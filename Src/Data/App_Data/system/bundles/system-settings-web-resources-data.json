@@ -1065,15 +1065,9 @@
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
-                        },
-                        "Separator": {
-                          "en-us": ","
                         }
                       },
                       "Boolean": {
-                        "AllowMultiValue": {
-                          "en-us": false
-                        },
                         "EnableTextEntry": {
                           "en-us": true
                         }
@@ -1195,15 +1189,9 @@
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
-                        },
-                        "Separator": {
-                          "en-us": ","
                         }
                       },
                       "Boolean": {
-                        "AllowMultiValue": {
-                          "en-us": false
-                        },
                         "EnableTextEntry": {
                           "en-us": true
                         }
@@ -1326,7 +1314,7 @@
           "Entities": [
             {
               "Id": 169951,
-              "Version": 2,
+              "Version": 3,
               "Guid": "69741b0b-6734-49b8-a8b5-46b42908e302",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -1335,13 +1323,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "// new formula syntax - see https://r.2sxc.org/formulas\nv2((data, context) => {\n  const hasCdn = data.CdnSourceEdit || data.CdnSourcePublic;\n  if (!hasCdn) return false;\n  // show the warning if any of the features are not enabled\n  const f = context.features;\n  if (!f.isEnabled('CdnSourceEdit') || !f.isEnabled('CdnSourcePublic'))\n    return true;\n  return false;\n});"
+                    "en-us": "v2((data, context) => {\n  const hasCdn = data.CdnSourceEdit || data.CdnSourcePublic;\n  if (!hasCdn) return false;\n  // show the warning if any of the features are not enabled\n  const f = context.features;\n  if (!f.isEnabled('CdnSourceEdit') || !f.isEnabled('CdnSourcePublic'))\n    return true;\n  return false;\n});"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {

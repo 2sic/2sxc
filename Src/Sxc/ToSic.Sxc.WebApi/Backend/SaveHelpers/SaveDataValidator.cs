@@ -29,7 +29,6 @@ internal class SaveDataValidator(EditDto package, ILog parentLog = null) : Valid
     {
         if (Package.ContentTypes != null) Add("package contained content-types, unexpected!");
         if (Package.InputTypes != null) Add("package contained input types, unexpected!");
-        if (Package.Features != null) Add("package contained features, unexpected!");
 
         // check that items are mostly intact
         if (Package.Items == null || Package.Items.Count == 0)

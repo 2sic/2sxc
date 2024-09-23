@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Integration;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Integration;
 
 namespace ToSic.Sxc.Apps;
 

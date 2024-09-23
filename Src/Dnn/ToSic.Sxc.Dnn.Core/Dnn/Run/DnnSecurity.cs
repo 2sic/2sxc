@@ -1,7 +1,6 @@
 ﻿using System.Web.Security;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
-using DotNetNuke.Security.Permissions;
 using DotNetNuke.Security.Roles;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;

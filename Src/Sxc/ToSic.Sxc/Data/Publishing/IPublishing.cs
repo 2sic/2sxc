@@ -12,7 +12,7 @@ public interface IPublishing
     /// Basically all real Items based on IEntity support publishing, but in some cases you will have
     /// <see cref="ITypedItem"/>s which are not based on an entity, and those will not support publishing.
     ///
-    /// By default, those objects will say `IsPublished` == `true` and `IsUnpublished` == `false`.
+    /// By default, those objects will say `IsPublished` == `true`, `HasPublished` == `true` and `HasUnpublished` == `false`.
     /// </summary>
     bool IsSupported { get; }
 

@@ -21,7 +21,7 @@ public class ViewsBackend(
         var l = Log.Fn<IEnumerable<ViewDetailsDto>>($"get all a#{appId}");
 
         var appViews = workViews.New(appId);
-        var contentTypes = appViews.AppWorkCtx.AppState.ContentTypes.OfScope(Scopes.Default).ToList();
+        var contentTypes = appViews.AppWorkCtx.AppReader.ContentTypes.OfScope(Scopes.Default).ToList();
 
         var viewList = appViews.GetAll().ToList();
         Log.A($"attribute list count:{contentTypes.Count}, template count:{viewList.Count}");
@@ -37,7 +37,7 @@ public class ViewsBackend(
                         {
                             Id = lightSpeedDeco.Id,
                             Title = lightSpeedDeco.Title,
-                            IsEnabled = lightSpeedDeco.IsEnabled
+                            IsEnabled = /*lightSpeedDeco.IsEnabled*/lightSpeedDeco.IsEnabledNullable != false,
                         })
                     );
 

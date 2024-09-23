@@ -27,7 +27,7 @@ partial class CodeDataFactory
     /// <param name="parent"></param>
     /// <param name="field"></param>
     /// <returns></returns>
-    internal IEnumerable<TTypedItem> CreateEmptyChildList<TTypedItem>(IEntity parent, string field) where TTypedItem : ITypedItem
+    internal IEnumerable<TTypedItem> CreateEmptyChildList<TTypedItem>(IEntity parent, string field) where TTypedItem : class, ITypedItem
     {
         // Generate a marker/placeholder to remember what field this is etc.
         var fakeEntity = PlaceHolderInBlock(parent.AppId, parent, field);

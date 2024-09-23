@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using ToSic.Eav.DataSources.Sys.Internal;
+using ToSic.Eav.ImportExport.Internal;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using AppDto = ToSic.Eav.WebApi.Dto.AppDto;
@@ -67,14 +68,14 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
 
     /// <inheritdoc />
     [HttpGet]
-    public HttpResponseMessage Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
-        => Real.Export(zoneId, appId, includeContentGroups, resetAppGuid);
+    public HttpResponseMessage Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite, bool assetAdamDeleted = true)
+        => Real.Export(new AppExportSpecs(zoneId, appId, includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted));
 
     /// <inheritdoc />
     [HttpGet]
     [ValidateAntiForgeryToken]
     public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withPortalFiles = false)
-        => Real.SaveData(zoneId, appId, includeContentGroups, resetAppGuid, withPortalFiles);
+        => Real.SaveData(new AppExportSpecs(zoneId, appId, includeContentGroups, resetAppGuid, WithSiteFiles: withPortalFiles));
 
     /// <inheritdoc />
     [HttpGet]

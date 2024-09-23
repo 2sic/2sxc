@@ -58,7 +58,7 @@ public class BlockControllerReal(
     {
         // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
         var site = context.Value.Site;
-        return workApps.Value.GetSelectableApps(site, apps).ToList();
+        return [.. workApps.Value.GetSelectableApps(site, apps)];
     }
 
     #endregion

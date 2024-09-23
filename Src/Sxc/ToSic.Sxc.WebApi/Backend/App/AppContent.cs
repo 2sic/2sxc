@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.Api01;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.DataFormats.EavLight;
@@ -41,7 +42,7 @@ public class AppContent(
     }
     protected IContextOfApp Context;
 
-    protected IAppStateInternal AppState => Context?.AppState ??
+    protected IAppReader AppReader => Context?.AppReader ??
                                    throw new(
                                        "Can't access AppState before Context is ready. Did you forget to call Init(...)?");
 
@@ -55,10 +56,10 @@ public class AppContent(
         var l = Log.Fn<IEnumerable<IDictionary<string, object>>>($"get entities type:{contentType}, path:{appPath}");
 
         // verify that read-access to these content-types is permitted
-        var permCheck = ThrowIfNotAllowedInType(contentType, GrantSets.ReadSomething, AppState);
+        var permCheck = ThrowIfNotAllowedInType(contentType, GrantSets.ReadSomething, AppReader);
 
         var includeDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
-        var result = api.GetEntities(AppState, contentType, includeDrafts, oDataSelect)
+        var result = api.GetEntities(AppReader, contentType, includeDrafts, oDataSelect)
             ?.ToList();
         return l.Return(result, "found: " + result?.Count);
     }
@@ -79,14 +80,14 @@ public class AppContent(
         Log.A($"get and serialize after security check type:{contentType}, path:{appPath}");
 
         // first try to find in all entities incl. drafts
-        var itm = getOne(AppState.List);
-        var permCheck = ThrowIfNotAllowedInItem(itm, GrantSets.ReadSomething, AppState);
+        var itm = getOne(AppReader.List);
+        var permCheck = ThrowIfNotAllowedInItem(itm, GrantSets.ReadSomething, AppReader);
 
         // in case draft wasn't allow, get again with more restricted permissions 
         if (!permCheck.EnsureAny(GrantSets.ReadDraft))
-            itm = getOne(AppState.ListPublished);
+            itm = getOne(AppReader.GetListPublished());
 
-        return InitEavAndSerializer(AppState.AppId, Context.Permissions.IsContentAdmin, oDataSelect).Convert(itm);
+        return InitEavAndSerializer(AppReader.AppId, Context.Permissions.IsContentAdmin, oDataSelect).Convert(itm);
     }
 
 
@@ -105,24 +106,24 @@ public class AppContent(
         // this throws an error if it's not the correct type
         var itm = id == null
             ? null
-            : AppState.List.GetOrThrow(contentType, id.Value);
+            : AppReader.List.GetOrThrow(contentType, id.Value);
 
-        if (itm == null) ThrowIfNotAllowedInType(contentType, GrantSets.CreateSomething, AppState);
-        else ThrowIfNotAllowedInItem(itm, GrantSets.WriteSomething, AppState);
+        if (itm == null) ThrowIfNotAllowedInType(contentType, GrantSets.CreateSomething, AppReader);
+        else ThrowIfNotAllowedInItem(itm, GrantSets.WriteSomething, AppReader);
 
         // Convert to case-insensitive dictionary just to be safe!
         var rawValuesCaseInsensitive = newContentItem.ToInvariant();
 
         // Now create the cleaned up import-dictionary so we can create a new entity
         var cleanedNewItem = new AppContentEntityBuilder(Log)
-            .CreateEntityDictionary(contentType, rawValuesCaseInsensitive, AppState)
+            .CreateEntityDictionary(contentType, rawValuesCaseInsensitive, AppReader)
             .ToInvariant();
 
         // add owner
         if (!cleanedNewItem.ContainsKey(Attributes.EntityFieldOwner))
             cleanedNewItem.Add(Attributes.EntityFieldOwner, Context.User.IdentityToken);
 
-        var dataController = DataController(AppState);
+        var dataController = DataController(AppReader);
         if (id == null)
         {
             // Get Metadata - not sure why we're using the raw values, but maybe there were removed in cleaned?
@@ -140,8 +141,8 @@ public class AppContent(
         else
             dataController.Update(id.Value, cleanedNewItem);
 
-        return InitEavAndSerializer(AppState.AppId, Context.Permissions.IsContentAdmin, null)
-            .Convert(AppState.List.One(id.Value));
+        return InitEavAndSerializer(AppReader.AppId, Context.Permissions.IsContentAdmin, null)
+            .Convert(AppReader.List.One(id.Value));
     }
 
     private bool AddParentRelationship(IDictionary<string, object> valuesCaseInsensitive, int addedEntityId)
@@ -162,7 +163,7 @@ public class AppContent(
         if (!parentGuid.HasValue) 
             return l.ReturnFalse($"'{ParentRelParent}' guid is missing");
 
-        var parentEntity = AppState.GetDraftOrPublished(parentGuid.Value);
+        var parentEntity = AppReader.GetDraftOrPublished(parentGuid.Value);
         if (parentEntity == null) 
             return l.ReturnFalse("Parent entity is missing");
 
@@ -172,7 +173,7 @@ public class AppContent(
         var field = (string)parentRelationship[ParentRelField];
         var fields = new[] { field };
 
-        workFieldList.New(AppState).FieldListAdd(parentEntity, fields, index, ids, asDraft: false, forceAddToEnd: false);
+        workFieldList.New(AppReader).FieldListAdd(parentEntity, fields, index, ids, asDraft: false, forceAddToEnd: false);
 
         return l.ReturnTrue($"new ParentRelationship p:{parentGuid},f:{field},i:{index}");
     }
@@ -246,9 +247,9 @@ public class AppContent(
         if (contentType == "any")
             throw l.Done(new Exception("type any not allowed with id-only, requires guid"));
 
-        var entityApi = api.Init(AppState.AppId);
-        var itm = AppState.List.GetOrThrow(contentType, id);
-        ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppState);
+        var entityApi = api.Init(AppReader.AppId);
+        var itm = AppReader.List.GetOrThrow(contentType, id);
+        ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppReader);
         entityApi.Delete(itm.Type.Name, id);
         l.Done();
     }
@@ -258,10 +259,10 @@ public class AppContent(
         var l = Log.Fn($"guid:{guid}, type:{contentType}, path:{appPath}");
         // Note: if app-path specified, use that app, otherwise use from context - probably automatic based on headers?
 
-        var entityApi = api.Init(AppState.AppId);
-        var itm = AppState.List.GetOrThrow(contentType == "any" ? null : contentType, guid);
+        var entityApi = api.Init(AppReader.AppId);
+        var itm = AppReader.List.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
-        ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppState);
+        ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppReader);
 
         entityApi.Delete(itm.Type.Name, guid);
         l.Done();

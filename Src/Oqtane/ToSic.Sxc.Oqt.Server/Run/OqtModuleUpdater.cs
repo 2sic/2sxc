@@ -10,7 +10,6 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Integration.Modules;
@@ -20,14 +19,16 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
+// TODO: @STV - this looks very similar to the Dnn implementation
+// Probably best to make a base class and de-duplicate.
 internal class OqtModuleUpdater(
     SettingsHelper settingsHelper,
     IPageModuleRepository pageModuleRepository,
     GenWorkPlus<WorkViews> workViews,
-    LazySvc<IAppStates> appStates,
+    LazySvc<IAppsCatalog> appsCatalog,
     ISite site)
     : ServiceBase($"{OqtConstants.OqtLogPrefix}.MapA2I",
-        connect: [settingsHelper, pageModuleRepository, appStates, workViews, site]), IPlatformModuleUpdater
+        connect: [settingsHelper, pageModuleRepository, appsCatalog, workViews, site]), IPlatformModuleUpdater
 {
     public void SetAppId(IModule instance, int? appId)
     {
@@ -37,11 +38,11 @@ internal class OqtModuleUpdater(
 
         // ToDo: Should throw exception if a real BlockConfiguration exists
 
-        if (appId == Eav.Constants.AppIdEmpty || !appId.HasValue)
+        if (appId is Eav.Constants.AppIdEmpty or null)
             UpdateInstanceSetting(instance.Id, ModuleSettingNames.AppName, null, Log);
         else
         {
-            var appName = appStates.Value.AppIdentifier(site.ZoneId, appId.Value);
+            var appName = appsCatalog.Value.AppNameId(new AppIdentity(site.ZoneId, appId.Value));
             UpdateInstanceSetting(instance.Id, ModuleSettingNames.AppName, appName, Log);
         }
 
@@ -49,7 +50,8 @@ internal class OqtModuleUpdater(
         if (appId.HasValue)
         {
             var appIdentity = new AppIdentity(site.ZoneId, appId.Value);
-            var templateGuid = workViews.New(appIdentity).GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
+            var templateGuid = workViews.New(appIdentity).GetAll()
+                .FirstOrDefault(t => !t.IsHidden)?.Guid;
             if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
         }
 

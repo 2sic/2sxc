@@ -6,22 +6,9 @@ using ToSic.Sxc.Cms.Internal.Publishing;
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class SxcPagePublishing: SaveHelperBase
+public class SxcPagePublishing(ContentGroupList contentGroupList, IPagePublishing pagePublishing, IAppsCatalog appsCatalog)
+    : SaveHelperBase("Sxc.PgPubl", connect: [contentGroupList, pagePublishing, appsCatalog])
 {
-    #region Constructor / DI
-    public SxcPagePublishing(ContentGroupList contentGroupList, IPagePublishing pagePublishing, IAppStates appStates) : base("Sxc.PgPubl")
-    {
-        ConnectLogs([
-            _contentGroupList = contentGroupList,
-            _pagePublishing = pagePublishing,
-            _appStates = appStates
-        ]);
-    }
-    private readonly ContentGroupList _contentGroupList;
-    private readonly IPagePublishing _pagePublishing;
-    private readonly IAppStates _appStates;
-
-    #endregion
 
     internal Dictionary<Guid, int> SaveInPagePublishing(
         IBlock blockOrNull,
@@ -40,8 +27,8 @@ public class SxcPagePublishing: SaveHelperBase
         Dictionary<Guid, int> postSaveIds = null;
 
         // The internal call which will be used further down
-        var appIdentity = _appStates.IdentityOfApp(appId);
-        var groupList = _contentGroupList.Init(appIdentity/*, Context.UserMayEdit*/);
+        var appIdentity = appsCatalog.AppIdentity(appId);
+        var groupList = contentGroupList.Init(appIdentity/*, Context.UserMayEdit*/);
 
         Dictionary<Guid, int> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call,
             bool forceSaveAsDraft)
@@ -57,7 +44,7 @@ public class SxcPagePublishing: SaveHelperBase
         if (partOfPage)
         {
             Log.A("partOfPage - save with publishing");
-            var versioning = _pagePublishing;
+            var versioning = pagePublishing;
             versioning.DoInsidePublishing(Context,
                 args => postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft));
         }

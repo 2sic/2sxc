@@ -1304,7 +1304,7 @@
           "Entities": [
             {
               "Id": 163997,
-              "Version": 2,
+              "Version": 3,
               "Guid": "5090e000-abab-403c-9aa8-1601824550d1",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -1313,13 +1313,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  const icon = data.Icon.toLowerCase();\n  if (icon.indexOf('[app:path]/') == 0)\n    return data.default + ' \uD83D\uDC4D\uD83C\uDFFD [App:Path]/... is the best option';\n  if (icon.indexOf('file:') == 0)\n    return data.default + \" ⚠️ using 'file:...' is not ideal, see docs link in description below\";\n  return data.default;\n}"
+                    "en-us": "v1(data, context) {\n  const icon = data.Icon.toLowerCase();\n  if (icon.indexOf('[app:path]/') == 0)\n    return data.default + ' \uD83D\uDC4D\uD83C\uDFFD [App:Path]/... is the best option';\n  if (icon.indexOf('file:') == 0)\n    return data.default + \" ⚠️ using 'file:...' is not ideal, see docs link in description below\";\n  return data.default;\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Name"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Name"
+                    "en-us": "Setting Name"
                   }
                 },
                 "Boolean": {

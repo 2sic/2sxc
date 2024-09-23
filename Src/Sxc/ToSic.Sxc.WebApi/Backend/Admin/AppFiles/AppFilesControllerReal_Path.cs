@@ -6,9 +6,7 @@ partial class AppFilesControllerReal
 {
     private string ResolveAppPath(int appId, bool global) =>
         (
-            _appPaths.InitDone
-                ? _appPaths
-                : _appPaths.Init(_site, _appStates.GetReader(appId))
+            _appPaths ??= _appPathsFactoryTemp.Get(_appReaders.Get(appId), _site)
         )
         .PhysicalPathSwitch(global);
 }

@@ -56,7 +56,7 @@ internal class OqtUiContextBuilder(
             RemoteDestinations.GettingStarted,
             Services.SiteCtx.Site,
             blockCtx?.Module.Id ?? 0,
-            AppStateOrNull,
+            AppSpecsOrNull,
             true
         );
         return gsUrl;

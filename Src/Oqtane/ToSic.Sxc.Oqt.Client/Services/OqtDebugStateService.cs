@@ -41,4 +41,6 @@ internal class OqtDebugStateService : IOqtDebugStateService
         if (json is null) return default;
         return JsonSerializer.Deserialize<T>(json);
     }
+
+    public string Platform => "Client";
 }

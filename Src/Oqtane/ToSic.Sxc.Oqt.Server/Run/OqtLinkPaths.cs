@@ -10,18 +10,15 @@ namespace ToSic.Sxc.Oqt.Server.Run;
 internal class OqtLinkPaths(IHttpContextAccessor contextAccessor, AliasResolver aliasResolver)
     : ILinkPaths
 {
-    public HttpContext Current => contextAccessor.HttpContext;
-
     #region Paths
 
-
-    private string toWebAbsolute(string virtualPath)
+    private string ToWebAbsolute(string virtualPath)
     {
         virtualPath = virtualPath.TrimStart('~');
         return virtualPath.PrefixSlash().ForwardSlash();
     }
 
-    public string AsSeenFromTheDomainRoot(string virtualPath) => toWebAbsolute(virtualPath);
+    public string AsSeenFromTheDomainRoot(string virtualPath) => ToWebAbsolute(virtualPath);
 
     public string ApiFromSiteRoot(string appFolder, string apiPath) => $"/app/{appFolder}/{apiPath}";
 

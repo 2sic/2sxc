@@ -6,14 +6,15 @@ namespace ToSic.Sxc.Blocks.Internal;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class BlockEditorForEntity : BlockEditorBase
 {
+    private readonly IAppsCatalog _appsCatalog;
     private readonly GenWorkDb<WorkEntityUpdate> _entityUpdate;
 
-    public BlockEditorForEntity(MyServices services, IAppStates appStates, GenWorkDb<WorkEntityUpdate> entityUpdate) 
+    public BlockEditorForEntity(MyServices services, GenWorkDb<WorkEntityUpdate> entityUpdate, IAppsCatalog appsCatalog)
         : base(services)
     {
         ConnectLogs([
             _entityUpdate = entityUpdate,
-            _appStates = appStates
+            _appsCatalog = appsCatalog,
         ]);
     }
 
@@ -32,8 +33,8 @@ public class BlockEditorForEntity : BlockEditorBase
         var appName = "";
         if (appId.HasValue)
         {
-            var zoneAppId = _appStates.IdentityOfApp(appId.Value);
-            appName = _appStates.AppIdentifier(zoneAppId.ZoneId, zoneAppId.AppId);
+            var zoneAppId = _appsCatalog.AppIdentity(appId.Value);
+            appName = _appsCatalog.AppNameId(zoneAppId);
         }
         UpdateValue(BlockFromEntity.CbPropertyApp, appName);
     }
@@ -57,12 +58,10 @@ public class BlockEditorForEntity : BlockEditorBase
 
     private void Update(Dictionary<string, object> newValues)
     {
-        var parentAppState = ((BlockBase)Block).Parent.App.AppState;
-        _entityUpdate.New(parentAppState)
+        var parentBlockAppState = ((IAppWithInternal)((BlockBase)Block).Parent.App).AppReader;
+        _entityUpdate.New(parentBlockAppState)
             .UpdateParts(Math.Abs(Block.ContentBlockId), newValues);
     }
-
-    private readonly IAppStates _appStates;
 
     #endregion
 

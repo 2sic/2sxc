@@ -1,11 +1,13 @@
 ﻿using ToSic.Eav;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.Insights;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.WebApi.Sys.Insights;
 
 namespace ToSic.Sxc.Backend.Sys;
 
-internal class InsightsAppCodeOverview(IAppStates appStates) : InsightsProvider(Link, helpCategory: Constants.AppCode)
+internal class InsightsAppCodeOverview(IAppReaderFactory appReaders, IAppStateCacheService appStates, IAppsCatalog appsCatalog)
+    : InsightsProvider(Link, helpCategory: Constants.AppCode, connect: [appsCatalog])
 {
     public static string Link => "AppCodeOverview";
 
@@ -16,7 +18,7 @@ internal class InsightsAppCodeOverview(IAppStates appStates) : InsightsProvider(
                + InsightsHtmlTable.HeadFields("Zone ↕", "App ↕", "Name", "Is Loaded", "Build App Code")
                + "<tbody>";
 
-        var zones = appStates.Zones.OrderBy(z => z.Key);
+        var zones = appsCatalog.Zones.OrderBy(z => z.Key);
 
 
         foreach (var zone in zones)
@@ -26,14 +28,14 @@ internal class InsightsAppCodeOverview(IAppStates appStates) : InsightsProvider(
                 {
                     var appIdentity = new AppIdentity(zone.Value.ZoneId, a.Key);
                     var inCache = appStates.IsCached(appIdentity);
-                    var appState = inCache ? appStates.GetReader(appIdentity) : null;
+                    var appState = inCache ? appReaders.Get(appIdentity) : null;
                     return new
                     {
                         Id = a.Key,
                         Guid = a.Value,
                         InCache = inCache,
                         Name = inCache
-                            ? appState?.Name ?? "unknown, app-infos not json"
+                            ? appState?.Specs.Name ?? "unknown, app-infos not json"
                             : "not-loaded",
                         Reader = appState
                     };

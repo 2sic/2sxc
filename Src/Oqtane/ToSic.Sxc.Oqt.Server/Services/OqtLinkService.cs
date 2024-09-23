@@ -1,7 +1,6 @@
 ﻿using Custom.Hybrid;
 using Oqtane.Repository;
 using Oqtane.Shared;
-using System.Linq;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
@@ -21,28 +20,15 @@ namespace ToSic.Sxc.Oqt.Server.Services;
 /// The Oqtane implementation of the <see cref="ILinkService"/>.
 /// </summary>
 [PrivateApi]
-internal class OqtLinkService : LinkServiceBase
+internal class OqtLinkService(
+    IPageRepository pageRepository,
+    AliasResolver aliasResolver,
+    ImgResizeLinker imgLinker,
+    LazySvc<ILinkPaths> linkPathsLazy)
+    : LinkServiceBase(imgLinker, linkPathsLazy, connect: [pageRepository, aliasResolver])
 {
     public Razor12 RazorPage { get; set; }
-    private readonly IPageRepository _pageRepository;
-    private readonly AliasResolver _aliasResolver;
-    private readonly LazySvc<IAliasRepository> _aliasRepositoryLazy;
     private IContextOfBlock _context;
-
-    public OqtLinkService(
-        IPageRepository pageRepository,
-        AliasResolver aliasResolver,
-        ImgResizeLinker imgLinker,
-        LazySvc<ILinkPaths> linkPathsLazy,
-        LazySvc<IAliasRepository> aliasRepositoryLazy
-    ) : base(imgLinker, linkPathsLazy)
-    {
-        ConnectLogs([
-            _pageRepository = pageRepository,
-            _aliasResolver = aliasResolver,
-            _aliasRepositoryLazy = aliasRepositoryLazy
-        ]);
-    }
 
     private new OqtLinkPaths LinkPaths => (OqtLinkPaths) base.LinkPaths;
 
@@ -60,7 +46,7 @@ internal class OqtLinkService : LinkServiceBase
     // Prepare Api link.
     private string ApiNavigateUrl(string api, string parameters)
     {
-        var alias = _aliasResolver.Alias;
+        var alias = aliasResolver.Alias;
 
         var pathWithQueryString = CombineApiWithQueryString(
             LinkPaths.ApiFromSiteRoot(App.Folder, api),
@@ -83,12 +69,12 @@ internal class OqtLinkService : LinkServiceBase
 
         if (pageId.HasValue)
         {
-            var page = _pageRepository.GetPage(pageId.Value, false);
+            var page = pageRepository.GetPage(pageId.Value, false);
             if (page != null) return PageUrlBuilder(page, parameters, absoluteUrl);
         }
 
         // if pageId is invalid, fallback to currentPageId
-        var currentPage = _pageRepository.GetPage(currentPageId.Value, false);
+        var currentPage = pageRepository.GetPage(currentPageId.Value, false);
         var currentPageUrl = PageUrlBuilder(currentPage, parameters, absoluteUrl);
 
         return CurrentPageUrlWithEventualHashError(pageId, currentPageUrl);
@@ -96,15 +82,9 @@ internal class OqtLinkService : LinkServiceBase
 
     private string PageUrlBuilder(Page page, string parameters, bool absoluteUrl)
     {
-        var alias = _aliasRepositoryLazy.Value.GetAliases()
-            .OrderByDescending(a => /*a.IsDefault*/
-                a.Name.Length) // TODO: a.IsDefault DESC after upgrade to Oqt v3.0.3+
-            //.ThenByDescending(a => a.Name.Length)
-            .ThenBy(a => a.Name)
-            .FirstOrDefault(a => a.SiteId == page.SiteId);
-
-        if (alias == null)
-            throw new($"Error, Alias is unknown, pageId: {page.PageId}, siteId: {page.SiteId}.");
+        aliasResolver.InitIfEmpty(page.SiteId);
+        var alias = aliasResolver.Alias 
+            ?? throw new($"Error, Alias is unknown, pageId: {page.PageId}, siteId: {page.SiteId}."); 
 
         // for invalid page numbers just skip that part 
         var relativePath =

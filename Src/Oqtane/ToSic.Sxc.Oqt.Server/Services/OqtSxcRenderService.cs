@@ -5,13 +5,13 @@ using Oqtane.Repository;
 using Oqtane.Security;
 using Oqtane.Shared;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Oqt.Server.Blocks;
 using ToSic.Sxc.Oqt.Server.Context;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared.Helpers;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.Services;
 public class OqtSxcRenderService(
     IHttpContextAccessor accessor,
     Generator<IOqtSxcViewBuilder> oqtSxcViewBuilder,
-    IAliasRepository aliases,
+    AliasResolver aliasResolver,
     ISiteRepository sites,
     IPageRepository pages,
     IModuleRepository modules,
@@ -37,15 +37,9 @@ public class OqtSxcRenderService(
     {
         try
         {
-            var alias = aliases.GetAlias(@params.AliasId);
+            var alias = aliasResolver.GetAndStoreAlias(@params.AliasId);
             if (alias == null)
                 return Forbidden("Unauthorized Alias Get Attempt {AliasId}", @params.AliasId);
-
-            // HACKS: STV POC - indirectly share information
-            accessor?.HttpContext?.Items.TryAdd("AliasFor2sxc", alias);
-
-            // Store Alias in SiteState for background processing.
-            if (siteState != null) siteState.Alias = alias;
 
             // Set User culture
             if (@params.Culture != CultureInfo.CurrentUICulture.Name) OqtCulture.SetCulture(@params.Culture);

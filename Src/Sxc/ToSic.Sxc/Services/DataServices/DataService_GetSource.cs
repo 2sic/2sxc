@@ -39,7 +39,7 @@ internal partial class DataService
 
         // Do this first, to ensure AppIdentity is really known/set
         var safeOptions = OptionsMs.SafeOptions(parameters, options: options);
-        var appId = safeOptions.AppIdentity.AppId;
+        var appId = safeOptions.AppIdentityOrReader.AppId;
 
         var dsInfo = catalog.Value.FindDataSourceInfo(name, appId);
         if (dsInfo == null)

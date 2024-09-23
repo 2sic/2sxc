@@ -207,15 +207,9 @@
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
-                        },
-                        "Separator": {
-                          "en-us": ","
                         }
                       },
                       "Boolean": {
-                        "AllowMultiValue": {
-                          "en-us": false
-                        },
                         "EnableTextEntry": {
                           "en-us": false
                         }
@@ -476,9 +470,9 @@
           },
           "Entities": [
             {
-              "Id": 182631,
-              "Version": 2,
-              "Guid": "2994546c-d5b8-4d7e-9240-ee852cb9ad24",
+              "Id": 182601,
+              "Version": 3,
+              "Guid": "ba8bd5b8-4585-4761-b329-2f97ed812602",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
                 "Name": "UiFormula"
@@ -486,7 +480,7 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v2((data) => { return data.CopyrightInfoType == 'advanced'; });"
+                    "en-us": "v2((data) => { return data.CopyrightInfoType == 'simple'; });"
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
@@ -504,9 +498,9 @@
               "Owner": "dnn:userid=41"
             },
             {
-              "Id": 182601,
-              "Version": 3,
-              "Guid": "ba8bd5b8-4585-4761-b329-2f97ed812602",
+              "Id": 182631,
+              "Version": 2,
+              "Guid": "2994546c-d5b8-4d7e-9240-ee852cb9ad24",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
                 "Name": "UiFormula"
@@ -514,7 +508,7 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v2((data) => { return data.CopyrightInfoType == 'simple'; });"
+                    "en-us": "v2((data) => { return data.CopyrightInfoType == 'advanced'; });"
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
@@ -820,15 +814,9 @@
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
-                        },
-                        "Separator": {
-                          "en-us": ","
                         }
                       },
                       "Boolean": {
-                        "AllowMultiValue": {
-                          "en-us": false
-                        },
                         "EnableTextEntry": {
                           "en-us": true
                         }

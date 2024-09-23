@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.State;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.State;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Internal.Requirements;
 using ToSic.Eav.Plumbing;
@@ -8,19 +9,19 @@ namespace ToSic.Sxc.Engines;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class EngineAppRequirements(IRequirementsService requirements) : EngineRequirementsBase(requirements, "Eng.AppReq")
 {
-    internal bool RequirementsMet(IAppStateInternal appState) 
+    internal bool RequirementsMet(IAppReader appState) 
         => !RequirementsStatus(appState).SafeAny();
 
-    private List<RequirementStatus> RequirementsStatus(IAppStateInternal appState)
-        => appState.GetPiggyBackExpiring("AppRequirementsStatus",
+    private List<RequirementStatus> RequirementsStatus(IAppReader appReader)
+        => appReader.GetPiggyBackExpiring("AppRequirementsStatus",
             // take the requirements reported by the app
-            () => requirements.UnfulfilledRequirements(appState.Metadata)
+            () => requirements.UnfulfilledRequirements(appReader.Specs.Metadata)
                 // Merge with the basic requirements for 2sxc 17 to work
                 //.Concat(requirements.UnfulfilledRequirements(SysFeatureSuggestions.CSharp08.ToListOfOne()).ToList())
                 .ToList()
             ).Value;
 
-    internal RenderEngineResult GetMessageForRequirements(IAppStateInternal appState)
+    internal RenderEngineResult GetMessageForRequirements(IAppReader appState)
     {
         var l = Log.Fn<RenderEngineResult>();
 

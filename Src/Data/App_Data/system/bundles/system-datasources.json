@@ -1853,17 +1853,6 @@
                 "IsTitle": false,
                 "Metadata": [
                   {
-                    "Id": 129171,
-                    "Version": 1,
-                    "Guid": "ad69c663-5ca5-40dc-859a-fc6f39fe47b9",
-                    "Type": {
-                      "Id": "@string-default",
-                      "Name": "@string-default"
-                    },
-                    "Attributes": {},
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
                     "Id": 129169,
                     "Version": 5,
                     "Guid": "8d176fb0-f52a-489e-b1c3-d7b8b5971cbd",
@@ -1952,6 +1941,17 @@
                         }
                       }
                     },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 129171,
+                    "Version": 1,
+                    "Guid": "ad69c663-5ca5-40dc-859a-fc6f39fe47b9",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {},
                     "Owner": "dnn:userid=41"
                   },
                   {
@@ -3384,7 +3384,7 @@
           "Entities": [
             {
               "Id": 167696,
-              "Version": 1,
+              "Version": 2,
               "Guid": "7813fc65-c96c-4a2e-a101-2018d3041d6f",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -3393,13 +3393,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  return data.IncludeRelationshipsAsCsv == 'true';\n}"
+                    "en-us": "v1(data, context) { return data.IncludeRelationshipsAsCsv == 'true'; }"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Disabled"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Disabled"
+                    "en-us": "Setting Disabled"
                   }
                 },
                 "Boolean": {
@@ -3567,7 +3570,7 @@
             },
             {
               "Id": 167697,
-              "Version": 1,
+              "Version": 2,
               "Guid": "34febfa2-fb09-43d7-880d-9103e4d6f52a",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -3576,13 +3579,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  return data.IncludeRelationshipsAsCsv == 'true'\n    ? 'CSV like \"27,42,999\"'\n    : 'object like { id: 27, guid: \"guid-guid-guidguid\" }';\n}"
+                    "en-us": "v1(data, context) {\n  return data.IncludeRelationshipsAsCsv == 'true'\n    ? 'CSV like \"27,42,999\"'\n    : 'object like { id: 27, guid: \"guid-guid-guidguid\" }';\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Notes"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Notes"
+                    "en-us": "Setting Notes"
                   }
                 },
                 "Boolean": {
@@ -4200,7 +4206,7 @@
           "Entities": [
             {
               "Id": 169168,
-              "Version": 1,
+              "Version": 2,
               "Guid": "622e3024-b35e-4b9e-aaa5-ea6265148b0b",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -4209,21 +4215,20 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "*": "// new formula syntax - see https://r.2sxc.org/formulas\nv2((data, context) => {\n  return context.debug;\n});",
-                    "en-us": "// new formula syntax - see https://r.2sxc.org/formulas\nv2((data, context) => {\n  return context.debug;\n});"
+                    "en-us": "v2((data, context) => { return context.debug; });"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
-                    "*": "Field.Settings.Visible",
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "*": "Field.Settings.Visible",
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
                   "Enabled": {
-                    "*": true,
                     "en-us": true
                   }
                 }
@@ -13367,7 +13372,7 @@
           "Entities": [
             {
               "Id": 163989,
-              "Version": 1,
+              "Version": 2,
               "Guid": "e4d42e3d-4de7-453a-a68f-e9e015ac46c3",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -13376,13 +13381,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  return data.ConnectionString === '';\n}"
+                    "en-us": "v1(data, context) { return data.ConnectionString === ''; }"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -13395,7 +13403,7 @@
             },
             {
               "Id": 163990,
-              "Version": 1,
+              "Version": 2,
               "Guid": "ab0b768e-4af4-4cfb-b93c-efd349b5ec68",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -13404,13 +13412,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  return data.ConnectionStringName === '';\n}"
+                    "en-us": "v1(data, context) { return data.ConnectionStringName === ''; }"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {

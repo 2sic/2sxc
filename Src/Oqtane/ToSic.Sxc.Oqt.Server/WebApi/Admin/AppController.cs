@@ -4,6 +4,7 @@ using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
 using ToSic.Eav.DataSources.Sys.Internal;
+using ToSic.Eav.ImportExport.Internal;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Routing;
@@ -71,15 +72,15 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
 
     /// <inheritdoc />
     [HttpGet]
-    public IActionResult Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid) 
-        => Real.Export(zoneId, appId, includeContentGroups, resetAppGuid);
+    public IActionResult Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite, bool assetAdamDeleted = true) 
+        => Real.Export(new AppExportSpecs(zoneId, appId, includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted));
 
     /// <inheritdoc />
     [HttpGet]
     [Authorize(Roles = RoleNames.Admin)]
     [ValidateAntiForgeryToken]
     public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withPortalFiles = false)
-        => Real.SaveData(zoneId, appId, includeContentGroups, resetAppGuid, withPortalFiles);
+        => Real.SaveData(new AppExportSpecs(zoneId, appId, includeContentGroups, resetAppGuid, WithSiteFiles: withPortalFiles));
 
     /// <inheritdoc />
     [HttpGet]

@@ -19,16 +19,16 @@ public class DnnModule: Module<ModuleInfo>
 {
     #region Constructors and DI
         
-    public DnnModule(IAppStates appStates, LazySvc<AppFinder> appFinderLazy, ISite site): base("Dnn.Contnr")
+    public DnnModule(IAppsCatalog appsCatalog, LazySvc<AppFinder> appFinderLazy, ISite site): base("Dnn.Contnr")
     {
         ConnectLogs([
-            _appStates = appStates,
-            _appFinderLazy = appFinderLazy
+            _appsCatalog = appsCatalog,
+            _appFinderLazy = appFinderLazy,
+        _site = site,
         ]);
-        _site = site;
     }
 
-    private readonly IAppStates _appStates;
+    private readonly IAppsCatalog _appsCatalog;
     private readonly LazySvc<AppFinder> _appFinderLazy;
     private readonly ISite _site;
 
@@ -102,7 +102,7 @@ public class DnnModule: Module<ModuleInfo>
         var msg = $"get appid from instance for Z:{zoneId} Mod:{module.ModuleID}";
         if (IsContent)
         {
-            var appId = _appStates.DefaultAppId(zoneId);
+            var appId = _appsCatalog.DefaultAppIdentity(zoneId).AppId;
             return l.Return((appId, "Content"), $"{msg} - use Default app: {appId}");
         }
 

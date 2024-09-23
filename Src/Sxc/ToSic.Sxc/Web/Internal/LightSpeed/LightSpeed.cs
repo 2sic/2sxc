@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.Apps.State;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Plumbing;
@@ -19,11 +18,12 @@ namespace ToSic.Sxc.Web.Internal.LightSpeed;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class LightSpeed(
     IEavFeaturesService features,
-    LazySvc<IAppStates> appStatesLazy,
+    LazySvc<IAppsCatalog> appsCatalog,
+    LazySvc<IAppReaderFactory> appReadersLazy,
     Generator<IAppPathsMicroSvc> appPathsLazy,
     LazySvc<ICmsContext> cmsContext,
     LazySvc<OutputCacheManager> outputCacheManager
-) : ServiceBase(SxcLogName + ".Lights", connect: [features, appStatesLazy, appPathsLazy, cmsContext, outputCacheManager]), IOutputCache
+) : ServiceBase(SxcLogName + ".Lights", connect: [features, appsCatalog, appReadersLazy, appPathsLazy, cmsContext, outputCacheManager]), IOutputCache
 {
     public IOutputCache Init(int moduleId, int pageId, IBlock block)
     {
@@ -36,7 +36,7 @@ internal class LightSpeed(
     private int _moduleId;
     private int _pageId;
     private IBlock _block;
-    private IAppStateInternal AppState => _block?.Context?.AppState;
+    private IAppReader AppState => _block?.Context?.AppReader;
 
     public bool Save(IRenderResult data) => AddToLightSpeed(data);
 
@@ -58,7 +58,7 @@ internal class LightSpeed(
 
         // get dependent appStates
         var dependentAppsStates = data.DependentApps
-            .Select(da => appStatesLazy.Value.GetCacheState(da.AppId))
+            .Select(da => appReadersLazy.Value.Get(da.AppId))
             .ToList();
         l.A($"{nameof(dependentAppsStates)} count {dependentAppsStates.Count}");
 
@@ -71,12 +71,13 @@ internal class LightSpeed(
         if (appState == null)
             return l.ReturnFalse("no app");
 
+        data.AppId = appState.AppId; // info for LightSpeedStats
+
         if (appState.ZoneId >= 0)
         {
             l.A("dependentAppsStates add");
-            dependentAppsStates.Add(appStatesLazy.Value.Get(appStatesLazy.Value.IdentityOfPrimary(appState.ZoneId)));
-            // 2024-05-16 2dm changing to not use a Reader, as it's not needed and may cause #IServiceProviderDisposedException
-            //dependentAppsStates.Add(appStatesLazy.Value.GetPrimaryReader(appState.ZoneId, Log).StateCache);
+            var primary = appsCatalog.Value.PrimaryAppIdentity(appState.ZoneId);
+            dependentAppsStates.Add(appReadersLazy.Value.Get(primary));
         }
 
         l.A($"Found {data.DependentApps.Count} apps: " + string.Join(",", data.DependentApps.Select(da => da.AppId)));
@@ -94,10 +95,6 @@ internal class LightSpeed(
             : null;
         l.A($"{nameof(appPathsToMonitor)} done");
 
-        // copy the value into a separate variable so the cache doesn't capture the AppState separately
-        var appId = appState.AppId;
-        var size = data.Size;
-
         // add to cache and log
         string cacheKey = null;
         l.Do(message: "outputCacheManager add", timer: true,
@@ -105,16 +102,12 @@ internal class LightSpeed(
                 CacheKey,
                 cacheItem,
                 duration,
-                dependentAppsStates.Cast<ICanBeCacheDependency>().ToList(),
-                appPathsToMonitor,
-                LightSpeedStats.CreateNonCapturingRemoveCall(appId, size)
+                dependentAppsStates.Select(r => r.GetCache()).Cast<ICanBeCacheDependency>().ToList(),
+                appPathsToMonitor
             )
         );
 
         l.A($"LightSpeed Cache Key: {cacheKey}");
-
-        if (cacheKey != "error")
-            LightSpeedStats.AddStatic(appId, size);
 
         return l.ReturnTrue($"added for {duration}s");
     }
@@ -122,7 +115,7 @@ internal class LightSpeed(
     /// <summary>
     /// find if caching is enabled on all dependent apps
     /// </summary>
-    private bool IsEnabledOnDependentApps(List<IAppStateCache> appStates)
+    private bool IsEnabledOnDependentApps(List<IAppReader> appStates)
     {
         var l = Log.Fn<bool>(timer: true);
         foreach (var appState in appStates.Where(appState => !GetLightSpeedConfig(appState).IsEnabled))
@@ -138,7 +131,7 @@ internal class LightSpeed(
     /// ADAM folders are not monitored
     /// </remarks>
     /// <returns>list of paths to monitor</returns>
-    private IList<string> AppPaths(List<IAppStateCache> dependentApps)
+    private IList<string> AppPaths(List<IAppReader> dependentApps)
     {
         if ((_block as BlockFromModule)?.App is not EavApp app) return null;
         if (dependentApps.SafeNone()) return null;
@@ -146,7 +139,7 @@ internal class LightSpeed(
         var paths = new List<string>();
         foreach (var appState in dependentApps)
         {
-            var appPaths = appPathsLazy.New().Init(app.Site, appStatesLazy.Value.ToReader(appState, Log));
+            var appPaths = appPathsLazy.New().Get(appState, app.Site);
             if (Directory.Exists(appPaths.PhysicalPath)) paths.Add(appPaths.PhysicalPath);
             if (Directory.Exists(appPaths.PhysicalPathShared)) paths.Add(appPaths.PhysicalPathShared);
         }
@@ -223,23 +216,29 @@ internal class LightSpeed(
         // Normal check.
         var feat = features.IsEnabled(LightSpeedOutputCache.NameId);
         if (!feat) return l.ReturnFalse("feature disabled");
-        var ok = AppConfig.IsEnabled;
-        return l.Return(ok, $"app config: {ok}");
+
+        if (!AppConfig.IsEnabled)
+            return l.ReturnFalse("disabled at app level");
+
+        if (LightSpeedConfig.IsEnabledNullable == false)
+            return l.ReturnFalse("disabled at view level");
+
+        return l.ReturnTrue($"app and view config: true");
     }
 
 
     private LightSpeedDecorator LightSpeedConfig => _lightSpeedConfig ??=
-        _block.View.Metadata.OfType(LightSpeedDecorator.TypeNameId).FirstOrDefault()?.NullOrGetWith(viewLs => new LightSpeedDecorator(viewLs))
+        _block.View?.Metadata.OfType(LightSpeedDecorator.TypeNameId).FirstOrDefault()?.NullOrGetWith(viewLs => new LightSpeedDecorator(viewLs))
         ?? AppConfig;
     private LightSpeedDecorator _lightSpeedConfig;
 
-    private LightSpeedDecorator AppConfig => _lsd.Get(() => GetLightSpeedConfig(AppState.StateCache));
+    private LightSpeedDecorator AppConfig => _lsd.Get(() => GetLightSpeedConfig(AppState));
     private readonly GetOnce<LightSpeedDecorator> _lsd = new();
 
-    private LightSpeedDecorator GetLightSpeedConfig(IAppStateCache appState)
+    private LightSpeedDecorator GetLightSpeedConfig(IAppReader appReader)
     {
         var l = Log.Fn<LightSpeedDecorator>();
-        var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(appState, Log);
+        var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(appReader, Log);
         return l.Return(decoFromPiggyBack, $"has decorator: {decoFromPiggyBack.Entity != null}");
     }
 

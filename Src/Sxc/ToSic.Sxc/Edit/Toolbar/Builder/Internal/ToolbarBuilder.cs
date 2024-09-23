@@ -24,13 +24,11 @@ public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolba
 
     #region Constructors and Init
 
-    public class MyServices(
-        LazySvc<IAppStates> appStatesLazy,
-        LazySvc<ToolbarButtonDecoratorHelper> toolbarButtonHelper)
-        : MyServicesBase(connect: [toolbarButtonHelper, appStatesLazy])
+    public class MyServices(LazySvc<ToolbarButtonDecoratorHelper> toolbarButtonHelper, LazySvc<IAppsCatalog> appsCatalog)
+        : MyServicesBase(connect: [toolbarButtonHelper, appsCatalog])
     {
-        internal readonly LazySvc<IAppStates> AppStatesLazy = appStatesLazy;
         internal LazySvc<ToolbarButtonDecoratorHelper> ToolbarButtonHelper { get; } = toolbarButtonHelper;
+        public LazySvc<IAppsCatalog> AppsCatalog { get; } = appsCatalog;
     }
 
     /// <summary>

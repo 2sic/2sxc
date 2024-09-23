@@ -15,39 +15,25 @@ using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
-internal class OqtXmlExporter : XmlExporter
+internal class OqtXmlExporter(
+    AdamManager<int, int> adamManager,
+    ISxcContextResolver ctxResolver,
+    XmlSerializer xmlSerializer,
+    IWebHostEnvironment hostingEnvironment,
+    LazySvc<IFileRepository> fileRepositoryLazy,
+    LazySvc<IFolderRepository> folderRepositoryLazy,
+    LazySvc<ITenantResolver> oqtTenantResolverLazy,
+    IAppsCatalog appsCatalog,
+    LazySvc<OqtAssetsFileHelper> fileHelper)
+    : XmlExporter(xmlSerializer, appsCatalog, ctxResolver, OqtConstants.OqtLogPrefix,
+        connect:
+        [
+            hostingEnvironment, fileRepositoryLazy, folderRepositoryLazy, oqtTenantResolverLazy, fileHelper, adamManager
+        ])
 {
     #region Constructor / DI
 
-    private readonly IWebHostEnvironment _hostingEnvironment;
-    private readonly LazySvc<IFileRepository> _fileRepositoryLazy;
-    private readonly LazySvc<IFolderRepository> _folderRepositoryLazy;
-    private readonly LazySvc<ITenantResolver> _oqtTenantResolverLazy;
-    private readonly LazySvc<OqtAssetsFileHelper> _fileHelper;
-
-    public OqtXmlExporter(
-        AdamManager<int, int> adamManager,
-        ISxcContextResolver ctxResolver,
-        XmlSerializer xmlSerializer,
-        IWebHostEnvironment hostingEnvironment,
-        LazySvc<IFileRepository> fileRepositoryLazy,
-        LazySvc<IFolderRepository> folderRepositoryLazy,
-        LazySvc<ITenantResolver> oqtTenantResolverLazy,
-        IAppStates appStates,
-        LazySvc<OqtAssetsFileHelper> fileHelper
-    ) : base(xmlSerializer, appStates, ctxResolver, OqtConstants.OqtLogPrefix)
-    {
-        ConnectLogs([
-            _hostingEnvironment = hostingEnvironment,
-            _fileRepositoryLazy = fileRepositoryLazy,
-            _folderRepositoryLazy = folderRepositoryLazy,
-            _oqtTenantResolverLazy = oqtTenantResolverLazy,
-            _fileHelper = fileHelper,
-            AdamManager = adamManager
-        ]);
-    }
-
-    internal AdamManager<int, int> AdamManager { get; }
+    internal AdamManager<int, int> AdamManager { get; } = adamManager;
 
     protected override void PostContextInit(IContextOfApp appContext)
     {
@@ -77,7 +63,7 @@ internal class OqtXmlExporter : XmlExporter
             // also try to remember the folder
             try
             {
-                var file = _fileRepositoryLazy.Value.GetFile(fileNum, false);
+                var file = fileRepositoryLazy.Value.GetFile(fileNum, false);
                 if (file != null) ReferencedFolderIds.Add(file.FolderId);
             }
             catch
@@ -93,14 +79,14 @@ internal class OqtXmlExporter : XmlExporter
 
     protected override string ResolveFolderId(int folderId)
     {
-        var folderController = _folderRepositoryLazy.Value;
+        var folderController = folderRepositoryLazy.Value;
         var folder = folderController.GetFolder(folderId);
         return folder?.Path;
     }
 
     protected override TenantFileItem ResolveFile(int fileId)
     {
-        var fileController = _fileRepositoryLazy.Value;
+        var fileController = fileRepositoryLazy.Value;
         var file = fileController.GetFile(fileId);
         if (file == null) return new()
         {
@@ -110,8 +96,8 @@ internal class OqtXmlExporter : XmlExporter
         };
 
         var relativePath = Path.Combine(file?.Folder.Path.Backslash(), file?.Name);
-        var alias = _oqtTenantResolverLazy.Value.GetAlias();
-        var path = _fileHelper.Value.GetFilePath(_hostingEnvironment.ContentRootPath, alias, relativePath);
+        var alias = oqtTenantResolverLazy.Value.GetAlias();
+        var path = fileHelper.Value.GetFilePath(hostingEnvironment.ContentRootPath, alias, relativePath);
 
         return new()
         {

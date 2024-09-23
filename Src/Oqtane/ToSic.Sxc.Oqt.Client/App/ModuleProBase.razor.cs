@@ -19,7 +19,7 @@ using ToSic.Sxc.Oqt.Shared.Interfaces;
 namespace ToSic.Sxc.Oqt.App;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ModuleProBase: ModuleBase, IOqtHybridLog
+public abstract class ModuleProBase: ModuleBase, IOqtHybridLog
 {
     #region Injected Services
 
@@ -43,8 +43,8 @@ public class ModuleProBase: ModuleBase, IOqtHybridLog
     public readonly ConcurrentQueue<object[]> LogMessageQueue = new();
 
     public bool FirstRender = true;
-    #endregion
 
+    #endregion
 
     protected override async Task OnParametersSetAsync()
     {
@@ -53,10 +53,7 @@ public class ModuleProBase: ModuleBase, IOqtHybridLog
         var debugEnabled = await OqtDebugStateService.GetDebugAsync();
         if (!debugEnabled && NavigationManager.TryGetQueryString<bool>("debug", out var debugInQueryString))
             OqtDebugStateService.SetDebug(debugInQueryString);
-
-        Log($"2sxc Blazor Logging Enabled");  // will only show if it's enabled
     }
-        
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -95,38 +92,41 @@ public class ModuleProBase: ModuleBase, IOqtHybridLog
     public void Log(params object[] message)
     {
         // If the url has a debug=true and we are the super-user
-        if (message == null || !message.Any() || !(OqtDebugStateService?.IsDebugEnabled ?? false /* HACK @stv fix it*/) || !IsSuperUser) return;
+        if (message == null || !message.Any() || !OqtDebugStateService.IsDebugEnabled || !IsSuperUser) return;
 
-        _logPrefix ??= $"2sxc:Page({PageState?.Page?.PageId}):Mod({ModuleState?.ModuleId}):";
+        _logPrefix ??= $"2sxc:Page({PageState?.Page?.PageId}):Mod({ModuleState?.ModuleId}):Render({ModuleState?.RenderId}):";
         try
         {
-            // log on web server
+            // log on web server / webassembly console
             foreach (var item in message)
                 Console.WriteLine($"{_logPrefix} {item}");
 
-            // log to browser console
-            if (IsSafeToRunJs)
+            if (OqtDebugStateService.Platform == "Server")
             {
-                // first log messages from queue
-                var timeOut = 0;
-                while (!LogMessageQueue.IsEmpty && timeOut < 100)
+                // log to browser console
+                if (IsSafeToRunJs)
                 {
-                    if (LogMessageQueue.TryDequeue(out var messageToLog))
+                    // first log messages from queue
+                    var timeOut = 0;
+                    while (!LogMessageQueue.IsEmpty && timeOut < 100)
                     {
-                        ConsoleLog(new List<object> { $"dequeue({LogMessageQueue.Count}):" }.Concat(messageToLog).ToArray());
-                        timeOut = 0;
-                    }
-                    else
-                        timeOut++;
-                };
-                    
-                // than log current message
-                ConsoleLog(message);
-            }
-            else
-            {
-                // browser is not ready, so store messages in queue
-                LogMessageQueue.Enqueue(message.ToArray());
+                        if (LogMessageQueue.TryDequeue(out var messageToLog))
+                        {
+                            ConsoleLog(new List<object> { $"dequeue({LogMessageQueue.Count}):" }.Concat(messageToLog).ToArray());
+                            timeOut = 0;
+                        }
+                        else
+                            timeOut++;
+                    };
+
+                    // than log current message
+                    ConsoleLog(message);
+                }
+                else
+                {
+                    // browser is not ready, so store messages in queue
+                    LogMessageQueue.Enqueue(message.ToArray());
+                }
             }
 
             // log to oqtane log if possible

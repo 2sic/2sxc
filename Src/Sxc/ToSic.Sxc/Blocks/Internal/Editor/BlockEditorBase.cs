@@ -62,7 +62,7 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.MySe
         if (BlockConfiguration.Exists || forceCreateContentGroup)
         {
             var existedBeforeSettingTemplate = BlockConfiguration.Exists;
-            var contentGroupGuid = Services.WorkBlocksMod.New(Block.Context.AppState).UpdateOrCreateContentGroup(BlockConfiguration, templateId);
+            var contentGroupGuid = Services.WorkBlocksMod.New(Block.Context.AppReader).UpdateOrCreateContentGroup(BlockConfiguration, templateId);
 
             if (!existedBeforeSettingTemplate) EnsureLinkToContentGroup(contentGroupGuid);
 
@@ -88,7 +88,7 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.MySe
         var hasPresentation = presEntity != null;
 
         // make sure we really have the draft item an not the live one
-        var appState = Block.Context.AppState;
+        var appState = Block.Context.AppReader;
         var publisher = Services.Publisher.New(appState: appState);
         var contDraft = contEntity.IsPublished ? appState.GetDraft(contEntity) : contEntity;
         publisher.Publish(contDraft.RepositoryId);

@@ -6,6 +6,7 @@ using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Internal.Loaders;
 using ToSic.Eav.StartUp;
 using ToSic.Lib.DI;
+using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Images.Internal;
 
@@ -57,6 +58,7 @@ public class StartupDnn : IServiceRouteMapper
         globalConfig.GlobalFolder = HostingEnvironment.MapPath(DnnConstants.SysFolderRootVirtual);
         globalConfig.AssetsVirtualUrl = DnnConstants.SysFolderRootVirtual + "assets/";
         globalConfig.SharedAppsFolder = "~/Portals/_default/" + AppConstants.AppsRootFolder + "/";
+        globalConfig.TempAssemblyFolder = HostingEnvironment.MapPath($"~/{Eav.Constants.AppDataProtectedFolder}/{Eav.Constants.TempAssemblyFolder}/");
 
         var sxcSysLoader = transientSp.Build<SystemLoader>();
         sxcSysLoader.StartUp();
@@ -71,7 +73,7 @@ public class StartupDnn : IServiceRouteMapper
         Imageflow.Dnn.StartUp.RegisterQueryStringRewrite(ImageflowRewrite.QueryStringRewrite);
 
         // Clean the App_Data/2sxc.bin folder
-        Compile.AppCode.CleanTempAssemblyFolder();
+        transientSp.Build<Util>().CleanTempAssemblyFolder();
 
         _alreadyConfigured = true;
         return l.ReturnTrue();

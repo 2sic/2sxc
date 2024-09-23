@@ -783,23 +783,6 @@
                 "IsTitle": false,
                 "Metadata": [
                   {
-                    "Id": 177518,
-                    "Version": 2,
-                    "Guid": "7eaa2ece-4ce6-4307-8253-cc521404bbee",
-                    "Type": {
-                      "Id": "@empty-default",
-                      "Name": "@empty-default"
-                    },
-                    "Attributes": {
-                      "Boolean": {
-                        "DefaultCollapsed": {
-                          "en-us": false
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
                     "Id": 177517,
                     "Version": 4,
                     "Guid": "b309674f-e06c-4657-9b07-30a32df2e762",
@@ -873,6 +856,23 @@
                       }
                     },
                     "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 177518,
+                    "Version": 2,
+                    "Guid": "7eaa2ece-4ce6-4307-8253-cc521404bbee",
+                    "Type": {
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
                   }
                 ]
               },
@@ -882,43 +882,6 @@
                 "InputType": "string-default",
                 "IsTitle": true,
                 "Metadata": [
-                  {
-                    "Id": 144403,
-                    "Version": 1,
-                    "Guid": "50d521e5-5071-415d-917b-8b02b3cbd4e4",
-                    "Type": {
-                      "Id": "@String",
-                      "Name": "@String"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "DropdownValues": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "en-us": ""
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 144404,
-                    "Version": 1,
-                    "Guid": "e74260b4-d2d3-45f9-b0a6-8776cfe01dd1",
-                    "Type": {
-                      "Id": "@string-default",
-                      "Name": "@string-default"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "InputFontFamily": {
-                          "en-us": ""
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
                   {
                     "Id": 144396,
                     "Version": 3,
@@ -977,6 +940,43 @@
                         },
                         "VisibleInEditUI": {
                           "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 144403,
+                    "Version": 1,
+                    "Guid": "50d521e5-5071-415d-917b-8b02b3cbd4e4",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 144404,
+                    "Version": 1,
+                    "Guid": "e74260b4-d2d3-45f9-b0a6-8776cfe01dd1",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": ""
                         }
                       }
                     },
@@ -2412,7 +2412,7 @@
             },
             {
               "Id": 176323,
-              "Version": 3,
+              "Version": 4,
               "Guid": "6bcded21-014b-430a-b968-b095bc627776",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -2421,13 +2421,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "// new formula syntax - see https://go.2sxc.org/formulas\nv2((data, context) => {\n  const detailsBlank = data.DescriptionExtended == '';\n  return !detailsBlank || data.AddDescriptionDetailed;\n});"
+                    "en-us": "v2((data, context) => {\n  const detailsBlank = data.DescriptionExtended == '';\n  return !detailsBlank || data.AddDescriptionDetailed;\n});"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -2440,7 +2443,7 @@
             },
             {
               "Id": 176328,
-              "Version": 2,
+              "Version": 3,
               "Guid": "1aef80c1-fb18-493a-90b9-e5f8c702965e",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -2449,13 +2452,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "// new formula syntax - see https://go.2sxc.org/formulas\nv2((data, context) => {\n  return !!data.parameters?.showWarningGlobalFile;\n});"
+                    "en-us": "v2((data, context) => { return !!data.parameters?.showWarningGlobalFile; });"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -5574,7 +5580,7 @@
             },
             {
               "Id": 144523,
-              "Version": 1,
+              "Version": 2,
               "Guid": "46e32523-21b2-4485-8e10-ae846009e305",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -5583,13 +5589,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v1 (data, context) {\n  return context.debug;\n}"
+                    "en-us": "v1(data, context) {\n  return context.debug;\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -5602,7 +5611,7 @@
             },
             {
               "Id": 144445,
-              "Version": 3,
+              "Version": 4,
               "Guid": "48dfbe23-bdad-4fd3-a216-3e28dd072d39",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -5611,13 +5620,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v1 (data, context) {\n  var partMsg = function(target, value) {\n    if (value == -1) return target + ' \uD83D\uDEAB';\n    return target + ' ' + value + 's';\n  }\n  var msg = '';\n  if (!data.IsEnabled)\n    return '\uD83D\uDEAB';\n  msg = '✅ - ';\n  msg += partMsg('Users', data.Duration);\n  msg += ', ' + partMsg('Reg', data.DurationUsers);\n  msg += ', ' + partMsg('Editors', data.DurationEditors);\n  msg += ', ' + partMsg('SysAdmins', data.DurationSystemAdmin);\n  return msg;\n}"
+                    "en-us": "v1(data, context) {\n  var partMsg = function(target, value) {\n    if (value == -1) return target + ' \uD83D\uDEAB';\n    return target + ' ' + value + 's';\n  }\n  var msg = '';\n  if (!data.IsEnabled)\n    return '\uD83D\uDEAB';\n  msg = '✅ - ';\n  msg += partMsg('Users', data.Duration);\n  msg += ', ' + partMsg('Reg', data.DurationUsers);\n  msg += ', ' + partMsg('Editors', data.DurationEditors);\n  msg += ', ' + partMsg('SysAdmins', data.DurationSystemAdmin);\n  return msg;\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Value"
                   },
                   "Title": {
-                    "en-us": "Field.Value"
+                    "en-us": "Value"
                   }
                 },
                 "Boolean": {
@@ -7575,7 +7587,7 @@
             },
             {
               "Id": 143982,
-              "Version": 2,
+              "Version": 3,
               "Guid": "7faf0496-dc03-4e45-a1ae-e43629965344",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -7584,13 +7596,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v1 (data, context) {\n  const empty = 'empty';\n  const len = 30;\n  // Remove HTML in note\n  const noHtml = data.Note.replace(/<\\/?[^>]+(>|$)/g, ' ');\n  if (!noHtml || noHtml == ' ') return empty;\n\n  // remove html things like &nbsp;\n  const converterTextArea = context.cache.converter \n    || document.createElement(\"textarea\");\n  converterTextArea.innerHTML = noHtml;\n  const cleanText = converterTextArea.value;\n\n  // Trim multiple spaces, created by multiple tags\n  var final = cleanText.replace(/\\s+/g, ' ').trim();\n\n  if (!final) return empty;\n\n  if (final.length > len) final = final.substring(0, len) + \"...\"\n  return final || empty;\n}"
+                    "en-us": "v1(data, context) {\n  const empty = 'empty';\n  const len = 30;\n  // Remove HTML in note\n  const noHtml = data.Note.replace(/<\\/?[^>]+(>|$)/g, ' ');\n  if (!noHtml || noHtml == ' ') return empty;\n\n  // remove html things like &nbsp;\n  const converterTextArea = context.cache.converter \n    || document.createElement(\"textarea\");\n  converterTextArea.innerHTML = noHtml;\n  const cleanText = converterTextArea.value;\n\n  // Trim multiple spaces, created by multiple tags\n  var final = cleanText.replace(/\\s+/g, ' ').trim();\n\n  if (!final) return empty;\n\n  if (final.length > len) final = final.substring(0, len) + \"...\"\n  return final || empty;\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Value"
                   },
                   "Title": {
-                    "en-us": "Field.Value"
+                    "en-us": "Value"
                   }
                 },
                 "Boolean": {

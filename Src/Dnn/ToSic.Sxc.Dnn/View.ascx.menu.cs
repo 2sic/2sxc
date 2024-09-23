@@ -23,14 +23,14 @@ partial class View
 
             // Don't offer options if it's from another portal
             if (ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID)
-                _moduleActions = new ModuleActionCollection();
+                _moduleActions = [];
 
             return _moduleActions = InitModuleActions();
         }
         catch (Exception e)
         {
             Exceptions.LogException(e);
-            return new ModuleActionCollection();
+            return [];
         }
     });
 

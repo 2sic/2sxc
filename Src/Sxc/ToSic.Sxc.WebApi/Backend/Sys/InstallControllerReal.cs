@@ -28,13 +28,12 @@ public class InstallControllerReal(
     IResponseMaker responseMaker,
     LazySvc<IFeaturesService> featureService,
     LazySvc<AppsBackend> appsBackend,
-    LazySvc<IAppStates> appStates,
     LazySvc<AppDataStackService> appSettingsStack)
     : ServiceBase($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl",
         connect:
         [
             context, envInstallerLazy, platformAppInstaller, impFromRemoteLazy, responseMaker, featureService,
-            appStates, appSettingsStack, appsBackend
+            appSettingsStack, appsBackend
         ])
 {
     public const string LogSuffix = "Install";
@@ -69,8 +68,9 @@ public class InstallControllerReal(
             .ToList();
 
         // Get list of allow/forbid rules for the App installer
-        var primaryApp = appStates.Value.GetPrimaryReader(site.ZoneId, Log);
-        var settingsSources = appSettingsStack.Value.Init(primaryApp).GetStack(AppStackConstants.Settings);
+        var settingsSources = appSettingsStack.Value
+            .InitForPrimaryAppOfZone(site.ZoneId)
+            .GetStack(AppStackConstants.Settings);
         var stack = new PropertyStack().Init(AppStackConstants.RootNameSettings, settingsSources);
 
         var rules = stack.InternalGetPath(new PropReqSpecs("SiteSetup.AutoInstallApps", PropReqSpecs.EmptyDimensions, true, Log), null);

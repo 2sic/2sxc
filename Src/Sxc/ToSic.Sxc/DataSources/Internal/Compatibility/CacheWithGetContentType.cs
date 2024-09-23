@@ -1,5 +1,5 @@
 ﻿#if NETFRAMEWORK
-using ToSic.Eav.Apps.Services;
+using ToSic.Eav.Apps;
 
 namespace ToSic.Sxc.DataSources.Internal.Compatibility;
 
@@ -7,9 +7,9 @@ namespace ToSic.Sxc.DataSources.Internal.Compatibility;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class CacheWithGetContentType
 {
-    private readonly IAppContentTypeService _app;
+    private readonly IAppReadContentTypes _app;
 
-    internal CacheWithGetContentType(IAppContentTypeService app)
+    internal CacheWithGetContentType(IAppReadContentTypes app)
     {
         _app = app;
     }

@@ -22,7 +22,7 @@ partial class SxcContextResolver
 
 
         // If the app in the request matches the app in the context, everything is fine
-        if (appId == moduleCtx.AppState?.AppId) return moduleCtx;
+        if (appId == moduleCtx.AppReader?.AppId) return moduleCtx;
         
         // If the app in the request doesn't match the app in the context
         // Set the app in the context to the real one to be sure about security check

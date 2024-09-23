@@ -11,8 +11,8 @@ namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy)
-    : ServiceForDynamicCode($"{SxcLogName}.LnkHlp", connect: [linkPathsLazy, imgLinker]), ILinkService
+public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy, object[] connect = default)
+    : ServiceForDynamicCode($"{SxcLogName}.LnkHlp", connect: [..connect ?? [], linkPathsLazy, imgLinker]), ILinkService
 {
     [PrivateApi]
     protected ILinkPaths LinkPaths => linkPathsLazy.Value;

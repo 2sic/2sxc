@@ -8,7 +8,9 @@
 /// <param name="original"></param>
 /// <param name="fieldInfo"></param>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class ListTypedItems<TTypedItem>(IEnumerable<TTypedItem> original, IEntity fieldInfo) : List<TTypedItem>(original), ICanBeEntity
+internal class ListTypedItems<TTypedItem>(IEnumerable<TTypedItem> original, IEntity fieldInfo)
+    : List<TTypedItem>(original), ICanBeEntity
+    where TTypedItem : class
 {
-    public IEntity Entity { get; } = fieldInfo;
+    public IEntity Entity { get; } = fieldInfo ?? (original?.FirstOrDefault() as ICanBeEntity)?.Entity;
 }

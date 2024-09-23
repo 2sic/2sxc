@@ -10,10 +10,10 @@ using ToSic.Sxc.Integration.Installation;
 namespace ToSic.Sxc.Dnn.Install;
 
 internal class DnnPlatformAppInstaller(
-    LazySvc<IAppStates> appStatesLazy,
+    LazySvc<IAppsCatalog> appsCatalog,
     GenWorkPlus<WorkViews> workViews,
     LazySvc<RemoteRouterLink> remoteRouterLazy)
-    : ServiceBase("Dnn.AppIns", connect: [workViews, appStatesLazy, remoteRouterLazy]), IPlatformAppInstaller
+    : ServiceBase("Dnn.AppIns", connect: [workViews, appsCatalog, remoteRouterLazy]), IPlatformAppInstaller
 {
     public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp)
     {
@@ -30,7 +30,7 @@ internal class DnnPlatformAppInstaller(
         if (forContentApp)
             try
             {
-                var primaryAppId = appStatesLazy.Value.IdentityOfDefault(site.ZoneId);
+                var primaryAppId = appsCatalog.Value.DefaultAppIdentity(site.ZoneId);
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                 var contentViews = workViews.New(primaryAppId).GetAll();
                 if (contentViews.Any()) return null;
@@ -44,7 +44,7 @@ internal class DnnPlatformAppInstaller(
             RemoteDestinations.AutoConfigure,
             site,
             module.Id,
-            app: null,
+            appSpecsOrNull: null,
             forContentApp);
 
         // Set src to iframe

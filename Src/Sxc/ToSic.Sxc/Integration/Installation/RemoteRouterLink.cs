@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Integration.Installation;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class RemoteRouterLink(SystemFingerprint fingerprint, IPlatformInfo platformInfo)
 {
-    public string LinkToRemoteRouter(RemoteDestinations destination, ISite site, int moduleId, IAppSpecs app, bool isContentApp)
+    public string LinkToRemoteRouter(RemoteDestinations destination, ISite site, int moduleId, IAppSpecs appSpecsOrNull, bool isContentApp)
     {
         var destinationPart = "";
         if (destination == RemoteDestinations.AutoConfigure)
@@ -35,12 +35,12 @@ public class RemoteRouterLink(SystemFingerprint fingerprint, IPlatformInfo platf
                    + "&SysGuid=" + platformInfo.Identity
             ;
 
-        link += "&AppId=" + (isContentApp ? "Default" : app?.NameId ?? "");
+        link += "&AppId=" + (isContentApp ? "Default" : appSpecsOrNull?.NameId ?? "");
             
         // Add AppStaticName and Version if _not_ the primary content-app
-        if (app?.Configuration != null)
-            link += $"&AppVersion={app.Configuration.Version}"
-                    + $"&AppOriginalId={app.Configuration.OriginalId}";
+        if (appSpecsOrNull?.Configuration != null)
+            link += $"&AppVersion={appSpecsOrNull.Configuration.Version}"
+                    + $"&AppOriginalId={appSpecsOrNull.Configuration.OriginalId}";
 
         link += "&fp=" + System.Net.WebUtility.UrlEncode(fingerprint.GetFingerprint())?.ToLowerInvariant();
         return link;

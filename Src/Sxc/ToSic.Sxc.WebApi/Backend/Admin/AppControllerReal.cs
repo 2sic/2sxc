@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.DataSources.Sys.Internal;
+using ToSic.Eav.ImportExport.Internal;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.ImportExport;
@@ -33,7 +34,7 @@ public class AppControllerReal(
     LazySvc<ResetApp> resetAppLazy,
     LazySvc<AppCachePurger> systemManagerLazy,
     LazySvc<LanguagesBackend> languagesBackendLazy,
-    LazySvc<IAppStates> appStatesLazy,
+    LazySvc<IAppReaderFactory> appReadersLazy,
     LazySvc<AppStackBackend> appStackBackendLazy,
     LazySvc<IJsonService> json,
     IGlobalConfiguration globalConfiguration)
@@ -41,7 +42,7 @@ public class AppControllerReal(
         connect:
         [
             appsBackendLazy, workAppsRemove, exportAppLazy, importAppLazy, appBuilderLazy, resetAppLazy,
-            systemManagerLazy, languagesBackendLazy, appStatesLazy, appStackBackendLazy, json, globalConfiguration
+            systemManagerLazy, languagesBackendLazy, appReadersLazy, appStackBackendLazy, json, globalConfiguration
         ])
 {
     public const string LogSuffix = "AppCon";
@@ -53,7 +54,7 @@ public class AppControllerReal(
     public List<AppDto> InheritableApps() => appsBackendLazy.Value.GetInheritableApps();
 
     public void App(int zoneId, int appId, bool fullDelete = true)
-        => workAppsRemove.Value /*_cmsZonesLazy.Value.SetId(zoneId).AppsMan*/.RemoveAppInSiteAndEav(zoneId, appId, fullDelete);
+        => workAppsRemove.Value.RemoveAppInSiteAndEav(zoneId, appId, fullDelete);
 
     public void App(int zoneId, string name, int? inheritAppId = null, int templateId = 0)
     {
@@ -64,7 +65,8 @@ public class AppControllerReal(
             l.A("create default new app without template");
             appBuilderLazy.Value.Init(zoneId).Create(name, null, inheritAppId);
             l.Done("ok");
-            return; // Exit here, because we created the app without template
+            // Exit here, because we created the app without template
+            return;
         }
 
         l.A($"find template app zip path for {nameof(templateId)}:{templateId}");
@@ -100,7 +102,7 @@ public class AppControllerReal(
     }
 
     public List<SiteLanguageDto> Languages(int appId)
-        => languagesBackendLazy.Value.GetLanguagesOfApp(appStatesLazy.Value.GetReader(appId), true);
+        => languagesBackendLazy.Value.GetLanguagesOfApp(appReadersLazy.Value.Get(appId), true);
 
     public AppExportInfoDto Statistics(int zoneId, int appId) => exportAppLazy.Value.GetAppInfo(zoneId, appId);
 
@@ -111,14 +113,14 @@ public class AppControllerReal(
         return l.ReturnTrue("ok");
     }
 
-    public THttpResponseType Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
-        => exportAppLazy.Value.Export(zoneId, appId, includeContentGroups, resetAppGuid) as THttpResponseType;
+    public THttpResponseType Export(AppExportSpecs specs)
+        => exportAppLazy.Value.Export(specs) as THttpResponseType;
 
-    public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withPortalFiles)
-        => exportAppLazy.Value.SaveDataForVersionControl(zoneId, appId, includeContentGroups, resetAppGuid, withPortalFiles);
+    public bool SaveData(AppExportSpecs specs)
+        => exportAppLazy.Value.SaveDataForVersionControl(specs);
 
     public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
-        => appStackBackendLazy.Value.GetAll(appId, part ?? AppStackConstants.RootNameSettings, key, view); //, null);
+        => appStackBackendLazy.Value.GetAll(appId, part ?? AppStackConstants.RootNameSettings, key, view);
 
     public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage, bool withPortalFiles)
         => resetAppLazy.Value.Reset(zoneId, appId, defaultLanguage, withPortalFiles);

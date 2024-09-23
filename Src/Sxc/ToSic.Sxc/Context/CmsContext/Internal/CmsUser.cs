@@ -5,7 +5,7 @@ using ToSic.Eav.Metadata;
 namespace ToSic.Sxc.Context.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class CmsUser(CmsContext parent, IMetadataOfSource appState)
+internal class CmsUser(CmsContext parent, IMetadataOfSource appReader)
     : CmsContextPartBase<IUser>(parent, parent.CtxSite.User), ICmsUser
 {
     public string Email => IsAnonymous ? "" : GetContents().Email;
@@ -24,7 +24,7 @@ internal class CmsUser(CmsContext parent, IMetadataOfSource appState)
     public bool IsAnonymous => GetContents().IsAnonymous;
 
     protected override IMetadataOf GetMetadataOf() 
-        => ExtendWithRecommendations(appState.GetMetadataOf(TargetTypes.User, Id, "User (" + Id + ")"));
+        => ExtendWithRecommendations(appReader.GetMetadataOf(TargetTypes.User, Id, title: "User (" + Id + ")"));
 
     public string Name => IsAnonymous ? "" : GetContents().Name;
     public string Username => IsAnonymous ? "" : GetContents().Username;

@@ -16,9 +16,9 @@ internal class AppDataTyped(
 {
     #region Content Types - explicit implementation to ensure it's only available in Typed APIs
 
-    IEnumerable<IContentType> IAppDataTyped.GetContentTypes() => AppState.ContentTypes;
+    IEnumerable<IContentType> IAppDataTyped.GetContentTypes() => AppReader.ContentTypes;
 
-    IContentType IAppDataTyped.GetContentType(string name) => AppState.GetContentType(name);
+    IContentType IAppDataTyped.GetContentType(string name) => AppReader.GetContentType(name);
 
     #endregion
 

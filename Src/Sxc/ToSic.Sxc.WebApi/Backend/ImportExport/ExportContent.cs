@@ -3,6 +3,7 @@ using THttpResponseType = System.Net.Http.HttpResponseMessage;
 #else
 using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 #endif
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.ImportExport.Internal;
 using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.Infrastructure;
@@ -74,10 +75,10 @@ public class ExportContent(
 
         var currentApp = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, user, site.ZoneId);
 
-        var fileName = $"2sxcContentExport_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}.xml";
-        var fileXml = xmlExporter.Init(zoneId, appId, currentApp, false,
-            contentTypeIdsString?.Split(';') ?? Array.Empty<string>(),
-            entityIdsString?.Split(';') ?? Array.Empty<string>()
+        var fileName = $"2sxcContentExport_{currentApp.Specs.ToFileNameWithVersion()}.xml";
+        var fileXml = xmlExporter.Init(new AppExportSpecs(zoneId, appId), currentApp, false,
+            contentTypeIdsString?.Split(';') ?? [],
+            entityIdsString?.Split(';') ?? []
         ).GenerateNiceXml();
 
         var result = responseMaker.File(fileXml, fileName, "text/xml");

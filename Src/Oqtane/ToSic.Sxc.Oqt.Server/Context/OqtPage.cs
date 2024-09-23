@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Oqtane.Models;
+﻿using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using ToSic.Eav.Helpers;
@@ -8,7 +7,7 @@ using ToSic.Lib.DI;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Integration.Paths;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Web.Internal.DotNet;
 using ToSic.Sxc.Web.Internal.Url;
 using ToSic.Sxc.Web.Parameters;
@@ -19,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.Context;
 internal class OqtPage(
     LazySvc<IHttp> httpBlazor,
     SiteState siteState,
-    LazySvc<IAliasRepository> aliasRepository,
+    LazySvc<AliasResolver> aliasResolver,
     LazySvc<IPageRepository> pages,
     LazySvc<ILinkPaths> linkPathsLazy)
     : Page(httpBlazor), IWrapper<Oqtane.Models.Page>
@@ -52,7 +51,7 @@ internal class OqtPage(
     {
         Alias ??= siteState.Alias;
         if (Alias != null && Alias.SiteId == siteId) return Alias;
-        Alias = aliasRepository.Value.GetAliases().OrderBy(a => a.Name).FirstOrDefault(a => a.SiteId == siteId); // best guess
+        if (aliasResolver.Value.InitIfEmpty(siteId)) Alias = aliasResolver.Value.Alias;
         return Alias;
     }
 

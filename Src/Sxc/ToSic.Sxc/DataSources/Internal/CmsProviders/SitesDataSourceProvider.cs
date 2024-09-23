@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Integration;
-using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 
@@ -15,22 +14,11 @@ namespace ToSic.Sxc.DataSources.Internal;
 public abstract class SitesDataSourceProvider(SitesDataSourceProvider.MyServices services, string logName)
     : ServiceBase<SitesDataSourceProvider.MyServices>(services, logName)
 {
-    public class MyServices : MyServicesBase
+    public class MyServices(LazySvc<IZoneMapper> zoneMapperLazy, IAppsCatalog appsCatalog)
+        : MyServicesBase(connect: [zoneMapperLazy, appsCatalog])
     {
-        public LazySvc<IZoneMapper> ZoneMapperLazy { get; }
-        public IAppStates AppStates { get; }
-
-        public MyServices(
-            LazySvc<IZoneMapper> zoneMapperLazy,
-            IAppStates appStates
-        )
-        {
-            ConnectLogs([
-                ZoneMapperLazy = zoneMapperLazy,
-                AppStates = appStates
-            ]);
-        }
-
+        public LazySvc<IZoneMapper> ZoneMapperLazy { get; } = zoneMapperLazy;
+        public IAppsCatalog AppsCatalog { get; } = appsCatalog;
     }
 
     /// <summary>
@@ -41,14 +29,13 @@ public abstract class SitesDataSourceProvider(SitesDataSourceProvider.MyServices
 
     public int GetZoneId(int siteId) => Services.ZoneMapperLazy.Value.GetZoneId(siteId);
 
-    public int GetDefaultAppId(int siteId) => Services.AppStates.DefaultAppId(GetZoneId(siteId));
+    public int GetDefaultAppId(int siteId) => Services.AppsCatalog.DefaultAppIdentity(GetZoneId(siteId)).AppId;
 
-    public int GetPrimaryAppId(int siteId) => Services.AppStates.PrimaryAppId(GetZoneId(siteId));
+    public int GetPrimaryAppId(int siteId) => Services.AppsCatalog.PrimaryAppIdentity(GetZoneId(siteId)).AppId;
 
     public string GetLanguages(int siteId)
     {
-        var languages = Services.AppStates
-            .Languages(GetZoneId(siteId), true);
+        var languages = Services.AppsCatalog.Zone(GetZoneId(siteId)).Languages;
         return string.Join(",", languages.Select(l => l.EnvironmentKey.ToLower()));
         //return Deps.AppStates
         //    .Languages(GetZoneId(siteId), true)

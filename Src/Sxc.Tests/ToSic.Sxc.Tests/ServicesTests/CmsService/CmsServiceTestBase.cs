@@ -28,8 +28,8 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
             eavSystemLoader.StartUp();
             eavSystemLoader.LoadLicenseAndFeatures();
 
-            var appStates = GetService<IAppStates>();
-            var app = appStates.GetPresetReader();
+            var appStates = GetService<IAppReaderFactory>();
+            var app = appStates.GetSystemPreset();
             TstDataContentType = app.GetContentType("TstData");
             if (TstDataContentType == null) throw new("TstData content type not found. Probably JSON is missing.");
             Cdf = GetService<CodeDataFactory>();

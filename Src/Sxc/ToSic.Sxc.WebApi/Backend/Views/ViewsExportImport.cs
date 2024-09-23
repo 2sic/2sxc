@@ -49,13 +49,13 @@ public class ViewsExportImport(
     {
         var logCall = Log.Fn<THttpResponseType>($"{appId}, {viewId}");
         SecurityHelpers.ThrowIfNotSiteAdmin(context.User, Log);
-        var app = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(context.Site.ZoneId, appId, context.User, context.Site.ZoneId);
+        var appReader = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(context.Site.ZoneId, appId, context.User, context.Site.ZoneId);
         var bundle = new BundleEntityWithAssets
         {
-            Entity = app.StateCache.List.One(viewId).IfOfType(Settings.TemplateContentType) // .Data[Eav.ImportExport.Settings.TemplateContentType].One(viewId)
+            Entity = appReader.List.One(viewId).IfOfType(Settings.TemplateContentType)
         };
 
-        var appPaths = appPathSvc.Init(context.Site, app);
+        var appPaths = appPathSvc.Get(appReader, context.Site);
 
         // Attach files
         var view = new View(bundle.Entity, [context.Site.CurrentCultureCode], Log, qDefBuilder);
@@ -71,7 +71,7 @@ public class ViewsExportImport(
             }
         }
 
-        var serializer = jsonSerializerLazy.Value.SetApp(app);
+        var serializer = jsonSerializerLazy.Value.SetApp(appReader);
         var serialized = serializer.Serialize(bundle, 0);
 
         return logCall.ReturnAsOk(responseMaker.File(serialized,
@@ -98,7 +98,7 @@ public class ViewsExportImport(
         {
             // 0.1 Check permissions, get the app, 
             var appRead = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(context.Site.ZoneId, appId, context.User, context.Site.ZoneId);
-            var appPaths = appPathSvc.Init(context.Site, appRead);
+            var appPaths = appPathSvc.Get(appRead, context.Site);
 
             // 0.2 Verify it's json etc.
             if (files.Any(file => !Json.IsValidJson(file.Contents)))

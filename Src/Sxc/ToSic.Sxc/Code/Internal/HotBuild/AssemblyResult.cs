@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using ToSic.Eav.Caching;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
@@ -27,7 +28,7 @@ public class AssemblyResult(
     /// The list of folders which must be watched for changes when using this assembly.
     /// ATM just used for AppCode assemblies, should maybe be in an inheriting class...
     /// </summary>
-    // WIP - should be more functional, this get/set is still hacky
+    // TODO: WIP - should be more functional, this get/set is still hacky
     public IDictionary<string, bool> WatcherFolders { get; internal set; }
 
     public Dictionary<string, string> Infos { get; } = infos ?? [];
@@ -36,6 +37,16 @@ public class AssemblyResult(
     /// True if an assembly was created without compile errors.
     /// </summary>
     public bool HasAssembly => Assembly != null;
+
+    /// <summary>
+    /// True if an assembly was not created and we get compile errors.
+    /// </summary>
+    public bool HasError => !HasAssembly && ErrorMessages.HasValue();
+
+    /// <summary>
+    /// True if there is a value, either an assembly or an error.
+    /// </summary>
+    public bool HasValue => HasAssembly || HasError;
 
     #region CacheDependency
 

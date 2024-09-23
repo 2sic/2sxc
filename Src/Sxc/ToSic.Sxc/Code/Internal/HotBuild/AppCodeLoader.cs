@@ -3,6 +3,7 @@ using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Caching;
+using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
@@ -14,12 +15,12 @@ namespace ToSic.Sxc.Code.Internal.HotBuild;
 public class AppCodeLoader(
     ILogStore logStore,
     ISite site,
-    IAppStates appStates,
+    IAppReaderFactory appReadFac,
     LazySvc<IAppPathsMicroSvc> appPathsLazy,
     LazySvc<AppCodeCompiler> appCompilerLazy,
     AssemblyCacheManager assemblyCacheManager)
     : ServiceBase("Sys.AppCodeLoad",
-        connect: [logStore, site, appStates, appPathsLazy, appCompilerLazy, assemblyCacheManager])
+        connect: [logStore, site, appReadFac, appPathsLazy, appCompilerLazy, assemblyCacheManager])
 {
     /// <summary>
     /// Try to get the app code - first of the edition, then of the root.
@@ -82,7 +83,7 @@ public class AppCodeLoader(
         // All OK (no errors) - return
         if (string.IsNullOrEmpty(assemblyResults?.ErrorMessages))
             return l.ReturnAsOk(assemblyResults);
-        
+
         // Problems - log and throw
         l.ReturnAsError(null, assemblyResults.ErrorMessages);
         throw new(assemblyResults.ErrorMessages);
@@ -110,21 +111,46 @@ public class AppCodeLoader(
                 return l.Return(result, "inside lock, start");
 
             // Get paths
-            var (physicalPath, relativePath) = GetAppPaths(Constants.AppCode, spec);
+            var (physicalPath, relativePath, physicalPathShared, relativePathShared) = GetAppPaths(Constants.AppCode, spec);
             logSummary.AddSpec("PhysicalPath", physicalPath);
             logSummary.AddSpec("RelativePath", relativePath);
+            logSummary.AddSpec("PhysicalPathShared", physicalPathShared);
+            logSummary.AddSpec("RelativePathShared", relativePathShared);
 
-            var assemblyResult = appCompilerLazy.Value.GetAppCode(relativePath, spec);
+            var appCodeInShared = false;
+            var assemblyResult = appCompilerLazy.Value.GetAppCode(relativePath, spec.WithoutSharedSuffix());
+            if (assemblyResult.HasValue)
+            {
+                l.A($"local AppCode folder exists: {physicalPath}");
+            }
+            else
+            {
+                assemblyResult = appCompilerLazy.Value.GetAppCode(relativePathShared, spec.WithSharedSuffix());
+                if (assemblyResult.HasValue)
+                {
+                    appCodeInShared = true;
+                    l.A($"shared AppCode folder exists: {physicalPathShared}");
+                }
+            }
 
             logSummary.UpdateSpecs(assemblyResult.Infos);
 
-            if (assemblyResult.ErrorMessages.HasValue())
+            if (assemblyResult.HasError)
                 return l.ReturnAsError(assemblyResult, assemblyResult.ErrorMessages);
 
-            assemblyResult.WatcherFolders = GetWatcherFolders(assemblyResult.HasAssembly, spec, physicalPath, Log);
+            #region WatchFolders
+            // for AppCode in local site path
+            assemblyResult.WatcherFolders = GetWatcherFolders(false, spec, physicalPath, Log);
+
+            // for AppCode in shared (global) path 
+            if (appCodeInShared)
+                foreach (var w in GetWatcherFolders(assemblyResult.HasAssembly, spec, physicalPathShared, Log))
+                    assemblyResult.WatcherFolders.Add(w.Key, w.Value);
+
             l.A("Folders to watch:");
             foreach (var watcherFolder in assemblyResult.WatcherFolders)
                 l.A($"- '{watcherFolder}'");
+            #endregion
 
             assemblyResult.CacheDependencyId = cacheKey; // used to create cache dependency with CacheEntryChangeMonitor 
 
@@ -195,22 +221,25 @@ public class AppCodeLoader(
             if (!Directory.Exists(folder)) return l2.ReturnFalse();
             folders.Add(folder, watchSubfolders);
             return l2.ReturnTrue();
-        }   
+        }
     }
 
-    private (string physicalPath, string relativePath) GetAppPaths(string folder, HotBuildSpec spec)
+    private (string physicalPath, string relativePath, string physicalPathShared, string relativePathShared) GetAppPaths(string folder, HotBuildSpec spec)
     {
-        var l = Log.Fn<(string physicalPath, string relativePath)>($"{nameof(folder)}: '{folder}'; {spec}");
+        var l = Log.Fn<(string physicalPath, string relativePath, string physicalPathShared, string relativePathShared)>($"{nameof(folder)}: '{folder}'; {spec}");
         l.A($"site id: {site.Id}, ...: {site.AppsRootPhysicalFull}");
-        var appPaths = appPathsLazy.Value.Init(site, appStates.GetReader(spec.AppId));
-        var folderWithEdition = folder.HasValue() 
+        var appPaths = appPathsLazy.Value.Get(appReadFac.Get(spec.AppId), site);
+        var folderWithEdition = folder.HasValue()
             ? spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder
             : spec.Edition;
         var physicalPath = Path.Combine(appPaths.PhysicalPath, folderWithEdition);
         //l.A($"{nameof(physicalPath)}: '{physicalPath}'");
         var relativePath = Path.Combine(appPaths.RelativePath, folderWithEdition);
         //l.A($"{nameof(relativePath)}: '{relativePath}'");
-        return l.ReturnAsOk((physicalPath, relativePath));
+        var physicalPathShared = Path.Combine(appPaths.PhysicalPathShared.Backslash(), folderWithEdition);
+        //l.A($"{nameof(physicalPath)}: '{physicalPath}'");
+        var relativePathShared = Path.Combine(appPaths.RelativePathShared.Backslash(), folderWithEdition);
+        return l.ReturnAsOk((physicalPath, relativePath, physicalPathShared, relativePathShared));
     }
 
 }

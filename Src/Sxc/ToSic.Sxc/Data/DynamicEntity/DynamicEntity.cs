@@ -3,6 +3,7 @@ using ToSic.Eav.Metadata;
 using ToSic.Razor.Blade;
 using IEntity = ToSic.Eav.Data.IEntity;
 using System.Dynamic;
+using ToSic.Eav.Apps;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
@@ -174,10 +175,10 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     public bool IsPublished => Entity?.IsPublished ?? true;
 
     /// <inheritdoc />
-    public dynamic GetDraft() => SubDataFactory.SubDynEntityOrNull(Entity == null ? null : Cdf.BlockOrNull?.App.AppState?.GetDraft(Entity));
+    public dynamic GetDraft() => SubDataFactory.SubDynEntityOrNull(Entity == null ? null : (Cdf.BlockOrNull?.App as IAppWithInternal)?.AppReader?.GetDraft(Entity));
 
     /// <inheritdoc />
-    public dynamic GetPublished() => SubDataFactory.SubDynEntityOrNull(Entity == null ? null : Cdf.BlockOrNull?.App.AppState?.GetPublished(Entity));
+    public dynamic GetPublished() => SubDataFactory.SubDynEntityOrNull(Entity == null ? null : (Cdf.BlockOrNull?.App as IAppWithInternal)?.AppReader?.GetPublished(Entity));
 
     #endregion
 

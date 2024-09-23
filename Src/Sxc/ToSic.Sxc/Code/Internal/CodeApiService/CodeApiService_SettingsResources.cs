@@ -19,7 +19,7 @@ public partial class CodeApiService
     public ITypedStack AllResources => _allRes.Get(() => Cdf.AsTypedStack(RootNameResources, ResSrc));
     private readonly GetOnce<ITypedStack> _allRes= new();
 
-    private AppDataStackService AppSS => _appSetStackService ??= Services.DataStackService.Init(App.AppState);
+    private AppDataStackService AppSS => _appSetStackService ??= Services.DataStackService.Init(((IAppWithInternal)App).AppReader);
     private AppDataStackService _appSetStackService;
 
     private SettingsSources ResSrc => _resSrc.Get(() => AppSS.GetStack(AppStackConstants.Resources, _Block?.View?.Resources));

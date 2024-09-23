@@ -19,18 +19,18 @@ internal class CmsContext(
     IPlatform platform,
     IContextOfSite initialContext,
     LazySvc<IPage> pageLazy,
-    IAppStates appStates,
+    IAppReaderFactory appReaders,
     LazySvc<ICmsSite> cmsSiteLazy)
     : ServiceForDynamicCode(SxcLogName + ".CmsCtx",
-        connect: [initialContext, pageLazy, appStates, cmsSiteLazy, platform]), ICmsContext
+        connect: [initialContext, pageLazy, appReaders, cmsSiteLazy, platform]), ICmsContext
 {
     #region Constructor
 
     internal IContextOfSite CtxSite => _ctxSite.Get(() => CtxBlockOrNull ?? initialContext);
     private readonly GetOnce<IContextOfSite> _ctxSite = new();
 
-    private IAppStateInternal SiteAppState => _siteAppState ??= appStates.GetPrimaryReader(CtxSite.Site.ZoneId, Log);
-    private IAppStateInternal _siteAppState;
+    private IAppReader SiteAppState => _siteAppState ??= appReaders.GetZonePrimary(CtxSite.Site.ZoneId);
+    private IAppReader _siteAppState;
 
     // Note: Internal so it can be used for View<T, T>
     internal IBlock RealBlockOrNull => _realBlock.Get(() => ((ICodeApiServiceInternal)_CodeApiSvc)?._Block);
@@ -46,7 +46,7 @@ internal class CmsContext(
     public ICmsSite Site => _site.Get(() => ((CmsSite)cmsSiteLazy.Value).Init(this, SiteAppState));
     private readonly GetOnce<ICmsSite> _site = new();
 
-    public ICmsPage Page => _page ??= new CmsPage(this, SiteAppState, pageLazy);
+    public ICmsPage Page => _page ??= new CmsPage(this, SiteAppState.Metadata, pageLazy);
     private ICmsPage _page;
 
     public ICmsCulture Culture => _culture ??= new CmsCulture(this);
@@ -55,7 +55,7 @@ internal class CmsContext(
     public ICmsModule Module => _cmsModule ??= new CmsModule(this, RealBlockOrNull.Context?.Module ?? new ModuleUnknown(null), RealBlockOrNull);
     private ICmsModule _cmsModule;
 
-    public ICmsUser User => _user ??= new CmsUser(this, SiteAppState);
+    public ICmsUser User => _user ??= new CmsUser(this, SiteAppState.Metadata);
     private ICmsUser _user;
 
     public ICmsView View => _view ??= new CmsView(this, RealBlockOrNull);

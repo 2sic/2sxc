@@ -17,4 +17,6 @@ internal class OqtDebugStateService(IHttpContextAccessor httpContextAccessor) : 
     }
 
     private const string DebugKey = "2sxcDebug";
+
+    public string Platform => "Server";
 }

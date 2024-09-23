@@ -199,7 +199,7 @@ internal class SearchController(
     {
         DnnEnvironmentLogger.AddSearchExceptionToLog(modInfo, e, nameof(SearchController));
         Log.Ex(e);
-        return new();
+        return [];
     }
         
         
@@ -236,7 +236,7 @@ internal class SearchController(
         foreach (var stream in streamsToIndex)
         {
             var entities = stream.Value.List.ToImmutableList();
-            var searchInfoList = searchInfoDictionary[stream.Key] = new();
+            var searchInfoList = searchInfoDictionary[stream.Key] = [];
 
             searchInfoList.AddRange(entities.Select(entity =>
             {
@@ -318,7 +318,7 @@ internal class SearchController(
         var l = Log.Fn<ICustomizeSearch>();
         // 1. Get and compile the view.ViewController
         var path = Path
-            .Combine(Block.View.IsShared ? site.SharedAppsRootRelative() : site.AppsRootPhysical, block.Context.AppState.Folder)
+            .Combine(Block.View.IsShared ? site.SharedAppsRootRelative() : site.AppsRootPhysical, block.Context.AppReader.Specs.Folder)
             .ForwardSlash();
         l.A($"compile ViewController class on path: {path}/{Block.View.ViewController}");
         var spec = new HotBuildSpec(block.AppId, _edition, block.App?.Name);

@@ -1,8 +1,8 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.MetadataDecorators;
 using ToSic.Eav.Apps.Internal.Ui;
-using ToSic.Eav.Apps.State;
 using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Plumbing;
@@ -12,8 +12,8 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Apps.Internal.Work;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class WorkApps(IAppStates appStates, Generator<IAppPathsMicroSvc> appPathsGen, LazySvc<GlobalPaths> globalPaths)
-    : ServiceBase("Cms.AppsRt", connect: [appStates, appPathsGen, globalPaths])
+public class WorkApps(IAppStateCacheService appStates, IAppReaderFactory appReaders, Generator<IAppPathsMicroSvc> appPathsGen, LazySvc<GlobalPaths> globalPaths, IAppsCatalog appsCatalog)
+    : ServiceBase("Cms.AppsRt", connect: [appStates, appReaders, appPathsGen, globalPaths, appsCatalog])
 {
 
     public IList<AppUiInfo> GetSelectableApps(ISite site, string filter)
@@ -21,22 +21,27 @@ public class WorkApps(IAppStates appStates, Generator<IAppPathsMicroSvc> appPath
         var l = Log.Fn<List<AppUiInfo>>($"filter:{filter}");
         var list =
             GetApps(site)
-                .Where(a => a.Name != Eav.Constants.ContentAppName 
-                            && a.Name != Eav.Constants.ErrorAppName // "Error" it is a name of empty Content app (before content templates are installed)
-                            && a.Name != Eav.Constants.PrimaryAppName 
-                            && a.Name != Eav.Constants.PrimaryAppGuid) // #SiteApp v13
-                .Where(a => !a.Configuration.IsHidden)
-        .Select(a =>
-        {
-                    var paths = appPathsGen.New().Init(site, a);
-                    var thumbnail = AppAssetThumbnail.GetUrl(a, paths, globalPaths);
+                .Where(reader =>
+                {
+                    var name = reader.Specs.Name;
+                    return name != Eav.Constants.ContentAppName
+                           && name != Eav.Constants.ErrorAppName // "Error" it is a name of empty Content app (before content templates are installed)
+                           && name != Eav.Constants.PrimaryAppName
+                           && name != Eav.Constants.PrimaryAppGuid;
+                }) // #SiteApp v13
+                .Where(reader => !reader.Specs.Configuration.IsHidden)
+                .Select(reader =>
+                {
+                    var paths = appPathsGen.New().Get(reader, site);
+                    var thumbnail = AppAssetThumbnail.GetUrl(reader, paths, globalPaths);
+                    var specs = reader.Specs;
                     return new AppUiInfo
                     {
-                        Name = a.Name,
-                        AppId = a.AppId,
-                        SupportsAjaxReload = a.Configuration?.EnableAjax ?? false,
-                        Thumbnail = thumbnail, // a.Thumbnail,
-                        Version = a.Configuration?.Version?.ToString() ?? ""
+                        Name = specs.Name,
+                        AppId = specs.AppId,
+                        SupportsAjaxReload = specs.Configuration?.EnableAjax ?? false,
+                        Thumbnail = thumbnail,
+                        Version = specs.Configuration?.Version?.ToString() ?? ""
                     };
                 })
                 .ToList();
@@ -55,42 +60,31 @@ public class WorkApps(IAppStates appStates, Generator<IAppPathsMicroSvc> appPath
     /// Returns all Apps for the current zone
     /// </summary>
     /// <returns></returns>
-    public List<IAppStateInternal> GetApps(ISite site)
+    public List<IAppReader> GetApps(ISite site)
     {
         // todo: unclear if this is the right way to do this - probably the ZoneId should come from the site?
         var zId = site.ZoneId;
-        var appIds = appStates.Apps(zId);
+        var appIds = appsCatalog.Apps(zId);
 
         return appIds
-            .Select(a =>
-            {
-                var appIdentity = new AppIdentityPure(zId, a.Key);
-                return appStates.GetReader(appIdentity);
-            })
-            .OrderBy(a => a.Name)
+            .Select(a => appReaders.Get(new AppIdentityPure(zId, a.Key)))
+            .OrderBy(a => a.Specs.Name)
             .ToList();
-
-        //return appIds
-        //    .Select(a => _appGenerator.New()
-        //        .PreInit(site)
-        //        .Init(new AppIdentityPure(zId, a.Key), buildConfig) as IApp)
-        //    .OrderBy(a => a.Name)
-        //    .ToList();
     }
 
     /// <summary>
     /// Returns all Apps for the current zone
     /// </summary>
     /// <returns></returns>
-    public List<IAppStateInternal> GetInheritableApps(ISite site)
+    public List<IAppReader> GetInheritableApps(ISite site)
     {
         // Get existing apps, as we should not list inheritable apps which are already inherited
-        var siteApps = appStates.Apps(site.ZoneId)
-            .Select(a => appStates.GetReader(a.Key).Folder)
+        var siteApps = appsCatalog.Apps(site.ZoneId)
+            // TODO: #AppStates we could only get the specs here...
+            .Select(a => appReaders.Get(a.Key).Specs.Folder)
             .ToList();
 
-        var zones = appStates.Zones;
-        var appStateWithCacheInfo = appStates;
+        var zones = appsCatalog.Zones;
         var result = zones
             // Skip all global apps on the current site, as they shouldn't be inheritable
             .Where(z => z.Key != site.ZoneId)
@@ -98,24 +92,26 @@ public class WorkApps(IAppStates appStates, Generator<IAppPathsMicroSvc> appPath
             {
                 // todo: probably the ZoneId should come from the site?
                 var zId = zSet.Key;
-                var appIds = appStates.Apps(zId);
+                var appIds = appsCatalog.Apps(zId);
 
                 return appIds
                     //.Select(a => new AppIdentityPure(zId, a.Key))
                     .Select(a =>
                     {
                         var appIdentity = new AppIdentityPure(zId, a.Key);
-                        return appStateWithCacheInfo.IsCached(appIdentity) ? appStates.GetReader(appIdentity) : null;
+                        return appStates.IsCached(appIdentity)
+                            ? appReaders.Get(appIdentity)
+                            : null;
                     })
-                    .Where(state =>
+                    .Where(reader =>
                     {
-                        if (state == null) return false;
+                        if (reader == null) return false;
                         // if (!appStateWithCacheInfo.IsCached(aId)) return false;
                         //var appState = _appStates.GetReader(aId);
-                        return state?.IsShared() == true && !siteApps.Any(sa => sa.Equals(state.Folder, StringComparison.InvariantCultureIgnoreCase));
+                        return reader?.IsShared() == true && !siteApps.Any(sa => sa.Equals(reader.Specs.Folder, StringComparison.InvariantCultureIgnoreCase));
                     })
                     //.Select(a => _appGenerator.New().PreInit(site).Init(a, buildConfig) as IApp)
-                    .OrderBy(a => a.Name)
+                    .OrderBy(a => a.Specs.Name)
                     .ToList();
             })
             .ToList();

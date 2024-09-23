@@ -9,26 +9,13 @@ using ToSic.Sxc.Dnn.Context;
 
 namespace ToSic.Sxc.Dnn.Run;
 
-internal class DnnZoneMapper : ZoneMapperBase
+internal class DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCreatorLazy, IAppsCatalog appsCatalog)
+    : ZoneMapperBase(appsCatalog, "DNN.ZoneMp", connect: [site, zoneCreatorLazy])
 {
-
-
     /// <summary>
     /// This is the name of the setting in the PortalSettings pointing to the zone of this portal
     /// </summary>
     private const string PortalSettingZoneId = "ToSIC_SexyContent_ZoneID";
-
-    /// <inheritdoc />
-    public DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCreatorLazy, IAppStates appStates) : base(appStates, "DNN.ZoneMp")
-    {
-        ConnectLogs([
-            _site = site,
-            _zoneCreatorLazy = zoneCreatorLazy
-        ]);
-    }
-    private readonly LazySvc<ZoneCreator> _zoneCreatorLazy;
-    private readonly Generator<ISite> _site;
-
 
     /// <inheritdoc />
     /// <summary>
@@ -48,10 +35,10 @@ internal class DnnZoneMapper : ZoneMapperBase
         var c = PortalController.Instance.GetPortalSettings(siteId);
 
         // Create new zone automatically
-        if (c.ContainsKey(PortalSettingZoneId)) return int.Parse(c[PortalSettingZoneId]);
+        if (c.TryGetValue(PortalSettingZoneId, out var value)) return int.Parse(value);
 
         var portalSettings = new PortalSettings(siteId);
-        var zoneId = _zoneCreatorLazy.Value.Create(portalSettings.PortalName + " (Portal " + siteId + ")");
+        var zoneId = zoneCreatorLazy.Value.Create(portalSettings.PortalName + " (Portal " + siteId + ")");
         PortalController.UpdatePortalSetting(siteId, PortalSettingZoneId, zoneId.ToString());
         return zoneId;
 
@@ -63,7 +50,9 @@ internal class DnnZoneMapper : ZoneMapperBase
         var portalController = PortalController.Instance;
         var portals = portalController.GetPortals();
         l.A($"Sites/Portals Count: {portals.Count}");
-        var found = portals.Cast<PortalInfo>().Select(p =>
+        var found = portals
+            .Cast<PortalInfo>()
+            .Select(p =>
             {
                 var pSettings = portalController.GetPortalSettings(p.PortalID);
                 if (!pSettings.TryGetValue(PortalSettingZoneId, out var portalZoneId)) return null;
@@ -74,15 +63,16 @@ internal class DnnZoneMapper : ZoneMapperBase
 
         return found == null
             ? l.Return(null, "not found")
-            : l.Return(((DnnSite)_site.New()).TryInitPortal(found, Log), $"found {found.PortalId}");
+            : l.Return(((DnnSite)site.New()).TryInitPortal(found, Log), $"found {found.PortalId}");
     }
 
     /// <inheritdoc />
     public override List<ISiteLanguageState> CulturesWithState(ISite site)
     {
-        if (_supportedCultures != null) return _supportedCultures;
+        if (_supportedCultures != null)
+            return _supportedCultures;
 
-        var availableEavLanguages = AppStates.Languages(site.ZoneId, true);
+        var availableEavLanguages = AppsCatalog.Zone(site.ZoneId).Languages;
         var defaultLanguageCode = site.DefaultCultureCode;
 
         return _supportedCultures = LocaleController.Instance.GetLocales(site.Id)

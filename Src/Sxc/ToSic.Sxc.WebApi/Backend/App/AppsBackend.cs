@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.MetadataDecorators;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.Code.InfoSystem;
@@ -30,34 +31,34 @@ public class AppsBackend(
         return list.Select(CreateAppDto).ToList();
     }
 
-    private AppDto CreateAppDto(IAppStateInternal state)
+    private AppDto CreateAppDto(IAppReader appReader)
     {
         AppMetadataDto lightspeed = null;
-        var lightSpeedDeco = LightSpeedDecorator.GetFromAppStatePiggyBack(state.StateCache, Log);
+        var lightSpeedDeco = LightSpeedDecorator.GetFromAppStatePiggyBack(appReader, Log);
         if (lightSpeedDeco.Entity != null)
             lightspeed = new () { Id = lightSpeedDeco.Id, Title = lightSpeedDeco.Title, IsEnabled = lightSpeedDeco.IsEnabled };
 
-        var paths = appPathsGen.New().Init(context.Site, state);
-        var thumbnail = AppAssetThumbnail.GetUrl(state, paths, globalPaths);
-
+        var paths = appPathsGen.New().Get(appReader, context.Site);
+        var thumbnail = AppAssetThumbnail.GetUrl(appReader, paths, globalPaths);
+        var specs = appReader.Specs;
         return new ()
         {
-            Id = state.AppId,
-            IsApp = state.NameId != Eav.Constants.DefaultAppGuid &&
-                    state.NameId != Eav.Constants.PrimaryAppGuid, // #SiteApp v13
-            Guid = state.NameId,
-            Name = state.Name,
-            Folder = state.Folder,
+            Id = appReader.AppId,
+            IsApp = specs.NameId != Eav.Constants.DefaultAppGuid &&
+                    specs.NameId != Eav.Constants.PrimaryAppGuid, // #SiteApp v13
+            Guid = specs.NameId,
+            Name = specs.Name,
+            Folder = specs.Folder,
             AppRoot = paths.Path,
-            IsHidden = state.Configuration.IsHidden,
-            ConfigurationId = state.Configuration.Id,
-            Items = state.List.Count,
-            Thumbnail = thumbnail,// a.Thumbnail,
-            Version = state.VersionSafe(),
-            IsGlobal = state.IsShared(),
-            IsInherited = state.IsInherited(),
+            IsHidden = specs.Configuration.IsHidden,
+            ConfigurationId = specs.Configuration.Id,
+            Items = appReader.List.Count,
+            Thumbnail = thumbnail,
+            Version = specs.VersionSafe(),
+            IsGlobal = appReader.IsShared(),
+            IsInherited = appReader.IsInherited(),
             Lightspeed = lightspeed,
-            HasCodeWarnings = codeStats.AppHasWarnings(state.AppId),
+            HasCodeWarnings = codeStats.AppHasWarnings(appReader.AppId),
         };
     }
 }

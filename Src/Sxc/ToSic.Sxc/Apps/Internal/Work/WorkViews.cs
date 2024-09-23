@@ -36,7 +36,7 @@ public class WorkViews(
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public record ViewInfoForPathSelect(IView View, string Name, string UrlIdentifier, bool IsRegex, string MainKey);
 
-    private List<IEntity> ViewEntities => _viewDs.Get(() => AppWorkCtx.AppState.GetPiggyBackPropExpiring(
+    private List<IEntity> ViewEntities => _viewDs.Get(() => AppWorkCtx.AppReader.GetPiggyBackPropExpiring(
             () => appEntities.New(AppWorkCtx)
                 .Get(AppConstants.TemplateContentType)
                 .ToList()
@@ -70,7 +70,7 @@ public class WorkViews(
         var l = Log.Fn<List<ViewInfoForPathSelect>>();
 
         // get from cache if available or generate
-        var views = AppWorkCtx.AppState.GetPiggyBackPropExpiring(() => GetAll()
+        var views = AppWorkCtx.AppReader.GetPiggyBackPropExpiring(() => GetAll()
             .Where(t => !string.IsNullOrEmpty(t.UrlIdentifier))
             .Select(v =>
             {
@@ -181,7 +181,7 @@ public class WorkViews(
 
         var valConverter = valConverterLazy.Value;
 
-        var result = AppWorkCtx.AppState.ContentTypes
+        var result = AppWorkCtx.AppReader.ContentTypes
             .OfScope(Scopes.Default) 
             .Where(ct => templates.Any(t => t.ContentType == ct.NameId)) // must exist in at least 1 template
             .OrderBy(ct => ct.Name)

@@ -79,17 +79,17 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
 
     #region Keys and Empty-Checks
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IHasKeys.ContainsKey"/>
     public bool ContainsKey(string name) => ((IHasKeys)_item).ContainsKey(name);
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IHasKeys.Keys"/>
     public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default) => _item.Keys(noParamOrder, only);
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IHasKeys.IsEmpty"/>
     public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
         => _item.IsEmpty(name, noParamOrder, language: language);
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IHasKeys.IsNotEmpty"/>
     public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
         => _item.IsNotEmpty(name, noParamOrder, language: language);
 
@@ -173,30 +173,32 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
         _item.Img(name, noParamOrder, settings, factor, width, imgAlt, imgAltFallback, imgClass, imgAttributes, toolbar, recipe);
 
     /// <inheritdoc />
-    public IFolder Folder(string name, NoParamOrder noParamOrder = default, bool? required = default) => _item.Folder(name, noParamOrder, required);
+    public IFolder Folder(string name, NoParamOrder noParamOrder = default, bool? required = default)
+        => _item.Folder(name, noParamOrder, required);
 
     /// <inheritdoc />
-    public IFile File(string name, NoParamOrder noParamOrder = default, bool? required = default) => _item.File(name, noParamOrder, required);
+    public IFile File(string name, NoParamOrder noParamOrder = default, bool? required = default)
+        => _item.File(name, noParamOrder, required);
 
     #endregion
 
     #region Children and Parents
 
     /// <inheritdoc />
-    public ITypedItem Child(string name, NoParamOrder noParamOrder = default, bool? required = default) => _item.Child(name, noParamOrder, required);
+    public ITypedItem Child(string name, NoParamOrder noParamOrder = default, bool? required = default)
+        => _item.Child(name, noParamOrder, required);
 
     /// <inheritdoc />
-    public IEnumerable<ITypedItem> Children(string field, NoParamOrder noParamOrder = default, string type = default,
-        bool? required = default) =>
-        _item.Children(field, noParamOrder, type, required);
+    public IEnumerable<ITypedItem> Children(string field, NoParamOrder noParamOrder = default, string type = default, bool? required = default)
+        => _item.Children(field, noParamOrder, type, required);
 
     /// <inheritdoc />
-    public ITypedItem Parent(NoParamOrder noParamOrder = default, bool? current = default, string type = default,
-        string field = default) =>
-        _item.Parent(noParamOrder, current, type, field);
+    public ITypedItem Parent(NoParamOrder noParamOrder = default, bool? current = default, string type = default, string field = default)
+        => _item.Parent(noParamOrder, current, type, field);
 
     /// <inheritdoc />
-    public IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder = default, string type = default, string field = default) => _item.Parents(noParamOrder, type, field);
+    public IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder = default, string type = default, string field = default)
+        => _item.Parents(noParamOrder, type, field);
 
     #endregion
 

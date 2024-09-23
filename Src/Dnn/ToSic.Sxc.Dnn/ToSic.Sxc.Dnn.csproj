@@ -16,11 +16,7 @@
     <TargetFramework>net472</TargetFramework>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetFrameworkProfile />
-    <!-- 2024-02-16 2dm - seem to be very old Source Control tags, disabled. if all is ok, remove 2024-04+ https://stackoverflow.com/questions/56859076/do-csproj-files-in-git-need-xml-tags-sccprojectname-scclocalpath-sccauxpath-s -->
-    <!--<SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>-->
+
     <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />

@@ -14,6 +14,7 @@ namespace ToSic.Sxc.Oqt.Shared.Helpers;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class HtmlHelper
 {
+    private static readonly string Timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmssfff");
 
     //public string Link(string id) => $"<link id=\"{id}\" rel=\"shortcut icon\" type=\"image/{favicontype}\" href=\"{favicon}\" />\n";
 
@@ -90,7 +91,8 @@ public class HtmlHelper
 
     public static string AddOrUpdateMetaTagContent(string html, string name, string content, bool encode = true)
     {
-        if (html == null || string.IsNullOrEmpty(name)) return html;
+        if (name.IsNullOrEmpty()) return html;
+        html ??= string.Empty;
 
         // Define a regex pattern to match the meta tag
         var pattern = $@"(<meta\s+name\s*=\s*[""']{WebUtility.HtmlEncode(name)}[""']\s+content\s*=\s*[""'])(.*?)([""']\s*/?>)";
@@ -105,21 +107,23 @@ public class HtmlHelper
 
     public static string AddHeadChanges(string html, IEnumerable<OqtHeadChange> headChanges)
     {
-        if (html == null || headChanges == null)
-            return html;
+        if (headChanges == null) return html;
+        html ??= string.Empty;
+
         var str = string.Empty;
         foreach (var headChange in headChanges)
         {
             if (!string.IsNullOrEmpty(headChange.Tag))
                 str += headChange.Tag + Environment.NewLine;
         }
-        return html + Environment.NewLine + str;
+        return html + str;
     }
 
     public static string ManageStyleSheets(string html, OqtViewResultsDto viewResults, Alias alias, string themeName, string pageHtml = "")
     {
-        if (viewResults == null)
-            return html;
+        if (viewResults == null) return html;
+        html ??= string.Empty;
+
         var list = viewResults.TemplateResources.Where(r => r.IsExternal && r.ResourceType == ResourceType.Stylesheet)
             .Select(r => r.Url).ToList();
         var count = 0;
@@ -133,9 +137,10 @@ public class HtmlHelper
             if (!html.Contains(src, StringComparison.OrdinalIgnoreCase) && !pageHtml.Contains(src, StringComparison.OrdinalIgnoreCase))
             {
                 ++count;
-                html += "<link"
-                    + " id=\"app-stylesheet-" + ResourceLevel.Page.ToString().ToLower() + "-" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + "-" + count.ToString("00") + "\""
-                    + " rel=\"stylesheet\" href=\"" + src + "\" type=\"text/css\"/>" + Environment.NewLine;
+                var assetHtml= "<link"
+                    + " id=\"app-stylesheet-" + ResourceLevel.Page.ToString().ToLower() + "-" + Timestamp + "-" + count.ToString("00") + "\""
+                    + " rel=\"stylesheet\" href=\"" + src + "\" type=\"text/css\"/>";
+                html = AddAssetWhenMissing(html, assetHtml);
             }
         }
         return html;
@@ -143,36 +148,49 @@ public class HtmlHelper
 
     public static string ManageScripts(string html, OqtViewResultsDto viewResults, Alias alias, string pageHtml = "")
     {
-        if (viewResults == null)
-            return html;
-        if (string.IsNullOrEmpty(html))
-            html = string.Empty;
+        if (viewResults == null) return html;
+        html ??= string.Empty;
+
         foreach (var sxcResource in viewResults.TemplateResources.Where(r => r.IsExternal && r.ResourceType == ResourceType.Script))
             html = AddScript(html, sxcResource, alias, pageHtml);
         var count = 0;
         foreach (var sxcScript in viewResults.SxcScripts) 
             html = AddScript(html, new Resource { Url = sxcScript, Reload = false }, alias, pageHtml, ++count);
+
         return html;
     }
 
     public static string ManageInlineScripts(string html, OqtViewResultsDto viewResults, Alias alias, string pageHtml = "")
     {
-        if (viewResults == null)
-            return html;
-        if (string.IsNullOrEmpty(html))
-            html = string.Empty;
+        if (viewResults == null) return html;
+        html ??= string.Empty;
+
         foreach (var sxcResource in viewResults.TemplateResources.Where(r => !r.IsExternal))
             html = AddScript(html, sxcResource, alias, pageHtml);
+
         return html;
     }
 
     private static string AddScript(string html, Resource resource, Alias alias, string pageHtml = "", int count = 0)
     {
-        if (resource == null || resource.Url.IsNullOrEmpty() && resource.Content.IsNullOrEmpty())
-            return html;
+        if (resource == null || resource.Url.IsNullOrEmpty() && resource.Content.IsNullOrEmpty()) return html;
+        html ??= string.Empty;
+
         var script = CreateScript(resource, alias, count);
-        if (!html.Contains(script, StringComparison.OrdinalIgnoreCase) && !pageHtml.Contains(script, StringComparison.OrdinalIgnoreCase))
-            html += script + Environment.NewLine;
+        if (!pageHtml.Contains(script, StringComparison.OrdinalIgnoreCase))
+            html = AddAssetWhenMissing(html, script);
+
+        return html;
+    }
+
+    private static string AddAssetWhenMissing(string html, string assetHtml)
+    {
+        if (assetHtml.IsNullOrEmpty())  return html;
+        html ??= string.Empty;
+
+        if (!html.Contains(assetHtml, StringComparison.OrdinalIgnoreCase))
+            html += assetHtml + Environment.NewLine;
+
         return html;
     }
 

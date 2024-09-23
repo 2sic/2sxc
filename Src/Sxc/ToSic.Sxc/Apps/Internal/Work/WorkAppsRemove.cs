@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Internal.Work;
-using ToSic.Eav.Context;
 using ToSic.Eav.ImportExport.Internal.Zip;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
@@ -12,17 +11,17 @@ namespace ToSic.Sxc.Apps.Internal.Work;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class WorkAppsRemove(
     LazySvc<ZoneManager> zoneManagerLazy,
-    IAppStates appStates,
-    ISite site,
-    IAppPathsMicroSvc appPaths)
-    : ServiceBase("Cms.AppsRt", connect: [zoneManagerLazy, appStates, site, appPaths])
+    IAppReaderFactory appReaders,
+    IAppPathsMicroSvc appPaths,
+    IAppsCatalog appsCatalog
+) : ServiceBase("Cms.AppsRt", connect: [zoneManagerLazy, appReaders, appPaths, appsCatalog])
 {
 
     internal void RemoveAppInSiteAndEav(int zoneId, int appId, bool fullDelete)
     {
         // check portal assignment and that it's not the default app
         // enable restore for DefaultApp
-        if (appId == appStates.DefaultAppId(zoneId) && fullDelete)
+        if (appId == appsCatalog.DefaultAppIdentity(zoneId).AppId && fullDelete)
             throw new("The default app of a zone cannot be removed.");
 
         if (appId == Eav.Constants.MetaDataAppId)
@@ -31,9 +30,9 @@ public class WorkAppsRemove(
         // todo: maybe verify the app is of this portal; I assume delete will fail anyhow otherwise
 
         // Prepare to Delete folder in dnn - this must be done, before deleting the app in the DB
-        var appState = appStates.GetReader(new AppIdentity(zoneId, appId));
-        var paths = appPaths.Init(site, appState);
-        var folder = appState.Folder;
+        var appReader = appReaders.Get(new AppIdentity(zoneId, appId));
+        var paths = appPaths.Get(appReader);
+        var folder = appReader.Specs.Folder;
         var physPath = paths.PhysicalPath;
 
         // now remove from DB. This sometimes fails, so we do this before trying to clean the files

@@ -2078,7 +2078,7 @@
             },
             {
               "Id": 166053,
-              "Version": 1,
+              "Version": 2,
               "Guid": "e78504d3-1016-43e2-9a42-692554ea9145",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -2087,13 +2087,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  return context.app.isSite;\n}"
+                    "en-us": "v1(data, context) { return context.app.isSite; }"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -2106,7 +2109,7 @@
             },
             {
               "Id": 166052,
-              "Version": 1,
+              "Version": 2,
               "Guid": "8ada531e-f7ea-4c14-b843-91b9d86cbea7",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -2115,13 +2118,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  return context.app.isGlobal;\n}"
+                    "en-us": "v1(data, context) { return context.app.isGlobal; }"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -2134,7 +2140,7 @@
             },
             {
               "Id": 166054,
-              "Version": 1,
+              "Version": 2,
               "Guid": "414f8b4d-6b9c-4acf-a0b0-53a1ffa2a5b5",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -2143,13 +2149,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  return !(context.app.isSite || context.app.isGlobal);\n}"
+                    "en-us": "v1(data, context) {\n  return !(context.app.isSite || context.app.isGlobal);\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -2162,7 +2171,7 @@
             },
             {
               "Id": 166041,
-              "Version": 1,
+              "Version": 2,
               "Guid": "3984debd-09ca-4e42-93b6-4284af3dcffe",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -2171,13 +2180,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  return context.debug;\n}"
+                    "en-us": "v1(data, context) { return context.debug; }"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -2803,7 +2815,7 @@
           "Entities": [
             {
               "Id": 166416,
-              "Version": 1,
+              "Version": 2,
               "Guid": "9cc5420b-097f-4af8-a8f3-a8b27cccf9a7",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -2812,13 +2824,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  return !context.features.isEnabled('DataExportImportBundles');\n}"
+                    "en-us": "v1(data, context) {\n  return !context.features.isEnabled('DataExportImportBundles');\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -3172,7 +3187,7 @@
           "Entities": [
             {
               "Id": 144499,
-              "Version": 1,
+              "Version": 2,
               "Guid": "420612fc-6056-49a9-baa5-8267c72e86bc",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -3181,13 +3196,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v1 (data, context) {\n  return !context.features.isEnabled('ContentSecurityPolicy');\n}"
+                    "en-us": "v1(data, context) { return !context.features.isEnabled('ContentSecurityPolicy'); }"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -4057,7 +4075,7 @@
           "Entities": [
             {
               "Id": 144493,
-              "Version": 1,
+              "Version": 2,
               "Guid": "6294cc9e-3793-4506-a777-a8aada403bb1",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -4066,13 +4084,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v1 (data, context) {\n  return data.ItemIdentifier == 'Dev' ? 'not relevant for dev-mode configuration' : data.default;\n  // return data.value;\n}"
+                    "en-us": "v1(data, context) {\n  return data.ItemIdentifier == 'Dev'\n? 'not relevant for dev-mode configuration'\n: data.default;\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Notes"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Notes"
+                    "en-us": "Setting Notes"
                   }
                 },
                 "Boolean": {
@@ -4116,7 +4137,7 @@
             },
             {
               "Id": 144521,
-              "Version": 1,
+              "Version": 2,
               "Guid": "f6be3e78-a86c-44da-97d7-f283481b5f8e",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -4125,13 +4146,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v1 (data, context) {\n  // in dev mode, we\n  if (context.debug) return false;\n  return !(context.app.isSite || context.app.isGlobal);\n}"
+                    "en-us": "v1(data, context) {\n  // in dev mode, we\n  if (context.debug) return false;\n  return !(context.app.isSite || context.app.isGlobal);\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Disabled"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Disabled"
+                    "en-us": "Setting Disabled"
                   }
                 },
                 "Boolean": {
@@ -4144,7 +4168,7 @@
             },
             {
               "Id": 144512,
-              "Version": 2,
+              "Version": 3,
               "Guid": "1571d7da-298c-476e-a25c-d2fe79c1052b",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -4153,13 +4177,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v1 (data, context) {\n  if (context.cache.secondRun) return data.value;\n  context.cache.secondRun = true;\n  // detect if we're on app or site/global\n  const onApp = !(context.app.isSite || context.app.isGlobal);\n  var original = data.default;\n  return onApp \n    ? data.default.replace('Policies (', 'App Policies (') \n    : data.default;\n}"
+                    "en-us": "v1(data, context) {\n  if (context.cache.secondRun) return data.value;\n  context.cache.secondRun = true;\n  // detect if we're on app or site/global\n  const onApp = !(context.app.isSite || context.app.isGlobal);\n  var original = data.default;\n  return onApp \n    ? data.default.replace('Policies (', 'App Policies (') \n    : data.default;\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Name"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Name"
+                    "en-us": "Setting Name"
                   }
                 },
                 "Boolean": {
@@ -4172,7 +4199,7 @@
             },
             {
               "Id": 144501,
-              "Version": 1,
+              "Version": 2,
               "Guid": "67897d2b-1039-4008-9e8c-13af71fc34dc",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -4181,13 +4208,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v1 (data, context) {\n  return !context.features.isEnabled('ContentSecurityPolicy');\n}"
+                    "en-us": "v1(data, context) {\n  return !context.features.isEnabled('ContentSecurityPolicy');\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -4200,7 +4230,7 @@
             },
             {
               "Id": 144514,
-              "Version": 1,
+              "Version": 2,
               "Guid": "49c22fa1-4e1f-4585-92e7-10d18a6da0fe",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -4209,13 +4239,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v1 (data, context) {\n  const app = context.app;\n  return !(app.isSite || app.isGlobal);\n}"
+                    "en-us": "v1(data, context) {\n  const app = context.app;\n  return !(app.isSite || app.isGlobal);\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -4259,7 +4292,7 @@
             },
             {
               "Id": 144495,
-              "Version": 1,
+              "Version": 2,
               "Guid": "cd800dca-99fc-4970-bbc8-1aa215436c0e",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -4268,13 +4301,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v1 (data, context) {\n  return data.ItemIdentifier == 'Dev';\n}"
+                    "en-us": "v1(data, context) { return data.ItemIdentifier == 'Dev'; }"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -4287,7 +4323,7 @@
             },
             {
               "Id": 144497,
-              "Version": 2,
+              "Version": 3,
               "Guid": "c6170f01-7fd3-49eb-8203-cdea80148094",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -4296,13 +4332,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v1 (data, context) {\n  return !data.Policies && (context.app.isSite || context.app.isGlobal);\n}"
+                    "en-us": "v1(data, context) {\n  return !data.Policies && (context.app.isSite || context.app.isGlobal);\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -4908,7 +4947,7 @@
           "Entities": [
             {
               "Id": 166030,
-              "Version": 1,
+              "Version": 2,
               "Guid": "200d66a2-823b-415c-9a41-19ec5eb6e520",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -4917,13 +4956,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  return !context.features.isEnabled('EditUiGpsCustomDefaults');\n}"
+                    "en-us": "v1(data, context) {\n  return !context.features.isEnabled('EditUiGpsCustomDefaults');\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Disabled"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Disabled"
+                    "en-us": "Setting Disabled"
                   }
                 },
                 "Boolean": {
@@ -6705,7 +6747,7 @@
             },
             {
               "Id": 144381,
-              "Version": 1,
+              "Version": 2,
               "Guid": "ad90da09-ab14-4b6a-b762-6b60613cf63c",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -6714,13 +6756,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v1 (data, context) {\n  return !data.AspectRatio;\n}"
+                    "en-us": "v1(data, context) { return !data.AspectRatio; }"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -6733,7 +6778,7 @@
             },
             {
               "Id": 160374,
-              "Version": 1,
+              "Version": 2,
               "Guid": "00eed300-a780-4959-8c6e-b5b2a1ff8af5",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -6742,13 +6787,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  if (data.value === '{}') {\n    return `{\n  \"$schema\": \"https://schemas.2sxc.org/image-resize/v13/index.json\",\n  \"recipe\": {\n    \"name\": \"default\",\n    \"variants\": \"2*, 1*, 3/4*, 1/2*\",\n    \"setWidth\": false,\n    \"attributes\": {\n      \"loading\": \"lazy\"\n    }\n  }\n}`;\n  }\n  return data.value;\n}"
+                    "en-us": "v1(data, context) {\n  if (data.value === '{}') {\n    return `{\n  \"$schema\": \"https://schemas.2sxc.org/image-resize/v13/index.json\",\n  \"recipe\": {\n    \"name\": \"default\",\n    \"variants\": \"2*, 1*, 3/4*, 1/2*\",\n    \"setWidth\": false,\n    \"attributes\": {\n      \"loading\": \"lazy\"\n    }\n  }\n}`;\n  }\n  return data.value;\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Value"
                   },
                   "Title": {
-                    "en-us": "Field.Value"
+                    "en-us": "Value"
                   }
                 },
                 "Boolean": {
@@ -8404,7 +8452,7 @@
           "Entities": [
             {
               "Id": 166060,
-              "Version": 1,
+              "Version": 2,
               "Guid": "ad2e2046-6eef-4cb1-98dd-0ae513af9e50",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -8413,13 +8461,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  return !context.features.isEnabled('AppAutoInstallerConfigurable');\n}"
+                    "en-us": "v1(data, context) {\n  return !context.features.isEnabled('AppAutoInstallerConfigurable');\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -9048,7 +9099,7 @@
           "Entities": [
             {
               "Id": 164878,
-              "Version": 2,
+              "Version": 3,
               "Guid": "c4b84ce2-edd3-4ab5-a87c-d0534251947c",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -9057,13 +9108,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  return data.Target === 'guid';\n}"
+                    "en-us": "v1(data, context) { return data.Target === 'guid'; }"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -9076,7 +9130,7 @@
             },
             {
               "Id": 164877,
-              "Version": 2,
+              "Version": 3,
               "Guid": "4bbd4c45-a56a-4aed-ab73-4fb6bffad6a1",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -9085,13 +9139,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  return data.Target !== '';\n}"
+                    "en-us": "v1(data, context) { return data.Target !== ''; }"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -9104,7 +9161,7 @@
             },
             {
               "Id": 164879,
-              "Version": 1,
+              "Version": 2,
               "Guid": "8431ad5d-a030-4646-b524-5acf4ca502ee",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -9113,13 +9170,16 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "function v1 (data, context) {\n  return data.Target === 'url';\n}"
+                    "en-us": "v1(data, context) { return data.Target === 'url'; }"
+                  },
+                  "Notes": {
+                    "en-us": ""
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
                   },
                   "Title": {
-                    "en-us": "Field.Settings.Visible"
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {

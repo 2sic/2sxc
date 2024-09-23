@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Data.Build;
+﻿using ToSic.Eav;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Metadata;
@@ -26,7 +27,7 @@ public partial class EditLoadBackend(
     IUiContextBuilder contextBuilder,
     ISxcContextResolver ctxResolver,
     ITargetTypes mdTargetTypes,
-    IAppStates appStates,
+    IAppReaderFactory appReaders,
     IUiData uiData,
     GenWorkPlus<WorkInputTypes> inputTypes,
     Generator<JsonSerializer> jsonSerializerGenerator,
@@ -37,7 +38,7 @@ public partial class EditLoadBackend(
         connect:
         [
             workCtxSvc, inputTypes, api, contentGroupList, entityBuilder, contextBuilder, ctxResolver,
-            mdTargetTypes, appStates, uiData, jsonSerializerGenerator, typesPermissions, prefetch, loadSettings
+            mdTargetTypes, appReaders, uiData, jsonSerializerGenerator, typesPermissions, prefetch, loadSettings
         ])
 {
 
@@ -48,21 +49,20 @@ public partial class EditLoadBackend(
         // Security check
         var context = ctxResolver.GetBlockOrSetApp(appId);
         
-
         // do early permission check - but at this time it may be that we don't have the types yet
-        // because they may be group/id combinations, without type information which we'll look up afterwards
-        var appIdentity = appStates.IdentityOfApp(appId);
-        items = contentGroupList.Init(appIdentity)
+        // because they may be group/id combinations, without type information which we'll look up afterward
+        var appReader = appReaders.Get(appId);
+        items = contentGroupList.Init(appReader.PureIdentity())
             .ConvertGroup(items)
             .ConvertListIndexToId(items);
-        TryToAutoFindMetadataSingleton(items, context.AppState);
+        TryToAutoFindMetadataSingleton(items, context.AppReader.Metadata);
 
         // Special Edge Case
         // If the user is Module-Admin then we can skip the remaining checks
         // This is important because the main context may not contain the module
 
         // Look up the types, and repeat security check with type-names
-        var permCheck = typesPermissions.New().Init(context, context.AppState, items);
+        var permCheck = typesPermissions.New().Init(context, context.AppReader, items);
         if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
             throw HttpException.PermissionDenied(error);
 
@@ -71,14 +71,13 @@ public partial class EditLoadBackend(
         var appWorkCtx = workCtxSvc.ContextPlus(appId, showDrafts: showDrafts);
         var result = new EditDto();
         var entityApi = api.Init(appId, showDrafts);
-        var appState = appStates.GetReader(appIdentity);
         var list = entityApi.GetEntitiesForEditing(items);
-        var jsonSerializer = jsonSerializerGenerator.New().SetApp(appState);
+        var jsonSerializer = jsonSerializerGenerator.New().SetApp(appReader);
         result.Items = list
             .Select(e => new BundleWithHeader<JsonEntity>
             {
                 Header = e.Header,
-                Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, appState, appWorkCtx)
+                Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, appReader, appWorkCtx)
             })
             .ToList();
 
@@ -89,7 +88,7 @@ public partial class EditLoadBackend(
             result.IsPublished = entity?.IsPublished ?? true; // Entity could be null (new), then true
             // only set draft-should-branch if this draft already has a published item
             if (!result.IsPublished)
-                result.DraftShouldBranch = (entity == null ? null : appState.GetPublished(entity)) != null;
+                result.DraftShouldBranch = (entity == null ? null : appReader.GetPublished(entity)) != null;
         }
 
         // since we're retrieving data - make sure we're allowed to
@@ -101,7 +100,7 @@ public partial class EditLoadBackend(
 
         #region Load content-types and additional data (eg. formulas)
 
-        var serializerForTypes = jsonSerializerGenerator.New().SetApp(appState);
+        var serializerForTypes = jsonSerializerGenerator.New().SetApp(appReader);
         serializerForTypes.ValueConvertHyperlinks = true;
         var usedTypes = UsedTypes(list, appWorkCtx);
         var serSettings = new JsonSerializationSettings
@@ -123,6 +122,9 @@ public partial class EditLoadBackend(
             .SelectMany(t => t.Entities)
             .ToList();
 
+        var isSystemType = usedTypes.Any(t => t.AppId == Constants.PresetAppId);
+        l.A($"isSystemType: {isSystemType}");
+
         #endregion
 
         #region Input Types on ContentTypes and general definitions
@@ -137,12 +139,9 @@ public partial class EditLoadBackend(
 
         #endregion
 
-        // also include UI features
-        result.Features = uiData.Features(permCheck);
-
         // Attach context, but only the minimum needed for the UI
-        result.Context = contextBuilder.InitApp(context.AppState)
-            .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features, CtxEnable.EditUi);
+        result.Context = contextBuilder.InitApp(context.AppReader)
+            .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features | (isSystemType ? Ctx.FeaturesForSystemTypes : Ctx.Features), CtxEnable.EditUi);
 
         result.Settings = loadSettings.GetSettings(context, usedTypes, result.ContentTypes, appWorkCtx);
 
@@ -157,7 +156,7 @@ public partial class EditLoadBackend(
         }
             
         // done
-        var finalMsg = $"items:{result.Items.Count}, types:{result.ContentTypes.Count}, inputs:{result.InputTypes.Count}, feats:{result.Features.Count}";
+        var finalMsg = $"items:{result.Items.Count}, types:{result.ContentTypes.Count}, inputs:{result.InputTypes.Count}, feats:{result.Context.Features.Count}";
         return l.Return(result, finalMsg);
     }
         
@@ -165,7 +164,7 @@ public partial class EditLoadBackend(
     /// <summary>
     /// new 2020-12-08 - correct entity-id with lookup of existing if marked as singleton
     /// </summary>
-    private bool TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, IMetadataSource appState)
+    private bool TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, IMetadataSource appMdSource)
     {
         var l = Log.Fn<bool>();
         foreach (var header in list
@@ -177,10 +176,10 @@ public partial class EditLoadBackend(
             // #TargetTypeIdInsteadOfTarget
             var type = mdFor.TargetType != 0 ? mdFor.TargetType : mdTargetTypes.GetId(mdFor.Target);
             var mds = mdFor.Guid != null
-                ? appState.GetMetadata(type, mdFor.Guid.Value, header.ContentTypeName)
+                ? appMdSource.GetMetadata(type, mdFor.Guid.Value, header.ContentTypeName)
                 : mdFor.Number != null
-                    ? appState.GetMetadata(type, mdFor.Number.Value, header.ContentTypeName)
-                    : appState.GetMetadata(type, mdFor.String, header.ContentTypeName);
+                    ? appMdSource.GetMetadata(type, mdFor.Number.Value, header.ContentTypeName)
+                    : appMdSource.GetMetadata(type, mdFor.String, header.ContentTypeName);
 
             var mdList = mds.ToArray();
             if (mdList.Length > 1)
