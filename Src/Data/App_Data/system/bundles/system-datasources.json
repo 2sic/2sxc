@@ -8909,8 +8909,28 @@
                 "IsTitle": false,
                 "Metadata": [
                   {
+                    "Id": 135536,
+                    "Version": 2,
+                    "Guid": "53efabfe-b718-422f-8e92-4d9ef480289d",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
                     "Id": 135533,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "389f5c99-c5cd-4659-8775-2f853b1a4cfb",
                     "Type": {
                       "Id": "@All",
@@ -8922,6 +8942,9 @@
                           "en-us": ""
                         },
                         "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
                           "en-us": ""
                         },
                         "InputType": {
@@ -8936,7 +8959,15 @@
                         "Placeholder": {
                           "en-us": ""
                         },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
                         "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -8969,28 +9000,8 @@
                     "Owner": "dnn:userid=41"
                   },
                   {
-                    "Id": 135536,
-                    "Version": 2,
-                    "Guid": "53efabfe-b718-422f-8e92-4d9ef480289d",
-                    "Type": {
-                      "Id": "@String",
-                      "Name": "@String"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "DropdownValues": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "en-us": ""
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
                     "Id": 135537,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "3561aa76-6924-4aa1-b892-9dacafbc8628",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -8998,8 +9009,14 @@
                     },
                     "Attributes": {
                       "String": {
+                        "EntityType": {
+                          "en-us": ""
+                        },
                         "Label": {
                           "en-us": "Name"
+                        },
+                        "MoreFields": {
+                          "en-us": ""
                         },
                         "Query": {
                           "en-us": "Eav.Queries.Global.ContentTypes"
@@ -9021,6 +9038,9 @@
                         "AllowMultiValue": {
                           "en-us": false
                         },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
                         "EnableEdit": {
                           "en-us": false
                         },
@@ -9028,7 +9048,7 @@
                           "en-us": true
                         },
                         "EnableTextEntry": {
-                          "en-us": false
+                          "en-us": true
                         }
                       }
                     },
