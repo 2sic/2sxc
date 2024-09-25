@@ -2482,7 +2482,7 @@
         },
         {
           "Id": 182360,
-          "Version": 10,
+          "Version": 11,
           "Guid": "68af1a61-9362-4cc5-8e60-cd9c37fe88c3",
           "Type": {
             "Id": "DataPipeline",
@@ -2503,7 +2503,7 @@
                 "*": "Default,Header"
               },
               "StreamWiring": {
-                "*": "6c04fa59-082e-428c-9a1f-ac511e3d04b6:UiPickerSourceCustomList>e73021f3-b121-4fc0-81c3-a8800bbd14d9:CustomList\r\n6c04fa59-082e-428c-9a1f-ac511e3d04b6:UiPickerSourceEntity>e73021f3-b121-4fc0-81c3-a8800bbd14d9:Entity\r\n6c04fa59-082e-428c-9a1f-ac511e3d04b6:UiPickerSourceQuery>e73021f3-b121-4fc0-81c3-a8800bbd14d9:Query\r\ne73021f3-b121-4fc0-81c3-a8800bbd14d9:Default>Out:Default\r\n6c04fa59-082e-428c-9a1f-ac511e3d04b6:UiPickerSourceCustomCsv>e73021f3-b121-4fc0-81c3-a8800bbd14d9:Default"
+                "*": "6c04fa59-082e-428c-9a1f-ac511e3d04b6:UiPickerSourceCustomList>e73021f3-b121-4fc0-81c3-a8800bbd14d9:CustomList\r\n6c04fa59-082e-428c-9a1f-ac511e3d04b6:UiPickerSourceEntity>e73021f3-b121-4fc0-81c3-a8800bbd14d9:Entity\r\n6c04fa59-082e-428c-9a1f-ac511e3d04b6:UiPickerSourceQuery>e73021f3-b121-4fc0-81c3-a8800bbd14d9:Query\r\ne73021f3-b121-4fc0-81c3-a8800bbd14d9:Default>Out:Default\r\n6c04fa59-082e-428c-9a1f-ac511e3d04b6:UiPickerSourceCustomCsv>e73021f3-b121-4fc0-81c3-a8800bbd14d9:Default\r\n6c04fa59-082e-428c-9a1f-ac511e3d04b6:UiPickerSourceCss>e73021f3-b121-4fc0-81c3-a8800bbd14d9:UiPickerSourceCss"
               },
               "TestParameters": {
                 "*": ""
@@ -2549,7 +2549,7 @@
             },
             {
               "Id": 182362,
-              "Version": 8,
+              "Version": 9,
               "Guid": "6c04fa59-082e-428c-9a1f-ac511e3d04b6",
               "Type": {
                 "Id": "DataPipelinePart",
@@ -2580,7 +2580,7 @@
             },
             {
               "Id": 182363,
-              "Version": 6,
+              "Version": 7,
               "Guid": "e73021f3-b121-4fc0-81c3-a8800bbd14d9",
               "Type": {
                 "Id": "DataPipelinePart",

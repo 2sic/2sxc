@@ -59,6 +59,22 @@
                   "TargetType": 5,
                   "String": "88d60bbc-cc2a-4ef8-b430-ed41e3012240"
                 }
+              },
+              {
+                "Id": 183925,
+                "Version": 1,
+                "Guid": "93e2a4c2-d2df-4c99-97b9-591b15e21346",
+                "Type": {
+                  "Id": "bcce96be-a439-4f22-9d1e-a10487544fa5",
+                  "Name": "IsPickerSourceDecorator"
+                },
+                "Attributes": {},
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "88d60bbc-cc2a-4ef8-b430-ed41e3012240"
+                }
               }
             ],
             "Attributes": [
@@ -628,6 +644,22 @@
                     }
                   }
                 },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "f11f79a2-186b-49ec-89d6-be260698e371"
+                }
+              },
+              {
+                "Id": 183926,
+                "Version": 1,
+                "Guid": "c4758063-0042-4f86-a3b5-ceb81d2bdea7",
+                "Type": {
+                  "Id": "bcce96be-a439-4f22-9d1e-a10487544fa5",
+                  "Name": "IsPickerSourceDecorator"
+                },
+                "Attributes": {},
                 "Owner": "dnn:userid=41",
                 "For": {
                   "Target": "ContentType",
@@ -2110,6 +2142,22 @@
                     }
                   }
                 },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "5f8e3968-e02b-40d5-ab77-f60c2e73d244"
+                }
+              },
+              {
+                "Id": 183927,
+                "Version": 1,
+                "Guid": "58e60d38-d414-4658-accb-7c9466f52112",
+                "Type": {
+                  "Id": "bcce96be-a439-4f22-9d1e-a10487544fa5",
+                  "Name": "IsPickerSourceDecorator"
+                },
+                "Attributes": {},
                 "Owner": "dnn:userid=41",
                 "For": {
                   "Target": "ContentType",
@@ -4151,7 +4199,7 @@
             },
             {
               "Id": 182681,
-              "Version": 26,
+              "Version": 27,
               "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -4160,7 +4208,7 @@
               "Attributes": {
                 "String": {
                   "CreateTypes": {
-                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv"
+                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv\nUiPickerSourceCss"
                   },
                   "Description": {
                     "en-us": "<p>Get all Data Sources for UI Pickers.</p>"
@@ -4351,7 +4399,7 @@
           "Entities": [
             {
               "Id": 182681,
-              "Version": 26,
+              "Version": 27,
               "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -4360,7 +4408,7 @@
               "Attributes": {
                 "String": {
                   "CreateTypes": {
-                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv"
+                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv\nUiPickerSourceCss"
                   },
                   "Description": {
                     "en-us": "<p>Get all Data Sources for UI Pickers.</p>"
@@ -4978,7 +5026,7 @@
             },
             {
               "Id": 182681,
-              "Version": 26,
+              "Version": 27,
               "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -4987,7 +5035,7 @@
               "Attributes": {
                 "String": {
                   "CreateTypes": {
-                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv"
+                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv\nUiPickerSourceCss"
                   },
                   "Description": {
                     "en-us": "<p>Get all Data Sources for UI Pickers.</p>"
@@ -9352,7 +9400,7 @@
           "Entities": [
             {
               "Id": 182681,
-              "Version": 26,
+              "Version": 27,
               "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -9361,7 +9409,7 @@
               "Attributes": {
                 "String": {
                   "CreateTypes": {
-                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv"
+                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv\nUiPickerSourceCss"
                   },
                   "Description": {
                     "en-us": "<p>Get all Data Sources for UI Pickers.</p>"
@@ -9460,7 +9508,7 @@
             },
             {
               "Id": 182681,
-              "Version": 26,
+              "Version": 27,
               "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -9469,7 +9517,7 @@
               "Attributes": {
                 "String": {
                   "CreateTypes": {
-                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv"
+                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv\nUiPickerSourceCss"
                   },
                   "Description": {
                     "en-us": "<p>Get all Data Sources for UI Pickers.</p>"
@@ -11328,6 +11376,22 @@
                   "TargetType": 5,
                   "String": "3a96ad21-027d-4679-8372-c39406ad1d11"
                 }
+              },
+              {
+                "Id": 183924,
+                "Version": 1,
+                "Guid": "72626777-5df3-4c13-b422-d14c4cb57d78",
+                "Type": {
+                  "Id": "bcce96be-a439-4f22-9d1e-a10487544fa5",
+                  "Name": "IsPickerSourceDecorator"
+                },
+                "Attributes": {},
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "3a96ad21-027d-4679-8372-c39406ad1d11"
+                }
               }
             ],
             "Attributes": [
@@ -11964,6 +12028,929 @@
               "Owner": "dnn:userid=41"
             }
           ]
+        },
+        {
+          "ContentType": {
+            "Id": "78451625-053f-4e23-b4e8-e95c3fcf3320",
+            "Name": "UiPickerSourceCss",
+            "Scope": "System.Fields",
+            "Metadata": [
+              {
+                "Id": 183928,
+                "Version": 2,
+                "Guid": "703be1a9-518b-4bdf-a98b-7a60ba3699cb",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": ""
+                    },
+                    "Label": {
+                      "en-us": "UI Picker Source - Css (for selecting icons or classes)"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "78451625-053f-4e23-b4e8-e95c3fcf3320"
+                }
+              },
+              {
+                "Id": 183952,
+                "Version": 1,
+                "Guid": "01c78465-f078-4978-9eee-ec5d88599660",
+                "Type": {
+                  "Id": "bcce96be-a439-4f22-9d1e-a10487544fa5",
+                  "Name": "IsPickerSourceDecorator"
+                },
+                "Attributes": {},
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "78451625-053f-4e23-b4e8-e95c3fcf3320"
+                }
+              }
+            ],
+            "Attributes": [
+              {
+                "Name": "Title",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": true,
+                "Metadata": [
+                  {
+                    "Id": 183929,
+                    "Version": 2,
+                    "Guid": "063d39d6-20ab-4426-bcb7-15fdd6fb9c1e",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "CSS Data Source for Icons"
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-default"
+                        },
+                        "Name": {
+                          "en-us": "Title"
+                        },
+                        "Notes": {
+                          "en-us": "<p>A simple name so you can identify this source when you re-use it.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183930,
+                    "Version": 1,
+                    "Guid": "9727cb6b-d6bd-4c1d-9f7c-ebee06b84731",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183931,
+                    "Version": 1,
+                    "Guid": "9a273123-7ba7-419d-9a6f-701403f989a7",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": ""
+                        },
+                        "TextWrapping": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "GroupDescription",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "SysSettings": {
+                  "InheritMetadataOf": "0046b3fd-b3ee-47ee-be29-1f0df071069a"
+                }
+              },
+              {
+                "Name": "Description",
+                "Type": "String",
+                "InputType": "string-wysiwyg",
+                "IsTitle": false,
+                "SysSettings": {
+                  "InheritMetadataOf": "970d9f99-9fc7-4ebb-b5c3-8ce1518a0bce"
+                }
+              },
+              {
+                "Name": "GroupCssConfiguration",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183938,
+                    "Version": 2,
+                    "Guid": "89044b7e-d98d-4d28-9b11-9066b0083b84",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-default"
+                        },
+                        "Name": {
+                          "en-us": "Css Configuration"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Configure which CSS file to load, and what classes to select from it.</p>\n<p>Note that the CSS file must come from the same domain, otherwise the browser will block access to the internal inspection, which must find the class names.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183941,
+                    "Version": 1,
+                    "Guid": "1e24fbd7-e533-4303-87bf-9dbb6a99d568",
+                    "Type": {
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "CssSourceFile",
+                "Type": "Hyperlink",
+                "InputType": "hyperlink-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183939,
+                    "Version": 4,
+                    "Guid": "9c9cd7f9-16b9-4699-86cb-ce91ca4c4b8f",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "[App:Path]/Icons/fontawesome-nobrands.min.css"
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "hyperlink-default"
+                        },
+                        "Name": {
+                          "en-us": "CSS Source File"
+                        },
+                        "Notes": {
+                          "en-us": "<p>File to load in this dialog - usually the CSS-file which would contain icon-definitions. You can also use the placeholder [App:Path] to inject the app, path, like</p>\n<ul>\n<li><em>[App:Path]/dist/custom-icons.css</em>.</li>\n</ul>\n<p>Remember that these styles will also affect the styling of the entire UI, so try to include files which only include the icon-definitions. You could also create separate icon-definition files just for this icon picker.</p>\n<p>If you want to select icons and want a nice preview, make sure that the css file also loads the font you are using.</p>\n<p>Find out more on <a href=\"//2sxc.org/help?tag=font-icon\" target=\"_blank\" rel=\"noopener\">2sxc.org/help?tag=font-icon</a></p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183942,
+                    "Version": 3,
+                    "Guid": "42470026-2c2c-40fa-9a82-2e227af1ce6c",
+                    "Type": {
+                      "Id": "@Hyperlink",
+                      "Name": "@Hyperlink"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "Buttons": {
+                          "en-us": "adam,more"
+                        },
+                        "DefaultDialog": {
+                          "en-us": ""
+                        },
+                        "FileFilter": {
+                          "en-us": ""
+                        },
+                        "Paths": {
+                          "en-us": ""
+                        },
+                        "ServerResourceMapping": {
+                          "en-us": ""
+                        }
+                      },
+                      "Boolean": {
+                        "ShowAdam": {
+                          "en-us": true
+                        },
+                        "ShowFileManager": {
+                          "en-us": false
+                        },
+                        "ShowImageManager": {
+                          "en-us": false
+                        },
+                        "ShowPagePicker": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "CssSelectorFilter",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183940,
+                    "Version": 4,
+                    "Guid": "f7e752fe-b96d-4549-8cff-738ff77d740f",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ".fa-"
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-default"
+                        },
+                        "Name": {
+                          "en-us": "Css Selector Filter"
+                        },
+                        "Notes": {
+                          "en-us": "<p>The CSS could contain more rules (selectors) than you want, so to be sure we only show the desired ones, you can specify filters to limit what is used. You have 2 options:</p>\n<ol>\n<li>just use a string such as \".fa-\" (the typical prefix for FontAwesome) - this will filter/search for all selectors which start with this prefix</li>\n<li>use a regular expression such as \"(\\.fa-|\\.fas-)\". Regular expressions must always be wrapped inside brackets (...) so that the search can tell the difference to normal string-start-with searches.</li>\n</ol>"
+                        },
+                        "Placeholder": {
+                          "en-us": "A prefix or regular expression to select what CSS rules to use."
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": true
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183943,
+                    "Version": 3,
+                    "Guid": "9d531a28-df89-44ba-ab8e-c7c2e32aeb8e",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183944,
+                    "Version": 3,
+                    "Guid": "1f5f925f-07ed-44d8-b472-fc986962d786",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": "monospace"
+                        },
+                        "TextWrapping": {
+                          "en-us": ""
+                        }
+                      },
+                      "Number": {
+                        "RowCount": {
+                          "en-us": 1
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "Value",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183945,
+                    "Version": 2,
+                    "Guid": "255db97a-79ca-481b-9258-007672fec2c8",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-default"
+                        },
+                        "Name": {
+                          "en-us": "Value (optional)"
+                        },
+                        "Notes": {
+                          "en-us": "<p>The value to store. If not specified, will just use the found selector without preceding dot, so \".address\" would become \"address\". Placeholders:</p>\n<ol>\n<li>[Item:Value] - the selector without leading \".\"</li>\n<li>[Item:ValueRaw] - the selector with leading \".\"</li>\n</ol>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183947,
+                    "Version": 1,
+                    "Guid": "fa1a13a3-3658-4648-afea-b60714122861",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183948,
+                    "Version": 1,
+                    "Guid": "2115f588-34ae-4d1d-a190-53ce1016b9f8",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": ""
+                        },
+                        "TextWrapping": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "ValuePreview",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183946,
+                    "Version": 2,
+                    "Guid": "93e77f98-91ae-42ec-8e49-b890f2c375df",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ".fas [Item:ValueRaw]"
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-default"
+                        },
+                        "Name": {
+                          "en-us": "Value Preview"
+                        },
+                        "Notes": {
+                          "en-us": "<p>CSS rule to use for the preview. Allows you to specify things such as prefixes (required for Font-Awesom, but not for newer If not specified, will just use the found selector with dot, so \".address\". Placeholders:</p>\n<ol>\n<li>[Item:Value] - the selector without leading \".\"</li>\n<li>[Item:ValueRaw] - the selector with leading \".\"</li>\n</ol>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183949,
+                    "Version": 1,
+                    "Guid": "061e6f38-7e70-4420-8d93-e832f83d267e",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183950,
+                    "Version": 1,
+                    "Guid": "aca91517-1845-49e9-8b5e-056801366af5",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": ""
+                        },
+                        "TextWrapping": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "GroupItemHelp",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "SysSettings": {
+                  "InheritMetadataOf": "ea9c3f94-578f-4c5f-b721-767f38fea57d"
+                }
+              },
+              {
+                "Name": "ItemTooltip",
+                "Type": "String",
+                "InputType": "string-wysiwyg",
+                "IsTitle": false,
+                "SysSettings": {
+                  "InheritMetadataOf": "49d939a6-b45c-405b-98e9-b7ee38a9c68a"
+                }
+              },
+              {
+                "Name": "ItemInformation",
+                "Type": "String",
+                "InputType": "string-wysiwyg",
+                "IsTitle": false,
+                "SysSettings": {
+                  "InheritMetadataOf": "2cd90609-840f-4ccf-aed6-8c6e39ea067e"
+                }
+              },
+              {
+                "Name": "ItemLink",
+                "Type": "Hyperlink",
+                "InputType": "hyperlink-default",
+                "IsTitle": false,
+                "SysSettings": {
+                  "InheritMetadataOf": "8a7dcb9e-f47b-4518-9519-f66db95f195e"
+                }
+              }
+            ]
+          },
+          "Entities": [
+            {
+              "Id": 183740,
+              "Version": 1,
+              "Guid": "294f8671-40aa-4af3-a111-c53d00cb53be",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data) => { return data.default + (!!data.Info ? '✅' : ''); });"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Name"
+                  },
+                  "Title": {
+                    "en-us": "Setting Name: Value"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183718,
+              "Version": 4,
+              "Guid": "e457872b-90e7-4041-a8de-07bb88ddd43e",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  const typeName = context.target.entity.type.name;\n  // For custom list, it can always be visible\n  if (typeName == \"UiPickerSourceCustomList\" || typeName == \"UiPickerSourceCustomCsv\") {\n    // console.log('custom list - show by default');\n    return true;\n  }\n\n  // For Entity Picker\n  if (typeName == \"UiPickerSourceEntity\") {\n    // console.log('entity source');\n    return data.ContentTypeNames.length > 0;\n  }\n\n  if (typeName == \"UiPickerSourceQuery\") {\n    // console.log('2dm query source');\n    return data.Query.length > 0;\n  }\n\n  console.warn('formula for GroupItemHelp is running on an unexpected type: ' + typeName);\n  // console.log('2dm data', data, context);\n  return data.value;\n});"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Setting Visible: Value"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183739,
+              "Version": 1,
+              "Guid": "5a7bf19c-2be2-4310-b706-b888c89b8394",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  const icons = [];\n  if (!!data.ItemTooltip) icons.push('\uD83D\uDCA1');\n  if (!!data.ItemInformation) icons.push('ℹ️');\n  if (!!data.ItemHelpLink) icons.push('\uD83D\uDD17');\n  const addOn = icons.length ? ' (' + icons.join(' ') + ')' : '';\n  return data.default + addOn;\n});"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Name"
+                  },
+                  "Title": {
+                    "en-us": "Setting Name: Value"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            }
+          ]
         }
       ],
       "Entities": [
@@ -12047,7 +13034,7 @@
         },
         {
           "Id": 182681,
-          "Version": 26,
+          "Version": 27,
           "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
           "Type": {
             "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -12056,7 +13043,7 @@
           "Attributes": {
             "String": {
               "CreateTypes": {
-                "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv"
+                "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv\nUiPickerSourceCss"
               },
               "Description": {
                 "en-us": "<p>Get all Data Sources for UI Pickers.</p>"

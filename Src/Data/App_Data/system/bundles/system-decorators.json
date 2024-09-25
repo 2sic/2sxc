@@ -9279,6 +9279,117 @@
             "Attributes": []
           },
           "Entities": []
+        },
+        {
+          "ContentType": {
+            "Id": "bcce96be-a439-4f22-9d1e-a10487544fa5",
+            "Name": "IsPickerSourceDecorator",
+            "Scope": "System.Decorators",
+            "Metadata": [
+              {
+                "Id": 183921,
+                "Version": 1,
+                "Guid": "f4a28d83-923e-4809-8776-e3f462fbbd0b",
+                "Type": {
+                  "Id": "4c88d78f-5f3e-4b66-95f2-6d63b7858847",
+                  "Name": "MetadataForDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "DeleteWarning": {
+                      "en-us": ""
+                    },
+                    "TargetName": {
+                      "en-us": ""
+                    },
+                    "Title": {
+                      "en-us": "Content Types can be Picker Source Configurations"
+                    }
+                  },
+                  "Number": {
+                    "Amount": {
+                      "en-us": 1
+                    },
+                    "TargetType": {
+                      "en-us": 5
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "bcce96be-a439-4f22-9d1e-a10487544fa5"
+                }
+              },
+              {
+                "Id": 183919,
+                "Version": 3,
+                "Guid": "03d0bc06-f18e-49b5-a4f7-eee4b3e1abdd",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p>This marks content types which are picker sources.</p>\n<p>There are no properties to edit.</p>"
+                    },
+                    "Label": {
+                      "en-us": "Is Picker Source (Decorator)"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": "base64:PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjRweCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiIHdpZHRoPSIyNHB4IiBmaWxsPSIjZThlYWVkIj48cGF0aCBkPSJNMzIwLTI4MHExNyAwIDI4LjUtMTEuNVQzNjAtMzIwcTAtMTctMTEuNS0yOC41VDMyMC0zNjBxLTE3IDAtMjguNSAxMS41VDI4MC0zMjBxMCAxNyAxMS41IDI4LjVUMzIwLTI4MFptMC0xNjBxMTcgMCAyOC41LTExLjVUMzYwLTQ4MHEwLTE3LTExLjUtMjguNVQzMjAtNTIwcS0xNyAwLTI4LjUgMTEuNVQyODAtNDgwcTAgMTcgMTEuNSAyOC41VDMyMC00NDBabTAtMTYwcTE3IDAgMjguNS0xMS41VDM2MC02NDBxMC0xNy0xMS41LTI4LjVUMzIwLTY4MHEtMTcgMC0yOC41IDExLjVUMjgwLTY0MHEwIDE3IDExLjUgMjguNVQzMjAtNjAwWm0xMjAgMzIwaDI0MHYtODBINDQwdjgwWm0wLTE2MGgyNDB2LTgwSDQ0MHY4MFptMC0xNjBoMjQwdi04MEg0NDB2ODBaTTIwMC0xMjBxLTMzIDAtNTYuNS0yMy41VDEyMC0yMDB2LTU2MHEwLTMzIDIzLjUtNTYuNVQyMDAtODQwaDU2MHEzMyAwIDU2LjUgMjMuNVQ4NDAtNzYwdjU2MHEwIDMzLTIzLjUgNTYuNVQ3NjAtMTIwSDIwMFptMC04MGg1NjB2LTU2MEgyMDB2NTYwWm0wLTU2MHY1NjAtNTYwWiIvPjwvc3ZnPg=="
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "bcce96be-a439-4f22-9d1e-a10487544fa5"
+                }
+              },
+              {
+                "Id": 183923,
+                "Version": 1,
+                "Guid": "977cb2e5-4480-4522-83ad-c0e9c1b33d99",
+                "Type": {
+                  "Id": "8c78dabf-e0ad-4c26-b750-48138ecb8a39",
+                  "Name": "SaveEmptyDecorator"
+                },
+                "Attributes": {},
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "bcce96be-a439-4f22-9d1e-a10487544fa5"
+                }
+              }
+            ],
+            "Attributes": []
+          },
+          "Entities": []
         }
       ],
       "Entities": [
