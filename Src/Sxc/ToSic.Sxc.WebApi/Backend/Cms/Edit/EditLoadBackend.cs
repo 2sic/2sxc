@@ -168,7 +168,7 @@ public partial class EditLoadBackend(
         if (allField.Any())
             result.RequiredFeatures = new()
             {
-                { BuiltInFeatures.FieldShareConfigManagement.NameId, allField.Select(f => $"Used in fields: {f.Type.Name}.{f.Name}").ToArray() },
+                { BuiltInFeatures.ContentTypeFieldsReuseDefinitions.NameId, allField.Select(f => $"Used in fields: {f.Type.Name}.{f.Name}").ToArray() },
             };
 
         // done
