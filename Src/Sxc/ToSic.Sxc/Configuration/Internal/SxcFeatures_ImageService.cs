@@ -47,7 +47,7 @@ public partial class SxcFeatures
         "Image Service - Multiple Formats",
         false,
         false,
-        "Enables the ImageService to also provide WebP as better alternatives to Jpg and Png",
+        "Enables the ImageService to also provide WebP as better alternatives to JPG and PNG",
         FeaturesCatalogRules.Security0Improved,
         Eav.Internal.Features.BuiltInFeatures.ForPatronsPerfectionist
     );
