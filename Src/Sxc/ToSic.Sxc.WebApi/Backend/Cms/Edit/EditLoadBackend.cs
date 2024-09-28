@@ -159,16 +159,16 @@ public partial class EditLoadBackend(
         }
 
         // Determine required features for the UI WIP 18.02
-        var allField = usedTypes
+        var inheritedFields = usedTypes
             .SelectMany(t => t.Attributes
                 .Where(a => a.SysSettings?.InheritMetadata == true)
                 .Select(a => new { Name = a.Name, Type = t}))
             .ToList();
 
-        if (allField.Any())
+        if (inheritedFields.Any())
             result.RequiredFeatures = new()
             {
-                { BuiltInFeatures.ContentTypeFieldsReuseDefinitions.NameId, allField.Select(f => $"Used in fields: {f.Type.Name}.{f.Name}").ToArray() },
+                { BuiltInFeatures.ContentTypeFieldsReuseDefinitions.NameId, inheritedFields.Select(f => $"Used in fields: {f.Type.Name}.{f.Name}").ToArray() },
             };
 
         // done
