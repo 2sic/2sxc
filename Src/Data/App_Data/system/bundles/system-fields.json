@@ -15616,26 +15616,6 @@
                 "IsTitle": false,
                 "Metadata": [
                   {
-                    "Id": 53800,
-                    "Version": 5,
-                    "Guid": "464233ce-8364-4b2f-b8fc-8c3591ada33e",
-                    "Type": {
-                      "Id": "@String",
-                      "Name": "@String"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "DropdownValues": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "en-us": ""
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=1"
-                  },
-                  {
                     "Id": 53795,
                     "Version": 10,
                     "Guid": "54e74c8d-9539-44ba-9ce0-025db7a42e0c",
@@ -15701,6 +15681,26 @@
                         },
                         "VisibleInEditUI": {
                           "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=1"
+                  },
+                  {
+                    "Id": 53800,
+                    "Version": 5,
+                    "Guid": "464233ce-8364-4b2f-b8fc-8c3591ada33e",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
                         }
                       }
                     },
@@ -15777,26 +15777,6 @@
                 "IsTitle": false,
                 "Metadata": [
                   {
-                    "Id": 53802,
-                    "Version": 5,
-                    "Guid": "ebacf837-1ae9-4c8a-b8f3-70a40b4daec6",
-                    "Type": {
-                      "Id": "@String",
-                      "Name": "@String"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "DropdownValues": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "en-us": ""
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=1"
-                  },
-                  {
                     "Id": 53796,
                     "Version": 9,
                     "Guid": "2e4375c3-f594-44f8-b8d6-bf1d2f61bd1b",
@@ -15862,6 +15842,26 @@
                         },
                         "VisibleInEditUI": {
                           "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=1"
+                  },
+                  {
+                    "Id": 53802,
+                    "Version": 5,
+                    "Guid": "ebacf837-1ae9-4c8a-b8f3-70a40b4daec6",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
                         }
                       }
                     },
@@ -17698,66 +17698,6 @@
       ],
       "Entities": [
         {
-          "Id": 183906,
-          "Version": 2,
-          "Guid": "4e5df6de-0980-48f3-8ad4-3e405fe67138",
-          "Type": {
-            "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
-            "Name": "UiPickerSourceCustomCsv"
-          },
-          "Attributes": {
-            "String": {
-              "Csv": {
-                "en-us": "Value,Title,Info\n,\"Default\",\"Disabled in the small editor, enabled in the popup Dialog\"\ntrue,\"Always Enable\",\"Always enable in all editors\"\nfalse,\"Always Disable\",\"Always disable in all editors\""
-              },
-              "Description": {
-                "en-us": ""
-              },
-              "ItemInformation": {
-                "en-us": "<p>[Item:Info]</p>"
-              },
-              "ItemTooltip": {
-                "en-us": "<p>[Item:Info]</p>"
-              },
-              "Title": {
-                "en-us": "String-WYSIWYG - Button Advanced"
-              }
-            },
-            "Hyperlink": {
-              "ItemLink": {
-                "en-us": ""
-              }
-            }
-          },
-          "Owner": "dnn:userid=41",
-          "Metadata": [
-            {
-              "Id": 183908,
-              "Version": 1,
-              "Guid": "c4606ff4-651e-4664-8393-6fa552ce8055",
-              "Type": {
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
-                "Name": "SystemExportDecorator"
-              },
-              "Attributes": {
-                "Entity": {
-                  "Configuration": {
-                    "*": [
-                      "ca0051d4-0c30-4fee-b0b7-6c6136674941"
-                    ]
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41",
-              "For": {
-                "Target": "Entity",
-                "TargetType": 4,
-                "Guid": "4e5df6de-0980-48f3-8ad4-3e405fe67138"
-              }
-            }
-          ]
-        },
-        {
           "Id": 183875,
           "Version": 2,
           "Guid": "f57b953e-9caf-4bf8-bbf8-51d2479835f5",
@@ -18173,6 +18113,66 @@
                 "Target": "Entity",
                 "TargetType": 4,
                 "Guid": "28e7b048-6967-4abf-bf84-4b09e5c45843"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 183906,
+          "Version": 2,
+          "Guid": "4e5df6de-0980-48f3-8ad4-3e405fe67138",
+          "Type": {
+            "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+            "Name": "UiPickerSourceCustomCsv"
+          },
+          "Attributes": {
+            "String": {
+              "Csv": {
+                "en-us": "Value,Title,Info\n,\"Default\",\"Disabled in the small editor, enabled in the popup Dialog\"\ntrue,\"Always Enable\",\"Always enable in all editors\"\nfalse,\"Always Disable\",\"Always disable in all editors\""
+              },
+              "Description": {
+                "en-us": ""
+              },
+              "ItemInformation": {
+                "en-us": "<p>[Item:Info]</p>"
+              },
+              "ItemTooltip": {
+                "en-us": "<p>[Item:Info]</p>"
+              },
+              "Title": {
+                "en-us": "String-WYSIWYG - Button Advanced"
+              }
+            },
+            "Hyperlink": {
+              "ItemLink": {
+                "en-us": ""
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 183908,
+              "Version": 1,
+              "Guid": "c4606ff4-651e-4664-8393-6fa552ce8055",
+              "Type": {
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "ca0051d4-0c30-4fee-b0b7-6c6136674941"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "4e5df6de-0980-48f3-8ad4-3e405fe67138"
               }
             }
           ]
