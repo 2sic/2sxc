@@ -483,7 +483,7 @@
             "Metadata": [
               {
                 "Id": 182309,
-                "Version": 1,
+                "Version": 2,
                 "Guid": "094a53b8-194c-4b6c-a076-89f883069af4",
                 "Type": {
                   "Id": "ContentType",
@@ -504,7 +504,7 @@
                       "en-us": "<p>Pick entities of a specific type.</p>"
                     },
                     "Label": {
-                      "en-us": "UI Picker Source - Entity Picker"
+                      "en-us": "UI Picker Source - Entities"
                     },
                     "ListInstructions": {
                       "en-us": ""
@@ -1420,61 +1420,6 @@
                     "Owner": "dnn:userid=41"
                   },
                   {
-                    "Id": 183694,
-                    "Version": 2,
-                    "Guid": "db7a056b-5403-4814-970c-1c41b316d7d7",
-                    "Type": {
-                      "Id": "@string-dropdown-query",
-                      "Name": "@string-dropdown-query"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "EntityType": {
-                          "en-us": ""
-                        },
-                        "Label": {
-                          "en-us": "Title"
-                        },
-                        "MoreFields": {
-                          "en-us": ""
-                        },
-                        "Query": {
-                          "en-us": "System.Attributes"
-                        },
-                        "Separator": {
-                          "en-us": ","
-                        },
-                        "StreamName": {
-                          "en-us": "Default"
-                        },
-                        "UrlParameters": {
-                          "en-us": "ContentTypeName=[ContentTypeNames]"
-                        },
-                        "Value": {
-                          "en-us": "Name"
-                        }
-                      },
-                      "Boolean": {
-                        "AllowMultiValue": {
-                          "en-us": true
-                        },
-                        "EnableCreate": {
-                          "en-us": false
-                        },
-                        "EnableEdit": {
-                          "en-us": false
-                        },
-                        "EnableRemove": {
-                          "en-us": true
-                        },
-                        "EnableTextEntry": {
-                          "en-us": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
                     "Id": 183748,
                     "Version": 1,
                     "Guid": "8d2ce3c6-21d6-4b29-9f41-b9f4eb425e48",
@@ -1588,7 +1533,7 @@
           "Entities": [
             {
               "Id": 183744,
-              "Version": 2,
+              "Version": 3,
               "Guid": "0ff39e34-cee6-4ac1-b188-d6fbc6f0952d",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -1624,7 +1569,7 @@
                     "en-us": "Default"
                   },
                   "Title": {
-                    "en-us": "System.Attributes for EntityPicker"
+                    "en-us": "Attributes for EntityPicker"
                   },
                   "Value": {
                     "en-us": "Name"
@@ -1689,110 +1634,6 @@
                 "Boolean": {
                   "Enabled": {
                     "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 183744,
-              "Version": 2,
-              "Guid": "0ff39e34-cee6-4ac1-b188-d6fbc6f0952d",
-              "Type": {
-                "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
-                "Name": "UiPickerSourceQuery"
-              },
-              "Attributes": {
-                "String": {
-                  "CreateTypes": {
-                    "en-us": ""
-                  },
-                  "Description": {
-                    "en-us": "<p>Will get the attributes for an Entity Picker.</p>"
-                  },
-                  "ItemInformation": {
-                    "en-us": ""
-                  },
-                  "ItemTooltip": {
-                    "en-us": ""
-                  },
-                  "Label": {
-                    "en-us": "Title"
-                  },
-                  "MoreFields": {
-                    "en-us": ""
-                  },
-                  "Query": {
-                    "en-us": "System.Attributes"
-                  },
-                  "QueryParameters": {
-                    "en-us": "ContentTypeName=[ContentTypeNames]"
-                  },
-                  "StreamName": {
-                    "en-us": "Default"
-                  },
-                  "Title": {
-                    "en-us": "System.Attributes for EntityPicker"
-                  },
-                  "Value": {
-                    "en-us": "Name"
-                  }
-                },
-                "Hyperlink": {
-                  "ItemLink": {
-                    "en-us": ""
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 183744,
-              "Version": 2,
-              "Guid": "0ff39e34-cee6-4ac1-b188-d6fbc6f0952d",
-              "Type": {
-                "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
-                "Name": "UiPickerSourceQuery"
-              },
-              "Attributes": {
-                "String": {
-                  "CreateTypes": {
-                    "en-us": ""
-                  },
-                  "Description": {
-                    "en-us": "<p>Will get the attributes for an Entity Picker.</p>"
-                  },
-                  "ItemInformation": {
-                    "en-us": ""
-                  },
-                  "ItemTooltip": {
-                    "en-us": ""
-                  },
-                  "Label": {
-                    "en-us": "Title"
-                  },
-                  "MoreFields": {
-                    "en-us": ""
-                  },
-                  "Query": {
-                    "en-us": "System.Attributes"
-                  },
-                  "QueryParameters": {
-                    "en-us": "ContentTypeName=[ContentTypeNames]"
-                  },
-                  "StreamName": {
-                    "en-us": "Default"
-                  },
-                  "Title": {
-                    "en-us": "System.Attributes for EntityPicker"
-                  },
-                  "Value": {
-                    "en-us": "Name"
-                  }
-                },
-                "Hyperlink": {
-                  "ItemLink": {
-                    "en-us": ""
                   }
                 }
               },
@@ -2275,7 +2116,7 @@
                 "Metadata": [
                   {
                     "Id": 182282,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "6025db5b-75e4-491f-9045-55224f31c6e8",
                     "Type": {
                       "Id": "@All",
@@ -2366,7 +2207,7 @@
                   },
                   {
                     "Id": 182295,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "9d2ac197-62c4-4204-9c1b-bf0b0640ab43",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -2401,7 +2242,7 @@
                       },
                       "Boolean": {
                         "AllowMultiValue": {
-                          "en-us": true
+                          "en-us": false
                         },
                         "EnableCreate": {
                           "en-us": false
@@ -2424,12 +2265,12 @@
               {
                 "Name": "Value",
                 "Type": "String",
-                "InputType": "string-dropdown-query",
+                "InputType": "string-picker",
                 "IsTitle": false,
                 "Metadata": [
                   {
                     "Id": 182283,
-                    "Version": 4,
+                    "Version": 8,
                     "Guid": "02109e16-a6ae-485f-ac61-81ac334cf81c",
                     "Type": {
                       "Id": "@All",
@@ -2447,7 +2288,7 @@
                           "en-us": ""
                         },
                         "InputType": {
-                          "en-us": "string-dropdown-query"
+                          "en-us": "string-picker"
                         },
                         "Name": {
                           "en-us": "Value Field"
@@ -2519,43 +2360,47 @@
                     "Owner": "dnn:userid=41"
                   },
                   {
-                    "Id": 182297,
-                    "Version": 2,
-                    "Guid": "4129cb57-5389-4d70-8af6-a8aa001ebad9",
+                    "Id": 183968,
+                    "Version": 1,
+                    "Guid": "d2f6e7f4-1ff9-44a0-babd-fee419272d5e",
                     "Type": {
-                      "Id": "@string-dropdown-query",
-                      "Name": "@string-dropdown-query"
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
                     },
                     "Attributes": {
                       "String": {
-                        "EntityType": {
+                        "CreateParameters": {
                           "en-us": ""
                         },
-                        "Label": {
-                          "en-us": "Title"
-                        },
-                        "MoreFields": {
+                        "CreatePrefill": {
                           "en-us": ""
                         },
-                        "Query": {
-                          "en-us": "System.QueryInfo"
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "list"
                         },
                         "Separator": {
-                          "en-us": ","
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "839f7aef-a5f2-4fa2-8065-30eb78e267ac"
+                          ]
                         },
-                        "StreamName": {
-                          "en-us": "Attributes"
-                        },
-                        "UrlParameters": {
-                          "en-us": "QueryName=[Query]&StreamName=[StreamName]"
-                        },
-                        "Value": {
-                          "en-us": "Name"
+                        "PickerDisplayConfiguration": {
+                          "*": []
                         }
                       },
                       "Boolean": {
                         "AllowMultiValue": {
                           "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
                         },
                         "EnableCreate": {
                           "en-us": false
@@ -2565,6 +2410,9 @@
                         },
                         "EnableRemove": {
                           "en-us": true
+                        },
+                        "EnableReselect": {
+                          "en-us": false
                         },
                         "EnableTextEntry": {
                           "en-us": true
@@ -2578,12 +2426,12 @@
               {
                 "Name": "Label",
                 "Type": "String",
-                "InputType": "string-dropdown-query",
+                "InputType": "string-picker",
                 "IsTitle": false,
                 "Metadata": [
                   {
                     "Id": 182284,
-                    "Version": 3,
+                    "Version": 6,
                     "Guid": "249b749f-ffe7-4448-b72e-5dca775fc828",
                     "Type": {
                       "Id": "@All",
@@ -2601,7 +2449,7 @@
                           "en-us": ""
                         },
                         "InputType": {
-                          "en-us": "string-dropdown-query"
+                          "en-us": "string-picker"
                         },
                         "Name": {
                           "en-us": "Label Field"
@@ -2673,43 +2521,47 @@
                     "Owner": "dnn:userid=41"
                   },
                   {
-                    "Id": 182299,
-                    "Version": 2,
-                    "Guid": "974dc409-fb34-4458-83ee-b2ed4daeae5e",
+                    "Id": 183969,
+                    "Version": 1,
+                    "Guid": "c101c26e-b759-4256-987b-c6a712b8106f",
                     "Type": {
-                      "Id": "@string-dropdown-query",
-                      "Name": "@string-dropdown-query"
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
                     },
                     "Attributes": {
                       "String": {
-                        "EntityType": {
+                        "CreateParameters": {
                           "en-us": ""
                         },
-                        "Label": {
-                          "en-us": "Title"
-                        },
-                        "MoreFields": {
+                        "CreatePrefill": {
                           "en-us": ""
                         },
-                        "Query": {
-                          "en-us": "System.QueryInfo"
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "list"
                         },
                         "Separator": {
-                          "en-us": ","
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "839f7aef-a5f2-4fa2-8065-30eb78e267ac"
+                          ]
                         },
-                        "StreamName": {
-                          "en-us": "Attributes"
-                        },
-                        "UrlParameters": {
-                          "en-us": "QueryName=[Query]&StreamName=[StreamName]"
-                        },
-                        "Value": {
-                          "en-us": "Name"
+                        "PickerDisplayConfiguration": {
+                          "*": []
                         }
                       },
                       "Boolean": {
                         "AllowMultiValue": {
                           "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
                         },
                         "EnableCreate": {
                           "en-us": false
@@ -2719,6 +2571,9 @@
                         },
                         "EnableRemove": {
                           "en-us": true
+                        },
+                        "EnableReselect": {
+                          "en-us": false
                         },
                         "EnableTextEntry": {
                           "en-us": true
@@ -2732,12 +2587,12 @@
               {
                 "Name": "MoreFields",
                 "Type": "String",
-                "InputType": "string-dropdown-query",
+                "InputType": "string-picker",
                 "IsTitle": false,
                 "Metadata": [
                   {
                     "Id": 182285,
-                    "Version": 3,
+                    "Version": 6,
                     "Guid": "903997e4-8cdd-4503-8f3d-89546aef391f",
                     "Type": {
                       "Id": "@All",
@@ -2755,10 +2610,10 @@
                           "en-us": ""
                         },
                         "InputType": {
-                          "en-us": "string-dropdown-query"
+                          "en-us": "string-picker"
                         },
                         "Name": {
-                          "en-us": "More Fields to retrieve (beta 16.0x)"
+                          "en-us": "More Fields to retrieve"
                         },
                         "Notes": {
                           "en-us": "<p>Additional fields can be used for tooltip, help or information.</p>"
@@ -2827,42 +2682,46 @@
                     "Owner": "dnn:userid=41"
                   },
                   {
-                    "Id": 182301,
-                    "Version": 2,
-                    "Guid": "d1c93946-9e92-4032-b2aa-5a3fc273d51e",
+                    "Id": 183970,
+                    "Version": 1,
+                    "Guid": "dd1992f9-a98d-4e6d-9502-40466cc023b4",
                     "Type": {
-                      "Id": "@string-dropdown-query",
-                      "Name": "@string-dropdown-query"
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
                     },
                     "Attributes": {
                       "String": {
-                        "EntityType": {
+                        "CreateParameters": {
                           "en-us": ""
                         },
-                        "Label": {
-                          "en-us": "Title"
-                        },
-                        "MoreFields": {
+                        "CreatePrefill": {
                           "en-us": ""
                         },
-                        "Query": {
-                          "en-us": "System.QueryInfo"
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "list"
                         },
                         "Separator": {
                           "en-us": ","
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "839f7aef-a5f2-4fa2-8065-30eb78e267ac"
+                          ]
                         },
-                        "StreamName": {
-                          "en-us": "Attributes"
-                        },
-                        "UrlParameters": {
-                          "en-us": "QueryName=[Query]&StreamName=[StreamName]"
-                        },
-                        "Value": {
-                          "en-us": "Name"
+                        "PickerDisplayConfiguration": {
+                          "*": []
                         }
                       },
                       "Boolean": {
                         "AllowMultiValue": {
+                          "en-us": true
+                        },
+                        "EnableAddExisting": {
                           "en-us": true
                         },
                         "EnableCreate": {
@@ -2873,6 +2732,9 @@
                         },
                         "EnableRemove": {
                           "en-us": true
+                        },
+                        "EnableReselect": {
+                          "en-us": false
                         },
                         "EnableTextEntry": {
                           "en-us": true
@@ -3105,6 +2967,58 @@
                 "Boolean": {
                   "Enabled": {
                     "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183964,
+              "Version": 2,
+              "Guid": "839f7aef-a5f2-4fa2-8065-30eb78e267ac",
+              "Type": {
+                "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
+                "Name": "UiPickerSourceQuery"
+              },
+              "Attributes": {
+                "String": {
+                  "CreateTypes": {
+                    "en-us": ""
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": ""
+                  },
+                  "ItemTooltip": {
+                    "en-us": ""
+                  },
+                  "Label": {
+                    "en-us": "Title"
+                  },
+                  "MoreFields": {
+                    "en-us": ""
+                  },
+                  "Query": {
+                    "en-us": "System.QueryInfo"
+                  },
+                  "QueryParameters": {
+                    "en-us": "QueryName=[Query]&StreamName=[StreamName]"
+                  },
+                  "StreamName": {
+                    "en-us": "Attributes"
+                  },
+                  "Title": {
+                    "en-us": "Attributes for System.Query using QueryInfo"
+                  },
+                  "Value": {
+                    "en-us": "Name"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
                   }
                 }
               },
@@ -8134,58 +8048,6 @@
               "Owner": "dnn:userid=41"
             },
             {
-              "Id": 182681,
-              "Version": 27,
-              "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
-              "Type": {
-                "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
-                "Name": "UiPickerSourceQuery"
-              },
-              "Attributes": {
-                "String": {
-                  "CreateTypes": {
-                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv\nUiPickerSourceCss"
-                  },
-                  "Description": {
-                    "en-us": "<p>Get all Data Sources for UI Pickers.</p>"
-                  },
-                  "ItemInformation": {
-                    "en-us": "<p>[item:Description]</p>"
-                  },
-                  "ItemTooltip": {
-                    "en-us": ""
-                  },
-                  "Label": {
-                    "en-us": "[Item:Title] ([Item:Id])"
-                  },
-                  "MoreFields": {
-                    "en-us": ""
-                  },
-                  "Query": {
-                    "en-us": "System.UiPickers"
-                  },
-                  "QueryParameters": {
-                    "en-us": ""
-                  },
-                  "StreamName": {
-                    "en-us": "Default"
-                  },
-                  "Title": {
-                    "en-us": "System.UiPickers Data Source"
-                  },
-                  "Value": {
-                    "en-us": "Guid"
-                  }
-                },
-                "Hyperlink": {
-                  "ItemLink": {
-                    "en-us": ""
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
               "Id": 182493,
               "Version": 1,
               "Guid": "5f17d5e2-fc51-4c6a-acd4-41f6c8de27f1",
@@ -11365,302 +11227,7 @@
           "Entities": []
         }
       ],
-      "Entities": [
-        {
-          "Id": 182677,
-          "Version": 2,
-          "Guid": "c6732c81-bfeb-4675-9a9d-611ad0289de2",
-          "Type": {
-            "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
-            "Name": "UiPickerSourceQuery"
-          },
-          "Attributes": {
-            "String": {
-              "CreateTypes": {
-                "en-us": ""
-              },
-              "Description": {
-                "en-us": "<p>Find all Content-Types</p>"
-              },
-              "ItemInformation": {
-                "en-us": ""
-              },
-              "ItemTooltip": {
-                "en-us": ""
-              },
-              "Label": {
-                "en-us": "Title"
-              },
-              "MoreFields": {
-                "en-us": ""
-              },
-              "Query": {
-                "en-us": "Eav.Queries.Global.ContentTypes"
-              },
-              "QueryParameters": {
-                "en-us": ""
-              },
-              "StreamName": {
-                "en-us": "Default"
-              },
-              "Title": {
-                "en-us": "ContentTypes (all)"
-              },
-              "Value": {
-                "en-us": "NameId"
-              }
-            },
-            "Hyperlink": {
-              "ItemLink": {
-                "en-us": ""
-              }
-            }
-          },
-          "Owner": "dnn:userid=41",
-          "Metadata": [
-            {
-              "Id": 182679,
-              "Version": 1,
-              "Guid": "a5410e4e-cd99-4061-a12e-97e180dc3a9a",
-              "Type": {
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
-                "Name": "SystemExportDecorator"
-              },
-              "Attributes": {
-                "Entity": {
-                  "Configuration": {
-                    "*": [
-                      "ab72c1ff-f0c6-4d22-bada-75e0168736dc"
-                    ]
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41",
-              "For": {
-                "Target": "Entity",
-                "TargetType": 4,
-                "Guid": "c6732c81-bfeb-4675-9a9d-611ad0289de2"
-              }
-            }
-          ]
-        },
-        {
-          "Id": 182681,
-          "Version": 27,
-          "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
-          "Type": {
-            "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
-            "Name": "UiPickerSourceQuery"
-          },
-          "Attributes": {
-            "String": {
-              "CreateTypes": {
-                "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv\nUiPickerSourceCss"
-              },
-              "Description": {
-                "en-us": "<p>Get all Data Sources for UI Pickers.</p>"
-              },
-              "ItemInformation": {
-                "en-us": "<p>[item:Description]</p>"
-              },
-              "ItemTooltip": {
-                "en-us": ""
-              },
-              "Label": {
-                "en-us": "[Item:Title] ([Item:Id])"
-              },
-              "MoreFields": {
-                "en-us": ""
-              },
-              "Query": {
-                "en-us": "System.UiPickers"
-              },
-              "QueryParameters": {
-                "en-us": ""
-              },
-              "StreamName": {
-                "en-us": "Default"
-              },
-              "Title": {
-                "en-us": "System.UiPickers Data Source"
-              },
-              "Value": {
-                "en-us": "Guid"
-              }
-            },
-            "Hyperlink": {
-              "ItemLink": {
-                "en-us": ""
-              }
-            }
-          },
-          "Owner": "dnn:userid=41",
-          "Metadata": [
-            {
-              "Id": 182682,
-              "Version": 1,
-              "Guid": "3a97d7a1-20d8-4587-94e0-498b51193001",
-              "Type": {
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
-                "Name": "SystemExportDecorator"
-              },
-              "Attributes": {
-                "Entity": {
-                  "Configuration": {
-                    "*": [
-                      "ab72c1ff-f0c6-4d22-bada-75e0168736dc"
-                    ]
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41",
-              "For": {
-                "Target": "Entity",
-                "TargetType": 4,
-                "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380"
-              }
-            }
-          ]
-        },
-        {
-          "Id": 183744,
-          "Version": 2,
-          "Guid": "0ff39e34-cee6-4ac1-b188-d6fbc6f0952d",
-          "Type": {
-            "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
-            "Name": "UiPickerSourceQuery"
-          },
-          "Attributes": {
-            "String": {
-              "CreateTypes": {
-                "en-us": ""
-              },
-              "Description": {
-                "en-us": "<p>Will get the attributes for an Entity Picker.</p>"
-              },
-              "ItemInformation": {
-                "en-us": ""
-              },
-              "ItemTooltip": {
-                "en-us": ""
-              },
-              "Label": {
-                "en-us": "Title"
-              },
-              "MoreFields": {
-                "en-us": ""
-              },
-              "Query": {
-                "en-us": "System.Attributes"
-              },
-              "QueryParameters": {
-                "en-us": "ContentTypeName=[ContentTypeNames]"
-              },
-              "StreamName": {
-                "en-us": "Default"
-              },
-              "Title": {
-                "en-us": "System.Attributes for EntityPicker"
-              },
-              "Value": {
-                "en-us": "Name"
-              }
-            },
-            "Hyperlink": {
-              "ItemLink": {
-                "en-us": ""
-              }
-            }
-          },
-          "Owner": "dnn:userid=41",
-          "Metadata": [
-            {
-              "Id": 183745,
-              "Version": 1,
-              "Guid": "275e8f7d-4fa3-4c1e-8cec-f6dfe2035424",
-              "Type": {
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
-                "Name": "SystemExportDecorator"
-              },
-              "Attributes": {
-                "Entity": {
-                  "Configuration": {
-                    "*": [
-                      "ab72c1ff-f0c6-4d22-bada-75e0168736dc"
-                    ]
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41",
-              "For": {
-                "Target": "Entity",
-                "TargetType": 4,
-                "Guid": "0ff39e34-cee6-4ac1-b188-d6fbc6f0952d"
-              }
-            }
-          ]
-        },
-        {
-          "Id": 183894,
-          "Version": 6,
-          "Guid": "b09500f5-0a16-4347-97d4-505bac83d0fc",
-          "Type": {
-            "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
-            "Name": "UiPickerSourceCustomCsv"
-          },
-          "Attributes": {
-            "String": {
-              "Csv": {
-                "en-us": "Value,Title,Info,Disabled\nlist,\"Default\",\"Dropdown with search and dialog when more need to be selected.\",false\n\nauto-inline,\"Inline Auto WIP\",\"Inline - automatically showing checkboxes or radio buttons, depending on the amount of items you can select\",true\nradio,\"Inline Radio Buttons WIP\",\"Inline radio button selection for single-item choices\",true\ncheckbox,\"Inline Checkboxes WIP\",\"Inline checkbox list for multiple item selection\",true\n\ntree,\"Tree structure - requires more configuration (BETA, doesn't work yet)\",,true"
-              },
-              "Description": {
-                "en-us": ""
-              },
-              "ItemInformation": {
-                "en-us": "<p>[Item:Info]</p>"
-              },
-              "ItemTooltip": {
-                "en-us": "<p>[Item:Info]</p>"
-              },
-              "Title": {
-                "en-us": "Picker Shared - DisplayMode"
-              }
-            },
-            "Hyperlink": {
-              "ItemLink": {
-                "en-us": ""
-              }
-            }
-          },
-          "Owner": "dnn:userid=41",
-          "Metadata": [
-            {
-              "Id": 183896,
-              "Version": 1,
-              "Guid": "bc423598-c313-48ac-8fab-28eb1cb0c44d",
-              "Type": {
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
-                "Name": "SystemExportDecorator"
-              },
-              "Attributes": {
-                "Entity": {
-                  "Configuration": {
-                    "*": [
-                      "ab72c1ff-f0c6-4d22-bada-75e0168736dc"
-                    ]
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41",
-              "For": {
-                "Target": "Entity",
-                "TargetType": 4,
-                "Guid": "b09500f5-0a16-4347-97d4-505bac83d0fc"
-              }
-            }
-          ]
-        }
-      ]
+      "Entities": []
     }
   ]
 }
