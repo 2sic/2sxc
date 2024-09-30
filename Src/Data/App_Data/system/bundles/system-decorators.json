@@ -5443,99 +5443,6 @@
           },
           "Entities": [
             {
-              "Id": 144523,
-              "Version": 2,
-              "Guid": "46e32523-21b2-4485-8e10-ae846009e305",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v1(data, context) {\n  return context.debug;\n}"
-                  },
-                  "Notes": {
-                    "en-us": ""
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Setting Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 144445,
-              "Version": 4,
-              "Guid": "48dfbe23-bdad-4fd3-a216-3e28dd072d39",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v1(data, context) {\n  var partMsg = function(target, value) {\n    if (value == -1) return target + ' \uD83D\uDEAB';\n    return target + ' ' + value + 's';\n  }\n  var msg = '';\n  if (!data.IsEnabled)\n    return '\uD83D\uDEAB';\n  msg = '✅ - ';\n  msg += partMsg('Users', data.Duration);\n  msg += ', ' + partMsg('Reg', data.DurationUsers);\n  msg += ', ' + partMsg('Editors', data.DurationEditors);\n  msg += ', ' + partMsg('SysAdmins', data.DurationSystemAdmin);\n  return msg;\n}"
-                  },
-                  "Notes": {
-                    "en-us": ""
-                  },
-                  "Target": {
-                    "en-us": "Field.Value"
-                  },
-                  "Title": {
-                    "en-us": "Value"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 144458,
-              "Version": 4,
-              "Guid": "21f878f4-f822-45cf-a840-8d7d581e8f0d",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v1(data, context) {\n  if (context.cache.alreadyRun) return data.value;\n  context.cache.alreadyRun = true;\n  const enabled = context.features.isEnabled('LightSpeedOutputCache');\n  // console.log(\"enabled\", enabled);\n  return !enabled;\n}"
-                  },
-                  "Notes": {
-                    "en-us": ""
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Setting Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
               "Id": 183804,
               "Version": 2,
               "Guid": "3cdbdd23-27c8-4fbd-8b56-43501a9606bb",
@@ -5665,6 +5572,99 @@
                   },
                   "Title": {
                     "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 144523,
+              "Version": 2,
+              "Guid": "46e32523-21b2-4485-8e10-ae846009e305",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v1(data, context) {\n  return context.debug;\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Setting Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 144445,
+              "Version": 4,
+              "Guid": "48dfbe23-bdad-4fd3-a216-3e28dd072d39",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v1(data, context) {\n  var partMsg = function(target, value) {\n    if (value == -1) return target + ' \uD83D\uDEAB';\n    return target + ' ' + value + 's';\n  }\n  var msg = '';\n  if (!data.IsEnabled)\n    return '\uD83D\uDEAB';\n  msg = '✅ - ';\n  msg += partMsg('Users', data.Duration);\n  msg += ', ' + partMsg('Reg', data.DurationUsers);\n  msg += ', ' + partMsg('Editors', data.DurationEditors);\n  msg += ', ' + partMsg('SysAdmins', data.DurationSystemAdmin);\n  return msg;\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Value"
+                  },
+                  "Title": {
+                    "en-us": "Value"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 144458,
+              "Version": 4,
+              "Guid": "21f878f4-f822-45cf-a840-8d7d581e8f0d",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v1(data, context) {\n  if (context.cache.alreadyRun) return data.value;\n  context.cache.alreadyRun = true;\n  const enabled = context.features.isEnabled('LightSpeedOutputCache');\n  // console.log(\"enabled\", enabled);\n  return !enabled;\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -9439,42 +9439,6 @@
                     },
                     "Link": {
                       "en-us": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "7775df1b-9c6d-4344-8f64-f6683b324615"
-                }
-              },
-              {
-                "Id": 183989,
-                "Version": 1,
-                "Guid": "6e6e253f-56ed-4c7b-ab4d-9ce37b182a41",
-                "Type": {
-                  "Id": "4c88d78f-5f3e-4b66-95f2-6d63b7858847",
-                  "Name": "MetadataForDecorator"
-                },
-                "Attributes": {
-                  "String": {
-                    "DeleteWarning": {
-                      "en-us": ""
-                    },
-                    "TargetName": {
-                      "en-us": ""
-                    },
-                    "Title": {
-                      "en-us": "Metadata for Input Fields"
-                    }
-                  },
-                  "Number": {
-                    "Amount": {
-                      "en-us": 1
-                    },
-                    "TargetType": {
-                      "en-us": 2
                     }
                   }
                 },

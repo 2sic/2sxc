@@ -11859,6 +11859,151 @@
                 ]
               },
               {
+                "Name": "PickerPreviewType",
+                "Guid": "2ca67f4b-7e68-4502-ac73-9c521fba2aaf",
+                "Type": "String",
+                "InputType": "string-picker",
+                "IsTitle": false,
+                "SysSettings": {
+                  "Share": true
+                },
+                "Metadata": [
+                  {
+                    "Id": 183993,
+                    "Version": 4,
+                    "Guid": "2533cf19-7597-46ad-bdda-19d7c693b0db",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-picker"
+                        },
+                        "Name": {
+                          "en-us": "Preview Type"
+                        },
+                        "Notes": {
+                          "en-us": "<p>If the selected data can be previewed (like an icon), specify how.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183995,
+                    "Version": 3,
+                    "Guid": "bce7becc-0db7-436f-a6c7-6694a45d9ef3",
+                    "Type": {
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CreateParameters": {
+                          "en-us": ""
+                        },
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "list"
+                        },
+                        "Separator": {
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "c37e1472-d258-4ce4-8733-d801a049f574"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": true
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "GroupEditDialog",
                 "Guid": "bc89498a-6a98-4d7c-994f-4c04b8930154",
                 "Type": "Empty",
@@ -12716,6 +12861,40 @@
                 "Boolean": {
                   "Enabled": {
                     "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183994,
+              "Version": 2,
+              "Guid": "c37e1472-d258-4ce4-8733-d801a049f574",
+              "Type": {
+                "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+                "Name": "UiPickerSourceCustomCsv"
+              },
+              "Attributes": {
+                "String": {
+                  "Csv": {
+                    "en-us": "Value,Title,Info\n,\"Not configured (default)\",\"No special preview, or use the preview-setting from the source - this is the default for normal values\"\nicon-css,\"Icon from Font in CSS\",\"Show the value as an icon from an icon-font such as fontawesome, which is specified in the CSS\"\nsvg,\"SVG preview\",\"Show an SVG file - typically an icon\"\ntext-css,\"Text formatted by CSS\",\"Show some text to see how the text-formatting changes\"\nimage,\"Image\",\"Show an image which is specified by the data\""
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": ""
+                  },
+                  "ItemTooltip": {
+                    "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "Title": {
+                    "en-us": "Picker Shared - Preview Type"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
                   }
                 }
               },
@@ -14021,6 +14200,106 @@
                     "Owner": "dnn:userid=41"
                   }
                 ]
+              },
+              {
+                "Name": "GroupPreview",
+                "Guid": "809f9514-13eb-4182-8a03-a010b93beaf7",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "SysSettings": {
+                  "Share": true
+                },
+                "Metadata": [
+                  {
+                    "Id": 184000,
+                    "Version": 3,
+                    "Guid": "731b5bbf-2f59-424f-9987-4c31d094f521",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-default"
+                        },
+                        "Name": {
+                          "en-us": "Preview Settings"
+                        },
+                        "Notes": {
+                          "en-us": "<p>The following settings can adjust how the selected value is previewed.</p>\n<p>For example, you can specify how a file such as an image/SVG is previewed, or how an icon-font will be displayed.&nbsp;</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 184001,
+                    "Version": 2,
+                    "Guid": "2ddfec52-9e8a-4363-9efa-cbedc1fdef9d",
+                    "Type": {
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
               }
             ]
           },
@@ -14712,6 +14991,68 @@
                 ]
               },
               {
+                "Name": "GroupPreview",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "SysSettings": {
+                  "InheritMetadataOf": "809f9514-13eb-4182-8a03-a010b93beaf7"
+                }
+              },
+              {
+                "Name": "PreviewValue",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183999,
+                    "Version": 1,
+                    "Guid": "2668c20e-aef8-40ce-9f6e-26b48f445189",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputType": {
+                          "*": "string-default"
+                        },
+                        "Name": {
+                          "*": "ValuePreview"
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "VisibleInEditUI": {
+                          "*": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "PickerPreviewType",
+                "Type": "String",
+                "InputType": "string-picker",
+                "IsTitle": false,
+                "SysSettings": {
+                  "InheritMetadataOf": "2ca67f4b-7e68-4502-ac73-9c521fba2aaf"
+                }
+              },
+              {
                 "Name": "GroupItemHelp",
                 "Type": "Empty",
                 "InputType": "empty-default",
@@ -15102,7 +15443,7 @@
                 "Metadata": [
                   {
                     "Id": 183939,
-                    "Version": 4,
+                    "Version": 5,
                     "Guid": "9c9cd7f9-16b9-4699-86cb-ce91ca4c4b8f",
                     "Type": {
                       "Id": "@All",
@@ -15114,7 +15455,7 @@
                           "en-us": ""
                         },
                         "DefaultValue": {
-                          "en-us": "[App:Path]/Icons/fontawesome-nobrands.min.css"
+                          "en-us": "[App:Path]/icons/fontawesome-nobrands.min.css"
                         },
                         "Information": {
                           "en-us": ""
@@ -15173,7 +15514,7 @@
                   },
                   {
                     "Id": 183942,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "42470026-2c2c-40fa-9a82-2e227af1ce6c",
                     "Type": {
                       "Id": "@Hyperlink",
@@ -15460,14 +15801,23 @@
                 ]
               },
               {
-                "Name": "ValuePreview",
+                "Name": "GroupPreview",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "SysSettings": {
+                  "InheritMetadataOf": "809f9514-13eb-4182-8a03-a010b93beaf7"
+                }
+              },
+              {
+                "Name": "PreviewValue",
                 "Type": "String",
                 "InputType": "string-default",
                 "IsTitle": false,
                 "Metadata": [
                   {
                     "Id": 183946,
-                    "Version": 2,
+                    "Version": 4,
                     "Guid": "93e77f98-91ae-42ec-8e49-b890f2c375df",
                     "Type": {
                       "Id": "@All",
@@ -15479,7 +15829,7 @@
                           "en-us": ""
                         },
                         "DefaultValue": {
-                          "en-us": ".fas [Item:ValueRaw]"
+                          "en-us": "fas [Item:Value]"
                         },
                         "Information": {
                           "en-us": ""
@@ -15488,7 +15838,7 @@
                           "en-us": "string-default"
                         },
                         "Name": {
-                          "en-us": "Value Preview"
+                          "en-us": "Preview Value"
                         },
                         "Notes": {
                           "en-us": "<p>CSS rule to use for the preview. Allows you to specify things such as prefixes (required for Font-Awesom, but not for newer If not specified, will just use the found selector with dot, so \".address\". Placeholders:</p>\n<ol>\n<li>[Item:Value] - the selector without leading \".\"</li>\n<li>[Item:ValueRaw] - the selector with leading \".\"</li>\n</ol>"
@@ -15538,7 +15888,7 @@
                   },
                   {
                     "Id": 183949,
-                    "Version": 1,
+                    "Version": 3,
                     "Guid": "061e6f38-7e70-4420-8d93-e832f83d267e",
                     "Type": {
                       "Id": "@String",
@@ -15558,7 +15908,7 @@
                   },
                   {
                     "Id": 183950,
-                    "Version": 1,
+                    "Version": 3,
                     "Guid": "aca91517-1845-49e9-8b5e-056801366af5",
                     "Type": {
                       "Id": "@string-default",
@@ -15571,6 +15921,147 @@
                         },
                         "TextWrapping": {
                           "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "PickerPreviewType",
+                "Type": "String",
+                "InputType": "string-picker",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 184005,
+                    "Version": 3,
+                    "Guid": "43f37c22-b262-4933-beed-a2d0d14068a3",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "icon-css"
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-picker"
+                        },
+                        "Name": {
+                          "en-us": "Preview Type"
+                        },
+                        "Notes": {
+                          "en-us": "<p>If the selected data can be previewed (like an icon), specify how.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 184006,
+                    "Version": 2,
+                    "Guid": "f821a003-0b0d-44ee-9ece-6cb4f8692b51",
+                    "Type": {
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CreateParameters": {
+                          "en-us": ""
+                        },
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "radio"
+                        },
+                        "Separator": {
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "c37e1472-d258-4ce4-8733-d801a049f574"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": true
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": true
                         }
                       }
                     },
