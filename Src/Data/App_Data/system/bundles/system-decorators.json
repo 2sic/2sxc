@@ -2562,7 +2562,11 @@
               "Guid": "29e24872-6359-4c9e-9c0c-c5a9e68a4a7d",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
-                "Name": "UiPickerSourceQuery"
+                "Name": "UiPickerSourceQuery",
+                "AttributeMap": {
+                  "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
+                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a"
+                }
               },
               "Attributes": {
                 "String": {
@@ -5439,6 +5443,99 @@
           },
           "Entities": [
             {
+              "Id": 144523,
+              "Version": 2,
+              "Guid": "46e32523-21b2-4485-8e10-ae846009e305",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v1(data, context) {\n  return context.debug;\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Setting Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 144445,
+              "Version": 4,
+              "Guid": "48dfbe23-bdad-4fd3-a216-3e28dd072d39",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v1(data, context) {\n  var partMsg = function(target, value) {\n    if (value == -1) return target + ' \uD83D\uDEAB';\n    return target + ' ' + value + 's';\n  }\n  var msg = '';\n  if (!data.IsEnabled)\n    return '\uD83D\uDEAB';\n  msg = '✅ - ';\n  msg += partMsg('Users', data.Duration);\n  msg += ', ' + partMsg('Reg', data.DurationUsers);\n  msg += ', ' + partMsg('Editors', data.DurationEditors);\n  msg += ', ' + partMsg('SysAdmins', data.DurationSystemAdmin);\n  return msg;\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Value"
+                  },
+                  "Title": {
+                    "en-us": "Value"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 144458,
+              "Version": 4,
+              "Guid": "21f878f4-f822-45cf-a840-8d7d581e8f0d",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v1(data, context) {\n  if (context.cache.alreadyRun) return data.value;\n  context.cache.alreadyRun = true;\n  const enabled = context.features.isEnabled('LightSpeedOutputCache');\n  // console.log(\"enabled\", enabled);\n  return !enabled;\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Setting Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
               "Id": 183804,
               "Version": 2,
               "Guid": "3cdbdd23-27c8-4fbd-8b56-43501a9606bb",
@@ -5568,99 +5665,6 @@
                   },
                   "Title": {
                     "en-us": "Field.Settings.Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 144523,
-              "Version": 2,
-              "Guid": "46e32523-21b2-4485-8e10-ae846009e305",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v1(data, context) {\n  return context.debug;\n}"
-                  },
-                  "Notes": {
-                    "en-us": ""
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Setting Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 144445,
-              "Version": 4,
-              "Guid": "48dfbe23-bdad-4fd3-a216-3e28dd072d39",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v1(data, context) {\n  var partMsg = function(target, value) {\n    if (value == -1) return target + ' \uD83D\uDEAB';\n    return target + ' ' + value + 's';\n  }\n  var msg = '';\n  if (!data.IsEnabled)\n    return '\uD83D\uDEAB';\n  msg = '✅ - ';\n  msg += partMsg('Users', data.Duration);\n  msg += ', ' + partMsg('Reg', data.DurationUsers);\n  msg += ', ' + partMsg('Editors', data.DurationEditors);\n  msg += ', ' + partMsg('SysAdmins', data.DurationSystemAdmin);\n  return msg;\n}"
-                  },
-                  "Notes": {
-                    "en-us": ""
-                  },
-                  "Target": {
-                    "en-us": "Field.Value"
-                  },
-                  "Title": {
-                    "en-us": "Value"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 144458,
-              "Version": 4,
-              "Guid": "21f878f4-f822-45cf-a840-8d7d581e8f0d",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v1(data, context) {\n  if (context.cache.alreadyRun) return data.value;\n  context.cache.alreadyRun = true;\n  const enabled = context.features.isEnabled('LightSpeedOutputCache');\n  // console.log(\"enabled\", enabled);\n  return !enabled;\n}"
-                  },
-                  "Notes": {
-                    "en-us": ""
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -9390,6 +9394,356 @@
             "Attributes": []
           },
           "Entities": []
+        },
+        {
+          "ContentType": {
+            "Id": "7775df1b-9c6d-4344-8f64-f6683b324615",
+            "Name": "FieldSettingsGeneric",
+            "Scope": "System.Decorators",
+            "Metadata": [
+              {
+                "Id": 183983,
+                "Version": 1,
+                "Guid": "5c4445aa-e14e-4cd2-abca-011dfa4a2023",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p>This is for development / internal features only.</p>\n<p>Goal is to be able to quickly add some generic settings to an input field, which affect the field without having to first create a content-type for these.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "en-us": "Field Settings - Generic (Development only)"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "7775df1b-9c6d-4344-8f64-f6683b324615"
+                }
+              },
+              {
+                "Id": 183989,
+                "Version": 1,
+                "Guid": "6e6e253f-56ed-4c7b-ab4d-9ce37b182a41",
+                "Type": {
+                  "Id": "4c88d78f-5f3e-4b66-95f2-6d63b7858847",
+                  "Name": "MetadataForDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "DeleteWarning": {
+                      "en-us": ""
+                    },
+                    "TargetName": {
+                      "en-us": ""
+                    },
+                    "Title": {
+                      "en-us": "Metadata for Input Fields"
+                    }
+                  },
+                  "Number": {
+                    "Amount": {
+                      "en-us": 1
+                    },
+                    "TargetType": {
+                      "en-us": 2
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "7775df1b-9c6d-4344-8f64-f6683b324615"
+                }
+              }
+            ],
+            "Attributes": [
+              {
+                "Name": "Title",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": true,
+                "Metadata": [
+                  {
+                    "Id": 183985,
+                    "Version": 2,
+                    "Guid": "3664805a-7ed8-407f-ab44-bbf3caa3ca54",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-default"
+                        },
+                        "Name": {
+                          "en-us": "Title"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Title so you know why this was added.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": true
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183987,
+                    "Version": 1,
+                    "Guid": "91194b53-491d-4cff-9f7e-9d4335f16174",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183988,
+                    "Version": 1,
+                    "Guid": "6f22c773-321f-4e1b-bcd7-7fe37d12d25b",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": ""
+                        },
+                        "TextWrapping": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "SettingsGeneric",
+                "Type": "String",
+                "InputType": "string-json",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183986,
+                    "Version": 2,
+                    "Guid": "957ec393-6088-406f-850c-d672fd030b57",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-json"
+                        },
+                        "Name": {
+                          "en-us": "Settings - Generic"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183991,
+                    "Version": 1,
+                    "Guid": "f2084a14-006b-4b7b-9d78-f8b2b5ece02a",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183992,
+                    "Version": 1,
+                    "Guid": "65d4e5d2-2ce4-46db-82e9-29e4936e1197",
+                    "Type": {
+                      "Id": "@string-json",
+                      "Name": "@string-json"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "JsonSchemaMode": {
+                          "en-us": "none"
+                        },
+                        "JsonSchemaRaw": {
+                          "en-us": ""
+                        },
+                        "JsonSchemaSource": {
+                          "en-us": "link"
+                        },
+                        "JsonValidation": {
+                          "en-us": "strict"
+                        }
+                      },
+                      "Hyperlink": {
+                        "JsonSchemaUrl": {
+                          "en-us": ""
+                        }
+                      },
+                      "Number": {
+                        "Rows": {
+                          "en-us": 10
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              }
+            ]
+          },
+          "Entities": []
         }
       ],
       "Entities": [
@@ -9399,7 +9753,11 @@
           "Guid": "5f49cf41-62b9-4d99-8642-59eece7ecdc2",
           "Type": {
             "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
-            "Name": "UiPickerSourceQuery"
+            "Name": "UiPickerSourceQuery",
+            "AttributeMap": {
+              "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
+              "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a"
+            }
           },
           "Attributes": {
             "String": {
