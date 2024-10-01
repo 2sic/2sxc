@@ -20,25 +20,17 @@ namespace ToSic.Sxc.DataSources.Internal;
 public class AppFilesDataSourceProvider(AppFilesDataSourceProvider.MyServices services)
     : ServiceBase<AppFilesDataSourceProvider.MyServices>(services, $"{SxcLogName}.AppFls")
 {
-    public class MyServices : MyServicesBase
+    public class MyServices(IAppReaderFactory appReaders, IAppPathsMicroSvc appPathMicroSvc, Generator<FileManager> fileManagerGenerator)
+        : MyServicesBase(connect: [appReaders, appPathMicroSvc, fileManagerGenerator])
     {
-        internal Generator<FileManager> FileManagerGenerator { get; }
-        internal IAppPathsMicroSvc AppPathMicroSvc { get; }
-        public IAppReaderFactory AppReaders { get; }
-
         /// <summary>
         /// Note that we will use Generators for safety, because in rare cases the dependencies could be re-used to create a sub-data-source
         /// </summary>
-        public MyServices(
-            IAppReaderFactory appReaders,
-            IAppPathsMicroSvc appPathMicroSvc,
-            Generator<FileManager> fileManagerGenerator
-        ): base(connect: [appReaders, appPathMicroSvc, fileManagerGenerator])
-        {
-            AppReaders = appReaders;
-            AppPathMicroSvc = appPathMicroSvc;
-            FileManagerGenerator = fileManagerGenerator;
-        }
+        internal Generator<FileManager> FileManagerGenerator { get; } = fileManagerGenerator;
+
+        internal IAppPathsMicroSvc AppPathMicroSvc { get; } = appPathMicroSvc;
+
+        internal IAppReaderFactory AppReaders { get; } = appReaders;
     }
 
     public AppFilesDataSourceProvider Configure(
@@ -75,7 +67,8 @@ public class AppFilesDataSourceProvider(AppFilesDataSourceProvider.MyServices se
     /// So the core data source doesn't have settings to configure this
     /// </summary>
     /// <returns></returns>
-    public (List<AppFolderDataRaw> Folders, List<AppFileDataRaw> Files) GetAll() => Log.Func(l => (Folders, Files));
+    public (List<AppFolderDataRaw> Folders, List<AppFileDataRaw> Files) GetAll()
+        => Log.Func(l => (Folders, Files));
 
     public List<AppFileDataRaw> Files => _files.GetM(Log, l =>
     {
@@ -129,7 +122,7 @@ public class AppFilesDataSourceProvider(AppFilesDataSourceProvider.MyServices se
                     };
                 })
                 .ToList();
-            folders.Insert(0, _rootFolder);
+            folders.Insert(0, RootFolder);
         }
         else
             l.A($"onlyFiles:{_onlyFiles}");
@@ -138,7 +131,7 @@ public class AppFilesDataSourceProvider(AppFilesDataSourceProvider.MyServices se
     });
     private readonly GetOnce<List<AppFolderDataRaw>> _folders = new();
 
-    private readonly AppFolderDataRaw _rootFolder = new()
+    private static readonly AppFolderDataRaw RootFolder = new()
     {
         Name = "Root",
         FullName = "",
