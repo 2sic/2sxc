@@ -11859,7 +11859,7 @@
                 ]
               },
               {
-                "Name": "PickerPreviewType",
+                "Name": "PreviewType",
                 "Guid": "2ca67f4b-7e68-4502-ac73-9c521fba2aaf",
                 "Type": "String",
                 "InputType": "string-picker",
@@ -12526,7 +12526,7 @@
             },
             {
               "Id": 182681,
-              "Version": 28,
+              "Version": 29,
               "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -12539,7 +12539,7 @@
               "Attributes": {
                 "String": {
                   "CreateTypes": {
-                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv\nUiPickerSourceCss\nUiPickerSourceAppFiles"
+                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv\nUiPickerSourceCss\nUiPickerSourceAppAssets"
                   },
                   "Description": {
                     "en-us": "<p>Get all Data Sources for UI Pickers.</p>"
@@ -12868,7 +12868,7 @@
             },
             {
               "Id": 183994,
-              "Version": 2,
+              "Version": 3,
               "Guid": "c37e1472-d258-4ce4-8733-d801a049f574",
               "Type": {
                 "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
@@ -12877,7 +12877,7 @@
               "Attributes": {
                 "String": {
                   "Csv": {
-                    "en-us": "Value,Title,Info\n,\"Not configured (default)\",\"No special preview, or use the preview-setting from the source - this is the default for normal values\"\nicon-css,\"Icon from Font in CSS\",\"Show the value as an icon from an icon-font such as fontawesome, which is specified in the CSS\"\nsvg,\"SVG preview\",\"Show an SVG file - typically an icon\"\ntext-css,\"Text formatted by CSS\",\"Show some text to see how the text-formatting changes\"\nimage,\"Image\",\"Show an image which is specified by the data\""
+                    "en-us": "Value,Title,Info\n,\"Not configured (default)\",\"No special preview, or use the preview-setting from the source - this is the default for normal values\"\nicon-css,\"Icon from Font in CSS\",\"Show the value as an icon from an icon-font such as fontawesome, which is specified in the CSS - usually applied as a class.\"\nicon-symbol,\"Icon symbols from Font\",\"Symbol icons use a text-name to specify that they should show\"\nsvg,\"SVG preview\",\"Show an SVG file - typically an icon\"\ntext-css,\"Text formatted by CSS\",\"Show some text to see how the text-formatting changes\"\nimage,\"Image\",\"Show an image which is specified by the data\""
                   },
                   "Description": {
                     "en-us": ""
@@ -12887,6 +12887,12 @@
                   },
                   "ItemTooltip": {
                     "en-us": "<p>[Item:Info]</p>"
+                  },
+                  "PreviewType": {
+                    "en-us": ""
+                  },
+                  "PreviewValue": {
+                    "en-us": ""
                   },
                   "Title": {
                     "en-us": "Picker Shared - Preview Type"
@@ -14679,7 +14685,7 @@
                 "Metadata": [
                   {
                     "Id": 183878,
-                    "Version": 5,
+                    "Version": 6,
                     "Guid": "71fb0597-88bf-470c-9611-13058681c8ff",
                     "Type": {
                       "Id": "@All",
@@ -14703,7 +14709,7 @@
                           "en-us": "PickerSourceCsv FeatureNotEnabledWarning"
                         },
                         "Notes": {
-                          "en-us": "<p><strong>⚠️ Warning ⚠️</strong></p>\n<p>You are configuring an new CSV source. It appears that this feature is not enabled. See <a href=\"https://patrons.2sxc.org/features/feat/PickerSourceCsv\" target=\"_blank\" rel=\"noopener\">Picker CSV Source feature docs</a>.</p>\n<p>✅ You can still use this source and everything will work, but it will show a warning that you're using an unlicensed feature.</p>"
+                          "en-us": "<p><strong>Warning: </strong>You are configuring an new CSV source. It appears that this feature is not enabled. See <a href=\"https://patrons.2sxc.org/features/feat/PickerSourceCsv\" target=\"_blank\" rel=\"noopener\">Picker Source CSV Source feature</a>.</p>\n<p>✅ You can still use this source and everything will work, but it will show a warning that you're using an unlicensed feature.</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -15044,7 +15050,7 @@
                 ]
               },
               {
-                "Name": "PickerPreviewType",
+                "Name": "PreviewType",
                 "Type": "String",
                 "InputType": "string-picker",
                 "IsTitle": false,
@@ -15929,7 +15935,7 @@
                 ]
               },
               {
-                "Name": "PickerPreviewType",
+                "Name": "PreviewType",
                 "Type": "String",
                 "InputType": "string-picker",
                 "IsTitle": false,
@@ -16112,12 +16118,12 @@
         {
           "ContentType": {
             "Id": "5d139b94-70cd-45dd-97dd-0ea73d191791",
-            "Name": "UiPickerSourceAppFiles",
+            "Name": "UiPickerSourceAppAssets",
             "Scope": "System.Fields",
             "Metadata": [
               {
                 "Id": 184045,
-                "Version": 1,
+                "Version": 3,
                 "Guid": "41643a23-8a35-42a2-89a4-b1ad208a8abe",
                 "Type": {
                   "Id": "ContentType",
@@ -16138,7 +16144,7 @@
                       "en-us": ""
                     },
                     "Label": {
-                      "en-us": "UI Picker Source - App Files"
+                      "en-us": "UI Picker Source - App Assets (Files/Folders)"
                     },
                     "ListInstructions": {
                       "en-us": ""
@@ -16156,6 +16162,22 @@
                     }
                   }
                 },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "5d139b94-70cd-45dd-97dd-0ea73d191791"
+                }
+              },
+              {
+                "Id": 184055,
+                "Version": 1,
+                "Guid": "39456cc3-4416-4dab-89ed-7ad46164caf3",
+                "Type": {
+                  "Id": "bcce96be-a439-4f22-9d1e-a10487544fa5",
+                  "Name": "IsPickerSourceDecorator"
+                },
+                "Attributes": {},
                 "Owner": "dnn:userid=41",
                 "For": {
                   "Target": "ContentType",
@@ -16292,7 +16314,7 @@
                 "Metadata": [
                   {
                     "Id": 184025,
-                    "Version": 2,
+                    "Version": 4,
                     "Guid": "1f58aa88-4949-4478-a5d1-b5e815ed7c41",
                     "Type": {
                       "Id": "@All",
@@ -16316,7 +16338,7 @@
                           "en-us": "PickerSourceAppFilesNotEnabledWarning"
                         },
                         "Notes": {
-                          "en-us": "<p>⚠️ TODO warning</p>"
+                          "en-us": "<p><strong>Warning: </strong>You are configuring an new App Assets source. It appears that this feature is not enabled. See&nbsp;<a href=\"https://patrons.2sxc.org/features/feat/PickerSourceAppAssets\" target=\"_blank\" rel=\"noopener\">Picker Source App Assets feature</a>.</p>\n<p>✅ You can still use this source and everything will work, but it will show a warning that you're using an unlicensed feature.</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -16338,7 +16360,9 @@
                           "*": []
                         },
                         "Formulas": {
-                          "*": []
+                          "*": [
+                            "2576a1bb-76cc-464a-a7eb-d0e1eec4c373"
+                          ]
                         },
                         "Warnings": {
                           "*": []
@@ -16426,14 +16450,14 @@
                 ]
               },
               {
-                "Name": "AppFilesRootFolder",
+                "Name": "AppAssetsRootFolder",
                 "Type": "String",
                 "InputType": "string-picker",
                 "IsTitle": false,
                 "Metadata": [
                   {
                     "Id": 184026,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "aef9d6ca-4c86-488d-9b28-20716083b5e8",
                     "Type": {
                       "Id": "@All",
@@ -16454,10 +16478,10 @@
                           "en-us": "string-picker"
                         },
                         "Name": {
-                          "en-us": "AppFilesRootFolder"
+                          "en-us": "Root Folder"
                         },
                         "Notes": {
-                          "en-us": ""
+                          "en-us": "<p>Only retrieve things below this folder.</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -16504,7 +16528,7 @@
                   },
                   {
                     "Id": 184039,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "c140bc7f-7958-442c-a0da-13dcfdcac4fa",
                     "Type": {
                       "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
@@ -16567,14 +16591,155 @@
                 ]
               },
               {
-                "Name": "AppFilesFileFilter",
+                "Name": "AppAssetsType",
+                "Type": "String",
+                "InputType": "string-picker",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 184049,
+                    "Version": 3,
+                    "Guid": "e6e65889-3e45-4a00-ade0-9afc5adbe134",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "files"
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-picker"
+                        },
+                        "Name": {
+                          "en-us": "What to Retrieve"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Should the user be able to select files, folders or both?</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 184051,
+                    "Version": 2,
+                    "Guid": "cf5c7971-4209-4727-835c-adf26a9ce01a",
+                    "Type": {
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CreateParameters": {
+                          "en-us": ""
+                        },
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "radio"
+                        },
+                        "Separator": {
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "d8c9fc1c-7d81-4520-b6e9-8958f0b5429e"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": false
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "AppAssetsFileFilter",
                 "Type": "String",
                 "InputType": "string-picker",
                 "IsTitle": false,
                 "Metadata": [
                   {
                     "Id": 184027,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "3225f228-c9ac-4962-88f6-e4d9e26d7917",
                     "Type": {
                       "Id": "@All",
@@ -16595,10 +16760,10 @@
                           "en-us": "string-picker"
                         },
                         "Name": {
-                          "en-us": "AppFilesFileFilter"
+                          "en-us": "File Filter"
                         },
                         "Notes": {
-                          "en-us": ""
+                          "en-us": "<p>Only retrieve files matching this pattern.</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -16645,7 +16810,7 @@
                   },
                   {
                     "Id": 184041,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "afd55f0c-6281-41e3-a837-ec326693cdd7",
                     "Type": {
                       "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
@@ -16717,7 +16882,7 @@
                 }
               },
               {
-                "Name": "PickerPreviewType",
+                "Name": "PreviewType",
                 "Type": "String",
                 "InputType": "string-picker",
                 "IsTitle": false,
@@ -16773,6 +16938,34 @@
             ]
           },
           "Entities": [
+            {
+              "Id": 184048,
+              "Version": 1,
+              "Guid": "2576a1bb-76cc-464a-a7eb-d0e1eec4c373",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => { return !context.features.isEnabled('PickerSourceAppAssets'); });"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
             {
               "Id": 184038,
               "Version": 1,
@@ -16831,7 +17024,7 @@
             },
             {
               "Id": 184040,
-              "Version": 2,
+              "Version": 3,
               "Guid": "e5b1e2b4-a491-49d1-89da-3bbd91c087de",
               "Type": {
                 "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
@@ -16851,14 +17044,54 @@
                   "ItemTooltip": {
                     "en-us": ""
                   },
-                  "PickerPreviewType": {
+                  "PreviewType": {
                     "en-us": ""
                   },
                   "PreviewValue": {
                     "en-us": "[Item:Title] ([Item:Value])"
                   },
                   "Title": {
-                    "en-us": "App Files - File Filters"
+                    "en-us": "App Assets - File Filters"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 184050,
+              "Version": 3,
+              "Guid": "d8c9fc1c-7d81-4520-b6e9-8958f0b5429e",
+              "Type": {
+                "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+                "Name": "UiPickerSourceCustomCsv"
+              },
+              "Attributes": {
+                "String": {
+                  "Csv": {
+                    "en-us": "Value,Title,Icon\n\"files\",\"Files\",file_copy\n\"folders\",\"Folders\",folder_copy\n\"all\",\"Files and Folders\",snippet_folder"
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": ""
+                  },
+                  "ItemTooltip": {
+                    "en-us": ""
+                  },
+                  "PreviewType": {
+                    "en-us": "icon-symbol"
+                  },
+                  "PreviewValue": {
+                    "en-us": "[Item:Icon]"
+                  },
+                  "Title": {
+                    "en-us": "App Assets - Asset Types"
                   }
                 },
                 "Hyperlink": {
