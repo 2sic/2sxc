@@ -12526,7 +12526,7 @@
             },
             {
               "Id": 182681,
-              "Version": 27,
+              "Version": 28,
               "Guid": "a0a2db07-5d62-452c-b0a6-4708daee5380",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -12539,7 +12539,7 @@
               "Attributes": {
                 "String": {
                   "CreateTypes": {
-                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv\nUiPickerSourceCss"
+                    "en-us": "UiPickerSourceEntity\nUiPickerSourceQuery\nUiPickerSourceCustomList\nUiPickerSourceCustomCsv\nUiPickerSourceCss\nUiPickerSourceAppFiles"
                   },
                   "Description": {
                     "en-us": "<p>Get all Data Sources for UI Pickers.</p>"
