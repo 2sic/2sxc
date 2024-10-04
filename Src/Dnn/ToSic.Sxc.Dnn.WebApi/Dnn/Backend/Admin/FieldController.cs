@@ -84,6 +84,14 @@ public class FieldController() : DnnSxcControllerBase(RealController.LogSuffix),
     public IEnumerable<ContentTypeFieldDto> GetSharedFields(int appId, int attributeId = default)
         => Real.GetSharedFields(appId, attributeId);
 
+    [HttpGet]
+    public IEnumerable<ContentTypeFieldDto> GetAncestors(int appId, int attributeId)
+        => Real.GetAncestors(appId, attributeId);
+
+    [HttpGet]
+    public IEnumerable<ContentTypeFieldDto> GetDescendants(int appId, int attributeId)
+        => Real.GetDescendants(appId, attributeId);
+    
     [HttpPost]
     public bool Share(int appId, int attributeId, bool share, bool hide = false)
         => Real.Share(appId, attributeId, share, hide);
@@ -95,5 +103,6 @@ public class FieldController() : DnnSxcControllerBase(RealController.LogSuffix),
     [HttpPost]
     public bool AddInheritedField(int appId, int contentTypeId, string sourceType, Guid sourceField, string name)
         => Real.AddInheritedField(appId, contentTypeId, sourceType, sourceField, name);
+
     #endregion
 }
