@@ -41,7 +41,7 @@ namespace ToSic.Sxc.DataSources;
 public class AppAssets: CustomDataSourceAdvanced
 {
     private readonly IDataFactory _dataFactory;
-    private readonly AppFilesDataSourceProvider _provider;
+    private readonly AppAssetsDataSourceProvider _appAssetsSource;
 
     private const string StreamFiles = "Files";
     private const string StreamFolders = "Folders";
@@ -85,9 +85,9 @@ public class AppAssets: CustomDataSourceAdvanced
     #region Constructor
 
     [PrivateApi]
-    public AppAssets(MyServices services, AppFilesDataSourceProvider provider, IDataFactory dataFactory) : base(services, "CDS.AppFiles", connect: [provider, dataFactory])
+    public AppAssets(MyServices services, AppAssetsDataSourceProvider appAssetsSource, IDataFactory dataFactory) : base(services, "CDS.AppFiles", connect: [appAssetsSource, dataFactory])
     {
-        _provider = provider;
+        _appAssetsSource = appAssetsSource;
         _dataFactory = dataFactory;
 
         ProvideOut(() => Get(StreamDefaultName));
@@ -140,15 +140,14 @@ public class AppAssets: CustomDataSourceAdvanced
     private (IImmutableList<IEntity> folders, IImmutableList<IEntity> files) GetInternal()
     {
         var l = Log.Fn<(IImmutableList<IEntity> folders, IImmutableList<IEntity> files)>(timer: true);
-        //Configuration.Parse();
 
         // TODO:
         // must ensure that the folder can't contain ".." characters or anything else to make it go outside of the app folder
 
-        _provider.Configure(zoneId: ZoneId, appId: AppId, onlyFolders: OnlyFolders, onlyFiles: OnlyFiles, root: RootFolder, filter: FileFilter);
+        _appAssetsSource.Configure(zoneId: ZoneId, appId: AppId, onlyFolders: OnlyFolders, onlyFiles: OnlyFiles, root: RootFolder, filter: FileFilter);
 
         // Get pages from underlying system/provider
-        var (rawFolders, rawFiles) = _provider.GetAll();
+        var (rawFolders, rawFiles) = _appAssetsSource.GetAll();
         if (!rawFiles.Any() && !rawFolders.Any())
             return l.Return((EmptyList, EmptyList), "null/empty");
 

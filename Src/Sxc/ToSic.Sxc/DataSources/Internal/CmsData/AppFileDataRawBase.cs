@@ -31,6 +31,16 @@ public abstract class AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
 
     public DateTime Modified { get; set; }
 
+    /// <summary>
+    /// WIP
+    /// </summary>
+    public string Url { get; set; }
+
+    /// <summary>
+    /// WIP
+    /// </summary>
+    public string UrlRelative { get; set; }
+
 
     /// <summary>
     /// Data but without Id, Guid, Created, Modified
@@ -41,6 +51,8 @@ public abstract class AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
         { nameof(Name), Name },
         { nameof(FullName), FullName },
         { nameof(Path), Path },
+        { nameof(Url), Url },
+        { nameof(UrlRelative), UrlRelative },
         { "Parent", new RawRelationship(key: $"Folder:{ParentFolderInternal}") },
     };
 

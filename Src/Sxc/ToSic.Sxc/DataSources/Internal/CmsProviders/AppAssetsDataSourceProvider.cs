@@ -17,8 +17,8 @@ namespace ToSic.Sxc.DataSources.Internal;
 /// Must be overriden in each platform.
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppFilesDataSourceProvider(AppFilesDataSourceProvider.MyServices services)
-    : ServiceBase<AppFilesDataSourceProvider.MyServices>(services, $"{SxcLogName}.AppFls")
+public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices services)
+    : ServiceBase<AppAssetsDataSourceProvider.MyServices>(services, $"{SxcLogName}.AppFls")
 {
     public class MyServices(IAppReaderFactory appReaders, IAppPathsMicroSvc appPathMicroSvc, Generator<FileManager> fileManagerGenerator)
         : MyServicesBase(connect: [appReaders, appPathMicroSvc, fileManagerGenerator])
@@ -33,7 +33,7 @@ public class AppFilesDataSourceProvider(AppFilesDataSourceProvider.MyServices se
         internal IAppReaderFactory AppReaders { get; } = appReaders;
     }
 
-    public AppFilesDataSourceProvider Configure(
+    public AppAssetsDataSourceProvider Configure(
         NoParamOrder noParamOrder = default,
         int zoneId = default,
         int appId = default,
@@ -42,7 +42,7 @@ public class AppFilesDataSourceProvider(AppFilesDataSourceProvider.MyServices se
         string root = default,
         string filter = default
     ) {
-        var l = Log.Fn<AppFilesDataSourceProvider>($"a:{appId}; z:{zoneId}, onlyFolders:{onlyFolders}, onlyFiles:{onlyFiles}, root:{root}, filter:{filter}");
+        var l = Log.Fn<AppAssetsDataSourceProvider>($"a:{appId}; z:{zoneId}, onlyFolders:{onlyFolders}, onlyFiles:{onlyFiles}, root:{root}, filter:{filter}");
         _onlyFolders = onlyFolders;
         _onlyFiles = onlyFiles;
         _root = root.TrimPrefixSlash().Backslash();
@@ -87,6 +87,12 @@ public class AppFilesDataSourceProvider(AppFilesDataSourceProvider.MyServices se
                         FullName = fullName,
                         ParentFolderInternal = fullName.BeforeLast("/"),
                         Path = fullName.BeforeLast("/") + "/",
+
+                        // TODO convert characters for safe HTML
+                        Url = _appPaths.Path + fullName,
+                        UrlRelative = fullName,
+
+
                         Size = f.Length,
                         Created = f.CreationTime,
                         Modified = f.LastWriteTime
