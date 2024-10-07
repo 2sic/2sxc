@@ -7,7 +7,7 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, object[] connect = default) : ServiceBase("Sxc.MyApCd", connect: connect)
+public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, SourceCodeHasher sourceCodeHasher, object[] connect = default) : ServiceBase("Sxc.MyApCd", connect: connect)
 {
     protected const string AppCodeDll = "AppCode.dll";
     private const string CsFiles = ".cs";
@@ -26,7 +26,7 @@ public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, 
         //    .Concat(GetSourceFilesInFolder(Path.Combine(fullPath, HotBuildEnum.Data.ToString()))).ToArray();
 
         // Build the AppCode folder with subfolders
-        var sourceFiles = GetSourceFilesInFolder(fullPath);
+        var sourceFiles = sourceCodeHasher.GetSourceFilesInFolder(fullPath);
 
         // Log all files
         foreach (var sourceFile in sourceFiles) l.A(sourceFile);
@@ -34,17 +34,15 @@ public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, 
         return l.ReturnAsOk(sourceFiles);
     }
 
-    private static string[] GetSourceFilesInFolder(string fullPath) => Directory.GetFiles(fullPath, $"*{CsFiles}", UseSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
-
     /// <summary>
-    /// Generates a random name for a dll file and ensures it does not already exist in the "2sxc.bin" folder.
+    /// Generates a name with hash for a dll file.
     /// </summary>
     /// <returns>The generated random name.</returns>
-    private string GetAppCodeDllName(string folderPath, HotBuildSpecWithSharedSuffix spec)
+    private string GetAppCodeDllName(string sourceRootPath, HotBuildSpecWithSharedSuffix spec)
     {
-        var l = Log.Fn<string>($"{nameof(folderPath)}: '{folderPath}'; {spec}", timer: true);
+        var l = Log.Fn<string>($"{nameof(sourceRootPath)}: '{sourceRootPath}'; {spec}", timer: true);
         var assemblyName = $"App-{spec.AppId:00000}-AppCode{OptionalSuffix(spec)}";
-        return l.ReturnAsOk(RandomNameWithoutExtension(folderPath, assemblyName));
+        return l.ReturnAsOk(HashInNameWithoutExtension(sourceRootPath, assemblyName));
     }
 
     /// <summary>
@@ -66,6 +64,9 @@ public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, 
         return $"{optionalEditionSuffix}{optionalSharedSuffix}";
     }
 
+    private string HashInNameWithoutExtension(string folderPath, string assemblyName)
+        => $"{assemblyName}-{sourceCodeHasher.GetHashString(folderPath)}";
+
     private static string RandomNameWithoutExtension(string folderPath, string assemblyName)
     {
         string randomNameWithoutExtension;
@@ -78,7 +79,6 @@ public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, 
 
         return randomNameWithoutExtension;
     }
-
 
     /// <summary>
     /// Normalize full file or folder path, so it is without redirections like "../" in "dir1/dir2/../file.cs"
@@ -98,13 +98,13 @@ public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, 
         l.Done();
     }
 
-    protected (string SymbolsPath, string AssemblyPath) GetAssemblyLocations(HotBuildSpecWithSharedSuffix spec)
+    protected (string SymbolsPath, string AssemblyPath) GetAssemblyLocations(HotBuildSpecWithSharedSuffix spec, string sourceRootPath)
     {
         var l = Log.Fn<(string, string)>($"{spec}");
         l.A($"TempAssemblyFolderPath: '{globalConfiguration.TempAssemblyFolder}'");
 
         // need name 
-        var assemblyName = GetAppCodeDllName(globalConfiguration.TempAssemblyFolder, spec);
+        var assemblyName = GetAppCodeDllName(sourceRootPath, spec);
         l.A($"AssemblyName: '{assemblyName}'");
         var assemblyFilePath = Path.Combine(globalConfiguration.TempAssemblyFolder, $"{assemblyName}.dll");
         l.A($"AssemblyFilePath: '{assemblyFilePath}'");

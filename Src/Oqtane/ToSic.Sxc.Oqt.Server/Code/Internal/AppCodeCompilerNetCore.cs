@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Internal.Environment;
@@ -13,7 +14,7 @@ using ToSic.Sxc.Code.Internal.HotBuild;
 namespace ToSic.Sxc.Oqt.Server.Code.Internal;
 
 [PrivateApi]
-internal class AppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, Generator<Compiler> compiler, IGlobalConfiguration globalConfiguration) : AppCodeCompiler(globalConfiguration, connect: [serverPaths, compiler])
+internal class AppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, Generator<Compiler> compiler, IGlobalConfiguration globalConfiguration, SourceCodeHasher sourceCodeHasher) : AppCodeCompiler(globalConfiguration, sourceCodeHasher, connect: [serverPaths, compiler, sourceCodeHasher])
 {
     protected internal override AssemblyResult GetAppCode(string virtualPath, HotBuildSpecWithSharedSuffix spec)
     {
@@ -21,13 +22,16 @@ internal class AppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, Generat
 
         try
         {
-            var sourceFiles = GetSourceFiles(NormalizeFullPath(serverPaths.Value.FullContentPath(virtualPath.Backslash())));
+            var sourceRootPath = NormalizeFullPath(serverPaths.Value.FullContentPath(virtualPath.Backslash()));
+            var sourceFiles = GetSourceFiles(sourceRootPath);
             if (sourceFiles.Length == 0)
                 return l.ReturnAsOk(new());
 
-            var (symbolsPath, assemblyPath) = GetAssemblyLocations(spec);
+            var (symbolsPath, assemblyPath) = GetAssemblyLocations(spec, sourceRootPath);
             var dllName = Path.GetFileName(assemblyPath);
-            var assemblyResult = compiler.New().GetCompiledAssemblyFromFolder(sourceFiles, assemblyPath, symbolsPath, dllName, spec);
+            var assemblyResult = File.Exists(assemblyPath) 
+                ? new AssemblyResult(assembly: new SimpleUnloadableAssemblyLoadContext().LoadFromAssemblyPath(assemblyPath))
+                : compiler.New().GetCompiledAssemblyFromFolder(sourceFiles, assemblyPath, symbolsPath, dllName, spec);
 
             var dicInfos = new Dictionary<string, string>
             {
