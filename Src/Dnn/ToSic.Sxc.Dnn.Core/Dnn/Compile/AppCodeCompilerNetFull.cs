@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using System.CodeDom.Compiler;
 using System.IO;
+using System.Reflection;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Dnn.Compile;
@@ -9,8 +10,8 @@ using ToSic.Sxc.Dnn.Compile;
 namespace ToSic.Sxc.Code;
 
 [PrivateApi]
-internal class AppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironment, IReferencedAssembliesProvider referencedAssembliesProvider, IGlobalConfiguration globalConfiguration)
-    : AppCodeCompiler(globalConfiguration, connect: [hostingEnvironment, referencedAssembliesProvider])
+internal class AppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironment, IReferencedAssembliesProvider referencedAssembliesProvider, IGlobalConfiguration globalConfiguration, SourceCodeHasher sourceCodeHasher)
+    : AppCodeCompiler(globalConfiguration, sourceCodeHasher, connect: [hostingEnvironment, referencedAssembliesProvider, sourceCodeHasher])
 {
 
     protected internal override AssemblyResult GetAppCode(string relativePath, HotBuildSpecWithSharedSuffix spec)
@@ -24,13 +25,16 @@ internal class AppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironm
             _spec = spec;
 
             // Get all C# files in the folder
-            var sourceFiles = GetSourceFiles(NormalizeFullPath(hostingEnvironment.MapPath(relativePath)));
+            var sourceRootPath = NormalizeFullPath(hostingEnvironment.MapPath(relativePath));
+            var sourceFiles = GetSourceFiles(sourceRootPath); // stv# this iterator can calculate hash, so we can iterate file once
             if (sourceFiles.Length == 0)
                 return l.ReturnAsOk(new());
 
-            var (symbolsPath, assemblyPath) = GetAssemblyLocations(spec);
+            var (symbolsPath, assemblyPath) = GetAssemblyLocations(spec, sourceRootPath);
 
-            var results = GetCompiledAssemblyFromFolder(sourceFiles, assemblyPath);
+            var results = File.Exists(assemblyPath)
+                ? new(new TempFileCollection()) { PathToAssembly = assemblyPath, CompiledAssembly = Assembly.LoadFrom(assemblyPath) }
+                : GetCompiledAssemblyFromFolder(sourceFiles, assemblyPath);
 
             var dicInfos = new Dictionary<string, string>
             {
@@ -75,6 +79,17 @@ internal class AppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironm
     }
     private string _relativePath;
     private HotBuildSpec _spec;
+
+    //// Loads the content of a file to a byte array.
+    //private static byte[] LoadFile(string filename)
+    //{
+    //    using var fs = new FileStream(filename, FileMode.Open);
+    //    {
+    //        var buffer = new byte[(int)fs.Length];
+    //        fs.Read(buffer, 0, buffer.Length);
+    //        return buffer;
+    //    }
+    //}
 
     private CompilerResults GetCompiledAssemblyFromFolder(string[] sourceFiles, string assemblyFilePath)
     {

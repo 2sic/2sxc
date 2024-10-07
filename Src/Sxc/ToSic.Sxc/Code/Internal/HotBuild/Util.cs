@@ -1,10 +1,11 @@
 ﻿using System.IO;
+using System.Text.RegularExpressions;
 using ToSic.Eav.Internal.Configuration;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 /// <summary>
-/// On start need to clean the "2sxc.bin", because it is used to temporary save shared temp AppCode assemblies.
+/// On start need to clean the "2sxc.bin", because it is used to temporarily save shared temp AppCode assemblies.
 /// </summary>
 public class Util(IGlobalConfiguration globalConfiguration)
 {
@@ -22,8 +23,11 @@ public class Util(IGlobalConfiguration globalConfiguration)
 
             if (Directory.Exists(globalConfiguration.TempAssemblyFolder))
             {
-                var filesToClean = Directory.GetFiles(globalConfiguration.TempAssemblyFolder, "*.*", SearchOption.TopDirectoryOnly);
-                foreach (var file in filesToClean)
+                // *** Step 1. delete all files without Hash
+                var filesWithoutHashToDelete = Directory.GetFiles(globalConfiguration.TempAssemblyFolder, "*.*", SearchOption.TopDirectoryOnly)
+                    .Where(file => GetFilePrefix(file) == null);
+
+                foreach(var file in filesWithoutHashToDelete)
                 {
                     try
                     {
@@ -31,10 +35,41 @@ public class Util(IGlobalConfiguration globalConfiguration)
                     }
                     catch
                     {
-                        // ignored
+                        // sink
                     }
                 }
 
+                // *** Step 2. Keep only the latest file for each group of files with the same prefix ***
+                const int retentionDays = 28;
+                var currentDateTime = DateTime.Now;
+
+                // Group files by their prefix (excluding the hash part if valid)
+                var groupedFiles = Directory.GetFiles(globalConfiguration.TempAssemblyFolder, "*.*", SearchOption.TopDirectoryOnly)
+                    .Select(f => new FileInfo(f))
+                    .GroupBy(fileInfo => GetFilePrefix(fileInfo.Name));
+
+                foreach (var group in groupedFiles)
+                {
+                    // Sort files in the group by LastWriteTime descending (latest first)
+                    var filesInGroup = group.OrderByDescending(f => f.LastWriteTime).ToList();
+
+                    // Find the latest file if it's less than 28 days old.
+                    var keepFile = filesInGroup.FirstOrDefault(f => (currentDateTime - f.LastWriteTime).TotalDays < retentionDays);
+
+                    // Keep the latest file, delete the rest.
+                    var filesToDelete = filesInGroup.Where(f => f != keepFile);
+                    foreach (var fileInfo in filesToDelete)
+                    {
+                        try
+                        {
+                            File.Delete(fileInfo.FullName);
+                        }
+                        catch
+                        {
+                            // sink
+                        }
+                    }
+                }
             }
             else
             {
@@ -44,5 +79,27 @@ public class Util(IGlobalConfiguration globalConfiguration)
 
             Cleaned = true;
         }
+    }
+
+    // Helper method to extract the prefix from the filename, validating the hash part
+    private static string GetFilePrefix(string fileName)
+    {
+        var nameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+        var lastDashIndex = nameWithoutExtension.LastIndexOf('-');
+
+        // Validate the potential hash using a regex (e.g., 64-character hexadecimal)
+        if (lastDashIndex >= 0 && IsValidHash(nameWithoutExtension.Substring(lastDashIndex + 1)))
+            // Valid hash found, return the prefix without the hash
+            return nameWithoutExtension.Substring(0, lastDashIndex);
+
+        // No hyphen found or valid hash
+        return null;
+    }
+
+    private static bool IsValidHash(string input)
+    {
+        // Pattern to match SHA256 hash format
+        const string hashPattern = @"^[a-fA-F0-9]{64}$";
+        return Regex.IsMatch(input, hashPattern);
     }
 }
