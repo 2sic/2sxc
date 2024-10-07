@@ -22,13 +22,18 @@ namespace ToSic.Sxc.DataSources;
 ///
 /// To figure out the properties returned and what they match up to, see <see cref="PageDataRaw"/> TODO
 /// </summary>
+/// <remarks>
+/// In use in v18.02 for the first time - in the Picker Source App Assets.
+/// Otherwise, it's not officially released yet!
+/// Reason is that the names of the delivered properties are not totally final.
+/// </remarks>
 [VisualQuery(
-    ConfigurationType = "477d5de4-5ffa-43ef-8553-37354cb27660", // TODO:
-    NameId = "3fe6c215-4c37-45c1-8883-b4b2a47162a7",
-    HelpLink = "https://go.2sxc.org/ds-appfiles",
-    Icon = DataSourceIcons.Tree,
-    NiceName = "AppFiles",
+    NiceName = "App Assets",
     Type = DataSourceType.Source,
+    ConfigurationType = "477d5de4-5ffa-43ef-8553-37354cb27660",
+    NameId = "3fe6c215-4c37-45c1-8883-b4b2a47162a7",
+    HelpLink = "https://go.2sxc.org/ds-appfiles", // TODO:
+    Icon = DataSourceIcons.Tree,
     Audience = Audience.Advanced,
     UiHint = "Files and folders in the App folder")]
 [PrivateApi("Was till v17 InternalApi_DoNotUse_MayChangeWithoutNotice(still wip / finishing specs etc.)")]
@@ -47,12 +52,14 @@ public class AppFiles: CustomDataSourceAdvanced
     /// <summary>
     /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
     /// </summary>
+    [PrivateApi("concept not final, may be changed to use AssetsType or something")]
     [Configuration(Fallback = false)]
     public bool OnlyFolders => Configuration.GetThis(false);
 
     /// <summary>
     /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
     /// </summary>
+    [PrivateApi("concept not final, may be changed to use AssetsType or something")]
     [Configuration(Fallback = false)]
     public bool OnlyFiles => Configuration.GetThis(false);
 
@@ -69,6 +76,7 @@ public class AppFiles: CustomDataSourceAdvanced
     public string FileFilter => Configuration.GetThis();
 
     // TODO: not implemented yet!
+    [PrivateApi("TODO: NOT IMPLEMENTED YET")]
     [Configuration(Fallback = false)]
     public bool SearchSubfolders => Configuration.GetThis(false);
 
