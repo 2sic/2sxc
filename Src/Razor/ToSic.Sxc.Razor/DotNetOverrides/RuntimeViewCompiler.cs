@@ -458,7 +458,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         var appRelativePath = block.App.RelativePath;
 
         // Inner-content app case
-        if (IsTemplateLocatedInAppFolder(appRelativePath, relativePath))
+        if (!IsTemplateLocatedInAppFolder(appRelativePath, relativePath))
             return GetSxcAppRelativePathWithEditionFallback(relativePath);
 
         // Standard case (appRelativePath and edition from block)
@@ -474,7 +474,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
     /// <param name="relativePath">template relative path</param>
     /// <returns></returns>
     private static bool IsTemplateLocatedInAppFolder(string appRelativePath, string relativePath) 
-        => !relativePath.TrimPrefixSlash().StartsWith(appRelativePath);
+        => relativePath.ForwardSlash().TrimPrefixSlash().StartsWith(appRelativePath.ForwardSlash());
 
     /// <summary>
     /// extract appRelativePathWithEdition from relativePath
