@@ -669,7 +669,7 @@
               {
                 "Name": "EnableEdit",
                 "Type": "Boolean",
-                "InputType": "boolean-default",
+                "InputType": "boolean-tristate",
                 "IsTitle": false,
                 "SysSettings": {
                   "InheritMetadataOf": "f09fbd6a-ba83-4023-a5b4-b82b6ef7e9ff"
@@ -678,7 +678,7 @@
               {
                 "Name": "EnableCreate",
                 "Type": "Boolean",
-                "InputType": "boolean-default",
+                "InputType": "boolean-tristate",
                 "IsTitle": false,
                 "SysSettings": {
                   "InheritMetadataOf": "916b17c1-f15d-4414-80e5-6d53b27ff463"
@@ -1297,7 +1297,9 @@
                 "Name": "UiPickerSourceQuery",
                 "AttributeMap": {
                   "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
-                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a"
+                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a",
+                  "Value": "0ee078ec-ee4d-41a0-b6b6-ffcdfa90f4eb",
+                  "Label": "a3489bc4-6f3c-4e84-a825-2476b0ae4c32"
                 }
               },
               "Attributes": {
@@ -2730,7 +2732,7 @@
                 "Metadata": [
                   {
                     "Id": 41712,
-                    "Version": 19,
+                    "Version": 20,
                     "Guid": "d872b7c1-8902-4794-8bc1-65eb86855a20",
                     "Type": {
                       "Id": "@All",
@@ -2742,6 +2744,9 @@
                           "en-us": ""
                         },
                         "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
                           "en-us": ""
                         },
                         "InputType": {
@@ -2756,7 +2761,15 @@
                         "Placeholder": {
                           "en-us": ""
                         },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
                         "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -2827,7 +2840,7 @@
                   },
                   {
                     "Id": 43000,
-                    "Version": 12,
+                    "Version": 13,
                     "Guid": "a0b1a1dc-8878-49a6-b681-6505bfd3beb3",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -2835,11 +2848,17 @@
                     },
                     "Attributes": {
                       "String": {
+                        "EntityType": {
+                          "en-us": ""
+                        },
                         "Label": {
                           "en-us": "Title"
                         },
+                        "MoreFields": {
+                          "en-us": ""
+                        },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.QueryInfo"
+                          "en-us": "System.QueryInfo"
                         },
                         "Separator": {
                           "en-us": ","
@@ -2857,6 +2876,9 @@
                       "Boolean": {
                         "AllowMultiValue": {
                           "en-us": false
+                        },
+                        "EnableCreate": {
+                          "en-us": true
                         },
                         "EnableEdit": {
                           "en-us": false
@@ -3462,7 +3484,7 @@
               {
                 "Name": "EnableEdit",
                 "Type": "Boolean",
-                "InputType": "boolean-default",
+                "InputType": "boolean-tristate",
                 "IsTitle": false,
                 "SysSettings": {
                   "InheritMetadataOf": "f09fbd6a-ba83-4023-a5b4-b82b6ef7e9ff"
@@ -3893,7 +3915,7 @@
               {
                 "Name": "EnableCreate",
                 "Type": "Boolean",
-                "InputType": "boolean-default",
+                "InputType": "boolean-tristate",
                 "IsTitle": false,
                 "SysSettings": {
                   "InheritMetadataOf": "916b17c1-f15d-4414-80e5-6d53b27ff463"
@@ -5840,7 +5862,9 @@
                 "Name": "UiPickerSourceQuery",
                 "AttributeMap": {
                   "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
-                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a"
+                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a",
+                  "Value": "0ee078ec-ee4d-41a0-b6b6-ffcdfa90f4eb",
+                  "Label": "a3489bc4-6f3c-4e84-a825-2476b0ae4c32"
                 }
               },
               "Attributes": {
@@ -6644,9 +6668,13 @@
               },
               {
                 "Name": "Value",
+                "Guid": "0ee078ec-ee4d-41a0-b6b6-ffcdfa90f4eb",
                 "Type": "String",
                 "InputType": "string-picker",
                 "IsTitle": false,
+                "SysSettings": {
+                  "Share": true
+                },
                 "Metadata": [
                   {
                     "Id": 182283,
@@ -6805,9 +6833,13 @@
               },
               {
                 "Name": "Label",
+                "Guid": "a3489bc4-6f3c-4e84-a825-2476b0ae4c32",
                 "Type": "String",
                 "InputType": "string-picker",
                 "IsTitle": false,
+                "SysSettings": {
+                  "Share": true
+                },
                 "Metadata": [
                   {
                     "Id": 182284,
@@ -7334,7 +7366,9 @@
                 "Name": "UiPickerSourceQuery",
                 "AttributeMap": {
                   "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
-                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a"
+                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a",
+                  "Value": "0ee078ec-ee4d-41a0-b6b6-ffcdfa90f4eb",
+                  "Label": "a3489bc4-6f3c-4e84-a825-2476b0ae4c32"
                 }
               },
               "Attributes": {
@@ -7418,7 +7452,9 @@
                 "Name": "UiPickerSourceQuery",
                 "AttributeMap": {
                   "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
-                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a"
+                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a",
+                  "Value": "0ee078ec-ee4d-41a0-b6b6-ffcdfa90f4eb",
+                  "Label": "a3489bc4-6f3c-4e84-a825-2476b0ae4c32"
                 }
               },
               "Attributes": {
@@ -7474,7 +7510,9 @@
                 "Name": "UiPickerSourceQuery",
                 "AttributeMap": {
                   "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
-                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a"
+                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a",
+                  "Value": "0ee078ec-ee4d-41a0-b6b6-ffcdfa90f4eb",
+                  "Label": "a3489bc4-6f3c-4e84-a825-2476b0ae4c32"
                 }
               },
               "Attributes": {
@@ -7701,7 +7739,7 @@
               {
                 "Name": "EnableEdit",
                 "Type": "Boolean",
-                "InputType": "boolean-default",
+                "InputType": "boolean-tristate",
                 "IsTitle": false,
                 "SysSettings": {
                   "InheritMetadataOf": "f09fbd6a-ba83-4023-a5b4-b82b6ef7e9ff"
@@ -7710,7 +7748,7 @@
               {
                 "Name": "EnableCreate",
                 "Type": "Boolean",
-                "InputType": "boolean-default",
+                "InputType": "boolean-tristate",
                 "IsTitle": false,
                 "SysSettings": {
                   "InheritMetadataOf": "916b17c1-f15d-4414-80e5-6d53b27ff463"
@@ -8121,7 +8159,7 @@
               {
                 "Name": "EnableEdit",
                 "Type": "Boolean",
-                "InputType": "boolean-default",
+                "InputType": "boolean-tristate",
                 "IsTitle": false,
                 "SysSettings": {
                   "InheritMetadataOf": "f09fbd6a-ba83-4023-a5b4-b82b6ef7e9ff"
@@ -8130,7 +8168,7 @@
               {
                 "Name": "EnableCreate",
                 "Type": "Boolean",
-                "InputType": "boolean-default",
+                "InputType": "boolean-tristate",
                 "IsTitle": false,
                 "SysSettings": {
                   "InheritMetadataOf": "916b17c1-f15d-4414-80e5-6d53b27ff463"
@@ -10177,7 +10215,7 @@
                 "Name": "EnableEdit",
                 "Guid": "f09fbd6a-ba83-4023-a5b4-b82b6ef7e9ff",
                 "Type": "Boolean",
-                "InputType": "boolean-default",
+                "InputType": "boolean-tristate",
                 "IsTitle": false,
                 "SysSettings": {
                   "Share": true
@@ -10185,7 +10223,7 @@
                 "Metadata": [
                   {
                     "Id": 182461,
-                    "Version": 6,
+                    "Version": 8,
                     "Guid": "095ceb76-e05b-4655-ba6b-e60cf012f9c0",
                     "Type": {
                       "Id": "@All",
@@ -10203,7 +10241,7 @@
                           "en-us": ""
                         },
                         "InputType": {
-                          "en-us": "boolean-default"
+                          "en-us": "boolean-tristate"
                         },
                         "Name": {
                           "en-us": "Enable Edit Items"
@@ -10256,7 +10294,7 @@
                   },
                   {
                     "Id": 182468,
-                    "Version": 5,
+                    "Version": 6,
                     "Guid": "f168db44-4c78-48d3-a6b3-95cc1b97de86",
                     "Type": {
                       "Id": "@Boolean",
@@ -10268,7 +10306,7 @@
                           "en-us": "edit items disabled \uD83D\uDD0F"
                         },
                         "TitleIndeterminate": {
-                          "en-us": ""
+                          "en-us": "automatically detect if edit is enabled"
                         },
                         "TitleTrue": {
                           "en-us": "edit items enabled ✏️"
@@ -10283,7 +10321,7 @@
                 "Name": "EnableCreate",
                 "Guid": "916b17c1-f15d-4414-80e5-6d53b27ff463",
                 "Type": "Boolean",
-                "InputType": "boolean-default",
+                "InputType": "boolean-tristate",
                 "IsTitle": false,
                 "SysSettings": {
                   "Share": true
@@ -10291,7 +10329,7 @@
                 "Metadata": [
                   {
                     "Id": 182462,
-                    "Version": 6,
+                    "Version": 8,
                     "Guid": "d5c87d5a-d241-49ba-9823-cfaf8d801051",
                     "Type": {
                       "Id": "@All",
@@ -10309,7 +10347,7 @@
                           "en-us": ""
                         },
                         "InputType": {
-                          "en-us": "boolean-default"
+                          "en-us": "boolean-tristate"
                         },
                         "Name": {
                           "en-us": "EnableCreate"
@@ -10362,7 +10400,7 @@
                   },
                   {
                     "Id": 182469,
-                    "Version": 5,
+                    "Version": 6,
                     "Guid": "f10a3743-1f41-40a9-a68b-fdb6406fc50c",
                     "Type": {
                       "Id": "@Boolean",
@@ -10374,7 +10412,7 @@
                           "en-us": "create items disabled \uD83D\uDD12"
                         },
                         "TitleIndeterminate": {
-                          "en-us": ""
+                          "en-us": "automatically detect if create new is possible"
                         },
                         "TitleTrue": {
                           "en-us": "create items enabled ⭐"
@@ -10397,7 +10435,7 @@
                 "Metadata": [
                   {
                     "Id": 182463,
-                    "Version": 6,
+                    "Version": 8,
                     "Guid": "cba7c7df-977f-4b3f-ba7b-37ba8742a789",
                     "Type": {
                       "Id": "@All",
@@ -10415,7 +10453,7 @@
                           "en-us": ""
                         },
                         "InputType": {
-                          "en-us": "boolean-default"
+                          "*": "boolean-default"
                         },
                         "Name": {
                           "en-us": "EnableAddExisting"
@@ -11870,7 +11908,7 @@
                 "Metadata": [
                   {
                     "Id": 183993,
-                    "Version": 4,
+                    "Version": 5,
                     "Guid": "2533cf19-7597-46ad-bdda-19d7c693b0db",
                     "Type": {
                       "Id": "@All",
@@ -11891,7 +11929,7 @@
                           "en-us": "string-picker"
                         },
                         "Name": {
-                          "en-us": "Preview Type"
+                          "en-us": "Preview"
                         },
                         "Notes": {
                           "en-us": "<p>If the selected data can be previewed (like an icon), specify how.</p>"
@@ -11941,7 +11979,7 @@
                   },
                   {
                     "Id": 183995,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "bce7becc-0db7-436f-a6c7-6694a45d9ef3",
                     "Type": {
                       "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
@@ -12533,7 +12571,9 @@
                 "Name": "UiPickerSourceQuery",
                 "AttributeMap": {
                   "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
-                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a"
+                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a",
+                  "Value": "0ee078ec-ee4d-41a0-b6b6-ffcdfa90f4eb",
+                  "Label": "a3489bc4-6f3c-4e84-a825-2476b0ae4c32"
                 }
               },
               "Attributes": {
@@ -14319,7 +14359,9 @@
                 "Name": "UiPickerSourceQuery",
                 "AttributeMap": {
                   "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
-                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a"
+                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a",
+                  "Value": "0ee078ec-ee4d-41a0-b6b6-ffcdfa90f4eb",
+                  "Label": "a3489bc4-6f3c-4e84-a825-2476b0ae4c32"
                 }
               },
               "Attributes": {
@@ -16413,7 +16455,7 @@
                 "Metadata": [
                   {
                     "Id": 184037,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "90d4b3a7-bf74-4e5b-b24f-eb56b99afa10",
                     "Type": {
                       "Id": "@All",
@@ -16421,11 +16463,37 @@
                     },
                     "Attributes": {
                       "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
                         "InputType": {
-                          "*": "empty-default"
+                          "en-us": "empty-default"
                         },
                         "Name": {
-                          "*": "GroupAppFiles"
+                          "en-us": "App Files"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
                         }
                       },
                       "Entity": {
@@ -16440,8 +16508,34 @@
                         }
                       },
                       "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
                         "VisibleInEditUI": {
-                          "*": true
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 184068,
+                    "Version": 1,
+                    "Guid": "a5a9496b-9d92-470e-9a2d-82d7e0effa26",
+                    "Type": {
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
                         }
                       }
                     },
@@ -16450,14 +16544,14 @@
                 ]
               },
               {
-                "Name": "AppAssetsRootFolder",
+                "Name": "AssetsRootFolder",
                 "Type": "String",
                 "InputType": "string-picker",
                 "IsTitle": false,
                 "Metadata": [
                   {
                     "Id": 184026,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "aef9d6ca-4c86-488d-9b28-20716083b5e8",
                     "Type": {
                       "Id": "@All",
@@ -16528,7 +16622,7 @@
                   },
                   {
                     "Id": 184039,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "c140bc7f-7958-442c-a0da-13dcfdcac4fa",
                     "Type": {
                       "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
@@ -16591,7 +16685,7 @@
                 ]
               },
               {
-                "Name": "AppAssetsType",
+                "Name": "AssetsType",
                 "Type": "String",
                 "InputType": "string-picker",
                 "IsTitle": false,
@@ -16732,7 +16826,7 @@
                 ]
               },
               {
-                "Name": "AppAssetsFileFilter",
+                "Name": "AssetsFileFilter",
                 "Type": "String",
                 "InputType": "string-picker",
                 "IsTitle": false,
@@ -16882,6 +16976,288 @@
                 }
               },
               {
+                "Name": "Value",
+                "Type": "String",
+                "InputType": "string-picker",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 184069,
+                    "Version": 6,
+                    "Guid": "43fb0166-362c-4df0-86f6-9f4e7c9ec2c5",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "Name"
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-picker"
+                        },
+                        "Name": {
+                          "en-us": "Value Field"
+                        },
+                        "Notes": {
+                          "en-us": "<p>The field of the items which will be stored as a value - typically the name with extension.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": true
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 184071,
+                    "Version": 5,
+                    "Guid": "57872556-a3d4-47e4-b2e5-a0c37e70b64e",
+                    "Type": {
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CreateParameters": {
+                          "en-us": ""
+                        },
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "list"
+                        },
+                        "Separator": {
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "a617f624-315d-41dc-b433-faf7924f64f1"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": false
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "Label",
+                "Type": "String",
+                "InputType": "string-picker",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 184072,
+                    "Version": 2,
+                    "Guid": "37f09e7f-933e-4940-8995-0f1f8a27c94b",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "Name"
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-picker"
+                        },
+                        "Name": {
+                          "en-us": "Label Field"
+                        },
+                        "Notes": {
+                          "en-us": "<p>The field which will be shown in the dropdown as the visible field for the user to select.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 184073,
+                    "Version": 1,
+                    "Guid": "09aeafab-7083-4851-b2d8-9fe596d32309",
+                    "Type": {
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CreateParameters": {
+                          "en-us": ""
+                        },
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "list"
+                        },
+                        "Separator": {
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "a617f624-315d-41dc-b433-faf7924f64f1"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": true
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "PreviewType",
                 "Type": "String",
                 "InputType": "string-picker",
@@ -16889,6 +17265,149 @@
                 "SysSettings": {
                   "InheritMetadataOf": "2ca67f4b-7e68-4502-ac73-9c521fba2aaf"
                 }
+              },
+              {
+                "Name": "PreviewValue",
+                "Type": "String",
+                "InputType": "string-picker",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 184056,
+                    "Version": 5,
+                    "Guid": "abaf5be4-e2f4-4b62-876b-700db812ac6b",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "Url"
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-picker"
+                        },
+                        "Name": {
+                          "en-us": "Preview Value (to be used in the special preview)"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "bd20b0d9-f99a-4fab-9af0-0fa431754383"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 184074,
+                    "Version": 3,
+                    "Guid": "764e0dd4-13fb-4044-9b67-15ae07758dc4",
+                    "Type": {
+                      "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
+                      "Name": "@string-picker"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CreateParameters": {
+                          "en-us": ""
+                        },
+                        "CreatePrefill": {
+                          "en-us": ""
+                        },
+                        "EditParameters": {
+                          "en-us": ""
+                        },
+                        "PickerDisplayMode": {
+                          "en-us": "list"
+                        },
+                        "Separator": {
+                          "en-us": "\\n"
+                        }
+                      },
+                      "Entity": {
+                        "DataSources": {
+                          "*": [
+                            "a617f624-315d-41dc-b433-faf7924f64f1"
+                          ]
+                        },
+                        "PickerDisplayConfiguration": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": true
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": true
+                        },
+                        "EnableReselect": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
               },
               {
                 "Name": "GroupItemHelp",
@@ -16968,14 +17487,16 @@
             },
             {
               "Id": 184038,
-              "Version": 1,
+              "Version": 2,
               "Guid": "e13e0514-2606-48ae-b77c-fd5ed9b9a602",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
                 "Name": "UiPickerSourceQuery",
                 "AttributeMap": {
                   "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
-                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a"
+                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a",
+                  "Value": "0ee078ec-ee4d-41a0-b6b6-ffcdfa90f4eb",
+                  "Label": "a3489bc4-6f3c-4e84-a825-2476b0ae4c32"
                 }
               },
               "Attributes": {
@@ -16999,7 +17520,7 @@
                     "en-us": ""
                   },
                   "Query": {
-                    "en-us": "System.AppFiles"
+                    "en-us": "System.AppAssets"
                   },
                   "QueryParameters": {
                     "en-us": ""
@@ -17008,7 +17529,7 @@
                     "en-us": "Default"
                   },
                   "Title": {
-                    "en-us": "App Folders"
+                    "en-us": "AppAssets - App Folders"
                   },
                   "Value": {
                     "en-us": "Path"
@@ -17092,6 +17613,92 @@
                   },
                   "Title": {
                     "en-us": "App Assets - Asset Types"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 184075,
+              "Version": 1,
+              "Guid": "bd20b0d9-f99a-4fab-9af0-0fa431754383",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  return !!data.PreviewType;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 184070,
+              "Version": 3,
+              "Guid": "a617f624-315d-41dc-b433-faf7924f64f1",
+              "Type": {
+                "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
+                "Name": "UiPickerSourceQuery",
+                "AttributeMap": {
+                  "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
+                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a",
+                  "Value": "0ee078ec-ee4d-41a0-b6b6-ffcdfa90f4eb",
+                  "Label": "a3489bc4-6f3c-4e84-a825-2476b0ae4c32"
+                }
+              },
+              "Attributes": {
+                "String": {
+                  "CreateTypes": {
+                    "en-us": ""
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": ""
+                  },
+                  "ItemTooltip": {
+                    "en-us": ""
+                  },
+                  "Label": {
+                    "en-us": "Title"
+                  },
+                  "MoreFields": {
+                    "en-us": ""
+                  },
+                  "Query": {
+                    "en-us": "System.QueryInfo"
+                  },
+                  "QueryParameters": {
+                    "en-us": "QueryName=System.AppAssets&StreamName=Default"
+                  },
+                  "StreamName": {
+                    "en-us": "Attributes"
+                  },
+                  "Title": {
+                    "en-us": "AppAssets - Fields of Query"
+                  },
+                  "Value": {
+                    "en-us": "Name"
                   }
                 },
                 "Hyperlink": {
