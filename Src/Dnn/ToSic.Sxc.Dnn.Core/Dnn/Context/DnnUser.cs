@@ -1,4 +1,5 @@
 ﻿using System.Web.Security;
+using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Context;
@@ -29,8 +30,8 @@ internal class DnnUser(LazySvc<DnnSecurity> dnnSecurity)
 
     public bool IsSystemAdmin => DnnUserInfo?.IsSuperUser ?? false;
 
-    public bool IsSiteAdmin => EffectivePermissions.IsSiteAdmin;
-    public bool IsContentAdmin => EffectivePermissions.IsContentAdmin;
+    public bool IsSiteAdmin => EffectivePermissions?.IsSiteAdmin ?? false;
+    public bool IsContentAdmin => EffectivePermissions?.IsContentAdmin ?? false;
     public bool IsSiteDeveloper => IsSystemAdmin;
 
     private EffectivePermissions EffectivePermissions => _adminPermissions
@@ -60,7 +61,7 @@ internal class DnnUser(LazySvc<DnnSecurity> dnnSecurity)
             .ToList();
     }
 
-    public int Id => DnnUserInfo?.UserID ?? -1;
+    public int Id => DnnUserInfo?.UserID ?? Null.NullInteger;
 
     public bool IsAnonymous => Id == -1;
 
