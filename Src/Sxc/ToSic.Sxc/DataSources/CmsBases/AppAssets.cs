@@ -38,7 +38,7 @@ namespace ToSic.Sxc.DataSources;
     UiHint = "Files and folders in the App folder")]
 [PrivateApi("Was till v17 InternalApi_DoNotUse_MayChangeWithoutNotice(still wip / finishing specs etc.)")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppFiles: CustomDataSourceAdvanced
+public class AppAssets: CustomDataSourceAdvanced
 {
     private readonly IDataFactory _dataFactory;
     private readonly AppFilesDataSourceProvider _provider;
@@ -85,7 +85,7 @@ public class AppFiles: CustomDataSourceAdvanced
     #region Constructor
 
     [PrivateApi]
-    public AppFiles(MyServices services, AppFilesDataSourceProvider provider, IDataFactory dataFactory) : base(services, "CDS.AppFiles", connect: [provider, dataFactory])
+    public AppAssets(MyServices services, AppFilesDataSourceProvider provider, IDataFactory dataFactory) : base(services, "CDS.AppFiles", connect: [provider, dataFactory])
     {
         _provider = provider;
         _dataFactory = dataFactory;
