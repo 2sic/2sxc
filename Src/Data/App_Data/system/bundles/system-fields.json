@@ -414,9 +414,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "boolean-tristate"
                         },
@@ -429,15 +426,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -1225,9 +1214,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-wysiwyg"
                         },
@@ -1240,15 +1226,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -2846,236 +2824,6 @@
                     "Owner": "dnn:userid=41"
                   }
                 ]
-              },
-              {
-                "Name": "GroupExperimentalInfo",
-                "Type": "Empty",
-                "InputType": "empty-default",
-                "IsTitle": false,
-                "Metadata": [
-                  {
-                    "Id": 169157,
-                    "Version": 3,
-                    "Guid": "59a05a27-35d1-4ce7-a36a-15334847a1af",
-                    "Type": {
-                      "Id": "@All",
-                      "Name": "@All"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "CustomJavaScript": {
-                          "en-us": ""
-                        },
-                        "DefaultValue": {
-                          "en-us": ""
-                        },
-                        "Information": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "en-us": "empty-default"
-                        },
-                        "Name": {
-                          "en-us": "Experimental Information (new/WIP in v15)"
-                        },
-                        "Notes": {
-                          "en-us": "<p>These fields are experimental and meant for enhancing the UI.&nbsp;</p>\n<p>ATM they would only affect Entity-pickers and nothing else, but it's not implemented yet.</p>"
-                        },
-                        "Placeholder": {
-                          "en-us": ""
-                        },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
-                        "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
-                          "en-us": ""
-                        }
-                      },
-                      "Entity": {
-                        "Errors": {
-                          "*": []
-                        },
-                        "Formulas": {
-                          "*": [
-                            "d57e9667-b470-4557-a35d-eb13aaa94022"
-                          ]
-                        },
-                        "Warnings": {
-                          "*": []
-                        }
-                      },
-                      "Boolean": {
-                        "Disabled": {
-                          "en-us": false
-                        },
-                        "DisableTranslation": {
-                          "en-us": false
-                        },
-                        "Required": {
-                          "en-us": false
-                        },
-                        "VisibleInEditUI": {
-                          "en-us": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 169161,
-                    "Version": 1,
-                    "Guid": "50021acc-103f-4bbc-8969-271fdc0cf1ab",
-                    "Type": {
-                      "Id": "@empty-default",
-                      "Name": "@empty-default"
-                    },
-                    "Attributes": {
-                      "Boolean": {
-                        "DefaultCollapsed": {
-                          "en-us": false
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  }
-                ]
-              },
-              {
-                "Name": "Information",
-                "Type": "String",
-                "InputType": "string-wysiwyg",
-                "IsTitle": false,
-                "Metadata": [
-                  {
-                    "Id": 169158,
-                    "Version": 1,
-                    "Guid": "44051f94-987d-45eb-9d0a-231f5e6d0cd8",
-                    "Type": {
-                      "Id": "@All",
-                      "Name": "@All"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "InputType": {
-                          "*": "string-wysiwyg"
-                        },
-                        "Name": {
-                          "*": "Information"
-                        }
-                      },
-                      "Entity": {
-                        "Errors": {
-                          "*": []
-                        },
-                        "Formulas": {
-                          "*": []
-                        },
-                        "Warnings": {
-                          "*": []
-                        }
-                      },
-                      "Boolean": {
-                        "VisibleInEditUI": {
-                          "*": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  }
-                ]
-              },
-              {
-                "Name": "Tooltip",
-                "Type": "String",
-                "InputType": "string-wysiwyg",
-                "IsTitle": false,
-                "Metadata": [
-                  {
-                    "Id": 169159,
-                    "Version": 1,
-                    "Guid": "22753080-6c96-48ca-95a1-308976104e58",
-                    "Type": {
-                      "Id": "@All",
-                      "Name": "@All"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "InputType": {
-                          "*": "string-wysiwyg"
-                        },
-                        "Name": {
-                          "*": "Tooltip"
-                        }
-                      },
-                      "Entity": {
-                        "Errors": {
-                          "*": []
-                        },
-                        "Formulas": {
-                          "*": []
-                        },
-                        "Warnings": {
-                          "*": []
-                        }
-                      },
-                      "Boolean": {
-                        "VisibleInEditUI": {
-                          "*": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  }
-                ]
-              },
-              {
-                "Name": "HelpLink",
-                "Type": "Hyperlink",
-                "InputType": "hyperlink-default",
-                "IsTitle": false,
-                "Metadata": [
-                  {
-                    "Id": 169160,
-                    "Version": 1,
-                    "Guid": "1f68b736-f1b7-4da1-9e83-318c97a191ab",
-                    "Type": {
-                      "Id": "@All",
-                      "Name": "@All"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "InputType": {
-                          "*": "hyperlink-default"
-                        },
-                        "Name": {
-                          "*": "HelpLink"
-                        }
-                      },
-                      "Entity": {
-                        "Errors": {
-                          "*": []
-                        },
-                        "Formulas": {
-                          "*": []
-                        },
-                        "Warnings": {
-                          "*": []
-                        }
-                      },
-                      "Boolean": {
-                        "VisibleInEditUI": {
-                          "*": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  }
-                ]
               }
             ]
           },
@@ -3309,37 +3057,6 @@
                 "String": {
                   "Formula": {
                     "en-us": "v1(data, context) { return !data.DisableTranslation; }"
-                  },
-                  "Notes": {
-                    "en-us": ""
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Setting Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 169162,
-              "Version": 2,
-              "Guid": "d57e9667-b470-4557-a35d-eb13aaa94022",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v2((data, context) => { return context.debug; });"
                   },
                   "Notes": {
                     "en-us": ""
@@ -6349,9 +6066,6 @@
                         "DefaultValue": {
                           "en-us": "strict"
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-picker"
                         },
@@ -6364,15 +6078,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -6510,9 +6216,6 @@
                         "DefaultValue": {
                           "en-us": "none"
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-picker"
                         },
@@ -6525,15 +6228,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -6671,9 +6366,6 @@
                         "DefaultValue": {
                           "en-us": "link"
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-picker"
                         },
@@ -6686,15 +6378,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -8159,9 +7843,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-picker"
                         },
@@ -8174,15 +7855,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -8320,9 +7993,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-picker"
                         },
@@ -8335,15 +8005,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -8954,9 +8616,6 @@
                         "DefaultValue": {
                           "en-us": "d3dde02f-c1dc-43b8-a8b7-4be3c43eadd0"
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-dropdown-query"
                         },
@@ -8969,15 +8628,7 @@
                         "Placeholder": {
                           "en-us": "Default mode"
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -9039,9 +8690,6 @@
                     },
                     "Attributes": {
                       "String": {
-                        "EntityType": {
-                          "en-us": "StringWysiwygConfiguration"
-                        },
                         "Label": {
                           "en-us": "Title"
                         },
@@ -9066,9 +8714,6 @@
                       },
                       "Boolean": {
                         "AllowMultiValue": {
-                          "en-us": false
-                        },
-                        "EnableCreate": {
                           "en-us": false
                         },
                         "EnableEdit": {
@@ -9193,9 +8838,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-picker"
                         },
@@ -9208,15 +8850,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -9354,9 +8988,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-picker"
                         },
@@ -9369,15 +9000,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -9785,9 +9408,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-picker"
                         },
@@ -9800,15 +9420,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -9946,9 +9558,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-picker"
                         },
@@ -9961,15 +9570,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -10174,6 +9775,102 @@
           },
           "Entities": [
             {
+              "Id": 142603,
+              "Version": 4,
+              "Guid": "18da7984-28c7-4c22-9c30-c7d698808c15",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v1(data, context) {\n  return data.Dialog != 'dialog';\n}"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Setting Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 183899,
+              "Version": 5,
+              "Guid": "43c38be0-097c-4c0d-8860-7a530e1f4c7a",
+              "Type": {
+                "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
+                "Name": "UiPickerSourceCustomCsv"
+              },
+              "Attributes": {
+                "String": {
+                  "Csv": {
+                    "en-us": "Value,Title,Info\n,\"Default (narrow)\",\"Default is narrow, but visibly multi-line with ca. 3 lines of text\"\n1,\"Minimum\",\"As narrow as possible, so the user will usually not type much, and it doesn't take much screen space\"\n3,\"Narrow\",\"Narrow, but visibly multi-line\"\n5,\"Medium\",\"Medium size\"\n10,\"Large\",\"Large so it's clearly meant for a lot of text. Only do this if the user should write a lot\""
+                  },
+                  "Description": {
+                    "en-us": ""
+                  },
+                  "ItemInformation": {
+                    "en-us": "<p>[Item:Info]</p>\n<p>ca. [Item:Value] lines</p>"
+                  },
+                  "ItemTooltip": {
+                    "en-us": "<p>[Item:Info]</p>\n<p>ca. [Item:Value] lines</p>"
+                  },
+                  "Title": {
+                    "en-us": "String-WYSIWYG - Inline Initial Height"
+                  }
+                },
+                "Hyperlink": {
+                  "ItemLink": {
+                    "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 164914,
+              "Version": 3,
+              "Guid": "c1f607b3-6cc1-4797-a75b-b46555f512cf",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v1(data, context) { return data.WysiwygMode === 'enhanced'; }"
+                  },
+                  "Notes": {
+                    "en-us": ""
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Setting Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
               "Id": 183897,
               "Version": 3,
               "Guid": "28e7b048-6967-4abf-bf84-4b09e5c45843",
@@ -10296,102 +9993,6 @@
                   },
                   "Title": {
                     "en-us": "Setting Collapsed"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 142603,
-              "Version": 4,
-              "Guid": "18da7984-28c7-4c22-9c30-c7d698808c15",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v1(data, context) {\n  return data.Dialog != 'dialog';\n}"
-                  },
-                  "Notes": {
-                    "en-us": ""
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Setting Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 183899,
-              "Version": 5,
-              "Guid": "43c38be0-097c-4c0d-8860-7a530e1f4c7a",
-              "Type": {
-                "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
-                "Name": "UiPickerSourceCustomCsv"
-              },
-              "Attributes": {
-                "String": {
-                  "Csv": {
-                    "en-us": "Value,Title,Info\n,\"Default (narrow)\",\"Default is narrow, but visibly multi-line with ca. 3 lines of text\"\n1,\"Minimum\",\"As narrow as possible, so the user will usually not type much, and it doesn't take much screen space\"\n3,\"Narrow\",\"Narrow, but visibly multi-line\"\n5,\"Medium\",\"Medium size\"\n10,\"Large\",\"Large so it's clearly meant for a lot of text. Only do this if the user should write a lot\""
-                  },
-                  "Description": {
-                    "en-us": ""
-                  },
-                  "ItemInformation": {
-                    "en-us": "<p>[Item:Info]</p>\n<p>ca. [Item:Value] lines</p>"
-                  },
-                  "ItemTooltip": {
-                    "en-us": "<p>[Item:Info]</p>\n<p>ca. [Item:Value] lines</p>"
-                  },
-                  "Title": {
-                    "en-us": "String-WYSIWYG - Inline Initial Height"
-                  }
-                },
-                "Hyperlink": {
-                  "ItemLink": {
-                    "en-us": ""
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 164914,
-              "Version": 3,
-              "Guid": "c1f607b3-6cc1-4797-a75b-b46555f512cf",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v1(data, context) { return data.WysiwygMode === 'enhanced'; }"
-                  },
-                  "Notes": {
-                    "en-us": ""
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Setting Visible"
                   }
                 },
                 "Boolean": {
@@ -11086,9 +10687,6 @@
                         "DefaultValue": {
                           "en-us": "strict"
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "*": "string-picker"
                         },
@@ -11101,15 +10699,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
