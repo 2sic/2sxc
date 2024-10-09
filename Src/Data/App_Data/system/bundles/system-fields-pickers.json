@@ -14217,8 +14217,24 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
+                "Id": 183952,
+                "Version": 1,
+                "Guid": "01c78465-f078-4978-9eee-ec5d88599660",
+                "Type": {
+                  "Id": "bcce96be-a439-4f22-9d1e-a10487544fa5",
+                  "Name": "IsPickerSourceDecorator"
+                },
+                "Attributes": {},
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "78451625-053f-4e23-b4e8-e95c3fcf3320"
+                }
+              },
+              {
                 "Id": 183928,
-                "Version": 2,
+                "Version": 3,
                 "Guid": "703be1a9-518b-4bdf-a98b-7a60ba3699cb",
                 "Type": {
                   "Id": "ContentType",
@@ -14239,7 +14255,7 @@
                       "en-us": ""
                     },
                     "Label": {
-                      "en-us": "UI Picker Source - Css (for selecting icons or classes)"
+                      "en-us": "UI Picker Source - Css (for selecting icons or classes) BETA⚠️"
                     },
                     "ListInstructions": {
                       "en-us": ""
@@ -14257,22 +14273,6 @@
                     }
                   }
                 },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "78451625-053f-4e23-b4e8-e95c3fcf3320"
-                }
-              },
-              {
-                "Id": 183952,
-                "Version": 1,
-                "Guid": "01c78465-f078-4978-9eee-ec5d88599660",
-                "Type": {
-                  "Id": "bcce96be-a439-4f22-9d1e-a10487544fa5",
-                  "Name": "IsPickerSourceDecorator"
-                },
-                "Attributes": {},
                 "Owner": "dnn:userid=41",
                 "For": {
                   "Target": "ContentType",
@@ -14835,114 +14835,6 @@
                 }
               },
               {
-                "Name": "PreviewValue",
-                "Type": "String",
-                "InputType": "string-default",
-                "IsTitle": false,
-                "Metadata": [
-                  {
-                    "Id": 183946,
-                    "Version": 4,
-                    "Guid": "93e77f98-91ae-42ec-8e49-b890f2c375df",
-                    "Type": {
-                      "Id": "@All",
-                      "Name": "@All"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "CustomJavaScript": {
-                          "en-us": ""
-                        },
-                        "DefaultValue": {
-                          "en-us": "fas [Item:Value]"
-                        },
-                        "InputType": {
-                          "en-us": "string-default"
-                        },
-                        "Name": {
-                          "en-us": "Preview Value"
-                        },
-                        "Notes": {
-                          "en-us": "<p>CSS rule to use for the preview. Allows you to specify things such as prefixes (required for Font-Awesom, but not for newer If not specified, will just use the found selector with dot, so \".address\". Placeholders:</p>\n<ol>\n<li>[Item:Value] - the selector without leading \".\"</li>\n<li>[Item:ValueRaw] - the selector with leading \".\"</li>\n</ol>"
-                        },
-                        "Placeholder": {
-                          "en-us": ""
-                        },
-                        "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Entity": {
-                        "Errors": {
-                          "*": []
-                        },
-                        "Formulas": {
-                          "*": []
-                        },
-                        "Warnings": {
-                          "*": []
-                        }
-                      },
-                      "Boolean": {
-                        "Disabled": {
-                          "en-us": false
-                        },
-                        "DisableTranslation": {
-                          "en-us": false
-                        },
-                        "Required": {
-                          "en-us": false
-                        },
-                        "VisibleInEditUI": {
-                          "en-us": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 183949,
-                    "Version": 3,
-                    "Guid": "061e6f38-7e70-4420-8d93-e832f83d267e",
-                    "Type": {
-                      "Id": "@String",
-                      "Name": "@String"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "DropdownValues": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "en-us": ""
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 183950,
-                    "Version": 3,
-                    "Guid": "aca91517-1845-49e9-8b5e-056801366af5",
-                    "Type": {
-                      "Id": "@string-default",
-                      "Name": "@string-default"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "InputFontFamily": {
-                          "en-us": ""
-                        },
-                        "TextWrapping": {
-                          "en-us": ""
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  }
-                ]
-              },
-              {
                 "Name": "PreviewType",
                 "Type": "String",
                 "InputType": "string-picker",
@@ -15065,6 +14957,114 @@
                         },
                         "EnableTextEntry": {
                           "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "PreviewValue",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183946,
+                    "Version": 4,
+                    "Guid": "93e77f98-91ae-42ec-8e49-b890f2c375df",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "fas [Item:Value]"
+                        },
+                        "InputType": {
+                          "en-us": "string-default"
+                        },
+                        "Name": {
+                          "en-us": "Preview Value"
+                        },
+                        "Notes": {
+                          "en-us": "<p>CSS rule to use for the preview. Allows you to specify things such as prefixes (required for Font-Awesom, but not for newer If not specified, will just use the found selector with dot, so \".address\". Placeholders:</p>\n<ol>\n<li>[Item:Value] - the selector without leading \".\"</li>\n<li>[Item:ValueRaw] - the selector with leading \".\"</li>\n</ol>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183949,
+                    "Version": 3,
+                    "Guid": "061e6f38-7e70-4420-8d93-e832f83d267e",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183950,
+                    "Version": 3,
+                    "Guid": "aca91517-1845-49e9-8b5e-056801366af5",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": ""
+                        },
+                        "TextWrapping": {
+                          "en-us": ""
                         }
                       }
                     },
