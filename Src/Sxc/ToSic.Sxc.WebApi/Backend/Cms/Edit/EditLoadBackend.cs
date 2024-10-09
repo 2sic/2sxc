@@ -2,6 +2,7 @@
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
+using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Internal;
@@ -143,8 +144,10 @@ public partial class EditLoadBackend(
         result.Context = contextBuilder.InitApp(context.AppReader)
             .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features | (isSystemType ? Ctx.FeaturesForSystemTypes : Ctx.Features), CtxEnable.EditUi);
 
+        // Load settings for the front-end
         result.Settings = loadSettings.GetSettings(context, usedTypes, result.ContentTypes, appWorkCtx);
 
+        // Prefetch additional data
         try
         {
             result.Prefetch = prefetch.TryToPrefectAdditionalData(appId, result);
@@ -154,7 +157,20 @@ public partial class EditLoadBackend(
             l.A("Ran into an error during Prefetch");
             l.Ex(ex);
         }
-            
+
+        // Determine required features for the UI WIP 18.02
+        var inheritedFields = usedTypes
+            .SelectMany(t => t.Attributes
+                .Where(a => a.SysSettings?.InheritMetadata == true)
+                .Select(a => new { Name = a.Name, Type = t}))
+            .ToList();
+
+        if (inheritedFields.Any())
+            result.RequiredFeatures = new()
+            {
+                { BuiltInFeatures.ContentTypeFieldsReuseDefinitions.NameId, inheritedFields.Select(f => $"Used in fields: {f.Type.Name}.{f.Name}").ToArray() },
+            };
+
         // done
         var finalMsg = $"items:{result.Items.Count}, types:{result.ContentTypes.Count}, inputs:{result.InputTypes.Count}, feats:{result.Context.Features.Count}";
         return l.Return(result, finalMsg);

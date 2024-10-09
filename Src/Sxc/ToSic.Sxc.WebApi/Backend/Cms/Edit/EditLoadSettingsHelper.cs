@@ -83,9 +83,9 @@ public class EditLoadSettingsHelper(
         return l.Return(finalSettings, $"{finalSettings.Count}");
     }
 
-    public List<JsonContentType> GetContentTypes(LoadSettingsProviderParameters parameters)
+    public List<JsonContentTypeWithTitleWip> GetContentTypes(LoadSettingsProviderParameters parameters)
     {
-        var l = Log.Fn<List<JsonContentType>>();
+        var l = Log.Fn<List<JsonContentTypeWithTitleWip>>();
 
         // Load all types from the providers
         var typesFromProviders = loadSettingsTypesProviders
@@ -106,7 +106,22 @@ public class EditLoadSettingsHelper(
 
 
         var nameMap = typesFromProviders
-            .Select(t => serializerForTypes.ToPackage(t, serSettings).ContentType)
+            .Select(t =>
+            {
+                var normal = serializerForTypes.ToPackage(t, serSettings).ContentType;
+                var title = t.Metadata.DetailsOrNull?.Title;
+                return new JsonContentTypeWithTitleWip()
+                {
+                    Id = normal.Id,
+                    Name = normal.Name,
+                    Scope = normal.Scope,
+                    Sharing = normal.Sharing,
+                    Metadata = normal.Metadata,
+                    Attributes = normal.Attributes,
+                    Assets = normal.Assets,
+                    Title = title.NullIfNoValue() ?? normal.Name,
+                };
+            })
             .ToList();
 
         return l.Return(nameMap, $"all ok, found {nameMap.Count}");

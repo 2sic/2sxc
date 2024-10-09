@@ -176,8 +176,8 @@ public static partial class RegisterSxcServices
 
         // v15 DataSource Dependencies
         services.TryAddTransient<SitesDataSourceProvider.MyServices>();
-        services.TryAddTransient<AppFilesDataSourceProvider>();
-        services.TryAddTransient<AppFilesDataSourceProvider.MyServices>();
+        services.TryAddTransient<AppAssetsDataSourceProvider>();
+        services.TryAddTransient<AppAssetsDataSourceProvider.MyServices>();
         services.TryAddTransient(typeof(AdamDataSourceProvider<,>));
         services.TryAddTransient(typeof(AdamDataSourceProvider<,>.MyServices));
         services.TryAddTransient<IAppDataSourcesLoader, AppDataSourcesLoader>();
@@ -208,6 +208,7 @@ public static partial class RegisterSxcServices
         // v18
         services.TryAddSingleton<Util>();
         services.TryAddTransient<LightSpeedStats>();
+        services.TryAddTransient<SourceCodeHasher>();
 
         // Add possibly missing fallback services
         // This must always be at the end here so it doesn't accidentally replace something we actually need

@@ -102,11 +102,11 @@ public class ImportContent(
 
                 // bundle json
                 if (isEnabled && package.Value.Bundles.SafeAny())
-                    types.AddRange(serializer.GetContentTypesFromBundles(package.Value));
+                    types.AddRange(serializer.GetContentTypesFromBundles(package.Value).Select(set => set.ContentType));
 
                 // single json
                 if (package.Value.ContentType != null)
-                    types.Add(serializer.ConvertContentType(package.Value));
+                    types.Add(serializer.ConvertContentType(package.Value).ContentType);
             }
 
             if (types.Any(t => t == null))
@@ -135,8 +135,6 @@ public class ImportContent(
 
             // 2.2. Build content types
             var entities = new List<IEntity>();
-            //var relationshipsList = new List<IEntity>();
-            //var relationshipSource = new DirectEntitiesSource(relationshipsList);
             DirectEntitiesSource.Using(relationships =>
             {
                 foreach (var package in packages)

@@ -2482,7 +2482,7 @@
         },
         {
           "Id": 182360,
-          "Version": 10,
+          "Version": 13,
           "Guid": "68af1a61-9362-4cc5-8e60-cd9c37fe88c3",
           "Type": {
             "Id": "DataPipeline",
@@ -2503,7 +2503,7 @@
                 "*": "Default,Header"
               },
               "StreamWiring": {
-                "*": "6c04fa59-082e-428c-9a1f-ac511e3d04b6:UiPickerSourceCustomList>e73021f3-b121-4fc0-81c3-a8800bbd14d9:CustomList\r\n6c04fa59-082e-428c-9a1f-ac511e3d04b6:UiPickerSourceEntity>e73021f3-b121-4fc0-81c3-a8800bbd14d9:Entity\r\n6c04fa59-082e-428c-9a1f-ac511e3d04b6:UiPickerSourceQuery>e73021f3-b121-4fc0-81c3-a8800bbd14d9:Query\r\ne73021f3-b121-4fc0-81c3-a8800bbd14d9:Default>Out:Default\r\n6c04fa59-082e-428c-9a1f-ac511e3d04b6:UiPickerSourceCustomCsv>e73021f3-b121-4fc0-81c3-a8800bbd14d9:Default"
+                "*": "6c04fa59-082e-428c-9a1f-ac511e3d04b6:UiPickerSourceCustomList>e73021f3-b121-4fc0-81c3-a8800bbd14d9:CustomList\r\n6c04fa59-082e-428c-9a1f-ac511e3d04b6:UiPickerSourceEntity>e73021f3-b121-4fc0-81c3-a8800bbd14d9:Entity\r\n6c04fa59-082e-428c-9a1f-ac511e3d04b6:UiPickerSourceQuery>e73021f3-b121-4fc0-81c3-a8800bbd14d9:Query\r\ne73021f3-b121-4fc0-81c3-a8800bbd14d9:Default>Out:Default\r\n6c04fa59-082e-428c-9a1f-ac511e3d04b6:UiPickerSourceCustomCsv>e73021f3-b121-4fc0-81c3-a8800bbd14d9:Default\r\n6c04fa59-082e-428c-9a1f-ac511e3d04b6:UiPickerSourceCss>e73021f3-b121-4fc0-81c3-a8800bbd14d9:UiPickerSourceCss\r\n6c04fa59-082e-428c-9a1f-ac511e3d04b6:UiPickerSourceAppAssets>e73021f3-b121-4fc0-81c3-a8800bbd14d9:UiPickerSourceAppAssets"
               },
               "TestParameters": {
                 "*": ""
@@ -2524,32 +2524,8 @@
           "Owner": "dnn:userid=41",
           "Metadata": [
             {
-              "Id": 182365,
-              "Version": 2,
-              "Guid": "acba9b5f-fead-4181-8a36-e39281fc7288",
-              "Type": {
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
-                "Name": "SystemExportDecorator"
-              },
-              "Attributes": {
-                "Entity": {
-                  "Configuration": {
-                    "*": [
-                      "1fac6138-39c7-4ab6-9c54-9cf3e4ffd5ed"
-                    ]
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41",
-              "For": {
-                "Target": "Entity",
-                "TargetType": 4,
-                "Guid": "68af1a61-9362-4cc5-8e60-cd9c37fe88c3"
-              }
-            },
-            {
               "Id": 182362,
-              "Version": 8,
+              "Version": 11,
               "Guid": "6c04fa59-082e-428c-9a1f-ac511e3d04b6",
               "Type": {
                 "Id": "DataPipelinePart",
@@ -2580,7 +2556,7 @@
             },
             {
               "Id": 182363,
-              "Version": 6,
+              "Version": 9,
               "Guid": "e73021f3-b121-4fc0-81c3-a8800bbd14d9",
               "Type": {
                 "Id": "DataPipelinePart",
@@ -2599,6 +2575,30 @@
                   },
                   "VisualDesignerData": {
                     "*": "{\r\n  \"Top\": 200,\r\n  \"Left\": 400\r\n}"
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "68af1a61-9362-4cc5-8e60-cd9c37fe88c3"
+              }
+            },
+            {
+              "Id": 182365,
+              "Version": 2,
+              "Guid": "acba9b5f-fead-4181-8a36-e39281fc7288",
+              "Type": {
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "1fac6138-39c7-4ab6-9c54-9cf3e4ffd5ed"
+                    ]
                   }
                 }
               },
@@ -2742,6 +2742,194 @@
                 "TargetType": 4,
                 "Guid": "ca79c11d-0c2e-422a-8bcb-0a89d493ecc0"
               }
+            }
+          ]
+        },
+        {
+          "Id": 167720,
+          "Version": 25,
+          "Guid": "952633f8-c04b-4592-9db9-a3e6ecf2dbb5",
+          "Type": {
+            "Id": "DataPipeline",
+            "Name": "DataPipeline"
+          },
+          "Attributes": {
+            "String": {
+              "Description": {
+                "en-us": "Get all the files / folders from an App (new v18.02)"
+              },
+              "Name": {
+                "en-us": "System.AppAssets"
+              },
+              "Params": {
+                "en-us": "RootFolder=[QueryString:RootFolder||/]\nFileFilter=[QueryString:FileFilter||*.*]\nSearchSubfolders=[QueryString:SearchSubfolders||false]\nAssetType=[QueryString:AssetType||Files]\n"
+              },
+              "StreamsOut": {
+                "en-us": "Default,Header,Files,Folders,All"
+              },
+              "StreamWiring": {
+                "en-us": "da65ba2b-ae16-4446-84f7-90d76c98c513:Files>Out:Files\r\nda65ba2b-ae16-4446-84f7-90d76c98c513:Folders>Out:Folders\r\nda65ba2b-ae16-4446-84f7-90d76c98c513:All>Out:All\r\nda65ba2b-ae16-4446-84f7-90d76c98c513:Files>0ccade9c-343a-4d4f-b037-66ed381d8cee:Files\r\nda65ba2b-ae16-4446-84f7-90d76c98c513:Folders>0ccade9c-343a-4d4f-b037-66ed381d8cee:Folders\r\nda65ba2b-ae16-4446-84f7-90d76c98c513:All>0ccade9c-343a-4d4f-b037-66ed381d8cee:All\r\n0ccade9c-343a-4d4f-b037-66ed381d8cee:Default>Out:Default"
+              },
+              "TestParameters": {
+                "en-us": "[QueryString:RootFolder]=/\n[QueryString:FileFilter]=*.*\n[QueryString:SearchSubfolders]=false\n[QueryString:AssetType]=Folders"
+              },
+              "VisualDesignerData": {
+                "en-us": "{\"ShowDataSourceDetails\":true}"
+              }
+            },
+            "Boolean": {
+              "AllowEdit": {
+                "en-us": true
+              },
+              "HiddenInQueryPicker": {
+                "en-us": true
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 167722,
+              "Version": 15,
+              "Guid": "da65ba2b-ae16-4446-84f7-90d76c98c513",
+              "Type": {
+                "Id": "DataPipelinePart",
+                "Name": "DataPipelinePart"
+              },
+              "Attributes": {
+                "String": {
+                  "Description": {
+                    "*": ""
+                  },
+                  "Name": {
+                    "*": "AppFiles"
+                  },
+                  "PartAssemblyAndType": {
+                    "*": "3fe6c215-4c37-45c1-8883-b4b2a47162a7"
+                  },
+                  "VisualDesignerData": {
+                    "*": "{\r\n  \"Top\": 520,\r\n  \"Left\": 200\r\n}"
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "952633f8-c04b-4592-9db9-a3e6ecf2dbb5"
+              },
+              "Metadata": [
+                {
+                  "Id": 184022,
+                  "Version": 4,
+                  "Guid": "6059b2f9-28d6-4673-b165-540c6d85828b",
+                  "Type": {
+                    "Id": "477d5de4-5ffa-43ef-8553-37354cb27660",
+                    "Name": "AppFilesDataSourceConfig"
+                  },
+                  "Attributes": {
+                    "String": {
+                      "FileFilter": {
+                        "en-us": "[Params:FileFilter]"
+                      },
+                      "RootFolder": {
+                        "en-us": "[Params:RootFolder]"
+                      },
+                      "SearchSubfolders": {
+                        "en-us": "[Params:SearchSubfolders]"
+                      },
+                      "Title": {
+                        "en-us": "App Files"
+                      }
+                    }
+                  },
+                  "Owner": "dnn:userid=41",
+                  "For": {
+                    "Target": "Entity",
+                    "TargetType": 4,
+                    "Guid": "da65ba2b-ae16-4446-84f7-90d76c98c513"
+                  }
+                }
+              ]
+            },
+            {
+              "Id": 184023,
+              "Version": 1,
+              "Guid": "72559058-b7e0-4be1-bca6-ecf809c55b14",
+              "Type": {
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
+                "Name": "SystemExportDecorator"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "1fac6138-39c7-4ab6-9c54-9cf3e4ffd5ed"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "952633f8-c04b-4592-9db9-a3e6ecf2dbb5"
+              }
+            },
+            {
+              "Id": 184053,
+              "Version": 6,
+              "Guid": "0ccade9c-343a-4d4f-b037-66ed381d8cee",
+              "Type": {
+                "Id": "DataPipelinePart",
+                "Name": "DataPipelinePart"
+              },
+              "Attributes": {
+                "String": {
+                  "Description": {
+                    "*": ""
+                  },
+                  "Name": {
+                    "*": "Pick Stream"
+                  },
+                  "PartAssemblyAndType": {
+                    "*": "ToSic.Eav.DataSources.StreamPick, ToSic.Eav.DataSources"
+                  },
+                  "VisualDesignerData": {
+                    "*": "{\r\n  \"Top\": 260,\r\n  \"Left\": 540\r\n}"
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "952633f8-c04b-4592-9db9-a3e6ecf2dbb5"
+              },
+              "Metadata": [
+                {
+                  "Id": 184054,
+                  "Version": 1,
+                  "Guid": "cb686948-965b-4b9b-a14a-920c0594b48c",
+                  "Type": {
+                    "Id": "67b19864-df6d-400b-9f37-f41f1dd69c4a",
+                    "Name": "StreamPick"
+                  },
+                  "Attributes": {
+                    "String": {
+                      "StreamName": {
+                        "en-us": "[Params:AssetType]"
+                      }
+                    }
+                  },
+                  "Owner": "dnn:userid=41",
+                  "For": {
+                    "Target": "Entity",
+                    "TargetType": 4,
+                    "Guid": "0ccade9c-343a-4d4f-b037-66ed381d8cee"
+                  }
+                }
+              ]
             }
           ]
         }

@@ -635,9 +635,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "empty-message"
                         },
@@ -651,15 +648,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -717,9 +706,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "empty-message"
                         },
@@ -732,15 +718,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -798,9 +776,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "empty-default"
                         },
@@ -815,15 +790,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -1006,9 +973,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "boolean-default"
                         },
@@ -1021,15 +985,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -1117,9 +1073,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-wysiwyg"
                         },
@@ -1134,15 +1087,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -1254,9 +1199,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "boolean-default"
                         },
@@ -1270,15 +1212,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -1364,9 +1298,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "empty-default"
                         },
@@ -1381,15 +1312,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -1692,9 +1615,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-picker"
                         },
@@ -1708,15 +1628,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -1873,9 +1785,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "empty-message"
                         },
@@ -1889,15 +1798,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -1955,9 +1856,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "empty-default"
                         },
@@ -1971,15 +1869,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -2052,9 +1942,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "boolean-tristate"
                         },
@@ -2067,15 +1954,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -2157,9 +2036,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-dropdown"
                         },
@@ -2174,15 +2050,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -2562,7 +2430,13 @@
               "Guid": "29e24872-6359-4c9e-9c0c-c5a9e68a4a7d",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
-                "Name": "UiPickerSourceQuery"
+                "Name": "UiPickerSourceQuery",
+                "AttributeMap": {
+                  "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
+                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a",
+                  "Value": "0ee078ec-ee4d-41a0-b6b6-ffcdfa90f4eb",
+                  "Label": "a3489bc4-6f3c-4e84-a825-2476b0ae4c32"
+                }
               },
               "Attributes": {
                 "String": {
@@ -3991,9 +3865,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "empty-default"
                         },
@@ -4006,15 +3877,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -4573,9 +4436,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "empty-message"
                         },
@@ -4588,15 +4448,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -4671,9 +4523,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "empty-default"
                         },
@@ -4686,15 +4535,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -4951,9 +4792,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-default"
                         },
@@ -4966,15 +4804,7 @@
                         "Placeholder": {
                           "en-us": "example     // vary the cache by the url parameter example=abcd"
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -5072,9 +4902,6 @@
                         "DefaultValue": {
                           "en-us": "true"
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "boolean-default"
                         },
@@ -5087,15 +4914,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -5349,9 +5168,6 @@
                         "DefaultValue": {
                           "en-us": "true"
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "boolean-default"
                         },
@@ -5364,15 +5180,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -5889,9 +5697,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "number-dropdown"
                         },
@@ -5904,15 +5709,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -7834,9 +7631,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-dropdown"
                         },
@@ -7849,15 +7643,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -7958,9 +7744,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-dropdown-query"
                         },
@@ -7973,15 +7756,7 @@
                         "Placeholder": {
                           "en-us": "Please enter feature NameId"
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -8067,9 +7842,6 @@
                     },
                     "Attributes": {
                       "String": {
-                        "EntityType": {
-                          "en-us": ""
-                        },
                         "Label": {
                           "en-us": "Title"
                         },
@@ -8094,9 +7866,6 @@
                       },
                       "Boolean": {
                         "AllowMultiValue": {
-                          "en-us": false
-                        },
-                        "EnableCreate": {
                           "en-us": false
                         },
                         "EnableEdit": {
@@ -9279,6 +9048,409 @@
             "Attributes": []
           },
           "Entities": []
+        },
+        {
+          "ContentType": {
+            "Id": "bcce96be-a439-4f22-9d1e-a10487544fa5",
+            "Name": "IsPickerSourceDecorator",
+            "Scope": "System.Decorators",
+            "Metadata": [
+              {
+                "Id": 183919,
+                "Version": 3,
+                "Guid": "03d0bc06-f18e-49b5-a4f7-eee4b3e1abdd",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p>This marks content types which are picker sources.</p>\n<p>There are no properties to edit.</p>"
+                    },
+                    "Label": {
+                      "en-us": "Is Picker Source (Decorator)"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": "base64:PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjRweCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiIHdpZHRoPSIyNHB4IiBmaWxsPSIjZThlYWVkIj48cGF0aCBkPSJNMzIwLTI4MHExNyAwIDI4LjUtMTEuNVQzNjAtMzIwcTAtMTctMTEuNS0yOC41VDMyMC0zNjBxLTE3IDAtMjguNSAxMS41VDI4MC0zMjBxMCAxNyAxMS41IDI4LjVUMzIwLTI4MFptMC0xNjBxMTcgMCAyOC41LTExLjVUMzYwLTQ4MHEwLTE3LTExLjUtMjguNVQzMjAtNTIwcS0xNyAwLTI4LjUgMTEuNVQyODAtNDgwcTAgMTcgMTEuNSAyOC41VDMyMC00NDBabTAtMTYwcTE3IDAgMjguNS0xMS41VDM2MC02NDBxMC0xNy0xMS41LTI4LjVUMzIwLTY4MHEtMTcgMC0yOC41IDExLjVUMjgwLTY0MHEwIDE3IDExLjUgMjguNVQzMjAtNjAwWm0xMjAgMzIwaDI0MHYtODBINDQwdjgwWm0wLTE2MGgyNDB2LTgwSDQ0MHY4MFptMC0xNjBoMjQwdi04MEg0NDB2ODBaTTIwMC0xMjBxLTMzIDAtNTYuNS0yMy41VDEyMC0yMDB2LTU2MHEwLTMzIDIzLjUtNTYuNVQyMDAtODQwaDU2MHEzMyAwIDU2LjUgMjMuNVQ4NDAtNzYwdjU2MHEwIDMzLTIzLjUgNTYuNVQ3NjAtMTIwSDIwMFptMC04MGg1NjB2LTU2MEgyMDB2NTYwWm0wLTU2MHY1NjAtNTYwWiIvPjwvc3ZnPg=="
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "bcce96be-a439-4f22-9d1e-a10487544fa5"
+                }
+              },
+              {
+                "Id": 183921,
+                "Version": 1,
+                "Guid": "f4a28d83-923e-4809-8776-e3f462fbbd0b",
+                "Type": {
+                  "Id": "4c88d78f-5f3e-4b66-95f2-6d63b7858847",
+                  "Name": "MetadataForDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "DeleteWarning": {
+                      "en-us": ""
+                    },
+                    "TargetName": {
+                      "en-us": ""
+                    },
+                    "Title": {
+                      "en-us": "Content Types can be Picker Source Configurations"
+                    }
+                  },
+                  "Number": {
+                    "Amount": {
+                      "en-us": 1
+                    },
+                    "TargetType": {
+                      "en-us": 5
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "bcce96be-a439-4f22-9d1e-a10487544fa5"
+                }
+              },
+              {
+                "Id": 183923,
+                "Version": 1,
+                "Guid": "977cb2e5-4480-4522-83ad-c0e9c1b33d99",
+                "Type": {
+                  "Id": "8c78dabf-e0ad-4c26-b750-48138ecb8a39",
+                  "Name": "SaveEmptyDecorator"
+                },
+                "Attributes": {},
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "bcce96be-a439-4f22-9d1e-a10487544fa5"
+                }
+              }
+            ],
+            "Attributes": []
+          },
+          "Entities": []
+        },
+        {
+          "ContentType": {
+            "Id": "7775df1b-9c6d-4344-8f64-f6683b324615",
+            "Name": "FieldSettingsGeneric",
+            "Scope": "System.Decorators",
+            "Metadata": [
+              {
+                "Id": 183983,
+                "Version": 1,
+                "Guid": "5c4445aa-e14e-4cd2-abca-011dfa4a2023",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p>This is for development / internal features only.</p>\n<p>Goal is to be able to quickly add some generic settings to an input field, which affect the field without having to first create a content-type for these.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "en-us": "Field Settings - Generic (Development only)"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "7775df1b-9c6d-4344-8f64-f6683b324615"
+                }
+              }
+            ],
+            "Attributes": [
+              {
+                "Name": "Title",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": true,
+                "Metadata": [
+                  {
+                    "Id": 183985,
+                    "Version": 2,
+                    "Guid": "3664805a-7ed8-407f-ab44-bbf3caa3ca54",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-default"
+                        },
+                        "Name": {
+                          "en-us": "Title"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Title so you know why this was added.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": true
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183987,
+                    "Version": 1,
+                    "Guid": "91194b53-491d-4cff-9f7e-9d4335f16174",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183988,
+                    "Version": 1,
+                    "Guid": "6f22c773-321f-4e1b-bcd7-7fe37d12d25b",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": ""
+                        },
+                        "TextWrapping": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "SettingsGeneric",
+                "Type": "String",
+                "InputType": "string-json",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 183986,
+                    "Version": 2,
+                    "Guid": "957ec393-6088-406f-850c-d672fd030b57",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-json"
+                        },
+                        "Name": {
+                          "en-us": "Settings - Generic"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183991,
+                    "Version": 1,
+                    "Guid": "f2084a14-006b-4b7b-9d78-f8b2b5ece02a",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183992,
+                    "Version": 1,
+                    "Guid": "65d4e5d2-2ce4-46db-82e9-29e4936e1197",
+                    "Type": {
+                      "Id": "@string-json",
+                      "Name": "@string-json"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "JsonSchemaMode": {
+                          "en-us": "none"
+                        },
+                        "JsonSchemaRaw": {
+                          "en-us": ""
+                        },
+                        "JsonSchemaSource": {
+                          "en-us": "link"
+                        },
+                        "JsonValidation": {
+                          "en-us": "strict"
+                        }
+                      },
+                      "Hyperlink": {
+                        "JsonSchemaUrl": {
+                          "en-us": ""
+                        }
+                      },
+                      "Number": {
+                        "Rows": {
+                          "en-us": 10
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              }
+            ]
+          },
+          "Entities": []
         }
       ],
       "Entities": [
@@ -9288,7 +9460,13 @@
           "Guid": "5f49cf41-62b9-4d99-8642-59eece7ecdc2",
           "Type": {
             "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
-            "Name": "UiPickerSourceQuery"
+            "Name": "UiPickerSourceQuery",
+            "AttributeMap": {
+              "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
+              "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a",
+              "Value": "0ee078ec-ee4d-41a0-b6b6-ffcdfa90f4eb",
+              "Label": "a3489bc4-6f3c-4e84-a825-2476b0ae4c32"
+            }
           },
           "Attributes": {
             "String": {

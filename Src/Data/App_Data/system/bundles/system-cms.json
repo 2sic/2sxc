@@ -4559,6 +4559,26 @@
                     },
                     "Attributes": {},
                     "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 183990,
+                    "Version": 1,
+                    "Guid": "ee0d0e18-2dac-4efc-96b4-4eda019dd270",
+                    "Type": {
+                      "Id": "7775df1b-9c6d-4344-8f64-f6683b324615",
+                      "Name": "FieldSettingsGeneric"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "SettingsGeneric": {
+                          "en-us": "{\r\n  \"FileType\": \"C# Search\"\r\n}"
+                        },
+                        "Title": {
+                          "en-us": "View Configuration - ViewController (Search) - Provide Settings for Type/Location Masks"
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
                   }
                 ]
               },
@@ -6467,6 +6487,68 @@
               "Owner": "dnn:userid=41"
             },
             {
+              "Id": 130216,
+              "Version": 4,
+              "Guid": "295c8af6-cb9e-4394-9fcc-1f957907e94c",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "*": "v1(data) { return !!data.Path; }"
+                  },
+                  "Notes": {
+                    "*": ""
+                  },
+                  "Target": {
+                    "*": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "*": "Setting Visible: InEditUI: Show when template is set"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "*": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 130252,
+              "Version": 3,
+              "Guid": "50d9926b-bdc0-4e6e-a837-046fa1e59eee",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "*": "v1(data) { return data.default + (data.IsHidden ? ' ⛔': '') + (data.ViewNameInUrl ? ' \uD83D\uDD17': ''); }"
+                  },
+                  "Notes": {
+                    "*": ""
+                  },
+                  "Target": {
+                    "*": "Field.Settings.Name"
+                  },
+                  "Title": {
+                    "*": "Setting Name"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "*": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
               "Id": 130188,
               "Version": 11,
               "Guid": "07958470-13f6-4e7d-b2a2-901517058e2a",
@@ -6828,130 +6910,6 @@
                   },
                   "Title": {
                     "*": "Setting Visible: Show if needed"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "*": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 130488,
-              "Version": 4,
-              "Guid": "a71cb2c5-6724-44aa-95c1-f5d56e3b0dc6",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "*": "v1(data, context) {\n  if(context.cache.secondRun) return data.value;\n  context.cache.secondRun = true;\n  var result =\n    !data.SearchIndexingDisabled\n    && data.SearchIndexingStreams.length == 0\n    && data.ViewController == ''; \n  return result;\n}"
-                  },
-                  "Notes": {
-                    "*": ""
-                  },
-                  "Target": {
-                    "*": "Field.Value"
-                  },
-                  "Title": {
-                    "*": "Value"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "*": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 130492,
-              "Version": 3,
-              "Guid": "79b8d7f1-9f3b-441b-be61-633dee1526dd",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "*": "v1(data, context) { \n  var result =  !data.ViewController \n    && !data.VarSearchIsDefault \n    && !data.SearchIndexingDisabled;  \n  return result;\n}"
-                  },
-                  "Notes": {
-                    "*": ""
-                  },
-                  "Target": {
-                    "*": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "*": "Setting Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "*": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 130216,
-              "Version": 4,
-              "Guid": "295c8af6-cb9e-4394-9fcc-1f957907e94c",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "*": "v1(data) { return !!data.Path; }"
-                  },
-                  "Notes": {
-                    "*": ""
-                  },
-                  "Target": {
-                    "*": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "*": "Setting Visible: InEditUI: Show when template is set"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "*": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 130252,
-              "Version": 3,
-              "Guid": "50d9926b-bdc0-4e6e-a837-046fa1e59eee",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "*": "v1(data) { return data.default + (data.IsHidden ? ' ⛔': '') + (data.ViewNameInUrl ? ' \uD83D\uDD17': ''); }"
-                  },
-                  "Notes": {
-                    "*": ""
-                  },
-                  "Target": {
-                    "*": "Field.Settings.Name"
-                  },
-                  "Title": {
-                    "*": "Setting Name"
                   }
                 },
                 "Boolean": {
@@ -7364,6 +7322,68 @@
                 }
               },
               "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 130488,
+              "Version": 4,
+              "Guid": "a71cb2c5-6724-44aa-95c1-f5d56e3b0dc6",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "*": "v1(data, context) {\n  if(context.cache.secondRun) return data.value;\n  context.cache.secondRun = true;\n  var result =\n    !data.SearchIndexingDisabled\n    && data.SearchIndexingStreams.length == 0\n    && data.ViewController == ''; \n  return result;\n}"
+                  },
+                  "Notes": {
+                    "*": ""
+                  },
+                  "Target": {
+                    "*": "Field.Value"
+                  },
+                  "Title": {
+                    "*": "Value"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "*": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 130492,
+              "Version": 3,
+              "Guid": "79b8d7f1-9f3b-441b-be61-633dee1526dd",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "*": "v1(data, context) { \n  var result =  !data.ViewController \n    && !data.VarSearchIsDefault \n    && !data.SearchIndexingDisabled;  \n  return result;\n}"
+                  },
+                  "Notes": {
+                    "*": ""
+                  },
+                  "Target": {
+                    "*": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "*": "Setting Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "*": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
             }
           ]
         },
@@ -7701,7 +7721,11 @@
               "Guid": "4bd91a3d-ea09-4ae5-b984-42d934f072ae",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
-                "Name": "UiPickerSourceQuery"
+                "Name": "UiPickerSourceQuery",
+                "AttributeMap": {
+                  "Query": "1454db62-f29f-4471-b2a5-5bd82817580a",
+                  "StreamName": "cb87841b-d687-43ab-be67-cdb810a69e3a"
+                }
               },
               "Attributes": {
                 "String": {
@@ -7995,86 +8019,7 @@
           "Entities": []
         }
       ],
-      "Entities": [
-        {
-          "Id": 183781,
-          "Version": 1,
-          "Guid": "4bd91a3d-ea09-4ae5-b984-42d934f072ae",
-          "Type": {
-            "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
-            "Name": "UiPickerSourceQuery"
-          },
-          "Attributes": {
-            "String": {
-              "CreateTypes": {
-                "en-us": ""
-              },
-              "Description": {
-                "en-us": ""
-              },
-              "ItemInformation": {
-                "en-us": ""
-              },
-              "ItemTooltip": {
-                "en-us": ""
-              },
-              "Label": {
-                "en-us": "[Item:Name] ([Item:UserName])"
-              },
-              "MoreFields": {
-                "en-us": ""
-              },
-              "Query": {
-                "en-us": "System.Users"
-              },
-              "QueryParameters": {
-                "en-us": ""
-              },
-              "StreamName": {
-                "en-us": "Default"
-              },
-              "Title": {
-                "en-us": "Get all Users"
-              },
-              "Value": {
-                "en-us": "Id"
-              }
-            },
-            "Hyperlink": {
-              "ItemLink": {
-                "en-us": ""
-              }
-            }
-          },
-          "Owner": "dnn:userid=41",
-          "Metadata": [
-            {
-              "Id": 183782,
-              "Version": 1,
-              "Guid": "804274a3-8975-42a9-abd7-06dc970402aa",
-              "Type": {
-                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f",
-                "Name": "SystemExportDecorator"
-              },
-              "Attributes": {
-                "Entity": {
-                  "Configuration": {
-                    "*": [
-                      "36ffa022-cd04-46c5-9634-2252810e0c2a"
-                    ]
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41",
-              "For": {
-                "Target": "Entity",
-                "TargetType": 4,
-                "Guid": "4bd91a3d-ea09-4ae5-b984-42d934f072ae"
-              }
-            }
-          ]
-        }
-      ]
+      "Entities": []
     }
   ]
 }

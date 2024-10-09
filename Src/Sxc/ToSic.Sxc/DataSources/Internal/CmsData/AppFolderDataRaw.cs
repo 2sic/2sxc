@@ -5,7 +5,7 @@ namespace ToSic.Sxc.DataSources.Internal;
 
 /// <summary>
 /// Internal class to hold all the information about the App folders,
-/// until it's converted to an IEntity in the <see cref="AppFiles"/> DataSource.
+/// until it's converted to an IEntity in the <see cref="AppAssets"/> DataSource.
 ///
 /// Important: this is an internal object.
 /// We're just including in in the docs to better understand where the properties come from.
