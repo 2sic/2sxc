@@ -117,13 +117,12 @@ public interface ICacheSpecs
     ICacheSpecs VaryByPageParameter(string name, NoParamOrder protector = default, bool caseSensitive = false);
 
     /// <summary>
-    /// Vary the cache by one or more specific page parameter, eg `?category=1&sort=asc`.
+    /// Vary the cache by one or more specific page parameter, eg `?category=1&amp;sort=asc`.
     /// Using this method will only vary the cache by the mentioned parameters and ignore the rest.
     /// </summary>
     /// <param name="names">Names of one or more parameters, comma-separated</param>
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="caseSensitive">Determines if the value should be treated case-sensitive, default is `false`</param>
-    /// <returns></returns>
     ICacheSpecs VaryByPageParameters(string names = default, NoParamOrder protector = default, bool caseSensitive = false);
 
     /// <summary>
