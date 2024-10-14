@@ -88,6 +88,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="DnnPackageBuilder\SqlDataProvider\16.07.01.SqlDataProvider" />
+    <None Remove="DnnPackageBuilder\SqlDataProvider\18.02.01.SqlDataProvider" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetNuke.Core" Version="9.6.1">
@@ -207,6 +208,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="ClientScripts\readme.md" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\18.02.01.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\16.07.01.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\ToSic.Sxc.Dnn.dnn">
       <SubType>Designer</SubType>
