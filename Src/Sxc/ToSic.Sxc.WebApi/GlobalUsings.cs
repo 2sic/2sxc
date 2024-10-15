@@ -10,6 +10,7 @@ global using ToSic.Eav.Data;
 global using ToSic.Eav.Security.Permissions;
 global using ToSic.Eav.WebApi.Dto;
 global using ToSic.Lib.DI;
+global using ToSic.Lib.Documentation;
 global using ToSic.Lib.Logging;
 global using ToSic.Lib.Services;
 global using ToSic.Sxc.Context.Internal;

@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.WebApi;
+﻿namespace ToSic.Sxc.WebApi;
 
 /// <summary>
 /// Mark a WebApi to use the modern Json Formatter based on System.Text.Json.

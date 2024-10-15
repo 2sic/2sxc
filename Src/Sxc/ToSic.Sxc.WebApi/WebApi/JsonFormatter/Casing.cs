@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.WebApi;
+﻿namespace ToSic.Sxc.WebApi;
 
 /// <summary>
 /// Determines what casing to use when converting data to JSON.
