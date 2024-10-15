@@ -32,8 +32,14 @@ internal class DnnAdamSecurityChecks(AdamSecurityChecksBase.MyServices services)
         var id = (item as IFolder)?.Id
                  ?? (item as IFile)?.ParentId
                  ?? throw new ArgumentException("Should be a DNN asset", nameof(item));
-            
-        var folder = FolderManager.Instance.GetFolder(id);
-        return folder != null && FolderPermissionController.CanAddFolder(folder as FolderInfo);
+
+        if (FolderManager.Instance.GetFolder(id) is not FolderInfo folderInfo)
+            return false;
+
+        return FolderPermissionController.CanAddFolder(folderInfo) // ex: "WRITE" core folder permission
+            || FolderPermissionController.CanAdminFolder(folderInfo) // ex: "WRITE" core folder permission
+            || FolderPermissionController.CanManageFolder(folderInfo) // ex: "WRITE" core folder permission
+            || FolderPermissionController.CanDeleteFolder(folderInfo) // ex: "WRITE" core folder permission
+            || FolderPermissionController.CanCopyFolder(folderInfo); // ex: "WRITE" core folder permission
     }
 }
