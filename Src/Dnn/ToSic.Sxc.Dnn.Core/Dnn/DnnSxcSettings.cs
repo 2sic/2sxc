@@ -39,6 +39,6 @@ internal class DnnSxcSettings
         // this is the last version which must run server-side change-code
         // it's not sql-code, as the SqlDataProvider files are imported by DNN, not by our code
         internal const string LastVersionWithServerChanges = "15.02.00";
-        internal const string LastVersionWithDnnDbChanges = "16.07.01"; // just fyi, not used anywhere
+        internal const string LastVersionWithDnnDbChanges = "18.02.01"; // just fyi, not used anywhere
     }
 }
