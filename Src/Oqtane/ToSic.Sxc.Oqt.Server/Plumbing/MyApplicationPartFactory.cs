@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using System.Collections.Generic;
 using System.Reflection;
 
 // Code is required to razor runtime compilation.

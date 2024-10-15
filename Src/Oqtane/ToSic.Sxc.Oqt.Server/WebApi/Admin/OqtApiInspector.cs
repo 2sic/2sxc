@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Lib.Services;

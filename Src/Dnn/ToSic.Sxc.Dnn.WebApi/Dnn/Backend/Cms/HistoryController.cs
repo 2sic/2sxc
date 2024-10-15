@@ -5,6 +5,10 @@ using RealController = ToSic.Sxc.Backend.Cms.HistoryControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Cms;
 
+/// <summary>
+/// Controller for history of entities
+/// </summary>
+[PrivateApi]
 [SupportedModules(DnnSupportedModuleNames)]
 [ValidateAntiForgeryToken]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

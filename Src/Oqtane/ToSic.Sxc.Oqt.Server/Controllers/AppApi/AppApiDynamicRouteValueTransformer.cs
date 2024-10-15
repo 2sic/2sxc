@@ -8,7 +8,6 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using ToSic.Eav.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Lib.DI;

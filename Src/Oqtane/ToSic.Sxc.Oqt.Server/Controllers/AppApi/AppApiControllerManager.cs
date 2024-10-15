@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Routing;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using ToSic.Eav;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context.Internal;

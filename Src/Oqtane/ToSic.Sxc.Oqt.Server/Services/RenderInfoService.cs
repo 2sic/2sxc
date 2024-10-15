@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Oqtane.Shared;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 
 namespace ToSic.Sxc.Oqt.Server.Services

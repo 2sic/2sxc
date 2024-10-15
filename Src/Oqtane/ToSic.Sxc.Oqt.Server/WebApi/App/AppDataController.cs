@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using ToSic.Eav.WebApi.App;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using static ToSic.Eav.WebApi.EavWebApiConstants;

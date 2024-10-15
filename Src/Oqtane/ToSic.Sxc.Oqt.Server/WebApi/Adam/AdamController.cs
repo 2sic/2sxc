@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.Adam.AdamControllerReal<int>;

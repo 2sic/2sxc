@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 

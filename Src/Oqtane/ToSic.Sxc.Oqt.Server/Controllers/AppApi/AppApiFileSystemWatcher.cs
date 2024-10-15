@@ -3,7 +3,6 @@ using System;
 using System.Collections.Concurrent;
 using System.IO;
 using ToSic.Eav;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
