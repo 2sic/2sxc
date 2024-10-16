@@ -1,13 +1,16 @@
 ﻿using System.Web.Security;
+using DotNetNuke.Common;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
+using DotNetNuke.Services.Personalization;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Internal;
+using static DotNetNuke.Entities.Portals.PortalSettings;
 
 namespace ToSic.Sxc.Dnn.Context;
 
@@ -71,5 +74,37 @@ internal class DnnUser(LazySvc<DnnSecurity> dnnSecurity)
     public string Name => DnnUserInfo?.DisplayName;
 
     public string Email => DnnUserInfo?.Email;
+
+    public bool IsEditMode => GetUserMode() == PortalSettings.Mode.Edit;
+
+    /// <summary>Gets the mode the user is viewing the page in.</summary>
+    /// <returns><see cref="Mode"/>.</returns>
+    private static Mode GetUserMode()
+    {
+        Mode mode;
+        if (HttpContextSource.Current?.Request.IsAuthenticated == true)
+        {
+            mode = PortalSettings.Current.DefaultControlPanelMode;
+            string setting = Convert.ToString(Personalization.GetProfile("Usability", "UserMode" + PortalController.Instance.GetCurrentSettings().PortalId));
+            switch (setting.ToUpperInvariant())
+            {
+                case "VIEW":
+                    mode = Mode.View;
+                    break;
+                case "EDIT":
+                    mode = Mode.Edit;
+                    break;
+                case "LAYOUT":
+                    mode = Mode.Layout;
+                    break;
+            }
+        }
+        else
+        {
+            mode = Mode.View;
+        }
+
+        return mode;
+    }
 
 }

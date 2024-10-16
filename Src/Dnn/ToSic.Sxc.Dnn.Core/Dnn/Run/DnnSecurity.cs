@@ -105,6 +105,7 @@ public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("
                 IsSiteAdmin = adminInfo.IsSiteAdmin,
                 IsContentAdmin = adminInfo.IsContentAdmin,
                 IsContentEditor = adminInfo.IsContentEditor,
+                IsEditMode = adminInfo.ShowDraftData,
                 IsAnonymous = IsNullOrAnonymous(user),
                 Created = user.CreatedOnDate,
                 Modified = user.LastModifiedOnDate,

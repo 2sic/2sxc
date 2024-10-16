@@ -59,8 +59,8 @@ public class CmsUserRaw: RawEntityBase, IUser, ICmsUser, IRawEntity, IHasIdentit
     public bool IsContentAdmin { get; set; }
     public bool IsContentEditor { get; set; }
     public bool IsSiteDeveloper => IsSystemAdmin;
-
     public bool IsAnonymous { get; set; }
+    public bool IsEditMode { get; set; }
 
     /// <summary>
     /// Ignore, just included for IUser compatibility
