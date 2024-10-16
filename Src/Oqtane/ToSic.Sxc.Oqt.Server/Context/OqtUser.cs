@@ -61,6 +61,8 @@ internal class OqtUser(
 
     public bool IsContentAdmin => IsSiteAdmin;
 
+    public bool IsContentEditor => IsSiteAdmin;
+
     public bool IsSiteDeveloper => IsSystemAdmin;
 
     #region New Permission properties for v12

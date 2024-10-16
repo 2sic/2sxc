@@ -49,6 +49,7 @@ public class OqtSecurity(LazySvc<IUserRoleRepository> userRoleRepository, UserMa
             IsSystemAdmin = IsSystemAdmin(user),
             IsSiteAdmin = isSiteAdmin,
             IsContentAdmin = isSiteAdmin,
+            IsContentEditor = isSiteAdmin,
             IsAnonymous = IsAnonymous(user),
             Created = user.CreatedOn,
             Modified = user.ModifiedOn,
