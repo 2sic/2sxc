@@ -16,6 +16,22 @@ internal class DnnSxcSettings
 
     public const string DnnAdminRoleDefaultName = "Administrators";
 
+    /// <summary>
+    /// Content Editors Advanced Role Name.
+    /// </summary>
+    /// <remarks>
+    /// AdvancedPermissionProvider in DNN v10
+    /// </remarks>
+    public const string DnnContentEditors = "Content Editors";
+
+    /// <summary>
+    /// Content Managers Advanced Role Name.
+    /// </summary>
+    /// <remarks>
+    /// AdvancedPermissionProvider in DNN v10
+    /// </remarks>
+    public const string DnnContentManagers = "Content Managers";
+
     public static class Installation
     {
         // This list is just used to run code-upgrades in DNN

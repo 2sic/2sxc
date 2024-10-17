@@ -66,7 +66,14 @@ internal class DnnEnvironmentPermission() : EnvironmentPermission(DnnConstants.L
             // skip during search (usual HttpContext is missing for search)
             return System.Web.HttpContext.Current == null
                 ? l.ReturnFalse()
-                : l.ReturnAsOk(ModulePermissionController.HasModuleAccess(SecurityAccessLevel.Edit, "", Module));
+                : l.ReturnAsOk(
+                    ModulePermissionController.HasModuleAccess(SecurityAccessLevel.Edit, "", Module)
+                        || ModulePermissionController.CanEditModuleContent(Module)
+                        //|| ModulePermissionController.CanDeleteModule(Module)
+                        //|| ModulePermissionController.CanExportModule(Module)
+                        //|| ModulePermissionController.CanImportModule(Module)
+                        //|| ModulePermissionController.CanManageModule(Module)
+                    );
         }
         catch
         {

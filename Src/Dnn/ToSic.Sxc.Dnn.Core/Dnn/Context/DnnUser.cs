@@ -32,6 +32,7 @@ internal class DnnUser(LazySvc<DnnSecurity> dnnSecurity)
 
     public bool IsSiteAdmin => EffectivePermissions?.IsSiteAdmin ?? false;
     public bool IsContentAdmin => EffectivePermissions?.IsContentAdmin ?? false;
+    public bool IsContentEditor => EffectivePermissions?.IsContentEditor ?? false;
     public bool IsSiteDeveloper => IsSystemAdmin;
 
     private EffectivePermissions EffectivePermissions => _adminPermissions
