@@ -234,94 +234,94 @@
             <!-- CsvHelper transitive dependency -->
             <assembly>
               <name>Microsoft.Bcl.HashCode.dll</name>
-              <version>1.0.0.0</version>
+              <version>1.1.1.0</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
               <name>Microsoft.EntityFrameworkCore.Abstractions.dll</name>
-              <version>2.1.1.0</version>
+              <version>3.1.32.0</version>
             </assembly>
             <!-- ToSic.Eav.Persistence.Efc PackageReference -->
             <assembly>
               <name>Microsoft.EntityFrameworkCore.dll</name>
-              <version>2.1.1.0</version>
+              <version>3.1.32.0</version>
             </assembly>
             <!-- ToSic.Eav.Persistence.Efc PackageReference -->
             <!-- Microsoft.EntityFrameworkCore.SqlServer transitive dependency -->
             <assembly>
               <name>Microsoft.EntityFrameworkCore.Relational.dll</name>
-              <version>2.1.1.0</version>
+              <version>3.1.32.0</version>
             </assembly>
             <!-- ToSic.Eav.Persistence.Efc PackageReference -->
             <assembly>
               <name>Microsoft.EntityFrameworkCore.SqlServer.dll</name>
-              <version>2.1.1.0</version>
+              <version>3.1.32.0</version>
             </assembly>
             <!-- Microsoft.Extensions.Caching.Memory transitive dependency -->
             <assembly>
               <name>Microsoft.Extensions.Caching.Abstractions.dll</name>
-              <version>2.1.1.0</version>
+              <version>3.1.32.0</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
               <name>Microsoft.Extensions.Caching.Memory.dll</name>
-              <version>2.1.1.0</version>
+              <version>3.1.32.0</version>
             </assembly>
             <!-- Microsoft.Extensions.Configuration transitive dependency -->
             <assembly>
               <name>Microsoft.Extensions.Configuration.Abstractions.dll</name>
-              <version>2.1.1.0</version>
+              <version>3.1.32.0</version>
             </assembly>
             <!-- Microsoft.Extensions.Logging transitive dependency -->
             <assembly>
               <name>Microsoft.Extensions.Configuration.Binder.dll</name>
-              <version>2.1.1.0</version>
+              <version>3.1.32.0</version>
             </assembly>
             <!-- Microsoft.Extensions.Configuration.Binder transitive dependency -->
             <assembly>
               <name>Microsoft.Extensions.Configuration.dll</name>
-              <version>2.1.1.0</version>
+              <version>3.1.32.0</version>
             </assembly>
             <!-- ToSic.Sxc.Dnn.Core PackageReference -->
             <!-- ToSic.Sxc.Dnn.Main packages.config -->
             <!-- Microsoft.EntityFrameworkCore.DependencyInjection transitive dependency -->
             <!-- Microsoft.Extensions.Logging transitive dependency -->
-            <!--<assembly>
+            <assembly>
               <name>Microsoft.Extensions.DependencyInjection.Abstractions.dll</name>
-              <version>2.1.1.0</version>
-            </assembly>-->
+              <version>8.0.0.0</version>
+            </assembly>
             <!--ToSic.Eav.Core.dll PackageReference-->
             <!--Microsoft.EntityFrameworkCore transitive dependency-->
-            <!--<assembly>
+            <assembly>
               <name>Microsoft.Extensions.DependencyInjection.dll</name>
-              <version>2.1.1.0</version>
-            </assembly>-->
+              <version>8.0.0.0</version>
+            </assembly>
             <!-- Microsoft.Extensions.Logging transitive dependency -->
             <assembly>
               <name>Microsoft.Extensions.Logging.Abstractions.dll</name>
-              <version>2.1.1.0</version>
+              <version>3.1.32.0</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
               <name>Microsoft.Extensions.Logging.dll</name>
-              <version>2.1.1.0</version>
+              <version>3.1.32.0</version>
             </assembly>
             <!-- Microsoft.Extensions.Caching.Memory transitive dependency -->
             <!-- Microsoft.Extensions.Logging transitive dependency -->
             <assembly>
               <name>Microsoft.Extensions.Options.dll</name>
-              <version>2.1.1.0</version>
+              <version>3.1.32.0</version>
             </assembly>
             <!-- Microsoft.Extensions.Options transitive dependency -->
             <assembly>
               <name>Microsoft.Extensions.Primitives.dll</name>
-              <version>2.1.1.0</version>
+              <version>3.1.32.0</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
-            <assembly>
+            <!--<assembly>
               <name>Remotion.Linq.dll</name>
               <version>2.2.0.0</version>
-            </assembly>
+            </assembly> -->
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
               <name>System.Collections.Immutable.dll</name>
@@ -330,12 +330,16 @@
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
               <name>System.ComponentModel.Annotations.dll</name>
-              <version>4.2.1.0</version>
+              <version>5.0.0.0</version>
             </assembly>
             <!-- ToSic.Eav.DataSources PackageReference -->
-            <assembly>
+            <!--<assembly>
               <name>System.Data.SqlClient.dll</name>
               <version>4.6.1.6</version>
+            </assembly>-->
+            <assembly>
+              <name>Microsoft.Data.SqlClient.dll</name>
+              <version>5.2.0.0</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
@@ -343,10 +347,10 @@
               <version>4.0.4.0</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
-            <assembly>
+            <!--<assembly>
               <name>System.Interactive.Async.dll</name>
               <version>3.0.3000.0</version>
-            </assembly>
+            </assembly>-->
             <!-- Microsoft.Extensions.Primitives transitive dependency -->
             <!-- Microsoft.Extensions.Logging.Abstractions transitive dependency -->
             <!-- System.Text.Encodings.Web transitive dependency -->

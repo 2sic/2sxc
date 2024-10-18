@@ -1,7 +1,7 @@
 ﻿using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Controllers;
 using System.Configuration;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.IO;
 using ToSic.Eav;
 using Exception = System.Exception;
