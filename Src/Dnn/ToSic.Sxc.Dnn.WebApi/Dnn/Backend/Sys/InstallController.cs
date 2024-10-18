@@ -33,7 +33,7 @@ public class InstallController()
     /// <inheritdoc />
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    [ValidateAntiForgeryToken] // now activate this, as it's post now, previously not, because this is a GET and can't include the RVT
+    [ValidateAntiForgeryToken] // Now with RVT as it's post now. Previously not, because this was a GET and could not include the RVT
     public HttpResponseMessage RemotePackage(string packageUrl)
     {
         SysHlp.PreventServerTimeout300();

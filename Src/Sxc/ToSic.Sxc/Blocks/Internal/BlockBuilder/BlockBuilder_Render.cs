@@ -246,11 +246,11 @@ public partial class BlockBuilder
 
     private string GenerateWarningMsgIfLicenseNotOk()
     {
-        if (AnyLicenseOk) return null;
+        //if (AnyLicenseOk) return null;
             
         Log.A("none of the licenses are valid");
         var warningLink = Tag.A("go.2sxc.org/license-warning").Href("https://go.2sxc.org/license-warning").Target("_blank");
-        var appsManagementLink = Tag.A("System-Management").Href("#").On("click", "$2sxc(this).cms.run({ action: 'system' })");
+        var appsManagementLink = Tag.A("System-Management").Href("#").On("click", "$2sxc(this).cms.run({ action: 'system', params: { newWindow: true }})");
         var warningMsg = "Registration not valid so some features may be disabled. " +
                          $"Please re-register in {appsManagementLink}. " +
                          "<br>" +
