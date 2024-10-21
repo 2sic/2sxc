@@ -246,8 +246,8 @@ public partial class BlockBuilder
 
     private string GenerateWarningMsgIfLicenseNotOk()
     {
-        //if (AnyLicenseOk) return null;
-            
+        if (AnyLicenseOk) return null;
+
         Log.A("none of the licenses are valid");
         var warningLink = Tag.A("go.2sxc.org/license-warning").Href("https://go.2sxc.org/license-warning").Target("_blank");
         var appsManagementLink = Tag.A("System-Management").Href("#").On("click", "$2sxc(this).cms.run({ action: 'system', params: { newWindow: true }})");
