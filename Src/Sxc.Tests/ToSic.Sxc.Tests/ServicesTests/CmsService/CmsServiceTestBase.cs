@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
                 {SomeTextField, text},
                 {SomeHtmlField, html}
             };
-            return GetService<EntityBuilder>().TestCreate(appId: AppId, entityId: 1, contentType: contentType, values: values, titleField: SomeTextField);
+            return GetService<DataBuilder>().TestCreate(appId: AppId, entityId: 1, contentType: contentType, values: values, titleField: SomeTextField);
         }
 
         public DynamicEntity DynEntStrict(IEntity entity = null) => Cdf.AsDynamic(entity, true);

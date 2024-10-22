@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Tests.WebLightSpeed
                 {nameof(LightSpeedDecorator.UrlParameterNames), names},
                 {nameof(LightSpeedDecorator.UrlParametersOthersDisableCache), othersDisableCache }
             };
-            var ent = builder.Entity.TestCreate(appId: AppId, entityId: 1, contentType: LsCtUrlFields, values: valDaniel, titleField: nameof(LightSpeedDecorator.Title));
+            var ent = builder.TestCreate(appId: AppId, entityId: 1, contentType: LsCtUrlFields, values: valDaniel, titleField: nameof(LightSpeedDecorator.Title));
             return ent;
         }
 
