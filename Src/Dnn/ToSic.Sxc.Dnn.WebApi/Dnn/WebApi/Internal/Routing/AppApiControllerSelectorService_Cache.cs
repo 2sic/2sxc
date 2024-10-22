@@ -24,11 +24,17 @@ internal partial class AppApiControllerSelectorService
 
         var (data, cacheKeys, filePaths) = BuildDescriptorIfExists(appFolder, editionPath, controllerTypeName, shared, spec);
 
-        memoryCacheService.Set(key: descriptorCacheKey, 
-            value: data,
-            slidingExpiration: new TimeSpan(1, 0, 0),
-            cacheKeys: cacheKeys,
-            filePaths: filePaths);
+        memoryCacheService.SetNew(key: descriptorCacheKey, value: data, func: p => p
+            .SetSlidingExpiration(new TimeSpan(1, 0, 0))
+            .WatchCacheKeys(cacheKeys)
+            .WatchFiles(filePaths)
+        );
+        // Ported 2024-10-22 - remove old code ca. 2024-12 #MemoryCacheApiCleanUp
+        //memoryCacheService.Set(key: descriptorCacheKey, 
+        //    value: data,
+        //    slidingExpiration: new TimeSpan(1, 0, 0),
+        //    cacheKeys: cacheKeys,
+        //    filePaths: filePaths);
 
         PreservePathForGetCodeInController(data.Folder, data.FullPath);
 

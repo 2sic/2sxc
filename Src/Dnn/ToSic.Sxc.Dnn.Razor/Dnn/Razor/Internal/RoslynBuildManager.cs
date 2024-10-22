@@ -274,7 +274,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             
             var codeProvider = new CSharpCodeProvider(); // TODO: @stv test with latest nuget package for @inherits ; issue
             // add to memory cache for 5 minute floating expiry
-            memoryCacheService.SetNew(CSharpCodeProviderCacheKey, codeProvider, p=> p.SetSlidingExpiration(new(0, CSharpCodeProviderCacheMinutes, 0)));
+            memoryCacheService.SetNew(CSharpCodeProviderCacheKey, codeProvider, p=> p.SetSlidingExpiration(CSharpCodeProviderCacheMinutes * 60));
             // memoryCacheService.Add(CSharpCodeProviderCacheKey, codeProvider, new CacheItemPolicy { SlidingExpiration = new(0, CSharpCodeProviderCacheMinutes, 0) });
 
             return l.Return(codeProvider, "created new and added to cache for 1 min");

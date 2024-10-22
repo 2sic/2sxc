@@ -49,14 +49,19 @@ public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : Servi
         // Try to add to cache - use try-catch to avoid exceptions
         try
         {
-            var expiration = new TimeSpan(0, 0, slidingDuration);
-
-            var cacheSpecs = memoryCacheService.NewPolicyMaker()
-                .SetSlidingExpiration(expiration)
+            memoryCacheService.SetNew(cacheKey, data, p => p
+                .SetSlidingExpiration(slidingDuration)
                 .WatchFiles(filePaths)
                 .WatchFolders(folderPaths)
-                .WatchNotifyKeys(dependencies);
-            memoryCacheService.SetNew(cacheKey, data, cacheSpecs);
+                .WatchNotifyKeys(dependencies)
+            );
+            // Ported 2024-10-22 - remove old code ca. 2024-12 #MemoryCacheApiCleanUp
+            //var cacheSpecs = memoryCacheService.NewPolicyMaker()
+            //    .SetSlidingExpiration(new(0, 0, slidingDuration))
+            //    .WatchFiles(filePaths)
+            //    .WatchFolders(folderPaths)
+            //    .WatchNotifyKeys(dependencies);
+            //memoryCacheService.SetNew(cacheKey, data, cacheSpecs);
 
             return l.ReturnAsOk(cacheKey);
         }
