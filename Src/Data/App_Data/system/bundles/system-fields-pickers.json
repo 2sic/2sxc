@@ -708,7 +708,7 @@
                 "Metadata": [
                   {
                     "Id": 128428,
-                    "Version": 3,
+                    "Version": 5,
                     "Guid": "487df46d-3ec2-4d53-87a7-c0e02a182340",
                     "Type": {
                       "Id": "@All",
@@ -729,7 +729,7 @@
                           "en-us": "Experimental / Beta Features"
                         },
                         "Notes": {
-                          "en-us": "<p>These features are not final, so you should only use them with caution and the way they are configured may still change.&nbsp;</p>"
+                          "en-us": "<p>These features are not final, so you should only use them with caution and the way they are configured may still change.&nbsp;</p>\n<p>We recommend that you use the entity-picker and that prefill instead.&nbsp;</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -743,7 +743,9 @@
                           "*": []
                         },
                         "Formulas": {
-                          "*": []
+                          "*": [
+                            "27ffdc8c-2054-4ec0-a4f6-14517d27b71c"
+                          ]
                         },
                         "Warnings": {
                           "*": []
@@ -768,7 +770,7 @@
                   },
                   {
                     "Id": 128429,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "a1db0df3-753a-4d72-888a-a99c53105b48",
                     "Type": {
                       "Id": "@empty-default",
@@ -946,6 +948,34 @@
                 "Hyperlink": {
                   "ItemLink": {
                     "en-us": ""
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 184083,
+              "Version": 2,
+              "Guid": "27ffdc8c-2054-4ec0-a4f6-14517d27b71c",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  return context.debug;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
                   }
                 }
               },
@@ -14217,22 +14247,6 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 183952,
-                "Version": 1,
-                "Guid": "01c78465-f078-4978-9eee-ec5d88599660",
-                "Type": {
-                  "Id": "bcce96be-a439-4f22-9d1e-a10487544fa5",
-                  "Name": "IsPickerSourceDecorator"
-                },
-                "Attributes": {},
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "78451625-053f-4e23-b4e8-e95c3fcf3320"
-                }
-              },
-              {
                 "Id": 183928,
                 "Version": 3,
                 "Guid": "703be1a9-518b-4bdf-a98b-7a60ba3699cb",
@@ -14273,6 +14287,22 @@
                     }
                   }
                 },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "78451625-053f-4e23-b4e8-e95c3fcf3320"
+                }
+              },
+              {
+                "Id": 183952,
+                "Version": 1,
+                "Guid": "01c78465-f078-4978-9eee-ec5d88599660",
+                "Type": {
+                  "Id": "bcce96be-a439-4f22-9d1e-a10487544fa5",
+                  "Name": "IsPickerSourceDecorator"
+                },
+                "Attributes": {},
                 "Owner": "dnn:userid=41",
                 "For": {
                   "Target": "ContentType",
