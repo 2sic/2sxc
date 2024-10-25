@@ -109,7 +109,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
             .ToList();
 
         // if the root is just "/" then we need to add the root folder, otherwise not
-        var root = new DirectoryInfo($"{_appPaths.PhysicalPath}/{_root}".FlattenMultipleForwardSlashes());
+        var root = new DirectoryInfo($"{_appPaths.PhysicalPath}/{_root}".FlattenMultipleForwardSlashes().TrimLastSlash());
         folders.Insert(0, ToFolderData(root, pathsFromRoot, "Root"));
         
         return (folders, $"found:{folders.Count}");
