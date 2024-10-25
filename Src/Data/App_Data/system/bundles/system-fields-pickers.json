@@ -13516,7 +13516,7 @@
             },
             {
               "Id": 183718,
-              "Version": 4,
+              "Version": 6,
               "Guid": "e457872b-90e7-4041-a8de-07bb88ddd43e",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -13525,7 +13525,7 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v2((data, context) => {\n  const typeName = context.target.entity.type.name;\n  // For custom list, it can always be visible\n  if (typeName == \"UiPickerSourceCustomList\" || typeName == \"UiPickerSourceCustomCsv\") {\n    // console.log('custom list - show by default');\n    return true;\n  }\n\n  // For Entity Picker\n  if (typeName == \"UiPickerSourceEntity\") {\n    // console.log('entity source');\n    return data.ContentTypeNames.length > 0;\n  }\n\n  if (typeName == \"UiPickerSourceQuery\") {\n    // console.log('2dm query source');\n    return data.Query.length > 0;\n  }\n\n  console.warn('formula for GroupItemHelp is running on an unexpected type: ' + typeName);\n  // console.log('2dm data', data, context);\n  return data.value;\n});"
+                    "en-us": "v2((data, context) => {\n  const typeName = context.target.entity.type.name;\n  // For custom list, it can always be visible\n  if (typeName == 'UiPickerSourceCustomList'\n    || typeName == 'UiPickerSourceCustomCsv'\n    || typeName == 'UiPickerSourceAppAssets'\n  ) {\n    return true;\n  }\n\n  // For Entity Picker\n  if (typeName == \"UiPickerSourceEntity\") {\n    return data.ContentTypeNames.length > 0;\n  }\n\n  if (typeName == \"UiPickerSourceQuery\") {\n    return data.Query.length > 0;\n  }\n\n  // Warn on unknown type, as it can't determine how to set visibility\n  console.warn('formula for GroupItemHelp is running on an unexpected type, so it is not clear when to show/hide: ' + typeName);\n  // console.log('2dm data', data, context);\n  return data.value;\n});"
                   },
                   "Notes": {
                     "en-us": ""

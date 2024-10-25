@@ -50,23 +50,7 @@ public class AppAssets: CustomDataSourceAdvanced
     #region Configuration properties
 
     /// <summary>
-    /// WIP - WILL PROBABLY BE REMOVED
-    /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
-    /// </summary>
-    [PrivateApi("concept not final, may be changed to use AssetsType or something")]
-    [Configuration(Fallback = false)]
-    public bool OnlyFolders => Configuration.GetThis(false);
-
-    /// <summary>
-    /// WIP - WILL PROBABLY BE REMOVED
-    /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
-    /// </summary>
-    [PrivateApi("concept not final, may be changed to use AssetsType or something")]
-    [Configuration(Fallback = false)]
-    public bool OnlyFiles => Configuration.GetThis(false);
-
-    /// <summary>
-    /// WIP - WILL PROBABLY BE REMOVED
+    /// WIP - The root folder to start from, beginning in the app root.
     /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
     /// </summary>
     [Configuration(Fallback = "/")]
@@ -148,7 +132,7 @@ public class AppAssets: CustomDataSourceAdvanced
         // TODO:
         // must ensure that the folder can't contain ".." characters or anything else to make it go outside the app folder
 
-        _appAssetsSource.Configure(zoneId: ZoneId, appId: AppId, onlyFolders: OnlyFolders, onlyFiles: OnlyFiles, root: RootFolder, filter: FileFilter);
+        _appAssetsSource.Configure(zoneId: ZoneId, appId: AppId, root: RootFolder, filter: FileFilter);
 
         // Get pages from underlying system/provider
         var (rawFolders, rawFiles) = _appAssetsSource.GetAll();
