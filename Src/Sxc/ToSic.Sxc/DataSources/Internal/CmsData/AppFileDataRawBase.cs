@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Data.Raw;
+﻿using ToSic.Eav.Data.ContentTypes.CodeAttributes;
+using ToSic.Eav.Data.Raw;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
@@ -6,39 +7,53 @@ namespace ToSic.Sxc.DataSources.Internal;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public abstract class AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
 {
+    /// <inheritdoc />
     public int Id { get; set; }
 
+    /// <inheritdoc />
     public Guid Guid { get; set; } = Guid.NewGuid();
 
+    /// <summary>
+    /// The file name with extension.
+    /// </summary>
+    [ContentTypeAttributeSpecs(IsTitle = true, Description = "The file name with extension, like image.jpg")]
     public string Name { get; set; }
 
     /// <summary>
+    /// The file name with path.
     /// Starting in the App-Root
     /// </summary>
+    [ContentTypeAttributeSpecs(Description = "The full name with the path beginning at the root. Note that the root can differ depending on the files you ask for.")]
     public string FullName { get; set; }
 
     /// <summary>
     /// This is just for internal lookup
     /// </summary>
+    [ContentTypeAttributeIgnore]
     public string ParentFolderInternal { get; set; }
 
     /// <summary>
     /// Starting in the App-Root
     /// </summary>
+    [ContentTypeAttributeSpecs(Description = "Full path. It starts at the root of the app or whatever other system you're asking for.")]
     public string Path { get; set; }
 
+    /// <inheritdoc />
     public DateTime Created { get; set; }
 
+    /// <inheritdoc />
     public DateTime Modified { get; set; }
 
     /// <summary>
-    /// WIP
+    /// The full url starting at the root of the site. Absolute but without protocol/domain.
     /// </summary>
+    [ContentTypeAttributeSpecs(Description = "The full url starting at the root of the site. Absolute but without protocol/domain.")]
     public string Url { get; set; }
 
     /// <summary>
-    /// WIP
+    /// The relative URL based on where the data was requested from. From the App Root or ADAM Root.
     /// </summary>
+    [ContentTypeAttributeSpecs(Description = "The relative URL based on where the data was requested from. From the App Root or ADAM Root.")]
     public string UrlRelative { get; set; }
 
 
@@ -46,15 +61,16 @@ public abstract class AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
     /// Data but without Id, Guid, Created, Modified
     /// </summary>
     [PrivateApi]
-    public virtual IDictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>
-    {
-        { nameof(Name), Name },
-        { nameof(FullName), FullName },
-        { nameof(Path), Path },
-        { nameof(Url), Url },
-        { nameof(UrlRelative), UrlRelative },
-        { "Parent", new RawRelationship(key: $"Folder:{ParentFolderInternal}") },
-    };
+    public virtual IDictionary<string, object> Attributes(RawConvertOptions options)
+        => new Dictionary<string, object>
+        {
+            { nameof(Name), Name },
+            { nameof(FullName), FullName },
+            { nameof(Path), Path },
+            { nameof(Url), Url },
+            { nameof(UrlRelative), UrlRelative },
+            { "Parent", new RawRelationship(key: $"Folder:{ParentFolderInternal}") },
+        };
 
     [PrivateApi]
     public abstract IEnumerable<object> RelationshipKeys(RawConvertOptions options);
