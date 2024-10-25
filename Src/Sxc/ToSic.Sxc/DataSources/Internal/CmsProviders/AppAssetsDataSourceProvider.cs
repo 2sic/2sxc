@@ -134,9 +134,11 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
                         ParentFolderInternal = fullNameFromAppRoot.BeforeLast("/"),
                         Path = fullNameFromAppRoot.BeforeLast("/") + "/",
                         Created = d.CreationTime,
-                        Modified = d.LastWriteTime
+                        Modified = d.LastWriteTime,
 
                         // TODO: URL / UrlRelative
+                        Url = $"{_appPaths.Path}/{fullNameFromAppRoot}",
+                        UrlRelative = fullNameFromAppRoot,
                     };
                 })
                 .ToList();
