@@ -7110,7 +7110,7 @@
             },
             {
               "Id": 183964,
-              "Version": 2,
+              "Version": 3,
               "Guid": "839f7aef-a5f2-4fa2-8065-30eb78e267ac",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -7134,7 +7134,7 @@
                     "en-us": ""
                   },
                   "ItemTooltip": {
-                    "en-us": ""
+                    "en-us": "<p>[Item:Description]</p>"
                   },
                   "Label": {
                     "en-us": "Title"
@@ -16373,7 +16373,7 @@
             },
             {
               "Id": 184038,
-              "Version": 4,
+              "Version": 5,
               "Guid": "e13e0514-2606-48ae-b77c-fd5ed9b9a602",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -16412,7 +16412,7 @@
                     "en-us": ""
                   },
                   "StreamName": {
-                    "en-us": "Default"
+                    "en-us": "Folders"
                   },
                   "Title": {
                     "en-us": "AppAssets - App Folders"
