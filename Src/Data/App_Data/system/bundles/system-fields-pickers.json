@@ -16373,7 +16373,7 @@
             },
             {
               "Id": 184038,
-              "Version": 2,
+              "Version": 4,
               "Guid": "e13e0514-2606-48ae-b77c-fd5ed9b9a602",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -16539,7 +16539,7 @@
             },
             {
               "Id": 184070,
-              "Version": 3,
+              "Version": 4,
               "Guid": "a617f624-315d-41dc-b433-faf7924f64f1",
               "Type": {
                 "Id": "5f8e3968-e02b-40d5-ab77-f60c2e73d244",
@@ -16560,7 +16560,7 @@
                     "en-us": ""
                   },
                   "ItemInformation": {
-                    "en-us": ""
+                    "en-us": "<p>[Item:Description]</p>"
                   },
                   "ItemTooltip": {
                     "en-us": ""
