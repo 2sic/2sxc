@@ -8,9 +8,11 @@ namespace ToSic.Sxc.DataSources.Internal;
 public abstract class AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
 {
     /// <inheritdoc />
+    [ContentTypeAttributeSpecs(Description = "DO NOT USE. This is a temporary, random ID calculated at runtime and will return different values all the time.")]
     public int Id { get; set; }
 
     /// <inheritdoc />
+    [ContentTypeAttributeSpecs(Description = "DO NOT USE. This is a temporary, random ID calculated at runtime and will return different values all the time.")]
     public Guid Guid { get; set; } = Guid.NewGuid();
 
     /// <summary>
@@ -39,9 +41,11 @@ public abstract class AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
     public string Path { get; set; }
 
     /// <inheritdoc />
+    [ContentTypeAttributeSpecs(Description = "When the file/folder was created.")]
     public DateTime Created { get; set; }
 
     /// <inheritdoc />
+    [ContentTypeAttributeSpecs(Description = "When the file/folder was modified.")]
     public DateTime Modified { get; set; }
 
     /// <summary>

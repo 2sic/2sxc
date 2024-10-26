@@ -92,7 +92,7 @@ internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, CodeDa
 
     bool IEquatable<ITypedItem>.Equals(ITypedItem other) => Equals(other);
 
-    List<IDecorator<IEntity>> IHasDecorators<IEntity>.Decorators => (Entity as IEntityWrapper)?.Decorators ?? [];
+    IEnumerable<IDecorator<IEntity>> IHasDecorators<IEntity>.Decorators => (Entity as IEntityWrapper)?.Decorators ?? [];
 
     IEntity IMultiWrapper<IEntity>.RootContentsForEqualityCheck => (Entity as IEntityWrapper)?.RootContentsForEqualityCheck ?? Entity;
 
