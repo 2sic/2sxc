@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.ContentTypes.CodeAttributes;
+﻿using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
 
 namespace ToSic.Sxc.DataSources.Internal;
