@@ -4,9 +4,11 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Services;
 using ISite = ToSic.Eav.Context.ISite;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
@@ -18,9 +20,10 @@ public class AppCodeLoader(
     IAppReaderFactory appReadFac,
     LazySvc<IAppPathsMicroSvc> appPathsLazy,
     LazySvc<AppCodeCompiler> appCompilerLazy,
-    AssemblyCacheManager assemblyCacheManager)
+    AssemblyCacheManager assemblyCacheManager,
+    LazySvc<IFeaturesService> features)
     : ServiceBase("Sys.AppCodeLoad",
-        connect: [logStore, site, appReadFac, appPathsLazy, appCompilerLazy, assemblyCacheManager])
+        connect: [logStore, site, appReadFac, appPathsLazy, appCompilerLazy, assemblyCacheManager, features])
 {
     /// <summary>
     /// Try to get the app code - first of the edition, then of the root.
@@ -118,12 +121,12 @@ public class AppCodeLoader(
             logSummary.AddSpec("RelativePathShared", relativePathShared);
 
             var appCodeInShared = false;
+            // First try app folder inside the site, as this has first priority
             var assemblyResult = appCompilerLazy.Value.GetAppCode(relativePath, spec.WithoutSharedSuffix());
             if (assemblyResult.HasValue)
-            {
                 l.A($"local AppCode folder exists: {physicalPath}");
-            }
-            else
+            // If not found, try the shared folder (if feature is activated)
+            else if (features.Value.IsEnabled(BuiltInFeatures.SharedAppCode.NameId))
             {
                 assemblyResult = appCompilerLazy.Value.GetAppCode(relativePathShared, spec.WithSharedSuffix());
                 if (assemblyResult.HasValue)
@@ -132,6 +135,8 @@ public class AppCodeLoader(
                     l.A($"shared AppCode folder exists: {physicalPathShared}");
                 }
             }
+            else
+                l.A("local AppCode doesn't exist, and feature not enabled, shared location not checked.");
 
             logSummary.UpdateSpecs(assemblyResult.Infos);
 
