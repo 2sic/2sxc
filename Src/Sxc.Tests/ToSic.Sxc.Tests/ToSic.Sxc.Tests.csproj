@@ -187,9 +187,11 @@
     <Compile Include="ServicesTests\SecureData\SecureDataHashTests.cs" />
     <Compile Include="ServicesTests\SecureData\SecureDataTest.cs" />
     <Compile Include="Images\ImageflowRewriteTests.cs" />
+    <Compile Include="ServicesTests\Templates\TemplatesHtmlTests.cs" />
     <Compile Include="ServicesTests\Templates\TemplatesDefaultTests.cs" />
     <Compile Include="ServicesTests\Templates\TemplatesDefaultSourcesTests.cs" />
     <Compile Include="ServicesTests\Templates\TemplatesEmptySourcesTests.cs" />
+    <Compile Include="ServicesTests\Templates\TemplatesBasicTests.cs" />
     <Compile Include="ServicesTests\Templates\TemplatesTestsBase.cs" />
     <Compile Include="ServicesTests\Templates\TemplatesEmptyTests.cs" />
     <Compile Include="ServicesTests\ToolbarService\TweakButtonParameters.cs" />

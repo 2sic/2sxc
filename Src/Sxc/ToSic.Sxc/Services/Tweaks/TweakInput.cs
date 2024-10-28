@@ -13,27 +13,27 @@ internal class TweakInput<TInput>(TweakInput<TInput> original = default, TweakCo
     public TweakConfigs Tweaks { get; } = new(original?.Tweaks, additional);
 
     [PublicApi]
-    public ITweakInput<TInput> Input(TInput replace, NoParamOrder protector = default)//, string step = default)
-        => ValueInternal(_ => replace); //, step: step);
+    public ITweakInput<TInput> Input(TInput replace, NoParamOrder protector = default)
+        => CloneExtend(_ => replace);
 
     [PublicApi]
-    public ITweakInput<TInput> Input(Func<TInput> func, NoParamOrder protector = default) //, string step = default)
-        => ValueInternal(_ => func());//, step: step);
+    public ITweakInput<TInput> Input(Func<TInput> func, NoParamOrder protector = default)
+        => CloneExtend(_ => func());
 
     [PublicApi]
-    public ITweakInput<TInput> Input(Func<TInput, TInput> func, NoParamOrder protector = default) //, string step = default)
-        => ValueInternal(tv => func(tv.Value));//, step: step);
+    public ITweakInput<TInput> Input(Func<TInput, TInput> func, NoParamOrder protector = default)
+        => CloneExtend(tv => func(tv.Value));
 
     [PublicApi]
-    public ITweakInput<TInput> Process(Func<ITweakData<TInput>, TInput> func, NoParamOrder protector = default) //, string step = default)
-        => ValueInternal(func); //, step: step);
+    public ITweakInput<TInput> Process(Func<ITweakData<TInput>, TInput> func, NoParamOrder protector = default)
+        => CloneExtend(func);
 
-    private ITweakInput<TInput> ValueInternal(Func<ITweakData<TInput>, TInput> func, NoParamOrder protector = default, string step = default)
-        => AddTweak(func, TweakValue.NameDefault, step ?? TweakValue.StepBefore, target: TweakConfig.TargetDefault);
+    private ITweakInput<TInput> CloneExtend(Func<ITweakData<TInput>, TInput> func, NoParamOrder protector = default, string step = default)
+        => CloneExtend(func, TweakValue.NameDefault, step ?? TweakValue.StepBefore, target: TweakConfig.TargetDefault);
 
 
 
-    private TweakInput<TInput> AddTweak(Func<ITweakData<TInput>, TInput> changeFunc, string nameId, string step, string target)
+    private TweakInput<TInput> CloneExtend(Func<ITweakData<TInput>, TInput> changeFunc, string nameId, string step, string target)
     {
         var tweak = new TweakConfig<Func<ITweakData<TInput>, int, ITweakData<TInput>>>(nameId,
             (v, index) => new TweakData<TInput>(v, changeFunc(v), index), step, target);
