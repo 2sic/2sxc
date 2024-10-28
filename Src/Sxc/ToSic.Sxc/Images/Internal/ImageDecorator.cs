@@ -9,7 +9,7 @@ using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 namespace ToSic.Sxc.Images.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBasedType(entity, languageCodes)
+public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBasedType(entity, languageCodes), IImageDecorator
 {
     #region Constants and Type Names
 
@@ -93,12 +93,16 @@ public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBase
     internal (string Param, string Value) GetAnchorOrNull()
     {
         var b = CropBehavior;
-        if (b != ToCrop) return (null, null);
+        if (b != ToCrop)
+            return (null, null);
+        
         var direction = CropTo;
-        if (string.IsNullOrWhiteSpace(direction)) return (null, null);
+        if (string.IsNullOrWhiteSpace(direction))
+            return (null, null);
 
         var dirLong = ResolveCompass(direction);
-        if (string.IsNullOrWhiteSpace(dirLong)) return (null, null);
+        if (string.IsNullOrWhiteSpace(dirLong))
+            return (null, null);
 
         return ("anchor", dirLong);
     }

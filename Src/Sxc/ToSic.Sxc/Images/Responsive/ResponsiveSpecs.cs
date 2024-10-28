@@ -10,29 +10,37 @@ namespace ToSic.Sxc.Images;
 /// Helper class to handle all kinds of parameters passed to a responsive tag
 /// </summary>
 [PrivateApi]
-internal class ResponsiveSpecs(ResponsiveSpecsOfTarget prepared)
+internal record ResponsiveSpecs(ResponsiveSpecsOfTarget OfTarget, TweakImage Tweaker)
 {
     /// <summary>
     /// The only reliable object which knows about the url - can never be null
     /// </summary>
-    public IHasLink Link => prepared.HasLinkOrNull;
+    public IHasLink Link => OfTarget.HasLinkOrNull;
 
     /// <summary>
     /// The field used for this responsive output - can be null!
     /// </summary>
-    public IField Field => prepared.FieldOrNull;
+    public IField Field => OfTarget.FieldOrNull;
 
-    public IHasMetadata HasMetadataOrNull => prepared.HasMdOrNull;
+    public IHasMetadata HasMetadataOrNull => OfTarget.HasMdOrNull;
 
     /// <summary>
     /// Image Decorator of the current image.
     /// </summary>
-    public ImageDecorator ImageDecoratorOrNull => prepared.ImgDecoratorOrNull;
+    public ImageDecorator ImageDecoratorOrNull => OfTarget.ImgDecoratorOrNull;
 
-    /// <summary>
-    /// Image Decorator of the field in which the image is located.
-    /// </summary>
-    public ImageDecorator FieldImgDecoratorOrNull => prepared.FieldImgDecoratorOrNull;
+    ///// <summary>
+    ///// Image Decorator of the field in which the image is located.
+    ///// </summary>
+    //public ImageDecorator FieldImgDecoratorOrNull => OfTarget.FieldImgDecoratorOrNull;
+
+    public IImageDecorator LightboxDecorator => Tweaker is { VDec: not null }
+        ? Tweaker.VDec
+        : ImageDecoratorOrNull?.LightboxIsEnabled == true
+            ? ImageDecoratorOrNull
+            : ImageDecoratorOrNull?.LightboxIsEnabled == null
+                ? OfTarget.FieldImgDecoratorOrNull
+                : null;
 
     public IResizeSettings Settings { get; init; }
     public string ImgAlt { get; init; }

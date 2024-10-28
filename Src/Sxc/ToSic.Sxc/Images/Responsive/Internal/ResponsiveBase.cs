@@ -73,13 +73,16 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         if (Width != null) imgTag = imgTag.Width(Width);
         if (Height != null) imgTag = imgTag.Height(Height);
 
-        // Add lightbox if enabled on the specific image...
-        var lightboxOnImg = Specs.ImageDecoratorOrNull?.LightboxIsEnabled;
-        if (lightboxOnImg == true)
-            imgTag = AddLightbox(imgTag, Specs.ImageDecoratorOrNull);
-        // ...or on the input field metadata
-        else if (lightboxOnImg != false && Specs.FieldImgDecoratorOrNull?.LightboxIsEnabled == true)
-            imgTag = AddLightbox(imgTag, Specs.FieldImgDecoratorOrNull);
+        // Add lightbox if configured & enabled on the specific image...
+        var lightboxDeco = Specs.LightboxDecorator;
+        if (lightboxDeco?.LightboxIsEnabled == true)
+            imgTag = AddLightbox(imgTag, lightboxDeco);
+        //var lightboxOnImg = Specs.ImageDecoratorOrNull?.LightboxIsEnabled;
+        //if (lightboxOnImg == true)
+        //    imgTag = AddLightbox(imgTag, Specs.ImageDecoratorOrNull);
+        //// ...or on the input field metadata
+        //else if (lightboxOnImg != false && Specs.FieldImgDecoratorOrNull?.LightboxIsEnabled == true)
+        //    imgTag = AddLightbox(imgTag, Specs.FieldImgDecoratorOrNull);
 
         // #alwaysOnImg
         //if (Params.Toolbar as string == "img")
@@ -93,7 +96,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
 
 
 
-    private Img AddLightbox(Img original, ImageDecorator decorator)
+    private Img AddLightbox(Img original, IImageDecorator decorator)
     {
         // 3. Mark the image for lightbox use, and possibly give it the attributes like
         // - data-title="My caption"

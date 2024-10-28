@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Images;
 
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class ResizeSettings : IResizeSettings, IResizeSettingsInternal
+internal record ResizeSettings : IResizeSettings, IResizeSettingsInternal
 {
     /// <summary>
     /// Name of the settings used initially
@@ -93,12 +93,12 @@ internal class ResizeSettings : IResizeSettings, IResizeSettingsInternal
     /// <summary>
     /// Should the factor be used? only if it's clearly away from zero.
     /// </summary>
-    public bool FactorUsed => !DNearZero(Factor) && !DNearZero(Factor - 1); // so ~0 and ~1 are not used
+    private bool FactorUsed => !DNearZero(Factor) && !DNearZero(Factor - 1); // so ~0 and ~1 are not used
 
     /// <summary>
     /// The factor to use, which is either the factor, or 1 if it's not used
     /// </summary>
-    public double FactorToUse => FactorUsed ? Factor : 1;
+    internal double FactorToUse => FactorUsed ? Factor : 1;
 
     internal string ToHtmlInfo(ImageDecorator decoOrNull)
     {

@@ -63,6 +63,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object link = null,
         object settings = null,
         NoParamOrder noParamOrder = default,
+        Func<ITweakImage, ITweakImage> tweak = default,
         object factor = null,
         object width = default,
         string imgAlt = null,
@@ -73,10 +74,13 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object recipe = null)
     {
         var prefetch = ResponsiveSpecs.ExtractSpecs(link);
+
+        var tweaker = tweak?.Invoke(new TweakImage());
+
         return new ResponsiveImage(
             this,
             PageService,
-            new(prefetch)
+            new(prefetch, tweaker as TweakImage)
             {
                 Settings = Settings(settings ?? prefetch.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe),
                 ImgAlt = imgAlt,
@@ -94,6 +98,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object link = default,
         object settings = default,
         NoParamOrder noParamOrder = default,
+        Func<ITweakImage, ITweakImage> tweak = default,
         object factor = default,
         object width = default,
         string imgAlt = default,
@@ -106,10 +111,11 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object recipe = default)
     {
         var prefetch = ResponsiveSpecs.ExtractSpecs(link);
+        var tweaker = tweak?.Invoke(new TweakImage());
         return new ResponsivePicture(
             this,
             PageService,
-            new(prefetch)
+            new(prefetch, tweaker as TweakImage)
             {
                 Settings = Settings(settings ?? prefetch.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe),
                 ImgAlt = imgAlt,
