@@ -111,7 +111,7 @@ public class ServiceKit16() : ServiceKit("Sxc.Kit16")
     /// <summary>
     /// Key service.
     /// Rarely used, as the RazorTyped has a UniqueKey property which comes from this service.
-    /// You only need this service, if you need to create combined keys (eg with an entity)
+    /// You only need this service, if you need to create combined keys (like with an entity)
     /// </summary>
     /// <remarks>
     /// * New in v16.04

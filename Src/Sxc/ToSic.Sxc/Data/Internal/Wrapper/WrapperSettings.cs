@@ -24,7 +24,7 @@ public readonly struct WrapperSettings
     public bool WrapChildren { get; }
 
     /// <summary>
-    /// Determine if real objects (with an existing class, eg. non Anonymous) should also be wrapped.
+    /// Determine if real objects (with an existing class, like non-Anonymous) should also be wrapped.
     /// </summary>
     public bool WrapRealObjects { get; }
 

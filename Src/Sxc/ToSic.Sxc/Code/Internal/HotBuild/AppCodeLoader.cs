@@ -181,10 +181,10 @@ public class AppCodeLoader(
         var l = log.Fn<IDictionary<string, bool>>($"{nameof(physicalPathAppCode)}: {physicalPathAppCode}");
         var folders = new Dictionary<string, bool>();
 
-        // take AppCode folder (eg. ...\edition\AppCode)
+        // take AppCode folder (like ...\edition\AppCode)
         IfExistsThenAdd(physicalPathAppCode, true);
 
-        // take parent folder (eg. ...\edition)
+        // take parent folder (like ...\edition)
         var appCodeParentFolder = Path.GetDirectoryName(physicalPathAppCode);
         if (appCodeParentFolder.IsEmpty())
             return l.Return(folders, $"{nameof(appCodeParentFolder)}.IsEmpty");
@@ -201,7 +201,7 @@ public class AppCodeLoader(
         // If we had an edition and no assembly, then we need to watch the root folder
         // we need to add more folders to watch for cache invalidation
 
-        // App Root folder (eg. ...\)
+        // App Root folder (like ...\)
         var appRootFolder = Path.GetDirectoryName(appCodeParentFolder);
         if (appRootFolder.IsEmpty())
             return l.Return(folders, $"{nameof(appRootFolder)}.IsEmpty");

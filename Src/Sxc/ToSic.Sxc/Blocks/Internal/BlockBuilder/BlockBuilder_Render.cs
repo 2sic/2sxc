@@ -87,7 +87,7 @@ public partial class BlockBuilder
     {
         var l = Log.Fn<(string, bool, List<Exception>)>(timer: true);
 
-        // any errors from dnn requirements check (eg. missing c# 8.0)
+        // any errors from dnn requirements check (like missing c# 8.0)
         if (specs.RenderEngineResult?.ExceptionsOrNull != null)
             return l.Return(new(specs.RenderEngineResult.Html, specs.RenderEngineResult.ExceptionsOrNull != null, specs.RenderEngineResult.ExceptionsOrNull), "dnn requirements (c# 8.0...) not met");
 

@@ -12,7 +12,7 @@ internal class CodeFragment(string nameId, string code, bool priority = true, Li
     /// <summary>
     /// Distinct property name to deduplicate, in case multiple fragments would generate the same property.
     ///
-    /// eg. if we had a string property `ImageFile` and a file property `Image` which would both generate a property `ImageFile`,
+    /// like if we had a string property `ImageFile` and a file property `Image` which would both generate a property `ImageFile`,
     /// </summary>
     public string NameId { get; } = nameId;
 

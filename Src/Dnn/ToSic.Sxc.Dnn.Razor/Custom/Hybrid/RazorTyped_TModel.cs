@@ -5,7 +5,7 @@ namespace Custom.Hybrid;
 /// New base class with custom model.
 /// The rest of this is identical to <see cref="RazorTyped"/>.
 /// </summary>
-/// <typeparam name="TModel">Model type - eg `string` or a class from your `AppCode`</typeparam>
+/// <typeparam name="TModel">Model type - like `string` or a class from your `AppCode`</typeparam>
 /// <remarks>
 /// Introduced in v17.03
 /// </remarks>

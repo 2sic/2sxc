@@ -22,7 +22,7 @@ partial class CodeDataFactory
         // 2023-08-08 2dm - try to use the new GetOnce.Reset functionality
         //if (_adamManagerPrepared != null) return _adamManagerPrepared;
 
-        // If we don't even have a _DynCodeRoot (eg. when exporting from a neutral WebAPI)
+        // If we don't even have a _DynCodeRoot (like when exporting from a neutral WebAPI)
         if (_CodeApiSvc is null)
             throw new($"Can't create App Context for {nameof(AdamManager)} in {nameof(Internal.CodeDataFactory)} - no block, no App");
 

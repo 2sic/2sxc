@@ -20,7 +20,7 @@ public class ServiceKit(string logName) : ServiceForDynamicCode(logName)
     /// <summary>
     /// All the services provided by this kit must come from the code root, so they are properly initialized.
     ///
-    /// Will first try to use the GetService method to ensure that changes in the Kit (eg. 16/14) still return
+    /// Will first try to use the GetService method to ensure that changes in the Kit (like 16/14) still return
     /// the identical sub-services.
     /// </summary>
     /// <typeparam name="TService"></typeparam>

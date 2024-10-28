@@ -107,7 +107,7 @@ public interface ICacheSpecs
     ICacheSpecs VaryByUser(NoParamOrder protector = default, ICmsUser user = default, int? id = default);
 
     /// <summary>
-    /// Vary the cache by a specific page parameter, eg `?category=1`.
+    /// Vary the cache by a specific page parameter, like `?category=1`.
     /// Using this method will only vary the cache by this specific parameter and ignore the rest.
     /// </summary>
     /// <param name="name">Name of a single parameter</param>
@@ -117,7 +117,7 @@ public interface ICacheSpecs
     ICacheSpecs VaryByPageParameter(string name, NoParamOrder protector = default, bool caseSensitive = false);
 
     /// <summary>
-    /// Vary the cache by one or more specific page parameter, eg `?category=1&amp;sort=asc`.
+    /// Vary the cache by one or more specific page parameter, like `?category=1&amp;sort=asc`.
     /// Using this method will only vary the cache by the mentioned parameters and ignore the rest.
     /// </summary>
     /// <param name="names">Names of one or more parameters, comma-separated</param>

@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Context.Internal;
 /// </summary>
 /// <remarks>
 /// This MUST be public, because in dyn-code you could have Parameters.Set("key", something).Set(...).Set(...).
-/// If any parameter (eg 'something') is dynamic, the second Set(...) would fail, because it can't find the method on `object`.
+/// If any parameter (like 'something') is dynamic, the second Set(...) would fail, because it can't find the method on `object`.
 /// </remarks>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public partial class Parameters(NameValueCollection initialNvc = null) : IParameters

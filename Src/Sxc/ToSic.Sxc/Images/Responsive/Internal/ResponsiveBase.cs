@@ -227,7 +227,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
                 // Add note only for the ImageDecorator Metadata, not for other buttons
                 var modified = (t as TweakButton)?.AddNamed(ImageDecorator.TypeNameId, btn =>
                 {
-                    // add label eg "Image Settings and Cropping" - i18n
+                    // add label like "Image Settings and Cropping" - i18n
                     btn = btn.Tooltip($"{ToolbarConstants.ToolbarLabelPrefix}MetadataImage");
 
                     // Check if we have special resize metadata

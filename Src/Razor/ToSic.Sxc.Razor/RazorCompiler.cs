@@ -58,7 +58,7 @@ internal class RazorCompiler(
             if (!_executedAlready)
             {
                 l.A($"one time execute, remove problematic ApplicationPart assemblies");
-                // fix special case that happens with oqtane custom module server project assembly (eg. Name.Server.Oqtane.dll)
+                // fix special case that happens with oqtane custom module server project assembly (like Name.Server.Oqtane.dll)
                 // that has empty reference paths (for unknown reason) and IRazorViewEngine.GetView breaks when there are empty
                 // reference paths in the ApplicationParts/AssemblyPart
                 removeThis = applicationPartManager.ApplicationParts.Where(part =>

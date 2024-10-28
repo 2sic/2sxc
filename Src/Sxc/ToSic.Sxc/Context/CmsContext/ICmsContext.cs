@@ -5,7 +5,7 @@
 /// Note that it it _Platform Agnostic_ so it's the same on Dnn, Oqtane etc.
 ///
 /// 🪒 In [Dynamic Razor](xref:Custom.Hybrid.Razor14) it's found on `CmsContext`  
-/// 🪒 In [Typed Razor](xref:Custom.Hybrid.RazorTyped) it's found on `MyContext`, but many objects are directly available, eg. `MyPage`
+/// 🪒 In [Typed Razor](xref:Custom.Hybrid.RazorTyped) it's found on `MyContext`, but many objects are directly available, like `MyPage`
 /// </summary>
 [PublicApi]
 public interface ICmsContext
@@ -16,7 +16,7 @@ public interface ICmsContext
     ICmsCulture Culture { get; }
 
     /// <summary>
-    /// Information about the Module / Container which holds an 2sxc content block in the CMS
+    /// Information about the Module / Container which holds a 2sxc content block in the CMS
     /// </summary>
     ICmsModule Module { get; }
 

@@ -27,12 +27,12 @@ internal class TweakData<TValue>: ITweakData<TValue>
     }
 
     /// <summary>
-    /// Name of the value which will be modified, eg `FirstName`
+    /// Name of the value which will be modified, like `FirstName`
     /// </summary>
     public string Name { get; }
 
     /// <summary>
-    /// Step of the tweak, like a workflow step. eg. `before`
+    /// Step of the tweak, like a workflow step. like `before`
     /// </summary>
     public string Step { get; }
 

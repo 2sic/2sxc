@@ -8,5 +8,5 @@ public class RenderSpecs
 {
     public object Data { get; set; }
     public bool UseLightspeed { get; set; }
-    public RenderEngineResult RenderEngineResult { get; set; } // errors from dnn requirements check (eg. c# 8.0)
+    public RenderEngineResult RenderEngineResult { get; set; } // errors from dnn requirements check (like c# 8.0)
 }

@@ -6,7 +6,7 @@ public partial interface IToolbarBuilder
     /// Create an info, warning, help or link-button to assist the user.
     /// </summary>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <param name="target">the target window, eg `_blank` - new in v17; defaults to `null` so that ctrl-click etc. work as expected</param>
+    /// <param name="target">the target window, like `_blank` - new in v17; defaults to `null` so that ctrl-click etc. work as expected</param>
     /// <param name="tweak">Optional function call to tweak the button.</param>
     /// <param name="link">If provided, will make the button open the link in a new window.</param>
     /// <returns></returns>

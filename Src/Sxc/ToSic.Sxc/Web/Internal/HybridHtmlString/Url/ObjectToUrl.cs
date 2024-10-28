@@ -140,7 +140,7 @@ public class ObjectToUrl
             .Where(x => x.CanRead)
             .Select(x =>
             {
-                // Check if it's a key value pair (from a dictionary) - eg. on note
+                // Check if it's a key value pair (from a dictionary) - like on note
                 var kvpPair = PropOfKvp(data);
                 var preSerialize = kvpPair != null
                     ? new(kvpPair.Name, kvpPair.Value, prefix)

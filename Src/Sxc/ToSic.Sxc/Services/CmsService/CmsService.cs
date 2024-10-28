@@ -36,7 +36,7 @@ internal class CmsService: ServiceForDynamicCode, ICmsService
 
         // New v17 - preprocess the tweaks if available
         // Note that we should use the field if one was found, only use the "thing" if there was no field
-        // Otherwise there is the risk that "Raw" is null (eg new wysiwyg field before adding text)
+        // Otherwise there is the risk that "Raw" is null (like new wysiwyg field before adding text)
         // and it would then revert to showing "ToSic.Sxc.Data.Internal.Field"
         var value = field != null
             ? field.Raw?.ToString()

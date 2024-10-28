@@ -56,11 +56,11 @@ public partial class CodeApiService : ICodeApiServiceInternal
             return newService;
         }
     }
-    
+
     /// <summary>
     /// A kind of cache for:
-    /// - all kinds of kits by version, eg. Kit14, Kit16
-    /// - all services used inside these kits, as they should share the state (eg. the Edit kit)
+    /// - all kinds of kits by version, like Kit14, Kit16
+    /// - all services used inside these kits, as they should share the state (like the Edit kit)
     /// ...so we don't have to create them over and over again.
     /// This allows us to just get an object, kit, and if it's already created, we get the same instance.
     /// </summary>

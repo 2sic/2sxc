@@ -12,7 +12,7 @@ public interface IModuleService: IHasLog
     IReadOnlyCollection<IHtmlTag> MoreTags { get; }
 
     /// <summary>
-    /// Add a tag (eg. a TurnOn) to the end of the module
+    /// Add a tag (like a TurnOn) to the end of the module
     /// </summary>
     /// <param name="tag"></param>
     /// <param name="nameId"></param>

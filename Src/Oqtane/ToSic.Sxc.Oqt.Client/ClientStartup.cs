@@ -13,7 +13,7 @@ public class ClientStartup : IClientStartup
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public void ConfigureServices(IServiceCollection services)
     {
-        // Must register services here, because can not use IService for registration when service has DI interface in another assembly (eg. ToSic.Sxc.Oqtane.Shared.dll)
+        // Must register services here, because can not use IService for registration when service has DI interface in another assembly (like ToSic.Sxc.Oqtane.Shared.dll)
         services.TryAddScoped<OqtPageChangeService>();
         services.TryAddScoped<IOqtSxcRenderService, OqtSxcRenderService>();
         services.TryAddScoped<IRenderInfoService, RenderInfoService>();
