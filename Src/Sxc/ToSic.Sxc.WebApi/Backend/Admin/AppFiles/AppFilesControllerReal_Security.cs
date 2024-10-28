@@ -12,7 +12,9 @@ partial class AppFilesControllerReal
         var ext = Path.GetExtension(assetFromTemplateDto.Path);
         var nameWithoutExt = name.Substring(0, name.Length - ext.Length);
 
-        return _assetTemplates.GetTemplate(assetFromTemplateDto.TemplateKey)
+        return _assetTemplates.GetTemplates()
+            .FirstOrDefault(t => t.Key.Equals(assetFromTemplateDto.TemplateKey, StringComparison.InvariantCultureIgnoreCase))
+            ?.Body
             .Replace(AssetTemplates.CsApiTemplateControllerName, nameWithoutExt)
             .Replace(AssetTemplates.CsCodeTemplateName, nameWithoutExt)
             .Replace(AssetTemplates.CsDataSourceName, nameWithoutExt);
