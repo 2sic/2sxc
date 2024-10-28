@@ -9,14 +9,11 @@ namespace ToSic.Sxc.Services.CmsService;
 
 [PrivateApi("WIP + Hide Implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class CmsService: ServiceForDynamicCode, ICmsService
+internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
+    : ServiceForDynamicCode($"{SxcLogName}.CmsSrv", connect: [stringWysiwyg]), ICmsService
 {
-    private readonly Generator<CmsServiceStringWysiwyg> _stringWysiwyg;
-
-    public CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg) : base(SxcLogName + ".CmsSrv", connect: [stringWysiwyg])
-    {
-        _stringWysiwyg = stringWysiwyg.SetInit(s => s.ConnectToRoot(_CodeApiSvc));
-    }
+    private Generator<CmsServiceStringWysiwyg> StringWysiwygGen => _stringWysiwyg ??= stringWysiwyg.SetInit(s => s.ConnectToRoot(_CodeApiSvc));
+    private Generator<CmsServiceStringWysiwyg> _stringWysiwyg;
 
     public IHtmlTag Html(
         object thing,
@@ -78,7 +75,7 @@ internal class CmsService: ServiceForDynamicCode, ICmsService
 
         // WYSIWYG
         var fieldAdam = _CodeApiSvc.Cdf.Folder(field.Parent, field.Name, field);
-        var htmlResult = _stringWysiwyg.New()
+        var htmlResult = StringWysiwygGen.New()
             .Init(field, contentType, attribute, fieldAdam, debug, imageSettings)
             .HtmlForStringAndWysiwyg(value);
 

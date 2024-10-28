@@ -72,7 +72,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object toolbar = default,
         object recipe = null)
     {
-        var prefetch = ResponsiveParams.Prepare(link);
+        var prefetch = ResponsiveSpecs.ExtractSpecs(link);
         return new ResponsiveImage(
             this,
             PageService,
@@ -105,7 +105,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object toolbar = default,
         object recipe = default)
     {
-        var prefetch = ResponsiveParams.Prepare(link);
+        var prefetch = ResponsiveSpecs.ExtractSpecs(link);
         return new ResponsivePicture(
             this,
             PageService,

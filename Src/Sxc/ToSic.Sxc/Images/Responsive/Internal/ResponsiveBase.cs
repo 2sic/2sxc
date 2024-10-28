@@ -23,29 +23,29 @@ namespace ToSic.Sxc.Images.Internal;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
 {
-
-    internal ResponsiveBase(ImageService imgService, IPageService pageService, ResponsiveParams callParams, ILog parentLog, string logName)
+    internal ResponsiveBase(ImageService imgService, IPageService pageService, ResponsiveSpecs specs, ILog parentLog, string logName)
         : base(parentLog, $"Img.{logName}")
     {
-        Params = callParams;
+        Specs = specs;
         PageService = pageService;
         ImgService = imgService;
         ImgLinker = imgService.ImgLinker;
     }
-    internal ResponsiveParams Params { get; }
+
+    internal ResponsiveSpecs Specs { get; }
     protected readonly ImgResizeLinker ImgLinker;
     internal readonly ImageService ImgService;
     protected readonly IPageService PageService;
+    internal IResizeSettings Settings => Specs.Settings;
 
     private OneResize ThisResize => _thisResize.Get(() => { 
-        var t = ImgLinker.ImageOnly(Params.Link.Url, Settings as ResizeSettings, Params.HasMetadataOrNull);
+        var t = ImgLinker.ImageOnly(Specs.Link.Url, Settings as ResizeSettings, Specs.HasMetadataOrNull);
         Log.A(ImgService.Debug, $"{nameof(ThisResize)}: " + t?.Dump());
         return t;
     });
     private readonly GetOnce<OneResize> _thisResize = new();
 
 
-    internal IResizeSettings Settings => Params.Settings;
 
 
     /// <summary>
@@ -60,13 +60,13 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         var imgTag = ToSic.Razor.Blade.Tag.Img().Src(Src);
 
         // Add all kind of attributes if specified
-        imgTag = AddAttributes(imgTag, Params.ImgAttributes);
+        imgTag = AddAttributes(imgTag, Specs.ImgAttributes);
         imgTag = AddAttributes(imgTag, ThisResize.Recipe?.Attributes);
 
-        // Only add these if they were really specified / known
+        // Only add Alt, Class etc. if they were really specified / known
         if (Alt != null) imgTag = imgTag.Alt(Alt);
         if (Class != null) imgTag = imgTag.Class(Class);
-        if (TryGetAttribute(Params.ImgAttributes, Recipe.SpecialPropertyStyle, out var style))
+        if (TryGetAttribute(Specs.ImgAttributes, Recipe.SpecialPropertyStyle, out var style))
             imgTag = imgTag.Style(style);
         if (TryGetAttribute(ThisResize.Recipe?.Attributes, Recipe.SpecialPropertyStyle, out style)) 
             imgTag = imgTag.Style(style);
@@ -74,18 +74,18 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         if (Height != null) imgTag = imgTag.Height(Height);
 
         // Add lightbox if enabled on the specific image...
-        var lightboxOnImg = Params.ImageDecoratorOrNull?.LightboxIsEnabled;
+        var lightboxOnImg = Specs.ImageDecoratorOrNull?.LightboxIsEnabled;
         if (lightboxOnImg == true)
-            imgTag = AddLightbox(imgTag, Params.ImageDecoratorOrNull);
+            imgTag = AddLightbox(imgTag, Specs.ImageDecoratorOrNull);
         // ...or on the input field metadata
-        else if (lightboxOnImg != false && Params.InputImageDecoratorOrNull?.LightboxIsEnabled == true)
-            imgTag = AddLightbox(imgTag, Params.InputImageDecoratorOrNull);
+        else if (lightboxOnImg != false && Specs.FieldImgDecoratorOrNull?.LightboxIsEnabled == true)
+            imgTag = AddLightbox(imgTag, Specs.FieldImgDecoratorOrNull);
 
         // #alwaysOnImg
         //if (Params.Toolbar as string == "img")
         {
             var tlb = ToolbarOrNull(/*true*/);
-            if (tlb != null) imgTag.Attr(tlb);
+            if (tlb != null) imgTag = imgTag.Attr(tlb);
         }
 
         return imgTag;
@@ -111,7 +111,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
             : original.Attr(LightboxHelpers.Attribute);
 
         var lsSettings = (ResizeSettings)ImgService.Settings(LightboxHelpers.SettingsName);
-        var lsUrl = ImgLinker.ImageOnly(Params.Link.Url, settings: lsSettings, Params.HasMetadataOrNull).Url;
+        var lsUrl = ImgLinker.ImageOnly(Specs.Link.Url, settings: lsSettings, Specs.HasMetadataOrNull).Url;
         
         // Add Lightbox caption and src
         var caption = Alt + decorator.DescriptionExtended;
@@ -179,10 +179,10 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     {
         // attach edit if we are in edit-mode and the link was generated through a call
         if (ImgService.EditOrNull?.Enabled != true) return null;
-        if (Params.Field?.Parent == null) return null;
+        if (Specs.Field?.Parent == null) return null;
 
         // Check if it's not a demo-entity, in which case editing settings shouldn't happen
-        if (Params.Field.Parent.Entity.DisableInlineEditSafe()) return null;
+        if (Specs.Field.Parent.Entity.DisableInlineEditSafe()) return null;
 
         // Get toolbar - if it's null (basically when the ImageService fails) stop here
         // #alwaysOnImg if (forImage == (Params.Toolbar as string == "img"))
@@ -198,18 +198,18 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     public IToolbarBuilder Toolbar() => _toolbar.Get(() =>
     {
         var l = Log.Fn<IToolbarBuilder>();
-        switch (Params.Toolbar)
+        switch (Specs.Toolbar)
         {
             case false: return l.ReturnNull("false");
             case IToolbarBuilder customToolbar: return l.Return(customToolbar, "already set");
         }
 
         // If we're creating an image for a string value, it won't have a field or parent.
-        if (Params.Field?.Parent == null || Params.HasMetadataOrNull == null)
+        if (Specs.Field?.Parent == null || Specs.HasMetadataOrNull == null)
             return l.ReturnNull("no field or no metadata");
 
         // Determine if this is an "own" adam file, because only field-owned files should allow config
-        var isInSameEntity = Security.PathIsInItemAdam(Params.Field.Parent.Guid, "", Src);
+        var isInSameEntity = Security.PathIsInItemAdam(Specs.Field.Parent.Guid, "", Src);
 
         // Construct the toolbar; in edge cases the toolbar service could be missing
         var imgTlb = ImgService.ToolbarOrNull?.Empty().Settings(
@@ -219,7 +219,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         );
 
         // Try to add the metadata button (or just null if not available)
-        imgTlb = imgTlb?.Metadata(Params.HasMetadataOrNull,
+        imgTlb = imgTlb?.Metadata(Specs.HasMetadataOrNull,
             tweak: t =>
             {
                 // Note: Using experimental feature which doesn't exist on the ITweakButton interface
@@ -231,12 +231,12 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
                     btn = btn.Tooltip($"{ToolbarConstants.ToolbarLabelPrefix}MetadataImage");
 
                     // Check if we have special resize metadata
-                    var md = Params.HasMetadataOrNull?.Metadata
+                    var md = Specs.HasMetadataOrNull?.Metadata
                         .FirstOrDefaultOfType(ImageDecorator.NiceTypeName)
                         .NullOrGetWith(imgDeco => new ImageDecorator(imgDeco, []));
 
                     // Try to add note
-                    var note = (Params.Settings as ResizeSettings)?.ToHtmlInfo(md);
+                    var note = (Specs.Settings as ResizeSettings)?.ToHtmlInfo(md);
                     if (note.HasValue())
                         btn = btn.Note(note, format: "html", background: "#DFC2F2", delay: 1000);
 
@@ -246,7 +246,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
                 }); // fallback, in case conversion fails unexpectedly
 
                 // Add note for Copyright - if there is Metadata for that
-                Params.HasMetadataOrNull?.Metadata
+                Specs.HasMetadataOrNull?.Metadata
                     .OfType(CopyrightDecorator.NiceTypeName)
                     .FirstOrDefault()
                     .DoIfNotNull(cpEntity =>
@@ -271,27 +271,27 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
 
 
     /// <inheritdoc />
-    public string Description => _description.Get(() => Params.ImageDecoratorOrNull?.Description);
+    public string Description => _description.Get(() => Specs.ImageDecoratorOrNull?.Description);
     private readonly GetOnce<string> _description = new();
 
     /// <inheritdoc />
-    public string DescriptionExtended => _descriptionDet.Get(() => Params.ImageDecoratorOrNull?.DescriptionExtended);
+    public string DescriptionExtended => _descriptionDet.Get(() => Specs.ImageDecoratorOrNull?.DescriptionExtended);
     private readonly GetOnce<string> _descriptionDet = new();
 
     /// <inheritdoc />
     public string Alt => _alt.Get(() =>
         // If alt is specified, it takes precedence - even if it's an empty string, because there must have been a reason for this
-        Params.ImgAlt 
+        Specs.ImgAlt 
         // If we take the image description, empty does NOT take precedence, it will be treated as not-set
         ?? Description.NullIfNoValue()
         // If all else fails, take the fallback specified in the call - IF it's allowed
-        ?? (Params.ImageDecoratorOrNull?.SkipFallbackTitle ?? false ? null : Params.ImgAltFallback)
+        ?? (Specs.ImageDecoratorOrNull?.SkipFallbackTitle ?? false ? null : Specs.ImgAltFallback)
     );
     private readonly GetOnce<string> _alt = new();
 
 
     /// <inheritdoc />
-    public string Class => _imgClass.Get(() => StyleOrClassGenerator(Params.ImgClass, Recipe.SpecialPropertyClass));
+    public string Class => _imgClass.Get(() => StyleOrClassGenerator(Specs.ImgClass, Recipe.SpecialPropertyClass));
     private readonly GetOnce<string> _imgClass = new();
 
     private string StyleOrClassGenerator(string codePart, string key)
@@ -333,8 +333,8 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         var hasVariants = (ThisResize?.Recipe?.Variants).HasValue();
         var l = (ImgService.Debug ? Log : null).Fn<string>($"{nameof(isEnabled)}: {isEnabled}, {nameof(hasVariants)}: {hasVariants}");
         return isEnabled && hasVariants
-            ? l.Return(ImgLinker.SrcSet(Params.Link.Url, Settings as ResizeSettings, SrcSetType.Img,
-                Params.HasMetadataOrNull))
+            ? l.Return(ImgLinker.SrcSet(Specs.Link.Url, Settings as ResizeSettings, SrcSetType.Img,
+                Specs.HasMetadataOrNull))
             : l.ReturnNull();
     }
 

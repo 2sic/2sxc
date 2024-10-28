@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Images;
 /// Helper class to handle all kinds of parameters passed to a responsive tag
 /// </summary>
 [PrivateApi]
-internal class ResponsiveParams(ResponsiveParams.PreparedResponsiveParams prepared)
+internal class ResponsiveSpecs(ResponsiveSpecsOfTarget prepared)
 {
     /// <summary>
     /// The only reliable object which knows about the url - can never be null
@@ -24,9 +24,15 @@ internal class ResponsiveParams(ResponsiveParams.PreparedResponsiveParams prepar
 
     public IHasMetadata HasMetadataOrNull => prepared.HasMdOrNull;
 
+    /// <summary>
+    /// Image Decorator of the current image.
+    /// </summary>
     public ImageDecorator ImageDecoratorOrNull => prepared.ImgDecoratorOrNull;
 
-    public ImageDecorator InputImageDecoratorOrNull => prepared.InputImgDecoratorOrNull;
+    /// <summary>
+    /// Image Decorator of the field in which the image is located.
+    /// </summary>
+    public ImageDecorator FieldImgDecoratorOrNull => prepared.FieldImgDecoratorOrNull;
 
     public IResizeSettings Settings { get; init; }
     public string ImgAlt { get; init; }
@@ -39,13 +45,13 @@ internal class ResponsiveParams(ResponsiveParams.PreparedResponsiveParams prepar
 
     public object Toolbar { get; init; }
 
-    internal static PreparedResponsiveParams Prepare(object target)
+    internal static ResponsiveSpecsOfTarget ExtractSpecs(object target)
     {
         // Handle null and already-typed scenarios
         switch (target)
         {
             case null: return new(null, null, null, null, null);
-            case PreparedResponsiveParams already: return already;
+            case ResponsiveSpecsOfTarget already: return already;
         }
 
         // Figure out what field it's from - either because it's a hyperlink - or an image inside a WYSIWYG field
@@ -67,15 +73,25 @@ internal class ResponsiveParams(ResponsiveParams.PreparedResponsiveParams prepar
         return new(field, mdProvider, imgDecorator, link, inputImgDecorator);
     }
 
-    internal record PreparedResponsiveParams(
-        IField FieldOrNull,
-        IHasMetadata HasMdOrNull,
-        ImageDecorator ImgDecoratorOrNull,
-        IHasLink HasLinkOrNull,
-        ImageDecorator InputImgDecoratorOrNull
-    )
-    {
-        internal string ResizeSettingsOrNull => ImgDecoratorOrNull?.ResizeSettings?.NullIfNoValue()
-                                               ?? InputImgDecoratorOrNull?.ResizeSettings?.NullIfNoValue();
-    }
+}
+
+/// <summary>
+/// Initial specs of a specific target - typically a field,
+/// extracted / prepared for responsive image processing.
+/// </summary>
+/// <param name="FieldOrNull"></param>
+/// <param name="HasMdOrNull"></param>
+/// <param name="ImgDecoratorOrNull"></param>
+/// <param name="HasLinkOrNull"></param>
+/// <param name="FieldImgDecoratorOrNull"></param>
+internal record ResponsiveSpecsOfTarget(
+    IField FieldOrNull,
+    IHasMetadata HasMdOrNull,
+    ImageDecorator ImgDecoratorOrNull,
+    IHasLink HasLinkOrNull,
+    ImageDecorator FieldImgDecoratorOrNull
+)
+{
+    internal string ResizeSettingsOrNull => ImgDecoratorOrNull?.ResizeSettings?.NullIfNoValue()
+                                            ?? FieldImgDecoratorOrNull?.ResizeSettings?.NullIfNoValue();
 }

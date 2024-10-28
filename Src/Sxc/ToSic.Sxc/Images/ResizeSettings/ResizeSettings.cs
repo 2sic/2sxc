@@ -143,13 +143,13 @@ Quality: {(Quality != IntIgnore ? Quality : notSet)}
 ResizeMode: {resize}
 ScaleMode: {scale}
 Format: {Format ?? notSet}
-Factor: {(FactorUsed ? Factor : notSet)}
+Factor: {(FactorUsed ? Factor.ToString("0.####") : notSet)}
 AspectRatio: {aspectRatio}
 Url Parameters: {Parameters}
 Crop Center: {cropCenter}
 
 <em>This is the primary size. Other responsive sizes derive from this.</em>";
-        //result += $", Advanced: {Advanced}";
+        
         return result.Replace(", ", "\n").Replace("\n", "<br>\n");
     }
 }
