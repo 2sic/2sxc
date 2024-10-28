@@ -9,9 +9,9 @@ namespace ToSic.Sxc.Services;
 /// Service to help parse token-based templates.
 /// </summary>
 /// <remarks>
-/// New in v17.08 - still beta
+/// Released in 18.03
 /// </remarks>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("Still Beta in v17.08")]
+[PublicApi]
 public interface ITemplateService
 {
     /// <summary>

@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Services.Template;
 /// <remarks>
 /// Released in 18.03
 /// </remarks>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("Still Beta in v17.08")]
+[PublicApi]
 public interface ITemplateEngine
 {
     /// <summary>
