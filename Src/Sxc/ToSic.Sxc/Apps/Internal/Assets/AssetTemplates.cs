@@ -36,16 +36,16 @@ public partial class AssetTemplates() : ServiceBase("SxcAss.Templt")
 
     public List<TemplateInfo> GetTemplates() => _templates ??=
     [
-        RazorHybrid,
         RazorTyped,
+        RazorHybrid,
         RazorDnn,
-        // DnnCsCode,
-        CsHybrid,
         CsTyped,
-        ApiHybrid,
+        CsHybrid,
+        // DnnCsCode,
         ApiTyped,
-        DataSourceHybrid,
+        ApiHybrid,
         // DataSourceTyped,
+        DataSourceHybrid,
         Token,
         DnnSearch,
         Markdown,
