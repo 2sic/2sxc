@@ -75,7 +75,7 @@ partial interface ITypedItem
     /// - A dynamic object containing settings properties (this can also be a merged custom + standard settings)
     /// - A strictly typed <see cref="IResizeSettings"/> object containing all settings created using <see cref="ToSic.Sxc.Services.IImageService.Settings">ResizeSettings</see> 
     /// </param>
-    /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
+    /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Like 0.5. </param>
     /// <param name="width">An optional, fixed width of the image</param>
     /// <param name="imgAlt">
     /// Optional `alt` attribute on the created `img` tag for SEO etc.
@@ -145,7 +145,7 @@ partial interface ITypedItem
     /// - A dynamic object containing settings properties (this can also be a merged custom + standard settings)
     /// - A strictly typed <see cref="IResizeSettings"/> object containing all settings created using <see cref="ToSic.Sxc.Services.IImageService.Settings">ResizeSettings</see> 
     /// </param>
-    /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
+    /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Like 0.5. </param>
     /// <param name="width">An optional, fixed width of the image</param>
     /// <param name="imgAlt">
     /// Optional `alt` attribute on the created `img` tag for SEO etc.

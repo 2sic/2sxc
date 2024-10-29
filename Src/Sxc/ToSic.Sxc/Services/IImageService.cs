@@ -43,7 +43,7 @@ public interface IImageService: ICanDebug
     /// - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings.
     /// </param>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
+    /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Like 0.5. </param>
     /// <param name="width">Optional width parameter. Cannot be used if `factor` is set. Usually takes the default from the `settings`.</param>
     /// <param name="height">Optional height parameter. Can only be 0 if `factor` is set, no not specify a height. Usually takes the default from the `settings`.</param>
     /// <param name="quality">Optional quality parameter. Usually takes the default from the `settings`.</param>
@@ -104,7 +104,7 @@ public interface IImageService: ICanDebug
     /////     Note: If you need to construct very custom settings, use <see cref="ResizeSettings">ResizeSettings</see> to create them
     ///// </param>
     ///// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    ///// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
+    ///// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Like 0.5. </param>
     ///// <param name="recipe">Optional string to configure what `srcset`s to generate - see [](xref:NetCode.Images.SrcSet) (note it's `srcset`, not `srcSet`)</param>
     ///// <returns></returns>
     ///// <remarks>
@@ -140,7 +140,7 @@ public interface IImageService: ICanDebug
     /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
     /// - A <see cref="IResizeSettings"/> object containing all settings created using <see cref="ToSic.Sxc.Services.IImageService.Settings">ResizeSettings</see> 
     /// </param>
-    /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
+    /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Like 0.5. </param>
     /// <param name="width">An optional, fixed width of the image</param>
     /// <param name="imgAlt">
     /// Optional `alt` attribute on the created `img` tag for SEO etc.
@@ -207,7 +207,7 @@ public interface IImageService: ICanDebug
     ///     - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
     ///     - A <see cref="IResizeSettings"/> object containing all settings created using <see cref="ToSic.Sxc.Services.IImageService.Settings">ResizeSettings</see> 
     /// </param>
-    /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
+    /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Like 0.5. </param>
     /// <param name="width">An optional, fixed width of the image</param>
     /// <param name="imgAlt">
     /// Optional `alt` attribute on the created `img` tag for SEO etc.

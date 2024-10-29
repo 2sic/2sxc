@@ -87,14 +87,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         var enabled = Tweaker.VDec?.LightboxIsEnabled
                       ?? Target.ImgDecoratorOrNull?.LightboxIsEnabled
                       ?? Target.FieldImgDecoratorOrNull?.LightboxIsEnabled;
-        //IImageDecorator lightboxDeco = Tweaker is { VDec.LightboxIsEnabled: not null }
-        //    ? Tweaker.VDec
-        //    : Target.ImgDecoratorOrNull?.LightboxIsEnabled == true
-        //        ? Target.ImgDecoratorOrNull
-        //        : Target.ImgDecoratorOrNull?.LightboxIsEnabled == null
-        //            ? Target.FieldImgDecoratorOrNull
-        //            : null;
-        //if (lightboxDeco?.LightboxIsEnabled == true)
+
         if (enabled == true)
             imgTag = AddLightbox(
                 imgTag,
