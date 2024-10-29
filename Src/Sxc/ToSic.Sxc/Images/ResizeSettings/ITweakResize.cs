@@ -16,6 +16,9 @@ public interface ITweakResize
     /// </summary>
     public ITweakResize Width(int width);
 
+    /// <summary>
+    /// Set an explicit height.
+    /// </summary>
     public ITweakResize Height(int height);
 
     /// <summary>
@@ -40,13 +43,29 @@ public interface ITweakResize
     /// </summary>
     public ITweakResize AspectRatio(string aspectRatio);
 
+    /// <summary>
+    /// Set the compression quality
+    /// </summary>
     public ITweakResize Quality(int quality);
 
+    /// <summary>
+    /// Set the resize mode, like 'crop', 'max', etc.
+    /// </summary>
     public ITweakResize ResizeMode(string resizeMode);
 
+    /// <summary>
+    /// Set scale-mode to allow up-scaling images like `up` or `both`.
+    /// </summary>
     public ITweakResize ScaleMode(string scaleMode);
 
+    /// <summary>
+    /// Set the format of the image, like 'jpg', 'png', etc.
+    /// Will only accept known formats, otherwise will ignore the value.
+    /// </summary>
     public ITweakResize Format(string format);
 
+    /// <summary>
+    /// Specify custom url parameters for the image, like 'cachebreak=42'
+    /// </summary>
     public ITweakResize Parameters(string parameters);
 }

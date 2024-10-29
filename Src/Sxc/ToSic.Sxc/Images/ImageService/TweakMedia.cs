@@ -10,15 +10,24 @@ internal record TweakMedia(ImageService ImageSvc, ResponsiveSpecsOfTarget Target
 {
     #region Resize Settings
 
+    /// <inheritdoc />
+    public ITweakMedia Resize(Func<ITweakResize, ITweakResize> tweak = default)
+    {
+        var updated = (tweak?.Invoke(new TweakResize(ResizeSettings)) as TweakResize)?.Settings ?? ResizeSettings;
+        return this with { ResizeSettings = updated };
+    }
+
+    /// <inheritdoc />
     public ITweakMedia Resize(string name, NoParamOrder noParamOrder = default, Func<ITweakResize, ITweakResize> tweak = default)
     {
-        var settings = name != null && ImageSvc != null // during tests, ImageSvc may be blank
+        var settings = !string.IsNullOrEmpty(name) && ImageSvc != null // during tests, ImageSvc may be blank
             ? ImageSvc.ImgLinker.ResizeParamMerger.BuildResizeSettings(settings: ImageSvc.GetSettingsByName(name))
             : ResizeSettings;
         var updated = (tweak?.Invoke(new TweakResize(settings)) as TweakResize)?.Settings ?? settings;
         return this with { ResizeSettings = updated };
     }
 
+    /// <inheritdoc />
     public ITweakMedia Resize(IResizeSettings settings, NoParamOrder noParamOrder = default, Func<ITweakResize, ITweakResize> tweak = default)
     {
         var retyped = settings as ResizeSettings ?? throw new ArgumentException(@"Can't properly convert to expected type", nameof(settings));
@@ -30,12 +39,15 @@ internal record TweakMedia(ImageService ImageSvc, ResponsiveSpecsOfTarget Target
 
     #region Lightbox
 
+    /// <inheritdoc />
     public ITweakMedia LightboxEnable(bool isEnabled = true)
         => this with { VDec = VDec with { LightboxIsEnabled = isEnabled } };
 
+    /// <inheritdoc />
     public ITweakMedia LightboxGroup(string group)
         => this with { VDec = VDec with { LightboxGroup = group } };
 
+    /// <inheritdoc />
     public ITweakMedia LightboxDescription(string description)
         => this with { VDec = VDec with { DescriptionExtended = description } };
 

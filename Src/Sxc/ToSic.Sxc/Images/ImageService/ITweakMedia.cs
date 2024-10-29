@@ -20,19 +20,29 @@ public interface ITweakMedia
     /// <summary>
     /// Configure the Resize Settings.
     /// </summary>
+    /// <param name="tweak">Tweak API to customize further settings</param>
+    ITweakMedia Resize(Func<ITweakResize, ITweakResize> tweak = default);
+
+    /// <summary>
+    /// Configure the Resize Settings.
+    /// </summary>
     /// <param name="name">
     /// Name of an existing configuration, such as "Lightbox".
     /// If not specified (null) will default to "Content".
     /// </param>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">Tweak API to customize further settings</param>
-    /// <returns></returns>
     public ITweakMedia Resize(
         string name,
         NoParamOrder noParamOrder = default,
         Func<ITweakResize, ITweakResize> tweak = default
     );
 
+    ITweakMedia Resize(
+        IResizeSettings settings,
+        NoParamOrder noParamOrder = default,
+        Func<ITweakResize, ITweakResize> tweak = default
+    );
     // Note: Recipe is missing
 
     #endregion
