@@ -140,6 +140,10 @@ public interface IImageService: ICanDebug
     /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
     /// - A <see cref="IResizeSettings"/> object containing all settings created using <see cref="ToSic.Sxc.Services.IImageService.Settings">ResizeSettings</see> 
     /// </param>
+    /// <param name="tweak">
+    /// Tweak API to configure everything (new v18.03).
+    /// This is recommended above using parameter names and all newer parameters will only be available on this.
+    /// </param>
     /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Like 0.5. </param>
     /// <param name="width">An optional, fixed width of the image</param>
     /// <param name="imgAlt">
@@ -171,6 +175,7 @@ public interface IImageService: ICanDebug
     /// * Extended in v16.03 to also support IFile
     /// * `toolbar` added in v16.04
     /// * `imgAttributes`, `picClass` and `picAttributes` added in 16.07
+    /// * `tweak` added in 18.03
     /// </remarks>
     IResponsivePicture Picture(
         object link = null,
@@ -200,12 +205,16 @@ public interface IImageService: ICanDebug
     ///     - a string url, in which case it would be used if `url` is not specified
     ///     - a <see cref="IField"/> in which case it would be used if `field` is not specified
     /// </param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="settings">
     ///     - The name of a settings configuration, like "Content", "Screen", "Square", etc.
     ///     - A standardized Image-Settings object like Settings.Images.Content - see https://go.2sxc.org/settings
     ///     - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
     ///     - A <see cref="IResizeSettings"/> object containing all settings created using <see cref="ToSic.Sxc.Services.IImageService.Settings">ResizeSettings</see> 
+    /// </param>
+    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="tweak">
+    /// Tweak API to configure everything (new v18.03).
+    /// This is recommended above using parameter names and all newer parameters will only be available on this.
     /// </param>
     /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Like 0.5. </param>
     /// <param name="width">An optional, fixed width of the image</param>
@@ -234,6 +243,7 @@ public interface IImageService: ICanDebug
     /// <remarks>
     /// * Added in 2sxc 13.03
     /// * `toolbar` added in v16.04
+    /// * `tweak` added in 18.03
     /// </remarks>
     IResponsiveImage Img(
         object link = null,

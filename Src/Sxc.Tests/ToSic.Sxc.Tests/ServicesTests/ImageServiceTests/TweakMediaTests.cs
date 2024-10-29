@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Remotion.Linq.Parsing.Structure.IntermediateModel;
 using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;
@@ -7,19 +6,23 @@ namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;
 [TestClass]
 public class TweakMediaTests
 {
-    private static ITweakMedia ResizeOnly() => new TweakMedia(new(null, null, 100, 100, 2.5, 0.5, null, "not-based-on-anything"), null, null, null, null);
+    #region Resize Settings - not implemented, as we should probably have an entire Resize(name, t => ...) API for this instead
+
+    private static ITweakMedia ResizeOnly() => new TweakMedia(null, null, new(null, null, 100, 100, 2.5, 0.5, null, "not-based-on-anything"), null, null, null, null);
 
     [TestMethod]
-    public void Width() => Assert.AreEqual(42, (ResizeOnly().Width(42) as TweakMedia).Resize.Width);
+    public void Width() => Assert.AreEqual(42, (ResizeOnly().Resize(null, tweak: t => t.Width(42)) as TweakMedia).ResizeSettings.Width);
 
     [TestMethod]
     public void ResizeChangeMakesCopy()
     {
         var x = ResizeOnly();
-        var y = x.Width(42);
-        var z = x.Factor(0.75);
+        var y = x.Resize(null, tweak: t => t.Width(42));
+        var z = x.Resize(null, tweak: t => t.Factor(0.75));
         Assert.AreNotEqual(x, y);
         Assert.AreNotEqual(x, z);
         Assert.AreNotEqual(y, z);
     }
+
+    #endregion
 }

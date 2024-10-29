@@ -57,6 +57,7 @@ public class ImageConstants
             case "jpeg": return Jpg;
             case Png: return Png;
             case Gif: return Gif;
+            case Webp: return Webp;
             default: return null;
         }
     }

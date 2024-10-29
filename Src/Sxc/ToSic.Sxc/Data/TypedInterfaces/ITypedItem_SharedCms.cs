@@ -69,6 +69,10 @@ partial interface ITypedItem
     /// </summary>
     /// <param name="name">Name of a field</param>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="tweak">
+    /// Tweak API to configure everything (new v18.03).
+    /// This is recommended above using parameter names and all newer parameters will only be available on this.
+    /// </param>
     /// <param name="settings">
     /// - The name of a settings configuration, like "Content", "Screen", "Square", etc.
     /// - A standardized Image-Settings object like Settings.Child("Images.Content") - see https://go.2sxc.org/settings
@@ -107,10 +111,12 @@ partial interface ITypedItem
     /// <remarks>
     /// * Added to ITypedItem in v16.03
     /// * `imgAttributes`, `picClass` and `picAttributes` added in 16.07
+    /// * `tweak` added in 18.03
     /// </remarks>
     IResponsivePicture Picture(
         string name,
         NoParamOrder noParamOrder = default,
+        Func<ITweakMedia, ITweakMedia> tweak = default,
         object settings = default,
         object factor = default,
         object width = default,
@@ -139,6 +145,10 @@ partial interface ITypedItem
     /// </summary>
     /// <param name="name">Name of a field</param>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="tweak">
+    /// Tweak API to configure everything (new v18.03).
+    /// This is recommended above using parameter names and all newer parameters will only be available on this.
+    /// </param>
     /// <param name="settings">
     /// - The name of a settings configuration, like "Content", "Screen", "Square", etc.
     /// - A standardized Image-Settings object like Settings.Child("Images.Content") - see https://go.2sxc.org/settings
@@ -174,10 +184,12 @@ partial interface ITypedItem
     /// </returns>
     /// <remarks>
     /// * Added to ITypedItem in v17.04 (previously only Picture was available)
+    /// * `tweak` added in 18.03
     /// </remarks>
     IResponsiveImage Img(
         string name,
         NoParamOrder noParamOrder = default,
+        Func<ITweakMedia, ITweakMedia> tweak = default,
         object settings = default,
         object factor = default,
         object width = default,

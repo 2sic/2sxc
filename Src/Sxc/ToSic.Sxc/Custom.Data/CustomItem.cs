@@ -161,16 +161,18 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
         _item.Html(name, noParamOrder, container, toolbar, imageSettings, required, debug, tweak);
 
     /// <inheritdoc />
-    public IResponsivePicture Picture(string name, NoParamOrder noParamOrder = default, object settings = default,
+    public IResponsivePicture Picture(string name, NoParamOrder noParamOrder = default,
+        Func<ITweakMedia, ITweakMedia> tweak = default,
+        object settings = default,
         object factor = default, object width = default, string imgAlt = default, string imgAltFallback = default,
         string imgClass = default, object imgAttributes = default, string pictureClass = default,
         object pictureAttributes = default, object toolbar = default, object recipe = default) =>
-        _item.Picture(name, noParamOrder, settings, factor, width, imgAlt, imgAltFallback, imgClass, imgAttributes, pictureClass, pictureAttributes, toolbar, recipe);
+        _item.Picture(name, noParamOrder, tweak, settings, factor, width, imgAlt, imgAltFallback, imgClass, imgAttributes, pictureClass, pictureAttributes, toolbar, recipe);
 
     /// <inheritdoc />
-    public IResponsiveImage Img(string name, NoParamOrder noParamOrder = default, object settings = default, object factor = default, object width = default,
+    public IResponsiveImage Img(string name, NoParamOrder noParamOrder = default, Func<ITweakMedia, ITweakMedia> tweak = default, object settings = default, object factor = default, object width = default,
         string imgAlt = default, string imgAltFallback = default, string imgClass = default, object imgAttributes = default, object toolbar = default, object recipe = default) =>
-        _item.Img(name, noParamOrder, settings, factor, width, imgAlt, imgAltFallback, imgClass, imgAttributes, toolbar, recipe);
+        _item.Img(name, noParamOrder, tweak, settings, factor, width, imgAlt, imgAltFallback, imgClass, imgAttributes, toolbar, recipe);
 
     /// <inheritdoc />
     public IFolder Folder(string name, NoParamOrder noParamOrder = default, bool? required = default)

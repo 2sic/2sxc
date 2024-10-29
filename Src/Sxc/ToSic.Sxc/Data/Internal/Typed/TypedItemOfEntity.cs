@@ -327,6 +327,7 @@ internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, CodeDa
     IResponsivePicture ITypedItem.Picture(
         string name,
         NoParamOrder noParamOrder,
+        Func<ITweakMedia, ITweakMedia> tweak,
         object settings,
         object factor,
         object width,
@@ -338,7 +339,7 @@ internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, CodeDa
         object pictureAttributes,
         object toolbar,
         object recipe
-    ) => TypedItemHelpers.Picture(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, settings: settings,
+    ) => TypedItemHelpers.Picture(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, tweak: tweak, settings: settings,
         factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback, 
         imgClass: imgClass, imgAttributes: imgAttributes, pictureClass: pictureClass, pictureAttributes: pictureAttributes, 
         toolbar: toolbar, recipe: recipe);
@@ -346,6 +347,7 @@ internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, CodeDa
     IResponsiveImage ITypedItem.Img(
         string name,
         NoParamOrder noParamOrder,
+        Func<ITweakMedia, ITweakMedia> tweak,
         object settings,
         object factor,
         object width,
@@ -355,7 +357,7 @@ internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, CodeDa
         object imgAttributes,
         object toolbar,
         object recipe
-    ) => TypedItemHelpers.Img(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, settings: settings,
+    ) => TypedItemHelpers.Img(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, tweak: tweak, settings: settings,
         factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback,
         imgClass: imgClass, imgAttributes: imgAttributes,
         toolbar: toolbar, recipe: recipe);

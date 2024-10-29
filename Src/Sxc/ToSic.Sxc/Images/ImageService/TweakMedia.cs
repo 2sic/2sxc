@@ -6,18 +6,25 @@ using static System.StringComparer;
 
 namespace ToSic.Sxc.Images;
 
-internal record TweakMedia(ResizeSettings Resize, ImageDecoratorVirtual VDec, ImageSpecs Img, PictureSpecs Pic, object ToolbarObj): ITweakMedia
+internal record TweakMedia(ImageService ImageSvc, ResponsiveSpecsOfTarget TargetSpecs, ResizeSettings ResizeSettings, ImageDecoratorVirtual VDec, ImageSpecs Img, PictureSpecs Pic, object ToolbarObj): ITweakMedia
 {
-    #region ResizeSettings
+    #region Resize Settings
 
-    public ITweakMedia Width(int width)
-        => this with { Resize = Resize with { Width = width } };
+    public ITweakMedia Resize(string name, NoParamOrder noParamOrder = default, Func<ITweakResize, ITweakResize> tweak = default)
+    {
+        var settings = name != null && ImageSvc != null // during tests, ImageSvc may be blank
+            ? ImageSvc.ImgLinker.ResizeParamMerger.BuildResizeSettings(settings: ImageSvc.GetSettingsByName(name))
+            : ResizeSettings;
+        var updated = (tweak?.Invoke(new TweakResize(settings)) as TweakResize)?.Settings ?? settings;
+        return this with { ResizeSettings = updated };
+    }
 
-    //public ITweakMedia Height(int height)
-    //    => this with { Resize = Resize with { Height = height } };
-
-    public ITweakMedia Factor(double factor)
-        => this with { Resize = Resize with { Factor = factor } };
+    public ITweakMedia Resize(IResizeSettings settings, NoParamOrder noParamOrder = default, Func<ITweakResize, ITweakResize> tweak = default)
+    {
+        var retyped = settings as ResizeSettings ?? throw new ArgumentException(@"Can't properly convert to expected type", nameof(settings));
+        var updated = (tweak?.Invoke(new TweakResize(retyped)) as TweakResize)?.Settings ?? retyped;
+        return this with { ResizeSettings = updated };
+    }
 
     #endregion
 
@@ -39,8 +46,8 @@ internal record TweakMedia(ResizeSettings Resize, ImageDecoratorVirtual VDec, Im
     public ITweakMedia ImgClass(string imgClass)
         => this with { Img = Img with { Class = imgClass } };
 
-    public ITweakMedia ImgAlt(string imgAlt)
-        => this with { Img = Img with { Alt = imgAlt } };
+    public ITweakMedia ImgAlt(string alt)
+        => this with { Img = Img with { Alt = alt } };
 
     public ITweakMedia ImgAltFallback(string imgAltFallback)
         => this with { Img = Img with { AltFallback = imgAltFallback } };

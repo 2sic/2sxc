@@ -20,9 +20,9 @@ internal record ResizeSettings : IResizeSettings, IResizeSettingsInternal
     public int Quality { get; set; } = IntIgnore;
     public string ResizeMode { get; set; }
     public string ScaleMode { get; set; }
-    public string Format { get; }
+    public string Format { get; init; }
     public double Factor { get; init; } = 1;
-    public double AspectRatio { get; }
+    public double AspectRatio { get; init; }
     public NameValueCollection Parameters { get; set; }
 
 

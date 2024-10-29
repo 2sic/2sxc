@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Plumbing;
-using ToSic.Lib.Helpers;
+﻿using ToSic.Lib.Helpers;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
@@ -17,42 +16,11 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
 
     internal IEditService EditOrNull => _CodeApiSvc?.Edit;
 
-    internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => _CodeApiSvc?.GetService<IToolbarService>());
+    internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => _CodeApiSvc?.GetService<IToolbarService>(reuse: true));
     private readonly GetOnce<IToolbarService> _toolbarSvc = new();
 
     private IPageService PageService => _pageService ??= _CodeApiSvc?.GetService<IPageService>(reuse: true);
     private IPageService _pageService;
-
-    #endregion
-
-    #region Settings Handling
-
-    /// <summary>
-    /// Use the given settings or try to use the default content-settings if available
-    /// </summary>
-    /// <param name="settings"></param>
-    /// <returns></returns>
-    private object GetBestSettings(object settings)
-    {
-        var l = Log.Fn<object>(enabled: Debug);
-
-        return settings switch
-        {
-            null or true => l.Return(GetSettingsByName("Content"), "null/default"),
-            string strName when strName.HasValue() => l.Return(GetSettingsByName(strName), $"name: {strName}"),
-            _ => l.Return(settings, "unchanged")
-        };
-    }
-
-    
-    internal ICanGetByName GetSettingsByName(string strName) => ResizeParamMerger.GetImageSettingsByName(_CodeApiSvc, strName, Debug, Log);
-
-    /// <summary>
-    /// Convert to Multi-Resize Settings
-    /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    private AdvancedSettings ToAdv(object value) => AdvancedSettings.Parse(value);
 
     #endregion
 
@@ -71,9 +39,11 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object toolbar = default,
         object recipe = null)
     {
-        var prefetch = ResponsiveSpecsOfTarget.ExtractSpecs(link);
-        var finalSettings = SettingsInternal(settings ?? prefetch.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe);
+        var specs = ResponsiveSpecsOfTarget.ExtractSpecs(link);
+        var finalSettings = SettingsInternal(settings ?? specs.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe);
         ITweakMedia tweaker = new TweakMedia(
+            this,
+            specs,
             finalSettings,
             new(),
             new(Class: imgClass, Alt: imgAlt, AltFallback: imgAltFallback, Attributes: TweakMedia.CreateAttribDic(imgAttributes, nameof(imgAttributes))),
@@ -85,7 +55,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         return new ResponsiveImage(
             this,
             PageService,
-            new(prefetch, Tweaker: tweaker as TweakMedia),
+            new(specs, Tweaker: tweaker as TweakMedia),
             Log);
     }
 
@@ -107,9 +77,11 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object toolbar = default,
         object recipe = default)
     {
-        var prefetch = ResponsiveSpecsOfTarget.ExtractSpecs(link);
-        var finalSettings = SettingsInternal(settings ?? prefetch.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe);
+        var specs = ResponsiveSpecsOfTarget.ExtractSpecs(link);
+        var finalSettings = SettingsInternal(settings ?? specs.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe);
         ITweakMedia tweaker = new TweakMedia(
+            this,
+            specs,
             finalSettings,
             new(),
             new(Class: imgClass, Alt: imgAlt, AltFallback: imgAltFallback, Attributes: TweakMedia.CreateAttribDic(imgAttributes, nameof(imgAttributes))),
@@ -120,7 +92,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         return new ResponsivePicture(
             this,
             PageService,
-            new(prefetch, Tweaker: tweaker as TweakMedia),
+            new(specs, Tweaker: tweaker as TweakMedia),
             Log);
     }
 
@@ -137,14 +109,4 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
     }
     private bool _debug;
 
-    //private static IDictionary<string, object> CreateAttribDic(object attributes, string name)
-    //    => attributes switch
-    //    {
-    //        null => null,
-    //        IDictionary<string, object> ok => ok.ToInvariant(),
-    //        IDictionary<string, string> strDic => strDic.ToDictionary(pair => pair.Key, pair => pair.Value as object, InvariantCultureIgnoreCase),
-    //        _ => attributes.IsAnonymous()
-    //            ? attributes.ToDicInvariantInsensitive()
-    //            : throw new ArgumentException($@"format of {name} unknown: {name.GetType().Name}", nameof(attributes))
-    //    };
 }

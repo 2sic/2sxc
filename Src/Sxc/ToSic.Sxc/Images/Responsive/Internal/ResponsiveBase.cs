@@ -45,7 +45,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     internal readonly ImageService ImgService;
     protected readonly IPageService PageService;
     internal readonly TweakMedia Tweaker;
-    internal ResizeSettings Settings => Tweaker.Resize;
+    internal ResizeSettings Settings => Tweaker.ResizeSettings;
 
     private OneResize ThisResize => _thisResize.Get(() => { 
         var t = ImgLinker.ImageOnly(Target.Link.Url, Settings as ResizeSettings, Target.HasMdOrNull);

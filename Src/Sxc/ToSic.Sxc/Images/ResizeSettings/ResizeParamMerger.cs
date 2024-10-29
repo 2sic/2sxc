@@ -54,15 +54,15 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         if (settings is IResizeSettings typeSettings)
             return l.Return(new(
                 typeSettings,
-                format: paramHelper.FormatOrNull(format),
-                width: paramHelper.WidthOrNull(width),
-                height: paramHelper.HeightOrNull(height),
-                aspectRatio: paramHelper.AspectRatioOrNull(aspectRatio),
-                factor: paramHelper.FactorOrNull(factor),
-                quality: paramHelper.QualityOrNull(quality),
-                resizeMode: paramHelper.ResizeModeOrNull(resizeMode),
-                scaleMode: paramHelper.ScaleModeOrNull(scaleMode),
-                parameters: paramHelper.ParametersOrNull(parameters),
+                format: ResizeParams.FormatOrNull(format),
+                width: ResizeParams.WidthOrNull(width),
+                height: ResizeParams.HeightOrNull(height),
+                aspectRatio: ResizeParams.AspectRatioOrNull(aspectRatio),
+                factor: ResizeParams.FactorOrNull(factor),
+                quality: ResizeParams.QualityOrNull(quality),
+                resizeMode: ResizeParams.ResizeModeOrNull(resizeMode),
+                scaleMode: ResizeParams.ScaleModeOrNull(scaleMode),
+                parameters: ResizeParams.ParametersOrNull(parameters),
                 advanced: advanced
             ), $"Is {nameof(ResizeSettings)}, will clone/init");
 
@@ -70,21 +70,20 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         var settingsOrNull = TryToCastSettings(settings, codeApiSvc);
         l.A($"Has Settings: {settingsOrNull != null}; type: {settings?.GetType().FullName}");
 
-        var formatValue = paramHelper.FormatOrNull(format);
+        var formatValue = ResizeParams.FormatOrNull(format);
 
         var resizeParams = BuildCoreSettings(paramHelper, width, height, factor, aspectRatio, formatValue, settingsOrNull);
 
         // Add more URL parameters if known
-        resizeParams.Parameters = paramHelper.ParametersOrNull(parameters);
+        resizeParams.Parameters = ResizeParams.ParametersOrNull(parameters);
 
         // Aspects which aren't affected by aspect ratio
-        var qParamInt2 = paramHelper.QualityOrNull(quality);
+        var qParamInt2 = ResizeParams.QualityOrNull(quality);
         resizeParams.Quality = qParamInt2 ?? IntOrZeroAsNull(settingsOrNull?.Get(QualityField)) ?? IntIgnore;
-        resizeParams.ResizeMode =
-            paramHelper.ResizeModeOrNull(KeepBestString(resizeMode, settingsOrNull?.Get(ResizeModeField)));
-        resizeParams.ScaleMode = paramHelper.ScaleModeOrNull(KeepBestString(scaleMode, settingsOrNull?.Get(ScaleModeField)));
+        resizeParams.ResizeMode = ResizeParams.ResizeModeOrNull(KeepBestString(resizeMode, settingsOrNull?.Get(ResizeModeField)));
+        resizeParams.ScaleMode = ResizeParams.ScaleModeOrNull(KeepBestString(scaleMode, settingsOrNull?.Get(ScaleModeField)));
 
-        resizeParams.Advanced = GetMultiResizeSettings(advanced, settingsOrNull);
+        resizeParams.Advanced = advanced ?? GetMultiResizeSettings(settingsOrNull);
 
         return l.Return(resizeParams, "");
     }
@@ -108,26 +107,19 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
 
 
 
-    private AdvancedSettings GetMultiResizeSettings(AdvancedSettings advanced, ICanGetByName getSettings)
+    private AdvancedSettings GetMultiResizeSettings(ICanGetByName getSettings)
     {
-        if (advanced != null) return advanced;
         try
         {
             // Check if we have a property-lookup (usually an entity) and if yes, use the piggy-back
-            if (getSettings is IPropertyLookup getProperties)
-            {
-                var result = getProperties.GetOrCreateInPiggyBack(AdvancedField, ParseAdvancedSettingsJson, Log);
-                if (result != null) return result;
-            }
-
-            return ParseAdvancedSettingsJson(getSettings?.Get(AdvancedField));
+            var result = (getSettings as IPropertyLookup)?.GetOrCreateInPiggyBack(AdvancedField, ParseAdvancedSettingsJson, Log);
+            return result ?? ParseAdvancedSettingsJson(getSettings?.Get(AdvancedField));
         }
         catch
         {
             /* ignore */
+            return null;
         }
-
-        return null;
 
         AdvancedSettings ParseAdvancedSettingsJson(object value) => AdvancedSettings.FromJson(value, Log);
     }
@@ -138,7 +130,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
 
         // Try to pre-process parameters and prefer them
         // The manually provided values must remember Zeros because they deactivate presets
-        (int? W, int? H) parameters = (resP.WidthOrNull(width), resP.HeightOrNull(height));
+        (int? W, int? H) parameters = (ResizeParams.WidthOrNull(width), ResizeParams.HeightOrNull(height));
         IfDebugLogPair("Params", parameters);
 
         // Pre-Clean the values - all as strings
@@ -148,9 +140,9 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         (int W, int H) safe = (IntOrZeroAsNull(set.W) ?? IntIgnore, IntOrZeroAsNull(set.H) ?? IntIgnore);
         IfDebugLogPair("Safe", safe);
 
-        var factorFinal = resP.FactorOrNull(factor) ?? IntIgnore;
-        var arFinal = resP.AspectRatioOrNull(aspectRatio)
-                      ?? resP.AspectRatioOrNull(settingsOrNull?.Get(AspectRatioField)) ?? IntIgnore;
+        var factorFinal = ResizeParams.FactorOrNull(factor) ?? IntIgnore;
+        var arFinal = ResizeParams.AspectRatioOrNull(aspectRatio)
+                      ?? ResizeParams.AspectRatioOrNull(settingsOrNull?.Get(AspectRatioField)) ?? IntIgnore;
         l.A(Debug, $"Resize Factor: {factorFinal}, Aspect Ratio: {arFinal}");
 
         var basedOnName = settingsOrNull?.Get("ItemIdentifier") as string;

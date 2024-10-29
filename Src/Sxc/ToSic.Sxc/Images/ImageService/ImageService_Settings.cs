@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Images;
+﻿using ToSic.Eav.Plumbing;
+
+namespace ToSic.Sxc.Images;
 
 partial class ImageService
 {
@@ -44,6 +46,37 @@ partial class ImageService
             width: width, height: height, quality: quality, resizeMode: resizeMode,
             scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, advanced: AdvancedSettings.Parse(recipe));
     }
+
+    #region Settings Handling
+
+    /// <summary>
+    /// Use the given settings or try to use the default content-settings if available
+    /// </summary>
+    /// <param name="settings"></param>
+    /// <returns></returns>
+    private object GetBestSettings(object settings)
+    {
+        var l = Log.Fn<object>(enabled: Debug);
+        return settings switch
+        {
+            null or true => l.Return(GetSettingsByName("Content"), "null/default"),
+            string strName when strName.HasValue() => l.Return(GetSettingsByName(strName), $"name: {strName}"),
+            _ => l.Return(settings, "unchanged")
+        };
+    }
+
+
+    internal ICanGetByName GetSettingsByName(string strName)
+        => ResizeParamMerger.GetImageSettingsByName(_CodeApiSvc, strName, Debug, Log);
+
+    /// <summary>
+    /// Convert to Multi-Resize Settings
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    private AdvancedSettings ToAdv(object value) => AdvancedSettings.Parse(value);
+
+    #endregion
 
     /// <inheritdoc />
     public Recipe Recipe(string variants) => new(variants: variants);
