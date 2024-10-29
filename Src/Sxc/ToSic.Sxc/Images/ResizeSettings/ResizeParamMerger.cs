@@ -93,17 +93,17 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         settings switch
         {
             null => null,
-            string name => GetImageSettingsByName(codeApiServiceOrNull, name, Debug, Log) as ICanGetByName,
+            string name => GetImageSettingsByName(codeApiServiceOrNull, name, Debug, Log),
             ICanGetByName getSettings => getSettings,
             IEnumerable<ICanGetByName> settingsList => settingsList.FirstOrDefault(),
             _ => null
         };
 
-    internal static object GetImageSettingsByName(ICodeApiService codeApiSvcOrNull, string strName, bool debug, ILog log)
+    internal static ICanGetByName GetImageSettingsByName(ICodeApiService codeApiSvcOrNull, string strName, bool debug, ILog log)
     {
-        var l = log.Fn<object>($"{strName}; code root: {codeApiSvcOrNull != null}", enabled: debug);
-        var result = codeApiSvcOrNull?.Settings?.Get($"Settings.Images.{strName}");
-        return l.Return((object)result, $"found: {result != null}");
+        var l = log.Fn<ICanGetByName>($"{strName}; code root: {codeApiSvcOrNull != null}", enabled: debug);
+        var result = codeApiSvcOrNull?.Settings?.Get($"Settings.Images.{strName}") as ICanGetByName;
+        return l.Return(result, $"found: {result != null}");
     }
 
 
@@ -155,9 +155,16 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
 
         var basedOnName = settingsOrNull?.Get("ItemIdentifier") as string;
 
-        var resizeSettings = new ResizeSettings(width: parameters.W, height: parameters.H,
-            fallbackWidth: safe.W, fallbackHeight: safe.H,
-            aspectRatio: arFinal, factor: factorFinal, format: format, basedOn: basedOnName);
+        var resizeSettings = new ResizeSettings(
+            width: parameters.W,
+            height: parameters.H,
+            fallbackWidth: safe.W,
+            fallbackHeight: safe.H,
+            aspectRatio: arFinal,
+            factor: factorFinal,
+            format: format,
+            basedOn: basedOnName
+        );
 
         return l.Return(resizeSettings);
 

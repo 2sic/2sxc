@@ -15,13 +15,13 @@ internal record ResizeSettings : IResizeSettings, IResizeSettingsInternal
     /// </summary>
     public string BasedOn { get; }
 
-    public int Width { get; } = IntIgnore;
-    public int Height { get; } = IntIgnore;
+    public int Width { get; init; } = IntIgnore;
+    public int Height { get; init; } = IntIgnore;
     public int Quality { get; set; } = IntIgnore;
     public string ResizeMode { get; set; }
     public string ScaleMode { get; set; }
     public string Format { get; }
-    public double Factor { get; } = 1;
+    public double Factor { get; init; } = 1;
     public double AspectRatio { get; }
     public NameValueCollection Parameters { get; set; }
 

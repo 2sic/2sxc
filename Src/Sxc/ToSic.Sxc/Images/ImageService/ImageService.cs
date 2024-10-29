@@ -38,14 +38,14 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
 
         return settings switch
         {
-            null or true => l.Return(GetImageSettingsByName("Content"), "null/default"),
-            string strName when strName.HasValue() => l.Return(GetImageSettingsByName(strName), $"name: {strName}"),
+            null or true => l.Return(GetSettingsByName("Content"), "null/default"),
+            string strName when strName.HasValue() => l.Return(GetSettingsByName(strName), $"name: {strName}"),
             _ => l.Return(settings, "unchanged")
         };
     }
 
     
-    private object GetImageSettingsByName(string strName) => ResizeParamMerger.GetImageSettingsByName(_CodeApiSvc, strName, Debug, Log);
+    internal ICanGetByName GetSettingsByName(string strName) => ResizeParamMerger.GetImageSettingsByName(_CodeApiSvc, strName, Debug, Log);
 
     /// <summary>
     /// Convert to Multi-Resize Settings
@@ -61,7 +61,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object link = null,
         object settings = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakImage, ITweakImage> tweak = default,
+        Func<ITweakMedia, ITweakMedia> tweak = default,
         object factor = null,
         object width = default,
         string imgAlt = null,
@@ -72,10 +72,11 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object recipe = null)
     {
         var prefetch = ResponsiveSpecsOfTarget.ExtractSpecs(link);
-        var finalSettings = Settings(settings ?? prefetch.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe);
-        ITweakImage tweaker = new TweakImage(
+        var finalSettings = SettingsInternal(settings ?? prefetch.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe);
+        ITweakMedia tweaker = new TweakMedia(
+            finalSettings,
             new(),
-            new(Class: imgClass, Alt: imgAlt, AltFallback: imgAltFallback, Attributes: TweakImage.CreateAttribDic(imgAttributes, nameof(imgAttributes))),
+            new(Class: imgClass, Alt: imgAlt, AltFallback: imgAltFallback, Attributes: TweakMedia.CreateAttribDic(imgAttributes, nameof(imgAttributes))),
             new(),
             ToolbarObj: toolbar
         );
@@ -84,7 +85,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         return new ResponsiveImage(
             this,
             PageService,
-            new(prefetch, Settings: finalSettings, Tweaker: tweaker as TweakImage),
+            new(prefetch, Tweaker: tweaker as TweakMedia),
             Log);
     }
 
@@ -94,7 +95,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object link = default,
         object settings = default,
         NoParamOrder noParamOrder = default,
-        Func<ITweakImage, ITweakImage> tweak = default,
+        Func<ITweakMedia, ITweakMedia> tweak = default,
         object factor = default,
         object width = default,
         string imgAlt = default,
@@ -107,18 +108,19 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object recipe = default)
     {
         var prefetch = ResponsiveSpecsOfTarget.ExtractSpecs(link);
-        var finalSettings = Settings(settings ?? prefetch.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe);
-        ITweakImage tweaker = new TweakImage(
+        var finalSettings = SettingsInternal(settings ?? prefetch.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe);
+        ITweakMedia tweaker = new TweakMedia(
+            finalSettings,
             new(),
-            new(Class: imgClass, Alt: imgAlt, AltFallback: imgAltFallback, Attributes: TweakImage.CreateAttribDic(imgAttributes, nameof(imgAttributes))),
-            new(pictureClass, Attributes: TweakImage.CreateAttribDic(pictureAttributes, nameof(pictureAttributes))),
+            new(Class: imgClass, Alt: imgAlt, AltFallback: imgAltFallback, Attributes: TweakMedia.CreateAttribDic(imgAttributes, nameof(imgAttributes))),
+            new(pictureClass, Attributes: TweakMedia.CreateAttribDic(pictureAttributes, nameof(pictureAttributes))),
             ToolbarObj: toolbar
         );
         if (tweak != default) tweaker = tweak(tweaker);
         return new ResponsivePicture(
             this,
             PageService,
-            new(prefetch, Settings: finalSettings, Tweaker: tweaker as TweakImage),
+            new(prefetch, Tweaker: tweaker as TweakMedia),
             Log);
     }
 

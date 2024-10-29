@@ -44,8 +44,8 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     protected readonly ImgResizeLinker ImgLinker;
     internal readonly ImageService ImgService;
     protected readonly IPageService PageService;
-    internal readonly TweakImage Tweaker;
-    internal IResizeSettings Settings => Specs.Settings;
+    internal readonly TweakMedia Tweaker;
+    internal ResizeSettings Settings => Tweaker.Resize;
 
     private OneResize ThisResize => _thisResize.Get(() => { 
         var t = ImgLinker.ImageOnly(Target.Link.Url, Settings as ResizeSettings, Target.HasMdOrNull);
@@ -84,21 +84,26 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         if (Height != null) imgTag = imgTag.Height(Height);
 
         // Add lightbox if configured & enabled on the specific image...
-        IImageDecorator lightboxDeco = Tweaker is { VDec: not null }
-            ? Tweaker.VDec
-            : Target.ImgDecoratorOrNull?.LightboxIsEnabled == true
-                ? Target.ImgDecoratorOrNull
-                : Target.ImgDecoratorOrNull?.LightboxIsEnabled == null
-                    ? Target.FieldImgDecoratorOrNull
-                    : null;
-        if (lightboxDeco?.LightboxIsEnabled == true)
-            imgTag = AddLightbox(imgTag, lightboxDeco);
-        //var lightboxOnImg = Specs.ImageDecoratorOrNull?.LightboxIsEnabled;
-        //if (lightboxOnImg == true)
-        //    imgTag = AddLightbox(imgTag, Specs.ImageDecoratorOrNull);
-        //// ...or on the input field metadata
-        //else if (lightboxOnImg != false && Specs.FieldImgDecoratorOrNull?.LightboxIsEnabled == true)
-        //    imgTag = AddLightbox(imgTag, Specs.FieldImgDecoratorOrNull);
+        var enabled = Tweaker.VDec?.LightboxIsEnabled
+                      ?? Target.ImgDecoratorOrNull?.LightboxIsEnabled
+                      ?? Target.FieldImgDecoratorOrNull?.LightboxIsEnabled;
+        //IImageDecorator lightboxDeco = Tweaker is { VDec.LightboxIsEnabled: not null }
+        //    ? Tweaker.VDec
+        //    : Target.ImgDecoratorOrNull?.LightboxIsEnabled == true
+        //        ? Target.ImgDecoratorOrNull
+        //        : Target.ImgDecoratorOrNull?.LightboxIsEnabled == null
+        //            ? Target.FieldImgDecoratorOrNull
+        //            : null;
+        //if (lightboxDeco?.LightboxIsEnabled == true)
+        if (enabled == true)
+            imgTag = AddLightbox(
+                imgTag,
+                imageGroup: Tweaker.VDec?.LightboxGroup
+                            ?? Target.ImgDecoratorOrNull?.LightboxGroup
+                            ?? Target.FieldImgDecoratorOrNull?.LightboxGroup,
+                description: Tweaker.VDec?.DescriptionExtended
+                             ?? Target.ImgDecoratorOrNull?.DescriptionExtended
+            );
 
         // #alwaysOnImg
         //if (Params.Toolbar as string == "img")
@@ -111,17 +116,19 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     }, enabled: ImgService.Debug);
 
 
-
-    private Img AddLightbox(Img original, IImageDecorator decorator)
+    /// <summary>
+    /// Mark the image for lightbox use, and possibly give it the attributes like
+    /// - data-title="My caption"
+    /// - data-alt="My alt text"
+    /// - large image
+    /// </summary>
+    /// <param name="original"></param>
+    /// <param name="imageGroup"></param>
+    /// <param name="description"></param>
+    /// <returns></returns>
+    private Img AddLightbox(Img original, string imageGroup, string description)
     {
-        // 3. Mark the image for lightbox use, and possibly give it the attributes like
-        // - data-title="My caption"
-        // - data-alt="My alt text"
-        // - large image
-
-        // TODO: use constants for most scenarios
         var l = Log.Fn<Img>();
-        var imageGroup = decorator.LightboxGroup;
         var hasGroup = imageGroup.HasValue();
 
         // Mark image for lightbox use, different html for single image or group
@@ -129,12 +136,13 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
             ? original.Attr(LightboxHelpers.AttributeGroup, imageGroup)
             : original.Attr(LightboxHelpers.Attribute);
 
-        var lsSettings = (ResizeSettings)ImgService.Settings(LightboxHelpers.SettingsName);
+        var lsSettings = ImgService.SettingsInternal(LightboxHelpers.SettingsName);
         var lsUrl = ImgLinker.ImageOnly(Target.Link.Url, settings: lsSettings, Target.HasMdOrNull).Url;
         
         // Add Lightbox caption and src
-        var caption = Alt + decorator.DescriptionExtended;
-        img = img.Attr("data-src", lsUrl)
+        var caption = Alt + description;
+        img = img
+            .Attr("data-src", lsUrl)
             .Attr("data-caption", caption);
 
         // 2. Turn on lightbox feature of 2sxc
@@ -255,7 +263,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
                         .NullOrGetWith(imgDeco => new ImageDecorator(imgDeco, []));
 
                     // Try to add note
-                    var note = (Specs.Settings as ResizeSettings)?.ToHtmlInfo(md);
+                    var note = Settings?.ToHtmlInfo(md);
                     if (note.HasValue())
                         btn = btn.Note(note, format: "html", background: "#DFC2F2", delay: 1000);
 

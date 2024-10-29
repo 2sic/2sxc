@@ -16,11 +16,31 @@ partial class ImageService
         object aspectRatio = default,
         string parameters = default,
         object recipe = default
+    ) => SettingsInternal(settings: settings, noParamOrder: noParamOrder, factor: factor, width: width, height: height, quality: quality,
+            resizeMode: resizeMode, scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, recipe: recipe);
+
+    /// <summary>
+    /// Internal Get-Settings, with internal type.
+    /// </summary>
+    /// <returns>an internal settings record which could be further manipulated</returns>
+    internal ResizeSettings SettingsInternal(
+        object settings = default,
+        NoParamOrder noParamOrder = default,
+        object factor = default,
+        object width = default,
+        object height = default,
+        object quality = default,
+        string resizeMode = default,
+        string scaleMode = default,
+        string format = default,
+        object aspectRatio = default,
+        string parameters = default,
+        object recipe = default
     )
     {
-        settings = GetBestSettings(settings);
+        var realSettings = GetBestSettings(settings);
 
-        return ImgLinker.ResizeParamMerger.BuildResizeSettings(noParamOrder: noParamOrder, settings: settings, factor: factor,
+        return ImgLinker.ResizeParamMerger.BuildResizeSettings(noParamOrder: noParamOrder, settings: realSettings, factor: factor,
             width: width, height: height, quality: quality, resizeMode: resizeMode,
             scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, advanced: AdvancedSettings.Parse(recipe));
     }

@@ -10,29 +10,7 @@ namespace ToSic.Sxc.Images;
 /// Helper class to handle all kinds of parameters passed to a responsive tag
 /// </summary>
 [PrivateApi]
-internal record ResponsiveSpecs(ResponsiveSpecsOfTarget Target, IResizeSettings Settings, TweakImage Tweaker)
-{
-    ///// <summary>
-    ///// The only reliable object which knows about the url - should never be null
-    ///// </summary>
-    //public IHasLink Link => Target.HasLinkOrNull;
-
-    ///// <summary>
-    ///// The field used for this responsive output - can be null!
-    ///// </summary>
-    //public IField Field => Target.FieldOrNull;
-
-    //public IHasMetadata HasMetadataOrNull => Target.HasMdOrNull;
-
-    ///// <summary>
-    ///// Image Decorator of the current image.
-    ///// </summary>
-    //public ImageDecorator ImageDecoratorOrNull => Target.ImgDecoratorOrNull;
-
-
-    //public IResizeSettings Settings { get; init; }
-
-}
+internal record ResponsiveSpecs(ResponsiveSpecsOfTarget Target, TweakMedia Tweaker);
 
 /// <summary>
 /// Initial specs of a specific target - typically a field,
