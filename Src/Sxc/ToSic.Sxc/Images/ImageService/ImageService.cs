@@ -1,10 +1,8 @@
-﻿using ToSic.Eav.Generics;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
-using static System.StringComparer;
 
 namespace ToSic.Sxc.Images;
 
@@ -73,22 +71,20 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object toolbar = default,
         object recipe = null)
     {
-        var prefetch = ResponsiveSpecs.ExtractSpecs(link);
-
-        var tweaker = tweak?.Invoke(new TweakImage());
+        var prefetch = ResponsiveSpecsOfTarget.ExtractSpecs(link);
+        var finalSettings = Settings(settings ?? prefetch.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe);
+        ITweakImage tweaker = new TweakImage(
+            new(),
+            new(Class: imgClass, Alt: imgAlt, AltFallback: imgAltFallback, Attributes: TweakImage.CreateAttribDic(imgAttributes, nameof(imgAttributes))),
+            new(),
+            ToolbarObj: toolbar
+        );
+        if (tweak != default) tweaker = tweak(tweaker);
 
         return new ResponsiveImage(
             this,
             PageService,
-            new(prefetch, tweaker as TweakImage)
-            {
-                Settings = Settings(settings ?? prefetch.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe),
-                ImgAlt = imgAlt,
-                ImgAltFallback = imgAltFallback,
-                ImgClass = imgClass,
-                ImgAttributes = CreateAttribDic(imgAttributes),
-                Toolbar = toolbar,
-            },
+            new(prefetch, Settings: finalSettings, Tweaker: tweaker as TweakImage),
             Log);
     }
 
@@ -110,22 +106,19 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object toolbar = default,
         object recipe = default)
     {
-        var prefetch = ResponsiveSpecs.ExtractSpecs(link);
-        var tweaker = tweak?.Invoke(new TweakImage());
+        var prefetch = ResponsiveSpecsOfTarget.ExtractSpecs(link);
+        var finalSettings = Settings(settings ?? prefetch.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe);
+        ITweakImage tweaker = new TweakImage(
+            new(),
+            new(Class: imgClass, Alt: imgAlt, AltFallback: imgAltFallback, Attributes: TweakImage.CreateAttribDic(imgAttributes, nameof(imgAttributes))),
+            new(pictureClass, Attributes: TweakImage.CreateAttribDic(pictureAttributes, nameof(pictureAttributes))),
+            ToolbarObj: toolbar
+        );
+        if (tweak != default) tweaker = tweak(tweaker);
         return new ResponsivePicture(
             this,
             PageService,
-            new(prefetch, tweaker as TweakImage)
-            {
-                Settings = Settings(settings ?? prefetch.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe),
-                ImgAlt = imgAlt,
-                ImgAltFallback = imgAltFallback,
-                ImgClass = imgClass,
-                ImgAttributes = CreateAttribDic(imgAttributes),
-                PictureClass = pictureClass,
-                PictureAttributes = CreateAttribDic(pictureAttributes),
-                Toolbar = toolbar,
-            },
+            new(prefetch, Settings: finalSettings, Tweaker: tweaker as TweakImage),
             Log);
     }
 
@@ -142,15 +135,14 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
     }
     private bool _debug;
 
-    private IDictionary<string, object> CreateAttribDic(object attributes)
-        => attributes switch
-        {
-            null => null,
-            IDictionary<string, object> ok => ok.ToInvariant(),
-            IDictionary<string, string> strDic => strDic.ToDictionary(pair => pair.Key, pair => pair.Value as object,
-                InvariantCultureIgnoreCase),
-            _ => (attributes.IsAnonymous())
-                ? attributes.ToDicInvariantInsensitive()
-                : throw new ArgumentException("format unknown", nameof(attributes))
-        };
+    //private static IDictionary<string, object> CreateAttribDic(object attributes, string name)
+    //    => attributes switch
+    //    {
+    //        null => null,
+    //        IDictionary<string, object> ok => ok.ToInvariant(),
+    //        IDictionary<string, string> strDic => strDic.ToDictionary(pair => pair.Key, pair => pair.Value as object, InvariantCultureIgnoreCase),
+    //        _ => attributes.IsAnonymous()
+    //            ? attributes.ToDicInvariantInsensitive()
+    //            : throw new ArgumentException($@"format of {name} unknown: {name.GetType().Name}", nameof(attributes))
+    //    };
 }

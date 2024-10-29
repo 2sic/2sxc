@@ -101,7 +101,7 @@ internal class CmsServiceStringWysiwyg(CmsServiceImageExtractor imageExtractor)
             var imgProps = imageExtractor.ExtractImageProperties(originalImgTag, Field.Parent.Guid, Folder);
 
             // if we have a real file, pre-get the inner parameters as we would want to use it for resize-settings
-            var preparedImgParams = imgProps.File.NullOrGetWith(ResponsiveSpecs.ExtractSpecs);
+            var preparedImgParams = imgProps.File.NullOrGetWith(ResponsiveSpecsOfTarget.ExtractSpecs);
 
             // if the file itself specifies a resize settings, use it, otherwise use the default settings
             var imgSettings = preparedImgParams?.ImgDecoratorOrNull?.ResizeSettings ?? defaultImageSettings;

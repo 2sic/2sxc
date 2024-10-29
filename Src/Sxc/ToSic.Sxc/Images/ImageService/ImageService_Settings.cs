@@ -1,6 +1,4 @@
-﻿using ToSic.Eav;
-
-namespace ToSic.Sxc.Images;
+﻿namespace ToSic.Sxc.Images;
 
 partial class ImageService
 {

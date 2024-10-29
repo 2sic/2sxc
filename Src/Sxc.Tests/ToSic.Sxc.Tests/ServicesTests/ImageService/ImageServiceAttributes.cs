@@ -10,32 +10,31 @@ namespace ToSic.Sxc.Tests.ServicesTests
     [TestClass]
     public class ImageServiceAttributes: TestBaseSxcDb
     {
-        private class TestCase
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Name">Test name</param>
+        /// <param name="Expected">Expected result</param>
+        /// <param name="OnCall">Parameter to use when calling .Picture() or .Img() </param>
+        /// <param name="OnRecipe">Parameter to use when calling with recipe...</param>
+        /// <param name="useRecipe"></param>
+        private record TestCase(string Name, string Expected, string OnCall, string OnRecipe = default, bool useRecipe = false)
         {
-            public string Name, Expected, OnCall, OnRecipe;
-            public bool UseRecipe;
-            public TestCase(string name, string expected, string onCall, string onRecipe = default, bool useRecipe = false)
-            {
-                Name = name;
-                Expected = expected;
-                OnCall = onCall;
-                OnRecipe = onRecipe;
-                UseRecipe = useRecipe || onRecipe != null;
-            }
+            public readonly bool UseRecipe = useRecipe || OnRecipe != null;
 
             public override string ToString() => $"Test: '{Name}";
         }
 
-        private static List<TestCase> TestCasesClass = new()
-        {
+        private static readonly List<TestCase> TestCasesClass =
+        [
             new("Call Only", "class='img-class'", "img-class"),
             new("Call Only multiple", "class='img-class img-class2'", "img-class img-class2"),
             new("Call only, recipe null", "class='img-class'", "img-class", useRecipe: true),
-            new("Call only, recipe empty", "class='img-class'", "img-class", useRecipe: true, onRecipe: ""),
-            new("recipe only", "class='rec-class'", null, onRecipe: "rec-class"),
+            new("Call only, recipe empty", "class='img-class'", "img-class", useRecipe: true, OnRecipe: ""),
+            new("recipe only", "class='rec-class'", null, OnRecipe: "rec-class"),
             new("Call and recipe", "class='img-class rec-class'", "img-class", useRecipe: true,
-                onRecipe: "rec-class"),
-        };
+                OnRecipe: "rec-class")
+        ];
 
         private static IEnumerable<object[]> TestDataImgClass { get; } = TestCasesClass.ToTestEnum();
 
@@ -45,9 +44,16 @@ namespace ToSic.Sxc.Tests.ServicesTests
         {
             var test = (TestCase)testObj;
             var recDic = new Dictionary<string, object> { { "class", test.OnRecipe } };
-            var recipe = test.UseRecipe ? this.ImgSvc().Recipe(null, attributes: recDic) : null;
+            var recipe = test.UseRecipe
+                ? this.ImgSvc().Recipe(null, attributes: recDic)
+                : null;
+            // Classic API
             var pic = this.ImgSvc().Picture("dummy.jpg", imgClass: test.OnCall, recipe: recipe);
             IsTrue(pic.Img.ToString().Contains(test.Expected), $"{test}: {pic.Img}");
+
+            // New Tweak API
+            var picTweak = this.ImgSvc().Picture("dummy.jpg", tweak: t => t.ImgClass(test.OnCall), recipe: recipe);
+            AreEqual(pic.Img.ToString(), picTweak.Img.ToString(), $"Should be identical for tweak {test}");
         }
 
         private static IEnumerable<object[]> TestDataPicClass { get; } = TestCasesClass.Where(t => !t.UseRecipe).ToTestEnum();
@@ -59,20 +65,25 @@ namespace ToSic.Sxc.Tests.ServicesTests
             var pic = this.ImgSvc().Picture("dummy.jpg", pictureClass: test.OnCall);
             IsTrue(pic.ToString().Contains(test.Expected), $"{test}: {pic.Picture}");
             IsFalse(pic.Img.ToString().Contains(test.Expected), $"{test}: {pic.Img}");
+
+            // New Tweak API
+            var picTweak = this.ImgSvc().Picture("dummy.jpg", tweak: t => t.PictureClass(test.OnCall));
+            AreEqual(pic.ToString(), picTweak.ToString(), $"Should be identical for tweak {test}");
         }
 
 
-        private static List<TestCase> TestCasesStyles = new()
-        {
+        private static readonly List<TestCase> TestCasesStyles =
+        [
             new("Call Only", "style='img-style: 50px'", "img-style: 50px"),
             new("Call Only multiple", "style='img-style: 50px; width: 10px'", "img-style: 50px; width: 10px"),
             new("Call only, recipe null", "style='img-style: 50px'", "img-style: 50px", useRecipe: true),
-            new("Call only, recipe empty", "style='img-style: 50px'", "img-style: 50px", useRecipe: true, onRecipe: ""),
-            new("recipe only", "style='rec-style: 20px'", null, onRecipe: "rec-style: 20px"),
+            new("Call only, recipe empty", "style='img-style: 50px'", "img-style: 50px", useRecipe: true, OnRecipe: ""),
+            new("recipe only", "style='rec-style: 20px'", null, OnRecipe: "rec-style: 20px"),
             new("Call and recipe", "style='img-style: 50px;rec-style: 20px'", "img-style: 50px",
                 useRecipe: true,
-                onRecipe: "rec-style: 20px"),
-        };
+                OnRecipe: "rec-style: 20px")
+
+        ];
 
         private static IEnumerable<object[]> TestDataImgStyle { get; } = TestCasesStyles.ToTestEnum();
 
@@ -87,6 +98,10 @@ namespace ToSic.Sxc.Tests.ServicesTests
             var pic = this.ImgSvc().Picture("dummy.jpg", imgAttributes: callDic, recipe: recipe);
             // IsTrue(pic.ToString().Contains(expected), name + ": " + pic);
             IsTrue(pic.Img.ToString().Contains(test.Expected), $"{test} (expected: {test.Expected}): {pic.Img}");
+
+            // New Tweak API
+            var picTweak = this.ImgSvc().Picture("dummy.jpg", tweak: t => t.ImgAttributes(callDic), recipe: recipe);
+            AreEqual(pic.ToString(), picTweak.ToString(), $"Should be identical for tweak {test}");
         }
 
         private static IEnumerable<object[]> TestDataPicStyle { get; } = TestCasesStyles.Where(t => !t.UseRecipe).ToTestEnum();
@@ -101,15 +116,23 @@ namespace ToSic.Sxc.Tests.ServicesTests
             var pic = this.ImgSvc().Picture("dummy.jpg", pictureAttributes: callDic);
             IsTrue(pic.ToString().Contains(test.Expected), $"{test} (expected '{test.Expected}'): {pic.Picture}");
             IsFalse(pic.Img.ToString().Contains(test.Expected), $"{test} (expected '{test.Expected}'): {pic.Img}");
+
+            // New Tweak API
+            var picTweak = this.ImgSvc().Picture("dummy.jpg", tweak: t => t.PictureAttributes(callDic));
+            AreEqual(pic.ToString(), picTweak.ToString(), $"Should be identical for tweak {test}");
         }
 
 
         private const string ImageAttributesStyleValue = "some: 50px";
         private void ImageAttributes(object callDic)
         {
-            var expected = "style='some: 50px";
+            const string expected = "style='some: 50px";
             var pic = this.ImgSvc().Picture("dummy.jpg", imgAttributes: callDic);
             IsTrue(pic.Img.ToString().Contains(expected), $"expected: {expected}: {pic.Img}");
+
+            // New Tweak API
+            var picTweak = this.ImgSvc().Picture("dummy.jpg", tweak: t => t.ImgAttributes(callDic));
+            AreEqual(pic.ToString(), picTweak.ToString(), $"Should be identical for tweak {callDic}");
         }
 
         [TestMethod]

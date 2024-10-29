@@ -10,48 +10,54 @@ namespace ToSic.Sxc.Images;
 /// Helper class to handle all kinds of parameters passed to a responsive tag
 /// </summary>
 [PrivateApi]
-internal record ResponsiveSpecs(ResponsiveSpecsOfTarget OfTarget, TweakImage Tweaker)
+internal record ResponsiveSpecs(ResponsiveSpecsOfTarget Target, IResizeSettings Settings, TweakImage Tweaker)
 {
-    /// <summary>
-    /// The only reliable object which knows about the url - can never be null
-    /// </summary>
-    public IHasLink Link => OfTarget.HasLinkOrNull;
-
-    /// <summary>
-    /// The field used for this responsive output - can be null!
-    /// </summary>
-    public IField Field => OfTarget.FieldOrNull;
-
-    public IHasMetadata HasMetadataOrNull => OfTarget.HasMdOrNull;
-
-    /// <summary>
-    /// Image Decorator of the current image.
-    /// </summary>
-    public ImageDecorator ImageDecoratorOrNull => OfTarget.ImgDecoratorOrNull;
+    ///// <summary>
+    ///// The only reliable object which knows about the url - should never be null
+    ///// </summary>
+    //public IHasLink Link => Target.HasLinkOrNull;
 
     ///// <summary>
-    ///// Image Decorator of the field in which the image is located.
+    ///// The field used for this responsive output - can be null!
     ///// </summary>
-    //public ImageDecorator FieldImgDecoratorOrNull => OfTarget.FieldImgDecoratorOrNull;
+    //public IField Field => Target.FieldOrNull;
 
-    public IImageDecorator LightboxDecorator => Tweaker is { VDec: not null }
-        ? Tweaker.VDec
-        : ImageDecoratorOrNull?.LightboxIsEnabled == true
-            ? ImageDecoratorOrNull
-            : ImageDecoratorOrNull?.LightboxIsEnabled == null
-                ? OfTarget.FieldImgDecoratorOrNull
-                : null;
+    //public IHasMetadata HasMetadataOrNull => Target.HasMdOrNull;
 
-    public IResizeSettings Settings { get; init; }
-    public string ImgAlt { get; init; }
-    public string ImgAltFallback { get; init; }
-    public string ImgClass { get; init; }
-    public IDictionary<string, object> ImgAttributes { get; init; }
-    public IDictionary<string, object> PictureAttributes { get; init; }
+    ///// <summary>
+    ///// Image Decorator of the current image.
+    ///// </summary>
+    //public ImageDecorator ImageDecoratorOrNull => Target.ImgDecoratorOrNull;
 
-    public string PictureClass { get; init; }
 
-    public object Toolbar { get; init; }
+    //public IResizeSettings Settings { get; init; }
+
+}
+
+/// <summary>
+/// Initial specs of a specific target - typically a field,
+/// extracted / prepared for responsive image processing.
+/// </summary>
+/// <param name="FieldOrNull">The field used for this responsive output - can be null!</param>
+/// <param name="HasMdOrNull"></param>
+/// <param name="ImgDecoratorOrNull">Image Decorator of the current image.</param>
+/// <param name="HasLinkOrNull"></param>
+/// <param name="FieldImgDecoratorOrNull"></param>
+internal record ResponsiveSpecsOfTarget(
+    IField FieldOrNull,
+    IHasMetadata HasMdOrNull,
+    ImageDecorator ImgDecoratorOrNull,
+    IHasLink HasLinkOrNull,
+    ImageDecorator FieldImgDecoratorOrNull
+)
+{
+    internal string ResizeSettingsOrNull => ImgDecoratorOrNull?.ResizeSettings?.NullIfNoValue()
+                                            ?? FieldImgDecoratorOrNull?.ResizeSettings?.NullIfNoValue();
+
+    /// <summary>
+    /// The only reliable object which knows about the url - should never be null
+    /// </summary>
+    public IHasLink Link => HasLinkOrNull;
 
     internal static ResponsiveSpecsOfTarget ExtractSpecs(object target)
     {
@@ -80,26 +86,4 @@ internal record ResponsiveSpecs(ResponsiveSpecsOfTarget OfTarget, TweakImage Twe
 
         return new(field, mdProvider, imgDecorator, link, inputImgDecorator);
     }
-
-}
-
-/// <summary>
-/// Initial specs of a specific target - typically a field,
-/// extracted / prepared for responsive image processing.
-/// </summary>
-/// <param name="FieldOrNull"></param>
-/// <param name="HasMdOrNull"></param>
-/// <param name="ImgDecoratorOrNull"></param>
-/// <param name="HasLinkOrNull"></param>
-/// <param name="FieldImgDecoratorOrNull"></param>
-internal record ResponsiveSpecsOfTarget(
-    IField FieldOrNull,
-    IHasMetadata HasMdOrNull,
-    ImageDecorator ImgDecoratorOrNull,
-    IHasLink HasLinkOrNull,
-    ImageDecorator FieldImgDecoratorOrNull
-)
-{
-    internal string ResizeSettingsOrNull => ImgDecoratorOrNull?.ResizeSettings?.NullIfNoValue()
-                                            ?? FieldImgDecoratorOrNull?.ResizeSettings?.NullIfNoValue();
 }
