@@ -71,7 +71,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         // Add all kind of attributes if specified
         var imgSpecs = Tweaker.Img;
         imgTag = AddAttributes(imgTag, imgSpecs.Attributes);
-        imgTag = AddAttributes(imgTag, ThisResize.Recipe?.Attributes);
+        imgTag = AddAttributes(imgTag, ThisResize.Recipe?.Attributes, imgSpecs.Attributes?.Keys);
 
         // Only add Alt, Class etc. if they were really specified / known
         if (Alt != null) imgTag = imgTag.Alt(Alt);
@@ -148,14 +148,16 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     }
 
     [PrivateApi]
-    protected TImg AddAttributes<TImg>(TImg imgTag, IDictionary<string, object> addAttributes) where TImg : Tag<TImg>
+    protected TImg AddAttributes<TImg>(TImg imgTag, IDictionary<string, object> addAttributes, IEnumerable<string> skip = default) where TImg : Tag<TImg>
     {
         var l = Log.Fn<TImg>();
         if (addAttributes == null || addAttributes.Count == 0)
             return l.Return(imgTag, "nothing to add");
 
+        string[] exclude = [..Recipe.SpecialProperties, ..skip ?? [] ];
+
         var dic = addAttributes
-            .Where(pair => !Recipe.SpecialProperties.Contains(pair.Key, comparer: InvariantCultureIgnoreCase))
+            .Where(pair => !exclude.Contains(pair.Key, comparer: InvariantCultureIgnoreCase))
             .ToDictionary(p => p.Key, p => p.Value);
         if (dic.Count == 0)
             return l.Return(imgTag, "only special props");
