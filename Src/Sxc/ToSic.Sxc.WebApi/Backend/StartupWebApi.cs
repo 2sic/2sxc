@@ -109,6 +109,7 @@ public static class StartupWebApi
         services.TryAddTransient<InstallControllerReal>();
         services.TryAddTransient<BlockControllerReal>();
         services.TryAddTransient<CodeControllerReal>();
+        services.TryAddTransient<DataControllerReal>();
 
         services.AddLoadSettingsProviders();
 
