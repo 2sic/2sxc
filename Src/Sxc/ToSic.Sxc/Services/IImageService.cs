@@ -1,5 +1,4 @@
-﻿using ToSic.Eav;
-using ToSic.Sxc.Adam;
+﻿using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Internal;
@@ -43,6 +42,11 @@ public interface IImageService: ICanDebug
     /// - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings.
     /// </param>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="tweak">
+    /// Tweak API to configure everything (new v18.03).
+    /// This is recommended above using parameter names and all newer parameters will only be available on this.
+    /// Note that tweak will be executed after applying other parameters.
+    /// </param>
     /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Like 0.5. </param>
     /// <param name="width">Optional width parameter. Cannot be used if `factor` is set. Usually takes the default from the `settings`.</param>
     /// <param name="height">Optional height parameter. Can only be 0 if `factor` is set, no not specify a height. Usually takes the default from the `settings`.</param>
@@ -58,11 +62,13 @@ public interface IImageService: ICanDebug
     /// <param name="recipe">WIP - not ready yet</param>
     /// <returns>A settings object which has all the parameters as configured</returns>
     /// <remarks>
-    /// History: Added in 2sxc 13.03
+    /// * Added in v13.03
+    /// * Tweak added in v18.03
     /// </remarks>
     IResizeSettings Settings(
         object settings = default,
         NoParamOrder noParamOrder = default,
+        Func<ITweakResize, ITweakResize> tweak = default,
         object factor = default,
         object width = default,
         object height = default,
@@ -143,6 +149,7 @@ public interface IImageService: ICanDebug
     /// <param name="tweak">
     /// Tweak API to configure everything (new v18.03).
     /// This is recommended above using parameter names and all newer parameters will only be available on this.
+    /// Note that tweak will be executed after applying other parameters.
     /// </param>
     /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Like 0.5. </param>
     /// <param name="width">An optional, fixed width of the image</param>
@@ -215,6 +222,7 @@ public interface IImageService: ICanDebug
     /// <param name="tweak">
     /// Tweak API to configure everything (new v18.03).
     /// This is recommended above using parameter names and all newer parameters will only be available on this.
+    /// Note that tweak will be executed after applying other parameters.
     /// </param>
     /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Like 0.5. </param>
     /// <param name="width">An optional, fixed width of the image</param>

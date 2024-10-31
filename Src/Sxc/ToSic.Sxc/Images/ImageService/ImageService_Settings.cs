@@ -8,6 +8,7 @@ partial class ImageService
     public IResizeSettings Settings(
         object settings = default,
         NoParamOrder noParamOrder = default,
+        Func<ITweakResize, ITweakResize> tweak = default,
         object factor = default,
         object width = default,
         object height = default,
@@ -18,8 +19,10 @@ partial class ImageService
         object aspectRatio = default,
         string parameters = default,
         object recipe = default
-    ) => SettingsInternal(settings: settings, noParamOrder: noParamOrder, factor: factor, width: width, height: height, quality: quality,
-            resizeMode: resizeMode, scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, recipe: recipe);
+    ) => SettingsInternal(settings: settings, noParamOrder: noParamOrder, tweak: tweak,
+        factor: factor, width: width, height: height, quality: quality,
+        resizeMode: resizeMode, scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
+        parameters: parameters, recipe: recipe);
 
     /// <summary>
     /// Internal Get-Settings, with internal type.
@@ -28,6 +31,7 @@ partial class ImageService
     internal ResizeSettings SettingsInternal(
         object settings = default,
         NoParamOrder noParamOrder = default,
+        Func<ITweakResize, ITweakResize> tweak = default,
         object factor = default,
         object width = default,
         object height = default,
@@ -42,9 +46,13 @@ partial class ImageService
     {
         var realSettings = GetBestSettings(settings);
 
-        return ImgLinker.ResizeParamMerger.BuildResizeSettings(noParamOrder: noParamOrder, settings: realSettings, factor: factor,
+        var almostFinal = ImgLinker.ResizeParamMerger.BuildResizeSettings(noParamOrder: noParamOrder, settings: realSettings, factor: factor,
             width: width, height: height, quality: quality, resizeMode: resizeMode,
             scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, advanced: AdvancedSettings.Parse(recipe));
+
+        return tweak != null 
+            ? (tweak?.Invoke(new TweakResize(almostFinal)) as TweakResize)?.Settings ?? almostFinal
+            : almostFinal;
     }
 
     #region Settings Handling

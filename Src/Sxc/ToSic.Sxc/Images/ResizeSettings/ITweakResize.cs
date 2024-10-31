@@ -46,7 +46,7 @@ public interface ITweakResize
     /// <summary>
     /// Set the compression quality
     /// </summary>
-    public ITweakResize Quality(int quality);
+    public ITweakResize Quality(double quality);
 
     /// <summary>
     /// Set the resize mode, like 'crop', 'max', etc.

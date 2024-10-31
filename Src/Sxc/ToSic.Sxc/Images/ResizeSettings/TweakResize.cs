@@ -26,8 +26,11 @@ internal record TweakResize(ResizeSettings Settings): ITweakResize
         return a == null ? this : new(Settings: Settings with { AspectRatio = a.Value });
     }
 
-    public ITweakResize Quality(int quality)
-    => new TweakResize(Settings: Settings with { Quality = quality });
+    public ITweakResize Quality(double quality)
+    {
+        var q = ResizeParams.QualityOrNull(quality);
+        return q == null ? this : new(Settings: Settings with { Quality = q.Value });
+    }
 
     public ITweakResize ResizeMode(string resizeMode)
         => new TweakResize(Settings: Settings with { ResizeMode = resizeMode });
