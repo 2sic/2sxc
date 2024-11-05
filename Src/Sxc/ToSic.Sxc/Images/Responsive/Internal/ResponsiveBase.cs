@@ -91,8 +91,8 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         if (enabled == true)
             imgTag = AddLightbox(
                 imgTag,
-                imageGroup: Tweaker.VDec?.LightboxGroup
-                            ?? Target.ImgDecoratorOrNull?.LightboxGroup
+                imageGroup: Tweaker.VDec?.LightboxGroup.NullIfNoValue()
+                            ?? Target.ImgDecoratorOrNull?.LightboxGroup.NullIfNoValue()
                             ?? Target.FieldImgDecoratorOrNull?.LightboxGroup,
                 description: Tweaker.VDec?.DescriptionExtended
                              ?? Target.ImgDecoratorOrNull?.DescriptionExtended
