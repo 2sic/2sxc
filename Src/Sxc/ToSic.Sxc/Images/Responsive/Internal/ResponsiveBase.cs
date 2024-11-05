@@ -227,8 +227,12 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         }
 
         // If we're creating an image for a string value, it won't have a field or parent.
-        if (Target.FieldOrNull?.Parent == null || Target.HasMdOrNull == null)
-            return l.ReturnNull("no field or no metadata");
+        if (Target.FieldOrNull?.Parent == null)
+            return l.ReturnNull("no field");
+
+        // If the HasMd is null, or the Metadata is null (e.g. image from another website)
+        if (Target.HasMdOrNull?.Metadata == null)
+            return l.ReturnNull("no metadata");
 
         // Determine if this is an "own" adam file, because only field-owned files should allow config
         var isInSameEntity = Security.PathIsInItemAdam(Target.FieldOrNull.Parent.Guid, "", Src);
@@ -253,7 +257,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
                     btn = btn.Tooltip($"{ToolbarConstants.ToolbarLabelPrefix}MetadataImage");
 
                     // Check if we have special resize metadata
-                    var md = Target.HasMdOrNull?.Metadata
+                    var md = Target.HasMdOrNull.Metadata
                         .FirstOrDefaultOfType(ImageDecorator.NiceTypeName)
                         .NullOrGetWith(imgDeco => new ImageDecorator(imgDeco, []));
 
@@ -268,7 +272,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
                 }); // fallback, in case conversion fails unexpectedly
 
                 // Add note for Copyright - if there is Metadata for that
-                Target.HasMdOrNull?.Metadata
+                Target.HasMdOrNull.Metadata
                     .OfType(CopyrightDecorator.NiceTypeName)
                     .FirstOrDefault()
                     .DoIfNotNull(cpEntity =>
