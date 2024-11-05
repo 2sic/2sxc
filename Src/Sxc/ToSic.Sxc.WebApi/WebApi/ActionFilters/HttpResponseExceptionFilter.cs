@@ -3,7 +3,6 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.WebApi.ActionFilters;
 /// <summary>

@@ -36,16 +36,16 @@ public partial class AssetTemplates() : ServiceBase("SxcAss.Templt")
 
     public List<TemplateInfo> GetTemplates() => _templates ??=
     [
-        RazorHybrid,
         RazorTyped,
+        RazorHybrid,
         RazorDnn,
-        // DnnCsCode,
-        CsHybrid,
         CsTyped,
-        ApiHybrid,
+        CsHybrid,
+        // DnnCsCode,
         ApiTyped,
-        DataSourceHybrid,
+        ApiHybrid,
         // DataSourceTyped,
+        DataSourceHybrid,
         Token,
         DnnSearch,
         Markdown,
@@ -54,15 +54,6 @@ public partial class AssetTemplates() : ServiceBase("SxcAss.Templt")
     ];
     private static List<TemplateInfo> _templates;
 
-    // TODO: @STV This should probably become obsolete once you change the objects above
-    public string GetTemplate(string key) => GetTemplateInfo(key).Body;
-
-    // TODO: @STV This should become obsolete once you change the objects above
-    private TemplateInfo GetTemplateInfo(string key) => GetTemplates()
-        .FirstOrDefault(t => t.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase));
-
-
     public const string CsApiTemplateControllerName = "PleaseRenameController";
     public const string CsDataSourceName = "PleaseRename";
-
 }

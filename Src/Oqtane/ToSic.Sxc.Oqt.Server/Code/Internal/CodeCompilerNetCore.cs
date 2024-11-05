@@ -3,8 +3,6 @@ using System.IO;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Oqt.Server.Code.Internal;

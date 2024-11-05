@@ -24,13 +24,6 @@ namespace ToSic.Sxc.Services;
 /// </remarks>
 [PublicApi]
 public interface ILinkService: INeedsCodeApiService, ICanDebug
-    // 2024-01-11 2dm #RemoveILinkHelper - removed, probably never in use, but it could be
-    // Preserve till 2024-07-01 (Start Q3), if not used, remove
-//#if NETFRAMEWORK
-//#pragma warning disable CS0618
-//        , ILinkHelper
-//#pragma warning restore CS0618
-//#endif
 {
     /// <summary>
     /// returns a link to the current page with parameters resolved in a way that DNN wants it
@@ -95,7 +88,7 @@ public interface ILinkService: INeedsCodeApiService, ICanDebug
     /// - Or a specially prepared <see cref="Images.IResizeSettings"/> object containing all settings.
     ///   If this is provided, only `factor` will still be respected, all other settings like `width` on this command will be ignored.
     /// </param>
-    /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5.</param>
+    /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Like 0.5.</param>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="field">WIP v13.04 - not final yet</param>
     /// <param name="width">Optional width parameter. Usually takes the default from the `settings`.</param>

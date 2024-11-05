@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Code.Internal.HotBuild
             l.A("hash string computed");
 
             memoryCacheService.SetNew(cacheKey, files, p => p
-                .SetSlidingExpiration(new(0, CacheMinutes, 0))
+                .SetSlidingExpiration(CacheMinutes * 60)
                 .WatchCacheKeys(new[] { SourceFilesInFolderCacheKey(folderPath) }));
 
             return l.ReturnAsOk(computeHashStringForFiles);
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Code.Internal.HotBuild
             l.A("sorted files");
 
             memoryCacheService.SetNew(cacheKey, files, p => p
-                .SetSlidingExpiration(new(0, CacheMinutes, 0))
+                .SetSlidingExpiration(CacheMinutes * 60)
                 .WatchFolders(new Dictionary<string, bool> { { fullPath, UseSubfolders } }));
 
             return l.ReturnAsOk(files);

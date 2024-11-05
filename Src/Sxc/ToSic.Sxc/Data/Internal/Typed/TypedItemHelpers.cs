@@ -31,6 +31,7 @@ internal class TypedItemHelpers
         ITypedItem item,
         string name,
         NoParamOrder noParamOrder,
+        Func<ITweakMedia, ITweakMedia> tweak,
         object settings,
         object factor,
         object width,
@@ -48,7 +49,7 @@ internal class TypedItemHelpers
         var field = item.Field(name, required: true);
         return field.Url.IsEmptyOrWs()
             ? null
-            : kit.Image.Picture(field, settings: settings, factor: factor, width: width,
+            : kit.Image.Picture(field, tweak: tweak, settings: settings, factor: factor, width: width,
                 imgAlt: imgAlt, imgAltFallback: imgAltFallback, 
                 imgClass: imgClass, imgAttributes: imgAttributes, pictureClass: pictureClass, pictureAttributes: pictureAttributes,
                 toolbar: toolbar, recipe: recipe);
@@ -59,6 +60,7 @@ internal class TypedItemHelpers
         ITypedItem item,
         string name,
         NoParamOrder noParamOrder,
+        Func<ITweakMedia, ITweakMedia> tweak,
         object settings,
         object factor,
         object width,
@@ -74,7 +76,7 @@ internal class TypedItemHelpers
         var field = item.Field(name, required: true);
         return field.Url.IsEmptyOrWs()
             ? null
-            : kit.Image.Img(field, settings: settings, noParamOrder: noParamOrder, factor: factor, width: width,
+            : kit.Image.Img(field, tweak: tweak, settings: settings, noParamOrder: noParamOrder, factor: factor, width: width,
                 imgAlt: imgAlt, imgAltFallback: imgAltFallback,
                 imgClass: imgClass, imgAttributes: imgAttributes,
                 toolbar: toolbar, recipe: recipe);

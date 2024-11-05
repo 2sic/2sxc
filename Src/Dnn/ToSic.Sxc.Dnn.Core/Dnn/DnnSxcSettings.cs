@@ -16,6 +16,22 @@ internal class DnnSxcSettings
 
     public const string DnnAdminRoleDefaultName = "Administrators";
 
+    /// <summary>
+    /// Content Editors Advanced Role Name.
+    /// </summary>
+    /// <remarks>
+    /// AdvancedPermissionProvider in DNN v10
+    /// </remarks>
+    public const string DnnContentEditors = "Content Editors";
+
+    /// <summary>
+    /// Content Managers Advanced Role Name.
+    /// </summary>
+    /// <remarks>
+    /// AdvancedPermissionProvider in DNN v10
+    /// </remarks>
+    public const string DnnContentManagers = "Content Managers";
+
     public static class Installation
     {
         // This list is just used to run code-upgrades in DNN
@@ -39,6 +55,6 @@ internal class DnnSxcSettings
         // this is the last version which must run server-side change-code
         // it's not sql-code, as the SqlDataProvider files are imported by DNN, not by our code
         internal const string LastVersionWithServerChanges = "15.02.00";
-        internal const string LastVersionWithDnnDbChanges = "16.07.01"; // just fyi, not used anywhere
+        internal const string LastVersionWithDnnDbChanges = "18.03.00"; // just fyi, not used anywhere
     }
 }

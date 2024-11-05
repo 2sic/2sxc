@@ -85,12 +85,10 @@ public class ContentGroupList(
                 // fix https://github.com/2sic/2sxc/issues/2943 
                 if (!parent.Children(fieldPair.First()).Any() && !targetIsContentBlock) indexNullAddToEnd = true;
                     
-                fieldList
-                    /*CmsManager.Entities*/.FieldListAdd(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft, indexNullAddToEnd, targetIsContentBlock);
+                fieldList.FieldListAdd(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft, indexNullAddToEnd, targetIsContentBlock);
             }
             else
-                fieldList
-                    /*CmsManager.Entities*/.FieldListReplaceIfModified(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft);
+                fieldList.FieldListReplaceIfModified(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft);
 
         }
 

@@ -1842,7 +1842,7 @@
                 "Metadata": [
                   {
                     "Id": 183822,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "dcc4368d-49f3-4907-ab25-b1e245547365",
                     "Type": {
                       "Id": "@All",
@@ -1864,7 +1864,7 @@
                           "de-de": "Lightbox / PopUp Einstellungen"
                         },
                         "Notes": {
-                          "en-us": ""
+                          "en-us": "<p>For help, see&nbsp;<a href=\"https://go.2sxc.org/image-lightbox\">docs</a>.</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -1903,7 +1903,7 @@
                   },
                   {
                     "Id": 183825,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "4e3ec7ee-5211-41de-b921-6f520f1f8d2c",
                     "Type": {
                       "Id": "@empty-default",

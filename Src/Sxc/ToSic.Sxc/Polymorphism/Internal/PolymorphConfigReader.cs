@@ -19,7 +19,7 @@ public class PolymorphConfigReader(LazySvc<ServiceSwitcher<IPolymorphismResolver
     private int _appId;
 
     /// <summary>
-    /// Helper to either use the edition set by the view (eg. in preview mode)
+    /// Helper to either use the edition set by the view (like in preview mode)
     /// or to use this same PolymorphConfigReader to figure out the edition.
     /// Since the reader should only be created if necessary, it's handed in as a function.
     /// </summary>

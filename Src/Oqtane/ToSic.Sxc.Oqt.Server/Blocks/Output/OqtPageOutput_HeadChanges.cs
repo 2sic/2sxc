@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Oqt.Shared.Models;
+﻿using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output;
 

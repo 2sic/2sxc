@@ -6,7 +6,7 @@ public partial interface ITyped
 {
     /// <summary>
     /// Return a value as a raw HTML string for using inside an attribute.
-    /// Usage eg. `title='@item.Attribute("Title")'`
+    /// Usage like `title='@item.Attribute("Title")'`
     /// It will do a few things such as:
     /// 
     /// 1. Ensure dates are in the ISO format

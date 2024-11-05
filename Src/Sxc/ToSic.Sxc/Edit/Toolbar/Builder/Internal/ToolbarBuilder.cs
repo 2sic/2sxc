@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Internal;
 /// Reason is that as soon as we run something like `Kit.Toolbar.Empty(Content)` in a razor file,
 /// the result is dynamic - so the compiler evaluates the final object at runtime.
 /// If the ToolbarBuilder is internal, things start to fail.
-/// eg. AsTag() will fail, saying that RawHtmlString doesn't have that
+/// like AsTag() will fail, saying that RawHtmlString doesn't have that
 /// So for now :( it must remain public.
 /// </remarks>
 [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]

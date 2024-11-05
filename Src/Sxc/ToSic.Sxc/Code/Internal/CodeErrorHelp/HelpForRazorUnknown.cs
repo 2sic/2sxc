@@ -14,10 +14,10 @@ internal class HelpForRazorCompileErrors
     internal static CodeHelp UnknownNamespace = new(name: "unknown-ns",
         detect: "error CS0234: The type or namespace name",
         uiMessage: @"
-Your code seems to have an invalid namespace - eg as a '@using xxx' or '@inherits xxx'. Check and fix your code.
+Your code seems to have an invalid namespace - like as a '@using xxx' or '@inherits xxx'. Check and fix your code.
 ",
         detailsHtml: @"
-Your code seems to have an invalid namespace - eg as a <code>@using xxx</code> or <code>@inherits xxx</code>. Check and fix your code.
+Your code seems to have an invalid namespace - like as a <code>@using xxx</code> or <code>@inherits xxx</code>. Check and fix your code.
 ");
 
 

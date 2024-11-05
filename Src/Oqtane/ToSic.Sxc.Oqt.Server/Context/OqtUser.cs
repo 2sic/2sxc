@@ -3,8 +3,6 @@ using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
@@ -60,6 +58,8 @@ internal class OqtUser(
     private readonly GetOnce<bool> _isSiteAdmin = new();
 
     public bool IsContentAdmin => IsSiteAdmin;
+
+    public bool IsContentEditor => IsSiteAdmin;
 
     public bool IsSiteDeveloper => IsSystemAdmin;
 

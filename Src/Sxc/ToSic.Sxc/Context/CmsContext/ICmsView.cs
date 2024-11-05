@@ -82,8 +82,8 @@ public interface ICmsView: IHasMetadata
     ///
     /// This is different from the `App.Folder`, because it will also contain the edition (if there is an edition)
     /// 
-    /// 🪒 Use in Razor: `CmsContext.View.Folder` - eg `CmsContext.View.Folder.Url`  
-    /// 🪒 Use in Typed Razor: `MyView.Edition` - eg `MyView.Folder.Url`
+    /// 🪒 Use in Razor: `CmsContext.View.Folder` - like `CmsContext.View.Folder.Url`  
+    /// 🪒 Use in Typed Razor: `MyView.Edition` - like `MyView.Folder.Url`
     /// </summary>
     /// <remarks>
     /// Added in v16.04

@@ -55,7 +55,7 @@ internal class LoadSettingsForPickerSources() : LoadSettingsProviderBase($"{SxcL
 
         // Look up the types in the app-state
         var typesToEnableCreate = createTypes
-            // Do distinct first, no eliminate duplicate keys - eg. when there are many pickers with the same create-new-type
+            // Do distinct first, no eliminate duplicate keys - like when there are many pickers with the same create-new-type
             .DistinctBy(s => s.ToLowerInvariant())
             .Select(nameId => new
             {

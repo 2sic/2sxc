@@ -12,9 +12,9 @@ namespace ToSic.Sxc.Images.Internal;
 public class ResponsiveImage: ResponsiveBase
 {
     [PrivateApi("don't show")]
-    internal ResponsiveImage(ImageService imgService, IPageService pageService, ResponsiveParams callParams, ILog parentLog) : base(imgService, pageService, callParams, parentLog, "Img")
-    {
-    }
+    internal ResponsiveImage(ImageService imgService, IPageService pageService, ResponsiveSpecs specs, ILog parentLog)
+        : base(imgService, pageService, specs, parentLog, "Img")
+    { }
 
     /// <summary>
     /// Same as base / initial implementation, but add srcset if available

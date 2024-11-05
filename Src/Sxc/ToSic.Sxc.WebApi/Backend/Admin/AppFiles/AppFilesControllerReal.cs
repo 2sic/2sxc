@@ -124,7 +124,7 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
 
         // TBD: future purpose implementation
         purpose = (purpose ?? AssetTemplates.ForTemplate).ToLowerInvariant().Trim();
-        var defId = AssetTemplates.RazorHybrid.Key;
+        var defId = AssetTemplates.RazorTyped.Key;
         if (purpose.Equals(AssetTemplates.ForApi, InvariantCultureIgnoreCase))
             defId = AssetTemplates.ApiHybrid.Key;
         if (purpose.Equals(AssetTemplates.ForDataSource, InvariantCultureIgnoreCase))

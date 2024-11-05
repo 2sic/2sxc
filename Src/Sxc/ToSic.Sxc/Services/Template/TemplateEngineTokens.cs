@@ -41,15 +41,23 @@ internal class TemplateEngineTokens(ILookUpEngine original): ITemplateEngine, IW
         {
             [TemplateKey] = template
         };
-        var result = original.LookUp(dic, overrides: sources, depth: MaxDepth);
+        var result = original.LookUp(dic, overrides: sources, depth: MaxDepth, tweak: t =>
+        {
+            if (allowHtml) return t;
+            return t.PostProcess(s =>
+                !string.IsNullOrEmpty(s) && (s.Contains("<") || s.Contains("&") || s.Contains(">"))
+                    ? ToSic.Razor.Blade.Tags.Encode(s)
+                    : s
+            );
+        });
         var raw = result[TemplateKey];
+        return raw;
+        //if (raw is null) return null;
 
-        if (raw is null) return null;
-
-        var hasHtml = raw.Contains("<") || raw.Contains("&") || raw.Contains(">");
-        return allowHtml || !hasHtml
-            ? raw
-            : ToSic.Razor.Blade.Tags.Encode(raw);
+        //var hasHtml = raw.Contains("<") || raw.Contains("&") || raw.Contains(">");
+        //return allowHtml || !hasHtml
+        //    ? raw
+        //    : ToSic.Razor.Blade.Tags.Encode(raw);
     }
 
     /// <summary>

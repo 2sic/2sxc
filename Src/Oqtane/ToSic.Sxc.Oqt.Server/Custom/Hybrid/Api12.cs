@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -8,7 +7,6 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.WebApi;
 using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;

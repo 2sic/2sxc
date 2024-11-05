@@ -1,13 +1,11 @@
 ﻿using Oqtane.Repository;
 using Oqtane.Shared;
 using System;
-using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks.Internal;

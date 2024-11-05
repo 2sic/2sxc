@@ -1,6 +1,4 @@
 ﻿using Oqtane.Shared;
-using System.Collections.Generic;
-using System.Linq;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.PageFeatures;

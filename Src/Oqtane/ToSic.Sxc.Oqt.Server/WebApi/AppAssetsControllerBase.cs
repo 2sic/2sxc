@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using Oqtane.Shared;
 using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Oqt.Server.Adam;

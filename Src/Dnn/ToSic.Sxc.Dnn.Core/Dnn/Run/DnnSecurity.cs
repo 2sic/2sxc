@@ -1,6 +1,7 @@
 ﻿using System.Web.Security;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
+using DotNetNuke.Security.Permissions;
 using DotNetNuke.Security.Roles;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
@@ -51,20 +52,30 @@ public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("
         if (portal == null)
             return new(false);
 
-        // TODO: is there a way to get this with DI?
-        //bool displayTitle = ModulePermissionController.CanEditModuleContent(module)
-        //var dnnPermissionProvider = PermissionProvider.Instance();
-
-        // Non-SuperUsers must be Admin AND in the group SxcAppAdmins
-        if (!user.IsInRole(portal.AdministratorRoleName ?? DnnAdminRoleDefaultName))
+        var dnnPermissionProvider = PermissionProvider.Instance();
+        if (!dnnPermissionProvider.IsPortalEditor())
             return new(false);
 
+        // Non-SuperUsers must be PortalEditor AND in the group SxcAppAdmins
         var hasSpecialGroup = PortalHasExplicitAdminGroups(portal.PortalId);
         if (hasSpecialGroup && IsExplicitAdmin(user))
             return new(true);
 
         // If the special group doesn't exist, then the admin-state (which is true - since he got here) is valid
-        return new(isSiteAdmin: !hasSpecialGroup, isContentAdmin: true);
+        // or if the special group exist, then all administrators will be treated as ContentAdmins (has fewer permissions).
+        if (user.IsInRole(portal.AdministratorRoleName ?? DnnAdminRoleDefaultName))
+            return new(isSiteAdmin: !hasSpecialGroup, isContentAdmin: true);
+
+        // ... for "Content Managers"
+        if (user.IsInRole(DnnContentManagers))
+            return new(false, true);
+
+        // ... for "Content Editors"
+        if (user.IsInRole(DnnContentEditors))
+            return new(false, false, true, true);
+
+        // this should not happen
+        return new(false);
     }
 
 
@@ -93,6 +104,7 @@ public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("
                 IsSystemAdmin = user.IsSuperUser,
                 IsSiteAdmin = adminInfo.IsSiteAdmin,
                 IsContentAdmin = adminInfo.IsContentAdmin,
+                IsContentEditor = adminInfo.IsContentEditor,
                 IsAnonymous = IsNullOrAnonymous(user),
                 Created = user.CreatedOnDate,
                 Modified = user.LastModifiedOnDate,

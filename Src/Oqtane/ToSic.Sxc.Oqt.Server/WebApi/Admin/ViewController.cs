@@ -2,10 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Routing;

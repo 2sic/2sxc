@@ -52,17 +52,18 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     ) => TypedItemHelpers.Html(Cdf, this, name: name, noParamOrder: noParamOrder, container: container,
         toolbar: toolbar, imageSettings: imageSettings, required: required, debug: debug, tweak: tweak);
 
-    IResponsivePicture ITypedItem.Picture(string name, NoParamOrder noParamOrder, object settings,
+    IResponsivePicture ITypedItem.Picture(string name, NoParamOrder noParamOrder, Func<ITweakMedia, ITweakMedia> tweak, object settings,
         object factor, object width, string imgAlt, string imgAltFallback,
         string imgClass, object imgAttributes, string pictureClass,
         object pictureAttributes, object toolbar, object recipe
     ) => TypedItemHelpers.Picture(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder,
-        settings: settings, factor: factor, width: width, imgAlt: imgAlt,
+        tweak: tweak, settings: settings, factor: factor, width: width, imgAlt: imgAlt,
         imgAltFallback: imgAltFallback, imgClass: imgClass, imgAttributes: imgAttributes, pictureClass: pictureClass, pictureAttributes: pictureAttributes, toolbar: toolbar, recipe: recipe);
 
     IResponsiveImage ITypedItem.Img(
         string name,
         NoParamOrder noParamOrder,
+        Func<ITweakMedia, ITweakMedia> tweak,
         object settings,
         object factor,
         object width,
@@ -72,7 +73,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
         object imgAttributes,
         object toolbar,
         object recipe
-    ) => TypedItemHelpers.Img(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, settings: settings,
+    ) => TypedItemHelpers.Img(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, tweak: tweak, settings: settings,
         factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback,
         imgClass: imgClass, imgAttributes: imgAttributes,
         toolbar: toolbar, recipe: recipe);

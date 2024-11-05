@@ -4,8 +4,6 @@ using Oqtane.Repository;
 using Oqtane.Security;
 using Oqtane.Shared;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Context.Internal.Raw;
@@ -49,6 +47,7 @@ public class OqtSecurity(LazySvc<IUserRoleRepository> userRoleRepository, UserMa
             IsSystemAdmin = IsSystemAdmin(user),
             IsSiteAdmin = isSiteAdmin,
             IsContentAdmin = isSiteAdmin,
+            IsContentEditor = isSiteAdmin,
             IsAnonymous = IsAnonymous(user),
             Created = user.CreatedOn,
             Modified = user.ModifiedOn,

@@ -1,6 +1,5 @@
 ﻿using System.Text.RegularExpressions;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
@@ -18,8 +17,8 @@ internal class CmsServiceStringWysiwyg(CmsServiceImageExtractor imageExtractor)
     : ServiceForDynamicCode("Cms.StrWys", connect: [imageExtractor])
 {
 
-    private ServiceKit14 ServiceKit => _svcKit.Get(_CodeApiSvc.GetKit<ServiceKit14>);
-    private readonly GetOnce<ServiceKit14> _svcKit = new();
+    private ServiceKit14 ServiceKit => _svcKit ??= _CodeApiSvc.GetKit<ServiceKit14>();
+    private ServiceKit14 _svcKit;
 
     #region Init
 
@@ -102,7 +101,7 @@ internal class CmsServiceStringWysiwyg(CmsServiceImageExtractor imageExtractor)
             var imgProps = imageExtractor.ExtractImageProperties(originalImgTag, Field.Parent.Guid, Folder);
 
             // if we have a real file, pre-get the inner parameters as we would want to use it for resize-settings
-            var preparedImgParams = imgProps.File.NullOrGetWith(file => ResponsiveParams.Prepare(file));
+            var preparedImgParams = imgProps.File.NullOrGetWith(ResponsiveSpecsOfTarget.ExtractSpecs);
 
             // if the file itself specifies a resize settings, use it, otherwise use the default settings
             var imgSettings = preparedImgParams?.ImgDecoratorOrNull?.ResizeSettings ?? defaultImageSettings;

@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Web.Internal.JsContext;
+﻿using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output;
 

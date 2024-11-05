@@ -29,16 +29,16 @@ internal class OutputCacheManager(MemoryCacheService memoryCacheService, Lazy<IE
         try
         {
             // Never store 0, that's like never-expire
-            var expiration = new TimeSpan(0, 0, duration);
+            //var expiration = new TimeSpan(0, 0, duration);
 
             // experimental, maybe use as replacement... v17.09+
             var policyMaker = memoryCacheService.NewPolicyMaker()
-                .SetSlidingExpiration(expiration)
+                .SetSlidingExpiration(duration)   // Never store 0, that's like never-expire
                 .WatchNotifyKeys([..apps, featuresDoNotConnect.Value]);
 
             if (appPaths?.Any() == true)
                 policyMaker = policyMaker
-                    .WatchFolders(appPaths.ToDictionary(p => p, p => true));
+                    .WatchFolders(appPaths.ToDictionary(p => p, _ => true));
 
             memoryCacheService.SetNew(cacheKey, data, policyMaker);
             

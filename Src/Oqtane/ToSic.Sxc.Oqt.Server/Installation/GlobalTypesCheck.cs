@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using ToSic.Eav.Apps;
+﻿using ToSic.Eav.Apps;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Oqt.Shared;

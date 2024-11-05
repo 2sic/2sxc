@@ -6,9 +6,9 @@ namespace ToSic.Sxc.Services.Template;
 /// Engine which parses a template containing placeholders and replaces them with values from sources.
 /// </summary>
 /// <remarks>
-/// New / beta in v17.08
+/// Released in 18.03
 /// </remarks>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("Still Beta in v17.08")]
+[PublicApi]
 public interface ITemplateEngine
 {
     /// <summary>
@@ -20,7 +20,7 @@ public interface ITemplateEngine
     /// <summary>
     /// Basic Parse functionality.
     /// This is the variant without parameters, which should be used in basic cases and also
-    /// for passing into function calls, eg. into CMS HTML Tweaks.
+    /// for passing into function calls, like into CMS HTML Tweaks.
     /// </summary>
     /// <param name="template"></param>
     /// <returns></returns>

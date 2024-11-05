@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
@@ -8,7 +7,6 @@ using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Internal;

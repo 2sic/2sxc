@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Code;
 
 /// <summary>
 /// Helper object to use on Razor, Code, APIs to create more app-specific helper objects.
-/// Eg. the `App` object, `View` object etc.
+/// Like the `App` object, `View` object etc.
 ///
 /// It will usually be provided on a protected `Customize` property on RazorTyped etc.
 /// </summary>

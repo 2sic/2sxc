@@ -131,7 +131,7 @@ internal class CSharpDataModelGenerator(CSharpDataModelsGenerator dmg, IContentT
                + dmg.CodeGenHelper.XmlComment(Specs.TabsClass, summary:
                    $"""
                     {className} data. <br/>
-                    Generated {DateTime.Now:u}. Re-generate whenever you change the ContentType. <br/>
+                    Re-generate whenever you change the ContentType. <br/>
                     <br/>
                     Default properties such as `.Title` or `.Id` are provided in the base class. <br/>
                     Most properties have a simple access, such as `.{firstPropertyName}`. <br/>

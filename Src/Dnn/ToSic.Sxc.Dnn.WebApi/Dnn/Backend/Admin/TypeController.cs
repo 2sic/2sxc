@@ -1,5 +1,4 @@
 ﻿using System.Web;
-using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Backend.Admin;
@@ -128,7 +127,6 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     {
         // Make sure the Scoped ResponseMaker has this controller context
         SysHlp.SetupResponseMaker(this);
-
         return Real.Json(appId, name);
     }
 
@@ -153,7 +151,7 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     /// Json Bundle Export
     /// </summary>
     /// <remarks>
-    /// New in 2sxc v15
+    /// New in 2sxc v15.x
     /// </remarks>
     [HttpGet]
     [AllowAnonymous] // will do security check internally
@@ -161,7 +159,7 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     {
         // Make sure the Scoped ResponseMaker has this controller context
         SysHlp.SetupResponseMaker(this);
-
         return Real.JsonBundleExport(appId, exportConfiguration, indentation);
     }
+
 }

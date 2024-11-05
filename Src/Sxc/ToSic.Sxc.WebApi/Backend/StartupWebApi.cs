@@ -78,8 +78,6 @@ public static class StartupWebApi
         services.TryAddTransient<ViewsExportImport>();
 
         // Small WebApi Helpers
-        // #UnusedFeatureHistoryOfGroup 2022-07-05 2dm removed - probably clean up ca. Q4 2022
-        // services.TryAddTransient<IdentifierHelper>();
         services.TryAddTransient<ContentGroupList>();
 
         // js context / UI
@@ -111,6 +109,7 @@ public static class StartupWebApi
         services.TryAddTransient<InstallControllerReal>();
         services.TryAddTransient<BlockControllerReal>();
         services.TryAddTransient<CodeControllerReal>();
+        services.TryAddTransient<DataControllerReal>();
 
         services.AddLoadSettingsProviders();
 

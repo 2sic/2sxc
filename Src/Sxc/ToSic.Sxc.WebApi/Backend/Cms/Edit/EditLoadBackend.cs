@@ -99,7 +99,7 @@ public partial class EditLoadBackend(
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out error))
                 throw l.Ex(HttpException.PermissionDenied(error));
 
-        #region Load content-types and additional data (eg. formulas)
+        #region Load content-types and additional data (like formulas)
 
         var serializerForTypes = jsonSerializerGenerator.New().SetApp(appReader);
         serializerForTypes.ValueConvertHyperlinks = true;

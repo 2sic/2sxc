@@ -7,7 +7,7 @@
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface ITypedItemWrapper16
 {
-    // TODO: consider alternatives, eg. using an Attribute on the class!
+    // TODO: consider alternatives, like using an Attribute on the class!
     // that could be optional
 
     /// <summary>

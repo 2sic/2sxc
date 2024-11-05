@@ -14,17 +14,17 @@ namespace ToSic.Sxc.Images.Internal;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class ResponsivePicture: ResponsiveBase, IResponsivePicture
 {
-    internal ResponsivePicture(ImageService imgService, IPageService pageService, ResponsiveParams callParams, ILog parentLog) : base(imgService, pageService, callParams, parentLog, "Picture")
-    {
-    }
-
+    internal ResponsivePicture(ImageService imgService, IPageService pageService, ResponsiveSpecs specs, ILog parentLog)
+        : base(imgService, pageService, specs, parentLog, "Picture")
+    { }
 
     public Picture Picture => _picTag.Get(() =>
     {
         var pic = ToSic.Razor.Blade.Tag.Picture(Sources, Img);
-        pic = AddAttributes(pic, Params.PictureAttributes);
-        if (Params.PictureClass.HasValue()) pic = pic.Class(Params.PictureClass);
-        if (TryGetAttribute(Params.PictureAttributes, Recipe.SpecialPropertyStyle, out var style))
+        var picSpecs = Tweaker.Pic;
+        pic = AddAttributes(pic, picSpecs.Attributes);
+        if (Tweaker.Pic.Class.HasValue()) pic = pic.Class(Tweaker.Pic.Class);
+        if (TryGetAttribute(picSpecs.Attributes, Recipe.SpecialPropertyStyle, out var style))
             pic = pic.Style(style);
         return pic;
     });
@@ -32,7 +32,7 @@ public class ResponsivePicture: ResponsiveBase, IResponsivePicture
 
     protected override IHtmlTag GetOutermostTag() => Picture;
 
-    public TagList Sources => _sourceTags.Get(() => SourceTagsInternal(Params.Link.Url, Settings));
+    public TagList Sources => _sourceTags.Get(() => SourceTagsInternal(Target.Link.Url, Settings));
     private readonly GetOnce<TagList> _sourceTags = new();
 
     private TagList SourceTagsInternal(string url, IResizeSettings resizeSettings)
@@ -60,8 +60,8 @@ public class ResponsivePicture: ResponsiveBase, IResponsivePicture
                 // We must copy the settings, because we change them and this shouldn't affect anything else
                 var formatSettings = new ResizeSettings(resizeSettings, format: resizeFormat != defFormat ? resizeFormat.Format : null);
                 var srcSet = useMultiSrcSet
-                    ? ImgLinker.SrcSet(url, formatSettings, SrcSetType.Source, Params.HasMetadataOrNull)
-                    : ImgLinker.ImageOnly(url, formatSettings, Params.HasMetadataOrNull).Url;
+                    ? ImgLinker.SrcSet(url, formatSettings, SrcSetType.Source, Target.HasMdOrNull)
+                    : ImgLinker.ImageOnly(url, formatSettings, Target.HasMdOrNull).Url;
                 var source = ToSic.Razor.Blade.Tag.Source().Type(resizeFormat.MimeType).Srcset(srcSet);
                 if (!string.IsNullOrEmpty(Sizes)) source.Sizes(Sizes);
                 return source;

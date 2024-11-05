@@ -43,6 +43,10 @@ public class FileSaver(ISite site, IAppReaderFactory appReadFac, IAppPathsMicroS
             File.WriteAllText(fullPath, classSb.Body);
         }
 
+        // Update the code-generator.log file
+        if (classFiles.Any())
+            File.AppendAllText(Path.Combine(physicalPath, "code-generator.log"), $"{DateTime.Now:u}: Code generated.\n");
+
         l.Done();
     }
 

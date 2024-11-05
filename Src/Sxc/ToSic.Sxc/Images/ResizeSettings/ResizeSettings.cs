@@ -8,21 +8,21 @@ namespace ToSic.Sxc.Images;
 
 [PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class ResizeSettings : IResizeSettings, IResizeSettingsInternal
+internal record ResizeSettings : IResizeSettings, IResizeSettingsInternal
 {
     /// <summary>
     /// Name of the settings used initially
     /// </summary>
     public string BasedOn { get; }
 
-    public int Width { get; } = IntIgnore;
-    public int Height { get; } = IntIgnore;
+    public int Width { get; init; } = IntIgnore;
+    public int Height { get; init; } = IntIgnore;
     public int Quality { get; set; } = IntIgnore;
     public string ResizeMode { get; set; }
     public string ScaleMode { get; set; }
-    public string Format { get; }
-    public double Factor { get; } = 1;
-    public double AspectRatio { get; }
+    public string Format { get; init; }
+    public double Factor { get; init; } = 1;
+    public double AspectRatio { get; init; }
     public NameValueCollection Parameters { get; set; }
 
 
@@ -93,12 +93,12 @@ internal class ResizeSettings : IResizeSettings, IResizeSettingsInternal
     /// <summary>
     /// Should the factor be used? only if it's clearly away from zero.
     /// </summary>
-    public bool FactorUsed => !DNearZero(Factor) && !DNearZero(Factor - 1); // so ~0 and ~1 are not used
+    private bool FactorUsed => !DNearZero(Factor) && !DNearZero(Factor - 1); // so ~0 and ~1 are not used
 
     /// <summary>
     /// The factor to use, which is either the factor, or 1 if it's not used
     /// </summary>
-    public double FactorToUse => FactorUsed ? Factor : 1;
+    internal double FactorToUse => FactorUsed ? Factor : 1;
 
     internal string ToHtmlInfo(ImageDecorator decoOrNull)
     {
@@ -143,13 +143,13 @@ Quality: {(Quality != IntIgnore ? Quality : notSet)}
 ResizeMode: {resize}
 ScaleMode: {scale}
 Format: {Format ?? notSet}
-Factor: {(FactorUsed ? Factor : notSet)}
+Factor: {(FactorUsed ? Factor.ToString("0.####") : notSet)}
 AspectRatio: {aspectRatio}
 Url Parameters: {Parameters}
 Crop Center: {cropCenter}
 
 <em>This is the primary size. Other responsive sizes derive from this.</em>";
-        //result += $", Advanced: {Advanced}";
+        
         return result.Replace(", ", "\n").Replace("\n", "<br>\n");
     }
 }

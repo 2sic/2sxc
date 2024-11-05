@@ -126,10 +126,10 @@ public partial interface IToolbarBuilder
     /// Create Button to let the user switch to other app editions.
     ///
     /// Note that by default, this functionality is also on the `Layout` button, but there are cases
-    /// where a user won't see that (eg. a non-admin) and you may still want to provide them this feature.
+    /// where a user won't see that (like a non-admin) and you may still want to provide them this feature.
     /// </summary>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <param name="editions">Optional list of editions, eg `staging,live`. By default, it would take the editions in the `app.json`.</param>
+    /// <param name="editions">Optional list of editions, like `staging,live`. By default, it would take the editions in the `app.json`.</param>
     /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters</param>
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     /// <remarks>new v17.08, should be considered experimental ATM</remarks>

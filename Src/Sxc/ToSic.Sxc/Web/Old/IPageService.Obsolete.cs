@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Web;
 // This is why each method on the underlying interface must be repeated here :(
 //
 // We suggest that we won't do this for new commands, but all commands that were in 12.08 must be repeated here
-// eg. Blog 06.00.01 which was still around early 2023 uses this, so it could also be used in Oqtane
+// like Blog 06.00.01 which was still around early 2023 uses this, so it could also be used in Oqtane
 
 /// <summary>
 /// Old name for the IPageService, it's in use in some v12 App templates so we must keep it working.

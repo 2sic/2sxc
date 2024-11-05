@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Helpers;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.WebApi.ActionFilters;

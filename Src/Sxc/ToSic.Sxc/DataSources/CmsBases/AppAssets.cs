@@ -50,26 +50,14 @@ public class AppAssets: CustomDataSourceAdvanced
     #region Configuration properties
 
     /// <summary>
-    /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
-    /// </summary>
-    [PrivateApi("concept not final, may be changed to use AssetsType or something")]
-    [Configuration(Fallback = false)]
-    public bool OnlyFolders => Configuration.GetThis(false);
-
-    /// <summary>
-    /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
-    /// </summary>
-    [PrivateApi("concept not final, may be changed to use AssetsType or something")]
-    [Configuration(Fallback = false)]
-    public bool OnlyFiles => Configuration.GetThis(false);
-
-    /// <summary>
+    /// WIP - The root folder to start from, beginning in the app root.
     /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
     /// </summary>
     [Configuration(Fallback = "/")]
     public string RootFolder => Configuration.GetThis();
 
     /// <summary>
+    /// The file name filter, such as "*.jpg".
     /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
     /// </summary>
     [Configuration(Fallback = "*.*")]
@@ -142,9 +130,9 @@ public class AppAssets: CustomDataSourceAdvanced
         var l = Log.Fn<(IImmutableList<IEntity> folders, IImmutableList<IEntity> files)>(timer: true);
 
         // TODO:
-        // must ensure that the folder can't contain ".." characters or anything else to make it go outside of the app folder
+        // must ensure that the folder can't contain ".." characters or anything else to make it go outside the app folder
 
-        _appAssetsSource.Configure(zoneId: ZoneId, appId: AppId, onlyFolders: OnlyFolders, onlyFiles: OnlyFiles, root: RootFolder, filter: FileFilter);
+        _appAssetsSource.Configure(zoneId: ZoneId, appId: AppId, root: RootFolder, filter: FileFilter);
 
         // Get pages from underlying system/provider
         var (rawFolders, rawFiles) = _appAssetsSource.GetAll();
@@ -152,11 +140,11 @@ public class AppAssets: CustomDataSourceAdvanced
             return l.Return((EmptyList, EmptyList), "null/empty");
 
         // Convert Folders to Entities
-        var folderFactory = _dataFactory.New(options: new(AppFolderDataRaw.Options, appId: AppId));
+        var folderFactory = _dataFactory.New(options: new(AppFolderDataRaw.Options, appId: AppId) { Type = typeof(AppFolderDataRaw) });
         var folders = folderFactory.Create(rawFolders);
 
         // Convert Files to Entities
-        var fileFactory = _dataFactory.New(options: new(AppFileDataRaw.Options, appId: AppId),
+        var fileFactory = _dataFactory.New(options: new(AppFileDataRaw.Options, appId: AppId) { Type = typeof(AppFileDataRaw) },
             // Make sure we share relationships source with folders, as files need folders and folders need files
             relationships: folderFactory.Relationships);
         var files = fileFactory.Create(rawFiles);

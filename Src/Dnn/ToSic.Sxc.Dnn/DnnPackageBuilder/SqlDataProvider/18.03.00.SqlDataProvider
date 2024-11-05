@@ -1,0 +1,28 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+GO
+
+-- Remove AttributeGroups SQL table and related:
+-- Drop the foreign key constraint before dropping the column.
+ALTER TABLE [dbo].[ToSIC_EAV_AttributesInSets] 
+DROP CONSTRAINT IF EXISTS [FK_ToSIC_EAV_AttributesInSets_ToSIC_EAV_AttributeGroups];
+GO
+
+-- Now it's safe to drop the column.
+ALTER TABLE [dbo].[ToSIC_EAV_AttributesInSets] 
+DROP COLUMN IF EXISTS [AttributeGroupID];
+GO
+
+-- Drop the foreign key constraint in another table before dropping the table.
+ALTER TABLE [dbo].[ToSIC_EAV_AttributeGroups] 
+DROP CONSTRAINT IF EXISTS [FK_ToSIC_EAV_AttributeGroups_ToSIC_EAV_AttributeSets];
+GO
+
+-- Now it's safe to drop the table.
+DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_AttributeGroups];
+GO
+

@@ -3,7 +3,6 @@ using System.Reflection;
 using ToSic.Eav;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.WebApi.ApiExplorer;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;

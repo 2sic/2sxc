@@ -65,7 +65,7 @@ public interface ITypedModel: IHasKeys
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
     /// It is automatically `false` if a `fallback` is provided which is not the `default`.
-    /// So eg. `Get&lt;string&gt;(..., fallback: false)` can't be detected, but `..., fallback: "hello"` can.
+    /// So like `Get&lt;string&gt;(..., fallback: false)` can't be detected, but `..., fallback: "hello"` can.
     /// </param>
     /// <returns>Object of type T if found, `null` if not found.</returns>
     T Get<T>(string name, NoParamOrder protector = default, T fallback = default, bool? required = default);

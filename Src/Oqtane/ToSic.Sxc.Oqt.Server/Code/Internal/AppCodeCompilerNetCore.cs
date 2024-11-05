@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using ToSic.Eav.Helpers;
@@ -7,8 +6,6 @@ using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Oqt.Server.Code.Internal;

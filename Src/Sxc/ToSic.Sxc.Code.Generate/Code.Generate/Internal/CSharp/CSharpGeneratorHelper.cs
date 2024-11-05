@@ -118,7 +118,6 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs)
          // Generator:   {generator.Name} v{generator.Version}
          // App/Edition: {specs.AppName}/{specs.Edition}
          // User:        {userName}
-         // When:        {specs.DateTime:u}
          """;
 
     public static string DoNotModifyMessage = """

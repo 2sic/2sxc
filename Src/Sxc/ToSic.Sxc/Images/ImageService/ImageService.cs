@@ -1,10 +1,7 @@
-﻿using ToSic.Eav.Generics;
-using ToSic.Eav.Plumbing;
-using ToSic.Lib.Helpers;
+﻿using ToSic.Lib.Helpers;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
-using static System.StringComparer;
 
 namespace ToSic.Sxc.Images;
 
@@ -19,42 +16,11 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
 
     internal IEditService EditOrNull => _CodeApiSvc?.Edit;
 
-    internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => _CodeApiSvc?.GetService<IToolbarService>());
+    internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => _CodeApiSvc?.GetService<IToolbarService>(reuse: true));
     private readonly GetOnce<IToolbarService> _toolbarSvc = new();
 
     private IPageService PageService => _pageService ??= _CodeApiSvc?.GetService<IPageService>(reuse: true);
     private IPageService _pageService;
-
-    #endregion
-
-    #region Settings Handling
-
-    /// <summary>
-    /// Use the given settings or try to use the default content-settings if available
-    /// </summary>
-    /// <param name="settings"></param>
-    /// <returns></returns>
-    private object GetBestSettings(object settings)
-    {
-        var l = Log.Fn<object>(enabled: Debug);
-
-        return settings switch
-        {
-            null or true => l.Return(GetImageSettingsByName("Content"), "null/default"),
-            string strName when strName.HasValue() => l.Return(GetImageSettingsByName(strName), $"name: {strName}"),
-            _ => l.Return(settings, "unchanged")
-        };
-    }
-
-    
-    private object GetImageSettingsByName(string strName) => ResizeParamMerger.GetImageSettingsByName(_CodeApiSvc, strName, Debug, Log);
-
-    /// <summary>
-    /// Convert to Multi-Resize Settings
-    /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    private AdvancedSettings ToAdv(object value) => AdvancedSettings.Parse(value);
 
     #endregion
 
@@ -63,6 +29,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object link = null,
         object settings = null,
         NoParamOrder noParamOrder = default,
+        Func<ITweakMedia, ITweakMedia> tweak = default,
         object factor = null,
         object width = default,
         string imgAlt = null,
@@ -72,19 +39,23 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object toolbar = default,
         object recipe = null)
     {
-        var prefetch = ResponsiveParams.Prepare(link);
+        var specs = ResponsiveSpecsOfTarget.ExtractSpecs(link);
+        var finalSettings = SettingsInternal(settings ?? specs.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe);
+        ITweakMedia tweaker = new TweakMedia(
+            this,
+            specs,
+            finalSettings,
+            new(),
+            new(Class: imgClass, Alt: imgAlt, AltFallback: imgAltFallback, Attributes: TweakMedia.CreateAttribDic(imgAttributes, nameof(imgAttributes))),
+            new(),
+            ToolbarObj: toolbar
+        );
+        if (tweak != default) tweaker = tweak(tweaker);
+
         return new ResponsiveImage(
             this,
             PageService,
-            new(prefetch)
-            {
-                Settings = Settings(settings ?? prefetch.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe),
-                ImgAlt = imgAlt,
-                ImgAltFallback = imgAltFallback,
-                ImgClass = imgClass,
-                ImgAttributes = CreateAttribDic(imgAttributes),
-                Toolbar = toolbar,
-            },
+            new(specs, Tweaker: tweaker as TweakMedia),
             Log);
     }
 
@@ -94,6 +65,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object link = default,
         object settings = default,
         NoParamOrder noParamOrder = default,
+        Func<ITweakMedia, ITweakMedia> tweak = default,
         object factor = default,
         object width = default,
         string imgAlt = default,
@@ -105,21 +77,22 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
         object toolbar = default,
         object recipe = default)
     {
-        var prefetch = ResponsiveParams.Prepare(link);
+        var specs = ResponsiveSpecsOfTarget.ExtractSpecs(link);
+        var finalSettings = SettingsInternal(settings ?? specs.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe);
+        ITweakMedia tweaker = new TweakMedia(
+            this,
+            specs,
+            finalSettings,
+            new(),
+            new(Class: imgClass, Alt: imgAlt, AltFallback: imgAltFallback, Attributes: TweakMedia.CreateAttribDic(imgAttributes, nameof(imgAttributes))),
+            new(pictureClass, Attributes: TweakMedia.CreateAttribDic(pictureAttributes, nameof(pictureAttributes))),
+            ToolbarObj: toolbar
+        );
+        if (tweak != default) tweaker = tweak(tweaker);
         return new ResponsivePicture(
             this,
             PageService,
-            new(prefetch)
-            {
-                Settings = Settings(settings ?? prefetch.ResizeSettingsOrNull, factor: factor, width: width, recipe: recipe),
-                ImgAlt = imgAlt,
-                ImgAltFallback = imgAltFallback,
-                ImgClass = imgClass,
-                ImgAttributes = CreateAttribDic(imgAttributes),
-                PictureClass = pictureClass,
-                PictureAttributes = CreateAttribDic(pictureAttributes),
-                Toolbar = toolbar,
-            },
+            new(specs, Tweaker: tweaker as TweakMedia),
             Log);
     }
 
@@ -136,15 +109,4 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
     }
     private bool _debug;
 
-    private IDictionary<string, object> CreateAttribDic(object attributes)
-        => attributes switch
-        {
-            null => null,
-            IDictionary<string, object> ok => ok.ToInvariant(),
-            IDictionary<string, string> strDic => strDic.ToDictionary(pair => pair.Key, pair => pair.Value as object,
-                InvariantCultureIgnoreCase),
-            _ => (attributes.IsAnonymous())
-                ? attributes.ToDicInvariantInsensitive()
-                : throw new ArgumentException("format unknown", nameof(attributes))
-        };
 }
