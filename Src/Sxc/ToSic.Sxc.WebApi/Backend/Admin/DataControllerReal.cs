@@ -1,4 +1,10 @@
-﻿using ToSic.Eav.Persistence.Logging;
+﻿using System.IO;
+using ToSic.Eav;
+using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.Internal.Loaders;
+using ToSic.Eav.Persistence.Logging;
+using ToSic.Eav.Security;
+using ToSic.Eav.Security.Files;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.ImportExport;
@@ -14,12 +20,15 @@ namespace ToSic.Sxc.Backend.Admin;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class DataControllerReal(
+    ISite site,
+    IAppPathsMicroSvc appPathSvc,
+    AppWorkContextService appWorkCtxSvc,
     LazySvc<IContextOfSite> context,
     LazySvc<ContentExportApi> contentExportLazy,
     Generator<ImportContent> importContent,
     LazySvc<IUser> userLazy)
     : ServiceBase("Api.DtaCtlRl",
-        connect: [context, contentExportLazy, importContent, userLazy])/*, IAdminDataController*/
+        connect: [site, appPathSvc, appWorkCtxSvc, context, contentExportLazy, importContent, userLazy])/*, IAdminDataController*/
 {
     public const string LogSuffix = "DataCtrl";
 
@@ -29,6 +38,8 @@ public class DataControllerReal(
     public ImportResultDto BundleImport(HttpUploadedFile uploadInfo, int zoneId, int appId)
     {
         var l = Log.Fn<ImportResultDto>();
+
+        SecurityHelpers.ThrowIfNotSiteAdmin(userLazy.Value, l);
 
         if (!uploadInfo.HasFiles())
             return l.Return(new(false, "no file uploaded", Message.MessageTypes.Error), "no file uploaded");
@@ -46,16 +57,28 @@ public class DataControllerReal(
     }
 
     public bool BundleSave(int appId, Guid exportConfiguration, int indentation = 0)
-    {
-        // TODO: @STV implement BundleSave
-        return false;
-        // throw new NotImplementedException();
-    }
+        => contentExportLazy.Value.Init(appId).BundleSave(userLazy.Value, exportConfiguration, indentation);
 
-    public bool BundleRestore(int zoneId, int appId)
+    public bool BundleRestore(string fileName, int zoneId, int appId)
     {
-        // TODO: @STV implement BundleRestore
-        return false;
-        // throw new NotImplementedException();
+        var l = Log.Fn<bool>();
+
+        SecurityHelpers.ThrowIfNotSiteAdmin(userLazy.Value, l);
+
+        var fileNameSafe = FileNames.SanitizeFileName(fileName);
+        if (fileName != fileNameSafe) l.A($"File name sanitized:'{fileName}' => '{fileNameSafe}'");
+
+        var appPaths = appPathSvc.Get(appWorkCtxSvc.Context(appId).AppReader, site);
+        var filePath = Path.Combine(appPaths.PhysicalPath, Constants.AppDataProtectedFolder, FsDataConstants.BundlesFolder, fileNameSafe);
+
+        if (!File.Exists(filePath))
+            return l.ReturnFalse($"File not found: {filePath}");
+
+        var result = importContent.New()
+            .ImportJsonFiles(zoneId, appId, [new() { Name = fileName, Stream = new FileStream(filePath, FileMode.Open, FileAccess.Read) }], context.Value.Site.DefaultCultureCode);
+
+        var message = string.Join(", ", result.Messages.Select(m => m.Text));
+
+        return l.Return(result.Success, message);
     }
 }

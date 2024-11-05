@@ -11,9 +11,8 @@ public interface IAdminDataController
     THttpResponseType BundleExport(int appId, Guid exportConfiguration, int indentation = 0);
 
     ImportResultDto BundleImport(int zoneId, int appId);
-    //ImportResultDto BundleImport(HttpUploadedFile uploadInfo, int zoneId, int appId);
 
     bool BundleSave(int appId, Guid exportConfiguration, int indentation = 0);
 
-    bool BundleRestore(int zoneId, int appId);
+    bool BundleRestore(string fileName, int zoneId, int appId);
 }

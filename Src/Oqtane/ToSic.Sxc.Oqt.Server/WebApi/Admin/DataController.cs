@@ -44,12 +44,12 @@ public class DataController() : OqtStatefulControllerBase(DataControllerReal.Log
         => Real.BundleImport(new(Request), zoneId, appId);
 
     [HttpGet]
-    [Authorize(Roles = RoleNames.Admin)]
+    [AllowAnonymous] // will do security check internally
     public bool BundleSave(int appId, Guid exportConfiguration, int indentation = 0)
         => Real.BundleSave(appId, exportConfiguration, indentation);
 
     [HttpGet]
-    [Authorize(Roles = RoleNames.Admin)]
-    public bool BundleRestore(int zoneId, int appId)
-        => Real.BundleRestore(zoneId, appId);
+    [AllowAnonymous] // will do security check internally
+    public bool BundleRestore(string fileName, int zoneId, int appId)
+        => Real.BundleRestore(fileName, zoneId, appId);
 }

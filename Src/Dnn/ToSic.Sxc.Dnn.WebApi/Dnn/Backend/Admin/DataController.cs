@@ -50,7 +50,7 @@ public class DataController() : DnnSxcControllerBase(DataControllerReal.LogSuffi
     /// Bundle Save
     /// </summary>
     [HttpGet]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [AllowAnonymous] // will do security check internally
     public bool BundleSave(int appId, Guid exportConfiguration, int indentation = 0)
         => Real.BundleSave(appId, exportConfiguration, indentation);
 
@@ -58,7 +58,7 @@ public class DataController() : DnnSxcControllerBase(DataControllerReal.LogSuffi
     /// Bundle Restore
     /// </summary>
     [HttpGet]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public bool BundleRestore(int zoneId, int appId)
-        => Real.BundleRestore(zoneId, appId);
+    [AllowAnonymous] // will do security check internally
+    public bool BundleRestore(string fileName, int zoneId, int appId)
+        => Real.BundleRestore(fileName, zoneId, appId);
 }
