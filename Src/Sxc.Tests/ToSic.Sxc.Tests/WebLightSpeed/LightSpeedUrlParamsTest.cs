@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Eav.Data.Build;
+using ToSic.Lib.Logging;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Web.Internal.LightSpeed;
 using ToSic.Sxc.Web.Internal.Url;
@@ -17,9 +19,15 @@ namespace ToSic.Sxc.Tests.WebLightSpeed
 
         private readonly LightSpeedTestData _testData;
 
-        private NameValueCollection Parse(string query) => UrlHelpers.ParseQueryString(query);
+        private static NameValueCollection Parse(string query) => UrlHelpers.ParseQueryString(query);
 
+        internal static (bool CachingAllowed, string Extension) GetUrlParamsTac(LightSpeedDecorator lsConfig,
+            string pageParameters, ILog log = null, bool usePiggyBack = true)
+            => GetUrlParamsTac(lsConfig, new Parameters(Parse(pageParameters)), log, usePiggyBack);
 
+        internal static (bool CachingAllowed, string Extension) GetUrlParamsTac(LightSpeedDecorator lsConfig,
+            IParameters pageParameters = null, ILog log = null, bool usePiggyBack = true)
+            => LightSpeedUrlParams.GetUrlParams(lsConfig, pageParameters ?? new Parameters(), log, usePiggyBack);
 
         [DataRow(true, null, "no setting")]
         [DataRow(true, true, "true")]
@@ -28,14 +36,14 @@ namespace ToSic.Sxc.Tests.WebLightSpeed
         public void IsEnabled(bool expected, bool? isEnabled, string message)
         {
             var lsDecorator = _testData.Decorator(isEnabled: isEnabled);
-            var result = LightSpeedUrlParams.GetUrlParams(lsDecorator, new Parameters(), null);
+            var result = GetUrlParamsTac(lsDecorator);
             AreEqual(expected, result.CachingAllowed, message);
             AreEqual("", result.Extension);
         }
 
-        [DataRow(true, "", null, null, "")]
-        [DataRow(true, "", true, true, "")]
-        [DataRow(true, "", true, false, "")]
+        [DataRow(true, "", null, null, "", "blank, enabled/byUrl not defined")]
+        [DataRow(true, "", true, true, "", "blank, enabled/byUrl true")]
+        [DataRow(true, "", true, false, "", "blank, enabled, but not byUrl")]
         [DataRow(true, "", true, false, "a=b")]
         [DataRow(true, "a=b", true, true, "a=b")]
         [DataRow(true, "a=b&test=y", true, true, "test=y&a=b", DisplayName = "Ensure parameters are sorted")]
@@ -46,7 +54,7 @@ namespace ToSic.Sxc.Tests.WebLightSpeed
         public void ByUrlParameters(bool expected, string expValue, bool? isEnabled, bool? byUrlParameters, string urlParameters, string message = default)
         {
             var lsDecorator = _testData.Decorator(isEnabled: isEnabled, byUrlParameters: byUrlParameters, othersDisableCache: false);
-            var result = LightSpeedUrlParams.GetUrlParams(lsDecorator, new Parameters(Parse(urlParameters)), null);
+            var result = GetUrlParamsTac(lsDecorator, urlParameters);
             AreEqual(expected, result.CachingAllowed, message, "caching allowed");
             AreEqual(expValue, result.Extension, "strings match");
         }
@@ -62,7 +70,7 @@ namespace ToSic.Sxc.Tests.WebLightSpeed
         public void NamesShouldFilterResults(string expValue, string names, string urlParameters, string message = default)
         {
             var lsDecorator = _testData.Decorator(isEnabled: true, byUrlParameters: true, names: names, othersDisableCache: true);
-            var result = LightSpeedUrlParams.GetUrlParams(lsDecorator, new Parameters(Parse(urlParameters)), null);
+            var result = GetUrlParamsTac(lsDecorator, urlParameters);
             AreEqual(true, result.CachingAllowed, message);
             AreEqual(expValue, result.Extension);
         }
@@ -81,7 +89,7 @@ namespace ToSic.Sxc.Tests.WebLightSpeed
         public void NamesShouldDisable(bool expected, string names, string urlParameters)
         {
             var lsDecorator = _testData.Decorator(isEnabled: true, byUrlParameters: true, names: names, othersDisableCache: true);
-            var result = LightSpeedUrlParams.GetUrlParams(lsDecorator, new Parameters(Parse(urlParameters)), null);
+            var result = GetUrlParamsTac(lsDecorator, urlParameters);
             AreEqual(expected, result.CachingAllowed);
         }
 
@@ -94,7 +102,7 @@ namespace ToSic.Sxc.Tests.WebLightSpeed
         public void NamesCanBeMultilineAndCommented(string expValue, string names, string urlParameters, string message = default)
         {
             var lsDecorator = _testData.Decorator(isEnabled: true, byUrlParameters: true, names: names, othersDisableCache: true);
-            var result = LightSpeedUrlParams.GetUrlParams(lsDecorator, new Parameters(Parse(urlParameters)), null);
+            var result = GetUrlParamsTac(lsDecorator, urlParameters);
             AreEqual(true, result.CachingAllowed, message);
             AreEqual(expValue, result.Extension);
         }
@@ -105,18 +113,18 @@ namespace ToSic.Sxc.Tests.WebLightSpeed
         {
             const int repeat = 10000;
             var lsDecorator = _testData.Decorator(isEnabled: true, byUrlParameters: true, names: "a // nice idea\nb // ok too, but a bit nasty\n\ntest // another one to parse", othersDisableCache: true);
-            var parameters = new Parameters(Parse("ZETA=last&d=27&a=b&b=c"));
+            var parameters = "ZETA=last&d=27&a=b&b=c";
 
             var stopwatch = Stopwatch.StartNew();
             for (var i = 0; i < repeat; i++) 
-                LightSpeedUrlParams.GetUrlParams(lsDecorator, parameters, null, usePiggyBack: false);
+                GetUrlParamsTac(lsDecorator, parameters, usePiggyBack: false);
             stopwatch.Stop();
 
             Trace.WriteLine($"Ran {repeat} iterations without cache, duration was {stopwatch.ElapsedMilliseconds}ms");
 
             stopwatch = Stopwatch.StartNew();
             for (var i = 0; i < repeat; i++) 
-                LightSpeedUrlParams.GetUrlParams(lsDecorator, parameters, null, usePiggyBack: true);
+                GetUrlParamsTac(lsDecorator, parameters);
             stopwatch.Stop();
 
             Trace.WriteLine($"Ran {repeat} iterations with cache, duration was {stopwatch.ElapsedMilliseconds}ms");
