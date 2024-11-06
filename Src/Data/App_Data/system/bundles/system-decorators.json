@@ -5360,7 +5360,7 @@
             },
             {
               "Id": 183819,
-              "Version": 3,
+              "Version": 4,
               "Guid": "46b375ba-3a11-4f04-8faf-33ef4ef5b29a",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -5369,7 +5369,7 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "// if parameters has a forView then take that, otherwise default to false\nv2((data, context) => {\n  console.log('debug 2dm lightspeed', data.parameters, data);\n  return { \n    value: data.parameters.forView == 'true', // defaults to false\n    stop: true,\n  }\n});"
+                    "en-us": "// if parameters has a forView then take that, otherwise default to false\nv2((data, context) => {\n  return { \n    value: data.parameters.forView == 'true', // defaults to false\n    stop: true,\n  }\n});"
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
