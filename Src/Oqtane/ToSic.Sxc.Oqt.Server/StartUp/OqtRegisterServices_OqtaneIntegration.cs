@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Sxc.Oqt.Server.Search;
 using ToSic.Sxc.Oqt.Server.Services;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
@@ -17,6 +18,8 @@ partial class OqtRegisterServices
         services.TryAddTransient<IMailService, OqtMailService>();
         services.TryAddTransient<UserSourceProvider, OqtUsersServiceProvider>();
         services.AddTransient<ITurnOnService, OqtTurnOnService>();
+        //services.TryAddTransient(typeof(ISearchController<>), typeof(SearchController));
+        services.TryAddTransient<SearchController>();
         return services;
     }
 }

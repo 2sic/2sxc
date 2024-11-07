@@ -1,5 +1,6 @@
-﻿using DotNetNuke.Entities.Modules;
-using DotNetNuke.Services.Search.Entities;
+﻿using Oqtane.Infrastructure;
+using Oqtane.Models;
+using System;
 using System.Collections.Immutable;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -12,33 +13,26 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.Dnn.Context;
-using ToSic.Sxc.Dnn.LookUp;
-using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Internal;
+using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.Search;
 using static System.StringComparer;
+using Log = ToSic.Lib.Logging.Log;
 
-namespace ToSic.Sxc.Dnn.Search;
+namespace ToSic.Sxc.Oqt.Server.Search;
 
 /// <summary>
-/// This will construct data for the search indexer in DNN.
+/// This will construct data for the search indexer in Oqtane.
 /// It's created once for each module which will be indexed
 /// </summary>
-/// <remarks>
-/// ATM it's DNN only (because Oqtane doesn't have search indexing)
-/// But the code is 99% clean, so it would be easy to split into dnn/Oqtane versions once ready.
-/// The only difference seems to be exception logging. 
-/// </remarks>
 internal class SearchController(
     AppsCacheSwitch appsCache,
     Generator<CodeCompiler> codeCompiler,
@@ -48,13 +42,14 @@ internal class SearchController(
     LazySvc<ILookUpEngineResolver> dnnLookUpEngineResolver,
     EngineFactory engineFactory,
     LazySvc<ILogStore> logStore,
-    PolymorphConfigReader polymorphism)
+    PolymorphConfigReader polymorphism,
+    ILocalizationManager localizationManager)
     : ServiceBase("DNN.Search",
         connect:
         [
             appsCache, codeCompiler, codeRootFactory, siteGenerator, engineFactory, dnnLookUpEngineResolver,
             moduleAndBlockBuilder, logStore, polymorphism
-        ])/*, ISearchController<SearchDocument>*/
+        ])/*, ISearchController<SearchContent>*/
 {
     /// <summary>
     /// Initialize all values which are needed - or return a text with the info why we must stop. 
@@ -65,12 +60,12 @@ internal class SearchController(
     {
         var l = Log.Fn<string>();
         // Start by getting the module info
-        DnnModule = (module as Module<ModuleInfo>)?.GetContents();
-        l.A($"start search for mod#{DnnModule?.ModuleID}");
-        if (DnnModule == null) return l.ReturnAsOk("no module");
+        OqtModule = (module as OqtModule)?.GetContents();
+        l.A($"start search for mod#{OqtModule?.ModuleId}");
+        if (OqtModule == null) return l.ReturnAsOk("no module");
 
         // This changes site in whole scope
-        DnnSite = ((DnnSite)siteGenerator.New()).TryInitModule(DnnModule, Log);
+        OqtSite = (OqtSite)siteGenerator.New().Init(OqtModule.SiteId, Log);
 
         // New Context because Portal-Settings.Current is null
         var appId = module.BlockIdentifier.AppId;
@@ -79,9 +74,9 @@ internal class SearchController(
 
         // Ensure cache builds up with correct primary language
         // In case it's not loaded yet
-        appsCache.Value.Load(module.BlockIdentifier.PureIdentity(), DnnSite.DefaultCultureCode, appsCache.AppLoaderTools);
+        appsCache.Value.Load(module.BlockIdentifier.PureIdentity(), OqtSite.DefaultCultureCode, appsCache.AppLoaderTools);
 
-        Block = moduleAndBlockBuilder.Value.BuildBlock(DnnModule, null);
+        Block = moduleAndBlockBuilder.Value.BuildBlock(OqtModule, null);
 
         if (Block.View == null) return "no view";
         if (Block.View.SearchIndexingDisabled) return "search disabled"; // new in 12.02
@@ -90,8 +85,8 @@ internal class SearchController(
         if (Block.Data == null) return "DataSource null";
 
 
-        // Attach DNN Lookup Providers so query-params like [DateTime:Now] or [Portal:PortalId] will work
-        AttachDnnLookUpsToData(Block.Data, DnnSite, DnnModule);
+        //// Attach DNN Lookup Providers so query-params like [DateTime:Now] or [Portal:PortalId] will work
+        //AttachDnnLookUpsToData(Block.Data, OqtSite, OqtModule);
 
         // Get all streams to index
         var streamsToIndex = GetStreamsToIndex();
@@ -104,16 +99,16 @@ internal class SearchController(
         //           ?? _polymorphism.Init(Block.Context.AppState.List).Edition();
 
         // Convert DNN SearchDocuments from 2sxc SearchInfos
-        SearchItems = BuildInitialSearchInfos(streamsToIndex, DnnModule);
+        SearchItems = BuildInitialSearchInfos(streamsToIndex, OqtModule);
 
         // all ok - return null so upstream knows no errors
         return l.ReturnNull();
     }
 
     /// <summary>The DnnModule will be initialized, and must exist for the search-index to provide data.</summary>
-    public ModuleInfo DnnModule;
+    public Module OqtModule;
     /// <summary>The DnnSite will be initialized, and must exist for the search-index to provide data.</summary>
-    public DnnSite DnnSite;
+    public OqtSite OqtSite;
     /// <summary>The Block will be initialized, and must exist for the search-index to provide data.</summary>
     public IBlock Block;
     /// <summary>The SearchItems will be initialized, and must exist for the search-index to provide data.</summary>
@@ -125,9 +120,9 @@ internal class SearchController(
     /// Get search info for each dnn module containing 2sxc data
     /// </summary>
     /// <returns></returns>
-    public IList<SearchDocument> GetModifiedSearchDocuments(IModule module, DateTime beginDate)
+    public IList<SearchContent> GetModifiedSearchDocuments(IModule module, DateTime beginDate)
     {
-        var l = Log.Fn<IList<SearchDocument>>();
+        var l = Log.Fn<IList<SearchContent>>();
         // Turn off logging into history by default - the template code can reactivate this if desired
         var logWithPreserve = Log as Log;
         if (logWithPreserve != null) logWithPreserve.Preserve = false;
@@ -135,7 +130,7 @@ internal class SearchController(
         // Log with infos, to ensure errors are caught
         var exitMessage = InitAllAndVerifyIfOk(module);
         if (exitMessage != null)
-            return l.Return(new List<SearchDocument>(), exitMessage);
+            return l.Return(new List<SearchContent>(), exitMessage);
 
         try
         {
@@ -144,8 +139,8 @@ internal class SearchController(
             if (useCustomViewController)
             {
                 /* New mode in 12.02 using a custom ViewController */
-                var customizeSearch = CreateAndInitViewController(DnnSite, Block);
-                if (customizeSearch == null) return l.Return(new List<SearchDocument>(), "exit");
+                var customizeSearch = CreateAndInitViewController(OqtSite, Block);
+                if (customizeSearch == null) return l.Return(new List<SearchContent>(), "exit");
 
                 // Call CustomizeSearch in a try/catch
                 l.A("execute CustomizeSearch");
@@ -157,28 +152,27 @@ internal class SearchController(
                 /* Old mode v06.02 - 12.01 using the Engine or Razor which customizes */
                 // Build the engine, as that's responsible for calling inner search stuff
                 var engine = engineFactory.CreateEngine(Block.View);
-                if (engine is IEngineDnnOldCompatibility oldEngine)
-                {
-#pragma warning disable CS0618
-                    oldEngine.Init(Block, Purpose.IndexingForSearch);
+                //                if (engine is IEngineDnnOldCompatibility oldEngine)
+                //                {
+                //#pragma warning disable CS0618
+                //                    oldEngine.Init(Block, Purpose.IndexingForSearch);
 
-                    // Only run CustomizeData() if we're in the older, classic model of search-indexing
-                    // The new model v12.02 won't need this
-                    l.A("Will run CustomizeData() in the Razor Engine which will call it in the Razor if exists");
-                    oldEngine.CustomizeData();
+                //                    // Only run CustomizeData() if we're in the older, classic model of search-indexing
+                //                    // The new model v12.02 won't need this
+                //                    l.A("Will run CustomizeData() in the Razor Engine which will call it in the Razor if exists");
+                //                    oldEngine.CustomizeData();
 
-                    // check if the cshtml has search customizations
-                    l.A("Will run CustomizeSearch() in the Razor Engine which will call it in the Razor if exists");
-                    oldEngine.CustomizeSearch(SearchItems, Block.Context.Module, beginDate);
-#pragma warning restore CS0618
-                } else
-                    engine.Init(Block);
-
+                //                    // check if the cshtml has search customizations
+                //                    l.A("Will run CustomizeSearch() in the Razor Engine which will call it in the Razor if exists");
+                //                    oldEngine.CustomizeSearch(SearchItems, Block.Context.Module, beginDate);
+                //#pragma warning restore CS0618
+                //                } else
+                engine.Init(Block);
             }
         }
         catch (Exception e)
         {
-            return l.Return(LogErrorForExit(e, DnnModule),
+            return l.Return(LogErrorForExit(e, OqtModule),
                 "error, so return nothing to ensure we don't bleed unexpected infos");
         }
 
@@ -193,16 +187,16 @@ internal class SearchController(
         return l.Return(searchDocuments, $"{searchDocuments.Count}");
     }
 
-        
-        
-    private List<SearchDocument> LogErrorForExit(Exception e, ModuleInfo modInfo)
+
+
+    private List<SearchContent> LogErrorForExit(Exception e, Module oqtModule)
     {
-        DnnEnvironmentLogger.AddSearchExceptionToLog(modInfo, e, nameof(SearchController));
+        //DnnEnvironmentLogger.AddSearchExceptionToLog(oqtModule, e, nameof(SearchController));
         Log.Ex(e);
         return [];
     }
-        
-        
+
+
 
     /// <summary>
     /// Reduce load by only keeping recently modified items
@@ -210,14 +204,14 @@ internal class SearchController(
     /// <param name="beginDate"></param>
     /// <param name="searchInfoDictionary"></param>
     /// <returns></returns>
-    private static List<SearchDocument> KeepOnlyChangesSinceLastIndex(DateTime beginDate, Dictionary<string, List<ISearchItem>> searchInfoDictionary)
+    private static List<SearchContent> KeepOnlyChangesSinceLastIndex(DateTime beginDate, Dictionary<string, List<ISearchItem>> searchInfoDictionary)
     {
-        var searchDocuments = new List<SearchDocument>();
+        var searchDocuments = new List<SearchContent>();
         foreach (var searchInfoList in searchInfoDictionary)
         {
             // Filter by Date - take only SearchDocuments that changed since beginDate
             var searchDocumentsToAdd = searchInfoList.Value.Where(p => p.ModifiedTimeUtc >= beginDate.ToUniversalTime())
-                .Select(p => (SearchDocument) p);
+                .Select(p => (SearchContent)p);
             searchDocuments.AddRange(searchDocumentsToAdd);
         }
 
@@ -228,10 +222,10 @@ internal class SearchController(
     /// <summary>
     /// Convert DNN SearchDocuments from 2sxc SearchInfos
     /// </summary>
-    private Dictionary<string, List<ISearchItem>> BuildInitialSearchInfos(KeyValuePair<string, IDataStream>[] streamsToIndex, ModuleInfo dnnModule)
+    private Dictionary<string, List<ISearchItem>> BuildInitialSearchInfos(KeyValuePair<string, IDataStream>[] streamsToIndex, Module oqtModule)
     {
         var l = Log.Fn<Dictionary<string, List<ISearchItem>>>();
-        var language = dnnModule.CultureCode;
+        var language = /*oqtModule.CultureCode*/localizationManager.GetDefaultCulture(); // TODO: @STV check for case when site support more languages
         var searchInfoDictionary = new Dictionary<string, List<ISearchItem>>();
         foreach (var stream in streamsToIndex)
         {
@@ -242,20 +236,24 @@ internal class SearchController(
             {
                 var searchInfo = new SearchItem
                 {
-                    Entity = entity,
-                    Url = "",
-                    Description = "",
-                    Body = GetJoinedAttributes(entity, language),
+                    EntityName = entity.Type.Name,
+                    EntityId = entity.EntityId.ToString(),
                     Title = entity.Title?[language]?.ToString() ?? "(no title)",
-                    ModifiedTimeUtc = (entity.Modified == DateTime.MinValue
-                        ? DateTime.Now.Date.AddHours(DateTime.Now.Hour)
-                        : entity.Modified).ToUniversalTime(),
-                    UniqueKey = "2sxc-" + dnnModule.ModuleID + "-" + (entity.EntityGuid != new Guid()
+                    Description = "", // a summary description of the content (optional)
+                    Body = GetJoinedAttributes(entity, language), // the actual content
+                    Url = "", // the url for accessing the page where the content exists (starting with the page path - not including any alias)
+                    ContentModifiedOn = entity.Modified == DateTime.MinValue ? oqtModule.ModifiedOn : entity.Modified,
+                    AdditionalContent = string.Empty,
+                    CreatedOn = entity.Created,
+
+                    Entity = entity,
+                    ModifiedTimeUtc = (entity.Modified == DateTime.MinValue ? oqtModule.ModifiedOn : entity.Modified).ToUniversalTime(),
+                    UniqueKey = "2sxc-" + oqtModule.ModuleId + "-" + (entity.EntityGuid != Guid.Empty
                         ? entity.EntityGuid.ToString()
                         : stream.Key + "-" + entity.EntityId),
                     IsActive = true,
-                    TabId = dnnModule.TabID,
-                    PortalId = dnnModule.PortalID
+                    CultureCode = language,
+                    QueryString = "" // TODO: @STV find how to get query string part
                 };
 
                 return searchInfo;
@@ -265,27 +263,27 @@ internal class SearchController(
         return l.Return(searchInfoDictionary, $"{searchInfoDictionary.Count}");
     }
 
-    /// <summary>
-    /// Attach DNN Lookup Providers so query-params like [DateTime:Now] or [Portal:PortalId] will work
-    /// </summary>
-    private void AttachDnnLookUpsToData(IDataSource dataSource, DnnSite site, ModuleInfo dnnModule)
-    {
-        if (dataSource.Configuration?.LookUpEngine != null)
-        {
-            Log.A("Will try to attach dnn providers to DataSource LookUps");
-            try
-            {
-                var getLookups = dnnLookUpEngineResolver.Value;
-                var dnnLookUps = (getLookups as DnnLookUpEngineResolver)?.LookUpEngineOfPortalSettings(site.GetContents(), dnnModule.ModuleID);
-                ((LookUpEngine) dataSource.Configuration.LookUpEngine).Link(dnnLookUps);
-            }
-            catch (Exception e)
-            {
-                // Log but keep going, as it's bad, but the lookups may not be important for this module
-                Log.Ex(e);
-            }
-        }
-    }
+    ///// <summary>
+    ///// Attach DNN Lookup Providers so query-params like [DateTime:Now] or [Portal:PortalId] will work
+    ///// </summary>
+    //private void AttachDnnLookUpsToData(IDataSource dataSource, OqtSite site, Module<Module> oqtModule)
+    //{
+    //    if (dataSource.Configuration?.LookUpEngine != null)
+    //    {
+    //        Log.A("Will try to attach dnn providers to DataSource LookUps");
+    //        try
+    //        {
+    //            var getLookups = dnnLookUpEngineResolver.Value;
+    //            var dnnLookUps = (getLookups as DnnLookUpEngineResolver)?.LookUpEngineOfPortalSettings(site.GetContents(), oqtModule.Id);
+    //            ((LookUpEngine) dataSource.Configuration.LookUpEngine).Link(dnnLookUps);
+    //        }
+    //        catch (Exception e)
+    //        {
+    //            // Log but keep going, as it's bad, but the lookups may not be important for this module
+    //            Log.Ex(e);
+    //        }
+    //    }
+    //}
 
     /// <summary>
     /// Get original streams and if the settings restrict which ones to keep, apply that. 
@@ -318,7 +316,7 @@ internal class SearchController(
         var l = Log.Fn<ICustomizeSearch>();
         // 1. Get and compile the view.ViewController
         var path = Path
-            .Combine(Block.View.IsShared ? site.SharedAppsRootRelative() : site.AppsRootPhysical, block.Context.AppReader.Specs.Folder)
+            .Combine(/*TODO: @STV Block.View.IsShared ? site.SharedAppsRootRelative() :*/ site.AppsRootPhysical, block.Context.AppReader.Specs.Folder)
             .ForwardSlash();
         l.A($"compile ViewController class on path: {path}/{Block.View.ViewController}");
         var spec = new HotBuildSpec(block.AppId, _edition, block.App?.Name);

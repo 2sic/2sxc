@@ -7,6 +7,7 @@ using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Search;
+using ToSic.Sxc.Search;
 
 namespace ToSic.Sxc.Dnn;
 

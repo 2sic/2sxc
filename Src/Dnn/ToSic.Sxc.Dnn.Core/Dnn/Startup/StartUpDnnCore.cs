@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DotNetNuke.Services.Search.Entities;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
@@ -33,6 +34,7 @@ using ToSic.Sxc.Dnn.StartUp;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.Integration.Modules;
+using ToSic.Sxc.Search;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web.Internal.DotNet;
@@ -109,6 +111,7 @@ internal static class StartUpDnnCore
         services.TryAddScoped<IJsApiService, DnnJsApiService>(); // v16.01
 
         // v12.04 - proper DI for SearchController
+        //services.TryAddTransient(typeof(ISearchController<>), typeof(SearchController));
         services.TryAddTransient<SearchController>();
 
         // v12.05 custom Http for Dnn which only keeps the URL parameters really provided, and not the internally generated ones

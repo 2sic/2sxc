@@ -1,6 +1,14 @@
 using Oqtane.Infrastructure;
+using Oqtane.Interfaces;
 using Oqtane.Models;
 using Oqtane.Repository;
+using System;
+using System.Threading.Tasks;
+using Oqtane.Modules;
+using ToSic.Lib.DI;
+using ToSic.Sxc.Oqt.Server.Search;
+using ToSic.Sxc.Search;
+using IModule = ToSic.Sxc.Context.IModule;
 
 namespace ToSic.Sxc.Oqt.Server.Installation;
 
@@ -11,15 +19,8 @@ namespace ToSic.Sxc.Oqt.Server.Installation;
 /// WARNING: Careful when renaming / moving, the name is listed in the ModuleInfo.cs in the Client.
 /// </remarks>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class SxcManager(ISqlRepository sql) : IInstallable
-{
-    public bool Install(Tenant tenant, string version)
-    {
-        return sql.ExecuteScript(tenant, GetType().Assembly, "ToSic.Sxc." + version + ".sql");
-    }
-
-    public bool Uninstall(Tenant tenant)
-    {
-        return sql.ExecuteScript(tenant, GetType().Assembly, "ToSic.Sxc.Uninstall.sql");
-    }
-}
+internal partial class SxcManager(
+    ISqlRepository sql,
+    Generator<SearchController> searchControllerGenerator,
+    Generator<IModule> moduleGenerator) /*: MigratableModuleBase*/
+{ }
