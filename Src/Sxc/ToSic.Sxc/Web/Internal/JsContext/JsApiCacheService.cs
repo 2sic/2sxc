@@ -18,6 +18,7 @@ public class JsApiCacheService(IHttp http) : ServiceBase("JsApi", connect: [http
         Func<string> uiRoot,
         string rvtHeader,
         Func<string> rvt,
+        Func<string> secureEndpointPublicKey,
         string dialogQuery = null // these are any platform specific url query params to the dialog; can be null
     )
     {
@@ -45,7 +46,8 @@ public class JsApiCacheService(IHttp http) : ServiceBase("JsApi", connect: [http
             uiRoot = uiRoot.Invoke(),
             rvtHeader = rvtHeader,
             rvt = rvt.Invoke(),
-            dialogQuery = dialogQuery
+            dialogQuery = dialogQuery,
+            secureEndpointPublicKey = secureEndpointPublicKey.Invoke()
         };
         _cache.AddOrUpdate(pageId, jsApi, (key, value) => jsApi);
             

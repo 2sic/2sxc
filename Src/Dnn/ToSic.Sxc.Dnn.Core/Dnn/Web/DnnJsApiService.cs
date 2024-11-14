@@ -3,14 +3,15 @@ using DotNetNuke.Framework;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Helpers;
+using ToSic.Eav.Security.Encryption;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc.Dnn.Web;
 
-internal class DnnJsApiService(JsApiCacheService jsApiCache)
-    : ServiceBase("DnnJsAPi", connect: [jsApiCache]), IJsApiService
+internal class DnnJsApiService(JsApiCacheService jsApiCache, RsaCryptographyService rsaCryptographyService)
+    : ServiceBase("DnnJsAPi", connect: [jsApiCache, rsaCryptographyService]), IJsApiService
 {
     public const string PortalIdParamName = "portalId";
 
@@ -23,6 +24,7 @@ internal class DnnJsApiService(JsApiCacheService jsApiCache)
         // pageId and siteRoot are provided only in very special case for EditUI in /DesktopModules/.../...aspx
 
         string SiteRootFn() => siteRoot ?? ServicesFramework.GetServiceFrameworkRoot();
+        string SecureEndpointPrimaryKeyFn() => rsaCryptographyService.PublicKey;
 
         return jsApiCache.JsApiJson(
             platform: PlatformType.Dnn.ToString(),
@@ -32,7 +34,8 @@ internal class DnnJsApiService(JsApiCacheService jsApiCache)
             appApiRoot: () => GetApiRoots(SiteRootFn()).AppApiRoot,
             uiRoot: () => VirtualPathUtility.ToAbsolute(DnnConstants.SysFolderRootVirtual),
             rvtHeader: DnnConstants.AntiForgeryTokenHeaderName,
-            rvt: AntiForgeryToken,
+            rvt: AntiForgeryToken, 
+            secureEndpointPublicKey: SecureEndpointPrimaryKeyFn,
             dialogQuery: $"{PortalIdParamName}={PortalSettings.Current.PortalId}"
         );
     }
