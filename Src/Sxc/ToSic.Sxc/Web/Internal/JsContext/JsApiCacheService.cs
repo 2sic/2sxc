@@ -47,8 +47,10 @@ public class JsApiCacheService(IHttp http) : ServiceBase("JsApi", connect: [http
             rvtHeader = rvtHeader,
             rvt = rvt.Invoke(),
             dialogQuery = dialogQuery,
-            secureEndpointPublicKey = secureEndpointPublicKey.Invoke()
-        };
+            // TODO: tmp commented for 18.04 release
+            // secureEndpointPublicKey = secureEndpointPublicKey.Invoke() 
+            secureEndpointPublicKey = string.Empty
+        }; 
         _cache.AddOrUpdate(pageId, jsApi, (key, value) => jsApi);
             
         return jsApi;
