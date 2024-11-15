@@ -32,31 +32,17 @@ public class JsApi
 
     public static string JsApiJson(JsApi jsApi) =>
         "{"
-        + $"\"{nameof(JsApi.platform)}\": \"{jsApi.platform}\","
+        + JsonProperty(nameof(JsApi.platform), jsApi.platform) + ","
         + $"\"{nameof(JsApi.page)}\": {jsApi.page},"
-        + $"\"{nameof(JsApi.root)}\": \"{jsApi.root}\","
-        + $"\"{nameof(JsApi.api)}\": \"{jsApi.api}\","
-        + $"\"{nameof(JsApi.appApi)}\": \"{jsApi.appApi}\", "
-        + $"\"{nameof(JsApi.uiRoot)}\": \"{jsApi.uiRoot}\", "
-        + $"\"{nameof(JsApi.rvtHeader)}\": \"{jsApi.rvtHeader}\", "
-        + $"\"{nameof(JsApi.rvt)}\": \"{jsApi.rvt}\","
-        + $"\"{nameof(JsApi.dialogQuery)}\": \"{jsApi.dialogQuery}\""
+        + JsonProperty(nameof(JsApi.root), jsApi.root) + ","
+        + JsonProperty(nameof(JsApi.api), jsApi.api) + ","
+        + JsonProperty(nameof(JsApi.appApi), jsApi.appApi) + ","
+        + JsonProperty(nameof(JsApi.uiRoot), jsApi.uiRoot) + ","
+        + JsonProperty(nameof(JsApi.rvtHeader), jsApi.rvtHeader) + ","
+        + JsonProperty(nameof(JsApi.rvt), jsApi.rvt) + ","
+        + JsonProperty(nameof(JsApi.dialogQuery), jsApi.dialogQuery) + ","
+        + JsonPropertyOrEmpty(nameof(jsApi.secureEndpointPublicKey), jsApi.secureEndpointPublicKey)
         + "}";
-
-    // TODO: tmp commented for 18.04 release
-    //public static string JsApiJson(JsApi jsApi) =>
-    //    "{"
-    //    + JsonProperty(nameof(JsApi.platform), jsApi.platform) + ","
-    //    + $"\"{nameof(JsApi.page)}\": {jsApi.page},"
-    //    + JsonProperty(nameof(JsApi.root), jsApi.root) + ","
-    //    + JsonProperty(nameof(JsApi.api), jsApi.api) + ","
-    //    + JsonProperty(nameof(JsApi.appApi), jsApi.appApi) + ","
-    //    + JsonProperty(nameof(JsApi.uiRoot), jsApi.uiRoot) + ","
-    //    + JsonProperty(nameof(JsApi.rvtHeader), jsApi.rvtHeader) + ","
-    //    + JsonProperty(nameof(JsApi.rvt), jsApi.rvt) + ","
-    //    + JsonProperty(nameof(JsApi.dialogQuery), jsApi.dialogQuery) + ","
-    //    + JsonPropertyOrEmpty(nameof(jsApi.secureEndpointPublicKey), jsApi.secureEndpointPublicKey)
-    //    + "}";
 
     private static string JsonPropertyOrEmpty(string key, string value)
         => string.IsNullOrEmpty(value) ? string.Empty : JsonProperty(key, value);
