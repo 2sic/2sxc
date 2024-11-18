@@ -158,7 +158,7 @@ internal class LightSpeed(
     private int? _duration;
 
     private (bool CachingAllowed, string Extension) UrlParams => _urlParams.Get(
-        () => LightSpeedUrlParams.GetUrlParams(LightSpeedConfig, _block.Context.Page.Parameters, Log)
+        () => LightSpeedUrlParams.GetUrlParams(ViewConfig ?? AppConfig, _block.Context.Page.Parameters, Log)
         );
     private readonly GetOnce<(bool CachingAllowed, string Extension)> _urlParams = new();
     
@@ -169,7 +169,7 @@ internal class LightSpeed(
     private string CacheKey => _key.Get(() => Log.Func(() => OutputCacheManager.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, UrlParams.Extension, CurrentCulture)));
     private readonly GetOnce<string> _key = new();
 
-    private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? (int?)null : _block.Context.User.Id);
+    private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? null : _block.Context.User.Id);
     private readonly GetOnce<int?> _userId = new();
 
     // Note 2023-10-30 2dm changed the handling of the preview template and checks if it's set. In case caching is too aggressive this can be the problem. Remove early 2024
@@ -211,29 +211,37 @@ internal class LightSpeed(
         var l = Log.Fn<bool>();
         // special - Oqtane seems to call this much earlier than Dnn, even on non-existing modules.
         // so on new modules this would fail and throw an error. So we'll just return false in this case.
-        if (AppState == null) return l.ReturnFalse("no app");
+        if (AppState == null)
+            return l.ReturnFalse("disabled, no app");
 
         // Normal check.
         var feat = features.IsEnabled(LightSpeedOutputCache.NameId);
-        if (!feat) return l.ReturnFalse("feature disabled");
+        if (!feat)
+            return l.ReturnFalse("disabled, feature");
 
         if (!AppConfig.IsEnabled)
-            return l.ReturnFalse("disabled at app level");
+            return l.ReturnFalse("disabled, app not enabled");
 
-        if (LightSpeedConfig.IsEnabledNullable == false)
-            return l.ReturnFalse("disabled at view level");
+        if (ViewConfig.IsEnabledNullable == false)
+            return l.ReturnFalse("disabled at view explicit");
 
-        return l.ReturnTrue($"app and view config: true");
+        if (!UrlParams.CachingAllowed)
+            return l.ReturnFalse("disabled, url params not allowed");
+
+        return l.ReturnTrue("enabled");
     }
 
-
-    private LightSpeedDecorator LightSpeedConfig => _lightSpeedConfig ??=
-        _block.View?.Metadata.OfType(LightSpeedDecorator.TypeNameId).FirstOrDefault()?.NullOrGetWith(viewLs => new LightSpeedDecorator(viewLs))
-        ?? AppConfig;
-    private LightSpeedDecorator _lightSpeedConfig;
-
+    /// <summary>
+    /// Lightspeed Configuration at App Level
+    /// </summary>
     private LightSpeedDecorator AppConfig => _lsd.Get(() => GetLightSpeedConfig(AppState));
     private readonly GetOnce<LightSpeedDecorator> _lsd = new();
+
+    /// <summary>
+    /// Lightspeed Configuration at View Level
+    /// </summary>
+    private LightSpeedDecorator ViewConfig => _viewConfig.Get(() => _block.View?.Metadata.OfType(LightSpeedDecorator.TypeNameId).FirstOrDefault()?.NullOrGetWith(viewLs => new LightSpeedDecorator(viewLs)));
+    private readonly GetOnce<LightSpeedDecorator> _viewConfig = new();
 
     private LightSpeedDecorator GetLightSpeedConfig(IAppReader appReader)
     {

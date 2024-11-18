@@ -103,7 +103,8 @@ public class OqtStartup : IServerStartup
         globalConfig.InstructionsFolder = Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.InstructionsFolder);
         globalConfig.AssetsVirtualUrl = $"~/Modules/{OqtConstants.PackageName}/assets/";
         globalConfig.SharedAppsFolder = $"/{OqtConstants.AppRoot}/{OqtConstants.SharedAppFolder}/"; // "/2sxc/Shared"
-        globalConfig.TempAssemblyFolder = Path.Combine(env.ContentRootPath, "App_Data", "2sxc.bin");
+        globalConfig.TempAssemblyFolder = Path.Combine(env.ContentRootPath, Eav.Constants.AppDataProtectedFolder, Eav.Constants.TempAssemblyFolder); // ".../App_Data/2sxc.bin"
+        globalConfig.CryptoFolder = Path.Combine(env.ContentRootPath, Eav.Constants.AppDataProtectedFolder, Eav.Constants.CryptoFolder);
 
         // ensure we have an instance
         var assemblyResolver = serviceProvider.Build<AssemblyResolver>();

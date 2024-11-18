@@ -12,16 +12,20 @@ internal class LightSpeedUrlParams
         var l = log.Fn<(bool, string)>();
 
         // Preflight exit checks
-        if (lsConfig == null) return l.Return((false, ""), "no config");
-        if (lsConfig.IsEnabledNullable == false) return l.Return((false, ""), "Disabled at view level");
-        if (!lsConfig.ByUrlParameters) return l.Return((true, ""), "Enabled without url parameters");
+        if (lsConfig == null)
+            return l.Return((false, ""), "no config");
+        if (lsConfig.IsEnabledNullable == false)
+            return l.Return((false, ""), "Disabled at view level");
+        if (!lsConfig.ByUrlParameters)
+            return l.Return((true, ""), "Enabled without url parameters");
 
         // Get the parameter names from the config - use piggyback if possible
         var namesCsv = usePiggyBack && lsConfig.Entity is IHasPiggyBack withCache
             ? withCache.GetPiggyBack(nameof(LightSpeedUrlParams), () => ExtractConfigCsv(lsConfig))
             : ExtractConfigCsv(lsConfig);
 
-        return ParseParameters(lsConfig, namesCsv, pageParameters, log);
+        var result = ParseParameters(lsConfig, namesCsv, pageParameters, log);
+        return l.Return(result);
     }
 
     private static (bool CachingAllowed, string Extension) ParseParameters(LightSpeedDecorator lsConfig, string namesCsv, IParameters pageParameters, ILog log)
@@ -63,15 +67,17 @@ internal class LightSpeedUrlParams
 
     private static string ExtractConfigCsv(LightSpeedDecorator lsConfig)
     {
-        var paramNames = !string.IsNullOrWhiteSpace(lsConfig.UrlParameterNames)
-            ? lsConfig.UrlParameterNames
+        var paramNames = string.IsNullOrWhiteSpace(lsConfig.UrlParameterNames)
+            ? null
+            : lsConfig.UrlParameterNames
                 .SplitNewLine()
                 .Select(line => (line.Before("//") ?? line).TrimEnd())
-                .ToList()
-            : null;
+                .ToList();
 
         // Get the params, filter them new v17.10 and return the string - or exit
-        var namesCsv = paramNames == null ? "" : string.Join(",", paramNames).Trim();
+        var namesCsv = paramNames == null
+            ? ""
+            : string.Join(",", paramNames).Trim();
         return namesCsv;
     }
 }

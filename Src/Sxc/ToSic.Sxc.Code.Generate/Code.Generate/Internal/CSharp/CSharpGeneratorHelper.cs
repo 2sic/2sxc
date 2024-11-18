@@ -115,7 +115,7 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs)
 
     public static string GeneratorHeader(IFileGenerator generator, CSharpCodeSpecs specs, string userName) =>
         $"""
-         // Generator:   {generator.Name} v{generator.Version}
+         // Generator:   {generator.Name}
          // App/Edition: {specs.AppName}/{specs.Edition}
          // User:        {userName}
          """;
