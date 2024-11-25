@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dependencies;
 using System.Web.Http.Filters;
+using System.Web.UI.WebControls;
 using ToSic.Eav.Security.Encryption;
 using ToSic.Eav.Serialization;
 
@@ -20,21 +21,25 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal.SecureEndpoint
 
             if (request.Method == HttpMethod.Post && request.Content.Headers.ContentType.MediaType == mediaType)
             {
-                var encryptedDataJson = ReadEncryptedData(request);
-                if (string.IsNullOrEmpty(encryptedDataJson))
+                var jsonString = GetRequestContentStream(request);
+                if (string.IsNullOrEmpty(jsonString))
                 {
                     filterContext.Response = request.CreateErrorResponse(HttpStatusCode.BadRequest, "Request content is empty.");
                     return;
                 }
 
-                var encryptedData = JsonSerializer.Deserialize<EncryptedData>(encryptedDataJson, options: JsonOptions.SafeJsonForHtmlAttributes);
-                // "duck typing" check
-                if (encryptedData.Version == 1 && encryptedData.Data is null && encryptedData.Key is null && encryptedData.Iv is null) // 
+                // Deserializes the JSON string to an EncryptedData object and performs a "EncryptedData" check.
+                // If encrypted data is missing, sets the request content stream to the original JSON string and returns.
+                var encryptedData = JsonSerializer.Deserialize<EncryptedData>(jsonString, options: JsonOptions.SafeJsonForHtmlAttributes);
+                if (encryptedData?.Data is null && encryptedData?.Key is null && encryptedData?.Iv is null && encryptedData?.Version == 1)
+                {
+                    SetRequestContentStream(request, jsonString);
                     return;
+                }
 
-                // Determine the parameter name and type dynamically.
-                // Find parameter that has FromBody attribute on it,
-                // or param that is not a value type.
+                // Currently, only POST payloads can be encrypted. 
+                // Try to determine the POST parameter dynamically by finding a parameter 
+                // that has the FromBody attribute on it or a parameter that is not a value type.
                 var parameter = filterContext.ActionDescriptor.GetParameters()
                     .FirstOrDefault(p => p.GetCustomAttributes<FromBodyAttribute>().Any() || !p.ParameterType.IsValueType);
                 if (parameter == null)
@@ -43,23 +48,25 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal.SecureEndpoint
                     return;
                 }
 
-                var decryptedData = Decrypt(filterContext.Request.GetDependencyScope(), encryptedData);
-
                 try
                 {
+                    // Decrypt data
+                    var decryptedData = Decrypt(filterContext.Request.GetDependencyScope(), encryptedData);
+
                     // Validate that decrypted data is valid JSON
                     var formData = JsonSerializer.Deserialize(decryptedData, parameter.ParameterType, options: JsonOptions.SafeJsonForHtmlAttributes);
 
                     // Replace the request content with the deserialized object
                     filterContext.ActionArguments[parameter.ParameterName] = formData;
-                    request.Content = new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes(decryptedData)));
-                    request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                    //filterContext.Request.Content = new ObjectContent(parameter.ParameterType, formData, parameter.Configuration.Formatters.JsonFormatter);
+
+                    SetRequestContentStream(request, decryptedData);
+
+                    return;
                 }
                 catch (JsonException)
                 {
                     // Handle invalid JSON format
-                    filterContext.Response = request.CreateErrorResponse(HttpStatusCode.BadRequest, "Invalid JSON format after decryption.");
+                    filterContext.Response = request.CreateErrorResponse(HttpStatusCode.BadRequest, "Exception in decryption.");
                     return;
                 }
             }
@@ -67,7 +74,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal.SecureEndpoint
             base.OnActionExecuting(filterContext);
         }
 
-        private static string ReadEncryptedData(HttpRequestMessage request)
+        /// <summary>
+        /// Reads the request content stream as a string.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        private static string GetRequestContentStream(HttpRequestMessage request)
         {
             var stream = request.Content.ReadAsStreamAsync().Result;
             stream.Position = 0;
@@ -75,6 +87,25 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal.SecureEndpoint
             return reader.ReadToEnd();
         }
 
+        /// <summary>
+        /// Replaces the request content with a new stream containing the specified JSON string.
+        /// </summary>
+        /// <param name="request">The HTTP request message.</param>
+        /// <param name="jsonString">The JSON string to set as the request content.</param>
+        private static void SetRequestContentStream(HttpRequestMessage request, string jsonString)
+        {
+
+            request.Content = new StreamContent(new MemoryStream(Encoding.UTF8.GetBytes(jsonString)));
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            //filterContext.Request.Content = new ObjectContent(parameter.ParameterType, formData, parameter.Configuration.Formatters.JsonFormatter);
+        }
+
+        /// <summary>
+        /// Decrypts the specified encrypted data.
+        /// </summary>
+        /// <param name="dependencyScope"></param>
+        /// <param name="encryptedData"></param>
+        /// <returns></returns>
         private static string Decrypt(IDependencyScope dependencyScope, EncryptedData encryptedData)
         {
             var cryptoService = (AesHybridCryptographyService)dependencyScope.GetService(typeof(AesHybridCryptographyService));
