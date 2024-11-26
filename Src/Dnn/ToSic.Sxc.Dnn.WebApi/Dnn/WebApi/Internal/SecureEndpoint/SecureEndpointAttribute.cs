@@ -7,19 +7,20 @@ using System.Text.Json;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dependencies;
 using System.Web.Http.Filters;
-using System.Web.UI.WebControls;
 using ToSic.Eav.Security.Encryption;
 using ToSic.Eav.Serialization;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal.SecureEndpoint
 {
-    public class SecureEndpointAttribute(string mediaType = "application/json") : ActionFilterAttribute
+    public class SecureEndpointAttribute : ActionFilterAttribute
     {
+        private const string MediaType = "application/json";
+
         public override void OnActionExecuting(HttpActionContext filterContext)
         {
             var request = filterContext.Request;
 
-            if (request.Method == HttpMethod.Post && request.Content.Headers.ContentType.MediaType == mediaType)
+            if (request.Method == HttpMethod.Post && request.Content.Headers.ContentType.MediaType == MediaType)
             {
                 var jsonString = GetRequestContentStream(request);
                 if (string.IsNullOrEmpty(jsonString))

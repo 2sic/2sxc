@@ -70,13 +70,13 @@ internal class AppApiFileSystemWatcher : IDisposable, IHasLog
     private void OnChanged(object source, FileSystemEventArgs e)
     {
         var appApiCacheItem = FlagForRemove(e.FullPath) ?? CheckAppCode(e.FullPath);
-        Log.A($"Change type: {e.ChangeType}, file: {e.FullPath}, flag for remove: {appApiCacheItem.FlagForRemove}.");
+        Log.A($"Change type: {e.ChangeType}, file: {e.FullPath}, flag for remove: {appApiCacheItem?.FlagForRemove}.");
     }
 
     private void OnRenamed(object source, RenamedEventArgs e)
     {
         var appApiCacheItem = FlagForRemove(e.OldFullPath) ?? CheckAppCode(e.OldFullPath);
-        Log.A($"Renamed: {e.OldFullPath} to {e.FullPath}, flag for remove: {appApiCacheItem.FlagForRemove}.");
+        Log.A($"Renamed: {e.OldFullPath} to {e.FullPath}, flag for remove: {appApiCacheItem?.FlagForRemove}.");
     }
 
     private AppApiCacheItem FlagForRemove(string path)
