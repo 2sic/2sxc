@@ -8,7 +8,7 @@ SET OqtaneTarget=%2
 ECHO BuildFolder=%BuildFolder%
 ECHO OqtaneTarget=%OqtaneTarget%
 
-SET OqtaneBin=%OqtaneTarget%bin\%BuildFolder%\net8.0
+SET OqtaneBin=%OqtaneTarget%bin\%BuildFolder%\net9.0
 SET PackageName=ToSic.Sxc.Oqtane
 SET BuildTarget=%OqtaneTarget%wwwroot\Modules\%PackageName%
 ECHO The target folder is: %OqtaneBin%
@@ -29,6 +29,7 @@ XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net8.0\Microsoft.AspNetCore.Mvc
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net8.0\Microsoft.AspNetCore.Razor.*" "%OqtaneBin%\" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net8.0\Microsoft.CodeAnalys*.*" "%OqtaneBin%\" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net8.0\Microsoft.Extensions.DependencyModel.dll" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net8.0\System.Runtime.Caching.dll" "%OqtaneBin%\" /Y
 
 ECHO(
 ECHO 2sxc Oqtane - 3rd party deps
@@ -61,6 +62,9 @@ XCOPY "..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.pdb" "%Oqtane
 
 ECHO(
 ECHO the target for js, css, json etc is: %BuildTarget%
+REM robocopy /mir "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc.Oqtane\js\ " "%BuildTarget%\js\ "
+REM robocopy /mir "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc.Oqtane\dist\ " "%BuildTarget%\dist\ "
+REM robocopy /mir "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc.Oqtane\system\ " "%BuildTarget%\system\ "
 
 ECHO(
 ECHO Copy ImportExport instructions
