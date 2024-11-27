@@ -54,11 +54,11 @@ internal class WebResourceProcessor(IFeaturesService features, string cdnSource,
         var autoOptimize = webRes.Get(WebResAutoOptimizeField, fallback: false);
 
         if (!CdnSource.HasValue() || CdnSource == CdnDefault)
-            return l.Return(new(key, html: html, autoOptimize: autoOptimize), "ok, using built-in cdn-path");
+            return l.Return(new() { NameId = key, Html = html, AutoOptimize = autoOptimize }, "ok, using built-in cdn-path");
 
         // check if feature is enabled
         if (!features.IsEnabled(SxcFeatures.CdnSourcePublic.NameId))
-            return l.Return(new(key, html: html, autoOptimize: autoOptimize), "ok, cdn-swap feature not enabled");
+            return l.Return(new() { NameId = key, Html = html, AutoOptimize = autoOptimize }, "ok, cdn-swap feature not enabled");
 
         // Set new root based on CdnSource settings
         var newRoot = CdnSource + VersionSuffix;
@@ -89,8 +89,7 @@ internal class WebResourceProcessor(IFeaturesService features, string cdnSource,
             html = html.Replace(orig, "");
         }
 
-        return l.Return(new(key, html: html, autoOptimize: autoOptimize), 
-            $"ok; root now {newRoot}");
+        return l.Return(new() { NameId = key, Html = html, AutoOptimize = autoOptimize }, $"ok; root now {newRoot}");
     }
 
 }

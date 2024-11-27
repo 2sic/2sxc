@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Tests.PageFeatures
             Assert.IsTrue(!fm.Features.TryGetValue("dummy", out _));
 
             var cat = GetService<PageFeaturesCatalog>();
-            cat.Register(new PageFeature("dummy", "dummy-feature"));
+            cat.Register(new PageFeature { NameId = "dummy", Name = "dummy-feature" });
 
             Assert.IsTrue(fm.Features["dummy"] != null);
 
