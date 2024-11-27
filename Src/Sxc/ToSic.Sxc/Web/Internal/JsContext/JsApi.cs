@@ -1,6 +1,4 @@
-﻿// ReSharper disable InconsistentNaming
-#pragma warning disable IDE1006
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace ToSic.Sxc.Web.Internal.JsContext;
@@ -16,44 +14,41 @@ public class JsApi
     public const string ExtensionPlaceholder = "e.x.t";
 
     [JsonPropertyName("platform")]
-    public string platform { get; set; }
+    public string Platform { get; set; }
 
     [JsonPropertyName("page")]
-    public int page { get; set; }
+    public int Page { get; set; }
 
     [JsonPropertyName("root")]
-    public string root { get; set; }
+    public string Root { get; set; }
 
     [JsonPropertyName("api")]
-    public string api { get; set; }
+    public string Api { get; set; }
 
     [JsonPropertyName("appApi")]
-    public string appApi { get; set; }
+    public string AppApi { get; set; }
 
     [JsonPropertyName("uiRoot")]
-    public string uiRoot { get; set; }
+    public string UiRoot { get; set; }
 
     [JsonPropertyName("rvtHeader")]
-    public string rvtHeader { get; set; }
+    public string RvtHeader { get; set; }
 
     [JsonPropertyName("rvt")]
-    public string rvt { get; set; }
+    public string Rvt { get; set; }
 
     [JsonPropertyName("dialogQuery")]
-    public string dialogQuery { get; set; }
+    public string DialogQuery { get; set; }
 
-    // TODO: should probably get a nicer name, like "publicKey" or "publicKeyForEncryption"
-    // ...but change would require JS changes as well
-
-    [JsonPropertyName("secureEndpointPublicKey")]
+    [JsonPropertyName("publicKey")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string secureEndpointPublicKey { get; set; }
+    public string PublicKey { get; set; }
 
     /// <summary>
     /// Debug information while we're developing the on-module info
     /// </summary>
     [JsonIgnore]
-    public string source => "module JsApi";
+    public string Source => "module JsApi";
 
     public static string JsApiJson(JsApi jsApi) => JsonSerializer.Serialize(jsApi);
 

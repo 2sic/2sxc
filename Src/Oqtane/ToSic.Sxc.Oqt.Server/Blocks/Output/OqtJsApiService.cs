@@ -20,7 +20,7 @@ internal class OqtJsApiService(
     : ServiceBase("OqtJsApi", connect: [antiForgery, http, jsApiCache, aliasResolver, rsaCryptographyService]), IJsApiService
 {
     public string GetJsApiJson(int? pageId = null, string siteRoot = null, string rvt = null, bool withPublicKey = false) 
-        => JsApi.JsApiJson(GetJsApi(pageId, siteRoot, rvt));
+        => JsApi.JsApiJson(GetJsApi(pageId, siteRoot, rvt, withPublicKey));
 
     public JsApi GetJsApi(int? pageId = null, string siteRoot = null, string rvt = null, bool withPublicKey = false)
     {
@@ -33,6 +33,7 @@ internal class OqtJsApiService(
             uiRoot: UiRootFn,
             rvtHeader: Oqtane.Shared.Constants.AntiForgeryTokenHeaderName,
             rvt: RvtFn,
+            withPublicKey: withPublicKey,
             secureEndpointPublicKey: SecureEndpointPrimaryKeyFn,
             dialogQuery: null);
 
@@ -40,7 +41,7 @@ internal class OqtJsApiService(
         string ApiRootFn() => SiteRootFn() + OqtWebApiConstants.ApiRootNoLanguage + "/";
         string UiRootFn() => OqtConstants.UiRoot + "/";
         string RvtFn() => rvt.IsEmpty() && http?.HttpContext != null ? antiForgery.GetAndStoreTokens(http.HttpContext).RequestToken : rvt;
-        string SecureEndpointPrimaryKeyFn() => withPublicKey ? rsaCryptographyService.PublicKey : null;
+        string SecureEndpointPrimaryKeyFn() => rsaCryptographyService.PublicKey;
     }
 
 }

@@ -23,9 +23,6 @@ internal class DnnJsApiService(JsApiCacheService jsApiCache, RsaCryptographyServ
         // pageId and siteRoot are normally null when called from razor, api, custom cs
         // pageId and siteRoot are provided only in very special case for EditUI in /DesktopModules/.../...aspx
 
-        string SiteRootFn() => siteRoot ?? ServicesFramework.GetServiceFrameworkRoot();
-        string SecureEndpointPrimaryKeyFn() => withPublicKey ? rsaCryptographyService.PublicKey : null;
-
         return jsApiCache.JsApiJson(
             platform: PlatformType.Dnn.ToString(),
             pageId: pageId ?? PortalSettings.Current.ActiveTab.TabID,
@@ -34,10 +31,13 @@ internal class DnnJsApiService(JsApiCacheService jsApiCache, RsaCryptographyServ
             appApiRoot: () => GetApiRoots(SiteRootFn()).AppApiRoot,
             uiRoot: () => VirtualPathUtility.ToAbsolute(DnnConstants.SysFolderRootVirtual),
             rvtHeader: DnnConstants.AntiForgeryTokenHeaderName,
-            rvt: AntiForgeryToken, 
-            secureEndpointPublicKey: SecureEndpointPrimaryKeyFn,
+            rvt: AntiForgeryToken,
+            withPublicKey: withPublicKey,
+            secureEndpointPublicKey: () => rsaCryptographyService.PublicKey,
             dialogQuery: $"{PortalIdParamName}={PortalSettings.Current.PortalId}"
         );
+
+        string SiteRootFn() => siteRoot ?? ServicesFramework.GetServiceFrameworkRoot();
     }
 
     internal static (string SiteApiRoot, string AppApiRoot) GetApiRoots(string siteRoot = null)
