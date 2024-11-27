@@ -13,7 +13,7 @@ internal class DnnJsApiHeader(IJsApiService dnnJsApiService, ILog parentLog = nu
         // ensure we only do this once
         if (MarkAddedAndReturnIfAlreadyDone()) return l.ReturnFalse("already");
 
-        var json = dnnJsApiService.GetJsApiJson();
+        var json = dnnJsApiService.GetJsApiJson(pageId: null, siteRoot: null, rvt: null, withPublicKey: false);
         if (json == null) return l.ReturnFalse("no path");
 
 #pragma warning disable CS0618

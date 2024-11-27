@@ -16,17 +16,20 @@ public partial class SxcFeatures
             RenderThrowPartialSystemAdmin,
             PermissionPrioritizeModuleContext,
 
-            // CSP
+            // Sentinel CSP
             ContentSecurityPolicy,
             ContentSecurityPolicyTestUrl,
             ContentSecurityPolicyEnforceTemp,
 
-            // New 15.04
+            // Sentinel New 15.04
             CdnSourcePublic,
             CdnSourceEdit,
             // Not yet available
             //CdnSourceAdmin,
             //CdnSourceDev,
+
+            // Sentinel new v18.05
+            NetworkDataEncryption,
 
             // Patrons Perfectionist
             ImageServiceMultiFormat, // v13
@@ -36,9 +39,5 @@ public partial class SxcFeatures
 
             LightSpeedOutputCache,
             LightSpeedOutputCacheAppFileChanges
-
-
         );
-
-
 }

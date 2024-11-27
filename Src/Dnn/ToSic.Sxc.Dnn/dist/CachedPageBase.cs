@@ -65,7 +65,7 @@ public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to pre
         l.A($"customHeaders: {assets.HtmlHead}");
 
         var dnnJsApi = sp.GetService<IJsApiService>();
-        var content = dnnJsApi.GetJsApiJson(pageId, siteRoot);
+        var content = dnnJsApi.GetJsApiJson(pageId: pageId, siteRoot: siteRoot, rvt: null, withPublicKey: false);
         l.A($"JsApiJson: {content}");
 
         return l.ReturnAsOk(HtmlDialog.UpdatePlaceholders(html, content, pageId, addOn, assets.HtmlHead, ""));
