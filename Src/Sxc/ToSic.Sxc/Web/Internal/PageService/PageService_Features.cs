@@ -28,7 +28,7 @@ partial class PageService
         // 1. Try to add manual resources from WebResources
         // This must happen in the IPageService which is per-module
         // The PageServiceShared cannot do this, because it doesn't have the WebResources which vary by module
-        if (WebResources is not null) // special problem: DynamicEntity null-compare isn't quite right, **do not** use `!=`
+        if (WebResources is not null) // important: DynamicEntity null-compare isn't quite right, **do not** use `!=`
             keys = AddResourcesFromSettings(keys);
 
         // 2. If any keys are left, they are probably preconfigured keys, so add them now
@@ -37,6 +37,7 @@ partial class PageService
 
         l.A($"Remaining keys: {string.Join(",", keys)}");
         var added = PageServiceShared.Activate(keys);
+
         // also add to this specific module, as we need a few module-level features to activate in case...
         ((ICodeApiServiceInternal)_CodeApiSvc)?._Block?.BlockFeatureKeys.AddRange(added);
 

@@ -10,6 +10,11 @@ public class JsApiCacheService(IHttp http) : ServiceBase("JsApi", connect: [http
     private const string JsApiKey = "JsApi";
     private ConcurrentDictionary<int, JsApi> _cache;
 
+    /// <summary>
+    /// Create the JsAPI - or get from cache.
+    /// This is why we provide functions for most properties, so they don't need to be accessed if not needed.
+    /// </summary>
+    /// <returns></returns>
     public JsApi JsApiJson(string platform,
         int pageId,
         Func<string> siteRoot,
