@@ -11,8 +11,8 @@ using ToSic.Sxc.Web.Internal.PageFeatures;
 namespace ToSic.Sxc.Web.Internal.JsContext;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class JsContextAll(JsContextLanguage jsLangCtx, IJsApiService jsApiService, CodeInfosInScope codeWarnings, IAppJsonService appJson)
-    : ServiceBase("Sxc.CliInf", connect: [jsLangCtx, jsApiService, codeWarnings])
+public class JsContextAll(JsContextLanguage jsLangCtxSvc, IJsApiService jsApiService, CodeInfosInScope codeWarnings, IAppJsonService appJson)
+    : ServiceBase("Sxc.CliInf", connect: [jsLangCtxSvc, jsApiService, codeWarnings])
 {
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public JsContextEnvironment Environment;
@@ -58,7 +58,7 @@ public class JsContextAll(JsContextLanguage jsLangCtx, IJsApiService jsApiServic
         var ctx = block.Context;
 
         Environment = new(systemRootUrl, ctx);
-        Language = jsLangCtx.Init(ctx.Site);
+        Language = jsLangCtxSvc.Init(ctx.Site);
 
         // New in v13 - if the view is from remote, don't allow design
         var blockCanDesign = block.View?.Entity.HasAncestor() ?? false ? (bool?)false : null;

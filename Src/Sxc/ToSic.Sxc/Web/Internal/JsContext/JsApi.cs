@@ -23,6 +23,9 @@ public class JsApi
     public string rvtHeader { get; set; }
     public string rvt { get; set; }
     public string dialogQuery { get; set; }
+
+    // TODO: should probably get a nicer name, like "publicKey" or "publicKeyForEncryption"
+    // ...but change would require JS changes as well
     public string secureEndpointPublicKey { get; set; }
 
     /// <summary>

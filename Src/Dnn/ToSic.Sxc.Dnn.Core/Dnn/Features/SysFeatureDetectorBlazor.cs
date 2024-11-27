@@ -4,4 +4,4 @@ using static ToSic.Eav.Internal.Features.SysFeatureSuggestions;
 namespace ToSic.Sxc.Dnn.Features;
 
 internal class SysFeatureDetectorBlazor()
-    : SysFeatureDetector(Blazor.Clone(name: Blazor.Name + " (not available in Dnn)"), false);
+    : SysFeatureDetector(Blazor with { Name = Blazor.Name + " (not available in Dnn)" }, false);
