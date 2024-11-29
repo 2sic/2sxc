@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 
@@ -14,6 +15,8 @@ namespace ToSic.Sxc.Code.Internal.HotBuild
         private const bool UseSubfolders = true;
         private const int BufferSize = 16 * 1024; // 16KB buffer
         private const int CacheMinutes = 10;
+        private readonly TryLockTryDo _lockHashProvider = new();
+        private readonly TryLockTryDo _lockSourceFilesProvider = new();
 
         public string GetHashString(string folderPath)
         {
@@ -24,17 +27,26 @@ namespace ToSic.Sxc.Code.Internal.HotBuild
             if (memoryCacheService.TryGet<string>(cacheKey, out var fromCache))
                 return l.Return(fromCache, "from cache");
 
-            var files = GetSourceFilesInFolder(folderPath);
-            l.A($"{files.Length} files found");
+            var result = _lockHashProvider.Call(
+                conditionToGenerate: () => !memoryCacheService.TryGet<string>(cacheKey, out _),
+                generator: () =>
+                {
+                    var files = GetSourceFilesInFolder(folderPath);
+                    l.A($"{files.Length} files found");
 
-            var computeHashStringForFiles = BitConverter.ToString(ComputeHashForFiles(files)).Replace("-", "").ToLower();
-            l.A("hash string computed");
+                    var computeHashStringForFiles = BitConverter.ToString(ComputeHashForFiles(files)).Replace("-", "").ToLower();
+                    l.A("hash string computed");
 
-            memoryCacheService.SetNew(cacheKey, files, p => p
-                .SetSlidingExpiration(CacheMinutes * 60)
-                .WatchCacheKeys(new[] { SourceFilesInFolderCacheKey(folderPath) }));
+                    memoryCacheService.SetNew(cacheKey, computeHashStringForFiles, p => p
+                        .SetSlidingExpiration(CacheMinutes * 60)
+                        .WatchCacheKeys([SourceFilesInFolderCacheKey(folderPath)]));
 
-            return l.ReturnAsOk(computeHashStringForFiles);
+                    return computeHashStringForFiles;
+                },
+                cacheOrFallback: () => memoryCacheService.Get<string>(cacheKey)
+            );
+
+            return l.ReturnAsOk(result.Result);
         }
 
         internal string[] GetSourceFilesInFolder(string fullPath)
@@ -46,17 +58,27 @@ namespace ToSic.Sxc.Code.Internal.HotBuild
             if (memoryCacheService.TryGet<string[]>(cacheKey, out var fromCache))
                 return l.Return(fromCache, "from cache");
 
-            var files = Directory.GetFiles(fullPath, $"*{CsFiles}", UseSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
-            l.A($"{files.Length} files found with {nameof(UseSubfolders)}: {UseSubfolders}");
-            Array.Sort(files, StringComparer.Ordinal); // sort the array of file paths before processing to ensure hashing deterministic behavior.
-            l.A("sorted files");
+            var result = _lockSourceFilesProvider.Call(
+                conditionToGenerate: () => !memoryCacheService.TryGet<string[]>(cacheKey, out _),
+                generator: () =>
+                {
+                    var files = Directory.GetFiles(fullPath, $"*{CsFiles}", UseSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+                    l.A($"{files.Length} files found with {nameof(UseSubfolders)}: {UseSubfolders}");
+                    Array.Sort(files, StringComparer.Ordinal); // sort the array of file paths before processing to ensure hashing deterministic behavior.
+                    l.A("sorted files");
 
-            memoryCacheService.SetNew(cacheKey, files, p => p
-                .SetSlidingExpiration(CacheMinutes * 60)
-                .WatchFolders(new Dictionary<string, bool> { { fullPath, UseSubfolders } }));
+                    memoryCacheService.SetNew(cacheKey, files, p => p
+                        .SetSlidingExpiration(CacheMinutes * 60)
+                        .WatchFolders(new Dictionary<string, bool> { { fullPath, UseSubfolders } }));
 
-            return l.ReturnAsOk(files);
+                    return files;
+                },
+                cacheOrFallback: () => memoryCacheService.Get<string[]>(cacheKey)
+            );
+
+            return l.ReturnAsOk(result.Result);
         }
+
 
         private string FolderHashCacheKey(string fullPath) => $"Sxc-FolderHash-{fullPath}";
 
