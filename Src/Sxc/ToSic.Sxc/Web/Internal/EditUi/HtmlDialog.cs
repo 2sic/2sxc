@@ -8,6 +8,7 @@ namespace ToSic.Sxc.Web.Internal.EditUi;
 public class HtmlDialog
 {
     public const string PageIdInUrl = "pageId";
+    public const string WithPublicKey = "wpk";
 
     public const string BasePlaceholder = "@base";
     public const string CustomBodyPlaceholder = "@custombody";

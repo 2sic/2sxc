@@ -61,8 +61,10 @@ internal class EditUiMiddleware
 
         var rvt = sp.GetRequiredService<IAntiforgery>().GetAndStoreTokens(context).RequestToken;
 
+        var withPublicKey = WithPublicKey(context);
+
         // inject JsApi to html content
-        var content = sp.GetRequiredService<IJsApiService>().GetJsApiJson(pageId, siteRoot, rvt);
+        var content = sp.GetRequiredService<IJsApiService>().GetJsApiJson(pageId, siteRoot, rvt, withPublicKey);
 
         html = HtmlDialog.UpdatePlaceholders(html, content, pageId, "", htmlHead, $"<input name=\"__RequestVerificationToken\" type=\"hidden\" value=\"{rvt}\" >");
 
@@ -85,6 +87,13 @@ internal class EditUiMiddleware
         return !string.IsNullOrEmpty(pageIdString) 
             ? Convert.ToInt32(pageIdString) 
             : UnknownPageId;
+    }
+
+    private static bool WithPublicKey(HttpContext context)
+    {
+        // 'wpk' should be provided in query string
+        var withPublicKeyString = context.Request.Query[HtmlDialog.WithPublicKey];
+        return !string.IsNullOrEmpty(withPublicKeyString) && Convert.ToBoolean(withPublicKeyString);
     }
 
     /// <summary>
