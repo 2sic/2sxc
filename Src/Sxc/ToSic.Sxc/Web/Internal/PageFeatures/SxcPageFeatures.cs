@@ -191,6 +191,11 @@ public class SxcPageFeatures
     public static PageFeature EncryptFormData = new()
     {
         NameId = "Network.EncryptBody",
-        Name = "Encrypts the form data before sending it to the server"
+        Name = "Encrypts the form data before sending it to the server",
+        Needs =
+        [
+            // Needs the 2sxc js-api on the module to work
+            JsApiOnModule.NameId,
+        ],
     };
 }
