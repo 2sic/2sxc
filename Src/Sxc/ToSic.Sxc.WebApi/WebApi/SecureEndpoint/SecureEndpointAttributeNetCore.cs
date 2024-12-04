@@ -4,18 +4,29 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SqlServer.Server;
 using System.IO;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ToSic.Eav.Security.Encryption;
-using ToSic.Eav.Serialization;
 using JsonOptions = ToSic.Eav.Serialization.JsonOptions;
 
-namespace ToSic.Sxc.WebApi.ActionFilters;
+namespace ToSic.Sxc.WebApi;
 
+/// <summary>
+/// An ActionFilter attribute that automatically decrypts encrypted POST payloads for Web API endpoints.
+/// Apply this attribute to a controller or action method to seamlessly handle encrypted incoming POST requests,
+/// ensuring the decrypted data is available for processing within the action method.
+/// </summary>
+/// <remarks>
+/// This attribute intercepts POST requests with JSON content, checks for encrypted data,
+/// and if present, decrypts the payload using the <see cref="AesHybridCryptographyService"/>.
+/// It then deserializes the decrypted data into the expected parameter type and replaces the action arguments.
+/// If the payload is not encrypted, the request content remains unchanged.
+/// * Introduced in version 18.05.
+/// </remarks>
+[PublicApi]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class SecureEndpointAttribute : ActionFilterAttribute
 {
     private const string MediaType = "application/json";
