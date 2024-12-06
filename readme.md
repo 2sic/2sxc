@@ -1,8 +1,8 @@
 <img src="https://docs.2sxc.org/assets/logos/vcurrent/500.png" width="200px" align="right">
 
-# 2sxc 17 for Dnn and Oqtane
+# 2sxc for Dnn and Oqtane
 
-## Content Management, Dynamic Data, Dynamic Code & App Engine
+## CMS, Dynamic Data, Dynamic Code & App Engine
 
 > you can't use DNN  or Oqtane without 2sxc 😉
 
@@ -37,7 +37,7 @@ This is just one repo of 2sxc - the full software also has another ca. 3 for
 ## System Requirements for 2sxc
 
 1. DNN 9.6.1+ with .net Framework 4.8
-1. Oqtane 3.4.2+ with .net 6
+1. Oqtane 5.1+ with .net 8 or Oqtane 6 with .net 9
 
 Older Versions
 
