@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Tests.WebLightSpeed
 
         internal static (bool CachingAllowed, string Extension) GetUrlParamsTac(LightSpeedDecorator lsConfig,
             string pageParameters, ILog log = null, bool usePiggyBack = true)
-            => GetUrlParamsTac(lsConfig, new Parameters(Parse(pageParameters)), log, usePiggyBack);
+            => GetUrlParamsTac(lsConfig, new Parameters { Nvc = Parse(pageParameters) }, log, usePiggyBack);
 
         internal static (bool CachingAllowed, string Extension) GetUrlParamsTac(LightSpeedDecorator lsConfig,
             IParameters pageParameters = null, ILog log = null, bool usePiggyBack = true)

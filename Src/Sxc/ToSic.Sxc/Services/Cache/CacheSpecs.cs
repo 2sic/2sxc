@@ -121,8 +121,11 @@ internal class CacheSpecs(ILog parentLog, ICodeApiService codeApiSvc, LazySvc<IA
     public ICacheSpecs VaryByParameters(IParameters parameters, NoParamOrder protector = default, string names = default, bool caseSensitive = false)
         => VaryByParamsInternal("Parameters", parameters, names, caseSensitive: caseSensitive);
 
-    public ICacheSpecs VaryByPageParameters(string names = default, NoParamOrder protector = default, bool caseSensitive = false)
-        => VaryByParamsInternal("PageParameters", codeApiSvc?.CmsContext.Page.Parameters ?? new Parameters(), names, caseSensitive: caseSensitive);
+    public ICacheSpecs VaryByPageParameters(string names = default, NoParamOrder protector = default,
+        bool caseSensitive = false)
+        => VaryByParamsInternal("PageParameters",
+            codeApiSvc?.CmsContext.Page.Parameters ?? new Parameters { Nvc = [] }, names,
+            caseSensitive: caseSensitive);
 
     private ICacheSpecs VaryByParamsInternal(string varyByName, IParameters parameters, string names, bool caseSensitive = false)
     {

@@ -21,7 +21,11 @@ public class ParametersToStringTests
 
     [TestMethod]
     public void ParamsToStringSortId()
-        => AreEqual(SortDescendingId27, ParametersSortDescendingId27().ToString());
+        => AreEqual(SortDescendingId27, ParametersSortDescendingId27().Prioritize("sort").ToString());
+
+    [TestMethod]
+    public void ParamsToStringSortIdDifferentCasing()
+        => AreEqual(SortDescendingId27, ParametersSortDescendingId27().Prioritize("SORT").ToString());
 
     #endregion
 

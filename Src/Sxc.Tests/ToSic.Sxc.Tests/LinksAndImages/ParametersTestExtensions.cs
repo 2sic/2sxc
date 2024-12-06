@@ -7,9 +7,9 @@ namespace ToSic.Sxc.Tests.LinksAndImages
 {
     internal static class ParametersTestExtensions
     {
-        public static IParameters NewParameters(NameValueCollection originals) => new Parameters(originals);
+        public static IParameters NewParameters(NameValueCollection originals) => new Parameters { Nvc = originals };
 
-        public static IParameters AsParameters(this NameValueCollection originals) => new Parameters(originals);
+        public static IParameters AsParameters(this NameValueCollection originals) => new Parameters { Nvc = originals };
 
         public static IParameters AsParameters(this string originals) => UrlHelpers.ParseQueryString(originals).AsParameters();
 

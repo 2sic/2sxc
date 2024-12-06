@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Web.Internal.Url;
 
@@ -43,12 +44,24 @@ public static class UrlHelpers
     /// so be very careful if you change anything!
     /// </summary>
     /// <param name="nvc"></param>
+    /// <param name="prioritize"></param>
     /// <returns></returns>
-    public static NameValueCollection Sort(this NameValueCollection nvc)
+    public static NameValueCollection Sort(this NameValueCollection nvc, string prioritize = default)
     {
+        // Figure Out best key order, respecting the custom prioritization
+        var customKeys = prioritize.CsvToArrayWithoutEmpty().ToList();
+        var keys = customKeys.Count > 0
+            ? nvc.AllKeys.OrderBy(k =>
+            {
+                // find index case-insensitive
+                var index = customKeys.FindIndex(x => x.EqualsInsensitive(k));
+                return (index != -1 ? index.ToString("000") : "999") + "-" + k;
+            })
+            : nvc.AllKeys.OrderBy(k => k);
+
         // create a new NVC but sorted
         var sorted = new NameValueCollection();
-        foreach (var key in nvc.AllKeys.OrderBy(k => k))
+        foreach (var key in keys)
         {
             var values = nvc.GetValues(key)?.OrderBy(v => v).ToArray();
             if (values == null || values.Length == 0)

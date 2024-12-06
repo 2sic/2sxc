@@ -56,6 +56,9 @@ internal class OqtPage(
     }
 
     // caching is disabled because in Blazor Interactive the query string parameters are changed after the page is created
-    public override IParameters Parameters => new Parameters(OriginalParameters.GetOverrideParams(httpBlazor.Value?.QueryStringParams));
+    public override IParameters Parameters => new Parameters
+    {
+        Nvc = OriginalParameters.GetOverrideParams(httpBlazor.Value?.QueryStringParams)
+    };
 
 }
