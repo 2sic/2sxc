@@ -160,9 +160,8 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
                 using (var pdbFileStream = new FileStream(pdbFilePath, FileMode.Create, FileAccess.Write)) 
                     pdbStream.CopyTo(pdbFileStream);
 
-                var assembly = assemblyLoadContext.LoadFromStream(peStream, pdbStream);
-                //var assembly = assemblyLoadContext.LoadFromAssemblyPath(assemblyFilePath);
-                //var assemblyBytes = File.ReadAllBytes(assemblyFilePath);
+                var assembly = assemblyLoadContext.LoadFromAssemblyPath(assemblyFilePath);
+
 
                 return l.ReturnAsOk(new AssemblyResult(assembly));
             }
