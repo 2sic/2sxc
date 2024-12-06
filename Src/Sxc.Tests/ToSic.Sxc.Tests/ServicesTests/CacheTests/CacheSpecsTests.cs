@@ -90,10 +90,13 @@ public class CacheSpecsTests: TestBaseSxcDb
     public void VaryByParametersOneNamed(string names, string testName)
     {
         var expected = MainPrefix + "VaryByParameters=A=AVal".ToLowerInvariant();
-        var pars = new Parameters(new()
+        var pars = new Parameters
         {
-            { "A", "AVal" }
-        });
+            Nvc = new()
+            {
+                { "A", "AVal" }
+            }
+        };
         var specs = GetForMain().VaryByParameters(pars, names: names);
         AreEqual(expected, specs.Key, testName);
     }
@@ -103,12 +106,15 @@ public class CacheSpecsTests: TestBaseSxcDb
     public void VaryByParametersWithNamesAll()
     {
         var expected = MainPrefix + "VaryByParameters=A=AVal&B=BVal&C=CVal".ToLowerInvariant();
-        var pars = new Parameters(new()
+        var pars = new Parameters
         {
-            { "A", "AVal" },
-            { "B", "BVal" },
-            { "C", "CVal" }
-        });
+            Nvc = new()
+            {
+                { "A", "AVal" },
+                { "B", "BVal" },
+                { "C", "CVal" }
+            }
+        };
         var specs = GetForMain().VaryByParameters(pars, names: "A,B,c");
         AreEqual(expected, specs.Key);
     }
@@ -117,12 +123,15 @@ public class CacheSpecsTests: TestBaseSxcDb
     public void VaryByParametersWithNamesSome()
     {
         var expected = MainPrefix + "VaryByParameters=A=AVal&C=CVal".ToLowerInvariant();
-        var pars = new Parameters(new()
+        var pars = new Parameters
         {
-            { "A", "AVal" },
-            { "B", "BVal" },
-            { "C", "CVal" }
-        });
+            Nvc = new()
+            {
+                { "A", "AVal" },
+                { "B", "BVal" },
+                { "C", "CVal" }
+            }
+        };
         var specs = GetForMain().VaryByParameters(pars, names: "A,c");
         AreEqual(expected, specs.Key);
     }
@@ -131,12 +140,15 @@ public class CacheSpecsTests: TestBaseSxcDb
     public void VaryByParametersBlankSameAsNone()
     {
         var expected = MainPrefix + "VaryByParameters=A=AVal&C=CVal".ToLowerInvariant();
-        var pars = new Parameters(new()
+        var pars = new Parameters
         {
-            { "A", "AVal" },
-            { "B", "" },
-            { "C", "CVal" }
-        });
+            Nvc = new()
+            {
+                { "A", "AVal" },
+                { "B", "" },
+                { "C", "CVal" }
+            }
+        };
         var specsFiltered = GetForMain().VaryByParameters(pars, names: "A,c");
         var specsAll = GetForMain().VaryByParameters(pars);
         AreEqual(expected, specsFiltered.Key);

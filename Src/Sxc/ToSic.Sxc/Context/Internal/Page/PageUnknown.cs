@@ -15,6 +15,6 @@ internal class PageUnknown(WarnUseOfUnknown<PageUnknown> _) : IPage, IIsUnknown
 
     public string Url => Eav.Constants.UrlNotInitialized;
 
-    public IParameters Parameters => new Parameters(null);
+    public IParameters Parameters => new Parameters();
 
 }
