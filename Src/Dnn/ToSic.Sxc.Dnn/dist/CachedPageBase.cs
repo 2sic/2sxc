@@ -65,7 +65,7 @@ public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to pre
         l.A($"customHeaders: {assets.HtmlHead}");
 
         var dnnJsApi = sp.GetService<IJsApiService>();
-        var content = dnnJsApi.GetJsApiJson(pageId, siteRoot);
+        var content = dnnJsApi.GetJsApiJson(pageId: pageId, siteRoot: siteRoot, rvt: null, withPublicKey: WithPublicKey());
         l.A($"JsApiJson: {content}");
 
         return l.ReturnAsOk(HtmlDialog.UpdatePlaceholders(html, content, pageId, addOn, assets.HtmlHead, ""));
@@ -129,6 +129,19 @@ public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to pre
         l.A($"{(pageId == UnknownPageId ? "unknown" : "")} pageId: {pageId}");
 
         return l.ReturnAsOk(pageId);
+    }
+
+    private bool WithPublicKey()
+    {
+        var l = Log.Fn<bool>();
+
+        // 'wpk' should be provided in query string
+        var withPublicKeyString = Request.QueryString[HtmlDialog.WithPublicKey];
+        l.A($"{HtmlDialog.WithPublicKey} from query string: {withPublicKeyString}");
+
+        var withPublicKey = withPublicKeyString.HasValue() && Convert.ToBoolean(withPublicKeyString);
+
+        return l.ReturnAsOk(withPublicKey);
     }
 
     /// <summary>

@@ -83,7 +83,8 @@ public class PageChangeSummary(
                 css: new(autoOpt, AddToBottom, CssDefaultPriority, false, false),
                 js: new(autoOpt, AddToBottom, JsDefaultPriority, autoOpt, autoOpt)));
             l.A($"Feature: {settingFeature.Name} - assets extracted: {extracted.Assets.Count}");
-            if (!extracted.Assets.Any()) continue;
+            if (!extracted.Assets.Any())
+                continue;
 
             //// todo: If the original settings say we should auto-optimize, do this here
             //if (settingFeature.AutoOptimize)
@@ -98,6 +99,7 @@ public class PageChangeSummary(
             extracted.Assets.ForEach(a => a.WhitelistInCsp = true);
 
             newAssets.AddRange(extracted.Assets);
+
             // Reset the HTML to what's left after extracting the resources
             settingFeature.Html = extracted.Html;
         }

@@ -8,54 +8,46 @@ namespace ToSic.Sxc.Web.Internal.PageFeatures;
 /// </summary>
 [PrivateApi("Internal / not final - neither name, namespace or anything")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class PageFeature(
-    string key,
-    string name,
-    string description = default,
-    string[] needs = default,
-    string html = default,
-    List<Requirement> requirements = default,
-    string urlInDist = default)
-    : IPageFeature
+public record PageFeature : IPageFeature
 {
     public const string ConditionIsPageFeature = "pagefeature";
         
     /// <summary>
     /// Primary identifier to activate the feature
     /// </summary>
-    public string NameId { get; } = key ?? throw new("key is required");
+    public required string NameId { get; init; }
 
     /// <summary>
     /// Name of this feature. 
     /// </summary>
-    public string Name { get; } = name ?? throw new("name is required");
+    public string Name { get; init; } = "";
 
-    public string Html { get; set; } = html;
+    public string Html { get; set; } // TODO: INIT!
 
     /// <summary>
     /// Nice description of the feature.
     /// </summary>
-    public string Description { get; } = description ?? "";
+    public string Description { get; init; } = "";
 
     /// <summary>
     /// List of other features required to run this feature.
     /// </summary>
-    public IEnumerable<string> Needs { get; } = needs ?? [];
+    public IEnumerable<string> Needs { get; init; } = [];
 
-    public Requirement Requirement { get; } = new(ConditionIsPageFeature, key);
+    public Requirement Requirement => field ??= new(ConditionIsPageFeature, NameId);
 
-    public List<Requirement> Requirements { get; } = requirements ?? [];
+    public List<Requirement> Requirements { get; init; } = [];
 
     /// <summary>
     /// Temporary URL for internal features which need to store the URL someplace
     /// This is not a final solution, in future it should probably
     /// be more sophisticated, like contain a list of configuration objects to construct the url.
     /// </summary>
-    public string UrlInDist { get; } = urlInDist;
+    public string UrlInDist { get; init; }
 
     /// <summary>
     /// ToString for easier debugging
     /// </summary>
     public override string ToString()
-        => base.ToString() + "(" + NameId + ")";
+        => $"{base.ToString()}({NameId})";
 }

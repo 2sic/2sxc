@@ -7,7 +7,9 @@ internal class PageFeatures(IPageFeaturesManager pfm) : IPageFeatures
     /// <inheritdoc />
     public IEnumerable<string> Activate(params string[] keys)
     {
-        var realKeys = keys.Where(k => !string.IsNullOrWhiteSpace(k)).ToArray();
+        var realKeys = keys
+            .Where(k => !string.IsNullOrWhiteSpace(k))
+            .ToArray();
         FeatureKeys.AddRange(realKeys);
         return realKeys;
     }

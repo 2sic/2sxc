@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
             var encoding = Encoding.UTF8;
 
             var options = CSharpParseOptions.Default
-                .WithLanguageVersion(LanguageVersion.CSharp11)
+                .WithLanguageVersion(LanguageVersion.Latest)
                 .WithPreprocessorSymbols("OQTANE", "NETCOREAPP", "NET5_0");
 
             var syntaxTrees = new List<SyntaxTree>();
@@ -55,40 +55,38 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
             var assemblyLoadContext = new SimpleUnloadableAssemblyLoadContext();
 
             // Compile to in-memory streams
-            using (var peStream = new MemoryStream())
-            using (var pdbStream = new MemoryStream())
+            using var peStream = new MemoryStream();
+            using var pdbStream = new MemoryStream();
+            var result = compilation.Emit(peStream, pdbStream, embeddedTexts: embeddedTexts,
+                options: new EmitOptions(
+                    debugInformationFormat: DebugInformationFormat.PortablePdb,
+                    pdbFilePath: $"{assemblyName}.pdb"));
+
+            if (!result.Success)
             {
-                var result = compilation.Emit(peStream, pdbStream, embeddedTexts: embeddedTexts,
-                    options: new EmitOptions(
-                        debugInformationFormat: DebugInformationFormat.PortablePdb,
-                        pdbFilePath: $"{assemblyName}.pdb"));
+                l.E("Compilation done with error.");
 
-                if (!result.Success)
+                var errors = new List<string>();
+
+                var failures = result.Diagnostics.Where(diagnostic =>
+                    diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error);
+
+                foreach (var diagnostic in failures)
                 {
-                    l.E("Compilation done with error.");
-
-                    var errors = new List<string>();
-
-                    var failures = result.Diagnostics.Where(diagnostic =>
-                        diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error);
-
-                    foreach (var diagnostic in failures)
-                    {
-                        l.A("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
-                        errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
-                    }
-
-                    //throw l.Done(new InvalidOperationException(string.Join("\n", errors)));
-                    return l.ReturnAsError(new AssemblyResult(errorMessages: string.Join("\n", errors)));
+                    l.A("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
+                    errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
                 }
 
-                peStream.Seek(0, SeekOrigin.Begin);
-                pdbStream?.Seek(0, SeekOrigin.Begin);
-
-                var assembly = assemblyLoadContext.LoadFromStream(peStream, pdbStream);
-
-                return l.ReturnAsOk(new AssemblyResult(assembly));
+                //throw l.Done(new InvalidOperationException(string.Join("\n", errors)));
+                return l.ReturnAsError(new AssemblyResult(errorMessages: string.Join("\n", errors)));
             }
+
+            peStream.Seek(0, SeekOrigin.Begin);
+            pdbStream?.Seek(0, SeekOrigin.Begin);
+
+            var assembly = assemblyLoadContext.LoadFromStream(peStream, pdbStream);
+
+            return l.ReturnAsOk(new AssemblyResult(assembly));
         }
 
         // Ensure that can't be kept alive by stack slot references (real- or JIT-introduced locals).
@@ -124,11 +122,11 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
 
             var assemblyLoadContext = new SimpleUnloadableAssemblyLoadContext();
 
-            // Create file streams to save the compiled assembly and PDB to disk
-            using (var peFileStream = new FileStream(assemblyFilePath, FileMode.Create, FileAccess.Write))
-            using (var pdbFileStream = new FileStream(pdbFilePath, FileMode.Create, FileAccess.Write))
+            try
             {
-                var result = compilation.Emit(peFileStream, pdbFileStream, embeddedTexts: embeddedTexts,
+                using var peStream = new MemoryStream();
+                using var pdbStream = new MemoryStream();
+                var result = compilation.Emit(peStream, pdbStream, embeddedTexts: embeddedTexts,
                     options: new EmitOptions(
                         debugInformationFormat: DebugInformationFormat.PortablePdb,
                         pdbFilePath: pdbFilePath));
@@ -152,14 +150,33 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
                     return l.ReturnAsError(new AssemblyResult(errorMessages: string.Join("\n", errors)));
                 }
 
-                peFileStream.Flush();
-                pdbFileStream.Flush();
+                // Create file streams to save the compiled assembly and PDB to disk
+                peStream.Seek(0, SeekOrigin.Begin);
+                pdbStream?.Seek(0, SeekOrigin.Begin);
+
+                using (var peFileStream = new FileStream(assemblyFilePath, FileMode.Create, FileAccess.Write))
+                    peStream.CopyTo(peFileStream);
+
+                using (var pdbFileStream = new FileStream(pdbFilePath, FileMode.Create, FileAccess.Write)) 
+                    pdbStream.CopyTo(pdbFileStream);
+
+                var assembly = assemblyLoadContext.LoadFromStream(peStream, pdbStream);
+                //var assembly = assemblyLoadContext.LoadFromAssemblyPath(assemblyFilePath);
+                //var assemblyBytes = File.ReadAllBytes(assemblyFilePath);
+
+                return l.ReturnAsOk(new AssemblyResult(assembly));
             }
-
-            var assembly = assemblyLoadContext.LoadFromAssemblyPath(assemblyFilePath);
-            //var assemblyBytes = File.ReadAllBytes(assemblyFilePath);
-
-            return l.ReturnAsOk(new AssemblyResult(assembly, /*assemblyBytes,*/ null));
+            catch (Exception ex)
+            {
+                l.E($"Exception during compilation: {ex.Message}");
+                return l.ReturnAsError(new AssemblyResult(errorMessages: ex.Message));
+            }
+            finally
+            {
+                // Ensure that can't be kept alive.
+                if (assemblyLoadContext.IsCollectible)
+                    assemblyLoadContext.Unload();
+            }
         }
     }
 }

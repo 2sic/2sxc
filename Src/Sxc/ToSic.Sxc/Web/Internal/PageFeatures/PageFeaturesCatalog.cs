@@ -33,7 +33,8 @@ public class PageFeaturesCatalog: GlobalCatalogBase<IPageFeature>
             ToolbarsAutoInternal,
             TurnOn,
             CmsWysiwyg,
-            Lightbox
+            Lightbox,
+            EncryptFormData
         );
     }
 }
