@@ -22,7 +22,7 @@ public partial record Parameters : IParameters
     /// This is the only place where the initial NVC is stored.
     /// </summary>
     [PrivateApi]
-    public NameValueCollection Nvc { get => field ??= []; init; }
+    public NameValueCollection Nvc { get => field ??= []; init => field = value; }
 
     #region Get (new v15.04)
 
