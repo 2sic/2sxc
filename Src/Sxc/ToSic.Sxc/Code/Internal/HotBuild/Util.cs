@@ -9,6 +9,7 @@ namespace ToSic.Sxc.Code.Internal.HotBuild;
 /// </summary>
 public class Util(IGlobalConfiguration globalConfiguration)
 {
+    private const string Dll = ".dll";
     private static bool Cleaned { get; set; }
     private static readonly object CleaningLock = new();
 
@@ -44,7 +45,7 @@ public class Util(IGlobalConfiguration globalConfiguration)
                 var currentDateTime = DateTime.Now;
 
                 // Group files by their prefix (excluding the hash part if valid)
-                var groupedFiles = Directory.GetFiles(globalConfiguration.TempAssemblyFolder, "*.*", SearchOption.TopDirectoryOnly)
+                var groupedFiles = Directory.GetFiles(globalConfiguration.TempAssemblyFolder, "*" + Dll, SearchOption.TopDirectoryOnly)
                     .Select(f => new FileInfo(f))
                     .GroupBy(fileInfo => GetFilePrefix(fileInfo.Name));
 
@@ -84,6 +85,9 @@ public class Util(IGlobalConfiguration globalConfiguration)
     // Helper method to extract the prefix from the filename, validating the hash part
     private static string GetFilePrefix(string fileName)
     {
+        if (Path.GetExtension(fileName) != Dll)
+            return null;
+
         var nameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
         var lastDashIndex = nameWithoutExtension.LastIndexOf('-');
 
