@@ -9,7 +9,7 @@ public interface IModuleService: IHasLog
     /// <summary>
     /// Tags added by code, errors, TurnOn etc. which are added to the end of the module.
     /// </summary>
-    IReadOnlyCollection<IHtmlTag> MoreTags { get; }
+    IReadOnlyCollection<IHtmlTag> GetAndFlushMoreTags(int moduleId = default);
 
     /// <summary>
     /// Add a tag (like a TurnOn) to the end of the module
@@ -17,5 +17,6 @@ public interface IModuleService: IHasLog
     /// <param name="tag"></param>
     /// <param name="nameId"></param>
     /// <param name="noDuplicates"></param>
-    void AddToMore(IHtmlTag tag, string nameId = null, bool noDuplicates = false);
+    /// <param name="moduleId"></param>
+    void AddToMore(IHtmlTag tag, string nameId = null, bool noDuplicates = false, int moduleId = default);
 }
