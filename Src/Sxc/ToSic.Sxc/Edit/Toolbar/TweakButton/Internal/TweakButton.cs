@@ -113,29 +113,49 @@ internal class TweakButton: ITweakButton, ITweakButtonInternal
 
     #region Params
 
-    public ITweakButton FormParameters(object value)
-        => value == null ? this : Parameters(new ObjectToUrl().SerializeChild(value, ToolbarConstants.RuleParamPrefixForm));
+    /// <summary>
+    /// Do null-check, then convert any possible object to url using an additional prefix
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="prefix"></param>
+    /// <returns></returns>
+    private ITweakButton ParamObjInternal(object value, string prefix)
+        => value == null
+            ? this
+            : ParamAddProcessed(new ObjectToUrl().SerializeChild(value, prefix));
 
-    public ITweakButton FormParameters(string name, object value)
-        => (value ?? name) == null ? this : FormParameters($"{name}={value}");
+    private ITweakButton ParamObjInternal(string name, object value, string prefix)
+        // todo: check if we can properly serialize the value...object
+        => (value ?? name) == null
+            ? this
+            : ParamAddProcessed(new ObjectToUrl().SerializeChild($"{name}={ValueToString(value)}", prefix));
 
-    public ITweakButton Parameters(object value)
-        => value == null ? this : new(this, parameters: _paramsMerge.Add(value));
-
-    public ITweakButton Parameters(string name, object value)
-        => (value ?? name) == null ? this : Parameters($"{name}={value}");
-
-    public ITweakButton Prefill(object value)
-        => value == null ? this : Parameters(new ObjectToUrl().SerializeChild(value, ToolbarConstants.RuleParamPrefixPrefill));
-
-    public ITweakButton Prefill(string name, object value)
-        => (value ?? name) == null ? this : Prefill($"{name}={ValueToString(value)}");
+    private ITweakButton ParamAddProcessed(object value)
+        => new TweakButton(this, parameters: _paramsMerge.Add(value));
 
     public ITweakButton Filter(object value)
-        => value == null ? this : Parameters(new ObjectToUrl().SerializeChild(value, ToolbarConstants.RuleParamPrefixFilter));
+        => ParamObjInternal(value, ToolbarConstants.RuleParamPrefixFilter);
 
     public ITweakButton Filter(string name, object value)
-        => (value ?? name) == null ? this : Filter($"{name}={ValueToString(value)}");
+        => ParamObjInternal(name, value, ToolbarConstants.RuleParamPrefixFilter);
+
+    public ITweakButton FormParameters(object value)
+        => ParamObjInternal(value, ToolbarConstants.RuleParamPrefixForm);
+    
+    public ITweakButton FormParameters(string name, object value)
+        => ParamObjInternal(name, value, ToolbarConstants.RuleParamPrefixForm);
+
+    public ITweakButton Parameters(object value)
+        => value == null ? this : ParamAddProcessed(value);
+
+    public ITweakButton Parameters(string name, object value)
+        => ParamObjInternal(name, value, null /* no special prefix */);
+
+    public ITweakButton Prefill(object value)
+        => ParamObjInternal(value, ToolbarConstants.RuleParamPrefixPrefill);
+
+    public ITweakButton Prefill(string name, object value)
+        => ParamObjInternal(name, value, ToolbarConstants.RuleParamPrefixPrefill);
 
     /// <summary>
     /// WIP trying to get Filter with an array of IDs to return [1,2,3] instead of Int32[]
@@ -146,6 +166,7 @@ internal class TweakButton: ITweakButton, ITweakButtonInternal
     {
         null => null,
         string str => str,
+        bool bln => bln.ToString().ToLower(),
         IEnumerable => JsonSerializer.Serialize(value),
         _ => value.ToString()
     };
