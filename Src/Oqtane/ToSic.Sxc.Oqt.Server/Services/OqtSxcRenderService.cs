@@ -14,6 +14,7 @@ using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared.Helpers;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
+using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
 
@@ -36,6 +37,8 @@ public class OqtSxcRenderService(
     {
         try
         {
+            StoreParamsInHttpContext(@params);
+
             var alias = aliasResolver.GetAndStoreAlias(@params.AliasId);
             if (alias == null)
                 return Forbidden("Unauthorized Alias Get Attempt {AliasId}", @params.AliasId);
@@ -65,6 +68,26 @@ public class OqtSxcRenderService(
         catch (Exception ex)
         {
             return Error(ex);
+        }
+    }
+
+    /// <summary>
+    /// Stores the rendering parameters in the current HTTP context for later retrieval during the request lifecycle.
+    /// ModuleId is necessary for ModuleService to scope its functionality to each module rendering in Oqtane Interactive Server.
+    /// </summary>
+    /// <param name="params">
+    /// RenderParameters containing module, page, and site information.
+    /// </param>
+    private void StoreParamsInHttpContext(RenderParameters @params)
+    {
+        if (accessor.HttpContext != null)
+        {
+            // Store the render parameters in HttpContext.Items using a specific key.
+            // This allows other components to access these parameters throughout the current HTTP request.
+            accessor.HttpContext.Items[ModuleService.OqtaneSxcRenderParameters] = @params;
+
+            //accessor.HttpContext.Items.TryGetValue("Oqtane.Sxc.RenderParametersCounter", out var counter);
+            //accessor.HttpContext.Items["Oqtane.Sxc.RenderParametersCounter"] = (counter as int? ?? 0) + 1;
         }
     }
 

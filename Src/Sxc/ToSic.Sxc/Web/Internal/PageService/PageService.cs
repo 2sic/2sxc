@@ -14,6 +14,11 @@ public partial class PageService(
     LazySvc<IHtmlTagsService> htmlTagsLazy,
     LazySvc<ITurnOnService> turnOn,
     LazySvc<IModuleService> moduleService,
+#if NETCOREAPP
+    // used to enabled ModuleService scoping by ModuleId in Oqtane Interactive Server
+    ToSic.Sxc.Context.Internal.IContextOfBlock contextOfBlock,
+    Microsoft.AspNetCore.Http.IHttpContextAccessor accessor,
+#endif
     LazySvc<IFeaturesService> features)
     : ServiceForDynamicCode("2sxc.PgeSrv",
             connect: [cspServiceLazy, htmlTagsLazy, moduleService, turnOn, pageServiceShared, features]),
