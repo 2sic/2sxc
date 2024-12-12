@@ -37,8 +37,6 @@ public class OqtSxcRenderService(
     {
         try
         {
-            StoreParamsInHttpContext(@params);
-
             var alias = aliasResolver.GetAndStoreAlias(@params.AliasId);
             if (alias == null)
                 return Forbidden("Unauthorized Alias Get Attempt {AliasId}", @params.AliasId);
@@ -71,26 +69,6 @@ public class OqtSxcRenderService(
         }
     }
 
-    /// <summary>
-    /// Stores the rendering parameters in the current HTTP context for later retrieval during the request lifecycle.
-    /// ModuleId is necessary for ModuleService to scope its functionality to each module rendering in Oqtane Interactive Server.
-    /// </summary>
-    /// <param name="params">
-    /// RenderParameters containing module, page, and site information.
-    /// </param>
-    private void StoreParamsInHttpContext(RenderParameters @params)
-    {
-        if (accessor.HttpContext != null)
-        {
-            // Store the render parameters in HttpContext.Items using a specific key.
-            // This allows other components to access these parameters throughout the current HTTP request.
-            accessor.HttpContext.Items[ModuleService.OqtaneSxcRenderParameters] = @params;
-
-            //accessor.HttpContext.Items.TryGetValue("Oqtane.Sxc.RenderParametersCounter", out var counter);
-            //accessor.HttpContext.Items["Oqtane.Sxc.RenderParametersCounter"] = (counter as int? ?? 0) + 1;
-        }
-    }
-
     private OqtViewResultsDto Forbidden(string message, params object[] args)
     {
         logger.Log(LogLevel.Error, this, LogFunction.Security, message, args);
@@ -110,6 +88,4 @@ public class OqtSxcRenderService(
     private bool IsSuperUser => 
         (accessor?.HttpContext?.User.IsInRole(RoleNames.Host) ?? false)
         || (accessor?.HttpContext?.User.IsInRole(RoleNames.Admin) ?? false);
-
-    // TODO: ...
 }
