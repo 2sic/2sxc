@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Razor.Markup;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Web.Internal;
 
@@ -36,8 +35,13 @@ public partial record ToolbarBuilder: RawHtmlStringRecord, IEnumerable<string>, 
     /// Public constructor for DI
     /// </summary>
     /// <param name="services"></param>
-    public ToolbarBuilder(MyServices services) => Services = services.ConnectServices(Log);
-    protected readonly MyServices Services;
+    public ToolbarBuilder(MyServices services) =>
+        Services = services.ConnectServices(Log);
+
+    protected MyServices Services { get; init; }
+
+    public ILog Log { get; } = new Log(SxcLogName + ".TlbBld");
+
 
     /// <summary>
     /// Clone-constructor
@@ -45,35 +49,64 @@ public partial record ToolbarBuilder: RawHtmlStringRecord, IEnumerable<string>, 
     internal ToolbarBuilder(ToolbarBuilder parent, IEnumerable<ToolbarRuleBase> replaceRules = null) : this(parent.Services)
     {
         this.LinkLog(parent.Log);
-        _currentAppIdentity = parent._currentAppIdentity;
-        _CodeApiSvc = parent._CodeApiSvc;
+        CurrentAppIdentity = parent.CurrentAppIdentity;
+        CodeApiSvc = parent.CodeApiSvc;
         Configuration = parent.Configuration;
         Utils = parent.Utils;
         Rules.AddRange(replaceRules ?? parent.Rules);
     }
 
-    public ILog Log { get; } = new Log(SxcLogName + ".TlbBld");
+    /// <summary>
+    /// Clone-constructor
+    /// </summary>
+    internal static ToolbarBuilder CloneWith(ToolbarBuilder parent, IEnumerable<ToolbarRuleBase> replaceRules = null) //: this(parent.Services)
+    {
+        var clone = parent with // new ToolbarBuilder(parent.Services)
+        {
+            //Log = parent.Log,
+            //CurrentAppIdentity = parent.CurrentAppIdentity,
+            //CodeApiSvc = parent.CodeApiSvc,
+            //Configuration = parent.Configuration,
+            //Utils = parent.Utils,
+            Rules = replaceRules?.ToList() ?? parent.Rules.ToList()
+        };
 
-    private IAppIdentity _currentAppIdentity;
+        clone.LinkLog(parent.Log);
+        //CurrentAppIdentity = parent.CurrentAppIdentity;
+        //CodeApiSvc = parent.CodeApiSvc;
+        //Configuration = parent.Configuration;
+        //Utils = parent.Utils;
+        //clone.Rules.AddRange(replaceRules ?? parent.Rules);
+        return clone;
+    }
+
 
     public void ConnectToRoot(ICodeApiService codeRoot)
     {
         if (codeRoot == null) return;
-        _CodeApiSvc = codeRoot;
-        _currentAppIdentity = codeRoot.App;
-        Services.ToolbarButtonHelper.Value.MainAppIdentity = _currentAppIdentity;
+        CodeApiSvc = codeRoot;
+        CurrentAppIdentity = codeRoot.App;
+        Services.ToolbarButtonHelper.Value.MainAppIdentity = CurrentAppIdentity;
     }
-    private ICodeApiService _CodeApiSvc;
+
+    private IAppIdentity CurrentAppIdentity { get; set; }
+
+    private ICodeApiService CodeApiSvc { get; set; }
 
     #endregion
 
-    internal ToolbarBuilderConfiguration Configuration;
+    #region Object state, init only for cloning
+
+    internal ToolbarBuilderConfiguration Configuration { get; set; } /* WARNING - should be init only */
 
     private ToolbarBuilderUtilities Utils { get => field ??= new(); init => field = value; }
 
-    internal List<ToolbarRuleBase> Rules { get; } = [];
+    internal List<ToolbarRuleBase> Rules { get; init; } = [];
 
-    public IToolbarBuilder Toolbar(
+    #endregion
+
+
+    internal IToolbarBuilder Toolbar(
         string toolbarTemplate,
         object target = default,
         NoParamOrder noParamOrder = default,
@@ -84,10 +117,10 @@ public partial record ToolbarBuilder: RawHtmlStringRecord, IEnumerable<string>, 
     )
     {
         var updated = this.AddInternal(new ToolbarRuleToolbar(toolbarTemplate, ui: PrepareUi(ui)));
-        if (new[] { target, parameters, prefill, tweak }.Any(x => x != null))
-            updated = updated.Parameters(target, tweak: tweak, parameters: parameters, prefill: prefill);
-
-        return updated;
+        // If anything is not null, then we must specify it
+        return new[] { target, parameters, prefill, tweak }.Any(x => x != null)
+            ? updated.Parameters(target, tweak: tweak, parameters: parameters, prefill: prefill)
+            : updated;
     }
 
 

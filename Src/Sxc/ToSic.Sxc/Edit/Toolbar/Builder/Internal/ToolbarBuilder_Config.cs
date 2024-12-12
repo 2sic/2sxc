@@ -19,7 +19,7 @@ partial record ToolbarBuilder
             clone.Configuration = (Configuration ?? new()) with { Mode = mode };
         return clone;
     }
-    private IToolbarBuilder With(ToolbarBuilderConfiguration configuration)
+    private ToolbarBuilder With(ToolbarBuilderConfiguration configuration)
     {
         // Create clone before starting to log so it's in there too
         var clone = new ToolbarBuilder(this)

@@ -181,8 +181,8 @@ partial record ToolbarBuilder
             );
         });
 
-        var builder = this as IToolbarBuilder;
-        return l.ReturnAsOk(builder.AddInternal(mdsToAdd.Cast<object>().ToArray()));
+        // var builder = this as IToolbarBuilder;
+        return l.ReturnAsOk(this.AddInternal(mdsToAdd.Cast<object>().ToArray()));
     }
 
     /// <inheritdoc />

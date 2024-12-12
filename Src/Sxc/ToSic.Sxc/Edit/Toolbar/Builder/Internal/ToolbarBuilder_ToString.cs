@@ -23,7 +23,7 @@ partial record ToolbarBuilder
     public override string ToString()
     {
         // Get edit, but don't exit if null, as the Render (later on) will add comments if Edit is null
-        var edit = _CodeApiSvc?.Edit;
+        var edit = CodeApiSvc?.Edit;
 
         // TODO:
         // - force
@@ -31,7 +31,7 @@ partial record ToolbarBuilder
         var enabled = edit?.Enabled == true || forceEnable;
 
         if (forceEnable) 
-            _CodeApiSvc?.GetService<IPageService>(reuse: true)
+            CodeApiSvc?.GetService<IPageService>(reuse: true)
                 .Activate(SxcPageFeatures.ToolbarsInternal.NameId);
 
         // Check if conditions don't allow. Only test conditions if the toolbar would show - otherwise ignore
@@ -73,9 +73,9 @@ partial record ToolbarBuilder
         var tlb = new ToolbarBuilder(this, rules) as IToolbarBuilder;
         var keyOrMessage = Configuration?.DemoMessage;
         var message = keyOrMessage == null
-            ? _CodeApiSvc.Resources.Get<string>($"{AppStackConstants.RootNameResources}.Toolbar.IsDemoSubItem")
+            ? CodeApiSvc.Resources.Get<string>($"{AppStackConstants.RootNameResources}.Toolbar.IsDemoSubItem")
             : keyOrMessage.StartsWith($"{AppStackConstants.RootNameResources}.")
-                ? _CodeApiSvc.Resources.Get<string>(keyOrMessage)
+                ? CodeApiSvc.Resources.Get<string>(keyOrMessage)
                 : keyOrMessage;
         tlb = tlb.Info(tweak: b => b.Note(message));
         return (ToolbarBuilder)tlb;

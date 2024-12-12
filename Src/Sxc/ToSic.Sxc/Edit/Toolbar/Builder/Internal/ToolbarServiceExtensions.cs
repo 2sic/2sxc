@@ -10,14 +10,14 @@ internal static class ToolbarBuilderExtensions
     /// History
     /// * Added in 2sxc 13
     /// </remarks>
-    public static IToolbarBuilder AddInternal(this IToolbarBuilder original, params object[] newRules)
+    public static ToolbarBuilder AddInternal(this ToolbarBuilder original, params object[] newRules)
     {
-        var l = original.Log.Fn<IToolbarBuilder>();
+        var l = original.Log.Fn<ToolbarBuilder>();
         if (newRules == null || !newRules.Any())
             return l.Return(original, "no new rules");
 
         // Create clone before starting to log so it's in there too
-        var clone = new ToolbarBuilder(parent: original as ToolbarBuilder);
+        var clone = original with { }; // new ToolbarBuilder(parent: original as ToolbarBuilder);}
 
         foreach (var rule in newRules)
             if (rule is ToolbarRuleBase realRule)
