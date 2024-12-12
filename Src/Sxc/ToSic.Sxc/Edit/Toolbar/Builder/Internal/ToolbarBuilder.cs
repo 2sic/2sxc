@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Internal;
 /// So for now :( it must remain public.
 /// </remarks>
 [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-public partial record ToolbarBuilder: RawHtmlStringRecord, IEnumerable<string>, IToolbarBuilder, INeedsCodeApiService
+public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsCodeApiService
 {
 
     #region Constructors and Init
