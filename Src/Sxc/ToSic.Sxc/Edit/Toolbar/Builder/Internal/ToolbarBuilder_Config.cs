@@ -5,62 +5,23 @@ namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
 partial record ToolbarBuilder
 {
-    private IToolbarBuilder With(
-        NoParamOrder noParamOrder = default,
-        string mode = default,
-        object target = default)
-    {
-        // Create clone before starting to log so it's in there too
-        var clone = target == null 
-            ? new(this)
-            : (ToolbarBuilder)Parameters(target);   // Params will already copy/clone it
-
-        if (mode != null)
-            clone.Configuration = (Configuration ?? new()) with { Mode = mode };
-        return clone;
-    }
-    private ToolbarBuilder With(ToolbarBuilderConfiguration configuration)
-    {
-        // Create clone before starting to log so it's in there too
-        var clone = new ToolbarBuilder(this)
-        {
-            Configuration = configuration
-        };
-
-        return clone;
-    }
-    public IToolbarBuilder More(
-        NoParamOrder noParamOrder = default,
-        object ui = default
-    ) =>
-        this.AddInternal(new ToolbarRuleCustom("more", ui: PrepareUi(ui)));
+    public IToolbarBuilder More(NoParamOrder noParamOrder = default, object ui = default) =>
+        this.AddInternal([new ToolbarRuleCustom("more", ui: PrepareUi(ui))]);
 
     public IToolbarBuilder For(object target) =>
-        With(target: target);
+        Parameters(target);
 
-    public IToolbarBuilder DetectDemo(
-        ICanBeEntity root,
-        NoParamOrder noParamOrder = default,
-        string message = default
-    ) =>
-        With((Configuration ?? new()) with { Root = root, DemoMessage = message });
-
-    public IToolbarBuilder Activate(bool condition)
-    {
-        throw new NotImplementedException();
-    }
-
+    public IToolbarBuilder DetectDemo(ICanBeEntity root, NoParamOrder noParamOrder = default, string message = default) =>
+        this with { Configuration = (Configuration ?? new()) with { DemoCheckItem = root, DemoMessage = message } };
 
     public IToolbarBuilder Condition(bool condition) =>
-        With((Configuration ?? new()) with { Condition = condition });
+        this with { Configuration = (Configuration ?? new()) with { Condition = condition } };
 
     public IToolbarBuilder Condition(Func<bool> condition) =>
-        With((Configuration ?? new()) with { ConditionFunc = condition });
+        this with { Configuration = (Configuration ?? new()) with { ConditionFunc = condition } };
 
     public IToolbarBuilder Audience(NoParamOrder protector = default, bool? everyone = default) =>
-        everyone == null
-            ? this
-            : With((Configuration ?? new()) with { ForEveryone = everyone });
+        everyone == null ? this : this with { Configuration = (Configuration ?? new()) with { ForceShow = everyone } };
 
     public IToolbarBuilder Group(string name = null)
     {
@@ -75,8 +36,8 @@ partial record ToolbarBuilder
         // auto-add other UI params such as the previous group
         return name!.StartsWith("-")
             // It's a remove-group rule
-            ? this.AddInternal($"-group={name.Substring(1)}")
+            ? this.AddInternal([$"-group={name.Substring(1)}"])
             // It's an add group - set the current group and add the button-rule
-            : With((Configuration ?? new()) with { Group = name }).AddInternal($"+group={name}");
+            : (this with { Configuration = (Configuration ?? new()) with { Group = name } }).AddInternal([$"+group={name}"]);
     }
 }

@@ -77,7 +77,7 @@ partial record ToolbarBuilder
             contentType: contentType,
             propsKeep: propsKeep, propsSkip: propsSkip,
             decoHelper: Services.ToolbarButtonHelper.Value);
-        var builder = this.AddInternal(command);
+        var builder = this.AddInternal([command]);
         return (command, builder);
     }
 

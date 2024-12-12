@@ -17,7 +17,7 @@ partial record ToolbarBuilder : IToolbarBuilderInternal
         // Get context, specify "true" to force it to be added
         var context = GenerateContext(target, true.ToString());
         var rule = new ToolbarRuleContext(null, context, Services.ToolbarButtonHelper.Value);
-        return this.AddInternal(rule);
+        return this.AddInternal([rule]);
     }
 
     /// <summary>

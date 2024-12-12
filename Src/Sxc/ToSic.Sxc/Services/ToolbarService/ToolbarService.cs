@@ -74,7 +74,7 @@ internal class ToolbarService(Generator<IToolbarBuilder> toolbarGenerator)
             tlb = (ToolbarBuilder)tlb.Settings(ui: _defaultUi);
 
         if (context.HasValue())
-            tlb = tlb.AddInternal(new ToolbarRuleGeneric($"context?{context}"));
+            tlb = tlb.AddInternal([new ToolbarRuleGeneric($"context?{context}")]);
 
         return callLog.Return(tlb);
     }

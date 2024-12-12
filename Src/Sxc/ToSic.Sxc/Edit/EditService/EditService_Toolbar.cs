@@ -47,7 +47,8 @@ partial class EditService
         var l = Log.Fn<IRawHtmlString>($"enabled:{Enabled}; inline{inTag}");
 
         // new v17.08 - force-show for everyone
-        var forceShow = (target as ToolbarBuilder)?.Configuration?.ForEveryone == true;
+        var tlbConfig = (target as ToolbarBuilder)?.Configuration;
+        var forceShow = tlbConfig?.ForceShow == true;
 
         if (!Enabled && !forceShow)
             return l.ReturnNull("not enabled");

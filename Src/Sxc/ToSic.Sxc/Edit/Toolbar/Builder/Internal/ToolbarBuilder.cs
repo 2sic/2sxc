@@ -41,45 +41,7 @@ public partial record ToolbarBuilder: RawHtmlStringRecord, IEnumerable<string>, 
     protected MyServices Services { get; init; }
 
     public ILog Log { get; } = new Log(SxcLogName + ".TlbBld");
-
-
-    /// <summary>
-    /// Clone-constructor
-    /// </summary>
-    internal ToolbarBuilder(ToolbarBuilder parent, IEnumerable<ToolbarRuleBase> replaceRules = null) : this(parent.Services)
-    {
-        this.LinkLog(parent.Log);
-        CurrentAppIdentity = parent.CurrentAppIdentity;
-        CodeApiSvc = parent.CodeApiSvc;
-        Configuration = parent.Configuration;
-        Utils = parent.Utils;
-        Rules.AddRange(replaceRules ?? parent.Rules);
-    }
-
-    /// <summary>
-    /// Clone-constructor
-    /// </summary>
-    internal static ToolbarBuilder CloneWith(ToolbarBuilder parent, IEnumerable<ToolbarRuleBase> replaceRules = null) //: this(parent.Services)
-    {
-        var clone = parent with // new ToolbarBuilder(parent.Services)
-        {
-            //Log = parent.Log,
-            //CurrentAppIdentity = parent.CurrentAppIdentity,
-            //CodeApiSvc = parent.CodeApiSvc,
-            //Configuration = parent.Configuration,
-            //Utils = parent.Utils,
-            Rules = replaceRules?.ToList() ?? parent.Rules.ToList()
-        };
-
-        clone.LinkLog(parent.Log);
-        //CurrentAppIdentity = parent.CurrentAppIdentity;
-        //CodeApiSvc = parent.CodeApiSvc;
-        //Configuration = parent.Configuration;
-        //Utils = parent.Utils;
-        //clone.Rules.AddRange(replaceRules ?? parent.Rules);
-        return clone;
-    }
-
+    
 
     public void ConnectToRoot(ICodeApiService codeRoot)
     {
@@ -97,7 +59,7 @@ public partial record ToolbarBuilder: RawHtmlStringRecord, IEnumerable<string>, 
 
     #region Object state, init only for cloning
 
-    internal ToolbarBuilderConfiguration Configuration { get; set; } /* WARNING - should be init only */
+    internal ToolbarBuilderConfiguration Configuration { get; init; }
 
     private ToolbarBuilderUtilities Utils { get => field ??= new(); init => field = value; }
 
@@ -116,7 +78,7 @@ public partial record ToolbarBuilder: RawHtmlStringRecord, IEnumerable<string>, 
         object prefill = default
     )
     {
-        var updated = this.AddInternal(new ToolbarRuleToolbar(toolbarTemplate, ui: PrepareUi(ui)));
+        var updated = this.AddInternal([new ToolbarRuleToolbar(toolbarTemplate, ui: PrepareUi(ui))]);
         // If anything is not null, then we must specify it
         return new[] { target, parameters, prefill, tweak }.Any(x => x != null)
             ? updated.Parameters(target, tweak: tweak, parameters: parameters, prefill: prefill)
@@ -142,7 +104,7 @@ public partial record ToolbarBuilder: RawHtmlStringRecord, IEnumerable<string>, 
         // to not-hover by default. 
         // The rule must be added to the top of the list, so that any other settings will take precedence,
         // Including UI rules added to the toolbar itself
-        if (Configuration?.Mode == ToolbarHtmlModes.Standalone)
+        if (Configuration?.HtmlMode == ToolbarHtmlModes.Standalone)
         {
             var standaloneSettings = new ToolbarRuleSettings(show: "always", hover: "none");
             rulesToDeliver = [standaloneSettings, .. Rules];

@@ -14,11 +14,35 @@ partial record ToolbarBuilder
 {
     private const string ErrRenderMessage = "error: can't render toolbar to html, missing context";
 
-    public IToolbarBuilder AsTag(object target = null) => With(mode: ToolbarHtmlModes.Standalone, target: target);
+    private IToolbarBuilder With(
+        NoParamOrder noParamOrder = default,
+        string mode = default,
+        object target = default)
+    {
+        // Create clone before starting to log so it's in there too
+        var clone = target == null
+            ? new(this)
+            : (ToolbarBuilder)Parameters(target);   // Params will already copy/clone it
 
-    public IToolbarBuilder AsAttributes(object target = null) => With(mode: ToolbarHtmlModes.OnTag, target: target);
+        return mode != null
+            ? clone with
+            {
+                Configuration = (Configuration ?? new()) with
+                {
+                    HtmlMode = mode
+                }
+            }
+            : clone;
+    }
 
-    public IToolbarBuilder AsJson(object target = null) => With(mode: ToolbarHtmlModes.Json, target: target);
+    public IToolbarBuilder AsTag(object target = null) =>
+        With(mode: ToolbarHtmlModes.Standalone, target: target);
+
+    public IToolbarBuilder AsAttributes(object target = null) =>
+        With(mode: ToolbarHtmlModes.OnTag, target: target);
+
+    public IToolbarBuilder AsJson(object target = null) =>
+        With(mode: ToolbarHtmlModes.Json, target: target);
 
     public override string ToString()
     {
@@ -27,9 +51,11 @@ partial record ToolbarBuilder
 
         // TODO:
         // - force
-        var forceEnable = Configuration?.ForEveryone == true;
+        var forceEnable = Configuration?.ForceShow == true;
         var enabled = edit?.Enabled == true || forceEnable;
 
+        // If we override force-show, then we must make sure that the toolbars API is loaded in JS
+        // since in this case it may not be activated
         if (forceEnable) 
             CodeApiSvc?.GetService<IPageService>(reuse: true)
                 .Activate(SxcPageFeatures.ToolbarsInternal.NameId);
@@ -43,7 +69,7 @@ partial record ToolbarBuilder
 
         // Show toolbar or a Demo-Informative-Toolbar
         var finalToolbar = ShouldSwitchToItemDemoMode()
-            ? CreateItemDemoToolbar()       // Implement Demo-Mode with info-button only
+            ? CreateStandaloneItemDemoToolbar()       // Implement Demo-Mode with info-button only
             : this;                         // Normal render of the current toolbar
         return finalToolbar.Render(edit, enabled);
     }
@@ -52,7 +78,7 @@ partial record ToolbarBuilder
     /// Create a fresh Toolbar which only shows infos about item being in demo-mode
     /// </summary>
     /// <returns></returns>
-    private ToolbarBuilder CreateItemDemoToolbar()
+    private ToolbarBuilder CreateStandaloneItemDemoToolbar()
     {
         var rules = new List<ToolbarRuleBase>();
 
@@ -70,21 +96,21 @@ partial record ToolbarBuilder
         AddRuleIfFound<ToolbarRuleForParams>();
         AddRuleIfFound<ToolbarRuleSettings>();
 
-        var tlb = new ToolbarBuilder(this, rules) as IToolbarBuilder;
+        var tlb = this with { Rules = rules }; // new ToolbarBuilder(this, rules);}
         var keyOrMessage = Configuration?.DemoMessage;
         var message = keyOrMessage == null
             ? CodeApiSvc.Resources.Get<string>($"{AppStackConstants.RootNameResources}.Toolbar.IsDemoSubItem")
             : keyOrMessage.StartsWith($"{AppStackConstants.RootNameResources}.")
                 ? CodeApiSvc.Resources.Get<string>(keyOrMessage)
                 : keyOrMessage;
-        tlb = tlb.Info(tweak: b => b.Note(message));
-        return (ToolbarBuilder)tlb;
+        tlb = (ToolbarBuilder)tlb.Info(tweak: b => b.Note(message));
+        return tlb;
     }
 
     private bool ShouldSwitchToItemDemoMode()
     {
         // If no root provided, we can't check demo mode as of now, so return
-        var root = Configuration?.Root?.Entity;
+        var root = Configuration?.DemoCheckItem?.Entity;
         if (root == null) return false;
 
         // If root is not demo, then don't use demo mode
@@ -108,7 +134,7 @@ partial record ToolbarBuilder
         if (!enabled)
             return ""; 
 
-        var mode = (Configuration?.Mode ?? ToolbarHtmlModes.OnTag).ToLowerInvariant();
+        var mode = (Configuration?.HtmlMode ?? ToolbarHtmlModes.OnTag).ToLowerInvariant();
         switch (mode)
         {
             // ReSharper disable AssignNullToNotNullAttribute
