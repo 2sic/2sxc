@@ -17,8 +17,7 @@ internal class CmsServiceStringWysiwyg(CmsServiceImageExtractor imageExtractor)
     : ServiceForDynamicCode("Cms.StrWys", connect: [imageExtractor])
 {
 
-    private ServiceKit14 ServiceKit => _svcKit ??= _CodeApiSvc.GetKit<ServiceKit14>();
-    private ServiceKit14 _svcKit;
+    private ServiceKit14 ServiceKit => field ??= _CodeApiSvc.GetKit<ServiceKit14>();
 
     #region Init
 
