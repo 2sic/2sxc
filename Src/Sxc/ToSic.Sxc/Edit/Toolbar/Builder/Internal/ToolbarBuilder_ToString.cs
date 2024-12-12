@@ -44,7 +44,14 @@ partial record ToolbarBuilder
     public IToolbarBuilder AsJson(object target = null) =>
         With(mode: ToolbarHtmlModes.Json, target: target);
 
-    public override string ToString()
+    /// <summary>
+    /// Also overwrite ToString() to keep functionality similar to before switch to record.
+    /// Probably not relevant though.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString() => ToHtmlString();
+
+    protected override string ToHtmlString()
     {
         // Get edit, but don't exit if null, as the Render (later on) will add comments if Edit is null
         var edit = CodeApiSvc?.Edit;
