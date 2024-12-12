@@ -184,7 +184,7 @@ public partial class BlockBuilder
             // This is not ideal, because it actually changes what's in the DIV
             // We would rather add it to the end, but ATM that doesn't trigger turnOn in AJAX reload
 
-            var additionalTags = Services.ModuleService.GetAndFlushMoreTags(Block.Context.Module.Id);
+            var additionalTags = Services.ModuleService.GetMoreTagsAndFlush(Block.Context.Module.Id);
             var bodyWithAddOns = additionalTags.Any()
                 ? body + "\n" + string.Join("\n", additionalTags.Select(t => t?.ToString()))
                 : body;
