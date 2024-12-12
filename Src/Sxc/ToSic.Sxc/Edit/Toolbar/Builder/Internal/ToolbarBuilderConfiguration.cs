@@ -1,31 +1,21 @@
 ﻿namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
-internal class ToolbarBuilderConfiguration(
-    ToolbarBuilderConfiguration original,
-    string mode = null,
-    bool? condition = null,
-    Func<bool> conditionFunc = null,
-    bool? forEveryone = null,
-    string group = null,
-    ICanBeEntity root = default,
-    bool? autoDemoMode = default,
-    string demoMessage = default)
+internal record ToolbarBuilderConfiguration
 {
-    public readonly string Mode = mode ?? original?.Mode;
+    public string Mode { get; init; }
 
-    public readonly bool? Condition = condition ?? original?.Condition;
+    public bool? Condition { get; init; }
 
-    public readonly Func<bool> ConditionFunc = conditionFunc ?? original?.ConditionFunc;
+    public Func<bool> ConditionFunc { get; init; }
 
     // Doesn't seem to be in use ATM
-    public readonly bool? ForEveryone = forEveryone ?? original?.ForEveryone;
+    public bool? ForEveryone { get; init; }
 
-    public readonly string Group = group ?? original?.Group;
+    public string Group { get; init; }
 
-    public readonly ICanBeEntity Root = root ?? original?.Root;
+    public ICanBeEntity Root { get; init; }
 
-    public readonly string DemoMessage = demoMessage ?? original?.DemoMessage;
+    public string DemoMessage { get; init; }
 
-    public readonly bool AutoDemoMode = autoDemoMode ?? original?.AutoDemoMode ?? default;
-
+    public bool AutoDemoMode { get; init; }
 }

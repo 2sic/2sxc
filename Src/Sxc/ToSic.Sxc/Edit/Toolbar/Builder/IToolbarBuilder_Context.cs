@@ -67,6 +67,17 @@ public partial interface IToolbarBuilder
     IToolbarBuilder Condition(Func<bool> condition);
 
     /// <summary>
+    /// Modify activation of the toolbar.
+    /// By default, it will auto-activate, so this is only needed if you want manually activate it,
+    /// for example for specific users who don't normally have edit permissions.
+    /// </summary>
+    /// <param name="condition"></param>
+    /// <returns>
+    /// BETA v19, replaces the previous _beta_ `Audience` method.
+    /// </returns>
+    IToolbarBuilder Activate(bool condition);
+
+    /// <summary>
     /// Specify an audience for the toolbar.
     /// Normally only people with admin permissions would see a toolbar.
     /// Specifying the audience will make it appear even if you are not an admin.
