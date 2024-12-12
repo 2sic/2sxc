@@ -9,7 +9,7 @@ public interface IModuleService: IHasLog
     /// <summary>
     /// Tags added by code, errors, TurnOn etc. which are added to the end of the module.
     /// </summary>
-    IReadOnlyCollection<IHtmlTag> GetAndFlushMoreTags(int moduleId = default);
+    IReadOnlyCollection<IHtmlTag> GetMoreTagsAndFlush(int moduleId = default);
 
     /// <summary>
     /// Add a tag (like a TurnOn) to the end of the module

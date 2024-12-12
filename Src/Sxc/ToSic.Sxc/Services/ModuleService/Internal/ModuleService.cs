@@ -18,9 +18,6 @@ namespace ToSic.Sxc.Services.Internal;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class ModuleService() : ServiceBase(SxcLogName + ".ModSvc"), IModuleService
 {
-    // Key used in HttpContext.Items to store ModuleID and additional rendering parameters.
-    public const string OqtaneSxcRenderParameters = "Oqtane.Sxc.RenderParameters";
-
     // Stores ModuleServiceData instances, scoped by ModuleId.
     private readonly Dictionary<int, ModuleServiceData> _moduleData = new();
 
@@ -54,7 +51,7 @@ internal class ModuleService() : ServiceBase(SxcLogName + ".ModSvc"), IModuleSer
     /// </summary>
     /// <param name="moduleId">The ID of the module.</param>
     /// <returns>A read-only collection of HTML tags associated with the module.</returns>
-    public IReadOnlyCollection<IHtmlTag> GetAndFlushMoreTags(int moduleId = default)
+    public IReadOnlyCollection<IHtmlTag> GetMoreTagsAndFlush(int moduleId = default)
     {
         var moduleServiceData = GetOrCreateModuleServiceData(moduleId);
         var tags = moduleServiceData.MoreTags;
@@ -68,9 +65,6 @@ internal class ModuleService() : ServiceBase(SxcLogName + ".ModSvc"), IModuleSer
             return moduleServiceData;
 
         // Handle the case where the moduleId does not exist
-        moduleServiceData = new ModuleServiceData();
-        _moduleData[moduleId] = moduleServiceData;
-
-        return moduleServiceData;
+        return _moduleData[moduleId] = new ModuleServiceData();
     }
 }

@@ -46,17 +46,7 @@ partial class PageService
     /// <summary>
     /// Retrieves the Module ID for the current module rendering context.
     /// </summary>
-    /// <returns>The resolved Module ID as an integer; returns zero if it cannot be determined.</returns>
-    private int GetModuleId()
-    {
-        var moduleId = contextOfBlock.Module.Id; // This is not working. It's always 0.
-        if (moduleId != default || accessor.HttpContext == null) return moduleId;
-
-        //accessor.HttpContext.Items.TryGetValue("Oqtane.Sxc.RenderParametersCounter", out var counter);
-        if (accessor.HttpContext.Items.TryGetValue(ModuleService.OqtaneSxcRenderParameters, out var @params))
-            moduleId = (@params as dynamic)?.ModuleId ?? moduleId;
-
-        return moduleId;
-    }
+    /// <returns>The resolved Module ID as an integer.</returns>
+    private int GetModuleId() => _CodeApiSvc.CmsContext.Module.Id;
 #endif
 }
