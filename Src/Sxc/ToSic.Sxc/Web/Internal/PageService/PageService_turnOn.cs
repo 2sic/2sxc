@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Services.Internal;
-using ToSic.Sxc.Web.Internal.PageFeatures;
+﻿using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Web.Internal.PageService;
 
@@ -33,7 +32,7 @@ partial class PageService
         // and it does not change during subsequent SignalR communications (until a full page reload).
         // As a result, scoped services have the same instance for all 2sxc module instances across all pages during a user's browser session.
         // To prevent conflicts, we need to add the ModuleId to the ModuleService to scope its functionality to each module rendering.
-        moduleService.Value.AddToMore(tag, noDuplicates: noDuplicates == true, moduleId: GetModuleId());
+        moduleService.Value.AddToMore(tag, noDuplicates: noDuplicates == true, moduleId: _CodeApiSvc.CmsContext.Module.Id);
 #else
         moduleService.Value.AddToMore(tag, noDuplicates: noDuplicates == true);
 #endif
@@ -41,12 +40,4 @@ partial class PageService
         // Then return empty string
         return l.ReturnAsOk(null);
     }
-
-#if NETCOREAPP
-    /// <summary>
-    /// Retrieves the Module ID for the current module rendering context.
-    /// </summary>
-    /// <returns>The resolved Module ID as an integer.</returns>
-    private int GetModuleId() => _CodeApiSvc.CmsContext.Module.Id;
-#endif
 }
