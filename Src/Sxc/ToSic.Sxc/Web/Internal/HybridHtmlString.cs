@@ -31,12 +31,13 @@ public record HybridHtmlString : IRawHtmlString
     private readonly string _value;
 
     /// <summary>
-    /// Standard ToString overload - used when concatenating strings.
+    /// Records automatically overwrite ToString(),
+    /// so we must use another method for providing the desired HTML string.
     ///
     /// This is also the method used for any other integration, so overwrite this if you need to change the behavior.
     /// </summary>
     /// <returns></returns>
-    public override string ToString() => _value;
+    protected virtual string ToHtmlString() => _value;
 
 #if NETFRAMEWORK
     /// <summary>
@@ -44,7 +45,7 @@ public record HybridHtmlString : IRawHtmlString
     /// </summary>
     /// <returns></returns>
     [PrivateApi]
-    public string ToHtmlString() => ToString();
+    string IHtmlString.ToHtmlString() => ToHtmlString();
 #else
 
         /// <inheritdoc />
@@ -52,26 +53,24 @@ public record HybridHtmlString : IRawHtmlString
         public void WriteTo(System.IO.TextWriter writer, HtmlEncoder encoder)
         {
             if (writer == null) throw new System.ArgumentNullException(nameof(writer));
-            writer.Write(ToString());
+            writer.Write(ToHtmlString());
         }
 #endif
 
-    public static bool IsStringOrHtmlString(object original, out string asString)
-    {
-        asString = null;
-        if (original is null) return false;
-        if (original is string strOriginal)
-        {
-            asString = strOriginal;
-            return true;
-        }
-
-        if (original is IHtmlString)
-        {
-            asString = original.ToString();
-            return true;
-        }
-
-        return false;
-    }
+    //public static bool IsStringOrHtmlString(object original, out string asString)
+    //{
+    //    asString = null;
+    //    if (original is null) return false;
+    //    if (original is string strOriginal)
+    //    {
+    //        asString = strOriginal;
+    //        return true;
+    //    }
+    //    if (original is IHtmlString)
+    //    {
+    //        asString = original.ToString();
+    //        return true;
+    //    }
+    //    return false;
+    //}
 }
