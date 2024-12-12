@@ -12,7 +12,7 @@ partial class PageServiceShared
 
     public List<IClientAsset> GetAssetsAndFlush()
     {
-        var assets = Assets.ToArray().ToList();
+        var assets = new List<IClientAsset>(Assets);
         Assets.Clear();
         return assets;
     }
