@@ -7234,54 +7234,6 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 182380,
-                "Version": 5,
-                "Guid": "cf832332-5f70-40af-ad1f-4399f294ac42",
-                "Type": {
-                  "Id": "ContentType",
-                  "Name": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "AdditionalSettings": {
-                      "en-us": ""
-                    },
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": "<p>Configure a Item (Entity) Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
-                    },
-                    "Label": {
-                      "en-us": "Item (Entity) Picker (BETA v17)"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "6fa7f390-7612-40c6-baff-2bcf6140a85f"
-                }
-              },
-              {
                 "Id": 182665,
                 "Version": 8,
                 "Guid": "73bf2a9b-6d4c-4987-96d8-d421c586a888",
@@ -7313,6 +7265,76 @@
                     },
                     "UseAdam": {
                       "en-us": false
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "6fa7f390-7612-40c6-baff-2bcf6140a85f"
+                }
+              },
+              {
+                "Id": 182380,
+                "Version": 6,
+                "Guid": "cf832332-5f70-40af-ad1f-4399f294ac42",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p>Configure a Item (Entity) Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "en-us": "Item (Entity) Picker"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "6fa7f390-7612-40c6-baff-2bcf6140a85f"
+                }
+              },
+              {
+                "Id": 184123,
+                "Version": 1,
+                "Guid": "fe3b9d97-1076-4860-ad7f-7c80008428e7",
+                "Type": {
+                  "Id": "c740085a-d548-41f3-8d06-0a48b8692345",
+                  "Name": "IsRecommendedDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "Message": {
+                      "en-us": "new v19"
                     }
                   }
                 },
@@ -7507,54 +7529,6 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 182381,
-                "Version": 3,
-                "Guid": "df9485fb-10f6-4c1e-a19e-84b47b68955b",
-                "Type": {
-                  "Id": "ContentType",
-                  "Name": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "AdditionalSettings": {
-                      "en-us": ""
-                    },
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": "<p>Configure a Number Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
-                    },
-                    "Label": {
-                      "en-us": "Number Picker (BETA v17)"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "2421dded-3aeb-47d2-ab9d-e2b72a2d821d"
-                }
-              },
-              {
                 "Id": 183771,
                 "Version": 1,
                 "Guid": "65054dae-9f44-49cd-912f-4786bccabe04",
@@ -7586,6 +7560,76 @@
                     },
                     "UseAdam": {
                       "en-us": false
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "2421dded-3aeb-47d2-ab9d-e2b72a2d821d"
+                }
+              },
+              {
+                "Id": 182381,
+                "Version": 4,
+                "Guid": "df9485fb-10f6-4c1e-a19e-84b47b68955b",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p>Configure a Number Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "en-us": "Number Picker"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "2421dded-3aeb-47d2-ab9d-e2b72a2d821d"
+                }
+              },
+              {
+                "Id": 184124,
+                "Version": 1,
+                "Guid": "1bdf0ff1-be37-40e1-b9c3-f3b4d6c062d9",
+                "Type": {
+                  "Id": "c740085a-d548-41f3-8d06-0a48b8692345",
+                  "Name": "IsRecommendedDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "Message": {
+                      "en-us": "new v19"
                     }
                   }
                 },
@@ -7654,54 +7698,6 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 182382,
-                "Version": 3,
-                "Guid": "dba24477-2502-42c2-8437-4c16934b9f5e",
-                "Type": {
-                  "Id": "ContentType",
-                  "Name": "ContentType"
-                },
-                "Attributes": {
-                  "String": {
-                    "AdditionalSettings": {
-                      "en-us": ""
-                    },
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": "<p>Configure a String Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
-                    },
-                    "Label": {
-                      "en-us": "String Picker (BETA v17)"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "e64dd20e-0055-4410-87a1-1238fe44707f"
-                }
-              },
-              {
                 "Id": 182573,
                 "Version": 5,
                 "Guid": "ba6ce128-0a51-4047-8a40-bfff27658476",
@@ -7733,6 +7729,76 @@
                     },
                     "UseAdam": {
                       "en-us": false
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "e64dd20e-0055-4410-87a1-1238fe44707f"
+                }
+              },
+              {
+                "Id": 182382,
+                "Version": 4,
+                "Guid": "dba24477-2502-42c2-8437-4c16934b9f5e",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p>Configure a String Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "en-us": "String Picker"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "e64dd20e-0055-4410-87a1-1238fe44707f"
+                }
+              },
+              {
+                "Id": 184125,
+                "Version": 1,
+                "Guid": "dce429d6-5813-435d-b46c-fb6d2ca6902d",
+                "Type": {
+                  "Id": "c740085a-d548-41f3-8d06-0a48b8692345",
+                  "Name": "IsRecommendedDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "Message": {
+                      "en-us": "new v19"
                     }
                   }
                 },
