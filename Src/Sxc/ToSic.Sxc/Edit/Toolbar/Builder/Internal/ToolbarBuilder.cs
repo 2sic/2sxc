@@ -4,6 +4,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Web.Internal;
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Internal;
 /// So for now :( it must remain public.
 /// </remarks>
 [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsCodeApiService
+public partial record ToolbarBuilder: RawHtmlStringRecord, IEnumerable<string>, IToolbarBuilder, INeedsCodeApiService
 {
 
     #region Constructors and Init
@@ -47,7 +48,7 @@ public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolba
         _currentAppIdentity = parent._currentAppIdentity;
         _CodeApiSvc = parent._CodeApiSvc;
         Configuration = parent.Configuration;
-        _utils = parent._utils;
+        Utils = parent.Utils;
         Rules.AddRange(replaceRules ?? parent.Rules);
     }
 
@@ -68,8 +69,7 @@ public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolba
 
     internal ToolbarBuilderConfiguration Configuration;
 
-    private ToolbarBuilderUtilities Utils => _utils ??= new();
-    private ToolbarBuilderUtilities _utils;
+    private ToolbarBuilderUtilities Utils { get => field ??= new(); init => field = value; }
 
     internal List<ToolbarRuleBase> Rules { get; } = [];
 

@@ -10,7 +10,7 @@ using Attribute = ToSic.Razor.Markup.Attribute;
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
-partial class ToolbarBuilder
+partial record ToolbarBuilder
 {
     private const string ErrRenderMessage = "error: can't render toolbar to html, missing context";
 

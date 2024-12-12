@@ -3,7 +3,7 @@ using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
-partial class ToolbarBuilder
+partial record ToolbarBuilder
 {
     private IToolbarBuilder AddAdminAction(
         string verb,

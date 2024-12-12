@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
-partial class ToolbarBuilder
+partial record ToolbarBuilder
 {
     private string PrepareUi(object ui, object uiMerge = default, string uiMergePrefix = default, IEnumerable<object> tweaks = default) 
         => Utils.PrepareUi(ui, uiMerge, uiMergePrefix, Configuration?.Group, tweaks: tweaks);

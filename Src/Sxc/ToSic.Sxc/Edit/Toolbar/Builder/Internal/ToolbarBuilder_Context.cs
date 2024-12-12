@@ -6,7 +6,7 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
-partial class ToolbarBuilder: IToolbarBuilderInternal
+partial record ToolbarBuilder : IToolbarBuilderInternal
 {
     private const int NoAppId = -1;
 
