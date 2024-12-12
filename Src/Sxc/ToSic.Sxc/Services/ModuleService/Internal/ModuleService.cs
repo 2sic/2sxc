@@ -26,20 +26,27 @@ internal class ModuleService() : ServiceBase(SxcLogName + ".ModSvc"), IModuleSer
     /// optionally preventing duplicates and scoping to a specific module ID.
     /// </summary>
     /// <param name="tag">The HTML tag to add.</param>
+    /// <param name="moduleId">
+    ///     The ID of the module to which the tag should be scoped; defaults to the current module.
+    /// </param>
     /// <param name="nameId">
-    /// An optional identifier for the tag; if not provided, the string representation of the tag is used.
-    /// This identifier helps prevent duplicate tags if <paramref name="noDuplicates"/> is set to true.
+    ///     An optional identifier for the tag; if not provided, the string representation of the tag is used.
+    ///     This identifier helps prevent duplicate tags if <paramref name="noDuplicates"/> is set to true.
     /// </param>
     /// <param name="noDuplicates">
-    /// If true, the tag will only be added if it does not already exist in the collection.
+    ///     If true, the tag will only be added if it does not already exist in the collection.
     /// </param>
-    /// <param name="moduleId">
-    /// The ID of the module to which the tag should be scoped; defaults to the current module.
-    /// </param>
-    public void AddToMore(IHtmlTag tag, string nameId = null, bool noDuplicates = false, int moduleId = default)
+#if NETCOREAPP
+    public void AddToMore(IHtmlTag tag, int moduleId, string nameId = null, bool noDuplicates = false)
+#else
+    public void AddToMore(IHtmlTag tag, string nameId = null, bool noDuplicates = false) // DNN implementation is missing moduleId on purpose, to not provide it by mistake.
+#endif
     {
         if (tag is null) return;
         nameId ??= tag.ToString();
+#if NETFRAMEWORK
+        int moduleId = default;
+#endif
         var moduleServiceData = GetOrCreateModuleServiceData(moduleId);
         if (noDuplicates && moduleServiceData.ExistingKeys.Contains(nameId)) return;
         moduleServiceData.ExistingKeys.Add(nameId);
@@ -51,8 +58,15 @@ internal class ModuleService() : ServiceBase(SxcLogName + ".ModSvc"), IModuleSer
     /// </summary>
     /// <param name="moduleId">The ID of the module.</param>
     /// <returns>A read-only collection of HTML tags associated with the module.</returns>
+#if NETCOREAPP
     public IReadOnlyCollection<IHtmlTag> GetMoreTagsAndFlush(int moduleId = default)
+#else
+    public IReadOnlyCollection<IHtmlTag> GetMoreTagsAndFlush() // DNN implementation has missing moduleID on purpose. It is not needed, and it should not be provided by mistake.
+#endif
     {
+#if NETFRAMEWORK
+        int moduleId = default;
+#endif
         var moduleServiceData = GetOrCreateModuleServiceData(moduleId);
         var tags = moduleServiceData.MoreTags;
         _moduleData[moduleId] = new(); // Reset module data to avoid duplicates on subsequent calls

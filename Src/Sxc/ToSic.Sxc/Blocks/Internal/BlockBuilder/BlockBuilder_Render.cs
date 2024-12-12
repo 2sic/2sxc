@@ -183,13 +183,16 @@ public partial class BlockBuilder
 
             // This is not ideal, because it actually changes what's in the DIV
             // We would rather add it to the end, but ATM that doesn't trigger turnOn in AJAX reload
-
+#if NETCOREAPP
             var additionalTags = Services.ModuleService.GetMoreTagsAndFlush(Block.Context.Module.Id);
+#else
+            var additionalTags = Services.ModuleService.GetMoreTagsAndFlush();
+#endif
             var bodyWithAddOns = additionalTags.Any()
                 ? body + "\n" + string.Join("\n", additionalTags.Select(t => t?.ToString()))
                 : body;
 
-            #endregion
+#endregion
 
             var stats = new RenderStatistics { RenderMs = (int)l.Timer.ElapsedMilliseconds, UseLightSpeed = specs.UseLightspeed};
 
@@ -204,7 +207,7 @@ public partial class BlockBuilder
                     exsOrNull: exceptions,
                     statistics: stats)
                 : bodyWithAddOns;
-            #endregion
+#endregion
 
             return l.ReturnAsOk((result, err, exceptions));
         }
