@@ -31,6 +31,11 @@ public record ResponsivePicture: ResponsiveBase, IResponsivePicture
         return pic;
     }
 
+    /// <summary>
+    /// Necessary so it also works with ToString() otherwise the record will show the JSON.
+    /// </summary>
+    public override string ToString() => ToHtmlString();
+
     protected override IHtmlTag GetOutermostTag() => Picture;
 
     public TagList Sources => field ??= SourceTagsInternal(Target.Link.Url, Settings);

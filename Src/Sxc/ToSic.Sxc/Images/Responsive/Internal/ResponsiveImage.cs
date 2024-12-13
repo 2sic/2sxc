@@ -28,4 +28,8 @@ public record ResponsiveImage: ResponsiveBase
         return img;
     }
 
+    /// <summary>
+    /// Necessary so it also works with ToString() otherwise the record will show the JSON.
+    /// </summary>
+    public override string ToString() => ToHtmlString();
 }
