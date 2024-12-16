@@ -42,13 +42,9 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> 
     public string Name => App.Name;
 
     /// <inheritdoc />
-    public IAppDataTyped Data => _data ??= new Func<IAppDataTyped>(() =>
-    {
-        var data = App.BuildDataForTyped<AppDataTyped, AppDataTyped>();
-        data.Setup(((ICodeApiServiceInternal)CodeApiSvc).GetKit<ServiceKit16>());
-        return data;
-    })();
-    private IAppDataTyped _data;
+    public IAppDataTyped Data => field ??= App
+        .BuildDataForTyped<AppDataTyped, AppDataTyped>()
+        .Setup(((ICodeApiServiceInternal)CodeApiSvc).GetKit<ServiceKit16>());
 
     /// <inheritdoc />
     public IDataSource GetQuery(string name = default, NoParamOrder noParamOrder = default, IDataSourceLinkable attach = default, object parameters = default)
@@ -75,8 +71,7 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> 
     }
 
     /// <inheritdoc />
-    public IFolder Folder => _folder ??= (this as IAppTyped).FolderAdvanced();
-    private IFolder _folder;
+    public IFolder Folder => field ??= (this as IAppTyped).FolderAdvanced();
 
     /// <inheritdoc />
     public IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string location = default)

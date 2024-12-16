@@ -50,11 +50,13 @@ public interface IAppDataTyped: IDataSource
     /// <summary>
     /// Get all data from the app of the specified type.
     /// It will detect the expected Content-Type based on the name of the class used.
-    /// So in most cases you will not add any parameters.
+    /// 
+    /// So in most cases you will not add any parameters except for the type parameter `T`.
+    /// This is usually a type of your `AppCode.Data` namespace.
     /// </summary>
     /// <typeparam name="T">The type to get and convert to - usually inheriting <see cref="Custom.Data.CustomItem"/></typeparam>
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <param name="typeName">_optional_ type name</param>
+    /// <param name="typeName">_optional_ type name which is used as the **stream** name when retrieving the data, as each stream contains entities of one type.</param>
     /// <param name="nullIfNotFound">if set, will return null if the type doesn't exist - default is empty list.</param>
     /// <returns></returns>
     /// <remarks>

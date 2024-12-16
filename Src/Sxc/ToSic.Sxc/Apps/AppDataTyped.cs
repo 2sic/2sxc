@@ -14,7 +14,7 @@ internal class AppDataTyped(
     LazySvc<IDataSourceCacheService> dsCacheSvc)
     : AppDataWithCrud(services, dataController, dsCacheSvc), IAppDataTyped
 {
-    #region Content Types - explicit implementation to ensure it's only available in Typed APIs
+    #region Get Content Types - explicit implementation to ensure it's only available in Typed APIs
 
     IEnumerable<IContentType> IAppDataTyped.GetContentTypes() => AppReader.ContentTypes;
 
@@ -22,13 +22,17 @@ internal class AppDataTyped(
 
     #endregion
 
-    internal void Setup(ServiceKit16 kit)
+    #region Kit Attachments
+
+    internal AppDataTyped Setup(ServiceKit16 kit)
     {
-        _kit = kit;
+        Kit = kit;
+        return this;
     }
 
-    private ServiceKit16 Kit => _kit ?? throw new("ServiceKit16 not set");
-    private ServiceKit16 _kit;
+    private ServiceKit16 Kit { get => field ?? throw new("ServiceKit16 not set"); set => field = value; }
+
+    #endregion
 
     /// <inheritdoc />
     IEnumerable<T> IAppDataTyped.GetAll<T>(NoParamOrder protector, string typeName, bool nullIfNotFound)
@@ -54,17 +58,17 @@ internal class AppDataTyped(
         where TResult : class, ITypedItemWrapper16, ITypedItem, new()
     {
         var item = getItem();
-        if (item == null) return null;
+        if (item == null)
+            return null;
 
         // Skip Type-Name check
-        if (skipTypeCheck) return Kit._CodeApiSvc.Cdf.AsCustom<TResult>(item);
+        if (skipTypeCheck)
+            return Kit._CodeApiSvc.Cdf.AsCustom<TResult>(item);
 
         // Do Type-Name check
         var typeName = new TResult().ForContentType;
-        if (!item.Type.Is(typeName)) throw new($"Item with ID {id} is not a {typeName}. This is probably a mistake, otherwise use {nameof(skipTypeCheck)}: true");
+        if (!item.Type.Is(typeName))
+            throw new($"Item with ID {id} is not a {typeName}. This is probably a mistake, otherwise use {nameof(skipTypeCheck)}: true");
         return Kit._CodeApiSvc.Cdf.AsCustom<TResult>(item);
     }
-
-
-
 }
