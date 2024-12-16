@@ -7,6 +7,7 @@ using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Code.Customizer;
 
+/// <inheritdoc cref="ICodeCustomizer" />
 internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICodeCustomizer
 {
     public IAppTyped<TSettings, TResources> App<TSettings, TResources>()

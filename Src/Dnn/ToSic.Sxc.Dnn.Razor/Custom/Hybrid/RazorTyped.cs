@@ -55,10 +55,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     internal TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
     private TypedCode16Helper _codeHelper;
 
-    /// <summary>
-    /// BETA! v17.03+
-    /// </summary>
-    [WorkInProgressApi("Experiment v17.03+")]
+    /// <inheritdoc cref="CodeTyped.Customize"/>
     protected ICodeCustomizer Customize => _customize ??= _CodeApiSvc.GetService<ICodeCustomizer>(reuse: true);
     private ICodeCustomizer _customize;
 

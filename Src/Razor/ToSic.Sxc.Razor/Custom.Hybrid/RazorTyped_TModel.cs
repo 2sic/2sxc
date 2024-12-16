@@ -182,23 +182,20 @@ public abstract class RazorTyped<TModel>()
     #region WIP v17
 
     /// <summary>
-    /// EXPERIMENTAL support razor base class with typed model
+    /// Typed Model of a Razor with typed model
     /// </summary>
     /// <returns></returns>
     /// <remarks>
-    /// Introduced (beta) in v17.03
+    /// * Introduced in v17.03 (beta)
+    /// * Stable since v18.00
     /// </remarks>
     [PrivateApi("WIP, don't publish yet")]
     public new TModel Model => CodeHelper.GetModel<TModel>();
 
-    /// <summary>
-    /// WIP
-    /// </summary>
-    [PrivateApi("Experiment v17.02+")]
+    /// <inheritdoc cref="CodeTyped.Customize"/>
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     protected ICodeCustomizer Customize => _customize ??= _CodeApiSvc.GetService<ICodeCustomizer>(reuse: true);
     private ICodeCustomizer _customize;
-
 
     #endregion
 

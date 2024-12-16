@@ -228,12 +228,9 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     #endregion
 
-    #region Customize new WIP v17
+    #region Customize
 
-    /// <summary>
-    /// WIP
-    /// </summary>
-    [PrivateApi("Experiment v17.02+")]
+    /// <inheritdoc cref="CodeTyped.Customize"/>
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     protected ICodeCustomizer Customize => _customize ??= _CodeApiSvc.GetService<ICodeCustomizer>(reuse: true);
     private ICodeCustomizer _customize;
