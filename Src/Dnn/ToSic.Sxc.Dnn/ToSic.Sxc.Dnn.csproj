@@ -225,7 +225,7 @@
     <Content Include="DnnPackageBuilder\SqlDataProvider\15.00.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\16.07.01.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\18.03.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\18.07.00.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\19.00.00.SqlDataProvider" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="web.config" />
     <None Include="web.Debug.config">
