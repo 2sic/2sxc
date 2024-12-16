@@ -29,6 +29,25 @@ partial class CodeDataFactory
         return newT;
     }
 
+    internal TResult GetOne<TResult>(Func<IEntity> getItem, object id, bool skipTypeCheck)
+        where TResult : class, ITypedItemWrapper16, ITypedItem, new()
+    {
+        var item = getItem();
+        if (item == null)
+            return null;
+
+        // Skip Type-Name check
+        if (skipTypeCheck)
+            return AsCustom<TResult>(item);
+
+        // Do Type-Name check
+        var typeName = new TResult().ForContentType;
+        if (!item.Type.Is(typeName))
+            throw new($"Item with ID {id} is not a {typeName}. This is probably a mistake, otherwise use {nameof(skipTypeCheck)}: true");
+        return AsCustom<TResult>(item);
+    }
+
+
     ///// <summary>
     ///// WIP / experimental, would be for types which are not as T, but as a type-object.
     ///// Not in use, so not fully tested.

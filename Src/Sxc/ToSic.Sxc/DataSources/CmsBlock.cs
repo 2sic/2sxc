@@ -42,34 +42,25 @@ public sealed partial class CmsBlock : DataSourceBase
     /// The instance-id of the CmsBlock (2sxc instance, DNN ModId). <br/>
     /// It's named Instance-Id to be more neutral as we're opening it to other platforms
     /// </summary>
-    [Configuration(Field = FieldInstanceId, Fallback = "[" + InstanceLookupName + ":" + ModuleIdKey + "]")]
+    [Configuration(Field = FieldInstanceId, Fallback = $"[{InstanceLookupName}:{ModuleIdKey}]")]
     public int? ModuleId
     {
-        get => _moduleId ?? (int.TryParse(Configuration.GetThis(), out var listId) ? listId : new int?());
-        set => _moduleId = value;
+        get => field ?? (int.TryParse(Configuration.GetThis(), out var listId) ? listId : new int?());
+        set => field = value;
     }
-    private int? _moduleId;
 
     #region Constructor
 
-    public new class MyServices: MyServicesBase<DataSourceBase.MyServices>
+    public new class MyServices(
+        DataSourceBase.MyServices parentServices,
+        LazySvc<IModule> moduleLazy,
+        LazySvc<IDataSourcesService> dataSourceFactory,
+        GenWorkPlus<WorkBlocks> appBlocks)
+        : MyServicesBase<DataSourceBase.MyServices>(parentServices, connect: [moduleLazy, dataSourceFactory, appBlocks])
     {
-        public GenWorkPlus<WorkBlocks> AppBlocks { get; }
-        public LazySvc<IModule> ModuleLazy { get; }
-        public LazySvc<IDataSourcesService> DataSourceFactory { get; }
-
-        public MyServices(DataSourceBase.MyServices parentServices,
-            LazySvc<IModule> moduleLazy,
-            LazySvc<IDataSourcesService> dataSourceFactory,
-            GenWorkPlus<WorkBlocks> appBlocks
-        ) : base(parentServices)
-        {
-            ConnectLogs([
-                ModuleLazy = moduleLazy,
-                DataSourceFactory = dataSourceFactory,
-                AppBlocks = appBlocks
-            ]);
-        }
+        public GenWorkPlus<WorkBlocks> AppBlocks { get; } = appBlocks;
+        public LazySvc<IModule> ModuleLazy { get; } = moduleLazy;
+        public LazySvc<IDataSourcesService> DataSourceFactory { get; } = dataSourceFactory;
     }
 
     public CmsBlock(MyServices services): base(services, $"SDS.CmsBks")
@@ -83,7 +74,7 @@ public sealed partial class CmsBlock : DataSourceBase
     private readonly MyServices _services;
     #endregion
 
-    public override IDataSourceLink Link => _link.Get(() => BreachExtensions.CreateEmptyLink(this) // new DataSourceLink(null, dataSource: this)
+    public override IDataSourceLink Link => _link.Get(() => BreachExtensions.CreateEmptyLink(this)
         .AddStream(name: ViewParts.StreamHeader)
         .AddStream(name: ViewParts.StreamHeaderOld));
     private readonly GetOnce<IDataSourceLink> _link = new();

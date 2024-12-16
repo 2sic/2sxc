@@ -1,13 +1,13 @@
 ﻿using System.Runtime.CompilerServices;
 using ToSic.Eav;
 using ToSic.Eav.Code.Help;
+using ToSic.Eav.DataSource;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 
@@ -115,7 +115,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     public ITypedStack AllSettings => CodeHelper.AllSettings;
 
 
-    public IBlockInstance MyData => CodeRootOrError().Data;
+    public IDataSource MyData => CodeRootOrError().Data;
 
     #endregion
 

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Eav.Code.Help;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataSource;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -16,7 +17,6 @@ using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Razor.Internal;
@@ -73,7 +73,7 @@ public abstract class RazorTyped<TModel>()
 
     public ITypedItem MyHeader => CodeHelper.MyHeader;
 
-    public IBlockInstance MyData => _CodeApiSvc.Data;
+    public IDataSource MyData => _CodeApiSvc.Data;
 
     #endregion
 

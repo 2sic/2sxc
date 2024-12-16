@@ -14,10 +14,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using ToSic.Sxc.Adam;
 using Microsoft.AspNetCore.Mvc.Filters;
+using ToSic.Eav.DataSource;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Internal;
 
 // ReSharper disable once CheckNamespace
@@ -127,7 +127,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     public ITypedItem MyHeader => CodeHelper.MyHeader;
 
-    public IBlockInstance MyData => _CodeApiSvc.Data;
+    public IDataSource MyData => _CodeApiSvc.Data;
 
     #endregion
 

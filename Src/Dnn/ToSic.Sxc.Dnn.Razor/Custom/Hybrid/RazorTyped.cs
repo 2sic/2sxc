@@ -4,7 +4,6 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Razor.Internal;
 using ToSic.Sxc.Engines;
@@ -126,7 +125,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     public ITypedItem MyHeader => CodeHelper.MyHeader;
 
     /// <inheritdoc />
-    public IBlockInstance MyData => _CodeApiSvc.Data;
+    public IDataSource MyData => _CodeApiSvc.Data;
 
     /// <inheritdoc />
     public ITypedModel MyModel => CodeHelper.MyModel;
