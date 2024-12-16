@@ -7234,48 +7234,6 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 182665,
-                "Version": 8,
-                "Guid": "73bf2a9b-6d4c-4987-96d8-d421c586a888",
-                "Type": {
-                  "Id": "ContentType-InputType",
-                  "Name": "ContentType-InputType"
-                },
-                "Attributes": {
-                  "String": {
-                    "AngularAssets": {
-                      "en-us": ""
-                    },
-                    "ConfigTypes": {
-                      "en-us": "@All,@entity-picker"
-                    },
-                    "Description": {
-                      "en-us": "Item (Entity) Picker (BETA)"
-                    },
-                    "Label": {
-                      "en-us": "Item (Entity) Picker (BETA v17)"
-                    },
-                    "Type": {
-                      "en-us": "@entity-picker"
-                    }
-                  },
-                  "Boolean": {
-                    "DisableI18n": {
-                      "en-us": true
-                    },
-                    "UseAdam": {
-                      "en-us": false
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "6fa7f390-7612-40c6-baff-2bcf6140a85f"
-                }
-              },
-              {
                 "Id": 182380,
                 "Version": 6,
                 "Guid": "cf832332-5f70-40af-ad1f-4399f294ac42",
@@ -7313,6 +7271,48 @@
                     },
                     "Link": {
                       "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "6fa7f390-7612-40c6-baff-2bcf6140a85f"
+                }
+              },
+              {
+                "Id": 182665,
+                "Version": 8,
+                "Guid": "73bf2a9b-6d4c-4987-96d8-d421c586a888",
+                "Type": {
+                  "Id": "ContentType-InputType",
+                  "Name": "ContentType-InputType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AngularAssets": {
+                      "en-us": ""
+                    },
+                    "ConfigTypes": {
+                      "en-us": "@All,@entity-picker"
+                    },
+                    "Description": {
+                      "en-us": "Item (Entity) Picker (BETA)"
+                    },
+                    "Label": {
+                      "en-us": "Item (Entity) Picker (BETA v17)"
+                    },
+                    "Type": {
+                      "en-us": "@entity-picker"
+                    }
+                  },
+                  "Boolean": {
+                    "DisableI18n": {
+                      "en-us": true
+                    },
+                    "UseAdam": {
+                      "en-us": false
                     }
                   }
                 },
@@ -7529,48 +7529,6 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 183771,
-                "Version": 1,
-                "Guid": "65054dae-9f44-49cd-912f-4786bccabe04",
-                "Type": {
-                  "Id": "ContentType-InputType",
-                  "Name": "ContentType-InputType"
-                },
-                "Attributes": {
-                  "String": {
-                    "AngularAssets": {
-                      "en-us": ""
-                    },
-                    "ConfigTypes": {
-                      "en-us": "@All,@number-picker"
-                    },
-                    "Description": {
-                      "en-us": "Number Picker (BETA)"
-                    },
-                    "Label": {
-                      "en-us": "Number Picker (BETA v17)"
-                    },
-                    "Type": {
-                      "en-us": "@number-picker"
-                    }
-                  },
-                  "Boolean": {
-                    "DisableI18n": {
-                      "en-us": false
-                    },
-                    "UseAdam": {
-                      "en-us": false
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "2421dded-3aeb-47d2-ab9d-e2b72a2d821d"
-                }
-              },
-              {
                 "Id": 182381,
                 "Version": 4,
                 "Guid": "df9485fb-10f6-4c1e-a19e-84b47b68955b",
@@ -7608,6 +7566,48 @@
                     },
                     "Link": {
                       "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "2421dded-3aeb-47d2-ab9d-e2b72a2d821d"
+                }
+              },
+              {
+                "Id": 183771,
+                "Version": 1,
+                "Guid": "65054dae-9f44-49cd-912f-4786bccabe04",
+                "Type": {
+                  "Id": "ContentType-InputType",
+                  "Name": "ContentType-InputType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AngularAssets": {
+                      "en-us": ""
+                    },
+                    "ConfigTypes": {
+                      "en-us": "@All,@number-picker"
+                    },
+                    "Description": {
+                      "en-us": "Number Picker (BETA)"
+                    },
+                    "Label": {
+                      "en-us": "Number Picker (BETA v17)"
+                    },
+                    "Type": {
+                      "en-us": "@number-picker"
+                    }
+                  },
+                  "Boolean": {
+                    "DisableI18n": {
+                      "en-us": false
+                    },
+                    "UseAdam": {
+                      "en-us": false
                     }
                   }
                 },
@@ -7698,48 +7698,6 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 182573,
-                "Version": 5,
-                "Guid": "ba6ce128-0a51-4047-8a40-bfff27658476",
-                "Type": {
-                  "Id": "ContentType-InputType",
-                  "Name": "ContentType-InputType"
-                },
-                "Attributes": {
-                  "String": {
-                    "AngularAssets": {
-                      "en-us": ""
-                    },
-                    "ConfigTypes": {
-                      "en-us": "@All,@string-picker"
-                    },
-                    "Description": {
-                      "en-us": "String Picker Field (BETA)"
-                    },
-                    "Label": {
-                      "en-us": "String Picker (BETA v17)"
-                    },
-                    "Type": {
-                      "en-us": "@string-picker"
-                    }
-                  },
-                  "Boolean": {
-                    "DisableI18n": {
-                      "en-us": false
-                    },
-                    "UseAdam": {
-                      "en-us": false
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "e64dd20e-0055-4410-87a1-1238fe44707f"
-                }
-              },
-              {
                 "Id": 182382,
                 "Version": 4,
                 "Guid": "dba24477-2502-42c2-8437-4c16934b9f5e",
@@ -7777,6 +7735,48 @@
                     },
                     "Link": {
                       "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "e64dd20e-0055-4410-87a1-1238fe44707f"
+                }
+              },
+              {
+                "Id": 182573,
+                "Version": 5,
+                "Guid": "ba6ce128-0a51-4047-8a40-bfff27658476",
+                "Type": {
+                  "Id": "ContentType-InputType",
+                  "Name": "ContentType-InputType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AngularAssets": {
+                      "en-us": ""
+                    },
+                    "ConfigTypes": {
+                      "en-us": "@All,@string-picker"
+                    },
+                    "Description": {
+                      "en-us": "String Picker Field (BETA)"
+                    },
+                    "Label": {
+                      "en-us": "String Picker (BETA v17)"
+                    },
+                    "Type": {
+                      "en-us": "@string-picker"
+                    }
+                  },
+                  "Boolean": {
+                    "DisableI18n": {
+                      "en-us": false
+                    },
+                    "UseAdam": {
+                      "en-us": false
                     }
                   }
                 },
@@ -10585,7 +10585,7 @@
                 "Metadata": [
                   {
                     "Id": 182482,
-                    "Version": 7,
+                    "Version": 8,
                     "Guid": "9a58bccc-650c-4926-a92b-69bf2c2a6479",
                     "Type": {
                       "Id": "@All",
@@ -10597,7 +10597,7 @@
                           "en-us": ""
                         },
                         "DefaultValue": {
-                          "en-us": "\\n"
+                          "en-us": ","
                         },
                         "InputType": {
                           "en-us": "string-dropdown"
@@ -10647,7 +10647,7 @@
                   },
                   {
                     "Id": 182487,
-                    "Version": 5,
+                    "Version": 6,
                     "Guid": "a570466a-0170-421c-aef0-f4673ee0d906",
                     "Type": {
                       "Id": "@String",
@@ -10667,7 +10667,7 @@
                   },
                   {
                     "Id": 182488,
-                    "Version": 5,
+                    "Version": 6,
                     "Guid": "5228cb37-4015-44f3-ba87-7836e059aacd",
                     "Type": {
                       "Id": "@string-dropdown",
@@ -10795,7 +10795,7 @@
                 "Metadata": [
                   {
                     "Id": 182484,
-                    "Version": 4,
+                    "Version": 5,
                     "Guid": "1f5dc29f-190e-4227-b7df-b035ae64d5de",
                     "Type": {
                       "Id": "@All",
@@ -10813,7 +10813,7 @@
                           "en-us": "number-default"
                         },
                         "Name": {
-                          "en-us": "Multi-Select Maxmum Amount Allowed"
+                          "en-us": "Multi-Select Maximum Amount Allowed"
                         },
                         "Notes": {
                           "en-us": "<p>When allowing multiple, max amount to allow.</p>"
@@ -10857,7 +10857,7 @@
                   },
                   {
                     "Id": 182490,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "383b2045-2b46-41bb-8777-22e2a0c83e87",
                     "Type": {
                       "Id": "@Number",
