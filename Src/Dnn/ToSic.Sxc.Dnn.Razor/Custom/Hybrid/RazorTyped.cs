@@ -4,7 +4,6 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Razor.Internal;
 using ToSic.Sxc.Engines;
@@ -55,10 +54,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     internal TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
     private TypedCode16Helper _codeHelper;
 
-    /// <summary>
-    /// BETA! v17.03+
-    /// </summary>
-    [WorkInProgressApi("Experiment v17.03+")]
+    /// <inheritdoc cref="CodeTyped.Customize"/>
     protected ICodeCustomizer Customize => _customize ??= _CodeApiSvc.GetService<ICodeCustomizer>(reuse: true);
     private ICodeCustomizer _customize;
 
@@ -129,7 +125,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     public ITypedItem MyHeader => CodeHelper.MyHeader;
 
     /// <inheritdoc />
-    public IBlockInstance MyData => _CodeApiSvc.Data;
+    public IDataSource MyData => _CodeApiSvc.Data;
 
     /// <inheritdoc />
     public ITypedModel MyModel => CodeHelper.MyModel;

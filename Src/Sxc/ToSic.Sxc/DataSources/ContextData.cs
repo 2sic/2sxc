@@ -19,7 +19,8 @@ namespace ToSic.Sxc.DataSources;
 /// </remarks>
 [PrivateApi("used to be Internal... till 16.01, then changed to private to hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal partial class ContextData : PassThrough, IBlockInstance
+internal partial class ContextData : PassThrough,
+    IBlockInstance // compatibility
 {
     #region Constructor and Init
 
@@ -36,8 +37,7 @@ internal partial class ContextData : PassThrough, IBlockInstance
 #pragma warning disable IDE0290 // Use primary constructor
     public ContextData(MyServices services) : base(services, "Sxc.BlckDs")
 #pragma warning restore IDE0290 // Use primary constructor
-    {
-        }
+    { }
 #endif
 
     #endregion
@@ -46,10 +46,10 @@ internal partial class ContextData : PassThrough, IBlockInstance
 
     #region New v16
 
-    internal IEnumerable<IEntity> MyItem => _myContent.Get(() => _blockSource.GetStream(emptyIfNotFound: true).List);
+    internal IEnumerable<IEntity> MyItems => _myContent.Get(() => _blockSource.GetStream(emptyIfNotFound: true).List);
     private readonly GetOnce<IEnumerable<IEntity>> _myContent = new();
 
-    internal IEnumerable<IEntity> MyHeader => _header.Get(() => _blockSource.GetStream(ViewParts.StreamHeader, emptyIfNotFound: true).List);
+    internal IEnumerable<IEntity> MyHeaders => _header.Get(() => _blockSource.GetStream(ViewParts.StreamHeader, emptyIfNotFound: true).List);
     private readonly GetOnce<IEnumerable<IEntity>> _header = new();
         
     #endregion

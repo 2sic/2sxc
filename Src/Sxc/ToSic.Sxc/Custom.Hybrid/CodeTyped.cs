@@ -1,14 +1,13 @@
 ﻿using System.Runtime.CompilerServices;
 using ToSic.Eav;
 using ToSic.Eav.Code.Help;
-using ToSic.Lib.Helpers;
+using ToSic.Eav.DataSource;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 
@@ -41,16 +40,16 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     public new ICodeLog Log => CodeHlp.CodeLog;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
-    public TService GetService<TService>() where TService : class => CodeRootOrError().GetService<TService>();
+    public TService GetService<TService>() where TService : class
+        => CodeRootOrError().GetService<TService>();
 
     [PrivateApi("WIP 17.06,x")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
         => CodeHelper.GetService<TService>(protector, typeName);
 
-    private TypedCode16Helper CodeHelper 
-        => _codeHelper ??= new(owner: this, helperSpecs: new(CodeRootOrError(), false, "c# code file"), getRazorModel: () => null, getModelDic: () => null);
-    private TypedCode16Helper _codeHelper;
+    private TypedCode16Helper CodeHelper
+        => field ??= new(owner: this, helperSpecs: new(CodeRootOrError(), false, "c# code file"), getRazorModel: () => null, getModelDic: () => null);
 
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -59,8 +58,8 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     #endregion
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
-    public ServiceKit16 Kit => _kit.Get(() => CodeRootOrError().GetKit<ServiceKit16>());
-    private readonly GetOnce<ServiceKit16> _kit = new();
+    public ServiceKit16 Kit
+        => field ??= CodeRootOrError().GetKit<ServiceKit16>();
 
     private ICodeApiService CodeRootOrError([CallerMemberName] string propName = default)
     {
@@ -116,7 +115,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     public ITypedStack AllSettings => CodeHelper.AllSettings;
 
 
-    public IBlockInstance MyData => CodeRootOrError().Data;
+    public IDataSource MyData => CodeRootOrError().Data;
 
     #endregion
 
@@ -200,15 +199,18 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
 
     #endregion
 
-    #region Customize new WIP v17
+    #region Customize
 
     /// <summary>
-    /// WIP
+    /// Helper to create typed objects for App, View etc. - mainly for custom base classes in `AppCode`
     /// </summary>
-    [PrivateApi("Experiment v17.02+")]
+    /// <remarks>
+    /// * Introduced in v17.03 (beta)
+    /// * Stable and ready for production in v18.00
+    /// </remarks>
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    protected ICodeCustomizer Customize => _customize ??= _CodeApiSvc.GetService<ICodeCustomizer>(reuse: true);
-    private ICodeCustomizer _customize;
+    protected ICodeCustomizer Customize
+        => field ??= _CodeApiSvc.GetService<ICodeCustomizer>(reuse: true);
 
     #endregion
 

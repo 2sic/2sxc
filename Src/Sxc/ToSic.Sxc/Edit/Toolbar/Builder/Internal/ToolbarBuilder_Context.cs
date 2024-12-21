@@ -6,7 +6,7 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
-partial class ToolbarBuilder: IToolbarBuilderInternal
+partial record ToolbarBuilder : IToolbarBuilderInternal
 {
     private const int NoAppId = -1;
 
@@ -17,7 +17,7 @@ partial class ToolbarBuilder: IToolbarBuilderInternal
         // Get context, specify "true" to force it to be added
         var context = GenerateContext(target, true.ToString());
         var rule = new ToolbarRuleContext(null, context, Services.ToolbarButtonHelper.Value);
-        return this.AddInternal(rule);
+        return this.AddInternal([rule]);
     }
 
     /// <summary>
@@ -53,7 +53,7 @@ partial class ToolbarBuilder: IToolbarBuilderInternal
         // If we're not forcing the context "true" then check cases where it's not needed
         if (!context.EqualsInsensitive(true.ToString()))
             // If we're still on the same app, and we didn't force the context, return null
-            if (_currentAppIdentity != null && _currentAppIdentity.AppId == identity.AppId)
+            if (CurrentAppIdentity != null && CurrentAppIdentity.AppId == identity.AppId)
             {
                 // ensure we're not in a global context where the current-context is already special
                 var globalAppId = appsCatalog.GetPrimaryAppOfAppId(appId, Log);
@@ -86,4 +86,5 @@ partial class ToolbarBuilder: IToolbarBuilderInternal
 
         return l.Return(NoAppId, "no app id");
     }
+
 }

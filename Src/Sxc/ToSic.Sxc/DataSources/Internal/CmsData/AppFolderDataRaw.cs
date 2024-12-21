@@ -25,14 +25,20 @@ public class AppFolderDataRaw: AppFileDataRawBase
 {
     public const string TypeName = "Folder";
 
-    public static DataFactoryOptions Options = new(typeName: TypeName, titleField: nameof(Name));
+    public static DataFactoryOptions Options = new(typeName: TypeName, titleField: nameof(Path));
+
+    /// <summary>
+    /// The folder name - or blank when it's the root.
+    /// </summary>
+    [ContentTypeAttributeSpecs(Description = "The folder name or blank when it's the root.")]
+    public override string Name { get; set; }
 
     [PrivateApi]
     public override IDictionary<string, object> Attributes(RawConvertOptions options)
         => new Dictionary<string, object>(base.Attributes(options))
         {
-            { "Folders", new RawRelationship(key: $"FolderIn:{FullName}") },
-            { "Files", new RawRelationship(key: $"FileIn:{FullName}") },
+            { "Folders", new RawRelationship(key: $"FolderIn:{Path}") },
+            { "Files", new RawRelationship(key: $"FileIn:{Path}") },
         };
 
     [PrivateApi]
@@ -40,7 +46,7 @@ public class AppFolderDataRaw: AppFileDataRawBase
         => new List<object>
         {
             // For Relationships looking for this folder
-            $"Folder:{FullName}",
+            $"Folder:{Path}",
             // For Relationships looking for folders having a specific parent
             $"FolderIn:{ParentFolderInternal}",
         };

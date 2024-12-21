@@ -13,29 +13,19 @@ using JsonOptions = ToSic.Eav.Serialization.JsonOptions;
 
 namespace ToSic.Sxc.WebApi;
 
-/// <summary>
-/// An ActionFilter attribute that automatically decrypts encrypted POST payloads for Web API endpoints.
-/// Apply this attribute to a controller or action method to seamlessly handle encrypted incoming POST requests,
-/// ensuring the decrypted data is available for processing within the action method.
-/// </summary>
-/// <remarks>
-/// This attribute intercepts POST requests with JSON content, checks for encrypted data,
-/// and if present, decrypts the payload using the <see cref="AesHybridCryptographyService"/>.
-/// It then deserializes the decrypted data into the expected parameter type and replaces the action arguments.
-/// If the payload is not encrypted, the request content remains unchanged.
-/// * Introduced in version 18.05.
-/// </remarks>
-[PublicApi]
+[PrivateApi]
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class SecureEndpointAttribute : ActionFilterAttribute
 {
     private const string MediaType = "application/json";
 
+    [PrivateApi]
     public SecureEndpointAttribute()
     {
         Order = -3002;
     }
 
+    [PrivateApi]
     public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
         var request = context.HttpContext.Request;

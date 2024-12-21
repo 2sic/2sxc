@@ -19,24 +19,13 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
     private readonly MyServices _services;
     private IContextOfApp _context;
 
-    public class MyServices : MyServicesBase
+    public class MyServices(
+        LazySvc<AdamContext<TFolderId, TFileId>> adamContext,
+        ISxcContextResolver ctxResolver)
+        : MyServicesBase(connect: [adamContext, ctxResolver])
     {
-        public LazySvc<AdamContext<TFolderId, TFileId>> AdamContext { get; }
-        public ISxcContextResolver CtxResolver { get; }
-
-        /// <summary>
-        /// Note that we will use Generators for safety, because in rare cases the dependencies could be re-used to create a sub-data-source
-        /// </summary>
-        public MyServices(
-            LazySvc<AdamContext<TFolderId, TFileId>> adamContext,
-            ISxcContextResolver ctxResolver
-        )
-        {
-            ConnectLogs([
-                AdamContext = adamContext,
-                CtxResolver = ctxResolver
-            ]);
-        }
+        public LazySvc<AdamContext<TFolderId, TFileId>> AdamContext { get; } = adamContext;
+        public ISxcContextResolver CtxResolver { get; } = ctxResolver;
     }
 
     protected AdamDataSourceProvider(MyServices services) : base(services, $"{SxcLogName}.AdamDs")

@@ -2,8 +2,8 @@
 using ToSic.Eav.Apps;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Razor.Markup;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Web.Internal;
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Internal;
 /// So for now :( it must remain public.
 /// </remarks>
 [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsCodeApiService
+public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsCodeApiService
 {
 
     #region Constructors and Init
@@ -35,45 +35,40 @@ public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolba
     /// Public constructor for DI
     /// </summary>
     /// <param name="services"></param>
-    public ToolbarBuilder(MyServices services) => Services = services.ConnectServices(Log);
-    protected readonly MyServices Services;
+    public ToolbarBuilder(MyServices services) =>
+        Services = services.ConnectServices(Log);
 
-    /// <summary>
-    /// Clone-constructor
-    /// </summary>
-    internal ToolbarBuilder(ToolbarBuilder parent, IEnumerable<ToolbarRuleBase> replaceRules = null) : this(parent.Services)
-    {
-        this.LinkLog(parent.Log);
-        _currentAppIdentity = parent._currentAppIdentity;
-        _CodeApiSvc = parent._CodeApiSvc;
-        Configuration = parent.Configuration;
-        _utils = parent._utils;
-        Rules.AddRange(replaceRules ?? parent.Rules);
-    }
+    protected MyServices Services { get; init; }
 
     public ILog Log { get; } = new Log(SxcLogName + ".TlbBld");
-
-    private IAppIdentity _currentAppIdentity;
+    
 
     public void ConnectToRoot(ICodeApiService codeRoot)
     {
         if (codeRoot == null) return;
-        _CodeApiSvc = codeRoot;
-        _currentAppIdentity = codeRoot.App;
-        Services.ToolbarButtonHelper.Value.MainAppIdentity = _currentAppIdentity;
+        CodeApiSvc = codeRoot;
+        CurrentAppIdentity = codeRoot.App;
+        Services.ToolbarButtonHelper.Value.MainAppIdentity = CurrentAppIdentity;
     }
-    private ICodeApiService _CodeApiSvc;
+
+    private IAppIdentity CurrentAppIdentity { get; set; }
+
+    private ICodeApiService CodeApiSvc { get; set; }
 
     #endregion
 
-    internal ToolbarBuilderConfiguration Configuration;
+    #region Object state, init only for cloning
 
-    private ToolbarBuilderUtilities Utils => _utils ??= new();
-    private ToolbarBuilderUtilities _utils;
+    internal ToolbarBuilderConfiguration Configuration { get; init; }
 
-    internal List<ToolbarRuleBase> Rules { get; } = [];
+    private ToolbarBuilderUtilities Utils { get => field ??= new(); init => field = value; }
 
-    public IToolbarBuilder Toolbar(
+    internal List<ToolbarRuleBase> Rules { get; init; } = [];
+
+    #endregion
+
+
+    internal IToolbarBuilder Toolbar(
         string toolbarTemplate,
         object target = default,
         NoParamOrder noParamOrder = default,
@@ -83,11 +78,11 @@ public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolba
         object prefill = default
     )
     {
-        var updated = this.AddInternal(new ToolbarRuleToolbar(toolbarTemplate, ui: PrepareUi(ui)));
-        if (new[] { target, parameters, prefill, tweak }.Any(x => x != null))
-            updated = updated.Parameters(target, tweak: tweak, parameters: parameters, prefill: prefill);
-
-        return updated;
+        var updated = this.AddInternal([new ToolbarRuleToolbar(toolbarTemplate, ui: PrepareUi(ui))]);
+        // If anything is not null, then we must specify it
+        return new[] { target, parameters, prefill, tweak }.Any(x => x != null)
+            ? updated.Parameters(target, tweak: tweak, parameters: parameters, prefill: prefill)
+            : updated;
     }
 
 
@@ -109,7 +104,7 @@ public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolba
         // to not-hover by default. 
         // The rule must be added to the top of the list, so that any other settings will take precedence,
         // Including UI rules added to the toolbar itself
-        if (Configuration?.Mode == ToolbarHtmlModes.Standalone)
+        if (Configuration?.HtmlMode == ToolbarHtmlModes.Standalone)
         {
             var standaloneSettings = new ToolbarRuleSettings(show: "always", hover: "none");
             rulesToDeliver = [standaloneSettings, .. Rules];

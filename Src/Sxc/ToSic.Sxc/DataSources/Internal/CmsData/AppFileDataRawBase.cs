@@ -15,11 +15,7 @@ public abstract class AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
     [ContentTypeAttributeSpecs(Description = "DO NOT USE. This is a temporary, random ID calculated at runtime and will return different values all the time.")]
     public Guid Guid { get; set; } = Guid.NewGuid();
 
-    /// <summary>
-    /// The file name with extension.
-    /// </summary>
-    [ContentTypeAttributeSpecs(IsTitle = true, Description = "The file name with extension, like image.jpg")]
-    public string Name { get; set; }
+    public abstract string Name { get; set; }
 
     /// <summary>
     /// The file name with path.
@@ -37,7 +33,7 @@ public abstract class AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
     /// <summary>
     /// Starting in the App-Root
     /// </summary>
-    [ContentTypeAttributeSpecs(Description = "Full path. It starts at the root of the app or whatever other system you're asking for.")]
+    [ContentTypeAttributeSpecs(IsTitle = true, Description = "Full path. It starts at the root of the app or whatever other system you're asking for. Always end with slash, so root is `/` and it's easy to distinguish folders and files.")]
     public string Path { get; set; }
 
     /// <inheritdoc />
@@ -55,13 +51,6 @@ public abstract class AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
     public string Url { get; set; }
 
     /// <summary>
-    /// The relative URL based on where the data was requested from. From the App Root or ADAM Root.
-    /// </summary>
-    [ContentTypeAttributeSpecs(Description = "The relative URL based on where the data was requested from. From the App Root or ADAM Root.")]
-    public string UrlRelative { get; set; }
-
-
-    /// <summary>
     /// Data but without Id, Guid, Created, Modified
     /// </summary>
     [PrivateApi]
@@ -72,8 +61,10 @@ public abstract class AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
             { nameof(FullName), FullName },
             { nameof(Path), Path },
             { nameof(Url), Url },
-            { nameof(UrlRelative), UrlRelative },
             { "Parent", new RawRelationship(key: $"Folder:{ParentFolderInternal}") },
+
+            // For debugging
+            //{ nameof(ParentFolderInternal), ParentFolderInternal },
         };
 
     [PrivateApi]

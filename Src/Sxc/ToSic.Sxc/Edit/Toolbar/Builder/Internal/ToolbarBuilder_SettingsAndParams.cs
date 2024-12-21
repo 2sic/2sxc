@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
-partial class ToolbarBuilder
+partial record ToolbarBuilder
 {
     public IToolbarBuilder Settings(
         NoParamOrder noParamOrder = default,
@@ -13,8 +13,11 @@ partial class ToolbarBuilder
         string autoAddMore = default,
         object ui = default,
         object parameters = default)
-        => this.AddInternal(new ToolbarRuleSettings(show: show, hover: hover, follow: follow, classes: classes, autoAddMore: autoAddMore,
-            ui: PrepareUi(ui), parameters: Utils.Par2Url.Serialize(parameters)));
+        => this.AddInternal([
+            new ToolbarRuleSettings(show: show, hover: hover, follow: follow, classes: classes,
+                autoAddMore: autoAddMore,
+                ui: PrepareUi(ui), parameters: Utils.Par2Url.Serialize(parameters))
+        ]);
 
 
     public IToolbarBuilder Parameters(

@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Images.Internal;
 /// </remarks>
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
+public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
 {
     /// <summary>
     /// Constructor is internal so 1. it can't be created from outside and 2. it has parameters which are internal.
@@ -31,24 +31,20 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         : base(parentLog, $"Img.{logName}")
     {
         Specs = specs;
-        Target = specs.Target;
         PageService = pageService;
         ImgService = imgService;
-        ImgLinker = imgService.ImgLinker;
-        Tweaker = Specs.Tweaker;
     }
 
-    internal ResponsiveSpecsOfTarget Target;
+    internal ResponsiveSpecsOfTarget Target => Specs.Target;
 
-    internal ResponsiveSpecs Specs { get; }
-    protected readonly ImgResizeLinker ImgLinker;
-    internal readonly ImageService ImgService;
-    protected readonly IPageService PageService;
-    internal readonly TweakMedia Tweaker;
+    internal ResponsiveSpecs Specs { get; init; }
+    internal ImageService ImgService { get; init; }
+    protected IPageService PageService { get; init; }
+    internal TweakMedia Tweaker => Specs.Tweaker;
     internal ResizeSettings Settings => Tweaker.ResizeSettings;
 
     private OneResize ThisResize => _thisResize.Get(() => { 
-        var t = ImgLinker.ImageOnly(Target.Link.Url, Settings as ResizeSettings, Target.HasMdOrNull);
+        var t = ImgService.ImgLinker.ImageOnly(Target.Link.Url, Settings, Target.HasMdOrNull);
         Log.A(ImgService.Debug, $"{nameof(ThisResize)}: " + t?.Dump());
         return t;
     });
@@ -61,7 +57,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     /// ToString must be specified by each implementation
     /// </summary>
     /// <returns></returns>
-    public override string ToString() => Tag.ToString();
+    protected override string ToHtmlString() => Tag.ToString();
 
     /// <inheritdoc />
     public virtual Img Img => _imgTag.GetL(Log, _ =>
@@ -130,7 +126,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
             : original.Attr(LightboxHelpers.Attribute);
 
         var lsSettings = ImgService.SettingsInternal(LightboxHelpers.SettingsName);
-        var lsUrl = ImgLinker.ImageOnly(Target.Link.Url, settings: lsSettings, Target.HasMdOrNull).Url;
+        var lsUrl = ImgService.ImgLinker.ImageOnly(Target.Link.Url, settings: lsSettings, Target.HasMdOrNull).Url;
         
         // Add Lightbox caption and src
         var caption = Alt + description;
@@ -171,33 +167,19 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
 
     private readonly GetOnce<Img> _imgTag = new();
 
-    public IHtmlTag Tag => _tag.Get(GetTagWithToolbar);
+    public IHtmlTag Tag => _tag.Get(GetOutermostTag);
     private readonly GetOnce<IHtmlTag> _tag = new();
 
     protected virtual IHtmlTag GetOutermostTag() => Img;
 
-    private IHtmlTag GetTagWithToolbar()
-    {
-        // experimental #alwaysOnImg v18.0 - always put toolbar on img...
-        var tag = GetOutermostTag();
-        return tag;
-
-        
-        //// Get toolbar - if it's null (basically when the ImageService fails) stop here
-        //var toolbar = ToolbarOrNull(false);
-        //if (toolbar != null) tag = tag.Attr(toolbar);
-
-        //return tag;
-    }
 
     /// <summary>
     /// Get the toolbar - or null, based on
     /// - various conditions if toolbars are available
     /// - the question if it is being retrieved for the IMG tag or not.
     /// </summary>
-    /// <param name="forImage">If this is exclusively for the img-tag.</param>
     /// <returns></returns>
-    private IToolbarBuilder ToolbarOrNull(/*bool forImage*/)
+    private IToolbarBuilder ToolbarOrNull()
     {
         // attach edit if we are in edit-mode and the link was generated through a call
         if (ImgService.EditOrNull?.Enabled != true) return null;
@@ -207,9 +189,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         if (Target.FieldOrNull.Parent.Entity.DisableInlineEditSafe()) return null;
 
         // Get toolbar - if it's null (basically when the ImageService fails) stop here
-        // #alwaysOnImg if (forImage == (Params.Toolbar as string == "img"))
         return Toolbar();
-        // #alwaysOnImg return null;
     }
 
     #region Toolbar
@@ -219,6 +199,10 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     // still implemented as a method, so we could add future parameters if necessary
     public IToolbarBuilder Toolbar() => _toolbar.Get(() =>
     {
+        //var toolbarBuilder = new ResponsiveToolbarBuilder();
+        //toolbarBuilder.LinkLog(Log);
+        //return toolbarBuilder.Toolbar(ImgService, Target, Tweaker, Settings, Src);
+
         var l = Log.Fn<IToolbarBuilder>();
         switch (Tweaker.ToolbarObj)
         {
@@ -359,7 +343,7 @@ public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         var hasVariants = (ThisResize?.Recipe?.Variants).HasValue();
         var l = (ImgService.Debug ? Log : null).Fn<string>($"{nameof(isEnabled)}: {isEnabled}, {nameof(hasVariants)}: {hasVariants}");
         return isEnabled && hasVariants
-            ? l.Return(ImgLinker.SrcSet(Target.Link.Url, Settings as ResizeSettings, SrcSetType.Img,
+            ? l.Return(ImgService.ImgLinker.SrcSet(Target.Link.Url, Settings as ResizeSettings, SrcSetType.Img,
                 Target.HasMdOrNull))
             : l.ReturnNull();
     }

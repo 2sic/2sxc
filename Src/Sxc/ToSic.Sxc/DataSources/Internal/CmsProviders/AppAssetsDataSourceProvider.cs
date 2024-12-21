@@ -7,7 +7,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
-using static System.IO.Path;
+//using static System.IO.Path;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
@@ -76,17 +76,17 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
                 // but when asking for app files/folders it must always assume/start with the root of the app
                 //var fullName = FullNameWithoutAppFolder(f.FullName, _appPaths, _root);
                 var fullNameFromAppRoot = FullNameWithoutAppFolder(f.FullName, pathsFromRoot);
+                var name = Path.GetFileNameWithoutExtension(f.FullName);
+                var path = fullNameFromAppRoot.TrimPrefixSlash();
                 return new AppFileDataRaw
                 {
-                    Name = $"{GetFileNameWithoutExtension(f.FullName)}{f.Extension}",
-                    Extension = f.Extension,
-                    FullName = fullNameFromAppRoot,
-                    ParentFolderInternal = fullNameFromAppRoot.BeforeLast("/"),
-                    Path = fullNameFromAppRoot.BeforeLast("/") + "/",
+                    Name = name,
+                    Extension = f.Extension.TrimStart('.'), // Extension is without the dot
+                    FullName = $"{name}{f.Extension}",
+                    ParentFolderInternal = path.BeforeLast("/").SuffixSlash(),
+                    Path = path,
                     // TODO convert characters for safe HTML
-                    Url = $"{_appPaths.Path}/{fullNameFromAppRoot}",
-                    UrlRelative = fullNameFromAppRoot,
-
+                    Url = $"{_appPaths.Path}{fullNameFromAppRoot}",
 
                     Size = f.Length,
                     Created = f.CreationTime,
@@ -110,7 +110,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
 
         // if the root is just "/" then we need to add the root folder, otherwise not
         var root = new DirectoryInfo($"{_appPaths.PhysicalPath}/{_root}".FlattenMultipleForwardSlashes().TrimLastSlash());
-        folders.Insert(0, ToFolderData(root, pathsFromRoot, "Root"));
+        folders.Insert(0, ToFolderData(root, pathsFromRoot, ""));
         
         return (folders, $"found:{folders.Count}");
     });
@@ -120,16 +120,20 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
         // 2024-10-07 2dm - had to fix because the path became shorter when requesting files from a subfolder
         // but when asking for app files/folders it must always assume/start with the root of the app
         var fullNameFromAppRoot = FullNameWithoutAppFolder(d.FullName, pathsFromRoot);
+
+        // Name is the name of the folder, but if an alternative name is provided, use that instead
+        // this is for the root, which should have an "empty" name
+        var name = altName ?? Path.GetFileName(d.FullName);
+
         return new()
         {
-            Name = altName ?? $"{GetFileNameWithoutExtension(d.FullName)}{d.Extension}",
-            FullName = fullNameFromAppRoot,
-            ParentFolderInternal = fullNameFromAppRoot.BeforeLast("/"),
-            Path = fullNameFromAppRoot.BeforeLast("/") + "/",
+            Name = altName ?? name,
+            FullName = name,
+            ParentFolderInternal = fullNameFromAppRoot.TrimPrefixSlash().BeforeLast("/").SuffixSlash(),
+            Path = fullNameFromAppRoot.TrimPrefixSlash().SuffixSlash(),
             Created = d.CreationTime,
             Modified = d.LastWriteTime,
             Url = $"{_appPaths.Path}{fullNameFromAppRoot}",
-            UrlRelative = fullNameFromAppRoot,
         };
     }
 
@@ -155,7 +159,10 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
     private static PreparedPaths PreparePaths(IAppPaths appPaths, string root)
     {
         var hasShared = appPaths.PhysicalPathShared != null;
-        return new(Combine(appPaths.PhysicalPath, root), hasShared, hasShared ? Combine(appPaths.PhysicalPathShared, root) : "");
+        var appSharedPath = hasShared
+            ? Path.Combine(appPaths.PhysicalPathShared, root)
+            : "";
+        return new(Path.Combine(appPaths.PhysicalPath, root), hasShared, appSharedPath);
     }
 
     private record PreparedPaths(string AppSitePath, bool HasShared, string AppSharedPath);

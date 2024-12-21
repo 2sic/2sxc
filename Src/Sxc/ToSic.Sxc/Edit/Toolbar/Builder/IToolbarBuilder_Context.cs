@@ -67,7 +67,7 @@ public partial interface IToolbarBuilder
     IToolbarBuilder Condition(Func<bool> condition);
 
     /// <summary>
-    /// Specify an audience for the toolbar.
+    /// Specify an audience for the toolbar - to activate even if the user wouldn't normally see it.
     /// Normally only people with admin permissions would see a toolbar.
     /// Specifying the audience will make it appear even if you are not an admin.
     ///

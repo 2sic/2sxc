@@ -7,6 +7,7 @@ using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Code.Customizer;
 
+/// <inheritdoc cref="ICodeCustomizer" />
 internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICodeCustomizer
 {
     public IAppTyped<TSettings, TResources> App<TSettings, TResources>()
@@ -45,7 +46,7 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
         // check if cache exists and was created with the sames specs
         if (_myItem is TCustomType typed) return typed;
 
-        var created = _CodeApiSvc.Cdf.AsCustom<TCustomType>((_CodeApiSvc.Data as ContextData)?.MyItem.FirstOrDefault());
+        var created = _CodeApiSvc.Cdf.AsCustom<TCustomType>((_CodeApiSvc.Data as ContextData)?.MyItems.FirstOrDefault());
         _myItem = created;
         return created;
     }
@@ -58,7 +59,7 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
         if (_myItems is IEnumerable<TCustomType> typed) return typed;
         
         // Get and cache for reuse
-        var created = _CodeApiSvc.Cdf.AsCustomList<TCustomType>((_CodeApiSvc.Data as ContextData)?.MyItem ?? [], default, nullIfNull: false);
+        var created = _CodeApiSvc.Cdf.AsCustomList<TCustomType>((_CodeApiSvc.Data as ContextData)?.MyItems ?? [], default, nullIfNull: false);
         _myItems = created;
         return created;
     }
@@ -71,7 +72,7 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
         if (_myHeader is TCustomType typed) return typed;
 
         // Get and cache for reuse
-        var created = _CodeApiSvc.Cdf.AsCustom<TCustomType>((_CodeApiSvc.Data as ContextData)?.MyHeader.FirstOrDefault());
+        var created = _CodeApiSvc.Cdf.AsCustom<TCustomType>((_CodeApiSvc.Data as ContextData)?.MyHeaders.FirstOrDefault());
         _myHeader = created;
         return created;
     }

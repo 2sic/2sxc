@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Eav.Code.Help;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataSource;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -16,7 +17,6 @@ using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Razor.Internal;
@@ -73,7 +73,7 @@ public abstract class RazorTyped<TModel>()
 
     public ITypedItem MyHeader => CodeHelper.MyHeader;
 
-    public IBlockInstance MyData => _CodeApiSvc.Data;
+    public IDataSource MyData => _CodeApiSvc.Data;
 
     #endregion
 
@@ -182,23 +182,20 @@ public abstract class RazorTyped<TModel>()
     #region WIP v17
 
     /// <summary>
-    /// EXPERIMENTAL support razor base class with typed model
+    /// Typed Model of a Razor with typed model
     /// </summary>
     /// <returns></returns>
     /// <remarks>
-    /// Introduced (beta) in v17.03
+    /// * Introduced in v17.03 (beta)
+    /// * Stable since v18.00
     /// </remarks>
     [PrivateApi("WIP, don't publish yet")]
     public new TModel Model => CodeHelper.GetModel<TModel>();
 
-    /// <summary>
-    /// WIP
-    /// </summary>
-    [PrivateApi("Experiment v17.02+")]
+    /// <inheritdoc cref="CodeTyped.Customize"/>
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     protected ICodeCustomizer Customize => _customize ??= _CodeApiSvc.GetService<ICodeCustomizer>(reuse: true);
     private ICodeCustomizer _customize;
-
 
     #endregion
 

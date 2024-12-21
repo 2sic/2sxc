@@ -10,20 +10,30 @@ internal static class ToolbarBuilderExtensions
     /// History
     /// * Added in 2sxc 13
     /// </remarks>
-    public static IToolbarBuilder AddInternal(this IToolbarBuilder original, params object[] newRules)
+    public static ToolbarBuilder AddInternal(this ToolbarBuilder original, object[] newRules)
     {
-        var l = original.Log.Fn<IToolbarBuilder>();
+        var l = original.Log.Fn<ToolbarBuilder>();
         if (newRules == null || !newRules.Any())
             return l.Return(original, "no new rules");
 
-        // Create clone before starting to log so it's in there too
-        var clone = new ToolbarBuilder(parent: original as ToolbarBuilder);
-
+        var mergeRules = new List<ToolbarRuleBase>(original.Rules);
         foreach (var rule in newRules)
-            if (rule is ToolbarRuleBase realRule)
-                clone.Rules.Add(realRule);
-            else if (rule is string stringRule)
-                clone.Rules.Add(new ToolbarRuleGeneric(stringRule));
+            switch (rule)
+            {
+                case ToolbarRuleBase realRule:
+                    mergeRules.Add(realRule);
+                    break;
+                case string stringRule:
+                    mergeRules.Add(new ToolbarRuleGeneric(stringRule));
+                    break;
+            }
+
+        // Create clone with all rules
+        var clone = original with
+        {
+            Rules = mergeRules
+        };
+
 
         return l.Return(clone, "clone");
     }

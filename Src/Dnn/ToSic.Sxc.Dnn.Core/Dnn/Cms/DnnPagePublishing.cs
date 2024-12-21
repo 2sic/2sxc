@@ -6,12 +6,12 @@ using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 
@@ -133,7 +133,7 @@ internal partial class DnnPagePublishing(
 
     }
 
-    private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, IBlockInstance data, string key)
+    private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, IDataSource data, string key)
     {
         var cont = data.GetStream(key, nullIfNotFound: true)?.List.ToImmutableList(); //  data.Out.ContainsKey(key) ? data[key]?.List?.ToImmutableList() : null;
         Log.A($"TryToAddStream(..., ..., key:{key}), found:{cont != null} add⋮{cont?.Count ?? 0}" );

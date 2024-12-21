@@ -6,7 +6,7 @@ using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
-partial class ToolbarBuilder
+partial record ToolbarBuilder
 {
     private class CleanedParams
     {
@@ -77,7 +77,7 @@ partial class ToolbarBuilder
             contentType: contentType,
             propsKeep: propsKeep, propsSkip: propsSkip,
             decoHelper: Services.ToolbarButtonHelper.Value);
-        var builder = this.AddInternal(command);
+        var builder = this.AddInternal([command]);
         return (command, builder);
     }
 
@@ -181,8 +181,8 @@ partial class ToolbarBuilder
             );
         });
 
-        var builder = this as IToolbarBuilder;
-        return l.ReturnAsOk(builder.AddInternal(mdsToAdd.Cast<object>().ToArray()));
+        // var builder = this as IToolbarBuilder;
+        return l.ReturnAsOk(this.AddInternal(mdsToAdd.Cast<object>().ToArray()));
     }
 
     /// <inheritdoc />

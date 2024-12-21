@@ -4,7 +4,7 @@ using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
-partial class ToolbarBuilder
+partial record ToolbarBuilder
 {
     private IToolbarBuilder AddListAction(
         string commandName,
@@ -25,7 +25,7 @@ partial class ToolbarBuilder
             parameters: pars.Parameters,
             propsKeep: KeysOfLists, 
             operation: pars.Operation);
-        return this.AddInternal(command);
+        return this.AddInternal([command]);
 
     }
 

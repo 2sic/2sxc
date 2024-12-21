@@ -1,12 +1,9 @@
 ﻿using ToSic.Eav.Plumbing;
-using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Decorators;
-using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Edit.Toolbar.Internal;
 
 namespace ToSic.Sxc.Services.CmsService;
@@ -23,10 +20,7 @@ internal class CmsServiceContainerHelper(
 {
     private string Classes { get; set; } = classes;
 
-
-    private ServiceKit14 ServiceKit => _svcKit.Get(dynCodeRoot.GetKit<ServiceKit14>);
-    private readonly GetOnce<ServiceKit14> _svcKit = new();
-
+    private ServiceKit14 ServiceKit => field ??= dynCodeRoot.GetKit<ServiceKit14>();
 
     public IHtmlTag Wrap(CmsProcessed result, bool defaultToolbar)
     {

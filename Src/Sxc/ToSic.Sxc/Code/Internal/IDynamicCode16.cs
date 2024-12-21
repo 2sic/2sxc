@@ -1,7 +1,7 @@
-﻿using ToSic.Sxc.Apps;
+﻿using ToSic.Eav.DataSource;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.Internal;
@@ -221,7 +221,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     /// 1. If the view expects no data, it will just contain a `Default` stream containing no items
     /// 1. If the view has a Query behind it, then MyData will have all the streams provided by the Query
     /// </summary>
-    IBlockInstance MyData { get; }
+    IDataSource MyData { get; }
 
     #endregion
 

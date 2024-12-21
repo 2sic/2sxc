@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
-partial class ToolbarBuilder
+partial record ToolbarBuilder
 {
     public IToolbarBuilder Info(
         NoParamOrder noParamOrder = default,

@@ -64,16 +64,17 @@ internal class ToolbarService(Generator<IToolbarBuilder> toolbarGenerator)
         var callLog = Log.Fn<IToolbarBuilder>($"{nameof(toolbarTemplate)}:{toolbarTemplate}");
         
         // The following lines must be just as this, because it's a functional object, where each call may return a new copy
-        var tlb = toolbarGenerator.New();
+        var tlb = (ToolbarBuilder)toolbarGenerator.New();
         tlb.ConnectToRoot(_CodeApiSvc);
 
-        tlb = ((ToolbarBuilder)tlb).Toolbar(toolbarTemplate: toolbarTemplate, target: target, tweak: tweak, ui: ui, parameters: parameters, prefill: prefill);
+        tlb = (ToolbarBuilder)tlb
+            .Toolbar(toolbarTemplate: toolbarTemplate, target: target, tweak: tweak, ui: ui, parameters: parameters, prefill: prefill);
 
         if (_defaultUi.HasValue())
-            tlb = tlb.Settings(ui: _defaultUi);
+            tlb = (ToolbarBuilder)tlb.Settings(ui: _defaultUi);
 
         if (context.HasValue())
-            tlb = tlb.AddInternal(new ToolbarRuleGeneric($"context?{context}"));
+            tlb = tlb.AddInternal([new ToolbarRuleGeneric($"context?{context}")]);
 
         return callLog.Return(tlb);
     }

@@ -10,28 +10,61 @@ using Attribute = ToSic.Razor.Markup.Attribute;
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
-partial class ToolbarBuilder
+partial record ToolbarBuilder
 {
     private const string ErrRenderMessage = "error: can't render toolbar to html, missing context";
 
-    public IToolbarBuilder AsTag(object target = null) => With(mode: ToolbarHtmlModes.Standalone, target: target);
+    private IToolbarBuilder With(
+        NoParamOrder noParamOrder = default,
+        string mode = default,
+        object target = default)
+    {
+        // Create clone before starting to log so it's in there too
+        var clone = target == null
+            ? new(this)
+            : (ToolbarBuilder)Parameters(target);   // Params will already copy/clone it
 
-    public IToolbarBuilder AsAttributes(object target = null) => With(mode: ToolbarHtmlModes.OnTag, target: target);
+        return mode != null
+            ? clone with
+            {
+                Configuration = (Configuration ?? new()) with
+                {
+                    HtmlMode = mode
+                }
+            }
+            : clone;
+    }
 
-    public IToolbarBuilder AsJson(object target = null) => With(mode: ToolbarHtmlModes.Json, target: target);
+    public IToolbarBuilder AsTag(object target = null) =>
+        With(mode: ToolbarHtmlModes.Standalone, target: target);
 
-    public override string ToString()
+    public IToolbarBuilder AsAttributes(object target = null) =>
+        With(mode: ToolbarHtmlModes.OnTag, target: target);
+
+    public IToolbarBuilder AsJson(object target = null) =>
+        With(mode: ToolbarHtmlModes.Json, target: target);
+
+    /// <summary>
+    /// Also overwrite ToString() to keep functionality similar to before switch to record.
+    /// Probably not relevant though.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString() => ToHtmlString();
+
+    protected override string ToHtmlString()
     {
         // Get edit, but don't exit if null, as the Render (later on) will add comments if Edit is null
-        var edit = _CodeApiSvc?.Edit;
+        var edit = CodeApiSvc?.Edit;
 
         // TODO:
         // - force
-        var forceEnable = Configuration?.ForEveryone == true;
+        var forceEnable = Configuration?.ForceShow == true;
         var enabled = edit?.Enabled == true || forceEnable;
 
+        // If we override force-show, then we must make sure that the toolbars API is loaded in JS
+        // since in this case it may not be activated
         if (forceEnable) 
-            _CodeApiSvc?.GetService<IPageService>(reuse: true)
+            CodeApiSvc?.GetService<IPageService>(reuse: true)
                 .Activate(SxcPageFeatures.ToolbarsInternal.NameId);
 
         // Check if conditions don't allow. Only test conditions if the toolbar would show - otherwise ignore
@@ -43,7 +76,7 @@ partial class ToolbarBuilder
 
         // Show toolbar or a Demo-Informative-Toolbar
         var finalToolbar = ShouldSwitchToItemDemoMode()
-            ? CreateItemDemoToolbar()       // Implement Demo-Mode with info-button only
+            ? CreateStandaloneItemDemoToolbar()       // Implement Demo-Mode with info-button only
             : this;                         // Normal render of the current toolbar
         return finalToolbar.Render(edit, enabled);
     }
@@ -52,7 +85,7 @@ partial class ToolbarBuilder
     /// Create a fresh Toolbar which only shows infos about item being in demo-mode
     /// </summary>
     /// <returns></returns>
-    private ToolbarBuilder CreateItemDemoToolbar()
+    private ToolbarBuilder CreateStandaloneItemDemoToolbar()
     {
         var rules = new List<ToolbarRuleBase>();
 
@@ -70,21 +103,21 @@ partial class ToolbarBuilder
         AddRuleIfFound<ToolbarRuleForParams>();
         AddRuleIfFound<ToolbarRuleSettings>();
 
-        var tlb = new ToolbarBuilder(this, rules) as IToolbarBuilder;
+        var tlb = this with { Rules = rules }; // new ToolbarBuilder(this, rules);}
         var keyOrMessage = Configuration?.DemoMessage;
         var message = keyOrMessage == null
-            ? _CodeApiSvc.Resources.Get<string>($"{AppStackConstants.RootNameResources}.Toolbar.IsDemoSubItem")
+            ? CodeApiSvc.Resources.Get<string>($"{AppStackConstants.RootNameResources}.Toolbar.IsDemoSubItem")
             : keyOrMessage.StartsWith($"{AppStackConstants.RootNameResources}.")
-                ? _CodeApiSvc.Resources.Get<string>(keyOrMessage)
+                ? CodeApiSvc.Resources.Get<string>(keyOrMessage)
                 : keyOrMessage;
-        tlb = tlb.Info(tweak: b => b.Note(message));
-        return (ToolbarBuilder)tlb;
+        tlb = (ToolbarBuilder)tlb.Info(tweak: b => b.Note(message));
+        return tlb;
     }
 
     private bool ShouldSwitchToItemDemoMode()
     {
         // If no root provided, we can't check demo mode as of now, so return
-        var root = Configuration?.Root?.Entity;
+        var root = Configuration?.DemoCheckItem?.Entity;
         if (root == null) return false;
 
         // If root is not demo, then don't use demo mode
@@ -108,7 +141,7 @@ partial class ToolbarBuilder
         if (!enabled)
             return ""; 
 
-        var mode = (Configuration?.Mode ?? ToolbarHtmlModes.OnTag).ToLowerInvariant();
+        var mode = (Configuration?.HtmlMode ?? ToolbarHtmlModes.OnTag).ToLowerInvariant();
         switch (mode)
         {
             // ReSharper disable AssignNullToNotNullAttribute

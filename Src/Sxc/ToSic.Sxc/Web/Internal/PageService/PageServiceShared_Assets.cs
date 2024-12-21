@@ -8,8 +8,14 @@ partial class PageServiceShared
     /// <summary>
     /// Assets consolidated from all render-results 
     /// </summary>
-    public List<IClientAsset> Assets { get; } = [];
+    private List<IClientAsset> Assets { get; } = [];
 
+    public List<IClientAsset> GetAssetsAndFlush()
+    {
+        var assets = new List<IClientAsset>(Assets);
+        Assets.Clear();
+        return assets;
+    }
 
     public void AddAssets(RenderEngineResult result)
     {

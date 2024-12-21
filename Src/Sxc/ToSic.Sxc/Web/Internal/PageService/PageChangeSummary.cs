@@ -30,7 +30,7 @@ public class PageChangeSummary(
             pss.Activate(SxcPageFeatures.ToolbarsAutoInternal.NameId);
         }
 
-        var assets = pss.Assets;
+        var assets = pss.GetAssetsAndFlush();
         var (newAssets, rest) = ConvertSettingsAssetsIntoReal(pss.PageFeatures.FeaturesFromSettingsGetNew(Log));
 
         assets.AddRange(newAssets);

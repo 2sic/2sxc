@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Edit.Toolbar.Internal;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarConstants;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ToolbarService;
@@ -32,6 +31,13 @@ public class TweakButtonParameters: TweakButtonTestsBase
     [TestMethod]
     public void Parameters2Strings()
         => AssertParams(["Hello=World"], NewTb().TacParameters("Hello", "World"));
+
+    [TestMethod]
+    public void Parameters2Int()
+        => AssertParams(["Hello=42"], NewTb().TacParameters("Hello", 42));
+    [TestMethod]
+    public void Parameters2Bool()
+        => AssertParams(["Hello=true"], NewTb().TacParameters("Hello", true));
 
     [TestMethod]
     public void Parameters1ObjectA()
