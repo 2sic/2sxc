@@ -7234,43 +7234,17 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 182380,
-                "Version": 6,
-                "Guid": "cf832332-5f70-40af-ad1f-4399f294ac42",
+                "Id": 184123,
+                "Version": 1,
+                "Guid": "fe3b9d97-1076-4860-ad7f-7c80008428e7",
                 "Type": {
-                  "Id": "ContentType",
-                  "Name": "ContentType"
+                  "Id": "c740085a-d548-41f3-8d06-0a48b8692345",
+                  "Name": "IsRecommendedDecorator"
                 },
                 "Attributes": {
                   "String": {
-                    "AdditionalSettings": {
-                      "en-us": ""
-                    },
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": "<p>Configure a Item (Entity) Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
-                    },
-                    "Label": {
-                      "en-us": "Item (Entity) Picker"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
+                    "Message": {
+                      "en-us": "new v19"
                     }
                   }
                 },
@@ -7283,7 +7257,7 @@
               },
               {
                 "Id": 182665,
-                "Version": 8,
+                "Version": 10,
                 "Guid": "73bf2a9b-6d4c-4987-96d8-d421c586a888",
                 "Type": {
                   "Id": "ContentType-InputType",
@@ -7298,10 +7272,10 @@
                       "en-us": "@All,@entity-picker"
                     },
                     "Description": {
-                      "en-us": "Item (Entity) Picker (BETA)"
+                      "en-us": "Item Picker for Entities (new v19)"
                     },
                     "Label": {
-                      "en-us": "Item (Entity) Picker (BETA v17)"
+                      "en-us": "Data Picker Entity (new v19)"
                     },
                     "Type": {
                       "en-us": "@entity-picker"
@@ -7324,17 +7298,43 @@
                 }
               },
               {
-                "Id": 184123,
-                "Version": 1,
-                "Guid": "fe3b9d97-1076-4860-ad7f-7c80008428e7",
+                "Id": 182380,
+                "Version": 10,
+                "Guid": "cf832332-5f70-40af-ad1f-4399f294ac42",
                 "Type": {
-                  "Id": "c740085a-d548-41f3-8d06-0a48b8692345",
-                  "Name": "IsRecommendedDecorator"
+                  "Id": "ContentType",
+                  "Name": "ContentType"
                 },
                 "Attributes": {
                   "String": {
-                    "Message": {
-                      "en-us": "new v19"
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p>Configure a Item (Entity) Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "en-us": "Data Picker for Entity Field"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
                     }
                   }
                 },
@@ -7529,43 +7529,17 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 182381,
-                "Version": 4,
-                "Guid": "df9485fb-10f6-4c1e-a19e-84b47b68955b",
+                "Id": 184124,
+                "Version": 1,
+                "Guid": "1bdf0ff1-be37-40e1-b9c3-f3b4d6c062d9",
                 "Type": {
-                  "Id": "ContentType",
-                  "Name": "ContentType"
+                  "Id": "c740085a-d548-41f3-8d06-0a48b8692345",
+                  "Name": "IsRecommendedDecorator"
                 },
                 "Attributes": {
                   "String": {
-                    "AdditionalSettings": {
-                      "en-us": ""
-                    },
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": "<p>Configure a Number Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
-                    },
-                    "Label": {
-                      "en-us": "Number Picker"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
+                    "Message": {
+                      "en-us": "new v19"
                     }
                   }
                 },
@@ -7578,7 +7552,7 @@
               },
               {
                 "Id": 183771,
-                "Version": 1,
+                "Version": 3,
                 "Guid": "65054dae-9f44-49cd-912f-4786bccabe04",
                 "Type": {
                   "Id": "ContentType-InputType",
@@ -7593,10 +7567,10 @@
                       "en-us": "@All,@number-picker"
                     },
                     "Description": {
-                      "en-us": "Number Picker (BETA)"
+                      "en-us": "Data Picker Number (new v19)"
                     },
                     "Label": {
-                      "en-us": "Number Picker (BETA v17)"
+                      "en-us": "Data Picker Number (new v19)"
                     },
                     "Type": {
                       "en-us": "@number-picker"
@@ -7619,17 +7593,43 @@
                 }
               },
               {
-                "Id": 184124,
-                "Version": 1,
-                "Guid": "1bdf0ff1-be37-40e1-b9c3-f3b4d6c062d9",
+                "Id": 182381,
+                "Version": 8,
+                "Guid": "df9485fb-10f6-4c1e-a19e-84b47b68955b",
                 "Type": {
-                  "Id": "c740085a-d548-41f3-8d06-0a48b8692345",
-                  "Name": "IsRecommendedDecorator"
+                  "Id": "ContentType",
+                  "Name": "ContentType"
                 },
                 "Attributes": {
                   "String": {
-                    "Message": {
-                      "en-us": "new v19"
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p>Configure a Number Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "en-us": "Data Picker for Number Field"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
                     }
                   }
                 },
@@ -7698,43 +7698,17 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 182382,
-                "Version": 4,
-                "Guid": "dba24477-2502-42c2-8437-4c16934b9f5e",
+                "Id": 184125,
+                "Version": 1,
+                "Guid": "dce429d6-5813-435d-b46c-fb6d2ca6902d",
                 "Type": {
-                  "Id": "ContentType",
-                  "Name": "ContentType"
+                  "Id": "c740085a-d548-41f3-8d06-0a48b8692345",
+                  "Name": "IsRecommendedDecorator"
                 },
                 "Attributes": {
                   "String": {
-                    "AdditionalSettings": {
-                      "en-us": ""
-                    },
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": "<p>Configure a String Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
-                    },
-                    "Label": {
-                      "en-us": "String Picker"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
+                    "Message": {
+                      "en-us": "new v19"
                     }
                   }
                 },
@@ -7747,7 +7721,7 @@
               },
               {
                 "Id": 182573,
-                "Version": 5,
+                "Version": 7,
                 "Guid": "ba6ce128-0a51-4047-8a40-bfff27658476",
                 "Type": {
                   "Id": "ContentType-InputType",
@@ -7762,10 +7736,10 @@
                       "en-us": "@All,@string-picker"
                     },
                     "Description": {
-                      "en-us": "String Picker Field (BETA)"
+                      "en-us": "Data Picker for Text/String Field (new v19)"
                     },
                     "Label": {
-                      "en-us": "String Picker (BETA v17)"
+                      "en-us": "Data Picker String (new v19)"
                     },
                     "Type": {
                       "en-us": "@string-picker"
@@ -7788,17 +7762,43 @@
                 }
               },
               {
-                "Id": 184125,
-                "Version": 1,
-                "Guid": "dce429d6-5813-435d-b46c-fb6d2ca6902d",
+                "Id": 182382,
+                "Version": 8,
+                "Guid": "dba24477-2502-42c2-8437-4c16934b9f5e",
                 "Type": {
-                  "Id": "c740085a-d548-41f3-8d06-0a48b8692345",
-                  "Name": "IsRecommendedDecorator"
+                  "Id": "ContentType",
+                  "Name": "ContentType"
                 },
                 "Attributes": {
                   "String": {
-                    "Message": {
-                      "en-us": "new v19"
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p>Configure a String Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "en-us": "Data Picker for Text/String Field"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
                     }
                   }
                 },
@@ -12100,7 +12100,7 @@
             },
             {
               "Id": 183903,
-              "Version": 6,
+              "Version": 15,
               "Guid": "bfc2786d-c211-4d74-8b58-621105cf3b27",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -12109,7 +12109,7 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v2((data, context) => {\n  const options = data.optionsRaw.map(o => ({\n    ...o,\n    noSelect: o.entity?.Disabled ?? false,\n  }))\n  return {\n    options: options,\n  };\n});"
+                    "en-us": "v2((data, context) => {\n  let temp = 0;\n  const options = data.optionsRaw.map(o => ({\n    ...o,\n    noSelect: o.data?.Disabled ?? false,\n    // conditions: (++temp % 2) ? `warn=feature:PickerUiRadio` : null,\n  }))\n  console.log(options);\n  return {\n    options: options,\n  };\n});"
                   },
                   "Target": {
                     "en-us": "Field.Options"
@@ -12128,7 +12128,7 @@
             },
             {
               "Id": 183894,
-              "Version": 6,
+              "Version": 16,
               "Guid": "b09500f5-0a16-4347-97d4-505bac83d0fc",
               "Type": {
                 "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
@@ -12137,7 +12137,7 @@
               "Attributes": {
                 "String": {
                   "Csv": {
-                    "en-us": "Value,Title,Info,Disabled\nlist,\"Default\",\"Dropdown with search and dialog when more need to be selected.\",false\n\nauto-inline,\"Inline Auto WIP\",\"Inline - automatically showing checkboxes or radio buttons, depending on the amount of items you can select\",true\nradio,\"Inline Radio Buttons WIP\",\"Inline radio button selection for single-item choices\",true\ncheckbox,\"Inline Checkboxes WIP\",\"Inline checkbox list for multiple item selection\",true\n\ntree,\"Tree structure - requires more configuration (BETA, doesn't work yet)\",,true"
+                    "en-us": "Value,Title,Info,Disabled,Rules\nlist,\"Default\",\"Dropdown with search. Opens dialog when more need to be selected.\",false\n\nauto-inline,\"Auto Radio/Checkbox\",\"Inline - automatically showing checkboxes or radio buttons, depending on the amount of items you can select\",false,\"warn-req=feature:PickerUiRadio;warn-req=feature:PickerUiCheckbox\"\nradio,\"Inline Radio Buttons\",\"Inline radio button selection for single-item choices\",false,\"warn-req=feature:PickerUiRadio\"\ncheckbox,\"Inline Checkboxes\",\"Inline checkbox list for multiple item selection\",false,\"warn-req=feature:PickerUiCheckbox\"\n\ntree,\"Tree structure (BETA)\",\"Requires more configuration (BETA, doesn't work yet)\",true"
                   },
                   "Description": {
                     "en-us": ""
@@ -12146,7 +12146,13 @@
                     "en-us": "<p>[Item:Info]</p>"
                   },
                   "ItemTooltip": {
-                    "en-us": "<p>[Item:Info]</p>"
+                    "en-us": ""
+                  },
+                  "PreviewType": {
+                    "en-us": ""
+                  },
+                  "PreviewValue": {
+                    "en-us": ""
                   },
                   "Title": {
                     "en-us": "Picker Shared - DisplayMode"

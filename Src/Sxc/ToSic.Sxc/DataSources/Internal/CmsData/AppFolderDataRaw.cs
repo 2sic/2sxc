@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
@@ -25,14 +26,29 @@ public class AppFolderDataRaw: AppFileDataRawBase
 {
     public const string TypeName = "Folder";
 
-    public static DataFactoryOptions Options = new(typeName: TypeName, titleField: nameof(Name));
+    public static DataFactoryOptions Options = new(typeName: TypeName, titleField: nameof(Title));
+
+    /// <summary>
+    /// The folder name - or blank when it's the root.
+    /// </summary>
+    [ContentTypeAttributeSpecs(IsTitle = true, Description = "The folder name or blank when it's the root.")]
+    public override string Name { get; set; }
+
+    /// <summary>
+    /// The folder name.
+    /// </summary>
+    [ContentTypeAttributeSpecs(IsTitle = true, Description = "The folder name or 'root' when it's the root")]
+    //public string Title { get => field.NullIfNoValue() ?? "root"; set => field = value; }
+    public string Title => Name.NullIfNoValue() ?? "root";
+
 
     [PrivateApi]
     public override IDictionary<string, object> Attributes(RawConvertOptions options)
         => new Dictionary<string, object>(base.Attributes(options))
         {
-            { "Folders", new RawRelationship(key: $"FolderIn:{FullName}") },
-            { "Files", new RawRelationship(key: $"FileIn:{FullName}") },
+            { "Folders", new RawRelationship(key: $"FolderIn:{Path}") },
+            { "Files", new RawRelationship(key: $"FileIn:{Path}") },
+            { nameof(Title), Title }
         };
 
     [PrivateApi]
@@ -40,7 +56,7 @@ public class AppFolderDataRaw: AppFileDataRawBase
         => new List<object>
         {
             // For Relationships looking for this folder
-            $"Folder:{FullName}",
+            $"Folder:{Path}",
             // For Relationships looking for folders having a specific parent
             $"FolderIn:{ParentFolderInternal}",
         };

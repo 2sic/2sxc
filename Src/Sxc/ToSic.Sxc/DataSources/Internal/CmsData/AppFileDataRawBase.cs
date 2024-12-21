@@ -15,11 +15,7 @@ public abstract class AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
     [ContentTypeAttributeSpecs(Description = "DO NOT USE. This is a temporary, random ID calculated at runtime and will return different values all the time.")]
     public Guid Guid { get; set; } = Guid.NewGuid();
 
-    /// <summary>
-    /// The file name with extension.
-    /// </summary>
-    [ContentTypeAttributeSpecs(IsTitle = true, Description = "The file name with extension, like image.jpg")]
-    public string Name { get; set; }
+    public abstract string Name { get; set; }
 
     /// <summary>
     /// The file name with path.
@@ -74,6 +70,10 @@ public abstract class AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
             { nameof(Url), Url },
             { nameof(UrlRelative), UrlRelative },
             { "Parent", new RawRelationship(key: $"Folder:{ParentFolderInternal}") },
+
+            // For debugging
+            //{ nameof(ParentFolderInternal), ParentFolderInternal },
+
         };
 
     [PrivateApi]

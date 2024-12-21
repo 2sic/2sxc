@@ -28,7 +28,15 @@ public class AppFileDataRaw: AppFileDataRawBase
     public static DataFactoryOptions Options = new(typeName: TypeName, titleField: nameof(Name));
 
     /// <summary>
-    /// The file name extension
+    /// The file name with extension.
+    /// </summary>
+    [ContentTypeAttributeSpecs(IsTitle = true, Description = "The file name without extension, like my-image")]
+    public override string Name { get; set; }
+
+    /// <summary>
+    /// The file name extension, without any dot.
+    /// Purpose is to do switching between extensions.
+    /// If you want to have a safe, merged file name, just take the `FullName`.
     /// </summary>
     public string Extension { get; set; }
 
@@ -47,6 +55,10 @@ public class AppFileDataRaw: AppFileDataRawBase
 
     [PrivateApi]
     public override IEnumerable<object> RelationshipKeys(RawConvertOptions options)
-        => new List<object> { $"FileIn:{ParentFolderInternal}" };
+        => new List<object>
+        {
+            // For relationships looking for files in this folder
+            $"FileIn:{ParentFolderInternal}"
+        };
 
 }
