@@ -77,17 +77,16 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
                 //var fullName = FullNameWithoutAppFolder(f.FullName, _appPaths, _root);
                 var fullNameFromAppRoot = FullNameWithoutAppFolder(f.FullName, pathsFromRoot);
                 var name = Path.GetFileNameWithoutExtension(f.FullName);
+                var path = fullNameFromAppRoot.TrimPrefixSlash();
                 return new AppFileDataRaw
                 {
                     Name = name,
                     Extension = f.Extension.TrimStart('.'), // Extension is without the dot
                     FullName = $"{name}{f.Extension}",
-                    ParentFolderInternal = fullNameFromAppRoot.BeforeLast("/").SuffixSlash(),
-                    Path = fullNameFromAppRoot,
+                    ParentFolderInternal = path.BeforeLast("/").SuffixSlash(),
+                    Path = path,
                     // TODO convert characters for safe HTML
                     Url = $"{_appPaths.Path}{fullNameFromAppRoot}",
-                    UrlRelative = fullNameFromAppRoot,
-
 
                     Size = f.Length,
                     Created = f.CreationTime,
@@ -125,16 +124,16 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
         // Name is the name of the folder, but if an alternative name is provided, use that instead
         // this is for the root, which should have an "empty" name
         var name = altName ?? Path.GetFileName(d.FullName);
+
         return new()
         {
             Name = altName ?? name,
             FullName = name,
-            ParentFolderInternal = fullNameFromAppRoot.BeforeLast("/").SuffixSlash(),
-            Path = fullNameFromAppRoot.SuffixSlash(),
+            ParentFolderInternal = fullNameFromAppRoot.TrimPrefixSlash().BeforeLast("/").SuffixSlash(),
+            Path = fullNameFromAppRoot.TrimPrefixSlash().SuffixSlash(),
             Created = d.CreationTime,
             Modified = d.LastWriteTime,
             Url = $"{_appPaths.Path}{fullNameFromAppRoot}",
-            UrlRelative = fullNameFromAppRoot,
         };
     }
 

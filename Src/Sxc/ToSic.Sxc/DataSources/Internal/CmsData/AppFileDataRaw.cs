@@ -25,12 +25,12 @@ public class AppFileDataRaw: AppFileDataRawBase
 {
     public const string TypeName = "File";
 
-    public static DataFactoryOptions Options = new(typeName: TypeName, titleField: nameof(Name));
+    public static DataFactoryOptions Options = new(typeName: TypeName, titleField: nameof(Path));
 
     /// <summary>
     /// The file name with extension.
     /// </summary>
-    [ContentTypeAttributeSpecs(IsTitle = true, Description = "The file name without extension, like my-image")]
+    [ContentTypeAttributeSpecs(Description = "The file name without extension, like my-image")]
     public override string Name { get; set; }
 
     /// <summary>

@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
-using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
@@ -26,20 +25,20 @@ public class AppFolderDataRaw: AppFileDataRawBase
 {
     public const string TypeName = "Folder";
 
-    public static DataFactoryOptions Options = new(typeName: TypeName, titleField: nameof(Title));
+    public static DataFactoryOptions Options = new(typeName: TypeName, titleField: nameof(Path));
 
     /// <summary>
     /// The folder name - or blank when it's the root.
     /// </summary>
-    [ContentTypeAttributeSpecs(IsTitle = true, Description = "The folder name or blank when it's the root.")]
+    [ContentTypeAttributeSpecs(Description = "The folder name or blank when it's the root.")]
     public override string Name { get; set; }
 
-    /// <summary>
-    /// The folder name.
-    /// </summary>
-    [ContentTypeAttributeSpecs(IsTitle = true, Description = "The folder name or 'root' when it's the root")]
-    //public string Title { get => field.NullIfNoValue() ?? "root"; set => field = value; }
-    public string Title => Name.NullIfNoValue() ?? "root";
+    ///// <summary>
+    ///// The folder name.
+    ///// </summary>
+    //[ContentTypeAttributeSpecs(IsTitle = true, Description = "The folder name or 'root' when it's the root")]
+    ////public string Title { get => field.NullIfNoValue() ?? "root"; set => field = value; }
+    //public string Title => Name.NullIfNoValue() ?? "root";
 
 
     [PrivateApi]
@@ -48,7 +47,7 @@ public class AppFolderDataRaw: AppFileDataRawBase
         {
             { "Folders", new RawRelationship(key: $"FolderIn:{Path}") },
             { "Files", new RawRelationship(key: $"FileIn:{Path}") },
-            { nameof(Title), Title }
+            //{ nameof(Title), Title },
         };
 
     [PrivateApi]
