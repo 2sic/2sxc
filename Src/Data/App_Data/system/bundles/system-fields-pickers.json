@@ -7234,17 +7234,43 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 184123,
-                "Version": 1,
-                "Guid": "fe3b9d97-1076-4860-ad7f-7c80008428e7",
+                "Id": 182380,
+                "Version": 10,
+                "Guid": "cf832332-5f70-40af-ad1f-4399f294ac42",
                 "Type": {
-                  "Id": "c740085a-d548-41f3-8d06-0a48b8692345",
-                  "Name": "IsRecommendedDecorator"
+                  "Id": "ContentType",
+                  "Name": "ContentType"
                 },
                 "Attributes": {
                   "String": {
-                    "Message": {
-                      "en-us": "new v19"
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p>Configure a Item (Entity) Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "en-us": "Data Picker for Entity Field"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
                     }
                   }
                 },
@@ -7298,43 +7324,17 @@
                 }
               },
               {
-                "Id": 182380,
-                "Version": 10,
-                "Guid": "cf832332-5f70-40af-ad1f-4399f294ac42",
+                "Id": 184123,
+                "Version": 1,
+                "Guid": "fe3b9d97-1076-4860-ad7f-7c80008428e7",
                 "Type": {
-                  "Id": "ContentType",
-                  "Name": "ContentType"
+                  "Id": "c740085a-d548-41f3-8d06-0a48b8692345",
+                  "Name": "IsRecommendedDecorator"
                 },
                 "Attributes": {
                   "String": {
-                    "AdditionalSettings": {
-                      "en-us": ""
-                    },
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": "<p>Configure a Item (Entity) Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
-                    },
-                    "Label": {
-                      "en-us": "Data Picker for Entity Field"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
+                    "Message": {
+                      "en-us": "new v19"
                     }
                   }
                 },
@@ -7529,17 +7529,43 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 184124,
-                "Version": 1,
-                "Guid": "1bdf0ff1-be37-40e1-b9c3-f3b4d6c062d9",
+                "Id": 182381,
+                "Version": 8,
+                "Guid": "df9485fb-10f6-4c1e-a19e-84b47b68955b",
                 "Type": {
-                  "Id": "c740085a-d548-41f3-8d06-0a48b8692345",
-                  "Name": "IsRecommendedDecorator"
+                  "Id": "ContentType",
+                  "Name": "ContentType"
                 },
                 "Attributes": {
                   "String": {
-                    "Message": {
-                      "en-us": "new v19"
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p>Configure a Number Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "en-us": "Data Picker for Number Field"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
                     }
                   }
                 },
@@ -7593,43 +7619,17 @@
                 }
               },
               {
-                "Id": 182381,
-                "Version": 8,
-                "Guid": "df9485fb-10f6-4c1e-a19e-84b47b68955b",
+                "Id": 184124,
+                "Version": 1,
+                "Guid": "1bdf0ff1-be37-40e1-b9c3-f3b4d6c062d9",
                 "Type": {
-                  "Id": "ContentType",
-                  "Name": "ContentType"
+                  "Id": "c740085a-d548-41f3-8d06-0a48b8692345",
+                  "Name": "IsRecommendedDecorator"
                 },
                 "Attributes": {
                   "String": {
-                    "AdditionalSettings": {
-                      "en-us": ""
-                    },
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": "<p>Configure a Number Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
-                    },
-                    "Label": {
-                      "en-us": "Data Picker for Number Field"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
+                    "Message": {
+                      "en-us": "new v19"
                     }
                   }
                 },
@@ -7698,17 +7698,43 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 184125,
-                "Version": 1,
-                "Guid": "dce429d6-5813-435d-b46c-fb6d2ca6902d",
+                "Id": 182382,
+                "Version": 8,
+                "Guid": "dba24477-2502-42c2-8437-4c16934b9f5e",
                 "Type": {
-                  "Id": "c740085a-d548-41f3-8d06-0a48b8692345",
-                  "Name": "IsRecommendedDecorator"
+                  "Id": "ContentType",
+                  "Name": "ContentType"
                 },
                 "Attributes": {
                   "String": {
-                    "Message": {
-                      "en-us": "new v19"
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p>Configure a String Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
+                    },
+                    "Label": {
+                      "en-us": "Data Picker for Text/String Field"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
                     }
                   }
                 },
@@ -7762,43 +7788,17 @@
                 }
               },
               {
-                "Id": 182382,
-                "Version": 8,
-                "Guid": "dba24477-2502-42c2-8437-4c16934b9f5e",
+                "Id": 184125,
+                "Version": 1,
+                "Guid": "dce429d6-5813-435d-b46c-fb6d2ca6902d",
                 "Type": {
-                  "Id": "ContentType",
-                  "Name": "ContentType"
+                  "Id": "c740085a-d548-41f3-8d06-0a48b8692345",
+                  "Name": "IsRecommendedDecorator"
                 },
                 "Attributes": {
                   "String": {
-                    "AdditionalSettings": {
-                      "en-us": ""
-                    },
-                    "Description": {
-                      "en-us": ""
-                    },
-                    "DynamicChildrenField": {
-                      "en-us": ""
-                    },
-                    "EditInstructions": {
-                      "en-us": "<p>Configure a String Picker. This is a new concept which is still in BETA ⚠️, so it may still change a bit.&nbsp;</p>\n<p>The core idea is that you separate the UI (this configuration) from the Source Definition (see Source below). The Source can be reused in other pickers, and it allows many more features then were possible before.&nbsp;</p>"
-                    },
-                    "Label": {
-                      "en-us": "Data Picker for Text/String Field"
-                    },
-                    "ListInstructions": {
-                      "en-us": ""
-                    },
-                    "Notes": {
-                      "en-us": ""
-                    }
-                  },
-                  "Hyperlink": {
-                    "Icon": {
-                      "en-us": ""
-                    },
-                    "Link": {
-                      "en-us": ""
+                    "Message": {
+                      "en-us": "new v19"
                     }
                   }
                 },
@@ -11245,7 +11245,7 @@
                 "Metadata": [
                   {
                     "Id": 183993,
-                    "Version": 5,
+                    "Version": 6,
                     "Guid": "2533cf19-7597-46ad-bdda-19d7c693b0db",
                     "Type": {
                       "Id": "@All",
@@ -11305,7 +11305,7 @@
                   },
                   {
                     "Id": 183995,
-                    "Version": 4,
+                    "Version": 5,
                     "Guid": "bce7becc-0db7-436f-a6c7-6694a45d9ef3",
                     "Type": {
                       "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
@@ -12196,7 +12196,7 @@
             },
             {
               "Id": 183994,
-              "Version": 3,
+              "Version": 6,
               "Guid": "c37e1472-d258-4ce4-8733-d801a049f574",
               "Type": {
                 "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
@@ -12205,16 +12205,16 @@
               "Attributes": {
                 "String": {
                   "Csv": {
-                    "en-us": "Value,Title,Info\n,\"Not configured (default)\",\"No special preview, or use the preview-setting from the source - this is the default for normal values\"\nicon-css,\"Icon from Font in CSS\",\"Show the value as an icon from an icon-font such as fontawesome, which is specified in the CSS - usually applied as a class.\"\nicon-symbol,\"Icon symbols from Font\",\"Symbol icons use a text-name to specify that they should show\"\nsvg,\"SVG preview\",\"Show an SVG file - typically an icon\"\ntext-css,\"Text formatted by CSS\",\"Show some text to see how the text-formatting changes\"\nimage,\"Image\",\"Show an image which is specified by the data\""
+                    "en-us": "Value,Title,Info\n,\"Not configured (default)\",\"No special preview, or use the preview-setting from the source - this is the default for normal values\"\nicon-css,\"Icon from Font in CSS\",\"Show the value as an icon from an icon-font such as fontawesome, which is specified in the CSS - usually applied as a class.\"\nicon-material,\"Icon Material (using font-symbols)\",\"Symbol icons use a text-name to specify that they should show\"\nsvg,\"SVG preview\",\"Show an SVG file - typically an icon\"\ntext-css,\"Text formatted by CSS\",\"Show some text to see how the text-formatting changes\"\nimage,\"Image\",\"Show an image like png/jpg etc. which is specified by the data\""
                   },
                   "Description": {
                     "en-us": ""
                   },
                   "ItemInformation": {
-                    "en-us": ""
+                    "en-us": "<p>[Item:Info]</p>"
                   },
                   "ItemTooltip": {
-                    "en-us": "<p>[Item:Info]</p>"
+                    "en-us": ""
                   },
                   "PreviewType": {
                     "en-us": ""
@@ -15974,7 +15974,7 @@
                 "Metadata": [
                   {
                     "Id": 184069,
-                    "Version": 6,
+                    "Version": 7,
                     "Guid": "43fb0166-362c-4df0-86f6-9f4e7c9ec2c5",
                     "Type": {
                       "Id": "@All",
@@ -15986,7 +15986,7 @@
                           "en-us": ""
                         },
                         "DefaultValue": {
-                          "en-us": "Name"
+                          "en-us": "FullName"
                         },
                         "InputType": {
                           "en-us": "string-picker"
@@ -16034,7 +16034,7 @@
                   },
                   {
                     "Id": 184071,
-                    "Version": 5,
+                    "Version": 6,
                     "Guid": "57872556-a3d4-47e4-b2e5-a0c37e70b64e",
                     "Type": {
                       "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
@@ -16104,7 +16104,7 @@
                 "Metadata": [
                   {
                     "Id": 184072,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "37f09e7f-933e-4940-8995-0f1f8a27c94b",
                     "Type": {
                       "Id": "@All",
@@ -16116,7 +16116,7 @@
                           "en-us": ""
                         },
                         "DefaultValue": {
-                          "en-us": "Name"
+                          "en-us": "FullName"
                         },
                         "InputType": {
                           "en-us": "string-picker"
@@ -16164,7 +16164,7 @@
                   },
                   {
                     "Id": 184073,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "09aeafab-7083-4851-b2d8-9fe596d32309",
                     "Type": {
                       "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
@@ -16243,7 +16243,7 @@
                 "Metadata": [
                   {
                     "Id": 184056,
-                    "Version": 5,
+                    "Version": 6,
                     "Guid": "abaf5be4-e2f4-4b62-876b-700db812ac6b",
                     "Type": {
                       "Id": "@All",
@@ -16264,7 +16264,7 @@
                           "en-us": "Preview Value (to be used in the special preview)"
                         },
                         "Notes": {
-                          "en-us": ""
+                          "en-us": "<p>We recommend the Url as it's the most likely option to work, but you can also use placeholders to create your own path to the preview.&nbsp;</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -16305,7 +16305,7 @@
                   },
                   {
                     "Id": 184074,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "764e0dd4-13fb-4044-9b67-15ae07758dc4",
                     "Type": {
                       "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",

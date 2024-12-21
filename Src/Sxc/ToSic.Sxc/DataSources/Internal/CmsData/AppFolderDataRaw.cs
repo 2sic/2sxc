@@ -33,21 +33,12 @@ public class AppFolderDataRaw: AppFileDataRawBase
     [ContentTypeAttributeSpecs(Description = "The folder name or blank when it's the root.")]
     public override string Name { get; set; }
 
-    ///// <summary>
-    ///// The folder name.
-    ///// </summary>
-    //[ContentTypeAttributeSpecs(IsTitle = true, Description = "The folder name or 'root' when it's the root")]
-    ////public string Title { get => field.NullIfNoValue() ?? "root"; set => field = value; }
-    //public string Title => Name.NullIfNoValue() ?? "root";
-
-
     [PrivateApi]
     public override IDictionary<string, object> Attributes(RawConvertOptions options)
         => new Dictionary<string, object>(base.Attributes(options))
         {
             { "Folders", new RawRelationship(key: $"FolderIn:{Path}") },
             { "Files", new RawRelationship(key: $"FileIn:{Path}") },
-            //{ nameof(Title), Title },
         };
 
     [PrivateApi]
