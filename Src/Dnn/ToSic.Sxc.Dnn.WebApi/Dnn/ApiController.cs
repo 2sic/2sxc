@@ -55,7 +55,7 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
     public IApp App => _CodeApiSvc.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IBlockInstance Data => _CodeApiSvc.Data;
+    public IDataSource Data => _CodeApiSvc.Data;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();

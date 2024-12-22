@@ -13,7 +13,6 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Custom;
@@ -72,7 +71,7 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
     public IApp App => _CodeApiSvc?.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IBlockInstance Data => _CodeApiSvc?.Data;
+    public IDataSource Data => _CodeApiSvc?.Data;
 
     /// <inheritdoc cref="IDynamicCode12.Resources" />
     public dynamic Resources => _CodeApiSvc.Resources;

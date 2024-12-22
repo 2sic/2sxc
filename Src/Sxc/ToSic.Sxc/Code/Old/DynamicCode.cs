@@ -5,7 +5,6 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 
@@ -44,7 +43,7 @@ public abstract class DynamicCode : CustomCodeBase, IHasCodeLog, IDynamicCode
     public IApp App => _CodeApiSvc?.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IBlockInstance Data => _CodeApiSvc?.Data;
+    public IDataSource Data => _CodeApiSvc?.Data;
 
     /// <inheritdoc cref="IDynamicCode.Content" />
     public dynamic Content => _CodeApiSvc?.Content;

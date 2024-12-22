@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Code.Help;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Razor;
 
 // ReSharper disable once CheckNamespace
@@ -75,7 +74,7 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
     public dynamic Header => _CodeApiSvc.Header;
 
     /// <inheritdoc />
-    public IBlockInstance Data => _CodeApiSvc.Data;
+    public IDataSource Data => _CodeApiSvc.Data;
 
     #endregion
 

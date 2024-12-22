@@ -34,8 +34,8 @@ public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // 
     /// The data prepared for the current Code. Usually user data which was manually added to the instance, but can also be a query.
     /// </summary>
     /// <returns>
-    /// An <see cref="IBlockInstance"/> which is as <see cref="IDataSource"/>.</returns>
-    IBlockInstance Data { get; }
+    /// A standard <see cref="IDataSource"/>.</returns>
+    IDataSource Data { get; }
 
     #region Content and Header
     /// <summary>

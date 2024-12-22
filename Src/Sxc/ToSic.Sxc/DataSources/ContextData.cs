@@ -16,11 +16,12 @@ namespace ToSic.Sxc.DataSources;
 /// </summary>
 /// <remarks>
 /// It's based on the <see cref="PassThrough"/> data source, because it's just a coordination-wrapper.
+/// In v19 we removed the implementation of IBlockInstance as it was identical to IDataSource.
+/// ...so if anybody had code using that name, it could break, but we assume this is never the case since people would always just use the `Data` object without casting a variable.
 /// </remarks>
 [PrivateApi("used to be Internal... till 16.01, then changed to private to hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal partial class ContextData : PassThrough,
-    IBlockInstance // compatibility
+internal partial class ContextData : PassThrough
 {
     #region Constructor and Init
 

@@ -13,7 +13,6 @@ using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Compatibility.Internal;
 using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DataSources.Internal.Compatibility;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
@@ -82,7 +81,7 @@ public abstract partial class SxcApiController() :
     // Explicit implementation of expected interface, but it should not work in the normal code
     // as the old code sometimes expects Data.Cache.GetContentType
     /// <inheritdoc />
-    IBlockInstance IDynamicCode.Data => _CodeApiSvc.Data;
+    IDataSource IDynamicCode.Data => _CodeApiSvc.Data;
 
 
     #region AsDynamic implementations

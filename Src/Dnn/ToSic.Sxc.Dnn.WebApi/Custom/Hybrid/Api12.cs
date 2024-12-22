@@ -9,7 +9,6 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
 using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
 using ToSic.Sxc.Internal;
@@ -55,7 +54,7 @@ public abstract partial class Api12: DnnSxcCustomControllerBase, IDynamicCode12,
     public IApp App => _CodeApiSvc.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IBlockInstance Data => _CodeApiSvc.Data;
+    public IDataSource Data => _CodeApiSvc.Data;
 
     #endregion
 

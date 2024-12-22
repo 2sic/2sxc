@@ -6,7 +6,6 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Search;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DataSources.Internal.Compatibility;
 
 namespace ToSic.Sxc.Dnn;
@@ -108,7 +107,7 @@ public abstract partial class RazorComponent : RazorComponentBase,
 
     // This is explicitly implemented so the interfaces don't complain
     // but actually we're not showing this - in reality we're showing the Old (see above)
-    IBlockInstance IDynamicCode.Data => _CodeApiSvc.Data;
+    IDataSource IDynamicCode.Data => _CodeApiSvc.Data;
 
     #endregion
 
