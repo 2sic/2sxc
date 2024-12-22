@@ -28,7 +28,7 @@ public class ModuleInfo : IModule
      * ...
      * 16-07-01 - SQL - add Json for Attribute and ContentType configuration + Guid for Attribute
      * 18-03-00 - SQL - remove AttributeGroups SQL table and related
-     * 18-07-00 - SQL - CASCADE DELETE on REFERENCE constraint FK_ToSIC_EAV_EntityRelationships_ToSIC_EAV_Attributes
+     * 19-00-00 - SQL - CASCADE DELETE on REFERENCE constraint FK_ToSIC_EAV_EntityRelationships_ToSIC_EAV_Attributes
      */
 
     /// <summary>
