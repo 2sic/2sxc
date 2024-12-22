@@ -15,7 +15,8 @@ namespace ToSic.Sxc.Context;
 /// * uses the [](xref:NetCode.Conventions.Functional)
 /// * Added typed accessors such as `Int(...)` etc. in v16.03 implementing <see cref="ITyped"/>
 /// * Made order of parameters automatically sort in 18.06 because of crawler-load issues
-/// * Added `Prioritize` in v18.06
+/// * Added `Prioritize` in v19.00
+/// * Added `Flush` in 19.00
 /// </remarks>
 [PublicApi]
 public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
@@ -225,7 +226,7 @@ public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     /// 2. If you order the parameters, this can have an unexpected effect on the amount of URLs you generate, possibly causing high server load when crawlers visit.
     /// </summary>
     /// <remarks>
-    /// New in v18.06.
+    /// New in v19.00
     /// </remarks>
     /// <param name="fields">CSV of names to prioritize, in the specified order</param>
     /// <returns></returns>
@@ -236,7 +237,7 @@ public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     /// Note that it does preserve other settings like prioritization.
     /// </summary>
     /// <remarks>
-    /// New v18.06
+    /// New v19.00
     /// </remarks>
     /// <returns></returns>
     IParameters Flush();

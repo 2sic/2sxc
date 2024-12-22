@@ -18,9 +18,9 @@ namespace ToSic.Sxc.Services;
 /// <remarks>
 /// Basic use will just use a string key. The internal key will be more complex,
 /// while advanced use would first create the specs using <see cref="CreateSpecs"/> and then use those specs for all operations.
-/// Released v19.00
+/// To be Released ca. v19.01
 /// </remarks>
-[PublicApi]
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface ICacheService
 {
