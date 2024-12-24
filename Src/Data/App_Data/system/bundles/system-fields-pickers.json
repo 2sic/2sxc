@@ -16543,7 +16543,7 @@
             },
             {
               "Id": 184050,
-              "Version": 3,
+              "Version": 4,
               "Guid": "d8c9fc1c-7d81-4520-b6e9-8958f0b5429e",
               "Type": {
                 "Id": "3a96ad21-027d-4679-8372-c39406ad1d11",
@@ -16564,7 +16564,7 @@
                     "en-us": ""
                   },
                   "PreviewType": {
-                    "en-us": "icon-symbol"
+                    "en-us": "icon-material"
                   },
                   "PreviewValue": {
                     "en-us": "[Item:Icon]"
