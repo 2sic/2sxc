@@ -21,7 +21,7 @@ internal class EditUiMiddleware
 
     public static Task PageOutputCached(HttpContext context, IWebHostEnvironment env, string virtualPath, EditUiResourceSettings settings)
     {
-        context.Response.Headers.Add("test-dev", "2sxc");
+        context.Response.Headers.TryAdd("test-dev", "2sxc");
 
         var sp = context.RequestServices;
 
@@ -36,8 +36,6 @@ internal class EditUiMiddleware
             html = Encoding.Default.GetString(bytesInFile);
             html = HtmlDialog.CleanImport(html);
             memoryCacheService.SetNew(key, html, p => p.WatchFiles([path]));
-            // Ported 2024-10-22 - remove old code ca. 2024-12 #MemoryCacheApiCleanUp
-            //memoryCacheService.Set(key, html, filePaths: [path]);
         }
 
         var pageId = GetPageId(context);
