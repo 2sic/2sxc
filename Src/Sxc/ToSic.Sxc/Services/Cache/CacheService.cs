@@ -88,7 +88,7 @@ internal class CacheService(MemoryCacheService cache, LazySvc<IAppReaderFactory>
         if (generate == null) return default;
         var newValue = generate();
 
-        cache.SetNew(specs.Key, newValue, specs.PolicyMaker);
+        cache.Set(specs.Key, newValue, specs.PolicyMaker);
         return newValue;
     }
 
@@ -108,5 +108,5 @@ internal class CacheService(MemoryCacheService cache, LazySvc<IAppReaderFactory>
         => Set(ProcessSpecs(key), value);
 
     public void Set<T>(ICacheSpecs specs, T value, NoParamOrder protector = default)
-        => cache.SetNew(specs.Key, value, specs.PolicyMaker);
+        => cache.Set(specs.Key, value, specs.PolicyMaker);
 }

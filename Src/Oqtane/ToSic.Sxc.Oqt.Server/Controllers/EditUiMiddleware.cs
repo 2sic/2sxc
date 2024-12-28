@@ -35,7 +35,7 @@ internal class EditUiMiddleware
             var bytesInFile = File.ReadAllBytes(path);
             html = Encoding.Default.GetString(bytesInFile);
             html = HtmlDialog.CleanImport(html);
-            memoryCacheService.SetNew(key, html, p => p.WatchFiles([path]));
+            memoryCacheService.Set(key, html, p => p.WatchFiles([path]));
         }
 
         var pageId = GetPageId(context);

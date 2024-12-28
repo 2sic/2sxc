@@ -54,7 +54,7 @@ public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : Servi
         // Try to add to cache - use try-catch to avoid exceptions
         try
         {
-            memoryCacheService.SetNew(cacheKey, data, p => p
+            memoryCacheService.Set(cacheKey, data, p => p
                 .SetSlidingExpiration(slidingDuration)
                 .WatchFiles(filePaths)
                 .WatchFolders(folderPaths)

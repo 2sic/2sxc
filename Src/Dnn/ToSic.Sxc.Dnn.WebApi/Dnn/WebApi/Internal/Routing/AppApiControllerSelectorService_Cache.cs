@@ -24,7 +24,7 @@ internal partial class AppApiControllerSelectorService
 
         var (data, cacheKeys, filePaths) = BuildDescriptorIfExists(appFolder, editionPath, controllerTypeName, shared, spec);
 
-        memoryCacheService.SetNew(key: descriptorCacheKey, value: data, func: p => p
+        memoryCacheService.Set(key: descriptorCacheKey, value: data, func: p => p
             .SetSlidingExpiration(new TimeSpan(1, 0, 0))
             .WatchCacheKeys(cacheKeys)
             .WatchFiles(filePaths)
