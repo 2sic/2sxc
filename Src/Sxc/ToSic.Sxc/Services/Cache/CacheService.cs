@@ -31,8 +31,8 @@ namespace ToSic.Sxc.Services.Cache;
 /// - by session, by cache, by request, by response, by server, by client, by browser, by os, by device...
 /// </summary>
 /// <param name="cache"></param>
-internal class CacheService(MemoryCacheService cache, LazySvc<IAppReaderFactory> appStates, Generator<IAppPathsMicroSvc> appPathsLazy)
-    : ServiceForDynamicCode($"{SxcLogName}.CchSvc", connect: [cache, appStates]), ICacheService
+internal class CacheService(MemoryCacheService cache, LazySvc<IAppReaderFactory> appReaders, Generator<IAppPathsMicroSvc> appPathsLazy)
+    : ServiceForDynamicCode($"{SxcLogName}.CchSvc", connect: [cache, appReaders]), ICacheService
 {
     /// <summary>
     /// AppId to use in key generation, so it won't collide with other apps.
@@ -43,8 +43,15 @@ internal class CacheService(MemoryCacheService cache, LazySvc<IAppReaderFactory>
     public ICacheSpecs CreateSpecs(string key, NoParamOrder protector = default, string regionName = default, bool? shared = default)
     {
         var l = Log.Fn<ICacheSpecs>($"Key: {key} / Segment: {regionName}");
-        var keySpec = new CacheKeySpecs(shared == true ? CacheKeySpecs.NoApp : AppId, key, regionName);
-        var specs = new CacheSpecs(Log, _CodeApiSvc, appStates, appPathsLazy, keySpec, cache.NewPolicyMaker());
+        var keySpecs = new CacheKeySpecs(shared == true ? CacheKeySpecs.NoApp : AppId, key, regionName);
+        var specs = new CacheSpecs
+        {
+            AppPathsLazy = appPathsLazy,
+            AppReaders = appReaders,
+            CodeApiSvc = _CodeApiSvc,
+            KeySpecs = keySpecs,
+            PolicyMaker = cache.NewPolicyMaker(),
+        };
         return l.Return(specs);
     }
 

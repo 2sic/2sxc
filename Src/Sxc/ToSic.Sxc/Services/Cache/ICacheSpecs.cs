@@ -4,20 +4,31 @@ using ToSic.Sxc.Context;
 namespace ToSic.Sxc.Services.Cache;
 
 /// <summary>
-/// Experimental!
-/// Cache Specs which determine how the key is generated, additional dependencies and expiration policies.
+/// Cache Specs contain the definition of what the cached data should depend on, how long it should be cached and how the cache key should be generated.
+/// It uses a fluent API to continue adding rules / expirations / dependencies.
+/// Internally this is then used to create a cache policy.
 /// </summary>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("WIP v17.09")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+/// <remarks>
+/// * Introduced as experimental in v17.09
+/// * Released in 19.01
+/// </remarks>
+[PublicApi]
 public interface ICacheSpecs
 {
+    /// <summary>
+    /// The final cache key.
+    /// </summary>
+    /// <remarks>
+    /// This services will always add a prefix to the key, to avoid conflicts with other cache keys.
+    /// The Key itself is only ever needed if you want to see a key manually, mainly for debugging purposes.
+    /// </remarks>
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     string Key { get; }
 
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public IPolicyMaker PolicyMaker { get; }
+    internal IPolicyMaker PolicyMaker { get; }
 
     /// <summary>
     /// Set absolute expiration, alternative is sliding expiration.
@@ -78,55 +89,88 @@ public interface ICacheSpecs
     ICacheSpecs VaryBy(string name, string value, NoParamOrder protector = default, bool caseSensitive = false);
 
     /// <summary>
-    /// Vary the cache by page, so that each page has its own cache.
-    /// By default, it will take the current page, but you can optionally specify a custom page or ID.
+    /// Vary the cache by a specific name and value.
+    /// All cache items where this value is the same, will be considered the same.
+    /// For example, this could be a category name or something where the data for this category is always the same.
     /// </summary>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <param name="id">optional page id to use instead of the default</param>
-    /// <param name="page">optional page object to use instead of the default</param>
+    /// <param name="name"></param>
+    /// <param name="value"></param>
     /// <returns></returns>
-    ICacheSpecs VaryByPage(NoParamOrder protector = default, ICmsPage page = default, int? id = default);
+    ICacheSpecs VaryBy(string name, int value);
+
+    /// <summary>
+    /// Vary the cache by the _current_ module, so that each module has its own cache.
+    /// </summary>
+    ICacheSpecs VaryByModule();
 
     /// <summary>
     /// Vary the cache by module, so that each module has its own cache.
-    /// By default, it will take the current module, but you can optionally specify a custom module or ID.
     /// </summary>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <param name="id">optional page id to use instead of the default</param>
-    /// <param name="module">optional module object to use instead of the default</param>
-    ICacheSpecs VaryByModule(NoParamOrder protector = default, ICmsModule module = default, int? id = default);
+    /// <param name="id">Module id to use</param>
+    ICacheSpecs VaryByModule(int id);
+
+    // Note: I don't think there is great value in providing ICms... overloads, so comment out to prevent next person from creating them again
+    ///// <summary>
+    ///// Vary the cache by module, so that each module has its own cache.
+    ///// </summary>
+    ///// <param name="module">module to use</param>
+    //ICacheSpecs VaryByModule(ICmsModule module);
+
+    /// <summary>
+    /// Vary the cache by the _current_ page, so that each page has its own cache.
+    /// </summary>
+    /// <returns></returns>
+    ICacheSpecs VaryByPage();
+
+    /// <summary>
+    /// Vary the cache by page, so that each page has its own cache.
+    /// By default, it will take the current page, but you can optionally specify a custom page or ID.
+    /// </summary>
+    /// <param name="id">page id to use</param>
+    /// <returns></returns>
+    ICacheSpecs VaryByPage(int id);
+
+    // Note: I don't think there is great value in providing ICms... overloads, so comment out to prevent next person from creating them again
+    ///// <summary>
+    ///// Vary the cache by page, so that each page has its own cache.
+    ///// By default, it will take the current page, but you can optionally specify a custom page or ID.
+    ///// </summary>
+    ///// <param name="page">page object to use</param>
+    ///// <returns></returns>
+    //ICacheSpecs VaryByPage(ICmsPage page);
+
+    /// <summary>
+    /// Vary the cache by _current_ user, so that each user has its own cache.
+    /// </summary>
+    /// <returns></returns>
+    ICacheSpecs VaryByUser();
 
     /// <summary>
     /// Vary the cache by user, so that each user has its own cache.
-    /// By default, it will take the current user, but you can specify a custom user or ID.
     /// </summary>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <param name="id">optional page id to use instead of the default</param>
-    /// <param name="user">optional module object to use instead of the default</param>
+    /// <param name="id">User id to use</param>
     /// <returns></returns>
-    ICacheSpecs VaryByUser(NoParamOrder protector = default, ICmsUser user = default, int? id = default);
+    ICacheSpecs VaryByUser(int id);
+
+    // Note: I don't think there is great value in providing ICms... overloads, so comment out to prevent next person from creating them again
+    ///// <summary>
+    ///// Vary the cache by user, so that each user has its own cache.
+    ///// </summary>
+    ///// <param name="user">user object to use</param>
+    ///// <returns></returns>
+    //ICacheSpecs VaryByUser(ICmsUser user);
 
     /// <summary>
-    /// Vary the cache by a specific page parameter, like `?category=1`.
-    /// Using this method will only vary the cache by this specific parameter and ignore the rest.
-    /// </summary>
-    /// <param name="name">Name of a single parameter</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <param name="caseSensitive">Determines if the value should be treated case-sensitive, default is `false`</param>
-    /// <returns></returns>
-    ICacheSpecs VaryByPageParameter(string name, NoParamOrder protector = default, bool caseSensitive = false);
-
-    /// <summary>
-    /// Vary the cache by one or more specific page parameter, like `?category=1&amp;sort=asc`.
+    /// Vary the cache by one or more specific page parameter, like `?category=1` or `?category=1&amp;sort=asc`.
     /// Using this method will only vary the cache by the mentioned parameters and ignore the rest.
     /// </summary>
-    /// <param name="names">Names of one or more parameters, comma-separated</param>
+    /// <param name="names">Names of one or more parameters, comma-separated. If null, all parameters are used, if `""`, no parameters are used.</param>
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="caseSensitive">Determines if the value should be treated case-sensitive, default is `false`</param>
     ICacheSpecs VaryByPageParameters(string names = default, NoParamOrder protector = default, bool caseSensitive = false);
 
     /// <summary>
-    /// Vary the cache by parameters which may not come from the page. 
+    /// Vary the cache by a custom parameters list.
     /// </summary>
     /// <param name="parameters">parameters object</param>
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>

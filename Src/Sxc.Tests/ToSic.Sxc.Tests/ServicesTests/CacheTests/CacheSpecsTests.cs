@@ -12,7 +12,8 @@ public class CacheSpecsTests: TestBaseSxcDb
 {
     private static readonly string MainPrefix = $"{CacheKeyTests.FullDefaultPrefix.Replace("App:0", "App:-1")}Main{Sep}";
 
-    private ICacheSpecs GetForMain(string name = "Main") => GetService<ICacheService>().CreateSpecs(name);
+    private ICacheSpecs GetForMain(string name = "Main") =>
+        GetService<ICacheService>().CreateSpecs(name);
 
     [TestMethod]
     public void ShareKeyAcrossApps()
@@ -29,7 +30,7 @@ public class CacheSpecsTests: TestBaseSxcDb
         var expected = MainPrefix + "VaryByKey1=Value1";
         var svc = GetService<ICacheService>();
         var specs = svc.CreateSpecs("Main")
-            .VaryBy("Key1", "Value1", caseSensitive: true);
+            .VaryByTac("Key1", "Value1", caseSensitive: true);
         AreEqual(expected, specs.Key);
     }
 
@@ -38,7 +39,7 @@ public class CacheSpecsTests: TestBaseSxcDb
     {
         var expected = MainPrefix + "VaryByKey1=Value1".ToLowerInvariant();
         var specs = GetForMain()
-            .VaryBy("Key1", "Value1");
+            .VaryByTac("Key1", "Value1");
         AreEqual(expected, specs.Key);
     }
 
@@ -47,8 +48,8 @@ public class CacheSpecsTests: TestBaseSxcDb
     {
         var expected = MainPrefix + "VaryByKey1=Value1".ToLowerInvariant();
         var specs = GetForMain()
-            .VaryBy("Key1", "valueWhichWillGoAway")
-            .VaryBy("Key1", "Value1");
+            .VaryByTac("Key1", "valueWhichWillGoAway")
+            .VaryByTac("Key1", "Value1");
         AreEqual(expected, specs.Key);
     }
 
@@ -57,8 +58,8 @@ public class CacheSpecsTests: TestBaseSxcDb
     {
         var expected = MainPrefix + $"VaryByKey1=Val1{Sep}VaryByKey2=Value2".ToLowerInvariant();
         var specs = GetForMain()
-            .VaryBy("Key1", "Val1")
-            .VaryBy("Key2", "Value2");
+            .VaryByTac("Key1", "Val1")
+            .VaryByTac("Key2", "Value2");
         AreEqual(expected, specs.Key);
     }
 
@@ -77,19 +78,19 @@ public class CacheSpecsTests: TestBaseSxcDb
     {
         var expected = MainPrefix + "VaryByParameters=".ToLowerInvariant();
         var pars = new Parameters();
-        var specs = GetForMain().VaryByParameters(pars);
+        var specs = GetForMain().VaryByParametersTac(pars);
         AreEqual(expected, specs.Key);
     }
 
-    [DataRow(null, "no names specified")]
-    [DataRow("", "empty names specified")]
+    [DataRow(null, "no names specified, use all")]
+    [DataRow("", "empty names specified, use none", "")]
     [DataRow("A,B,C", "too many names")]
     [DataRow("A", "names with exact casing")]
     [DataRow("a", "names with different casing")]
     [TestMethod]
-    public void VaryByParametersOneNamed(string names, string testName)
+    public void VaryByParametersOneNamed(string names, string testName, string specialExpected = default)
     {
-        var expected = MainPrefix + "VaryByParameters=A=AVal".ToLowerInvariant();
+        var expected = MainPrefix + ("VaryByParameters=" + (specialExpected ?? "A=AVal")).ToLowerInvariant();
         var pars = new Parameters
         {
             Nvc = new()
@@ -97,7 +98,7 @@ public class CacheSpecsTests: TestBaseSxcDb
                 { "A", "AVal" }
             }
         };
-        var specs = GetForMain().VaryByParameters(pars, names: names);
+        var specs = GetForMain().VaryByParametersTac(pars, names: names);
         AreEqual(expected, specs.Key, testName);
     }
 
@@ -115,7 +116,7 @@ public class CacheSpecsTests: TestBaseSxcDb
                 { "C", "CVal" }
             }
         };
-        var specs = GetForMain().VaryByParameters(pars, names: "A,B,c");
+        var specs = GetForMain().VaryByParametersTac(pars, names: "A,B,c");
         AreEqual(expected, specs.Key);
     }
 
@@ -132,7 +133,7 @@ public class CacheSpecsTests: TestBaseSxcDb
                 { "C", "CVal" }
             }
         };
-        var specs = GetForMain().VaryByParameters(pars, names: "A,c");
+        var specs = GetForMain().VaryByParametersTac(pars, names: "A,c");
         AreEqual(expected, specs.Key);
     }
 
@@ -149,8 +150,8 @@ public class CacheSpecsTests: TestBaseSxcDb
                 { "C", "CVal" }
             }
         };
-        var specsFiltered = GetForMain().VaryByParameters(pars, names: "A,c");
-        var specsAll = GetForMain().VaryByParameters(pars);
+        var specsFiltered = GetForMain().VaryByParametersTac(pars, names: "A,c");
+        var specsAll = GetForMain().VaryByParametersTac(pars);
         AreEqual(expected, specsFiltered.Key);
         AreEqual(specsFiltered.Key, specsAll.Key);
     }

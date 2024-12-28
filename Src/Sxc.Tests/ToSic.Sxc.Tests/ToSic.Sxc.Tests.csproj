@@ -146,6 +146,7 @@
     <Compile Include="EditTests\ToolbarRuleTests\ToolbarRuleToolbarTests.cs" />
     <Compile Include="EditTests\ToolbarRuleTests\ToolbarRuleOpPickTests.cs" />
     <Compile Include="LinksAndImages\ParametersTestExtensions.cs" />
+    <Compile Include="ServicesTests\CacheTests\CacheSpecsTestAccessors.cs" />
     <Compile Include="ServicesTests\CacheTests\CacheSpecsTests.cs" />
     <Compile Include="ServicesTests\CacheTests\CacheKeyTests.cs" />
     <Compile Include="ServicesTests\CmsService\CmsServiceTest.cs" />

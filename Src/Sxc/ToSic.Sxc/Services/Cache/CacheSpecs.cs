@@ -9,98 +9,82 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Web.Internal.Url;
-using static System.StringComparer;
 
 namespace ToSic.Sxc.Services.Cache;
 
-internal class CacheSpecs(ILog parentLog, ICodeApiService codeApiSvc, LazySvc<IAppReaderFactory> appReaders, Generator<IAppPathsMicroSvc> appPathsLazy, CacheKeySpecs key, IPolicyMaker policyMaker): ICacheSpecs
+internal record CacheSpecs : ICacheSpecs
 {
+    #region Internal Bits to make it work
+
+    internal required CacheKeySpecs KeySpecs { get; init; }
+
+    internal required ICodeApiService CodeApiSvc { get; init; }
+
+    internal required LazySvc<IAppReaderFactory> AppReaders { get; init; }
+
+    internal required Generator<IAppPathsMicroSvc> AppPathsLazy { get; init; }
+
+    // Note: actually internal...
+    public required IPolicyMaker PolicyMaker { get; internal init; }
+
+    #endregion
+
     #region Keys
 
-    /// <summary>
-    /// Generate the final cache key.
-    /// This services will always add a prefix to the key, to avoid conflicts with other cache keys.
-    /// 
-    /// This happens automatically, the Key method is only needed if you want to see a key manually, mainly for debugging purposes.
-    /// </summary>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    public string Key => key.Key;
+    /// <inheritdoc />
+    public string Key => KeySpecs.Key;
 
     #endregion
 
-    public IPolicyMaker PolicyMaker => policyMaker;
 
-    #region Next(...) calls, for functional API
-
-    private ICacheSpecs Next(IPolicyMaker newPm) => new CacheSpecs(parentLog, codeApiSvc, appReaders, appPathsLazy, key, newPm);
-
-    private ICacheSpecs Next(string varyBy, int value) => Next(varyBy, value.ToString());
-
-    private ICacheSpecs Next(string varyBy, string value, bool caseSensitive = false)
-    {
-        varyBy = "VaryBy" + varyBy;
-        varyBy = caseSensitive ? varyBy : varyBy.ToLowerInvariant();
-        value = caseSensitive ? value : value.ToLowerInvariant();
-
-        var newDic = new Dictionary<string, string>(key.VaryByDic ?? [], InvariantCultureIgnoreCase)
-        {
-            [varyBy] = value
-        };
-        return new CacheSpecs(parentLog, codeApiSvc, appReaders, appPathsLazy, key with { VaryByDic = newDic }, policyMaker);
-    }
-
-    #endregion
 
 
     #region Time Absolute / Sliding
 
     public ICacheSpecs SetAbsoluteExpiration(DateTimeOffset absoluteExpiration) 
-        => Next(policyMaker.SetAbsoluteExpiration(absoluteExpiration));
+        => this with { PolicyMaker = PolicyMaker.SetAbsoluteExpiration(absoluteExpiration) };
 
     public ICacheSpecs SetSlidingExpiration(TimeSpan slidingExpiration)
-        => Next(policyMaker.SetSlidingExpiration(slidingExpiration));
+        => this with { PolicyMaker = PolicyMaker.SetSlidingExpiration(slidingExpiration) };
 
     #endregion
 
+    #region Watch Files / Folders - not yet on the interface, since the standard for paths is not final (eg. full path, relative path, etc.)
+
     public ICacheSpecs WatchFile(string filePath)
-        => Next(policyMaker.WatchFiles([filePath]));
+        => this with { PolicyMaker = PolicyMaker.WatchFiles([filePath]) };
 
     public ICacheSpecs WatchFiles(IEnumerable<string> filePaths)
-        => Next(policyMaker.WatchFiles([..filePaths]));
+        => this with { PolicyMaker = PolicyMaker.WatchFiles([..filePaths]) };
 
     public ICacheSpecs WatchFolder(string folderPath, bool watchSubfolders = false)
-        => Next(policyMaker.WatchFolders(new Dictionary<string, bool> { { folderPath, watchSubfolders } }));
+        => this with { PolicyMaker = PolicyMaker.WatchFolders(new Dictionary<string, bool> { { folderPath, watchSubfolders } }) };
 
     public ICacheSpecs WatchFolders(IDictionary<string, bool> folderPaths)
-        => Next(policyMaker.WatchFolders(folderPaths));
+        => this with { PolicyMaker = PolicyMaker.WatchFolders(folderPaths) };
+
+    #endregion
 
     public ICacheSpecs WatchCacheKeys(IEnumerable<string> cacheKeys)
-        => Next(policyMaker.WatchCacheKeys(cacheKeys));
+        => this with { PolicyMaker = PolicyMaker.WatchCacheKeys(cacheKeys) };
 
 
     public ICacheSpecs WatchAppData(NoParamOrder protector = default)
-        => Next(policyMaker.WatchNotifyKeys([AppReader.GetCache()]));
+        => this with { PolicyMaker = PolicyMaker.WatchNotifyKeys([AppReader.GetCache()]) };
 
-    private IAppReader AppReader => _appReader ??= appReaders.Value.Get(codeApiSvc.App.AppId);
-    private IAppReader _appReader;
+    private IAppReader AppReader => field ??= AppReaders.Value.Get(CodeApiSvc.App.AppId);
 
     public ICacheSpecs WatchAppFolder(NoParamOrder protector = default, bool? withSubfolders = true)
     {
-        var appPath = appPathsLazy.New().Get(AppReader, ((ICodeApiServiceInternal)codeApiSvc)?._Block?.Context.Site);
-        var mainPath = appPath.PhysicalPath;
-        return Next(policyMaker.WatchFolders(new Dictionary<string, bool> { { mainPath, withSubfolders ?? true } }));
+        var appPaths = AppPathsLazy.New().Get(AppReader, ((ICodeApiServiceInternal)CodeApiSvc)?._Block?.Context.Site);
+        return this with
+        {
+            PolicyMaker = PolicyMaker.WatchFolders(new Dictionary<string, bool>
+            {
+                [appPaths.PhysicalPath] = withSubfolders ?? true
+            })
+        };
     }
-
-
-    //public ICacheTweak AddAppStates(List<IAppStateChanges> appStates)
-    //    => new CacheTweak(policyMaker.AddAppStates(appStates), keyAdditions);
-
-    //public ICacheTweak ConnectFeaturesService(IEavFeaturesService featuresService)
-    //    => new CacheTweak(policyMaker.ConnectFeaturesService(featuresService), keyAdditions);
-
-    //public ICacheTweak AddUpdateCallback(CacheEntryUpdateCallback updateCallback)
-    //    => new CacheTweak(policyMaker.AddUpdateCallback(updateCallback), keyAdditions);
 
     #region Vary By Value
 
@@ -108,30 +92,38 @@ internal class CacheSpecs(ILog parentLog, ICodeApiService codeApiSvc, LazySvc<IA
     //    => Next(value, "", caseSensitive: caseSensitive);
 
     public ICacheSpecs VaryBy(string name, string value, NoParamOrder protector = default, bool caseSensitive = false)
-        => Next(name, value, caseSensitive: caseSensitive);
+    {
+        name = "VaryBy" + name;
+        var varyByKey = caseSensitive ? name : name.ToLowerInvariant();
+        var valueToUse = caseSensitive ? value : value.ToLowerInvariant();
+
+        var newDic = new Dictionary<string, string>(KeySpecs.VaryByDic ?? [], StringComparer.InvariantCultureIgnoreCase)
+        {
+            [varyByKey] = valueToUse
+        };
+        return this with { KeySpecs = KeySpecs with { VaryByDic = newDic } };
+    }
 
     #endregion
 
     #region Vary-By Custom User, QueryString, etc.
 
+    /// <inheritdoc />
+    public ICacheSpecs VaryByPageParameters(string names = default, NoParamOrder protector = default, bool caseSensitive = false)
+        => VaryByParamsInternal("PageParameters",
+            CodeApiSvc?.CmsContext.Page.Parameters ?? new Parameters { Nvc = [] }, names,
+            caseSensitive: caseSensitive
+        );
 
-    public ICacheSpecs VaryByPageParameter(string name, NoParamOrder protector = default, bool caseSensitive = false)
-        => Next($"PageParameter-{name}", codeApiSvc?.CmsContext.Page.Parameters[name] ?? "", caseSensitive: caseSensitive);
-
+    /// <inheritdoc />
     public ICacheSpecs VaryByParameters(IParameters parameters, NoParamOrder protector = default, string names = default, bool caseSensitive = false)
         => VaryByParamsInternal("Parameters", parameters, names, caseSensitive: caseSensitive);
-
-    public ICacheSpecs VaryByPageParameters(string names = default, NoParamOrder protector = default,
-        bool caseSensitive = false)
-        => VaryByParamsInternal("PageParameters",
-            codeApiSvc?.CmsContext.Page.Parameters ?? new Parameters { Nvc = [] }, names,
-            caseSensitive: caseSensitive);
 
     private ICacheSpecs VaryByParamsInternal(string varyByName, IParameters parameters, string names, bool caseSensitive = false)
     {
         var all = parameters
             .Filter(names)
-            .OrderBy(p => p.Key, comparer: InvariantCultureIgnoreCase)
+            .OrderBy(p => p.Key, comparer: StringComparer.InvariantCultureIgnoreCase)
             .ToList();
 
         var nvc = all
@@ -144,21 +136,52 @@ internal class CacheSpecs(ILog parentLog, ICodeApiService codeApiSvc, LazySvc<IA
                 });
 
         var asUrl = nvc.NvcToString();
-        return Next(varyByName, asUrl, caseSensitive: caseSensitive);
+        return VaryBy(varyByName, asUrl, caseSensitive: caseSensitive);
     }
 
     #endregion
 
-    #region VaryBy Page, Module, User
+    #region VaryBy Int, Page, Module, User
 
-    public ICacheSpecs VaryByPage(NoParamOrder protector = default, ICmsPage page = default, int? id = default)
-        => Next("Page", id ?? page?.Id ?? codeApiSvc?.CmsContext.Page.Id ?? -1);
+    /// <inheritdoc />
+    public ICacheSpecs VaryBy(string name, int value) =>
+        VaryBy(name, value.ToString(), caseSensitive: false);
 
-    public ICacheSpecs VaryByModule(NoParamOrder protector = default, ICmsModule module = default, int? id = default)
-        => Next("Module", id ?? module?.Id ?? codeApiSvc?.CmsContext.Module.Id ?? -1);
+    /// <inheritdoc />
+    public ICacheSpecs VaryByModule(int id)
+        => VaryBy("Module", id);
 
-    public ICacheSpecs VaryByUser(NoParamOrder protector = default, ICmsUser user = default, int? id = default)
-        => Next("User", id ?? user?.Id ?? codeApiSvc?.CmsContext?.User?.Id ?? -1);
+    ///// <inheritdoc />
+    //public ICacheSpecs VaryByModule(ICmsModule module)
+    //    => VaryByModule(module.Id);
+
+    /// <inheritdoc />
+    public ICacheSpecs VaryByModule()
+        => VaryByModule(CodeApiSvc?.CmsContext.Module.Id ?? -1);
+
+    /// <inheritdoc />
+    public ICacheSpecs VaryByPage(int id)
+        => VaryBy("Page", id);
+
+    ///// <inheritdoc />
+    //public ICacheSpecs VaryByPage(ICmsPage page)
+    //    => VaryByPage(page.Id);
+
+    /// <inheritdoc />
+    public ICacheSpecs VaryByPage()
+        => VaryByPage(CodeApiSvc?.CmsContext.Page.Id ?? -1);
+
+    /// <inheritdoc />
+    public ICacheSpecs VaryByUser(int id)
+        => VaryBy("User", id);
+
+    ///// <inheritdoc />
+    //public ICacheSpecs VaryByUser(ICmsUser user)
+    //    => VaryByUser(user.Id);
+
+    /// <inheritdoc />
+    public ICacheSpecs VaryByUser()
+        => VaryByUser(CodeApiSvc?.CmsContext?.User?.Id ?? -1);
 
     #endregion
 
