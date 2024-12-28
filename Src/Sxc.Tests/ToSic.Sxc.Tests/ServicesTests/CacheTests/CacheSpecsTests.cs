@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
@@ -13,14 +14,14 @@ public class CacheSpecsTests: TestBaseSxcDb
     private static readonly string MainPrefix = $"{CacheKeyTests.FullDefaultPrefix.Replace("App:0", "App:-1")}Main{Sep}";
 
     private ICacheSpecs GetForMain(string name = "Main") =>
-        GetService<ICacheService>().CreateSpecs(name);
+        GetService<ICacheService>().CreateSpecsTac(name);
 
     [TestMethod]
     public void ShareKeyAcrossApps()
     {
         var expected = $"{CacheKeyTests.FullDefaultPrefix.Replace(Sep + "App:0", "")}Main";
         var svc = GetService<ICacheService>();
-        var specs = svc.CreateSpecs("Main", shared: true);
+        var specs = svc.CreateSpecsTac("Main", shared: true);
         AreEqual(expected, specs.Key);
     }
 
@@ -29,7 +30,7 @@ public class CacheSpecsTests: TestBaseSxcDb
     {
         var expected = MainPrefix + "VaryByKey1=Value1";
         var svc = GetService<ICacheService>();
-        var specs = svc.CreateSpecs("Main")
+        var specs = svc.CreateSpecsTac("Main")
             .VaryByTac("Key1", "Value1", caseSensitive: true);
         AreEqual(expected, specs.Key);
     }
@@ -156,4 +157,13 @@ public class CacheSpecsTests: TestBaseSxcDb
         AreEqual(specsFiltered.Key, specsAll.Key);
     }
 
+    [TestMethod]
+    public void TestCacheKeys()
+    {
+        var key = "TestKey";
+        var previousKey = new CacheKeySpecs(-1, key).Key;
+
+        var spec = GetForMain(key);
+        AreEqual(previousKey, spec.Key);
+    }
 }
