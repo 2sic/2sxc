@@ -18,14 +18,6 @@ namespace ToSic.Sxc.Data;
 [JsonConverter(typeof(DynamicJsonConverter))] // we'll have to keep an eye on it for scenarios where ITypedItem also inherits from ITypedRead, and could have some surprises. But since the DynamicEntity was never meant to become json, probably there is no code out there that tries to do this. 
 public partial interface ITyped
 {
-    ///// <summary>
-    ///// A dynamic accessor for properties, to quickly get values when you don't care about type safety.
-    ///// This is _often_ (but not always) a <see cref="IDynamicEntity"/>.
-    /////
-    ///// Example: `Dyn.FirstName` might just work - and return the first name or `null` if not found.
-    ///// </summary>
-    //dynamic Dyn { get; }
-
     /// <summary>
     /// Get a property and return the value as a `bool`.
     /// If conversion fails, will return default `false` or what is specified in the `fallback`.

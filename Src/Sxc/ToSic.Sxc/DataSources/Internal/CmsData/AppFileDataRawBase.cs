@@ -18,8 +18,8 @@ public abstract class AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
     public abstract string Name { get; set; }
 
     /// <summary>
-    /// The file name with path.
-    /// Starting in the App-Root
+    /// The full name with extension.
+    /// If it's a folder or there is no extension, then it's identical to the <see cref="Name"/>
     /// </summary>
     [ContentTypeAttributeSpecs(Description = "The full name with the path beginning at the root. Note that the root can differ depending on the files you ask for.")]
     public string FullName { get; set; }
@@ -50,6 +50,9 @@ public abstract class AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
     [ContentTypeAttributeSpecs(Description = "The full url starting at the root of the site. Absolute but without protocol/domain.")]
     public string Url { get; set; }
 
+    [ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Reference to the parent folder.")]
+    public RawRelationship Folder => new(key: $"Folder:{ParentFolderInternal}");
+
     /// <summary>
     /// Data but without Id, Guid, Created, Modified
     /// </summary>
@@ -61,7 +64,7 @@ public abstract class AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
             { nameof(FullName), FullName },
             { nameof(Path), Path },
             { nameof(Url), Url },
-            { "Parent", new RawRelationship(key: $"Folder:{ParentFolderInternal}") },
+            { nameof(Folder), Folder },
 
             // For debugging
             //{ nameof(ParentFolderInternal), ParentFolderInternal },

@@ -4,6 +4,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.DataSources.Internal;
 using static System.StringComparer;
 using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
@@ -18,14 +19,19 @@ namespace ToSic.Sxc.DataSources;
 /// <summary>
 /// Deliver a list of App files and folders from the current platform (Dnn or Oqtane).
 ///
-/// As of now there are no parameters to set.
+/// This provides 4 streams:
 ///
-/// To figure out the properties returned and what they match up to, see <see cref="PageDataRaw"/> TODO
+/// * All: Stream containing both files and folders
+/// * Default: All files <see cref="AppFileTyped"/>
+/// * Files: All Files <see cref="AppFileTyped"/>
+/// * Folders: All folders <see cref="AppFolderTyped"/>
+///
+/// To figure out the properties returned and what they match up to, see <see cref="AppFileTyped"/> and <see cref="AppFolderTyped"/>.
+/// 
 /// </summary>
 /// <remarks>
-/// In use in v18.02 for the first time - in the Picker Source App Assets.
-/// Otherwise, it's not officially released yet!
-/// Reason is that the names of the delivered properties are not totally final.
+/// * Started v18.02 for the first time - in the Picker Source App Assets.
+/// * officially documented for v19.00, but API not fully final/stable, names may change.
 /// </remarks>
 [VisualQuery(
     NiceName = "App Assets",
@@ -36,7 +42,7 @@ namespace ToSic.Sxc.DataSources;
     Icon = DataSourceIcons.Tree,
     Audience = Audience.Advanced,
     UiHint = "Files and folders in the App folder")]
-[PrivateApi("Was till v17 InternalApi_DoNotUse_MayChangeWithoutNotice(still wip / finishing specs etc.)")]
+[InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta in v19 as the final name may change.")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AppAssets: CustomDataSourceAdvanced
 {
@@ -50,7 +56,7 @@ public class AppAssets: CustomDataSourceAdvanced
     #region Configuration properties
 
     /// <summary>
-    /// WIP - The root folder to start from, beginning in the app root.
+    /// The root folder to start from, beginning in the app root.
     /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
     /// </summary>
     [Configuration(Fallback = "/")]
@@ -128,9 +134,6 @@ public class AppAssets: CustomDataSourceAdvanced
     private (IImmutableList<IEntity> folders, IImmutableList<IEntity> files) GetInternal()
     {
         var l = Log.Fn<(IImmutableList<IEntity> folders, IImmutableList<IEntity> files)>(timer: true);
-
-        // TODO:
-        // must ensure that the folder can't contain ".." characters or anything else to make it go outside the app folder
 
         _appAssetsSource.Configure(zoneId: ZoneId, appId: AppId, root: RootFolder, filter: FileFilter);
 

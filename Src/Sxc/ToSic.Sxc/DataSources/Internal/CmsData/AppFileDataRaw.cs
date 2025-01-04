@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
+using ToSic.Sxc.Apps.Internal.Assets;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
@@ -9,7 +10,7 @@ namespace ToSic.Sxc.DataSources.Internal;
 /// until it's converted to an IEntity in the <see cref="AppAssets"/> DataSource.
 ///
 /// Important: this is an internal object.
-/// We're just including in in the docs to better understand where the properties come from.
+/// We're just including it in the docs to better understand where the properties come from.
 /// We'll probably move it to another namespace some day.
 /// </summary>
 /// <remarks>
@@ -21,29 +22,24 @@ namespace ToSic.Sxc.DataSources.Internal;
     Guid = "3cf0822f-d276-469a-bbd1-cc84fd6ff748",
     Description = "File in an App"
 )]
-public class AppFileDataRaw: AppFileDataRawBase
+public class AppFileDataRaw: AppFileDataRawBase, IAppFileEntity
 {
     public const string TypeName = "File";
 
     public static DataFactoryOptions Options = new(typeName: TypeName, titleField: nameof(Path));
 
-    /// <summary>
-    /// The file name with extension.
-    /// </summary>
+    /// <inheritdoc cref="IAppFileEntity.Name"/>
     [ContentTypeAttributeSpecs(Description = "The file name without extension, like my-image")]
     public override string Name { get; set; }
 
-    /// <summary>
-    /// The file name extension, without any dot.
-    /// Purpose is to do switching between extensions.
-    /// If you want to have a safe, merged file name, just take the `FullName`.
-    /// </summary>
+    /// <inheritdoc cref="IAppFileEntity.Extension"/>
     public string Extension { get; set; }
 
-    public long Size { get; set; }
+    /// <inheritdoc cref="IAppFileEntity.Size"/>
+    public int Size { get; set; }
 
     /// <summary>
-    /// Data but without Id, Guid, Created, Modified
+    /// Data but without ID, Guid, Created, Modified
     /// </summary>
     [PrivateApi]
     public override IDictionary<string, object> Attributes(RawConvertOptions options)

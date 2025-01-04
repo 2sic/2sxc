@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
+using ToSic.Sxc.Apps.Internal.Assets;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
@@ -21,24 +22,28 @@ namespace ToSic.Sxc.DataSources.Internal;
     Guid = "96cda931-b677-4589-9eb2-df5a38cefff0",
     Description = "Folder in an App"
 )]
-public class AppFolderDataRaw: AppFileDataRawBase
+public class AppFolderDataRaw: AppFileDataRawBase, IAppFolderEntity
 {
     public const string TypeName = "Folder";
 
     public static DataFactoryOptions Options = new(typeName: TypeName, titleField: nameof(Path));
 
-    /// <summary>
-    /// The folder name - or blank when it's the root.
-    /// </summary>
+    /// <inheritdoc cref="IAppFolderEntity.Name"/>
     [ContentTypeAttributeSpecs(Description = "The folder name or blank when it's the root.")]
     public override string Name { get; set; }
+
+    [ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Folders in this folder.")]
+    public RawRelationship Folders => new(key: $"FolderIn:{Path}");
+
+    [ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Files in this folder.")]
+    public RawRelationship Files => new(key: $"FileIn:{Path}");
 
     [PrivateApi]
     public override IDictionary<string, object> Attributes(RawConvertOptions options)
         => new Dictionary<string, object>(base.Attributes(options))
         {
-            { "Folders", new RawRelationship(key: $"FolderIn:{Path}") },
-            { "Files", new RawRelationship(key: $"FileIn:{Path}") },
+            { nameof(Folders), Folders },
+            { nameof(Files), Files },
         };
 
     [PrivateApi]
