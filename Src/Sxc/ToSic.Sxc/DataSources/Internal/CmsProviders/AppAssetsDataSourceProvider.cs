@@ -88,7 +88,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
                     // TODO convert characters for safe HTML
                     Url = $"{_appPaths.Path}{fullNameFromAppRoot}",
 
-                    Size = f.Length,
+                    Size = (int)f.Length,
                     Created = f.CreationTime,
                     Modified = f.LastWriteTime
                 };
