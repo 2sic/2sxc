@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 
-namespace ToSic.Sxc.Apps;
+namespace ToSic.Sxc.Apps.Internal.Assets;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class AppAssetFolderMain(IAppPaths appPaths, string folder, bool shared) : AppAssetFolder

@@ -4,7 +4,7 @@ using System.IO;
 using Oqtane.Shared;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Controllers;
 

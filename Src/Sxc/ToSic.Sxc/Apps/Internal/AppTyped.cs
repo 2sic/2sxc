@@ -7,15 +7,16 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.DataServices;
 using ToSic.Sxc.Services.Internal;
-using static ToSic.Sxc.Apps.AppAssetFolderMain;
+using static ToSic.Sxc.Apps.Internal.Assets.AppAssetFolderMain;
 
-namespace ToSic.Sxc.Apps;
+namespace ToSic.Sxc.Apps.Internal;
 
 // Wip, NOT PRODUCTION READY #IAppTyped
 // Goal is to use this instead of the App, to be a clean wrapper hiding the old App

@@ -7,7 +7,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Oqt.Server.Code.Internal;
 using ToSic.Sxc.Oqt.Server.Controllers;

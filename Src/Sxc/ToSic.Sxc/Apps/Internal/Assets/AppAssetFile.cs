@@ -5,7 +5,7 @@ using ToSic.Sxc.Data;
 using IAsset = ToSic.Sxc.Adam.IAsset;
 using IFile = ToSic.Sxc.Adam.IFile;
 
-namespace ToSic.Sxc.Apps;
+namespace ToSic.Sxc.Apps.Internal.Assets;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal abstract class AppAssetFile: IFile

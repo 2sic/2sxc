@@ -5,7 +5,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Apps;
+namespace ToSic.Sxc.Apps.Internal;
 
 internal class AppDataTyped(
     Eav.DataSources.App.MyServices services,

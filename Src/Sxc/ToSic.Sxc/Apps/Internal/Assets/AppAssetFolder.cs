@@ -2,7 +2,7 @@
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 
-namespace ToSic.Sxc.Apps;
+namespace ToSic.Sxc.Apps.Internal.Assets;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal abstract class AppAssetFolder: IFolder

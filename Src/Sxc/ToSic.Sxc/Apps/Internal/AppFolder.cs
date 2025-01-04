@@ -2,10 +2,10 @@
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context.Internal;
 
-namespace ToSic.Sxc.Apps;
+namespace ToSic.Sxc.Apps.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppFolder(ISxcContextResolver ctxResolver) : ServiceBase("AppFolder")
+public class AppFolder(ISxcContextResolver ctxResolver) : ServiceBase("AppFld")
 {
     /// <summary>
     /// This is necessary for special calls where the _ctxResolve may not yet be complete...

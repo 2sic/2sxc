@@ -8,7 +8,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using static ToSic.Eav.Apps.Internal.AppConstants;
 
-namespace ToSic.Sxc.Apps;
+namespace ToSic.Sxc.Apps.Internal.Assets;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class AppAssetThumbnail(IAppReader appReader, IAppPaths appPaths, LazySvc<GlobalPaths> globalPaths)

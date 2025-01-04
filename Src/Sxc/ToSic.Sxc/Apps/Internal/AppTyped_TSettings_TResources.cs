@@ -3,7 +3,7 @@ using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Data;
 
-namespace ToSic.Sxc.Apps;
+namespace ToSic.Sxc.Apps.Internal;
 
 internal class AppTyped<TSettings, TResources>(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> queryManager)
     : AppTyped(globalPaths, queryManager), IAppTyped<TSettings, TResources>,

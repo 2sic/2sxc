@@ -8,6 +8,7 @@ using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Apps.Internal.Assets;
 
 namespace ToSic.Sxc.Apps.Internal.Work;
 

@@ -11,7 +11,7 @@ using ToSic.Eav.Helpers;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Backend;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Oqt.Server.Plumbing;
