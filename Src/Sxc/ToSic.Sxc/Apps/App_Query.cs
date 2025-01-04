@@ -16,14 +16,13 @@ partial class App
     {
         get
         {
-            if (_queries != null) return _queries;
+            if (field != null) return field;
 
             if (ConfigurationProvider == null)
                 throw new("Can't use app-queries, because the necessary configuration provider hasn't been initialized. Call InitData first.");
-            return _queries = Services.QueryManager.Value.AllQueries(this, ConfigurationProvider);
+            return field = Services.QueryManager.Value.AllQueries(this, ConfigurationProvider);
         }
     }
-    private IDictionary<string, IQuery> _queries;
 
     /// <inheritdoc />
     public IQuery GetQuery(string name)
