@@ -5,7 +5,7 @@ namespace ToSic.Sxc.DataSources.Internal;
 
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
+public abstract record AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
 {
     /// <inheritdoc />
     [ContentTypeAttributeSpecs(Description = "DO NOT USE. This is a temporary, random ID calculated at runtime and will return different values all the time.")]

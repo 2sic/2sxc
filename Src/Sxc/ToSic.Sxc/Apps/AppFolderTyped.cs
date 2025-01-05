@@ -24,6 +24,7 @@ public class AppFolderTyped: CustomItem, IAppFolderEntity
 
     /// <summary>
     /// Reference to the parent folder.
+    /// Returns `null` on the root folder.
     /// </summary>
     public new AppFolderTyped Folder => _item.Child<AppFolderTyped>(nameof(Folder));
 

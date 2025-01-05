@@ -7,7 +7,6 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
-//using static System.IO.Path;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
@@ -72,9 +71,6 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
             .Select(p => new FileInfo(p))
             .Select(f =>
             {
-                // 2024-10-07 2dm - had to fix because the path became shorter when requesting files from a subfolder
-                // but when asking for app files/folders it must always assume/start with the root of the app
-                //var fullName = FullNameWithoutAppFolder(f.FullName, _appPaths, _root);
                 var fullNameFromAppRoot = FullNameWithoutAppFolder(f.FullName, pathsFromRoot);
                 var name = Path.GetFileNameWithoutExtension(f.FullName);
                 var path = fullNameFromAppRoot.TrimPrefixSlash();
@@ -103,7 +99,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
     {
         var pathsFromRoot = PreparePaths(_appPaths, "");
 
-        var folders = _fileManager.GetAllTransferableFolders( /*filter*/)
+        var folders = _fileManager.GetAllTransferableFolders(/*filter*/)
             .Select(p => new DirectoryInfo(p))
             .Select(d => ToFolderData(d, pathsFromRoot))
             .ToList();
@@ -114,24 +110,24 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
                 .FlattenMultipleForwardSlashes()
                 .TrimLastSlash()
         );
-        folders.Insert(0, ToFolderData(root, pathsFromRoot, ""));
+        folders.Insert(0, ToFolderData(root, pathsFromRoot) with
+        {
+            Name = "",                  // Make name blank, since it's the root folder
+            ParentFolderInternal = "",  // reset the ParentFolder, otherwise the root thinks it's a subfolder of itself
+        });
         
         return (folders, $"found:{folders.Count}");
     });
 
-    private AppFolderDataRaw ToFolderData(DirectoryInfo d, PreparedPaths pathsFromRoot, string altName = default)
+    private AppFolderDataRaw ToFolderData(DirectoryInfo d, PreparedPaths pathsFromRoot)
     {
-        // 2024-10-07 2dm - had to fix because the path became shorter when requesting files from a subfolder
-        // but when asking for app files/folders it must always assume/start with the root of the app
         var fullNameFromAppRoot = FullNameWithoutAppFolder(d.FullName, pathsFromRoot);
 
-        // Name is the name of the folder, but if an alternative name is provided, use that instead
-        // this is for the root, which should have an "empty" name
-        var name = altName ?? Path.GetFileName(d.FullName);
+        var name = Path.GetFileName(d.FullName);
 
         return new()
         {
-            Name = altName ?? name,
+            Name = name,
             FullName = name,
             ParentFolderInternal = fullNameFromAppRoot.TrimPrefixSlash().BeforeLast("/").SuffixSlash(),
             Path = fullNameFromAppRoot.TrimPrefixSlash().SuffixSlash(),

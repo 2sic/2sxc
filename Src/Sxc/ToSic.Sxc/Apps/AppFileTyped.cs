@@ -28,6 +28,7 @@ public class AppFileTyped: CustomItem, IAppFileEntity
 
     /// <summary>
     /// Reference to the folder this file is in.
+    /// Returns `null` on the root folder.
     /// </summary>
     public new AppFolderTyped Folder => _item.Child<AppFolderTyped>(nameof(Folder));
 

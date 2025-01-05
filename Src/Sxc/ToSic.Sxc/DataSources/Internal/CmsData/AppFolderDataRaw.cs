@@ -22,7 +22,7 @@ namespace ToSic.Sxc.DataSources.Internal;
     Guid = "96cda931-b677-4589-9eb2-df5a38cefff0",
     Description = "Folder in an App"
 )]
-public class AppFolderDataRaw: AppFileDataRawBase, IAppFolderEntity
+public record AppFolderDataRaw: AppFileDataRawBase, IAppFolderEntity
 {
     public const string TypeName = "Folder";
 

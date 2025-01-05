@@ -22,7 +22,7 @@ namespace ToSic.Sxc.DataSources.Internal;
     Guid = "3cf0822f-d276-469a-bbd1-cc84fd6ff748",
     Description = "File in an App"
 )]
-public class AppFileDataRaw: AppFileDataRawBase, IAppFileEntity
+public record AppFileDataRaw: AppFileDataRawBase, IAppFileEntity
 {
     public const string TypeName = "File";
 
