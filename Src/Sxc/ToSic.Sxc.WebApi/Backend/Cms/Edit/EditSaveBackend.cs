@@ -95,19 +95,18 @@ public class EditSaveBackend(
                 if (resultValidator.Exception != null)
                     throw resultValidator.Exception;
 
-                ent = dataBuilder.Entity.CreateFrom(ent, id: resultValidator.ResetId, isPublished: package.IsPublished,
-                    placeDraftInBranch: package.DraftShouldBranch);
-
-                //ent.ResetEntityId(resultValidator.ResetId ?? 0); //AjaxPreviewHelperWIP!
-                //ent.IsPublished = package.IsPublished;
-                //ent.PlaceDraftInBranch = package.DraftShouldBranch;
+                ent = dataBuilder.Entity.CreateFrom(ent,
+                    id: resultValidator.ResetId,
+                    isPublished: package.IsPublished,
+                    placeDraftInBranch: package.DraftShouldBranch
+                );
 
                 // new in 11.01
                 if (i.Header.Parent != null)
                 {
                     // Check if Add was true, and fix if it had already been saved (EntityId != 0)
                     // the entityId is reset by the validator if it turns out to be an update
-                    // todo: verify use - maybe it's to set before we save, as maybe afterwards it's always != 0?
+                    // todo: verify use - maybe it's to set before we save, as maybe afterward it's always != 0?
                     var add = i.Header.AddSafe;
                     i.Header.Add = add;
                     if (ent.EntityId > 0 && add) i.Header.Add = false;
