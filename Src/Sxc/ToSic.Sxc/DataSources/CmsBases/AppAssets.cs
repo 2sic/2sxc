@@ -143,11 +143,21 @@ public class AppAssets: CustomDataSourceAdvanced
             return l.Return((EmptyList, EmptyList), "null/empty");
 
         // Convert Folders to Entities
-        var folderFactory = _dataFactory.New(options: AppFolderDataRaw.Options with { AppId = AppId, Type = typeof(AppFolderDataRaw) });
+        var folderFactory = _dataFactory.New(options: AppFolderDataRaw.Options with
+        {
+            AppId = AppId,
+            IdSeed = -100001,
+            Type = typeof(AppFolderDataRaw),
+        });
         var folders = folderFactory.Create(rawFolders);
 
         // Convert Files to Entities
-        var fileFactory = _dataFactory.New(options: AppFileDataRaw.Options with { AppId = AppId, Type = typeof(AppFileDataRaw) },
+        var fileFactory = _dataFactory.New(options: AppFileDataRaw.Options with
+            {
+                AppId = AppId,
+                IdSeed = -1,
+                Type = typeof(AppFileDataRaw),
+            },
             // Make sure we share relationships source with folders, as files need folders and folders need files
             relationships: folderFactory.Relationships);
         var files = fileFactory.Create(rawFiles);
