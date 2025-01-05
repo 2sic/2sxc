@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Apps.Internal.Assets;
 
 namespace ToSic.Sxc.DataSources.Internal;
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.DataSources.Internal;
     Guid = "3cf0822f-d276-469a-bbd1-cc84fd6ff748",
     Description = "File in an App"
 )]
-public record AppFileDataRaw: AppFileDataRawBase, IAppFileEntity
+public record AppFileDataRaw: AppFileDataRawBase, IFileEntity
 {
     public const string TypeName = "File";
 
@@ -32,14 +33,14 @@ public record AppFileDataRaw: AppFileDataRawBase, IAppFileEntity
         TitleField = nameof(Path)
     };
 
-    /// <inheritdoc cref="IAppFileEntity.Name"/>
+    /// <inheritdoc cref="IFileEntity.Name"/>
     [ContentTypeAttributeSpecs(Description = "The file name without extension, like my-image")]
     public override string Name { get; set; }
 
-    /// <inheritdoc cref="IAppFileEntity.Extension"/>
+    /// <inheritdoc cref="IFileEntity.Extension"/>
     public string Extension { get; set; }
 
-    /// <inheritdoc cref="IAppFileEntity.Size"/>
+    /// <inheritdoc cref="IFileEntity.Size"/>
     public int Size { get; set; }
 
     /// <summary>

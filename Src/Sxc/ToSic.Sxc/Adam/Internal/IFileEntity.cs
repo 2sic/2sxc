@@ -1,15 +1,27 @@
-﻿namespace ToSic.Sxc.Apps.Internal.Assets;
+﻿namespace ToSic.Sxc.Adam.Internal;
 
-internal interface IAppFolderEntity
+internal interface IFileEntity
 {
     /// <summary>
-    /// The folder name - or blank when it's the root.
+    /// The file name without extension.
     /// </summary>
     string Name { get; }
 
     /// <summary>
+    /// The file name extension, without any dot.
+    /// Purpose is to do switching between extensions.
+    /// If you want to have a safe, merged file name, just take the `FullName`.
+    /// </summary>
+    string Extension { get; }
+
+    /// <summary>
+    /// The size in bytes.
+    /// </summary>
+    int Size { get; }
+
+    /// <summary>
     /// The full name with extension.
-    /// If it's a folder or there is no extension, then it's identical to the `Name`
+    /// If it's a folder or there is no extension, then it's identical to the <see cref="Name"/>
     /// </summary>
     string FullName { get; }
 

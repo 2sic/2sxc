@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Apps.Internal.Assets;
 
 namespace ToSic.Sxc.DataSources.Internal;
@@ -22,13 +23,13 @@ namespace ToSic.Sxc.DataSources.Internal;
     Guid = "96cda931-b677-4589-9eb2-df5a38cefff0",
     Description = "Folder in an App"
 )]
-public record AppFolderDataRaw: AppFileDataRawBase, IAppFolderEntity
+public record AppFolderDataRaw: AppFileDataRawBase, IFolderEntity
 {
     public const string TypeName = "Folder";
 
     public static DataFactoryOptions Options = new() { TypeName = TypeName, TitleField = nameof(Path) };
 
-    /// <inheritdoc cref="IAppFolderEntity.Name"/>
+    /// <inheritdoc cref="IFolderEntity.Name"/>
     [ContentTypeAttributeSpecs(Description = "The folder name or blank when it's the root.")]
     public override string Name { get; set; }
 

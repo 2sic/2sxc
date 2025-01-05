@@ -4,7 +4,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.DataSources.Internal;
 using static System.StringComparer;
 using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
@@ -22,11 +22,11 @@ namespace ToSic.Sxc.DataSources;
 /// This provides 4 streams:
 ///
 /// * All: Stream containing both files and folders
-/// * Default: All files <see cref="AppFileTyped"/>
-/// * Files: All Files <see cref="AppFileTyped"/>
-/// * Folders: All folders <see cref="AppFolderTyped"/>
+/// * Default: All files <see cref="FileTyped"/>
+/// * Files: All Files <see cref="FileTyped"/>
+/// * Folders: All folders <see cref="FolderTyped"/>
 ///
-/// To figure out the properties returned and what they match up to, see <see cref="AppFileTyped"/> and <see cref="AppFolderTyped"/>.
+/// To figure out the properties returned and what they match up to, see <see cref="FileTyped"/> and <see cref="FolderTyped"/>.
 /// 
 /// </summary>
 /// <remarks>
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.DataSources;
     Icon = DataSourceIcons.Tree,
     Audience = Audience.Advanced,
     UiHint = "Files and folders in the App folder")]
-[InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta in v19 as the final name may change.")]
+[PublicApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AppAssets: CustomDataSourceAdvanced
 {
