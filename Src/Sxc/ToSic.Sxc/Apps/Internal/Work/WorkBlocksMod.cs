@@ -30,8 +30,11 @@ public class WorkBlocksMod(
         }
 
         l.A($"exists, create for group#{blockConfiguration.Guid} with template#{templateId}");
-        workEntUpdate.New(AppWorkCtx).UpdateParts(blockConfiguration.Entity.EntityId,
-            new Dictionary<string, object> { { ViewParts.TemplateContentType, new List<int?> { templateId } } });
+        workEntUpdate.New(AppWorkCtx).UpdateParts(
+            blockConfiguration.Entity.EntityId,
+            new Dictionary<string, object> { { ViewParts.TemplateContentType, new List<int?> { templateId } } },
+            new()
+        );
 
         return l.ReturnAndLog(blockConfiguration.Guid); // guid didn't change
     }
@@ -85,7 +88,7 @@ public class WorkBlocksMod(
             intList.Insert(index, entityId);
         }
         var updateDic = new Dictionary<string, object> { { field, intList } };
-        workEntUpdate.New(AppWorkCtx.AppReader).UpdateParts(cbEnt.EntityId, updateDic);
+        workEntUpdate.New(AppWorkCtx.AppReader).UpdateParts(cbEnt.EntityId, updateDic, new());
 
         #endregion
 

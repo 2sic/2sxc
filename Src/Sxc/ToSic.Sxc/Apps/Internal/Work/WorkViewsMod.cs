@@ -46,7 +46,7 @@ public class WorkViewsMod(
 
 
         if (templateId.HasValue)
-            entityUpdate.New(AppWorkCtx).UpdateParts(templateId.Value, values);
+            entityUpdate.New(AppWorkCtx).UpdateParts(templateId.Value, values, new());
         else
             entityCreate.New(AppWorkCtx).Create(AppConstants.TemplateContentType, values);
 
