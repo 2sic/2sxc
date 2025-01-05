@@ -9,7 +9,11 @@ public class AdamItemDataRaw: IRawEntity
 {
     public const string TypeName = "AdamItem";
 
-    public static DataFactoryOptions Options = new(typeName: TypeName, titleField: nameof(Name));
+    public static DataFactoryOptions Options = new()
+    {
+        TypeName = TypeName,
+        TitleField = nameof(Name)
+    };
 
     public int Id { get; set; }
     public Guid Guid { get; set; }

@@ -26,7 +26,11 @@ public class AppFileDataRaw: AppFileDataRawBase, IAppFileEntity
 {
     public const string TypeName = "File";
 
-    public static DataFactoryOptions Options = new(typeName: TypeName, titleField: nameof(Path));
+    public static DataFactoryOptions Options = new()
+    {
+        TypeName = TypeName,
+        TitleField = nameof(Path)
+    };
 
     /// <inheritdoc cref="IAppFileEntity.Name"/>
     [ContentTypeAttributeSpecs(Description = "The file name without extension, like my-image")]

@@ -26,7 +26,7 @@ public class AppFolderDataRaw: AppFileDataRawBase, IAppFolderEntity
 {
     public const string TypeName = "Folder";
 
-    public static DataFactoryOptions Options = new(typeName: TypeName, titleField: nameof(Path));
+    public static DataFactoryOptions Options = new() { TypeName = TypeName, TitleField = nameof(Path) };
 
     /// <inheritdoc cref="IAppFolderEntity.Name"/>
     [ContentTypeAttributeSpecs(Description = "The folder name or blank when it's the root.")]

@@ -24,9 +24,14 @@ namespace ToSic.Sxc.DataSources.Internal;
 public class RoleDataRaw: RawEntityBase, IRawEntity, IRole
 {
     internal static string TypeName = "Role";
-    internal static string TitleFieldName = nameof(Name);
+    //internal static string TitleFieldName = nameof(Name);
 
-    internal static DataFactoryOptions Options = new(typeName: "Role", titleField: nameof(Name), autoId: false);
+    internal static DataFactoryOptions Options = new()
+    {
+        AutoId = false,
+        TypeName = TypeName,
+        TitleField = nameof(Name),
+    };
 
     public string Name { get; set; }
 

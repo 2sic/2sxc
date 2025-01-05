@@ -8,7 +8,7 @@ using ToSic.Sxc.DataSources.Internal;
 using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 
 // Important Info to people working with this
-// It depends on abstract provder, that must be overriden in each platform
+// It depends on abstract provider, that must be overriden in each platform
 // In addition, each platform must make sure to register a TryAddTransient with the platform specific provider implementation
 // This is because any constructor DI should be able to target this type, and get the real provider implementation
 
@@ -103,7 +103,7 @@ public class AdamFiles : DataSourceBase
         _provider.Configure(appId: AppId, entityIds: EntityIds, entityGuids: EntityGuids, fields: Fields, filter: Filter);
         var find = _provider.GetInternal();
 
-        var adamFactory = _dataFactory.New(options: new(AdamItemDataRaw.Options, appId: AppId));
+        var adamFactory = _dataFactory.New(options: AdamItemDataRaw.Options with { AppId = AppId });
 
         var entities = adamFactory.Create(source.SelectMany(o => find(o)));
 

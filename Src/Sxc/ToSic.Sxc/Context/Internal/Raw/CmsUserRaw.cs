@@ -33,7 +33,11 @@ public class CmsUserRaw: RawEntityBase, IUser, ICmsUser, IRawEntity, IHasIdentit
     #region Types and Names for Raw Entities
 
     internal static string TypeName = "User";
-    internal static DataFactoryOptions Options = new(typeName: TypeName, titleField: nameof(Name));
+    internal static DataFactoryOptions Options = new()
+    {
+        TypeName = TypeName,
+        TitleField = nameof(Name)
+    };
 
     #endregion
 

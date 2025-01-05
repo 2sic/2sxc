@@ -228,8 +228,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
                 : [raw]
             : [];
 
-        var df = Cdf.Services.DataFactory.New(
-            options: new(appId: Cdf.BlockOrNull?.AppId, autoId: false));
+        var df = Cdf.Services.DataFactory.New(options: new() { AppId = Cdf.BlockOrNull?.AppId ?? 0, AutoId = false });
         var mdEntities = objList
             .Where(o => o != null)
             .Select(o =>

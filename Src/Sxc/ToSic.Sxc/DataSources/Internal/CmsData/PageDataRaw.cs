@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Data.Build;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
 
 namespace ToSic.Sxc.DataSources.Internal;
@@ -23,7 +24,13 @@ namespace ToSic.Sxc.DataSources.Internal;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class PageDataRaw: IRawEntity
 {
-    public static DataFactoryOptions Option = new(typeName: "Page", titleField: nameof(Name));
+    private const string TypeName = "Page";
+
+    public static DataFactoryOptions Option = new()
+    {
+        TypeName = TypeName,
+        TitleField = nameof(Name)
+    };
 
     /// <summary>
     /// The page ID.
