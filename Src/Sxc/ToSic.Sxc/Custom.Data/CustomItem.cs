@@ -295,7 +295,7 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
     /// <param name="item"></param>
     /// <returns></returns>
     /// <remarks>
-    /// BETA in v17.03
+    /// New in v17.03
     /// </remarks>
     protected T As<T>(ITypedItem item)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
@@ -311,7 +311,7 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper16, IHasPropLookup
     /// <param name="nullIfNull"></param>
     /// <returns></returns>
     /// <remarks>
-    /// BETA in v17.03
+    /// New in v17.03
     /// </remarks>
     protected IEnumerable<T> AsList<T>(IEnumerable<ITypedItem> source, NoParamOrder protector = default, bool nullIfNull = false)
         where T : class, ITypedItemWrapper16, ITypedItem, new()
