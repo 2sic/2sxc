@@ -46,20 +46,16 @@ internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, CodeDa
     #region Helpers / Services
 
     [PrivateApi]
-    private GetAndConvertHelper GetHelper => _getHelper ??= new(this, Cdf, propsRequired, childrenShouldBeDynamic: false, canDebug: this);
-    private GetAndConvertHelper _getHelper;
+    private GetAndConvertHelper GetHelper => field ??= new(this, Cdf, propsRequired, childrenShouldBeDynamic: false, canDebug: this);
 
     [PrivateApi]
-    private SubDataFactory SubDataFactory => _subData ??= new(Cdf, propsRequired, canDebug: this);
-    private SubDataFactory _subData;
+    private SubDataFactory SubDataFactory => field ??= new(Cdf, propsRequired, canDebug: this);
 
     [PrivateApi]
-    private CodeDynHelper DynHelper => _dynHelper ??= new(Entity, SubDataFactory);
-    private CodeDynHelper _dynHelper;
+    private CodeDynHelper DynHelper => field ??= new(Entity, SubDataFactory);
 
     [PrivateApi]
-    private CodeItemHelper ItemHelper => _itemHelper ??= new(GetHelper, this);
-    private CodeItemHelper _itemHelper;
+    private CodeItemHelper ItemHelper => field ??= new(GetHelper, this);
 
     #endregion
 
