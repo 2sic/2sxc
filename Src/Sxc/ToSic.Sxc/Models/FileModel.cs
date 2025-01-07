@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Models;
 /// * This is similar to the <see cref="Adam.IFile"/> but still a bit different. For example, it has a <see cref="Folder"/> property which is different from the <see cref="ToSic.Eav.Apps.Assets.IFile.Folder"/> property.
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still tweaking details and naming v19.0x")]
-public class FileModel: CustomModelOfItem, IFileEntity
+public class FileModel: DataModel, IFileEntity
 {
     ///// <summary>
     ///// The ID of this asset (file/folder).
@@ -30,31 +30,33 @@ public class FileModel: CustomModelOfItem, IFileEntity
     //public Guid Guid => ((ITypedItem)this).Guid;
 
     /// <inheritdoc />
-    public string Name => Item.String(nameof(Name));
+    public string Name => _data.Get<string>(nameof(Name));
     /// <inheritdoc />
-    public string Extension => Item.String(nameof(Extension));
+    public string Extension => _data.Get<string>(nameof(Extension));
     /// <inheritdoc />
-    public string FullName => Item.String(nameof(FullName));
+    public string FullName => _data.Get<string>(nameof(FullName));
     /// <inheritdoc />
-    public string Path => Item.String(nameof(Path));
+    public string Path => _data.Get<string>(nameof(Path));
 
     /// <summary>
     /// Reference to the folder this file is in.
     /// Returns `null` on the root folder.
     /// </summary>
-    public FolderModel Folder => Item.Child<FolderModel>(nameof(Folder));
+    //public FolderModel Folder => _item.Child<FolderModel>(nameof(Folder));
+
+    public FolderModel Folder => As<FolderModel>(_data.Entity.Children(field: nameof(Folder)).FirstOrDefault());
 
     /// <inheritdoc />
-    public int Size => Item.Int(nameof(Size));
+    public int Size => _data.Get<int>(nameof(Size));
 
     public ISizeInfo SizeInfo => field ??= new SizeInfo(Size);
 
     /// <inheritdoc cref="IFileEntity.Url" />
-    public string Url => Item.String(nameof(Url));
+    public string Url => _data.Get<string>(nameof(Url));
 
     /// <inheritdoc />
-    public DateTime Created => Item.DateTime(nameof(Created));
+    public DateTime Created => _data.Get<DateTime>(nameof(Created));
     /// <inheritdoc />
-    public DateTime Modified => Item.DateTime(nameof(Modified));
+    public DateTime Modified => _data.Get<DateTime>(nameof(Modified));
 
 }

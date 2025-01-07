@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 
 // ReSharper disable once CheckNamespace
@@ -44,24 +43,24 @@ namespace Custom.Data;
 /// - Released in v19.01 (BETA)
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change to CustomModelOfItem or something")]
-public abstract partial class CustomModelOfItem : IDataModelOf<ITypedItem>, IDataWrapperForType, ICanBeItem, ICanBeEntity //, IHasPropLookup
+public abstract partial class DataModel: IDataModelOf<IEntity>, IDataWrapperForType, /*ICanBeItem,*/ ICanBeEntity //, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
-    void IDataModelOf<ITypedItem>.Setup(ITypedItem baseItem)
-        => Item = baseItem;
+    void IDataModelOf<IEntity>.Setup(IEntity baseItem)
+        => _data = baseItem;
 
     /// <inheritdoc />
     string IDataWrapperForType.ForContentType
         => GetType().Name;
 
-    /// <summary>
-    /// The actual item which is being wrapped, in rare cases where you must access it from outside.
-    ///
-    /// It's only on the explicit interface, so it is not available from outside or inside, unless you cast to it.
-    /// Goal is that inheriting classes don't access it to keep API surface small.
-    /// </summary>
-    ITypedItem ICanBeItem.Item => Item;
+    ///// <summary>
+    ///// The actual item which is being wrapped, in rare cases where you must access it from outside.
+    /////
+    ///// It's only on the explicit interface, so it is not available from outside or inside, unless you cast to it.
+    ///// Goal is that inheriting classes don't access it to keep API surface small.
+    ///// </summary>
+    //ITypedItem ICanBeItem.Item => Item;
 
     /// <summary>
     /// This is necessary so the object can be used in places where an IEntity is expected,
@@ -71,9 +70,9 @@ public abstract partial class CustomModelOfItem : IDataModelOf<ITypedItem>, IDat
     /// </summary>
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    IEntity ICanBeEntity.Entity => Item.Entity;
+    IEntity ICanBeEntity.Entity => _data;
 
-    IBlock ICanBeItem.TryGetBlockContext() => Item.TryGetBlockContext();
+    //IBlock ICanBeItem.TryGetBlockContext() => Item.TryGetBlockContext();
 
     //IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= ((IHasPropLookup)((ICanBeItem)this).Item).PropertyLookup;
     //private IPropertyLookup _propLookup;
@@ -86,13 +85,14 @@ public abstract partial class CustomModelOfItem : IDataModelOf<ITypedItem>, IDat
     /// <remarks>
     /// This property is protected, not public, as it should only be used internally.
     /// </remarks>
-    protected internal ITypedItem Item { get; private set; }
+    // ReSharper disable once InconsistentNaming
+    protected internal IEntity _data { get; private set; }
 
     /// <summary>
     /// Override ToString to give more information about the current object
     /// </summary>
     public override string ToString() 
-        => $"{nameof(CustomModelOfItem)} Data Model {GetType().FullName} " + (Item == null ? "without backing data (null)" : $"for id:{Item.Id} ({Item})");
+        => $"{nameof(DataModelOfItem)} Data Model {GetType().FullName} " + (_data == null ? "without backing data (null)" : $"for id:{_data.EntityId} ({_data})");
 
 
     #region As...
@@ -106,7 +106,11 @@ public abstract partial class CustomModelOfItem : IDataModelOf<ITypedItem>, IDat
     /// <returns></returns>
     protected T As<T>(ITypedItem item)
         where T : class, IDataModel, new()
-        => CodeDataFactory.AsCustomFromItem<T>(item);
+        => CodeDataFactory.AsCustomFrom<T, ITypedItem>(item);
+
+    protected T As<T>(IEntity item)
+        where T : class, IDataModel, new()
+        => CodeDataFactory.AsCustomFrom<T, IEntity>(item);
 
     /// <summary>
     /// Convert a list of Entities or TypedItems into a strongly typed list.
@@ -119,7 +123,11 @@ public abstract partial class CustomModelOfItem : IDataModelOf<ITypedItem>, IDat
     /// <returns></returns>
     protected IEnumerable<T> AsList<T>(IEnumerable<ITypedItem> source, NoParamOrder protector = default, bool nullIfNull = false)
         where T : class, IDataModel, new()
-        => (source ?? (nullIfNull ? null : []))?.Select(CodeDataFactory.AsCustomFromItem<T>).ToList();
+        => (source ?? (nullIfNull ? null : []))?.Select(CodeDataFactory.AsCustomFrom<T, ITypedItem>).ToList();
+
+    protected IEnumerable<T> AsList<T>(IEnumerable<IEntity> source, NoParamOrder protector = default, bool nullIfNull = false)
+        where T : class, IDataModel, new()
+        => (source ?? (nullIfNull ? null : []))?.Select(CodeDataFactory.AsCustomFrom<T, IEntity>).ToList();
 
     #endregion
 

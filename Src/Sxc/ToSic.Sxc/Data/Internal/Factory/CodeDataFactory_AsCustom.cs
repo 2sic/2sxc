@@ -16,11 +16,26 @@ partial class CodeDataFactory
         {
             null when !mock => null,
             TCustom alreadyT => alreadyT,
-            IEntity entity => AsCustomFromItem<TCustom>(AsItem(entity, propsRequired: true)),
-            _ => AsCustomFromItem<TCustom>(source as ITypedItem ?? AsItem(source))
+            IEntity entity => AsCustomFrom<TCustom, ITypedItem>(AsItem(entity, propsRequired: true)),
+            _ => AsCustomFrom<TCustom, ITypedItem>(source as ITypedItem ?? AsItem(source))
         };
 
-    internal static TCustom AsCustomFromItem<TCustom>(ITypedItem item)
+    //internal static TCustom AsCustomFromItem<TCustom>(ITypedItem item)
+    //    where TCustom : class, IDataModel, new()
+    //{
+    //    if (item == null) return null;
+    //    if (item is TCustom t) return t;
+    //    var newT = new TCustom();
+
+    //    // Should be an ITypedItemWrapper, but not enforced in the signature
+    //    if (newT is IDataModelOf<ITypedItem> ofTypedItem)
+    //        ofTypedItem.Setup(item);
+    //    else
+    //        throw new($"The custom type {typeof(TCustom).Name} does not implement {nameof(IDataModelOf<ITypedItem>)}. This is probably a mistake.");
+    //    return newT;
+    //}
+
+    internal static TCustom AsCustomFrom<TCustom, TData>(TData item)
         where TCustom : class, IDataModel, new()
     {
         if (item == null) return null;
@@ -28,10 +43,13 @@ partial class CodeDataFactory
         var newT = new TCustom();
 
         // Should be an ITypedItemWrapper, but not enforced in the signature
-        if (newT is IDataModelOf<ITypedItem> ofTypedItem)
-            ofTypedItem.Setup(item);
+        if (newT is IDataModelOf<TData> withMatchingSetup)
+            withMatchingSetup.Setup(item);
+        // DataModelOfEntity can also be filled from Typed (but ATM not the other way around)
+        else if (newT is IDataModelOf<IEntity> forEntity && item is ICanBeEntity canBeEntity)
+            forEntity.Setup(canBeEntity.Entity);
         else
-            throw new($"The custom type {typeof(TCustom).Name} does not implement {nameof(IDataModelOf<ITypedItem>)}. This is probably a mistake.");
+            throw new($"The custom type {typeof(TCustom).Name} does not implement {nameof(IDataModelOf<TData>)}. This is probably a mistake.");
         return newT;
     }
 
@@ -100,7 +118,7 @@ partial class CodeDataFactory
             IEnumerable<TCustom> alreadyListT => alreadyListT,
             // special case: empty list, with hidden info about where it's from so the toolbar can adjust and provide new-buttons
             ListTypedItems<ITypedItem> { Count: 0, Entity: not null } list => new ListTypedItems<TCustom>(new List<TCustom>(), list.Entity),
-            _ => new ListTypedItems<TCustom>(SafeItems().Select(AsCustomFromItem<TCustom>), null)
+            _ => new ListTypedItems<TCustom>(SafeItems().Select(AsCustomFrom<TCustom, ITypedItem>), null)
         };
 
         // Helper function to be called from above to ensure that
