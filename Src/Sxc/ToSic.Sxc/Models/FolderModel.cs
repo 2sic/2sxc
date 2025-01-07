@@ -23,33 +23,33 @@ public class FolderModel: CustomModel, IFolderEntity
     //public Guid Guid => ((ITypedItem)this).Guid;
 
     /// <inheritdoc />
-    public string Name => _item.String(nameof(Name));
+    public string Name => Item.String(nameof(Name));
     /// <inheritdoc />
-    public string FullName => _item.String(nameof(FullName));
+    public string FullName => Item.String(nameof(FullName));
     /// <inheritdoc />
-    public string Path => _item.String(nameof(Path));
+    public string Path => Item.String(nameof(Path));
 
     /// <summary>
     /// Reference to the parent folder.
     /// Returns `null` on the root folder.
     /// </summary>
-    public FolderModel Folder => _item.Child<FolderModel>(nameof(Folder));
+    public FolderModel Folder => Item.Child<FolderModel>(nameof(Folder));
 
     /// <summary>
     /// All sub folders in this folder.
     /// </summary>
-    public IEnumerable<FolderModel> Folders => _item.Children<FolderModel>(nameof(Folders));
+    public IEnumerable<FolderModel> Folders => Item.Children<FolderModel>(nameof(Folders));
 
     /// <summary>
     /// All files in this folder.
     /// </summary>
-    public IEnumerable<FileModel> Files => _item.Children<FileModel>(nameof(Files));
+    public IEnumerable<FileModel> Files => Item.Children<FileModel>(nameof(Files));
 
     /// <inheritdoc cref="IFileEntity.Url" />
-    public string Url => _item.String(nameof(Url));
+    public string Url => Item.String(nameof(Url));
 
     /// <inheritdoc />
-    public DateTime Created => _item.DateTime(nameof(Created));
+    public DateTime Created => Item.DateTime(nameof(Created));
     /// <inheritdoc />
-    public DateTime Modified => _item.DateTime(nameof(Modified));
+    public DateTime Modified => Item.DateTime(nameof(Modified));
 }
