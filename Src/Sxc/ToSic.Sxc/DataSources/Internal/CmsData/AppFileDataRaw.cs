@@ -25,23 +25,21 @@ namespace ToSic.Sxc.DataSources.Internal;
 )]
 public record AppFileDataRaw: AppFileDataRawBase, IFileEntity
 {
-    public const string TypeName = "File";
-
-    public static DataFactoryOptions Options = new()
+    internal static DataFactoryOptions Options = new()
     {
-        TypeName = TypeName,
+        TypeName = "File",
         TitleField = nameof(Path)
     };
 
     /// <inheritdoc cref="IFileEntity.Name"/>
     [ContentTypeAttributeSpecs(Description = "The file name without extension, like my-image")]
-    public override string Name { get; set; }
+    public override string Name { get; init; }
 
     /// <inheritdoc cref="IFileEntity.Extension"/>
-    public string Extension { get; set; }
+    public string Extension { get; init; }
 
     /// <inheritdoc cref="IFileEntity.Size"/>
-    public int Size { get; set; }
+    public int Size { get; init; }
 
     /// <summary>
     /// Data but without ID, Guid, Created, Modified

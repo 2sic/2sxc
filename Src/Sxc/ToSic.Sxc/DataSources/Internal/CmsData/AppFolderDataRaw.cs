@@ -2,7 +2,6 @@
 using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
 using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Apps.Internal.Assets;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
@@ -11,7 +10,7 @@ namespace ToSic.Sxc.DataSources.Internal;
 /// until it's converted to an IEntity in the <see cref="AppAssets"/> DataSource.
 ///
 /// Important: this is an internal object.
-/// We're just including in in the docs to better understand where the properties come from.
+/// We're just including in the docs to better understand where the properties come from.
 /// We'll probably move it to another namespace some day.
 /// </summary>
 /// <remarks>
@@ -25,13 +24,15 @@ namespace ToSic.Sxc.DataSources.Internal;
 )]
 public record AppFolderDataRaw: AppFileDataRawBase, IFolderEntity
 {
-    public const string TypeName = "Folder";
-
-    public static DataFactoryOptions Options = new() { TypeName = TypeName, TitleField = nameof(Path) };
+    internal static DataFactoryOptions Options = new()
+    {
+        TypeName = "Folder",
+        TitleField = nameof(Path)
+    };
 
     /// <inheritdoc cref="IFolderEntity.Name"/>
     [ContentTypeAttributeSpecs(Description = "The folder name or blank when it's the root.")]
-    public override string Name { get; set; }
+    public override string Name { get; init; }
 
     [ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Folders in this folder.")]
     public RawRelationship Folders => new(key: $"FolderIn:{Path}");
