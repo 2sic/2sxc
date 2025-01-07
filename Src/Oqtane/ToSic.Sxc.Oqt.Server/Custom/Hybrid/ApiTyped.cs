@@ -160,7 +160,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     /// <inheritdoc cref="IDynamicCode16.AsStack{T}" />
     public T AsStack<T>(params object[] items)
-        where T : class, ITypedItemWrapper, ITypedItem, new()
+        where T : class, IDataModel, new()
         => _CodeApiSvc.Cdf.AsStack<T>(items);
 
     #endregion
@@ -218,12 +218,12 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     /// <inheritdoc />
     public T As<T>(object source, NoParamOrder protector = default, bool mock = default)
-        where T : class, ITypedItemWrapper, new()
+        where T : class, IDataModel, new()
         => _CodeApiSvc.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
 
     /// <inheritdoc />
     public IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
-        where T : class, ITypedItemWrapper, new()
+        where T : class, IDataModel, new()
         => _CodeApiSvc.Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
 
     #endregion

@@ -11,7 +11,7 @@ partial class CodeDataFactory
     /// If it's a list of entity-like things, the first one will be converted.
     /// </summary>
     public TCustom AsCustom<TCustom>(object source, NoParamOrder protector = default, bool mock = false)
-        where TCustom : class, ITypedItemWrapper, new()
+        where TCustom : class, IDataModel, new()
         => source switch
         {
             null when !mock => null,
@@ -21,17 +21,22 @@ partial class CodeDataFactory
         };
 
     internal static TCustom AsCustomFromItem<TCustom>(ITypedItem item)
-        where TCustom : class, ITypedItemWrapper, new()
+        where TCustom : class, IDataModel, new()
     {
         if (item == null) return null;
         if (item is TCustom t) return t;
         var newT = new TCustom();
-        newT.Setup(item);
+
+        // Should be an ITypedItemWrapper, but not enforced in the signature
+        if (newT is ITypedItemWrapper wrapper)
+            wrapper.Setup(item);
+        else
+            throw new($"The custom type {typeof(TCustom).Name} does not implement {nameof(ITypedItemWrapper)}. This is probably a mistake.");
         return newT;
     }
 
     internal TResult GetOne<TResult>(Func<IEntity> getItem, object id, bool skipTypeCheck)
-        where TResult : class, ITypedItemWrapper, ITypedItem, new()
+        where TResult : class, IDataModel, new()
     {
         var item = getItem();
         if (item == null)
@@ -42,11 +47,22 @@ partial class CodeDataFactory
             return AsCustom<TResult>(item);
 
         // Do Type-Name check
-        var typeName = new TResult().ForContentType;
+        var typeName = GetContentTypeName<TResult>();
         if (!item.Type.Is(typeName))
             throw new($"Item with ID {id} is not a {typeName}. This is probably a mistake, otherwise use {nameof(skipTypeCheck)}: true");
         return AsCustom<TResult>(item);
     }
+
+    /// <summary>
+    /// Figure out the expected ContentTypeName of a DataWrapper type.
+    /// If it implements <see cref="IDataWrapperForType"/> then use the information it provides, otherwise
+    /// use the type name.
+    /// </summary>
+    /// <typeparam name="TResult"></typeparam>
+    /// <returns></returns>
+    internal static string GetContentTypeName<TResult>() where TResult : IDataModel, new()
+        => (new TResult() as IDataWrapperForType)?.ForContentType
+           ?? typeof(TResult).Name;
 
 
     ///// <summary>
@@ -76,7 +92,7 @@ partial class CodeDataFactory
     /// Create list of custom-typed ITypedItems
     /// </summary>
     public IEnumerable<TCustom> AsCustomList<TCustom>(object source, NoParamOrder protector, bool nullIfNull)
-        where TCustom : class, ITypedItemWrapper, new()
+        where TCustom : class, IDataModel, new()
     {
         return source switch
         {
@@ -87,7 +103,8 @@ partial class CodeDataFactory
             _ => new ListTypedItems<TCustom>(SafeItems().Select(AsCustomFromItem<TCustom>), null)
         };
 
-        // Helper function to be called from above
+        // Helper function to be called from above to ensure that
+        // the source is a list of ITypedItems
         IEnumerable<ITypedItem> SafeItems()
             => source switch
             {

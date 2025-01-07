@@ -55,7 +55,7 @@ namespace Custom.Data;
 /// - It's not abstract, even if the most common case is to inherit, as there are cases where you want to use it directly.
 /// </remarks>
 [PublicApi]
-public partial class CustomItem: ITypedItem, ITypedItemWrapper, IHasPropLookup
+public partial class CustomItem: ITypedItem, ITypedItemWrapper, IDataWrapperForType, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
@@ -64,7 +64,7 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper, IHasPropLookup
         => _item = baseItem;
 
     /// <inheritdoc />
-    string ITypedItemWrapper.ForContentType
+    string IDataWrapperForType.ForContentType
         => GetType().Name;
 
     /// <summary>
@@ -297,25 +297,25 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper, IHasPropLookup
 
     /// <inheritdoc />
     public T Child<T>(string name, NoParamOrder protector = default, bool? required = default)
-        where T : class, ITypedItemWrapper, new()
+        where T : class, IDataModel, new()
         => _item.Child<T>(name, protector: protector, required: required);
 
     /// <inheritdoc />
     public IEnumerable<T> Children<T>(string field, NoParamOrder protector = default,
         string type = default, bool? required = default)
-        where T : class, ITypedItemWrapper, new()
+        where T : class, IDataModel, new()
         => _item.Children<T>(field: field, protector: protector, type: type, required: required);
 
     /// <inheritdoc />
     public T Parent<T>(NoParamOrder protector = default, bool? current = default, string type = default,
         string field = default)
-        where T : class, ITypedItemWrapper, new()
+        where T : class, IDataModel, new()
         => _item.Parent<T>(protector: protector, current: current, type: type, field: field);
 
     /// <inheritdoc />
     public IEnumerable<T> Parents<T>(NoParamOrder protector = default,
         string type = default, string field = default)
-        where T : class, ITypedItemWrapper, new()
+        where T : class, IDataModel, new()
         => _item.Parents<T>(protector: protector, type: type ?? typeof(T).Name, field: field);
 
     /// <inheritdoc />
@@ -337,7 +337,7 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper, IHasPropLookup
     /// New in v17.03
     /// </remarks>
     protected T As<T>(ITypedItem item)
-        where T : class, ITypedItemWrapper, ITypedItem, new()
+        where T : class, IDataModel, new()
         => CodeDataFactory.AsCustomFromItem<T>(item);
 
     /// <summary>
@@ -353,7 +353,7 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper, IHasPropLookup
     /// New in v17.03
     /// </remarks>
     protected IEnumerable<T> AsList<T>(IEnumerable<ITypedItem> source, NoParamOrder protector = default, bool nullIfNull = false)
-        where T : class, ITypedItemWrapper, ITypedItem, new()
+        where T : class, IDataModel, new()
         => (source ?? (nullIfNull ? null : []))?.Select(CodeDataFactory.AsCustomFromItem<T>).ToList();
 
     #endregion

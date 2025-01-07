@@ -1,8 +1,8 @@
 ﻿using ToSic.Eav.Apps.Internal.Api01;
 using ToSic.Eav.DataSource.Internal.Caching;
 using ToSic.Eav.DataSources.Internal;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Apps.Internal;
@@ -15,9 +15,11 @@ internal class AppDataTyped(
 {
     #region Get Content Types - explicit implementation to ensure it's only available in Typed APIs
 
-    IEnumerable<IContentType> IAppDataTyped.GetContentTypes() => AppReader.ContentTypes;
+    IEnumerable<IContentType> IAppDataTyped.GetContentTypes()
+        => AppReader.ContentTypes;
 
-    IContentType IAppDataTyped.GetContentType(string name) => AppReader.GetContentType(name);
+    IContentType IAppDataTyped.GetContentType(string name)
+        => AppReader.GetContentType(name);
 
     #endregion
 
@@ -29,19 +31,25 @@ internal class AppDataTyped(
         return this;
     }
 
-    private ServiceKit16 Kit { get => field ?? throw new("ServiceKit16 not set"); set => field = value; }
+    private ServiceKit16 Kit
+    {
+        get => field ?? throw new("ServiceKit16 not set");
+        set => field = value;
+    }
 
     #endregion
 
     /// <inheritdoc />
     IEnumerable<T> IAppDataTyped.GetAll<T>(NoParamOrder protector, string typeName, bool nullIfNotFound)
     {
-        typeName ??= new T().ForContentType;
+        typeName ??= CodeDataFactory.GetContentTypeName<T>();
 
         // Get the list - will be null if not found
         var list = GetStream(typeName, nullIfNotFound: nullIfNotFound);
 
-        return list.NullOrGetWith(l => Kit._CodeApiSvc.Cdf.AsCustomList<T>(source: l, protector: protector, nullIfNull: nullIfNotFound));
+        return list == null
+            ? null
+            : Kit._CodeApiSvc.Cdf.AsCustomList<T>(source: list, protector: protector, nullIfNull: nullIfNotFound);
     }
 
     /// <inheritdoc />

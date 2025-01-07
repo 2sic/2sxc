@@ -33,7 +33,7 @@ partial interface ITypedItem
     /// New v17.05
     /// </remarks>
     public T Child<T>(string name = default, NoParamOrder protector = default, bool? required = default)
-        where T : class, ITypedItemWrapper, new();
+        where T : class, IDataModel, new();
 
     /// <summary>
     /// A **strongly typed** list of sub-items. Important for LINQ style querying or just
@@ -53,7 +53,7 @@ partial interface ITypedItem
     /// </remarks>
     public IEnumerable<T> Children<T>(string field = default, NoParamOrder protector = default,
         string type = default, bool? required = default)
-        where T : class, ITypedItemWrapper, new();
+        where T : class, IDataModel, new();
 
     /// <summary>
     /// Get either the _current_ parent or the first parent which would be found on `.Parents(...)` as **strongly typed**.
@@ -70,7 +70,7 @@ partial interface ITypedItem
     /// </remarks>
     public T Parent<T>(NoParamOrder protector = default, bool? current = default, string type = default,
         string field = default)
-        where T : class, ITypedItemWrapper, new();
+        where T : class, IDataModel, new();
 
     /// <summary>
     /// A **typed** list of entities which point to this item. Important for LINQ style querying or just
@@ -90,7 +90,7 @@ partial interface ITypedItem
     /// </remarks>
     public IEnumerable<T> Parents<T>(NoParamOrder protector = default,
         string type = default, string field = default)
-        where T : class, ITypedItemWrapper, new();
+        where T : class, IDataModel, new();
 
     #endregion
 

@@ -44,7 +44,7 @@ namespace Custom.Data;
 /// - Released in v19.01 (BETA)
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change to CustomModelOfItem or something")]
-public abstract partial class CustomModel : ITypedItemWrapper, ICanBeItem, ICanBeEntity //, IHasPropLookup
+public abstract partial class CustomModel : ITypedItemWrapper, IDataWrapperForType, ICanBeItem, ICanBeEntity //, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
@@ -53,7 +53,7 @@ public abstract partial class CustomModel : ITypedItemWrapper, ICanBeItem, ICanB
         => Item = baseItem;
 
     /// <inheritdoc />
-    string ITypedItemWrapper.ForContentType
+    string IDataWrapperForType.ForContentType
         => GetType().Name;
 
     /// <summary>
