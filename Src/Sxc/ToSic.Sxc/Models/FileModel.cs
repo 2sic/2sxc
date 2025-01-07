@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Models;
 /// * This is similar to the <see cref="Adam.IFile"/> but still a bit different. For example, it has a <see cref="Folder"/> property which is different from the <see cref="ToSic.Eav.Apps.Assets.IFile.Folder"/> property.
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still tweaking details and naming v19.0x")]
-public class FileModel: CustomData, IFileEntity
+public class FileModel: CustomModel, IFileEntity
 {
     ///// <summary>
     ///// The ID of this asset (file/folder).

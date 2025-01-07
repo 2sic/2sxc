@@ -5,6 +5,7 @@ using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Models;
 using static System.StringComparer;
 using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 
@@ -21,11 +22,11 @@ namespace ToSic.Sxc.DataSources;
 /// This provides 4 streams:
 ///
 /// * All: Stream containing both files and folders
-/// * Default: All files <see cref="FileTyped"/>
-/// * Files: All Files <see cref="FileTyped"/>
-/// * Folders: All folders <see cref="FolderTyped"/>
+/// * Default: All files <see cref="FileModel"/>
+/// * Files: All Files <see cref="FileModel"/>
+/// * Folders: All folders <see cref="FolderModel"/>
 ///
-/// To figure out the properties returned and what they match up to, see <see cref="FileTyped"/> and <see cref="FolderTyped"/>.
+/// To figure out the properties returned and what they match up to, see <see cref="FileModel"/> and <see cref="FolderModel"/>.
 /// 
 /// </summary>
 /// <remarks>
