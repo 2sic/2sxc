@@ -304,12 +304,12 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     /// <inheritdoc />
     public T As<T>(object source, NoParamOrder protector = default, bool mock = false)
-        where T : class, ITypedItemWrapper, ITypedItem, new()
+        where T : class, ITypedItemWrapper, new()
         => _CodeApiSvc.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
 
     /// <inheritdoc />
     public IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
-        where T : class, ITypedItemWrapper, ITypedItem, new()
+        where T : class, ITypedItemWrapper, new()
         => _CodeApiSvc.Cdf.AsCustomList<T>(source, protector, nullIfNull);
 
     #endregion

@@ -11,7 +11,7 @@ partial class CodeDataFactory
     /// If it's a list of entity-like things, the first one will be converted.
     /// </summary>
     public TCustom AsCustom<TCustom>(object source, NoParamOrder protector = default, bool mock = false)
-        where TCustom : class, ITypedItemWrapper, ITypedItem, new()
+        where TCustom : class, ITypedItemWrapper, new()
         => source switch
         {
             null when !mock => null,
@@ -20,7 +20,8 @@ partial class CodeDataFactory
             _ => AsCustomFromItem<TCustom>(source as ITypedItem ?? AsItem(source))
         };
 
-    internal static TCustom AsCustomFromItem<TCustom>(ITypedItem item) where TCustom : class, ITypedItemWrapper, ITypedItem, new()
+    internal static TCustom AsCustomFromItem<TCustom>(ITypedItem item)
+        where TCustom : class, ITypedItemWrapper, new()
     {
         if (item == null) return null;
         if (item is TCustom t) return t;
@@ -75,7 +76,7 @@ partial class CodeDataFactory
     /// Create list of custom-typed ITypedItems
     /// </summary>
     public IEnumerable<TCustom> AsCustomList<TCustom>(object source, NoParamOrder protector, bool nullIfNull)
-        where TCustom : class, ITypedItemWrapper, ITypedItem, new()
+        where TCustom : class, ITypedItemWrapper, new()
     {
         return source switch
         {

@@ -184,7 +184,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
 
     #endregion
 
-        #region My... Stuff
+    #region My... Stuff
 
     /// <summary>
     /// The main Item belonging to this Template/Module.
@@ -202,7 +202,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     /// In some cases it can also be a pre-set item configured in the View to be used if the user has not added any data himself.
     ///
     /// If this view is configured to only have one item, then this list will only contain one item.
-    /// Otherwise it will have as many items as the editor added.
+    /// Otherwise, it will have as many items as the editor added.
     /// </summary>
     IEnumerable<ITypedItem> MyItems { get; }
 
@@ -267,7 +267,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     /// Released v17.05
     /// </remarks>
     T As<T>(object source, NoParamOrder protector = default, bool mock = default)
-        where T : class, ITypedItemWrapper, ITypedItem, new();
+        where T : class, ITypedItemWrapper, new();
 
     /// <summary>
     /// Convert a list of Entities or TypedItems into a strongly typed list.
@@ -282,7 +282,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     /// Release in v17.05
     /// </remarks>
     IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
-        where T : class, ITypedItemWrapper, ITypedItem, new();
+        where T : class, ITypedItemWrapper, new();
 
     #endregion
 }

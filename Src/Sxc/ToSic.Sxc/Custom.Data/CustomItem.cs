@@ -286,25 +286,25 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper, IHasPropLookup
 
     /// <inheritdoc />
     public T Child<T>(string name, NoParamOrder protector = default, bool? required = default)
-        where T : class, ITypedItemWrapper, ITypedItem, new()
+        where T : class, ITypedItemWrapper, new()
         => _item.Child<T>(name, protector: protector, required: required);
 
     /// <inheritdoc />
     public IEnumerable<T> Children<T>(string field, NoParamOrder protector = default,
         string type = default, bool? required = default)
-        where T : class, ITypedItemWrapper, ITypedItem, new()
+        where T : class, ITypedItemWrapper, new()
         => _item.Children<T>(field: field, protector: protector, type: type, required: required);
 
     /// <inheritdoc />
     public T Parent<T>(NoParamOrder protector = default, bool? current = default, string type = default,
         string field = default)
-        where T : class, ITypedItemWrapper, ITypedItem, new()
+        where T : class, ITypedItemWrapper, new()
         => _item.Parent<T>(protector: protector, current: current, type: type, field: field);
 
     /// <inheritdoc />
     public IEnumerable<T> Parents<T>(NoParamOrder protector = default,
         string type = default, string field = default)
-        where T : class, ITypedItemWrapper, ITypedItem, new()
+        where T : class, ITypedItemWrapper, new()
         => _item.Parents<T>(protector: protector, type: type ?? typeof(T).Name, field: field);
 
     /// <inheritdoc />

@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Models;
 /// * This is similar to the <see cref="IFolder"/> but still a bit different. For example, it has a <see cref="Folder"/> property.
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still tweaking details and naming v19.0x")]
-public class FolderInfo: CustomData, IFolderEntity
+public class FolderModel: CustomData, IFolderEntity
 {
     ///// <inheritdoc cref="FileTyped.Id"/>
     //public int Id => ((ITypedItem)this).Id;
@@ -33,17 +33,17 @@ public class FolderInfo: CustomData, IFolderEntity
     /// Reference to the parent folder.
     /// Returns `null` on the root folder.
     /// </summary>
-    public FolderInfo Folder => _item.Child<FolderInfo>(nameof(Folder));
+    public FolderModel Folder => _item.Child<FolderModel>(nameof(Folder));
 
     /// <summary>
     /// All sub folders in this folder.
     /// </summary>
-    public IEnumerable<FolderInfo> Folders => _item.Children<FolderInfo>(nameof(Folders));
+    public IEnumerable<FolderModel> Folders => _item.Children<FolderModel>(nameof(Folders));
 
     /// <summary>
     /// All files in this folder.
     /// </summary>
-    public IEnumerable<FileInfo> Files => _item.Children<FileInfo>(nameof(Files));
+    public IEnumerable<FileModel> Files => _item.Children<FileModel>(nameof(Files));
 
     /// <inheritdoc cref="IFileEntity.Url" />
     public string Url => _item.String(nameof(Url));
