@@ -20,15 +20,15 @@ namespace Custom.Data;
 /// - Released in v19.01
 /// </remarks>
 [PublicApi]
-public abstract partial class CustomData : ITypedItem, ITypedItemWrapper16, IHasPropLookup
+public abstract partial class CustomData : ITypedItem, ITypedItemWrapper, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
     /// <inheritdoc />
-    void ITypedItemWrapper16.Setup(ITypedItem baseItem) => _item = baseItem;
+    void ITypedItemWrapper.Setup(ITypedItem baseItem) => _item = baseItem;
 
     /// <inheritdoc />
-    string ITypedItemWrapper16.ForContentType => GetType().Name;
+    string ITypedItemWrapper.ForContentType => GetType().Name;
 
     /// <summary>
     /// The actual item which is being wrapped, in rare cases where you must access it.

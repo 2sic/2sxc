@@ -180,7 +180,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     /// <returns>Item of the custom type</returns>
     /// <remarks>New in 17.07</remarks>
     public T AsStack<T>(params object[] items)
-        where T : class, ITypedItemWrapper16, ITypedItem, new();
+        where T : class, ITypedItemWrapper, ITypedItem, new();
 
     #endregion
 
@@ -267,7 +267,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     /// Released v17.05
     /// </remarks>
     T As<T>(object source, NoParamOrder protector = default, bool mock = default)
-        where T : class, ITypedItemWrapper16, ITypedItem, new();
+        where T : class, ITypedItemWrapper, ITypedItem, new();
 
     /// <summary>
     /// Convert a list of Entities or TypedItems into a strongly typed list.
@@ -282,7 +282,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     /// Release in v17.05
     /// </remarks>
     IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
-        where T : class, ITypedItemWrapper16, ITypedItem, new();
+        where T : class, ITypedItemWrapper, ITypedItem, new();
 
     #endregion
 }
