@@ -25,13 +25,13 @@ public class PickOrBuildSpecsTests
     [TestMethod]
     public void RunArgsOnly() =>
         CompareJsonsAndTrace(
-            new() { Run = "window.run", Args = new[] { "test" } },
+            new() { Run = "window.run", Args = ["test"] },
             TurnOnTestAccessors.TacPickOrBuildSpecs("window.run", args: new string[] { "test" })
         );
     [TestMethod]
     public void RunArgsAndData() =>
         CompareJsonsAndTrace(
-            new() { Run = "window.run", Args = new[] { "test" }, Data = 42 },
+            new() { Run = "window.run", Args = ["test"], Data = 42 },
             TurnOnTestAccessors.TacPickOrBuildSpecs("window.run", args: new string[] { "test" }, data: 42)
         );
 

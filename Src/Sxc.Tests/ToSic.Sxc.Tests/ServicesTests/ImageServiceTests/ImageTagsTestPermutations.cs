@@ -8,16 +8,16 @@ public class ImageTagsTestPermutations
     public static List<TestParamSet> GenerateTestParams(string name, string variants)
     {
         var i = 1;
-        return new()
-        {
+        return
+        [
             new($"Test #{i++} {name}-both", true, true, true, variants),
             new($"Test #{i++} {name}-both", true, true, false, variants),
             new($"Test #{i++} {name}-on set", true, false, true, variants),
-            new($"Test #{i++} {name}-on set", true, false, false, variants),
+            new($"Test #{i++} {name}-on set", true, false, false, variants)
             // The On-Pic variations don't exist, as the pic doesn't have params for width/height
             //new TestParamSet($"{i++}{name}-on pic", false, true, true, srcset),
             //new TestParamSet($"{i++}{name}-on pic", false, true, false, srcset),
-        };
+        ];
     }
 
     public class TestParams
