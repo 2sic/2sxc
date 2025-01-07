@@ -32,7 +32,7 @@ public class CmsUserRaw: RawEntityBase, IUser, ICmsUser, IRawEntity, IHasIdentit
 {
     #region Types and Names for Raw Entities
 
-    internal static string TypeName = "User";
+    internal const string TypeName = "User";
     internal static DataFactoryOptions Options = new()
     {
         TypeName = TypeName,
@@ -49,7 +49,7 @@ public class CmsUserRaw: RawEntityBase, IUser, ICmsUser, IRawEntity, IHasIdentit
 
     #endregion
 
-    public string NameId { get; set; }
+    public string NameId { get; init; }
 
     /// <summary>
     /// Role ID List.
@@ -57,23 +57,23 @@ public class CmsUserRaw: RawEntityBase, IUser, ICmsUser, IRawEntity, IHasIdentit
     /// But for creating the entity we return a CSV
     /// </summary>
     [PrivateApi]
-    public List<int> Roles { get; set; }
-    public bool IsSystemAdmin { get; set; }
-    public bool IsSiteAdmin { get; set; }
-    public bool IsContentAdmin { get; set; }
-    public bool IsContentEditor { get; set; }
+    public List<int> Roles { get; init; }
+    public bool IsSystemAdmin { get; init; }
+    public bool IsSiteAdmin { get; init; }
+    public bool IsContentAdmin { get; init; }
+    public bool IsContentEditor { get; init; }
     public bool IsSiteDeveloper => IsSystemAdmin;
 
-    public bool IsAnonymous { get; set; }
+    public bool IsAnonymous { get; init; }
 
     /// <summary>
     /// Ignore, just included for IUser compatibility
     /// </summary>
     string IUser.IdentityToken => null;
 
-    public string Username { get; set; }
-    public string Email { get; set; } // aka PreferredEmail
-    public string Name { get; set; } // aka DisplayName
+    public string Username { get; init; }
+    public string Email { get; init; } // aka PreferredEmail
+    public string Name { get; init; } // aka DisplayName
 
     /// <summary>
     /// Data but without Id, Guid, Created, Modified
@@ -92,16 +92,20 @@ public class CmsUserRaw: RawEntityBase, IUser, ICmsUser, IRawEntity, IHasIdentit
             { nameof(Username), Username },
             { nameof(Email), Email },
         };
+
         if (options.ShouldAddKey(nameof(Roles)))
             data.Add("Roles",
                 new RawRelationship(keys: Roles?.Select(r => $"{RoleRelationshipPrefix}{r}" as object).ToList() ?? [])
             );
+
         return data;
     }
 
     internal const string RoleRelationshipPrefix = "Role:";
 
-    IMetadata ICmsUser.Metadata => throw new NotSupportedException($"Metadata currently not supported on CmsUser from {nameof(IUserService)}");
+    IMetadata ICmsUser.Metadata
+        => throw new NotSupportedException($"Metadata currently not supported on CmsUser from {nameof(IUserService)}");
 
-    IMetadataOf IHasMetadata.Metadata => throw new NotSupportedException($"Metadata currently not supported on CmsUser from {nameof(IUserService)}");
+    IMetadataOf IHasMetadata.Metadata
+        => throw new NotSupportedException($"Metadata currently not supported on CmsUser from {nameof(IUserService)}");
 }

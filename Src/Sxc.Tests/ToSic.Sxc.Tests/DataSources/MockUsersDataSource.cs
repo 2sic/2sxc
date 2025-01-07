@@ -10,10 +10,8 @@ namespace ToSic.Sxc.DataSources
     /// <summary>
     /// Mock list of users
     /// </summary>
-    public class MockUsersDataSource : UsersDataSourceProvider
+    public class MockUsersDataSource() : UsersDataSourceProvider("DS.MockUsers")
     {
-        public MockUsersDataSource() : base("DS.MockUsers") { }
-
         public override IEnumerable<CmsUserRaw> GetUsersInternal() => Log.Func(l =>
         {
             var siteId = 0;
