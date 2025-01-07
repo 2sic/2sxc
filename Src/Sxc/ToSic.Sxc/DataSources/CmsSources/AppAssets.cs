@@ -4,7 +4,6 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Adam;
 using ToSic.Sxc.DataSources.Internal;
 using static System.StringComparer;
 using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
