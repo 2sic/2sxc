@@ -1,13 +1,33 @@
 ﻿using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Context.Internal.Raw;
+using ToSic.Sxc.Models.Internal;
 
 namespace ToSic.Sxc.DataSources;
 
 public partial class Users
 {
-    private List<Func<CmsUserRaw, bool>> GetAllFilters() => Log.Func(l =>
+    private List<FilterOp<UserRaw>> GetAllFilters2()
     {
-        var filters = new List<Func<CmsUserRaw, bool>>
+        var l = Log.Fn<List<FilterOp<UserRaw>>>();
+        var filters = new List<FilterOp<UserRaw>>
+        {
+            IncludeUsersPredicate().NullOrGetWith(f => new FilterOp<UserRaw>(nameof(IncludeUsersPredicate), f)),
+            ExcludeUsersPredicate().NullOrGetWith(f => new FilterOp<UserRaw>(nameof(ExcludeUsersPredicate), f)),
+            FilterIncludeUsersOfRoles().NullOrGetWith(f => new FilterOp<UserRaw>(nameof(FilterIncludeUsersOfRoles), f)),
+            ExcludeRolesPredicate().NullOrGetWith(f => new FilterOp < UserRaw >(nameof(ExcludeRolesPredicate), f)),
+            SuperUserPredicate().NullOrGetWith(f => new FilterOp < UserRaw >(nameof(SuperUserPredicate), f))
+        };
+
+        filters = filters
+            .Where(f => f != null)
+            .ToList();
+
+        return l.Return(filters, $"{filters.Count}");
+    }
+
+    private List<Func<UserRaw, bool>> GetAllFilters()
+    {
+        var l = Log.Fn<List<Func<UserRaw, bool>>>();
+        var filters = new List<Func<UserRaw, bool>>
         {
             IncludeUsersPredicate(),
             ExcludeUsersPredicate(),
@@ -15,50 +35,62 @@ public partial class Users
             ExcludeRolesPredicate(),
             SuperUserPredicate()
         };
-        filters = filters.Where(f => f != null).ToList();
-        return (filters, $"{filters.Count}");
-    });
+
+        filters = filters
+            .Where(f => f != null)
+            .ToList();
+
+        return l.Return(filters, $"{filters.Count}");
+    }
 
 
-    private Func<CmsUserRaw, bool> IncludeUsersPredicate()
+    private Func<UserRaw, bool> IncludeUsersPredicate()
     {
-        if (string.IsNullOrEmpty(UserIds)) return null;
+        if (string.IsNullOrEmpty(UserIds))
+            return null;
         var includeUserGuids = FilterKeepUserGuids();
         var includeUserIds = FilterKeepUserIds();
         if (includeUserGuids == null && includeUserIds == null) return null;
-        return u => (includeUserGuids != null && includeUserGuids(u)) || (includeUserIds != null && includeUserIds(u));
+        return u => (includeUserGuids != null && includeUserGuids(u))
+                    || (includeUserIds != null && includeUserIds(u));
     }
 
-    private Func<CmsUserRaw, bool> FilterKeepUserGuids()
+    private Func<UserRaw, bool> FilterKeepUserGuids()
     {
-        var userGuidFilter = UserIds.Split(Separator)
+        var userGuidFilter = UserIds
+            .Split(Separator)
             .Select(u => Guid.TryParse(u.Trim(), out var userGuid) ? userGuid : Guid.Empty)
-            .Where(u => u != Guid.Empty).ToList();
+            .Where(u => u != Guid.Empty)
+            .ToList();
         return userGuidFilter.Any()
             ? u => u.Guid != Guid.Empty && userGuidFilter.Contains(u.Guid)
             : null;
     }
 
-    private Func<CmsUserRaw, bool> FilterKeepUserIds()
+    private Func<UserRaw, bool> FilterKeepUserIds()
     {
-        var userIdFilter = UserIds.Split(Separator)
+        var userIdFilter = UserIds
+            .Split(Separator)
             .Select(u => int.TryParse(u.Trim(), out var userId) ? userId : -1)
-            .Where(u => u != -1).ToList();
+            .Where(u => u != -1)
+            .ToList();
         return userIdFilter.Any()
             ? u => userIdFilter.Contains(u.Id)
             : null;
     }
 
-    private Func<CmsUserRaw, bool> ExcludeUsersPredicate()
+    private Func<UserRaw, bool> ExcludeUsersPredicate()
     {
-        if (string.IsNullOrEmpty(ExcludeUserIds)) return null;
+        if (string.IsNullOrEmpty(ExcludeUserIds))
+            return null;
         var excludeUserGuids = FilterExcludeUserGuids();
         var excludeUserIds = FilterExcludeUserIds();
         if (excludeUserGuids == null && excludeUserIds == null) return null;
-        return u => (excludeUserGuids == null || excludeUserGuids(u)) && (excludeUserIds == null || excludeUserIds(u));
+        return u => (excludeUserGuids == null || excludeUserGuids(u))
+                    && (excludeUserIds == null || excludeUserIds(u));
     }
 
-    private Func<CmsUserRaw, bool> FilterExcludeUserGuids()
+    private Func<UserRaw, bool> FilterExcludeUserGuids()
     {
         var excludeUserGuidsFilter = ExcludeUserIds
             .Split(Separator)
@@ -70,7 +102,7 @@ public partial class Users
             : null;
     }
 
-    private Func<CmsUserRaw, bool> FilterExcludeUserIds()
+    private Func<UserRaw, bool> FilterExcludeUserIds()
     {
         var excludeUserIdsFilter = ExcludeUserIds
             .Split(Separator)
@@ -82,7 +114,7 @@ public partial class Users
             : null;
     }
 
-    private Func<CmsUserRaw, bool> FilterIncludeUsersOfRoles()
+    private Func<UserRaw, bool> FilterIncludeUsersOfRoles()
     {
         var rolesFilter = Roles.RolesCsvListToInt(RoleIds);
         return rolesFilter.Any()
@@ -90,7 +122,7 @@ public partial class Users
             : null;
     }
 
-    private Func<CmsUserRaw, bool> ExcludeRolesPredicate()
+    private Func<UserRaw, bool> ExcludeRolesPredicate()
     {
         var excludeRolesFilter = Roles.RolesCsvListToInt(ExcludeRoleIds);
         return excludeRolesFilter.Any()
@@ -98,17 +130,18 @@ public partial class Users
             : null;
     }
 
-    private Func<CmsUserRaw, bool> SuperUserPredicate() => Log.Func<Func<CmsUserRaw, bool>>(() =>
+    private Func<UserRaw, bool> SuperUserPredicate()
     {
+        var l = Log.Fn<Func<UserRaw, bool>>();
         // If "include" == "only" return only super users
         if (IncludeSystemAdmins.EqualsInsensitive(IncludeRequired))
-            return (u => u.IsSystemAdmin, IncludeRequired);
+            return l.Return(u => u.IsSystemAdmin, IncludeRequired);
 
         // If "include" == true, return all
         if (IncludeSystemAdmins.EqualsInsensitive(IncludeOptional))
-            return (null, $"{IncludeOptional} = any"); // skip IsSystemAdmin check will return normal and super users
+            return l.ReturnNull($"{IncludeOptional} = any"); // skip IsSystemAdmin check will return normal and super users
 
         // If "include" == false - or basically any unknown value, return only normal users
-        return (u => !u.IsSystemAdmin, IncludeForbidden);
-    });
+        return l.Return(u => !u.IsSystemAdmin, IncludeForbidden);
+    }
 }

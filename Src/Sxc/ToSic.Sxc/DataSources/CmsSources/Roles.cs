@@ -5,6 +5,7 @@ using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Models.Internal;
 using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 
 // Important Info to people working with this
@@ -47,10 +48,10 @@ public class Roles : CustomDataSourceAdvanced
     [Configuration]
     public string RoleIds
     {
-        get => _roleIds ?? Configuration.GetThis();
-        set => _roleIds = value;
+        get => field ?? Configuration.GetThis();
+        set => field = value;
     }
-    private string _roleIds;
+
     /// <summary>
     /// Optional (single value or comma-separated integers) filter,
     /// exclude roles based on roleId
@@ -58,10 +59,10 @@ public class Roles : CustomDataSourceAdvanced
     [Configuration]
     public string ExcludeRoleIds
     {
-        get => _excludeRoleIds ?? Configuration.GetThis();
-        set => _excludeRoleIds = value;
+        get => field ?? Configuration.GetThis();
+        set => field = value;
     }
-    private string _excludeRoleIds;
+
     #endregion
 
 
@@ -71,64 +72,66 @@ public class Roles : CustomDataSourceAdvanced
     /// Constructor to tell the system what out-streams we have
     /// </summary>
     [PrivateApi]
-    public Roles(MyServices services, RolesDataSourceProvider provider, IDataFactory rolesFactory) : base(services, $"SDS.Roles")
+    public Roles(MyServices services, RolesDataSourceProvider provider, IDataFactory rolesFactory)
+        : base(services, "SDS.Roles", connect: [provider, rolesFactory])
     {
-        ConnectLogs([
-            _provider = provider,
-            _rolesFactory = rolesFactory.New(options: RoleDataRaw.Options)
-        ]);
+        _provider = provider;
+        _rolesFactory = rolesFactory.New(options: UserRoleRaw.Options);
+
         ProvideOut(GetList);
     }
 
     #endregion
 
-    private IImmutableList<IEntity> GetList() => Log.Func(l =>
+    private IImmutableList<IEntity> GetList()
     {
+        var l = Log.Fn<IImmutableList<IEntity>>();
         var roles = _provider.GetRolesInternal()?.ToList();
         l.A($"found {roles?.Count} roles");
 
         if (roles.SafeNone()) 
-            return (EmptyList, "null/empty");
+            return l.Return(EmptyList, "null/empty");
 
         // This will resolve the tokens before starting
         Configuration.Parse();
 
         var includeRolesPredicate = IncludeRolesPredicate();
         l.A($"includeRoles: {includeRolesPredicate == null}");
-        if (includeRolesPredicate != null) roles = roles.Where(includeRolesPredicate).ToList();
+        if (includeRolesPredicate != null)
+            roles = roles!.Where(includeRolesPredicate).ToList();
 
         var excludeRolesPredicate = ExcludeRolesPredicate();
         l.A($"excludeRoles: {excludeRolesPredicate == null}");
-        if (excludeRolesPredicate != null) roles = roles.Where(excludeRolesPredicate).ToList();
+        if (excludeRolesPredicate != null)
+            roles = roles!.Where(excludeRolesPredicate).ToList();
 
         var result = _rolesFactory.Create(roles);
 
-        return (result, $"found {result.Count} roles");
-    });
+        return l.Return(result, $"found {result.Count} roles");
+    }
 
-    private Func<RoleDataRaw, bool> IncludeRolesPredicate()
+    private Func<UserRoleRaw, bool> IncludeRolesPredicate()
     {
         var includeRolesFilter = RolesCsvListToInt(RoleIds);
-        return includeRolesFilter.Any() 
-            ? (Func<RoleDataRaw, bool>) (r => includeRolesFilter.Contains(r.Id)) 
+        return includeRolesFilter.Any()
+            ? (Func<UserRoleRaw, bool>)(r => includeRolesFilter.Contains(r.Id))
             : null;
     }
 
-    private Func<RoleDataRaw, bool> ExcludeRolesPredicate()
+    private Func<UserRoleRaw, bool> ExcludeRolesPredicate()
     {
         var excludeRolesFilter = RolesCsvListToInt(ExcludeRoleIds);
         return excludeRolesFilter.Any()
-            ? (Func<RoleDataRaw, bool>)(r => !excludeRolesFilter.Contains(r.Id))
+            ? (Func<UserRoleRaw, bool>)(r => !excludeRolesFilter.Contains(r.Id))
             : null;
     }
 
     [PrivateApi]
     internal static List<int> RolesCsvListToInt(string stringList)
-    {
-        if (!stringList.HasValue()) return [];
-        return stringList.Split(Separator)
-            .Select(r => int.TryParse(r.Trim(), out var roleId) ? roleId : int.MinValue)
-            .Where(r => r != int.MinValue)
-            .ToList();
-    }
+        => !stringList.HasValue()
+            ? []
+            : stringList.Split(Separator)
+                .Select(r => int.TryParse(r.Trim(), out var roleId) ? roleId : int.MinValue)
+                .Where(r => r != int.MinValue)
+                .ToList();
 }

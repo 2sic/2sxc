@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Context.Internal.Raw;
 using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Models.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources;
@@ -12,11 +12,11 @@ namespace ToSic.Sxc.DataSources;
 /// </summary>
 public class MockUsersDataSource() : UsersDataSourceProvider("DS.MockUsers")
 {
-    public override IEnumerable<CmsUserRaw> GetUsersInternal() => Log.Func(l =>
+    public override IEnumerable<UserRaw> GetUsersInternal() => Log.Func(l =>
     {
         var siteId = 0;
         l.A($"Portal Id {siteId}");
-        var users = new List<CmsUserRaw>();
+        var users = new List<UserRaw>();
 
         l.A($"mock 3 super users and admins with one role [1-3]");
         for (var i = 1; i <= 3; i++)

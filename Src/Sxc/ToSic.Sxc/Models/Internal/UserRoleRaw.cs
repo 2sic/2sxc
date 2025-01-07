@@ -2,8 +2,9 @@
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
+using ToSic.Sxc.DataSources;
 
-namespace ToSic.Sxc.DataSources.Internal;
+namespace ToSic.Sxc.Models.Internal;
 
 /// <summary>
 /// Internal class to hold all the information about the role.
@@ -27,7 +28,7 @@ namespace ToSic.Sxc.DataSources.Internal;
     Description = "User-Role in the site",
     Name = TypeName
 )]
-public class RoleDataRaw: RawEntityBase, IRawEntity, IRole
+public class UserRoleRaw: RawEntityBase, IRawEntity, IRole, IUserRoleModel
 {
     internal const string TypeName = "Role";
 
@@ -44,8 +45,9 @@ public class RoleDataRaw: RawEntityBase, IRawEntity, IRole
     /// Data but without Id, Guid, Created, Modified
     /// </summary>
     [PrivateApi]
-    public override IDictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>
-    {
-        { nameof(Name), Name },
-    };
+    public override IDictionary<string, object> Attributes(RawConvertOptions options)
+        => new Dictionary<string, object>
+        {
+            { nameof(Name), Name },
+        };
 }

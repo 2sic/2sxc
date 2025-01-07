@@ -101,7 +101,7 @@ namespace ToSic.Sxc.Code.Internal.HotBuild
             HashRelevantFiles(files, hashAlgorithm);
             l.A("relevant files hashed");
 
-            hashAlgorithm.TransformFinalBlock(new byte[0], 0, 0); // Finalize the hash computation
+            hashAlgorithm.TransformFinalBlock([], 0, 0); // Finalize the hash computation
             l.A("finalized hash");
 
             return l.ReturnAsOk(hashAlgorithm.Hash);

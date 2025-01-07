@@ -1,14 +1,13 @@
 ﻿using System.Collections.Immutable;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data.Build;
-using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Source;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Services;
-using ToSic.Sxc.Context.Internal.Raw;
 using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Models.Internal;
 using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 
 // Important Info to people working with this
@@ -53,10 +52,10 @@ public partial class Users : CustomDataSourceAdvanced
     [Configuration]
     public string UserIds
     {
-        get => _userIds ?? Configuration.GetThis();
-        set => _userIds = value;
+        get => field ?? Configuration.GetThis();
+        set => field = value;
     }
-    private string _userIds;
+
     /// <summary>
     /// Optional exclude Users (single value or comma-separated guids or integers) filter,
     /// exclude users based on guid or id
@@ -64,10 +63,9 @@ public partial class Users : CustomDataSourceAdvanced
     [Configuration]
     public string ExcludeUserIds
     {
-        get => _excludeUserIds ?? Configuration.GetThis();
-        set => _excludeUserIds = value;
+        get => field ?? Configuration.GetThis();
+        set => field = value;
     }
-    private string _excludeUserIds;
 
     /// <summary>
     /// Optional IncludeRolesFilter (single value or comma-separated integers) filter,
@@ -76,10 +74,9 @@ public partial class Users : CustomDataSourceAdvanced
     [Configuration]
     public string RoleIds
     {
-        get => _roleIds ?? Configuration.GetThis();
-        set => _roleIds = value;
+        get => field ?? Configuration.GetThis();
+        set => field = value;
     }
-    private string _roleIds;
 
     /// <summary>
     /// Optional ExcludeRolesFilter (single value or comma-separated integers) filter,
@@ -88,10 +85,9 @@ public partial class Users : CustomDataSourceAdvanced
     [Configuration]
     public string ExcludeRoleIds
     {
-        get => _excludeRoleIds ?? Configuration.GetThis();
-        set => _excludeRoleIds = value;
+        get => field ?? Configuration.GetThis();
+        set => field = value;
     }
-    private string _excludeRoleIds;
 
     /// <summary>
     /// Optional SystemAdmins filter.
@@ -106,10 +102,9 @@ public partial class Users : CustomDataSourceAdvanced
     [Configuration]
     public string IncludeSystemAdmins
     {
-        get => _includeSystemAdmins ?? Configuration.GetThis();
-        set => _includeSystemAdmins = value;
+        get => field ?? Configuration.GetThis();
+        set => field = value;
     }
-    private string _includeSystemAdmins;
 
     private static readonly string IncludeRequired = "required";
     private static readonly string IncludeOptional = true.ToString();
@@ -138,16 +133,13 @@ public partial class Users : CustomDataSourceAdvanced
     /// Constructor to tell the system what out-streams we have
     /// </summary>
     [PrivateApi]
-    public Users(MyServices services,
-        UsersDataSourceProvider provider,
-        IDataFactory dataFactory,
-        IDataSourceGenerator<Roles> rolesGenerator) : base(services, "SDS.Users")
+    public Users(MyServices services, UsersDataSourceProvider provider, IDataFactory dataFactory, IDataSourceGenerator<Roles> rolesGenerator)
+        : base(services, "SDS.Users", connect: [provider, dataFactory, rolesGenerator])
     {
-        ConnectLogs([
-            _provider = provider,
-            _dataFactory = dataFactory,
-            _rolesGenerator = rolesGenerator
-        ]);
+        _provider = provider;
+        _dataFactory = dataFactory;
+        _rolesGenerator = rolesGenerator;
+
         ProvideOut(() => GetUsersAndRoles().Users); // default out, if accessed, will deliver GetList
         ProvideOut(() => GetUsersAndRoles().UserRoles, "Roles");
     }
@@ -155,10 +147,11 @@ public partial class Users : CustomDataSourceAdvanced
     #endregion
 
     [PrivateApi]
-    private (IImmutableList<IEntity> Users, IImmutableList<IEntity> UserRoles) GetUsersAndRoles() => Log.Func(l =>
+    private (IImmutableList<IEntity> Users, IImmutableList<IEntity> UserRoles) GetUsersAndRoles()
     {
+        var l = Log.Fn<(IImmutableList<IEntity> Users, IImmutableList<IEntity> UserRoles)>();
         if (_usersAndRolesCache != default) 
-            return (_usersAndRolesCache, "from cache");
+            return l.Return(_usersAndRolesCache, "from cache");
 
         // Always parse configuration first
         Configuration.Parse();
@@ -168,9 +161,11 @@ public partial class Users : CustomDataSourceAdvanced
 
         // Figure out options to be sure we have the roles/roleids
         var relationships = new LazyLookup<object, IEntity>();
-        var userFactory = _dataFactory.New(options: CmsUserRaw.Options,
+        var userFactory = _dataFactory.New(
+            options: UserRaw.Options,
             relationships: relationships,
-            rawConvertOptions: new(addKeys: new []{ "Roles"}));
+            rawConvertOptions: new(addKeys: ["Roles"])
+        );
 
         var users = userFactory.Create(usersRaw);
         var roles = EmptyList;
@@ -182,7 +177,7 @@ public partial class Users : CustomDataSourceAdvanced
                 // New...
                 roles = GetRolesStream(usersRaw);
                 relationships.Add(roles.Select(r =>
-                    new KeyValuePair<object, IEntity>($"{CmsUserRaw.RoleRelationshipPrefix}{r.EntityId}", r)));
+                    new KeyValuePair<object, IEntity>($"{UserRaw.RoleRelationshipPrefix}{r.EntityId}", r)));
             }
             catch (Exception ex)
             {
@@ -192,22 +187,30 @@ public partial class Users : CustomDataSourceAdvanced
             }
 
         _usersAndRolesCache = (users, roles);
-        return (_usersAndRolesCache, $"users {users.Count}; roles {roles.Count}");
-    });
+        return l.Return(_usersAndRolesCache, $"users {users.Count}; roles {roles.Count}");
+    }
 
     private (IImmutableList<IEntity> Users, IImmutableList<IEntity> UserRoles) _usersAndRolesCache;
 
 
-    private List<CmsUserRaw> GetUsersAndFilter() => Log.Func(l =>
+    private List<UserRaw> GetUsersAndFilter()
     {
+        var l = Log.Fn<List<UserRaw>>();
         var users = _provider.GetUsersInternal()?.ToList();
-        if (users == null || !users.Any()) return ([], "null/empty");
+        if (users == null || users.Count == 0)
+            return l.Return([], "null/empty");
 
-        foreach (var filter in GetAllFilters())
-            users = users.Where(filter).ToList();
+        var filters = GetAllFilters2();
+        var filtered = filters
+            .Aggregate(
+                users,
+                (current, filter) => current
+                    .Where(list => filter.Filter(list))
+                    .ToList()
+            );
 
-        return (users, $"found {users.Count}");
-    });
+        return l.Return(filtered, $"found {filtered.Count}");
+    }
 
 
     /// <summary>
@@ -215,10 +218,13 @@ public partial class Users : CustomDataSourceAdvanced
     /// </summary>
     /// <param name="usersRaw"></param>
     /// <returns></returns>
-    private ImmutableList<IEntity> GetRolesStream(List<CmsUserRaw> usersRaw)
+    private ImmutableList<IEntity> GetRolesStream(List<UserRaw> usersRaw)
     {
         // Get list of all role IDs which are to be used
-        var roleIds = usersRaw.SelectMany(u => u.Roles).Distinct().ToList();
+        var roleIds = usersRaw
+            .SelectMany(u => u.Roles)
+            .Distinct()
+            .ToList();
         // Get roles, use the current data source to provide aspects such as lookups etc.
         var rolesDs = _rolesGenerator.New(attach: this);
         // Set filter parameter to only get roles we'll need

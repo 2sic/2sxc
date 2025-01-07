@@ -19,14 +19,14 @@ internal class ToolbarBuilderUtilities
     /// <summary>
     /// Helper to process 'parameters' to url, ensuring lower-case etc. 
     /// </summary>
-    public ObjectToUrl Par2Url => _par2U.Get(() => new(null, new[] { new UrlValueCamelCase() }));
+    public ObjectToUrl Par2Url => _par2U.Get(() => new(null, [new UrlValueCamelCase()]));
     private readonly GetOnce<ObjectToUrl> _par2U = new();
 
 
     /// <summary>
     /// Helper to process 'filter' to url - should not change the case of the properties and auto-fix some special scenarios
     /// </summary>
-    public ObjectToUrl Filter2Url => _f2U.Get(() => new(null, new[] { new FilterValueProcessor() })
+    public ObjectToUrl Filter2Url => _f2U.Get(() => new(null, [new FilterValueProcessor()])
     {
         ArrayBoxStart = "[",
         ArrayBoxEnd = "]"
@@ -51,11 +51,10 @@ internal class ToolbarBuilderUtilities
 
     #region UI Processing
 
-    internal static ObjectToUrl GetUi2Url() => new(null, new UrlValueProcess[]
-    {
+    internal static ObjectToUrl GetUi2Url() => new(null, [
         new UrlValueCamelCase(),
         new UiValueProcessor()
-    });
+    ]);
 
 
     public string PrepareUi(
