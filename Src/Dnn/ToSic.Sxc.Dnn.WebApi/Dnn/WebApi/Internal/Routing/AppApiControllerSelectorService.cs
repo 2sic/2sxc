@@ -211,7 +211,7 @@ internal partial class AppApiControllerSelectorService(
             ?? throw l.Ex(new Exception($"Type '{typeName}' not found in assembly. Could be a compile error or name mismatch."));
 
         l.A($"Type found: '{type.Name}'");
-        return l.Return((new (Configuration, type.Name, type), cacheDependecyKeys: cacheDependencyKeys));
+        return l.Return((new (Configuration, type.Name, type), cacheDependencyKeys));
     }
 
     ///// <summary>
