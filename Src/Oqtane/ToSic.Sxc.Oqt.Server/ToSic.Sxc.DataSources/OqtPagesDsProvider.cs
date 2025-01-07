@@ -4,6 +4,7 @@ using Oqtane.Repository;
 using Oqtane.Security;
 using Oqtane.Shared;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Sxc.DataSources.Internal;
@@ -54,7 +55,7 @@ internal class OqtPagesDsProvider(
                 Id = p.PageId,
                 Guid = Guid.Empty,
                 ParentId = p.ParentId ?? NoParent,
-                Title = p.Title,
+                Title = p.Title.UseFallbackIfNoValue(p.Name),
                 Name = p.Name,
                 IsNavigation = p.IsNavigation,
                 Path = p.Path,

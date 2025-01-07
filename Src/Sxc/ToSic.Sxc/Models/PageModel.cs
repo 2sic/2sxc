@@ -17,6 +17,7 @@ namespace ToSic.Sxc.Models;
 /// * the previous internal implementation had a property called `Visible` which we finalized to `IsNavigation` to better clarify it purpose.
 /// * the previous internal implementation had a property called `Clickable` which we finalized to `IsClickable` to better clarify it purpose.
 /// </remarks>
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
 public class PageModel: DataModel, IPageModel
 {
     /// <inheritdoc />

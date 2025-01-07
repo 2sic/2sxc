@@ -108,13 +108,15 @@ public abstract partial class DataModel: IDataModelOf<IEntity>, IDataModelForTyp
     /// <typeparam name="T"></typeparam>
     /// <param name="item"></param>
     /// <returns></returns>
-    protected T As<T>(ITypedItem item)
+    protected T As<T>(object item)
         where T : class, IDataModel, new()
-        => CodeDataFactory.AsCustomFrom<T, ITypedItem>(item);
-
-    protected T As<T>(IEntity item)
-        where T : class, IDataModel, new()
-        => CodeDataFactory.AsCustomFrom<T, IEntity>(item);
+        => item switch
+        {
+            null => null,
+            ITypedItem typedItem => CodeDataFactory.AsCustomFrom<T, ITypedItem>(typedItem),
+            IEntity entity => CodeDataFactory.AsCustomFrom<T, IEntity>(entity),
+            _ => throw new($"Type {typeof(T).Name} not supported, only {typeof(IEntity)} and {nameof(ITypedItem)} are allowed as data"),
+        };
 
     /// <summary>
     /// Convert a list of Entities or TypedItems into a strongly typed list.
@@ -125,13 +127,15 @@ public abstract partial class DataModel: IDataModelOf<IEntity>, IDataModelForTyp
     /// <param name="protector"></param>
     /// <param name="nullIfNull"></param>
     /// <returns></returns>
-    protected IEnumerable<T> AsList<T>(IEnumerable<ITypedItem> source, NoParamOrder protector = default, bool nullIfNull = false)
+    protected IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = false)
         where T : class, IDataModel, new()
-        => (source ?? (nullIfNull ? null : []))?.Select(CodeDataFactory.AsCustomFrom<T, ITypedItem>).ToList();
-
-    protected IEnumerable<T> AsList<T>(IEnumerable<IEntity> source, NoParamOrder protector = default, bool nullIfNull = false)
-        where T : class, IDataModel, new()
-        => (source ?? (nullIfNull ? null : []))?.Select(CodeDataFactory.AsCustomFrom<T, IEntity>).ToList();
+        => source switch
+        {
+            null => (nullIfNull ? null : []),
+            IEnumerable<ITypedItem> typedItems => typedItems.Select(CodeDataFactory.AsCustomFrom<T, ITypedItem>).ToList(),
+            IEnumerable<IEntity> entities => entities.Select(CodeDataFactory.AsCustomFrom<T, IEntity>).ToList(),
+            _ => throw new($"Type {typeof(T).Name} not supported, only {typeof(IEntity)} and {nameof(ITypedItem)} are allowed as data"),
+        };
 
     #endregion
 

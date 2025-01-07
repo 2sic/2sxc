@@ -2,6 +2,7 @@
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Security.Permissions;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.DataSources.Internal;
 
@@ -63,14 +64,14 @@ internal class DnnPagesDsProvider() : PagesDataSourceProvider("Dnn.Pages")
                 {
                     Id = p.TabID,
                     Guid = p.UniqueId,
-                    Title = p.Title,
+                    Title = p.Title.UseFallbackIfNoValue(p.TabName),
                     Name = p.TabName,
                     ParentId = p.ParentId == DnnNoParent ? NoParent : p.ParentId,
                     Path = p.TabPath.FlattenMultipleForwardSlashes(),
                     Url = p.FullUrl.TrimLastSlash(),
                     Created = p.CreatedOnDate,
                     Modified = p.LastModifiedOnDate,
-                    IsNavigation = p.IsVisible,
+                    IsNavigation = p.IsVisible, // note: renamed in 19.01 to `IsNavigation` from `Visible`
 
                     // New 15.01
                     IsClickable = !p.DisableLink,
