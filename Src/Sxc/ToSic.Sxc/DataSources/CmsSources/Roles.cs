@@ -20,9 +20,9 @@ namespace ToSic.Sxc.DataSources;
 /// </summary>
 [PublicApi]
 [VisualQuery(
-    NiceName = "Roles (User Roles)",
+    NiceName = "User Roles",
     Icon = DataSourceIcons.UserCircled,
-    UiHint = "Roles in this site",
+    UiHint = "User Roles in this site",
     HelpLink = "https://go.2sxc.org/ds-roles",
     NameId = "eee54266-d7ad-4f5e-9422-2d00c8f93b45",
     Type = DataSourceType.Source,
@@ -95,12 +95,12 @@ public class Roles : CustomDataSourceAdvanced
         // This will resolve the tokens before starting
         Configuration.Parse();
 
-        var includeRolesPredicate = IncludeRolesPredicate();
+        var includeRolesPredicate = KeepRolesCondition();
         l.A($"includeRoles: {includeRolesPredicate == null}");
         if (includeRolesPredicate != null)
             roles = roles!.Where(includeRolesPredicate).ToList();
 
-        var excludeRolesPredicate = ExcludeRolesPredicate();
+        var excludeRolesPredicate = DropRolesCondition();
         l.A($"excludeRoles: {excludeRolesPredicate == null}");
         if (excludeRolesPredicate != null)
             roles = roles!.Where(excludeRolesPredicate).ToList();
@@ -110,19 +110,19 @@ public class Roles : CustomDataSourceAdvanced
         return l.Return(result, $"found {result.Count} roles");
     }
 
-    private Func<UserRoleRaw, bool> IncludeRolesPredicate()
+    private Func<UserRoleRaw, bool> KeepRolesCondition()
     {
         var includeRolesFilter = RolesCsvListToInt(RoleIds);
         return includeRolesFilter.Any()
-            ? (Func<UserRoleRaw, bool>)(r => includeRolesFilter.Contains(r.Id))
+            ? r => includeRolesFilter.Contains(r.Id)
             : null;
     }
 
-    private Func<UserRoleRaw, bool> ExcludeRolesPredicate()
+    private Func<UserRoleRaw, bool> DropRolesCondition()
     {
         var excludeRolesFilter = RolesCsvListToInt(ExcludeRoleIds);
         return excludeRolesFilter.Any()
-            ? (Func<UserRoleRaw, bool>)(r => !excludeRolesFilter.Contains(r.Id))
+            ? r => !excludeRolesFilter.Contains(r.Id)
             : null;
     }
 

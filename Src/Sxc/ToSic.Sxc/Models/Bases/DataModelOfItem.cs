@@ -8,6 +8,7 @@ namespace ToSic.Sxc.Models;
 
 /// <summary>
 /// Base class for **plain** custom data models and can be used in Razor Components.
+/// It wraps a <see cref="ITypedItem"/> and provides a simple way to access the data.
 /// 
 /// This is much lighter than the <see cref="CustomItem"/> which also wraps data, as it doesn't have any predefined properties and doesn't have the <see cref="ITypedItem"/> APIs.
 /// </summary>
@@ -102,37 +103,15 @@ public abstract partial class DataModelOfItem : IDataModelOf<ITypedItem>, IDataM
 
     #region As...
 
-    /// <summary>
-    /// Convert an Entity or TypedItem into a strongly typed object.
-    /// Typically, the type will be from your `AppCode.Data`.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="item"></param>
-    /// <returns></returns>
-    protected T As<T>(ITypedItem item)
+    /// <inheritdoc cref="DataModelHelpers.As{T}"/>
+    protected T As<T>(object item)
         where T : class, IDataModel, new()
-        => CodeDataFactory.AsCustomFrom<T, ITypedItem>(item);
+        => DataModelHelpers.As<T>(item);
 
-    protected T As<T>(IEntity item)
+    /// <inheritdoc cref="DataModelHelpers.AsList{T}"/>
+    protected IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = false)
         where T : class, IDataModel, new()
-        => CodeDataFactory.AsCustomFrom<T, IEntity>(item);
-
-    /// <summary>
-    /// Convert a list of Entities or TypedItems into a strongly typed list.
-    /// Typically, the type will be from your `AppCode.Data`.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="source"></param>
-    /// <param name="protector"></param>
-    /// <param name="nullIfNull"></param>
-    /// <returns></returns>
-    protected IEnumerable<T> AsList<T>(IEnumerable<ITypedItem> source, NoParamOrder protector = default, bool nullIfNull = false)
-        where T : class, IDataModel, new()
-        => (source ?? (nullIfNull ? null : []))?.Select(CodeDataFactory.AsCustomFrom<T, ITypedItem>).ToList();
-
-    protected IEnumerable<T> AsList<T>(IEnumerable<IEntity> source, NoParamOrder protector = default, bool nullIfNull = false)
-        where T : class, IDataModel, new()
-        => (source ?? (nullIfNull ? null : []))?.Select(CodeDataFactory.AsCustomFrom<T, IEntity>).ToList();
+        => DataModelHelpers.AsList<T>(source, protector, nullIfNull);
 
     #endregion
 

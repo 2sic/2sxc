@@ -6,7 +6,7 @@ using ToSic.Sxc.Engines;
 namespace ToSic.Sxc.Dnn.Features;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class DnnRequirements(IRequirementsService requirements) : EngineRequirementsBase(requirements, "Eng.DnnReq")
+public class DnnRequirements(IRequirementsService requirements) : EngineRequirementsBase("Eng.DnnReq", connect: [requirements])
 {
     internal bool RequirementsMet() 
         => !RequirementsStatus().SafeAny();

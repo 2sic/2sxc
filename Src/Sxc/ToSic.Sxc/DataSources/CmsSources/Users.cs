@@ -140,21 +140,18 @@ public partial class Users : CustomDataSourceAdvanced
         _dataFactory = dataFactory;
         _rolesGenerator = rolesGenerator;
 
-        ProvideOut(() => GetUsersAndRoles().Users); // default out, if accessed, will deliver GetList
-        ProvideOut(() => GetUsersAndRoles().UserRoles, "Roles");
+        ProvideOut(() => UsersAndRoles.Users); // default out, if accessed, will deliver GetList
+        ProvideOut(() => UsersAndRoles.UserRoles, "Roles");
     }
 
     #endregion
 
-    [PrivateApi]
-    private (IImmutableList<IEntity> Users, IImmutableList<IEntity> UserRoles) GetUsersAndRoles()
-    {
-        var l = Log.Fn<(IImmutableList<IEntity> Users, IImmutableList<IEntity> UserRoles)>();
-        if (_usersAndRolesCache != default) 
-            return l.Return(_usersAndRolesCache, "from cache");
+    private (IEnumerable<IEntity> Users, IEnumerable<IEntity> UserRoles) UsersAndRoles => _usersAndRoles ??= GetUsersAndRoles();
+    private (IEnumerable<IEntity> Users, IEnumerable<IEntity> UserRoles)? _usersAndRoles;
 
-        // Always parse configuration first
-        Configuration.Parse();
+    private (IEnumerable<IEntity> Users, IEnumerable<IEntity> UserRoles) GetUsersAndRoles()
+    {
+        var l = Log.Fn<(IEnumerable<IEntity> Users, IEnumerable<IEntity> UserRoles)>();
 
         // Get raw users from provider, then generate entities
         var usersRaw = GetUsersAndFilter();
@@ -164,34 +161,34 @@ public partial class Users : CustomDataSourceAdvanced
         var userFactory = _dataFactory.New(
             options: UserRaw.Options,
             relationships: relationships,
+            // Option to tell the entity conversion to add the "Roles" to each user
             rawConvertOptions: new(addKeys: ["Roles"])
         );
 
         var users = userFactory.Create(usersRaw);
-        var roles = EmptyList;
+        List<IEntity> roles = [];
 
         // If we should include the roles, create them now and attach
-        if (AddRoles)
-            try
-            {
-                // New...
-                roles = GetRolesStream(usersRaw);
-                relationships.Add(roles.Select(r =>
-                    new KeyValuePair<object, IEntity>($"{UserRaw.RoleRelationshipPrefix}{r.EntityId}", r)));
-            }
-            catch (Exception ex)
-            {
-                l.A("Error trying to add roles");
-                l.Ex(ex);
-                /* ignore for now */
-            }
+        if (!AddRoles)
+            return l.Return((users, []), $"users {users.Count}; no roles");
 
-        _usersAndRolesCache = (users, roles);
-        return l.Return(_usersAndRolesCache, $"users {users.Count}; roles {roles.Count}");
+        try
+        {
+            // Get roles and extend with the property necessary for Users to map to the roles
+            roles = GetRolesStream(usersRaw);
+            relationships.Add(roles.Select(r =>
+                new KeyValuePair<object, IEntity>($"{UserRaw.RoleRelationshipPrefix}{r.EntityId}", r)));
+            return l.Return((users, roles), $"users {users.Count}; roles {roles.Count}");
+        }
+        catch (Exception ex)
+        {
+            l.A("Error trying to add roles");
+            l.Ex(ex);
+            /* ignore for now */
+            return l.Return((users, roles), $"users {users.Count}; roles error: {roles.Count}");
+        }
+
     }
-
-    private (IImmutableList<IEntity> Users, IImmutableList<IEntity> UserRoles) _usersAndRolesCache;
-
 
     private List<UserRaw> GetUsersAndFilter()
     {
@@ -218,18 +215,21 @@ public partial class Users : CustomDataSourceAdvanced
     /// </summary>
     /// <param name="usersRaw"></param>
     /// <returns></returns>
-    private ImmutableList<IEntity> GetRolesStream(List<UserRaw> usersRaw)
+    private List<IEntity> GetRolesStream(List<UserRaw> usersRaw)
     {
         // Get list of all role IDs which are to be used
         var roleIds = usersRaw
             .SelectMany(u => u.Roles)
             .Distinct()
             .ToList();
+
         // Get roles, use the current data source to provide aspects such as lookups etc.
-        var rolesDs = _rolesGenerator.New(attach: this);
-        // Set filter parameter to only get roles we'll need
-        rolesDs.RoleIds = string.Join(",", roleIds);
-        var roles = rolesDs.List;
-        return roles.ToImmutableList();
+        var rolesDs = _rolesGenerator.New(attach: this, options: new DataSourceOptions.Converter().Create(null, new
+        {
+            // Set filter parameter to only get roles we'll need
+            RoleIds = string.Join(",", roleIds),
+        }));
+        
+        return rolesDs.List.ToList();
     }
 }
