@@ -22,7 +22,7 @@ namespace Custom.Data;
 /// ```c#
 /// namespace AppCode.Data
 /// {
-///   class MyPerson : CustomModel
+///   class MyPerson : CustomModelOfItem
 ///   {
 ///     public string Name => _item.String("Name");
 ///   }
@@ -44,7 +44,7 @@ namespace Custom.Data;
 /// - Released in v19.01 (BETA)
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change to CustomModelOfItem or something")]
-public abstract partial class CustomModel : IDataModelOf<ITypedItem>, IDataWrapperForType, ICanBeItem, ICanBeEntity //, IHasPropLookup
+public abstract partial class CustomModelOfItem : IDataModelOf<ITypedItem>, IDataWrapperForType, ICanBeItem, ICanBeEntity //, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
@@ -92,41 +92,35 @@ public abstract partial class CustomModel : IDataModelOf<ITypedItem>, IDataWrapp
     /// Override ToString to give more information about the current object
     /// </summary>
     public override string ToString() 
-        => $"{nameof(CustomModel)} Data Model {GetType().FullName} " + (Item == null ? "without backing data (null)" : $"for id:{Item.Id} ({Item})");
+        => $"{nameof(CustomModelOfItem)} Data Model {GetType().FullName} " + (Item == null ? "without backing data (null)" : $"for id:{Item.Id} ({Item})");
 
 
-    //#region As...
+    #region As...
 
-    ///// <summary>
-    ///// Convert an Entity or TypedItem into a strongly typed object.
-    ///// Typically, the type will be from your `AppCode.Data`.
-    ///// </summary>
-    ///// <typeparam name="T"></typeparam>
-    ///// <param name="item"></param>
-    ///// <returns></returns>
-    ///// <remarks>
-    ///// New in v17.03
-    ///// </remarks>
-    //protected T As<T>(ITypedItem item)
-    //    where T : class, ITypedItemWrapper16, ITypedItem, new()
-    //    => CodeDataFactory.AsCustomFromItem<T>(item);
+    /// <summary>
+    /// Convert an Entity or TypedItem into a strongly typed object.
+    /// Typically, the type will be from your `AppCode.Data`.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="item"></param>
+    /// <returns></returns>
+    protected T As<T>(ITypedItem item)
+        where T : class, IDataModel, new()
+        => CodeDataFactory.AsCustomFromItem<T>(item);
 
-    ///// <summary>
-    ///// Convert a list of Entities or TypedItems into a strongly typed list.
-    ///// Typically, the type will be from your `AppCode.Data`.
-    ///// </summary>
-    ///// <typeparam name="T"></typeparam>
-    ///// <param name="source"></param>
-    ///// <param name="protector"></param>
-    ///// <param name="nullIfNull"></param>
-    ///// <returns></returns>
-    ///// <remarks>
-    ///// New in v17.03
-    ///// </remarks>
-    //protected IEnumerable<T> AsList<T>(IEnumerable<ITypedItem> source, NoParamOrder protector = default, bool nullIfNull = false)
-    //    where T : class, ITypedItemWrapper16, ITypedItem, new()
-    //    => (source ?? (nullIfNull ? null : []))?.Select(CodeDataFactory.AsCustomFromItem<T>).ToList();
+    /// <summary>
+    /// Convert a list of Entities or TypedItems into a strongly typed list.
+    /// Typically, the type will be from your `AppCode.Data`.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source"></param>
+    /// <param name="protector"></param>
+    /// <param name="nullIfNull"></param>
+    /// <returns></returns>
+    protected IEnumerable<T> AsList<T>(IEnumerable<ITypedItem> source, NoParamOrder protector = default, bool nullIfNull = false)
+        where T : class, IDataModel, new()
+        => (source ?? (nullIfNull ? null : []))?.Select(CodeDataFactory.AsCustomFromItem<T>).ToList();
 
-    //#endregion
+    #endregion
 
 }

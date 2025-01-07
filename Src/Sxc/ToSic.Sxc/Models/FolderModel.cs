@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Models;
 /// * This is similar to the <see cref="IFolder"/> but still a bit different. For example, it has a <see cref="Folder"/> property.
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still tweaking details and naming v19.0x")]
-public class FolderModel: CustomModel, IFolderEntity
+public class FolderModel: CustomModelOfItem, IFolderEntity
 {
     ///// <inheritdoc cref="FileTyped.Id"/>
     //public int Id => ((ITypedItem)this).Id;
