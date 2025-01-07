@@ -28,10 +28,10 @@ partial class CodeDataFactory
         var newT = new TCustom();
 
         // Should be an ITypedItemWrapper, but not enforced in the signature
-        if (newT is ITypedItemWrapper wrapper)
-            wrapper.Setup(item);
+        if (newT is IDataModelOf<ITypedItem> ofTypedItem)
+            ofTypedItem.Setup(item);
         else
-            throw new($"The custom type {typeof(TCustom).Name} does not implement {nameof(ITypedItemWrapper)}. This is probably a mistake.");
+            throw new($"The custom type {typeof(TCustom).Name} does not implement {nameof(IDataModelOf<ITypedItem>)}. This is probably a mistake.");
         return newT;
     }
 

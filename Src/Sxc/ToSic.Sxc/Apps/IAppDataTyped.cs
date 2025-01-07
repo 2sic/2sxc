@@ -93,7 +93,7 @@ public interface IAppDataTyped: IDataSource
     /// Released in v17.03.
     /// </remarks>
     public T GetOne<T>(Guid id, NoParamOrder protector = default, bool skipTypeCheck = false)
-        where T : class, ITypedItemWrapper, ITypedItem, new();
+        where T : class, IDataModel, new();
 
     #endregion
 }

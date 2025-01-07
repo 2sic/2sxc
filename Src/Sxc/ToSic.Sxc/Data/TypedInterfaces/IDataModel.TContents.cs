@@ -11,7 +11,7 @@
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("may change or rename at any time")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public interface ITypedItemWrapper: IDataModel
+public interface IDataModelOf<in TContents>: IDataModel
 {
     /// <summary>
     /// Add the data to use for the wrapper.
@@ -21,5 +21,5 @@ public interface ITypedItemWrapper: IDataModel
     /// <param name="baseItem"></param>
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    void Setup(ITypedItem baseItem);
+    void Setup(TContents baseItem);
 }

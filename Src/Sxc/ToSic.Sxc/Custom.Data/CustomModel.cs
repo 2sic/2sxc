@@ -44,12 +44,11 @@ namespace Custom.Data;
 /// - Released in v19.01 (BETA)
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change to CustomModelOfItem or something")]
-public abstract partial class CustomModel : ITypedItemWrapper, IDataWrapperForType, ICanBeItem, ICanBeEntity //, IHasPropLookup
+public abstract partial class CustomModel : IDataModelOf<ITypedItem>, IDataWrapperForType, ICanBeItem, ICanBeEntity //, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
-    /// <inheritdoc />
-    void ITypedItemWrapper.Setup(ITypedItem baseItem)
+    void IDataModelOf<ITypedItem>.Setup(ITypedItem baseItem)
         => Item = baseItem;
 
     /// <inheritdoc />
@@ -70,7 +69,7 @@ public abstract partial class CustomModel : ITypedItemWrapper, IDataWrapperForTy
     ///
     /// It's an explicit interface implementation, so that the object itself doesn't broadcast this.
     /// </summary>
-    [ToSic.Lib.Documentation.PrivateApi]
+    [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     IEntity ICanBeEntity.Entity => Item.Entity;
 

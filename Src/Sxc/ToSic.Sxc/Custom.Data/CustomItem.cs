@@ -55,12 +55,12 @@ namespace Custom.Data;
 /// - It's not abstract, even if the most common case is to inherit, as there are cases where you want to use it directly.
 /// </remarks>
 [PublicApi]
-public partial class CustomItem: ITypedItem, ITypedItemWrapper, IDataWrapperForType, IHasPropLookup
+public partial class CustomItem: ITypedItem, IDataModelOf<ITypedItem>, IDataWrapperForType, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
-    /// <inheritdoc />
-    void ITypedItemWrapper.Setup(ITypedItem baseItem)
+
+    void IDataModelOf<ITypedItem>.Setup(ITypedItem baseItem)
         => _item = baseItem;
 
     /// <inheritdoc />
