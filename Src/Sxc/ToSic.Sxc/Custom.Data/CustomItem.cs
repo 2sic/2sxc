@@ -60,10 +60,12 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper, IHasPropLookup
     #region Explicit Interfaces for internal use - Setup, etc.
 
     /// <inheritdoc />
-    void ITypedItemWrapper.Setup(ITypedItem baseItem) => _item = baseItem;
+    void ITypedItemWrapper.Setup(ITypedItem baseItem)
+        => _item = baseItem;
 
     /// <inheritdoc />
-    string ITypedItemWrapper.ForContentType => GetType().Name;
+    string ITypedItemWrapper.ForContentType
+        => GetType().Name;
 
     /// <summary>
     /// The actual item which is being wrapped, in rare cases where you must access it.
@@ -71,7 +73,8 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper, IHasPropLookup
     /// It's only on the explicit interface, so it is not available from outside or inside, unless you cast to it.
     /// Goal is that inheriting classes don't access it to keep API surface small.
     /// </summary>
-    ITypedItem ICanBeItem.Item => _item;
+    ITypedItem ICanBeItem.Item
+        => _item;
 
     /// <summary>
     /// This is necessary so the object can be used in places where an IEntity is expected,
@@ -83,10 +86,11 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper, IHasPropLookup
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     IEntity ICanBeEntity.Entity => _item.Entity;
 
-    IBlock ICanBeItem.TryGetBlockContext() => _item.TryGetBlockContext();
+    IBlock ICanBeItem.TryGetBlockContext()
+        => _item.TryGetBlockContext();
 
-    IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= ((IHasPropLookup)((ICanBeItem)this).Item).PropertyLookup;
-    private IPropertyLookup _propLookup;
+    IPropertyLookup IHasPropLookup.PropertyLookup
+        => field ??= ((IHasPropLookup)((ICanBeItem)this).Item).PropertyLookup;
 
     #endregion
 
@@ -106,16 +110,19 @@ public partial class CustomItem: ITypedItem, ITypedItemWrapper, IHasPropLookup
     /// Override ToString to give more information about the current object
     /// </summary>
     public override string ToString() 
-        => $"{nameof(CustomItem)} Data Model {GetType().FullName} " + (_item == null ? "without backing data (null)" : $"for id:{Id} ({_item})");
+        => $"{nameof(CustomItem)} Data Model {GetType().FullName} "
+           + (_item == null ? "without backing data (null)" : $"for id:{Id} ({_item})");
 
 
     #region Keys and Empty-Checks
 
     /// <inheritdoc cref="IHasKeys.ContainsKey"/>
-    public bool ContainsKey(string name) => ((IHasKeys)_item).ContainsKey(name);
+    public bool ContainsKey(string name)
+        => ((IHasKeys)_item).ContainsKey(name);
 
     /// <inheritdoc cref="IHasKeys.Keys"/>
-    public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default) => _item.Keys(noParamOrder, only);
+    public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default)
+        => _item.Keys(noParamOrder, only);
 
     /// <inheritdoc cref="IHasKeys.IsEmpty"/>
     public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
