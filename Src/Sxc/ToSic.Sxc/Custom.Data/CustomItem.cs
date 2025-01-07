@@ -8,6 +8,7 @@ using ToSic.Sxc.Cms.Data;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Models;
 using ToSic.Sxc.Services.Tweaks;
 
 // ReSharper disable once CheckNamespace
@@ -55,7 +56,7 @@ namespace Custom.Data;
 /// - It's not abstract, even if the most common case is to inherit, as there are cases where you want to use it directly.
 /// </remarks>
 [PublicApi]
-public partial class CustomItem: ITypedItem, IDataModelOf<ITypedItem>, IDataWrapperForType, IHasPropLookup
+public partial class CustomItem: ITypedItem, IDataModelOf<ITypedItem>, IDataModelForType, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
@@ -64,7 +65,7 @@ public partial class CustomItem: ITypedItem, IDataModelOf<ITypedItem>, IDataWrap
         => _item = baseItem;
 
     /// <inheritdoc />
-    string IDataWrapperForType.ForContentType
+    string IDataModelForType.ForContentType
         => GetType().Name;
 
     /// <summary>

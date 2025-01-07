@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Data;
+
+namespace ToSic.Sxc.Models;
 
 /// <summary>
 /// Interface to mark objects which can receive data such as <see cref="IEntity"/> or <see cref="ITypedItem"/> objects and wrap them.
@@ -11,7 +13,7 @@
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("may change or rename at any time")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public interface IDataWrapperForType: IDataModel
+public interface IDataModelForType: IDataModel
 {
     /// <summary>
     /// Internal functionality, so the object can declare what content Type it's for.

@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Apps.Assets.Internal;
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Models.Internal;
 
 namespace ToSic.Sxc.Models;
 
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.Models;
 /// * This is similar to the <see cref="Adam.IFile"/> but still a bit different. For example, it has a <see cref="Folder"/> property which is different from the <see cref="ToSic.Eav.Apps.Assets.IFile.Folder"/> property.
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still tweaking details and naming v19.0x")]
-public class FileModel: DataModel, IFileEntity
+public class FileModel: DataModel, IFileModel
 {
     ///// <summary>
     ///// The ID of this asset (file/folder).
@@ -41,14 +42,14 @@ public class FileModel: DataModel, IFileEntity
     /// Reference to the folder this file is in.
     /// Returns `null` on the root folder.
     /// </summary>
-    public FolderModel Folder => As<FolderModel>(_entity.Entity.Children(field: nameof(Folder)).FirstOrDefault());
+    public FolderModel Folder => As<FolderModel>(_entity.Children(field: nameof(Folder)).FirstOrDefault());
 
     /// <inheritdoc />
     public int Size => _entity.Get<int>(nameof(Size));
 
     public ISizeInfo SizeInfo => field ??= new SizeInfo(Size);
 
-    /// <inheritdoc cref="IFileEntity.Url" />
+    /// <inheritdoc cref="IFileModel.Url" />
     public string Url => _entity.Get<string>(nameof(Url));
 
     /// <inheritdoc />

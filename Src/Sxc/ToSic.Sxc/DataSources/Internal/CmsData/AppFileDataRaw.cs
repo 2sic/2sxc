@@ -3,6 +3,7 @@ using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Apps.Internal.Assets;
+using ToSic.Sxc.Models.Internal;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
@@ -21,24 +22,27 @@ namespace ToSic.Sxc.DataSources.Internal;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 [ContentTypeSpecs(
     Guid = "3cf0822f-d276-469a-bbd1-cc84fd6ff748",
-    Description = "File in an App"
+    Description = "File in an App",
+    Name = TypeName
 )]
-public record AppFileDataRaw: AppFileDataRawBase, IFileEntity
+public record AppFileDataRaw: AppFileDataRawBase, IFileModel
 {
+    internal const string TypeName = "File";
+
     internal static DataFactoryOptions Options = new()
     {
-        TypeName = "File",
+        TypeName = TypeName,
         TitleField = nameof(Path)
     };
 
-    /// <inheritdoc cref="IFileEntity.Name"/>
+    /// <inheritdoc cref="IFileModel.Name"/>
     [ContentTypeAttributeSpecs(Description = "The file name without extension, like my-image")]
     public override string Name { get; init; }
 
-    /// <inheritdoc cref="IFileEntity.Extension"/>
+    /// <inheritdoc cref="IFileModel.Extension"/>
     public string Extension { get; init; }
 
-    /// <inheritdoc cref="IFileEntity.Size"/>
+    /// <inheritdoc cref="IFileModel.Size"/>
     public int Size { get; init; }
 
     /// <summary>

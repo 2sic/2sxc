@@ -2,6 +2,7 @@
 using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Models.Internal;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
@@ -20,17 +21,20 @@ namespace ToSic.Sxc.DataSources.Internal;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 [ContentTypeSpecs(
     Guid = "96cda931-b677-4589-9eb2-df5a38cefff0",
-    Description = "Folder in an App"
+    Description = "Folder in an App",
+    Name = TypeName
 )]
-public record AppFolderDataRaw: AppFileDataRawBase, IFolderEntity
+public record AppFolderDataRaw: AppFileDataRawBase, IFolderModel
 {
+    internal const string TypeName = "Folder";
+
     internal static DataFactoryOptions Options = new()
     {
-        TypeName = "Folder",
+        TypeName = TypeName,
         TitleField = nameof(Path)
     };
 
-    /// <inheritdoc cref="IFolderEntity.Name"/>
+    /// <inheritdoc cref="IFolderModel.Name"/>
     [ContentTypeAttributeSpecs(Description = "The folder name or blank when it's the root.")]
     public override string Name { get; init; }
 

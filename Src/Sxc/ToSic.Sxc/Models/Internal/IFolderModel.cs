@@ -1,27 +1,15 @@
-﻿namespace ToSic.Sxc.Adam.Internal;
+﻿namespace ToSic.Sxc.Models.Internal;
 
-internal interface IFileEntity
+internal interface IFolderModel
 {
     /// <summary>
-    /// The file name without extension.
+    /// The folder name - or blank when it's the root.
     /// </summary>
     string Name { get; }
 
     /// <summary>
-    /// The file name extension, without any dot.
-    /// Purpose is to do switching between extensions.
-    /// If you want to have a safe, merged file name, just take the `FullName`.
-    /// </summary>
-    string Extension { get; }
-
-    /// <summary>
-    /// The size in bytes.
-    /// </summary>
-    int Size { get; }
-
-    /// <summary>
     /// The full name with extension.
-    /// If it's a folder or there is no extension, then it's identical to the <see cref="Name"/>
+    /// If it's a folder or there is no extension, then it's identical to the `Name`
     /// </summary>
     string FullName { get; }
 

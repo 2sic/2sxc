@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using ToSic.Sxc.Data.Internal.Typed;
+using ToSic.Sxc.Models;
 
 namespace ToSic.Sxc.Data.Internal;
 
@@ -73,13 +74,13 @@ partial class CodeDataFactory
 
     /// <summary>
     /// Figure out the expected ContentTypeName of a DataWrapper type.
-    /// If it implements <see cref="IDataWrapperForType"/> then use the information it provides, otherwise
+    /// If it implements <see cref="IDataModelForType"/> then use the information it provides, otherwise
     /// use the type name.
     /// </summary>
     /// <typeparam name="TResult"></typeparam>
     /// <returns></returns>
     internal static string GetContentTypeName<TResult>() where TResult : IDataModel, new()
-        => (new TResult() as IDataWrapperForType)?.ForContentType
+        => (new TResult() as IDataModelForType)?.ForContentType
            ?? typeof(TResult).Name;
 
 

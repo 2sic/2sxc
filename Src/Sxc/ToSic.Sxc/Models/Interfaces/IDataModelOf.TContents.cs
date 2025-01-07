@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Data;
+
+namespace ToSic.Sxc.Models;
 
 /// <summary>
 /// Interface to mark objects which can receive <see cref="ITypedItem"/> objects and wrap them.

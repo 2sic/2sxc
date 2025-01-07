@@ -19,6 +19,7 @@ using ToSic.Lib.Coding;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Internal;
+using ToSic.Sxc.Models;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
