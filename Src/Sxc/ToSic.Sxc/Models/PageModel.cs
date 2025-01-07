@@ -12,6 +12,10 @@ namespace ToSic.Sxc.Models;
 /// * [Oqtane Page](https://docs.oqtane.org/api/Oqtane.Models.Page.html)
 /// 
 /// </summary>
+/// <remarks>
+/// * Released v19.01
+/// * Note that previous internal implementation had a property called `Visible` which we finalized to `IsNavigation` to better clarify it's purpose.
+/// </remarks>
 public class PageModel: DataModel, IPageModel
 {
     /// <inheritdoc />

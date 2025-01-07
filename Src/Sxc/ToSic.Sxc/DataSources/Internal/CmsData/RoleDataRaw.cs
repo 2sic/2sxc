@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
 
 namespace ToSic.Sxc.DataSources.Internal;
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.DataSources.Internal;
 /// * TODO:
 /// * TODO:
 /// Important: this is an internal object.
-/// We're just including in in the docs to better understand where the properties come from.
+/// We're just including in the docs to better understand where the properties come from.
 /// We'll probably move it to another namespace some day.
 /// </summary>
 /// <remarks>
@@ -21,10 +22,14 @@ namespace ToSic.Sxc.DataSources.Internal;
 /// </remarks>
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ContentTypeSpecs(
+    Guid = "dc104414-e61a-4a59-bda8-455772ceb0cc",
+    Description = "User-Role in the site",
+    Name = TypeName
+)]
 public class RoleDataRaw: RawEntityBase, IRawEntity, IRole
 {
-    internal static string TypeName = "Role";
-    //internal static string TitleFieldName = nameof(Name);
+    internal const string TypeName = "Role";
 
     internal static DataFactoryOptions Options = new()
     {
@@ -33,7 +38,7 @@ public class RoleDataRaw: RawEntityBase, IRawEntity, IRole
         TitleField = nameof(Name),
     };
 
-    public string Name { get; set; }
+    public string Name { get; init; }
 
     /// <summary>
     /// Data but without Id, Guid, Created, Modified

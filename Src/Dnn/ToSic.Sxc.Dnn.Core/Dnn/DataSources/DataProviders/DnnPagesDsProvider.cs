@@ -9,13 +9,10 @@ using ToSic.Sxc.DataSources.Internal;
 namespace ToSic.Sxc.DataSources;
 
 [PrivateApi]
-internal class DnnPagesDsProvider: PagesDataSourceProvider
+internal class DnnPagesDsProvider() : PagesDataSourceProvider("Dnn.Pages")
 {
     private const int DnnNoParent = -1;
     private const int DnnLevelOffset = 1;
-    public DnnPagesDsProvider() : base("Dnn.Pages")
-    {
-    }
 
 
     public override List<PageDataRaw> GetPagesInternal(
@@ -47,15 +44,19 @@ internal class DnnPagesDsProvider: PagesDataSourceProvider
 
         try
         {
-            var filteredPages = (IEnumerable<TabInfo>)pages;
+            IEnumerable<TabInfo> filtered = pages;
 
             // Apply filters as needed
-            if (!includeAdmin) filteredPages = filteredPages.Where(x => !x.IsSystem);
-            if (!includeSystem) filteredPages = filteredPages.Where(x => !x.IsSuperTab);
-            if (requireViewPermissions) filteredPages = filteredPages.Where(TabPermissionController.CanViewPage);
-            if (requireEditPermissions) filteredPages = filteredPages.Where(TabPermissionController.CanAdminPage);
+            if (!includeAdmin)
+                filtered = filtered.Where(x => !x.IsSystem);
+            if (!includeSystem)
+                filtered = filtered.Where(x => !x.IsSuperTab);
+            if (requireViewPermissions)
+                filtered = filtered.Where(TabPermissionController.CanViewPage);
+            if (requireEditPermissions)
+                filtered = filtered.Where(TabPermissionController.CanAdminPage);
 
-            var final = filteredPages.ToList();
+            var final = filtered.ToList();
 
             var result = final
                 .Select(p => new PageDataRaw
@@ -65,7 +66,7 @@ internal class DnnPagesDsProvider: PagesDataSourceProvider
                     Title = p.Title,
                     Name = p.TabName,
                     ParentId = p.ParentId == DnnNoParent ? NoParent : p.ParentId,
-                    Path = p.TabPath,
+                    Path = p.TabPath.FlattenMultipleForwardSlashes(),
                     Url = p.FullUrl.TrimLastSlash(),
                     Created = p.CreatedOnDate,
                     Modified = p.LastModifiedOnDate,

@@ -118,19 +118,20 @@ public class Pages: CustomDataSourceAdvanced
     #region Constructor
 
     [PrivateApi]
-    public Pages(MyServices services, PagesDataSourceProvider provider, IDataFactory dataFactory, ITreeMapper treeMapper) : base(services, "CDS.Pages")
+    public Pages(MyServices services, PagesDataSourceProvider provider, IDataFactory dataFactory, ITreeMapper treeMapper)
+        : base(services, "CDS.Pages", connect: [provider, dataFactory, treeMapper])
     {
-        ConnectLogs([
-            _provider = provider,
-            _pageFactory = dataFactory.New(options: PageDataRaw.Option),
-            _treeMapper = treeMapper
-        ]);
+        _provider = provider;
+        _pageFactory = dataFactory.New(options: PageDataRaw.Option);
+        _treeMapper = treeMapper;
+
         ProvideOut(GetPages);
     }
     #endregion
 
-    private IImmutableList<IEntity> GetPages() => Log.Func(l =>
+    private IImmutableList<IEntity> GetPages()
     {
+        var l = Log.Fn<IImmutableList<IEntity>>();
         Configuration.Parse();
 
         // Get pages from underlying system/provider
@@ -143,8 +144,8 @@ public class Pages: CustomDataSourceAdvanced
             requireViewPermissions: RequireViewPermissions,
             requireEditPermissions: RequireEditPermissions
         );
-        if (pagesFromSystem == null || !pagesFromSystem.Any())
-            return (EmptyList, "null/empty");
+        if (pagesFromSystem == null || pagesFromSystem.Count == 0)
+            return l.Return(EmptyList, "null/empty");
 
         // Convert to Entity-Stream
         var pages = _pageFactory.Create(pagesFromSystem);
@@ -153,12 +154,12 @@ public class Pages: CustomDataSourceAdvanced
         try
         {
             var asTree = _treeMapper.AddParentChild(pages, Attributes.EntityIdPascalCase, "ParentId");
-            return (asTree, $"As Tree: {asTree.Count}");
+            return l.Return(asTree, $"As Tree: {asTree.Count}");
         }
         catch (Exception ex)
         {
             l.Ex(ex);
-            return (pages, $"Just pages (tree had error): {pages.Count}");
+            return l.Return(pages, $"Just pages (tree had error): {pages.Count}");
         }
-    });
+    }
 }

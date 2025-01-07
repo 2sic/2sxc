@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using ToSic.Eav.Data.Build;
+﻿using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
+using ToSic.Sxc.Models.Internal;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.DataSources.Internal;
 /// * [Oqtane Page](https://docs.oqtane.org/api/Oqtane.Models.Page.html)
 /// 
 /// Important: this is an internal object.
-/// We're just including in in the docs to better understand where the properties come from.
+/// We're just including in the docs to better understand where the properties come from.
 /// We'll probably move it to another namespace some day.
 /// </summary>
 /// <remarks>
@@ -22,176 +23,79 @@ namespace ToSic.Sxc.DataSources.Internal;
 /// </remarks>
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class PageDataRaw: IRawEntity
+[ContentTypeSpecs(
+    Guid = "c648a91d-b650-42bf-ad6a-9582015c165e",
+    Description = "Page in the site",
+    Name = TypeName
+)]
+public class PageDataRaw: IRawEntity, IPageModel
 {
     private const string TypeName = "Page";
 
     public static DataFactoryOptions Option = new()
     {
         TypeName = TypeName,
-        TitleField = nameof(Name)
+        TitleField = nameof(Title)
     };
 
-    /// <summary>
-    /// The page ID.
-    ///
-    /// * In Dnn it's from `TabInfo.TabID`
-    /// * In Oqtane it's `Page.PageId`
-    /// </summary>
-    public int Id { get; set; }
+    /// <inheritdoc cref="IPageModel.Id"/>
+    public int Id { get; init; }
+
+    /// <inheritdoc />
+    public int ParentId { get; init; }
+
+    /// <inheritdoc cref="IPageModel.Guid"/>
+    public Guid Guid { get; init; }
+
+    /// <inheritdoc cref="IPageModel.Title"/>
+    public string Title { get; init; }
+
+    /// <inheritdoc />
+    public string Name { get; init; }
+
+    /// <inheritdoc />
+    public bool Clickable { get; init; }
+
+
+    /// <inheritdoc />
+    public int Order { get; init; }
+
+    /// <inheritdoc />
+    public bool Visible { get; init; }
+
+    /// <inheritdoc />
+    public bool HasChildren { get; init; }
+
+    /// <inheritdoc />
+    public int Level { get; init; }
+
+    /// <inheritdoc />
+    public string LinkTarget { get; init; }
+
+
+    /// <inheritdoc />
+    public string Path { get; init; }
+
+    /// <inheritdoc />
+    public string Url { get; init; }
+
+    /// <inheritdoc cref="IPageModel.Created" />
+    public DateTime Created { get; init; }
+
+    /// <inheritdoc cref="IPageModel.Modified" />
+    public DateTime Modified { get; init; }
+
+    /// <inheritdoc />
+    public bool IsDeleted { get; init; }
 
     /// <summary>
-    /// The parent page ID.
-    ///
-    /// It's usually `0` if it's a top level page.
-    ///
-    /// * In Dnn it's from `TabInfo.ParentId`
-    /// * in Oqtane it's from `Page.ParentId`
-    /// </summary>
-    public int ParentId { get; set; }
-
-    /// <summary>
-    /// The page GUID.
-    ///
-    /// * In Dnn it's from `TabInfo.UniqueId`
-    /// * In Oqtane it's `Guid.Empty` as Oqtane doesn't have page GUIDs
-    /// </summary>
-    public Guid Guid { get; set; }
-
-    /// <summary>
-    /// The page title.
-    ///
-    /// * In Dnn it's from `TabInfo.Title`
-    /// * in Oqtane it's from `Page.Title`
-    /// </summary>
-    public string Title { get; set; }
-
-    /// <summary>
-    /// The page name.
-    ///
-    /// * In Dnn it's from `TabInfo.Name`
-    /// * in Oqtane it's from `Page.Name`
-    /// </summary>
-    public string Name { get; set; }
-
-    /// <summary>
-    /// Determines if this item is clickable in the menu.
-    ///
-    /// * In Dnn it's from `!TabInfo.DisableLink`
-    /// * in Oqtane it's from `Page.IsClickable`
-    /// </summary>
-    /// <remarks>
-    /// Added in v15.01
-    /// </remarks>
-    public bool Clickable { get; set; }
-
-
-    /// <summary>
-    /// Order of this item in a menu.
-    /// It is 1 based, so the first item has Order 1.
-    ///
-    /// * In Dnn it's from `TabInfo.TabOrder`
-    /// * in Oqtane it's from `Page.Order`
-    /// </summary>
-    /// <remarks>
-    /// Added in v15.01
-    /// </remarks>
-    public int Order { get; set; }
-
-    /// <summary>
-    /// The page visibility - if it should be shown in the menu.
-    ///
-    /// * In Dnn it's from `TabInfo.IsVisible`
-    /// * in Oqtane it's from `Page.IsNavigation`
-    /// </summary>
-    public bool Visible { get; set; }
-
-    /// <summary>
-    /// Info if the page has sub-pages. 
-    ///
-    /// * In Dnn it's from `TabInfo.HasChildren`
-    /// * in Oqtane it's from `Page.HasChildren`
-    /// </summary>
-    /// <remarks>
-    /// Added in v15.01
-    /// </remarks>
-    public bool HasChildren { get; set; }
-
-    /// <summary>
-    /// How deep this page is in the breadcrumb.
-    /// The number is 1 based, so the top level is 1.
-    ///
-    /// * In Dnn it's from `TabInfo.Level` (+1)
-    /// * in Oqtane it's from `Page.Level` (+1)
-    /// </summary>
-    /// <remarks>
-    /// Added in v15.01
-    /// </remarks>
-    public int Level { get; set; }
-
-    /// <summary>
-    /// WIP
-    /// * In Dnn it's from `TabInfo.TabSettings["LinkNewWindow"]`and will be either `_blank` or `` (empty string)
-    /// * In Oqtane it's _not implemented_ an will be an empty string
-    /// </summary>
-    /// <remarks>
-    /// Added in v15.02
-    /// </remarks>
-    public string LinkTarget { get; set; }
-
-
-    /// <summary>
-    /// The path with slashes to this page.
-    /// 
-    /// * In Dnn it's from `TabInfo.TabPath`
-    /// * in Oqtane it's from `Page.Path`
-    /// </summary>
-    public string Path { get; set; }
-
-    /// <summary>
-    /// The public url to this page (without any trailing slashes)
-    ///
-    /// * In Dnn it's from `TabInf.FullUrl` (last slash removed)
-    /// * in Oqtane it's a combination of protocol, site-alias and path
-    /// </summary>
-    public string Url { get; set; }
-
-    /// <summary>
-    /// The page creation date/time.
-    ///
-    /// * In Dnn it's from `TabInfo.CreatedOnDate`
-    /// * in Oqtane it's from `Page.CreatedOn`
-    /// </summary>
-    public DateTime Created { get; set; }
-
-    /// <summary>
-    /// The page modification date/time.
-    ///
-    /// * In Dnn it's from `TabInfo.LastModifiedOnDate`
-    /// * in Oqtane it's from `Page.ModifiedOn`
-    /// </summary>
-    public DateTime Modified { get; set; }
-
-    /// <summary>
-    /// The page delete-status.
-    /// Normally you will only see not-deleted pages, so it should usually be false.
-    ///
-    /// * In Dnn it's from `TabInfo.IsDeleted`
-    /// * in Oqtane it's from `Page.IsDeleted`
-    /// </summary>
-    /// <remarks>
-    /// Added in v15.01
-    /// </remarks>
-    public bool IsDeleted { get; set; }
-
-    /// <summary>
-    /// Data but without Id, Guid, Created, Modified
+    /// Data without ID, Guid, Created, Modified
     /// </summary>
     [PrivateApi]
     public IDictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>
     {
         // v14+
-        { Eav.Data.Attributes.TitleNiceName, Title },
+        { nameof(Title), Title },
         { nameof(Name), Name },
         { nameof(ParentId), ParentId },
         { nameof(Visible), Visible },

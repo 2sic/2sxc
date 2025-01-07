@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
 
 namespace ToSic.Sxc.DataSources.Internal;
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.DataSources.Internal;
 /// * [Oqtane Site](TODO:https://docs.oqtane.org/api/Oqtane.Models.Sites.html)
 /// 
 /// Important: this is an internal object.
-/// We're just including in in the docs to better understand where the properties come from.
+/// We're just including in the docs to better understand where the properties come from.
 /// We'll probably move it to another namespace some day.
 /// </summary>
 /// <remarks>
@@ -21,9 +22,14 @@ namespace ToSic.Sxc.DataSources.Internal;
 /// </remarks>
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ContentTypeSpecs(
+    Guid = "89ef9f2c-98d3-42e9-a190-b9b3fc814284",
+    Description = "User-Role in the site",
+    Name = TypeName
+)]
 public class SiteDataRaw: IRawEntity
 {
-    internal static string TypeName = "Site";
+    internal const string TypeName = "Site";
 
     internal static DataFactoryOptions Options => new()
     {
@@ -38,7 +44,7 @@ public class SiteDataRaw: IRawEntity
     /// * In Dnn it's from `PortalInfo.PortalID`
     /// * In Oqtane it's `Site.SiteId`
     /// </summary>
-    public int Id { get; set; }
+    public int Id { get; init; }
 
     /// <summary>
     /// The site GUID.
@@ -46,7 +52,7 @@ public class SiteDataRaw: IRawEntity
     /// * In Dnn it's from `PortalInfo.GUID`
     /// * In Oqtane it's `Guid.Empty` as Oqtane doesn't have site GUIDs
     /// </summary>
-    public Guid Guid { get; set; }
+    public Guid Guid { get; init; }
 
     /// <summary>
     /// The site name.
@@ -54,7 +60,7 @@ public class SiteDataRaw: IRawEntity
     /// * In Dnn it's from `PageInfo.PortalName`
     /// * in Oqtane it's from `Site.Name`
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; init; }
 
     /// <summary>
     /// The public url to this site (without any trailing slashes)
@@ -62,14 +68,14 @@ public class SiteDataRaw: IRawEntity
     /// * In Dnn it's from `PortalAliasInfo.FullUrl` (last slash removed)
     /// * in Oqtane it's a combination of protocol, site-alias and path
     /// </summary>
-    public string Url { get; set; }
+    public string Url { get; init; }
 
 
     /// <summary>
     /// The site languages, comma separated.
     /// Can be empty ever if a <see cref="DefaultLanguage"/> is set, if the site itself is not multi-language.
     /// </summary>
-    public string Languages { get; set; }
+    public string Languages { get; init; }
 
 
     /// <summary>
@@ -78,7 +84,7 @@ public class SiteDataRaw: IRawEntity
     /// * In Dnn it's from `PortalInfo.CultureCode`
     /// * in Oqtane it's from `Site.CultureCode`
     /// </summary>
-    public string DefaultLanguage { get; set; }
+    public string DefaultLanguage { get; init; }
 
     // 2023-02-13 2dm disabled this. It's a very exotic property, don't think it should be in the normal data source
     ///// <summary>
@@ -95,7 +101,7 @@ public class SiteDataRaw: IRawEntity
     /// * In Dnn it's from `PortalInfo.CreatedOnDate`
     /// * in Oqtane it's from `Site.CreatedOn`
     /// </summary>
-    public DateTime Created { get; set; }
+    public DateTime Created { get; init; }
 
     /// <summary>
     /// The site modification date/time.
@@ -103,20 +109,20 @@ public class SiteDataRaw: IRawEntity
     /// * In Dnn it's from `PortalInfo.LastModifiedOnDate`
     /// * in Oqtane it's from `Site.ModifiedOn`
     /// </summary>
-    public DateTime Modified { get; set; }
+    public DateTime Modified { get; init; }
 
 
-    public int ZoneId { get; set; }
+    public int ZoneId { get; init; }
 
     /// <summary>
     /// The Content App.
     /// </summary>
-    public int ContentAppId { get; set; }
+    public int ContentAppId { get; init; }
 
     /// <summary>
     /// The (technical) primary App, which contains things such as site metadata.
     /// </summary>
-    public int PrimaryAppId { get; set; }
+    public int PrimaryAppId { get; init; }
 
     /// <summary>
     /// Data but without Id, Guid, Created, Modified
