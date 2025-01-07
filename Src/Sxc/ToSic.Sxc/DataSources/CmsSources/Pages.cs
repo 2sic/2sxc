@@ -144,22 +144,24 @@ public class Pages: CustomDataSourceAdvanced
             requireViewPermissions: RequireViewPermissions,
             requireEditPermissions: RequireEditPermissions
         );
+
         if (pagesFromSystem == null || pagesFromSystem.Count == 0)
             return l.Return(EmptyList, "null/empty");
 
         // Convert to Entity-Stream
         var pages = _pageFactory.Create(pagesFromSystem);
 
-        // Try to add Navigation properties
-        try
-        {
-            var asTree = _treeMapper.AddParentChild(pages, Attributes.EntityIdPascalCase, "ParentId");
-            return l.Return(asTree, $"As Tree: {asTree.Count}");
-        }
-        catch (Exception ex)
-        {
-            l.Ex(ex);
-            return l.Return(pages, $"Just pages (tree had error): {pages.Count}");
-        }
+        return l.Return(pages, $"{pages.Count}");
+        //// Try to add Navigation properties
+        //try
+        //{
+        //    var asTree = _treeMapper.AddParentChild(pages, Attributes.EntityIdPascalCase, "ParentId");
+        //    return l.Return(asTree, $"As Tree: {asTree.Count}");
+        //}
+        //catch (Exception ex)
+        //{
+        //    l.Ex(ex);
+        //    return l.Return(pages, $"Just pages (tree had error): {pages.Count}");
+        //}
     }
 }

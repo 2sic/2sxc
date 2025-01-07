@@ -7,7 +7,7 @@ namespace ToSic.Sxc.DataSources.Internal;
 
 /// <summary>
 /// Internal class to hold all the information about the page,
-/// until it's converted to an IEntity in the <see cref="Pages"/> DataSource.
+/// until it's converted to an IEntity in the <see cref="DataSources.Pages"/> DataSource.
 ///
 /// For detailed documentation, check the docs of the underlying objects:
 ///
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.DataSources.Internal;
     Description = "Page in the site",
     Name = TypeName
 )]
-public class PageDataRaw: IRawEntity, IPageModel
+public class PageDataRaw: IRawEntity, IPageModel, IHasRelationshipKeys
 {
     private const string TypeName = "Page";
 
@@ -88,6 +88,9 @@ public class PageDataRaw: IRawEntity, IPageModel
     /// <inheritdoc />
     public bool IsDeleted { get; init; }
 
+    [ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Reference to the child pages.")]
+    public RawRelationship Children => new(key: $"ParentId:{Id}");
+
     /// <summary>
     /// Data without ID, Guid, Created, Modified
     /// </summary>
@@ -108,6 +111,15 @@ public class PageDataRaw: IRawEntity, IPageModel
         { nameof(Level), Level },
         { nameof(HasChildren), HasChildren },
         // New in v15.02
-        { nameof(LinkTarget), LinkTarget }
+        { nameof(LinkTarget), LinkTarget },
+
+        { nameof(Children), Children }
     };
+
+    public IEnumerable<object> RelationshipKeys(RawConvertOptions options)
+        => new List<object>
+        {
+            // For relationships looking for files in this folder
+            $"ParentId:{ParentId}"
+        };
 }
