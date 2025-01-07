@@ -22,11 +22,11 @@ public class FolderModel: DataModel, IFolderEntity
     //public Guid Guid => ((ITypedItem)this).Guid;
 
     /// <inheritdoc />
-    public string Name => _data.Get<string>(nameof(Name));
+    public string Name => _entity.Get<string>(nameof(Name));
     /// <inheritdoc />
-    public string FullName => _data.Get<string>(nameof(FullName));
+    public string FullName => _entity.Get<string>(nameof(FullName));
     /// <inheritdoc />
-    public string Path => _data.Get<string>(nameof(Path));
+    public string Path => _entity.Get<string>(nameof(Path));
 
     /// <summary>
     /// Reference to the parent folder.
@@ -34,26 +34,26 @@ public class FolderModel: DataModel, IFolderEntity
     /// </summary>
     //public FolderModel Folder => _item.Child<FolderModel>(nameof(Folder));
 
-    public FolderModel Folder => As<FolderModel>(_data.Entity.Children(field: nameof(Folder)).FirstOrDefault());
+    public FolderModel Folder => As<FolderModel>(_entity.Entity.Children(field: nameof(Folder)).FirstOrDefault());
 
     /// <summary>
     /// All sub folders in this folder.
     /// </summary>
     //public IEnumerable<FolderModel> Folders => _item.Children<FolderModel>(nameof(Folders));
 
-    public IEnumerable<FolderModel> Folders => AsList<FolderModel>(_data.Entity.Children(field: nameof(Folders)));
+    public IEnumerable<FolderModel> Folders => AsList<FolderModel>(_entity.Entity.Children(field: nameof(Folders)));
 
     /// <summary>
     /// All files in this folder.
     /// </summary>
     //public IEnumerable<FileModel> Files => _item.Children<FileModel>(nameof(Files));
-    public IEnumerable<FileModel> Files => AsList<FileModel>(_data.Entity.Children(field: nameof(Files)));
+    public IEnumerable<FileModel> Files => AsList<FileModel>(_entity.Entity.Children(field: nameof(Files)));
 
     /// <inheritdoc cref="IFileEntity.Url" />
-    public string Url => _data.Get<string>(nameof(Url));
+    public string Url => _entity.Get<string>(nameof(Url));
 
     /// <inheritdoc />
-    public DateTime Created => _data.Get<DateTime>(nameof(Created));
+    public DateTime Created => _entity.Get<DateTime>(nameof(Created));
     /// <inheritdoc />
-    public DateTime Modified => _data.Get<DateTime>(nameof(Modified));
+    public DateTime Modified => _entity.Get<DateTime>(nameof(Modified));
 }

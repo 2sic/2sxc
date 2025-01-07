@@ -98,11 +98,12 @@ public partial class CustomItem: ITypedItem, IDataModelOf<ITypedItem>, IDataWrap
     /// The item - for inheriting classes to access.
     /// </summary>
     /// <remarks>
-    /// This property is protected, not public, as it should only be used internally.
-    /// It uses an unusual name _item to avoid naming conflicts with properties generated in inheriting classes.
+    /// * this property is protected, not public, as it should only be used internally.
+    /// * this also prevents it from being serialized in JSON, which is good.
+    /// * it uses an unusual name `_item` to avoid naming conflicts with properties generated in inheriting classes.
     /// </remarks>
-    // ReSharper disable once InconsistentNaming
 #pragma warning disable IDE1006
+    // ReSharper disable once InconsistentNaming
     protected internal ITypedItem _item { get; private set; }
 #pragma warning restore IDE1006
 

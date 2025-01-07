@@ -17,7 +17,7 @@ partial class DataModel: IMultiWrapper<IEntity>, IEquatable<IEntity>
         => MultiWrapperEquality.GetWrappedHashCode(this);
 
     IEntity IMultiWrapper<IEntity>.RootContentsForEqualityCheck
-        => (_data as IMultiWrapper<IEntity>)?.RootContentsForEqualityCheck;
+        => (_entity as IMultiWrapper<IEntity>)?.RootContentsForEqualityCheck;
 
     /// <summary>
     /// Ensure that the equality check is done correctly.

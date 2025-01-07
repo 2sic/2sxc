@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Models;
 /// {
 ///   class MyPerson : CustomModelOfItem
 ///   {
-///     public string Name => _item.String("Name");
+///     public string Name => _entity.Get&lt;string&gt;("Name");
 ///   }
 /// }
 /// ```
@@ -48,7 +48,7 @@ public abstract partial class DataModel: IDataModelOf<IEntity>, IDataWrapperForT
     #region Explicit Interfaces for internal use - Setup, etc.
 
     void IDataModelOf<IEntity>.Setup(IEntity baseItem)
-        => _data = baseItem;
+        => _entity = baseItem;
 
     /// <inheritdoc />
     string IDataWrapperForType.ForContentType
@@ -70,7 +70,7 @@ public abstract partial class DataModel: IDataModelOf<IEntity>, IDataWrapperForT
     /// </summary>
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    IEntity ICanBeEntity.Entity => _data;
+    IEntity ICanBeEntity.Entity => _entity;
 
     //IBlock ICanBeItem.TryGetBlockContext() => Item.TryGetBlockContext();
 
@@ -80,19 +80,23 @@ public abstract partial class DataModel: IDataModelOf<IEntity>, IDataWrapperForT
     #endregion
 
     /// <summary>
-    /// The item - for inheriting classes to access.
+    /// The underlying entity - for inheriting classes to access.
     /// </summary>
     /// <remarks>
-    /// This property is protected, not public, as it should only be used internally.
+    /// * this property is protected, not public, as it should only be used internally.
+    /// * this also prevents it from being serialized in JSON, which is good.
+    /// * it uses an unusual name `_entity` to avoid naming conflicts with properties generated in inheriting classes.
     /// </remarks>
+#pragma warning disable IDE1006
     // ReSharper disable once InconsistentNaming
-    protected internal IEntity _data { get; private set; }
+    protected internal IEntity _entity { get; private set; }
+#pragma warning restore IDE1006
 
     /// <summary>
     /// Override ToString to give more information about the current object
     /// </summary>
     public override string ToString() 
-        => $"{nameof(DataModelOfItem)} Data Model {GetType().FullName} " + (_data == null ? "without backing data (null)" : $"for id:{_data.EntityId} ({_data})");
+        => $"{nameof(DataModelOfItem)} Data Model {GetType().FullName} " + (_entity == null ? "without backing data (null)" : $"for id:{_entity.EntityId} ({_entity})");
 
 
     #region As...

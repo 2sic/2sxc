@@ -29,33 +29,31 @@ public class FileModel: DataModel, IFileEntity
     //public Guid Guid => ((ITypedItem)this).Guid;
 
     /// <inheritdoc />
-    public string Name => _data.Get<string>(nameof(Name));
+    public string Name => _entity.Get<string>(nameof(Name));
     /// <inheritdoc />
-    public string Extension => _data.Get<string>(nameof(Extension));
+    public string Extension => _entity.Get<string>(nameof(Extension));
     /// <inheritdoc />
-    public string FullName => _data.Get<string>(nameof(FullName));
+    public string FullName => _entity.Get<string>(nameof(FullName));
     /// <inheritdoc />
-    public string Path => _data.Get<string>(nameof(Path));
+    public string Path => _entity.Get<string>(nameof(Path));
 
     /// <summary>
     /// Reference to the folder this file is in.
     /// Returns `null` on the root folder.
     /// </summary>
-    //public FolderModel Folder => _item.Child<FolderModel>(nameof(Folder));
-
-    public FolderModel Folder => As<FolderModel>(_data.Entity.Children(field: nameof(Folder)).FirstOrDefault());
+    public FolderModel Folder => As<FolderModel>(_entity.Entity.Children(field: nameof(Folder)).FirstOrDefault());
 
     /// <inheritdoc />
-    public int Size => _data.Get<int>(nameof(Size));
+    public int Size => _entity.Get<int>(nameof(Size));
 
     public ISizeInfo SizeInfo => field ??= new SizeInfo(Size);
 
     /// <inheritdoc cref="IFileEntity.Url" />
-    public string Url => _data.Get<string>(nameof(Url));
+    public string Url => _entity.Get<string>(nameof(Url));
 
     /// <inheritdoc />
-    public DateTime Created => _data.Get<DateTime>(nameof(Created));
+    public DateTime Created => _entity.Get<DateTime>(nameof(Created));
     /// <inheritdoc />
-    public DateTime Modified => _data.Get<DateTime>(nameof(Modified));
+    public DateTime Modified => _entity.Get<DateTime>(nameof(Modified));
 
 }

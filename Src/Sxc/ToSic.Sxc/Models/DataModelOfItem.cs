@@ -81,12 +81,17 @@ public abstract partial class DataModelOfItem : IDataModelOf<ITypedItem>, IDataW
     #endregion
 
     /// <summary>
-    /// The item - for inheriting classes to access.
+    /// The underlying item - for inheriting classes to access.
     /// </summary>
     /// <remarks>
-    /// This property is protected, not public, as it should only be used internally.
+    /// * this property is protected, not public, as it should only be used internally.
+    /// * this also prevents it from being serialized in JSON, which is good.
+    /// * it uses an unusual name `_item` to avoid naming conflicts with properties generated in inheriting classes.
     /// </remarks>
+#pragma warning disable IDE1006
+    // ReSharper disable once InconsistentNaming
     protected internal ITypedItem _item { get; private set; }
+#pragma warning restore IDE1006
 
     /// <summary>
     /// Override ToString to give more information about the current object
