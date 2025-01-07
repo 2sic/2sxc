@@ -53,7 +53,7 @@ public interface IPageModel
     /// <remarks>
     /// Added in v15.01
     /// </remarks>
-    bool Clickable { get; }
+    bool IsClickable { get; }
 
     /// <summary>
     /// Order of this item in a menu.
@@ -73,7 +73,7 @@ public interface IPageModel
     /// * In Dnn it's from `TabInfo.IsVisible`
     /// * in Oqtane it's from `Page.IsNavigation`
     /// </summary>
-    bool Visible { get; }
+    bool IsNavigation { get; }
 
     /// <summary>
     /// Info if the page has sub-pages. 

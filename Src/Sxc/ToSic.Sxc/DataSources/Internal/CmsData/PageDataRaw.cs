@@ -54,14 +54,14 @@ public class PageDataRaw: IRawEntity, IPageModel
     public string Name { get; init; }
 
     /// <inheritdoc />
-    public bool Clickable { get; init; }
+    public bool IsClickable { get; init; }
 
 
     /// <inheritdoc />
     public int Order { get; init; }
 
     /// <inheritdoc />
-    public bool Visible { get; init; }
+    public bool IsNavigation { get; init; }
 
     /// <inheritdoc />
     public bool HasChildren { get; init; }
@@ -98,11 +98,11 @@ public class PageDataRaw: IRawEntity, IPageModel
         { nameof(Title), Title },
         { nameof(Name), Name },
         { nameof(ParentId), ParentId },
-        { nameof(Visible), Visible },
+        { nameof(IsNavigation), IsNavigation },
         { nameof(Path), Path },
         { nameof(Url), Url },
         // New in v15.01
-        { nameof(Clickable), Clickable },
+        { nameof(IsClickable), IsClickable },
         { nameof(Order), Order },
         { nameof(IsDeleted), IsDeleted },
         { nameof(Level), Level },

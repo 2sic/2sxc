@@ -56,14 +56,14 @@ internal class OqtPagesDsProvider(
                 ParentId = p.ParentId ?? NoParent,
                 Title = p.Title,
                 Name = p.Name,
-                Visible = p.IsNavigation,
+                IsNavigation = p.IsNavigation,
                 Path = p.Path,
                 Url = $"{parts.Protocol}{siteState.Alias.Name}/{p.Path}".TrimLastSlash(),
                 Created = p.CreatedOn,
                 Modified = p.ModifiedOn,
 
                 // New in 15.01
-                Clickable = p.IsClickable,
+                IsClickable = p.IsClickable,
                 HasChildren = p.HasChildren,
                 IsDeleted = p.IsDeleted,
                 Level = p.Level + OqtLevelOffset,

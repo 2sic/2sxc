@@ -14,7 +14,8 @@ namespace ToSic.Sxc.Models;
 /// </summary>
 /// <remarks>
 /// * Released v19.01
-/// * Note that previous internal implementation had a property called `Visible` which we finalized to `IsNavigation` to better clarify it's purpose.
+/// * the previous internal implementation had a property called `Visible` which we finalized to `IsNavigation` to better clarify it purpose.
+/// * the previous internal implementation had a property called `Clickable` which we finalized to `IsClickable` to better clarify it purpose.
 /// </remarks>
 public class PageModel: DataModel, IPageModel
 {
@@ -29,11 +30,11 @@ public class PageModel: DataModel, IPageModel
     /// <inheritdoc />
     public string Name => _entity.Get<string>(nameof(Name));
     /// <inheritdoc />
-    public bool Clickable => _entity.Get<bool>(nameof(Clickable));
+    public bool IsClickable => _entity.Get<bool>(nameof(IsClickable));
     /// <inheritdoc />
     public int Order => _entity.Get<int>(nameof(Order));
     /// <inheritdoc />
-    public bool Visible => _entity.Get<bool>(nameof(Visible));
+    public bool IsNavigation => _entity.Get<bool>(nameof(IsNavigation));
     /// <inheritdoc />
     public bool HasChildren => _entity.Get<bool>(nameof(HasChildren));
     /// <inheritdoc />

@@ -70,11 +70,10 @@ internal class DnnPagesDsProvider() : PagesDataSourceProvider("Dnn.Pages")
                     Url = p.FullUrl.TrimLastSlash(),
                     Created = p.CreatedOnDate,
                     Modified = p.LastModifiedOnDate,
-                    // Existed it v14 but should be deprecated
-                    Visible = p.IsVisible,
+                    IsNavigation = p.IsVisible,
 
                     // New 15.01
-                    Clickable = !p.DisableLink,
+                    IsClickable = !p.DisableLink,
                     HasChildren = p.HasChildren,
                     IsDeleted = p.IsDeleted,
                     Level = p.Level + DnnLevelOffset,
