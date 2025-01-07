@@ -9,45 +9,31 @@ namespace ToSic.Sxc.Data.Internal;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeDataServices: MyServicesBase
+public class CodeDataServices(
+    LazySvc<IValueConverter> valueConverterLazy,
+    Generator<IRenderService> renderServiceGenerator,
+    LazySvc<IScrub> scrub,
+    LazySvc<ConvertForCodeService> forCode,
+    LazySvc<IDataFactory> dataFactory)
+    : MyServicesBase(connect: [valueConverterLazy, renderServiceGenerator, scrub, forCode, dataFactory])
 {
-    public CodeDataServices(
-        LazySvc<IValueConverter> valueConverterLazy,
-        Generator<IRenderService> renderServiceGenerator,
-        LazySvc<IScrub> scrub,
-        LazySvc<ConvertForCodeService> forCode,
-        LazySvc<IDataFactory> dataFactory)
-    {
-        ConnectLogs([
-            _valueConverterLazy = valueConverterLazy,
-            RenderServiceGenerator = renderServiceGenerator,
-            _scrub = scrub,
-            _forCode = forCode,
-            _dataFactory = dataFactory
-        ]);
-    }
     /// <summary>
     /// The ValueConverter is used to parse links in the format like "file:72"
     /// </summary>
-    internal IValueConverter ValueConverterOrNull => _valueConverterLazy.Value;
-    private readonly LazySvc<IValueConverter> _valueConverterLazy;
+    internal IValueConverter ValueConverterOrNull => valueConverterLazy.Value;
 
     /// <summary>
     /// This is used in special cases where static Render is called.
     /// It's not elegant, but necessary to maintain old code.
     /// </summary>
-    internal readonly Generator<IRenderService> RenderServiceGenerator;
+    internal readonly Generator<IRenderService> RenderServiceGenerator = renderServiceGenerator;
 
     /// <summary>
     /// This is provided so that ITypedItems can use Scrub in the String APIs
     /// </summary>
-    internal IScrub Scrub => _scrub.Value;
-    private readonly LazySvc<IScrub> _scrub;
+    internal IScrub Scrub => scrub.Value;
 
-    internal ConvertForCodeService ForCode => _forCode.Value;
-    private readonly LazySvc<ConvertForCodeService> _forCode;
+    internal ConvertForCodeService ForCode => forCode.Value;
 
-    internal IDataFactory DataFactory => _dataFactory.Value;
-    private readonly LazySvc<IDataFactory> _dataFactory;
-
+    internal IDataFactory DataFactory => dataFactory.Value;
 }

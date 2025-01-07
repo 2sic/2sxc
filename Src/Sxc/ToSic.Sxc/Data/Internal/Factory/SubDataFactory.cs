@@ -5,7 +5,7 @@
 /// </summary>
 internal class SubDataFactory(CodeDataFactory cdf, bool propsRequired, ICanDebug canDebug)
 {
-    public Internal.CodeDataFactory Cdf { get; } = cdf;
+    public CodeDataFactory Cdf { get; } = cdf;
     public bool PropsRequired { get; } = propsRequired;
 
     /// <summary>
@@ -14,7 +14,8 @@ internal class SubDataFactory(CodeDataFactory cdf, bool propsRequired, ICanDebug
     /// </summary>
     /// <param name="contents"></param>
     /// <returns></returns>
-    public IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, Cdf, canDebug.Debug, propsRequired: PropsRequired);
+    public IDynamicEntity SubDynEntityOrNull(IEntity contents)
+        => SubDynEntityOrNull(contents, Cdf, canDebug.Debug, propsRequired: PropsRequired);
 
     internal static DynamicEntity SubDynEntityOrNull(IEntity contents, CodeDataFactory cdf, bool? debug, bool propsRequired)
     {

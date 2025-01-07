@@ -100,14 +100,10 @@ partial class CodeDataFactory
 
     #region Merge Dynamic
 
-    public dynamic MergeDynamic(object[] entities)
-    {
-        if (entities == null || !entities.Any()) return null;
-        // 2023-08-08 2dm disable this 1-only optimization, because it results in a slightly different object
-        // if (entities.Length == 1) return AsDynamicFromObject(entities[0]);
-        return AsStack(null, entities, strictTypes: false, AsDynStack);
-        //return AsStack(entities);
-    }
+    public dynamic MergeDynamic(object[] entities) =>
+        entities == null || !entities.Any()
+            ? null
+            : AsStack(null, entities, strictTypes: false, AsDynStack);
 
     #endregion
 

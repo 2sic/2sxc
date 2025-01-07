@@ -21,5 +21,5 @@ public interface IDataModelOf<in TContents>: IDataModel
     /// <param name="baseItem"></param>
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    void Setup(TContents baseItem);
+    internal void Setup(TContents baseItem);
 }
