@@ -15,7 +15,7 @@ partial class CustomModel : IMultiWrapper<IEntity>
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public override int GetHashCode() => MultiWrapperEquality.GetWrappedHashCode(this);
 
-    IEntity IMultiWrapper<IEntity>.RootContentsForEqualityCheck => (_item as IMultiWrapper<IEntity>)?.RootContentsForEqualityCheck;
+    IEntity IMultiWrapper<IEntity>.RootContentsForEqualityCheck => (Item as IMultiWrapper<IEntity>)?.RootContentsForEqualityCheck;
 
     /// <summary>
     /// Ensure that the equality check is done correctly.

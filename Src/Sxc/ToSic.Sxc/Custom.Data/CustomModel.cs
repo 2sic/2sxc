@@ -1,4 +1,6 @@
-﻿using ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Data;
@@ -41,38 +43,38 @@ namespace Custom.Data;
 /// <remarks>
 /// - Released in v19.01 (BETA)
 /// </remarks>
-[PublicApi]
-public abstract partial class CustomModel : ITypedItemWrapper //, IHasPropLookup
+[InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change to CustomModelOfItem or something")]
+public abstract partial class CustomModel : ITypedItemWrapper, ICanBeItem, ICanBeEntity //, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
     /// <inheritdoc />
     void ITypedItemWrapper.Setup(ITypedItem baseItem)
-        => _item = baseItem;
+        => Item = baseItem;
 
     /// <inheritdoc />
     string ITypedItemWrapper.ForContentType
         => GetType().Name;
 
-    ///// <summary>
-    ///// The actual item which is being wrapped, in rare cases where you must access it.
-    /////
-    ///// It's only on the explicit interface, so it is not available from outside or inside, unless you cast to it.
-    ///// Goal is that inheriting classes don't access it to keep API surface small.
-    ///// </summary>
-    //ITypedItem ICanBeItem.Item => _item;
+    /// <summary>
+    /// The actual item which is being wrapped, in rare cases where you must access it from outside.
+    ///
+    /// It's only on the explicit interface, so it is not available from outside or inside, unless you cast to it.
+    /// Goal is that inheriting classes don't access it to keep API surface small.
+    /// </summary>
+    ITypedItem ICanBeItem.Item => Item;
 
-    ///// <summary>
-    ///// This is necessary so the object can be used in places where an IEntity is expected,
-    ///// like toolbars.
-    /////
-    ///// It's an explicit interface implementation, so that the object itself doesn't broadcast this.
-    ///// </summary>
-    //[PrivateApi]
-    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    //IEntity ICanBeEntity.Entity => _item.Entity;
+    /// <summary>
+    /// This is necessary so the object can be used in places where an IEntity is expected,
+    /// like toolbars.
+    ///
+    /// It's an explicit interface implementation, so that the object itself doesn't broadcast this.
+    /// </summary>
+    [ToSic.Lib.Documentation.PrivateApi]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    IEntity ICanBeEntity.Entity => Item.Entity;
 
-    //IBlock ICanBeItem.TryGetBlockContext() => _item.TryGetBlockContext();
+    IBlock ICanBeItem.TryGetBlockContext() => Item.TryGetBlockContext();
 
     //IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= ((IHasPropLookup)((ICanBeItem)this).Item).PropertyLookup;
     //private IPropertyLookup _propLookup;
@@ -84,18 +86,14 @@ public abstract partial class CustomModel : ITypedItemWrapper //, IHasPropLookup
     /// </summary>
     /// <remarks>
     /// This property is protected, not public, as it should only be used internally.
-    /// It uses an unusual name _item to avoid naming conflicts with properties generated in inheriting classes.
     /// </remarks>
-    // ReSharper disable once InconsistentNaming
-#pragma warning disable IDE1006
-    protected internal ITypedItem _item { get; private set; }
-#pragma warning restore IDE1006
+    protected internal ITypedItem Item { get; private set; }
 
     /// <summary>
     /// Override ToString to give more information about the current object
     /// </summary>
     public override string ToString() 
-        => $"{nameof(CustomModel)} Data Model {GetType().FullName} " + (_item == null ? "without backing data (null)" : $"for id:{_item.Id} ({_item})");
+        => $"{nameof(CustomModel)} Data Model {GetType().FullName} " + (Item == null ? "without backing data (null)" : $"for id:{Item.Id} ({Item})");
 
 
     //#region As...
