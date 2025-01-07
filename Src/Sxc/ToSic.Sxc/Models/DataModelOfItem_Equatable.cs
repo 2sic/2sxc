@@ -1,9 +1,11 @@
-﻿// ReSharper disable once CheckNamespace
-namespace Custom.Data;
+﻿
+using ToSic.Sxc.Data;
 
-partial class DataModel: IMultiWrapper<IEntity>, IEquatable<IEntity>
+namespace ToSic.Sxc.Models;
+
+partial class DataModelOfItem : IMultiWrapper<IEntity>, IEquatable<ITypedItem>
 {
-    bool IEquatable<IEntity>.Equals(IEntity other) => Equals(other);
+    bool IEquatable<ITypedItem>.Equals(ITypedItem other) => Equals(other);
 
     /// <summary>
     /// Ensure that the equality check is done correctly.
@@ -18,7 +20,7 @@ partial class DataModel: IMultiWrapper<IEntity>, IEquatable<IEntity>
         => MultiWrapperEquality.GetWrappedHashCode(this);
 
     IEntity IMultiWrapper<IEntity>.RootContentsForEqualityCheck
-        => (_data as IMultiWrapper<IEntity>)?.RootContentsForEqualityCheck;
+        => (_item as IMultiWrapper<IEntity>)?.RootContentsForEqualityCheck;
 
     /// <summary>
     /// Ensure that the equality check is done correctly.
@@ -27,7 +29,7 @@ partial class DataModel: IMultiWrapper<IEntity>, IEquatable<IEntity>
     /// <param name="item1">first item to compare</param>
     /// <param name="item2">second item to compare</param>
     /// <returns>true, if both wrappers are the same type and wrap the same entity</returns>
-    public static bool operator ==(DataModel item1, DataModel item2)
+    public static bool operator ==(DataModelOfItem item1, DataModelOfItem item2)
         => MultiWrapperEquality.IsEqual(item1, item2);
 
     /// <summary>
@@ -37,6 +39,6 @@ partial class DataModel: IMultiWrapper<IEntity>, IEquatable<IEntity>
     /// <param name="item1">first item to compare</param>
     /// <param name="item2">second item to compare</param>
     /// <returns>false, if both wrappers are the same type and wrap the same entity</returns>
-    public static bool operator !=(DataModel item1, DataModel item2)
+    public static bool operator !=(DataModelOfItem item1, DataModelOfItem item2)
         => !MultiWrapperEquality.IsEqual(item1, item2);
 }
