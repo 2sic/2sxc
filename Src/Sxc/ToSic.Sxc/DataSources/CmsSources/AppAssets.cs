@@ -6,6 +6,7 @@ using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Models;
+using ToSic.Sxc.Models.Internal;
 using static System.StringComparer;
 using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 
@@ -143,20 +144,20 @@ public class AppAssets: CustomDataSourceAdvanced
             return l.Return((EmptyList, EmptyList), "null/empty");
 
         // Convert Folders to Entities
-        var folderFactory = _dataFactory.New(options: AppFolderDataRaw.Options with
+        var folderFactory = _dataFactory.New(options: FolderRaw.Options with
         {
             AppId = AppId,
             IdSeed = -100001,
-            Type = typeof(AppFolderDataRaw),
+            Type = typeof(FolderRaw),
         });
         var folders = folderFactory.Create(rawFolders);
 
         // Convert Files to Entities
-        var fileFactory = _dataFactory.New(options: AppFileDataRaw.Options with
+        var fileFactory = _dataFactory.New(options: FileRaw.Options with
             {
                 AppId = AppId,
                 IdSeed = -1,
-                Type = typeof(AppFileDataRaw),
+                Type = typeof(FileRaw),
             },
             // Make sure we share relationships source with folders, as files need folders and folders need files
             relationships: folderFactory.Relationships);

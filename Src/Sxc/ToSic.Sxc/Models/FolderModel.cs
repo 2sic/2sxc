@@ -1,5 +1,4 @@
 ﻿using ToSic.Sxc.Adam;
-using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Models.Internal;
 
 namespace ToSic.Sxc.Models;

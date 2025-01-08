@@ -5,6 +5,7 @@ using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Models.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources;
@@ -14,7 +15,6 @@ internal class DnnPagesDsProvider() : PagesDataSourceProvider("Dnn.Pages")
 {
     private const int DnnNoParent = -1;
     private const int DnnLevelOffset = 1;
-
 
     public override List<PageDataRaw> GetPagesInternal(
         NoParamOrder noParamOrder = default,

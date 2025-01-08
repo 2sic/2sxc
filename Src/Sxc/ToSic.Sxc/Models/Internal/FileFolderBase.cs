@@ -1,11 +1,11 @@
 ﻿using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
 
-namespace ToSic.Sxc.DataSources.Internal;
+namespace ToSic.Sxc.Models.Internal;
 
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract record AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
+public abstract record FileFolderBase: IRawEntity, IHasRelationshipKeys
 {
     /// <inheritdoc />
     [ContentTypeAttributeSpecs(Description = "DO NOT USE. This is a temporary, random ID calculated at runtime and will return different values all the time.")]

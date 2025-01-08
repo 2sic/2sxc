@@ -11,6 +11,9 @@ namespace ToSic.Sxc.Models;
 /// * [Dnn RoleInfo](https://docs.dnncommunity.org/api/DotNetNuke.Security.Roles.RoleInfo.html)
 /// * [Oqtane UserRole](https://docs.oqtane.org/api/Oqtane.Models.UserRole.html)
 /// </summary>
+/// <remarks>
+/// * Introduced in v19.01
+/// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 public class UserRoleModel: DataModel, IUserRoleModel
 {

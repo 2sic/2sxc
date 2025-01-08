@@ -1,16 +1,15 @@
 ﻿using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Helpers;
 using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Models.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources;
 
 [PrivateApi]
-internal class DnnSitesDsProvider: SitesDataSourceProvider
+internal class DnnSitesDsProvider(SitesDataSourceProvider.MyServices services)
+    : SitesDataSourceProvider(services, "Dnn.Sites")
 {
-    public DnnSitesDsProvider(MyServices services) : base(services, "Dnn.Sites")
-    { }
-
     public override List<SiteDataRaw> GetSitesInternal()
     {
         var l = Log.Fn<List<SiteDataRaw>>($"PortalId: {PortalSettings.Current?.PortalId ?? -1}");

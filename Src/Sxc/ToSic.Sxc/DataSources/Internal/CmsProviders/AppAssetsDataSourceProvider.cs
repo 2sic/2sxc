@@ -7,6 +7,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Models.Internal;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
@@ -60,10 +61,10 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
     /// So the core data source doesn't have settings to configure this
     /// </summary>
     /// <returns></returns>
-    public (List<AppFolderDataRaw> Folders, List<AppFileDataRaw> Files) GetAll()
+    public (List<FolderRaw> Folders, List<FileRaw> Files) GetAll()
         => Log.Func(l => (Folders, Files));
 
-    public List<AppFileDataRaw> Files => _files.GetM(Log, l =>
+    public List<FileRaw> Files => _files.GetM(Log, l =>
     {
         var pathsFromRoot = PreparePaths(_appPaths, "");
 
@@ -74,7 +75,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
                 var fullNameFromAppRoot = FullNameWithoutAppFolder(f.FullName, pathsFromRoot);
                 var name = Path.GetFileNameWithoutExtension(f.FullName);
                 var path = fullNameFromAppRoot.TrimPrefixSlash();
-                return new AppFileDataRaw
+                return new FileRaw
                 {
                     Name = name,
                     Extension = f.Extension.TrimStart('.'), // Extension is without the dot
@@ -93,9 +94,9 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
 
         return (files, $"files:{files.Count}");
     });
-    private readonly GetOnce<List<AppFileDataRaw>> _files = new();
+    private readonly GetOnce<List<FileRaw>> _files = new();
 
-    public List<AppFolderDataRaw> Folders => _folders.GetM(Log, l =>
+    public List<FolderRaw> Folders => _folders.GetM(Log, l =>
     {
         var pathsFromRoot = PreparePaths(_appPaths, "");
 
@@ -119,7 +120,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
         return (folders, $"found:{folders.Count}");
     });
 
-    private AppFolderDataRaw ToFolderData(DirectoryInfo d, PreparedPaths pathsFromRoot)
+    private FolderRaw ToFolderData(DirectoryInfo d, PreparedPaths pathsFromRoot)
     {
         var fullNameFromAppRoot = FullNameWithoutAppFolder(d.FullName, pathsFromRoot);
 
@@ -137,7 +138,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
         };
     }
 
-    private readonly GetOnce<List<AppFolderDataRaw>> _folders = new();
+    private readonly GetOnce<List<FolderRaw>> _folders = new();
 
 
     /// <summary>

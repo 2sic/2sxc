@@ -1,8 +1,9 @@
 ﻿using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
+using ToSic.Sxc.DataSources;
 
-namespace ToSic.Sxc.DataSources.Internal;
+namespace ToSic.Sxc.Models.Internal;
 
 /// <summary>
 /// Internal class to hold all the information about the site,
@@ -27,7 +28,7 @@ namespace ToSic.Sxc.DataSources.Internal;
     Description = "User-Role in the site",
     Name = TypeName
 )]
-public class SiteDataRaw: IRawEntity
+public class SiteDataRaw: IRawEntity, ISiteModel
 {
     internal const string TypeName = "Site";
 
@@ -38,90 +39,38 @@ public class SiteDataRaw: IRawEntity
         TitleField = nameof(Name),
     };
 
-    /// <summary>
-    /// The site ID.
-    ///
-    /// * In Dnn it's from `PortalInfo.PortalID`
-    /// * In Oqtane it's `Site.SiteId`
-    /// </summary>
+    /// <inheritdoc cref="ISiteModel.Id" />
     public int Id { get; init; }
 
-    /// <summary>
-    /// The site GUID.
-    ///
-    /// * In Dnn it's from `PortalInfo.GUID`
-    /// * In Oqtane it's `Guid.Empty` as Oqtane doesn't have site GUIDs
-    /// </summary>
+    /// <inheritdoc cref="ISiteModel.Guid" />
     public Guid Guid { get; init; }
 
-    /// <summary>
-    /// The site name.
-    ///
-    /// * In Dnn it's from `PageInfo.PortalName`
-    /// * in Oqtane it's from `Site.Name`
-    /// </summary>
+    /// <inheritdoc />
     public string Name { get; init; }
 
-    /// <summary>
-    /// The public url to this site (without any trailing slashes)
-    ///
-    /// * In Dnn it's from `PortalAliasInfo.FullUrl` (last slash removed)
-    /// * in Oqtane it's a combination of protocol, site-alias and path
-    /// </summary>
+    /// <inheritdoc />
     public string Url { get; init; }
 
-
-    /// <summary>
-    /// The site languages, comma separated.
-    /// Can be empty ever if a <see cref="DefaultLanguage"/> is set, if the site itself is not multi-language.
-    /// </summary>
+    /// <inheritdoc />
     public string Languages { get; init; }
 
-
-    /// <summary>
-    /// The site Culture Code.
-    ///
-    /// * In Dnn it's from `PortalInfo.CultureCode`
-    /// * in Oqtane it's from `Site.CultureCode`
-    /// </summary>
+    /// <inheritdoc />
     public string DefaultLanguage { get; init; }
 
-    // 2023-02-13 2dm disabled this. It's a very exotic property, don't think it should be in the normal data source
-    ///// <summary>
-    ///// Determines if visitors may register / create user accounts
-    /////
-    ///// * In Dnn it's from `PortalInfo.UserRegistration`
-    ///// * in Oqtane it's from `Site.AllowRegistration`
-    ///// </summary>
-    //public bool AllowRegistration { get; set; }
-
-    /// <summary>
-    /// The site creation date/time.
-    ///
-    /// * In Dnn it's from `PortalInfo.CreatedOnDate`
-    /// * in Oqtane it's from `Site.CreatedOn`
-    /// </summary>
+    /// <inheritdoc cref="ISiteModel.Created" />
     public DateTime Created { get; init; }
 
-    /// <summary>
-    /// The site modification date/time.
-    ///
-    /// * In Dnn it's from `PortalInfo.LastModifiedOnDate`
-    /// * in Oqtane it's from `Site.ModifiedOn`
-    /// </summary>
+    /// <inheritdoc cref="ISiteModel.Modified" />
     public DateTime Modified { get; init; }
 
 
+    /// <inheritdoc />
     public int ZoneId { get; init; }
 
-    /// <summary>
-    /// The Content App.
-    /// </summary>
+    /// <inheritdoc />
     public int ContentAppId { get; init; }
 
-    /// <summary>
-    /// The (technical) primary App, which contains things such as site metadata.
-    /// </summary>
+    /// <inheritdoc />
     public int PrimaryAppId { get; init; }
 
     /// <summary>

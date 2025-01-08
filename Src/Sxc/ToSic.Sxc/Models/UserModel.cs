@@ -10,8 +10,10 @@ namespace ToSic.Sxc.Models;
 ///
 /// * [Dnn UserInfo](https://docs.dnncommunity.org/api/DotNetNuke.Entities.Users.UserInfo.html)
 /// * [Oqtane User](https://docs.oqtane.org/api/Oqtane.Models.User.html)
-/// 
 /// </summary>
+/// <remarks>
+/// * Introduced in v19.01
+/// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 public class UserModel: DataModel, IUserModel
 {

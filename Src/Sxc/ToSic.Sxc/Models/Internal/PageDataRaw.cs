@@ -1,9 +1,8 @@
 ﻿using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
-using ToSic.Sxc.Models.Internal;
 
-namespace ToSic.Sxc.DataSources.Internal;
+namespace ToSic.Sxc.Models.Internal;
 
 /// <summary>
 /// Internal class to hold all the information about the page,

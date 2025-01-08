@@ -5,6 +5,7 @@ using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.DataSources.Internal;
 using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Models.Internal;
 using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 
 // Important Info to people working with this
