@@ -8,7 +8,6 @@ using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Models;
 using ToSic.Sxc.Models.Internal;
 using static System.StringComparer;
-using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -19,6 +18,8 @@ namespace ToSic.Sxc.DataSources;
 
 /// <summary>
 /// Deliver a list of App files and folders from the current platform (Dnn or Oqtane).
+/// </summary>
+/// <remarks>
 ///
 /// This provides 4 streams:
 ///
@@ -29,8 +30,8 @@ namespace ToSic.Sxc.DataSources;
 ///
 /// To figure out the properties returned and what they match up to, see <see cref="FileModel"/> and <see cref="FolderModel"/>.
 /// 
-/// </summary>
-/// <remarks>
+/// History
+/// 
 /// * Started v18.02 for the first time - in the Picker Source App Assets.
 /// * officially documented for v19.00, but API not fully final/stable, names may change.
 /// </remarks>
@@ -93,7 +94,7 @@ public class AppAssets: CustomDataSourceAdvanced
         _appAssetsSource = appAssetsSource;
         _dataFactory = dataFactory;
 
-        ProvideOut(() => Get(StreamDefaultName));
+        ProvideOut(() => Get(DataSourceConstants.StreamDefaultName));
         ProvideOut(() => Get(StreamFolders), StreamFolders);
         ProvideOut(() => Get(StreamFiles), StreamFiles);
         ProvideOut(() => Get(StreamAll), StreamAll);
@@ -128,7 +129,7 @@ public class AppAssets: CustomDataSourceAdvanced
         var (folders, files) = GetInternal();
         return new(OrdinalIgnoreCase)
         {
-            { StreamDefaultName, () => files },
+            { DataSourceConstants.StreamDefaultName, () => files },
             { StreamAll, () => folders.Concat(files).ToImmutableList() },
             { StreamFolders, () => folders },
             { StreamFiles, () => files }
@@ -155,7 +156,7 @@ public class AppAssets: CustomDataSourceAdvanced
         // Get pages from underlying system/provider
         var (rawFolders, rawFiles) = _appAssetsSource.GetAll();
         if (!rawFiles.Any() && !rawFolders.Any())
-            return l.Return((EmptyList, EmptyList), "null/empty");
+            return l.Return(([], []), "null/empty");
 
         // Convert Folders to Entities
         var folderFactory = _dataFactory.New(options: FolderRaw.Options with

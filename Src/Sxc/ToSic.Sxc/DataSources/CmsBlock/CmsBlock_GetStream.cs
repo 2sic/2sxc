@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
 using ToSic.Eav.DataSource;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
 using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
@@ -23,7 +22,7 @@ public sealed partial class CmsBlock
         {
             // if no template is defined, return empty list
             if (view == null)
-                return (EmptyList, "no template definition - empty list");
+                return ([], "no template definition - empty list");
 
             // Create copy of list (not in cache) because it will get modified
             var contentEntities = items.ToList();

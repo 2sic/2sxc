@@ -2,6 +2,7 @@
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Models;
 using ToSic.Sxc.Models.Internal;
 
 // Important Info to people working with this
@@ -13,11 +14,19 @@ namespace ToSic.Sxc.DataSources;
 
 /// <summary>
 /// Deliver a list of sites from the Oqtane
+/// </summary>
+/// <remarks>
+/// You can cast the result to <see cref="SiteModel"/> for typed use in your code.
+/// To figure out the returned properties, best also consult the <see cref="SiteModel"/>.
 ///
 /// As of now there are no parameters to set.
+/// 
+/// History
 ///
-/// To figure out the properties returned and what they match up to, see <see cref="SiteDataRaw"/>
-/// </summary>
+/// * Not sure when it was first created, probably early 2023 with the name `Roles`, and not officially communicated.
+/// * Model <see cref="SiteModel"/> created in v19.01 and officially released
+/// </remarks>
+
 [PublicApi]
 [VisualQuery(
     ConfigurationType = "",

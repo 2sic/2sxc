@@ -5,7 +5,6 @@ using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.DataSources.Internal;
-using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -29,7 +28,7 @@ namespace ToSic.Sxc.DataSources;
     Icon = DataSourceIcons.Tree,
     Type = DataSourceType.Lookup,
     Audience = Audience.Advanced,
-    In = [InStreamDefaultRequired],
+    In = [DataSourceConstants.InStreamDefaultRequired],
     DynamicOut = false,
     ConfigurationType = "" // TODO: ...
 )]
