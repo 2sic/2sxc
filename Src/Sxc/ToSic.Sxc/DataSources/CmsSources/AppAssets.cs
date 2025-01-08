@@ -45,6 +45,7 @@ namespace ToSic.Sxc.DataSources;
     UiHint = "Files and folders in the App folder")]
 [PublicApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+//[ConfigurationSpecsWip(SpecsType = typeof(AppAssetsGetSpecs))]
 public class AppAssets: CustomDataSourceAdvanced
 {
     private readonly IDataFactory _dataFactory;
@@ -149,7 +150,7 @@ public class AppAssets: CustomDataSourceAdvanced
             ZoneId = Specs.ZoneId == int.MinValue ? ZoneId : Specs.ZoneId,
         };
         
-        _appAssetsSource.Configure(specs/*, zoneId: ZoneId, appId: AppId*//*, root: RootFolder, filter: FileFilter*/);
+        _appAssetsSource.Configure(specs);
 
         // Get pages from underlying system/provider
         var (rawFolders, rawFiles) = _appAssetsSource.GetAll();
