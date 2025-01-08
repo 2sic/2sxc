@@ -34,20 +34,24 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
     }
 
     public AppAssetsDataSourceProvider Configure(
-        NoParamOrder noParamOrder = default,
-        int zoneId = default,
-        int appId = default,
-        string root = default,
-        string filter = default
-    ) {
-        var l = Log.Fn<AppAssetsDataSourceProvider>($"a:{appId}; z:{zoneId}, root:{root}, filter:{filter}");
+        AppAssetsGetSpecs specs,
+        NoParamOrder noParamOrder = default
+        //int zoneId = default,
+        //int appId = default
+        //string root = default,
+        //string filter = default
+    )
+    {
+        var root = specs.RootFolder;
+        var filter = specs.FileFilter;
+        var l = Log.Fn<AppAssetsDataSourceProvider>($"a:{specs.AppId}; z:{specs.ZoneId}, root:{root}, filter:{filter}");
         _root = root.TrimPrefixSlash().Backslash();
         _filter = filter;
 
-        var appState = Services.AppReaders.Get(new AppIdentity(zoneId, appId));
+        var appState = Services.AppReaders.Get(new AppIdentity(specs.ZoneId, specs.AppId));
         _appPaths = Services.AppPathMicroSvc.Get(appState);
         
-        _fileManager = Services.FileManagerGenerator.New().SetFolder(appId, _appPaths.PhysicalPath, _root);
+        _fileManager = Services.FileManagerGenerator.New().SetFolder(specs.AppId, _appPaths.PhysicalPath, _root);
         return l.Return(this);
     }
 

@@ -39,7 +39,7 @@ namespace ToSic.Sxc.DataSources;
     Type = DataSourceType.Source,
     ConfigurationType = "477d5de4-5ffa-43ef-8553-37354cb27660",
     NameId = "3fe6c215-4c37-45c1-8883-b4b2a47162a7",
-    HelpLink = "https://go.2sxc.org/ds-appfiles", // TODO:
+    HelpLink = "https://go.2sxc.org/ds-appassets",
     Icon = DataSourceIcons.Tree,
     Audience = Audience.Advanced,
     UiHint = "Files and folders in the App folder")]
@@ -74,6 +74,13 @@ public class AppAssets: CustomDataSourceAdvanced
     [PrivateApi("TODO: NOT IMPLEMENTED YET")]
     [Configuration(Fallback = false)]
     public bool SearchSubfolders => Configuration.GetThis(false);
+
+    private AppAssetsGetSpecs Specs => new()
+    {
+        RootFolder = RootFolder,
+        FileFilter = FileFilter,
+        //SearchSubfolders = SearchSubfolders
+    };
 
     #endregion
 
@@ -136,7 +143,13 @@ public class AppAssets: CustomDataSourceAdvanced
     {
         var l = Log.Fn<(IImmutableList<IEntity> folders, IImmutableList<IEntity> files)>(timer: true);
 
-        _appAssetsSource.Configure(zoneId: ZoneId, appId: AppId, root: RootFolder, filter: FileFilter);
+        var specs = Specs with
+        {
+            AppId = Specs.AppId == int.MinValue ? AppId : Specs.AppId,
+            ZoneId = Specs.ZoneId == int.MinValue ? ZoneId : Specs.ZoneId,
+        };
+        
+        _appAssetsSource.Configure(specs/*, zoneId: ZoneId, appId: AppId*//*, root: RootFolder, filter: FileFilter*/);
 
         // Get pages from underlying system/provider
         var (rawFolders, rawFiles) = _appAssetsSource.GetAll();
