@@ -33,10 +33,10 @@ internal class DataSourceOptionsMs: ServiceBase
             );
         // Convert to a pure identity, in case the original object was much more
         appIdentity = new AppIdentity(appIdentity);
-        var opts = new DataSourceOptions.Converter().Create(new DataSourceOptions(appIdentity: appIdentity, lookUp: LookUpEngine, immutable: true), options);
+        var opts = new DataSourceOptionConverter().Create(new DataSourceOptions(appIdentity: appIdentity, lookUp: LookUpEngine, immutable: true), options);
 
         // Check if parameters were supplied, if yes, they override any values in the existing options (16.01)
-        var values = new DataSourceOptions.Converter().Values(parameters, false, true);
+        var values = new DataSourceOptionConverter().Values(parameters, false, true);
         if (values != null) opts = new DataSourceOptions(opts, values: values);
 
         return l.Return(opts);

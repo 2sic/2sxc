@@ -26,7 +26,7 @@ namespace ToSic.Sxc.DataSources;
     Icon = DataSourceIcons.Globe,
     NiceName = "Sites",
     Type = DataSourceType.Source,
-    UiHint = "Sites in this CMS")]
+    UiHint = "Sites in this system")]
 public class Sites: CustomDataSource
 {
     [PrivateApi]

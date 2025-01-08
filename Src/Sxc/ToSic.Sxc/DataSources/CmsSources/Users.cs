@@ -224,7 +224,7 @@ public partial class Users : CustomDataSourceAdvanced
             .ToList();
 
         // Get roles, use the current data source to provide aspects such as lookups etc.
-        var rolesDs = _rolesGenerator.New(attach: this, options: new DataSourceOptions.Converter().Create(null, new
+        var rolesDs = _rolesGenerator.New(attach: this, options: new DataSourceOptionConverter().Create(null, new
         {
             // Set filter parameter to only get roles we'll need
             RoleIds = string.Join(",", roleIds),

@@ -34,7 +34,7 @@ public class CodeCreateDataSourceSvc(LazySvc<IDataSourcesService> dataSources, L
     {
         // If no in-source was provided, make sure that we create one from the current app
         attach ??= DataSources.Value.CreateDefault(new DataSourceOptions(appIdentity: AppIdentity, lookUp: LookUpEngine, immutable: true));
-        var typedOptions = new DataSourceOptions.Converter().Create(new DataSourceOptions(lookUp: LookUpEngine, immutable: immutable), options);
+        var typedOptions = new DataSourceOptionConverter().Create(new DataSourceOptions(lookUp: LookUpEngine, immutable: immutable), options);
         return DataSources.Value.Create<T>(attach: attach, options: typedOptions);
     }
 
