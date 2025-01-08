@@ -2,7 +2,7 @@
 using ToSic.Eav.DataSource;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
-using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
+using static ToSic.Eav.DataSource.DataSourceConstants;
 
 namespace ToSic.Sxc.DataSources;
 

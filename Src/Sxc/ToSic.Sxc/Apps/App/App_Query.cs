@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.DataSource;
-using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
+using ToSic.Eav.DataSource.Internal;
+using static ToSic.Eav.DataSource.DataSourceConstants;
 
 namespace ToSic.Sxc.Apps;
 
@@ -35,6 +36,6 @@ partial class App
         // Try to find query definition - while also checking parent apps
         var qEntity = Services.QueryManager.Value.GetQuery(AppReaderInt, name, ConfigurationProvider, recurseParents: 3);
 
-        return qEntity ?? throw new((IsGlobalQuery(name) ? "Global " : "") + "Query not Found!");
+        return qEntity ?? throw new((DataSourceConstantsInternal.IsGlobalQuery(name) ? "Global " : "") + "Query not Found!");
     }
 }
