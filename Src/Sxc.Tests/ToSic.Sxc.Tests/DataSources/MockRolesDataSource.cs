@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Models.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Tests.DataSources;
@@ -10,14 +11,14 @@ namespace ToSic.Sxc.Tests.DataSources;
 /// <summary>
 /// Mock a list of roles
 /// </summary>
-public class MockRolesDataSource : RolesDataSourceProvider
+public class MockRolesDataSource() : RolesDataSourceProvider("DS.MockRoles")
 {
-    public override IEnumerable<RoleDataRaw> GetRolesInternal() => Log.Func(l =>
+    public override IEnumerable<UserRoleRaw> GetRolesInternal() => Log.Func(l =>
     {
         const int siteId = 0;
         Log.A($"Mock Portal Id {siteId}");
 
-        var roles = new List<RoleDataRaw>();
+        var roles = new List<UserRoleRaw>();
         for (var i = 1; i <= 10; i++)
         {
             roles.Add(new()
@@ -31,8 +32,4 @@ public class MockRolesDataSource : RolesDataSourceProvider
 
         return (roles, $"mock: {roles.Count}");
     });
-
-    public MockRolesDataSource() : base("DS.MockRoles")
-    {
-    }
 }
