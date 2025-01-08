@@ -26,11 +26,14 @@ internal class DnnUsersDsProvider(LazySvc<DnnSecurity> dnnSecurity)
                 superUsersOnly: true));
 
             var dnnUsers = dnnAllUsers.Cast<UserInfo>().ToList();
-            if (!dnnUsers.Any()) return l.Return(new List<UserRaw>(), "null/empty");
+            if (!dnnUsers.Any())
+                return l.Return(new List<UserRaw>(), "null/empty");
 
             var result = dnnUsers
                 //.Where(user => !user.IsDeleted)
-                .Select(u => dnnSecurity.Value.CmsUserBuilder(u, siteId)).ToList();
+                .Select(u => dnnSecurity.Value.CmsUserBuilder(u, siteId))
+                .ToList();
+
             return l.Return(result, "found");
         }
         catch (Exception ex)

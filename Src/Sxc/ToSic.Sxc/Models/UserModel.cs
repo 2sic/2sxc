@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.DataSources;
+﻿using ToSic.Sxc.Context.Internal.Raw;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Models.Internal;
 
 namespace ToSic.Sxc.Models;
@@ -18,39 +19,86 @@ namespace ToSic.Sxc.Models;
 /// * Introduced in v19.01
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public class UserModel: DataModel, IUserModel
+public class UserModel : DataModel, IUserModel
 {
+    /// <summary>
+    /// Special override object to provide the values without using the entity.
+    ///
+    /// WIP possible solution for the IUserService
+    /// </summary>
+    internal CmsUserRaw Override { get; init; }
+
     /// <inheritdoc />
-    public string Email => _entity.Get<string>(nameof(Email));
+    public string Email
+        => Override?.Email
+           ?? _entity.Get<string>(nameof(Email));
+
     /// <inheritdoc />
-    public int Id => _entity.EntityId;
+    public int Id
+        => Override?.Id
+           ?? _entity.EntityId;
+
     /// <inheritdoc />
-    public Guid Guid => _entity.EntityGuid;
+    public Guid Guid
+        => Override?.Guid
+           ?? _entity.EntityGuid;
+
     /// <inheritdoc />
-    public DateTime Created => _entity.Created;
+    public DateTime Created
+        => Override?.Created
+           ?? _entity.Created;
+
     /// <inheritdoc />
-    public DateTime Modified => _entity.Modified;
+    public DateTime Modified
+        => Override?.Modified
+           ?? _entity.Modified;
+
     /// <inheritdoc />
-    public bool IsAnonymous => _entity.Get<bool>(nameof(IsAnonymous));
+    public bool IsAnonymous
+        => Override?.IsAnonymous
+           ?? _entity.Get<bool>(nameof(IsAnonymous));
+
     /// <inheritdoc />
-    public bool IsSiteAdmin => _entity.Get<bool>(nameof(IsSiteAdmin));
+    public bool IsSiteAdmin
+        => Override?.IsSiteAdmin
+           ?? _entity.Get<bool>(nameof(IsSiteAdmin));
+
     /// <inheritdoc />
-    public bool IsContentAdmin => _entity.Get<bool>(nameof(IsContentAdmin));
+    public bool IsContentAdmin
+        => Override?.IsContentAdmin
+           ?? _entity.Get<bool>(nameof(IsContentAdmin));
+
     /// <inheritdoc />
-    public bool IsContentEditor => _entity.Get<bool>(nameof(IsContentEditor));
+    public bool IsContentEditor
+        => Override?.IsContentEditor
+           ?? _entity.Get<bool>(nameof(IsContentEditor));
+
     /// <inheritdoc />
-    public string NameId => _entity.Get<string>(nameof(NameId));
+    public string NameId
+        => Override?.NameId
+           ?? _entity.Get<string>(nameof(NameId));
+
     /// <inheritdoc />
-    public bool IsSystemAdmin => _entity.Get<bool>(nameof(IsSystemAdmin));
+    public bool IsSystemAdmin
+        => Override?.IsSystemAdmin
+           ?? _entity.Get<bool>(nameof(IsSystemAdmin));
+
     /// <inheritdoc />
-    public bool IsSiteDeveloper => _entity.Get<bool>(nameof(IsSiteDeveloper));
+    public bool IsSiteDeveloper
+        => Override?.IsSiteDeveloper
+           ?? _entity.Get<bool>(nameof(IsSiteDeveloper));
 
     //IMetadata ICmsUser.Metadata => null;
 
     /// <inheritdoc />
-    public string Name => _entity.Get<string>(nameof(Name));
+    public string Name
+        => Override?.Name
+           ?? _entity.Get<string>(nameof(Name));
+
     /// <inheritdoc />
-    public string Username => _entity.Get<string>(nameof(Username));
+    public string Username
+        => Override?.Username
+           ?? _entity.Get<string>(nameof(Username));
 
     //IMetadataOf IHasMetadata.Metadata => null;
 

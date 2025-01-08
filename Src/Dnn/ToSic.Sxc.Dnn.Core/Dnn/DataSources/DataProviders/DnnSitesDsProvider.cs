@@ -13,9 +13,13 @@ internal class DnnSitesDsProvider(SitesDataSourceProvider.MyServices services)
     public override List<SiteDataRaw> GetSitesInternal()
     {
         var l = Log.Fn<List<SiteDataRaw>>($"PortalId: {PortalSettings.Current?.PortalId ?? -1}");
-        var portals = PortalController.Instance.GetPortals().OfType<PortalInfo>().ToList();
+        var portals = PortalController.Instance
+            .GetPortals()
+            .OfType<PortalInfo>()
+            .ToList();
 
-        if (/*portals == null || */!portals.Any()) return l.Return([], "null/empty");
+        if (!portals.Any())
+            return l.Return([], "null/empty");
 
         var result = portals
             .Select(s => new SiteDataRaw
@@ -39,7 +43,8 @@ internal class DnnSitesDsProvider(SitesDataSourceProvider.MyServices services)
 
     private string GetUrl(int portalId, string cultureCode)
     {
-        var primaryPortalAlias = PortalAliasController.Instance.GetPortalAliasesByPortalId(portalId)
+        var primaryPortalAlias = PortalAliasController.Instance
+            .GetPortalAliasesByPortalId(portalId)
             .GetAliasByPortalIdAndSettings(portalId, result: null, cultureCode, settings: new(portalId));
         return primaryPortalAlias.HTTPAlias;
     }
