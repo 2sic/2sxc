@@ -205,5 +205,8 @@ public class UsersDataSourceTests : TestBaseSxcDb
 
     private Users GenerateUsersDataSourceDataSource(object options = default)
         => CreateDataSourceNew<Users>(new DataSourceOptionConverter()
-            .Create(new DataSourceOptions(lookUp: new LookUpTestData(GetService<DataBuilder>()).AppSetAndRes()), options));
+            .Create(new DataSourceOptions
+            {
+                LookUp = new LookUpTestData(GetService<DataBuilder>()).AppSetAndRes(),
+            }, options));
 }

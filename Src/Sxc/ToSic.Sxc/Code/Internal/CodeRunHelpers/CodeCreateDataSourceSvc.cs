@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps;
+﻿using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal.Catalog;
 using ToSic.Eav.LookUp;
@@ -33,8 +34,17 @@ public class CodeCreateDataSourceSvc(LazySvc<IDataSourcesService> dataSources, L
     public T CreateDataSource<T>(bool immutable, NoParamOrder noParamOrder = default, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
     {
         // If no in-source was provided, make sure that we create one from the current app
-        attach ??= DataSources.Value.CreateDefault(new DataSourceOptions(appIdentity: AppIdentity, lookUp: LookUpEngine, immutable: true));
-        var typedOptions = new DataSourceOptionConverter().Create(new DataSourceOptions(lookUp: LookUpEngine, immutable: immutable), options);
+        attach ??= DataSources.Value.CreateDefault(new DataSourceOptions
+        {
+            AppIdentityOrReader = AppIdentity,
+            LookUp = LookUpEngine,
+            Immutable = true,
+        });
+        var typedOptions = new DataSourceOptionConverter().Create(new DataSourceOptions
+        {
+            LookUp = LookUpEngine,
+            Immutable = immutable,
+        }, options);
         return DataSources.Value.Create<T>(attach: attach, options: typedOptions);
     }
 

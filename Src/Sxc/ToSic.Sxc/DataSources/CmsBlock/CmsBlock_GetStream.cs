@@ -99,7 +99,11 @@ public sealed partial class CmsBlock
         if (!In.ContainsKey(StreamDefaultName))
         {
             l.A("In not attached, will auto-attach");
-            var publishing = _services.DataSourceFactory.Value.CreateDefault(new DataSourceOptions(appIdentity: this, lookUp: Configuration.LookUpEngine));
+            var publishing = _services.DataSourceFactory.Value.CreateDefault(new DataSourceOptions
+            {
+                AppIdentityOrReader = this,
+                LookUp = Configuration.LookUpEngine,
+            });
             Attach(publishing);
         }
 

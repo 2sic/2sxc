@@ -77,5 +77,8 @@ public class RolesDataSourceTests : TestBaseSxcDb
 
     private Roles GenerateRolesDataSourceDataSource(object options = default) 
         => CreateDataSourceNew<Roles>(new DataSourceOptionConverter()
-            .Create(new DataSourceOptions(lookUp: new LookUpTestData(GetService<DataBuilder>()).AppSetAndRes()), options));
+            .Create(new DataSourceOptions
+            {
+                LookUp = new LookUpTestData(GetService<DataBuilder>()).AppSetAndRes()
+            }, options));
 }
