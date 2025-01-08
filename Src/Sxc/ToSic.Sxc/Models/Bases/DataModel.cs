@@ -7,8 +7,6 @@ namespace ToSic.Sxc.Models;
 /// <summary>
 /// Base class for **plain** custom data models and can be used in Razor Components.
 /// It wraps a <see cref="IEntity"/> and provides a simple way to access the data.
-/// 
-/// This is much lighter than the <see cref="CustomItem"/> which also wraps data, as it doesn't have any predefined properties and doesn't have the <see cref="ITypedItem"/> APIs.
 /// </summary>
 /// <example>
 ///
@@ -40,6 +38,10 @@ namespace ToSic.Sxc.Models;
 /// ```
 /// </example>
 /// <remarks>
+/// This is much lighter than the <see cref="CustomItem"/> which also wraps data, as it doesn't have any predefined properties and doesn't have the <see cref="ITypedItem"/> APIs.
+/// 
+/// History
+/// 
 /// - Released in v19.01 (BETA)
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change to CustomModelOfItem or something")]

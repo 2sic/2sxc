@@ -5,14 +5,16 @@ namespace ToSic.Sxc.Models;
 
 /// <summary>
 /// Data Model as is returned by the <see cref="Pages"/> DataSource.
+/// </summary>
+/// <remarks>
 ///
 /// For detailed documentation, check the docs of the underlying objects:
 ///
 /// * [Dnn TabInfo](https://docs.dnncommunity.org/api/DotNetNuke.Entities.Tabs.TabInfo.html)
 /// * [Oqtane Page](https://docs.oqtane.org/api/Oqtane.Models.Page.html)
+///
+/// History
 /// 
-/// </summary>
-/// <remarks>
 /// * Released v19.01
 /// * the previous internal implementation had a property called `Visible` which we finalized to `IsNavigation` to better clarify it purpose.
 /// * the previous internal implementation had a property called `Clickable` which we finalized to `IsClickable` to better clarify it purpose.

@@ -5,13 +5,16 @@ namespace ToSic.Sxc.Models;
 
 /// <summary>
 /// User Model for data returned by the <see cref="Users"/> DataSource or other sources.
+/// </summary>
+/// <remarks>
 ///
 /// For detailed documentation, check the docs of the underlying objects:
 ///
 /// * [Dnn UserInfo](https://docs.dnncommunity.org/api/DotNetNuke.Entities.Users.UserInfo.html)
 /// * [Oqtane User](https://docs.oqtane.org/api/Oqtane.Models.User.html)
-/// </summary>
-/// <remarks>
+///
+/// History
+/// 
 /// * Introduced in v19.01
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice]

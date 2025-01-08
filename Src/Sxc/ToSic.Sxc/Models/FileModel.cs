@@ -5,10 +5,11 @@ using ToSic.Sxc.Models.Internal;
 namespace ToSic.Sxc.Models;
 
 /// <summary>
-/// A File Entity for typed use.
-/// It defines the schema for a file as returned by the <see cref="DataSources.AppAssets"/> DataSource.
+/// A File Model which describes a file as returned by the <see cref="DataSources.AppAssets"/> DataSource.
 /// </summary>
 /// <remarks>
+/// History
+/// 
 /// * Introduced (BETA) in v19.00 for the <see cref="DataSources.AppAssets"/> DataSource.
 /// * Not to be seen as final, since we may rename this type when we also
 /// * This is similar to the <see cref="Adam.IFile"/> but still a bit different. For example, it has a <see cref="Folder"/> property which is different from the <see cref="ToSic.Eav.Apps.Assets.IFile.Folder"/> property.
