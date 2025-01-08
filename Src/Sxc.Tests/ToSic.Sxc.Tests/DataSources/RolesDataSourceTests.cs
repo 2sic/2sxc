@@ -75,8 +75,8 @@ public class RolesDataSourceTests : TestBaseSxcDb
         Assert.AreEqual(expected, rolesDataSource.List.ToList().Count);
     }
 
-    private Roles GenerateRolesDataSourceDataSource(object options = default) 
-        => CreateDataSourceNew<Roles>(new DataSourceOptionConverter()
+    private UserRoles GenerateRolesDataSourceDataSource(object options = default) 
+        => CreateDataSourceNew<UserRoles>(new DataSourceOptionConverter()
             .Create(new DataSourceOptions
             {
                 LookUp = new LookUpTestData(GetService<DataBuilder>()).AppSetAndRes()

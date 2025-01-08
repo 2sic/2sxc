@@ -110,7 +110,7 @@ public partial class Users
 
     private FilterOp<UserRaw> KeepUsersInRoles()
     {
-        var rolesFilter = Roles.RolesCsvListToInt(RoleIds);
+        var rolesFilter = UserRoles.RolesCsvListToInt(RoleIds);
         return rolesFilter.Any()
             ? new(u => u.Roles.Any(r => rolesFilter.Contains(r)))
             : null;
@@ -118,7 +118,7 @@ public partial class Users
 
     private FilterOp<UserRaw> DropUsersInRoles()
     {
-        var excludeRolesFilter = Roles.RolesCsvListToInt(ExcludeRoleIds);
+        var excludeRolesFilter = UserRoles.RolesCsvListToInt(ExcludeRoleIds);
         return excludeRolesFilter.Any()
             ? new(u => !u.Roles.Any(r => excludeRolesFilter.Contains(r)))
             : null;
@@ -127,13 +127,13 @@ public partial class Users
     private FilterOp<UserRaw> SuperUserCondition()
     {
         var l = Log.Fn<FilterOp<UserRaw>>();
-        // If "include" == "only" return only super users
+        // If "include" == "only" return only superusers
         if (IncludeSystemAdmins.EqualsInsensitive(IncludeRequired))
             return l.Return(new(u => u.IsSystemAdmin, IncludeRequired));
 
         // If "include" == true, return all
         if (IncludeSystemAdmins.EqualsInsensitive(IncludeOptional))
-            return l.ReturnNull($"{IncludeOptional} = any"); // skip IsSystemAdmin check will return normal and super users
+            return l.ReturnNull($"{IncludeOptional} = any"); // skip IsSystemAdmin check will return normal and superusers
 
         // If "include" == false - or basically any unknown value, return only normal users
         return l.Return(new(u => !u.IsSystemAdmin, IncludeForbidden));

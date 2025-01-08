@@ -5,8 +5,8 @@ using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Models;
 using ToSic.Sxc.Models.Internal;
-using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -16,8 +16,18 @@ using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 namespace ToSic.Sxc.DataSources;
 
 /// <summary>
-/// Will get all (or just some) roles of the current site.
+/// Will get all (or just some) user roles of the current site.
 /// </summary>
+/// <remarks>
+/// You can cast the result to <see cref="UserRoleModel"/> for typed use in your code.
+/// To figure out the returned properties, best also consult the <see cref="UserRoleModel"/>.
+/// 
+/// History
+///
+/// * Not sure when it was first created, probably early 2023 with the name `Roles`, and not officially communicated.
+/// * Model <see cref="UserRoleModel"/> created in v19.01 and officially released
+/// * Renamed to `UserRoles` for consistency in v19.0 as we believe nobody has been actively using it yet, since the models were missing.
+/// </remarks>
 [PublicApi]
 [VisualQuery(
     NiceName = "User Roles",
@@ -28,7 +38,7 @@ namespace ToSic.Sxc.DataSources;
     Type = DataSourceType.Source,
     ConfigurationType = "1b9fd9d1-dde0-40ad-bb66-5cd7f30de18d"
 )]
-public class Roles : CustomDataSourceAdvanced
+public class UserRoles : CustomDataSourceAdvanced
 {
     private readonly IDataFactory _rolesFactory;
     private readonly RolesDataSourceProvider _provider;
@@ -72,7 +82,7 @@ public class Roles : CustomDataSourceAdvanced
     /// Constructor to tell the system what out-streams we have
     /// </summary>
     [PrivateApi]
-    public Roles(MyServices services, RolesDataSourceProvider provider, IDataFactory rolesFactory)
+    public UserRoles(MyServices services, RolesDataSourceProvider provider, IDataFactory rolesFactory)
         : base(services, "SDS.Roles", connect: [provider, rolesFactory])
     {
         _provider = provider;
@@ -90,7 +100,7 @@ public class Roles : CustomDataSourceAdvanced
         l.A($"found {roles?.Count} roles");
 
         if (roles.SafeNone()) 
-            return l.Return(EmptyList, "null/empty");
+            return l.Return([], "null/empty");
 
         // This will resolve the tokens before starting
         Configuration.Parse();

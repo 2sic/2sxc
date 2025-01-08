@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using ToSic.Eav.Context;
+﻿using ToSic.Eav.Context;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Source;
 using ToSic.Eav.DataSource;
@@ -7,8 +6,8 @@ using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Services;
 using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Models;
 using ToSic.Sxc.Models.Internal;
-using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -19,8 +18,18 @@ namespace ToSic.Sxc.DataSources;
 
 /// <summary>
 /// Will get all (or just some) users of the current site.
-/// The resulting Entity will match the <see cref="IUser"/> interface.
 /// </summary>
+/// <remarks>
+/// You can cast the result to <see cref="UserModel"/> for typed use in your code.
+/// To figure out the returned properties, best also consult the <see cref="UserModel"/>.
+/// 
+/// The resulting Entity will almost match the <see cref="IUser"/> interface.
+/// 
+/// History
+/// 
+/// * Created ca. v.16 early 2023 but not officially communicated
+/// * Models <see cref="UserModel"/> and <see cref="UserRoleModel"/> created in v19.01 and officially released
+/// </remarks>
 [PublicApi]
 [VisualQuery(
     NiceName = "Users",
@@ -33,7 +42,7 @@ namespace ToSic.Sxc.DataSources;
 )]
 public partial class Users : CustomDataSourceAdvanced
 {
-    private readonly IDataSourceGenerator<Roles> _rolesGenerator;
+    private readonly IDataSourceGenerator<UserRoles> _rolesGenerator;
     private readonly IDataFactory _dataFactory;
     private readonly UsersDataSourceProvider _provider;
 
@@ -133,7 +142,7 @@ public partial class Users : CustomDataSourceAdvanced
     /// Constructor to tell the system what out-streams we have
     /// </summary>
     [PrivateApi]
-    public Users(MyServices services, UsersDataSourceProvider provider, IDataFactory dataFactory, IDataSourceGenerator<Roles> rolesGenerator)
+    public Users(MyServices services, UsersDataSourceProvider provider, IDataFactory dataFactory, IDataSourceGenerator<UserRoles> rolesGenerator)
         : base(services, "SDS.Users", connect: [provider, dataFactory, rolesGenerator])
     {
         _provider = provider;

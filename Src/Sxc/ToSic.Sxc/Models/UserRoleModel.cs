@@ -4,7 +4,7 @@ using ToSic.Sxc.Models.Internal;
 namespace ToSic.Sxc.Models;
 
 /// <summary>
-/// Model to return role information as provided by the <see cref="Roles"/> DataSource.
+/// Model to return role information as provided by the <see cref="UserRoles"/> DataSource.
 /// </summary>
 /// <remarks>
 /// For detailed documentation, check the docs of the underlying objects:

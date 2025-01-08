@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Models.Internal;
 
 /// <summary>
 /// Internal class to hold all the information about the role.
-/// until it's converted to an IEntity in the <see cref="Roles"/> DataSource.
+/// until it's converted to an IEntity in the <see cref="UserRoles"/> DataSource.
 ///
 /// For detailed documentation, check the docs of the underlying objects:
 ///
