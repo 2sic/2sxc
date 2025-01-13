@@ -105,6 +105,10 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
                 htmlAttributes = script.HtmlAttributes,
                 integrity = script.Integrity ?? "", // bug in Oqtane, needs to be an empty string to not throw errors
                 crossorigin = script.CrossOrigin ?? "",
+                es6module = script.ES6Module, // remove when Oqtane dependency is updated to 6.0.1
+                type = script.Type ?? "", // bug in Oqtane, needs to be an empty string to skip loading script
+                //defer = script.HtmlAttributes.TryGetValue("defer", out var deferValue) ? deferValue : "",
+                //async = script.HtmlAttributes.TryGetValue("async", out var asyncValue) ? asyncValue : "",
             }));
 
             // 3. Inline JS code which was extracted from the template
