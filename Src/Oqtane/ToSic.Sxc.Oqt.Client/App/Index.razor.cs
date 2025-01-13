@@ -253,11 +253,21 @@ public partial class Index : ModuleProBase
         // 1st criteria
         if (!ShouldRender()) return false;
 
+        if (_renderedParameters == null)
+        {
+            _renderedParameters = @params;
+            return true;
+        }
+
         // 2nd criteria - render parameters are not changed from the last render
-        if (_renderedParameters != null && _renderedParameters.Equals(@params)) return false;
+        if (_renderedParameters.Equals(@params)) return false;
+
+        //if (_renderedParameters.AliasId != @params.AliasId 
+        //    || _renderedParameters.PageId != @params.PageId 
+        //    || _renderedParameters.ModuleId != @params.ModuleId) return false;
 
         // render parameters are changed, store them for the next render
-        _renderedParameters = @params.Clone();
+        _renderedParameters = @params;
         return true;
     }
 
