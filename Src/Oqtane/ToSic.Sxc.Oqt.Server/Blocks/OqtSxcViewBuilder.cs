@@ -35,7 +35,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
             _contextResolverForLookUps = contextResolverForLookUps,
             _globalTypesCheck = globalTypesCheck,
             _outputCache = outputCache,
-            PageOutput = pageOutput
+            PageOutput = pageOutput,
         ]);
         logStore.Add("oqt-view", Log);
     }
@@ -46,7 +46,6 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     private readonly ISxcContextResolver _contextResolverForLookUps;
     private readonly GlobalTypesCheck _globalTypesCheck;
     private readonly IOutputCache _outputCache;
-
     #endregion
 
     #region Prepare
@@ -73,7 +72,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
             var useLightspeed = OutputCache?.IsEnabled ?? false;
             if (OutputCache?.Existing != null) Log.A("Lightspeed hit - will use cached");
             var renderResult = OutputCache?.Existing?.Data
-                               ?? Block.BlockBuilder.Run(true, specs: new() { UseLightspeed = useLightspeed });
+                               ?? Block.BlockBuilder.Run(true, specs: new() { UseLightspeed = useLightspeed, IncludeAllAssetsInOqtane = (site.RenderMode == "Interactive") });
             finalMessage = !useLightspeed ? "" :
                 OutputCache?.Existing?.Data != null ? "⚡⚡" : "⚡⏳";
             OutputCache?.Save(renderResult);

@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Web.Internal.PageFeatures;
+﻿using ToSic.Sxc.Blocks.Internal;
+
+namespace ToSic.Sxc.Web.Internal.PageFeatures;
 
 [PrivateApi("Internal stuff, hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -19,7 +21,7 @@ internal class PageFeatures(IPageFeaturesManager pfm) : IPageFeatures
     public void FeaturesFromSettingsAdd(PageFeatureFromSettings newFeature)
         => FeaturesFromSettings.Add(newFeature);
 
-    public List<PageFeatureFromSettings> FeaturesFromSettingsGetNew(ILog log)
+    public List<PageFeatureFromSettings> FeaturesFromSettingsGetNew(RenderSpecs specs, ILog log)
     {
         var l = log.Fn<List<PageFeatureFromSettings>>();
         // Filter out the ones which were already added in a previous round
@@ -27,13 +29,15 @@ internal class PageFeatures(IPageFeaturesManager pfm) : IPageFeatures
             // Put duplicates together
             .GroupBy(f => f.NameId)
             // Only process the groups which have none that were already processed
-            .Where(g => g.All(f => !f.AlreadyProcessed)) // only keep the groups which only have false
+            .Where(g => g.All(f => !f.AlreadyProcessed )) // only keep the groups which only have false
             // Keep only one of the group to then process
             .Select(g => g.First())
             .ToList();
 
-        // Mark the new ones as processed now, so they won't be processed in future
-        newFeatures.ForEach(f => f.AlreadyProcessed = true);
+        // Mark the new ones as processed now, so they won't be processed in the future, except for Oqtane where we will keep it all
+        if (!specs.IncludeAllAssetsInOqtane)
+            newFeatures.ForEach(f => f.AlreadyProcessed = true);
+
         return l.Return(newFeatures, $"{newFeatures.Count}");
     }
 

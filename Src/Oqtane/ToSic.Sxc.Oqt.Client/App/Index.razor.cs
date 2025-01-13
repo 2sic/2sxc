@@ -253,6 +253,7 @@ public partial class Index : ModuleProBase
         // 1st criteria
         if (!ShouldRender()) return false;
 
+        // first render of new instance of oqtane module
         if (_renderedParameters == null)
         {
             _renderedParameters = @params;
@@ -261,10 +262,6 @@ public partial class Index : ModuleProBase
 
         // 2nd criteria - render parameters are not changed from the last render
         if (_renderedParameters.Equals(@params)) return false;
-
-        //if (_renderedParameters.AliasId != @params.AliasId 
-        //    || _renderedParameters.PageId != @params.PageId 
-        //    || _renderedParameters.ModuleId != @params.ModuleId) return false;
 
         // render parameters are changed, store them for the next render
         _renderedParameters = @params;

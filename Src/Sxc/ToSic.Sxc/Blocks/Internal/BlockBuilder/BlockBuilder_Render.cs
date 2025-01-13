@@ -45,7 +45,7 @@ public partial class BlockBuilder
             if (topLevel)
             {
                 var allChanges = Services.PageChangeSummary.Value
-                    .FinalizeAndGetAllChanges(Block.Context.PageServiceShared, Block.Context.Permissions.IsContentAdmin);
+                    .FinalizeAndGetAllChanges(Block.Context.PageServiceShared, specs, Block.Context.Permissions.IsContentAdmin);
 
                 // Head & Page Changes
                 result.HeadChanges = allChanges.HeadChanges;

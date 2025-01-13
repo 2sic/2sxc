@@ -46,30 +46,34 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
         // the razor component reported what it needs
         if (viewResults.SxcScripts != null)
         {
-            scripts.AddRange(viewResults.SxcScripts.Select(a => new
-            {
-                href = noCache.CacheBusting(a, renderId),
-                bundle = "", // not working when bundleId is provided
-                id = "",
-                location = "body",
-                //htmlAttributes = null,
-                integrity = "", // bug in Oqtane, needs to be an empty string to not throw errors
-                crossorigin = "",
-            }));
+            scripts.AddRange(viewResults.SxcScripts
+                .DistinctBy(url => url)
+                .Select(url => new
+                {
+                    href = noCache.CacheBusting(url, renderId),
+                    bundle = "", // not working when bundleId is provided
+                    id = "",
+                    location = "body",
+                    //htmlAttributes = null,
+                    integrity = "", // bug in Oqtane, needs to be an empty string to not throw errors
+                    crossorigin = "",
+                }));
         }
 
         if (viewResults.SxcStyles != null)
         {
-            links.AddRange(viewResults.SxcStyles.Select(link => new
-            {
-                id = "",
-                rel= "stylesheet",
-                href = link,
-                type = "text/css",
-                integrity = "",
-                crossorigin = "",
-                insertbefore = "app-stylesheet-module"
-            }));
+            links.AddRange(viewResults.SxcStyles
+                .DistinctBy(url => url)
+                .Select(url => new
+                {
+                    id = "",
+                    rel= "stylesheet",
+                    href = url,
+                    type = "text/css",
+                    integrity = "",
+                    crossorigin = "",
+                    insertbefore = "app-stylesheet-module"
+                }));
         }
 
         #endregion
@@ -81,38 +85,43 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
             // External resources = independent files (so not inline JS in the template)
             var externalResources = viewResults.TemplateResources.Where(r => r.IsExternal).ToArray();
 
-            links.AddRange(externalResources.Where(r => r.ResourceType == ResourceType.Stylesheet).Select(link => new
-            {
-                id = string.IsNullOrWhiteSpace(link.UniqueId) ? "" : link.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
-                rel = "stylesheet",
-                href = link.Url,
-                type = "text/css",
-                integrity = "",
-                crossorigin = "",
-                insertbefore = "app-stylesheet-module" // bug in Oqtane, needs to be an empty string instead of null or undefined
-            }));
+            links.AddRange(externalResources.Where(r => r.ResourceType == ResourceType.Stylesheet)
+                .DistinctBy(r => r.Url)
+                .Select(link => new
+                {
+                    id = string.IsNullOrWhiteSpace(link.UniqueId) ? "" : link.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
+                    rel = "stylesheet",
+                    href = link.Url,
+                    type = "text/css",
+                    integrity = "",
+                    crossorigin = "",
+                    insertbefore = "app-stylesheet-module" // bug in Oqtane, needs to be an empty string instead of null or undefined
+                }));
 
             // 2. Scripts - usually libraries etc.
             // Important: the IncludeClientScripts (IncludeScripts) works very different from LoadScript
             // it uses LoadJS and bundles
-
-            scripts.AddRange(externalResources.Where(r => r.ResourceType == ResourceType.Script).Select(script => new
-            {
-                id = string.IsNullOrWhiteSpace(script.UniqueId) ? "" : script.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
-                href = noCache.CacheBusting(script.Url, renderId),
-                bundle = "", // not working when bundleId is provided
-                location = "body", // script.Location,
-                htmlAttributes = script.HtmlAttributes,
-                integrity = script.Integrity ?? "", // bug in Oqtane, needs to be an empty string to not throw errors
-                crossorigin = script.CrossOrigin ?? "",
-                es6module = script.ES6Module, // remove when Oqtane dependency is updated to 6.0.1
-                type = script.Type ?? "", // bug in Oqtane, needs to be an empty string to skip loading script
-                //defer = script.HtmlAttributes.TryGetValue("defer", out var deferValue) ? deferValue : "",
-                //async = script.HtmlAttributes.TryGetValue("async", out var asyncValue) ? asyncValue : "",
-            }));
+            scripts.AddRange(externalResources.Where(r => r.ResourceType == ResourceType.Script)
+                .DistinctBy(r => r.Url)
+                .Select(script => new
+                {
+                    id = string.IsNullOrWhiteSpace(script.UniqueId) ? "" : script.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
+                    href = noCache.CacheBusting(script.Url, renderId),
+                    bundle = "", // not working when bundleId is provided
+                    location = "body", // script.Location,
+                    htmlAttributes = script.HtmlAttributes,
+                    integrity = script.Integrity ?? "", // bug in Oqtane, needs to be an empty string to not throw errors
+                    crossorigin = script.CrossOrigin ?? "",
+                    es6module = script.ES6Module, // remove when Oqtane dependency is updated to 6.0.1
+                    type = script.Type ?? "", // bug in Oqtane, needs to be an empty string to skip loading script
+                    //defer = script.HtmlAttributes.TryGetValue("defer", out var deferValue) ? deferValue : "",
+                    //async = script.HtmlAttributes.TryGetValue("async", out var asyncValue) ? asyncValue : "",
+                }));
 
             // 3. Inline JS code which was extracted from the template
-            var inlineResources = viewResults.TemplateResources.Where(r => !r.IsExternal).ToArray();
+            var inlineResources = viewResults.TemplateResources.Where(r => !r.IsExternal)
+                .DistinctBy(r => r.Content)
+                .ToArray();
             inlineScripts.AddRange(inlineResources.Select(inline => new
             {
                 id = string.IsNullOrWhiteSpace(inline.UniqueId) ? "" : inline.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
@@ -167,19 +176,19 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
 
         // Lets load all 2sxc js dependencies (js / styles)
         // Not done the official Oqtane way, because that asks for the scripts before
-        // the razor component reported what it needs
+        // the razor component reported what it needs   
         if (viewResults.SxcScripts != null)
-            foreach (var resource in viewResults.SxcScripts)
+            foreach (var url in viewResults.SxcScripts.DistinctBy(url => url))
             {
-                page?.Log($"2.3: IncludeScript:{resource}");
-                await sxcInterop.IncludeScript("", resource, "", "", "", "head");
+                page?.Log($"2.3: IncludeScript:{url}");
+                await sxcInterop.IncludeScript("", url, "", "", "", "head");
             }
 
         if (viewResults.SxcStyles != null)
-            foreach (var style in viewResults.SxcStyles)
+            foreach (var url in viewResults.SxcStyles.DistinctBy(url => url))
             {
-                page?.Log($"2.4: IncludeCss:{style}");
-                await sxcInterop.IncludeLink("", "stylesheet", style, "text/css", "", "", "");
+                page?.Log($"2.4: IncludeCss:{url}");
+                await sxcInterop.IncludeLink("", "stylesheet", url, "text/css", "", "", "");
             }
 
         #endregion
@@ -195,6 +204,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
             // 1. Style Sheets, ideally before JS
             var css = externalResources
                 .Where(r => r.ResourceType == ResourceType.Stylesheet)
+                .DistinctBy(r => r.Url)
                 .Select(a => new
                 {
                     id = string.IsNullOrWhiteSpace(a.UniqueId)
@@ -220,6 +230,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
             // it uses LoadJS and bundles
             var scripts = externalResources
                 .Where(r => r.ResourceType == ResourceType.Script)
+                .DistinctBy(r => r.Url)
                 .Select(a => new
                 {
                     href = a.Url,
@@ -239,7 +250,9 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
                 await sxcInterop.IncludeScriptsWithAttributes(scripts);
 
             // 3. Inline JS code which was extracted from the template
-            var inlineResources = viewResults.TemplateResources.Where(r => !r.IsExternal).ToArray();
+            var inlineResources = viewResults.TemplateResources.Where(r => !r.IsExternal)
+                .DistinctBy(r => r.Content)
+                .ToArray();
             // Log inline
             page?.Log($"{logPrefix}Inline: {inlineResources.Length}", inlineResources);
             foreach (var inline in inlineResources)

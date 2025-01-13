@@ -11,6 +11,15 @@ async function includeScriptsWithAttributes(scripts) {
   const debug = window?.$2sxc?.urlParams?.isDebug() ?? false;
   if (debug) console.log('includeScriptsWithAttributes', scripts);
 
+  //// remove existing scripts
+  //for (let s = 0; s < scripts.length; s++) {
+  //  const src = scripts[s].href;
+  //  if (src !== "") {
+  //    let script = document.querySelector("script[src=\"" + CSS.escape(src) + "\"]");
+  //    if (script !== null) script.remove();
+  //  }
+  //}
+
   const bundles = [];
   for (let s = 0; s < scripts.length; s++) {
     if (scripts[s].bundle === '') {
