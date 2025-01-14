@@ -3,8 +3,10 @@
 /// <summary>
 /// Publishing Information for <see cref="ITypedItem"/>s.
 /// </summary>
-/// <remarks>New v17</remarks>
-[WorkInProgressApi("WIP v17")]
+/// <remarks>
+/// New v17
+/// </remarks>
+[PublicApi]
 public interface IPublishing
 {
     /// <summary>
