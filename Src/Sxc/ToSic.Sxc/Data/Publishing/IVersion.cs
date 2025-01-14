@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Data;
 /// See IVersion / ILifecycle - not yet in use.
 /// </summary>
 [PrivateApi]
-internal interface IVersion
+public interface IVersion
 {
     /// <summary>
     /// The version, starting at 1 when the item is created.

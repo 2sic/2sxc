@@ -8,7 +8,8 @@
 ///
 /// See IVersion / ILifecycle - not yet in use.
 /// </summary>
-internal interface ILifecycle
+[PrivateApi]
+public interface ILifecycle
 {
     public IVersion Created { get; }
     public IVersion Modified { get; }
