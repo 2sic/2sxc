@@ -1,15 +1,18 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Tests.DataTests.DynConverterTests;
 
 [TestClass]
-public class AsConverterAsItem: AsConverterTestsBase
+public class AsConverterAsItem: TestBaseSxcDb
 {
+    public CodeDataFactory Cdf => field ??= GetService<CodeDataFactory>();
+
     [TestMethod]
     public void AsItemWithFakeOk()
     {
-        var item = Cdf.TacAsItem(Cdf.TacFakeEntity(0), propsRequired: true);
+        var item = Cdf.AsItemTac(Cdf.FakeEntityTac(0), propsRequired: true);
         Assert.IsNotNull(item);
     }
 
@@ -23,6 +26,6 @@ public class AsConverterAsItem: AsConverterTestsBase
             Birthday = new DateTime(2012, 02, 07)
         };
 
-        var item = Cdf.TacAsItem(data, propsRequired: true);
+        var item = Cdf.AsItemTac(data, propsRequired: true);
     }
 }

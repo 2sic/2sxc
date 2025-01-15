@@ -37,7 +37,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>default</LangVersion>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -114,10 +114,10 @@
     <Compile Include="DataTests\CodeDataConverterTestAccessors.cs" />
     <Compile Include="DataTests\DynAndTypedTestsBase.cs" />
     <Compile Include="DataTests\DynConverterTests\AsConverterFakeTests.cs" />
-    <Compile Include="DataTests\DynConverterTests\AsConverterTestsBase.cs" />
     <Compile Include="DataTests\DynConverterTests\AsConverterAsItem.cs" />
     <Compile Include="DataTests\DynWrappers\WrapObjTypedItemEquality.cs" />
     <Compile Include="DataTests\GetAndConvertHelperTestAccessors.cs" />
+    <Compile Include="DataTests\ModelTests\CustomModelType.cs" />
     <Compile Include="DataTests\PropInfo.cs" />
     <Compile Include="DataTests\DynJson\WrapAllGps.cs" />
     <Compile Include="DataTests\DynJson\WrapAllKeys.cs" />
