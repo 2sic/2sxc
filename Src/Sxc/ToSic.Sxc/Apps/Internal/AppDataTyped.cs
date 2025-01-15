@@ -42,10 +42,10 @@ internal class AppDataTyped(
     /// <inheritdoc />
     IEnumerable<T> IAppDataTyped.GetAll<T>(NoParamOrder protector, string typeName, bool nullIfNotFound)
     {
-        typeName ??= CodeDataFactory.GetContentTypeName<T>();
+        var streamName = typeName ?? CodeDataFactory.GetStreamName<T>();
 
         // Get the list - will be null if not found
-        var list = GetStream(typeName, nullIfNotFound: nullIfNotFound);
+        var list = GetStream(streamName, nullIfNotFound: nullIfNotFound);
 
         return list == null
             ? null

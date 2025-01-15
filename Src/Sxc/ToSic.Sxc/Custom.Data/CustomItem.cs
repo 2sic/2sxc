@@ -9,6 +9,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Models;
+using ToSic.Sxc.Models.Attributes;
 using ToSic.Sxc.Services.Tweaks;
 
 // ReSharper disable once CheckNamespace
@@ -56,17 +57,14 @@ namespace Custom.Data;
 /// - It's not abstract, even if the most common case is to inherit, as there are cases where you want to use it directly.
 /// </remarks>
 [PublicApi]
-public partial class CustomItem: ITypedItem, IDataModelOf<ITypedItem>, IDataModelForType, IHasPropLookup
+[DataModel(ForContentTypes = DataModelAttribute.ForAnyContentType, Remarks = "Will work for any conversion, but inherited types will be restricted again")]
+public partial class CustomItem: ITypedItem, IDataModelOf<ITypedItem>, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
 
     void IDataModelOf<ITypedItem>.Setup(ITypedItem baseItem)
         => _item = baseItem;
-
-    /// <inheritdoc />
-    string IDataModelForType.ForContentType
-        => GetType().Name;
 
     /// <summary>
     /// The actual item which is being wrapped, in rare cases where you must access it.

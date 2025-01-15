@@ -47,16 +47,12 @@ namespace ToSic.Sxc.Models;
 /// - Released in v19.01 (BETA)
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change to CustomModelOfItem or something")]
-public abstract partial class DataModelOfItem : IDataModelOf<ITypedItem>, IDataModelForType, ICanBeItem, ICanBeEntity //, IHasPropLookup
+public abstract partial class DataModelOfItem : IDataModelOf<ITypedItem>, ICanBeItem, ICanBeEntity //, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
     void IDataModelOf<ITypedItem>.Setup(ITypedItem baseItem)
         => _item = baseItem;
-
-    /// <inheritdoc />
-    string IDataModelForType.ForContentType
-        => GetType().Name;
 
     /// <summary>
     /// The actual item which is being wrapped, in rare cases where you must access it from outside.
