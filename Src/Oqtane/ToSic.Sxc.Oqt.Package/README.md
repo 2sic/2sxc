@@ -3,7 +3,7 @@
 > you can't use DNN or Oqtane without 2sxc 😉
 
 2sxc helps web designers and developers prepare great looking, animated and sexy content and applications in DNN (DotNetNuke) and Oqtane. 
-It works in .NET Framework and .NET 7.
+It works in .NET Framework and .NET.
 
 Visit [2sxc.org](https://2sxc.org/) for more information.
 
