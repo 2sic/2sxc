@@ -28,12 +28,13 @@ public class ImportContent(
     IAppReaderFactory appReaders,
     LazySvc<IUser> userLazy,
     AppCachePurger appCachePurger,
-    LazySvc<IEavFeaturesService> features)
+    LazySvc<IEavFeaturesService> features,
+    GenWorkDb<WorkEntitySave> workEntSave)
     : ServiceBase("Bck.Export",
         connect:
         [
             envLogger, importerLazy, xmlImportWithFilesLazy, zipImport, jsonSerializerGenerator, globalConfiguration,
-            appReaders, appCachePurger, userLazy, features
+            appReaders, appCachePurger, userLazy, features, workEntSave
         ])
 {
 
@@ -131,6 +132,8 @@ public class ImportContent(
             // 2.1 Reset serializer to use the new app
             var appState = appReaders.Get(new AppIdentity(zoneId, appId));
             serializer = jsonSerializerGenerator.New().SetApp(appState);
+            // Since we're importing directly into this app, we prefer local content-types
+            serializer.PreferLocalAppTypes = true;
             l.A("Load items");
 
             // 2.2. Build content types
@@ -154,17 +157,9 @@ public class ImportContent(
                 throw new NullReferenceException("One Entity is null, something is wrong");
 
             // 2.3 Import the entities
-            l.A($"Load entity {entities.Count} items");
-            if (entities.Any())
-            {
-                import.ImportIntoDb(null, entities.Cast<Entity>().ToList());
-
-                l.A($"Purging {zoneId}/{appId}");
-                AppCachePurger.Purge(zoneId, appId);
-                    
-                //foreach (var entity in entities)
-                //    appState.Add(entity as Entity, null, true);
-            }
+            l.A($"Import entity {entities.Count} items");
+            if (entities.Any()) 
+                workEntSave.New(appState).Import(entities);
 
             // 3. possibly show messages / issues
             return (new(true), "ok (with entities)");
