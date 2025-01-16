@@ -12,19 +12,19 @@ namespace ToSic.Sxc.DataSources;
 internal class DnnRolesDsProvider() : RolesDataSourceProvider("Dnn.Roles")
 {
     [PrivateApi]
-    public override IEnumerable<UserRoleRaw> GetRolesInternal()
+    public override IEnumerable<UserRoleModel> GetRolesInternal()
     {
-        var l = Log.Fn<IEnumerable<UserRoleRaw>>();
+        var l = Log.Fn<IEnumerable<UserRoleModel>>();
         var siteId = PortalSettings.Current?.PortalId ?? -1;
         l.A($"Portal Id {siteId}");
         try
         {
             var dnnRoles = RoleController.Instance.GetRoles(portalId: siteId);
             if (!dnnRoles.Any())
-                return l.Return(new List<UserRoleRaw>(), "null/empty");
+                return l.Return(new List<UserRoleModel>(), "null/empty");
 
             var result = dnnRoles
-                .Select(r => new UserRoleRaw
+                .Select(r => new UserRoleModel
                 {
                     Id = r.RoleID,
                     // Guid = r.
@@ -38,7 +38,7 @@ internal class DnnRolesDsProvider() : RolesDataSourceProvider("Dnn.Roles")
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.Return(new List<UserRoleRaw>(), "error");
+            return l.Return(new List<UserRoleModel>(), "error");
         }
     }
 }

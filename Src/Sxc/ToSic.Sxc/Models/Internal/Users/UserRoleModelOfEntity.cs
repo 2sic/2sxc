@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Models.Internal;
 
-public class UserRoleModelOfEntity: DataModel, IUserRoleModelSync, IUserRoleModel
+public class UserRoleModelOfEntity: DataModel, IUserRoleModel
 {
     public int Id => _entity.EntityId;
     public string Name => _entity.Get<string>(nameof(Name));

@@ -16,5 +16,5 @@ public abstract class RolesDataSourceProvider(string logName, object[] connect =
     /// </summary>
     /// <returns></returns>
     [PrivateApi]
-    public abstract IEnumerable<UserRoleRaw> GetRolesInternal();
+    public abstract IEnumerable<UserRoleModel> GetRolesInternal();
 }

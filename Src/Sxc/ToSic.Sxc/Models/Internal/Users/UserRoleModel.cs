@@ -28,8 +28,10 @@ namespace ToSic.Sxc.Models.Internal;
     Description = "User-Role in the site",
     Name = TypeName
 )]
-public class UserRoleRaw: RawEntityBase, IRawEntity, IRole, IUserRoleModelSync
+public class UserRoleModel: IRawEntity, IRole, IUserRoleModel
 {
+    #region IRawEntity
+
     internal const string TypeName = "Role";
 
     internal static DataFactoryOptions Options = new()
@@ -39,15 +41,20 @@ public class UserRoleRaw: RawEntityBase, IRawEntity, IRole, IUserRoleModelSync
         TitleField = nameof(Name),
     };
 
-    public string Name { get; init; }
-
-    /// <summary>
-    /// Data but without Id, Guid, Created, Modified
-    /// </summary>
-    [PrivateApi]
-    public override IDictionary<string, object> Attributes(RawConvertOptions options)
+    IDictionary<string, object> IRawEntity.Attributes(RawConvertOptions options)
         => new Dictionary<string, object>
         {
             { nameof(Name), Name },
         };
+
+    Guid IRawEntity.Guid => Guid.Empty;
+
+    #endregion
+
+    public int Id { get; init; }
+    public DateTime Created { get; init; } = DateTime.Now;
+    public DateTime Modified { get; init; } = DateTime.Now;
+
+    public string Name { get; init; }
+
 }

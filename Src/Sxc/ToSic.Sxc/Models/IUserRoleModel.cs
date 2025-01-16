@@ -23,15 +23,23 @@ namespace ToSic.Sxc.Models;
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 public interface IUserRoleModel : IDataModel
 {
-    /// <inheritdoc cref="IUserRoleModelSync.Id" />
+    /// <summary>
+    /// The Role ID in the database.
+    /// </summary>
     int Id { get; }
 
-    /// <inheritdoc cref="IUserRoleModelSync.Name" />
+    /// <summary>
+    /// The Role Name as it is displayed everywhere.
+    /// </summary>
     string Name { get; }
 
-    /// <inheritdoc cref="IUserRoleModelSync.Created" />
+    /// <summary>
+    /// When the user role was first created.
+    /// </summary>
     DateTime Created { get; }
 
-    /// <inheritdoc cref="IUserRoleModelSync.Modified" />
+    /// <summary>
+    /// When the user role was last modified.
+    /// </summary>
     DateTime Modified { get; }
 }

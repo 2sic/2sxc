@@ -86,7 +86,7 @@ public class UserRoles : CustomDataSourceAdvanced
         : base(services, "SDS.Roles", connect: [provider, rolesFactory])
     {
         _provider = provider;
-        _rolesFactory = rolesFactory.New(options: UserRoleRaw.Options);
+        _rolesFactory = rolesFactory.New(options: UserRoleModel.Options);
 
         ProvideOut(GetList);
     }
@@ -120,7 +120,7 @@ public class UserRoles : CustomDataSourceAdvanced
         return l.Return(result, $"found {result.Count} roles");
     }
 
-    private Func<UserRoleRaw, bool> KeepRolesCondition()
+    private Func<UserRoleModel, bool> KeepRolesCondition()
     {
         var includeRolesFilter = RolesCsvListToInt(RoleIds);
         return includeRolesFilter.Any()
@@ -128,7 +128,7 @@ public class UserRoles : CustomDataSourceAdvanced
             : null;
     }
 
-    private Func<UserRoleRaw, bool> DropRolesCondition()
+    private Func<UserRoleModel, bool> DropRolesCondition()
     {
         var excludeRolesFilter = RolesCsvListToInt(ExcludeRoleIds);
         return excludeRolesFilter.Any()

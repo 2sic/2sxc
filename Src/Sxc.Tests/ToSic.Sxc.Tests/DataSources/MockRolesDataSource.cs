@@ -13,12 +13,12 @@ namespace ToSic.Sxc.Tests.DataSources;
 /// </summary>
 public class MockRolesDataSource() : RolesDataSourceProvider("DS.MockRoles")
 {
-    public override IEnumerable<UserRoleRaw> GetRolesInternal() => Log.Func(l =>
+    public override IEnumerable<UserRoleModel> GetRolesInternal() => Log.Func(l =>
     {
         const int siteId = 0;
         Log.A($"Mock Portal Id {siteId}");
 
-        var roles = new List<UserRoleRaw>();
+        var roles = new List<UserRoleModel>();
         for (var i = 1; i <= 10; i++)
         {
             roles.Add(new()

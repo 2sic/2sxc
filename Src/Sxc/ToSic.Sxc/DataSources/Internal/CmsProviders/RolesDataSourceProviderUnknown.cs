@@ -7,6 +7,6 @@ namespace ToSic.Sxc.DataSources.Internal;
 
 internal class RolesDataSourceProviderUnknown(WarnUseOfUnknown<RolesDataSourceProviderUnknown> _) : RolesDataSourceProvider($"{SxcLogName}.{LogConstants.NameUnknown}")
 {
-    public override IEnumerable<UserRoleRaw> GetRolesInternal(
-    ) => new List<UserRoleRaw>();
+    public override IEnumerable<UserRoleModel> GetRolesInternal(
+    ) => new List<UserRoleModel>();
 }
