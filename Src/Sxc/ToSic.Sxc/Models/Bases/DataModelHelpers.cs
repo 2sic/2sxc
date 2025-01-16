@@ -10,14 +10,14 @@ internal class DataModelHelpers
     /// Typically, the type will be from your `AppCode.Data`.
     /// </summary>
     /// <returns></returns>
-    internal static T As<T>(ICustomModelFactory modelFactory, object item)
-        where T : class, IDataModel
+    internal static TCustom As<TCustom>(ICustomModelFactory modelFactory, object item)
+        where TCustom : class, IDataModel
         => item switch
         {
             null => null,
-            ITypedItem typedItem => modelFactory.AsCustomFrom2<T, ITypedItem>(typedItem),
-            IEntity entity => modelFactory.AsCustomFrom2<T, IEntity>(entity),
-            _ => throw new($"Type {typeof(T).Name} not supported, only {typeof(IEntity)} and {nameof(ITypedItem)} are allowed as data"),
+            ITypedItem typedItem => modelFactory.AsCustomFrom<TCustom, ITypedItem>(typedItem),
+            IEntity entity => modelFactory.AsCustomFrom<TCustom, IEntity>(entity),
+            _ => throw new($"Type {typeof(TCustom).Name} not supported, only {typeof(IEntity)} and {nameof(ITypedItem)} are allowed as data"),
         };
 
 
@@ -26,14 +26,44 @@ internal class DataModelHelpers
     /// Typically, the type will be from your `AppCode.Data`.
     /// </summary>
     /// <returns></returns>
-    internal static IEnumerable<T> AsList<T>(ICustomModelFactory modelFactory, object source, NoParamOrder protector = default, bool nullIfNull = false)
-        where T : class, IDataModel
+    internal static IEnumerable<TCustom> AsList<TCustom>(ICustomModelFactory modelFactory, object source, NoParamOrder protector = default, bool nullIfNull = false)
+        where TCustom : class, IDataModel
         => source switch
         {
-            null => (nullIfNull ? null : []),
-            IEnumerable<ITypedItem> typedItems => typedItems.Select(modelFactory.AsCustomFrom2<T, ITypedItem>).ToList(),
-            IEnumerable<IEntity> entities => entities.Select(modelFactory.AsCustomFrom2<T, IEntity>).ToList(),
-            _ => throw new($"Type {typeof(T).Name} not supported, only {typeof(IEntity)} and {nameof(ITypedItem)} are allowed as data"),
+            null => nullIfNull ? null : [],
+            IEnumerable<ITypedItem> typedItems => typedItems
+                .Select(modelFactory.AsCustomFrom<TCustom, ITypedItem>)
+                .ToList(),
+            IEnumerable<IEntity> entities => entities
+                .Select(modelFactory.AsCustomFrom<TCustom, IEntity>)
+                .ToList(),
+            _ => throw new($"Type {typeof(TCustom).Name} not supported, only {typeof(IEntity)} and {nameof(ITypedItem)} are allowed as data"),
         };
+
+    ///// <summary>
+    ///// Convert a list of Entities or TypedItems into a strongly typed list.
+    ///// Typically, the type will be from your `AppCode.Data`.
+    ///// </summary>
+    ///// <returns></returns>
+    //internal static IEnumerable<TCustom> AsList<TCustom, TClass>(
+    //    ICustomModelFactory modelFactory,
+    //    object source,
+    //    NoParamOrder protector = default,
+    //    bool nullIfNull = false
+    //)
+    //    where TCustom : class, IDataModel
+    //    where TClass : class, TCustom
+    //    => source switch
+    //    {
+    //        null => nullIfNull ? null : [],
+    //        IEnumerable<ITypedItem> typedItems => typedItems
+    //            .Select(item => modelFactory.AsCustomFrom<TCustom, ITypedItem>(item, typeof(TClass)))
+    //            .ToList(),
+    //        IEnumerable<IEntity> entities => entities
+    //            .Select(entity => modelFactory.AsCustomFrom<TCustom, IEntity>(entity, typeof(TClass)))
+    //            .ToList(),
+    //        _ => throw new(
+    //            $"Type {typeof(TCustom).Name} not supported, only {typeof(IEntity)} and {nameof(ITypedItem)} are allowed as data"),
+    //    };
 
 }

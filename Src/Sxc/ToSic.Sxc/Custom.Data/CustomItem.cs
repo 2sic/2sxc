@@ -343,7 +343,7 @@ public partial class CustomItem: ITypedItem, IDataModelOf<ITypedItem>, IHasPropL
     /// </remarks>
     protected T As<T>(ITypedItem item)
         where T : class, IDataModel, new()
-        => _modelFactory.AsCustomFrom2<T, ITypedItem>(item);
+        => _modelFactory.AsCustomFrom<T, ITypedItem>(item);
 
     /// <summary>
     /// Convert a list of Entities or TypedItems into a strongly typed list.
@@ -359,7 +359,7 @@ public partial class CustomItem: ITypedItem, IDataModelOf<ITypedItem>, IHasPropL
     /// </remarks>
     protected IEnumerable<T> AsList<T>(IEnumerable<ITypedItem> source, NoParamOrder protector = default, bool nullIfNull = false)
         where T : class, IDataModel
-        => (source ?? (nullIfNull ? null : []))?.Select(_modelFactory.AsCustomFrom2<T, ITypedItem>).ToList();
+        => (source ?? (nullIfNull ? null : []))?.Select(_modelFactory.AsCustomFrom<T, ITypedItem>).ToList();
 
     #endregion
 

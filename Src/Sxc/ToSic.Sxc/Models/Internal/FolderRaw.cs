@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Models.Internal;
     Description = "Folder in an App",
     Name = TypeName
 )]
-public record FolderRaw: FileFolderBase, IFolderModel
+public record FolderRaw: FileFolderBase, IFolderModelSync
 {
     internal const string TypeName = "Folder";
 
@@ -33,7 +33,7 @@ public record FolderRaw: FileFolderBase, IFolderModel
         TitleField = nameof(Path)
     };
 
-    /// <inheritdoc cref="IFolderModel.Name"/>
+    /// <inheritdoc cref="IFolderModelSync.Name"/>
     [ContentTypeAttributeSpecs(Description = "The folder name or blank when it's the root.")]
     public override string Name { get; init; }
 

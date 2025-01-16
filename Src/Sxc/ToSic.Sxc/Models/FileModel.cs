@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Models;
 /// * Not to be seen as final, since we may rename this type when we also
 /// * This is similar to the <see cref="Adam.IFile"/> but still a bit different. For example, it has a <see cref="Folder"/> property which is different from the <see cref="ToSic.Eav.Apps.Assets.IFile.Folder"/> property.
 /// </remarks>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("Still tweaking details and naming v19.0x")]
+[PrivateApi("Still tweaking details and naming v19.0x")]
 public class FileModel: DataModel, IFileModelSync, IFileModel
 {
     ///// <summary>
@@ -38,7 +38,7 @@ public class FileModel: DataModel, IFileModelSync, IFileModel
 
     public string Path => _entity.Get<string>(nameof(Path));
 
-    public FolderModel Folder => As<FolderModel>(_entity.Children(field: nameof(Folder)).FirstOrDefault());
+    public IFolderModel Folder => As<FolderModel>(_entity.Children(field: nameof(Folder)).FirstOrDefault());
 
     public int Size => _entity.Get<int>(nameof(Size));
 

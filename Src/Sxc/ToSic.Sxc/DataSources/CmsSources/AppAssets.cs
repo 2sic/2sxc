@@ -24,11 +24,11 @@ namespace ToSic.Sxc.DataSources;
 /// This provides 4 streams:
 ///
 /// * All: Stream containing both files and folders
-/// * Default: All files <see cref="FileModel"/>
-/// * Files: All Files <see cref="FileModel"/>
-/// * Folders: All folders <see cref="FolderModel"/>
+/// * Default: All files <see cref="IFileModel"/>
+/// * Files: All Files <see cref="IFileModel"/>
+/// * Folders: All folders <see cref="IFolderModel"/>
 ///
-/// To figure out the properties returned and what they match up to, see <see cref="FileModel"/> and <see cref="FolderModel"/>.
+/// To figure out the properties returned and what they match up to, see <see cref="IFileModel"/> and <see cref="IFolderModel"/>.
 /// 
 /// History
 /// 

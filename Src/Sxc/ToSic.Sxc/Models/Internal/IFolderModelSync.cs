@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Models.Internal;
 
-internal interface IFolderModel
+internal interface IFolderModelSync
 {
     /// <summary>
     /// The folder name - or blank when it's the root.

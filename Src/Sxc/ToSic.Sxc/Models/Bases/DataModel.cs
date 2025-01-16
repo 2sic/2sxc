@@ -115,6 +115,13 @@ public abstract partial class DataModel: IDataModelOf<IEntity>, ICanBeEntity //,
         where T : class, IDataModel
         => DataModelHelpers.AsList<T>(_modelFactory, source, protector, nullIfNull);
 
+    ///// <inheritdoc cref="DataModelHelpers.AsList{T}"/>
+    //protected IEnumerable<TModel> AsList<TModel, TClass>(object source, NoParamOrder protector = default,
+    //    bool nullIfNull = false)
+    //    where TModel : class, IDataModel
+    //    where TClass : class, TModel
+    //    => DataModelHelpers.AsList<TModel, TClass>(_modelFactory, source, protector, nullIfNull);
+
     #endregion
 
 }

@@ -19,11 +19,11 @@ partial class CodeDataFactory: ICustomModelFactory
         {
             null when !mock => null,
             TCustom alreadyT => alreadyT,
-            IEntity entity => AsCustomFrom2<TCustom, ITypedItem>(AsItem(entity, propsRequired: true)),
-            _ => AsCustomFrom2<TCustom, ITypedItem>(source as ITypedItem ?? AsItem(source))
+            IEntity entity => AsCustomFrom<TCustom, ITypedItem>(AsItem(entity, propsRequired: true)),
+            _ => AsCustomFrom<TCustom, ITypedItem>(source as ITypedItem ?? AsItem(source))
         };
 
-    public TCustom AsCustomFrom2<TCustom, TData>(TData item)
+    public TCustom AsCustomFrom<TCustom, TData>(TData item)
         where TCustom : class, IDataModel
     {
         if (item == null) return null;
@@ -42,24 +42,6 @@ partial class CodeDataFactory: ICustomModelFactory
             throw new($"The custom type {typeof(TCustom).Name} does not implement {nameof(IDataModelOf<TData>)}. This is probably a mistake.");
         return newT;
     }
-
-    //internal static TCustom AsCustomFrom<TCustom, TData>(TData item)
-    //    where TCustom : class, IDataModel, new()
-    //{
-    //    if (item == null) return null;
-    //    if (item is TCustom t) return t;
-    //    var newT = Activator.CreateInstance<TCustom>();
-
-    //    // Should be an ITypedItemWrapper, but not enforced in the signature
-    //    if (newT is IDataModelOf<TData> withMatchingSetup)
-    //        withMatchingSetup.Setup(item, null);
-    //    // DataModelOfEntity can also be filled from Typed (but ATM not the other way around)
-    //    else if (newT is IDataModelOf<IEntity> forEntity && item is ICanBeEntity canBeEntity)
-    //        forEntity.Setup(canBeEntity.Entity, null);
-    //    else
-    //        throw new($"The custom type {typeof(TCustom).Name} does not implement {nameof(IDataModelOf<TData>)}. This is probably a mistake.");
-    //    return newT;
-    //}
 
     internal TCustom GetOne<TCustom>(Func<IEntity> getItem, object id, bool skipTypeCheck)
         where TCustom : class, IDataModel, new()
@@ -80,29 +62,6 @@ partial class CodeDataFactory: ICustomModelFactory
     }
 
 
-    ///// <summary>
-    ///// WIP / experimental, would be for types which are not as T, but as a type-object.
-    ///// Not in use, so not fully tested.
-    /////
-    ///// Inspired by https://stackoverflow.com/questions/3702916/is-there-a-typeof-inverse-operation
-    ///// </summary>
-    ///// <param name="t"></param>
-    ///// <param name="source"></param>
-    ///// <param name="protector"></param>
-    ///// <param name="mock"></param>
-    ///// <returns></returns>
-    //public object AsCustom(Type t, ICanBeEntity source, NoParamOrder protector = default, bool mock = false)
-    //{
-    //    if (!mock && source == null) return null;
-    //    if (source.GetType() == t) return source;
-
-    //    var item = source as ITypedItem ?? AsItem(source);
-    //    var wrapperObj = Activator.CreateInstance(t);
-    //    if (wrapperObj is not ITypedItemWrapper16 wrapper) return null;
-    //    wrapper.Setup(item);
-    //    return wrapper;
-    //}
-
     /// <summary>
     /// Create list of custom-typed ITypedItems
     /// </summary>
@@ -115,7 +74,7 @@ partial class CodeDataFactory: ICustomModelFactory
             IEnumerable<TCustom> alreadyListT => alreadyListT,
             // special case: empty list, with hidden info about where it's from so the toolbar can adjust and provide new-buttons
             ListTypedItems<ITypedItem> { Count: 0, Entity: not null } list => new ListTypedItems<TCustom>(new List<TCustom>(), list.Entity),
-            _ => new ListTypedItems<TCustom>(SafeItems().Select(AsCustomFrom2<TCustom, ITypedItem>), null)
+            _ => new ListTypedItems<TCustom>(SafeItems().Select(AsCustomFrom<TCustom, ITypedItem>), null)
         };
 
         // Helper function to be called from above to ensure that

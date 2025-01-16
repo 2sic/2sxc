@@ -4,7 +4,10 @@ using ToSic.Sxc.Models.Internal;
 
 namespace ToSic.Sxc.Models;
 
-[DataModelConversion(Map = [typeof(DataModelFrom<IEntity, IFileModel, FileModel>)])]
+[DataModelConversion(Map = [
+    typeof(DataModelFrom<IEntity, IFileModel, FileModel>),
+])]
+[InternalApi_DoNotUse_MayChangeWithoutNotice("Still tweaking details and naming v19.0x")]
 public interface IFileModel: IDataModel
 {
     /// <inheritdoc cref="IFileModelSync.Name" />
@@ -23,7 +26,7 @@ public interface IFileModel: IDataModel
     /// Reference to the folder this file is in.
     /// Returns `null` on the root folder.
     /// </summary>
-    FolderModel Folder { get; }
+    IFolderModel Folder { get; }
 
     /// <inheritdoc cref="IFileModelSync.Size" />
     int Size { get; }
