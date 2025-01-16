@@ -5,7 +5,7 @@ REM Displaying the parameters received
 SET BuildFolder=%1
 SET OqtaneTarget=%2
 
-ECHO BuildFolder=%BuildFolder%\net9.0
+ECHO BuildFolder=%BuildFolder%
 ECHO OqtaneTarget=%OqtaneTarget%
 
 SET OqtaneBin=%OqtaneTarget%bin\%BuildFolder%\net9.0
@@ -15,30 +15,30 @@ ECHO The target folder is: %OqtaneBin%
 
 ECHO(
 ECHO 2sxc Oqtane - Client
-XCOPY "..\ToSic.Sxc.Oqt.Client\bin\%BuildFolder%\ToSic.*.dll" "%OqtaneBin%\" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Client\bin\%BuildFolder%\ToSic.*.pdb" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Client\bin\%BuildFolder%\net9.0\ToSic.*.dll" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Client\bin\%BuildFolder%\net9.0\ToSic.*.pdb" "%OqtaneBin%\" /Y
 
 ECHO(
 ECHO 2sxc Oqtane - Server
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\ToSic.*.dll" "%OqtaneBin%\" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\ToSic.*.pdb" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net9.0\ToSic.*.dll" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net9.0\ToSic.*.pdb" "%OqtaneBin%\" /Y
 
 ECHO(
 ECHO 2sxc Oqtane - Server Framework DLLs
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\Microsoft.AspNetCore.Mvc.Razor.*.dll" "%OqtaneBin%\" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\Microsoft.AspNetCore.Razor.*" "%OqtaneBin%\" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\Microsoft.CodeAnalys*.*" "%OqtaneBin%\" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\Microsoft.Extensions.DependencyModel.dll" "%OqtaneBin%\" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\System.Runtime.Caching.dll" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net9.0\Microsoft.AspNetCore.Mvc.Razor.*.dll" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net9.0\Microsoft.AspNetCore.Razor.*" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net9.0\Microsoft.CodeAnalys*.*" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net9.0\Microsoft.Extensions.DependencyModel.dll" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net9.0\System.Runtime.Caching.dll" "%OqtaneBin%\" /Y
 
 ECHO(
 ECHO 2sxc Oqtane - 3rd party deps
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\CsvHelper.dll" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net9.0\CsvHelper.dll" "%OqtaneBin%\" /Y
 
 ECHO(
 ECHO 2sxc Oqtane - Shared
-XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\ToSic.*.dll" "%OqtaneBin%\" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\ToSic.*.pdb" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net9.0\ToSic.*.dll" "%OqtaneBin%\" /Y
+XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net9.0\ToSic.*.pdb" "%OqtaneBin%\" /Y
 
 ECHO(
 ECHO 2sxc Oqtane - Client Assets
