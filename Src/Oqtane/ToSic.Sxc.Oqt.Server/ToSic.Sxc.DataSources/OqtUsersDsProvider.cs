@@ -15,16 +15,16 @@ internal class OqtUsersDsProvider(
     LazySvc<IUserRoleRepository> roles)
     : UsersDataSourceProvider("Oqt.Users", connect: [siteState, oqtSecurity, roles])
 {
-    public override IEnumerable<UserRaw> GetUsersInternal()
+    public override IEnumerable<UserModel> GetUsersInternal()
     {
-        var l = Log.Fn<IEnumerable<UserRaw>>();
+        var l = Log.Fn<IEnumerable<UserModel>>();
         var siteId = siteState.Alias.SiteId;
         l.A($"Portal Id {siteId}");
         try
         {
             var userRoles = roles.Value.GetUserRoles(siteId).ToList();
             var users = userRoles.Select(ur => ur.User).Distinct().ToList();
-            if (!users.Any()) return l.Return(new List<UserRaw>(), "null/empty");
+            if (!users.Any()) return l.Return(new List<UserModel>(), "null/empty");
 
             var result = users
                 .Where(u => !u.IsDeleted)
@@ -34,7 +34,7 @@ internal class OqtUsersDsProvider(
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.Return(new List<UserRaw>(), "error");
+            return l.Return(new List<UserModel>(), "error");
         }
     }
 }

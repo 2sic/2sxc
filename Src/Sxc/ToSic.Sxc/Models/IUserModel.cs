@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data.Model;
+﻿using ToSic.Eav.Context;
+using ToSic.Sxc.Data.Model;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Models.Internal;
 
@@ -24,46 +25,66 @@ namespace ToSic.Sxc.Models;
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 public interface IUserModel : IDataModel
 {
-    /// <inheritdoc cref="IUserModelSync.Email" />
+    /// <inheritdoc cref="IUser.Email"/>
     string Email { get; }
 
-    /// <inheritdoc cref="IUserModelSync.Id" />
+    /// <inheritdoc cref="IUser.Id"/>>
     int Id { get; }
 
-    /// <inheritdoc cref="IUserModelSync.Guid" />
+    /// <inheritdoc cref="IUser.Guid"/>
     Guid Guid { get; }
 
-    /// <inheritdoc cref="IUserModelSync.Created" />
+    /// <summary>
+    /// When the user was first created.
+    /// </summary>
     DateTime Created { get; }
 
-    /// <inheritdoc cref="IUserModelSync.Modified" />
+    /// <summary>
+    /// When the user was last modified.
+    /// </summary>
     DateTime Modified { get; }
 
-    /// <inheritdoc cref="IUserModelSync.IsAnonymous" />
+    /// <summary>
+    /// True if the user is anonymous / not logged in. 
+    /// </summary>
     bool IsAnonymous { get; }
 
-    /// <inheritdoc cref="IUserModelSync.IsSiteAdmin" />
+    /// <summary>
+    /// True if the user is admin - allowing full content-management and user-management.
+    /// </summary>
     bool IsSiteAdmin { get; }
 
-    /// <inheritdoc cref="IUserModelSync.IsContentAdmin" />
+    /// <summary>
+    /// True if the user is a content admin / editor.
+    /// If the user only has this role, then he/she can only edit pages and content, but not users. 
+    /// </summary>
     bool IsContentAdmin { get; }
 
-    /// <inheritdoc cref="IUserModelSync.IsContentEditor" />
+    /// <summary>
+    /// Determines if the user is a content editor.
+    /// In DNN 10, ContentEditors cannot publish pages (unless they are also ContentAdmins).
+    /// </summary>
     bool IsContentEditor { get; }
 
-    /// <inheritdoc cref="IUserModelSync.NameId" />
+    // TODO:
     string NameId { get; }
 
-    /// <inheritdoc cref="IUserModelSync.IsSystemAdmin" />
+    /// <summary>
+    /// True if the user has super-user rights.
+    /// This kind of user can do everything, incl. create apps. 
+    /// </summary>
     bool IsSystemAdmin { get; }
 
-    /// <inheritdoc cref="IUserModelSync.IsSiteDeveloper" />
+    /// <summary>
+    /// True if a user is in the SxcDesigners group.
+    /// Such a person can actually do a lot more, like access the advanced toolbars. 
+    /// </summary>
     bool IsSiteDeveloper { get; }
 
-    /// <inheritdoc cref="IUserModelSync.Name" />
+    /// <inheritdoc cref="IUser.Name"/>
     string Name { get; }
 
-    /// <inheritdoc cref="IUserModelSync.Username" />
+    /// <inheritdoc cref="IUser.Username"/>
     string Username { get; }
 
     /// <summary>

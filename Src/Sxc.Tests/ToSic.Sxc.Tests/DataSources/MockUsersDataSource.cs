@@ -12,11 +12,11 @@ namespace ToSic.Sxc.DataSources;
 /// </summary>
 public class MockUsersDataSource() : UsersDataSourceProvider("DS.MockUsers")
 {
-    public override IEnumerable<UserRaw> GetUsersInternal() => Log.Func(l =>
+    public override IEnumerable<UserModel> GetUsersInternal() => Log.Func(l =>
     {
         var siteId = 0;
         l.A($"Portal Id {siteId}");
-        var users = new List<UserRaw>();
+        var users = new List<UserModel>();
 
         l.A($"mock 3 super users and admins with one role [1-3]");
         for (var i = 1; i <= 3; i++)
@@ -26,7 +26,7 @@ public class MockUsersDataSource() : UsersDataSourceProvider("DS.MockUsers")
                 Id = i,
                 Guid = new($"00000000-0000-0000-0000-{i:d12}"),
                 NameId = $"mock:{i}",
-                Roles = [i],
+                RolesRaw = [i],
                 IsSystemAdmin = true,
                 IsSiteAdmin = true,
                 //IsDesigner = false,
@@ -49,7 +49,7 @@ public class MockUsersDataSource() : UsersDataSourceProvider("DS.MockUsers")
                 Id = i,
                 Guid = new($"00000000-0000-0000-0000-{i:d12}"),
                 NameId = $"mock:{i}",
-                Roles = [2, 3, i],
+                RolesRaw = [2, 3, i],
                 IsSystemAdmin = false,
                 IsSiteAdmin = false,
                 //IsDesigner = false,
@@ -71,7 +71,7 @@ public class MockUsersDataSource() : UsersDataSourceProvider("DS.MockUsers")
                 Id = i,
                 Guid = new($"00000000-0000-0000-0000-{i:d12}"),
                 NameId = $"mock:{i}",
-                Roles = [9, 10],
+                RolesRaw = [9, 10],
                 IsSystemAdmin = false,
                 IsSiteAdmin = false,
                 //IsDesigner = false,

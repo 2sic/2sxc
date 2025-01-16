@@ -16,5 +16,5 @@ public abstract class UsersDataSourceProvider(string logName, object[] connect =
     /// </summary>
     /// <returns></returns>
     [PrivateApi]
-    public abstract IEnumerable<UserRaw> GetUsersInternal();
+    public abstract IEnumerable<UserModel> GetUsersInternal();
 }

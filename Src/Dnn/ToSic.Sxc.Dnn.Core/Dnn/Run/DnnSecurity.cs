@@ -104,7 +104,7 @@ public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("
                     Id = user.UserID,
                     Guid = UserGuid(user),
                     NameId = UserIdentityToken(user),
-                    Roles = RoleList(user, portalId: siteId),
+                    RolesRaw = RoleList(user, portalId: siteId),
                     IsSystemAdmin = user.IsSuperUser,
                     IsSiteAdmin = adminInfo.IsSiteAdmin,
                     IsContentAdmin = adminInfo.IsContentAdmin,

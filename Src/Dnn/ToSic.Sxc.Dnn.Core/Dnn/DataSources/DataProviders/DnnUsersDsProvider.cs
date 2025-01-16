@@ -10,9 +10,9 @@ namespace ToSic.Sxc.DataSources;
 internal class DnnUsersDsProvider(LazySvc<DnnSecurity> dnnSecurity)
     : UsersDataSourceProvider("Dnn.Users", connect: [dnnSecurity])
 {
-    public override IEnumerable<UserRaw> GetUsersInternal()
+    public override IEnumerable<UserModel> GetUsersInternal()
     {
-        var l = Log.Fn<IEnumerable<UserRaw>>();
+        var l = Log.Fn<IEnumerable<UserModel>>();
         var siteId = PortalSettings.Current?.PortalId ?? -1;
         l.A($"Portal Id {siteId}");
         try
@@ -27,7 +27,7 @@ internal class DnnUsersDsProvider(LazySvc<DnnSecurity> dnnSecurity)
 
             var dnnUsers = dnnAllUsers.Cast<UserInfo>().ToList();
             if (!dnnUsers.Any())
-                return l.Return(new List<UserRaw>(), "null/empty");
+                return l.Return(new List<UserModel>(), "null/empty");
 
             var result = dnnUsers
                 //.Where(user => !user.IsDeleted)
@@ -39,7 +39,7 @@ internal class DnnUsersDsProvider(LazySvc<DnnSecurity> dnnSecurity)
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.Return(new List<UserRaw>(), "error");
+            return l.Return(new List<UserModel>(), "error");
         }
     }
 }

@@ -43,7 +43,7 @@ public class OqtSecurity(LazySvc<IUserRoleRepository> userRoleRepository, UserMa
             Id = Id(user),
             Guid = UserGuid(user.Username),
             NameId = UserIdentityToken(user),
-            Roles = Roles(user),
+            RolesRaw = Roles(user),
             IsSystemAdmin = IsSystemAdmin(user),
             IsSiteAdmin = isSiteAdmin,
             IsContentAdmin = isSiteAdmin,

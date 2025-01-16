@@ -5,10 +5,10 @@ namespace ToSic.Sxc.DataSources;
 
 public partial class Users
 {
-    private List<FilterOp<UserRaw>> GetAllFilters2()
+    private List<FilterOp<UserModel>> GetAllFilters2()
     {
-        var l = Log.Fn<List<FilterOp<UserRaw>>>();
-        var filters = new List<FilterOp<UserRaw>>
+        var l = Log.Fn<List<FilterOp<UserModel>>>();
+        var filters = new List<FilterOp<UserModel>>
         {
             KeepUsersCondition(),
             ExcludeUsersPredicate(),
@@ -24,7 +24,7 @@ public partial class Users
         return l.Return(filters, $"{filters.Count}");
     }
 
-    private FilterOp<UserRaw> KeepUsersCondition()
+    private FilterOp<UserModel> KeepUsersCondition()
     {
         if (string.IsNullOrEmpty(UserIds))
             return null;
@@ -37,7 +37,7 @@ public partial class Users
         return new(u => (keepGuids != null && keepGuids(u)) || (keepIds != null && keepIds(u)));
 
 
-        Func<UserRaw, bool> FilterKeepUserGuids()
+        Func<UserModel, bool> FilterKeepUserGuids()
         {
             var userGuidFilter = UserIds
                 .Split(Separator)
@@ -50,7 +50,7 @@ public partial class Users
                 : null;
         }
 
-        Func<UserRaw, bool> FilterKeepUserIds()
+        Func<UserModel, bool> FilterKeepUserIds()
         {
             var userIdFilter = UserIds
                 .Split(Separator)
@@ -66,7 +66,7 @@ public partial class Users
 
 
 
-    private FilterOp<UserRaw> ExcludeUsersPredicate()
+    private FilterOp<UserModel> ExcludeUsersPredicate()
     {
         if (string.IsNullOrEmpty(ExcludeUserIds))
             return null;
@@ -81,7 +81,7 @@ public partial class Users
         );
 
 
-        Func<UserRaw, bool> FilterExcludeUserGuids()
+        Func<UserModel, bool> FilterExcludeUserGuids()
         {
             var excludeUserGuidsFilter = ExcludeUserIds
                 .Split(Separator)
@@ -93,7 +93,7 @@ public partial class Users
                 : null;
         }
 
-        Func<UserRaw, bool> FilterExcludeUserIds()
+        Func<UserModel, bool> FilterExcludeUserIds()
         {
             var excludeUserIdsFilter = ExcludeUserIds
                 .Split(Separator)
@@ -108,25 +108,25 @@ public partial class Users
 
 
 
-    private FilterOp<UserRaw> KeepUsersInRoles()
+    private FilterOp<UserModel> KeepUsersInRoles()
     {
         var rolesFilter = UserRoles.RolesCsvListToInt(RoleIds);
         return rolesFilter.Any()
-            ? new(u => u.Roles.Any(r => rolesFilter.Contains(r)))
+            ? new(u => u.RolesRaw.Any(r => rolesFilter.Contains(r)))
             : null;
     }
 
-    private FilterOp<UserRaw> DropUsersInRoles()
+    private FilterOp<UserModel> DropUsersInRoles()
     {
         var excludeRolesFilter = UserRoles.RolesCsvListToInt(ExcludeRoleIds);
         return excludeRolesFilter.Any()
-            ? new(u => !u.Roles.Any(r => excludeRolesFilter.Contains(r)))
+            ? new(u => !u.RolesRaw.Any(r => excludeRolesFilter.Contains(r)))
             : null;
     }
 
-    private FilterOp<UserRaw> SuperUserCondition()
+    private FilterOp<UserModel> SuperUserCondition()
     {
-        var l = Log.Fn<FilterOp<UserRaw>>();
+        var l = Log.Fn<FilterOp<UserModel>>();
         // If "include" == "only" return only superusers
         if (IncludeSystemAdmins.EqualsInsensitive(IncludeRequired))
             return l.Return(new(u => u.IsSystemAdmin, IncludeRequired));

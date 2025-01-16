@@ -168,7 +168,7 @@ public partial class Users : CustomDataSourceAdvanced
         // Figure out options to be sure we have the roles/roleids
         var relationships = new LazyLookup<object, IEntity>();
         var userFactory = _dataFactory.New(
-            options: UserRaw.Options,
+            options: UserModel.Options,
             relationships: relationships,
             // Option to tell the entity conversion to add the "Roles" to each user
             rawConvertOptions: new(addKeys: ["Roles"])
@@ -186,7 +186,7 @@ public partial class Users : CustomDataSourceAdvanced
             // Get roles and extend with the property necessary for Users to map to the roles
             roles = GetRolesStream(usersRaw);
             relationships.Add(roles.Select(r =>
-                new KeyValuePair<object, IEntity>($"{UserRaw.RoleRelationshipPrefix}{r.EntityId}", r)));
+                new KeyValuePair<object, IEntity>($"{UserModel.RoleRelationshipPrefix}{r.EntityId}", r)));
             return l.Return((users, roles), $"users {users.Count}; roles {roles.Count}");
         }
         catch (Exception ex)
@@ -199,9 +199,9 @@ public partial class Users : CustomDataSourceAdvanced
 
     }
 
-    private List<UserRaw> GetUsersAndFilter()
+    private List<UserModel> GetUsersAndFilter()
     {
-        var l = Log.Fn<List<UserRaw>>();
+        var l = Log.Fn<List<UserModel>>();
         var users = _provider.GetUsersInternal()?.ToList();
         if (users == null || users.Count == 0)
             return l.Return([], "null/empty");
@@ -224,11 +224,11 @@ public partial class Users : CustomDataSourceAdvanced
     /// </summary>
     /// <param name="usersRaw"></param>
     /// <returns></returns>
-    private List<IEntity> GetRolesStream(List<UserRaw> usersRaw)
+    private List<IEntity> GetRolesStream(List<UserModel> usersRaw)
     {
         // Get list of all role IDs which are to be used
         var roleIds = usersRaw
-            .SelectMany(u => u.Roles)
+            .SelectMany(u => u.RolesRaw)
             .Distinct()
             .ToList();
 

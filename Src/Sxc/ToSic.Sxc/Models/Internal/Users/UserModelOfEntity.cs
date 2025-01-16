@@ -1,17 +1,10 @@
-﻿using ToSic.Sxc.Context.Internal.Raw;
-using ToSic.Sxc.Data.Model;
+﻿using ToSic.Sxc.Data.Model;
 
 namespace ToSic.Sxc.Models.Internal;
 
 
-internal class UserModelOfEntity : DataModel, IUserModelSync, IUserModel
+internal class UserModelOfEntity : DataModel, IUserModel
 {
-    /// <summary>
-    /// Special override object to provide the values without using the entity.
-    ///
-    /// WIP possible solution for the IUserService
-    /// </summary>
-    internal CmsUserRaw Override { get; init; }
 
     public string Email => _entity.Get<string>(nameof(Email));
 
