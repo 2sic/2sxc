@@ -112,12 +112,14 @@
     <Compile Include="DataSources\UsersDataSourceTests.cs" />
     <Compile Include="DataSources\RolesDataSourceTests.cs" />
     <Compile Include="DataTests\CodeDataConverterTestAccessors.cs" />
+    <Compile Include="DataTests\ModelTests\DataModelAnalyzerTestAccessors.cs" />
     <Compile Include="DataTests\DynAndTypedTestsBase.cs" />
     <Compile Include="DataTests\DynConverterTests\AsConverterFakeTests.cs" />
     <Compile Include="DataTests\DynConverterTests\AsConverterAsItem.cs" />
     <Compile Include="DataTests\DynWrappers\WrapObjTypedItemEquality.cs" />
     <Compile Include="DataTests\GetAndConvertHelperTestAccessors.cs" />
-    <Compile Include="DataTests\ModelTests\CustomModelType.cs" />
+    <Compile Include="DataTests\ModelTests\DataModelAnalyzerTypeTests.cs" />
+    <Compile Include="DataTests\ModelTests\DataModelAnalyzerTests.cs" />
     <Compile Include="DataTests\PropInfo.cs" />
     <Compile Include="DataTests\DynJson\WrapAllGps.cs" />
     <Compile Include="DataTests\DynJson\WrapAllKeys.cs" />

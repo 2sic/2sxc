@@ -42,7 +42,7 @@ internal class AppDataTyped(
     /// <inheritdoc />
     IEnumerable<T> IAppDataTyped.GetAll<T>(NoParamOrder protector, string typeName, bool nullIfNotFound)
     {
-        var streamName = typeName ?? CodeDataFactory.GetStreamName<T>();
+        var streamName = typeName ?? DataModelAnalyzer.GetStreamName<T>();
 
         // Get the list - will be null if not found
         var list = GetStream(streamName, nullIfNotFound: nullIfNotFound);

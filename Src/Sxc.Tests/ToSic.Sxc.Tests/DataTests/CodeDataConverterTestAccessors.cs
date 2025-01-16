@@ -2,7 +2,6 @@
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
-using ToSic.Sxc.Models;
 
 namespace ToSic.Sxc.Tests.DataTests;
 
@@ -13,13 +12,4 @@ internal static class CodeDataConverterTestAccessors
 
     public static IEntity FakeEntityTac(this CodeDataFactory cdf, int? appId)
         => cdf.FakeEntity(appId);
-
-    public static string CdfGetContentTypeNameTac<T>()
-        where T : class, IDataModel
-        => CodeDataFactory.GetContentTypeName<T>();
-
-    public static string CdfGetStreamNameTac<T>()
-        where T : class, IDataModel
-        => CodeDataFactory.GetStreamName<T>();
-
 }

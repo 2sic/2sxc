@@ -5,14 +5,14 @@ using ToSic.Sxc.Models.Attributes;
 namespace ToSic.Sxc.Tests.DataTests.ModelTests;
 
 [TestClass]
-public class CustomModelType : TestBaseSxcDb
+public class DataModelAnalyzerTests : TestBaseSxcDb
 {
     private void AssertTypeName<T>(string name)
         where T : class, IDataModel =>
-        Assert.AreEqual(name, CodeDataConverterTestAccessors.CdfGetContentTypeNameTac<T>());
+        Assert.AreEqual(name, DataModelAnalyzerTestAccessors.GetContentTypeNameTac<T>());
     private void AssertStreamName<T>(string name)
         where T : class, IDataModel =>
-        Assert.AreEqual(name, CodeDataConverterTestAccessors.CdfGetStreamNameTac<T>());
+        Assert.AreEqual(name, DataModelAnalyzerTestAccessors.GetStreamNameTac<T>());
 
     class NotDecorated: IDataModel;
 

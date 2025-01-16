@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Data.Internal.Factory;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Models;
 using ToSic.Sxc.Models.Attributes;
@@ -23,28 +21,13 @@ partial class CodeDataFactory
             IEntity entity => AsCustomFrom<TCustom, ITypedItem>(AsItem(entity, propsRequired: true)),
             _ => AsCustomFrom<TCustom, ITypedItem>(source as ITypedItem ?? AsItem(source))
         };
-
-    //internal static TCustom AsCustomFromItem<TCustom>(ITypedItem item)
-    //    where TCustom : class, IDataModel, new()
-    //{
-    //    if (item == null) return null;
-    //    if (item is TCustom t) return t;
-    //    var newT = new TCustom();
-
-    //    // Should be an ITypedItemWrapper, but not enforced in the signature
-    //    if (newT is IDataModelOf<ITypedItem> ofTypedItem)
-    //        ofTypedItem.Setup(item);
-    //    else
-    //        throw new($"The custom type {typeof(TCustom).Name} does not implement {nameof(IDataModelOf<ITypedItem>)}. This is probably a mistake.");
-    //    return newT;
-    //}
-
+    
     internal static TCustom AsCustomFrom<TCustom, TData>(TData item)
         where TCustom : class, IDataModel, new()
     {
         if (item == null) return null;
         if (item is TCustom t) return t;
-        var newT = new TCustom();
+        var newT = Activator.CreateInstance<TCustom>();
 
         // Should be an ITypedItemWrapper, but not enforced in the signature
         if (newT is IDataModelOf<TData> withMatchingSetup)
@@ -69,44 +52,12 @@ partial class CodeDataFactory
             return AsCustom<TCustom>(item);
 
         // Do Type-Name check
-        var typeName = GetContentTypeName<TCustom>();
-        if (!item.Type.Is(typeName) &&  typeName != DataModelAttribute.ForAnyContentType)
+        var typeName = DataModelAnalyzer.GetContentTypeNames<TCustom>().Split(',');
+        if (typeName.FirstOrDefault() != DataModelAttribute.ForAnyContentType && !typeName.Any(tn => item.Type.Is(tn)))
             throw new($"Item with ID {id} is not a {typeName}. This is probably a mistake, otherwise use {nameof(skipTypeCheck)}: true");
         return AsCustom<TCustom>(item);
     }
 
-    /// <summary>
-    /// Figure out the expected ContentTypeName of a DataWrapper type.
-    /// If it is decorated with <see cref="DataModelAttribute"/> then use the information it provides, otherwise
-    /// use the type name.
-    /// </summary>
-    /// <typeparam name="TCustom"></typeparam>
-    /// <returns></returns>
-    internal static string GetContentTypeName<TCustom>() where TCustom : IDataModel =>
-        ContentTypeNames.Get<TCustom, DataModelAttribute>(a =>
-        {
-            // If we have an attribute, use the value provided (unless not specified)
-            if (a?.ForContentTypes != null)
-                return a.ForContentTypes;
-
-            // If no attribute, use name of type
-            var type = typeof(TCustom);
-            var typeName = type.Name;
-            // If type is Interface: drop the "I" as this can't be a content-type
-            // TODO: not sure if this is a good idea
-            return typeName.StartsWith("I") && type.IsInterface
-                ? typeName.Substring(1)
-                : typeName;
-        });
-    private static readonly ClassAttributeLookup<string> ContentTypeNames = new();
-
-    internal static string GetStreamName<TCustom>() where TCustom : IDataModel =>
-        StreamNames.Get<TCustom, DataModelAttribute>(a =>
-            // if we have the attribute, use that
-            a?.StreamNames.Split(',').First().Trim()
-            // If no attribute, use name of type
-            ?? typeof(TCustom).Name);
-    private static readonly ClassAttributeLookup<string> StreamNames = new();
 
     ///// <summary>
     ///// WIP / experimental, would be for types which are not as T, but as a type-object.
