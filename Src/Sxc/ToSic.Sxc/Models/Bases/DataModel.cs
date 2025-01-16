@@ -1,5 +1,7 @@
 ﻿using Custom.Data;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Data.Internal.Factory;
 
 namespace ToSic.Sxc.Models;
 
@@ -49,8 +51,12 @@ public abstract partial class DataModel: IDataModelOf<IEntity>, ICanBeEntity //,
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
-    void IDataModelOf<IEntity>.Setup(IEntity baseItem)
-        => _entity = baseItem;
+    void IDataModelOf<IEntity>.Setup(IEntity baseItem, ICustomModelFactory modelFactory)
+    {
+        _entity = baseItem;
+        _modelFactory = modelFactory;
+    }
+    private ICustomModelFactory _modelFactory;
 
     ///// <summary>
     ///// The actual item which is being wrapped, in rare cases where you must access it from outside.
@@ -102,12 +108,12 @@ public abstract partial class DataModel: IDataModelOf<IEntity>, ICanBeEntity //,
     /// <inheritdoc cref="DataModelHelpers.As{T}"/>
     protected T As<T>(object item)
         where T : class, IDataModel, new()
-        => DataModelHelpers.As<T>(item);
+        => DataModelHelpers.As<T>(_modelFactory, item);
 
     /// <inheritdoc cref="DataModelHelpers.AsList{T}"/>
     protected IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = false)
         where T : class, IDataModel, new()
-        => DataModelHelpers.AsList<T>(source, protector, nullIfNull);
+        => DataModelHelpers.AsList<T>(_modelFactory, source, protector, nullIfNull);
 
     #endregion
 

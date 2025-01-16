@@ -1,11 +1,12 @@
 ﻿using System.Collections;
+using Microsoft.Extensions.DependencyInjection;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Models;
 using ToSic.Sxc.Models.Attributes;
 
 namespace ToSic.Sxc.Data.Internal;
 
-partial class CodeDataFactory
+partial class CodeDataFactory: ICustomModelFactory
 {
     /// <summary>
     /// Convert an object to a custom type, if possible.
@@ -18,27 +19,45 @@ partial class CodeDataFactory
         {
             null when !mock => null,
             TCustom alreadyT => alreadyT,
-            IEntity entity => AsCustomFrom<TCustom, ITypedItem>(AsItem(entity, propsRequired: true)),
-            _ => AsCustomFrom<TCustom, ITypedItem>(source as ITypedItem ?? AsItem(source))
+            IEntity entity => AsCustomFrom2<TCustom, ITypedItem>(AsItem(entity, propsRequired: true)),
+            _ => AsCustomFrom2<TCustom, ITypedItem>(source as ITypedItem ?? AsItem(source))
         };
-    
-    internal static TCustom AsCustomFrom<TCustom, TData>(TData item)
-        where TCustom : class, IDataModel, new()
+
+    public TCustom AsCustomFrom2<TCustom, TData>(TData item)
+        where TCustom : class, IDataModel
     {
         if (item == null) return null;
         if (item is TCustom t) return t;
-        var newT = Activator.CreateInstance<TCustom>();
+        var newT = ActivatorUtilities.CreateInstance<TCustom>(serviceProvider);
 
         // Should be an ITypedItemWrapper, but not enforced in the signature
         if (newT is IDataModelOf<TData> withMatchingSetup)
-            withMatchingSetup.Setup(item);
+            withMatchingSetup.Setup(item, this);
         // DataModelOfEntity can also be filled from Typed (but ATM not the other way around)
         else if (newT is IDataModelOf<IEntity> forEntity && item is ICanBeEntity canBeEntity)
-            forEntity.Setup(canBeEntity.Entity);
+            forEntity.Setup(canBeEntity.Entity, this);
         else
             throw new($"The custom type {typeof(TCustom).Name} does not implement {nameof(IDataModelOf<TData>)}. This is probably a mistake.");
         return newT;
     }
+
+    //internal static TCustom AsCustomFrom<TCustom, TData>(TData item)
+    //    where TCustom : class, IDataModel, new()
+    //{
+    //    if (item == null) return null;
+    //    if (item is TCustom t) return t;
+    //    var newT = Activator.CreateInstance<TCustom>();
+
+    //    // Should be an ITypedItemWrapper, but not enforced in the signature
+    //    if (newT is IDataModelOf<TData> withMatchingSetup)
+    //        withMatchingSetup.Setup(item, null);
+    //    // DataModelOfEntity can also be filled from Typed (but ATM not the other way around)
+    //    else if (newT is IDataModelOf<IEntity> forEntity && item is ICanBeEntity canBeEntity)
+    //        forEntity.Setup(canBeEntity.Entity, null);
+    //    else
+    //        throw new($"The custom type {typeof(TCustom).Name} does not implement {nameof(IDataModelOf<TData>)}. This is probably a mistake.");
+    //    return newT;
+    //}
 
     internal TCustom GetOne<TCustom>(Func<IEntity> getItem, object id, bool skipTypeCheck)
         where TCustom : class, IDataModel, new()
@@ -94,7 +113,7 @@ partial class CodeDataFactory
             IEnumerable<TCustom> alreadyListT => alreadyListT,
             // special case: empty list, with hidden info about where it's from so the toolbar can adjust and provide new-buttons
             ListTypedItems<ITypedItem> { Count: 0, Entity: not null } list => new ListTypedItems<TCustom>(new List<TCustom>(), list.Entity),
-            _ => new ListTypedItems<TCustom>(SafeItems().Select(AsCustomFrom<TCustom, ITypedItem>), null)
+            _ => new ListTypedItems<TCustom>(SafeItems().Select(AsCustomFrom2<TCustom, ITypedItem>), null)
         };
 
         // Helper function to be called from above to ensure that

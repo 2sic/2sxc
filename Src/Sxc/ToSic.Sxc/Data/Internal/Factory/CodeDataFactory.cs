@@ -18,6 +18,7 @@ namespace ToSic.Sxc.Data.Internal;
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public partial class CodeDataFactory(
+    IServiceProvider serviceProvider,
     LazySvc<CodeDataServices> codeDataServices,
     LazySvc<AdamManager> adamManager,
     LazySvc<IContextOfApp> contextOfAppLazy,
@@ -27,7 +28,7 @@ public partial class CodeDataFactory(
     LazySvc<CodeInfoService> codeInfoSvc,
     LazySvc<IZoneMapper> zoneMapper)
     : ServiceForDynamicCode("Sxc.AsConv",
-        connect: [codeDataServices, adamManager, contextOfAppLazy, dataBuilderLazy, codeDataWrapper, wrapJsonGenerator, codeInfoSvc, zoneMapper])
+        connect: [/* never: serviceProvider */codeDataServices, adamManager, contextOfAppLazy, dataBuilderLazy, codeDataWrapper, wrapJsonGenerator, codeInfoSvc, zoneMapper])
 {
     internal CodeInfoService CodeInfo => codeInfoSvc.Value;
 

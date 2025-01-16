@@ -1,4 +1,6 @@
 ﻿using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Data.Internal.Factory;
 
 namespace ToSic.Sxc.Models;
 
@@ -24,8 +26,7 @@ public interface IDataModelOf<in TContents>: IDataModel
     /// We are not doing this in the constructor,
     /// because the object needs to have an empty (or future: maybe DI-compatible) constructor. 
     /// </summary>
-    /// <param name="baseItem"></param>
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    internal void Setup(TContents baseItem);
+    internal void Setup(TContents baseItem, ICustomModelFactory modelFactory);
 }

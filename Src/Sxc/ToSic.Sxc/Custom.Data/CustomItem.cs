@@ -7,6 +7,7 @@ using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Cms.Data;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Data.Internal.Factory;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Models;
 using ToSic.Sxc.Models.Attributes;
@@ -63,8 +64,12 @@ public partial class CustomItem: ITypedItem, IDataModelOf<ITypedItem>, IHasPropL
     #region Explicit Interfaces for internal use - Setup, etc.
 
 
-    void IDataModelOf<ITypedItem>.Setup(ITypedItem baseItem)
-        => _item = baseItem;
+    void IDataModelOf<ITypedItem>.Setup(ITypedItem baseItem, ICustomModelFactory modelFactory)
+    {
+        _item = baseItem;
+        _modelFactory = modelFactory;
+    }
+    private ICustomModelFactory _modelFactory;
 
     /// <summary>
     /// The actual item which is being wrapped, in rare cases where you must access it.
@@ -338,7 +343,7 @@ public partial class CustomItem: ITypedItem, IDataModelOf<ITypedItem>, IHasPropL
     /// </remarks>
     protected T As<T>(ITypedItem item)
         where T : class, IDataModel, new()
-        => CodeDataFactory.AsCustomFrom<T, ITypedItem>(item);
+        => _modelFactory.AsCustomFrom2<T, ITypedItem>(item);
 
     /// <summary>
     /// Convert a list of Entities or TypedItems into a strongly typed list.
@@ -354,7 +359,7 @@ public partial class CustomItem: ITypedItem, IDataModelOf<ITypedItem>, IHasPropL
     /// </remarks>
     protected IEnumerable<T> AsList<T>(IEnumerable<ITypedItem> source, NoParamOrder protector = default, bool nullIfNull = false)
         where T : class, IDataModel, new()
-        => (source ?? (nullIfNull ? null : []))?.Select(CodeDataFactory.AsCustomFrom<T, ITypedItem>).ToList();
+        => (source ?? (nullIfNull ? null : []))?.Select(_modelFactory.AsCustomFrom2<T, ITypedItem>).ToList();
 
     #endregion
 
