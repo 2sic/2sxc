@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Context.Internal.Raw;
 /// </summary>
 [PrivateApi("this is only internal - public access is always through interface")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CmsUserRaw: UserModel, ICmsUser
+public record CmsUserRaw: UserModel, ICmsUser
 {
     #region Constant user objects for Unknown/Anonymous
 

@@ -10,17 +10,8 @@ namespace ToSic.Sxc.Models.Internal;
 /// Internal class to hold all the information about the role.
 /// until it's converted to an IEntity in the <see cref="UserRoles"/> DataSource.
 ///
-/// For detailed documentation, check the docs of the underlying objects:
-///
-/// * TODO:
-/// * TODO:
-/// Important: this is an internal object.
-/// We're just including in the docs to better understand where the properties come from.
-/// We'll probably move it to another namespace some day.
+/// TODO:
 /// </summary>
-/// <remarks>
-/// Make sure the property names never change, as they are critical for the created Entity.
-/// </remarks>
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 [ContentTypeSpecs(
@@ -28,7 +19,7 @@ namespace ToSic.Sxc.Models.Internal;
     Description = "User-Role in the site",
     Name = TypeName
 )]
-public class UserRoleModel: IRawEntity, IRole, IUserRoleModel
+public record UserRoleModel: IRawEntity, IRole, IUserRoleModel
 {
     #region IRawEntity
 

@@ -8,11 +8,9 @@ namespace ToSic.Sxc.Models.Internal;
 /// <summary>
 /// Internal class to hold all the information about the site,
 /// until it's converted to an IEntity in the <see cref="Sites"/> DataSource.
-/// todo
+/// 
+/// TODO:
 /// </summary>
-/// <remarks>
-/// Make sure the property names never change, as they are critical for the created Entity.
-/// </remarks>
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 [ContentTypeSpecs(
@@ -20,7 +18,7 @@ namespace ToSic.Sxc.Models.Internal;
     Description = "User-Role in the site",
     Name = TypeName
 )]
-public class SiteModel: IRawEntity, ISiteModel
+public record SiteModel: IRawEntity, ISiteModel
 {
     #region IRawEntity
 

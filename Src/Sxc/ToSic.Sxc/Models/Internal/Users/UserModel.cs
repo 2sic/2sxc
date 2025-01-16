@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
 using ToSic.Lib.Data;
 using ToSic.Sxc.DataSources;
@@ -11,13 +12,14 @@ namespace ToSic.Sxc.Models.Internal;
 ///
 /// * TODO:
 /// </summary>
-/// <remarks>
-/// Make sure the property names never change, as they are critical for the created Entity.
-/// They must also match the ICmsUser interface
-/// </remarks>
 [PrivateApi("this is only internal - public access is always through interface")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class UserModel : /*IUser,*/ IRawEntity, IHasIdentityNameId, IUserModel
+[ContentTypeSpecs(
+    Guid = "612f9341-ff91-443d-be58-500e55bec2d8",
+    Description = "User Information",
+    Name = TypeName
+)]
+public record UserModel : IRawEntity, IHasIdentityNameId, IUserModel
 {
     #region Types and Names for Raw Entities
 

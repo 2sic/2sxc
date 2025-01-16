@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Models.Internal;
 
-public class PageModelOfEntity: DataModel, IPageModelSync, IPageModel
+public class PageModelOfEntity: DataModel, IPageModel
 {
     public int Id => _entity.EntityId;
     public int ParentId => _entity.Get<int>(nameof(ParentId));
