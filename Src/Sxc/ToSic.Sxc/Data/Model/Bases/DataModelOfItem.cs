@@ -17,6 +17,7 @@ namespace ToSic.Sxc.Data.Model;
 /// 2. Razor code which uses it to convert typed items into this custom data model
 /// 
 /// Example trivial custom **plain** data model:
+/// 
 /// ```c#
 /// namespace AppCode.Data
 /// {

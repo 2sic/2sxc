@@ -1,8 +1,19 @@
-﻿using ToSic.Sxc.Data.Model;
+﻿using ToSic.Sxc.Adam;
+using ToSic.Sxc.Data.Model;
 using ToSic.Sxc.Models.Internal;
 
 namespace ToSic.Sxc.Models;
 
+/// <summary>
+/// A Folder Model which describes a folder as returned by the <see cref="DataSources.AppAssets"/> DataSource.
+/// </summary>
+/// <remarks>
+/// History
+/// 
+/// * Introduced (BETA) in v19.01 for the <see cref="DataSources.AppAssets"/> DataSource.
+/// * Not to be seen as final, since we may rename this type when we also
+/// * This is similar to the <see cref="IFolder"/> but still a bit different. For example, it has a <see cref="Folder"/> property.
+/// </remarks>
 [DataModelConversion(Map = [
     typeof(DataModelFrom<IEntity, IFolderModel, FolderModelOfEntity>),
 ])]

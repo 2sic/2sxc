@@ -16,6 +16,7 @@ namespace ToSic.Sxc.Data.Model;
 /// 2. Razor code which uses it to convert typed items into this custom data model
 /// 
 /// Example trivial custom **plain** data model:
+/// 
 /// ```c#
 /// namespace AppCode.Data
 /// {
@@ -98,7 +99,7 @@ public abstract partial class DataModel: IDataModelOf<IEntity>, ICanBeEntity //,
     /// Override ToString to give more information about the current object
     /// </summary>
     public override string ToString() 
-        => $"{nameof(DataModelOfItem)} Data Model {GetType().FullName} " + (_entity == null ? "without backing data (null)" : $"for id:{_entity.EntityId} ({_entity})");
+        => $"{nameof(DataModel)} Data Model {GetType().FullName} " + (_entity == null ? "without backing data (null)" : $"for id:{_entity.EntityId} ({_entity})");
 
 
     #region As...
