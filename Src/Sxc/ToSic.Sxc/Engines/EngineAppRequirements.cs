@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.State;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Internal.Requirements;
 using ToSic.Eav.Plumbing;
@@ -7,7 +6,7 @@ using ToSic.Eav.Plumbing;
 namespace ToSic.Sxc.Engines;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class EngineAppRequirements(IRequirementsService requirements) : EngineRequirementsBase(requirements, "Eng.AppReq")
+public class EngineAppRequirements(IRequirementsService requirements) : EngineRequirementsBase("Eng.AppReq", connect: [requirements])
 {
     internal bool RequirementsMet(IAppReader appState) 
         => !RequirementsStatus(appState).SafeAny();

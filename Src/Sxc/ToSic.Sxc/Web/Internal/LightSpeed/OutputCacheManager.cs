@@ -40,7 +40,7 @@ internal class OutputCacheManager(MemoryCacheService memoryCacheService, Lazy<IE
                 policyMaker = policyMaker
                     .WatchFolders(appPaths.ToDictionary(p => p, _ => true));
 
-            memoryCacheService.SetNew(cacheKey, data, policyMaker);
+            memoryCacheService.Set(cacheKey, data, policyMaker);
             
             return l.ReturnAsOk(cacheKey);
         }

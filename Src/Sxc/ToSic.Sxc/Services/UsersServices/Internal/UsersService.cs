@@ -18,7 +18,9 @@ public class UsersService(LazySvc<IContextOfSite> context, UserSourceProvider pr
 
         var userId = UserId(identityToken);
 
-        return l.Return(Get(userId));
+        return userId.SpecialUser != null
+            ? l.Return(userId.SpecialUser, "special user")
+            : l.Return(Get(userId.UserId));
     }
 
     public ICmsUser Get(int userId) 
@@ -26,12 +28,12 @@ public class UsersService(LazySvc<IContextOfSite> context, UserSourceProvider pr
         var l = Log.Fn<ICmsUser>($"id:{userId}");
 
         if (userId == CmsUserRaw.AnonymousUser.Id)
-            return l.ReturnAsOk(CmsUserRaw.AnonymousUser);
+            return l.Return(CmsUserRaw.AnonymousUser, "anonymous");
 
         if (userId == CmsUserRaw.UnknownUser.Id)
-            return l.Return(CmsUserRaw.UnknownUser, "err");
+            return l.Return(CmsUserRaw.UnknownUser, "unknown");
 
-        var userDto = provider.PlatformUserInformationDto(userId, SiteId);
+        var userDto = provider.PlatformUserInformationDto(userId, context.Value.Site.Id);
 
         return userDto != null
             ? l.ReturnAsOk(userDto)
@@ -39,31 +41,26 @@ public class UsersService(LazySvc<IContextOfSite> context, UserSourceProvider pr
     }
 
     /// <summary>
-    /// Helper method to get SiteId.
-    /// </summary>
-    private int SiteId => context.Value.Site.Id;
-
-    /// <summary>
     /// Helper method to parse UserID from user identity token.
     /// </summary>
     /// <param name="identityToken"></param>
     /// <returns></returns>
-    private int UserId(string identityToken) 
+    private (ICmsUser SpecialUser, int UserId) UserId(string identityToken) 
     {
-        var l = Log.Fn<int>($"token:{identityToken}");
+        var l = Log.Fn< (ICmsUser, int)>($"token:{identityToken}");
 
         if (string.IsNullOrWhiteSpace(identityToken))
-            return l.Return(CmsUserRaw.UnknownUser.Id, "empty identity token");
+            return l.Return((CmsUserRaw.UnknownUser, CmsUserRaw.UnknownUser.Id), "empty identity token");
 
         if (identityToken.EqualsInsensitive(SxcUserConstants.Anonymous))
-            return l.Return(CmsUserRaw.AnonymousUser.Id, "ok (anonymous)");
+            return l.Return((CmsUserRaw.AnonymousUser, CmsUserRaw.AnonymousUser.Id), "ok (anonymous)");
 
         var prefix = provider.PlatformIdentityTokenPrefix;
         if (identityToken.StartsWith(prefix, InvariantCultureIgnoreCase))
             identityToken = identityToken.Substring(prefix.Length);
 
         return int.TryParse(identityToken, out var userId)
-            ? l.Return(userId, $"ok (u:{userId})")
-            : l.Return(CmsUserRaw.UnknownUser.Id, "err");
+            ? l.Return((null, userId), $"ok (u:{userId})")
+            : l.Return((CmsUserRaw.UnknownUser, CmsUserRaw.UnknownUser.Id), "err");
     }
 }

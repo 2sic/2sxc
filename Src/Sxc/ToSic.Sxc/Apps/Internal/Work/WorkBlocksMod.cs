@@ -15,27 +15,26 @@ public class WorkBlocksMod(
     {
         var l = Log.Fn<Guid>();
 
-        // #ExtractEntitySave - context
-
         if (!blockConfiguration.Exists)
         {
             l.A($"doesn't exist, will create new CG with template#{templateId}");
-            // #ExtractEntitySave - verified
             var guid = workEntCreate.New(AppWorkCtx).Create(WorkBlocks.BlockTypeName, new()
             {
-                {ViewParts.TemplateContentType, new List<int> {templateId}},
-                {ViewParts.Content, new List<int>()},
-                {ViewParts.Presentation, new List<int>()},
-                {ViewParts.FieldHeader, new List<int>()},
-                {ViewParts.FieldHeaderPresentation, new List<int>()}
+                { ViewParts.TemplateContentType, new List<int> { templateId } },
+                { ViewParts.Content, new List<int>() },
+                { ViewParts.Presentation, new List<int>() },
+                { ViewParts.FieldHeader, new List<int>() },
+                { ViewParts.FieldHeaderPresentation, new List<int>() }
             }).EntityGuid; // new guid
             return l.ReturnAndLog(guid, "created");
         }
 
         l.A($"exists, create for group#{blockConfiguration.Guid} with template#{templateId}");
-        // #ExtractEntitySave - verified
-        workEntUpdate.New(AppWorkCtx).UpdateParts(blockConfiguration.Entity.EntityId,
-            new Dictionary<string, object> { { ViewParts.TemplateContentType, new List<int?> { templateId } } });
+        workEntUpdate.New(AppWorkCtx).UpdateParts(
+            blockConfiguration.Entity.EntityId,
+            new Dictionary<string, object> { { ViewParts.TemplateContentType, new List<int?> { templateId } } },
+            new()
+        );
 
         return l.ReturnAndLog(blockConfiguration.Guid); // guid didn't change
     }
@@ -74,7 +73,6 @@ public class WorkBlocksMod(
         var l = Log.Fn<int>($"{nameof(parentId)}:{parentId}, {nameof(field)}:{field}, {nameof(index)}, {index}, {nameof(typeName)}:{typeName}");
 
         // create the new entity 
-        // #ExtractEntitySave - should be ok
         var entityId = workEntCreate.New(AppWorkCtx.AppReader).GetOrCreate(newGuid, typeName, values);
 
         #region attach to the current list of items
@@ -90,8 +88,7 @@ public class WorkBlocksMod(
             intList.Insert(index, entityId);
         }
         var updateDic = new Dictionary<string, object> { { field, intList } };
-        // #ExtractEntitySave - should be ok
-        workEntUpdate.New(AppWorkCtx.AppReader).UpdateParts(cbEnt.EntityId, updateDic);
+        workEntUpdate.New(AppWorkCtx.AppReader).UpdateParts(cbEnt.EntityId, updateDic, new());
 
         #endregion
 

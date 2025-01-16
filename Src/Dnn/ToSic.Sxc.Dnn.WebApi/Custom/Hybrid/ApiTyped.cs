@@ -13,8 +13,10 @@ using ToSic.Lib.Coding;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
+using ToSic.Sxc.Data.Model;
 using ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
 using ToSic.Sxc.Internal;
+using ToSic.Sxc.Models;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
@@ -214,7 +216,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     /// <inheritdoc cref="IDynamicCode16.AsStack{T}" />
     public T AsStack<T>(params object[] items)
-        where T : class, ITypedItemWrapper16, ITypedItem, new()
+        where T : class, IDataModel, new()
         => _CodeApiSvc.Cdf.AsStack<T>(items);
 
     #endregion
@@ -304,12 +306,12 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     /// <inheritdoc />
     public T As<T>(object source, NoParamOrder protector = default, bool mock = false)
-        where T : class, ITypedItemWrapper16, ITypedItem, new()
+        where T : class, IDataModel, new()
         => _CodeApiSvc.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
 
     /// <inheritdoc />
     public IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
-        where T : class, ITypedItemWrapper16, ITypedItem, new()
+        where T : class, IDataModel
         => _CodeApiSvc.Cdf.AsCustomList<T>(source, protector, nullIfNull);
 
     #endregion

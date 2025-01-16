@@ -2,21 +2,19 @@
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Security.Permissions;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Models.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources;
 
 [PrivateApi]
-internal class DnnPagesDsProvider: PagesDataSourceProvider
+internal class DnnPagesDsProvider() : PagesDataSourceProvider("Dnn.Pages")
 {
     private const int DnnNoParent = -1;
     private const int DnnLevelOffset = 1;
-    public DnnPagesDsProvider() : base("Dnn.Pages")
-    {
-    }
-
 
     public override List<PageDataRaw> GetPagesInternal(
         NoParamOrder noParamOrder = default,
@@ -47,33 +45,36 @@ internal class DnnPagesDsProvider: PagesDataSourceProvider
 
         try
         {
-            var filteredPages = (IEnumerable<TabInfo>)pages;
+            IEnumerable<TabInfo> filtered = pages;
 
             // Apply filters as needed
-            if (!includeAdmin) filteredPages = filteredPages.Where(x => !x.IsSystem);
-            if (!includeSystem) filteredPages = filteredPages.Where(x => !x.IsSuperTab);
-            if (requireViewPermissions) filteredPages = filteredPages.Where(TabPermissionController.CanViewPage);
-            if (requireEditPermissions) filteredPages = filteredPages.Where(TabPermissionController.CanAdminPage);
+            if (!includeAdmin)
+                filtered = filtered.Where(x => !x.IsSystem);
+            if (!includeSystem)
+                filtered = filtered.Where(x => !x.IsSuperTab);
+            if (requireViewPermissions)
+                filtered = filtered.Where(TabPermissionController.CanViewPage);
+            if (requireEditPermissions)
+                filtered = filtered.Where(TabPermissionController.CanAdminPage);
 
-            var final = filteredPages.ToList();
+            var final = filtered.ToList();
 
             var result = final
                 .Select(p => new PageDataRaw
                 {
                     Id = p.TabID,
                     Guid = p.UniqueId,
-                    Title = p.Title,
+                    Title = p.Title.UseFallbackIfNoValue(p.TabName),
                     Name = p.TabName,
                     ParentId = p.ParentId == DnnNoParent ? NoParent : p.ParentId,
-                    Path = p.TabPath,
+                    Path = p.TabPath.FlattenMultipleForwardSlashes(),
                     Url = p.FullUrl.TrimLastSlash(),
                     Created = p.CreatedOnDate,
                     Modified = p.LastModifiedOnDate,
-                    // Existed it v14 but should be deprecated
-                    Visible = p.IsVisible,
+                    IsNavigation = p.IsVisible, // note: renamed in 19.01 to `IsNavigation` from `Visible`
 
                     // New 15.01
-                    Clickable = !p.DisableLink,
+                    IsClickable = !p.DisableLink,
                     HasChildren = p.HasChildren,
                     IsDeleted = p.IsDeleted,
                     Level = p.Level + DnnLevelOffset,

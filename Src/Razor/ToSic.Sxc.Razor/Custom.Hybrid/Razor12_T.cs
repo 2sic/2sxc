@@ -10,7 +10,6 @@ using ToSic.Lib.Coding;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Razor.Internal;
@@ -70,7 +69,7 @@ public abstract class Razor12<TModel>() : OqtRazorBase<TModel>(CompatibilityLeve
     public IApp App => _CodeApiSvc.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IBlockInstance Data => _CodeApiSvc.Data;
+    public IDataSource Data => _CodeApiSvc.Data;
 
     #endregion
 

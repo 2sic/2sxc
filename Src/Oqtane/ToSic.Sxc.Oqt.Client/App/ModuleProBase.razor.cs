@@ -30,7 +30,6 @@ public abstract class ModuleProBase: ModuleBase, IOqtHybridLog
     #endregion
 
     #region Shared Variables
-
     public bool IsSuperUser => _isSuperUser.Get(() => UserSecurity.IsAuthorized(PageState.User, RoleNames.Host));
     private readonly GetOnce<bool> _isSuperUser = new();
 
@@ -44,6 +43,7 @@ public abstract class ModuleProBase: ModuleBase, IOqtHybridLog
 
     public bool FirstRender = true;
 
+    internal static readonly bool IsOqtaneVersionLessThan601 = new Version(Oqtane.Shared.Constants.Version) < new Version("6.0.1"); // remove when dependency is updated to Oqtane 6.0.1
     #endregion
 
     protected override async Task OnParametersSetAsync()

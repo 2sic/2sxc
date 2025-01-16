@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Services.Internal;
 /// Must be overriden in each platform.
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class UserSourceProvider(string logName) : ServiceBase(logName)
+public abstract class UserSourceProvider(string logName, object[] connect = default) : ServiceBase(logName, connect: connect)
 {
     public abstract string PlatformIdentityTokenPrefix { get; }
 

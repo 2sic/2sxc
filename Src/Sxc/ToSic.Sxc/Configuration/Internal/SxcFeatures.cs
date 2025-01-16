@@ -38,6 +38,7 @@ public partial class SxcFeatures
             ImageServiceUseFactors,
 
             LightSpeedOutputCache,
-            LightSpeedOutputCacheAppFileChanges
+            LightSpeedOutputCacheAppFileChanges,
+            SmartDataCache      // v19.01
         );
 }

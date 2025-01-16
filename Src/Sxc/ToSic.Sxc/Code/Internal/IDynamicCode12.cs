@@ -46,7 +46,7 @@ public interface IDynamicCode12 : IDynamicCode
     IApp App { get; }
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    IBlockInstance Data { get; }
+    IDataSource Data { get; }
 
     #region Content and Header
 

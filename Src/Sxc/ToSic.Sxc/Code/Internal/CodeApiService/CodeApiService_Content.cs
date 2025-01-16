@@ -1,5 +1,5 @@
 ﻿using ToSic.Lib.Helpers;
-using static ToSic.Eav.DataSource.Internal.DataSourceConstants;
+using static ToSic.Eav.DataSource.DataSourceConstants;
 using static ToSic.Sxc.Blocks.Internal.ViewParts;
 
 namespace ToSic.Sxc.Code.Internal;

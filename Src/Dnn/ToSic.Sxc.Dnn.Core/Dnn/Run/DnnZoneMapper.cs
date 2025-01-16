@@ -5,6 +5,7 @@ using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.Cms.Internal.Languages;
 using ToSic.Eav.Context;
 using ToSic.Eav.Integration;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Dnn.Context;
 
 namespace ToSic.Sxc.Dnn.Run;
@@ -27,21 +28,47 @@ internal class DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCre
     /// <returns></returns>
     public override int GetZoneId(int siteId)
     {
-        // additional protection against invalid portalId which may come from bad dnn configs and execute in search-index mode
-        // see https://github.com/2sic/2sxc/issues/1054
+        // Additional protection against invalid portalId
         if (siteId < 0)
-            throw new("Can't get zone for invalid portal ID: " + siteId);
+            throw new ArgumentException("Can't get zone for invalid portal ID: " + siteId);
 
-        var c = PortalController.Instance.GetPortalSettings(siteId);
+        // Attempt to retrieve existing Zone ID
+        var existingZoneId = GetExistingZoneId(siteId);
+        if (existingZoneId.HasValue)
+            return existingZoneId.Value;
 
-        // Create new zone automatically
-        if (c.TryGetValue(PortalSettingZoneId, out var value)) return int.Parse(value);
+        // Use TryLockTryDo to prevent race condition during zone creation
+        var zoneIdResult = _zoneCreateLocker.Call(
+            conditionToGenerate: () => !GetExistingZoneId(siteId).HasValue,
+            generator: () => CreateNewZone(siteId),
+            cacheOrFallback: () =>
+            {
+                // Retrieve existing Zone ID if it was created by another thread
+                var fallbackZoneId = GetExistingZoneId(siteId);
+                if (fallbackZoneId.HasValue)
+                    return fallbackZoneId.Value;
+                throw new InvalidOperationException("Failed to retrieve or create Zone ID.");
+            });
 
-        var portalSettings = new PortalSettings(siteId);
-        var zoneId = zoneCreatorLazy.Value.Create(portalSettings.PortalName + " (Portal " + siteId + ")");
-        PortalController.UpdatePortalSetting(siteId, PortalSettingZoneId, zoneId.ToString());
-        return zoneId;
+        return zoneIdResult.Result;
+    }
+    // Instance of TryLockTryDo for synchronization
+    private readonly TryLockTryDo _zoneCreateLocker = new();
 
+    private static int? GetExistingZoneId(int siteId)
+    {
+        var portalSettings = PortalController.Instance.GetPortalSettings(siteId);
+        if (portalSettings.TryGetValue(PortalSettingZoneId, out var value) && int.TryParse(value, out var zoneId))
+            return zoneId;
+        return null;
+    }
+
+    private int CreateNewZone(int siteId)
+    {
+        var portalInfo = new PortalSettings(siteId);
+        var newZoneId = zoneCreatorLazy.Value.Create($"{portalInfo.PortalName} (Portal {siteId})");
+        PortalController.UpdatePortalSetting(siteId, PortalSettingZoneId, newZoneId.ToString());
+        return newZoneId;
     }
 
     public override ISite SiteOfZone(int zoneId)

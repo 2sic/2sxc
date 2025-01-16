@@ -2,13 +2,13 @@
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.Cms.Internal;
+using ToSic.Eav.DataSource;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.LookUp.Internal;
 using App = ToSic.Sxc.Apps.App;
@@ -144,13 +144,13 @@ public abstract class BlockBase(BlockBase.MyServices services, string logName, o
 
 
 
-    public IBlockInstance Data => _data.GetL(Log, l =>
+    public IDataSource  Data => _data.GetL(Log, l =>
     {
         l.A($"About to load data source with possible app configuration provider. App is probably null: {App}");
         var dataSource = Services.BdsFactoryLazy.Value.GetContextDataSource(this, App?.ConfigurationProvider);
         return dataSource;
     });
-    private readonly GetOnce<IBlockInstance> _data = new();
+    private readonly GetOnce<IDataSource> _data = new();
 
     public BlockConfiguration Configuration { get; protected set; }
         

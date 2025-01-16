@@ -89,29 +89,33 @@ public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("
                 .ToList();
 
     internal Guid UserGuid(UserInfo user)
-        => Membership.GetUser(user.Username)?.ProviderUserKey as Guid? ?? Guid.Empty;
+        => Membership.GetUser(user.Username)?.ProviderUserKey as Guid?
+           ?? Guid.Empty;
 
     internal string UserIdentityToken(UserInfo user)
-        => IsNullOrAnonymous(user) ? SxcUserConstants.Anonymous : DnnConstants.UserTokenPrefix + user.UserID;
+        => IsNullOrAnonymous(user)
+            ? SxcUserConstants.Anonymous
+            : DnnConstants.UserTokenPrefix + user.UserID;
 
     internal CmsUserRaw CmsUserBuilder(UserInfo user, int siteId)
-        => UserMayAdminThis(user).Map(adminInfo => new CmsUserRaw
-            {
-                Id = user.UserID,
-                Guid = UserGuid(user),
-                NameId = UserIdentityToken(user),
-                Roles = RoleList(user, portalId: siteId),
-                IsSystemAdmin = user.IsSuperUser,
-                IsSiteAdmin = adminInfo.IsSiteAdmin,
-                IsContentAdmin = adminInfo.IsContentAdmin,
-                IsContentEditor = adminInfo.IsContentEditor,
-                IsAnonymous = IsNullOrAnonymous(user),
-                Created = user.CreatedOnDate,
-                Modified = user.LastModifiedOnDate,
-                //
-                Username = user.Username,
-                Email = user.Email,
-                Name = user.DisplayName
-            }
-        );
+        => UserMayAdminThis(user)
+            .Map(adminInfo => new CmsUserRaw
+                {
+                    Id = user.UserID,
+                    Guid = UserGuid(user),
+                    NameId = UserIdentityToken(user),
+                    Roles = RoleList(user, portalId: siteId),
+                    IsSystemAdmin = user.IsSuperUser,
+                    IsSiteAdmin = adminInfo.IsSiteAdmin,
+                    IsContentAdmin = adminInfo.IsContentAdmin,
+                    IsContentEditor = adminInfo.IsContentEditor,
+                    IsAnonymous = IsNullOrAnonymous(user),
+                    Created = user.CreatedOnDate,
+                    Modified = user.LastModifiedOnDate,
+                    //
+                    Username = user.Username,
+                    Email = user.Email,
+                    Name = user.DisplayName
+                }
+            );
 }

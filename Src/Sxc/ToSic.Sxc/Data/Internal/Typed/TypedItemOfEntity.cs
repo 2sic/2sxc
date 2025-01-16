@@ -46,20 +46,16 @@ internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, CodeDa
     #region Helpers / Services
 
     [PrivateApi]
-    private GetAndConvertHelper GetHelper => _getHelper ??= new(this, Cdf, propsRequired, childrenShouldBeDynamic: false, canDebug: this);
-    private GetAndConvertHelper _getHelper;
+    private GetAndConvertHelper GetHelper => field ??= new(this, Cdf, propsRequired, childrenShouldBeDynamic: false, canDebug: this);
 
     [PrivateApi]
-    private SubDataFactory SubDataFactory => _subData ??= new(Cdf, propsRequired, canDebug: this);
-    private SubDataFactory _subData;
+    private SubDataFactory SubDataFactory => field ??= new(Cdf, propsRequired, canDebug: this);
 
     [PrivateApi]
-    private CodeDynHelper DynHelper => _dynHelper ??= new(Entity, SubDataFactory);
-    private CodeDynHelper _dynHelper;
+    private CodeDynHelper DynHelper => field ??= new(Entity, SubDataFactory);
 
     [PrivateApi]
-    private CodeItemHelper ItemHelper => _itemHelper ??= new(GetHelper, this);
-    private CodeItemHelper _itemHelper;
+    private CodeItemHelper ItemHelper => field ??= new(GetHelper, this);
 
     #endregion
 
@@ -135,7 +131,7 @@ internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, CodeDa
 
     [PrivateApi]
     [JsonIgnore]
-    dynamic ITypedItem.Dyn => _dyn ??= dynOrNull ?? new DynamicEntity(Entity, cdf, propsRequired: propsRequired);
+    dynamic ITypedItem.Dyn => _dyn ??= dynOrNull ?? new DynamicEntity(Entity, Cdf, propsRequired: propsRequired);
     private object _dyn;
 
     [PrivateApi]
@@ -284,7 +280,7 @@ internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, CodeDa
             
             // if the child is null, we must return a fake list which knows about this parent
             return child == null 
-                ? cdf.CreateEmptyChildList<ITypedItem>(Entity, field)
+                ? Cdf.CreateEmptyChildList<ITypedItem>(Entity, field)
                 // On the next step, do forward the type filter, as the lowest node should check for that
                 : child.Children(rest, type: type, required: required);
         }
@@ -293,7 +289,7 @@ internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, CodeDa
         var list = GetHelper.ChildrenItems(entity: Entity, field: field, type: type);
         
         // Return list or special list if it's empty, as we need a special list which knows about this object being the parent
-        return list.Any() ? list : cdf.CreateEmptyChildList<ITypedItem>(Entity, field);
+        return list.Any() ? list : Cdf.CreateEmptyChildList<ITypedItem>(Entity, field);
 
     }
 

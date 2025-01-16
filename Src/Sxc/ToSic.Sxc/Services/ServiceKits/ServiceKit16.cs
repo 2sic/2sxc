@@ -1,5 +1,4 @@
 ﻿using Connect.Koi;
-using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Services.Internal;
@@ -17,96 +16,72 @@ namespace ToSic.Sxc.Services;
 public class ServiceKit16() : ServiceKit("Sxc.Kit16")
 {
     /// <inheritdoc cref="ServiceKit14.Adam"/>
-    public IAdamService Adam => _adam.Get(GetKitService<IAdamService>);
-    private readonly GetOnce<IAdamService> _adam = new();
+    public IAdamService Adam => field ??= GetKitService<IAdamService>();
 
     /// <summary>
     /// The CMS Service - WIP
     /// </summary>
     [PrivateApi("Not yet for public use, as API is not yet public")]
-    internal ICmsService Cms => _cms.Get(GetKitService<ICmsService>);
-    private readonly GetOnce<ICmsService> _cms = new();
+    internal ICmsService Cms => field ??= GetKitService<ICmsService>();
 
     /// <inheritdoc cref="ServiceKit14.Convert"/>
-    public IConvertService16 Convert => _convert.Get(GetKitService<IConvertService16>);
-    private readonly GetOnce<IConvertService16> _convert = new();
+    public IConvertService16 Convert => field ??= GetKitService<IConvertService16>();
 
     /// <inheritdoc cref="ServiceKit14.Css"/>
-    public ICss Css => _css.Get(GetKitService<ICss>);
-    private readonly GetOnce<ICss> _css = new();
+    public ICss Css => field ??= GetKitService<ICss>();
 
 
     /// <inheritdoc cref="ServiceKit14.Data"/>
-    public IDataService Data => _data.Get(GetKitService<IDataService>);
-    private readonly GetOnce<IDataService> _data = new();
+    public IDataService Data => field ??= GetKitService<IDataService>();
 
     /// <inheritdoc cref="ServiceKit14.Edit"/>
-    public IEditService Edit => _edit.Get(GetKitService<IEditService>);
-    private readonly GetOnce<IEditService> _edit = new();
-
+    public IEditService Edit => field ??= GetKitService<IEditService>();
 
     /// <inheritdoc cref="ServiceKit14.Feature"/>
-    public IFeaturesService Feature => _features.Get(GetKitService<IFeaturesService>);
-    private readonly GetOnce<IFeaturesService> _features = new();
+    public IFeaturesService Feature => field ??= GetKitService<IFeaturesService>();
 
     /// <inheritdoc cref="ServiceKit14.HtmlTags"/>
-    public IHtmlTagsService HtmlTags => _ht.Get(GetKitService<IHtmlTagsService>);
-    private readonly GetOnce<IHtmlTagsService> _ht = new();
+    public IHtmlTagsService HtmlTags => field ??= GetKitService<IHtmlTagsService>();
 
     /// <inheritdoc cref="ServiceKit14.Image"/>
-    public IImageService Image => _image.Get(GetKitService<IImageService>);
-    private readonly GetOnce<IImageService> _image = new();
-
+    public IImageService Image => field ??= GetKitService<IImageService>();
 
     /// <inheritdoc cref="ServiceKit14.Json"/>
-    public IJsonService Json => _json.Get(GetKitService<IJsonService>);
-    private readonly GetOnce<IJsonService> _json = new();
-
+    public IJsonService Json => field ??= GetKitService<IJsonService>();
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => _link.Get(GetKitService<ILinkService>);
-    private readonly GetOnce<ILinkService> _link = new();
+    public ILinkService Link => field ??= GetKitService<ILinkService>();
 
     /// <inheritdoc cref="ServiceKit14.SystemLog"/>
-    public ISystemLogService SystemLog => _sysLog.Get(GetKitService<ISystemLogService>);
-    private readonly GetOnce<ISystemLogService> _sysLog = new();
+    public ISystemLogService SystemLog => field ??= GetKitService<ISystemLogService>();
 
     // Removed for v16
     //public new ISystemLogService Log => SystemLog;
 
 
     /// <inheritdoc cref="ServiceKit14.Mail"/>
-    public IMailService Mail => _mail.Get(GetKitService<IMailService>);
-    private readonly GetOnce<IMailService> _mail = new();
-
+    public IMailService Mail => field ??= GetKitService<IMailService>();
 
     /// <inheritdoc cref="ServiceKit14.Page"/>
-    public IPageService Page => _page.Get(GetKitService<IPageService>);
-    private readonly GetOnce<IPageService> _page = new();
-
+    public IPageService Page => field ??= GetKitService<IPageService>();
 
     /// <inheritdoc cref="ServiceKit14.Render"/>
-    public IRenderService Render => _render.Get(GetKitService<IRenderService>);
-    private readonly GetOnce<IRenderService> _render = new();
+    public IRenderService Render => field ??= GetKitService<IRenderService>();
 
     /// <inheritdoc cref="ServiceKit14.SecureData"/>
-    public ISecureDataService SecureData => _secureData.Get(GetKitService<ISecureDataService>);
-    private readonly GetOnce<ISecureDataService> _secureData = new();
+    public ISecureDataService SecureData => field ??= GetKitService<ISecureDataService>();
 
     /// <inheritdoc cref="ServiceKit14.Scrub"/>
-    public IScrub Scrub => _scrub.Get(GetKitService<IScrub>);
-    private readonly GetOnce<IScrub> _scrub = new();
+    public IScrub Scrub => field ??= GetKitService<IScrub>();
 
 
     /// <inheritdoc cref="ServiceKit14.Toolbar"/>
-    public IToolbarService Toolbar => _toolbar.Get(GetKitService<IToolbarService>);
-    private readonly GetOnce<IToolbarService> _toolbar = new();
+    public IToolbarService Toolbar => field ??= GetKitService<IToolbarService>();
 
     /// <inheritdoc cref="ServiceKit14.User"/>
     [PrivateApi("Experimental in v15.03")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public IUserService User => _users.Get(GetKitService<IUserService>);
-    private readonly GetOnce<IUserService> _users = new();
+    public IUserService User => field ??= GetKitService<IUserService>();
 
     /// <summary>
     /// Key service.
@@ -116,18 +91,16 @@ public class ServiceKit16() : ServiceKit("Sxc.Kit16")
     /// <remarks>
     /// * New in v16.04
     /// </remarks>
-    public IKeyService Key => _keys ??= new KeyService();
-    private IKeyService _keys;
+    public IKeyService Key => field ??= new KeyService();
 
     /// <summary>
     /// Templates service, which can parse strings containing placeholders.
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("Still Beta in v17.08")]
-    public ITemplateService Template => _templates ??= GetKitService<ITemplateService>();
-    private ITemplateService _templates;
+    /// <remarks>
+    /// Released in v18.00
+    /// </remarks>
+    public ITemplateService Template => field ??= GetKitService<ITemplateService>();
 
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("Still Beta in v17.09")]
-    public ICacheService Cache => _cache ??= GetKitService<ICacheService>();
-    private ICacheService _cache;
-
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("Still Beta in v19.00")]
+    public ICacheService Cache => field ??= GetKitService<ICacheService>();
 }

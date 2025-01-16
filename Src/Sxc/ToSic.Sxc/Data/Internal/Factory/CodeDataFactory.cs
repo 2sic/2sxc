@@ -18,6 +18,7 @@ namespace ToSic.Sxc.Data.Internal;
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public partial class CodeDataFactory(
+    IServiceProvider serviceProvider,
     LazySvc<CodeDataServices> codeDataServices,
     LazySvc<AdamManager> adamManager,
     LazySvc<IContextOfApp> contextOfAppLazy,
@@ -27,7 +28,7 @@ public partial class CodeDataFactory(
     LazySvc<CodeInfoService> codeInfoSvc,
     LazySvc<IZoneMapper> zoneMapper)
     : ServiceForDynamicCode("Sxc.AsConv",
-        connect: [codeDataServices, adamManager, contextOfAppLazy, dataBuilderLazy, codeDataWrapper, wrapJsonGenerator, codeInfoSvc, zoneMapper])
+        connect: [/* never: serviceProvider */codeDataServices, adamManager, contextOfAppLazy, dataBuilderLazy, codeDataWrapper, wrapJsonGenerator, codeInfoSvc, zoneMapper])
 {
     internal CodeInfoService CodeInfo => codeInfoSvc.Value;
 
@@ -37,15 +38,14 @@ public partial class CodeDataFactory(
     {
         _siteOrNull = site;
         _compatibilityLevel = compatibility ?? _compatibilityLevel;
-        _adamManager.Reset(adamManagerPrepared);
+        AdamManager = adamManagerPrepared;
     }
     private ISite _siteOrNull;
 
-    private ISite SiteFromContextOrFallback => _siteFromContextOrFallback 
+    private ISite SiteFromContextOrFallback => field 
         ??= (_CodeApiSvc?.CmsContext as CmsContext)?.CtxSite.Site
             ?? _siteOrNull
             ?? throw new("Tried getting site from context or fallback, neither returned anything useful. ");
-    private ISite _siteFromContextOrFallback;
 
     public int CompatibilityLevel => _priorityCompatibilityLevel ?? _compatibilityLevel;
     private int? _priorityCompatibilityLevel;
@@ -69,11 +69,10 @@ public partial class CodeDataFactory(
     /// </summary>
     // If we don't have a DynCodeRoot, try to generate the language codes and compatibility
     // There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
-    internal string[] Dimensions => _dimensions ??=
+    internal string[] Dimensions => field ??=
         // note: can't use SiteFromContextOrFallback.SafeLanguagePriorityCodes() because it will error during testing
         (_CodeApiSvc?.CmsContext as CmsContext)?.CtxSite.Site.SafeLanguagePriorityCodes()
         ?? _siteOrNull.SafeLanguagePriorityCodes();
-    private string[] _dimensions;
 
 
     internal IBlock BlockOrNull => ((ICodeApiServiceInternal)_CodeApiSvc)?._Block;
@@ -91,11 +90,10 @@ public partial class CodeDataFactory(
     /// <remarks>
     /// IMPORTANT: LOWER-CASE guaranteed.
     /// </remarks>
-    public List<string> SiteCultures => _siteCultures
+    public List<string> SiteCultures => field
         ??= zoneMapper.Value
                 .CulturesEnabledWithState(SiteFromContextOrFallback)?
                 .Select(c => c.Code.ToLowerInvariant())
                 .ToList()
             ?? [];
-    private List<string> _siteCultures;
 }

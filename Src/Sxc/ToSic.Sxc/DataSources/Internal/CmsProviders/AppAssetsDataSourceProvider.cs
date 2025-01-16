@@ -7,7 +7,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
-//using static System.IO.Path;
+using ToSic.Sxc.Models.Internal;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
@@ -34,20 +34,24 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
     }
 
     public AppAssetsDataSourceProvider Configure(
-        NoParamOrder noParamOrder = default,
-        int zoneId = default,
-        int appId = default,
-        string root = default,
-        string filter = default
-    ) {
-        var l = Log.Fn<AppAssetsDataSourceProvider>($"a:{appId}; z:{zoneId}, root:{root}, filter:{filter}");
+        AppAssetsGetSpecs specs,
+        NoParamOrder noParamOrder = default
+        //int zoneId = default,
+        //int appId = default
+        //string root = default,
+        //string filter = default
+    )
+    {
+        var root = specs.RootFolder;
+        var filter = specs.FileFilter;
+        var l = Log.Fn<AppAssetsDataSourceProvider>($"a:{specs.AppId}; z:{specs.ZoneId}, root:{root}, filter:{filter}");
         _root = root.TrimPrefixSlash().Backslash();
         _filter = filter;
 
-        var appState = Services.AppReaders.Get(new AppIdentity(zoneId, appId));
+        var appState = Services.AppReaders.Get(new AppIdentity(specs.ZoneId, specs.AppId));
         _appPaths = Services.AppPathMicroSvc.Get(appState);
         
-        _fileManager = Services.FileManagerGenerator.New().SetFolder(appId, _appPaths.PhysicalPath, _root);
+        _fileManager = Services.FileManagerGenerator.New().SetFolder(specs.AppId, _appPaths.PhysicalPath, _root);
         return l.Return(this);
     }
 
@@ -61,10 +65,10 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
     /// So the core data source doesn't have settings to configure this
     /// </summary>
     /// <returns></returns>
-    public (List<AppFolderDataRaw> Folders, List<AppFileDataRaw> Files) GetAll()
+    public (List<FolderRaw> Folders, List<FileRaw> Files) GetAll()
         => Log.Func(l => (Folders, Files));
 
-    public List<AppFileDataRaw> Files => _files.GetM(Log, l =>
+    public List<FileRaw> Files => _files.GetM(Log, l =>
     {
         var pathsFromRoot = PreparePaths(_appPaths, "");
 
@@ -72,13 +76,10 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
             .Select(p => new FileInfo(p))
             .Select(f =>
             {
-                // 2024-10-07 2dm - had to fix because the path became shorter when requesting files from a subfolder
-                // but when asking for app files/folders it must always assume/start with the root of the app
-                //var fullName = FullNameWithoutAppFolder(f.FullName, _appPaths, _root);
                 var fullNameFromAppRoot = FullNameWithoutAppFolder(f.FullName, pathsFromRoot);
                 var name = Path.GetFileNameWithoutExtension(f.FullName);
                 var path = fullNameFromAppRoot.TrimPrefixSlash();
-                return new AppFileDataRaw
+                return new FileRaw
                 {
                     Name = name,
                     Extension = f.Extension.TrimStart('.'), // Extension is without the dot
@@ -88,7 +89,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
                     // TODO convert characters for safe HTML
                     Url = $"{_appPaths.Path}{fullNameFromAppRoot}",
 
-                    Size = f.Length,
+                    Size = (int)f.Length,
                     Created = f.CreationTime,
                     Modified = f.LastWriteTime
                 };
@@ -97,37 +98,41 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
 
         return (files, $"files:{files.Count}");
     });
-    private readonly GetOnce<List<AppFileDataRaw>> _files = new();
+    private readonly GetOnce<List<FileRaw>> _files = new();
 
-    public List<AppFolderDataRaw> Folders => _folders.GetM(Log, l =>
+    public List<FolderRaw> Folders => _folders.GetM(Log, l =>
     {
         var pathsFromRoot = PreparePaths(_appPaths, "");
 
-        var folders = _fileManager.GetAllTransferableFolders( /*filter*/)
+        var folders = _fileManager.GetAllTransferableFolders(/*filter*/)
             .Select(p => new DirectoryInfo(p))
             .Select(d => ToFolderData(d, pathsFromRoot))
             .ToList();
 
         // if the root is just "/" then we need to add the root folder, otherwise not
-        var root = new DirectoryInfo($"{_appPaths.PhysicalPath}/{_root}".FlattenMultipleForwardSlashes().TrimLastSlash());
-        folders.Insert(0, ToFolderData(root, pathsFromRoot, ""));
+        var root = new DirectoryInfo(
+            $"{_appPaths.PhysicalPath}/{_root}"
+                .FlattenMultipleForwardSlashes()
+                .TrimLastSlash()
+        );
+        folders.Insert(0, ToFolderData(root, pathsFromRoot) with
+        {
+            Name = "",                  // Make name blank, since it's the root folder
+            ParentFolderInternal = "",  // reset the ParentFolder, otherwise the root thinks it's a subfolder of itself
+        });
         
         return (folders, $"found:{folders.Count}");
     });
 
-    private AppFolderDataRaw ToFolderData(DirectoryInfo d, PreparedPaths pathsFromRoot, string altName = default)
+    private FolderRaw ToFolderData(DirectoryInfo d, PreparedPaths pathsFromRoot)
     {
-        // 2024-10-07 2dm - had to fix because the path became shorter when requesting files from a subfolder
-        // but when asking for app files/folders it must always assume/start with the root of the app
         var fullNameFromAppRoot = FullNameWithoutAppFolder(d.FullName, pathsFromRoot);
 
-        // Name is the name of the folder, but if an alternative name is provided, use that instead
-        // this is for the root, which should have an "empty" name
-        var name = altName ?? Path.GetFileName(d.FullName);
+        var name = Path.GetFileName(d.FullName);
 
         return new()
         {
-            Name = altName ?? name,
+            Name = name,
             FullName = name,
             ParentFolderInternal = fullNameFromAppRoot.TrimPrefixSlash().BeforeLast("/").SuffixSlash(),
             Path = fullNameFromAppRoot.TrimPrefixSlash().SuffixSlash(),
@@ -137,7 +142,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
         };
     }
 
-    private readonly GetOnce<List<AppFolderDataRaw>> _folders = new();
+    private readonly GetOnce<List<FolderRaw>> _folders = new();
 
 
     /// <summary>

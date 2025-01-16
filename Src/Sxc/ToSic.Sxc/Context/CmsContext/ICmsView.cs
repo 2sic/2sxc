@@ -45,7 +45,7 @@ public interface ICmsView: IHasMetadata
     string Identifier { get; }
 
     /// <summary>
-    /// Edition used - if any. Otherwise empty string. 
+    /// Edition used - if any. Otherwise, empty string. 
     /// 
     /// 🪒 Use in Razor: `CmsContext.View.Edition`  
     /// 🪒 Use in Typed Razor: `MyView.Edition`

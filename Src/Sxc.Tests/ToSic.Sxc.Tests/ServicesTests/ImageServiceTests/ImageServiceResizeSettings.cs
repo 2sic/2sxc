@@ -131,7 +131,7 @@ public class ImageServiceResizeSettings: TestBaseSxc
         var settings = this.SettingsTac(width: 100, height: 49);
         Assert.AreEqual(100, settings.Width);
         Assert.AreEqual(49, settings.Height);
-        AssertAllEmptyExceptSpecified(settings, new[] { nameof(settings.Width), nameof(settings.Height) });
+        AssertAllEmptyExceptSpecified(settings, [nameof(settings.Width), nameof(settings.Height)]);
     }
 
 

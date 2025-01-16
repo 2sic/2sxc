@@ -119,7 +119,6 @@ public class ViewsExportImport(
 
             // 2. Import the views
             // todo: construction of this should go into init
-            // #ExtractEntitySave - verified
             workEntSave.New(appRead).Import(bundles.Select(v => v.Entity).ToList());
 
             // 3. Import the attachments

@@ -53,7 +53,7 @@ public class OqtSxcRenderService(
                 return Forbidden("Unauthorized Page Get Attempt {pageId}", @params.PageId);
 
             var module = modules.GetModule(@params.ModuleId);
-            if (module == null || module.SiteId != alias.SiteId || !userPermissions.IsAuthorized(accessor?.HttpContext?.User, "View", module.Permissions)) 
+            if (module == null || module.SiteId != alias.SiteId || !userPermissions.IsAuthorized(accessor?.HttpContext?.User, "View", module.PermissionList)) 
                 return Forbidden("Unauthorized Module Get Attempt {ModuleId}", @params.ModuleId);
 
             var moduleDefinitions = definitions.GetModuleDefinitions(module.SiteId).ToList();

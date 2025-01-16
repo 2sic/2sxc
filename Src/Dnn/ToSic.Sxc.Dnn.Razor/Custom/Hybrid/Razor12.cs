@@ -2,7 +2,6 @@
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Razor;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -52,7 +51,7 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
     public new IApp App => _CodeApiSvc.App;
 
     /// <inheritdoc />
-    public IBlockInstance Data => _CodeApiSvc.Data;
+    public IDataSource Data => _CodeApiSvc.Data;
 
     #endregion
 

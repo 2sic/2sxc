@@ -41,7 +41,7 @@ public class EditSaveBackend(
 
     public Dictionary<Guid, int> Save(EditDto package, bool partOfPage)
     {
-        Log.A($"save started with a#{_appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
+        var l = Log.Fn<Dictionary<Guid, int>>($"save started with a#{_appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
 
         var validator = new SaveDataValidator(package, Log);
         // perform some basic validation checks
@@ -71,7 +71,8 @@ public class EditSaveBackend(
         // basic permission checks
         var permCheck = saveSecurity.Init(_context).DoPreSaveSecurityCheck(package.Items);
 
-        var foundItems = package.Items.Where(i => i.Entity.Id != 0 || i.Entity.Guid != Guid.Empty)
+        var foundItems = package.Items
+            .Where(i => i.Entity.Id != 0 || i.Entity.Guid != Guid.Empty)
             .Select(i => i.Entity.Guid != Guid.Empty
                     ? appEntities.Get(i.Entity.Guid) // prefer guid access if available
                     : appEntities.Get(i.Entity.Id) // otherwise id
@@ -81,7 +82,9 @@ public class EditSaveBackend(
         #endregion
 
 
-        var items = package.Items.Where(i => !i.Header.IsEmpty).Select(i =>
+        var items = package.Items
+            .Where(i => !i.Header.IsEmpty)
+            .Select(i =>
             {
                 var ent = ser.Deserialize(i.Entity, false, false);
 
@@ -95,22 +98,23 @@ public class EditSaveBackend(
                 if (resultValidator.Exception != null)
                     throw resultValidator.Exception;
 
-                ent = dataBuilder.Entity.CreateFrom(ent, id: resultValidator.ResetId, isPublished: package.IsPublished,
-                    placeDraftInBranch: package.DraftShouldBranch);
-
-                //ent.ResetEntityId(resultValidator.ResetId ?? 0); //AjaxPreviewHelperWIP!
-                //ent.IsPublished = package.IsPublished;
-                //ent.PlaceDraftInBranch = package.DraftShouldBranch;
+                ent = dataBuilder.Entity.CreateFrom(ent,
+                    id: resultValidator.ResetId,
+                    isPublished: package.IsPublished
+                    // #WipDraftShouldBranch
+                    // placeDraftInBranch: package.DraftShouldBranch
+                );
 
                 // new in 11.01
                 if (i.Header.Parent != null)
                 {
                     // Check if Add was true, and fix if it had already been saved (EntityId != 0)
                     // the entityId is reset by the validator if it turns out to be an update
-                    // todo: verify use - maybe it's to set before we save, as maybe afterwards it's always != 0?
+                    // todo: verify use - maybe it's to set before we save, as maybe afterward it's always != 0?
                     var add = i.Header.AddSafe;
                     i.Header.Add = add;
-                    if (ent.EntityId > 0 && add) i.Header.Add = false;
+                    if (ent.EntityId > 0 && add)
+                        i.Header.Add = false;
                 }
 
                 return new BundleWithHeader<IEntity>
@@ -121,15 +125,22 @@ public class EditSaveBackend(
             })
             .ToList();
 
-        Log.A("items to save generated, all data tests passed");
+        l.A("items to save generated, all data tests passed");
 
-        return pagePublishing.SaveInPagePublishing(ctxResolver.BlockOrNull(), _appId, items, partOfPage,
-            forceSaveAsDraft => DoSave(appEntities, items, forceSaveAsDraft),
-            permCheck);
+        var result = pagePublishing.SaveInPagePublishing(
+            ctxResolver.BlockOrNull(),
+            _appId,
+            items,
+            partOfPage,
+            forceSaveAsDraft => DoSave(appEntities, items, package.DraftShouldBranch || forceSaveAsDraft),
+            permCheck
+        );
+
+        return l.Return(result);
     }
 
 
-    private Dictionary<Guid, int> DoSave(WorkEntities workEntities, List<BundleWithHeader<IEntity>> items, bool forceSaveAsDraft)
+    private Dictionary<Guid, int> DoSave(WorkEntities workAppEntities, List<BundleWithHeader<IEntity>> items, bool forceSaveAsDraft)
     {
         // only save entities that are
         // a) not in a group
@@ -138,7 +149,7 @@ public class EditSaveBackend(
             .Where(e => !e.Header.IsContentBlockMode || !e.Header.IsEmpty)
             .ToList();
 
-        saveBackendHelper.UpdateGuidAndPublishedAndSaveMany(workEntities.AppWorkCtx, entitiesToSave, forceSaveAsDraft);
-        return saveBackendHelper.GenerateIdList(workEntities, items);
+        saveBackendHelper.UpdateGuidAndPublishedAndSaveMany(workAppEntities.AppWorkCtx, entitiesToSave, forceSaveAsDraft);
+        return saveBackendHelper.GenerateIdList(workAppEntities, items);
     }
 }

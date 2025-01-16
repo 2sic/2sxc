@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Code.Internal.HotBuild
                     var computeHashStringForFiles = BitConverter.ToString(ComputeHashForFiles(files)).Replace("-", "").ToLower();
                     l.A("hash string computed");
 
-                    memoryCacheService.SetNew(cacheKey, computeHashStringForFiles, p => p
+                    memoryCacheService.Set(cacheKey, computeHashStringForFiles, p => p
                         .SetSlidingExpiration(CacheMinutes * 60)
                         .WatchCacheKeys([SourceFilesInFolderCacheKey(folderPath)]));
 
@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Code.Internal.HotBuild
                     Array.Sort(files, StringComparer.Ordinal); // sort the array of file paths before processing to ensure hashing deterministic behavior.
                     l.A("sorted files");
 
-                    memoryCacheService.SetNew(cacheKey, files, p => p
+                    memoryCacheService.Set(cacheKey, files, p => p
                         .SetSlidingExpiration(CacheMinutes * 60)
                         .WatchFolders(new Dictionary<string, bool> { { fullPath, UseSubfolders } }));
 
@@ -101,7 +101,7 @@ namespace ToSic.Sxc.Code.Internal.HotBuild
             HashRelevantFiles(files, hashAlgorithm);
             l.A("relevant files hashed");
 
-            hashAlgorithm.TransformFinalBlock(new byte[0], 0, 0); // Finalize the hash computation
+            hashAlgorithm.TransformFinalBlock([], 0, 0); // Finalize the hash computation
             l.A("finalized hash");
 
             return l.ReturnAsOk(hashAlgorithm.Hash);

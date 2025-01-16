@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="19.00.00">
+    <package name="2SexyContent" type="Module" version="19.00.01">
       <friendlyName> Content</friendlyName>
       <description>2sxc is a DNN Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -79,7 +79,7 @@
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>19.00.00</version>
+              <version>19.00.01</version>
             </script>
           </scripts>
         </component>
@@ -130,7 +130,7 @@
               <businessControllerClass>ToSic.SexyContent.DnnBusinessController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
               <!-- This must contain all versions which have upgrade-code. By convention, we also add the main entry versions, even if no upgrade code exists for them -->
-              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,10.00.00,11.00.00,12.00.00,13.00.00,13.01.00,13.04.00,14.00.00,15.00.00,15.02.00,16.00.00,16.07.01,17.00.00,18.00.00,18.03.00,19.00.00</upgradeVersionsList>
+              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,10.00.00,11.00.00,12.00.00,13.00.00,13.01.00,13.04.00,14.00.00,15.00.00,15.02.00,16.00.00,16.07.01,17.00.00,18.00.00,18.03.00,19.00.00,19.00.01</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>
@@ -234,7 +234,7 @@
             <!-- System.Text.Json transitive dependency -->
             <assembly>
               <name>Microsoft.Bcl.AsyncInterfaces.dll</name>
-              <version>8.0.0.0</version>
+              <version>9.0.0.0</version>
             </assembly>
             <!-- CsvHelper transitive dependency -->
             <assembly>
@@ -330,7 +330,7 @@
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
               <name>System.Collections.Immutable.dll</name>
-              <version>8.0.0.0</version>
+              <version>9.0.0.0</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
@@ -351,6 +351,11 @@
             <assembly>
               <name>System.Interactive.Async.dll</name>
               <version>3.0.3000.0</version>
+            </assembly>
+            <!-- System.Text.Json transitive dependency -->
+            <assembly>
+              <name>System.IO.Pipelines.dll</name>
+              <version>9.0.0.0</version>
             </assembly>
             <!-- Microsoft.Extensions.Primitives transitive dependency -->
             <!-- Microsoft.Extensions.Logging.Abstractions transitive dependency -->
@@ -378,11 +383,11 @@
             <!-- System.Text.Json transitive dependency -->
             <assembly>
               <name>System.Text.Encodings.Web.dll</name>
-              <version>8.0.0.0</version>
+              <version>9.0.0.0</version>
             </assembly>
             <assembly>
               <name>System.Text.Json.dll</name>
-              <version>8.0.0.4</version>
+              <version>9.0.0.0</version>
             </assembly>
             <!-- Microsoft.Bcl.AsyncInterfaces transitive dependency -->
             <!-- System.Text.Json transitive dependency -->
@@ -637,7 +642,7 @@
       </components>
     </package>
 
-    <package name="2SexyContent-App" type="Module" version="19.00.00">
+    <package name="2SexyContent-App" type="Module" version="19.00.01">
       <friendlyName> App</friendlyName>
       <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>

@@ -1,4 +1,5 @@
 ﻿#if NETFRAMEWORK
+using System.Linq;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.LookUp;
@@ -24,17 +25,22 @@ public class CodeApiServiceObsolete(ICodeApiService dynCode)
         try
         {
             // try to find with assembly name, or otherwise with GlobalName / previous names
-            //var catalog = _root.GetService<DataSourceCatalog>();
             var type = dataSources.Catalog.Value.FindDataSourceInfo(typeName, dynCode.App.AppId)?.Type;
-            configuration ??= dataSources.LookUpEngine; // _root.ConfigurationProvider;
-            var cnf2Wip = new DataSourceOptions(lookUp: configuration);
+            configuration ??= dataSources.LookUpEngine;
+            var cnf2Wip = new DataSourceOptions
+            {
+                LookUp = configuration,
+            };
             if (links != null)
                 return dataSources.DataSources.Value/*_root.DataSourceFactory*/.Create(type: type, attach: links, options: cnf2Wip);
 
-            var initialSource = dataSources.DataSources.Value/* _root.DataSourceFactory*/
-                .CreateDefault(new DataSourceOptions(appIdentity: dynCode.App, lookUp: dataSources.LookUpEngine/*_root.ConfigurationProvider*/));
+            var initialSource = dataSources.DataSources.Value.CreateDefault(new DataSourceOptions
+            {
+                AppIdentityOrReader = dynCode.App,
+                LookUp = dataSources.LookUpEngine,
+            });
             return typeName != ""
-                ? dataSources.DataSources.Value/*_root.DataSourceFactory*/.Create(type: type, attach: initialSource, options: cnf2Wip)
+                ? dataSources.DataSources.Value.Create(type: type, attach: initialSource, options: cnf2Wip)
                 : initialSource;
         }
         catch (Exception ex)

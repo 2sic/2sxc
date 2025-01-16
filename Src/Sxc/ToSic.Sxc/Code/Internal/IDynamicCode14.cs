@@ -48,7 +48,7 @@ public interface IDynamicCode14<out TModel, out TServiceKit> : /*ICompatibleToCo
     IApp App { get; }
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    IBlockInstance Data { get; }
+    IDataSource Data { get; }
 
     #region Content and Header
 

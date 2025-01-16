@@ -4,7 +4,7 @@ using ToSic.Eav.Apps.Internal.MetadataDecorators;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.Code.InfoSystem;
 using ToSic.Eav.Internal.Environment;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Web.Internal.LightSpeed;
 

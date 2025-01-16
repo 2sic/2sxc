@@ -34,8 +34,8 @@ public class WorkViewsMod(
             {ViewConstants.FieldHeaderItem, listContentDemoEntity.HasValue ? [listContentDemoEntity.Value] : new List<int>() },
             {ViewConstants.FieldHeaderPresentationType, listPresentationTypeStaticName },
             {ViewConstants.FieldHeaderPresentationItem, listPresentationDemoEntity.HasValue ? [listPresentationDemoEntity.Value] : new List<int>() },
-            {nameof(IView.Type) /*View.FieldType*/, templateType },
-            {nameof(IView.IsHidden) /*View.FieldIsHidden*/, isHidden },
+            {nameof(IView.Type), templateType },
+            {nameof(IView.IsHidden), isHidden },
             {ViewConstants.FieldLocation, location },
             {ViewConstants.FieldUseList, useForList },
             {ViewConstants.FieldPublishEnable, publishData },
@@ -45,9 +45,8 @@ public class WorkViewsMod(
         };
 
 
-        // #ExtractEntitySave - looks good
         if (templateId.HasValue)
-            entityUpdate.New(AppWorkCtx).UpdateParts(templateId.Value, values);
+            entityUpdate.New(AppWorkCtx).UpdateParts(templateId.Value, values, new());
         else
             entityCreate.New(AppWorkCtx).Create(AppConstants.TemplateContentType, values);
 

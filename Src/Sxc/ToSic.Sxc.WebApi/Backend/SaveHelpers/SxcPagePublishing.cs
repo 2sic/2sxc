@@ -17,21 +17,21 @@ public class SxcPagePublishing(ContentGroupList contentGroupList, IPagePublishin
         bool partOfPage,
         Func<bool, Dictionary<Guid, int>> internalSaveMethod,
         IMultiPermissionCheck permCheck
-    ) => Log.Func<Dictionary<Guid, int>>(() =>
+    )
     {
+        var l = Log.Fn<Dictionary<Guid, int>>();
         var allowWriteLive = permCheck.UserMayOnAll(GrantSets.WritePublished);
         var forceDraft = !allowWriteLive;
-        Log.A($"allowWrite: {allowWriteLive} forceDraft: {forceDraft}");
+        l.A($"allowWrite: {allowWriteLive} forceDraft: {forceDraft}");
 
         // list of saved IDs
         Dictionary<Guid, int> postSaveIds = null;
 
         // The internal call which will be used further down
         var appIdentity = appsCatalog.AppIdentity(appId);
-        var groupList = contentGroupList.Init(appIdentity/*, Context.UserMayEdit*/);
+        var groupList = contentGroupList.Init(appIdentity);
 
-        Dictionary<Guid, int> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call,
-            bool forceSaveAsDraft)
+        Dictionary<Guid, int> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call, bool forceSaveAsDraft)
         {
             var ids = call.Invoke(forceSaveAsDraft);
             // now assign all content-groups as needed
@@ -43,19 +43,16 @@ public class SxcPagePublishing(ContentGroupList contentGroupList, IPagePublishin
         // use dnn versioning if partOfPage
         if (partOfPage)
         {
-            Log.A("partOfPage - save with publishing");
-            var versioning = pagePublishing;
-            versioning.DoInsidePublishing(Context,
-                args => postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft));
+            l.A("partOfPage - save with publishing");
+            pagePublishing.DoInsidePublishing(Context, _ => postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft));
         }
         else
         {
-            Log.A("partOfPage false, save without publishing");
+            l.A("partOfPage false, save without publishing");
             postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft);
         }
 
-        Log.A(Log.Try(() =>
-            $"post save IDs: {string.Join(",", postSaveIds.Select(psi => psi.Key + "(" + psi.Value + ")"))}"));
-        return postSaveIds;
-    });
+        var logIds = l.Try(() => string.Join(",", postSaveIds.Select(psi => $"{psi.Key}({psi.Value})")));
+        return l.Return(postSaveIds, $"post save IDs: {logIds}");
+    }
 }

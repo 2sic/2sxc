@@ -1,12 +1,12 @@
 ﻿using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Data.PiggyBack;
+using ToSic.Eav.DataSource;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
@@ -101,18 +101,16 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
     public IApp App { get; private set; }
 
     /// <inheritdoc />
-    public IBlockInstance Data { get; private set; }
+    public IDataSource Data { get; private set; }
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => _link ??= GetService<ILinkService>(reuse: true);
-    private ILinkService _link;
+    public ILinkService Link => field ??= GetService<ILinkService>(reuse: true);
 
 
     #region Edit
 
     /// <inheritdoc />
-    public IEditService Edit => _edit ??= GetService<IEditService>(reuse: true);
-    private IEditService _edit;
+    public IEditService Edit => field ??= GetService<IEditService>(reuse: true);
 
     #endregion
 

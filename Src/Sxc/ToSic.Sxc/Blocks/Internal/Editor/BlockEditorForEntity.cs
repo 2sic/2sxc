@@ -60,7 +60,7 @@ public class BlockEditorForEntity : BlockEditorBase
     {
         var parentBlockAppState = ((IAppWithInternal)((BlockBase)Block).Parent.App).AppReader;
         _entityUpdate.New(parentBlockAppState)
-            .UpdateParts(Math.Abs(Block.ContentBlockId), newValues);
+            .UpdateParts(Math.Abs(Block.ContentBlockId), newValues, new());
     }
 
     #endregion

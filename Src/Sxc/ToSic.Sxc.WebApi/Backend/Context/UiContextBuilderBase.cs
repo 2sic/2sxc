@@ -8,7 +8,7 @@ using ToSic.Eav.Internal.Features;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Languages;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Internal.Assets;
 using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Backend.Context;

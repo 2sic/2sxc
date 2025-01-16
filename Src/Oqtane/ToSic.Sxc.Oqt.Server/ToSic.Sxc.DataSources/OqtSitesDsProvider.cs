@@ -2,6 +2,7 @@
 using ToSic.Eav.Helpers;
 using ToSic.Lib.DI;
 using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Models.Internal;
 using ToSic.Sxc.Oqt.Server.Context;
 
 // ReSharper disable once CheckNamespace
@@ -31,11 +32,11 @@ internal class OqtSitesDsProvider : SitesDataSourceProvider
 
     #endregion
 
-    public override List<SiteDataRaw> GetSitesInternal()
+    public override List<SiteModel> GetSitesInternal()
     {
-        var l = Log.Fn<List<SiteDataRaw>>();
+        var l = Log.Fn<List<SiteModel>>();
         var sites = _sites.GetSites().ToList();
-        return l.ReturnAsOk(sites.Select(s => new SiteDataRaw
+        return l.ReturnAsOk(sites.Select(s => new SiteModel
         {
             Id = s.SiteId,
             Guid = new(s.SiteGuid),

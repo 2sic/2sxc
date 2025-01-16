@@ -2,6 +2,7 @@
 using ToSic.Eav.Integration;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Models.Internal;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
@@ -25,7 +26,7 @@ public abstract class SitesDataSourceProvider(SitesDataSourceProvider.MyServices
     /// So the core data source doesn't have settings to configure this
     /// </summary>
     /// <returns></returns>
-    public abstract List<SiteDataRaw> GetSitesInternal();
+    public abstract List<SiteModel> GetSitesInternal();
 
     public int GetZoneId(int siteId) => Services.ZoneMapperLazy.Value.GetZoneId(siteId);
 

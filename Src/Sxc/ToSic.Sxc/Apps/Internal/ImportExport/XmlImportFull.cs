@@ -1,6 +1,5 @@
 ﻿using System.Xml.Linq;
 using ToSic.Eav.Apps.Internal.Work;
-using ToSic.Eav.ImportExport;
 using ToSic.Eav.ImportExport.Internal;
 using ToSic.Eav.ImportExport.Internal.Xml;
 using ToSic.Eav.Repositories;
@@ -28,7 +27,7 @@ public partial class XmlImportFull: XmlImportWithFiles
 
     // ReSharper disable once UnusedMember.Global
     // The system says it's never used, but it's provided through DI as the base class
-    public new bool ImportXml(int zoneId, int appId, XDocument doc, bool leaveExistingValuesUntouched = true)
+    public bool ImportXml(int zoneId, int appId, XDocument doc, bool leaveExistingValuesUntouched = true)
     {
         var l = Log.Fn<bool>($"{zoneId}, {appId}, ..., {leaveExistingValuesUntouched}");
         var ok = base.ImportXml(zoneId, appId, parentAppId: null /* not sure if we never have a parent here */, doc, leaveExistingValuesUntouched);

@@ -70,7 +70,6 @@ public class AppQueryControllerReal(
         var appCtx = ctxResolver.SetAppOrGetBlock(appPath);
 
         var blockLookupOrNull = ctxResolver.BlockOrNull()?.Data?.Configuration?.LookUpEngine;
-        //var queryApp = _app.New().Init(appCtx.AppState, _appConfigDelegate.New().Build());
 
         // now just run the default query check and serializer
         var result = BuildQueryAndRun(appCtx.AppReader, name, stream, false, appCtx, more, blockLookupOrNull);

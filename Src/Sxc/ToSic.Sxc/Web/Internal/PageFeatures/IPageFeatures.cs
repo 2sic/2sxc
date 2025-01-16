@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Web.Internal.PageFeatures;
+﻿using ToSic.Sxc.Blocks.Internal;
+
+namespace ToSic.Sxc.Web.Internal.PageFeatures;
 
 /// <summary>
 /// Part of the <see cref="ToSic.Sxc.Services.IPageService"/> to activate features on the page.
@@ -35,8 +37,9 @@ public interface IPageFeatures
     /// <summary>
     /// Get the manual features which were added - skip those which were previously already added
     /// </summary>
+    /// <param name="specs"></param>
     /// <param name="log"></param>
     /// <returns></returns>
-    List<PageFeatureFromSettings> FeaturesFromSettingsGetNew(ILog log);
+    List<PageFeatureFromSettings> FeaturesFromSettingsGetNew(RenderSpecs specs, ILog log);
 
 }

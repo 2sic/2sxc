@@ -13,14 +13,18 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
     : ServiceBase("Sxc.BDsFct", connect: [dataSourceFactory, queryLazy])
 {
 
-    internal IBlockInstance GetContextDataSource(IBlock block, ILookUpEngine configLookUp)
+    internal IDataSource GetContextDataSource(IBlock block, ILookUpEngine configLookUp)
     {
-        var l = Log.Fn<IBlockInstance>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.Permissions.IsContentAdmin}, view:{block.View?.Name}");
+        var l = Log.Fn<IDataSource>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.Permissions.IsContentAdmin}, view:{block.View?.Name}");
         var view = block.View;
 
         // Get ModuleDataSource
         var dsFactory = dataSourceFactory.Value;
-        var initialSource = dsFactory.CreateDefault(new DataSourceOptions(appIdentity: block, lookUp: configLookUp));
+        var initialSource = dsFactory.CreateDefault(new DataSourceOptions
+        {
+            AppIdentityOrReader = block,
+            LookUp = configLookUp,
+        });
         var blockDataSource = dsFactory.Create<CmsBlock>(attach: initialSource);
 
         blockDataSource.OverrideView = view;
@@ -32,7 +36,11 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
             : null;
         l.A($"use query upstream:{viewDataSourceUpstream != null}");
 
-        var contextDataSource = dsFactory.Create<ContextData>(attach: viewDataSourceUpstream, options: new DataSourceOptions(appIdentity: block, lookUp: configLookUp));
+        var contextDataSource = dsFactory.Create<ContextData>(attach: viewDataSourceUpstream, options: new DataSourceOptions
+            {
+                AppIdentityOrReader = block,
+                LookUp = configLookUp,
+            });
         contextDataSource.SetBlock(blockDataSource);
 
         // Take Publish-Properties from the View-Template

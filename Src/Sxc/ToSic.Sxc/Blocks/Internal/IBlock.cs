@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.DataSource;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Engines;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -50,9 +50,9 @@ public interface IBlock: IAppIdentity, IHasLog
     IApp App { get; }
 
     /// <summary>
-    /// The <see cref="IBlockInstance"/> which delivers data for this block (will be used by the <see cref="IEngine"/> together with the View)
+    /// The DataSource which delivers data for this block (will be used by the <see cref="IEngine"/> together with the View)
     /// </summary>
-    IBlockInstance Data { get; }
+    IDataSource Data { get; }
 
     [PrivateApi("might rename this some time")]
     bool IsContentApp { get; }

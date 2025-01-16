@@ -1,25 +1,28 @@
 ﻿using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Helpers;
 using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Models.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources;
 
 [PrivateApi]
-internal class DnnSitesDsProvider: SitesDataSourceProvider
+internal class DnnSitesDsProvider(SitesDataSourceProvider.MyServices services)
+    : SitesDataSourceProvider(services, "Dnn.Sites")
 {
-    public DnnSitesDsProvider(MyServices services) : base(services, "Dnn.Sites")
-    { }
-
-    public override List<SiteDataRaw> GetSitesInternal()
+    public override List<SiteModel> GetSitesInternal()
     {
-        var l = Log.Fn<List<SiteDataRaw>>($"PortalId: {PortalSettings.Current?.PortalId ?? -1}");
-        var portals = PortalController.Instance.GetPortals().OfType<PortalInfo>().ToList();
+        var l = Log.Fn<List<SiteModel>>($"PortalId: {PortalSettings.Current?.PortalId ?? -1}");
+        var portals = PortalController.Instance
+            .GetPortals()
+            .OfType<PortalInfo>()
+            .ToList();
 
-        if (/*portals == null || */!portals.Any()) return l.Return([], "null/empty");
+        if (!portals.Any())
+            return l.Return([], "null/empty");
 
         var result = portals
-            .Select(s => new SiteDataRaw
+            .Select(s => new SiteModel
             {
                 Id = s.PortalID,
                 Guid = s.GUID,
@@ -40,7 +43,8 @@ internal class DnnSitesDsProvider: SitesDataSourceProvider
 
     private string GetUrl(int portalId, string cultureCode)
     {
-        var primaryPortalAlias = PortalAliasController.Instance.GetPortalAliasesByPortalId(portalId)
+        var primaryPortalAlias = PortalAliasController.Instance
+            .GetPortalAliasesByPortalId(portalId)
             .GetAliasByPortalIdAndSettings(portalId, result: null, cultureCode, settings: new(portalId));
         return primaryPortalAlias.HTTPAlias;
     }

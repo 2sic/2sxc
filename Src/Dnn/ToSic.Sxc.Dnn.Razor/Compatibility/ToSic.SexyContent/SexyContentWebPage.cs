@@ -11,7 +11,6 @@ using ToSic.Sxc.Compatibility.Internal;
 using ToSic.Sxc.Compatibility.RazorPermissions;
 using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Data.Internal.Wrapper;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DataSources.Internal.Compatibility;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
@@ -101,7 +100,7 @@ public abstract class SexyContentWebPage :
     // Explicit implementation of expected interface, but it should not work in the normal code
     // as the old code sometimes expects Data.Cache.GetContentType
     /// <inheritdoc />
-    IBlockInstance IDynamicCode.Data => _CodeApiSvc.Data;
+    IDataSource IDynamicCode.Data => _CodeApiSvc.Data;
 
     public RazorPermissions Permissions => new(((ICodeApiServiceInternal)_CodeApiSvc)._Block?.Context.Permissions.IsContentAdmin ?? false);
 

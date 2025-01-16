@@ -11,8 +11,7 @@ internal record CacheKeySpecs(int AppId, string Main, string RegionName = defaul
     /// </summary>
     internal const int NoApp = -9876;
 
-    public string Key => _key ??= GetKey(this);
-    private string _key;
+    public string Key => field ??= GetKey(this);
 
     public override string ToString() => Key;
 

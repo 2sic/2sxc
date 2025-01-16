@@ -1,17 +1,16 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Images;
 
-namespace ToSic.Sxc.Tests.LinksAndImages
+namespace ToSic.Sxc.Tests.LinksAndImages;
+
+[TestClass]
+public class ResizeParamMergeTests
 {
-    [TestClass]
-    public class ResizeParamMergeTests
+    [TestMethod]
+    public void TestMethod1()
     {
-        [TestMethod]
-        public void TestMethod1()
-        {
-            var merger = new ResizeParamMerger(null);
+        var merger = new ResizeParamMerger(null);
 
 
-        }
     }
 }

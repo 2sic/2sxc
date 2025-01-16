@@ -77,6 +77,7 @@
       <DependeciesInclude Include="bin\System.Data.SqlClient.dll" />
       <DependeciesInclude Include="bin\System.Diagnostics.DiagnosticSource.dll" />
       <DependeciesInclude Include="bin\System.Interactive.Async.dll" />
+      <DependeciesInclude Include="bin\System.IO.Pipelines.dll" />
       <DependeciesInclude Include="bin\System.Memory.dll" />
       <!--<DependeciesInclude Include="bin\System.Net.Http.Formatting.dll" />-->
       <DependeciesInclude Include="bin\System.Numerics.Vectors.dll" />

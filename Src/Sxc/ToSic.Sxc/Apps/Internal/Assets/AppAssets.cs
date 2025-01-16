@@ -4,7 +4,7 @@
 /// Constants for App Assets
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AppAssets
+internal class AppAssets
 {
     /// <summary>
     /// App file is located in the site itself.

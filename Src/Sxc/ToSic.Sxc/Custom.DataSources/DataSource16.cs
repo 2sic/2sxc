@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
@@ -17,25 +16,18 @@ namespace Custom.DataSource;
 /// <summary>
 /// The Base Class for custom Dynamic DataSources in your App.
 /// </summary>
-[PublicApi]
+[ToSic.Lib.Documentation.PublicApi]
 public abstract partial class DataSource16: ServiceBase<DataSource16.MyServices>, IDataSource, IAppIdentitySync
 {
     /// <summary>
-    /// These are dependencies of DataSource15.
-    /// At the moment we could use something else, but this ensures that all users must have this
-    /// in the constructor, so we can be sure we can add more dependencies as we need them.
+    /// Dependencies of DataSource15.
+    /// This ensures that all users must have this in the constructor, so we can be sure we can add more dependencies as we need them.
     /// </summary>
-    [PrivateApi]
-    public class MyServices: MyServicesBase<CustomDataSource.MyServices>
+    [ToSic.Lib.Documentation.PrivateApi]
+    public class MyServices(CustomDataSource.MyServices parentServices, ServiceKitLight16 kit)
+        : MyServicesBase<CustomDataSource.MyServices>(parentServices, connect: [kit])
     {
-        public ServiceKitLight16 Kit { get; }
-
-        public MyServices(CustomDataSource.MyServices parentServices, ServiceKitLight16 kit) : base(parentServices)
-        {
-            ConnectLogs([
-                Kit = kit
-            ]);
-        }
+        public ServiceKitLight16 Kit { get; } = kit;
     }
 
     /// <summary>
@@ -51,11 +43,32 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.MyServices>
     }
     private readonly CustomDataSource _inner;
 
+    /// <summary>
+    /// A simplified (light) Kit containing a bunch of helpers.
+    /// </summary>
+    /// <remarks>
+    /// This Kit has fewer APIs than in the typical Razor Kits,
+    /// because many of the Razor APIs require a Razor context.
+    /// </remarks>
     public ServiceKitLight16 Kit { get; }
 
+    /// <summary>
+    /// Optional method to provide default data.
+    /// You can override this, or use one or more <see cref="ProvideOut"/> in your constructor.
+    /// </summary>
+    /// <returns></returns>
     protected virtual IEnumerable<IRawEntity> GetDefault() => new List<IRawEntity>();
 
-
+    /// <summary>
+    /// Provide out-data on this data source.
+    /// Typically called in the constructor.
+    ///
+    /// You can call this multiple times, providing different names.
+    /// </summary>
+    /// <param name="getList"></param>
+    /// <param name="noParamOrder"></param>
+    /// <param name="name"></param>
+    /// <param name="options"></param>
     protected void ProvideOut(
         Func<object> getList,
         NoParamOrder noParamOrder = default,
@@ -89,10 +102,12 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.MyServices>
     #region IDataTarget - allmost all hidden
 
     /// <inheritdoc/>
-    public IImmutableList<IEntity> TryGetIn(string name = DataSourceConstants.StreamDefaultName) => _inner.TryGetIn(name);
+    public IImmutableList<IEntity> TryGetIn(string name = DataSourceConstants.StreamDefaultName)
+        => _inner.TryGetIn(name);
 
     /// <inheritdoc/>
-    public IImmutableList<IEntity> TryGetOut(string name = DataSourceConstants.StreamDefaultName) => _inner.TryGetOut(name);
+    public IImmutableList<IEntity> TryGetOut(string name = DataSourceConstants.StreamDefaultName)
+        => _inner.TryGetOut(name);
 
     // The rest is all explicit implementation only
 
@@ -102,17 +117,18 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.MyServices>
     // note also that temporarily the old interface IDataTarget will already error
     // but soon the new one must too
     private static readonly string AttachNotSupported = $"Attach(...) is not supported on new data sources. Provide 'attach:' in CreateDataSource(...) instead";
-    void IDataTarget.Attach(IDataSource dataSource) => _inner.Attach(dataSource);
+    void IDataTarget.Attach(IDataSource dataSource)
+        => _inner.Attach(dataSource);
 
-    void IDataTarget.Attach(string streamName, IDataSource dataSource, string sourceName) => _inner.Attach(streamName, dataSource, sourceName ?? DataSourceConstants.StreamDefaultName);
+    void IDataTarget.Attach(string streamName, IDataSource dataSource, string sourceName)
+        => _inner.Attach(streamName, dataSource, sourceName ?? DataSourceConstants.StreamDefaultName);
 
-    void IDataTarget.Attach(string streamName, IDataStream dataStream) => _inner.Attach(streamName, dataStream);
+    void IDataTarget.Attach(string streamName, IDataStream dataStream)
+        => _inner.Attach(streamName, dataStream);
 
     #endregion
 
-    void IAppIdentitySync.UpdateAppIdentity(IAppIdentity appIdentity) => ((IAppIdentitySync)_inner).UpdateAppIdentity(appIdentity);
+    void IAppIdentitySync.UpdateAppIdentity(IAppIdentity appIdentity)
+        => ((IAppIdentitySync)_inner).UpdateAppIdentity(appIdentity);
 
-    //IEnumerator<IEntity> IEnumerable<IEntity>.GetEnumerator() => _inner.List.GetEnumerator();
-
-    //IEnumerator IEnumerable.GetEnumerator() => _inner.List.GetEnumerator();
 }

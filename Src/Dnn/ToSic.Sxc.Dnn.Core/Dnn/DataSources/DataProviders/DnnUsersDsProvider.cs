@@ -1,26 +1,18 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
-using ToSic.Sxc.Context.Internal.Raw;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Models.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources;
 
-internal class DnnUsersDsProvider : UsersDataSourceProvider
+internal class DnnUsersDsProvider(LazySvc<DnnSecurity> dnnSecurity)
+    : UsersDataSourceProvider("Dnn.Users", connect: [dnnSecurity])
 {
-    private readonly LazySvc<DnnSecurity> _dnnSecurity;
-
-    public DnnUsersDsProvider(LazySvc<DnnSecurity> dnnSecurity) : base("Dnn.Users")
+    public override IEnumerable<UserRaw> GetUsersInternal()
     {
-        ConnectLogs([
-            _dnnSecurity = dnnSecurity
-        ]);
-    }
-
-    public override IEnumerable<CmsUserRaw> GetUsersInternal()
-    {
-        var l = Log.Fn<IEnumerable<CmsUserRaw>>();
+        var l = Log.Fn<IEnumerable<UserRaw>>();
         var siteId = PortalSettings.Current?.PortalId ?? -1;
         l.A($"Portal Id {siteId}");
         try
@@ -34,17 +26,20 @@ internal class DnnUsersDsProvider : UsersDataSourceProvider
                 superUsersOnly: true));
 
             var dnnUsers = dnnAllUsers.Cast<UserInfo>().ToList();
-            if (!dnnUsers.Any()) return l.Return(new List<CmsUserRaw>(), "null/empty");
+            if (!dnnUsers.Any())
+                return l.Return(new List<UserRaw>(), "null/empty");
 
             var result = dnnUsers
                 //.Where(user => !user.IsDeleted)
-                .Select(u => _dnnSecurity.Value.CmsUserBuilder(u, siteId)).ToList();
+                .Select(u => dnnSecurity.Value.CmsUserBuilder(u, siteId))
+                .ToList();
+
             return l.Return(result, "found");
         }
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.Return(new List<CmsUserRaw>(), "error");
+            return l.Return(new List<UserRaw>(), "error");
         }
     }
 }

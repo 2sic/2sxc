@@ -31,7 +31,6 @@ internal partial class LookUpForTokenTemplate(
     int repeaterTotal = -1)
     : ILookUp
 {
-    private ILookUp _lookUp;
     public string Name { get; } = name;
 
     public string Description => "LookUp for creating token based templates. In addition to retrieving values, it also resolves special tokens like repeater:index, repeater:isfirst, etc.";

@@ -21,7 +21,8 @@ partial class CodeDataFactory
                 WrapperSettings.Typed(true, true, propsRequired ?? true),
                 new LazyLike<CodeDataFactory>(this));
 
-        return AsItemInternal(data, MaxRecursions, propsRequired: propsRequired ?? false) ?? fallback;
+        return AsItemInternal(data, MaxRecursions, propsRequired: propsRequired ?? false)
+               ?? fallback;
     }
 
     /// <summary>
@@ -33,8 +34,8 @@ partial class CodeDataFactory
     public ITypedItem AsItem(IEntity entity, bool propsRequired)
         => entity == null ? null : new TypedItemOfEntity(null, entity, this, propsRequired: propsRequired);
 
-    private LogFilter AsItemLogFilter => _asItemLogFilter ??= new(Log, logFirstMax: 25, reLogIteration: 100);
-    private LogFilter _asItemLogFilter;
+    private LogFilter AsItemLogFilter
+        => field ??= new(Log, logFirstMax: 25, reLogIteration: 100);
 
     internal ITypedItem AsItemInternal(object data, int recursions, bool propsRequired)
     {
@@ -106,14 +107,14 @@ partial class CodeDataFactory
             //return l.Return(alreadyOk, "already matches type");
             //case IEnumerable<IDynamicEntity> dynIDynEnt:
             //    return l.Return(dynIDynEnt.Select(e => AsTyped(e, services, MaxRecursions, log)), "IEnum<DynEnt>");
-            case IDataSource dsEntities:
-                return l.Return(EntitiesToItems(dsEntities.List, propsRequired), "DataSource - convert list");
-            case IDataStream dataStream:
-                return l.Return(EntitiesToItems(dataStream.List, propsRequired), "DataStream - convert list");
-            case IEnumerable<IEntity> iEntities:
-                return l.Return(iEntities.Select(e => AsItem(e, propsRequired: propsRequired)), nameof(IEnumerable<IEntity>));
-            case IEnumerable<dynamic> dynEntities:
-                return l.Return(dynEntities.Select(e => AsItemInternal(e as object, MaxRecursions, propsRequired: propsRequired)), nameof(IEnumerable<dynamic>));
+            case IDataSource source:
+                return l.Return(EntitiesToItems(source.List, propsRequired), "DataSource - convert list");
+            case IDataStream stream:
+                return l.Return(EntitiesToItems(stream.List, propsRequired), "DataStream - convert list");
+            case IEnumerable<IEntity> entList:
+                return l.Return(entList.Select(e => AsItem(e, propsRequired: propsRequired)), nameof(IEnumerable<IEntity>));
+            case IEnumerable<dynamic> dynList:
+                return l.Return(dynList.Select(e => AsItemInternal(e as object, MaxRecursions, propsRequired: propsRequired)), nameof(IEnumerable<dynamic>));
             // Variations of single items - should be converted to list
             // All of the commented out variants are ICanBeEntity
             //case IEntity ent:

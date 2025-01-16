@@ -4,10 +4,12 @@ using Oqtane.Repository;
 using Oqtane.Security;
 using Oqtane.Shared;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Integration.Paths;
+using ToSic.Sxc.Models.Internal;
 using ToSic.Sxc.Web.Internal.Url;
 
 // ReSharper disable once CheckNamespace
@@ -17,31 +19,16 @@ namespace ToSic.Sxc.DataSources;
 /// Deliver a list of pages from the current platform (Dnn or Oqtane)
 /// </summary>
 [PrivateApi]
-internal class OqtPagesDsProvider : PagesDataSourceProvider
+internal class OqtPagesDsProvider(
+    IPageRepository pages,
+    SiteState siteState,
+    IUserPermissions userPermissions,
+    IHttpContextAccessor httpContextAccessor,
+    LazySvc<ILinkPaths> linkPathsLazy)
+    : PagesDataSourceProvider("Oqt.Pages",
+        connect: [pages, siteState, userPermissions, httpContextAccessor, linkPathsLazy])
 {
     private const int OqtLevelOffset = 1;
-
-    #region Constructor / DI
-
-    private readonly IPageRepository _pages;
-    private readonly SiteState _siteState;
-    private readonly IUserPermissions _userPermissions;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly LazySvc<ILinkPaths> _linkPathsLazy;
-
-    public OqtPagesDsProvider(IPageRepository pages, SiteState siteState, IUserPermissions userPermissions, IHttpContextAccessor httpContextAccessor, LazySvc<ILinkPaths> linkPathsLazy)
-        :base("Oqt.Pages")
-    {
-        ConnectLogs([
-            _pages = pages,
-            _siteState = siteState,
-            _userPermissions = userPermissions,
-            _httpContextAccessor = httpContextAccessor,
-            _linkPathsLazy = linkPathsLazy
-        ]);
-    }
-
-    #endregion
 
     public override List<PageDataRaw> GetPagesInternal(
         NoParamOrder noParamOrder = default,
@@ -54,35 +41,40 @@ internal class OqtPagesDsProvider : PagesDataSourceProvider
         bool requireEditPermissions = true)
     {
         var l = Log.Fn<List<PageDataRaw>>();
-        var user = _httpContextAccessor?.HttpContext?.User;
-        var pages = _pages.GetPages(_siteState.Alias.SiteId)
-            .Where(page => _userPermissions.IsAuthorized(user, PermissionNames.View, page.Permissions))
+        var user = httpContextAccessor?.HttpContext?.User;
+        var allowed = pages
+            .GetPages(siteState.Alias.SiteId)
+            .Where(page => userPermissions.IsAuthorized(user, PermissionNames.View, page.PermissionList))
             .ToList();
 
-        var parts = new UrlParts(_linkPathsLazy.Value.GetCurrentRequestUrl());
+        var parts = new UrlParts(linkPathsLazy.Value.GetCurrentRequestUrl());
 
-        return l.ReturnAsOk(pages.Select(p => new PageDataRaw
-        {
-            // In v14
-            Id = p.PageId,
-            Guid = Guid.Empty,
-            ParentId = p.ParentId ?? NoParent,
-            Title = p.Title,
-            Name = p.Name,
-            Visible = p.IsNavigation,
-            Path = p.Path,
-            Url = $"{parts.Protocol}{_siteState.Alias.Name}/{p.Path}".TrimLastSlash(),
-            Created = p.CreatedOn,
-            Modified = p.ModifiedOn,
+        var converted = allowed
+            .Select(p => new PageDataRaw
+            {
+                // In v14
+                Id = p.PageId,
+                Guid = Guid.Empty,
+                ParentId = p.ParentId ?? NoParent,
+                Title = p.Title.UseFallbackIfNoValue(p.Name),
+                Name = p.Name,
+                IsNavigation = p.IsNavigation,
+                Path = p.Path,
+                Url = $"{parts.Protocol}{siteState.Alias.Name}/{p.Path}".TrimLastSlash(),
+                Created = p.CreatedOn,
+                Modified = p.ModifiedOn,
 
-            // New in 15.01
-            Clickable = p.IsClickable,
-            HasChildren = p.HasChildren,
-            IsDeleted = p.IsDeleted,
-            Level = p.Level + OqtLevelOffset,
-            Order = p.Order,
-            // New in 15.02
-            LinkTarget = "", // TODO
-        }).ToList());
+                // New in 15.01
+                IsClickable = p.IsClickable,
+                HasChildren = p.HasChildren,
+                IsDeleted = p.IsDeleted,
+                Level = p.Level + OqtLevelOffset,
+                Order = p.Order,
+                // New in 15.02
+                LinkTarget = "", // TODO
+            })
+            .ToList();
+
+        return l.ReturnAsOk(converted);
     }
 }

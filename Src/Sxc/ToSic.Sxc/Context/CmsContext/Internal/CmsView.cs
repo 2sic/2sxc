@@ -3,7 +3,7 @@ using ToSic.Eav.Metadata;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data;
 

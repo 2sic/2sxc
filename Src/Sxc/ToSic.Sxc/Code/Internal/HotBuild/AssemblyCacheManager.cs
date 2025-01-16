@@ -9,23 +9,28 @@ public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : Servi
 {
     private const string GlobalCacheRoot = "Sxc-AssemblyCache.App.";
 
+    #region Static Calls for **AppCode** - to use before requiring DI
 
-    #region Static Calls for AppCode - to use before requiring DI
     public (AssemblyResult AssemblyResult, string cacheKey) TryGetAppCode(HotBuildSpec spec)
     {
         var cacheKey = KeyAppCode(spec);
         return (Get(cacheKey), cacheKey);
     }
+
     private static string KeyAppCode(HotBuildSpec spec) => $"{GlobalCacheRoot}app:{spec.AppId}.edition:{spec.Edition}.AppCode";
+
     #endregion
 
-    #region Static Calls for Dependecies - to use before requiring DI
+    #region Static Calls for **Dependecies** - to use before requiring DI
+
     public (List<AssemblyResult> assemblyResults, string cacheKey) TryGetDependencies(HotBuildSpec spec)
     {
         var cacheKey = KeyDependency(spec);
         return (memoryCacheService.Get<List<AssemblyResult>>(cacheKey), cacheKey);
     }
+
     private static string KeyDependency(HotBuildSpec spec) => $"{GlobalCacheRoot}app:{spec.AppId}.edition:{spec.Edition}.dep:{DependenciesLoader.DependenciesFolder}";
+
     #endregion
 
     #region Static Calls Only - for use before the object is created using DI
@@ -49,19 +54,12 @@ public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : Servi
         // Try to add to cache - use try-catch to avoid exceptions
         try
         {
-            memoryCacheService.SetNew(cacheKey, data, p => p
+            memoryCacheService.Set(cacheKey, data, p => p
                 .SetSlidingExpiration(slidingDuration)
                 .WatchFiles(filePaths)
                 .WatchFolders(folderPaths)
                 .WatchNotifyKeys(dependencies)
             );
-            // Ported 2024-10-22 - remove old code ca. 2024-12 #MemoryCacheApiCleanUp
-            //var cacheSpecs = memoryCacheService.NewPolicyMaker()
-            //    .SetSlidingExpiration(new(0, 0, slidingDuration))
-            //    .WatchFiles(filePaths)
-            //    .WatchFolders(folderPaths)
-            //    .WatchNotifyKeys(dependencies);
-            //memoryCacheService.SetNew(cacheKey, data, cacheSpecs);
 
             return l.ReturnAsOk(cacheKey);
         }

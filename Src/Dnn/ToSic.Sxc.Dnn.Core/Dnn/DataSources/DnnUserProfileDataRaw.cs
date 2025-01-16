@@ -152,7 +152,7 @@ public class DnnUserProfile : CustomDataSourceAdvanced
             results.Add(dnnUserProfile);
         }
         l.A($"results: {results.Count}");
-        var userProfileDataFactory = _dataFactory.New(options: new(DnnUserProfileDataRaw.Options, typeName: ContentType?.NullIfNoValue()));
+        var userProfileDataFactory = _dataFactory.New(options: DnnUserProfileDataRaw.Options with { TypeName = ContentType?.NullIfNoValue() });
         return l.Return(userProfileDataFactory.Create(results), "ok");
     }
 
@@ -204,7 +204,11 @@ public class DnnUserProfileDataRaw : IRawEntity
 {
     internal const string TypeName = "UserProfile";
 
-    internal static DataFactoryOptions Options = new(typeName: TypeName, titleField: nameof(Name));
+    internal static DataFactoryOptions Options = new()
+    {
+        TypeName = TypeName,
+        TitleField = nameof(Name)
+    };
     public int Id { get; set; }
     public Guid Guid { get; set; }
     public string Name { get; set; } // aka DisplayName

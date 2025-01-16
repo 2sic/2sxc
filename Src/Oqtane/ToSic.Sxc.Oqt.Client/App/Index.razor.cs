@@ -34,8 +34,9 @@ public partial class Index : ModuleProBase
     public override string RenderMode => RenderModes.Static;
 
     public override List<Resource> Resources => [
-        new Resource { ResourceType = ResourceType.Script, Url = $"Modules/{OqtConstants.PackageName}/Module.js", Reload = true },
-        new Resource { ResourceType = ResourceType.Script, Url = $"Modules/{OqtConstants.PackageName}/dist/turnOn/turn-on.js", Reload = true }
+        // Reload = true for Oqtane 6.0.0 or older (remove when dependency is updated to Oqtane 6.0.1)
+        new Resource { ResourceType = ResourceType.Script, Url = $"Modules/{OqtConstants.PackageName}/Module.js", Reload=IsOqtaneVersionLessThan601 },
+        new Resource { ResourceType = ResourceType.Script, Url = $"Modules/{OqtConstants.PackageName}/dist/turnOn/turn-on.js", Reload=IsOqtaneVersionLessThan601 },
         ];
 
     #endregion
@@ -252,11 +253,18 @@ public partial class Index : ModuleProBase
         // 1st criteria
         if (!ShouldRender()) return false;
 
+        // first render of new instance of oqtane module
+        if (_renderedParameters == null)
+        {
+            _renderedParameters = @params;
+            return true;
+        }
+
         // 2nd criteria - render parameters are not changed from the last render
-        if (_renderedParameters != null && _renderedParameters.Equals(@params)) return false;
+        if (_renderedParameters.Equals(@params)) return false;
 
         // render parameters are changed, store them for the next render
-        _renderedParameters = @params.Clone();
+        _renderedParameters = @params;
         return true;
     }
 
@@ -286,5 +294,4 @@ public partial class Index : ModuleProBase
     private string ThemeType => PageState.Page.ThemeType ?? PageState.Site.DefaultThemeType;
 
     #endregion
-
 }

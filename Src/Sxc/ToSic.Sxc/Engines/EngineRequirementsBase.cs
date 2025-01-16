@@ -6,7 +6,7 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Engines;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class EngineRequirementsBase(IRequirementsService requirements, string logName) : ServiceBase(logName, connect: [requirements])
+public abstract class EngineRequirementsBase(string logName, object[] connect = default) : ServiceBase(logName, connect: connect)
 {
     protected static RenderEngineResult BuildRenderEngineResult(List<RequirementStatus> reqStatus)
     {

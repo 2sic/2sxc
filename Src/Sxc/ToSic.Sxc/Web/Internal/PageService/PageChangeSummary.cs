@@ -21,7 +21,7 @@ public class PageChangeSummary(
     LazySvc<RequirementsService> requirements)
     : ServiceBase(SxcLogName + "PgChSm", connect: [requirements, resourceExtractor])
 {
-    public IRenderResult FinalizeAndGetAllChanges(PageServiceShared pss, bool enableEdit)
+    public IRenderResult FinalizeAndGetAllChanges(PageServiceShared pss, RenderSpecs specs, bool enableEdit)
     {
         var l = Log.Fn<IRenderResult>(timer: true);
         if (enableEdit)
@@ -31,7 +31,7 @@ public class PageChangeSummary(
         }
 
         var assets = pss.GetAssetsAndFlush();
-        var (newAssets, rest) = ConvertSettingsAssetsIntoReal(pss.PageFeatures.FeaturesFromSettingsGetNew(Log));
+        var (newAssets, rest) = ConvertSettingsAssetsIntoReal(pss.PageFeatures.FeaturesFromSettingsGetNew(specs, Log), specs);
 
         assets.AddRange(newAssets);
         assets = [.. assets.OrderBy(a => a.PosInPage)];
@@ -72,7 +72,7 @@ public class PageChangeSummary(
 
 
 
-    private (List<IClientAsset> newAssets, List<IPageFeature> rest) ConvertSettingsAssetsIntoReal(List<PageFeatureFromSettings> featuresFromSettings)
+    private (List<IClientAsset> newAssets, List<IPageFeature> rest) ConvertSettingsAssetsIntoReal(List<PageFeatureFromSettings> featuresFromSettings, RenderSpecs specs)
     {
         var l = Log.Fn<(List<IClientAsset> newAssets, List<IPageFeature> rest)>($"{featuresFromSettings.Count}");
         var newAssets = new List<IClientAsset>();
@@ -100,8 +100,9 @@ public class PageChangeSummary(
 
             newAssets.AddRange(extracted.Assets);
 
-            // Reset the HTML to what's left after extracting the resources
-            settingFeature.Html = extracted.Html;
+            // Reset the HTML to what's left after extracting the resources, except for Oqtane where we will keep it all
+            if (!specs.IncludeAllAssetsInOqtane)
+                settingFeature.Html = extracted.Html;
         }
 
         var featsLeft = featuresFromSettings

@@ -27,8 +27,8 @@ internal class CodeHelpBuilder
     public static List<CodeHelp> BuildListFromDiverseSources(params object[] parts)
         => parts?.SelectMany(r => r switch
             {
-                CodeHelp ch => new[] { ch },
-                GenNotExist gen => new[] { gen.Generate() },
+                CodeHelp ch => [ch],
+                GenNotExist gen => [gen.Generate()],
                 IEnumerable<CodeHelp> list => list,
                 _ => Array.Empty<CodeHelp>()
             })

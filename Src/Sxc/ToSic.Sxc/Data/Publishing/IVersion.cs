@@ -1,4 +1,5 @@
-﻿namespace ToSic.Sxc.Data;
+﻿
+namespace ToSic.Sxc.Data;
 
 /// <summary>
 /// Experimental 2dm - not done yet 2024-08
@@ -6,7 +7,8 @@
 ///
 /// See IVersion / ILifecycle - not yet in use.
 /// </summary>
-internal interface IVersion
+[PrivateApi]
+public interface IVersion
 {
     /// <summary>
     /// The version, starting at 1 when the item is created.
