@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Models.Internal;
 
-public interface IPageModel
+public interface IPageModelSync
 {
     /// <summary>
     /// The page ID.
@@ -8,7 +8,7 @@ public interface IPageModel
     /// * In Dnn it's from `TabInfo.TabID`
     /// * In Oqtane it's `Page.PageId`
     /// </summary>
-    int Id { get; }
+    public int Id { get; }
 
     /// <summary>
     /// The parent page ID.
@@ -18,7 +18,7 @@ public interface IPageModel
     /// * In Dnn it's from `TabInfo.ParentId`
     /// * in Oqtane it's from `Page.ParentId`
     /// </summary>
-    int ParentId { get; }
+    public int ParentId { get; }
 
     /// <summary>
     /// The page GUID.
@@ -26,7 +26,7 @@ public interface IPageModel
     /// * In Dnn it's from `TabInfo.UniqueId`
     /// * In Oqtane it's `Guid.Empty` as Oqtane doesn't have page GUIDs
     /// </summary>
-    Guid Guid { get; }
+    public Guid Guid { get; }
 
     /// <summary>
     /// The page title.
@@ -34,7 +34,7 @@ public interface IPageModel
     /// * In Dnn it's from `TabInfo.Title`
     /// * in Oqtane it's from `Page.Title`
     /// </summary>
-    string Title { get; }
+    public string Title { get; }
 
     /// <summary>
     /// The page name.
@@ -42,7 +42,7 @@ public interface IPageModel
     /// * In Dnn it's from `TabInfo.Name`
     /// * in Oqtane it's from `Page.Name`
     /// </summary>
-    string Name { get; }
+    public string Name { get; }
 
     /// <summary>
     /// Determines if this item is clickable in the menu.
@@ -53,7 +53,7 @@ public interface IPageModel
     /// <remarks>
     /// Added in v15.01
     /// </remarks>
-    bool IsClickable { get; }
+    public bool IsClickable { get; }
 
     /// <summary>
     /// Order of this item in a menu.
@@ -65,7 +65,7 @@ public interface IPageModel
     /// <remarks>
     /// Added in v15.01
     /// </remarks>
-    int Order { get; }
+    public int Order { get; }
 
     /// <summary>
     /// The page visibility - if it should be shown in the menu.
@@ -73,7 +73,7 @@ public interface IPageModel
     /// * In Dnn it's from `TabInfo.IsVisible`
     /// * in Oqtane it's from `Page.IsNavigation`
     /// </summary>
-    bool IsNavigation { get; }
+    public bool IsNavigation { get; }
 
     /// <summary>
     /// Info if the page has sub-pages. 
@@ -84,7 +84,7 @@ public interface IPageModel
     /// <remarks>
     /// Added in v15.01
     /// </remarks>
-    bool HasChildren { get; }
+    public bool HasChildren { get; }
 
     /// <summary>
     /// How deep this page is in the breadcrumb.
@@ -96,7 +96,7 @@ public interface IPageModel
     /// <remarks>
     /// Added in v15.01
     /// </remarks>
-    int Level { get; }
+    public int Level { get; }
 
     /// <summary>
     /// WIP
@@ -106,7 +106,7 @@ public interface IPageModel
     /// <remarks>
     /// Added in v15.02
     /// </remarks>
-    string LinkTarget { get; }
+    public string LinkTarget { get; }
 
     /// <summary>
     /// The path with slashes to this page.
@@ -114,7 +114,7 @@ public interface IPageModel
     /// * In Dnn it's from `TabInfo.TabPath`
     /// * in Oqtane it's from `Page.Path`
     /// </summary>
-    string Path { get; }
+    public string Path { get; }
 
     /// <summary>
     /// The public url to this page (without any trailing slashes)
@@ -122,7 +122,7 @@ public interface IPageModel
     /// * In Dnn it's from `TabInf.FullUrl` (last slash removed)
     /// * in Oqtane it's a combination of protocol, site-alias and path
     /// </summary>
-    string Url { get; }
+    public string Url { get; }
 
     /// <summary>
     /// The page creation date/time.
@@ -130,7 +130,7 @@ public interface IPageModel
     /// * In Dnn it's from `TabInfo.CreatedOnDate`
     /// * in Oqtane it's from `Page.CreatedOn`
     /// </summary>
-    DateTime Created { get; }
+    public DateTime Created { get; }
 
     /// <summary>
     /// The page modification date/time.
@@ -138,7 +138,7 @@ public interface IPageModel
     /// * In Dnn it's from `TabInfo.LastModifiedOnDate`
     /// * in Oqtane it's from `Page.ModifiedOn`
     /// </summary>
-    DateTime Modified { get; }
+    public DateTime Modified { get; }
 
     /// <summary>
     /// The page delete-status.
@@ -150,5 +150,5 @@ public interface IPageModel
     /// <remarks>
     /// Added in v15.01
     /// </remarks>
-    bool IsDeleted { get; }
+    public bool IsDeleted { get; }
 }

@@ -1,24 +1,24 @@
 ﻿namespace ToSic.Sxc.Models.Internal;
 
-public interface IUserRoleModel
+public interface IUserRoleModelSync
 {
     /// <summary>
     /// The Role ID in the database.
     /// </summary>
-    int Id { get; }
+    public int Id { get; }
 
     /// <summary>
     /// The Role Name as it is displayed everywhere.
     /// </summary>
-    string Name { get; }
+    public string Name { get; }
 
     /// <summary>
     /// When the user role was first created.
     /// </summary>
-    DateTime Created { get; }
+    public DateTime Created { get; }
 
     /// <summary>
     /// When the user role was last modified.
     /// </summary>
-    DateTime Modified { get; }
+    public DateTime Modified { get; }
 }

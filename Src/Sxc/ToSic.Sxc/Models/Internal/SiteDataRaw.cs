@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Models.Internal;
     Description = "User-Role in the site",
     Name = TypeName
 )]
-public class SiteDataRaw: IRawEntity, ISiteModel
+public class SiteDataRaw: IRawEntity, ISiteModelSync
 {
     internal const string TypeName = "Site";
 
@@ -39,10 +39,10 @@ public class SiteDataRaw: IRawEntity, ISiteModel
         TitleField = nameof(Name),
     };
 
-    /// <inheritdoc cref="ISiteModel.Id" />
+    /// <inheritdoc cref="ISiteModelSync.Id" />
     public int Id { get; init; }
 
-    /// <inheritdoc cref="ISiteModel.Guid" />
+    /// <inheritdoc cref="ISiteModelSync.Guid" />
     public Guid Guid { get; init; }
 
     /// <inheritdoc />
@@ -57,10 +57,10 @@ public class SiteDataRaw: IRawEntity, ISiteModel
     /// <inheritdoc />
     public string DefaultLanguage { get; init; }
 
-    /// <inheritdoc cref="ISiteModel.Created" />
+    /// <inheritdoc cref="ISiteModelSync.Created" />
     public DateTime Created { get; init; }
 
-    /// <inheritdoc cref="ISiteModel.Modified" />
+    /// <inheritdoc cref="ISiteModelSync.Modified" />
     public DateTime Modified { get; init; }
 
 

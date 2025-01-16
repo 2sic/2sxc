@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Models.Internal;
     Description = "Page in the site",
     Name = TypeName
 )]
-public class PageDataRaw: IRawEntity, IPageModel, IHasRelationshipKeys
+public class PageDataRaw: IRawEntity, IPageModelSync, IHasRelationshipKeys
 {
     private const string TypeName = "Page";
 
@@ -37,16 +37,16 @@ public class PageDataRaw: IRawEntity, IPageModel, IHasRelationshipKeys
         TitleField = nameof(Title)
     };
 
-    /// <inheritdoc cref="IPageModel.Id"/>
+    /// <inheritdoc cref="IPageModelSync.Id"/>
     public int Id { get; init; }
 
     /// <inheritdoc />
     public int ParentId { get; init; }
 
-    /// <inheritdoc cref="IPageModel.Guid"/>
+    /// <inheritdoc cref="IPageModelSync.Guid"/>
     public Guid Guid { get; init; }
 
-    /// <inheritdoc cref="IPageModel.Title"/>
+    /// <inheritdoc cref="IPageModelSync.Title"/>
     public string Title { get; init; }
 
     /// <inheritdoc />
@@ -78,10 +78,10 @@ public class PageDataRaw: IRawEntity, IPageModel, IHasRelationshipKeys
     /// <inheritdoc />
     public string Url { get; init; }
 
-    /// <inheritdoc cref="IPageModel.Created" />
+    /// <inheritdoc cref="IPageModelSync.Created" />
     public DateTime Created { get; init; }
 
-    /// <inheritdoc cref="IPageModel.Modified" />
+    /// <inheritdoc cref="IPageModelSync.Modified" />
     public DateTime Modified { get; init; }
 
     /// <inheritdoc />

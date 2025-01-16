@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Models.Internal;
 /// </remarks>
 [PrivateApi("this is only internal - public access is always through interface")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class UserRaw: RawEntityBase, IUser, IRawEntity, IHasIdentityNameId, IUserModel
+public class UserRaw: RawEntityBase, IUser, IRawEntity, IHasIdentityNameId, IUserModelSync
 {
     #region Types and Names for Raw Entities
 

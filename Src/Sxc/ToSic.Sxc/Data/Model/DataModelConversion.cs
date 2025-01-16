@@ -7,6 +7,7 @@
 /// It's primary property is the Map, which is an array of types that should be used to map the data model to.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false)]
+[InternalApi_DoNotUse_MayChangeWithoutNotice]
 public class DataModelConversion: Attribute
 {
     public Type[] Map { get; init; }

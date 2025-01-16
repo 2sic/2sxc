@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Models.Internal;
     Description = "User-Role in the site",
     Name = TypeName
 )]
-public class UserRoleRaw: RawEntityBase, IRawEntity, IRole, IUserRoleModel
+public class UserRoleRaw: RawEntityBase, IRawEntity, IRole, IUserRoleModelSync
 {
     internal const string TypeName = "Role";
 

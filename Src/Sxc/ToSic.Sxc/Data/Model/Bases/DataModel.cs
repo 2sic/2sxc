@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Data.Model;
 /// {
 ///   class MyPerson : DataModel
 ///   {
-///     public string Name => _entity.Get&lt;string&gt;("Name");
+///     public string Name => _entity.Get&lt;string&gt; ("Name");
 ///   }
 /// }
 /// ```
