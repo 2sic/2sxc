@@ -18,14 +18,14 @@ namespace ToSic.Sxc.DataSources;
 /// Get a list of pages from the current platform (Dnn or Oqtane).
 /// </summary>
 /// <remarks>
-/// You can cast the result to <see cref="PageModel"/> for typed use in your code.
-/// To figure out the returned properties, best also consult the <see cref="PageModel"/>.
+/// You can cast the result to <see cref="IPageModel"/> for typed use in your code.
+/// To figure out the returned properties, best also consult the <see cref="IPageModel"/>.
 /// 
 /// 
 /// History
 /// 
 /// * Created ca. v.16 early 2023 but not officially communicated
-/// * Models <see cref="UserModel"/> and <see cref="UserRoleModel"/> created in v19.01 and officially released
+/// * Models <see cref="IUserModel"/> and <see cref="IUserRoleModel"/> created in v19.01 and officially released
 /// </remarks>
 [PublicApi]
 [VisualQuery(

@@ -20,15 +20,15 @@ namespace ToSic.Sxc.DataSources;
 /// Will get all (or just some) users of the current site.
 /// </summary>
 /// <remarks>
-/// You can cast the result to <see cref="UserModel"/> for typed use in your code.
-/// To figure out the returned properties, best also consult the <see cref="UserModel"/>.
+/// You can cast the result to <see cref="IUserModel"/> for typed use in your code.
+/// To figure out the returned properties, best also consult the <see cref="IUserModel"/>.
 /// 
 /// The resulting Entity will almost match the <see cref="IUser"/> interface.
 /// 
 /// History
 /// 
 /// * Created ca. v.16 early 2023 but not officially communicated
-/// * Models <see cref="UserModel"/> and <see cref="UserRoleModel"/> created in v19.01 and officially released
+/// * Models <see cref="IUserModel"/> and <see cref="IUserRoleModel"/> created in v19.01 and officially released
 /// </remarks>
 [PublicApi]
 [VisualQuery(

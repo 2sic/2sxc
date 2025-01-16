@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Models;
 /// * the previous internal implementation had a property called `Clickable` which we finalized to `IsClickable` to better clarify it purpose.
 /// </remarks>
 [DataModelConversion(Map = [
-    typeof(DataModelFrom<IEntity, IPageModel, PageModel>),
+    typeof(DataModelFrom<IEntity, IPageModel, PageModelOfEntity>),
 ])]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 public interface IPageModel : IDataModel
@@ -74,5 +74,5 @@ public interface IPageModel : IDataModel
     /// <inheritdoc cref="IPageModelSync.IsDeleted" />
     bool IsDeleted { get; }
 
-    IEnumerable<PageModel> Children { get; }
+    IEnumerable<IPageModel> Children { get; }
 }

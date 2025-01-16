@@ -1,9 +1,8 @@
 ﻿using ToSic.Sxc.Data.Model;
-using ToSic.Sxc.Models.Internal;
 
-namespace ToSic.Sxc.Models;
+namespace ToSic.Sxc.Models.Internal;
 
-public class SiteModel: DataModel, ISiteModelSync, ISiteModel
+public class SiteModelOfEntity: DataModel, ISiteModelSync, ISiteModel
 {
     public int Id => _entity.EntityId;
     public Guid Guid => _entity.EntityGuid;

@@ -16,15 +16,15 @@ namespace ToSic.Sxc.DataSources;
 /// Deliver a list of sites from the Oqtane
 /// </summary>
 /// <remarks>
-/// You can cast the result to <see cref="SiteModel"/> for typed use in your code.
-/// To figure out the returned properties, best also consult the <see cref="SiteModel"/>.
+/// You can cast the result to <see cref="ISiteModel"/> for typed use in your code.
+/// To figure out the returned properties, best also consult the <see cref="ISiteModel"/>.
 ///
 /// As of now there are no parameters to set.
 /// 
 /// History
 ///
 /// * Not sure when it was first created, probably early 2023 with the name `Roles`, and not officially communicated.
-/// * Model <see cref="SiteModel"/> created in v19.01 and officially released
+/// * Model <see cref="ISiteModel"/> created in v19.01 and officially released
 /// </remarks>
 
 [PublicApi]

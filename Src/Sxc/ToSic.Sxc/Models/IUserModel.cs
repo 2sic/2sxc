@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Models;
 /// * Introduced in v19.01
 /// </remarks>
 [DataModelConversion(Map = [
-    typeof(DataModelFrom<IEntity, IUserModel, UserModel>),
+    typeof(DataModelFrom<IEntity, IUserModel, UserModelOfEntity>),
 ])]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 public interface IUserModel : IDataModel

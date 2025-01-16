@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Models;
 /// * Introduced in v19.01
 /// </remarks>
 [DataModelConversion(Map = [
-    typeof(DataModelFrom<IEntity, ISiteModelSync, SiteModel>),
+    typeof(DataModelFrom<IEntity, ISiteModelSync, SiteModelOfEntity>),
 ])]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 public interface ISiteModel : IDataModel

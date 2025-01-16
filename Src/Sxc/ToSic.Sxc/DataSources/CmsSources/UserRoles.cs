@@ -19,13 +19,13 @@ namespace ToSic.Sxc.DataSources;
 /// Will get all (or just some) user roles of the current site.
 /// </summary>
 /// <remarks>
-/// You can cast the result to <see cref="UserRoleModel"/> for typed use in your code.
-/// To figure out the returned properties, best also consult the <see cref="UserRoleModel"/>.
+/// You can cast the result to <see cref="IUserRoleModel"/> for typed use in your code.
+/// To figure out the returned properties, best also consult the <see cref="IUserRoleModel"/>.
 /// 
 /// History
 ///
 /// * Not sure when it was first created, probably early 2023 with the name `Roles`, and not officially communicated.
-/// * Model <see cref="UserRoleModel"/> created in v19.01 and officially released
+/// * Model <see cref="IUserRoleModel"/> created in v19.01 and officially released
 /// * Renamed to `UserRoles` for consistency in v19.0 as we believe nobody has been actively using it yet, since the models were missing.
 /// </remarks>
 [PublicApi]

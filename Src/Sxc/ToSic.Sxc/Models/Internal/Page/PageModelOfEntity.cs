@@ -1,9 +1,8 @@
 ﻿using ToSic.Sxc.Data.Model;
-using ToSic.Sxc.Models.Internal;
 
-namespace ToSic.Sxc.Models;
+namespace ToSic.Sxc.Models.Internal;
 
-public class PageModel: DataModel, IPageModelSync, IPageModel
+public class PageModelOfEntity: DataModel, IPageModelSync, IPageModel
 {
     public int Id => _entity.EntityId;
     public int ParentId => _entity.Get<int>(nameof(ParentId));
@@ -22,5 +21,5 @@ public class PageModel: DataModel, IPageModelSync, IPageModel
     public DateTime Modified => _entity.Modified;
     public bool IsDeleted => _entity.Get<bool>(nameof(IsDeleted));
 
-    public IEnumerable<PageModel> Children => AsList<PageModel>(_entity.Children(field: nameof(Children)));
+    public IEnumerable<IPageModel> Children => AsList<PageModelOfEntity>(_entity.Children(field: nameof(Children)));
 }

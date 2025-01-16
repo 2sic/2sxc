@@ -1,11 +1,10 @@
 ﻿using ToSic.Sxc.Context.Internal.Raw;
 using ToSic.Sxc.Data.Model;
-using ToSic.Sxc.Models.Internal;
 
-namespace ToSic.Sxc.Models;
+namespace ToSic.Sxc.Models.Internal;
 
 
-public class UserModel : DataModel, IUserModelSync, IUserModel
+internal class UserModelOfEntity : DataModel, IUserModelSync, IUserModel
 {
     /// <summary>
     /// Special override object to provide the values without using the entity.
@@ -46,6 +45,6 @@ public class UserModel : DataModel, IUserModelSync, IUserModel
 
     //IMetadataOf IHasMetadata.Metadata => null;
 
-    public IEnumerable<IUserRoleModel> Roles => AsList<UserRoleModel>(_entity.Children(field: nameof(Roles)));
+    public IEnumerable<IUserRoleModel> Roles => AsList<UserRoleModelOfEntity>(_entity.Children(field: nameof(Roles)));
 
 }
