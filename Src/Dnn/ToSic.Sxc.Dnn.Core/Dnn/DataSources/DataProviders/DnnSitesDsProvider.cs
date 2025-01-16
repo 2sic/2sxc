@@ -10,9 +10,9 @@ namespace ToSic.Sxc.DataSources;
 internal class DnnSitesDsProvider(SitesDataSourceProvider.MyServices services)
     : SitesDataSourceProvider(services, "Dnn.Sites")
 {
-    public override List<SiteDataRaw> GetSitesInternal()
+    public override List<SiteModel> GetSitesInternal()
     {
-        var l = Log.Fn<List<SiteDataRaw>>($"PortalId: {PortalSettings.Current?.PortalId ?? -1}");
+        var l = Log.Fn<List<SiteModel>>($"PortalId: {PortalSettings.Current?.PortalId ?? -1}");
         var portals = PortalController.Instance
             .GetPortals()
             .OfType<PortalInfo>()
@@ -22,7 +22,7 @@ internal class DnnSitesDsProvider(SitesDataSourceProvider.MyServices services)
             return l.Return([], "null/empty");
 
         var result = portals
-            .Select(s => new SiteDataRaw
+            .Select(s => new SiteModel
             {
                 Id = s.PortalID,
                 Guid = s.GUID,

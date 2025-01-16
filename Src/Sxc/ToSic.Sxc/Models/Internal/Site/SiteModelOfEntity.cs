@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Models.Internal;
 
-public class SiteModelOfEntity: DataModel, ISiteModelSync, ISiteModel
+public class SiteModelOfEntity: DataModel, ISiteModel
 {
     public int Id => _entity.EntityId;
     public Guid Guid => _entity.EntityGuid;

@@ -18,41 +18,86 @@ namespace ToSic.Sxc.Models;
 /// * Introduced in v19.01
 /// </remarks>
 [DataModelConversion(Map = [
-    typeof(DataModelFrom<IEntity, ISiteModelSync, SiteModelOfEntity>),
+    typeof(DataModelFrom<IEntity, ISiteModel, SiteModelOfEntity>),
 ])]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 public interface ISiteModel : IDataModel
 {
-    /// <inheritdoc cref="ISiteModelSync.Id" />
+    /// <summary>
+    /// The site ID.
+    ///
+    /// * In Dnn it's from `PortalInfo.PortalID`
+    /// * In Oqtane it's `Site.SiteId`
+    /// </summary>
     int Id { get; }
 
-    /// <inheritdoc cref="ISiteModelSync.Guid" />
+    /// <summary>
+    /// The site GUID.
+    ///
+    /// * In Dnn it's from `PortalInfo.GUID`
+    /// * In Oqtane it's `Guid.Empty` as Oqtane doesn't have site GUIDs
+    /// </summary>
     Guid Guid { get; }
 
-    /// <inheritdoc cref="ISiteModelSync.Created" />
+    /// <summary>
+    /// The site creation date/time.
+    ///
+    /// * In Dnn it's from `PortalInfo.CreatedOnDate`
+    /// * in Oqtane it's from `Site.CreatedOn`
+    /// </summary>
     DateTime Created { get; }
 
-    /// <inheritdoc cref="ISiteModelSync.Modified" />
+    /// <summary>
+    /// The site modification date/time.
+    ///
+    /// * In Dnn it's from `PortalInfo.LastModifiedOnDate`
+    /// * in Oqtane it's from `Site.ModifiedOn`
+    /// </summary>
     DateTime Modified { get; }
 
-    /// <inheritdoc cref="ISiteModelSync.Name" />
+    /// <summary>
+    /// The site name.
+    ///
+    /// * In Dnn it's from `PageInfo.PortalName`
+    /// * in Oqtane it's from `Site.Name`
+    /// </summary>
     string Name { get; }
 
-    /// <inheritdoc cref="ISiteModelSync.Url" />
+    /// <summary>
+    /// The public url to this site (without any trailing slashes)
+    ///
+    /// * In Dnn it's from `PortalAliasInfo.FullUrl` (last slash removed)
+    /// * in Oqtane it's a combination of protocol, site-alias and path
+    /// </summary>
     string Url { get; }
 
-    /// <inheritdoc cref="ISiteModelSync.Languages" />
+    /// <summary>
+    /// The site languages, comma separated.
+    /// Can be empty ever if a <see cref="DefaultLanguage"/> is set, if the site itself is not multi-language.
+    /// </summary>
     string Languages { get; }
 
-    /// <inheritdoc cref="ISiteModelSync.DefaultLanguage" />
+    /// <summary>
+    /// The site Culture Code.
+    ///
+    /// * In Dnn it's from `PortalInfo.CultureCode`
+    /// * in Oqtane it's from `Site.CultureCode`
+    /// </summary>
     string DefaultLanguage { get; }
 
-    /// <inheritdoc cref="ISiteModelSync.ZoneId" />
+    /// <summary>
+    /// The Zone ID, which is the ID of the 2sxc/EAV zone which applies to this site.
+    /// It's usually different from the site ID, and in rare cases can be shared among multiple sites.
+    /// </summary>
     int ZoneId { get; }
 
-    /// <inheritdoc cref="ISiteModelSync.ContentAppId" />
+    /// <summary>
+    /// The Content App Id of this Site and Zone.
+    /// </summary>
     int ContentAppId { get; }
 
-    /// <inheritdoc cref="ISiteModelSync.PrimaryAppId" />
+    /// <summary>
+    /// The (technical) primary App, which contains things such as site metadata.
+    /// </summary>
     int PrimaryAppId { get; }
 }

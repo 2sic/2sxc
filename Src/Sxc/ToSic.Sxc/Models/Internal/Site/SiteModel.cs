@@ -8,15 +8,7 @@ namespace ToSic.Sxc.Models.Internal;
 /// <summary>
 /// Internal class to hold all the information about the site,
 /// until it's converted to an IEntity in the <see cref="Sites"/> DataSource.
-///
-/// For detailed documentation, check the docs of the underlying objects:
-///
-/// * [Dnn Site](TODO:https://docs.dnncommunity.org/api/DotNetNuke.Entities.Portals.PortalInfo.html)
-/// * [Oqtane Site](TODO:https://docs.oqtane.org/api/Oqtane.Models.Sites.html)
-/// 
-/// Important: this is an internal object.
-/// We're just including in the docs to better understand where the properties come from.
-/// We'll probably move it to another namespace some day.
+/// todo
 /// </summary>
 /// <remarks>
 /// Make sure the property names never change, as they are critical for the created Entity.
@@ -28,8 +20,10 @@ namespace ToSic.Sxc.Models.Internal;
     Description = "User-Role in the site",
     Name = TypeName
 )]
-public class SiteDataRaw: IRawEntity, ISiteModelSync
+public class SiteModel: IRawEntity, ISiteModel
 {
+    #region IRawEntity
+
     internal const string TypeName = "Site";
 
     internal static DataFactoryOptions Options => new()
@@ -39,10 +33,23 @@ public class SiteDataRaw: IRawEntity, ISiteModelSync
         TitleField = nameof(Name),
     };
 
-    /// <inheritdoc cref="ISiteModelSync.Id" />
+    IDictionary<string, object> IRawEntity.Attributes(RawConvertOptions options) => new Dictionary<string, object>
+    {
+        { nameof(Name), Name },
+        { nameof(Url), Url },
+        { nameof(Languages), Languages },
+        { nameof(DefaultLanguage), DefaultLanguage },
+        { nameof(ZoneId), ZoneId },
+        { nameof(ContentAppId), ContentAppId },
+        { nameof(PrimaryAppId), PrimaryAppId },
+    };
+
+    #endregion
+
+    /// <inheritdoc cref="ISiteModel.Id" />
     public int Id { get; init; }
 
-    /// <inheritdoc cref="ISiteModelSync.Guid" />
+    /// <inheritdoc cref="ISiteModel.Guid" />
     public Guid Guid { get; init; }
 
     /// <inheritdoc />
@@ -57,10 +64,10 @@ public class SiteDataRaw: IRawEntity, ISiteModelSync
     /// <inheritdoc />
     public string DefaultLanguage { get; init; }
 
-    /// <inheritdoc cref="ISiteModelSync.Created" />
+    /// <inheritdoc cref="ISiteModel.Created" />
     public DateTime Created { get; init; }
 
-    /// <inheritdoc cref="ISiteModelSync.Modified" />
+    /// <inheritdoc cref="ISiteModel.Modified" />
     public DateTime Modified { get; init; }
 
 
@@ -72,19 +79,5 @@ public class SiteDataRaw: IRawEntity, ISiteModelSync
 
     /// <inheritdoc />
     public int PrimaryAppId { get; init; }
-
-    /// <summary>
-    /// Data but without Id, Guid, Created, Modified
-    /// </summary>
-    public IDictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>
-    {
-        { nameof(Name), Name },
-        { nameof(Url), Url },
-        { nameof(Languages), Languages },
-        { nameof(DefaultLanguage), DefaultLanguage },
-        { nameof(ZoneId), ZoneId },
-        { nameof(ContentAppId), ContentAppId },
-        { nameof(PrimaryAppId), PrimaryAppId },
-    };
 
 }
