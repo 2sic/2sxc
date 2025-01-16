@@ -358,7 +358,7 @@ public partial class CustomItem: ITypedItem, IDataModelOf<ITypedItem>, IHasPropL
     /// New in v17.03
     /// </remarks>
     protected IEnumerable<T> AsList<T>(IEnumerable<ITypedItem> source, NoParamOrder protector = default, bool nullIfNull = false)
-        where T : class, IDataModel, new()
+        where T : class, IDataModel
         => (source ?? (nullIfNull ? null : []))?.Select(_modelFactory.AsCustomFrom2<T, ITypedItem>).ToList();
 
     #endregion

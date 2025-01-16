@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Data.Internal.Factory;
+﻿using ToSic.Sxc.Data.Internal.Factory;
 using ToSic.Sxc.Models;
 using ToSic.Sxc.Models.Attributes;
 
@@ -51,6 +49,9 @@ internal class DataModelAnalyzer
     {
         var type = typeof(TCustom);
 
+        if (TargetTypes.TryGetValue(type, out var cachedType))
+            return cachedType;
+
         // Find attributes which describe conversion
         var attributes = type
             .GetCustomAttributes(typeof(DataModelConversion), false)
@@ -73,11 +74,18 @@ internal class DataModelAnalyzer
             .ToList();
 
         if (map == null || map.Count == 0)
-            return !type.IsInterface 
-                ? type
-                : throw new TypeInitializationException(type.FullName, new($"Can't determine type to create of {type.Name} as it's an interface and doesn't have the proper Attributes"));
+        {
+            if (type.IsInterface)
+                throw new TypeInitializationException(type.FullName,
+                    new($"Can't determine type to create of {type.Name} as it's an interface and doesn't have the proper Attributes"));
+            TargetTypes[type] = type;
+            return type;
+        }
 
-        return map.First().To;
+        var finalType = map.First().To;
+        TargetTypes[type] = finalType;
+        return finalType;
     }
 
+    private static readonly Dictionary<Type, Type> TargetTypes = new();
 }

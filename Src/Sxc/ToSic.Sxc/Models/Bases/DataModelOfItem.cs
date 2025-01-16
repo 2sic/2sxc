@@ -113,7 +113,7 @@ public abstract partial class DataModelOfItem : IDataModelOf<ITypedItem>, ICanBe
 
     /// <inheritdoc cref="DataModelHelpers.AsList{T}"/>
     protected IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = false)
-        where T : class, IDataModel, new()
+        where T : class, IDataModel
         => DataModelHelpers.AsList<T>(_modelFactory, source, protector, nullIfNull);
 
     #endregion

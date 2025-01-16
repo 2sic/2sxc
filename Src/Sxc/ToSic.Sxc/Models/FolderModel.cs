@@ -45,7 +45,7 @@ public class FolderModel: DataModel, IFolderModel
     /// </summary>
     public IEnumerable<FileModel> Files => AsList<FileModel>(_entity.Children(field: nameof(Files)));
 
-    /// <inheritdoc cref="IFileModel.Url" />
+    /// <inheritdoc cref="IFileModelSync.Url" />
     public string Url => _entity.Get<string>(nameof(Url));
 
     /// <inheritdoc />

@@ -195,7 +195,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
 
     /// <inheritdoc />
     public IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
-        where T : class, IDataModel, new()
+        where T : class, IDataModel
         => _CodeApiSvc.Cdf.AsCustomList<T>(source, protector, nullIfNull);
 
     #endregion

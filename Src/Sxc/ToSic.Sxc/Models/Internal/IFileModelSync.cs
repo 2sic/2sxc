@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Models.Internal;
 
-internal interface IFileModel
+internal interface IFileModelSync
 {
     /// <summary>
     /// The file name without extension.
@@ -38,11 +38,11 @@ internal interface IFileModel
     /// <summary>
     /// When the file/folder was created.
     /// </summary>
-    public DateTime Created { get; }
+    DateTime Created { get; }
 
     /// <summary>
     /// When the file/folder was modified.
     /// </summary>
-    public DateTime Modified { get; }
+    DateTime Modified { get; }
 
 }

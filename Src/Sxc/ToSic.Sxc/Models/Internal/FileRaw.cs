@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Models.Internal;
     Description = "File in an App",
     Name = TypeName
 )]
-public record FileRaw: FileFolderBase, IFileModel
+public record FileRaw: FileFolderBase, IFileModelSync
 {
     internal const string TypeName = "File";
 
@@ -33,14 +33,14 @@ public record FileRaw: FileFolderBase, IFileModel
         TitleField = nameof(Path)
     };
 
-    /// <inheritdoc cref="IFileModel.Name"/>
+    /// <inheritdoc cref="IFileModelSync.Name"/>
     [ContentTypeAttributeSpecs(Description = "The file name without extension, like my-image")]
     public override string Name { get; init; }
 
-    /// <inheritdoc cref="IFileModel.Extension"/>
+    /// <inheritdoc cref="IFileModelSync.Extension"/>
     public string Extension { get; init; }
 
-    /// <inheritdoc cref="IFileModel.Size"/>
+    /// <inheritdoc cref="IFileModelSync.Size"/>
     public int Size { get; init; }
 
     /// <summary>

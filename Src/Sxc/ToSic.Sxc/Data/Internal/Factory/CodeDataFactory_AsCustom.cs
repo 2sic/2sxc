@@ -28,7 +28,9 @@ partial class CodeDataFactory: ICustomModelFactory
     {
         if (item == null) return null;
         if (item is TCustom t) return t;
-        var newT = ActivatorUtilities.CreateInstance<TCustom>(serviceProvider);
+
+        var bestType = DataModelAnalyzer.GetTargetType<TCustom>();
+        var newT = ActivatorUtilities.CreateInstance(serviceProvider, bestType) as TCustom;
 
         // Should be an ITypedItemWrapper, but not enforced in the signature
         if (newT is IDataModelOf<TData> withMatchingSetup)
@@ -105,7 +107,7 @@ partial class CodeDataFactory: ICustomModelFactory
     /// Create list of custom-typed ITypedItems
     /// </summary>
     public IEnumerable<TCustom> AsCustomList<TCustom>(object source, NoParamOrder protector, bool nullIfNull)
-        where TCustom : class, IDataModel, new()
+        where TCustom : class, IDataModel
     {
         return source switch
         {

@@ -283,7 +283,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     /// Release in v17.05
     /// </remarks>
     IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
-        where T : class, IDataModel, new();
+        where T : class, IDataModel;
 
     #endregion
 }

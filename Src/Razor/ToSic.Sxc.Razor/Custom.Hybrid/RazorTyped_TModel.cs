@@ -175,7 +175,7 @@ public abstract class RazorTyped<TModel>()
 
     /// <inheritdoc />
     public IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
-        where T : class, IDataModel, new()
+        where T : class, IDataModel
         => _CodeApiSvc.Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
 
     #endregion
