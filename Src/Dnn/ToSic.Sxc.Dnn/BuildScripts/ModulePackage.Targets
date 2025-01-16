@@ -138,6 +138,7 @@
       <AssemblyInclude Include="$(OutDir)\System.Data.SqlClient.dll" />
       <AssemblyInclude Include="$(OutDir)\System.Diagnostics.DiagnosticSource.dll" />
       <AssemblyInclude Include="$(OutDir)\System.Interactive.Async.dll" />
+      <AssemblyInclude Include="$(OutDir)\System.IO.Pipelines.dll" />
       <AssemblyInclude Include="$(OutDir)\System.Memory.dll" />
       <!--<AssemblyInclude Include="$(OutDir)\System.Net.Http.Formatting.dll" />-->
       <AssemblyInclude Include="$(OutDir)\System.Numerics.Vectors.dll" />
