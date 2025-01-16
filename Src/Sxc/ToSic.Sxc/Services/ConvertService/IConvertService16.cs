@@ -1,5 +1,6 @@
 ﻿using ToSic.Sxc.Code.Internal.Documentation;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Model;
 using ToSic.Sxc.Models;
 
 // 2024-01-22 2dm

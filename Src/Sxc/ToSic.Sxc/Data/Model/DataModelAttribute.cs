@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Models.Attributes;
+﻿namespace ToSic.Sxc.Data.Model;
 
 /// <summary>
 /// Mark DataModel objects/interfaces and specify what ContentType they are for.

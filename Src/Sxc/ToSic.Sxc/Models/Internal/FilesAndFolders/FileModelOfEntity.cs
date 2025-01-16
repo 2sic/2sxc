@@ -1,8 +1,8 @@
 ﻿using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Apps.Assets.Internal;
-using ToSic.Sxc.Models.Internal;
+using ToSic.Sxc.Data.Model;
 
-namespace ToSic.Sxc.Models;
+namespace ToSic.Sxc.Models.Internal;
 
 /// <summary>
 /// A File Model which describes a file as returned by the <see cref="DataSources.AppAssets"/> DataSource.

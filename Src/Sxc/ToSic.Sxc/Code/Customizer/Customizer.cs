@@ -2,6 +2,7 @@
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Model;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Models;
 using ToSic.Sxc.Services.Internal;

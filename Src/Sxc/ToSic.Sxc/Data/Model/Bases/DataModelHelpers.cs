@@ -1,7 +1,6 @@
-﻿using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Internal;
+﻿using ToSic.Sxc.Data.Internal;
 
-namespace ToSic.Sxc.Models;
+namespace ToSic.Sxc.Data.Model;
 
 internal class DataModelHelpers
 {

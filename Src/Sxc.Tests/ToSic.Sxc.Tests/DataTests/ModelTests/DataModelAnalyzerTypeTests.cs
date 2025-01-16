@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Eav.Data;
+using ToSic.Sxc.Data.Model;
 using ToSic.Sxc.Models;
-using ToSic.Sxc.Models.Attributes;
 
 namespace ToSic.Sxc.Tests.DataTests.ModelTests;
 

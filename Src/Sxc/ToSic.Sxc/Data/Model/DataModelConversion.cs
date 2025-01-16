@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Models.Attributes;
+﻿namespace ToSic.Sxc.Data.Model;
 
 /// <summary>
 /// Attribute to decorate interfaces which should be used to retrieve a data model.

@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Apps.Assets;
-using ToSic.Sxc.Models.Attributes;
+using ToSic.Sxc.Data.Model;
 using ToSic.Sxc.Models.Internal;
 
 namespace ToSic.Sxc.Models;

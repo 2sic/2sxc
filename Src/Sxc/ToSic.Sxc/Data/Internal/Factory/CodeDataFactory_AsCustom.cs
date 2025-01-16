@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Sxc.Data.Internal.Typed;
+using ToSic.Sxc.Data.Model;
 using ToSic.Sxc.Models;
-using ToSic.Sxc.Models.Attributes;
 
 namespace ToSic.Sxc.Data.Internal;
 

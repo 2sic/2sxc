@@ -8,9 +8,9 @@ using ToSic.Sxc.Cms.Data;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Internal.Factory;
+using ToSic.Sxc.Data.Model;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Models;
-using ToSic.Sxc.Models.Attributes;
 using ToSic.Sxc.Services.Tweaks;
 
 // ReSharper disable once CheckNamespace

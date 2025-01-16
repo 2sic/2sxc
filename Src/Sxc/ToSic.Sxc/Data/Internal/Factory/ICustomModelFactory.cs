@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Models;
+﻿using ToSic.Sxc.Data.Model;
+using ToSic.Sxc.Models;
 
 namespace ToSic.Sxc.Data.Internal;
 

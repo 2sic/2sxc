@@ -1,14 +1,13 @@
 ﻿using Custom.Data;
-using ToSic.Sxc.Data;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Internal;
-using ToSic.Sxc.Data.Internal.Factory;
 
-namespace ToSic.Sxc.Models;
+namespace ToSic.Sxc.Data.Model;
 
 
 /// <summary>
 /// Base class for **plain** custom data models and can be used in Razor Components.
-/// It wraps a <see cref="IEntity"/> and provides a simple way to access the data.
+/// It wraps a <see cref="ITypedItem"/> and provides a simple way to access the data.
 /// </summary>
 /// <example>
 ///
@@ -21,9 +20,9 @@ namespace ToSic.Sxc.Models;
 /// ```c#
 /// namespace AppCode.Data
 /// {
-///   class MyPerson : DataModel
+///   class MyPerson : CustomModelOfItem
 ///   {
-///     public string Name => _entity.Get&lt;string&gt;("Name");
+///     public string Name => _item.String("Name");
 ///   }
 /// }
 /// ```
@@ -47,24 +46,24 @@ namespace ToSic.Sxc.Models;
 /// - Released in v19.01 (BETA)
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change to CustomModelOfItem or something")]
-public abstract partial class DataModel: IDataModelOf<IEntity>, ICanBeEntity //, IHasPropLookup
+public abstract partial class DataModelOfItem : IDataModelOf<ITypedItem>, ICanBeItem, ICanBeEntity //, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
-    void IDataModelOf<IEntity>.Setup(IEntity baseItem, ICustomModelFactory modelFactory)
+    void IDataModelOf<ITypedItem>.Setup(ITypedItem baseItem, ICustomModelFactory modelFactory)
     {
-        _entity = baseItem;
+        _item = baseItem;
         _modelFactory = modelFactory;
     }
     private ICustomModelFactory _modelFactory;
 
-    ///// <summary>
-    ///// The actual item which is being wrapped, in rare cases where you must access it from outside.
-    /////
-    ///// It's only on the explicit interface, so it is not available from outside or inside, unless you cast to it.
-    ///// Goal is that inheriting classes don't access it to keep API surface small.
-    ///// </summary>
-    //ITypedItem ICanBeItem.Item => Item;
+    /// <summary>
+    /// The actual item which is being wrapped, in rare cases where you must access it from outside.
+    ///
+    /// It's only on the explicit interface, so it is not available from outside or inside, unless you cast to it.
+    /// Goal is that inheriting classes don't access it to keep API surface small.
+    /// </summary>
+    ITypedItem ICanBeItem.Item => _item;
 
     /// <summary>
     /// This is necessary so the object can be used in places where an IEntity is expected,
@@ -74,9 +73,9 @@ public abstract partial class DataModel: IDataModelOf<IEntity>, ICanBeEntity //,
     /// </summary>
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    IEntity ICanBeEntity.Entity => _entity;
+    IEntity ICanBeEntity.Entity => _item.Entity;
 
-    //IBlock ICanBeItem.TryGetBlockContext() => Item.TryGetBlockContext();
+    IBlock ICanBeItem.TryGetBlockContext() => _item.TryGetBlockContext();
 
     //IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= ((IHasPropLookup)((ICanBeItem)this).Item).PropertyLookup;
     //private IPropertyLookup _propLookup;
@@ -84,23 +83,23 @@ public abstract partial class DataModel: IDataModelOf<IEntity>, ICanBeEntity //,
     #endregion
 
     /// <summary>
-    /// The underlying entity - for inheriting classes to access.
+    /// The underlying item - for inheriting classes to access.
     /// </summary>
     /// <remarks>
     /// * this property is protected, not public, as it should only be used internally.
     /// * this also prevents it from being serialized in JSON, which is good.
-    /// * it uses an unusual name `_entity` to avoid naming conflicts with properties generated in inheriting classes.
+    /// * it uses an unusual name `_item` to avoid naming conflicts with properties generated in inheriting classes.
     /// </remarks>
 #pragma warning disable IDE1006
     // ReSharper disable once InconsistentNaming
-    protected internal IEntity _entity { get; private set; }
+    protected internal ITypedItem _item { get; private set; }
 #pragma warning restore IDE1006
 
     /// <summary>
     /// Override ToString to give more information about the current object
     /// </summary>
     public override string ToString() 
-        => $"{nameof(DataModelOfItem)} Data Model {GetType().FullName} " + (_entity == null ? "without backing data (null)" : $"for id:{_entity.EntityId} ({_entity})");
+        => $"{nameof(DataModelOfItem)} Data Model {GetType().FullName} " + (_item == null ? "without backing data (null)" : $"for id:{_item.Id} ({_item})");
 
 
     #region As...

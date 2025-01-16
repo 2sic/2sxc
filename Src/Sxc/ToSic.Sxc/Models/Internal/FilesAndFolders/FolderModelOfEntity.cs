@@ -1,7 +1,7 @@
 ﻿using ToSic.Sxc.Adam;
-using ToSic.Sxc.Models.Internal;
+using ToSic.Sxc.Data.Model;
 
-namespace ToSic.Sxc.Models;
+namespace ToSic.Sxc.Models.Internal;
 
 /// <summary>
 /// A Folder Model which describes a folder as returned by the <see cref="DataSources.AppAssets"/> DataSource.
