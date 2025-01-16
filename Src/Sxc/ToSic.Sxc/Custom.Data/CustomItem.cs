@@ -64,12 +64,12 @@ public partial class CustomItem: ITypedItem, IDataModelOf<ITypedItem>, IHasPropL
     #region Explicit Interfaces for internal use - Setup, etc.
 
 
-    void IDataModelOf<ITypedItem>.Setup(ITypedItem baseItem, ICustomModelFactory modelFactory)
+    void IDataModelOf<ITypedItem>.Setup(ITypedItem baseItem, IModelFactory modelFactory)
     {
         _item = baseItem;
         _modelFactory = modelFactory;
     }
-    private ICustomModelFactory _modelFactory;
+    private IModelFactory _modelFactory;
 
     /// <summary>
     /// The actual item which is being wrapped, in rare cases where you must access it.

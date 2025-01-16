@@ -6,7 +6,7 @@ using ToSic.Sxc.Models;
 
 namespace ToSic.Sxc.Data.Internal;
 
-partial class CodeDataFactory: ICustomModelFactory
+partial class CodeDataFactory: IModelFactory
 {
     /// <summary>
     /// Convert an object to a custom type, if possible.

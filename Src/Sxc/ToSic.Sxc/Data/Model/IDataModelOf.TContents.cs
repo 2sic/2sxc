@@ -26,5 +26,5 @@ public interface IDataModelOf<in TContents>: IDataModel
     /// </summary>
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    internal void Setup(TContents baseItem, ICustomModelFactory modelFactory);
+    internal void Setup(TContents baseItem, IModelFactory modelFactory);
 }

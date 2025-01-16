@@ -50,12 +50,12 @@ public abstract partial class DataModel: IDataModelOf<IEntity>, ICanBeEntity //,
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
-    void IDataModelOf<IEntity>.Setup(IEntity baseItem, ICustomModelFactory modelFactory)
+    void IDataModelOf<IEntity>.Setup(IEntity baseItem, IModelFactory modelFactory)
     {
         _entity = baseItem;
         _modelFactory = modelFactory;
     }
-    private ICustomModelFactory _modelFactory;
+    private IModelFactory _modelFactory;
 
     ///// <summary>
     ///// The actual item which is being wrapped, in rare cases where you must access it from outside.

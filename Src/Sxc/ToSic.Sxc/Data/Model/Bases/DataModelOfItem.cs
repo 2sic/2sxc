@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Data.Model;
 /// ```c#
 /// namespace AppCode.Data
 /// {
-///   class MyPerson : CustomModelOfItem
+///   class MyPerson : DataModelOfItem
 ///   {
 ///     public string Name => _item.String("Name");
 ///   }
@@ -46,17 +46,17 @@ namespace ToSic.Sxc.Data.Model;
 /// 
 /// - Released in v19.01 (BETA)
 /// </remarks>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change to CustomModelOfItem or something")]
+[InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change to DataModelWithItem or something")]
 public abstract partial class DataModelOfItem : IDataModelOf<ITypedItem>, ICanBeItem, ICanBeEntity //, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
-    void IDataModelOf<ITypedItem>.Setup(ITypedItem baseItem, ICustomModelFactory modelFactory)
+    void IDataModelOf<ITypedItem>.Setup(ITypedItem baseItem, IModelFactory modelFactory)
     {
         _item = baseItem;
         _modelFactory = modelFactory;
     }
-    private ICustomModelFactory _modelFactory;
+    private IModelFactory _modelFactory;
 
     /// <summary>
     /// The actual item which is being wrapped, in rare cases where you must access it from outside.
