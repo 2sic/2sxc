@@ -39,31 +39,4 @@ internal class DataModelHelpers
                 .ToList(),
             _ => throw new($"Type {typeof(TCustom).Name} not supported, only {typeof(IEntity)} and {nameof(ITypedItem)} are allowed as data"),
         };
-
-    ///// <summary>
-    ///// Convert a list of Entities or TypedItems into a strongly typed list.
-    ///// Typically, the type will be from your `AppCode.Data`.
-    ///// </summary>
-    ///// <returns></returns>
-    //internal static IEnumerable<TCustom> AsList<TCustom, TClass>(
-    //    ICustomModelFactory modelFactory,
-    //    object source,
-    //    NoParamOrder protector = default,
-    //    bool nullIfNull = false
-    //)
-    //    where TCustom : class, IDataModel
-    //    where TClass : class, TCustom
-    //    => source switch
-    //    {
-    //        null => nullIfNull ? null : [],
-    //        IEnumerable<ITypedItem> typedItems => typedItems
-    //            .Select(item => modelFactory.AsCustomFrom<TCustom, ITypedItem>(item, typeof(TClass)))
-    //            .ToList(),
-    //        IEnumerable<IEntity> entities => entities
-    //            .Select(entity => modelFactory.AsCustomFrom<TCustom, IEntity>(entity, typeof(TClass)))
-    //            .ToList(),
-    //        _ => throw new(
-    //            $"Type {typeof(TCustom).Name} not supported, only {typeof(IEntity)} and {nameof(ITypedItem)} are allowed as data"),
-    //    };
-
 }

@@ -5,7 +5,7 @@ using ToSic.Sxc.Models.Internal;
 namespace ToSic.Sxc.Models;
 
 [DataModelConversion(Map = [
-    typeof(DataModelFrom<IEntity, IFileModel, FileModel>),
+    typeof(DataModelFrom<IEntity, IFileModel, FileModelOfEntity>),
 ])]
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still tweaking details and naming v19.0x")]
 public interface IFileModel: IDataModel

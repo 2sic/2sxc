@@ -4,7 +4,7 @@ using ToSic.Sxc.Models.Internal;
 namespace ToSic.Sxc.Models;
 
 [DataModelConversion(Map = [
-    typeof(DataModelFrom<IEntity, IFolderModel, FolderModel>),
+    typeof(DataModelFrom<IEntity, IFolderModel, FolderModelOfEntity>),
 ])]
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still tweaking details and naming v19.0x")]
 public interface IFolderModel: IDataModel
