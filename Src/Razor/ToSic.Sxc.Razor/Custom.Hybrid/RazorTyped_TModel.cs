@@ -170,7 +170,7 @@ public abstract class RazorTyped<TModel>()
 
     /// <inheritdoc />
     public T As<T>(object source, NoParamOrder protector = default, bool mock = false)
-        where T : class, IDataModel, new()
+        where T : class, IDataModel
         => _CodeApiSvc.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
 
     /// <inheritdoc />

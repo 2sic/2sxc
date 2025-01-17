@@ -219,7 +219,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     /// <inheritdoc />
     public T As<T>(object source, NoParamOrder protector = default, bool mock = default)
-        where T : class, IDataModel, new()
+        where T : class, IDataModel
         => _CodeApiSvc.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
 
     /// <inheritdoc />

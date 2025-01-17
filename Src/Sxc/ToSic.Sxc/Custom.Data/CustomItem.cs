@@ -342,7 +342,7 @@ public partial class CustomItem: ITypedItem, IDataModelOf<ITypedItem>, IHasPropL
     /// New in v17.03
     /// </remarks>
     protected T As<T>(ITypedItem item)
-        where T : class, IDataModel, new()
+        where T : class, IDataModel
         => _modelFactory.AsCustomFrom<T, ITypedItem>(item);
 
     /// <summary>

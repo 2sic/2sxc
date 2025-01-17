@@ -221,12 +221,12 @@ public interface IConvertService16
     [PrivateApi("WIP, don't publish yet")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool nullIfNull = false)
-        where T : class, IDataModel, ITypedItem, new();
+        where T : class, IDataModel;
 
     [PrivateApi("WIP, don't publish yet")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
-        where T : class, IDataModel, ITypedItem;
+        where T : class, IDataModel;
 
     #endregion
 }

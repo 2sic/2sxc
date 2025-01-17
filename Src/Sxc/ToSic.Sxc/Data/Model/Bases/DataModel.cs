@@ -106,7 +106,7 @@ public abstract partial class DataModel: IDataModelOf<IEntity>, ICanBeEntity //,
 
     /// <inheritdoc cref="DataModelHelpers.As{T}"/>
     protected T As<T>(object item)
-        where T : class, IDataModel, new()
+        where T : class, IDataModel
         => DataModelHelpers.As<T>(_modelFactory, item);
 
     /// <inheritdoc cref="DataModelHelpers.AsList{T}"/>

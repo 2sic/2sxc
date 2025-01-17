@@ -14,7 +14,7 @@ partial class CodeDataFactory: IModelFactory
     /// If it's a list of entity-like things, the first one will be converted.
     /// </summary>
     public TCustom AsCustom<TCustom>(object source, NoParamOrder protector = default, bool mock = false)
-        where TCustom : class, IDataModel, new()
+        where TCustom : class, IDataModel
         => source switch
         {
             null when !mock => null,

@@ -269,7 +269,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     /// Released v17.05
     /// </remarks>
     T As<T>(object source, NoParamOrder protector = default, bool mock = default)
-        where T : class, IDataModel, new();
+        where T : class, IDataModel;
 
     /// <summary>
     /// Convert a list of Entities or TypedItems into a strongly typed list.
