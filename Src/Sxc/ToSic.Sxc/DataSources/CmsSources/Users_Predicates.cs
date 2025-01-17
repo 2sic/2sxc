@@ -112,7 +112,7 @@ public partial class Users
     {
         var rolesFilter = UserRoles.RolesCsvListToInt(RoleIds);
         return rolesFilter.Any()
-            ? new(u => u.RolesRaw.Any(r => rolesFilter.Contains(r)))
+            ? new(u => u.Roles.Any(r => rolesFilter.Contains(r.Id)))
             : null;
     }
 
@@ -120,7 +120,7 @@ public partial class Users
     {
         var excludeRolesFilter = UserRoles.RolesCsvListToInt(ExcludeRoleIds);
         return excludeRolesFilter.Any()
-            ? new(u => !u.RolesRaw.Any(r => excludeRolesFilter.Contains(r)))
+            ? new(u => !u.Roles.Any(r => excludeRolesFilter.Contains(r.Id)))
             : null;
     }
 

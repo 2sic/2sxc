@@ -228,7 +228,8 @@ public partial class Users : CustomDataSourceAdvanced
     {
         // Get list of all role IDs which are to be used
         var roleIds = usersRaw
-            .SelectMany(u => u.RolesRaw)
+            .SelectMany(u => u.Roles)
+            .Select(r => r.Id)
             .Distinct()
             .ToList();
 

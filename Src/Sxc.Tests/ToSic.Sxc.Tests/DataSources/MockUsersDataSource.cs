@@ -26,7 +26,7 @@ public class MockUsersDataSource() : UsersDataSourceProvider("DS.MockUsers")
                 Id = i,
                 Guid = new($"00000000-0000-0000-0000-{i:d12}"),
                 NameId = $"mock:{i}",
-                RolesRaw = [i],
+                Roles = [new UserRoleModel { Id = i, Name = $"Role{i}" }],
                 IsSystemAdmin = true,
                 IsSiteAdmin = true,
                 //IsDesigner = false,
@@ -49,7 +49,12 @@ public class MockUsersDataSource() : UsersDataSourceProvider("DS.MockUsers")
                 Id = i,
                 Guid = new($"00000000-0000-0000-0000-{i:d12}"),
                 NameId = $"mock:{i}",
-                RolesRaw = [2, 3, i],
+                Roles =
+                [
+                    new UserRoleModel { Id = 2, Name = "Role2" },
+                    new UserRoleModel { Id = 3, Name = "Role3" },
+                    new UserRoleModel { Id = i, Name = $"Role{i}" }
+                ],
                 IsSystemAdmin = false,
                 IsSiteAdmin = false,
                 //IsDesigner = false,
@@ -71,7 +76,11 @@ public class MockUsersDataSource() : UsersDataSourceProvider("DS.MockUsers")
                 Id = i,
                 Guid = new($"00000000-0000-0000-0000-{i:d12}"),
                 NameId = $"mock:{i}",
-                RolesRaw = [9, 10],
+                Roles =
+                [
+                    new UserRoleModel { Id = 9, Name = "Role9" },
+                    new UserRoleModel { Id = 10, Name = "Role10" }
+                ],
                 IsSystemAdmin = false,
                 IsSiteAdmin = false,
                 //IsDesigner = false,

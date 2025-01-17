@@ -47,7 +47,7 @@ public record UserModel : IRawEntity, IHasIdentityNameId, IUserModel
         if (options.ShouldAddKey(nameof(IUserModel.Roles)))
             data.Add(
                 nameof(IUserModel.Roles),
-                new RawRelationship(keys: RolesRaw?.Select(object (r) => $"{RoleRelationshipPrefix}{r}").ToList() ?? [])
+                new RawRelationship(keys: Roles?.Select(object (r) => $"{RoleRelationshipPrefix}{r.Id}").ToList() ?? [])
             );
 
         return data;
@@ -55,12 +55,12 @@ public record UserModel : IRawEntity, IHasIdentityNameId, IUserModel
 
     internal const string RoleRelationshipPrefix = "Role:";
 
-    /// <summary>
-    /// Role ID List.
-    /// Important: Internally we use a list to do checks etc.
-    /// But for creating the entity we need the raw ID list.
-    /// </summary>
-    internal List<int> RolesRaw { get; init; }
+    ///// <summary>
+    ///// Role ID List.
+    ///// Important: Internally we use a list to do checks etc.
+    ///// But for creating the entity we need the raw ID list.
+    ///// </summary>
+    //internal List<int> RolesRaw { get; init; }
 
     #endregion
 
