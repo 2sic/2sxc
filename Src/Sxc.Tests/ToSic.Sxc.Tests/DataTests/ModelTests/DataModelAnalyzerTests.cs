@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Model;
-using ToSic.Sxc.Models;
 
 namespace ToSic.Sxc.Tests.DataTests.ModelTests;
 
@@ -8,13 +8,13 @@ namespace ToSic.Sxc.Tests.DataTests.ModelTests;
 public class DataModelAnalyzerTests : TestBaseSxcDb
 {
     private void AssertTypeName<T>(string name)
-        where T : class, IDataWrapper =>
+        where T : class, ICanWrapData =>
         Assert.AreEqual(name, DataModelAnalyzerTestAccessors.GetContentTypeNameTac<T>());
     private void AssertStreamName<T>(string name)
-        where T : class, IDataWrapper =>
+        where T : class, ICanWrapData =>
         Assert.AreEqual(name, DataModelAnalyzerTestAccessors.GetStreamNameTac<T>());
 
-    class NotDecorated: IDataWrapper;
+    class NotDecorated: ICanWrapData;
 
     [TestMethod]
     public void NotDecoratedDataModelType() =>
@@ -25,7 +25,7 @@ public class DataModelAnalyzerTests : TestBaseSxcDb
         AssertStreamName<NotDecorated>(nameof(NotDecorated));
 
 
-    interface INotDecorated: IDataWrapper;
+    interface INotDecorated: ICanWrapData;
 
     [TestMethod]
     public void INotDecoratedType() =>
@@ -39,7 +39,7 @@ public class DataModelAnalyzerTests : TestBaseSxcDb
     private const string ForContentType1 = "Abc";
     private const string StreamName1 = "AbcStream";
     [DataModel(ForContentTypes = ForContentType1, StreamNames = StreamName1)]
-    class Decorated: IDataWrapper;
+    class Decorated: ICanWrapData;
 
     [TestMethod]
     public void DecoratedType() =>
@@ -77,7 +77,7 @@ public class DataModelAnalyzerTests : TestBaseSxcDb
     private const string ForContentTypeIDecorated = "IDec";
     private const string StreamNameIDecorated= "IRedecStream";
     [DataModel(ForContentTypes = ForContentTypeIDecorated, StreamNames = StreamNameIDecorated)]
-    interface IDecorated: IDataWrapper;
+    interface IDecorated: ICanWrapData;
 
     [TestMethod]
     public void IDecoratedType() =>
