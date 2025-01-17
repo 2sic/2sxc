@@ -64,7 +64,7 @@
       <CurrentOqtaneRoot>%(OqtaneRoot.Identity)</CurrentOqtaneRoot>
     </PropertyGroup>
     <Message Text="CurrentOqtaneRoot='$(CurrentOqtaneRoot)'" Importance="High"/>
-    <Exec Command="debug.cmd $(ConfigurationName) $(CurrentOqtaneRoot)" />
+    <Exec Command="debug.cmd $(ConfigurationName) $(CurrentOqtaneRoot) $(TargetFramework)" />
   </Target>
 
   <Target Name="BuildConfigTarget2" AfterTargets="Build" DependsOnTargets="BuildConfigTarget" Condition=" '$(OqtaneExist)' == 'true'">
