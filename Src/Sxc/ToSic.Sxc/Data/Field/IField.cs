@@ -1,23 +1,22 @@
 ﻿using ToSic.Eav.Metadata;
 using ToSic.Sxc.Data.Internal;
-using ToSic.Sxc.Images;
-using ToSic.Sxc.Images.Internal;
 
 namespace ToSic.Sxc.Data;
 
 /// <summary>
 /// This describes a field-property of an item/entity. 
+/// </summary>
+/// <remarks>
 /// It's used for APIs which can need to know more about the field holding an item, like:
 ///
 /// - The field name and parent reference
 /// - The values in raw and converted
 /// - Any metadata of the field
 /// 
-/// </summary>
-/// <remarks>
-/// * Created in v13.10
-/// * In v16.02 renamed from `IDynamicField` to `IField` as it's not dynamic any more
-///     Kind of a breaking change, but shouldn't affect any code out there as the type name is not used
+/// History
+/// 
+/// * Created in v13.10, originally as `IDynamicField`
+/// * In v16.02 renamed `IField` as it's not dynamic, and published
 /// * In 16.02 changed types of `Value` and `Raw` to `object` - previously `dynamic`
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("This is just FYI so you see how it works; you shouldn't use any of these properties in your code")]

@@ -9,14 +9,22 @@ using IEntity = ToSic.Eav.Data.IEntity;
 namespace ToSic.Sxc.Data;
 
 /// <summary>
-/// This is a wrapper for IEntity objects. It provides nicer access to underlying properties
+/// This is an older _dynamic_ wrapper for IEntity objects. It provides _dynamic_ access to underlying properties.
+/// </summary>
+/// <remarks>
+/// It provides nicer access to underlying properties
 /// and automatically handles things like multi-language etc.
-/// The underlying IEntity <see cref="IEntity"/> is in the Entity property. 
+/// The underlying IEntity <see cref="IEntity"/> is in the Entity property.
+/// 
 /// <blockquote>
+/// This is an older way to work with entities and not recommended anymore.
+/// You should use a newer base class such as `RazorTyped`, there Dynamic objects are not used anymore.
+/// </blockquote>
+/// 
 /// Normally you will use it without caring about these internals. <br/>
 /// Please check @HowTo.DynamicCode.DynamicEntity
-/// </blockquote>
-/// </summary>
+/// 
+/// </remarks>
 [PublicApi]
 public partial interface IDynamicEntity:
 #if NETFRAMEWORK

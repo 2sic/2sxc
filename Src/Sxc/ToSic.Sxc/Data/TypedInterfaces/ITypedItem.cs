@@ -5,12 +5,13 @@ using ToSic.Sxc.Data.Internal.Convert;
 namespace ToSic.Sxc.Data;
 
 /// <summary>
-/// A typed object to access data.
-/// Previously Razor code always used `dynamic` <see cref="IDynamicEntity"/> objects.
-/// This had some disadvantages when working with LINQ or advanced toolbars.
+/// A typed item to access <see cref="IEntity"/> data in a strongly typed way.
 /// </summary>
 /// <remarks>
-/// Introduced in 2sxc 16.01
+/// Previously Razor code always used `dynamic` <see cref="IDynamicEntity"/> objects.
+/// This had some disadvantages when working with LINQ or advanced toolbars.
+/// 
+/// History: Introduced in 2sxc 16.01
 /// </remarks>
 [PublicApi]
 [JsonConverter(typeof(DynamicJsonConverter))]
