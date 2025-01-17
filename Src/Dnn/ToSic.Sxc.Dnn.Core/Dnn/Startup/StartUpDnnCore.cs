@@ -142,7 +142,6 @@ internal static class StartUpDnnCore
         services.TryAddTransient<AppCodeCompiler, AppCodeCompilerNetFull>();
 
         //v17.01
-        services.TryAddTransient<UserSourceProvider, DnnUsersServiceProvider>();
         services.TryAddTransient<DnnRequirements>();
 
         return services;

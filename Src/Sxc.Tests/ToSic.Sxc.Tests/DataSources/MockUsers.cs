@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Models;
 using ToSic.Sxc.Models.Internal;
 
 // ReSharper disable once CheckNamespace
@@ -10,9 +12,13 @@ namespace ToSic.Sxc.DataSources;
 /// <summary>
 /// Mock list of users
 /// </summary>
-public class MockUsersDataSource() : UsersDataSourceProvider("DS.MockUsers")
+public class MockUsers() : ServiceBase("DS.MockUsers"), IUsersProvider
 {
-    public override IEnumerable<UserModel> GetUsersInternal() => Log.Func(l =>
+    public string PlatformIdentityTokenPrefix => throw new NotImplementedException();
+
+    public IUserModel GetUser(int userId, int siteId) => throw new NotImplementedException();
+
+    public IEnumerable<UserModel> GetUsers(UsersGetSpecs specs) => Log.Func(l =>
     {
         var siteId = 0;
         l.A($"Portal Id {siteId}");

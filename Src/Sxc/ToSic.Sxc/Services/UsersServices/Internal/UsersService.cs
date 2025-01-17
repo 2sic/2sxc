@@ -1,20 +1,21 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal.Raw;
+using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Internal;
+using ToSic.Sxc.Models;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.Services.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class UsersService(LazySvc<IContextOfSite> context, UserSourceProvider provider)
+public class UsersService(LazySvc<IContextOfSite> context, IUsersProvider provider)
     : ServiceForDynamicCode($"{SxcLogName}.UsrInfoSrv", connect: [context, provider]), IUserService
 {
-    public ICmsUser Get(string identityToken)
+    public IUserModel Get(string identityToken)
     {
-        var l = Log.Fn<ICmsUser>($"token:{identityToken}");
+        var l = Log.Fn<IUserModel>($"token:{identityToken}");
 
         var userId = UserId(identityToken);
 
@@ -23,9 +24,9 @@ public class UsersService(LazySvc<IContextOfSite> context, UserSourceProvider pr
             : l.Return(Get(userId.UserId));
     }
 
-    public ICmsUser Get(int userId) 
+    public IUserModel Get(int userId) 
     {
-        var l = Log.Fn<ICmsUser>($"id:{userId}");
+        var l = Log.Fn<IUserModel>($"id:{userId}");
 
         if (userId == CmsUserRaw.AnonymousUser.Id)
             return l.Return(CmsUserRaw.AnonymousUser, "anonymous");
@@ -33,7 +34,7 @@ public class UsersService(LazySvc<IContextOfSite> context, UserSourceProvider pr
         if (userId == CmsUserRaw.UnknownUser.Id)
             return l.Return(CmsUserRaw.UnknownUser, "unknown");
 
-        var userDto = provider.PlatformUserInformationDto(userId, context.Value.Site.Id);
+        var userDto = provider.GetUser(userId, context.Value.Site.Id);
 
         return userDto != null
             ? l.ReturnAsOk(userDto)
@@ -45,9 +46,9 @@ public class UsersService(LazySvc<IContextOfSite> context, UserSourceProvider pr
     /// </summary>
     /// <param name="identityToken"></param>
     /// <returns></returns>
-    private (ICmsUser SpecialUser, int UserId) UserId(string identityToken) 
+    private (IUserModel SpecialUser, int UserId) UserId(string identityToken) 
     {
-        var l = Log.Fn< (ICmsUser, int)>($"token:{identityToken}");
+        var l = Log.Fn<(IUserModel, int)>($"token:{identityToken}");
 
         if (string.IsNullOrWhiteSpace(identityToken))
             return l.Return((CmsUserRaw.UnknownUser, CmsUserRaw.UnknownUser.Id), "empty identity token");

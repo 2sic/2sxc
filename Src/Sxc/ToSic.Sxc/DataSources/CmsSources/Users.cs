@@ -44,13 +44,7 @@ public partial class Users : CustomDataSourceAdvanced
 {
     private readonly IDataSourceGenerator<UserRoles> _rolesGenerator;
     private readonly IDataFactory _dataFactory;
-    private readonly UsersDataSourceProvider _provider;
-
-    #region Other Constants
-
-    private const char Separator = ',';
-
-    #endregion
+    private readonly IUsersProvider _provider;
 
     #region Configuration-properties
 
@@ -115,10 +109,6 @@ public partial class Users : CustomDataSourceAdvanced
         set => field = value;
     }
 
-    private static readonly string IncludeRequired = "required";
-    private static readonly string IncludeOptional = true.ToString();
-    private static readonly string IncludeForbidden = false.ToString();
-
     /// <summary>
     /// Add property `Roles` as a relationship to role entities.
     /// </summary>
@@ -135,6 +125,16 @@ public partial class Users : CustomDataSourceAdvanced
 
     #endregion
 
+    private UsersGetSpecs Specs => new()
+    {
+        UserIds = UserIds,
+        ExcludeUserIds = ExcludeUserIds,
+        RoleIds = RoleIds,
+        ExcludeRoleIds = ExcludeRoleIds,
+        IncludeSystemAdmins = IncludeSystemAdmins,
+        AddRoles = AddRoles
+    };
+
 
     #region Constructor
 
@@ -142,7 +142,7 @@ public partial class Users : CustomDataSourceAdvanced
     /// Constructor to tell the system what out-streams we have
     /// </summary>
     [PrivateApi]
-    public Users(MyServices services, UsersDataSourceProvider provider, IDataFactory dataFactory, IDataSourceGenerator<UserRoles> rolesGenerator)
+    public Users(MyServices services, IUsersProvider provider, IDataFactory dataFactory, IDataSourceGenerator<UserRoles> rolesGenerator)
         : base(services, "SDS.Users", connect: [provider, dataFactory, rolesGenerator])
     {
         _provider = provider;
@@ -202,20 +202,11 @@ public partial class Users : CustomDataSourceAdvanced
     private List<UserModel> GetUsersAndFilter()
     {
         var l = Log.Fn<List<UserModel>>();
-        var users = _provider.GetUsersInternal()?.ToList();
+        var users = _provider.GetUsers(Specs)?.ToList();
         if (users == null || users.Count == 0)
             return l.Return([], "null/empty");
 
-        var filters = GetAllFilters2();
-        var filtered = filters
-            .Aggregate(
-                users,
-                (current, filter) => current
-                    .Where(list => filter.Filter(list))
-                    .ToList()
-            );
-
-        return l.Return(filtered, $"found {filtered.Count}");
+        return l.Return(users, $"found {users.Count}");
     }
 
 

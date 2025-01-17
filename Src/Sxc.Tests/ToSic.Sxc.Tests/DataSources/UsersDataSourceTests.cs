@@ -18,7 +18,7 @@ public class UsersDataSourceTests : TestBaseSxcDb
     protected override void SetupServices(IServiceCollection services)
     {
         base.SetupServices(services);
-        services.AddTransient<UsersDataSourceProvider, MockUsersDataSource>();
+        services.AddTransient<IUsersProvider, MockUsers>();
     }
 
 
