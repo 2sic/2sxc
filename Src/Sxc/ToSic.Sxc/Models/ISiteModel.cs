@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data.Model;
+﻿using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Model;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Models.Internal;
 
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Models;
     typeof(DataModelFrom<IEntity, ISiteModel, SiteModelOfEntity>),
 ])]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public interface ISiteModel : IDataModel
+public interface ISiteModel : ICanWrapData
 {
     /// <summary>
     /// The site ID.

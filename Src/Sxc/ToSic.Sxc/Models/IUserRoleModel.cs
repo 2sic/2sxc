@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data.Model;
+﻿using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Model;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Models.Internal;
 
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Models;
     typeof(DataModelFrom<IEntity, IUserRoleModel, UserRoleModelOfEntity>),
 ])]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public interface IUserRoleModel : IDataModel
+public interface IUserRoleModel : ICanWrapData
 {
     /// <summary>
     /// The Role ID in the database.

@@ -14,7 +14,7 @@ internal class DataModelAnalyzer
     /// </summary>
     /// <typeparam name="TCustom"></typeparam>
     /// <returns></returns>
-    internal static string GetContentTypeNames<TCustom>() where TCustom : IDataModel =>
+    internal static string GetContentTypeNames<TCustom>() where TCustom : ICanWrapData =>
         ContentTypeNames.Get<TCustom, DataModelAttribute>(a =>
         {
             // If we have an attribute, use the value provided (unless not specified)
@@ -37,7 +37,7 @@ internal class DataModelAnalyzer
     /// </summary>
     /// <typeparam name="TCustom"></typeparam>
     /// <returns></returns>
-    internal static string GetStreamName<TCustom>() where TCustom : IDataModel =>
+    internal static string GetStreamName<TCustom>() where TCustom : ICanWrapData =>
         StreamNames.Get<TCustom, DataModelAttribute>(a =>
             // if we have the attribute, use that
             a?.StreamNames.Split(',').First().Trim()

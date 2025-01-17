@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data.Model;
+﻿using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Model;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Models.Internal;
 
@@ -24,7 +25,7 @@ namespace ToSic.Sxc.Models;
     typeof(DataModelFrom<IEntity, IPageModel, PageModelOfEntity>),
 ])]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public interface IPageModel : IDataModel
+public interface IPageModel : ICanWrapData
 {
     /// <summary>
     /// The page ID.

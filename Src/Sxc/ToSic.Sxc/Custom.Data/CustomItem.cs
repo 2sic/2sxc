@@ -59,12 +59,12 @@ namespace Custom.Data;
 /// </remarks>
 [PublicApi]
 [DataModel(ForContentTypes = DataModelAttribute.ForAnyContentType, Remarks = "Will work for any conversion, but inherited types will be restricted again")]
-public partial class CustomItem: ITypedItem, IDataModelOf<ITypedItem>, IHasPropLookup
+public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
 
-    void IDataModelOf<ITypedItem>.Setup(ITypedItem baseItem, IModelFactory modelFactory)
+    void ICanWrap<ITypedItem>.Setup(ITypedItem baseItem, IModelFactory modelFactory)
     {
         _item = baseItem;
         _modelFactory = modelFactory;
@@ -302,25 +302,25 @@ public partial class CustomItem: ITypedItem, IDataModelOf<ITypedItem>, IHasPropL
 
     /// <inheritdoc />
     public T Child<T>(string name, NoParamOrder protector = default, bool? required = default)
-        where T : class, IDataModel, new()
+        where T : class, ICanWrapData, new()
         => _item.Child<T>(name, protector: protector, required: required);
 
     /// <inheritdoc />
     public IEnumerable<T> Children<T>(string field, NoParamOrder protector = default,
         string type = default, bool? required = default)
-        where T : class, IDataModel, new()
+        where T : class, ICanWrapData, new()
         => _item.Children<T>(field: field, protector: protector, type: type, required: required);
 
     /// <inheritdoc />
     public T Parent<T>(NoParamOrder protector = default, bool? current = default, string type = default,
         string field = default)
-        where T : class, IDataModel, new()
+        where T : class, ICanWrapData, new()
         => _item.Parent<T>(protector: protector, current: current, type: type, field: field);
 
     /// <inheritdoc />
     public IEnumerable<T> Parents<T>(NoParamOrder protector = default,
         string type = default, string field = default)
-        where T : class, IDataModel, new()
+        where T : class, ICanWrapData, new()
         => _item.Parents<T>(protector: protector, type: type ?? typeof(T).Name, field: field);
 
     /// <inheritdoc />
@@ -342,7 +342,7 @@ public partial class CustomItem: ITypedItem, IDataModelOf<ITypedItem>, IHasPropL
     /// New in v17.03
     /// </remarks>
     protected T As<T>(ITypedItem item)
-        where T : class, IDataModel
+        where T : class, ICanWrapData
         => _modelFactory.AsCustomFrom<T, ITypedItem>(item);
 
     /// <summary>
@@ -358,7 +358,7 @@ public partial class CustomItem: ITypedItem, IDataModelOf<ITypedItem>, IHasPropL
     /// New in v17.03
     /// </remarks>
     protected IEnumerable<T> AsList<T>(IEnumerable<ITypedItem> source, NoParamOrder protector = default, bool nullIfNull = false)
-        where T : class, IDataModel
+        where T : class, ICanWrapData
         => (source ?? (nullIfNull ? null : []))?.Select(_modelFactory.AsCustomFrom<T, ITypedItem>).ToList();
 
     #endregion

@@ -8,13 +8,13 @@ namespace ToSic.Sxc.Tests.DataTests.ModelTests;
 public class DataModelAnalyzerTests : TestBaseSxcDb
 {
     private void AssertTypeName<T>(string name)
-        where T : class, IDataModel =>
+        where T : class, IDataWrapper =>
         Assert.AreEqual(name, DataModelAnalyzerTestAccessors.GetContentTypeNameTac<T>());
     private void AssertStreamName<T>(string name)
-        where T : class, IDataModel =>
+        where T : class, IDataWrapper =>
         Assert.AreEqual(name, DataModelAnalyzerTestAccessors.GetStreamNameTac<T>());
 
-    class NotDecorated: IDataModel;
+    class NotDecorated: IDataWrapper;
 
     [TestMethod]
     public void NotDecoratedDataModelType() =>
@@ -25,7 +25,7 @@ public class DataModelAnalyzerTests : TestBaseSxcDb
         AssertStreamName<NotDecorated>(nameof(NotDecorated));
 
 
-    interface INotDecorated: IDataModel;
+    interface INotDecorated: IDataWrapper;
 
     [TestMethod]
     public void INotDecoratedType() =>
@@ -39,7 +39,7 @@ public class DataModelAnalyzerTests : TestBaseSxcDb
     private const string ForContentType1 = "Abc";
     private const string StreamName1 = "AbcStream";
     [DataModel(ForContentTypes = ForContentType1, StreamNames = StreamName1)]
-    class Decorated: IDataModel;
+    class Decorated: IDataWrapper;
 
     [TestMethod]
     public void DecoratedType() =>
@@ -77,7 +77,7 @@ public class DataModelAnalyzerTests : TestBaseSxcDb
     private const string ForContentTypeIDecorated = "IDec";
     private const string StreamNameIDecorated= "IRedecStream";
     [DataModel(ForContentTypes = ForContentTypeIDecorated, StreamNames = StreamNameIDecorated)]
-    interface IDecorated: IDataModel;
+    interface IDecorated: IDataWrapper;
 
     [TestMethod]
     public void IDecoratedType() =>

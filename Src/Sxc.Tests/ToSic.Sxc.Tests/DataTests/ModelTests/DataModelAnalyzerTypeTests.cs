@@ -10,12 +10,12 @@ namespace ToSic.Sxc.Tests.DataTests.ModelTests;
 public class DataModelAnalyzerTypeTests : TestBaseSxcDb
 {
     private void AssertType<TInspect, TExpected>()
-        where TInspect : class, IDataModel =>
+        where TInspect : class, IDataWrapper =>
         Assert.AreEqual(typeof(TExpected), DataModelAnalyzerTestAccessors.GetTargetTypeTac<TInspect>());
 
     #region NotDecorated - should return itself as the type
 
-    class NotDecorated: IDataModel;
+    class NotDecorated: IDataWrapper;
 
     [TestMethod]
     public void NotDecoratedDataModelType() =>
@@ -25,7 +25,7 @@ public class DataModelAnalyzerTypeTests : TestBaseSxcDb
 
     #region Interface not Decorated - should return itself as the type
 
-    interface INotDecorated : IDataModel;
+    interface INotDecorated : IDataWrapper;
 
     [TestMethod]
     [ExpectedException(typeof(TypeInitializationException))]
@@ -74,7 +74,7 @@ public class DataModelAnalyzerTypeTests : TestBaseSxcDb
     #region Interface decorated - should return the decorated type
 
     [DataModelConversion(Map = [typeof(DataModelFrom<IEntity, IDecorated, EntityOfIDecorated>)])]
-    interface IDecorated : IDataModel;
+    interface IDecorated : IDataWrapper;
 
     class EntityOfIDecorated : InheritReDecorated, IDecorated;
 

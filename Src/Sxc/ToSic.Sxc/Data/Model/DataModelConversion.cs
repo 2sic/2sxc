@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Data.Model;
 
 /// <summary>
-/// Attribute to decorate interfaces which should be used to retrieve a data model.
+/// BETA / WIP: Attribute to decorate interfaces which should be used to retrieve a data model.
 /// </summary>
 /// <remarks>
 /// It's primary property is the Map, which is an array of types that should be used to map the data model to.
@@ -20,6 +20,6 @@ public class DataModelConversion: Attribute
 /// <typeparam name="TImplements"></typeparam>
 /// <typeparam name="TTo"></typeparam>
 public class DataModelFrom<TFrom, TImplements, TTo>
-    where TTo : class, TImplements, IDataModelOf<TFrom>, new()
+    where TTo : class, TImplements, ICanWrap<TFrom>, new()
     where TImplements : class
     where TFrom : ICanBeEntity;

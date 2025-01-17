@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Adam;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Model;
 using ToSic.Sxc.Models.Internal;
 
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Models;
     typeof(DataModelFrom<IEntity, IFolderModel, FolderModelOfEntity>),
 ])]
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still tweaking details and naming v19.0x")]
-public interface IFolderModel: IDataModel
+public interface IFolderModel: ICanWrapData
 {
     /// <inheritdoc cref="IFolderModelSync.Name" />
     string Name { get; }

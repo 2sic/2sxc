@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Assets;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Model;
 using ToSic.Sxc.Models.Internal;
 
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Models;
     typeof(DataModelFrom<IEntity, IFileModel, FileModelOfEntity>),
 ])]
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still tweaking details and naming v19.0x")]
-public interface IFileModel: IDataModel
+public interface IFileModel: ICanWrapData
 {
     /// <inheritdoc cref="IFileModelSync.Name" />
     string Name { get; }

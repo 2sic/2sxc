@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Data.Model;
 
 /// <summary>
-/// Mark DataModel objects/interfaces and specify what ContentType they are for.
+/// BETA / WIP: Mark DataModel objects/interfaces and specify what ContentType they are for.
 /// </summary>
 /// <remarks>
 /// Typical use is for custom data such as classes inheriting from <see cref="Custom.Data.CustomItem"/>

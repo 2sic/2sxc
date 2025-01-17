@@ -10,8 +10,8 @@ namespace ToSic.Sxc.Apps.Internal;
 internal class AppTyped<TSettings, TResources>(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> queryManager)
     : AppTyped(globalPaths, queryManager), IAppTyped<TSettings, TResources>,
         IAppTyped
-    where TSettings : class, IDataModel, new()
-    where TResources : class, IDataModel, new()
+    where TSettings : class, ICanWrapData, new()
+    where TResources : class, ICanWrapData, new()
 {
     TSettings IAppTyped<TSettings, TResources>.Settings
         => field ??= CodeApiSvc.Cdf.AsCustom<TSettings>(((IAppTyped)this).Settings);

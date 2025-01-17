@@ -8,5 +8,5 @@ namespace ToSic.Sxc.Data.Internal;
 public interface IModelFactory
 {
     TCustom AsCustomFrom<TCustom, TData>(TData item)
-        where TCustom : class, IDataModel;
+        where TCustom : class, ICanWrapData;
 }

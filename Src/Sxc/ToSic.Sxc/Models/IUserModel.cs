@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Context;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Model;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Models.Internal;
@@ -23,7 +24,7 @@ namespace ToSic.Sxc.Models;
     typeof(DataModelFrom<IEntity, IUserModel, UserModelOfEntity>),
 ])]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public interface IUserModel : IDataModel
+public interface IUserModel : ICanWrapData
 {
     /// <inheritdoc cref="IUser.Email"/>
     string Email { get; }

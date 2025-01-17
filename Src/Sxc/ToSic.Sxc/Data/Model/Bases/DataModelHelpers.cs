@@ -10,7 +10,7 @@ internal class DataModelHelpers
     /// </summary>
     /// <returns></returns>
     internal static TCustom As<TCustom>(IModelFactory modelFactory, object item)
-        where TCustom : class, IDataModel
+        where TCustom : class, ICanWrapData
         => item switch
         {
             null => null,
@@ -26,7 +26,7 @@ internal class DataModelHelpers
     /// </summary>
     /// <returns></returns>
     internal static IEnumerable<TCustom> AsList<TCustom>(IModelFactory modelFactory, object source, NoParamOrder protector = default, bool nullIfNull = false)
-        where TCustom : class, IDataModel
+        where TCustom : class, ICanWrapData
         => source switch
         {
             null => nullIfNull ? null : [],
