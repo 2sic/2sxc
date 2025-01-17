@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Data.Build;
 using ToSic.Eav.ImportExport.Json;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Serialization.Internal;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
@@ -100,9 +101,11 @@ public class EditSaveBackend(
 
                 ent = dataBuilder.Entity.CreateFrom(ent,
                     id: resultValidator.ResetId,
-                    isPublished: package.IsPublished
+                    isPublished: package.IsPublished,
                     // #WipDraftShouldBranch
                     // placeDraftInBranch: package.DraftShouldBranch
+
+                    owner: ent.Owner.NullIfNoValue() ?? _context.User.IdentityToken
                 );
 
                 // new in 11.01
