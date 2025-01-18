@@ -4,6 +4,7 @@ using DotNetNuke.Security.Permissions;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
+using ToSic.Sxc.Cms.Pages.Internal;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Models.Internal;
 

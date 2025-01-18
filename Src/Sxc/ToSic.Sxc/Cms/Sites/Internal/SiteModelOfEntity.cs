@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Data.Model;
 
-namespace ToSic.Sxc.Models.Internal;
+namespace ToSic.Sxc.Cms.Sites.Internal;
 
 public class SiteModelOfEntity: DataModel, ISiteModel
 {

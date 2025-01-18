@@ -3,6 +3,8 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
+using ToSic.Sxc.Cms.Pages;
+using ToSic.Sxc.Cms.Pages.Internal;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Models;
 using ToSic.Sxc.Models.Internal;

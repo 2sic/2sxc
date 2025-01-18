@@ -2,7 +2,7 @@
 using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
 
-namespace ToSic.Sxc.Models.Internal;
+namespace ToSic.Sxc.Cms.Pages.Internal;
 
 /// <summary>
 /// Internal class to hold all the information about the page,

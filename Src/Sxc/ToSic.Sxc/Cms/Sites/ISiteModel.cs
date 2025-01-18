@@ -1,9 +1,8 @@
-﻿using ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Cms.Sites.Internal;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Model;
-using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Models.Internal;
 
-namespace ToSic.Sxc.Models;
+namespace ToSic.Sxc.Cms.Sites;
 
 /// <summary>
 /// Site model for entities returned by the <see cref="Sites"/> DataSource.

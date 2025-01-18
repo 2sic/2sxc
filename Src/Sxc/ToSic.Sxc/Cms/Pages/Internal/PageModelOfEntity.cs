@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Data.Model;
 
-namespace ToSic.Sxc.Models.Internal;
+namespace ToSic.Sxc.Cms.Pages.Internal;
 
 public class PageModelOfEntity: DataModel, IPageModel
 {
