@@ -1,7 +1,7 @@
-﻿using ToSic.Sxc.Adam;
-using ToSic.Sxc.Data.Model;
+﻿using ToSic.Sxc.Data.Model;
+using ToSic.Sxc.Models;
 
-namespace ToSic.Sxc.Models.Internal;
+namespace ToSic.Sxc.Assets.Internal;
 
 [PrivateApi("Still tweaking details and naming v19.0x")]
 internal class FolderModelOfEntity: DataModel, IFolderModelSync, IFolderModel

@@ -1,8 +1,9 @@
 ﻿using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Apps.Assets.Internal;
 using ToSic.Sxc.Data.Model;
+using ToSic.Sxc.Models;
 
-namespace ToSic.Sxc.Models.Internal;
+namespace ToSic.Sxc.Assets.Internal;
 
 [PrivateApi("Still tweaking details and naming v19.0x")]
 internal class FileModelOfEntity: DataModel, IFileModelSync, IFileModel

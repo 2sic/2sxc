@@ -3,14 +3,14 @@ using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
 using ToSic.Sxc.DataSources;
 
-namespace ToSic.Sxc.Models.Internal;
+namespace ToSic.Sxc.Assets.Internal;
 
 /// <summary>
-/// Internal class to hold all the information about the App folders,
+/// Internal class to hold all the information about the App files,
 /// until it's converted to an IEntity in the <see cref="AppAssets"/> DataSource.
 ///
 /// Important: this is an internal object.
-/// We're just including in the docs to better understand where the properties come from.
+/// We're just including it in the docs to better understand where the properties come from.
 /// We'll probably move it to another namespace some day.
 /// </summary>
 /// <remarks>
@@ -19,13 +19,13 @@ namespace ToSic.Sxc.Models.Internal;
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 [ContentTypeSpecs(
-    Guid = "96cda931-b677-4589-9eb2-df5a38cefff0",
-    Description = "Folder in an App",
+    Guid = "3cf0822f-d276-469a-bbd1-cc84fd6ff748",
+    Description = "File in an App",
     Name = TypeName
 )]
-public record FolderRaw: FileFolderBase, IFolderModelSync
+public record FileModelRaw: FileFolderBase, IFileModelSync
 {
-    internal const string TypeName = "Folder";
+    internal const string TypeName = "File";
 
     internal static DataFactoryOptions Options = new()
     {
@@ -33,32 +33,33 @@ public record FolderRaw: FileFolderBase, IFolderModelSync
         TitleField = nameof(Path)
     };
 
-    /// <inheritdoc cref="IFolderModelSync.Name"/>
-    [ContentTypeAttributeSpecs(Description = "The folder name or blank when it's the root.")]
+    /// <inheritdoc cref="IFileModelSync.Name"/>
+    [ContentTypeAttributeSpecs(Description = "The file name without extension, like my-image")]
     public override string Name { get; init; }
 
-    [ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Folders in this folder.")]
-    public RawRelationship Folders => new(key: $"FolderIn:{Path}");
+    /// <inheritdoc cref="IFileModelSync.Extension"/>
+    public string Extension { get; init; }
 
-    [ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Files in this folder.")]
-    public RawRelationship Files => new(key: $"FileIn:{Path}");
+    /// <inheritdoc cref="IFileModelSync.Size"/>
+    public int Size { get; init; }
 
+    /// <summary>
+    /// Data but without ID, Guid, Created, Modified
+    /// </summary>
     [PrivateApi]
     public override IDictionary<string, object> Attributes(RawConvertOptions options)
         => new Dictionary<string, object>(base.Attributes(options))
         {
-            { nameof(Folders), Folders },
-            { nameof(Files), Files },
+            { nameof(Extension), Extension },
+            { nameof(Size), Size },
         };
 
     [PrivateApi]
     public override IEnumerable<object> RelationshipKeys(RawConvertOptions options)
         => new List<object>
         {
-            // For Relationships looking for this folder
-            $"Folder:{Path}",
-            // For Relationships looking for folders having a specific parent
-            $"FolderIn:{ParentFolderInternal}",
+            // For relationships looking for files in this folder
+            $"FileIn:{ParentFolderInternal}"
         };
 
 }

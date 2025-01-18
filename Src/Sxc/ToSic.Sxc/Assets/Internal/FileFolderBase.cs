@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
 
-namespace ToSic.Sxc.Models.Internal;
+namespace ToSic.Sxc.Assets.Internal;
 
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -21,7 +21,7 @@ public abstract record FileFolderBase: IRawEntity, IHasRelationshipKeys
     /// The full name with extension.
     /// If it's a folder or there is no extension, then it's identical to the <see cref="Name"/>
     /// </summary>
-    [ContentTypeAttributeSpecs(Description = "The full name with the path beginning at the root. Note that the root can differ depending on the files you ask for.")]
+    [ContentTypeAttributeSpecs(Description = "The full name with extension.")]
     public string FullName { get; init; }
 
     /// <summary>

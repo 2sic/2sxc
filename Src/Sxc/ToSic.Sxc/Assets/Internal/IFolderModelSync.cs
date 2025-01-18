@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Models.Internal;
+﻿namespace ToSic.Sxc.Assets.Internal;
 
 internal interface IFolderModelSync
 {
