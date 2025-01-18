@@ -17,7 +17,7 @@ internal class DnnPagesDsProvider() : PagesDataSourceProvider("Dnn.Pages")
     private const int DnnNoParent = -1;
     private const int DnnLevelOffset = 1;
 
-    public override List<PageDataRaw> GetPagesInternal(
+    public override List<PageModelRaw> GetPagesInternal(
         NoParamOrder noParamOrder = default,
         bool includeHidden = default,
         bool includeDeleted = default,
@@ -27,7 +27,7 @@ internal class DnnPagesDsProvider() : PagesDataSourceProvider("Dnn.Pages")
         bool requireViewPermissions = true,
         bool requireEditPermissions = true)
     {
-        var l = Log.Fn<List<PageDataRaw>>($"PortalId: {PortalSettings.Current?.PortalId ?? -1}");
+        var l = Log.Fn<List<PageModelRaw>>($"PortalId: {PortalSettings.Current?.PortalId ?? -1}");
         List<TabInfo> pages;
         try
         {
@@ -61,7 +61,7 @@ internal class DnnPagesDsProvider() : PagesDataSourceProvider("Dnn.Pages")
             var final = filtered.ToList();
 
             var result = final
-                .Select(p => new PageDataRaw
+                .Select(p => new PageModelRaw
                 {
                     Id = p.TabID,
                     Guid = p.UniqueId,

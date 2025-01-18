@@ -131,7 +131,7 @@ public class Pages: CustomDataSourceAdvanced
         : base(services, "CDS.Pages", connect: [provider, dataFactory])
     {
         _provider = provider;
-        _pageFactory = dataFactory.New(options: PageDataRaw.Option);
+        _pageFactory = dataFactory.New(options: PageModelRaw.Option);
 
         ProvideOut(GetPages);
     }

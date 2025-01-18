@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Cms.Pages.Internal;
     Description = "Page in the site",
     Name = TypeName
 )]
-public record PageDataRaw: IRawEntity, IPageModel, IHasRelationshipKeys
+public record PageModelRaw: IRawEntity, IPageModel, IHasRelationshipKeys
 {
     #region IRawEntity
 
