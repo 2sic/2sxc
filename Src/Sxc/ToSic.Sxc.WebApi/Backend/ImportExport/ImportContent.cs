@@ -102,8 +102,13 @@ public class ImportContent(
                 l.A($"import content-types from package: {package.Key}");
 
                 // bundle json
-                if (isEnabled && package.Value.Bundles.SafeAny())
-                    types.AddRange(serializer.GetContentTypesFromBundles(package.Value).Select(set => set.ContentType));
+                if (package.Value.Bundles.SafeAny())
+                {
+                    if (isEnabled)
+                        types.AddRange(serializer.GetContentTypesFromBundles(package.Value).Select(set => set.ContentType));
+                    else
+                        throw new NotSupportedException("Bundle packages import feature is not enabled.");
+                }
 
                 // single json
                 if (package.Value.ContentType != null)
@@ -124,7 +129,7 @@ public class ImportContent(
             }
 
             // are there any entities from bundles for import?
-            if (!isEnabled || packages.All(p => p.Value.Bundles?.Any(b => b.Entities.SafeAny()) != true))
+            if (packages.All(p => p.Value.Bundles?.Any(b => b.Entities.SafeAny()) != true))
                 return (new(true), "ok (types only)");
 
             // 2. Create Entities
