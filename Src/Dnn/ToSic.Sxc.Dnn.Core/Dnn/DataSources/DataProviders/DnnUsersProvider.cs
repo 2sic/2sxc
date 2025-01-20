@@ -20,6 +20,7 @@ internal class DnnUsersProvider(LazySvc<DnnSecurity> dnnSecurity)
 {
     #region Configuration
     private UsersGetSpecs _specs;
+    private UsersGetSpecsParsed _specsParsed;
     #endregion
 
     public string PlatformIdentityTokenPrefix => DnnConstants.UserTokenPrefix;
@@ -35,7 +36,8 @@ internal class DnnUsersProvider(LazySvc<DnnSecurity> dnnSecurity)
     public IEnumerable<UserModel> GetUsers(UsersGetSpecs specs)
     {
         var l = Log.Fn<IEnumerable<UserModel>>($"specs:{specs}");
-        Init(specs);
+        _specs = specs.Init();
+        _specsParsed = new(specs);
         try
         {
             return l.Return(GetUsersInternal(), "found");
@@ -46,8 +48,6 @@ internal class DnnUsersProvider(LazySvc<DnnSecurity> dnnSecurity)
             return l.Return(new List<UserModel>(), "error");
         }
     }
-
-    private void Init(UsersGetSpecs specs) => _specs = specs.Init();
 
     private IEnumerable<UserModel> GetUsersInternal()
     {
@@ -76,14 +76,14 @@ internal class DnnUsersProvider(LazySvc<DnnSecurity> dnnSecurity)
             else
             {
                 // UserIds
-                dnnUsers.AddRange(_specs.UserIdFilter.Except(_specs.ExcludeUserIdsFilter)
+                dnnUsers.AddRange(_specsParsed.UserIdFilter.Except(_specsParsed.ExcludeUserIdsFilter)
                     .Select(userId => UserController.GetUserById(siteId, userId)));
 
-                dnnUsers.AddRange(_specs.UserGuidFilter.Except(_specs.ExcludeUserGuidsFilter)
+                dnnUsers.AddRange(_specsParsed.UserGuidFilter.Except(_specsParsed.ExcludeUserGuidsFilter)
                     .Select(membershipUserKey => GetUserByMembershipUserKey(siteId, membershipUserKey)));
 
                 // RoleIds
-                dnnUsers.AddRange(_specs.RolesFilter.Except(_specs.ExcludeRolesFilter)
+                dnnUsers.AddRange(_specsParsed.RolesFilter.Except(_specsParsed.ExcludeRolesFilter)
                     .SelectMany(roleId => GetUsersByRoleId(siteId, roleId)));
             }
 
@@ -110,36 +110,38 @@ internal class DnnUsersProvider(LazySvc<DnnSecurity> dnnSecurity)
     private bool ExcludeUser(UserInfo user)
     {
         if (user == null) return true;
-        if (_specs.ExcludeUserIdsFilter.Contains(user.UserID)) return true;
-        if (_specs.ExcludeUserGuidsFilter.Contains(dnnSecurity.Value.UserGuid(user))) return true;
-        if (_specs.ExcludeRolesFilter.Any(roleId => user.IsInRole(RoleController.Instance.GetRoleById(user.PortalID, roleId).RoleName))) return true;
+        if (_specsParsed.ExcludeUserIdsFilter.Contains(user.UserID)) return true;
+        if (_specsParsed.ExcludeUserGuidsFilter.Contains(dnnSecurity.Value.UserGuid(user))) return true;
+        if (_specsParsed.ExcludeRolesFilter.Any(roleId => user.IsInRole(RoleController.Instance.GetRoleById(user.PortalID, roleId).RoleName))) return true;
         if (_specs.IncludeSystemAdmins.EqualsInsensitive(UsersGetSpecs.IncludeForbidden) && user.IsSuperUser) return true;
         if (_specs.IncludeSystemAdmins.EqualsInsensitive(UsersGetSpecs.IncludeRequired) && !user.IsSuperUser) return true;
         return false;
     }
 
     private static IList<UserInfo> GetUsersByRoleId(int siteId, int roleId)
-        => UserController.Instance.GetUsersAdvancedSearch(portalId: siteId,
-            userId: NullInteger,
-            filterUserId: NullInteger,
-            filterRoleId: roleId,
-            relationTypeId: NullInteger,
-            isAdmin: false,
-            pageIndex: 0,
-            pageSize: NullInteger,
-            sortColumn: null,
-            sortAscending: true,
-            propertyNames: null,
-            propertyValues: null).ToList();
+        => UserController.Instance
+            .GetUsersAdvancedSearch(
+                portalId: siteId,
+                userId: NullInteger,
+                filterUserId: NullInteger,
+                filterRoleId: roleId,
+                relationTypeId: NullInteger,
+                isAdmin: false,
+                pageIndex: 0,
+                pageSize: NullInteger,
+                sortColumn: null,
+                sortAscending: true,
+                propertyNames: null,
+                propertyValues: null
+            )
+            .ToList();
 
     private static UserInfo GetUserByMembershipUserKey(int portalId, Guid membershipUserKey)
     {
         var masterPortalId = PortalController.GetEffectivePortalId(portalId);
         var user = MembershipProvider.Instance().GetUserByProviderUserKey(masterPortalId, membershipUserKey.ToString());
         if (user != null)
-        {
             user.PortalID = portalId;
-        }
         return user;
     }
 }

@@ -26,6 +26,7 @@ internal class OqtUsersProvider(
 {
     #region Configuration
     private UsersGetSpecs _specs;
+    private UsersGetSpecsParsed _specsParsed;
     #endregion
 
     public string PlatformIdentityTokenPrefix => OqtConstants.UserTokenPrefix;
@@ -41,7 +42,8 @@ internal class OqtUsersProvider(
     public IEnumerable<UserModel> GetUsers(UsersGetSpecs specs)
     {
         var l = Log.Fn<IEnumerable<UserModel>>();
-        Init(specs);
+        _specs = specs.Init();
+        _specsParsed = new(specs);
 
         l.A($"Portal Id {SiteId}");
 
@@ -57,14 +59,14 @@ internal class OqtUsersProvider(
             else
             {
                 // UserIds
-                oqtUserRoles.AddRange(_specs.UserIdFilter.Except(_specs.ExcludeUserIdsFilter)
+                oqtUserRoles.AddRange(_specsParsed.UserIdFilter.Except(_specsParsed.ExcludeUserIdsFilter)
                     .SelectMany(userId => userRolesRepository.Value.GetUserRoles(userId, SiteId)));
 
-                oqtUserRoles.AddRange(_specs.UserGuidFilter.Except(_specs.ExcludeUserGuidsFilter)
+                oqtUserRoles.AddRange(_specsParsed.UserGuidFilter.Except(_specsParsed.ExcludeUserGuidsFilter)
                     .SelectMany(membershipUserKey => OqtAllUserRoles.Where(ur => oqtSecurity.Value.UserGuid(ur.User.Username) == membershipUserKey)));
 
                 // RoleIds
-                oqtUserRoles.AddRange(_specs.RolesFilter.Except(_specs.ExcludeRolesFilter)
+                oqtUserRoles.AddRange(_specsParsed.RolesFilter.Except(_specsParsed.ExcludeRolesFilter)
                     .SelectMany(roleId => OqtAllUserRoles.Where(ur => ur.RoleId == roleId)));
             }
 
@@ -95,8 +97,6 @@ internal class OqtUsersProvider(
         }
     }
 
-    private void Init(UsersGetSpecs specs) => _specs = specs.Init();
-
     private int SiteId => siteState.Alias.SiteId;
 
     private IEnumerable<UserRole> OqtAllUserRoles => _oqtAllUserRoles.Get(() => userRolesRepository.Value.GetUserRoles(SiteId));
@@ -105,9 +105,9 @@ internal class OqtUsersProvider(
     private bool ExcludeUser(UserRole userRole)
     {
         if (userRole == null) return true;
-        if (_specs.ExcludeUserIdsFilter.Contains(userRole.UserId)) return true;
-        if (_specs.ExcludeUserGuidsFilter.Contains(oqtSecurity.Value.UserGuid(userRole.User.Username))) return true;
-        if (_specs.ExcludeRolesFilter.Contains(userRole.RoleId)) return true;
+        if (_specsParsed.ExcludeUserIdsFilter.Contains(userRole.UserId)) return true;
+        if (_specsParsed.ExcludeUserGuidsFilter.Contains(oqtSecurity.Value.UserGuid(userRole.User.Username))) return true;
+        if (_specsParsed.ExcludeRolesFilter.Contains(userRole.RoleId)) return true;
         if (_specs.IncludeSystemAdmins.EqualsInsensitive(UsersGetSpecs.IncludeForbidden) && IsSystemAdmin(userRole)) return true;
         if (_specs.IncludeSystemAdmins.EqualsInsensitive(UsersGetSpecs.IncludeRequired) && !IsSystemAdmin(userRole)) return true;
         return false;
