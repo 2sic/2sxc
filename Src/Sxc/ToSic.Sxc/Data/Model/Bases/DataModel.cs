@@ -22,6 +22,7 @@ namespace ToSic.Sxc.Data.Model;
 /// {
 ///   class MyPerson : DataModel
 ///   {
+///     public int Id => _entity.EntityId;
 ///     public string Name => _entity.Get&lt;string&gt; ("Name");
 ///   }
 /// }
@@ -56,14 +57,6 @@ public abstract partial class DataModel: ICanWrap<IEntity>, ICanBeEntity //, IHa
         _modelFactory = modelFactory;
     }
     private IModelFactory _modelFactory;
-
-    ///// <summary>
-    ///// The actual item which is being wrapped, in rare cases where you must access it from outside.
-    /////
-    ///// It's only on the explicit interface, so it is not available from outside or inside, unless you cast to it.
-    ///// Goal is that inheriting classes don't access it to keep API surface small.
-    ///// </summary>
-    //ITypedItem ICanBeItem.Item => Item;
 
     /// <summary>
     /// This is necessary so the object can be used in places where an IEntity is expected,
