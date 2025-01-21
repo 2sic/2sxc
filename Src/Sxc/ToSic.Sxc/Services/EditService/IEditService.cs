@@ -8,24 +8,18 @@ using ToSic.Sxc.Edit.Toolbar;
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// Contains status and commands to configure the in-page editing system.
-///
-/// You will never create this yourself, as get this automatically in Razor or WebAPIs on an object called `Edit`.
+/// Service on [`Kit.Edit`](xref:ToSic.Sxc.Services.ServiceKit16.Edit) with status and commands to configure the in-page editing system.
 /// </summary>
 /// <remarks>
+/// You will never create this yourself, as get this automatically in Razor or WebAPIs on an object called `Edit`.
+/// 
 /// History
-/// - First version created ca. v2 - originally as `ToSic.Sxc.Web.IInPageEditEditingHelper`
-/// - Moved to `ToSic.Sxc.Services.IEditService` in v13.05
+/// 
+/// * First version created ca. v2 - originally as `ToSic.Sxc.Web.IInPageEditEditingHelper`
+/// * Moved to `ToSic.Sxc.Services.IEditService` in v13.05
 /// </remarks>
 [PublicApi]
 public interface IEditService: IHasLog, INeedsCodeApiService
-// 2024-01-11 2dm #RemoveIInPageEditingSystem - removed, probably never in use, but it could be
-// Preserve till 2024-07-01 (Start Q3), if not used, remove
-//#if NETFRAMEWORK
-//#pragma warning disable CS0618
-//        , IInPageEditingSystem
-//#pragma warning restore CS0618
-//#endif
 {
     /// <summary>
     /// If editing is enabled or not

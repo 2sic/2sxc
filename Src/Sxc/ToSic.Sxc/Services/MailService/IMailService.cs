@@ -6,12 +6,10 @@ using ToSic.Sxc.Code.Internal;
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// Service to send mail messages cross-platform.
-///
-/// Get this service in Razor or WebApi using e.g. [](xref:Custom.Hybrid.Razor12.GetService*)
+/// Service on [`Kit.Mail`](xref:ToSic.Sxc.Services.ServiceKit16.Mail) to send mail messages cross-platform.
 /// </summary>
 /// <remarks>
-/// New in 2sxc 12.05
+/// History: New in 2sxc 12.05
 /// </remarks>
 [PublicApi]
 public interface IMailService: INeedsCodeApiService

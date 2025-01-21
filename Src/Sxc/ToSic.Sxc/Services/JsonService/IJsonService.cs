@@ -5,22 +5,21 @@ using ToSic.Sxc.Data;
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// Service to serialize/restore JSON. Get it using GetService &lt; T &gt;
-///
+/// Service on [`Kit.Json`](xref:ToSic.Sxc.Services.ServiceKit16.Json) to serialize/restore JSON.
+/// </summary>
+/// <remarks>
 /// It works for 2sxc/EAV data but can be used for any data which can be serialized/deserialized.
 /// Since it's a data-operation, we keep it in this namespace, even if most other things in this namespace are 2sxc-data objects.
 ///
 /// *Important* This is simple object-string conversion.
 /// It doesn't change entity objects to be serializable.
 /// For that you should use the [](xref:ToSic.Eav.DataFormats.EavLight.IConvertToEavLight) which returns an object that can then be serialized. 
-/// </summary>
-/// <remarks>
-/// Introduced in 2sxc 12.05.
-/// For previous versions of 2sxc, you can just write code to access Newtonsoft directly.
-/// For more control regarding serialization, also just work with Newtonsoft directly.
+/// Internally it uses System.Text.Json and preserves the case of keys.
 ///
-/// Internally it uses Newtonsoft and preserves the case of keys.
-/// In future the internal engine may change (like for .net core), but we'll ensure that the result remains consistent. 
+/// History
+/// 
+/// * Introduced in 2sxc 12.05.
+///
 /// </remarks>
 [PublicApi]
 public interface IJsonService : IJsonServiceInternal

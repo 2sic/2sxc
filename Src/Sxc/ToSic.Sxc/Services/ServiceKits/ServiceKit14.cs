@@ -8,6 +8,7 @@ namespace ToSic.Sxc.Services;
 
 /// <summary>
 /// Default ServiceKit for 2sxc v14.
+/// Provided in Razor and WebApi as `Kit`.
 /// </summary>
 /// <remarks>
 /// * History: Added v14.04

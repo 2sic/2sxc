@@ -5,7 +5,7 @@ using ToSic.Sxc.Web;
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// Make changes to the page - usually from Razor.
+/// Service on [`Kit.Page`](xref:ToSic.Sxc.Services.ServiceKit16.Page) to make changes to the page - usually from Razor.
 /// </summary>
 /// <remarks>
 ///

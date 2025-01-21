@@ -3,8 +3,14 @@
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// WIP 16.04
+/// Service on [`Kit.Key`](xref:ToSic.Sxc.Services.ServiceKit16.Key) to generate module/block level unique keys.
 /// </summary>
+/// <remarks>
+/// Rarely used, as the RazorTyped has a UniqueKey property which comes from this service.
+/// You only need this service, if you need to create combined keys (like with an entity).
+/// 
+/// History: Introduced v16.04
+/// </remarks>
 [PublicApi]
 public interface IKeyService
 {

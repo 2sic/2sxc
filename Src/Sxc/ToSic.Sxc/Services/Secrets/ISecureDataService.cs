@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// Helper to work with secure / encrypted data. 
+/// Service on [`Kit.SecureData`](xref:ToSic.Sxc.Services.ServiceKit16.SecureData) to work with secure / encrypted data. 
 /// </summary>
 /// <remarks>
 /// History

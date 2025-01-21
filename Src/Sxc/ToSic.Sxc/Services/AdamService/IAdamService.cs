@@ -4,8 +4,13 @@ using ToSic.Sxc.Data;
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// WIP - Adam Service for additional ADAM operations such as retrieving a single file
+/// Internal: Adam Service for ADAM operations such as retrieving a single file.
 /// </summary>
+/// <remarks>
+/// Avoid using this, as most objects will already have their ADAM properties such as `File` or `Folder`.
+///
+/// History: Introduced as WIP in v14.04.
+/// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP 14.04")]
 public interface IAdamService
 {

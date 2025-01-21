@@ -4,7 +4,7 @@
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// Cache service to help your code cache data.
+/// Service on [`Kit.Cache`](xref:ToSic.Sxc.Services.ServiceKit16.Cache) to help your code cache data.
 /// </summary>
 /// <remarks>
 /// It does quite a bit of magic, for example:

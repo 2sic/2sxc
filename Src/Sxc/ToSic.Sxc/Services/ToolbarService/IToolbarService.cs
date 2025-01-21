@@ -3,11 +3,13 @@
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// Special helper to generate edit toolbars in the front-end.
-/// It's especially useful custom and/or complex rules like Metadata-buttons.
+/// Service on [`Kit.Toolbar`](xref:ToSic.Sxc.Services.ServiceKit16.Toolbar) to generate edit toolbars in the front-end.
 /// </summary>
 /// <remarks>
+/// It's especially useful custom and/or complex rules like Metadata-buttons.
+/// 
 /// History
+/// 
 /// * uses the [](xref:NetCode.Conventions.Functional)
 /// * Added in 2sxc 13
 /// * parameter `target` added to `Default()` and `Empty()` in v14.03

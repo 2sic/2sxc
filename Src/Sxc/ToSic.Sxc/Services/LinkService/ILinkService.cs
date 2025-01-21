@@ -6,8 +6,13 @@ using ToSic.Sxc.Data;
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// Helpers to create links to
-///
+/// Helper on [`Kit.Link`](xref:ToSic.Sxc.Services.ServiceKit16.Link) to create links to pages, APIs and images.
+/// </summary>
+/// <remarks>
+/// It is usually also available as a `Link` object in every Razor and WebApi file.
+/// 
+/// This helps create links to:
+/// 
 /// - Pages
 /// - APIs
 /// - Images
@@ -15,8 +20,7 @@ namespace ToSic.Sxc.Services;
 /// As well as create base-tag links (important for SPAs)
 ///
 /// You will never create this yourself, as get this automatically in Razor or WebAPIs on an object called `Link`.
-/// </summary>
-/// <remarks>
+/// 
 /// History
 /// 
 /// - Created ca. v2 as `ToSic.Sxc.Web.ILinkHelper`

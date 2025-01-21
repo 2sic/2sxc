@@ -1,17 +1,18 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// This is a service to give you DynamicCode outside of 2sxc.
-///
-/// Use this to access 2sxc data from a Theme, a `.ascx` WebControl or anywhere else. 
+/// This is a service to give you DynamicCode outside 2sxc.
 /// </summary>
 /// <remarks>
+/// Use this to access 2sxc data from a Theme, a `.ascx` WebControl or anywhere else. 
+/// 
+/// History
+/// 
 /// * New in v13.02
 /// * This is meant to replace the `ToSic.Sxc.Dnn.Factory`. Please use this from now on.
 /// </remarks>

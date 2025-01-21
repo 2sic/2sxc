@@ -7,6 +7,7 @@ namespace ToSic.Sxc.Services;
 
 /// <summary>
 /// Default ServiceKit for 2sxc v16.
+/// Provided in Razor and WebApi as `Kit`.
 /// </summary>
 /// <remarks>
 /// This is the service kit you get on `Hybrid.RazorTyped`, `AppCode.Razor.AppRazor` or `Hybrid.ApiTyped`.

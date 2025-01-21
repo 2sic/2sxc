@@ -2,12 +2,14 @@
 using ToSic.Eav.DataSource;
 
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// Services to create DataSources in Razor as well as external (skin) use.
+/// Services on [`Kit.Data`](xref:ToSic.Sxc.Services.ServiceKit16.Data) to create DataSources in Razor.
 /// </summary>
 /// <remarks>
+/// Can also be used in external code such as Skins using Dependency Injection.
 /// New in v16.00
 /// </remarks>
 [PublicApi]

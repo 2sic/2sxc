@@ -4,7 +4,7 @@ using ToSic.Sxc.Code.Internal;
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// Service to get users and roles of the platform.
+/// Service on [`Kit.User`](xref:ToSic.Sxc.Services.ServiceKit16.User) to get users and roles of the platform.
 /// </summary>
 /// <remarks>
 /// History: Released in 19.02 after being internal since 15.03.
