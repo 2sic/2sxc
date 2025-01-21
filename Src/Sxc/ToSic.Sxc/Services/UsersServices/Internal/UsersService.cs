@@ -3,7 +3,6 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Cms.Users.Internal;
-using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Internal;
 using static System.StringComparison;
 
@@ -13,11 +12,11 @@ namespace ToSic.Sxc.Services.Internal;
 public class UsersService(LazySvc<IContextOfSite> context, IUsersProvider provider)
     : ServiceForDynamicCode($"{SxcLogName}.UsrInfoSrv", connect: [context, provider]), IUserService
 {
-    public IUserModel Get(string identityToken)
+    public IUserModel Get(string nameId)
     {
-        var l = Log.Fn<IUserModel>($"token:{identityToken}");
+        var l = Log.Fn<IUserModel>($"token:{nameId}");
 
-        var userId = UserId(identityToken);
+        var userId = UserId(nameId);
 
         return userId.SpecialUser != null
             ? l.Return(userId.SpecialUser, "special user")
@@ -28,17 +27,19 @@ public class UsersService(LazySvc<IContextOfSite> context, IUsersProvider provid
     {
         var l = Log.Fn<IUserModel>($"id:{userId}");
 
-        if (userId == UserConstants.AnonymousUser.Id)
-            return l.Return(UserConstants.AnonymousUser, "anonymous");
+        var unknown = UserConstants.UnknownUser;
+        var anon = UserConstants.AnonymousUser;
+        if (userId == anon.Id)
+            return l.Return(anon, "anonymous");
 
-        if (userId == UserConstants.UnknownUser.Id)
-            return l.Return(UserConstants.UnknownUser, "unknown");
+        if (userId == unknown.Id)
+            return l.Return(unknown, "unknown");
 
         var userDto = provider.GetUser(userId, context.Value.Site.Id);
 
         return userDto != null
             ? l.ReturnAsOk(userDto)
-            : l.Return(UserConstants.UnknownUser, "err");
+            : l.Return(unknown, "err");
     }
 
     /// <summary>
@@ -50,11 +51,13 @@ public class UsersService(LazySvc<IContextOfSite> context, IUsersProvider provid
     {
         var l = Log.Fn<(IUserModel, int)>($"token:{identityToken}");
 
+        var unknown = UserConstants.UnknownUser;
+        var anon = UserConstants.AnonymousUser;
         if (string.IsNullOrWhiteSpace(identityToken))
-            return l.Return((UserConstants.UnknownUser, UserConstants.UnknownUser.Id), "empty identity token");
+            return l.Return((unknown, unknown.Id), "empty identity token");
 
         if (identityToken.EqualsInsensitive(SxcUserConstants.Anonymous))
-            return l.Return((UserConstants.AnonymousUser, UserConstants.AnonymousUser.Id), "ok (anonymous)");
+            return l.Return((anon, anon.Id), "ok (anonymous)");
 
         var prefix = provider.PlatformIdentityTokenPrefix;
         if (identityToken.StartsWith(prefix, InvariantCultureIgnoreCase))
@@ -62,6 +65,6 @@ public class UsersService(LazySvc<IContextOfSite> context, IUsersProvider provid
 
         return int.TryParse(identityToken, out var userId)
             ? l.Return((null, userId), $"ok (u:{userId})")
-            : l.Return((UserConstants.UnknownUser, UserConstants.UnknownUser.Id), "err");
+            : l.Return((unknown, unknown.Id), "err");
     }
 }

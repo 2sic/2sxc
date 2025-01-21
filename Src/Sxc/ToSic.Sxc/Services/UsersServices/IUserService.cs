@@ -1,16 +1,34 @@
 ﻿using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Services;
 
-[PrivateApi("Still WIP")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+/// <summary>
+/// Service to get users and roles of the platform.
+/// </summary>
+/// <remarks>
+/// History: Released in 19.02 after being internal since 15.03.
+/// </remarks>
+[PublicApi]
 public interface IUserService: INeedsCodeApiService
 {
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)] 
+    /// <summary>
+    /// Get a user by id.
+    /// </summary>
+    /// <param name="id">the user id</param>
+    /// <returns>
+    /// If found, a user model containing the user specs.
+    /// If not found, a user model containing the unknown user specs.
+    /// </returns>
     IUserModel Get(int id);
 
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    IUserModel Get(string identityToken);
+    /// <summary>
+    /// Get a user by nameId.
+    /// </summary>
+    /// <param name="nameId">The nameID which is the identity token like `dnn:42`.</param>
+    /// <returns>
+    /// If found, a user model containing the user specs.
+    /// If not found, a user model containing the unknown user specs.
+    /// </returns>
+    IUserModel Get(string nameId);
 }

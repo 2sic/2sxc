@@ -155,8 +155,12 @@ public class ServiceKit14() : ServiceKit("Sxc.Kit14")
     public IToolbarService Toolbar => _toolbar.Get(GetKitService<IToolbarService>);
     private readonly GetOnce<IToolbarService> _toolbar = new();
 
-    [PrivateApi("Experimental in v15.03")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    /// <summary>
+    /// The User service, used to get user and role information.
+    /// </summary>
+    /// <remarks>
+    /// History: released in 19.02 (started in v15.03 but was never public)
+    /// </remarks>
     public IUserService User => _users.Get(GetKitService<IUserService>);
     private readonly GetOnce<IUserService> _users = new();
 }

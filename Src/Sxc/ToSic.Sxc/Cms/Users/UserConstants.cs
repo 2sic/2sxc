@@ -11,12 +11,14 @@ internal class UserConstants
     {
         Id = -1,
         Name = SxcUserConstants.Anonymous,
+        Roles = [],
     };
 
     internal static readonly UserModel UnknownUser = new()
     {
         Id = -2,
         Name = Eav.Constants.NullNameId,
+        Roles = [],
     };
 
     #endregion
