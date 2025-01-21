@@ -6,8 +6,7 @@ using Oqtane.Shared;
 using System;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Context.Internal.Raw;
-using ToSic.Sxc.Models.Internal;
+using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
@@ -46,7 +45,7 @@ public class OqtSecurity(LazySvc<IUserRoleRepository> userRoleRepository, UserMa
 
     public bool IsAnonymous(User user) => Id(user) == -1;
 
-    public CmsUserRaw CmsUserBuilder(User user)
+    public UserModel CmsUserBuilder(User user)
     {
         var isSiteAdmin = IsSiteAdmin(user);
         return new()

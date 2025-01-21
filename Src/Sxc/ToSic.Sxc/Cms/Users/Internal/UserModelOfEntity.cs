@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Data.Model;
 
-namespace ToSic.Sxc.Models.Internal;
+namespace ToSic.Sxc.Cms.Users.Internal;
 
 
 internal class UserModelOfEntity : DataModel, IUserModel

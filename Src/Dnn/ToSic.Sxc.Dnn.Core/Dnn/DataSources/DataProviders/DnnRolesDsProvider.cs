@@ -1,7 +1,7 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security.Roles;
+using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.DataSources.Internal;
-using ToSic.Sxc.Models.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources;

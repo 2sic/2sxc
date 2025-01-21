@@ -1,9 +1,9 @@
-﻿using ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Cms.Users.Internal;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Model;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Models.Internal;
 
-namespace ToSic.Sxc.Models;
+namespace ToSic.Sxc.Cms.Users;
 
 /// <summary>
 /// Model to return role information as provided by the <see cref="UserRoles"/> DataSource.

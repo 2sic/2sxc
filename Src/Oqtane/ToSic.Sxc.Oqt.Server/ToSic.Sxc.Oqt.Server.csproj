@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>preview</LangVersion>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <AssemblyName>ToSic.Sxc.Oqtane.Server</AssemblyName>
     <!--2dm I think we need this to include DLLs-->

@@ -1,5 +1,5 @@
 ﻿using ToSic.Lib.Services;
-using ToSic.Sxc.Models.Internal;
+using ToSic.Sxc.Cms.Users.Internal;
 
 namespace ToSic.Sxc.DataSources.Internal;
 

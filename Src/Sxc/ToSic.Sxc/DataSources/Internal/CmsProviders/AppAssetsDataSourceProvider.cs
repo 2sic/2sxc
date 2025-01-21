@@ -8,7 +8,6 @@ using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Assets.Internal;
-using ToSic.Sxc.Models.Internal;
 
 namespace ToSic.Sxc.DataSources.Internal;
 

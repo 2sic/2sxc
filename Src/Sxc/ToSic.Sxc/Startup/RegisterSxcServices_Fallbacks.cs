@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Cms.Internal.Publishing;
+using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Context;

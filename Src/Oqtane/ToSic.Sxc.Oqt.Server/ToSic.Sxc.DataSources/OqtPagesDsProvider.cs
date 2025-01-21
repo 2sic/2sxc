@@ -10,7 +10,6 @@ using ToSic.Lib.DI;
 using ToSic.Sxc.Cms.Pages.Internal;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Integration.Paths;
-using ToSic.Sxc.Models.Internal;
 using ToSic.Sxc.Web.Internal.Url;
 
 // ReSharper disable once CheckNamespace

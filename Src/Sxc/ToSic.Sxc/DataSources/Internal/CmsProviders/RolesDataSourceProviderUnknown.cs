@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Internal.Unknown;
-using ToSic.Sxc.Models.Internal;
+using ToSic.Sxc.Cms.Users.Internal;
 
 #pragma warning disable CS9113 // Parameter is unread.
 

@@ -3,7 +3,6 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data.Internal.Stack;
 using ToSic.Sxc.Data.Model;
-using ToSic.Sxc.Models;
 
 namespace ToSic.Sxc.Data.Internal;
 

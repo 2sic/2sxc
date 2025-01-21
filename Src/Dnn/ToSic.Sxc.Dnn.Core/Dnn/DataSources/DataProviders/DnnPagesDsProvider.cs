@@ -6,7 +6,6 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Cms.Pages.Internal;
 using ToSic.Sxc.DataSources.Internal;
-using ToSic.Sxc.Models.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources;

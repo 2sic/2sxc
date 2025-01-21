@@ -10,7 +10,6 @@ using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Internal.Factory;
 using ToSic.Sxc.Data.Model;
 using ToSic.Sxc.Images;
-using ToSic.Sxc.Models;
 using ToSic.Sxc.Services.Tweaks;
 
 // ReSharper disable once CheckNamespace

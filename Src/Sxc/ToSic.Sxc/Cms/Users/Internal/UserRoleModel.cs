@@ -4,7 +4,7 @@ using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
 using ToSic.Sxc.DataSources;
 
-namespace ToSic.Sxc.Models.Internal;
+namespace ToSic.Sxc.Cms.Users.Internal;
 
 /// <summary>
 /// Internal class to hold all the information about the role.

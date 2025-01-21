@@ -5,9 +5,8 @@ using DotNetNuke.Security.Permissions;
 using DotNetNuke.Security.Roles;
 using ToSic.Eav.Context;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Context.Internal.Raw;
+using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.Internal;
-using ToSic.Sxc.Models.Internal;
 using static ToSic.Sxc.Dnn.DnnSxcSettings;
 
 namespace ToSic.Sxc.Dnn.Run;
@@ -102,7 +101,7 @@ public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("
             ? SxcUserConstants.Anonymous
             : DnnConstants.UserTokenPrefix + user.UserID;
 
-    internal CmsUserRaw CmsUserBuilder(UserInfo user, int siteId)
+    internal UserModel CmsUserBuilder(UserInfo user, int siteId)
     {
         var adminInfo = UserMayAdminThis(user);
         return new()

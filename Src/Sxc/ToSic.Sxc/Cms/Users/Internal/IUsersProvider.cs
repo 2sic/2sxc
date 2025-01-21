@@ -1,7 +1,4 @@
-﻿using ToSic.Sxc.Models;
-using ToSic.Sxc.Models.Internal;
-
-namespace ToSic.Sxc.DataSources.Internal;
+﻿namespace ToSic.Sxc.Cms.Users.Internal;
 
 /// <summary>
 /// Provider user data from platform.

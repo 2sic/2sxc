@@ -3,7 +3,6 @@ using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Model;
-using ToSic.Sxc.Models;
 
 namespace ToSic.Sxc.Apps.Internal;
 

@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Data.Model;
-using ToSic.Sxc.Models;
 
 namespace ToSic.Sxc.Data.Internal;
 

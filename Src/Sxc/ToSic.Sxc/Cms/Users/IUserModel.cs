@@ -1,10 +1,9 @@
 ﻿using ToSic.Eav.Context;
+using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Model;
-using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Models.Internal;
 
-namespace ToSic.Sxc.Models;
+namespace ToSic.Sxc.Cms.Users;
 
 /// <summary>
 /// User Model for data returned by the <see cref="Users"/> DataSource or other sources.

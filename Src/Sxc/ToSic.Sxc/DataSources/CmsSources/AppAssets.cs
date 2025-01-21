@@ -7,8 +7,6 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Assets;
 using ToSic.Sxc.Assets.Internal;
 using ToSic.Sxc.DataSources.Internal;
-using ToSic.Sxc.Models;
-using ToSic.Sxc.Models.Internal;
 using static System.StringComparer;
 
 // Important Info to people working with this

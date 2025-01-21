@@ -5,11 +5,11 @@ using DotNetNuke.Security.Roles;
 using System.Collections;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Cms.Users;
+using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Models;
-using ToSic.Sxc.Models.Internal;
 using static DotNetNuke.Common.Utilities.Null;
 
 // ReSharper disable once CheckNamespace
@@ -20,7 +20,7 @@ internal class DnnUsersProvider(LazySvc<DnnSecurity> dnnSecurity)
 {
     #region Configuration
     private UsersGetSpecs _specs;
-    private UsersGetSpecsParsed _specsParsed;
+    private UsersGetSpecsParsed SpecsParsed => field ??= new(_specs);
     #endregion
 
     public string PlatformIdentityTokenPrefix => DnnConstants.UserTokenPrefix;
@@ -36,8 +36,7 @@ internal class DnnUsersProvider(LazySvc<DnnSecurity> dnnSecurity)
     public IEnumerable<UserModel> GetUsers(UsersGetSpecs specs)
     {
         var l = Log.Fn<IEnumerable<UserModel>>($"specs:{specs}");
-        _specs = specs.Init();
-        _specsParsed = new(specs);
+        _specs = specs;
         try
         {
             return l.Return(GetUsersInternal(), "found");
@@ -51,7 +50,7 @@ internal class DnnUsersProvider(LazySvc<DnnSecurity> dnnSecurity)
 
     private IEnumerable<UserModel> GetUsersInternal()
     {
-        var l = Log.Fn<IEnumerable<UserModel>>();
+        var l = Log.Fn<List<UserModel>>();
         var siteId = PortalSettings.Current?.PortalId ?? NullInteger;
         l.A($"Portal Id {siteId}");
         try
@@ -63,11 +62,11 @@ internal class DnnUsersProvider(LazySvc<DnnSecurity> dnnSecurity)
             {
                 var dnnAllUsers = new ArrayList();
 
-                if (!_specs.IncludeSystemAdmins.EqualsInsensitive(UsersGetSpecs.IncludeRequired))
+                if (!_specs.IncludeSystemAdmins.EqualsInsensitive(UserConstants.IncludeRequired))
                     // take all portal users (this should include superusers, but superusers are missing)
                     dnnAllUsers.AddRange(UserController.GetUsers(portalId: siteId, includeDeleted: false, superUsersOnly: false));
 
-                if (!_specs.IncludeSystemAdmins.EqualsInsensitive(UsersGetSpecs.IncludeForbidden))
+                if (!_specs.IncludeSystemAdmins.EqualsInsensitive(UserConstants.IncludeForbidden))
                     // append all superusers
                     dnnAllUsers.AddRange(UserController.GetUsers(portalId: -1, includeDeleted: false, superUsersOnly: true));
 
@@ -76,14 +75,14 @@ internal class DnnUsersProvider(LazySvc<DnnSecurity> dnnSecurity)
             else
             {
                 // UserIds
-                dnnUsers.AddRange(_specsParsed.UserIdFilter.Except(_specsParsed.ExcludeUserIdsFilter)
+                dnnUsers.AddRange(SpecsParsed.UserIdFilter.Except(SpecsParsed.ExcludeUserIdsFilter)
                     .Select(userId => UserController.GetUserById(siteId, userId)));
 
-                dnnUsers.AddRange(_specsParsed.UserGuidFilter.Except(_specsParsed.ExcludeUserGuidsFilter)
+                dnnUsers.AddRange(SpecsParsed.UserGuidFilter.Except(SpecsParsed.ExcludeUserGuidsFilter)
                     .Select(membershipUserKey => GetUserByMembershipUserKey(siteId, membershipUserKey)));
 
                 // RoleIds
-                dnnUsers.AddRange(_specsParsed.RolesFilter.Except(_specsParsed.ExcludeRolesFilter)
+                dnnUsers.AddRange(SpecsParsed.RolesFilter.Except(SpecsParsed.ExcludeRolesFilter)
                     .SelectMany(roleId => GetUsersByRoleId(siteId, roleId)));
             }
 
@@ -91,7 +90,7 @@ internal class DnnUsersProvider(LazySvc<DnnSecurity> dnnSecurity)
             dnnUsers = dnnUsers.Distinct().Where(user => !ExcludeUser(user)).ToList();
 
             if (!dnnUsers.Any())
-                return l.Return(new List<UserModel>(), "null/empty");
+                return l.Return([], "null/empty");
 
             var users = dnnUsers
                 //.Where(user => !user.IsDeleted)
@@ -103,18 +102,18 @@ internal class DnnUsersProvider(LazySvc<DnnSecurity> dnnSecurity)
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.Return(new List<UserModel>(), "error");
+            return l.Return([], "error");
         }
     }
 
     private bool ExcludeUser(UserInfo user)
     {
         if (user == null) return true;
-        if (_specsParsed.ExcludeUserIdsFilter.Contains(user.UserID)) return true;
-        if (_specsParsed.ExcludeUserGuidsFilter.Contains(dnnSecurity.Value.UserGuid(user))) return true;
-        if (_specsParsed.ExcludeRolesFilter.Any(roleId => user.IsInRole(RoleController.Instance.GetRoleById(user.PortalID, roleId).RoleName))) return true;
-        if (_specs.IncludeSystemAdmins.EqualsInsensitive(UsersGetSpecs.IncludeForbidden) && user.IsSuperUser) return true;
-        if (_specs.IncludeSystemAdmins.EqualsInsensitive(UsersGetSpecs.IncludeRequired) && !user.IsSuperUser) return true;
+        if (SpecsParsed.ExcludeUserIdsFilter.Contains(user.UserID)) return true;
+        if (SpecsParsed.ExcludeUserGuidsFilter.Contains(dnnSecurity.Value.UserGuid(user))) return true;
+        if (SpecsParsed.ExcludeRolesFilter.Any(roleId => user.IsInRole(RoleController.Instance.GetRoleById(user.PortalID, roleId).RoleName))) return true;
+        if (_specs.IncludeSystemAdmins.EqualsInsensitive(UserConstants.IncludeForbidden) && user.IsSuperUser) return true;
+        if (_specs.IncludeSystemAdmins.EqualsInsensitive(UserConstants.IncludeRequired) && !user.IsSuperUser) return true;
         return false;
     }
 
