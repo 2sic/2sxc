@@ -23,9 +23,11 @@ public class ServiceKit14() : ServiceKit("Sxc.Kit14")
     private readonly GetOnce<IAdamService> _adam = new();
 
     /// <summary>
-    /// The CMS Service - WIP
+    /// The CMS Service - not for use
     /// </summary>
-    [PrivateApi("Not yet for public use, as API is not yet public")]
+    [PrivateApi("Was never public but could be in use")]
+    [Obsolete("This API was never published, do not use.")]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     internal ICmsService Cms => _cms.Get(GetKitService<ICmsService>);
     private readonly GetOnce<ICmsService> _cms = new();
 
@@ -154,13 +156,4 @@ public class ServiceKit14() : ServiceKit("Sxc.Kit14")
     /// </summary>
     public IToolbarService Toolbar => _toolbar.Get(GetKitService<IToolbarService>);
     private readonly GetOnce<IToolbarService> _toolbar = new();
-
-    ///// <summary>
-    ///// The User service, used to get user and role information.
-    ///// </summary>
-    ///// <remarks>
-    ///// History: released in 19.02 (started in v15.03 but was never public)
-    ///// </remarks>
-    //public IUserService User => _users.Get(GetKitService<IUserService>);
-    //private readonly GetOnce<IUserService> _users = new();
 }

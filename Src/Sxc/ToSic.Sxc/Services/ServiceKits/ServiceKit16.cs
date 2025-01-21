@@ -6,15 +6,24 @@ using ToSic.Sxc.Services.Internal;
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// Default ServiceKit for 2sxc v14.
+/// Default ServiceKit for 2sxc v16.
 /// </summary>
 /// <remarks>
-/// * History: Added v14.04
+/// This is the service kit you get on `Hybrid.RazorTyped`, `AppCode.Razor.AppRazor` or `Hybrid.ApiTyped`.
+/// 
+/// History
+/// * New in v16 for Typed Razor / WebApi
+/// * Added Key service in v16.04
+/// * Added Template service in v18.00
+/// * Added Cache service in v19.00
+/// * Added User service in v19.02
 /// </remarks>
 [PublicApi]
 [method: PrivateApi("Public constructor for DI")]
 public class ServiceKit16() : ServiceKit("Sxc.Kit16")
 {
+    #region Same as v14
+
     /// <inheritdoc cref="ServiceKit14.Adam"/>
     public IAdamService Adam => field ??= GetKitService<IAdamService>();
 
@@ -55,10 +64,6 @@ public class ServiceKit16() : ServiceKit("Sxc.Kit16")
     /// <inheritdoc cref="ServiceKit14.SystemLog"/>
     public ISystemLogService SystemLog => field ??= GetKitService<ISystemLogService>();
 
-    // Removed for v16
-    //public new ISystemLogService Log => SystemLog;
-
-
     /// <inheritdoc cref="ServiceKit14.Mail"/>
     public IMailService Mail => field ??= GetKitService<IMailService>();
 
@@ -77,6 +82,17 @@ public class ServiceKit16() : ServiceKit("Sxc.Kit16")
 
     /// <inheritdoc cref="ServiceKit14.Toolbar"/>
     public IToolbarService Toolbar => field ??= GetKitService<IToolbarService>();
+
+    #endregion
+
+    #region Existed in v14 but Removed in v16
+
+    // Removed for v16
+    //public new ISystemLogService Log => SystemLog;
+
+    #endregion
+
+    #region Added to v16 only
 
     /// <summary>
     /// The User service, used to get user and role information.
@@ -100,10 +116,20 @@ public class ServiceKit16() : ServiceKit("Sxc.Kit16")
     /// Templates service, which can parse strings containing placeholders.
     /// </summary>
     /// <remarks>
-    /// Released in v18.00
+    /// History: introduced in v18.00
     /// </remarks>
     public ITemplateService Template => field ??= GetKitService<ITemplateService>();
 
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("Still Beta in v19.00")]
+    /// <summary>
+    /// Cache service, used to cache data.
+    /// </summary>
+    /// <remarks>
+    /// Used to cache data, specifically to ensure it is refreshed when certain events happen,
+    /// such as data in the App changes.
+    ///
+    /// History: introduced in v19.00
+    /// </remarks>
     public ICacheService Cache => field ??= GetKitService<ICacheService>();
+
+    #endregion
 }
