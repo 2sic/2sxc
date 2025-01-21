@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Cms.Users;
-
-namespace ToSic.Sxc.Data;
+﻿namespace ToSic.Sxc.Data;
 
 /// <summary>
 /// Experimental 2dm - not done yet 2024-08
@@ -43,13 +41,5 @@ public interface ILifecycle
     /// The user Id of the owner of this thing.
     /// </summary>
     /// <returns>The User Id or -1 if unknown.</returns>
-    int OwnerUserId { get; }
-
-    /// <summary>
-    /// The user who owns this thing.
-    /// </summary>
-    /// <returns>
-    /// The user based on the Id, if it could be found - otherwise a neutral "unknown" user.
-    /// </returns>
-    IUserModel OwnerUser { get; }
+    int OwnerId { get; }
 }
