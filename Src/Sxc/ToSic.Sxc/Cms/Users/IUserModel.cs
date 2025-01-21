@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Model;
+using ToSic.Sxc.Data.Models;
 
 namespace ToSic.Sxc.Cms.Users;
 
@@ -19,9 +19,7 @@ namespace ToSic.Sxc.Cms.Users;
 /// 
 /// * Introduced in v19.01
 /// </remarks>
-[DataModelConversion(Map = [
-    typeof(DataModelFrom<IEntity, IUserModel, UserModelOfEntity>),
-])]
+[ModelCreation(Use = typeof(UserModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 public interface IUserModel : ICanWrapData
 {

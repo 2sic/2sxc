@@ -18,20 +18,20 @@ namespace ToSic.Sxc.Data;
 /// * Made visible in the docs for better understanding in v19.01
 /// * The `Setup()` method is still internal, as the signature may still change
 /// </remarks>
-/// <typeparam name="TData">
+/// <typeparam name="TSource">
 /// The data type which can be accepted.
 /// Must be <see cref="IEntity"/> or <see cref="ITypedItem"/> (other types not supported for now).
 /// </typeparam>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("may change or rename at any time")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public interface ICanWrap<in TData>: ICanWrapData
+public interface ICanWrap<in TSource>: ICanWrapData
 {
     /// <summary>
     /// Add the data to use for the wrapper.
     /// We are not doing this in the constructor,
-    /// because the object needs to have an empty (or future: maybe DI-compatible) constructor. 
+    /// because the object needs to have an empty or DI-compatible constructor. 
     /// </summary>
     [PrivateApi]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    internal void Setup(TData baseItem, IModelFactory modelFactory);
+    internal void Setup(TSource source, IModelFactory modelFactory);
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Sxc.Data.Internal.Typed;
-using ToSic.Sxc.Data.Model;
+using ToSic.Sxc.Data.Models;
 
 namespace ToSic.Sxc.Data.Internal;
 
@@ -55,7 +55,7 @@ partial class CodeDataFactory: IModelFactory
 
         // Do Type-Name check
         var typeName = DataModelAnalyzer.GetContentTypeNames<TCustom>().Split(',');
-        if (typeName.FirstOrDefault() != DataModelAttribute.ForAnyContentType && !typeName.Any(tn => item.Type.Is(tn)))
+        if (typeName.FirstOrDefault() != ModelSourceAttribute.ForAnyContentType && !typeName.Any(tn => item.Type.Is(tn)))
             throw new($"Item with ID {id} is not a {typeName}. This is probably a mistake, otherwise use {nameof(skipTypeCheck)}: true");
         return AsCustom<TCustom>(item);
     }

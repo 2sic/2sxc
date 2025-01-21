@@ -90,6 +90,7 @@
     <Folder Include="Beta\" />
     <Folder Include="Code\Internal\DynamicCodeService\" />
     <Folder Include="Code\Root\" />
+    <Folder Include="Data\Model\" />
     <Folder Include="Images\ResizeSettings\Internal\" />
     <Folder Include="Run\" />
     <Folder Include="Sys\" />

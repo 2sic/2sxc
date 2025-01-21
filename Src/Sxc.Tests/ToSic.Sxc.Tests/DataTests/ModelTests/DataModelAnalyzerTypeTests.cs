@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Model;
+using ToSic.Sxc.Data.Models;
 
 namespace ToSic.Sxc.Tests.DataTests.ModelTests;
 
@@ -36,8 +36,8 @@ public class DataModelAnalyzerTypeTests : TestBaseSxcDb
 
     #region Decorated - should return the decorated type
 
-    [DataModelConversion(Map = [typeof(DataModelFrom<IEntity, Decorated, DecoratedEntity>)])]
-    class Decorated: DataModel;
+    [ModelCreation(Use = typeof(DecoratedEntity))]
+    class Decorated: ModelFromEntity;
 
     class DecoratedEntity : Decorated;
 
@@ -60,7 +60,7 @@ public class DataModelAnalyzerTypeTests : TestBaseSxcDb
 
     #region Inherit and redecorate, should return the newly decorated type
 
-    [DataModelConversion(Map = [typeof(DataModelFrom<IEntity, InheritReDecorated, InheritReDecoratedEntity>)])]
+    [ModelCreation(Use = typeof(InheritReDecoratedEntity))]
     class InheritReDecorated : InheritDecorated;
 
     class InheritReDecoratedEntity : InheritReDecorated;
@@ -73,7 +73,7 @@ public class DataModelAnalyzerTypeTests : TestBaseSxcDb
 
     #region Interface decorated - should return the decorated type
 
-    [DataModelConversion(Map = [typeof(DataModelFrom<IEntity, IDecorated, EntityOfIDecorated>)])]
+    [ModelCreation(Use = typeof(EntityOfIDecorated))]
     interface IDecorated : ICanWrapData;
 
     class EntityOfIDecorated : InheritReDecorated, IDecorated;

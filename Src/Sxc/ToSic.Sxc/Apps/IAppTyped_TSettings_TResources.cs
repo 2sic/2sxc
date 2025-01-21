@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Model;
 
 namespace ToSic.Sxc.Apps;
 

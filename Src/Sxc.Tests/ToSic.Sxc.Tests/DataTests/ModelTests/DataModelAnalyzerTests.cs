@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Model;
+using ToSic.Sxc.Data.Models;
 
 namespace ToSic.Sxc.Tests.DataTests.ModelTests;
 
@@ -38,7 +38,7 @@ public class DataModelAnalyzerTests : TestBaseSxcDb
 
     private const string ForContentType1 = "Abc";
     private const string StreamName1 = "AbcStream";
-    [DataModel(ForContentTypes = ForContentType1, StreamNames = StreamName1)]
+    [ModelSource(ContentTypes = ForContentType1, Streams = StreamName1)]
     class Decorated: ICanWrapData;
 
     [TestMethod]
@@ -63,7 +63,7 @@ public class DataModelAnalyzerTests : TestBaseSxcDb
 
     private const string ForContentTypeReDecorated = "ReDec";
     private const string StreamNameReDecorated = "ReDecStream";
-    [DataModel(ForContentTypes = ForContentTypeReDecorated, StreamNames = StreamNameReDecorated + ",Abc")]
+    [ModelSource(ContentTypes = ForContentTypeReDecorated, Streams = StreamNameReDecorated + ",Abc")]
     class InheritReDecorated : InheritDecorated;
 
     [TestMethod]
@@ -76,7 +76,7 @@ public class DataModelAnalyzerTests : TestBaseSxcDb
 
     private const string ForContentTypeIDecorated = "IDec";
     private const string StreamNameIDecorated= "IRedecStream";
-    [DataModel(ForContentTypes = ForContentTypeIDecorated, StreamNames = StreamNameIDecorated)]
+    [ModelSource(ContentTypes = ForContentTypeIDecorated, Streams = StreamNameIDecorated)]
     interface IDecorated: ICanWrapData;
 
     [TestMethod]

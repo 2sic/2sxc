@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Model;
 
 namespace ToSic.Sxc.Apps;
 

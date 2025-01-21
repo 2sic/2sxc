@@ -1,8 +1,8 @@
-﻿using ToSic.Sxc.Data.Model;
+﻿using ToSic.Sxc.Data.Models;
 
 namespace ToSic.Sxc.Cms.Pages.Internal;
 
-public class PageModelOfEntity: DataModel, IPageModel
+public class PageModelOfEntity: ModelFromEntity, IPageModel
 {
     public int Id => _entity.EntityId;
     public int ParentId => _entity.Get<int>(nameof(ParentId));

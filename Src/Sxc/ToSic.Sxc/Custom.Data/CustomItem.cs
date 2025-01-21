@@ -8,7 +8,7 @@ using ToSic.Sxc.Cms.Data;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Internal.Factory;
-using ToSic.Sxc.Data.Model;
+using ToSic.Sxc.Data.Models;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
 
@@ -57,15 +57,15 @@ namespace Custom.Data;
 /// - It's not abstract, even if the most common case is to inherit, as there are cases where you want to use it directly.
 /// </remarks>
 [PublicApi]
-[DataModel(ForContentTypes = DataModelAttribute.ForAnyContentType, Remarks = "Will work for any conversion, but inherited types will be restricted again")]
+[ModelSource(ContentTypes = ModelSourceAttribute.ForAnyContentType)]
 public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
 
-    void ICanWrap<ITypedItem>.Setup(ITypedItem baseItem, IModelFactory modelFactory)
+    void ICanWrap<ITypedItem>.Setup(ITypedItem source, IModelFactory modelFactory)
     {
-        _item = baseItem;
+        _item = source;
         _modelFactory = modelFactory;
     }
     private IModelFactory _modelFactory;

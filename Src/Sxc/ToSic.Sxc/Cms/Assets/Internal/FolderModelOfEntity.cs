@@ -1,9 +1,9 @@
-﻿using ToSic.Sxc.Data.Model;
+﻿using ToSic.Sxc.Data.Models;
 
 namespace ToSic.Sxc.Cms.Assets.Internal;
 
 [PrivateApi("Still tweaking details and naming v19.0x")]
-internal class FolderModelOfEntity: DataModel, IFolderModelSync, IFolderModel
+internal class FolderModelOfEntity: ModelFromEntity, IFolderModelSync, IFolderModel
 {
     ///// <inheritdoc cref="FileTyped.Id"/>
     //public int Id => ((ITypedItem)this).Id;

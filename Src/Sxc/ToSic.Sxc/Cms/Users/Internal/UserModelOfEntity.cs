@@ -1,9 +1,9 @@
-﻿using ToSic.Sxc.Data.Model;
+﻿using ToSic.Sxc.Data.Models;
 
 namespace ToSic.Sxc.Cms.Users.Internal;
 
 
-internal class UserModelOfEntity : DataModel, IUserModel
+internal class UserModelOfEntity : ModelFromEntity, IUserModel
 {
 
     public string Email => _entity.Get<string>(nameof(Email));

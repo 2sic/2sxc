@@ -1,7 +1,7 @@
 ﻿
-namespace ToSic.Sxc.Data.Model;
+namespace ToSic.Sxc.Data.Models;
 
-partial class DataModelOfItem : IMultiWrapper<IEntity>, IEquatable<ITypedItem>
+partial class ModelFromItem : IMultiWrapper<IEntity>, IEquatable<ITypedItem>
 {
     bool IEquatable<ITypedItem>.Equals(ITypedItem other) => Equals(other);
 
@@ -24,19 +24,19 @@ partial class DataModelOfItem : IMultiWrapper<IEntity>, IEquatable<ITypedItem>
     /// Ensure that the equality check is done correctly.
     /// If two objects wrap the same item, they will be considered equal.
     /// </summary>
-    /// <param name="item1">first item to compare</param>
-    /// <param name="item2">second item to compare</param>
+    /// <param name="a">first item to compare</param>
+    /// <param name="b">second item to compare</param>
     /// <returns>true, if both wrappers are the same type and wrap the same entity</returns>
-    public static bool operator ==(DataModelOfItem item1, DataModelOfItem item2)
-        => MultiWrapperEquality.IsEqual(item1, item2);
+    public static bool operator ==(ModelFromItem a, ModelFromItem b)
+        => MultiWrapperEquality.IsEqual(a, b);
 
     /// <summary>
     /// Ensure that the equality check is done correctly.
     /// If two objects wrap the same item, they will be considered equal.
     /// </summary>
-    /// <param name="item1">first item to compare</param>
-    /// <param name="item2">second item to compare</param>
+    /// <param name="a">first item to compare</param>
+    /// <param name="b">second item to compare</param>
     /// <returns>false, if both wrappers are the same type and wrap the same entity</returns>
-    public static bool operator !=(DataModelOfItem item1, DataModelOfItem item2)
-        => !MultiWrapperEquality.IsEqual(item1, item2);
+    public static bool operator !=(ModelFromItem a, ModelFromItem b)
+        => !MultiWrapperEquality.IsEqual(a, b);
 }
