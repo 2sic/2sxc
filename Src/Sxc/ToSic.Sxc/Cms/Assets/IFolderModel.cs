@@ -6,7 +6,7 @@ using ToSic.Sxc.Data.Model;
 namespace ToSic.Sxc.Cms.Assets;
 
 /// <summary>
-/// A Folder Model which describes a folder as returned by the <see cref="DataSources.AppAssets"/> DataSource.
+/// BETA: A Folder Model which describes a folder as returned by the <see cref="DataSources.AppAssets"/> DataSource.
 /// </summary>
 /// <remarks>
 /// History

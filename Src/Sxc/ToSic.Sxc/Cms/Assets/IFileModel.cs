@@ -6,7 +6,7 @@ using ToSic.Sxc.Data.Model;
 namespace ToSic.Sxc.Cms.Assets;
 
 /// <summary>
-/// A File Model which describes a file as returned by the <see cref="DataSources.AppAssets"/> DataSource.
+/// BETA: A File Model which describes a file as returned by the <see cref="DataSources.AppAssets"/> DataSource.
 /// </summary>
 /// <remarks>
 /// History
