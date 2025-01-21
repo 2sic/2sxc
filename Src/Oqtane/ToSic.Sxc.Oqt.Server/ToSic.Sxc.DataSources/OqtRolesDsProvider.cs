@@ -16,7 +16,7 @@ internal class OqtRolesDsProvider(IRoleRepository roles, SiteState siteState)
         IUserRolesProvider
 {
     [PrivateApi]
-    public IEnumerable<UserRoleModel> GetRolesInternal()
+    public IEnumerable<UserRoleModel> GetRoles()
     {
         var l = Log.Fn<IEnumerable<UserRoleModel>>();
         var siteId = siteState.Alias.SiteId;
