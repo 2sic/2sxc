@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security.Roles;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.DataSources.Internal;
 
@@ -9,10 +10,9 @@ namespace ToSic.Sxc.DataSources;
 /// <summary>
 /// Deliver a list of roles from the Dnn.
 /// </summary>
-internal class DnnRolesDsProvider() : RolesDataSourceProvider("Dnn.Roles")
+internal class DnnRolesDsProvider() : ServiceBase("Dnn.Roles"), IUserRolesProvider
 {
-    [PrivateApi]
-    public override IEnumerable<UserRoleModel> GetRolesInternal()
+    public IEnumerable<UserRoleModel> GetRoles()
     {
         var l = Log.Fn<IEnumerable<UserRoleModel>>();
         var siteId = PortalSettings.Current?.PortalId ?? -1;

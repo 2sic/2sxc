@@ -13,7 +13,7 @@ internal static class DnnStartUpDataSources
     public static IServiceCollection AddDnnSxcDataSources(this IServiceCollection services)
     {
         // DataSourceProvider model
-        services.TryAddTransient<RolesDataSourceProvider, DnnRolesDsProvider>();
+        services.TryAddTransient<IUserRolesProvider, DnnRolesDsProvider>();
         services.TryAddTransient<IUsersProvider, DnnUsersProvider>();
 
         // info class to ensure SQL knows about default connections

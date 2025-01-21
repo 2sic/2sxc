@@ -81,7 +81,7 @@ static partial class RegisterSxcServices
         // v15 DataSource
         services.TryAddTransient<PagesDataSourceProvider, PagesDataSourceProviderUnknown>();
         services.TryAddTransient<IUsersProvider, UsersProviderUnknown>();
-        services.TryAddTransient<RolesDataSourceProvider, RolesDataSourceProviderUnknown>();
+        services.TryAddTransient<IUserRolesProvider, UserRolesProviderUnknown>();
         services.TryAddTransient<SitesDataSourceProvider, SitesDataSourceProviderUnknown>();
 
         // v16
@@ -89,7 +89,7 @@ static partial class RegisterSxcServices
         services.TryAddTransient<CodeErrorHelpService>();
 
         // v17.01
-        services.TryAddTransient<IUserService, UsersService>();
+        services.TryAddTransient<IUserService, UserService>();
 
         return services;
     }

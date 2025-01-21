@@ -3,16 +3,20 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Cms.Users.Internal;
+using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Internal;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.Services.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class UsersService(LazySvc<IContextOfSite> context, IUsersProvider provider)
-    : ServiceForDynamicCode($"{SxcLogName}.UsrInfoSrv", connect: [context, provider]), IUserService
+public class UserService(LazySvc<IContextOfSite> context, LazySvc<IUsersProvider> usersSvc, LazySvc<IUserRolesProvider> rolesSvc)
+    : ServiceForDynamicCode($"{SxcLogName}.UsrSrv", connect: [context, usersSvc]), IUserService
 {
-    public IUserModel Get(string nameId)
+    #region Get
+
+    // FYI: PublicApi
+    public IUserModel GetUser(string nameId)
     {
         var l = Log.Fn<IUserModel>($"token:{nameId}");
 
@@ -20,10 +24,11 @@ public class UsersService(LazySvc<IContextOfSite> context, IUsersProvider provid
 
         return userId.SpecialUser != null
             ? l.Return(userId.SpecialUser, "special user")
-            : l.Return(Get(userId.UserId));
+            : l.Return(GetUser(userId.UserId));
     }
 
-    public IUserModel Get(int userId) 
+    // FYI: PublicApi
+    public IUserModel GetUser(int userId) 
     {
         var l = Log.Fn<IUserModel>($"id:{userId}");
 
@@ -35,7 +40,7 @@ public class UsersService(LazySvc<IContextOfSite> context, IUsersProvider provid
         if (userId == unknown.Id)
             return l.Return(unknown, "unknown");
 
-        var userDto = provider.GetUser(userId, context.Value.Site.Id);
+        var userDto = usersSvc.Value.GetUser(userId, context.Value.Site.Id);
 
         return userDto != null
             ? l.ReturnAsOk(userDto)
@@ -59,7 +64,7 @@ public class UsersService(LazySvc<IContextOfSite> context, IUsersProvider provid
         if (identityToken.EqualsInsensitive(SxcUserConstants.Anonymous))
             return l.Return((anon, anon.Id), "ok (anonymous)");
 
-        var prefix = provider.PlatformIdentityTokenPrefix;
+        var prefix = usersSvc.Value.PlatformIdentityTokenPrefix;
         if (identityToken.StartsWith(prefix, InvariantCultureIgnoreCase))
             identityToken = identityToken.Substring(prefix.Length);
 
@@ -67,4 +72,19 @@ public class UsersService(LazySvc<IContextOfSite> context, IUsersProvider provid
             ? l.Return((null, userId), $"ok (u:{userId})")
             : l.Return((unknown, unknown.Id), "err");
     }
+
+    #endregion
+
+    #region Get Users
+
+    // FYI: PublicApi
+    public IEnumerable<IUserModel> GetUsers()
+        => usersSvc.Value.GetUsers(new());
+
+    // FYI: PublicApi
+    public IEnumerable<IUserRoleModel> GetRoles()
+        => rolesSvc.Value.GetRoles();
+
+    #endregion
+
 }

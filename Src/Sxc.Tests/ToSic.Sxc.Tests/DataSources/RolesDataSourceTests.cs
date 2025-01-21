@@ -4,7 +4,6 @@ using System.Linq;
 using ToSic.Eav.Core.Tests.LookUp;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSources;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DataSources.Internal;
 
@@ -18,7 +17,7 @@ public class RolesDataSourceTests : TestBaseSxcDb
     protected override void SetupServices(IServiceCollection services)
     {
         base.SetupServices(services);
-        services.AddTransient<RolesDataSourceProvider, MockRolesDataSource>();
+        services.AddTransient<IUserRolesProvider, MockRolesDataSource>();
     }
     [TestMethod()]
     public void RolesDefault()

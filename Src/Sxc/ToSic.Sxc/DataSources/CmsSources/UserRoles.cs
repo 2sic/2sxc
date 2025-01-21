@@ -41,7 +41,7 @@ namespace ToSic.Sxc.DataSources;
 public class UserRoles : CustomDataSourceAdvanced
 {
     private readonly IDataFactory _rolesFactory;
-    private readonly RolesDataSourceProvider _provider;
+    private readonly IUserRolesProvider _provider;
 
     #region Other Constants
 
@@ -82,7 +82,7 @@ public class UserRoles : CustomDataSourceAdvanced
     /// Constructor to tell the system what out-streams we have
     /// </summary>
     [PrivateApi]
-    public UserRoles(MyServices services, RolesDataSourceProvider provider, IDataFactory rolesFactory)
+    public UserRoles(MyServices services, IUserRolesProvider provider, IDataFactory rolesFactory)
         : base(services, "SDS.Roles", connect: [provider, rolesFactory])
     {
         _provider = provider;
@@ -96,7 +96,7 @@ public class UserRoles : CustomDataSourceAdvanced
     private IImmutableList<IEntity> GetList()
     {
         var l = Log.Fn<IImmutableList<IEntity>>();
-        var roles = _provider.GetRolesInternal()?.ToList();
+        var roles = _provider.GetRoles()?.ToList();
         l.A($"found {roles?.Count} roles");
 
         if (roles.SafeNone()) 

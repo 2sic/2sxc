@@ -13,7 +13,7 @@ internal static class OqtStartUpDataSources
     public static IServiceCollection AddOqtSxcDataSources(this IServiceCollection services)
     {
         // DataSourceProvider model
-        services.TryAddTransient<RolesDataSourceProvider, OqtRolesDsProvider>();
+        services.TryAddTransient<IUserRolesProvider, OqtRolesDsProvider>();
         services.TryAddTransient<IUsersProvider, OqtUsersProvider>();
         services.TryAddTransient<SitesDataSourceProvider, OqtSitesDsProvider>();
         services.TryAddTransient<PagesDataSourceProvider, OqtPagesDsProvider>();

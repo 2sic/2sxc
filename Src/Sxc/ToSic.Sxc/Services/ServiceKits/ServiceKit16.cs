@@ -78,9 +78,12 @@ public class ServiceKit16() : ServiceKit("Sxc.Kit16")
     /// <inheritdoc cref="ServiceKit14.Toolbar"/>
     public IToolbarService Toolbar => field ??= GetKitService<IToolbarService>();
 
-    /// <inheritdoc cref="ServiceKit14.User"/>
-    [PrivateApi("Experimental in v15.03")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    /// <summary>
+    /// The User service, used to get user and role information.
+    /// </summary>
+    /// <remarks>
+    /// History: released in 19.02 (started in v15.03 but was never public)
+    /// </remarks>
     public IUserService User => field ??= GetKitService<IUserService>();
 
     /// <summary>

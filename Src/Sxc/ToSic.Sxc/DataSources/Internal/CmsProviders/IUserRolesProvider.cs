@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.Services;
-using ToSic.Sxc.Cms.Users.Internal;
+﻿using ToSic.Sxc.Cms.Users.Internal;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
@@ -8,13 +7,13 @@ namespace ToSic.Sxc.DataSources.Internal;
 ///
 /// Must be overriden in each platform.
 /// </summary>
+[PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class RolesDataSourceProvider(string logName, object[] connect = default) : ServiceBase(logName, connect: connect)
+public interface IUserRolesProvider
 {
     /// <summary>
     /// The inner list retrieving roles. 
     /// </summary>
     /// <returns></returns>
-    [PrivateApi]
-    public abstract IEnumerable<UserRoleModel> GetRolesInternal();
+    IEnumerable<UserRoleModel> GetRoles();
 }

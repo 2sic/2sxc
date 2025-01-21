@@ -5,10 +5,10 @@
 ///
 /// Must be overriden in each platform.
 /// </summary>
+[PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public interface IUsersProvider
 {
-    [PrivateApi]
     public string PlatformIdentityTokenPrefix { get; }
 
     /// <summary>
@@ -17,7 +17,6 @@ public interface IUsersProvider
     /// <param name="userId"></param>
     /// <param name="siteId"></param>
     /// <returns></returns>
-    [PrivateApi]
     public IUserModel GetUser(int userId, int siteId);
 
     /// <summary>
@@ -25,6 +24,5 @@ public interface IUsersProvider
     /// </summary>
     /// <param name="specs"></param>
     /// <returns></returns>
-    [PrivateApi]
     public IEnumerable<UserModel> GetUsers(UsersGetSpecs specs);
 }

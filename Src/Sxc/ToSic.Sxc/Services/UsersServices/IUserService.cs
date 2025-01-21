@@ -20,7 +20,7 @@ public interface IUserService: INeedsCodeApiService
     /// If found, a user model containing the user specs.
     /// If not found, a user model containing the unknown user specs.
     /// </returns>
-    IUserModel Get(int id);
+    IUserModel GetUser(int id);
 
     /// <summary>
     /// Get a user by nameId.
@@ -30,5 +30,18 @@ public interface IUserService: INeedsCodeApiService
     /// If found, a user model containing the user specs.
     /// If not found, a user model containing the unknown user specs.
     /// </returns>
-    IUserModel Get(string nameId);
+    IUserModel GetUser(string nameId);
+
+    /// <summary>
+    /// Get all users.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerable<IUserModel> GetUsers();
+
+    /// <summary>
+    /// Get all user roles.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerable<IUserRoleModel> GetRoles();
+
 }
