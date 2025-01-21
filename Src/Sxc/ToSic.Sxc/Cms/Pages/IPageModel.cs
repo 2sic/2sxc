@@ -1,12 +1,11 @@
 ﻿using ToSic.Sxc.Cms.Pages.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Model;
-using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc.Cms.Pages;
 
 /// <summary>
-/// Data Model as is returned by the <see cref="Pages"/> DataSource.
+/// BETA Data Model as is returned by the <see cref="Pages"/> DataSource.
 /// </summary>
 /// <remarks>
 ///

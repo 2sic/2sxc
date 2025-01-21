@@ -6,7 +6,7 @@ using ToSic.Sxc.DataSources;
 namespace ToSic.Sxc.Cms.Users;
 
 /// <summary>
-/// Model to return role information as provided by the <see cref="UserRoles"/> DataSource.
+/// BETA Model to return role information as provided by the <see cref="UserRoles"/> DataSource.
 /// </summary>
 /// <remarks>
 /// For detailed documentation, check the docs of the underlying objects:

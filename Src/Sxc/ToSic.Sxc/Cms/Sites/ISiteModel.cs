@@ -5,7 +5,7 @@ using ToSic.Sxc.Data.Model;
 namespace ToSic.Sxc.Cms.Sites;
 
 /// <summary>
-/// Site model for entities returned by the <see cref="Sites"/> DataSource.
+/// BETA Site model for entities returned by the <see cref="Sites"/> DataSource.
 /// </summary>
 /// <remarks>
 /// For detailed documentation, check the docs of the underlying objects:

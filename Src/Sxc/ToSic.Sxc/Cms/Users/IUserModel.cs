@@ -6,7 +6,7 @@ using ToSic.Sxc.Data.Model;
 namespace ToSic.Sxc.Cms.Users;
 
 /// <summary>
-/// User Model for data returned by the <see cref="Users"/> DataSource or other sources.
+/// BETA User Model for data returned by the <see cref="Users"/> DataSource or other sources.
 /// </summary>
 /// <remarks>
 ///
