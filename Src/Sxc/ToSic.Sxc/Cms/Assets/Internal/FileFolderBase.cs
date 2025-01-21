@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
 
-namespace ToSic.Sxc.Assets.Internal;
+namespace ToSic.Sxc.Cms.Assets.Internal;
 
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]

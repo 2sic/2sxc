@@ -3,7 +3,7 @@ using ToSic.Eav.Data.Internal;
 using ToSic.Eav.Data.Raw;
 using ToSic.Sxc.DataSources;
 
-namespace ToSic.Sxc.Assets.Internal;
+namespace ToSic.Sxc.Cms.Assets.Internal;
 
 /// <summary>
 /// Internal class to hold all the information about the App files,
