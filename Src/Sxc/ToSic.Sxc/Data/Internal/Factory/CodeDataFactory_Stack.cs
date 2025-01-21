@@ -3,7 +3,6 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data.Internal.Stack;
 using ToSic.Sxc.Data.Model;
-using ToSic.Sxc.Models;
 
 namespace ToSic.Sxc.Data.Internal;
 
@@ -15,7 +14,7 @@ partial class CodeDataFactory
 
     [PrivateApi]
     public T AsStack<T>(object[] parts)
-        where T : class, IDataModel, new() 
+        where T : class, ICanWrapData, new() 
         => AsCustom<T>(AsStack(parts));
 
     private TStackType AsStack<TStackType>(string name, object[] parts, bool strictTypes, Func<string, List<KeyValuePair<string, IPropertyLookup>>, TStackType> generate)

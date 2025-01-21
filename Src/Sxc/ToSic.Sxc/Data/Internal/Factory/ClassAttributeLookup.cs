@@ -1,13 +1,12 @@
 ﻿using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data.Model;
-using ToSic.Sxc.Models;
 
 namespace ToSic.Sxc.Data.Internal.Factory;
 
 internal class ClassAttributeLookup<TValue>
 {
     internal TValue Get<TCustom, TAttribute>(Func<TAttribute, TValue> func)
-        where TCustom : IDataModel
+        where TCustom : ICanWrapData
         where TAttribute : Attribute
     {
         // Check cache

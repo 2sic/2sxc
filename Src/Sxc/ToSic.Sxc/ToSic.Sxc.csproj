@@ -92,6 +92,7 @@
     <Folder Include="Code\Root\" />
     <Folder Include="Images\ResizeSettings\Internal\" />
     <Folder Include="Run\" />
+    <Folder Include="Sys\" />
   </ItemGroup>
 
 </Project>

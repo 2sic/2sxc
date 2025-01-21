@@ -1,8 +1,9 @@
 ﻿using Oqtane.Repository;
 using Oqtane.Shared;
 using System;
+using ToSic.Lib.Services;
+using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.DataSources.Internal;
-using ToSic.Sxc.Models.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources;
@@ -11,10 +12,11 @@ namespace ToSic.Sxc.DataSources;
 /// Deliver a list of roles from the Oqtane
 /// </summary>
 internal class OqtRolesDsProvider(IRoleRepository roles, SiteState siteState)
-    : RolesDataSourceProvider("Oqt.Roles", connect: [roles, siteState])
+    : ServiceBase("Oqt.Roles", connect: [roles, siteState]),
+        IUserRolesProvider
 {
     [PrivateApi]
-    public override IEnumerable<UserRoleModel> GetRolesInternal()
+    public IEnumerable<UserRoleModel> GetRoles()
     {
         var l = Log.Fn<IEnumerable<UserRoleModel>>();
         var siteId = siteState.Alias.SiteId;

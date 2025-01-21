@@ -2,7 +2,6 @@
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Model;
-using ToSic.Sxc.Models;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Code;
@@ -25,8 +24,8 @@ public interface ICodeCustomizer
     /// <typeparam name="TSettings">Type to use for Settings.</typeparam>
     /// <typeparam name="TResources">Type to use for Resources</typeparam>
     IAppTyped<TSettings, TResources> App<TSettings, TResources>()
-        where TSettings : class, IDataModel, new()
-        where TResources : class, IDataModel, new();
+        where TSettings : class, ICanWrapData, new()
+        where TResources : class, ICanWrapData, new();
 
     /// <summary>
     /// Create (and cache for reuse) a strongly typed View instance for the MyView object.
@@ -34,8 +33,8 @@ public interface ICodeCustomizer
     /// <typeparam name="TSettings">Type to use for Settings.</typeparam>
     /// <typeparam name="TResources">Type to use for Resources</typeparam>
     ICmsView<TSettings, TResources> MyView<TSettings, TResources>()
-        where TSettings : class, IDataModel, new()
-        where TResources : class, IDataModel, new();
+        where TSettings : class, ICanWrapData, new()
+        where TResources : class, ICanWrapData, new();
 
     /// <summary>
     /// Create (and cache for reuse) a strongly typed Item instance for the MyItem object.
@@ -43,7 +42,7 @@ public interface ICodeCustomizer
     /// <typeparam name="TCustomType">Type to use for MyItem.</typeparam>
     /// <returns></returns>
     public TCustomType MyItem<TCustomType>()
-        where TCustomType : class, IDataModel, new();
+        where TCustomType : class, ICanWrapData, new();
 
     /// <summary>
     /// Create (and cache for reuse) a strongly typed Items instance for the MyItems object.
@@ -51,12 +50,12 @@ public interface ICodeCustomizer
     /// <typeparam name="TCustomType">Type to use for MyItems.</typeparam>
     /// <returns></returns>
     public IEnumerable<TCustomType> MyItems<TCustomType>()
-        where TCustomType : class, IDataModel, new();
+        where TCustomType : class, ICanWrapData, new();
 
     /// <summary>
     /// Create (and cache for reuse) a strongly typed Header instance for the MyHeader object.
     /// </summary>
     /// <typeparam name="TCustomType">Type to use for MyHeader.</typeparam>
     TCustomType MyHeader<TCustomType>()
-        where TCustomType : class, IDataModel, new();
+        where TCustomType : class, ICanWrapData, new();
 }

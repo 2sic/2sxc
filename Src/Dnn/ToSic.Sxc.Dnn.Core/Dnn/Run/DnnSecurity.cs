@@ -4,9 +4,8 @@ using DotNetNuke.Entities.Users;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Security.Roles;
 using ToSic.Eav.Context;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Context.Internal.Raw;
+using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.Internal;
 using static ToSic.Sxc.Dnn.DnnSxcSettings;
 
@@ -78,14 +77,19 @@ public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("
         return new(false);
     }
 
-
-    private List<int> RoleList(UserInfo user, int? portalId = null)
+    private List<UserRoleModel> UserRoles(UserInfo user, int? portalId = null)
         => IsNullOrAnonymous(user)
             ? []
             : user.Roles
                 .Select(r => RoleController.Instance.GetRoleByName(portalId ?? user.PortalID, r))
                 .Where(r => r != null)
-                .Select(r => r.RoleID)
+                .Select(r => new UserRoleModel
+                {
+                    Id = r.RoleID,
+                    Name = r.RoleName,
+                    Created = r.CreatedOnDate,
+                    Modified = r.LastModifiedOnDate,
+                })
                 .ToList();
 
     internal Guid UserGuid(UserInfo user)
@@ -97,25 +101,26 @@ public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("
             ? SxcUserConstants.Anonymous
             : DnnConstants.UserTokenPrefix + user.UserID;
 
-    internal CmsUserRaw CmsUserBuilder(UserInfo user, int siteId)
-        => UserMayAdminThis(user)
-            .Map(adminInfo => new CmsUserRaw
-                {
-                    Id = user.UserID,
-                    Guid = UserGuid(user),
-                    NameId = UserIdentityToken(user),
-                    Roles = RoleList(user, portalId: siteId),
-                    IsSystemAdmin = user.IsSuperUser,
-                    IsSiteAdmin = adminInfo.IsSiteAdmin,
-                    IsContentAdmin = adminInfo.IsContentAdmin,
-                    IsContentEditor = adminInfo.IsContentEditor,
-                    IsAnonymous = IsNullOrAnonymous(user),
-                    Created = user.CreatedOnDate,
-                    Modified = user.LastModifiedOnDate,
-                    //
-                    Username = user.Username,
-                    Email = user.Email,
-                    Name = user.DisplayName
-                }
-            );
+    internal UserModel CmsUserBuilder(UserInfo user, int siteId)
+    {
+        var adminInfo = UserMayAdminThis(user);
+        return new()
+        {
+            Id = user.UserID,
+            Guid = UserGuid(user),
+            NameId = UserIdentityToken(user),
+            Roles = UserRoles(user, portalId: siteId),
+            IsSystemAdmin = user.IsSuperUser,
+            IsSiteAdmin = adminInfo.IsSiteAdmin,
+            IsContentAdmin = adminInfo.IsContentAdmin,
+            IsContentEditor = adminInfo.IsContentEditor,
+            IsAnonymous = IsNullOrAnonymous(user),
+            Created = user.CreatedOnDate,
+            Modified = user.LastModifiedOnDate,
+            //
+            Username = user.Username,
+            Email = user.Email,
+            Name = user.DisplayName
+        };
+    }
 }

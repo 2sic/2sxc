@@ -5,11 +5,13 @@ using ToSic.Sxc.Data.Internal;
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// Block-Rendering system. It's responsible for taking a Block and delivering HTML for the output. <br/>
-/// It's used for InnerContent, so that Razor-Code can easily render additional content blocks. <br/>
-/// See also [](xref:Basics.Cms.InnerContent.Index)
+/// Service on [`Kit.Render`](xref:ToSic.Sxc.Services.ServiceKit16.Render) to rendering blocks and delivering HTML for the output.
 /// </summary>
 /// <remarks>
+/// It's used for InnerContent, so that Razor-Code can easily render additional content blocks. <br/>
+/// You can also use it inside Skins/Themes to render content-blocks. <br/>
+/// See also [](xref:Basics.Cms.InnerContent.Index)
+/// 
 /// This replaces the now obsolete ToSic.Sxc.Blocks.Render
 ///
 /// History

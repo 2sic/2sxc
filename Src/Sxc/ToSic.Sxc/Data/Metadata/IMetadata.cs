@@ -4,17 +4,19 @@ namespace ToSic.Sxc.Data;
 
 /// <summary>
 /// Metadata on Dynamic Objects - like <see cref="IDynamicEntity"/> or <see cref="ToSic.Sxc.Adam.IAsset"/> (files/folders).
-/// 
-/// Behaves like a normal DynamicEntity, but has additional commands to detect if specific Metadata exists.
 /// </summary>
 /// <remarks>
+/// Behaves like a normal DynamicEntity, but has additional commands to detect if specific Metadata exists.
+/// 
+/// History:
+/// 
 /// * Added in v13
 /// * Made compatible to <see cref="ITypedItem"/> in 16.02 to allow typed commands such as `.String(...)`
 /// * Renamed in v16.02 from `IDynamicMetadata` to `IMetadata` since it's not necessarily `dynamic` any more (but still supports `dynamic` where needed)
 ///     _Note that this is a breaking change, but we believe the type is never directly mentioned in any code_
 /// </remarks>
 [PublicApi]
-public interface IMetadata: /*IDynamicEntity,*/ IHasMetadata, ITypedItem, ICanDebug, ISxcDynamicObject, IEntityWrapper
+public interface IMetadata: IHasMetadata, ITypedItem, ICanDebug, ISxcDynamicObject, IEntityWrapper
 {
     /// <summary>
     /// Ask if there is metadata of the type specified.

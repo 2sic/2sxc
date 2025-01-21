@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.DataSources.Internal;
+using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Dnn.DataSources;
 
@@ -12,8 +13,8 @@ internal static class DnnStartUpDataSources
     public static IServiceCollection AddDnnSxcDataSources(this IServiceCollection services)
     {
         // DataSourceProvider model
-        services.TryAddTransient<RolesDataSourceProvider, DnnRolesDsProvider>();
-        services.TryAddTransient<UsersDataSourceProvider, DnnUsersDsProvider>();
+        services.TryAddTransient<IUserRolesProvider, DnnRolesDsProvider>();
+        services.TryAddTransient<IUsersProvider, DnnUsersProvider>();
 
         // info class to ensure SQL knows about default connections
         services.TryAddTransient<SqlPlatformInfo, DnnSqlPlatformInfo>();

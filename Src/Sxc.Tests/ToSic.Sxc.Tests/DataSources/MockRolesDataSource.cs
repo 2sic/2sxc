@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.DataSources;
+using ToSic.Lib.Services;
+using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.DataSources.Internal;
-using ToSic.Sxc.Models.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Tests.DataSources;
@@ -11,12 +11,13 @@ namespace ToSic.Sxc.Tests.DataSources;
 /// <summary>
 /// Mock a list of roles
 /// </summary>
-public class MockRolesDataSource() : RolesDataSourceProvider("DS.MockRoles")
+public class MockRolesDataSource() : ServiceBase("DS.MockRoles"), IUserRolesProvider
 {
-    public override IEnumerable<UserRoleModel> GetRolesInternal() => Log.Func(l =>
+    public IEnumerable<UserRoleModel> GetRoles()
     {
+        var l = Log.Fn<IEnumerable<UserRoleModel>>();
         const int siteId = 0;
-        Log.A($"Mock Portal Id {siteId}");
+        l.A($"Mock Portal Id {siteId}");
 
         var roles = new List<UserRoleModel>();
         for (var i = 1; i <= 10; i++)
@@ -30,6 +31,6 @@ public class MockRolesDataSource() : RolesDataSourceProvider("DS.MockRoles")
             });
         }
 
-        return (roles, $"mock: {roles.Count}");
-    });
+        return l.Return(roles, $"mock: {roles.Count}");
+    }
 }

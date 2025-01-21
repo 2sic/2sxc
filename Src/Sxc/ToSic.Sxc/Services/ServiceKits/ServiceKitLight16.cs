@@ -9,14 +9,16 @@ using ToSic.Sxc.Services.DataServices;
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// Lightweight ServiceKit for 2sxc v15.
+/// Lightweight ServiceKit for 2sxc v16.
+/// Provided in custom data sources as `Kit`.
+/// </summary>
+/// <remarks>
 /// It's primarily used in dynamic code which runs standalone, without a module context.
 ///
 /// Example: Custom DataSources can run anywhere without actually being inside a module or content-block.
 /// In such scenarios, certain services like the <see cref="IPageService"/> would not be able to perform any real work.
-/// </summary>
-/// <remarks>
-/// * History: Added v15.06 - still WIP
+/// 
+/// History: Added v15.06 - still WIP
 /// </remarks>
 [PublicApi]
 public class ServiceKitLight16(IServiceProvider serviceProvider) : ServiceBase("Sxc.Kit15", connect: [/* never! serviceProvider */ ])

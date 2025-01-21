@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.DataSources.Internal;
+using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Oqt.Server.ToSic.Sxc.DataSources;
 
@@ -12,8 +13,8 @@ internal static class OqtStartUpDataSources
     public static IServiceCollection AddOqtSxcDataSources(this IServiceCollection services)
     {
         // DataSourceProvider model
-        services.TryAddTransient<RolesDataSourceProvider, OqtRolesDsProvider>();
-        services.TryAddTransient<UsersDataSourceProvider, OqtUsersDsProvider>();
+        services.TryAddTransient<IUserRolesProvider, OqtRolesDsProvider>();
+        services.TryAddTransient<IUsersProvider, OqtUsersProvider>();
         services.TryAddTransient<SitesDataSourceProvider, OqtSitesDsProvider>();
         services.TryAddTransient<PagesDataSourceProvider, OqtPagesDsProvider>();
 

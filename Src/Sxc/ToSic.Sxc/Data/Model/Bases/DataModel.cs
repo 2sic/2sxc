@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Data.Model;
 
 
 /// <summary>
-/// Base class for **plain** custom data models and can be used in Razor Components.
+/// BETA / WIP: Base class for **plain** custom data models and can be used in Razor Components.
 /// It wraps a <see cref="IEntity"/> and provides a simple way to access the data.
 /// </summary>
 /// <example>
@@ -46,11 +46,11 @@ namespace ToSic.Sxc.Data.Model;
 /// - Released in v19.01 (BETA)
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change to CustomModelOfItem or something")]
-public abstract partial class DataModel: IDataModelOf<IEntity>, ICanBeEntity //, IHasPropLookup
+public abstract partial class DataModel: ICanWrap<IEntity>, ICanBeEntity //, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.
 
-    void IDataModelOf<IEntity>.Setup(IEntity baseItem, IModelFactory modelFactory)
+    void ICanWrap<IEntity>.Setup(IEntity baseItem, IModelFactory modelFactory)
     {
         _entity = baseItem;
         _modelFactory = modelFactory;
@@ -106,12 +106,12 @@ public abstract partial class DataModel: IDataModelOf<IEntity>, ICanBeEntity //,
 
     /// <inheritdoc cref="DataModelHelpers.As{T}"/>
     protected T As<T>(object item)
-        where T : class, IDataModel, new()
+        where T : class, ICanWrapData
         => DataModelHelpers.As<T>(_modelFactory, item);
 
     /// <inheritdoc cref="DataModelHelpers.AsList{T}"/>
     protected IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = false)
-        where T : class, IDataModel
+        where T : class, ICanWrapData
         => DataModelHelpers.AsList<T>(_modelFactory, source, protector, nullIfNull);
 
     #endregion

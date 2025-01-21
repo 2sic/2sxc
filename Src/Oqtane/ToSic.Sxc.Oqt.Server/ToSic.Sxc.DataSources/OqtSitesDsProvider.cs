@@ -1,8 +1,8 @@
 ﻿using Oqtane.Repository;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.DI;
+using ToSic.Sxc.Cms.Sites.Internal;
 using ToSic.Sxc.DataSources.Internal;
-using ToSic.Sxc.Models.Internal;
 using ToSic.Sxc.Oqt.Server.Context;
 
 // ReSharper disable once CheckNamespace

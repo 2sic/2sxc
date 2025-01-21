@@ -1,5 +1,5 @@
 ﻿using ToSic.Lib.Services;
-using ToSic.Sxc.Models.Internal;
+using ToSic.Sxc.Cms.Pages.Internal;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
@@ -18,7 +18,7 @@ public abstract class PagesDataSourceProvider(string logName, object[] connect =
     /// So the core data source doesn't have settings to configure this
     /// </summary>
     /// <returns></returns>
-    public abstract List<PageDataRaw> GetPagesInternal(
+    public abstract List<PageModelRaw> GetPagesInternal(
         NoParamOrder noParamOrder = default,
         bool includeHidden = default,
         bool includeDeleted = default,

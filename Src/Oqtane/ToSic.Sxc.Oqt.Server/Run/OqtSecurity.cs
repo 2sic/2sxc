@@ -6,7 +6,7 @@ using Oqtane.Shared;
 using System;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Context.Internal.Raw;
+using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
@@ -28,6 +28,16 @@ public class OqtSecurity(LazySvc<IUserRoleRepository> userRoleRepository, UserMa
     public string UserIdentityToken(User user) => $"{OqtConstants.UserTokenPrefix}{Id(user)}";
 
     public List<int> Roles(User user) => userRoleRepository.Value.GetUserRoles(Id(user), user.SiteId).Select(r => r.RoleId).ToList();
+    public List<UserRoleModel> Roles2(User user) => userRoleRepository.Value
+        .GetUserRoles(Id(user), user.SiteId)
+        .Select(r => new UserRoleModel
+        {
+            Id = r.RoleId,
+            Name = r.Role.Name,
+            Created = r.CreatedOn,
+            Modified = r.ModifiedOn,
+        })
+        .ToList();
 
     public bool IsSystemAdmin(User user) => UserSecurity.IsAuthorized(user, RoleNames.Host);
 
@@ -35,7 +45,7 @@ public class OqtSecurity(LazySvc<IUserRoleRepository> userRoleRepository, UserMa
 
     public bool IsAnonymous(User user) => Id(user) == -1;
 
-    public CmsUserRaw CmsUserBuilder(User user)
+    public UserModel CmsUserBuilder(User user)
     {
         var isSiteAdmin = IsSiteAdmin(user);
         return new()
@@ -43,7 +53,8 @@ public class OqtSecurity(LazySvc<IUserRoleRepository> userRoleRepository, UserMa
             Id = Id(user),
             Guid = UserGuid(user.Username),
             NameId = UserIdentityToken(user),
-            Roles = Roles(user),
+            //RolesRaw = Roles(user),
+            Roles = Roles2(user),
             IsSystemAdmin = IsSystemAdmin(user),
             IsSiteAdmin = isSiteAdmin,
             IsContentAdmin = isSiteAdmin,

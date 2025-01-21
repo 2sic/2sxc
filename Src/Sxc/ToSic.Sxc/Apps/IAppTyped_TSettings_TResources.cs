@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Model;
-using ToSic.Sxc.Models;
 
 namespace ToSic.Sxc.Apps;
 
@@ -17,8 +16,8 @@ namespace ToSic.Sxc.Apps;
 public interface IAppTyped<out TSettings, out TResources> :
     IAppIdentity,
     IAppTyped   // should be convertible to IAppTyped
-    where TSettings : class, IDataModel, new()
-    where TResources : class, IDataModel, new()
+    where TSettings : class, ICanWrapData, new()
+    where TResources : class, ICanWrapData, new()
 {
     /// <summary>
     /// All the app settings which are custom for each app.

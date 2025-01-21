@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Data.Model;
-using ToSic.Sxc.Models;
 
 namespace ToSic.Sxc.Data.Internal;
 
@@ -14,7 +13,7 @@ partial class CodeDataFactory: IModelFactory
     /// If it's a list of entity-like things, the first one will be converted.
     /// </summary>
     public TCustom AsCustom<TCustom>(object source, NoParamOrder protector = default, bool mock = false)
-        where TCustom : class, IDataModel, new()
+        where TCustom : class, ICanWrapData
         => source switch
         {
             null when !mock => null,
@@ -24,7 +23,7 @@ partial class CodeDataFactory: IModelFactory
         };
 
     public TCustom AsCustomFrom<TCustom, TData>(TData item)
-        where TCustom : class, IDataModel
+        where TCustom : class, ICanWrapData
     {
         if (item == null) return null;
         if (item is TCustom t) return t;
@@ -33,18 +32,18 @@ partial class CodeDataFactory: IModelFactory
         var newT = ActivatorUtilities.CreateInstance(serviceProvider, bestType) as TCustom;
 
         // Should be an ITypedItemWrapper, but not enforced in the signature
-        if (newT is IDataModelOf<TData> withMatchingSetup)
+        if (newT is ICanWrap<TData> withMatchingSetup)
             withMatchingSetup.Setup(item, this);
         // DataModelOfEntity can also be filled from Typed (but ATM not the other way around)
-        else if (newT is IDataModelOf<IEntity> forEntity && item is ICanBeEntity canBeEntity)
+        else if (newT is ICanWrap<IEntity> forEntity && item is ICanBeEntity canBeEntity)
             forEntity.Setup(canBeEntity.Entity, this);
         else
-            throw new($"The custom type {typeof(TCustom).Name} does not implement {nameof(IDataModelOf<TData>)}. This is probably a mistake.");
+            throw new($"The custom type {typeof(TCustom).Name} does not implement {nameof(ICanWrap<TData>)}. This is probably a mistake.");
         return newT;
     }
 
     internal TCustom GetOne<TCustom>(Func<IEntity> getItem, object id, bool skipTypeCheck)
-        where TCustom : class, IDataModel, new()
+        where TCustom : class, ICanWrapData, new()
     {
         var item = getItem();
         if (item == null)
@@ -66,7 +65,7 @@ partial class CodeDataFactory: IModelFactory
     /// Create list of custom-typed ITypedItems
     /// </summary>
     public IEnumerable<TCustom> AsCustomList<TCustom>(object source, NoParamOrder protector, bool nullIfNull)
-        where TCustom : class, IDataModel
+        where TCustom : class, ICanWrapData
     {
         return source switch
         {

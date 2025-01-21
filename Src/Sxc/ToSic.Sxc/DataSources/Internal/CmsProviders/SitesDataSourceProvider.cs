@@ -2,7 +2,7 @@
 using ToSic.Eav.Integration;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Models.Internal;
+using ToSic.Sxc.Cms.Sites.Internal;
 
 namespace ToSic.Sxc.DataSources.Internal;
 

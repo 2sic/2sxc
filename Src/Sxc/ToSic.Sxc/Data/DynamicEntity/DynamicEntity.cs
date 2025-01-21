@@ -67,21 +67,16 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     private PropLookupWithPathEntity _propLookup;
 
     [PrivateApi]
-    internal GetAndConvertHelper GetHelper => _getHelper ??= new(this, Cdf, _propsRequired, childrenShouldBeDynamic: true, canDebug: this);
-    private GetAndConvertHelper _getHelper;
+    internal GetAndConvertHelper GetHelper => field ??= new(this, Cdf, _propsRequired, childrenShouldBeDynamic: true, canDebug: this);
 
     [PrivateApi]
-    internal SubDataFactory SubDataFactory => _subData ??= new(Cdf, _propsRequired, canDebug: this);
-    private SubDataFactory _subData;
+    internal SubDataFactory SubDataFactory => field ??= new(Cdf, _propsRequired, canDebug: this);
 
     [PrivateApi]
-    internal CodeDynHelper DynHelper => _dynHelper ??= new(Entity, SubDataFactory);
-    private CodeDynHelper _dynHelper;
+    internal CodeDynHelper DynHelper => field ??= new(Entity, SubDataFactory);
 
     [PrivateApi]
-    internal ITypedItem TypedItem => _typedItem ??= new(this, Entity, Cdf, _propsRequired);
-    private TypedItemOfEntity _typedItem;
-
+    internal ITypedItem TypedItem => field ??= new TypedItemOfEntity(this, Entity, Cdf, _propsRequired);
 
     /// <inheritdoc />
     public bool Debug { get; set; }

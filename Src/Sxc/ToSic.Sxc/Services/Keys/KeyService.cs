@@ -4,8 +4,7 @@
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class KeyService : IKeyService
 {
-    private UniqueKeysServices UniqueKeysSvc => _uniqueKeysServices ??= new();
-    private UniqueKeysServices _uniqueKeysServices;
+    private UniqueKeysServices UniqueKeysSvc => field ??= new();
 
     /// <inheritdoc cref="IKeyService.UniqueKey"/>
     public string UniqueKey => UniqueKeysSvc.UniqueKey;

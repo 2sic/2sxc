@@ -4,8 +4,9 @@
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// Cache service to help your code cache data.
-///
+/// Service on [`Kit.Cache`](xref:ToSic.Sxc.Services.ServiceKit16.Cache) to help your code cache data.
+/// </summary>
+/// <remarks>
 /// It does quite a bit of magic, for example:
 ///
 /// - scope the cache to the current App, so a key like `main-list` will not bleed to other apps
@@ -19,8 +20,9 @@ namespace ToSic.Sxc.Services;
 /// 1. start by creating <see cref="ICacheSpecs"/> using a call to <see cref="CreateSpecs"/>
 /// 2. use a fluid API on the specs to determine what you want, like <see cref="ICacheSpecs.VaryByPageParameters"/>, <see cref="ICacheSpecs.VaryByUser()"/> <see cref="ICacheSpecs.WatchAppData"/> or just set different expiry options.
 /// 3. Then use these specs to either check if it <see cref="Contains"/> or use <see cref="TryGet{T}"/> or <see cref="GetOrSet{T}"/>
-/// </summary>
-/// <remarks>
+/// 
+/// History
+/// 
 /// * Was in internal beta since v17.09
 /// * Released v19.01
 /// * Requires the [SmartDataCache](https://patrons.2sxc.org/features/feat/DataCache) feature (Patron Perfectionist); if not enabled, will work without caching anything.

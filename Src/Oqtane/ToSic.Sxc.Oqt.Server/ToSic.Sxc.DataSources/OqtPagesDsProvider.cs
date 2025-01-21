@@ -7,9 +7,9 @@ using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
+using ToSic.Sxc.Cms.Pages.Internal;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Integration.Paths;
-using ToSic.Sxc.Models.Internal;
 using ToSic.Sxc.Web.Internal.Url;
 
 // ReSharper disable once CheckNamespace
@@ -30,7 +30,7 @@ internal class OqtPagesDsProvider(
 {
     private const int OqtLevelOffset = 1;
 
-    public override List<PageDataRaw> GetPagesInternal(
+    public override List<PageModelRaw> GetPagesInternal(
         NoParamOrder noParamOrder = default,
         bool includeHidden = default,
         bool includeDeleted = default,
@@ -40,7 +40,7 @@ internal class OqtPagesDsProvider(
         bool requireViewPermissions = true,
         bool requireEditPermissions = true)
     {
-        var l = Log.Fn<List<PageDataRaw>>();
+        var l = Log.Fn<List<PageModelRaw>>();
         var user = httpContextAccessor?.HttpContext?.User;
         var allowed = pages
             .GetPages(siteState.Alias.SiteId)
@@ -50,7 +50,7 @@ internal class OqtPagesDsProvider(
         var parts = new UrlParts(linkPathsLazy.Value.GetCurrentRequestUrl());
 
         var converted = allowed
-            .Select(p => new PageDataRaw
+            .Select(p => new PageModelRaw
             {
                 // In v14
                 Id = p.PageId,

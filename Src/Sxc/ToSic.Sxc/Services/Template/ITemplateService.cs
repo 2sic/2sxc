@@ -6,7 +6,7 @@ using ToSic.Sxc.Services.Template;
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// Service to help parse token-based templates.
+/// Service on [`Kit.Template`](xref:ToSic.Sxc.Services.ServiceKit16.Template) to help parse token-based templates.
 /// </summary>
 /// <remarks>
 /// Released in 18.03

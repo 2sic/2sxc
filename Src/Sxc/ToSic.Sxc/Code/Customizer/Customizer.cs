@@ -4,7 +4,6 @@ using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Model;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Models;
 using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Code.Customizer;
@@ -13,8 +12,8 @@ namespace ToSic.Sxc.Code.Customizer;
 internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICodeCustomizer
 {
     public IAppTyped<TSettings, TResources> App<TSettings, TResources>()
-        where TSettings : class, IDataModel, new()
-        where TResources : class, IDataModel, new()
+        where TSettings : class, ICanWrapData, new()
+        where TResources : class, ICanWrapData, new()
     {
         // check if cache exists and was created with the sames specs
         if (_app is IAppTyped<TSettings, TResources> typed) return typed;
@@ -27,8 +26,8 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
     private object _app;
 
     public ICmsView<TSettings, TResources> MyView<TSettings, TResources>()
-        where TSettings : class, IDataModel, new()
-        where TResources : class, IDataModel, new()
+        where TSettings : class, ICanWrapData, new()
+        where TResources : class, ICanWrapData, new()
     {
         // check if cache exists and was created with the sames specs
         if (_view is ICmsView<TSettings, TResources> typed) return typed;
@@ -43,7 +42,7 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
     private ICmsView _view;
 
     public TCustomType MyItem<TCustomType>()
-        where TCustomType : class, IDataModel, new()
+        where TCustomType : class, ICanWrapData, new()
     {
         // check if cache exists and was created with the sames specs
         if (_myItem is TCustomType typed) return typed;
@@ -55,7 +54,7 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
     private object _myItem;
 
     public IEnumerable<TCustomType> MyItems<TCustomType>()
-        where TCustomType : class, IDataModel, new()
+        where TCustomType : class, ICanWrapData, new()
     {
         // check if cache exists and was created with the sames specs
         if (_myItems is IEnumerable<TCustomType> typed) return typed;
@@ -68,7 +67,7 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
     private object _myItems;
 
     public TCustomType MyHeader<TCustomType>()
-        where TCustomType : class, IDataModel, new()
+        where TCustomType : class, ICanWrapData, new()
     {
         // check if cache exists and was created with the sames specs
         if (_myHeader is TCustomType typed) return typed;

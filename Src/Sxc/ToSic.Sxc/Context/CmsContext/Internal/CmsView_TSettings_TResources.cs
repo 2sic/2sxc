@@ -2,7 +2,6 @@
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Model;
-using ToSic.Sxc.Models;
 
 namespace ToSic.Sxc.Context.Internal;
 
@@ -21,8 +20,8 @@ namespace ToSic.Sxc.Context.Internal;
 /// </param>
 internal class CmsView<TSettings, TResources>(CmsContext parent, IBlock block, bool settingsPropsRequired = true)
     : CmsView(parent, block), ICmsView<TSettings, TResources>
-    where TSettings : class, IDataModel, new()
-    where TResources : class, IDataModel, new()
+    where TSettings : class, ICanWrapData, new()
+    where TResources : class, ICanWrapData, new()
 {
     private readonly IView _view = block.View;
     private readonly CmsContext _parent = parent;

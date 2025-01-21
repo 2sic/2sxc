@@ -3,9 +3,10 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
+using ToSic.Sxc.Cms.Pages;
+using ToSic.Sxc.Cms.Pages.Internal;
+using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.DataSources.Internal;
-using ToSic.Sxc.Models;
-using ToSic.Sxc.Models.Internal;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -129,7 +130,7 @@ public class Pages: CustomDataSourceAdvanced
         : base(services, "CDS.Pages", connect: [provider, dataFactory])
     {
         _provider = provider;
-        _pageFactory = dataFactory.New(options: PageDataRaw.Option);
+        _pageFactory = dataFactory.New(options: PageModelRaw.Option);
 
         ProvideOut(GetPages);
     }

@@ -7,10 +7,11 @@
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// Features lets your code find out what system features are currently enabled/disabled in the environment.
-/// It's important to detect if the admin must activate certain features to let your code do it's work.
+/// Service on [`Kit.Feature`](xref:ToSic.Sxc.Services.ServiceKit16.Feature) to let your code find out what system features are currently enabled/disabled in the environment.
 /// </summary>
 /// <remarks>
+/// It's important to detect if the admin must activate certain features to let your code do it's work.
+/// 
 /// This replaces the older static Features accessor - please only use this from now on.
 ///
 /// History:

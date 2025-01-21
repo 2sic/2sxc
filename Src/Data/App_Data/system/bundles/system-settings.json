@@ -704,9 +704,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "entity-default"
                         },
@@ -719,15 +716,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -771,12 +760,6 @@
                       "String": {
                         "EntityType": {
                           "en-us": "⚙️CopyrightSettings"
-                        },
-                        "Label": {
-                          "en-us": ""
-                        },
-                        "MoreFields": {
-                          "en-us": ""
                         },
                         "Prefill": {
                           "en-us": ""
@@ -916,9 +899,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "entity-default"
                         },
@@ -931,15 +911,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -983,12 +955,6 @@
                       "String": {
                         "EntityType": {
                           "en-us": "⚙️GoogleRecaptcha"
-                        },
-                        "Label": {
-                          "en-us": ""
-                        },
-                        "MoreFields": {
-                          "en-us": ""
                         },
                         "Prefill": {
                           "en-us": ""
@@ -2408,7 +2374,7 @@
                 "Metadata": [
                   {
                     "Id": 165952,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "9796b144-1972-4e25-9e01-a8f1f1cad9bd",
                     "Type": {
                       "Id": "@All",
@@ -2468,7 +2434,7 @@
                   },
                   {
                     "Id": 165955,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "89d6b2bc-d793-430c-89ac-9010e05731d6",
                     "Type": {
                       "Id": "@String",
@@ -2488,7 +2454,7 @@
                   },
                   {
                     "Id": 165956,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "b74b6a5a-3084-406e-a1e7-21b6a533fbcc",
                     "Type": {
                       "Id": "@string-dropdown",
@@ -2497,7 +2463,7 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "en-us": "json:JSON\njson-zip:Zipped JSON"
+                          "en-us": "json:JSON\njson-zip:Zipped JSON (not supported yet)"
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
@@ -2631,7 +2597,7 @@
                 "Metadata": [
                   {
                     "Id": 165954,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "7103b508-ce9c-4e33-bb40-1d0176f3cbaa",
                     "Type": {
                       "Id": "@All",
@@ -2643,7 +2609,7 @@
                           "en-us": ""
                         },
                         "DefaultValue": {
-                          "en-us": "false"
+                          "en-us": "true"
                         },
                         "InputType": {
                           "en-us": "boolean-default"
@@ -2691,7 +2657,7 @@
                   },
                   {
                     "Id": 165959,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "2cc0e49d-91fa-4d76-9d5a-4482789fc659",
                     "Type": {
                       "Id": "@Boolean",
@@ -5774,9 +5740,6 @@
                         "DefaultValue": {
                           "en-us": "Content"
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-dropdown"
                         },
@@ -5789,15 +5752,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -5898,9 +5853,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-default"
                         },
@@ -5913,15 +5865,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -9270,9 +9214,6 @@
                         "DefaultValue": {
                           "en-us": "Copyright"
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-default"
                         },
@@ -9285,15 +9226,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -9386,9 +9319,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "boolean-tristate"
                         },
@@ -9401,15 +9331,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -9532,9 +9454,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-dropdown"
                         },
@@ -9547,15 +9466,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },

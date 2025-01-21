@@ -6,7 +6,7 @@ using ToSic.Sxc.Images.Internal;
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// Service to help create responsive `img` and `picture` tags the best possible way.
+/// Service on [`Kit.Image`](xref:ToSic.Sxc.Services.ServiceKit16.Image) to help create responsive `img` and `picture` tags the best possible way.
 /// </summary>
 /// <remarks>
 /// History: Released 2sxc 13.10

@@ -4,9 +4,12 @@ namespace ToSic.Sxc.Data;
 
 /// <summary>
 /// This is a dynamic object which contains multiple dynamic objects (Sources).
-/// It will try to find a value inside each source in the order the Sources are managed. 
 /// </summary>
-/// <remarks>New in 12.02</remarks>
+/// <remarks>
+/// It will try to find a value inside each source in the order of the provided Sources. 
+/// 
+/// History: Introduced in 12.02
+/// </remarks>
 [PublicApi]
 public interface IDynamicStack: ISxcDynamicObject, ICanDebug, ICanGetByName
 {

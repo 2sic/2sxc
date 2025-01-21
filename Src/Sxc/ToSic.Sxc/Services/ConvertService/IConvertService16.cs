@@ -1,7 +1,6 @@
 ﻿using ToSic.Sxc.Code.Internal.Documentation;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Model;
-using ToSic.Sxc.Models;
 
 // 2024-01-22 2dm
 // Remove all convert methods which are just missing the optional parameters, to make the API smaller.
@@ -11,15 +10,18 @@ using ToSic.Sxc.Models;
 namespace ToSic.Sxc.Services;
 
 /// <summary>
-/// Conversion helper for things which are very common in web-code like Razor and WebAPIs.
+/// Helper on [`Kit.Convert`](xref:ToSic.Sxc.Services.ServiceKit16.Convert) for common conversions in web-code like Razor and WebAPIs.
+/// </summary>
+/// <remarks>
 /// It's mainly a safe conversion from anything to a target-type.
 /// 
 /// Some special things it does:
 /// * Strings like "4.2" reliably get converted to int 4 which would otherwise return 0
 /// * Numbers like 42 reliably converts to bool true which would otherwise return false
 /// * Numbers like 42.5 reliably convert to strings "42.5" instead of "42,5" in certain cultures
-/// </summary>
-/// <remarks>
+/// 
+/// History
+/// 
 /// * New in v16.03
 /// * Difference to <see cref="IConvertService"/> is that the param `fallback` must always be named
 /// </remarks>
@@ -221,12 +223,12 @@ public interface IConvertService16
     [PrivateApi("WIP, don't publish yet")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool nullIfNull = false)
-        where T : class, IDataModel, ITypedItem, new();
+        where T : class, ICanWrapData;
 
     [PrivateApi("WIP, don't publish yet")]
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
-        where T : class, IDataModel, ITypedItem;
+        where T : class, ICanWrapData;
 
     #endregion
 }

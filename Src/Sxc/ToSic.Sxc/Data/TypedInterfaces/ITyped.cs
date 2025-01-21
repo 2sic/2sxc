@@ -4,15 +4,15 @@ using ToSic.Sxc.Data.Internal.Convert;
 namespace ToSic.Sxc.Data;
 
 /// <summary>
-/// This describes objects which usually wrap other objects to provide strictly typed access to properties.
-/// have typed Methods to read properties like `.String(propName)`.
-///
-/// It's usually the result of a `AsTyped(something)` or `AsItem(...)` command.
-///
-/// It's meant to help Razor etc. access unknown or dynamic objects in a typed way.
+/// Objects which usually wrap other objects to provide strictly typed access to properties.
 /// </summary>
 /// <remarks>
-/// New in 16.02.
+/// The object will have typed Methods to read properties like `.String(propName)`.
+/// 
+/// It is usually the result of a `AsTyped(something)` or `AsItem(...)` command.
+/// It is meant to help Razor etc. access Entity and/or dynamic objects in a typed way.
+/// 
+/// History: Introduced in 16.02.
 /// </remarks>
 [PublicApi]
 [JsonConverter(typeof(DynamicJsonConverter))] // we'll have to keep an eye on it for scenarios where ITypedItem also inherits from ITypedRead, and could have some surprises. But since the DynamicEntity was never meant to become json, probably there is no code out there that tries to do this. 

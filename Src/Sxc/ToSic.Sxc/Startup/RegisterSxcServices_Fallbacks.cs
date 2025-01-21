@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Cms.Internal.Publishing;
+using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Context;
@@ -79,8 +80,8 @@ static partial class RegisterSxcServices
 
         // v15 DataSource
         services.TryAddTransient<PagesDataSourceProvider, PagesDataSourceProviderUnknown>();
-        services.TryAddTransient<UsersDataSourceProvider, UsersDataSourceProviderUnknown>();
-        services.TryAddTransient<RolesDataSourceProvider, RolesDataSourceProviderUnknown>();
+        services.TryAddTransient<IUsersProvider, UsersProviderUnknown>();
+        services.TryAddTransient<IUserRolesProvider, UserRolesProviderUnknown>();
         services.TryAddTransient<SitesDataSourceProvider, SitesDataSourceProviderUnknown>();
 
         // v16
@@ -88,8 +89,7 @@ static partial class RegisterSxcServices
         services.TryAddTransient<CodeErrorHelpService>();
 
         // v17.01
-        services.TryAddTransient<IUserService, UsersService>();
-        services.TryAddTransient<UserSourceProvider, UsersServiceProviderUnknown>();
+        services.TryAddTransient<IUserService, UserService>();
 
         return services;
     }
