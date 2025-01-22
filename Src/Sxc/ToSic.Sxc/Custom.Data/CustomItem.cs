@@ -30,7 +30,7 @@ namespace Custom.Data;
 /// ```c#
 /// namespace AppCode.Data
 /// {
-///   class MyPerson : CustomItem
+///   class MyPerson : Custom.Data.CustomItem
 ///   {
 ///     // New custom property
 ///     public string Name => _item.String("Name");
@@ -273,7 +273,8 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     public IMetadata Metadata => _item.Metadata;
 
     /// <inheritdoc />
-    public IField Field(string name, NoParamOrder noParamOrder = default, bool? required = default) => _item.Field(name, noParamOrder, required);
+    public IField Field(string name, NoParamOrder noParamOrder = default, bool? required = default)
+        => _item.Field(name, noParamOrder, required);
 
 
     #region Core Data: Id, Guid, Title, Type
@@ -365,6 +366,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     /// <summary>
     /// Get by name should never throw an error, as it's used to get null if not found.
     /// </summary>
-    object ICanGetByName.Get(string name) => (this as ITypedItem).Get(name, required: false);
+    object ICanGetByName.Get(string name)
+        => (this as ITypedItem).Get(name, required: false);
 
 }

@@ -14,7 +14,7 @@
 /// </example>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false)]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
-public class ModelCreationAttribute: Attribute
+public sealed class ModelCreationAttribute: Attribute
 {
     /// <summary>
     /// The type to use when creating a model of this interface.

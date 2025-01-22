@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 
@@ -6,13 +7,16 @@ namespace ToSic.Sxc.Tests.DataTests.ModelTests;
 
 internal static class DataModelAnalyzerTestAccessors
 {
-    public static string GetContentTypeNameTac<T>()
+    //public static string GetContentTypeNameTac<T>()
+    //    where T : class, ICanWrapData
+        //=> DataModelAnalyzer.GetContentTypeNameCsv<T>();
+    public static (List<string> List, string Flat) GetContentTypeNamesTac<T>()
         where T : class, ICanWrapData
-        => DataModelAnalyzer.GetContentTypeNames<T>();
+        => DataModelAnalyzer.GetContentTypeNamesList<T>();
 
-    public static string GetStreamNameTac<T>()
+    public static (List<string> List, string Flat) GetStreamNameListTac<T>()
         where T : class, ICanWrapData
-        => DataModelAnalyzer.GetStreamName<T>();
+        => DataModelAnalyzer.GetStreamNameList<T>();
 
     public static Type GetTargetTypeTac<T>()
         where T : class, ICanWrapData

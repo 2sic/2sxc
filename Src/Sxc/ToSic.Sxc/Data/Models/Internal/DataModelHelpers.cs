@@ -16,7 +16,11 @@ internal class DataModelHelpers
             null => null,
             ITypedItem typedItem => modelFactory.AsCustomFrom<TCustom, ITypedItem>(typedItem),
             IEntity entity => modelFactory.AsCustomFrom<TCustom, IEntity>(entity),
-            _ => throw new($"Type {typeof(TCustom).Name} not supported, only {typeof(IEntity)} and {nameof(ITypedItem)} are allowed as data"),
+            ICanBeItem canBeItem => modelFactory.AsCustomFrom<TCustom, ICanBeItem>(canBeItem.Item),
+            ICanBeEntity canBeEntity => modelFactory.AsCustomFrom<TCustom, ICanBeEntity>(canBeEntity.Entity),
+            _ => throw new(
+                $"Type {typeof(TCustom).Name} not supported. " +
+                $"Only {typeof(IEntity)}, {nameof(ITypedItem)}, {nameof(ICanBeEntity)} and {nameof(ICanBeItem)} are allowed as data"),
         };
 
 

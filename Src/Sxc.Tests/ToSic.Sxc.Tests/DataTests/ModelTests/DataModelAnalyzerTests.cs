@@ -9,10 +9,11 @@ public class DataModelAnalyzerTests : TestBaseSxcDb
 {
     private void AssertTypeName<T>(string name)
         where T : class, ICanWrapData =>
-        Assert.AreEqual(name, DataModelAnalyzerTestAccessors.GetContentTypeNameTac<T>());
-    private void AssertStreamName<T>(string name)
+        Assert.AreEqual(name, DataModelAnalyzerTestAccessors.GetContentTypeNamesTac<T>().Flat);
+
+    private void AssertStreamNames<T>(string namesCsv)
         where T : class, ICanWrapData =>
-        Assert.AreEqual(name, DataModelAnalyzerTestAccessors.GetStreamNameTac<T>());
+        Assert.AreEqual(namesCsv, DataModelAnalyzerTestAccessors.GetStreamNameListTac<T>().Flat);
 
     class NotDecorated: ICanWrapData;
 
@@ -22,18 +23,34 @@ public class DataModelAnalyzerTests : TestBaseSxcDb
 
     [TestMethod]
     public void NotDecoratedDataModelStream() =>
-        AssertStreamName<NotDecorated>(nameof(NotDecorated));
+        AssertStreamNames<NotDecorated>(nameof(NotDecorated));
 
+    [TestMethod]
+    public void NotDecoratedDataModelStreamList() =>
+        AssertStreamNames<NotDecorated>(nameof(NotDecorated));
+
+    class NotDecoratedModel : ICanWrapData;
+
+    [TestMethod]
+    public void NotDecoratedModelStreamList() =>
+        AssertStreamNames<NotDecoratedModel>(nameof(NotDecoratedModel) + "," + nameof(NotDecorated));
+
+    // Objects starting with an "I" won't have the "I" removed in the name checks
+    class INotDecoratedModel : ICanWrapData;
+
+    [TestMethod]
+    public void INotDecoratedModelStreamList() =>
+        AssertStreamNames<INotDecoratedModel>(nameof(INotDecoratedModel) + ",INotDecorated");
 
     interface INotDecorated: ICanWrapData;
 
     [TestMethod]
     public void INotDecoratedType() =>
-        AssertTypeName<INotDecorated>(nameof(INotDecorated).Substring(1));
+        AssertTypeName<INotDecorated>(nameof(INotDecorated) + ',' + nameof(INotDecorated).Substring(1));
 
     [TestMethod]
     public void INotDecoratedStream() =>
-        AssertStreamName<INotDecorated>(nameof(INotDecorated));
+        AssertStreamNames<INotDecorated>(nameof(INotDecorated) + ",NotDecorated");
 
 
     private const string ForContentType1 = "Abc";
@@ -47,7 +64,7 @@ public class DataModelAnalyzerTests : TestBaseSxcDb
 
     [TestMethod]
     public void DecoratedStream() =>
-        AssertStreamName<Decorated>(StreamName1);
+        AssertStreamNames<Decorated>(StreamName1);
 
 
     class InheritDecorated : Decorated;
@@ -58,7 +75,7 @@ public class DataModelAnalyzerTests : TestBaseSxcDb
 
     [TestMethod]
     public void InheritDecoratedStream() =>
-        AssertStreamName<InheritDecorated>(nameof(InheritDecorated));
+        AssertStreamNames<InheritDecorated>(nameof(InheritDecorated));
 
 
     private const string ForContentTypeReDecorated = "ReDec";
@@ -71,7 +88,7 @@ public class DataModelAnalyzerTests : TestBaseSxcDb
         AssertTypeName<InheritReDecorated>(ForContentTypeReDecorated);
     [TestMethod]
     public void InheritReDecoratedStream() =>
-        AssertStreamName<InheritReDecorated>(StreamNameReDecorated);
+        AssertStreamNames<InheritReDecorated>(StreamNameReDecorated + ",Abc");
 
 
     private const string ForContentTypeIDecorated = "IDec";
@@ -85,6 +102,6 @@ public class DataModelAnalyzerTests : TestBaseSxcDb
 
     [TestMethod]
     public void IDecoratedStream() =>
-        AssertStreamName<IDecorated>(StreamNameIDecorated);
+        AssertStreamNames<IDecorated>(StreamNameIDecorated);
 
 }

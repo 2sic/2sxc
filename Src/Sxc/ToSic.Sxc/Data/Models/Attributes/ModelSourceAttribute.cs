@@ -17,9 +17,9 @@ namespace ToSic.Sxc.Data.Models;
 /// 
 /// History: New / WIP in v19.01
 /// </remarks>
-[Lib.Documentation.InternalApi_DoNotUse_MayChangeWithoutNotice("may change or rename at any time")]
+[InternalApi_DoNotUse_MayChangeWithoutNotice("may change or rename at any time")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class ModelSourceAttribute: Attribute
+public sealed class ModelSourceAttribute: Attribute
 {
     /// <summary>
     /// Determines which content-type names are expected when converting to this data model.

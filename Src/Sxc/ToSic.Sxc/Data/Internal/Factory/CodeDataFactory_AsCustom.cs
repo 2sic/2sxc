@@ -31,19 +31,31 @@ partial class CodeDataFactory: IModelFactory
         var bestType = DataModelAnalyzer.GetTargetType<TCustom>();
         var newT = ActivatorUtilities.CreateInstance(serviceProvider, bestType) as TCustom;
 
-        // Should be an ITypedItemWrapper, but not enforced in the signature
-        if (newT is ICanWrap<TData> withMatchingSetup)
-            withMatchingSetup.Setup(item, this);
-        // DataModelOfEntity can also be filled from Typed (but ATM not the other way around)
-        else if (newT is ICanWrap<IEntity> forEntity && item is ICanBeEntity canBeEntity)
-            forEntity.Setup(canBeEntity.Entity, this);
-        else
-            throw new($"The custom type {typeof(TCustom).Name} does not implement {nameof(ICanWrap<TData>)}. This is probably a mistake.");
-        return newT;
+        switch (newT)
+        {
+            // Should be an ITypedItemWrapper, but not enforced in the signature
+            case ICanWrap<TData> withMatchingSetup:
+                withMatchingSetup.Setup(item, this);
+                return newT;
+            // In some cases the type of the data is already a model, so we need to unwrap it
+            case ICanWrap<ITypedItem> forItem when item is ICanBeItem canBeItem:
+                forItem.Setup(canBeItem.Item, this);
+                return newT;
+            // DataModelOfEntity can also be filled from Typed (but ATM not the other way around)
+            case ICanWrap<IEntity> forEntity when item is ICanBeEntity canBeEntity:
+                forEntity.Setup(canBeEntity.Entity, this);
+                return newT;
+            // In some cases we can only wrap an item, but the data is an entity-based model
+            case ICanWrap<ITypedItem> forTypedItem when item is ICanBeEntity canBeEntity:
+                forTypedItem.Setup(AsItem(canBeEntity.Entity), this);
+                return newT;
+            default:
+                throw new($"The custom type {typeof(TCustom).Name} does not implement {nameof(ICanWrap<TData>)}. This is probably a mistake.");
+        }
     }
 
     internal TCustom GetOne<TCustom>(Func<IEntity> getItem, object id, bool skipTypeCheck)
-        where TCustom : class, ICanWrapData, new()
+        where TCustom : class, ICanWrapData
     {
         var item = getItem();
         if (item == null)
@@ -54,10 +66,17 @@ partial class CodeDataFactory: IModelFactory
             return AsCustom<TCustom>(item);
 
         // Do Type-Name check
-        var typeName = DataModelAnalyzer.GetContentTypeNames<TCustom>().Split(',');
-        if (typeName.FirstOrDefault() != ModelSourceAttribute.ForAnyContentType && !typeName.Any(tn => item.Type.Is(tn)))
-            throw new($"Item with ID {id} is not a {typeName}. This is probably a mistake, otherwise use {nameof(skipTypeCheck)}: true");
-        return AsCustom<TCustom>(item);
+        var typeNames = DataModelAnalyzer.GetContentTypeNamesList<TCustom>();
+        
+        // Check all type names if they are `*` or match the data ContentType
+        if (typeNames.List.Any(t => t == ModelSourceAttribute.ForAnyContentType || item.Type.Is(t)))
+            return AsCustom<TCustom>(item);
+
+        throw new(
+            $"Item with ID {id} is not a '{typeNames.Flat}'. " +
+            $"This is probably a mistake, otherwise use '{nameof(skipTypeCheck)}: true' " +
+            $"or apply an attribute [{nameof(ModelSourceAttribute)}({nameof(ModelSourceAttribute.ContentTypes)} = \"expected-type-name\")] to your model class. "
+        );
     }
 
 
