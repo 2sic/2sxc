@@ -7,7 +7,6 @@ using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Cms.Data;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
-using ToSic.Sxc.Data.Internal.Factory;
 using ToSic.Sxc.Data.Models;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
@@ -16,8 +15,7 @@ using ToSic.Sxc.Services.Tweaks;
 namespace Custom.Data;
 
 /// <summary>
-/// Base class for custom data objects, which extend the <see cref="ITypedItem"/> and can be used in Razor Components.
-/// It is used by 2sxc Copilot when generating base classes for custom data objects.
+/// Base class for custom data objects, which extend the <see cref="ITypedItem"/> for use in Razor Components.
 /// </summary>
 /// <example>
 ///
@@ -53,8 +51,12 @@ namespace Custom.Data;
 /// ```
 /// </example>
 /// <remarks>
-/// - Released in v17.06
-/// - It's not abstract, even if the most common case is to inherit, as there are cases where you want to use it directly.
+/// It is used by 2sxc Copilot when generating base classes for custom data objects.
+///
+/// History
+/// 
+/// * Released in v17.06
+/// * It's not abstract, even if the most common case is to inherit, as there are cases where you want to use it directly.
 /// </remarks>
 [PublicApi]
 [ModelSource(ContentTypes = ModelSourceAttribute.ForAnyContentType)]
