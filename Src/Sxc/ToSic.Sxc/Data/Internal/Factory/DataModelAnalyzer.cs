@@ -1,5 +1,5 @@
 ﻿using ToSic.Sxc.Data.Internal.Factory;
-using ToSic.Sxc.Data.Model;
+using ToSic.Sxc.Data.Models;
 
 namespace ToSic.Sxc.Data.Internal;
 
@@ -8,17 +8,17 @@ internal class DataModelAnalyzer
 
     /// <summary>
     /// Figure out the expected ContentTypeName of a DataWrapper type.
-    /// If it is decorated with <see cref="DataModelAttribute"/> then use the information it provides, otherwise
+    /// If it is decorated with <see cref="ModelSourceAttribute"/> then use the information it provides, otherwise
     /// use the type name.
     /// </summary>
     /// <typeparam name="TCustom"></typeparam>
     /// <returns></returns>
-    internal static string GetContentTypeNames<TCustom>() where TCustom : ICanWrapData =>
-        ContentTypeNames.Get<TCustom, DataModelAttribute>(a =>
+    internal static string GetContentTypeNameCsv<TCustom>() where TCustom : ICanWrapData =>
+        ContentTypeNames.Get<TCustom, ModelSourceAttribute>(a =>
         {
             // If we have an attribute, use the value provided (unless not specified)
-            if (a?.ForContentTypes != null)
-                return a.ForContentTypes;
+            if (a?.ContentTypes != null)
+                return a.ContentTypes;
 
             // If no attribute, use name of type
             var type = typeof(TCustom);
@@ -32,17 +32,60 @@ internal class DataModelAnalyzer
     private static readonly ClassAttributeLookup<string> ContentTypeNames = new();
 
     /// <summary>
+    /// Figure out the expected ContentTypeName of a DataWrapper type.
+    /// If it is decorated with <see cref="ModelSourceAttribute"/> then use the information it provides, otherwise
+    /// use the type name.
+    /// </summary>
+    /// <typeparam name="TCustom"></typeparam>
+    /// <returns></returns>
+    internal static (List<string> List, string Flat) GetContentTypeNamesList<TCustom>() where TCustom : ICanWrapData
+        => ContentTypeNamesList.Get<TCustom, ModelSourceAttribute>(a => UseSpecifiedNameOrDeriveFromType<TCustom>(a?.ContentTypes));
+    private static readonly ClassAttributeLookup<(List<string> List, string Flat)> ContentTypeNamesList = new();
+
+    /// <summary>
     /// Get the stream names of the current type.
     /// </summary>
     /// <typeparam name="TCustom"></typeparam>
     /// <returns></returns>
-    internal static string GetStreamName<TCustom>() where TCustom : ICanWrapData =>
-        StreamNames.Get<TCustom, DataModelAttribute>(a =>
-            // if we have the attribute, use that
-            a?.StreamNames.Split(',').First().Trim()
-            // If no attribute, use name of type
-            ?? typeof(TCustom).Name);
-    private static readonly ClassAttributeLookup<string> StreamNames = new();
+    internal static (List<string> List, string Flat) GetStreamNameList<TCustom>() where TCustom : ICanWrapData
+        => StreamNames.Get<TCustom, ModelSourceAttribute>(attribute => UseSpecifiedNameOrDeriveFromType<TCustom>(attribute?.Streams));
+
+    private static (List<string> List, string Flat) UseSpecifiedNameOrDeriveFromType<TCustom>(string names)
+        where TCustom : ICanWrapData
+    {
+        var list = !string.IsNullOrWhiteSpace(names)
+            ? names.Split(',').Select(n => n.Trim()).ToList()
+            : CreateListOfNameVariants(typeof(TCustom).Name, typeof(TCustom).IsInterface);
+        return (list, string.Join(",", list));
+    }
+
+    private static readonly ClassAttributeLookup<(List<string> List, string Flat)> StreamNames = new();
+
+    /// <summary>
+    /// Take a class/interface name and create a list
+    /// which also checks for the same name without leading "I" or without trailing "Model".
+    /// </summary>
+    private static List<string> CreateListOfNameVariants(string name, bool isInterface)
+    {
+        // Start list with initial name
+        List<string> result = [name];
+        // Check if it ends with Model
+        var nameWithoutModelSuffix = name.EndsWith("Model")
+            ? name.Substring(0, name.Length - 5)
+            : null;
+        if (nameWithoutModelSuffix != null)
+            result.Add(nameWithoutModelSuffix);
+
+        if (isInterface && name.Length > 1 && name.StartsWith("I") && char.IsUpper(name, 1))
+        {
+            result.Add(name.Substring(1));
+            if (nameWithoutModelSuffix != null)
+                result.Add(nameWithoutModelSuffix.Substring(1));
+        }
+
+        return result;
+    }
+
 
     internal static Type GetTargetType<TCustom>()
     {
@@ -53,37 +96,24 @@ internal class DataModelAnalyzer
 
         // Find attributes which describe conversion
         var attributes = type
-            .GetCustomAttributes(typeof(DataModelConversion), false)
-            .Cast<DataModelConversion>()
+            .GetCustomAttributes(typeof(ModelCreationAttribute), false)
+            .Cast<ModelCreationAttribute>()
             .ToList();
 
-
-        var map = attributes
-            .FirstOrDefault()?.Map?
-            .Select(m =>
-            {
-                if (!m.IsGenericType) return null;
-                if (m.GetGenericTypeDefinition() != typeof(DataModelFrom<,,>))
-                    return null;
-
-                var args = m.GetGenericArguments();
-                return new { From = args[0], To = args[2] };
-            })
-            .Where(m => m != null)
-            .ToList();
-
-        if (map == null || map.Count == 0)
+        // 2025-01-21 temp
+        var implementation = attributes.FirstOrDefault()?.Use;
+        if (implementation != null)
         {
-            if (type.IsInterface)
-                throw new TypeInitializationException(type.FullName,
-                    new($"Can't determine type to create of {type.Name} as it's an interface and doesn't have the proper Attributes"));
-            TargetTypes[type] = type;
-            return type;
+            TargetTypes[type] = implementation;
+            return implementation;
         }
 
-        var finalType = map.First().To;
-        TargetTypes[type] = finalType;
-        return finalType;
+
+        if (type.IsInterface)
+            throw new TypeInitializationException(type.FullName,
+                new($"Can't determine type to create of {type.Name} as it's an interface and doesn't have the proper Attributes"));
+        TargetTypes[type] = type;
+        return type;
     }
 
     private static readonly Dictionary<Type, Type> TargetTypes = new();

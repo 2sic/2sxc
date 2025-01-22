@@ -18,7 +18,6 @@ using ToSic.Eav.DataSource;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
-using ToSic.Sxc.Data.Model;
 using ToSic.Sxc.Internal;
 
 // ReSharper disable once CheckNamespace

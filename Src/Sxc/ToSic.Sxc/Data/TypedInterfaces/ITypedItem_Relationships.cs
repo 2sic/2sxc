@@ -1,5 +1,4 @@
 ﻿using ToSic.Sxc.Data.Internal.Docs;
-using ToSic.Sxc.Data.Model;
 
 namespace ToSic.Sxc.Data;
 

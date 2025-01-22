@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Cms.Sites.Internal;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Model;
+using ToSic.Sxc.Data.Models;
 
 namespace ToSic.Sxc.Cms.Sites;
 
@@ -17,9 +17,7 @@ namespace ToSic.Sxc.Cms.Sites;
 /// 
 /// * Introduced in v19.01
 /// </remarks>
-[DataModelConversion(Map = [
-    typeof(DataModelFrom<IEntity, ISiteModel, SiteModelOfEntity>),
-])]
+[ModelCreation(Use = typeof(SiteModelOfEntity))]
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 public interface ISiteModel : ICanWrapData
 {

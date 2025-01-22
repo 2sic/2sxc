@@ -1,8 +1,8 @@
-﻿using ToSic.Sxc.Data.Model;
+﻿using ToSic.Sxc.Data.Models;
 
 namespace ToSic.Sxc.Cms.Users.Internal;
 
-public class UserRoleModelOfEntity: DataModel, IUserRoleModel
+public class UserRoleModelOfEntity: ModelFromEntity, IUserRoleModel
 {
     public int Id => _entity.EntityId;
     public string Name => _entity.Get<string>(nameof(Name));

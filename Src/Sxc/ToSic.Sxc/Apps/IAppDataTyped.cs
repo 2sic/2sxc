@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Model;
 
 namespace ToSic.Sxc.Apps;
 
@@ -65,7 +64,7 @@ public interface IAppDataTyped: IDataSource
     /// </remarks>
     public IEnumerable<T> GetAll<T>(NoParamOrder protector = default, string typeName = default,
         bool nullIfNotFound = default)
-        where T : class, ICanWrapData, new();
+        where T : class, ICanWrapData;
 
     /// <summary>
     /// Get a single item from the app of the specified type.
@@ -79,7 +78,7 @@ public interface IAppDataTyped: IDataSource
     /// Released in v17.03.
     /// </remarks>
     T GetOne<T>(int id, NoParamOrder protector = default, bool skipTypeCheck = false)
-        where T : class, ICanWrapData, new();
+        where T : class, ICanWrapData;
 
 
     /// <summary>
@@ -94,7 +93,7 @@ public interface IAppDataTyped: IDataSource
     /// Released in v17.03.
     /// </remarks>
     public T GetOne<T>(Guid id, NoParamOrder protector = default, bool skipTypeCheck = false)
-        where T : class, ICanWrapData, new();
+        where T : class, ICanWrapData;
 
     #endregion
 }
