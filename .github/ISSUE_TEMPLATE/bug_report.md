@@ -17,7 +17,7 @@ assignees: ''
 [x] JS development
 [x] Content Types or data management
 [x] APIs like REST
-[x] DNN parts
+[x] Platform parts (Dnn/Oqtane)
 [x] other / unknown
 
 ### Current Behavior / Expected Behavior
