@@ -7,6 +7,8 @@ assignees: ''
 
 ---
 
+<!-- FILL OUT THE FOLLOWING INFORMATION OR WE MAY CLOSE YOUR ISSUE WITHOUT INVESTIGATING -->
+
 ### Bug Affects...
 <!-- HINT: remove lines which don't apply  -->
 [x] edit experience / UI
