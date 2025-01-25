@@ -95,6 +95,36 @@ internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper)
         nameof(ITypedItem.IsDemoItem),
         nameof(ITypedItem.Entity),
         nameof(ITypedItem.Type),
+        nameof(ITypedItem.Field),
+        /*nameof(ITypedItem.Html)*/ "Html",
+        nameof(ITypedItem.Picture),
+        nameof(ITypedItem.Url),
+        nameof(ITypedItem.Img),
+        nameof(ITypedItem.File),
+        nameof(ITypedItem.Folder),
+        nameof(ITypedItem.Gps),
+        /*nameof(ITypedItem.Attribute)*/ "Attribute",
+
+        nameof(ITypedItem.IsEmpty),
+        nameof(ITypedItem.IsNotEmpty),
+        nameof(ITypedItem.Keys),
+        nameof(ITypedItem.ContainsKey),
+        nameof(ITypedItem.Get),
+
+        nameof(ITypedItem.Bool),
+        nameof(ITypedItem.DateTime),
+        nameof(ITypedItem.String),
+        nameof(ITypedItem.Int),
+        nameof(ITypedItem.Double),
+        nameof(ITypedItem.Decimal),
+        nameof(ITypedItem.Long),
+        nameof(ITypedItem.Float),
+
+        nameof(ITypedItem.Child),
+        nameof(ITypedItem.Children),
+        nameof(ITypedItem.Parent),
+        nameof(ITypedItem.Parents),
+
     ];
 
     private static readonly string[] OverrideMethods =
