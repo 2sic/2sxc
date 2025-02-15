@@ -10,7 +10,7 @@ internal class DnnRoslynConstants
     /// <summary>
     /// The default language version to use when compiling
     /// </summary>
-    public const string DefaultLangVersion = "8"; // "7.3";
+    public const string DefaultLangVersion = "8";
 
     public const string CompilerOptionLanguageVersion = $"/langversion:{DefaultLangVersion}";
 }

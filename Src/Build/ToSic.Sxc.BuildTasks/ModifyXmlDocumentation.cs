@@ -49,7 +49,7 @@ namespace ToSic.Sxc.BuildTasks
                 var reference = m.Groups[2].Value;
                 // Use label if provided, otherwise use reference as label
                 var linkText = !string.IsNullOrEmpty(label) ? label : reference;
-                return $@"<a href=""https://go.2sxc.org/xref17?xref={reference}"">{linkText}</a>";
+                return $@"<a href=""https://go.2sxc.org/find?xref={reference}"">{linkText}</a>";
             }
 
             var modifiedContent = Regex.Replace(content, pattern, new MatchEvaluator(Replacement));
@@ -82,7 +82,7 @@ namespace ToSic.Sxc.BuildTasks
 
                     var label = reference.Substring(reference.LastIndexOf('.') + 1);
 
-                    summary.Add(new XElement("para", new XElement("a", new XAttribute("href", $"https://go.2sxc.org/xref17?xref={reference}"), "📖 " + label)));
+                    summary.Add(new XElement("para", new XElement("a", new XAttribute("href", $"https://go.2sxc.org/find?xref={reference}"), "📖 " + label)));
                 }
                 catch (Exception ex)
                 {

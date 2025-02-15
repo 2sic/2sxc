@@ -16192,8 +16192,35 @@
             "Scope": "System.DataSources",
             "Metadata": [
               {
-                "Id": 160779,
+                "Id": 166589,
                 "Version": 1,
+                "Guid": "8da53d14-f2e4-446c-aae6-1692eb0b959d",
+                "Type": {
+                  "Id": "e2f569c9-d1dd-4458-a54e-4aaf53e9ae3c",
+                  "Name": "LanguagesDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "Title": {
+                      "en-us": "Disable translation"
+                    }
+                  },
+                  "Boolean": {
+                    "Enabled": {
+                      "en-us": false
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "ac11fae7-1916-4d2d-8583-09872e1e6966"
+                }
+              },
+              {
+                "Id": 160779,
+                "Version": 2,
                 "Guid": "910bb098-0184-4134-8ea4-f121a30acafe",
                 "Type": {
                   "Id": "ContentType",
@@ -16201,6 +16228,9 @@
                 },
                 "Attributes": {
                   "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
                     "Description": {
                       "en-us": ""
                     },
@@ -16208,7 +16238,7 @@
                       "en-us": ""
                     },
                     "EditInstructions": {
-                      "en-us": "<p>Configure which users to show.</p>"
+                      "en-us": "<p>Configure which users to show.</p>\n<p>It will return <a href=\"http://go.2sxc.org/find?xref=ToSic.Sxc.Cms.Users\" target=\"_blank\" rel=\"noopener\">users and roles</a>&nbsp;entities.</p>"
                     },
                     "Label": {
                       "en-us": "Users DataSource Configuration"
@@ -16226,33 +16256,6 @@
                     },
                     "Link": {
                       "en-us": ""
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "ac11fae7-1916-4d2d-8583-09872e1e6966"
-                }
-              },
-              {
-                "Id": 166589,
-                "Version": 1,
-                "Guid": "8da53d14-f2e4-446c-aae6-1692eb0b959d",
-                "Type": {
-                  "Id": "e2f569c9-d1dd-4458-a54e-4aaf53e9ae3c",
-                  "Name": "LanguagesDecorator"
-                },
-                "Attributes": {
-                  "String": {
-                    "Title": {
-                      "en-us": "Disable translation"
-                    }
-                  },
-                  "Boolean": {
-                    "Enabled": {
-                      "en-us": false
                     }
                   }
                 },
@@ -18189,7 +18192,7 @@
             "Metadata": [
               {
                 "Id": 167673,
-                "Version": 1,
+                "Version": 2,
                 "Guid": "4dc0c5ab-5cdf-4832-b13b-71753584bdb1",
                 "Type": {
                   "Id": "ContentType",
@@ -18207,7 +18210,7 @@
                       "en-us": ""
                     },
                     "EditInstructions": {
-                      "en-us": "<p>Configure settings for the Pages DataSource.</p>"
+                      "en-us": "<p>Configure settings for the Pages DataSource.</p>\n<p>It will return <a href=\"http://go.2sxc.org/find?xref=ToSic.Sxc.Cms.Pages\" target=\"_blank\" rel=\"noopener\">pages</a>&nbsp;entities.</p>"
                     },
                     "Label": {
                       "en-us": "PagesDataSourceConfig"
@@ -19735,7 +19738,7 @@
             "Metadata": [
               {
                 "Id": 184019,
-                "Version": 1,
+                "Version": 2,
                 "Guid": "0136ff45-c55a-4e3e-9b59-2c59ddf2b914",
                 "Type": {
                   "Id": "ContentType",
@@ -19753,7 +19756,7 @@
                       "en-us": ""
                     },
                     "EditInstructions": {
-                      "en-us": "<p>Specify how to get lists of files and/or folders from the App.</p>"
+                      "en-us": "<p>Specify how to get lists of files and/or folders from the App.</p>\n<p>It will return <a href=\"http://go.2sxc.org/find?xref=ToSic.Sxc.Cms.Assets\" target=\"_blank\" rel=\"noopener\">file and folder asset</a> entities.</p>"
                     },
                     "Label": {
                       "en-us": "App Files DataSource Configuration"
