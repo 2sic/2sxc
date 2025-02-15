@@ -5,6 +5,7 @@ using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Edit.Toolbar.Internal;
@@ -12,8 +13,6 @@ using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using static System.StringComparer;
-using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
-using static ToSic.Sxc.Images.Internal.ImageDecorator;
 
 namespace ToSic.Sxc.Images.Internal;
 
@@ -199,10 +198,6 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     // still implemented as a method, so we could add future parameters if necessary
     public IToolbarBuilder Toolbar() => _toolbar.Get(() =>
     {
-        //var toolbarBuilder = new ResponsiveToolbarBuilder();
-        //toolbarBuilder.LinkLog(Log);
-        //return toolbarBuilder.Toolbar(ImgService, Target, Tweaker, Settings, Src);
-
         var l = Log.Fn<IToolbarBuilder>();
         switch (Tweaker.ToolbarObj)
         {
@@ -232,9 +227,8 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         imgTlb = imgTlb?.Metadata(Target.HasMdOrNull,
             tweak: t =>
             {
-                // Note: Using experimental feature which doesn't exist on the ITweakButton interface
-
                 // Add note only for the ImageDecorator Metadata, not for other buttons
+                // Note: Using experimental AddNamed feature which doesn't exist on the ITweakButton interface
                 var modified = (t as TweakButton)?.AddNamed(ImageDecorator.TypeNameId, btn =>
                 {
                     // add label like "Image Settings and Cropping" - i18n
@@ -251,9 +245,9 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
                         btn = btn.Note(note, format: "html", background: "#DFC2F2", delay: 1000);
 
                     // if image is from elsewhere, show warning
-                    btn = isInSameEntity ? btn : btn.FormParameters(ShowWarningGlobalFile, true);
+                    btn = isInSameEntity ? btn : btn.FormParameters(ImageDecorator.ShowWarningGlobalFile, true);
                     return btn;
-                }); // fallback, in case conversion fails unexpectedly
+                });
 
                 // Add note for Copyright - if there is Metadata for that
                 Target.HasMdOrNull.Metadata
@@ -262,10 +256,12 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
                     .DoIfNotNull(cpEntity =>
                     {
                         var copyright = new CopyrightDecorator(cpEntity);
-                        modified = (modified as TweakButton)?.AddNamed(CopyrightDecorator.TypeNameId, btn => btn
-                            .Tooltip("Copyright")
-                            .Note(copyright.CopyrightMessage.NullIfNoValue() ??
-                                  copyright.Copyrights.FirstOrDefault()?.GetBestTitle() ?? ""));
+                        modified = (modified as TweakButton)?
+                            .AddNamed(CopyrightDecorator.TypeNameId, btn => btn
+                                .Tooltip("Copyright")
+                                .Note(copyright.CopyrightMessage.NullIfNoValue() ??
+                                      copyright.Copyrights.FirstOrDefault()?.GetBestTitle() ?? "")
+                            );
                     });
 
 
@@ -339,7 +335,7 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     private readonly GetOnce<string> _srcSet = new();
     private string SrcSetGenerator()
     {
-        var isEnabled = ImgService.Features.IsEnabled(ImageServiceMultipleSizes.NameId);
+        var isEnabled = ImgService.Features.IsEnabled(SxcFeatures.ImageServiceMultipleSizes.NameId);
         var hasVariants = (ThisResize?.Recipe?.Variants).HasValue();
         var l = (ImgService.Debug ? Log : null).Fn<string>($"{nameof(isEnabled)}: {isEnabled}, {nameof(hasVariants)}: {hasVariants}");
         return isEnabled && hasVariants
@@ -359,7 +355,7 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     private readonly GetOnce<string> _height = new();
 
     /// <inheritdoc />
-    public string Sizes => _sizes.Get(() => UseIfActive(ImgService.Features.IsEnabled(ImageServiceSetSizes.NameId), ThisResize.Recipe?.Sizes));
+    public string Sizes => _sizes.Get(() => UseIfActive(ImgService.Features.IsEnabled(SxcFeatures.ImageServiceSetSizes.NameId), ThisResize.Recipe?.Sizes));
     private readonly GetOnce<string> _sizes = new();
 
     private string UseIfActive<T>(bool? active, T value, [CallerMemberName] string name = default)
