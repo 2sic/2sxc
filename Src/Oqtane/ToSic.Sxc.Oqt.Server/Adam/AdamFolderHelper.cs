@@ -18,14 +18,13 @@ internal static class AdamFolderHelper
             Order = 1,
             IsSystem = false,
             Type = FolderTypes.Private,
-            Permissions = new List<Permission>
-            {
+            PermissionList = [
                 new(PermissionNames.Browse, RoleNames.Everyone, true),
                 new(PermissionNames.View, RoleNames.Everyone, true),
                 new(PermissionNames.Browse, RoleNames.Admin, true),
                 new(PermissionNames.View, RoleNames.Admin, true),
-                new(PermissionNames.Edit, RoleNames.Admin, true),
-            }.EncodePermissions()
+                new(PermissionNames.Edit, RoleNames.Admin, true)
+            ]
         };
     }
 }
