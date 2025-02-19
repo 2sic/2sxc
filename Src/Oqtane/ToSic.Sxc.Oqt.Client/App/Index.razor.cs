@@ -60,6 +60,8 @@ public partial class Index : ModuleProBase
         Log($"- Static SSR: {RenderInfoService.IsStaticSsr(RenderMode)}");
         Log($"- Blazor Enhanced Nav: {RenderInfoService.IsBlazorEnhancedNav(RenderMode)}");
         Log($"- SSR Framing: {RenderInfoService.IsSsrFraming(RenderMode)}");
+        Log($"- RendererInfo.IsInteractive: {RendererInfo.IsInteractive}");
+        Log($"- RendererInfo.Name: {RendererInfo.Name}");
     }
 
     //protected override async Task OnInitializedAsync()
