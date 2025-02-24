@@ -51,12 +51,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
                 .Select(url => new
                 {
                     href = noCache.CacheBusting(url, renderId),
-                    bundle = "", // not working when bundleId is provided
-                    id = "",
                     location = "body",
-                    //htmlAttributes = null,
-                    integrity = "", // bug in Oqtane, needs to be an empty string to not throw errors
-                    crossorigin = "",
                 }));
         }
 
