@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -127,3 +128,4 @@ public abstract class ImageServiceTagsBase(EavTestConfig testConfig = default) :
         if (lastException != null) throw lastException;
     }
 }
+#endif

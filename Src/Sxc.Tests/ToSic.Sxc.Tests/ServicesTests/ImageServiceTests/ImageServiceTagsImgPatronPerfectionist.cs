@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿#if NETFRAMEWORK
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Eav.Context;
 using ToSic.Testing.Shared.Platforms;
@@ -30,3 +31,4 @@ public class ImageServiceTagsImgPatronPerfectionist : ImageServiceTagsImgBase
     public new void ImageSrcSetMultiTest(string expected, string variants, string testName) 
         => base.ImageSrcSetMultiTest(expected, variants, testName);
 }
+#endif

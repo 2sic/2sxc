@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿#if NETFRAMEWORK
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Licenses;
@@ -62,3 +63,4 @@ public class ImageServiceTagsNoPatron() : ImageServiceTagsBase(EavTestConfig.Sce
     public void PictureTags(string expected, string variants, bool inPicTag, string name) 
         => PictureTagInner(expected, variants, inPicTag, name);
 }
+#endif

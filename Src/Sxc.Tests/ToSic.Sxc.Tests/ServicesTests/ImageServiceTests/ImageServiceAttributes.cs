@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿#if NETFRAMEWORK
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Testing.Shared;
+
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;
@@ -156,3 +158,4 @@ public class ImageServiceAttributes: TestBaseSxcDb
     public void ImageAttributesAnonymousCamelCase() => 
         ImageAttributes(new { Style = ImageAttributesStyleValue } );
 }
+#endif
