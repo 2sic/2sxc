@@ -5,11 +5,12 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
+using ToSic.Testing.Shared;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;
 
-public abstract class ImageServiceTagsBase: TestBaseSxcDb
+public abstract class ImageServiceTagsBase(EavTestConfig testConfig = default) : TestBaseSxcDb(testConfig)
 {
     protected const string ImgUrl = "/abc/def/test.jpg";
     protected const string Img120x24 = ImgUrl + "?w=120&amp;h=24";
@@ -74,6 +75,8 @@ public abstract class ImageServiceTagsBase: TestBaseSxcDb
         var pic = svc.Picture(link: ImgUrl, settings: settings, recipe: inPicTag ? rule : null);
 
         var expected = $"<picture>{expectedParts}<img src='{Img120x24}'></picture>";
+        Trace.WriteLine($"Expected: '{expected}'");
+        Trace.WriteLine($"Actual  : '{pic}'");
         AreEqual(expected, pic.ToString(), $"Test failed: {testName}");
     }
 
@@ -81,17 +84,21 @@ public abstract class ImageServiceTagsBase: TestBaseSxcDb
     /// <summary>
     /// Run a batch of tests on the source tags, with permutations of where the settings are given
     /// </summary>
-    protected void SourceTagsMultiTest(string expected, string variants, string testName)
+    protected void BatchTestManySrcSets(string expected, string variants, string testName)
     {
         var testSet = ImageTagsTestPermutations.GenerateTestParams(testName, variants);
         TestManyButThrowOnceOnly(testSet.Select(ts => (ts.Name, ts)), test =>
         {
+            Trace.WriteLine($"Test: {test}");
+
             var svc = GetService<IImageService>();
             var settings = svc.SettingsTac(width: test.Set.Width, height: test.Set.Height,
                 recipe: test.Set.SrcSetRule);
-            var sources = svc.Picture(link: ImgUrl, settings: settings, recipe: test.Pic.SrcSetRule).Sources;
+            var pic = svc.Picture(link: ImgUrl, settings: settings, recipe: test.Pic.SrcSetRule).Sources;
 
-            AreEqual(expected, sources.ToString(), $"Failed: {test.Name}");
+            Trace.WriteLine($"Expected: '{expected}'");
+            Trace.WriteLine($"Actual  : '{pic}'");
+            AreEqual(expected, pic.ToString(), $"Failed: {test.Name}");
 
         });
     }

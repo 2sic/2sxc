@@ -97,7 +97,9 @@
     <Compile Include="CodeTests\LoggingTests\LogFnTests.cs" />
     <Compile Include="CodeTests\LoggingTests\LogTestBase.cs" />
     <Compile Include="Code\Help\SourceAnalyzerTests.cs" />
-    <Compile Include="ConfigurationTests\VerifyPatronsPerfectionistPackage.cs" />
+    <Compile Include="ConfigurationTests\VerifyPatronsHelper.cs" />
+    <Compile Include="ConfigurationTests\VerifyScenarioNoPatronsPerfectionist.cs" />
+    <Compile Include="ConfigurationTests\VerifyScenarioPatronsPerfectionist.cs" />
     <Compile Include="ContentSecurityPolicyTests\CspParametersTests.cs" />
     <Compile Include="ContentSecurityPolicyTests\CspParameterFinalizerTests.cs" />
     <Compile Include="ContentSecurityPolicyTests\CspPolicyTextProcessorTests.cs" />
