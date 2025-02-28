@@ -10,10 +10,10 @@ namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;
 public class ImageServiceFormatsNoPatron(): ImageServiceFormatsBase(EavTestConfig.ScenarioBasic)
 {
     // Start the test with a platform-info that has no patron
-    protected override void SetupServices(IServiceCollection services)
+    protected override IServiceCollection SetupServices(IServiceCollection services)
     {
-        base.SetupServices(services);
-        services.AddTransient<IPlatformInfo, TestPlatformNotPatron>();
+        return base.SetupServices(services)
+            .AddTransient<IPlatformInfo, TestPlatformNotPatron>();
     }
 
 

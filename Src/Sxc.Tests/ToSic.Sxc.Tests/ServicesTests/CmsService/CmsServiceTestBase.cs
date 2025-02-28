@@ -30,18 +30,20 @@ public class CmsServiceTestBase : TestBaseSxcDb
         var appStates = GetService<IAppReaderFactory>();
         var app = appStates.GetSystemPreset();
         TstDataContentType = app.GetContentType("TstData");
-        if (TstDataContentType == null) throw new("TstData content type not found. Probably JSON is missing.");
+        if (TstDataContentType == null)
+            throw new("TstData content type not found. Probably JSON is missing.");
         Cdf = GetService<CodeDataFactory>();
     }
     public readonly CodeDataFactory Cdf;
     public readonly IContentType TstDataContentType;
 
-    protected override void SetupServices(IServiceCollection services)
+    protected override IServiceCollection SetupServices(IServiceCollection services)
     {
-        base.SetupServices(services);
-        services.AddAppLoader();
+        base.SetupServices(services)
+            .AddAppLoader();
         // services.AddTransient<IAppLoader, AppLoader>();
         services.TryAddTransient<IValueConverter, MockValueConverter>();
+        return services;
     }
 
 

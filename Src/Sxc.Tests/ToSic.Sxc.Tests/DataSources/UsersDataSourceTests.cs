@@ -15,11 +15,9 @@ namespace ToSic.Sxc.Tests.DataSources;
 public class UsersDataSourceTests : TestBaseSxcDb
 {
     // Start the test with a platform-info that has a patron
-    protected override void SetupServices(IServiceCollection services)
-    {
-        base.SetupServices(services);
-        services.AddTransient<IUsersProvider, MockUsers>();
-    }
+    protected override IServiceCollection SetupServices(IServiceCollection services) =>
+        base.SetupServices(services)
+            .AddTransient<IUsersProvider, MockUsers>();
 
     private DataSourcesTstBuilder DsSvc => field ??= GetService<DataSourcesTstBuilder>();
 

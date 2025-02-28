@@ -14,7 +14,6 @@ namespace ToSic.SexyContent.Interfaces
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public interface IDynamicEntity: IEntityWrapper
     {
-#if NETFRAMEWORK
         /// <summary>
         /// Deprecated - avoid using. Use Edit.Toolbar(object...) instead
         /// </summary>
@@ -30,7 +29,6 @@ namespace ToSic.SexyContent.Interfaces
         [Obsolete]
         [PrivateApi]
         IRawHtmlString Render();
-#endif
 
         // 2023-08-13 2dm removed and used IEntityWrapper - unsure if this has side effects
         //IEntity Entity { get; }

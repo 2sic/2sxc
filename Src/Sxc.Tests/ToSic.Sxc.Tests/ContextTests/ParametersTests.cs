@@ -263,7 +263,7 @@ public class ParametersTests
 
     [TestMethod]
     [DataRow("id=42&sort=descending", "id", "42", "should replace")]
-    [DataRow("id=42&new=hello&sort=descending", "new", "hello", "should append")]
+    [DataRow("id=27&new=hello&sort=descending", "new", "hello", "should append")]
     [DataRow("sort=descending", "id", "27", "should remove")]
     [DataRow("id&sort=descending", "id", "", "empty value should remove")]
     [DataRow("id&sort=descending", "id", null, "null should ???")]

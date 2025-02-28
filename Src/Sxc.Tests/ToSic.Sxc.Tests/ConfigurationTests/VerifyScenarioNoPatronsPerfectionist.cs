@@ -10,11 +10,9 @@ namespace ToSic.Sxc.Tests.ConfigurationTests;
 public class VerifyScenarioNoPatronsPerfectionist(): TestBaseSxcDb(EavTestConfig.ScenarioBasic)
 {
     // Start the test with a platform-info that has a patron
-    protected override void SetupServices(IServiceCollection services)
-    {
-        base.SetupServices(services);
-        services.AddTransient<IPlatformInfo, TestPlatformNotPatron>();
-    }
+    protected override IServiceCollection SetupServices(IServiceCollection services) =>
+        base.SetupServices(services)
+            .AddTransient<IPlatformInfo, TestPlatformNotPatron>();
 
     // Our current test only has 3 auto-enabled packages, so the service should report so many active licenses
     [TestMethod] public void VerifyPackageOk() => new VerifyPatronsHelper(this).VerifyPackageOk(3 /* auto-enabled only */);

@@ -16,11 +16,9 @@ namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;
 [TestClass]
 public class ImageServiceTagsNoPatron() : ImageServiceTagsBase(EavTestConfig.ScenarioBasic)
 {
-    protected override void SetupServices(IServiceCollection services)
-    {
-        base.SetupServices(services);
-        services.AddTransient<IPlatformInfo, TestPlatformNotPatron>();
-    }
+    protected override IServiceCollection SetupServices(IServiceCollection services) =>
+        base.SetupServices(services)
+            .AddTransient<IPlatformInfo, TestPlatformNotPatron>();
 
     [TestMethod]
     public void VerifyNotPatron()
