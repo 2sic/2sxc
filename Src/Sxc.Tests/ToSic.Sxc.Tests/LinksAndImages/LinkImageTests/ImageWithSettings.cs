@@ -22,7 +22,7 @@ public class ImageWithSettings: LinkImageTestBase
     }
 
     [DataRow(true)]
-    //[DataRow(false)]
+    [DataRow(false)]
     [TestMethod]
     public void BasicFormat(bool makeDyn)
     {

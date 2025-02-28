@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Data.PropertyLookup;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal;
 using static ToSic.Sxc.Images.Internal.ImageConstants;
@@ -97,7 +98,9 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
             string name => GetImageSettingsByName(codeApiServiceOrNull, name, Debug, Log),
             ICanGetByName getSettings => getSettings,
             IEnumerable<ICanGetByName> settingsList => settingsList.FirstOrDefault(),
-            _ => null
+            _ => settings.IsAnonymous()
+                ? new ObjectWrapperCanGetByName(settings)
+                : null,
         };
 
     internal static ICanGetByName GetImageSettingsByName(ICodeApiService codeApiSvcOrNull, string strName, bool debug, ILog log)

@@ -20,7 +20,8 @@ public class LinkImageTestBase: TestBaseSxc
     public ImgResizeLinker GetLinker() => GetService<ImgResizeLinker>();
     public ILinkService GetLinkHelper() => GetService<ILinkService>();
 
-    public WrapObjectDynamic ToDyn(object contents) => GetService<CodeDataWrapper>().FromObject(contents, WrapperSettings.Dyn(children: false, realObjectsToo: false));
+    public WrapObjectDynamic ToDyn(object contents) => GetService<CodeDataWrapper>()
+        .FromObject(contents, WrapperSettings.Dyn(children: false, realObjectsToo: false));
 
 
     protected void TestOnLinkerAndHelper(string expected,
