@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Threading;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ToSic.Sxc.Tests.ServicesTests.Templates;
 
@@ -44,6 +45,7 @@ public class TemplatesBasicTests : TemplatesTestsBase
     [TestMethod]
     public void EmptyFunctionFormatter(string expected, string value, string notes = default)
     {
+        Thread.CurrentThread.CurrentCulture = new("en-US");
         var svc = GetTemplateServices();
         var result = svc.Empty(sources: [GetFnNumberSourcesWithFormat()]).Parse(value);
         Assert.AreEqual(expected, result, $"Value: '{value}', notes: {notes}");
