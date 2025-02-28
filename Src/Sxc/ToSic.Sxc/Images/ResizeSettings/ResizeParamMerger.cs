@@ -19,6 +19,8 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
     private const string HeightField = "Height";
     private const string AspectRatioField = "AspectRatio";
     private const string AdvancedField = "Advanced";
+    private const string FormatField = "Format";
+    private const string ParametersField = "Parameters";
 
     public bool Debug = false;
 
@@ -70,12 +72,12 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         var settingsOrNull = TryToCastSettings(settings, codeApiSvc);
         l.A($"Has Settings: {settingsOrNull != null}; type: {settings?.GetType().FullName}");
 
-        var formatValue = ResizeParams.FormatOrNull(format);
+        var formatValue = ResizeParams.FormatOrNull(KeepBestString(format, settingsOrNull?.Get(FormatField)));
 
         var resizeParams = BuildCoreSettings(paramHelper, width, height, factor, aspectRatio, formatValue, settingsOrNull);
 
         // Add more URL parameters if known
-        resizeParams.Parameters = ResizeParams.ParametersOrNull(parameters);
+        resizeParams.Parameters = ResizeParams.ParametersOrNull(KeepBestString(parameters, settingsOrNull?.Get(ParametersField)));
 
         // Aspects which aren't affected by aspect ratio
         var qParamInt2 = ResizeParams.QualityOrNull(quality);
