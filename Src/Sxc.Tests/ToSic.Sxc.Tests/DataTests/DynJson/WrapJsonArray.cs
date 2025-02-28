@@ -190,8 +190,8 @@ public class WrapJsonArray : DynAndTypedTestsBase
     public void ObjectArray()
     {
         var test = ObjectArrayPrepare();
-        AreEqual(test.Original[0].Name, test.Dyn[0].Name);
-        AreNotEqual(test.Original[0].Name, test.Dyn[0].Age);
+        AreEqual(test.Original[0].Name, (string)test.Dyn[0].Name);
+        AreNotEqual<object>(test.Original[0].Name, test.Dyn[0].Age);
     }
 
     [TestMethod]

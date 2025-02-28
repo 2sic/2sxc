@@ -49,13 +49,14 @@ public class WrapObjBasic: DynAndTypedTestsBase
         dynamic dynAnon = Obj2WrapObj(data, false, false);
 
         IsNull(dynAnon.NotExisting);
-        AreEqual(data.Name, dynAnon.Name);
-        AreEqual(data.Name, dynAnon.naME, "Should be the same irrelevant of case");
+        AreEqual(data.Name, (string) dynAnon.Name);
+        AreEqual(data.Name, (string) dynAnon.naME, "Should be the same irrelevant of case");
+
         // This line is different from the anonymous test
-        AreNotEqual(data.DescriptionAsProperty, dynAnon.DescriptionAsProperty, "Should NOT work for values, only properties");
-        AreEqual(null, dynAnon.DescriptionAsProperty, "Should NOT work for values, only properties");
-        AreEqual(data.Birthday, dynAnon.Birthday, "dates should be the same");
-        AreEqual(data.Truthy, dynAnon.truthy);
+        AreNotEqual(data.DescriptionAsProperty, (object) dynAnon.DescriptionAsProperty, "Should NOT work for values, only properties");
+        AreEqual(null, (object) dynAnon.DescriptionAsProperty, "Should NOT work for values, only properties");
+        AreEqual(data.Birthday, (DateTime) dynAnon.Birthday, "dates should be the same");
+        AreEqual(data.Truthy, (bool) dynAnon.truthy);
 
         IsTrue(typed.TestContainsKey("Name"));
         IsTrue(typed.TestContainsKey("NAME"));
