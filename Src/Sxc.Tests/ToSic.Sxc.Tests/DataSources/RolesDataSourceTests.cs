@@ -6,11 +6,12 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DataSources.Internal;
+using ToSic.Testing.Shared;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Tests.DataSources;
 
-[TestClass()]
+[TestClass]
 public class RolesDataSourceTests : TestBaseSxcDb
 {
     // Start the test with a platform-info that has a patron
@@ -19,6 +20,8 @@ public class RolesDataSourceTests : TestBaseSxcDb
         base.SetupServices(services);
         services.AddTransient<IUserRolesProvider, MockRolesDataSource>();
     }
+    private DataSourcesTstBuilder DsSvc => field ??= GetService<DataSourcesTstBuilder>();
+
     [TestMethod()]
     public void RolesDefault()
     {
@@ -75,7 +78,7 @@ public class RolesDataSourceTests : TestBaseSxcDb
     }
 
     private UserRoles GenerateRolesDataSourceDataSource(object options = default) 
-        => CreateDataSourceNew<UserRoles>(new DataSourceOptionConverter()
+        => DsSvc.CreateDataSourceNew<UserRoles>(new DataSourceOptionConverter()
             .Create(new DataSourceOptions
             {
                 LookUp = new LookUpTestData(GetService<DataBuilder>()).AppSetAndRes()
