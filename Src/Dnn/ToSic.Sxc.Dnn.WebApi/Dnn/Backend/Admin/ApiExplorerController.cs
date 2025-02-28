@@ -4,6 +4,7 @@ using System.Web.Compilation;
 using System.Web.Hosting;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Context;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code.Internal.HotBuild;
@@ -50,7 +51,7 @@ public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSu
         var appJson = SysHlp.GetService<IAppJsonService>();
         var block = SysHlp.GetService<DnnGetBlock>().GetCmsBlock(Request);
         var codeFileInfo = SysHlp.GetService<SourceAnalyzer>().TypeOfVirtualPath(controllerVirtualPath);
-        if ((block != null && appJson.DnnCompilerAlwaysUseRoslyn(block.AppId)) || codeFileInfo.AppCode)
+        if ((block != null && appJson.DnnCompilerAlwaysUseRoslyn(block.AppId)) || codeFileInfo.AppCode || FileInAppCode(path))
         {
             Log.A("has AppCode");
             // Figure edition
@@ -76,5 +77,7 @@ public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSu
     [HttpGet]
     [JsonFormatter(Casing = Casing.Camel)]
     public AllApiFilesDto AppApiFiles(int appId) => Real.AppApiFiles(appId);
+
+    private bool FileInAppCode(string path) => path.StartsWith("AppCode\\api\\", StringComparison.InvariantCultureIgnoreCase) || path.ContainsInsensitive("\\AppCode\\api\\");
 
 }
