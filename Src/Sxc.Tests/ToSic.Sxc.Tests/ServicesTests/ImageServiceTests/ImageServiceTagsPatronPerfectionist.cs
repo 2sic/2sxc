@@ -1,5 +1,4 @@
-﻿#if NETFRAMEWORK
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Eav.Context;
@@ -71,4 +70,3 @@ public class ImageServiceTagsPatronPerfectionist: ImageServiceTagsBase
     }
 
 }
-#endif

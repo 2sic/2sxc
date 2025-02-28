@@ -1,5 +1,4 @@
-﻿#if NETFRAMEWORK
-using System.Linq;
+﻿using System.Linq;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using ToSic.Testing.Shared;
@@ -52,4 +51,3 @@ public class ImageServiceTagsImgBase(EavTestConfig testConfig = default) : Image
     }
 
 }
-#endif
