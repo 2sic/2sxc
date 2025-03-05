@@ -4,20 +4,9 @@ using ToSic.Testing.Shared;
 
 namespace ToSic.Sxc.Tests;
 
-public class TestBaseSxcDb: TestBaseDiEavFullAndDb
+public class TestBaseSxcDb(EavTestConfig testConfig = default) : TestBaseDiEavFullAndDb(testConfig)
 {
-    //protected override void Configure()
-    //{
-    //    var sxcStartup = Build<SxcSystemLoader>();
-    //    sxcStartup.PreStartUp();
-    //    base.Configure();
-    //}
-
-    protected override void SetupServices(IServiceCollection services)
-    {
-        base.SetupServices(services);
-        services
+    protected override IServiceCollection SetupServices(IServiceCollection services) =>
+        base.SetupServices(services)
             .AddSxcCore();
-    }
-
 }

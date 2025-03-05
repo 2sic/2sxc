@@ -88,6 +88,7 @@ public interface ILinkService: INeedsCodeApiService, ICanDebug
     /// <param name="settings">
     /// - A settings name such as "Content", "Lightbox" etc. (new 17.06)
     /// - A standardized Image-Settings object like Settings.Images.Content - see https://go.2sxc.org/settings
+    /// - An anonymous objects with properties such as `width`, `height`, `quality`, `resizeMode`, `scaleMode`, `format`, `aspectRatio` etc. like `new { width = 100, height = 100 }` (new v19.03.03)
     /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
     /// - Or a specially prepared <see cref="Images.IResizeSettings"/> object containing all settings.
     ///   If this is provided, only `factor` will still be respected, all other settings like `width` on this command will be ignored.
@@ -123,6 +124,7 @@ public interface ILinkService: INeedsCodeApiService, ICanDebug
     /// - Option to use <see cref="Images.IResizeSettings"/> added in v13.03
     /// - `factor` originally didn't influence width/height if provided here, updated it v13.03 to influence that as well
     /// - `field` being added in 13.04, not ready yet
+    /// - `settings` enhanced to also support simple anonymous objects in v19.03.03
     /// </remarks>
     /// <returns></returns>
     // Test comments, probably remove soon as this was never implemented like this

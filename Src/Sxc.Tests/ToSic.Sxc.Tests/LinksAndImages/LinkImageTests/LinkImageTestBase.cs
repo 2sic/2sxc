@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Eav.Internal.Loaders;
 using ToSic.Lib.Coding;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Dynamic;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Images;
@@ -21,7 +20,8 @@ public class LinkImageTestBase: TestBaseSxc
     public ImgResizeLinker GetLinker() => GetService<ImgResizeLinker>();
     public ILinkService GetLinkHelper() => GetService<ILinkService>();
 
-    public WrapObjectDynamic ToDyn(object contents) => GetService<CodeDataWrapper>().FromObject(contents, WrapperSettings.Dyn(children: false, realObjectsToo: false));
+    public WrapObjectDynamic ToDyn(object contents) => GetService<CodeDataWrapper>()
+        .FromObject(contents, WrapperSettings.Dyn(children: false, realObjectsToo: false));
 
 
     protected void TestOnLinkerAndHelper(string expected,

@@ -1,9 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Images.Internal;
+using ToSic.Testing.Shared;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;
 
-public abstract partial  class ImageServiceFormatsBase: TestBaseSxcDb
+public abstract partial  class ImageServiceFormatsBase(EavTestConfig testConfig = default) : TestBaseSxcDb(testConfig)
 {
     [DataRow("test.png")]
     [DataRow(".png")]

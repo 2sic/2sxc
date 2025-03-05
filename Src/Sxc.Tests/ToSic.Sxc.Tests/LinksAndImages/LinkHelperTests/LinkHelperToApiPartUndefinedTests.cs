@@ -1,5 +1,4 @@
-﻿using System.Collections.Specialized;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using static ToSic.Sxc.Tests.LinksAndImages.ParametersTestExtensions;
 

@@ -19,12 +19,13 @@ namespace ToSic.Dnn.Tests.ToSic.Eav.Configuration.Features_Compatibility
             sysLoader.ReloadFeatures();
         }
 
-        protected override void SetupServices(IServiceCollection services)
+        protected override IServiceCollection SetupServices(IServiceCollection services)
         {
-            base.SetupServices(services);
-            services.AddAppLoader();
+            base.SetupServices(services)
+                .AddAppLoader();
             services.TryAddTransient<IValueConverter, MockValueConverter>();
             services.TryAddTransient<IZoneMapper, MockZoneMapper>();
+            return services;
         }
 
     }

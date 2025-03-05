@@ -35,12 +35,28 @@ public class UniqueKeyTests
     [DataRow(PfxNum + "1", 1)]
     [DataRow(PfxNum + "-1", -1)]
     [DataRow(PfxNum + "17_5", 17.5)]
-    [DataRow(PfxString + "-327419862", "hello")]
-    [DataRow(PfxString + "221721854", "abcdefg")]
-    [DataRow(PfxString + "222795742", "Abcdefg")]
     // TODO: strings, chars
     public void UniqueKeyOfValues(string expected, object data, string testName = default) => 
         AreEqual(expected, TestKeyOf(data));
+
+#if NETFRAMEWORK
+    [DataRow(PfxString + "-327419862", "hello")]
+    [DataRow(PfxString + "221721854", "abcdefg")]
+    [DataRow(PfxString + "222795742", "Abcdefg")]
+    [TestMethod]
+    public void UniqueKeyOfString(string expected, object data, string testName = default) => 
+        AreEqual(expected, TestKeyOf(data));
+#else
+    // Note that .net 9.0 uses a more random hash-code which is not deterministic for strings!
+    // https://learn.microsoft.com/en-us/dotnet/api/system.string.gethashcode?view=net-9.0
+    // https://learn.microsoft.com/en-us/dotnet/framework/configure-apps/file-schema/runtime/userandomizedstringhashalgorithm-element
+    [DataRow("hello")]
+    [DataRow("abcdefg")]
+    [DataRow("Abcdefg")]
+    [TestMethod]
+    public void UniqueKeyOfString(object data, string testName = default) => 
+        AreEqual(PfxString + data.GetHashCode(), TestKeyOf(data));
+#endif
 
     [TestMethod]
     [DataRow("20230824", "2023-08-24")]

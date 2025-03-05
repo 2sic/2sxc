@@ -13,11 +13,9 @@ namespace ToSic.Dnn.Tests.ToSic.Eav.Configuration.Features_Compatibility
     // ReSharper disable once InconsistentNaming
     public class IFeaturesTests: TestBaseDiEavFullAndDb
     {
-        protected override void SetupServices(IServiceCollection services)
-        {
-            base.SetupServices(services);
-            services.AddTransient<IPlatformInfo, TestPlatformPatronPerfectionist>();
-        }
+        protected override IServiceCollection SetupServices(IServiceCollection services) =>
+            base.SetupServices(services)
+                .AddTransient<IPlatformInfo, TestPlatformPatronPerfectionist>();
 
         public IFeaturesTests() => Features = GetService<IFeaturesService>();
         internal readonly IFeaturesService Features;

@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Code.Generate.Internal;
 
@@ -34,7 +33,6 @@ internal class CSharpDataModelGenerator(CSharpDataModelsGenerator dmg, IContentT
         var fullBody =
             MainClassComment(firstProperty)
             + mainClass;
-        // + autoGenClass;
 
         var fileContents =
             dmg.CodeGenHelper.GenerateUsings(usings)
@@ -44,7 +42,7 @@ internal class CSharpDataModelGenerator(CSharpDataModelsGenerator dmg, IContentT
             + dmg.CodeGenHelper.NamespaceWrapper(Specs.DataNamespaceGenerated)
                 .ToString(autoGenClass);
 
-        return new(className + Specs.FileGeneratedSuffix, fileContents, FileIntroComment(dmg.User.Name));
+        return l.Return(new($"{className}{Specs.FileGeneratedSuffix}", fileContents, FileIntroComment(dmg.User.Name)), $"File size: {fileContents.Length}");
     }
 
     #endregion
@@ -60,7 +58,9 @@ internal class CSharpDataModelGenerator(CSharpDataModelsGenerator dmg, IContentT
             .Select(a => new
             {
                 Attribute = a,
-                Generators = GenDataProperties.Generators(dmg.CodeGenHelper).Where(p => p.ForDataType == a.Type).ToList()
+                Generators = GenDataProperties.Generators(dmg.CodeGenHelper)
+                    .Where(p => p.ForDataType == a.Type)
+                    .ToList()
             })
             .Where(a => a.Generators.Any())
             .SelectMany(set =>
@@ -71,7 +71,7 @@ internal class CSharpDataModelGenerator(CSharpDataModelsGenerator dmg, IContentT
             .ToList();
 
         if (!propsSnippets.Any())
-            return l.Return((false, null, null, null));
+            return l.Return((false, null, null, null), "no snippets found");
 
         // Detect duplicate names as this would fail
         // If we have duplicates, keep the first with a real priority
@@ -85,12 +85,16 @@ internal class CSharpDataModelGenerator(CSharpDataModelsGenerator dmg, IContentT
         foreach (var genCode in deduplicated)
             sb.AppendLine(genCode.ToString());
 
-        var usings = deduplicated.SelectMany(ps => ps.Usings)
+        var usings = deduplicated
+            .SelectMany(ps => ps.Usings)
             .Distinct()
             .OrderBy(u => u)
             .ToList();
 
-        return l.Return((true, sb.ToString(), usings, deduplicated.First().NameId));
+        l.A($"Snippets: {propsSnippets.Count}; Deduplicated: {deduplicated.Count}; Usings: {usings.Count}");
+        var properties = sb.ToString();
+
+        return l.Return((true, properties, usings, deduplicated.First().NameId), $"props string len: {properties.Length}");
     }
 
 

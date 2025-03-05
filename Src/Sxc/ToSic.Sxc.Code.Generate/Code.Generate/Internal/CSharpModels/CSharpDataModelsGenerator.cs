@@ -44,11 +44,22 @@ public class CSharpDataModelsGenerator(IUser user, IAppReaderFactory appReadFac)
             .Where(ct => !ct.HasAncestor())
             .ToList();
 
+        // Fix Bug introduced in v19.03.01 or so
+        // In that UI it accidentally created new content-types called AppResources or AppSettings
+        // In the SystemConfiguration scope. These must really be ignored.
+        // In addition, to avoid any other naming conflicts, we'll just skip all the names that were already used.
+        var typeNames = types
+            .Select(t => t.Name)
+            .ToList();
+        appConfigTypes = appConfigTypes
+            .Where(ct => !typeNames.Contains(ct.Name))
+            .ToList();
+
         types.AddRange(appConfigTypes);
 
         Specs.ExportedContentContentTypes = types;
 
-        CodeGenHelper = new(Specs);
+        CodeGenHelper = new(Specs, Log);
     }
 
 

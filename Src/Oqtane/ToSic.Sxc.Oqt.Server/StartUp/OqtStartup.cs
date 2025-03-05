@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 using Oqtane.Components;
 using Oqtane.Extensions;
 using Oqtane.Infrastructure;
@@ -126,7 +128,7 @@ public class OqtStartup : IServerStartup
         // MapWhen split the middleware pipeline into two completely separate branches
         app.MapWhen(context => IsSxcEndpoint(context.Request.Path.Value), appBuilder =>
         {
-            appBuilder.UseOqtaneMiddlewareConfiguration();
+            appBuilder.UseOqtaneMiddlewareConfiguration(Configuration);
             appBuilder.UseEndpoints(endpoints =>
             {
                 foreach (var pattern in SxcEndpointPatterns)
@@ -137,7 +139,7 @@ public class OqtStartup : IServerStartup
 
         app.MapWhen(context => IsSxcDialog(context.Request.Path.Value), appBuilder =>
         {
-            appBuilder.UseOqtaneMiddlewareConfiguration();
+            appBuilder.UseOqtaneMiddlewareConfiguration(Configuration);
             appBuilder.UseEndpoints(endpoints =>
             {
                 // Handle / Process URLs to Dialogs route for 2sxc UI
@@ -155,7 +157,7 @@ public class OqtStartup : IServerStartup
 
 public static class ApplicationBuilderExtensions
 {
-    public static IApplicationBuilder UseOqtaneMiddlewareConfiguration(this IApplicationBuilder app)
+    public static IApplicationBuilder UseOqtaneMiddlewareConfiguration(this IApplicationBuilder app, IConfigurationRoot configuration)
     {
         // Oqtane middlewares should be executed before configuration of 2sxc endpoint mappings
         // to avoid having duplicate middleware in pipeline (like we had before).
@@ -176,6 +178,13 @@ public static class ApplicationBuilderExtensions
             ServeUnknownFileTypes = true,
             OnPrepareResponse = (ctx) =>
             {
+                // static asset caching
+                var cachecontrol = configuration.GetSection("CacheControl");
+                if (!string.IsNullOrEmpty(cachecontrol.Value))
+                {
+                    ctx.Context.Response.Headers.Append(HeaderNames.CacheControl, cachecontrol.Value);
+                }
+                // CORS headers for .NET MAUI clients
                 var policy = corsPolicyProvider.GetPolicyAsync(ctx.Context, Constants.MauiCorsPolicy)
                     .ConfigureAwait(false).GetAwaiter().GetResult();
                 corsService.ApplyResult(corsService.EvaluatePolicy(ctx.Context, policy), ctx.Context.Response);

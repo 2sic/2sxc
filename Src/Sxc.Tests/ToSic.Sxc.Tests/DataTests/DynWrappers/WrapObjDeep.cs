@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Dynamic;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
@@ -24,7 +23,7 @@ public class WrapObjDeep: DynAndTypedTestsBase
             }
         };
 
-        var dynAnon = Obj2WrapObj(anon, false, false) as dynamic;
+        dynamic dynAnon = Obj2WrapObj(anon, false, false);
         AreEqual(anon.Sub, dynAnon.Sub);
     }
 
@@ -84,20 +83,20 @@ public class WrapObjDeep: DynAndTypedTestsBase
 
         // Test wrapping anonymous sub-objects only
         var msgPlus = $" - DynRead(..., {wrapChildren}, {wrapRealChildren})";
-        var dynWrapAnon = Obj2WrapObj(anon, wrapChildren, wrapRealChildren) as dynamic;
+        dynamic dynWrapAnon = Obj2WrapObj(anon, wrapChildren, wrapRealChildren);
 
         // These tests should run in all cases
-        AreNotEqual(anon, dynWrapAnon, $"wrapper should never be equal {msgPlus}");
+        AreNotEqual(anon, (object) dynWrapAnon, $"wrapper should never be equal {msgPlus}");
         AreEqual(anon, dynWrapAnon.GetContents(), $"Wrapped content should be equal {msgPlus}");
         AreEqual(anon.Arr, dynWrapAnon.Arr, $"Arrays shouldn't be re-wrapped {msgPlus}");
         AreEqual(anon.Guid, dynWrapAnon.Guid, $"Guids shouldn't be re-wrapped {msgPlus}");
 
-        if (testSet == "TF" || testSet == "TT")
+        if (testSet is "TF" or "TT")
         {
-            AreNotEqual(anon.Sub, dynWrapAnon.Sub, $"Should not be equal, as the Sub should be re-wrapped {msgPlus}");
+            AreNotEqual<object>(anon.Sub, dynWrapAnon.Sub, $"Should not be equal, as the Sub should be re-wrapped {msgPlus}");
             AreEqual(anon.Sub, dynWrapAnon.Sub.GetContents(), $"Sub should be = to unwrapped {msgPlus}");
             AreEqual(typeof(WrapObjectDynamic), dynWrapAnon.Sub.GetType(), $"type should be {nameof(WrapObjectDynamic)}");
-            AreNotEqual(anon.Sub.Sub, dynWrapAnon.Sub.Sub, $"sub-sub shouldn't be equal either, as they are still wrapped {msgPlus}");
+            AreNotEqual<object>(anon.Sub.Sub, dynWrapAnon.Sub.Sub, $"sub-sub shouldn't be equal either, as they are still wrapped {msgPlus}");
             AreEqual(anon.Sub.Sub, dynWrapAnon.Sub.Sub.GetContents(), $"sub-sub GetContents {msgPlus}");
             AreEqual(anon.Sub.Something, dynWrapAnon.sub.something, $"simple value, but case-invariant {msgPlus}");
             // added, todo
@@ -106,22 +105,22 @@ public class WrapObjDeep: DynAndTypedTestsBase
             // </added>
         }
 
-        if (testSet == "TF" || testSet == "FF" || testSet == "FT")
+        if (testSet is "TF" or "FF" or "FT")
         {
             AreEqual(anon.SubNonDynamic, dynWrapAnon.SubNonDynamic, $"real object, shouldn't be re-wrapped {msgPlus}");
         }
 
         if (testSet == "TT")
         {
-            AreNotEqual(anon.SubNonDynamic, dynWrapAnon.SubNonDynamic, $"real object, shouldn't be re-wrapped {msgPlus}");
+            AreNotEqual<object>(anon.SubNonDynamic, dynWrapAnon.SubNonDynamic, $"real object, shouldn't be re-wrapped {msgPlus}");
             AreEqual(anon.SubNonDynamic, dynWrapAnon.SubNonDynamic.GetContents(), $"real object, shouldn't be re-wrapped {msgPlus}");
         }
 
 
-        if (testSet == "FT" || testSet == "FF")
+        if (testSet is "FT" or "FF")
         {
             AreEqual(anon.Sub, dynWrapAnon.Sub, $"Should not be equal, as the Sub should be re-wrapped {msgPlus}");
-            AreNotEqual(typeof(WrapObjectDynamic), dynWrapAnon.Sub.GetType(), $"type should be {nameof(WrapObjectDynamic)}");
+            AreNotEqual<object>(typeof(WrapObjectDynamic), dynWrapAnon.Sub.GetType(), $"type should be {nameof(WrapObjectDynamic)}");
             AreEqual(anon.Sub.Sub, dynWrapAnon.Sub.Sub, $"sub-sub shouldn't be equal either, as they are still wrapped {msgPlus}");
         }
 

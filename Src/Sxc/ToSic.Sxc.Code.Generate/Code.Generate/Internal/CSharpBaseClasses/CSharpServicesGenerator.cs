@@ -41,7 +41,7 @@ public class CSharpServicesGenerator(IUser user, IAppReaderFactory appReadFac)
 
     internal GeneratedFile CSharpServiceBase(CSharpCodeSpecs cSharpSpecs, string className, string baseClass, string nsAndPath)
     {
-        var (_, appSnip, allUsings) = BaseClassHelper.BaseClassTools(cSharpSpecs);
+        var (_, appSnip, allUsings) = BaseClassHelper.BaseClassTools(cSharpSpecs, Log);
 
         var file = new GeneratedFile
         {

@@ -52,7 +52,7 @@ public class CodeDataWrapper(
         if (data is string || data.GetType().IsValueType) return data;
 
         // Guids & DateTimes are objects, but very simple, and should be returned for normal use
-        if (data is Guid || data is DateTime) return data;
+        if (data is Guid or DateTime) return data;
 
         // 2023-08-18 2dm DISABLED - I'm pretty sure that json should never be a source of this
         // as I believe it's only used in non-json wrappers
@@ -63,9 +63,9 @@ public class CodeDataWrapper(
         // Check if the original or result already supports navigation... - which is the case if it's a DynamicJacket now
         switch (result)
         {
-            case IPropertyLookup _:
-            case ISxcDynamicObject _:
-            case DynamicObject _:
+            case IPropertyLookup:
+            case ISxcDynamicObject:
+            case DynamicObject:
                 return result;
         }
 
@@ -79,7 +79,7 @@ public class CodeDataWrapper(
         var wrap = wrapNonAnon || data.IsAnonymous();
         return wrap
             ? settings.WrapToDynamic 
-                ? FromObject(data, settings) as object
+                ? FromObject(data, settings)
                 : TypedFromObject(data, settings)
             : data;
     }

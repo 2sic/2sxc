@@ -4,10 +4,9 @@ using System.Linq;
 using ToSic.Eav.Core.Tests.LookUp;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSources;
 using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.DataSources.Internal;
+using ToSic.Testing.Shared;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Tests.DataSources;
@@ -16,11 +15,11 @@ namespace ToSic.Sxc.Tests.DataSources;
 public class UsersDataSourceTests : TestBaseSxcDb
 {
     // Start the test with a platform-info that has a patron
-    protected override void SetupServices(IServiceCollection services)
-    {
-        base.SetupServices(services);
-        services.AddTransient<IUsersProvider, MockUsers>();
-    }
+    protected override IServiceCollection SetupServices(IServiceCollection services) =>
+        base.SetupServices(services)
+            .AddTransient<IUsersProvider, MockUsers>();
+
+    private DataSourcesTstBuilder DsSvc => field ??= GetService<DataSourcesTstBuilder>();
 
 
     [TestMethod()]
@@ -205,7 +204,7 @@ public class UsersDataSourceTests : TestBaseSxcDb
     }
 
     private Users GenerateUsersDataSourceDataSource(object options = default)
-        => CreateDataSourceNew<Users>(new DataSourceOptionConverter()
+        => DsSvc.CreateDataSourceNew<Users>(new DataSourceOptionConverter()
             .Create(new DataSourceOptions
             {
                 LookUp = new LookUpTestData(GetService<DataBuilder>()).AppSetAndRes(),

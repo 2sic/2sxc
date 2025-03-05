@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Net.Mail;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 

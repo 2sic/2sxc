@@ -108,7 +108,7 @@ public class ParametersTests
 
     [TestMethod]
     public void AddStringNewMultipleSameKey()
-        => ModifyDefAndVerify(3, Id27SortDescending + "&test=wonderful&test=awesome",
+        => ModifyDefAndVerify(3, Id27SortDescending + "&test=awesome&test=wonderful",
             p => p.TestAdd("test", "wonderful").TestAdd("Test", "awesome"));
 
 
@@ -206,7 +206,7 @@ public class ParametersTests
     {
         var p = ParametersId27SortDescending().TestAdd("id", 42).TestAdd("id", "hello")
             .TestRemove("id", "42");
-        AreEqual("sort=descending&id=27&id=hello", p.ToString());
+        AreEqual("id=27&id=hello&sort=descending", p.ToString());
     }
 
     [TestMethod]
@@ -263,7 +263,7 @@ public class ParametersTests
 
     [TestMethod]
     [DataRow("id=42&sort=descending", "id", "42", "should replace")]
-    [DataRow(Id27SortDescending + "&new=hello", "new", "hello", "should append")]
+    [DataRow("id=27&new=hello&sort=descending", "new", "hello", "should append")]
     [DataRow("sort=descending", "id", "27", "should remove")]
     [DataRow("id&sort=descending", "id", "", "empty value should remove")]
     [DataRow("id&sort=descending", "id", null, "null should ???")]
@@ -292,7 +292,7 @@ public class ParametersTests
     [TestMethod]
     [DataRow("id=42", "id=42", "id", "should preserve")]
     [DataRow("id=42", "id=42&sort=descending", "id", "should preserve id only")]
-    [DataRow("id=42&id=27", "id=42&id=27&sort=descending", "id", "should preserve id only")]
+    [DataRow("id=27&id=42", "id=42&id=27&sort=descending", "id", "should preserve id only")]
     [DataRow("sort=descending", "id=42&sort=descending", "sort", "should preserve id only")]
     public void Filter(string expected, string initial, string names, string testNotes = default)
     {

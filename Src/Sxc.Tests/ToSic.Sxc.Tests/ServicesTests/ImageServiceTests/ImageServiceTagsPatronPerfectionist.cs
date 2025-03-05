@@ -16,11 +16,9 @@ public class ImageServiceTagsPatronPerfectionist: ImageServiceTagsBase
     /// <summary>
     /// Start the test with a platform-info that has WebP support
     /// </summary>
-    protected override void SetupServices(IServiceCollection services)
-    {
-        base.SetupServices(services);
-        services.AddTransient<IPlatformInfo, TestPlatformPatronPerfectionist>();
-    }
+    protected override IServiceCollection SetupServices(IServiceCollection services) =>
+        base.SetupServices(services)
+            .AddTransient<IPlatformInfo, TestPlatformPatronPerfectionist>();
 
     protected override bool TestModeImg => false;
 
@@ -29,7 +27,7 @@ public class ImageServiceTagsPatronPerfectionist: ImageServiceTagsBase
     [DataRow(SrcWebP12 + SrcJpg12, SrcSet12, "With Src Set 1,2")]
     [DataTestMethod]
     public void SourceTagsMultiTests(string expected, string variants, string name) 
-        => SourceTagsMultiTest(expected, variants, name);
+        => BatchTestManySrcSets(expected, variants, name);
 
     [DataRow(SrcWebPNone + SrcJpgNone, SrcSetNone, true, "No Src Set, in-pic")]
     [DataRow(SrcWebPNone + SrcJpgNone, SrcSetNone, false, "No Src Set, in-setting")]

@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;

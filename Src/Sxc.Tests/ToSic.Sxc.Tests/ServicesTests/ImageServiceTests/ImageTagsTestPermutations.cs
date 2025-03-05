@@ -33,20 +33,16 @@ public class ImageTagsTestPermutations
         public string Variants;
 
         public Recipe SrcSetRule => Variants == null ? null : new Recipe(variants: Variants);
+
+        public override string ToString() => $"Width: {Width}, Height: {Height}, Variants: {Variants}, SrcSetRule: {SrcSetRule}";
     }
 
-    public class TestParamSet
+    public class TestParamSet(string name, bool useSet, bool usePic, bool putSrcOnSet, string variants)
     {
-        public TestParamSet(string name, bool useSet, bool usePic, bool putSrcOnSet, string variants)
-        {
-            Set = new(useSet, useSet, putSrcOnSet ? variants : null);
-            Pic = new(usePic, usePic, putSrcOnSet ? null : variants);
-            Name = name + $" (Settings on Pic: {usePic}, On Set: {useSet}, srcset: '{variants}' - on "
-                        + (putSrcOnSet ? "set" : "pic");
-        }
-        public TestParams Set;
-        public TestParams Pic;
-        public string Name;
+        public TestParams Set = new(useSet, useSet, putSrcOnSet ? variants : null);
+        public TestParams Pic = new(usePic, usePic, putSrcOnSet ? null : variants);
+        public string Name = name + $" (Settings on Pic: {usePic}, On Set: {useSet}, srcset: '{variants}' - on "
+                                  + (putSrcOnSet ? "set" : "pic");
     }
 
 }

@@ -1,9 +1,11 @@
 ﻿using System.Text;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Code.Generate.Internal;
 
-internal class CSharpGeneratorHelper(CSharpCodeSpecs specs)
+internal class CSharpGeneratorHelper(CSharpCodeSpecs specs, ILog parentLog): HelperBase(parentLog, "Cde.GenHlp")
 {
     public CSharpCodeSpecs Specs => specs;
 
@@ -11,7 +13,8 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs)
 
     public void AddLines(StringBuilder sb, int lines)
     {
-        for (var i = 0; i < lines; i++) sb.AppendLine();
+        for (var i = 0; i < lines; i++)
+            sb.AppendLine();
     }
 
     public string CodeComment(int tabs, string comment, int padBefore = 1, int padAfter = default, int altGap = 1)
@@ -19,6 +22,7 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs)
 
     public string CodeComment(int tabs, string[] comment, int padBefore = 1, int padAfter = default, int altGap = 1)
     {
+        var l = Log.Fn<string>();
         // If nothing, return empty lines as much as altGap
         if (!comment.SafeAny())
             return new('\n', altGap);
@@ -27,10 +31,11 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs)
         var sb = new StringBuilder();
         AddLines(sb, padBefore);
         var indent = Indent(tabs);
-        foreach (var l in comment) sb.AppendLine($"{indent}// {l}");
+        foreach (var c in comment)
+            sb.AppendLine($"{indent}// {c}");
         AddLines(sb, padAfter);
 
-        return sb.ToString();
+        return l.Return(sb.ToString());
     }
 
     public string XmlComment(int tabs, string summary = default, string remarks = default, string returns = default, int padBefore = 1, int padAfter = default,
@@ -39,6 +44,7 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs)
 
     public string XmlComment(int tabs, string[] summary = default, string[] remarks = default, string[] returns = default, int padBefore = 1, int padAfter = default, int altGap = 1)
     {
+        var l = Log.Fn<string>();
         // 1. If nothing, return empty lines as much as altGap
         // first merge all the comments to see if we have any
         var merged = (summary ?? []).Concat(returns ?? []).ToList();
@@ -51,19 +57,22 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs)
 
         // Summary
         var summaryComment = XmlCommentOne(indent, "summary", summary);
-        if (summaryComment.HasValue()) sb.Append(summaryComment);
+        if (summaryComment.HasValue())
+            sb.Append(summaryComment);
 
         // Remarks
         var remarksComment = XmlCommentOne(indent, "remarks", remarks);
-        if (remarksComment.HasValue()) sb.Append(remarksComment);
+        if (remarksComment.HasValue())
+            sb.Append(remarksComment);
 
         // Returns
         var returnsComment = XmlCommentOne(indent, "returns", returns);
-        if (returnsComment.HasValue()) sb.Append(returnsComment);
+        if (returnsComment.HasValue())
+            sb.Append(returnsComment);
 
         AddLines(sb, padAfter);
 
-        return sb.ToString();
+        return l.Return(sb.ToString());
     }
 
     private static string XmlCommentOne(string indent, string tagName, string[] comments = default)
@@ -97,11 +106,13 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs)
 
     internal CodeFragment NamespaceWrapper(string @namespace)
     {
-        return new("namespace", $"{Indent(specs.TabsNamespace)}namespace {@namespace}" + "\n{", closing: "}");
+        var l = Log.Fn<CodeFragment>($"{nameof(@namespace)}: {@namespace}");
+        return l.Return(new("namespace", $"{Indent(specs.TabsNamespace)}namespace {@namespace}" + "\n{", closing: "}"));
     }
 
     internal CodeFragment ClassWrapper(string className, bool isAbstract, bool isPartial, string inherits)
     {
+        var l = Log.Fn<CodeFragment>($"{nameof(className)}: {className}; {nameof(isAbstract)}: {isAbstract}; {nameof(isPartial)}: {isPartial}; {nameof(inherits)}: {inherits}");
         var indent = Indent(specs.TabsClass);
         var specifiers = (isAbstract ? "abstract " : "") + (isPartial ? "partial " : "");
         inherits = inherits.NullOrGetWith(i => $": {i}");
@@ -110,7 +121,7 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs)
                       {{indent}}public {{specifiers}}class {{className}}{{inherits}}
                       {{indent}}{
                       """;
-        return new("class", start, closing: $"{indent}}}\n");
+        return l.Return(new("class", start, closing: $"{indent}}}\n"));
     }
 
     public static string GeneratorHeader(IFileGenerator generator, CSharpCodeSpecs specs, string userName) =>

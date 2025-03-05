@@ -1,18 +1,19 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Eav.Context;
+using ToSic.Testing.Shared;
 using ToSic.Testing.Shared.Platforms;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;
 
 [TestClass]
-public class ImageServiceFormatsNoPatron: ImageServiceFormatsBase
+public class ImageServiceFormatsNoPatron(): ImageServiceFormatsBase(EavTestConfig.ScenarioBasic)
 {
     // Start the test with a platform-info that has no patron
-    protected override void SetupServices(IServiceCollection services)
+    protected override IServiceCollection SetupServices(IServiceCollection services)
     {
-        base.SetupServices(services);
-        services.AddTransient<IPlatformInfo, TestPlatformNotPatron>();
+        return base.SetupServices(services)
+            .AddTransient<IPlatformInfo, TestPlatformNotPatron>();
     }
 
 

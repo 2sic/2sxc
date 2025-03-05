@@ -1,12 +1,13 @@
 ﻿using System.Linq;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
+using ToSic.Testing.Shared;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using static ToSic.Testing.Shared.TestHelpers;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;
 
-public class ImageServiceTagsImgBase: ImageServiceTagsBase
+public class ImageServiceTagsImgBase(EavTestConfig testConfig = default) : ImageServiceTagsBase(testConfig)
 {
 
     protected void ImageTagMultiTest(string expected, string variants, object factor, string testName)

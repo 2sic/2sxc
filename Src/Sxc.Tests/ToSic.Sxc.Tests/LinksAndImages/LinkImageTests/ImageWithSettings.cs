@@ -5,18 +5,30 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests;
 [TestClass]
 public class ImageWithSettings: LinkImageTestBase
 {
+    [DataRow(true)]
+    //[DataRow(false)]
     [TestMethod]
-    public void BasicHWandAR()
+    public void BasicHWandAR(bool makeDyn)
     {
-        var settings = ToDyn(new { Width = 200, Height = 300 });
-        TestOnLinkerAndHelper("test.jpg?w=200&h=300", "test.jpg", settings);
+        var raw = new { Width = 200, Height = 300 };
+        TestOnLinkerAndHelper("test.jpg?w=200&h=300", "test.jpg", makeDyn ? ToDyn(raw) : raw);
 
-        var settings2 = ToDyn(new { Width = 200, AspectRatio = 1 });
-        TestOnLinkerAndHelper("test.png?w=200&h=200", "test.png", settings2);
+        var raw2 = new { Width = 200, Height = 300, AspectRatio = 1 };
+        TestOnLinkerAndHelper("test.png?w=200&h=200", "test.png", makeDyn ? ToDyn(raw2) : raw2);
 
         // if h & ar are given, ar should take precedence
-        var settings3 = ToDyn(new { Width = 200, Height = 300, AspectRatio = 1 });
-        TestOnLinkerAndHelper("test.png?w=200&h=200", "test.png", settings3);
+        var raw3 = new { Width = 200, Height = 300, AspectRatio = 1 };
+        TestOnLinkerAndHelper("test.png?w=200&h=200", "test.png", makeDyn ? ToDyn(raw3) : raw3);
+    }
+
+    [DataRow(true)]
+    [DataRow(false)]
+    [TestMethod]
+    public void BasicFormat(bool makeDyn)
+    {
+        var raw = new { Format = "webp" };
+        // TestOnLinkerAndHelper("test.jpg?format=webp", "test.jpg", format: "webp");
+        TestOnLinkerAndHelper("test.jpg?format=webp", "test.jpg", makeDyn ? ToDyn(raw) : raw);
     }
 
 
