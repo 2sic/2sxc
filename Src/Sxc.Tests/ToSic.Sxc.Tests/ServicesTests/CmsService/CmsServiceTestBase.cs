@@ -54,7 +54,7 @@ public class CmsServiceTestBase : TestBaseSxcDb
             {SomeTextField, text},
             {SomeHtmlField, html}
         };
-        return GetService<DataBuilder>().TestCreate(appId: AppId, entityId: 1, contentType: contentType, values: values, titleField: SomeTextField);
+        return GetService<DataBuilder>().CreateEntityTac(appId: AppId, entityId: 1, contentType: contentType, values: values, titleField: SomeTextField);
     }
 
     public DynamicEntity DynEntStrict(IEntity entity = null) => Cdf.AsDynamic(entity, true);

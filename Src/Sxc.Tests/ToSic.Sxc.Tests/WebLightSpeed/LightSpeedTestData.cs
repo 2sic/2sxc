@@ -16,7 +16,7 @@ public class LightSpeedTestData(DataBuilder builder): TestBaseEavCore
     /// <summary>
     /// Basic LightSpeed Content Type with Url Fields only for testing
     /// </summary>
-    private IContentType LsCtUrlFields => builder.ContentType.TestCreate(appId: AppId, name: LightSpeedDecorator.NiceName, attributes:
+    private IContentType LsCtUrlFields => builder.ContentType.CreateContentTypeTac(appId: AppId, name: LightSpeedDecorator.NiceName, attributes:
         [
             SampleData.ContentTypeAttribute(builder, AppId, nameof(LightSpeedDecorator.Title), DataTypes.Boolean, true),
             SampleData.ContentTypeAttribute(builder, AppId, nameof(LightSpeedDecorator.IsEnabled), DataTypes.Boolean),
@@ -38,7 +38,7 @@ public class LightSpeedTestData(DataBuilder builder): TestBaseEavCore
             {nameof(LightSpeedDecorator.UrlParameterNames), names},
             {nameof(LightSpeedDecorator.UrlParametersOthersDisableCache), othersDisableCache }
         };
-        var ent = builder.TestCreate(appId: AppId, entityId: 1, contentType: LsCtUrlFields, values: valDaniel, titleField: nameof(LightSpeedDecorator.Title));
+        var ent = builder.CreateEntityTac(appId: AppId, entityId: 1, contentType: LsCtUrlFields, values: valDaniel, titleField: nameof(LightSpeedDecorator.Title));
         return ent;
     }
 
