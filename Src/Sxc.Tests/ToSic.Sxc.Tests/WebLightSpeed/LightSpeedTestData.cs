@@ -17,12 +17,12 @@ public class LightSpeedTestData(DataBuilder builder): TestBaseEavCore
     /// </summary>
     private IContentType LsCtUrlFields => builder.ContentType.CreateContentTypeTac(appId: AppId, name: LightSpeedDecorator.NiceName, attributes:
         [
-            SampleData.ContentTypeAttribute(builder, AppId, nameof(LightSpeedDecorator.Title), DataTypes.Boolean, true),
-            SampleData.ContentTypeAttribute(builder, AppId, nameof(LightSpeedDecorator.IsEnabled), DataTypes.Boolean),
-            SampleData.ContentTypeAttribute(builder, AppId, nameof(LightSpeedDecorator.ByUrlParameters), DataTypes.Boolean),
-            SampleData.ContentTypeAttribute(builder, AppId, nameof(LightSpeedDecorator.UrlParametersCaseSensitive), DataTypes.Boolean),
-            SampleData.ContentTypeAttribute(builder, AppId, nameof(LightSpeedDecorator.UrlParameterNames), DataTypes.String),
-            SampleData.ContentTypeAttribute(builder, AppId, nameof(LightSpeedDecorator.UrlParametersOthersDisableCache), DataTypes.Boolean),
+            builder.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.Title), DataTypes.Boolean, true),
+            builder.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.IsEnabled), DataTypes.Boolean),
+            builder.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.ByUrlParameters), DataTypes.Boolean),
+            builder.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.UrlParametersCaseSensitive), DataTypes.Boolean),
+            builder.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.UrlParameterNames), DataTypes.String),
+            builder.ContentTypeAttributeTac(AppId, nameof(LightSpeedDecorator.UrlParametersOthersDisableCache), DataTypes.Boolean),
         ]
     );
 

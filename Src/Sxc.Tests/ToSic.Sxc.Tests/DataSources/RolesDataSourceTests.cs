@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
-using ToSic.Eav.Core.Tests.LookUp;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.LookUp;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Testing.Shared;
