@@ -3,10 +3,10 @@ using ToSic.Sxc.Oqt.Server.Plumbing;
 
 namespace ToSic.Eav.Security.Encryption.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class AesCryptographyServiceTests
     {
-        [TestMethod()]
+        [TestMethod]
         [Ignore]
         public void DecryptTest()
         {
