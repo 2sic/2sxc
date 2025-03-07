@@ -4,12 +4,12 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Mocks;
 using ToSic.Eav.Integration;
 using ToSic.Eav.Internal.Loaders;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
-using ToSic.Testing.Shared.Mocks;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
 namespace ToSic.Sxc.Tests.ServicesTests.CmsService;
