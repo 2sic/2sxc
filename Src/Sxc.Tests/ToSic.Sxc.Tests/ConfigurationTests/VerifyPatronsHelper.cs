@@ -3,7 +3,6 @@ using ToSic.Eav.Code;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Internal.Licenses;
 using ToSic.Sxc.Configuration.Internal;
-using ToSic.Testing.Shared;
 
 namespace ToSic.Sxc.Tests.ConfigurationTests;
 

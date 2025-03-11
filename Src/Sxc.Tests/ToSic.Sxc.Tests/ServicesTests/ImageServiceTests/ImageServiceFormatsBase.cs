@@ -5,7 +5,7 @@ using ToSic.Testing.Shared;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;
 
-public abstract partial  class ImageServiceFormatsBase(EavTestConfig testConfig = default) : TestBaseSxcDb(testConfig)
+public abstract partial  class ImageServiceFormatsBase(TestScenario testScenario = default) : TestBaseSxcDb(testScenario)
 {
     [DataRow("test.png")]
     [DataRow(".png")]

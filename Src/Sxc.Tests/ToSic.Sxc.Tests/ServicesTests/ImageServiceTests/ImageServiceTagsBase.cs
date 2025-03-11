@@ -11,7 +11,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;
 
-public abstract class ImageServiceTagsBase(EavTestConfig testConfig = default) : TestBaseSxcDb(testConfig)
+public abstract class ImageServiceTagsBase(TestScenario testScenario = default) : TestBaseSxcDb(testScenario)
 {
     protected const string ImgUrl = "/abc/def/test.jpg";
     protected const string Img120x24 = ImgUrl + "?w=120&amp;h=24";

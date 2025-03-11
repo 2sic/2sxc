@@ -6,7 +6,6 @@ using ToSic.Eav.Testing;
 using ToSic.Sxc.Services;
 using ToSic.Testing.Shared.Platforms;
 using ToSic.Sxc.Configuration.Internal;
-using ToSic.Testing.Shared;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;
 
@@ -14,7 +13,7 @@ namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;
 /// Run tests with Patrons not enabled.
 /// </summary>
 [TestClass]
-public class ImageServiceTagsNoPatron() : ImageServiceTagsBase(EavTestConfig.ScenarioBasic)
+public class ImageServiceTagsNoPatron() : ImageServiceTagsBase(new ScenarioBasic())
 {
     protected override IServiceCollection SetupServices(IServiceCollection services) =>
         base.SetupServices(services)

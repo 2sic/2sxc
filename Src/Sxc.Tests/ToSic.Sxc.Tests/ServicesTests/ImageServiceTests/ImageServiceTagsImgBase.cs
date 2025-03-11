@@ -8,7 +8,7 @@ using static ToSic.Testing.Shared.TestHelpers;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;
 
-public class ImageServiceTagsImgBase(EavTestConfig testConfig = default) : ImageServiceTagsBase(testConfig)
+public class ImageServiceTagsImgBase(TestScenario testScenario = default) : ImageServiceTagsBase(testScenario)
 {
 
     protected void ImageTagMultiTest(string expected, string variants, object factor, string testName)

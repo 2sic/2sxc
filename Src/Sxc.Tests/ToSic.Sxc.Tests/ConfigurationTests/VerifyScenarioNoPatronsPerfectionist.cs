@@ -1,14 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Context;
-using ToSic.Eav.Testing;
-using ToSic.Testing.Shared;
 using ToSic.Testing.Shared.Platforms;
 
 namespace ToSic.Sxc.Tests.ConfigurationTests;
 
 [TestClass]
-public class VerifyScenarioNoPatronsPerfectionist(): TestBaseSxcDb(EavTestConfig.ScenarioBasic)
+public class VerifyScenarioNoPatronsPerfectionist(): TestBaseSxcDb(new ScenarioBasic())
 {
     // Start the test with a platform-info that has a patron
     protected override IServiceCollection SetupServices(IServiceCollection services) =>
