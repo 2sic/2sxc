@@ -137,6 +137,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.StartupTests", ".
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Persistence.Efc.Tests", "..\..\eav-server\ToSic.Eav.Persistence.Efc.Tests\ToSic.Eav.Persistence.Efc.Tests.csproj", "{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Repository.Efc.Tests19", "..\..\eav-server\ToSic.Eav.Repository.Efc.Tests19\ToSic.Eav.Repository.Efc.Tests19.csproj", "{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1334,6 +1336,30 @@ Global
 		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Testing|Windows-x64.Build.0 = Debug|Any CPU
 		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Testing|Windows-x86.ActiveCfg = Debug|Any CPU
 		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Testing|Windows-x86.Build.0 = Debug|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Debug|DNN.ActiveCfg = Debug|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Debug|DNN.Build.0 = Debug|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Debug|Windows-x64.Build.0 = Debug|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Release|DNN.ActiveCfg = Release|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Release|DNN.Build.0 = Release|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Release|Windows-x64.ActiveCfg = Release|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Release|Windows-x64.Build.0 = Release|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Testing|DNN.ActiveCfg = Debug|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Testing|DNN.Build.0 = Debug|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Testing|Windows-x64.ActiveCfg = Debug|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Testing|Windows-x64.Build.0 = Debug|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Testing|Windows-x86.ActiveCfg = Debug|Any CPU
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8}.Testing|Windows-x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1391,6 +1417,7 @@ Global
 		{F62B6E09-D2AD-2612-3005-0B117312B8FC} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
 		{8FA5D0CF-619F-4B2A-9BA7-0124B2C5F325} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
 		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
+		{C11562DC-0FC1-4502-9CC1-C6B5DF2FEBB8} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
