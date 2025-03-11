@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Eav.Core", "..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj", "{82F94588-269B-4CDD-98D1-D5CB14C39090}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.DataSources.Tests", "..\..\eav-server\ToSic.Eav.DataSources.Tests\ToSic.Eav.DataSources.Tests.csproj", "{C212A78C-25BB-4A77-AFBB-B5939352CE36}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Eav.Apps", "..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj", "{FA1B4495-6B85-400F-A5E3-0E292CCBFAE2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Persistence.Efc.Tests", "..\..\eav-server\ToSic.Eav.Persistence.Efc.Tests\ToSic.Eav.Persistence.Efc.Tests.csproj", "{EB8491A7-4147-4A18-AC74-CD1BE957FF48}"
@@ -179,25 +177,6 @@ Global
 		{82F94588-269B-4CDD-98D1-D5CB14C39090}.Testing|Windows-x64.Build.0 = Dbg Testing|Any CPU
 		{82F94588-269B-4CDD-98D1-D5CB14C39090}.Testing|Windows-x86.ActiveCfg = Dbg Testing|Any CPU
 		{82F94588-269B-4CDD-98D1-D5CB14C39090}.Testing|Windows-x86.Build.0 = Dbg Testing|Any CPU
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36}.Debug|DNN.ActiveCfg = Debug|Any CPU
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36}.Debug|Windows-x64.Build.0 = Debug|Any CPU
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36}.Debug|Windows-x86.Build.0 = Debug|Any CPU
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36}.Release|DNN.ActiveCfg = Release|Any CPU
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36}.Release|Windows-x64.ActiveCfg = Release|Any CPU
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36}.Release|Windows-x86.ActiveCfg = Release|Any CPU
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36}.Release|Windows-x86.Build.0 = Release|Any CPU
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36}.Testing|Any CPU.Build.0 = Debug|Any CPU
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36}.Testing|DNN.ActiveCfg = Dbg Testing|Any CPU
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36}.Testing|DNN.Build.0 = Dbg Testing|Any CPU
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36}.Testing|Windows-x64.ActiveCfg = Dbg Testing|Any CPU
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36}.Testing|Windows-x64.Build.0 = Dbg Testing|Any CPU
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36}.Testing|Windows-x86.ActiveCfg = Dbg Testing|Any CPU
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36}.Testing|Windows-x86.Build.0 = Dbg Testing|Any CPU
 		{FA1B4495-6B85-400F-A5E3-0E292CCBFAE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FA1B4495-6B85-400F-A5E3-0E292CCBFAE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA1B4495-6B85-400F-A5E3-0E292CCBFAE2}.Debug|DNN.ActiveCfg = Debug|Any CPU
@@ -1356,7 +1335,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{82F94588-269B-4CDD-98D1-D5CB14C39090} = {2DBCC960-1C0B-494F-9E21-8707A1D344C3}
-		{C212A78C-25BB-4A77-AFBB-B5939352CE36} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
 		{FA1B4495-6B85-400F-A5E3-0E292CCBFAE2} = {2DBCC960-1C0B-494F-9E21-8707A1D344C3}
 		{EB8491A7-4147-4A18-AC74-CD1BE957FF48} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
 		{8398FE44-7164-48CB-96CF-74BA9C270BD2} = {82831295-FA89-4F5A-9420-DB6E15A8AD99}
