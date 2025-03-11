@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Eav.Core", "..\..\eav
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Eav.Apps", "..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj", "{FA1B4495-6B85-400F-A5E3-0E292CCBFAE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Persistence.Efc.Tests", "..\..\eav-server\ToSic.Eav.Persistence.Efc.Tests\ToSic.Eav.Persistence.Efc.Tests.csproj", "{EB8491A7-4147-4A18-AC74-CD1BE957FF48}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Dnn.WebApi", "Dnn\ToSic.Sxc.Dnn.WebApi\ToSic.Sxc.Dnn.WebApi.csproj", "{8398FE44-7164-48CB-96CF-74BA9C270BD2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Dnn.Razor", "Dnn\ToSic.Sxc.Dnn.Razor\ToSic.Sxc.Dnn.Razor.csproj", "{78A558AF-F274-4E3C-95FE-8DE9226E0EBC}"
@@ -137,6 +135,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Core.TestHelpers"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.StartupTests", "..\..\eav-server\ToSic.Eav.StartupTests\ToSic.Eav.StartupTests.csproj", "{8FA5D0CF-619F-4B2A-9BA7-0124B2C5F325}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Persistence.Efc.Tests", "..\..\eav-server\ToSic.Eav.Persistence.Efc.Tests\ToSic.Eav.Persistence.Efc.Tests.csproj", "{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -201,25 +201,6 @@ Global
 		{FA1B4495-6B85-400F-A5E3-0E292CCBFAE2}.Testing|Windows-x64.Build.0 = Dbg Testing|Any CPU
 		{FA1B4495-6B85-400F-A5E3-0E292CCBFAE2}.Testing|Windows-x86.ActiveCfg = Dbg Testing|Any CPU
 		{FA1B4495-6B85-400F-A5E3-0E292CCBFAE2}.Testing|Windows-x86.Build.0 = Dbg Testing|Any CPU
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48}.Debug|DNN.ActiveCfg = Debug|Any CPU
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48}.Debug|Windows-x64.Build.0 = Debug|Any CPU
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48}.Debug|Windows-x86.Build.0 = Debug|Any CPU
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48}.Release|DNN.ActiveCfg = Release|Any CPU
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48}.Release|Windows-x64.ActiveCfg = Release|Any CPU
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48}.Release|Windows-x86.ActiveCfg = Release|Any CPU
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48}.Release|Windows-x86.Build.0 = Release|Any CPU
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48}.Testing|Any CPU.Build.0 = Debug|Any CPU
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48}.Testing|DNN.ActiveCfg = Dbg Testing|Any CPU
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48}.Testing|DNN.Build.0 = Dbg Testing|Any CPU
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48}.Testing|Windows-x64.ActiveCfg = Dbg Testing|Any CPU
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48}.Testing|Windows-x64.Build.0 = Dbg Testing|Any CPU
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48}.Testing|Windows-x86.ActiveCfg = Dbg Testing|Any CPU
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48}.Testing|Windows-x86.Build.0 = Dbg Testing|Any CPU
 		{8398FE44-7164-48CB-96CF-74BA9C270BD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8398FE44-7164-48CB-96CF-74BA9C270BD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8398FE44-7164-48CB-96CF-74BA9C270BD2}.Debug|DNN.ActiveCfg = Debug|Any CPU
@@ -1329,6 +1310,30 @@ Global
 		{8FA5D0CF-619F-4B2A-9BA7-0124B2C5F325}.Testing|Windows-x64.Build.0 = Debug|Any CPU
 		{8FA5D0CF-619F-4B2A-9BA7-0124B2C5F325}.Testing|Windows-x86.ActiveCfg = Debug|Any CPU
 		{8FA5D0CF-619F-4B2A-9BA7-0124B2C5F325}.Testing|Windows-x86.Build.0 = Debug|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Debug|DNN.ActiveCfg = Debug|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Debug|DNN.Build.0 = Debug|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Debug|Windows-x64.Build.0 = Debug|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Release|DNN.ActiveCfg = Release|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Release|DNN.Build.0 = Release|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Release|Windows-x64.ActiveCfg = Release|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Release|Windows-x64.Build.0 = Release|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Testing|DNN.ActiveCfg = Debug|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Testing|DNN.Build.0 = Debug|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Testing|Windows-x64.ActiveCfg = Debug|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Testing|Windows-x64.Build.0 = Debug|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Testing|Windows-x86.ActiveCfg = Debug|Any CPU
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F}.Testing|Windows-x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1336,7 +1341,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{82F94588-269B-4CDD-98D1-D5CB14C39090} = {2DBCC960-1C0B-494F-9E21-8707A1D344C3}
 		{FA1B4495-6B85-400F-A5E3-0E292CCBFAE2} = {2DBCC960-1C0B-494F-9E21-8707A1D344C3}
-		{EB8491A7-4147-4A18-AC74-CD1BE957FF48} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
 		{8398FE44-7164-48CB-96CF-74BA9C270BD2} = {82831295-FA89-4F5A-9420-DB6E15A8AD99}
 		{78A558AF-F274-4E3C-95FE-8DE9226E0EBC} = {82831295-FA89-4F5A-9420-DB6E15A8AD99}
 		{D4250011-B9BE-4326-9736-4F0122C79802} = {82831295-FA89-4F5A-9420-DB6E15A8AD99}
@@ -1386,6 +1390,7 @@ Global
 		{233738E3-515C-4EAD-BA80-D649BEF43255} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
 		{F62B6E09-D2AD-2612-3005-0B117312B8FC} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
 		{8FA5D0CF-619F-4B2A-9BA7-0124B2C5F325} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
+		{DA2CF8DA-BD16-825E-CA43-EF69F2CBE95F} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
