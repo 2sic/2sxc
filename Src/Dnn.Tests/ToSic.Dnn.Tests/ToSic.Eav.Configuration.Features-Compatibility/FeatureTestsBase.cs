@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Apps.Tests.Mocks;
+using ToSic.Eav.Apps.Mocks;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Mocks;
 using ToSic.Eav.Internal.Loaders;
