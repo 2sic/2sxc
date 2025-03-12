@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps.TestsHelpers\ToSic.Eav.Apps.TestsHelpers.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps.TestsHelpers\ToSic.Eav.Apps.TestHelpers.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core.TestHelpers\ToSic.Eav.Core.TestHelpers.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj" />
