@@ -139,6 +139,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Apps.TestHelpers"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Apps.Tests", "..\..\eav-server\ToSic.Eav.Apps.Tests\ToSic.Eav.Apps.Tests.csproj", "{F2582791-2A07-0F5F-836F-AA977F7A4169}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.ImportExport.Tests19", "..\..\eav-server\ToSic.Eav.ImportExport.Tests19\ToSic.Eav.ImportExport.Tests19.csproj", "{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1364,6 +1366,29 @@ Global
 		{F2582791-2A07-0F5F-836F-AA977F7A4169}.Testing|Windows-x64.Build.0 = Debug|Any CPU
 		{F2582791-2A07-0F5F-836F-AA977F7A4169}.Testing|Windows-x86.ActiveCfg = Debug|Any CPU
 		{F2582791-2A07-0F5F-836F-AA977F7A4169}.Testing|Windows-x86.Build.0 = Debug|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Debug|DNN.ActiveCfg = Debug|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Debug|DNN.Build.0 = Debug|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Debug|Windows-x64.Build.0 = Debug|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Release|DNN.ActiveCfg = Release|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Release|DNN.Build.0 = Release|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Release|Windows-x64.ActiveCfg = Release|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Release|Windows-x64.Build.0 = Release|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Testing|DNN.ActiveCfg = Debug|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Testing|DNN.Build.0 = Debug|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Testing|Windows-x64.ActiveCfg = Debug|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Testing|Windows-x64.Build.0 = Debug|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Testing|Windows-x86.ActiveCfg = Debug|Any CPU
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD}.Testing|Windows-x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1422,9 +1447,10 @@ Global
 		{DBF7E808-4DB5-67DB-2D6B-A044BE3D81F1} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
 		{3D8DDAE5-E025-4917-8570-6B428A520B7D} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
 		{F2582791-2A07-0F5F-836F-AA977F7A4169} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
+		{937C5BE0-1554-43BF-A6A6-E3E7F25282BD} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 EndGlobal

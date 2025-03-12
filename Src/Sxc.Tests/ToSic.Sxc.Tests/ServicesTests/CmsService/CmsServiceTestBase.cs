@@ -27,7 +27,7 @@ public class CmsServiceTestBase : TestBaseSxcDb
         eavSystemLoader.LoadLicenseAndFeatures();
 
         var appStates = GetService<IAppReaderFactory>();
-        var app = appStates.GetSystemPreset();
+        var app = appStates.GetSystemPresetTac();
         TstDataContentType = app.GetContentType("TstData");
         if (TstDataContentType == null)
             throw new("TstData content type not found. Probably JSON is missing.");
