@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Context;
-using ToSic.Eav.Testing;
 using ToSic.Testing.Shared.Platforms;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;

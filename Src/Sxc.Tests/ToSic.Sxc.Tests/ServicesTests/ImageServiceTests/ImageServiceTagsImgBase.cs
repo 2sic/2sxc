@@ -1,7 +1,5 @@
-﻿using ToSic.Eav.Testing;
-using ToSic.Sxc.Images;
+﻿using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
-using ToSic.Testing.Shared;
 using static ToSic.Testing.Shared.TestHelpers;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;

@@ -4,30 +4,30 @@ using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Tests.ServicesTests.TurnOnTests;
 
-[TestClass]
+
 public class PickOrBuildSpecsTests
 {
-    [TestMethod]
+    [Fact]
     public void RunAnonObject() =>
         CompareJsonsAndTrace(
             new() { Run = "window.run" },
             TurnOnTestAccessors.TacPickOrBuildSpecs(new { run = "window.run"})
         );
 
-    [TestMethod]
+    [Fact]
     public void RunOnly() =>
         CompareJsonsAndTrace(
             new() { Run = "window.run" },
             TurnOnTestAccessors.TacPickOrBuildSpecs("window.run")
         );
 
-    [TestMethod]
+    [Fact]
     public void RunArgsOnly() =>
         CompareJsonsAndTrace(
             new() { Run = "window.run", Args = ["test"] },
             TurnOnTestAccessors.TacPickOrBuildSpecs("window.run", args: new string[] { "test" })
         );
-    [TestMethod]
+    [Fact]
     public void RunArgsAndData() =>
         CompareJsonsAndTrace(
             new() { Run = "window.run", Args = ["test"], Data = 42 },
@@ -35,28 +35,28 @@ public class PickOrBuildSpecsTests
         );
 
 
-    [TestMethod]
+    [Fact]
     public void RunAndDataNumber() =>
         CompareJsonsAndTrace(
             new() { Run = "window.run", Data = 42 },
             TurnOnTestAccessors.TacPickOrBuildSpecs("window.run", data: 42)
         );
 
-    [TestMethod]
+    [Fact]
     public void RunAndDataString() =>
         CompareJsonsAndTrace(
             new() { Run = "window.run", Data = "my-data" },
             TurnOnTestAccessors.TacPickOrBuildSpecs("window.run", data: "my-data")
         );
 
-    [TestMethod]
+    [Fact]
     public void RunAndRequireString() =>
         CompareJsonsAndTrace(
             new() { Run = "window.run", Require = "window.xyz" },
             TurnOnTestAccessors.TacPickOrBuildSpecs("window.run", require: "window.xyz")
         );
 
-    [TestMethod]
+    [Fact]
     public void RunAndRequireArray() =>
         CompareJsonsAndTrace(
             new() { Run = "window.run", Require = new[] { "window.xyz", "window.abc" } },
@@ -69,6 +69,6 @@ public class PickOrBuildSpecsTests
         var actualJson = JsonSerializer.Serialize(actual);
         Trace.WriteLine("expected: " + expectedJson);
         Trace.WriteLine("actual: " + actualJson);
-        AreEqual(expectedJson, actualJson);
+        Equal(expectedJson, actualJson);
     }
 }

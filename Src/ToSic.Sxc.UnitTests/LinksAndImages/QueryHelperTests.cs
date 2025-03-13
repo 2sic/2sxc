@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Tests.LinksAndImages;
 
-[TestClass]
+
 public class QueryHelperTests
 {
     private static string AddQueryString(string url, NameValueCollection queryParams)
@@ -30,7 +30,7 @@ public class QueryHelperTests
 
     private string paramAddOnOne = "added=worked";
 
-    [TestMethod]
+    [Fact]
     public void EmptyUrls()
     {
         VerifyUnchangedWithoutAddOn(null);
@@ -38,7 +38,7 @@ public class QueryHelperTests
         VerifyUnchangedWithoutAddOn(" ");
     }
 
-    [TestMethod]
+    [Fact]
     public void FileReferenceUrls()
     {
         VerifyUnchangedWithoutAddOn("file:27");
@@ -52,26 +52,26 @@ public class QueryHelperTests
         VerifyUnchangedWithoutAddOn(urlFile27 + fragKeyValueMany);
         VerifyUnchangedWithoutAddOn(urlFile27 + fragWithQuestion);
     }
-    [TestMethod]
+    [Fact]
     public void FileReferenceUrlsWithAddOns()
     {
 
-        AreEqual(urlFile27 + "?" + paramAddOnOne, AddQueryString(urlFile27, addOnOne));
-        AreEqual(urlPage42 + "?" + paramAddOnOne, AddQueryString(urlPage42, addOnOne));
-        AreEqual(urlPage42 + "?" + paramAddOnOne, AddQueryString(urlPage42, addOnOne));
+        Equal(urlFile27 + "?" + paramAddOnOne, AddQueryString(urlFile27, addOnOne));
+        Equal(urlPage42 + "?" + paramAddOnOne, AddQueryString(urlPage42, addOnOne));
+        Equal(urlPage42 + "?" + paramAddOnOne, AddQueryString(urlPage42, addOnOne));
 
         var urlFWithParam = urlFile27 + paramOne;
-        AreEqual(urlFWithParam + "&" + paramAddOnOne, AddQueryString(urlFWithParam, addOnOne));
+        Equal(urlFWithParam + "&" + paramAddOnOne, AddQueryString(urlFWithParam, addOnOne));
 
         // With fragment and with empty fragment
-        AreEqual(urlFile27+ "?" + paramAddOnOne, AddQueryString(urlFile27 + fragEmpty, addOnOne), "empty frag is dropped");
-        AreEqual(urlFile27 + "?" + paramAddOnOne + fragValueOnly, AddQueryString(urlFile27 + fragValueOnly, addOnOne));
-        AreEqual(urlFile27 + "?" + paramAddOnOne + fragKeyValue, AddQueryString(urlFile27 + fragKeyValue, addOnOne));
-        AreEqual(urlFile27 + "?" + paramAddOnOne + fragKeyValueMany, AddQueryString(urlFile27 + fragKeyValueMany, addOnOne));
-        AreEqual(urlFile27 + "?" + paramAddOnOne + fragWithQuestion, AddQueryString(urlFile27 + fragWithQuestion, addOnOne));
+        Equal(urlFile27+ "?" + paramAddOnOne, AddQueryString(urlFile27 + fragEmpty, addOnOne));//, "empty frag is dropped");
+        Equal(urlFile27 + "?" + paramAddOnOne + fragValueOnly, AddQueryString(urlFile27 + fragValueOnly, addOnOne));
+        Equal(urlFile27 + "?" + paramAddOnOne + fragKeyValue, AddQueryString(urlFile27 + fragKeyValue, addOnOne));
+        Equal(urlFile27 + "?" + paramAddOnOne + fragKeyValueMany, AddQueryString(urlFile27 + fragKeyValueMany, addOnOne));
+        Equal(urlFile27 + "?" + paramAddOnOne + fragWithQuestion, AddQueryString(urlFile27 + fragWithQuestion, addOnOne));
     }
 
-    [TestMethod]
+    [Fact]
     public void EmptyUrlWithExistingParams()
     {
         VerifyUnchangedWithoutAddOn(paramOne);
@@ -79,7 +79,7 @@ public class QueryHelperTests
         VerifyUnchangedWithoutAddOn(" " + paramOne);
     }
 
-    [TestMethod]
+    [Fact]
     public void NoParams()
     {
         VerifyUnchangedWithoutAddOn(urlRelativeNoParams);
@@ -87,7 +87,7 @@ public class QueryHelperTests
         VerifyUnchangedWithoutAddOn(urlHttpsNoParams);
     }
 
-    [TestMethod]
+    [Fact]
     public void ParamsButNoAdditional()
     {
         VerifyUnchangedWithoutAddOn(urlRelativeNoParams + paramOne);
@@ -98,28 +98,28 @@ public class QueryHelperTests
         VerifyUnchangedWithoutAddOn(urlHttpsNoParams + paramOne + paramTwo);
     }
 
-    [TestMethod]
+    [Fact]
     public void NoParamsButAddOne()
     {
-        AreEqual(urlRelativeNoParams + "?" + paramAddOnOne, AddQueryString(urlRelativeNoParams, addOnOne));
-        AreEqual(urlHttpNoParams + "?" + paramAddOnOne, AddQueryString(urlHttpNoParams, addOnOne));
-        AreEqual(urlHttpsNoParams+ "?" + paramAddOnOne, AddQueryString(urlHttpsNoParams, addOnOne));
+        Equal(urlRelativeNoParams + "?" + paramAddOnOne, AddQueryString(urlRelativeNoParams, addOnOne));
+        Equal(urlHttpNoParams + "?" + paramAddOnOne, AddQueryString(urlHttpNoParams, addOnOne));
+        Equal(urlHttpsNoParams+ "?" + paramAddOnOne, AddQueryString(urlHttpsNoParams, addOnOne));
     }
 
-    [TestMethod]
+    [Fact]
     public void ParamsAndAddOne()
     {
-        AreEqual($"{urlRelativeNoParams}{paramOne}&{paramAddOnOne}", AddQueryString($"{urlRelativeNoParams}{paramOne}", addOnOne));
-        AreEqual($"{urlHttpNoParams}{paramOne}&{paramAddOnOne}", AddQueryString($"{urlHttpNoParams}{paramOne}", addOnOne));
-        AreEqual($"{urlHttpsNoParams}{paramOne}&{paramAddOnOne}", AddQueryString($"{urlHttpsNoParams}{paramOne}", addOnOne));
+        Equal($"{urlRelativeNoParams}{paramOne}&{paramAddOnOne}", AddQueryString($"{urlRelativeNoParams}{paramOne}", addOnOne));
+        Equal($"{urlHttpNoParams}{paramOne}&{paramAddOnOne}", AddQueryString($"{urlHttpNoParams}{paramOne}", addOnOne));
+        Equal($"{urlHttpsNoParams}{paramOne}&{paramAddOnOne}", AddQueryString($"{urlHttpsNoParams}{paramOne}", addOnOne));
     }
 
 
 
     private void VerifyUnchangedWithoutAddOn(string url)
     {
-        AreEqual(url, AddQueryString(url , addOnNull), $"Initial: {url}");
-        AreEqual(url, AddQueryString(url , addOnEmpty), $"Initial {url}");
+        Equal(url, AddQueryString(url , addOnNull));//, $"Initial: {url}");
+        Equal(url, AddQueryString(url , addOnEmpty));//, $"Initial {url}");
     }
 
 }

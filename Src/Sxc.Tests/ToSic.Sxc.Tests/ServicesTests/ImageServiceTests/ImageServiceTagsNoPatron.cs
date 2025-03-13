@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Licenses;
-using ToSic.Eav.Testing;
 using ToSic.Sxc.Services;
 using ToSic.Testing.Shared.Platforms;
 using ToSic.Sxc.Configuration.Internal;

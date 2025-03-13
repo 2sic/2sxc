@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using ToSic.Eav.Testing;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
-using ToSic.Testing.Shared;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;
 
