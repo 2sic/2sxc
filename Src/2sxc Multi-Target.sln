@@ -139,6 +139,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Apps.Tests", "..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.ImportExport.Tests", "..\..\eav-server\ToSic.Eav.ImportExport.Tests\ToSic.Eav.ImportExport.Tests.csproj", "{DBD36AC0-D874-25CC-4618-2A848D5E6584}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.UnitTests", "ToSic.Sxc.UnitTests\ToSic.Sxc.UnitTests.csproj", "{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1353,6 +1355,30 @@ Global
 		{DBD36AC0-D874-25CC-4618-2A848D5E6584}.Testing|Windows-x64.Build.0 = Debug|Any CPU
 		{DBD36AC0-D874-25CC-4618-2A848D5E6584}.Testing|Windows-x86.ActiveCfg = Debug|Any CPU
 		{DBD36AC0-D874-25CC-4618-2A848D5E6584}.Testing|Windows-x86.Build.0 = Debug|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Debug|DNN.ActiveCfg = Debug|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Debug|DNN.Build.0 = Debug|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Debug|Windows-x64.Build.0 = Debug|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Release|DNN.ActiveCfg = Release|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Release|DNN.Build.0 = Release|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Release|Windows-x64.ActiveCfg = Release|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Release|Windows-x64.Build.0 = Release|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Testing|DNN.ActiveCfg = Debug|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Testing|DNN.Build.0 = Debug|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Testing|Windows-x64.ActiveCfg = Debug|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Testing|Windows-x64.Build.0 = Debug|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Testing|Windows-x86.ActiveCfg = Debug|Any CPU
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516}.Testing|Windows-x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1411,6 +1437,7 @@ Global
 		{3D8DDAE5-E025-4917-8570-6B428A520B7D} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
 		{F2582791-2A07-0F5F-836F-AA977F7A4169} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
 		{DBD36AC0-D874-25CC-4618-2A848D5E6584} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
+		{FADFD319-E7D1-4C6A-BBE3-D511C93EE516} = {E392C073-28AD-4164-B71B-B1BB4A163159}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35

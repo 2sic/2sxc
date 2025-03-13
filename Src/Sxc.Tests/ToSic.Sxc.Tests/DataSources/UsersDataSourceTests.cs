@@ -6,8 +6,16 @@ using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.DataSources;
 using ToSic.Testing.Shared;
 
-// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Tests.DataSources;
+
+// Note: most of these tests are useless ATM
+// Reason is that previously the filtering for superusers etc. happened in the UserDataSource
+// But it was then moved to a provider model.
+// But it doesn't make sense to have a mock provider with these filters, and test for that,
+// since that code would never be used in production.
+// So for now, most of the tests are disabled
+//
+// In future, we should find a way to system-test DNN DBs with real data, to make sure the filters work
 
 [TestClass]
 public class UsersDataSourceTests : TestBaseSxcDb
@@ -19,7 +27,6 @@ public class UsersDataSourceTests : TestBaseSxcDb
 
     private DataSourcesTstBuilder DsSvc => field ??= GetService<DataSourcesTstBuilder>();
 
-
     [TestMethod]
     public void UsersDefault()
     {
@@ -27,6 +34,7 @@ public class UsersDataSourceTests : TestBaseSxcDb
         AreEqual(MockUsersProvider.GenerateTotal, usersDataSource.List.ToList().Count);
     }
 
+    [Ignore]
     [DataTestMethod]
     [DataRow("", 17)]
     [DataRow("not-a-integer, -1", 17)]
@@ -43,6 +51,7 @@ public class UsersDataSourceTests : TestBaseSxcDb
         AreEqual(expected, usersDataSource.List.ToList().Count);
     }
 
+    [Ignore]
     [DataTestMethod]
     [DataRow("", 17)]
     [DataRow("not-a-guid, 00000000-0000-0000-0000-000000000000", 17)]
@@ -59,6 +68,7 @@ public class UsersDataSourceTests : TestBaseSxcDb
         AreEqual(expected, usersDataSource.List.ToList().Count);
     }
 
+    [Ignore]
     [DataTestMethod]
     [DataRow("", 17)]
     [DataRow("not-a-integer,-1", 17)]
@@ -75,6 +85,7 @@ public class UsersDataSourceTests : TestBaseSxcDb
         AreEqual(expected, usersDataSource.List.ToList().Count);
     }
 
+    [Ignore]
     [DataTestMethod]
     [DataRow("", 17)]
     [DataRow("not-a-guid, 00000000-0000-0000-0000-000000000000", 17)]
@@ -91,6 +102,7 @@ public class UsersDataSourceTests : TestBaseSxcDb
         AreEqual(expected, usersDataSource.List.ToList().Count);
     }
 
+    [Ignore]
     [DataTestMethod]
     [DataRow("not-a-guid, 00000000-0000-0000-0000-000000000000", "not-a-integer,-1", 17)]
     [DataRow("3,4,5", "00000000-0000-0000-0000-000000000001, 00000000-0000-0000-0000-000000000003, 00000000-0000-0000-0000-000000000004", 1)]
@@ -107,6 +119,7 @@ public class UsersDataSourceTests : TestBaseSxcDb
         AreEqual(expected, usersDataSource.List.ToList().Count);
     }
 
+    [Ignore]
     [DataTestMethod]
     [DataRow("", 17)]
     [DataRow("not-a-integer,-1,3", 7)]
@@ -123,6 +136,7 @@ public class UsersDataSourceTests : TestBaseSxcDb
         AreEqual(expected, usersDataSource.List.ToList().Count);
     }
 
+    [Ignore]
     [DataTestMethod]
     [DataRow("", 17)]
     [DataRow("not-a-integer,-1,2", 10)]
@@ -139,6 +153,7 @@ public class UsersDataSourceTests : TestBaseSxcDb
         AreEqual(expected, usersDataSource.List.ToList().Count);
     }
 
+    [Ignore]
     [DataTestMethod]
     [DataRow("2,10", "3", 10)]
     public void UsersWithIncludeExcludeRolesFilter(string includeRolesFilter, string excludeRolesFilter, int expected)
@@ -153,6 +168,7 @@ public class UsersDataSourceTests : TestBaseSxcDb
         AreEqual(expected, usersDataSource.List.ToList().Count);
     }
 
+    [Ignore]
     [DataTestMethod]
     [DataRow("", 17)]
     [DataRow("not-a-bool", 17)]
@@ -179,6 +195,7 @@ public class UsersDataSourceTests : TestBaseSxcDb
         AreEqual(expected, usersDataSource.List.ToList().Count);
     }
 
+    [Ignore]
     [DataTestMethod]
     [DataRow("1,2,3,4,5,6,7,8,9,10", "00000000-0000-0000-0000-000000000002, 00000000-0000-0000-0000-000000000003", "2", "9", true, 6)]
     // TODO: this test doesn't seem to do much different than the first?

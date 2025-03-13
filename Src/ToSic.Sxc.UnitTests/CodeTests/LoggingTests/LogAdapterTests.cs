@@ -5,58 +5,58 @@
 
 //namespace ToSic.Eav.Core.Tests.LogTests
 //{
-//    [TestClass]
+//    
 //    public class LogAdapterTests : LogTestBase
 //    {
 
         
-//        [TestMethod]
+//        [Fact]
 //        public void NoReturnBasic()
 //        {
 //            var log = LA("Test");
 
 //            var call = log.Fn();
-//            Assert.AreEqual(1, log.L.Entries.Count);
+//            Assert.Equal(1, log.L.Entries.Count);
 
 //            call.Done("ok");
-//            Assert.AreEqual(2, log.L.Entries.Count); // Another for results
+//            Assert.Equal(2, log.L.Entries.Count); // Another for results
 
 //            var resultEntry = log.L.Entries.First();
-//            Assert.AreEqual("ok", resultEntry.Result);
+//            Assert.Equal("ok", resultEntry.Result);
 //        }
 
-//        [TestMethod]
+//        [Fact]
 //        public void NoReturnAll()
 //        {
 //            var log = LA("Test");
 
 //            var call = log.Fn($"something: {7}", "start msg", true);
 //            Assert.IsTrue(call.Stopwatch.ElapsedMilliseconds < 1);
-//            Assert.AreEqual(1, log.L.Entries.Count);
+//            Assert.Equal(1, log.L.Entries.Count);
 //            System.Threading.Thread.Sleep(10); // wait 10 ms
 
 //            call.Done("ok");
 //            Assert.IsTrue(call.Stopwatch.ElapsedMilliseconds > 9);
-//            Assert.AreEqual(2, log.L.Entries.Count); // Another for results
+//            Assert.Equal(2, log.L.Entries.Count); // Another for results
 
 //            var resultEntry = log.L.Entries.First();
-//            Assert.AreEqual("ok", resultEntry.Result);
+//            Assert.Equal("ok", resultEntry.Result);
 //        }
 
-//        [TestMethod]
+//        [Fact]
 //        public void GenericBasic()
 //        {
 //            var log = LA("Test");
 
 //            var call = log.Fn<string>();
-//            Assert.AreEqual(1, log.L.Entries.Count);  // Should have one when starting
+//            Assert.Equal(1, log.L.Entries.Count);  // Should have one when starting
             
 //            var result = call.Return("result", "ok");
-//            Assert.AreEqual("result", result);
-//            Assert.AreEqual(2, log.L.Entries.Count);  // Another for results
+//            Assert.Equal("result", result);
+//            Assert.Equal(2, log.L.Entries.Count);  // Another for results
 
 //            var resultEntry = log.L.Entries.First();
-//            Assert.AreEqual("ok", resultEntry.Result);
+//            Assert.Equal("ok", resultEntry.Result);
 //        }
 //    }
 //}

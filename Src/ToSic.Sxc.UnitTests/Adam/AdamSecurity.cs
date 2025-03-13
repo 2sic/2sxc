@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Tests.Adam;
 
-[TestClass]
+
 public class AdamSecurity
 {
     private readonly string[] _badFiles =
@@ -24,24 +24,24 @@ public class AdamSecurity
         "list of flowers.csv"
     ];
 
-    [TestMethod]
+    [Fact]
     public void BadExtensionsCaught()
     {
         var exts = _badFiles.Select(System.IO.Path.GetExtension).ToList();
 
         exts.ForEach(e =>
-            IsTrue( FileNames.IsKnownRiskyExtension(e), $"expected {e} to be marked as bad")
+            True( FileNames.IsKnownRiskyExtension(e), $"expected {e} to be marked as bad")
         );
     }
 
 
-    [TestMethod]
+    [Fact]
     public void GoodExtensionsNotCaught()
     {
         var exts = _goodFiles.Select(System.IO.Path.GetExtension).ToList();
 
         exts.ForEach(e =>
-            IsFalse(FileNames.IsKnownRiskyExtension(e), $"expected {e} to be marked as good")
+            False(FileNames.IsKnownRiskyExtension(e), $"expected {e} to be marked as good")
         );
     }
 

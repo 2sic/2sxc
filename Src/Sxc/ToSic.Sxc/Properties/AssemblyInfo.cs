@@ -18,3 +18,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("ToSic.Sxc.Oqtane.Server")]
 
 [assembly: InternalsVisibleTo("ToSic.Sxc.Tests")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.UnitTests")]
