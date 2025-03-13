@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Models;
 
@@ -10,7 +9,7 @@ public class DataModelAnalyzerTypeTests : TestBaseSxcDb
 {
     private void AssertType<TInspect, TExpected>()
         where TInspect : class, ICanWrapData =>
-        Assert.AreEqual(typeof(TExpected), DataModelAnalyzerTestAccessors.GetTargetTypeTac<TInspect>());
+        AreEqual(typeof(TExpected), DataModelAnalyzerTestAccessors.GetTargetTypeTac<TInspect>());
 
     #region NotDecorated - should return itself as the type
 

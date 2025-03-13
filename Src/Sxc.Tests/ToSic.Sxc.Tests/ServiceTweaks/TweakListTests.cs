@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Services.Tweaks;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+﻿using ToSic.Sxc.Services.Tweaks;
 
 namespace ToSic.Sxc.Tests.ServiceTweaks;
 

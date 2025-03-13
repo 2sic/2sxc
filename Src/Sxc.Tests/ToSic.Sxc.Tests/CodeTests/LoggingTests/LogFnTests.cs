@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
-using ToSic.Lib.Logging;
+﻿using ToSic.Lib.Logging;
 
 namespace ToSic.Eav.Core.Tests.LogTests;
 
@@ -12,12 +10,12 @@ public class LogFnTests : LogTestBase
     {
         var log = L("Test");
         var call = log.Fn();
-        Assert.AreEqual(1, log.Entries.Count);
+        AreEqual(1, log.Entries.Count);
         call.Done("ok");
             
-        Assert.AreEqual(2, log.Entries.Count); // Another for results
+        AreEqual(2, log.Entries.Count); // Another for results
         var resultEntry = log.Entries.First();
-        Assert.AreEqual("ok", resultEntry.Result);
+        AreEqual("ok", resultEntry.Result);
     }
 
     [TestMethod]
@@ -25,16 +23,16 @@ public class LogFnTests : LogTestBase
     {
         var log = L("Test");
         var call = log.Fn($"something: {7}", "start msg", true);
-        Assert.IsTrue(call.Timer.ElapsedMilliseconds < 1);
-        Assert.AreEqual(1, log.Entries.Count);
+        IsTrue(call.Timer.ElapsedMilliseconds < 1);
+        AreEqual(1, log.Entries.Count);
         System.Threading.Thread.Sleep(10); // wait 10 ms
         call.Done("ok");
 
-        Assert.IsTrue(call.Timer.ElapsedMilliseconds > 9);
+        IsTrue(call.Timer.ElapsedMilliseconds > 9);
             
-        Assert.AreEqual(2, log.Entries.Count); // Another for results
+        AreEqual(2, log.Entries.Count); // Another for results
         var resultEntry = log.Entries.First();
-        Assert.AreEqual("ok", resultEntry.Result);
+        AreEqual("ok", resultEntry.Result);
     }
 
     [TestMethod]
@@ -43,12 +41,12 @@ public class LogFnTests : LogTestBase
         var log = L("Test");
         var call = log.Fn<string>();
             
-        Assert.AreEqual(1, log.Entries.Count);  // Should have one when starting
+        AreEqual(1, log.Entries.Count);  // Should have one when starting
         var result = call.Return("result", "ok");
-        Assert.AreEqual("result", result);
+        AreEqual("result", result);
 
-        Assert.AreEqual(2, log.Entries.Count);  // Another for results
+        AreEqual(2, log.Entries.Count);  // Another for results
         var resultEntry = log.Entries.First();
-        Assert.AreEqual("ok", resultEntry.Result);
+        AreEqual("ok", resultEntry.Result);
     }
 }

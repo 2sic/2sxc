@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
@@ -17,15 +15,15 @@ public class RolesDataSourceTests : TestBaseSxcDb
     // Start the test with a platform-info that has a patron
     protected override IServiceCollection SetupServices(IServiceCollection services) =>
         base.SetupServices(services)
-            .AddTransient<IUserRolesProvider, MockRolesDataSource>();
+            .AddTransient<IUserRolesProvider, MockUserRolesProvider>();
 
     private DataSourcesTstBuilder DsSvc => field ??= GetService<DataSourcesTstBuilder>();
 
-    [TestMethod()]
+    [TestMethod]
     public void RolesDefault()
     {
         var rolesDataSource = GenerateRolesDataSourceDataSource();
-        Assert.AreEqual(10, rolesDataSource.List.ToList().Count);
+        AreEqual(10, rolesDataSource.List.ToList().Count);
     }
 
     [DataTestMethod]
@@ -41,7 +39,7 @@ public class RolesDataSourceTests : TestBaseSxcDb
             RoleIds = includeRolesFilter
         });
         //rolesDataSource.RoleIds = includeRolesFilter;
-        Assert.AreEqual(expected, rolesDataSource.List.ToList().Count);
+        AreEqual(expected, rolesDataSource.List.ToList().Count);
     }
 
     [DataTestMethod]
@@ -57,7 +55,7 @@ public class RolesDataSourceTests : TestBaseSxcDb
             ExcludeRoleIds = excludeRolesFilter
         });
         //rolesDataSource.ExcludeRoleIds = excludeRolesFilter;
-        Assert.AreEqual(expected, rolesDataSource.List.ToList().Count);
+        AreEqual(expected, rolesDataSource.List.ToList().Count);
     }
 
     [DataTestMethod]
@@ -73,7 +71,7 @@ public class RolesDataSourceTests : TestBaseSxcDb
         });
         //rolesDataSource.RoleIds = includeRolesFilter;
         //rolesDataSource.ExcludeRoleIds = excludeRolesFilter;
-        Assert.AreEqual(expected, rolesDataSource.List.ToList().Count);
+        AreEqual(expected, rolesDataSource.List.ToList().Count);
     }
 
     private UserRoles GenerateRolesDataSourceDataSource(object options = default) 

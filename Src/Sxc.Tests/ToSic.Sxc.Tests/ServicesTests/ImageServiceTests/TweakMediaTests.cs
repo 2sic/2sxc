@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Images;
+﻿using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;
 
@@ -25,7 +24,7 @@ public class TweakMediaTests
     );
 
     [TestMethod]
-    public void ChangeWidth() => Assert.AreEqual(42, ((TweakMedia)ResizeOnly().Resize(null as string, tweak: t => t.Width(42))).ResizeSettings.Width);
+    public void ChangeWidth() => AreEqual(42, ((TweakMedia)ResizeOnly().Resize(null as string, tweak: t => t.Width(42))).ResizeSettings.Width);
 
     [TestMethod]
     public void ResizeChangeMakesCopyOfTweakMedia()
@@ -34,9 +33,9 @@ public class TweakMediaTests
         var changeWidth = original.Resize(null as string, tweak: t => t.Width(42));
         var changeFactor = original.Resize(null as string, tweak: t => t.Factor(0.75));
         // Verify that the objects are different
-        Assert.AreNotEqual(original, changeWidth);
-        Assert.AreNotEqual(original, changeFactor);
-        Assert.AreNotEqual(changeWidth, changeFactor);
+        AreNotEqual(original, changeWidth);
+        AreNotEqual(original, changeFactor);
+        AreNotEqual(changeWidth, changeFactor);
     }
 
     #endregion

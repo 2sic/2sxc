@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Eav.Code;
+﻿using ToSic.Eav.Code;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Internal.Licenses;
 using ToSic.Sxc.Configuration.Internal;
@@ -12,7 +11,7 @@ class VerifyPatronsHelper(ICanGetService parent)
     {
         var licenses = parent.GetService<ILicenseService>();
         var result = licenses.Enabled;
-        Assert.AreEqual(expected, result.Count, $"{expected} license package should be enabled. If the number changes, this test may need update.");
+        AreEqual(expected, result.Count, $"{expected} license package should be enabled. If the number changes, this test may need update.");
     }
 
 
@@ -22,7 +21,7 @@ class VerifyPatronsHelper(ICanGetService parent)
         var result = licenses.IsEnabled(BuiltInLicenses.PatronPerfectionist);
 
         // Our current test enables 6 packages, so the service should report so many active licenses
-        Assert.AreEqual(expected, result, "Patron Perfectionist should be enabled?");
+        AreEqual(expected, result, "Patron Perfectionist should be enabled?");
     }
 
     public void VerifyImageFormats(bool expected)
@@ -31,7 +30,7 @@ class VerifyPatronsHelper(ICanGetService parent)
         var result = features.IsEnabled(SxcFeatures.ImageServiceMultiFormat);
 
         // Our current test enables 6 packages, so the service should report so many active licenses
-        Assert.AreEqual(expected, result, "Patron Perfectionist should be enabled");
+        AreEqual(expected, result, "Patron Perfectionist should be enabled");
     }
     
 }

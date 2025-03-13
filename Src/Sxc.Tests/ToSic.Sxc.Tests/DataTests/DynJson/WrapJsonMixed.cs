@@ -1,7 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
-
-namespace ToSic.Sxc.Tests.DataTests.DynJson;
+﻿namespace ToSic.Sxc.Tests.DataTests.DynJson;
 
 [TestClass]
 public class WrapJsonMixed: DynAndTypedTestsBase

@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace ToSic.Sxc.Tests.LinksAndImages;
+﻿namespace ToSic.Sxc.Tests.LinksAndImages;
 
 [TestClass]
 public class UrlPartsProtocolAndDomain : UrlPartsTestBase
@@ -13,9 +11,9 @@ public class UrlPartsProtocolAndDomain : UrlPartsTestBase
         void VerifyProtocol(string url, string protocol, string domain)
         {
             var urlParts = UrlParts(url);
-            Assert.AreEqual(protocol, urlParts.Protocol);
-            Assert.AreEqual(domain, urlParts.Domain);
-            Assert.AreEqual(url ?? "", urlParts.ToLink(), "round trip should be identical except for null"); 
+            AreEqual(protocol, urlParts.Protocol);
+            AreEqual(domain, urlParts.Domain);
+            AreEqual(url ?? "", urlParts.ToLink(), "round trip should be identical except for null"); 
         }
         VerifyProtocol(null, "", "");
         VerifyProtocol("", "", "");
@@ -41,7 +39,7 @@ public class UrlPartsProtocolAndDomain : UrlPartsTestBase
     {
         var urlParts = UrlParts(url);
         urlParts.ReplaceRoot(post);
-        Assert.AreEqual(expected, urlParts.ToLink());
+        AreEqual(expected, urlParts.ToLink());
     }
 
     [TestMethod] public void RepRootEmptyOrigUsesReplacement() => VerRepRoot("//abc.org", "", "//abc.org");

@@ -1,7 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using ToSic.Sxc.Web.Internal.Url;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+﻿using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Tests.WebUrlTests;
 

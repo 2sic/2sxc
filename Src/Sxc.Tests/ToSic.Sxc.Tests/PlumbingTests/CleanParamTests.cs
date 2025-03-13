@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Internal.Plumbing;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+﻿using ToSic.Sxc.Internal.Plumbing;
 
 namespace ToSic.Sxc.Tests.PlumbingTests;
 

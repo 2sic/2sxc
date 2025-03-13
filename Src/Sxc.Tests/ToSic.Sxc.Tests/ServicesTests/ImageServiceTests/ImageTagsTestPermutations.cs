@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Sxc.Images;
+﻿using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;
 

@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.Json;
 using ToSic.Sxc.Services.Internal;
 
@@ -70,6 +69,6 @@ public class PickOrBuildSpecsTests
         var actualJson = JsonSerializer.Serialize(actual);
         Trace.WriteLine("expected: " + expectedJson);
         Trace.WriteLine("actual: " + actualJson);
-        Assert.AreEqual(expectedJson, actualJson);
+        AreEqual(expectedJson, actualJson);
     }
 }

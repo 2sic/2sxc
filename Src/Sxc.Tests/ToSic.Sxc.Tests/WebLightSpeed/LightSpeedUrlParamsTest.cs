@@ -1,6 +1,5 @@
 ﻿using System.Collections.Specialized;
 using System.Diagnostics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Eav.Data.Build;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
@@ -8,7 +7,6 @@ using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Web.Internal.LightSpeed;
 using ToSic.Sxc.Web.Internal.Url;
 using ToSic.Testing.Shared;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.WebLightSpeed;
 

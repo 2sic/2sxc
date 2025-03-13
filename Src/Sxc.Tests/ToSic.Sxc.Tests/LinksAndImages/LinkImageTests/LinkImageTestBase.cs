@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Eav.Internal.Loaders;
+﻿using ToSic.Eav.Internal.Loaders;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Data.Internal.Dynamic;
 using ToSic.Sxc.Data.Internal.Wrapper;
@@ -42,7 +41,7 @@ public class LinkImageTestBase: TestBaseSxc
         var linkerResult = linker.Image(url: url, settings: settings, factor: factor, width: width, height: height,
             quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
             aspectRatio: aspectRatio);
-        Assert.AreEqual(expected, linkerResult, "Failed on ImgResizeLinker");
+        AreEqual(expected, linkerResult, "Failed on ImgResizeLinker");
 
         // Skip Helper-tests if using SrcSet as that's not supported in that case
         // Because it would lead to not-expected result
@@ -53,7 +52,7 @@ public class LinkImageTestBase: TestBaseSxc
             height: height,
             quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
             aspectRatio: aspectRatio);
-        Assert.AreEqual(expected, helperResult, "Failed on ILinkHelper");
+        AreEqual(expected, helperResult, "Failed on ILinkHelper");
     }
 
 
@@ -79,6 +78,6 @@ public class LinkImageTestBase: TestBaseSxc
             quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
             aspectRatio: aspectRatio, advanced: AdvancedSettings.Parse(new Recipe(variants: variants)));
         var linkerResult = linker.SrcSet(url, typedSettings, SrcSetType.Img);
-        Assert.AreEqual(expected, linkerResult, $"Failed on ImgResizeLinker for srcSet '{variants}'");
+        AreEqual(expected, linkerResult, $"Failed on ImgResizeLinker for srcSet '{variants}'");
     }
 }

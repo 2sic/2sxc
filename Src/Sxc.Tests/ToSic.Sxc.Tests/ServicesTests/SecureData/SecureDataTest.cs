@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Services;
 using static ToSic.Sxc.Services.SecureDataService;
@@ -32,8 +31,8 @@ public class SecureDataTest: TestBaseSxc
         var sds = GetSecureDataService() as SecureDataService;
         var result = sds.Parse(original);
         Trace.WriteLine($"Test: '{testName}'; Result: '{result.Value}'");
-        Assert.AreEqual(expected, result.Value);
-        Assert.AreEqual(mustBeSecure, result.IsSecured, "Must be Secure");
+        AreEqual(expected, result.Value);
+        AreEqual(mustBeSecure, result.IsSecured, "Must be Secure");
     }
 
     //[DataRow("test translate", "Secure:OaB/h/7jUZomSeEvhfFUhCvmrsH6XfmDykIpgXH9JBf6SxoTPY3FjW6O3PebeZ8X")]
@@ -78,13 +77,13 @@ public class SecureDataTest: TestBaseSxc
         var encrypted = sds.Create(normal.Value);
         Trace.WriteLine($"Re-encrypted {testName} '{encrypted}'");
         var reDecrypted = sds.Parse(encrypted);
-        Assert.AreEqual(normal.Value, reDecrypted.Value);
+        AreEqual(normal.Value, reDecrypted.Value);
 
         Trace.WriteLine("Now with new key");
         encrypted = sds.Create(normal.Value);
         Trace.WriteLine($"Re-encrypted {testName} '{encrypted}'");
         reDecrypted = sds.Parse(encrypted);
-        Assert.AreEqual(normal.Value, reDecrypted.Value);
+        AreEqual(normal.Value, reDecrypted.Value);
     }
 
 
@@ -103,7 +102,7 @@ public class SecureDataTest: TestBaseSxc
         Trace.WriteLine("Encrypted: " + encrypted);
 
         var decrypted = secDataService.Parse(encrypted);
-        Assert.AreEqual(value, decrypted.Value);
+        AreEqual(value, decrypted.Value);
         Trace.WriteLine($"Parsed/Restored: '{decrypted.Value}'");
         Trace.WriteLine("Log Dump");
         Trace.WriteLine(secDataService.Log.Dump());

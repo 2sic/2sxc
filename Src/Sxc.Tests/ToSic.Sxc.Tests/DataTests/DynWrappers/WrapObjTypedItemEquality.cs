@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Data.Internal.Typed;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+﻿using ToSic.Sxc.Data.Internal.Typed;
 
 namespace ToSic.Sxc.Tests.DataTests.DynWrappers;
 

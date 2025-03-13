@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Context.Internal;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+﻿using ToSic.Sxc.Context.Internal;
 using static ToSic.Sxc.Tests.ContextTests.ParametersTestData;
 
 namespace ToSic.Sxc.Tests.ContextTests;

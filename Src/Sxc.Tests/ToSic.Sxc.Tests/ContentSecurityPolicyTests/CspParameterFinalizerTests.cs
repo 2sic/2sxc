@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
+﻿using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
 namespace ToSic.Sxc.Tests.ContentSecurityPolicyTests;
 
@@ -13,7 +12,7 @@ public class CspParameterFinalizerTests
     {
         var cspp = new CspParameters();
         cspp = _finalizer.MergedWithAll(cspp);
-        Assert.AreEqual("", cspp.ToString());
+        AreEqual("", cspp.ToString());
     }
 
     [TestMethod]
@@ -24,7 +23,7 @@ public class CspParameterFinalizerTests
             { CspConstants.AllSrcName, "" }
         };
         cspp = _finalizer.MergedWithAll(cspp);
-        Assert.AreEqual("", cspp.ToString());
+        AreEqual("", cspp.ToString());
     }
 
     [TestMethod]
@@ -35,7 +34,7 @@ public class CspParameterFinalizerTests
             { CspConstants.AllSrcName, "'self'" }
         };
         cspp = _finalizer.MergedWithAll(cspp);
-        Assert.AreEqual("default-src 'self';", cspp.ToString());
+        AreEqual("default-src 'self';", cspp.ToString());
     }
 
     [TestMethod]
@@ -47,7 +46,7 @@ public class CspParameterFinalizerTests
             { CspConstants.AllSrcName, "'self'" }
         };
         cspp = _finalizer.MergedWithAll(cspp);
-        Assert.AreEqual("default-src 'none' 'self';", cspp.ToString());
+        AreEqual("default-src 'none' 'self';", cspp.ToString());
     }
 
     [TestMethod]
@@ -60,7 +59,7 @@ public class CspParameterFinalizerTests
             { CspConstants.AllSrcName, "'self'" }
         };
         cspp = _finalizer.Finalize(cspp);
-        Assert.AreEqual("default-src 'none' 'self';", cspp.ToString());
+        AreEqual("default-src 'none' 'self';", cspp.ToString());
     }
 
     [TestMethod]
@@ -68,7 +67,7 @@ public class CspParameterFinalizerTests
     {
         var cspp = new CspParameters();
         cspp = _finalizer.DeduplicateValues(cspp);
-        Assert.AreEqual("", cspp.ToString());
+        AreEqual("", cspp.ToString());
     }
 
     [TestMethod]
@@ -80,7 +79,7 @@ public class CspParameterFinalizerTests
             { CspConstants.AllSrcName, "test2" },
         };
         cspp = _finalizer.DeduplicateValues(cspp);
-        Assert.AreEqual("all-src test test2;", cspp.ToString());
+        AreEqual("all-src test test2;", cspp.ToString());
     }
 
     [TestMethod]
@@ -92,7 +91,7 @@ public class CspParameterFinalizerTests
             { CspConstants.AllSrcName, "test" },
         };
         cspp = _finalizer.DeduplicateValues(cspp);
-        Assert.AreEqual("all-src test;", cspp.ToString());
+        AreEqual("all-src test;", cspp.ToString());
     }
 
 

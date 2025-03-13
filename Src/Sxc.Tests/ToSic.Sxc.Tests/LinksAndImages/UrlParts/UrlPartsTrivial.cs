@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace ToSic.Sxc.Tests.LinksAndImages;
+﻿namespace ToSic.Sxc.Tests.LinksAndImages;
 
 [TestClass]
 public class UrlPartsTrivial: UrlPartsTestBase
@@ -19,10 +17,10 @@ public class UrlPartsTrivial: UrlPartsTestBase
     private void VerifyUrlOnly(string url)
     {
         var urlParts = UrlParts(url);
-        Assert.AreEqual(url, urlParts.Url);
-        Assert.AreEqual(url, urlParts.ToLink());
-        Assert.AreEqual(string.Empty, urlParts.Query);
-        Assert.AreEqual(string.Empty, urlParts.Fragment);
+        AreEqual(url, urlParts.Url);
+        AreEqual(url, urlParts.ToLink());
+        AreEqual(string.Empty, urlParts.Query);
+        AreEqual(string.Empty, urlParts.Fragment);
     }
 
     [TestMethod]
@@ -37,10 +35,10 @@ public class UrlPartsTrivial: UrlPartsTestBase
     private void VerifyUrlAndFragmentOnly(string url, string pathExp, string fragmentExp)
     {
         var urlParts = UrlParts(url);
-        Assert.AreEqual(url, urlParts.Url);
-        Assert.AreEqual(pathExp, urlParts.Path);
-        Assert.AreEqual(string.Empty, urlParts.Query);
-        Assert.AreEqual(fragmentExp, urlParts.Fragment);
+        AreEqual(url, urlParts.Url);
+        AreEqual(pathExp, urlParts.Path);
+        AreEqual(string.Empty, urlParts.Query);
+        AreEqual(fragmentExp, urlParts.Fragment);
     }
 
 }

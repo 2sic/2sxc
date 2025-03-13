@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Web.Internal.HtmlParsing;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+﻿using ToSic.Sxc.Web.Internal.HtmlParsing;
 
 namespace ToSic.Sxc.Tests.ServicesTests.CmsService;
 

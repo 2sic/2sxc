@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Edit.Toolbar;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+﻿using ToSic.Sxc.Edit.Toolbar;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleToolbar;
 
 namespace ToSic.Sxc.Tests.EditTests.ToolbarRuleTests;

@@ -1,8 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Eav.Data.Build;
+﻿using ToSic.Eav.Data.Build;
 using ToSic.Sxc.Web.Internal.LightSpeed;
 using ToSic.Testing.Shared;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.WebLightSpeed;
 

@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Web.Internal.Url;
+﻿using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Tests.WebUrlTests;
 
@@ -14,6 +13,6 @@ public class UrlValueCamelCaseTest
     [DataRow("originalThing", "OriginalThing", "Pascal to camel case")]
     [DataRow("oRIGINAL", "ORIGINAL", "Caps to weird case")]
     public void BasicTests(string expected, string name, string message) 
-        => Assert.AreEqual(expected, TestProcess().Process(new(name, null)).Name, message);
+        => AreEqual(expected, TestProcess().Process(new(name, null)).Name, message);
 
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Web.Internal.PageService;
+﻿using ToSic.Sxc.Web.Internal.PageService;
 
 namespace ToSic.Sxc.Tests.PageProperty;
 
@@ -16,7 +15,7 @@ public class UpdatePropertyTest
     {
         var result = UpdatePropertyTestAccessor("[placeholder]" + Suffix,
             new() { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
-        Assert.AreEqual("My Title" + Suffix, result);
+        AreEqual("My Title" + Suffix, result);
     }
 
     [TestMethod]
@@ -24,7 +23,7 @@ public class UpdatePropertyTest
     {
         var result = UpdatePropertyTestAccessor(Suffix + "[placeholder]",
             new() { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
-        Assert.AreEqual(Suffix + "My Title", result);
+        AreEqual(Suffix + "My Title", result);
     }
 
     [TestMethod]
@@ -32,7 +31,7 @@ public class UpdatePropertyTest
     {
         var result = UpdatePropertyTestAccessor("Before-[placeholder]-After",
             new() { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
-        Assert.AreEqual("Before-My Title-After", result);
+        AreEqual("Before-My Title-After", result);
     }
 
     [TestMethod]
@@ -40,7 +39,7 @@ public class UpdatePropertyTest
     {
         var result = UpdatePropertyTestAccessor("[PlaceHolder]" + Suffix,
             new() { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
-        Assert.AreEqual("My Title" + Suffix, result);
+        AreEqual("My Title" + Suffix, result);
     }
 
     [TestMethod]
@@ -48,7 +47,7 @@ public class UpdatePropertyTest
     {
         var result = UpdatePropertyTestAccessor("[PlaceHolder]",
             new() { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
-        Assert.AreEqual("My Title", result);
+        AreEqual("My Title", result);
     }
 
     [TestMethod]
@@ -56,7 +55,7 @@ public class UpdatePropertyTest
     {
         var result = UpdatePropertyTestAccessor(Suffix,
             new() { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
-        Assert.AreEqual("My Title", result);
+        AreEqual("My Title", result);
     }
 
     [TestMethod]
@@ -64,7 +63,7 @@ public class UpdatePropertyTest
     {
         var result = UpdatePropertyTestAccessor(Suffix,
             new() { ReplacementIdentifier = "[placeholder]", Value = "My Title", ChangeMode = PageChangeModes.Replace });
-        Assert.AreEqual("My Title", result);
+        AreEqual("My Title", result);
     }
 
     [TestMethod]
@@ -72,7 +71,7 @@ public class UpdatePropertyTest
     {
         var result = UpdatePropertyTestAccessor(Suffix,
             new() { ReplacementIdentifier = "[placeholder]", Value = "My Title", ChangeMode = PageChangeModes.Prepend });
-        Assert.AreEqual("My Title" + Suffix, result);
+        AreEqual("My Title" + Suffix, result);
     }
 
     [TestMethod]
@@ -80,14 +79,14 @@ public class UpdatePropertyTest
     {
         var result = UpdatePropertyTestAccessor(Suffix,
             new() { ReplacementIdentifier = "[placeholder]", Value = "My Title", ChangeMode = PageChangeModes.Append });
-        Assert.AreEqual(Suffix + "My Title", result);
+        AreEqual(Suffix + "My Title", result);
     }
     [TestMethod]
     public void PlaceholderNotFoundAuto()
     {
         var result = UpdatePropertyTestAccessor(Suffix,
             new() { ReplacementIdentifier = "[placeholder]", Value = "My Title", ChangeMode = PageChangeModes.Auto });
-        Assert.AreEqual("My Title", result);
+        AreEqual("My Title", result);
     }
 
     [TestMethod]
@@ -95,7 +94,7 @@ public class UpdatePropertyTest
     {
         var result = UpdatePropertyTestAccessor(null,
             new() { ReplacementIdentifier = "[placeholder]", Value = "My Title" });
-        Assert.AreEqual("My Title", result);
+        AreEqual("My Title", result);
     }
 
     [TestMethod]
@@ -103,7 +102,7 @@ public class UpdatePropertyTest
     {
         var result = UpdatePropertyTestAccessor("Some Title",
             new() { ReplacementIdentifier = "[placeholder]", Value = null });
-        Assert.AreEqual("Some Title", result);
+        AreEqual("Some Title", result);
     }
 
     [TestMethod]
@@ -111,7 +110,7 @@ public class UpdatePropertyTest
     {
         var result = UpdatePropertyTestAccessor(null,
             new() { ReplacementIdentifier = "[placeholder]", Value = null });
-        Assert.AreEqual(null, result);
+        AreEqual(null, result);
     }
 
     [TestMethod]
@@ -119,6 +118,6 @@ public class UpdatePropertyTest
     {
         var result = UpdatePropertyTestAccessor("Some Title",
             new() { ReplacementIdentifier = "[placeholder]", Value = "" });
-        Assert.AreEqual("", result);
+        AreEqual("", result);
     }
 }

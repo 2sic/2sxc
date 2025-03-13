@@ -1,8 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Context.Internal;
+﻿using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using static ToSic.Sxc.Services.Cache.CacheServiceConstants;
 
 namespace ToSic.Sxc.Tests.ServicesTests.CacheTests;

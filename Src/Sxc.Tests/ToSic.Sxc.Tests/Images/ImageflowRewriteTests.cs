@@ -1,11 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Specialized;
-using System.Linq;
+﻿using System.Collections.Specialized;
 using ToSic.Sxc.Images.Internal;
 
 namespace ToSic.Sxc.Tests.Images;
 
-[TestClass()]
+[TestClass]
 public class ImageflowRewriteTests
 {
     #region shared
@@ -30,14 +28,14 @@ public class ImageflowRewriteTests
 
     #region QueryStringRewrite MAIN TESTING
 
-    [TestMethod()]
+    [TestMethod]
     public void QueryStringRewriteWhenQueryStringNull()
     {
-        Assert.IsNull(QueryStringRewrite(null));
+        IsNull(QueryStringRewrite(null));
     }
 
 
-    [TestMethod()]
+    [TestMethod]
     public void QueryStringRewriteWhenQueryStringEmpty()
     {
         var actual = QueryStringRewrite(new());
@@ -46,7 +44,7 @@ public class ImageflowRewriteTests
     }
 
 
-    [TestMethod()]
+    [TestMethod]
     public void QueryStringRewriteWhenQueryStringWithOneItem()
     {
         var actual = QueryStringRewrite(new() { { "1", "1" } });
@@ -58,7 +56,7 @@ public class ImageflowRewriteTests
     }
 
 
-    [TestMethod()]
+    [TestMethod]
     public void QueryStringRewriteWhenQueryStringWithManyItems()
     {
         var actual = QueryStringRewrite(
@@ -76,7 +74,7 @@ public class ImageflowRewriteTests
     }
 
 
-    [TestMethod()]
+    [TestMethod]
     public void QualityQueryStringRewrite()
     {
         var actual = QueryStringRewrite(new() { { Quality, "value" } });
@@ -91,7 +89,7 @@ public class ImageflowRewriteTests
     }
 
 
-    [TestMethod()]
+    [TestMethod]
     public void QualityQueryStringRewriteWhenManyItems()
     {
         var actual = QueryStringRewrite(
@@ -113,7 +111,7 @@ public class ImageflowRewriteTests
     }
 
 
-    [TestMethod()]
+    [TestMethod]
     public void QualityQueryStringRewriteWhenQueryStringWithManyQualityItems()
     {
         var actual = QueryStringRewrite(new()
@@ -137,7 +135,7 @@ public class ImageflowRewriteTests
 
     #region AddKeyWhenMissing function testing
 
-    [TestMethod()]
+    [TestMethod]
     public void AddKeyWhenMissingInQueryStringEmpty()
     {
         var actual = AddKeyWhenMissing(new(), "key", "value");
@@ -145,7 +143,7 @@ public class ImageflowRewriteTests
         AreEquivalentAlsoByValues(expected, actual);
     }
 
-    [TestMethod()]
+    [TestMethod]
     public void AddKeyWhenNotMissingInQueryStringOneElement()
     {
         var actual = AddKeyWhenMissing(
@@ -155,7 +153,7 @@ public class ImageflowRewriteTests
         AreEquivalentAlsoByValues(expected, actual);
     }
 
-    [TestMethod()]
+    [TestMethod]
     public void AddKeyWhenMissingInQueryStringOneElement()
     {
         var actual = AddKeyWhenMissing(
@@ -165,7 +163,7 @@ public class ImageflowRewriteTests
         AreEquivalentAlsoByValues(expected, actual);
     }
 
-    [TestMethod()]
+    [TestMethod]
     public void AddKeyWhenNotMissingInQueryStringManyElement()
     {
         var actual = AddKeyWhenMissing(
@@ -175,7 +173,7 @@ public class ImageflowRewriteTests
         AreEquivalentAlsoByValues(expected, actual);
     }
 
-    [TestMethod()]
+    [TestMethod]
     public void AddKeyWhenMissingInQueryStringManyElement()
     {
         var actual = AddKeyWhenMissing(

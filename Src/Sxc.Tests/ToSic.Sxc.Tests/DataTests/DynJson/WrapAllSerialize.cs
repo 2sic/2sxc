@@ -1,7 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Tests.DataTests.DynWrappers;
+﻿using ToSic.Sxc.Tests.DataTests.DynWrappers;
 using static System.Text.Json.JsonSerializer;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.DataTests.DynJson;
 

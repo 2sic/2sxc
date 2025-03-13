@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using static ToSic.Sxc.Edit.Toolbar.ToolbarConstants;
+﻿using static ToSic.Sxc.Edit.Toolbar.ToolbarConstants;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ToolbarService;
 

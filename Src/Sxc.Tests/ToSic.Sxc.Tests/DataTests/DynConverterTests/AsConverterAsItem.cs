@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Tests.DataTests.DynConverterTests;
@@ -13,7 +12,7 @@ public class AsConverterAsItem: TestBaseSxcDb
     public void AsItemWithFakeOk()
     {
         var item = Cdf.AsItemTac(Cdf.FakeEntityTac(0), propsRequired: true);
-        Assert.IsNotNull(item);
+        IsNotNull(item);
     }
 
     [TestMethod]

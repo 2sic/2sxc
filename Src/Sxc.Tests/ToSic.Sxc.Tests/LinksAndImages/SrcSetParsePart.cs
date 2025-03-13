@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Images;
+﻿using ToSic.Sxc.Images;
 using ToSic.Sxc.Internal.Plumbing;
 
 namespace ToSic.Sxc.Tests.LinksAndImages;
@@ -95,7 +93,7 @@ public class SrcSetParsePart
         var expected100 = BuildExpected(100, 'w', 100, 0);
         var expDefault = BuildExpected(0, 'd', 0, 0);
         var result = RecipeVariantsParser.ParseSet(variants);
-        Assert.AreEqual(6, result.Length);
+        AreEqual(6, result.Length);
         CompareSrcSetPart(variants, result.First(), expected100);
         CompareSrcSetPart(variants, result.Skip(1).First(), expected100);
         CompareSrcSetPart(variants, result.Skip(2).First(), expDefault);
@@ -124,7 +122,7 @@ public class SrcSetParsePart
     {
         var expected = BuildExpected(size, sizeType, width, height);
         var asSet = RecipeVariantsParser.ParseSet(variants);
-        Assert.AreEqual(1, asSet.Length, "Expect 1 exact hit");
+        AreEqual(1, asSet.Length, "Expect 1 exact hit");
         var first = asSet.First();
         CompareSrcSetPart(variants, first, expected);
     }
@@ -140,10 +138,10 @@ public class SrcSetParsePart
 
     private static void CompareSrcSetPart(string variants, RecipeVariant result, RecipeVariant expected)
     {
-        Assert.IsNotNull(result);
-        Assert.IsTrue(ParseObject.DNearZero(expected.Size - result.Size), $"Sizes should match on '{variants}'");
-        Assert.AreEqual(expected.SizeType, result.SizeType, $"Size Types should match on '{variants}'");
-        Assert.AreEqual(expected.Width, result.Width, $"Widths should match on '{variants}'");
-        Assert.AreEqual(expected.Height, result.Height, $"Heights should match on '{variants}'");
+        IsNotNull(result);
+        IsTrue(ParseObject.DNearZero(expected.Size - result.Size), $"Sizes should match on '{variants}'");
+        AreEqual(expected.SizeType, result.SizeType, $"Size Types should match on '{variants}'");
+        AreEqual(expected.Width, result.Width, $"Widths should match on '{variants}'");
+        AreEqual(expected.Height, result.Height, $"Heights should match on '{variants}'");
     }
 }

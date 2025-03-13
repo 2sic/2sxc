@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests;
+﻿namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests;
 
 [TestClass]
 public class ImageWithSettings: LinkImageTestBase

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests;
 

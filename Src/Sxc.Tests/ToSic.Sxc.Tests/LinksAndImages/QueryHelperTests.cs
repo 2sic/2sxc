@@ -1,6 +1,4 @@
 ﻿using System.Collections.Specialized;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.LinksAndImages;
 
@@ -8,7 +6,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages;
 public class QueryHelperTests
 {
     private static string AddQueryString(string url, NameValueCollection queryParams)
-        => ToSic.Sxc.Web.Internal.Url.UrlHelpers.AddQueryString(url, queryParams);
+        => Web.Internal.Url.UrlHelpers.AddQueryString(url, queryParams);
 
     private const string urlRelativeNoParams = "/xyz/abc.jpg";
     private const string urlHttpNoParams = "http://2sxc.org/xyz/abc.jpg";

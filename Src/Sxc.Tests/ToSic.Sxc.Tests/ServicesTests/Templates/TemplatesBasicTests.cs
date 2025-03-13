@@ -1,5 +1,4 @@
 ﻿using System.Threading;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ToSic.Sxc.Tests.ServicesTests.Templates;
 
@@ -18,7 +17,7 @@ public class TemplatesBasicTests : TemplatesTestsBase
     {
         var svc = GetTemplateServices();
         var result = svc.Empty(sources: [GetDicSource()]).Parse(value);
-        Assert.AreEqual(expected, result, $"Value: '{value}', notes: {notes}");
+        AreEqual(expected, result, $"Value: '{value}', notes: {notes}");
     }
 
     [DataRow("Hello World", "Hello World")]
@@ -30,7 +29,7 @@ public class TemplatesBasicTests : TemplatesTestsBase
     {
         var svc = GetTemplateServices();
         var result = svc.Empty(sources: [GetFnSource()]).Parse(value);
-        Assert.AreEqual(expected, result, $"Value: '{value}', notes: {notes}");
+        AreEqual(expected, result, $"Value: '{value}', notes: {notes}");
     }
 
     [DataRow("Hello World", "Hello World")]
@@ -48,7 +47,7 @@ public class TemplatesBasicTests : TemplatesTestsBase
         Thread.CurrentThread.CurrentCulture = new("en-US");
         var svc = GetTemplateServices();
         var result = svc.Empty(sources: [GetFnNumberSourcesWithFormat()]).Parse(value);
-        Assert.AreEqual(expected, result, $"Value: '{value}', notes: {notes}");
+        AreEqual(expected, result, $"Value: '{value}', notes: {notes}");
     }
 
 }

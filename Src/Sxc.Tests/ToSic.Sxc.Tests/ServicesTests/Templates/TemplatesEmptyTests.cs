@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace ToSic.Sxc.Tests.ServicesTests.Templates;
+﻿namespace ToSic.Sxc.Tests.ServicesTests.Templates;
 
 [TestClass]
 public class TemplatesEmptyTests: TemplatesTestsBase
@@ -12,7 +10,7 @@ public class TemplatesEmptyTests: TemplatesTestsBase
         var svc = GetTemplateServices();
         var instance1 = svc.Empty();
         var instance2 = svc.Empty();
-        Assert.AreEqual(instance1, instance2);
+        AreEqual(instance1, instance2);
     }
 
 
@@ -22,7 +20,7 @@ public class TemplatesEmptyTests: TemplatesTestsBase
     {
         var svc = GetTemplateServices();
         var result = svc.Empty().Parse(expectedAndValue);
-        Assert.AreEqual(expectedAndValue, result);
+        AreEqual(expectedAndValue, result);
     }
 
 

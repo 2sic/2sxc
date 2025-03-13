@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Images;
+﻿using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Internal;
 using static ToSic.Sxc.Tests.DataForImageTests.ResizeRecipesData;
 
@@ -14,11 +13,11 @@ public class MultiResizeTests: LinkImageTestBase
         var l = GetLinker();
         var settings = l.ResizeParamMerger.BuildResizeSettings(width: 1000);
         var f1 = l.DimGen.ResizeDimensions(settings, settings.Find(SrcSetType.Img, true, null));
-        Assert.AreEqual(1000, f1.Width);
+        AreEqual(1000, f1.Width);
 
         var f2 = new ResizeSettings(settings, factor: 0.5);
         var dims = l.DimGen.ResizeDimensions(f2, f2.Find(SrcSetType.Img, true, null));
-        Assert.AreEqual(500, dims.Width);
+        AreEqual(500, dims.Width);
     }
 
     [DataRow(W50, 0.5, CssNone, "0.5 should be changed")]
@@ -58,6 +57,6 @@ public class MultiResizeTests: LinkImageTestBase
         settings = new(settings, factor: factor);
         var srcSetSettings = settings.Find(SrcSetType.Img, true, cssFramework);
         var f1 = l.DimGen.ResizeDimensions(settings, srcSetSettings);
-        Assert.AreEqual(expected, f1.Width, name);
+        AreEqual(expected, f1.Width, name);
     }
 }

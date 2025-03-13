@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Testing.Shared;
-
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+﻿using ToSic.Testing.Shared;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;
 

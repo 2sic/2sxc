@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Licenses;
 using ToSic.Eav.Testing;
@@ -23,7 +22,7 @@ public class ImageServiceTagsNoPatron() : ImageServiceTagsBase(new ScenarioBasic
     public void VerifyNotPatron()
     {
         var platform = GetService<IPlatformInfo>();
-        Assert.AreEqual(platform.Name, new TestPlatformNotPatron().Name);
+        AreEqual(platform.Name, new TestPlatformNotPatron().Name);
     }
 
     [TestMethod]
@@ -31,7 +30,7 @@ public class ImageServiceTagsNoPatron() : ImageServiceTagsBase(new ScenarioBasic
     {
         var licenseSvc = GetService<ILicenseService>();
         var enabled = licenseSvc.IsEnabled(BuiltInLicenses.PatronPerfectionist);
-        Assert.IsFalse(enabled);
+        IsFalse(enabled);
     }
 
     [TestMethod]
@@ -39,7 +38,7 @@ public class ImageServiceTagsNoPatron() : ImageServiceTagsBase(new ScenarioBasic
     {
         var features = GetService<IFeaturesService>();
         var enabled = features.IsEnabled(SxcFeatures.ImageServiceMultipleSizes.NameId);
-        Assert.IsFalse(enabled);
+        IsFalse(enabled);
     }
 
     protected override bool TestModeImg => false;

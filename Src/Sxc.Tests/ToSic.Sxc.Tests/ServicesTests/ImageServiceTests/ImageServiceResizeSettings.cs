@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Web.Internal.Url;
@@ -20,7 +18,7 @@ public class ImageServiceResizeSettings: TestBaseSxc
     /// <param name="expected"></param>
     private void EqualsAndRestEmpty<T>(IResizeSettings settings, string name, Func<IResizeSettings, T> getValue, T expected)
     {
-        Assert.AreEqual(expected, getValue(settings));
+        AreEqual(expected, getValue(settings));
         AssertAllEmptyExceptSpecified(settings, name);
     }
 
@@ -129,8 +127,8 @@ public class ImageServiceResizeSettings: TestBaseSxc
     public void EmptyWidthAndHeight()
     {
         var settings = this.SettingsTac(width: 100, height: 49);
-        Assert.AreEqual(100, settings.Width);
-        Assert.AreEqual(49, settings.Height);
+        AreEqual(100, settings.Width);
+        AreEqual(49, settings.Height);
         AssertAllEmptyExceptSpecified(settings, [nameof(settings.Width), nameof(settings.Height)]);
     }
 
@@ -154,13 +152,13 @@ public class ImageServiceResizeSettings: TestBaseSxc
 
         // Verify the total count matches expected
         const int expectedCount = 7;
-        Assert.AreEqual(expectedCount - namesToSkip.Length, count, "count should be total fields minus untested");
+        AreEqual(expectedCount - namesToSkip.Length, count, "count should be total fields minus untested");
     }
 
     private static int MaybeTestOneProperty<T>(T actual, T expected, string[] namesToSkip, string notToTest)
     {
         if (namesToSkip.Any(n => n == notToTest)) return 0;
-        Assert.AreEqual(expected, actual, notToTest);
+        AreEqual(expected, actual, notToTest);
         return 1;
 
     }

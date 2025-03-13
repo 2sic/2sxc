@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using ToSic.Eav.Testing;
+﻿using ToSic.Eav.Testing;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using ToSic.Testing.Shared;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using static ToSic.Testing.Shared.TestHelpers;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ImageServiceTests;

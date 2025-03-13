@@ -1,7 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
-
-namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
+﻿namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
 
 [TestClass]
 public class LinkHelperImagePartUndefinedTests: LinkHelperTestBase

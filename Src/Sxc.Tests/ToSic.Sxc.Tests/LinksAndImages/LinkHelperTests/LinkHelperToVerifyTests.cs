@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
+﻿namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
 
 [TestClass]
 public class LinkHelperToVerifyTests : LinkHelperToTestBase

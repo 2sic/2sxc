@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using ToSic.Eav.LookUp;
+﻿using ToSic.Eav.LookUp;
 
 namespace ToSic.Sxc.Tests.ServicesTests.Templates;
 
@@ -24,7 +22,7 @@ public class TemplatesHtmlTests : TemplatesTestsBase
     {
         var svc = GetTemplateServices();
         var result = svc.Empty(sources: [GetHtml()]).Parse(value, allowHtml: true);
-        Assert.AreEqual(expected, result, $"Value: '{value}', notes: {notes}");
+        AreEqual(expected, result, $"Value: '{value}', notes: {notes}");
     }
 
     [DataRow("<div>Val1</div>", "<div>[Html:Key1]</div>")]
@@ -35,7 +33,7 @@ public class TemplatesHtmlTests : TemplatesTestsBase
     {
         var svc = GetTemplateServices();
         var result = svc.Empty(sources: [GetHtml()]).Parse(value);
-        Assert.AreEqual(expected, result, $"Value: '{value}', notes: {notes}");
+        AreEqual(expected, result, $"Value: '{value}', notes: {notes}");
     }
 
 }

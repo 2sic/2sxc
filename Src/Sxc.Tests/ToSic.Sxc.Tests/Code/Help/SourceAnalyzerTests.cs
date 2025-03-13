@@ -1,10 +1,9 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Code.Internal.SourceCode;
 
 namespace ToSic.Sxc.Tests.Code.Help;
 
-[TestClass()]
+[TestClass]
 public class SourceAnalyzerTests
 {
     private static string ExtractBaseClass(string sourceCode, string className) 
@@ -15,7 +14,7 @@ public class SourceAnalyzerTests
     {
         var sourceCode = "public class MyClass : MyBaseClass { }";
         var className = "MyClass";
-        Assert.AreEqual("MyBaseClass", ExtractBaseClass(sourceCode, className));
+        AreEqual("MyBaseClass", ExtractBaseClass(sourceCode, className));
     }
 
     [TestMethod]
@@ -23,7 +22,7 @@ public class SourceAnalyzerTests
     {
         var sourceCode = "public class MyClass : MyBaseClass { }";
         var className = "myclass";
-        Assert.AreEqual("MyBaseClass", ExtractBaseClass(sourceCode, className));
+        AreEqual("MyBaseClass", ExtractBaseClass(sourceCode, className));
     }
 
     [TestMethod]
@@ -31,7 +30,7 @@ public class SourceAnalyzerTests
     {
         var sourceCode = "public class MyClass { }";
         var className = "MyClass";
-        Assert.IsNull(ExtractBaseClass(sourceCode, className));
+        IsNull(ExtractBaseClass(sourceCode, className));
     }
 
     [TestMethod]
@@ -39,7 +38,7 @@ public class SourceAnalyzerTests
     {
         var sourceCode = "public class MyClass : MyBaseClass { }";
         var className = "UnknownClass";
-        Assert.IsNull(ExtractBaseClass(sourceCode, className));
+        IsNull(ExtractBaseClass(sourceCode, className));
     }
 
     [TestMethod]
@@ -47,7 +46,7 @@ public class SourceAnalyzerTests
     {
         var sourceCode = "public class MyClass : List<string> { }";
         var className = "MyClass";
-        Assert.AreEqual("List<string>", ExtractBaseClass(sourceCode, className));
+        AreEqual("List<string>", ExtractBaseClass(sourceCode, className));
     }
 
     [TestMethod]
@@ -55,7 +54,7 @@ public class SourceAnalyzerTests
     {
         var sourceCode = "public class MyClass : IInterface, MyBaseClass { }";
         var className = "MyClass";
-        Assert.AreEqual("IInterface", ExtractBaseClass(sourceCode, className));
+        AreEqual("IInterface", ExtractBaseClass(sourceCode, className));
     }
 
     [TestMethod]
@@ -64,7 +63,7 @@ public class SourceAnalyzerTests
     {
         var sourceCode = "public class OuterClass { public class MyClass : MyBaseClass { } }";
         var className = "MyClass";
-        Assert.IsNull(ExtractBaseClass(sourceCode, className));
+        IsNull(ExtractBaseClass(sourceCode, className));
     }
 
     [TestMethod]
@@ -73,7 +72,7 @@ public class SourceAnalyzerTests
     {
         var sourceCode = "// public class MyClass : MyBaseClass { }";
         var className = "MyClass";
-        Assert.IsNull(ExtractBaseClass(sourceCode, className));
+        IsNull(ExtractBaseClass(sourceCode, className));
     }
 
     [TestMethod]
@@ -82,7 +81,7 @@ public class SourceAnalyzerTests
     {
         var sourceCode = "string code = \"public class MyClass : MyBaseClass { }\";";
         var className = "MyClass";
-        Assert.IsNull(ExtractBaseClass(sourceCode, className));
+        IsNull(ExtractBaseClass(sourceCode, className));
     }
 
     [TestMethod]
@@ -90,7 +89,7 @@ public class SourceAnalyzerTests
     {
         var sourceCode = "public    class     MyClass\n:\nMyBaseClass { }";
         var className = "MyClass";
-        Assert.AreEqual("MyBaseClass", ExtractBaseClass(sourceCode, className));
+        AreEqual("MyBaseClass", ExtractBaseClass(sourceCode, className));
     }
 
     [TestMethod]
@@ -98,7 +97,7 @@ public class SourceAnalyzerTests
     {
         string sourceCode = null;
         var className = "MyClass";
-        Assert.IsNull(ExtractBaseClass(sourceCode, className));
+        IsNull(ExtractBaseClass(sourceCode, className));
     }
 
     [TestMethod]
@@ -106,7 +105,7 @@ public class SourceAnalyzerTests
     {
         var sourceCode = "";
         var className = "MyClass";
-        Assert.IsNull(ExtractBaseClass(sourceCode, className));
+        IsNull(ExtractBaseClass(sourceCode, className));
     }
 
     [TestMethod]
@@ -124,6 +123,6 @@ public class SourceAnalyzerTests
     {
         var sourceCode = "public class MyClass : MyBaseClass { }";
         var className = "";
-        Assert.IsNull(ExtractBaseClass(sourceCode, className));
+        IsNull(ExtractBaseClass(sourceCode, className));
     }
 }

@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
-using ToSic.Sxc.Edit.Toolbar;
+﻿using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Tests.EditTests.ToolbarRuleTests;
 
 namespace ToSic.Sxc.Tests.EditTests.ItemToolbarPickerTests;

@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
-using static ToSic.Sxc.Tests.LinksAndImages.ParametersTestExtensions;
+﻿using static ToSic.Sxc.Tests.LinksAndImages.ParametersTestExtensions;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
 

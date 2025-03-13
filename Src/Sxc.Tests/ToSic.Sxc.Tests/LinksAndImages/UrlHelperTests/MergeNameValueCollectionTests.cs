@@ -1,5 +1,4 @@
 ﻿using System.Collections.Specialized;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests;
@@ -23,15 +22,15 @@ public class MergeNameValueCollectionTests
         var nvc2 = UrlHelpers.ParseQueryString(second);
         var itemsIn2 = nvc2.Count;
         var merged = ImportTest(nvc1, nvc2);
-        Assert.AreEqual(itemsIn1, nvc1.Count, "Import shouldn't change first"); 
-        Assert.AreEqual(itemsIn2, nvc2.Count, "Import shouldn't change second");
-        Assert.AreEqual(exp, UrlHelpers.NvcToString(merged));
+        AreEqual(itemsIn1, nvc1.Count, "Import shouldn't change first"); 
+        AreEqual(itemsIn2, nvc2.Count, "Import shouldn't change second");
+        AreEqual(exp, UrlHelpers.NvcToString(merged));
 
         merged = ImportTest(nvc1, nvc2, true);
         if (expReplace == Same) expReplace = exp;
-        Assert.AreEqual(itemsIn1, nvc1.Count, "Import shouldn't change first"); 
-        Assert.AreEqual(itemsIn2, nvc2.Count, "Import shouldn't change second");
-        Assert.AreEqual(expReplace, UrlHelpers.NvcToString(merged));
+        AreEqual(itemsIn1, nvc1.Count, "Import shouldn't change first"); 
+        AreEqual(itemsIn2, nvc2.Count, "Import shouldn't change second");
+        AreEqual(expReplace, UrlHelpers.NvcToString(merged));
 
     }
 

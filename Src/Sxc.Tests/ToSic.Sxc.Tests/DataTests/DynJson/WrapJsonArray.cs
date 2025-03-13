@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Nodes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Wrapper;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.DataTests.DynJson;
 
@@ -60,7 +56,7 @@ public class WrapJsonArray : DynAndTypedTestsBase
 
         var jsonNode = JsonNode.Parse(json);
         var isArray = jsonNode is JsonArray;
-        Assert.IsTrue(isArray);
+        IsTrue(isArray);
         IsNotNull(jsonNode.AsArray());
     }
 

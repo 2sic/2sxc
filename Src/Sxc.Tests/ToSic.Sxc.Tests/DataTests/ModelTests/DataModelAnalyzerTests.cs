@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Models;
 
 namespace ToSic.Sxc.Tests.DataTests.ModelTests;
@@ -9,11 +8,11 @@ public class DataModelAnalyzerTests : TestBaseSxcDb
 {
     private void AssertTypeName<T>(string name)
         where T : class, ICanWrapData =>
-        Assert.AreEqual(name, DataModelAnalyzerTestAccessors.GetContentTypeNamesTac<T>().Flat);
+        AreEqual(name, DataModelAnalyzerTestAccessors.GetContentTypeNamesTac<T>().Flat);
 
     private void AssertStreamNames<T>(string namesCsv)
         where T : class, ICanWrapData =>
-        Assert.AreEqual(namesCsv, DataModelAnalyzerTestAccessors.GetStreamNameListTac<T>().Flat);
+        AreEqual(namesCsv, DataModelAnalyzerTestAccessors.GetStreamNameListTac<T>().Flat);
 
     class NotDecorated: ICanWrapData;
 

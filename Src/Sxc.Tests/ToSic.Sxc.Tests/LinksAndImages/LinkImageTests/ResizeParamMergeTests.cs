@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Images;
+﻿using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Tests.LinksAndImages;
 

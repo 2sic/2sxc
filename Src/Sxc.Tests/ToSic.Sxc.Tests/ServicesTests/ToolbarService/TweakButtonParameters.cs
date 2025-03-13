@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarConstants;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ToolbarService;

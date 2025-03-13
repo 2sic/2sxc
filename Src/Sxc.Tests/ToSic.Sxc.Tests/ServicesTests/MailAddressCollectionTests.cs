@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace ToSic.Sxc.Tests.ServicesTests;
+﻿namespace ToSic.Sxc.Tests.ServicesTests;
 
 [TestClass]
 public class MailAddressCollectionTests : MailServiceTestsBase

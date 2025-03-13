@@ -1,7 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
-
-namespace ToSic.Sxc.Tests.LinksAndImages;
+﻿namespace ToSic.Sxc.Tests.LinksAndImages;
 
 [TestClass]
 public class UrlPartsToLink : UrlPartsTestBase

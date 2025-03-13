@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Cms.Users.Internal;
@@ -11,7 +10,7 @@ namespace ToSic.Sxc.Tests.DataSources;
 /// <summary>
 /// Mock a list of roles
 /// </summary>
-public class MockRolesDataSource() : ServiceBase("DS.MockRoles"), IUserRolesProvider
+public class MockUserRolesProvider() : ServiceBase("DS.MockRoles"), IUserRolesProvider
 {
     public IEnumerable<UserRoleModel> GetRoles()
     {

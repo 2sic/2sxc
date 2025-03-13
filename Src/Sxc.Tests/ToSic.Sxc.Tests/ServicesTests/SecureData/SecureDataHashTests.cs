@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Eav.Security.Encryption;
 using ToSic.Sxc.Services;
 
@@ -27,7 +26,7 @@ public class SecureDataHashTests: TestBaseSxc
     {
         string value = null;
         var result = Sha256.Hash(null);
-        Assert.AreEqual("", result, $"failed on '{value}'");
+        AreEqual("", result, $"failed on '{value}'");
     }
 
     /// <remarks>
@@ -45,7 +44,7 @@ public class SecureDataHashTests: TestBaseSxc
     {
         var sds = GetSecureDataService();
         var result = sds.HashSha256(value + salt);
-        Assert.AreEqual(expected, result, $"failed on '{value}'; salt: '{salt}'");
+        AreEqual(expected, result, $"failed on '{value}'; salt: '{salt}'");
     }
 
     /// <summary>
@@ -61,7 +60,7 @@ public class SecureDataHashTests: TestBaseSxc
     {
         var sds = GetSecureDataService();
         var result = sds.HashSha256(value + salt);
-        Assert.AreNotEqual(expected, result, $"failed on '{value}'; salt: '{salt}'");
+        AreNotEqual(expected, result, $"failed on '{value}'; salt: '{salt}'");
     }
 
 
@@ -80,7 +79,7 @@ public class SecureDataHashTests: TestBaseSxc
     {
         var sds = GetSecureDataService();
         var result = sds.HashSha512(value + salt);
-        Assert.AreEqual(expected, result, $"failed on '{value}'; salt: '{salt}'");
+        AreEqual(expected, result, $"failed on '{value}'; salt: '{salt}'");
     }
 
     /// <summary>
@@ -96,6 +95,6 @@ public class SecureDataHashTests: TestBaseSxc
     {
         var sds = GetSecureDataService();
         var result = sds.HashSha512(value + salt);
-        Assert.AreNotEqual(expected, result, $"failed on '{value}'; salt: '{salt}'");
+        AreNotEqual(expected, result, $"failed on '{value}'; salt: '{salt}'");
     }
 }

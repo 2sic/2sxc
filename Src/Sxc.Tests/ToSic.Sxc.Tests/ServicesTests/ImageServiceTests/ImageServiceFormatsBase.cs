@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Eav.Testing;
+﻿using ToSic.Eav.Testing;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Testing.Shared;
 
@@ -45,16 +44,16 @@ public abstract partial  class ImageServiceFormatsBase(TestScenario testScenario
 
     private static void AssertUnknownFileInfo(string expected, IImageFormat format)
     {
-        Assert.IsNotNull(format);
-        Assert.AreEqual(expected, format.Format);
-        Assert.AreEqual("", format.MimeType);
+        IsNotNull(format);
+        AreEqual(expected, format.Format);
+        AreEqual("", format.MimeType);
     }
 
     private static void AssertOneFileInfo(string expectedType, IImageFormat imageInfo)
     {
-        Assert.IsNotNull(imageInfo);
-        Assert.AreEqual(expectedType, imageInfo.Format);
-        Assert.AreEqual(ImageConstants.FileTypes[expectedType].MimeType, imageInfo.MimeType);
+        IsNotNull(imageInfo);
+        AreEqual(expectedType, imageInfo.Format);
+        AreEqual(ImageConstants.FileTypes[expectedType].MimeType, imageInfo.MimeType);
     }
 
 }

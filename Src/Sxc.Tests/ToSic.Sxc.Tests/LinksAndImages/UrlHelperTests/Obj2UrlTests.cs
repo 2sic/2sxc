@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Web.Internal.Url;
+﻿using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests;
 
@@ -30,35 +29,35 @@ public class Obj2UrlTests
         {
             array = new int[] { 32, 16, 8 }
         };
-        Assert.AreEqual("array=32,16,8", O2uSerialize(obj));
+        AreEqual("array=32,16,8", O2uSerialize(obj));
     }
 
     [TestMethod]
-    public void StringOnly() => Assert.AreEqual(TestCase1Str, O2uSerialize(TestCase1Str));
+    public void StringOnly() => AreEqual(TestCase1Str, O2uSerialize(TestCase1Str));
 
     [TestMethod]
-    public void StringNull() => Assert.AreEqual(null as string, O2uSerialize(null));
+    public void StringNull() => AreEqual(null as string, O2uSerialize(null));
     [TestMethod]
-    public void StringEmpty() => Assert.AreEqual("", O2uSerialize(""));
+    public void StringEmpty() => AreEqual("", O2uSerialize(""));
 
     [TestMethod]
-    public void StringsInArray() => Assert.AreEqual(TestCase1Str, O2uSerialize( new object[] { TestCase1Str }));
+    public void StringsInArray() => AreEqual(TestCase1Str, O2uSerialize( new object[] { TestCase1Str }));
 
     [TestMethod]
-    public void StringsInArrayNullOnly() => Assert.AreEqual("", O2uSerialize( new object[] { null }));
+    public void StringsInArrayNullOnly() => AreEqual("", O2uSerialize( new object[] { null }));
     [TestMethod]
-    public void StringsInArrayEmptyOnly() => Assert.AreEqual("", O2uSerialize( new object[] { "" }));
+    public void StringsInArrayEmptyOnly() => AreEqual("", O2uSerialize( new object[] { "" }));
 
     [TestMethod]
-    public void StringsInArrayWithNull() => Assert.AreEqual(TestCase1Str, O2uSerialize( new object[] { TestCase1Str, null }));
+    public void StringsInArrayWithNull() => AreEqual(TestCase1Str, O2uSerialize( new object[] { TestCase1Str, null }));
 
     [TestMethod]
-    public void StringsInArray2() => Assert.AreEqual($"{TestCase1Str}&{TestCase2Str}", O2uSerialize( new object[] { TestCase1Str, TestCase2Str }));
+    public void StringsInArray2() => AreEqual($"{TestCase1Str}&{TestCase2Str}", O2uSerialize( new object[] { TestCase1Str, TestCase2Str }));
 
     [TestMethod]
     public void BasicObj()
     {
-        Assert.AreEqual(TestCase1Str, O2uSerialize(TestCase1));
+        AreEqual(TestCase1Str, O2uSerialize(TestCase1));
     }
     [TestMethod]
     public void WithSubArray()
@@ -70,7 +69,7 @@ public class Obj2UrlTests
                 array = new int[] { 32, 16, 8 }
             }
         };
-        Assert.AreEqual("prefill:array=32,16,8", O2uSerialize(obj));
+        AreEqual("prefill:array=32,16,8", O2uSerialize(obj));
     }
 
 
@@ -78,26 +77,26 @@ public class Obj2UrlTests
     [TestMethod]
     public void MergeObject1And2()
     {
-        Assert.AreEqual($"{TestCase1Str}&{TestCase2Str}", O2uSerialize(new object[] { TestCase1, TestCase2 }));
+        AreEqual($"{TestCase1Str}&{TestCase2Str}", O2uSerialize(new object[] { TestCase1, TestCase2 }));
     }
 
     [TestMethod]
     public void MergeObject1AndString2()
     {
-        Assert.AreEqual($"{TestCase1Str}&{TestCase2Str}", O2uSerialize(new object[] { TestCase1, TestCase2Str }));
+        AreEqual($"{TestCase1Str}&{TestCase2Str}", O2uSerialize(new object[] { TestCase1, TestCase2Str }));
     }
 
     [TestMethod]
     public void MergeString1AndObject2()
     {
-        Assert.AreEqual($"{TestCase1Str}&{TestCase2Str}", O2uSerialize(new object[] { TestCase1Str, TestCase2 }));
+        AreEqual($"{TestCase1Str}&{TestCase2Str}", O2uSerialize(new object[] { TestCase1Str, TestCase2 }));
     }
 
     [TestMethod]
     public void BasicWithPrefix()
     {
         var prefix = "prefix:";
-        Assert.AreEqual($"{prefix}test=7&{prefix}name=daniel", new ObjectToUrl(prefix: prefix).Serialize(TestCase1));
+        AreEqual($"{prefix}test=7&{prefix}name=daniel", new ObjectToUrl(prefix: prefix).Serialize(TestCase1));
     }
 
     [TestMethod]
@@ -112,7 +111,7 @@ public class Obj2UrlTests
                 title = "new title"
             }
         };
-        Assert.AreEqual("test=7&name=daniel&prefill:title=new%20title", O2uSerialize(obj));
+        AreEqual("test=7&name=daniel&prefill:title=new%20title", O2uSerialize(obj));
     }
 
     [TestMethod]
@@ -130,6 +129,6 @@ public class Obj2UrlTests
                 }
             }
         };
-        Assert.AreEqual("prefill:title=new%20title&prefill:entities:name=daniel&prefill:entities:and=ok", O2uSerialize(obj));
+        AreEqual("prefill:title=new%20title&prefill:entities:name=daniel&prefill:entities:and=ok", O2uSerialize(obj));
     }
 }
