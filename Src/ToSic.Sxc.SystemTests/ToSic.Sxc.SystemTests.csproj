@@ -33,6 +33,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\eav-server\ToSic.Eav.DataSource.TestHelpers\ToSic.Eav.DataSource.TestHelpers.csproj" />
+    <ProjectReference Include="..\..\..\eav-server\ToSic.Eav.Testing.FullDbFixtures\ToSic.Eav.Testing.FullDbFixtures.csproj" />
     <ProjectReference Include="..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj" />
     <ProjectReference Include="..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
   </ItemGroup>

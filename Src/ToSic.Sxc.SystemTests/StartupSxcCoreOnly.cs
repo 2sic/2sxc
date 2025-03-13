@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.StartUp;
-using ToSic.Lib;
 using ToSic.Sxc.Startup;
+using ToSic.Testing.Shared;
 
 #pragma warning disable CA1822
 
@@ -23,6 +23,8 @@ public class StartupSxcCoreOnly
     /// </summary>
     public virtual void ConfigureServices(IServiceCollection services) =>
         services
+            .AddTransient<FullDbFixtureHelper>()
+            .AddTransient<DataSourcesTstBuilder>()
             // 2sxc core
             .AddSxcCore()
             .AddLibCore()
