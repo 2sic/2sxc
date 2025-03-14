@@ -70,7 +70,7 @@ public class ImageBasic(LinkImageTestHelper helper)// : LinkImageTestBase
         helper.TestOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: "0.5");
 
         // Now set culture and run again
-        System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("de-DE");
+        Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("de-DE");
         helper.TestOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: "0.5");
         helper.TestOnLinkerAndHelper("test.jpg?w=200&h=400", "test.jpg", width: 200, aspectRatio: "0.5");
         helper.TestOnLinkerAndHelper("test.jpg?w=200&h=100", "test.jpg", width: 200, aspectRatio: "2");

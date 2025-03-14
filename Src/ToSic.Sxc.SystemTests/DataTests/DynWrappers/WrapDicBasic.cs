@@ -5,7 +5,7 @@ using ToSic.Sxc.Data.Internal.Wrapper;
 namespace ToSic.Sxc.DataTests.DynWrappers;
 
 [Startup(typeof(StartupSxcCoreOnly))]
-public class WrapDicBasic(CodeDataWrapper cdf) //: TestBaseSxcDb
+public class WrapDicBasic(CodeDataWrapper cdf)
 {
     private WrapDictionaryDynamic<TKey, TValue> ToDyn<TKey, TValue>(Dictionary<TKey, TValue> dic)
         => cdf.FromDictionary(dic);

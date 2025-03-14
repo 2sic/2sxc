@@ -10,7 +10,6 @@ public abstract class ImageServiceTagsImgBase(IImageService svc, ITestOutputHelp
     public virtual void ImageTagMultiTest(string expected, string variants, object factor, string testName)
     {
         var testSet = ImageTagsTestPermutations.GenerateTestParams(testName, variants);
-        //var svc = GetService<IImageService>();
         TestManyButThrowOnceOnly(testSet.Select(ts => (ts.Name, ts)), test =>
         {
             // Factor set on the Img call
@@ -18,20 +17,20 @@ public abstract class ImageServiceTagsImgBase(IImageService svc, ITestOutputHelp
                 recipe: new Recipe(variants: test.Set.Variants));
             var imgSetNoFactor = svc.Img(link: ImgUrl, settings: settingsWithoutFactor, factor: factor,
                 recipe: test.Pic.Variants);
-            Assert.Equal(expected, imgSetNoFactor.ToString());//, $"Failed (factor on Img): {test.Name}");
+            Equal(expected, imgSetNoFactor.ToString());//, $"Failed (factor on Img): {test.Name}");
 
             // Factor specified on settings
             var settingsWithFactor = svc.SettingsTac(factor: factor, width: test.Set.Width,
                 height: test.Set.Height,
                 recipe: new Recipe(variants: test.Set.Variants));
             var imgSetFactor = svc.Img( link: ImgUrl, settings: settingsWithFactor, recipe: test.Pic.Variants);
-            Assert.Equal(expected, imgSetFactor.ToString());//, $"Failed (factor on settings): {test.Name}");
+            Equal(expected, imgSetFactor.ToString());//, $"Failed (factor on settings): {test.Name}");
 
             // Factor on both - should not equal, because the factor is only applied 1x
             if (factor == null) return; // Skip if the factor has no effect
             var imgBothFactors = svc.Img(link: ImgUrl, settings: settingsWithFactor, factor: factor,
                 recipe: test.Pic.Variants);
-            Assert.Equal(expected, imgBothFactors.ToString());//, $"Failed (factor on both): {test.Name}");
+            Equal(expected, imgBothFactors.ToString());//, $"Failed (factor on both): {test.Name}");
         });
     }
 

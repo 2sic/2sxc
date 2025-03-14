@@ -3,10 +3,8 @@
 namespace ToSic.Sxc.DataTests.DynConverterTests;
 
 [Startup(typeof(StartupSxcCoreOnly))]
-public class AsConverterAsItem(CodeDataFactory cdf)//: TestBaseSxcDb
+public class AsConverterAsItem(CodeDataFactory cdf)
 {
-    //public CodeDataFactory Cdf => field ??= GetService<CodeDataFactory>();
-
     [Fact]
     public void AsItemWithFakeOk()
     {
@@ -15,7 +13,6 @@ public class AsConverterAsItem(CodeDataFactory cdf)//: TestBaseSxcDb
     }
 
     [Fact]
-    //[ExpectedException(typeof(ArgumentException))]
     public void AsItemWithAnonFail()
     {
         var data = new

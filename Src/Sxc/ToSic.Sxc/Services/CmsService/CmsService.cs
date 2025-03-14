@@ -44,11 +44,12 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
         if (field is null)
             return l.Return(cntHelper.Wrap(value ?? thing, defaultToolbar: false), "No field, will just treat as value");
 
-        // Get Content type and field information
+        // Get Content type and field information; if not found, exit early
         var contentType = field.Parent.Entity?.Type; // Entity can be null on mock data
         if (contentType == null)
             return l.Return(cntHelper.Wrap(value, defaultToolbar: false), "can't find content-type, treat as value");
 
+        // Get Attribute information; if not found, exit early
         var attribute = contentType[field.Name];
         if (attribute == null)
             return l.Return(cntHelper.Wrap(value, defaultToolbar: false), "no attribute info, treat as value");

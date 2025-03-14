@@ -13,14 +13,11 @@ public class DynAndTypedTestHelper(CodeDataFactory factory, CodeDataWrapper wrap
 {
     #region Helper / Factories
 
-    public CodeDataFactory Factory => factory; //_fac.Get(GetService<CodeDataFactory>);
-    //private readonly GetOnce<CodeDataFactory> _fac = new();
+    public CodeDataFactory Factory => factory;
 
-    public CodeDataWrapper Wrapper => wrapper;// _wrapFac.Get(GetService<CodeDataWrapper>);
-    //private readonly GetOnce<CodeDataWrapper> _wrapFac = new();
+    public CodeDataWrapper Wrapper => wrapper;
 
-    public CodeJsonWrapper JsonWrapper => codeJsonGenerator.New();//; _codeJson.Get(GetService<Generator<CodeJsonWrapper>>).New();
-    //private readonly GetOnce<Generator<CodeJsonWrapper>> _codeJson = new();
+    public CodeJsonWrapper JsonWrapper => codeJsonGenerator.New();
 
     #endregion
 

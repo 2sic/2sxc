@@ -9,7 +9,7 @@ public class Startup: StartupSxcWithDb
 {
     public override void ConfigureServices(IServiceCollection services)
     {
-        services.TryAddTransient<IValueConverter, MockValueConverter>();
+        //services.TryAddTransient<IValueConverter, MockValueConverter>();
         base.ConfigureServices(services);
     }
 

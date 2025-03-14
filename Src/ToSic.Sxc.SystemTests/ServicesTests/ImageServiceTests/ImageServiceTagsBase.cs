@@ -31,7 +31,7 @@ public abstract class ImageServiceTagsBase(IImageService svc, ITestOutputHelper 
     [Fact]
     public void UrlResized()
     {
-        //var svc = GetService<IImageService>();
+        
         var url = TestModeImg ? svc.Img(ImgUrl).Src : svc.Picture(ImgUrl).Src;
         Equal(ImgUrl, url);
     }
@@ -40,7 +40,7 @@ public abstract class ImageServiceTagsBase(IImageService svc, ITestOutputHelper 
     public void ImgAlt()
     {
         const string imgAlt = "test-alt";
-        //var svc = GetService<IImageService>();
+        
         var result = TestModeImg 
             ? svc.Img(ImgUrl, imgAlt: imgAlt).ToString()
             : svc.Picture(ImgUrl, imgAlt: imgAlt).Img.ToString();
@@ -50,7 +50,7 @@ public abstract class ImageServiceTagsBase(IImageService svc, ITestOutputHelper 
     [Fact]
     public void ImgClass()
     {
-        //var svc = GetService<IImageService>();
+        
         var cls = "class-dummy";
         var result = TestModeImg
             ? svc.Img(ImgUrl, imgClass: cls).ToString()
@@ -63,7 +63,7 @@ public abstract class ImageServiceTagsBase(IImageService svc, ITestOutputHelper 
 
     protected void PictureTagInner(string expectedParts, string variants, bool inPicTag, string testName)
     {
-        //var svc = GetService<IImageService>();
+        
         var rule = new Recipe(variants: variants);
         var settings = svc.SettingsTac(width: 120, height: 24, recipe: inPicTag ? null : rule);
         var pic = svc.Picture(link: ImgUrl, settings: settings, recipe: inPicTag ? rule : null);
@@ -85,7 +85,7 @@ public abstract class ImageServiceTagsBase(IImageService svc, ITestOutputHelper 
         {
             output.WriteLine($"Test: {test}");
 
-            //var svc = GetService<IImageService>();
+            
             var settings = svc.SettingsTac(width: test.Set.Width, height: test.Set.Height,
                 recipe: test.Set.SrcSetRule);
             var pic = svc.Picture(link: ImgUrl, settings: settings, recipe: test.Pic.SrcSetRule).Sources;

@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.ServicesTests.ImageServiceTests;
 
 [Startup(typeof(StartupSxcCoreOnly))]
-public class ImageServiceAttributes(IImageService imgSvc)//: TestBaseSxcDb
+public class ImageServiceAttributes(IImageService imgSvc)
 {
     /// <summary>
     /// 
@@ -31,13 +31,12 @@ public class ImageServiceAttributes(IImageService imgSvc)//: TestBaseSxcDb
             OnRecipe: "rec-class")
     ];
 
-    public static TheoryData<TestCase> TestDataImgClass { get; } = [..TestCasesClass];//.ToTestEnum();
+    public static TheoryData<TestCase> TestDataImgClass { get; } = [..TestCasesClass];
 
     [Theory]
     [MemberData(nameof(TestDataImgClass))]
-    public void TestClassImg(TestCase test)// testObj)
+    public void TestClassImg(TestCase test)
     {
-        //var test = (TestCase)testObj;
         var recDic = new Dictionary<string, object> { { "class", test.OnRecipe } };
         var recipe = test.UseRecipe
             ? imgSvc.Recipe(null, attributes: recDic)
@@ -51,12 +50,11 @@ public class ImageServiceAttributes(IImageService imgSvc)//: TestBaseSxcDb
         Equal(pic.Img.ToString(), picTweak.Img.ToString());//, $"Should be identical for tweak {test}");
     }
 
-    public static TheoryData<TestCase> TestDataPicClass { get; } = [..TestCasesClass.Where(t => !t.UseRecipe)];//.ToTestEnum();
+    public static TheoryData<TestCase> TestDataPicClass { get; } = [..TestCasesClass.Where(t => !t.UseRecipe)];
     [Theory]
     [MemberData(nameof(TestDataPicClass))]
     public void TestClassPic(TestCase test)
     {
-        //var test = (TestCase)testObj;
         var pic = imgSvc.Picture("dummy.jpg", pictureClass: test.OnCall);
         True(pic.ToString().Contains(test.Expected), $"{test}: {pic.Picture}");
         False(pic.Img.ToString().Contains(test.Expected), $"{test}: {pic.Img}");
@@ -80,13 +78,12 @@ public class ImageServiceAttributes(IImageService imgSvc)//: TestBaseSxcDb
 
     ];
 
-    public static TheoryData<TestCase> TestDataImgStyle { get; } = [..TestCasesStyles];//.ToTestEnum();
+    public static TheoryData<TestCase> TestDataImgStyle { get; } = [..TestCasesStyles];
 
     [Theory]
     [MemberData(nameof(TestDataImgStyle))]
-    public void TestImgStyleOnAttributes(TestCase test)// testObj)
+    public void TestImgStyleOnAttributes(TestCase test)
     {
-        //var test = (TestCase)testObj;
         var callDic = new Dictionary<string, object> { { "style", test.OnCall} };
         var recipeDic = new Dictionary<string, object> { { "style", test.OnRecipe } };
         var recipe = test.UseRecipe ? imgSvc.Recipe(null, attributes: recipeDic) : null;
@@ -104,7 +101,6 @@ public class ImageServiceAttributes(IImageService imgSvc)//: TestBaseSxcDb
     [MemberData(nameof(TestDataPicStyle))]
     public void TestStylePic(TestCase test)
     {
-        //var test = (TestCase)testObj;
         var callDic = new Dictionary<string, object> { { "style", test.OnCall } };
         //var recipeDic = new Dictionary<string, object> { { "style", test.OnRecipe } };
         //var recipe = test.UseRecipe ? imgSvc.Recipe(null, attributes: recipeDic) : null;

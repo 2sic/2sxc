@@ -6,7 +6,7 @@ using static ToSic.Sxc.Services.Cache.CacheServiceConstants;
 namespace ToSic.Sxc.ServicesTests.CacheTests;
 
 [Startup(typeof(StartupSxcCoreOnly))]
-public class CacheSpecsTests(ICacheService svc) //: TestBaseSxcDb
+public class CacheSpecsTests(ICacheService svc)
 {
     private static readonly string MainPrefix = $"{CacheKeyTests.FullDefaultPrefix.Replace("App:0", "App:-1")}Main{Sep}";
 
@@ -17,7 +17,6 @@ public class CacheSpecsTests(ICacheService svc) //: TestBaseSxcDb
     public void ShareKeyAcrossApps()
     {
         var expected = $"{CacheKeyTests.FullDefaultPrefix.Replace(Sep + "App:0", "")}Main";
-        //var svc = GetService<ICacheService>();
         var specs = svc.CreateSpecsTac("Main", shared: true);
         Equal(expected, specs.Key);
     }
@@ -26,7 +25,6 @@ public class CacheSpecsTests(ICacheService svc) //: TestBaseSxcDb
     public void VaryByCustom1CaseSensitive()
     {
         var expected = MainPrefix + "VaryByKey1=Value1";
-        //var svc = GetService<ICacheService>();
         var specs = svc.CreateSpecsTac("Main")
             .VaryByTac("Key1", "Value1", caseSensitive: true);
         Equal(expected, specs.Key);
