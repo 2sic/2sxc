@@ -23,8 +23,8 @@ public class StartupSxcCoreOnly
     /// </summary>
     public virtual void ConfigureServices(IServiceCollection services) =>
         services
-            .AddTransient<FullDbFixtureHelper>()
-            .AddTransient<DataSourcesTstBuilder>()
+            .AddFixtureHelpers()
+            .AddDataSourceTestHelpers()
             // 2sxc core
             .AddSxcCore()
             .AddLibCore()

@@ -9,7 +9,7 @@ using ToSic.Testing.Shared;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Tests.DataSources;
 
-public class RolesDataSourceTests(DataBuilder dataBuilder, DataSourcesTstBuilder DsSvc) : IClassFixture<DoFixtureStartup<ScenarioBasic>>
+public class RolesDataSourceTests(DataBuilder dataBuilder, DataSourcesTstBuilder dsSvc) : IClassFixture<DoFixtureStartup<ScenarioBasic>>
 {
     public class Startup: StartupSxcWithDb
     {
@@ -73,7 +73,7 @@ public class RolesDataSourceTests(DataBuilder dataBuilder, DataSourcesTstBuilder
     }
 
     private UserRoles GenerateRolesDataSourceDataSource(object options = default) 
-        => DsSvc.CreateDataSourceNew<UserRoles>(new DataSourceOptionConverter()
+        => dsSvc.CreateDataSourceNew<UserRoles>(new DataSourceOptionConverter()
             .Create(new DataSourceOptions
             {
                 LookUp = new LookUpTestData(dataBuilder).AppSetAndRes()

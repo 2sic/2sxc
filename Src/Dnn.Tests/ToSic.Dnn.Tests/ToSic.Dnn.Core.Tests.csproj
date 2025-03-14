@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetNuke.Core" Version="9.6.1" />
+    <PackageReference Include="DotNetNuke.Web" Version="9.6.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.4.3" />
     <PackageReference Include="MSTest.TestFramework" Version="3.4.3" />
   </ItemGroup>
