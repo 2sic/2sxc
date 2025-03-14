@@ -3,7 +3,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Web.Internal.Url;
 using Parameters = ToSic.Sxc.Context.Internal.Parameters;
 
-namespace ToSic.Sxc.Tests.LinksAndImages;
+namespace ToSic.Sxc.LinksAndImages;
 
 internal static class ParametersTestExtensions
 {

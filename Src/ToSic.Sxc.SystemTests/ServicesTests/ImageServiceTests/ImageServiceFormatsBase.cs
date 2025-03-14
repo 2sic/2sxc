@@ -4,7 +4,7 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.ServicesTests.ImageServiceTests;
 
 [Startup(typeof(StartupSxcCoreOnly))]
-public abstract partial  class ImageServiceFormatsBase(IImageService imgSvc) //: TestBaseSxcDb(testScenario)
+public abstract partial  class ImageServiceFormatsBase(IImageService imgSvc)
 {
     [Theory]
     [InlineData("test.png")]

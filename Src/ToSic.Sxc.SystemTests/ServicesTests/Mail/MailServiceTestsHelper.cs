@@ -4,11 +4,9 @@ using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.ServicesTests.Mail;
 
-public class MailServiceTestsHelper(IMailService mailSvc) //: TestBaseSxc
+public class MailServiceTestsHelper(IMailService mailSvc) 
 {
     #region Helpers
-
-    //public IMailService mailSvc => mailSvc;// GetService<IMailService>();
 
     public const string Address = @"user@host";
     public const string DisplayName = @"Display Name";

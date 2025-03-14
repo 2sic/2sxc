@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Tests.DataTests;
-
-namespace ToSic.Sxc.DataTests.DynWrappers;
+﻿namespace ToSic.Sxc.DataTests.DynWrappers;
 
 
 public class WrapObjTypedItem(DynAndTypedTestHelper helper)

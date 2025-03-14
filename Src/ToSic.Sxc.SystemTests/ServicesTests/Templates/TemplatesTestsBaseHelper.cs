@@ -3,7 +3,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.ServicesTests.Templates;
 
-public class TemplatesTestsBaseHelper(ITemplateService templateSvc) //: TestBaseSxc
+public class TemplatesTestsBaseHelper(ITemplateService templateSvc) 
 {
     //protected ITemplateService templateSvc. 
     //    => _service ??= GetService<ITemplateService>();

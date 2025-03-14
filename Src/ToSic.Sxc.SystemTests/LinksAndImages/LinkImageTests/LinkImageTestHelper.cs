@@ -4,12 +4,12 @@ using ToSic.Sxc.Data.Internal.Dynamic;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Internal;
+using ToSic.Sxc.LinksAndImages.LinkHelperTests;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
 
 namespace ToSic.Sxc.LinksAndImages.LinkImageTests;
 
-public class LinkImageTestHelper//: TestBaseSxc
+public class LinkImageTestHelper
 {
     private readonly CodeDataWrapper _cdf;
     private readonly ImgResizeLinker _linker;
@@ -23,8 +23,8 @@ public class LinkImageTestHelper//: TestBaseSxc
         systemLoader.LoadLicenseAndFeatures();
     }
 
-    public ImgResizeLinker GetLinker() => _linker;// GetService<ImgResizeLinker>();
-    public ILinkService GetLinkHelper() => _linkHelper;// GetService<ILinkService>();
+    public ImgResizeLinker GetLinker() => _linker;
+    public ILinkService GetLinkHelper() => _linkHelper;
 
     public WrapObjectDynamic ToDyn(object contents) => _cdf
         .FromObject(contents, WrapperSettings.Dyn(children: false, realObjectsToo: false));

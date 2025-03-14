@@ -1,8 +1,7 @@
-﻿using CsvHelper.Configuration.Attributes;
-using ToSic.Sxc.Services;
+﻿using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 
-namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
+namespace ToSic.Sxc.LinksAndImages.LinkHelperTests;
 
 [Startup(typeof(StartupSxcCoreOnly))]
 public class LinkHelperImagePartFullTests(ILinkService Link)

@@ -1,7 +1,6 @@
-﻿using System;
-using ToSic.Sxc.Data.Internal;
+﻿using ToSic.Sxc.Data.Internal;
 
-namespace ToSic.Sxc.Tests.DataTests.DynConverterTests;
+namespace ToSic.Sxc.DataTests.DynConverterTests;
 
 [Startup(typeof(StartupSxcCoreOnly))]
 public class AsConverterAsItem(CodeDataFactory cdf)//: TestBaseSxcDb

@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Data.Internal.Dynamic;
 
-namespace ToSic.Sxc.Tests.DataTests;
+namespace ToSic.Sxc.DataTests;
 
 internal static class GetAndConvertHelperTestAccessors
 {

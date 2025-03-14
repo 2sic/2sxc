@@ -7,7 +7,7 @@ using Xunit.Sdk;
 namespace ToSic.Sxc.ServicesTests.ImageServiceTests;
 
 [Startup(typeof(StartupSxcCoreOnly))]
-public class ImageServiceResizeSettings(IImageService imgSvc) //: TestBaseSxc
+public class ImageServiceResizeSettings(IImageService imgSvc) 
 {
     /// <summary>
     /// Main internal test to see if the value is expected, and the rest of the values are not set.

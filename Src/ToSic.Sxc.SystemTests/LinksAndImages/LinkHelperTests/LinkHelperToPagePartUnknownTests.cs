@@ -1,8 +1,8 @@
 ﻿using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
-using static ToSic.Sxc.Tests.LinksAndImages.ParametersTestExtensions;
+using static ToSic.Sxc.LinksAndImages.ParametersTestExtensions;
 
-namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
+namespace ToSic.Sxc.LinksAndImages.LinkHelperTests;
 
 [Startup(typeof(StartupSxcCoreOnly))]
 public class LinkHelperToPagePartUnknownTests (ILinkService Link)

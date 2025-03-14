@@ -1,8 +1,7 @@
-﻿using System;
-using ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Models;
 
-namespace ToSic.Sxc.Tests.DataTests.ModelTests;
+namespace ToSic.Sxc.DataTests.ModelTests;
 
 [Startup(typeof(StartupSxcCoreOnly))]
 public class DataModelAnalyzerTypeTests //: TestBaseSxcDb

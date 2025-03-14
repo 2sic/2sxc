@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Tests.DataTests;
-
-namespace ToSic.Sxc.DataTests.DynJson;
+﻿namespace ToSic.Sxc.DataTests.DynJson;
 
 
 public class WrapJsonMixed(DynAndTypedTestHelper helper)

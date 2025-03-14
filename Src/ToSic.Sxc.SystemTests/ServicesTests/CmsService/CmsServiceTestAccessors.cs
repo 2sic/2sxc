@@ -1,16 +1,16 @@
 ﻿using static ToSic.Sxc.Services.CmsService.CmsServiceImageExtractor;
 
-namespace ToSic.Sxc.Tests.ServicesTests.CmsService;
+namespace ToSic.Sxc.ServicesTests.CmsService;
 
 internal class CmsServiceTestAccessors
 {
-    public static string TacGetImgServiceResizeFactor(string classAttribute)
+    public static string GetImgServiceResizeFactorTac(string classAttribute)
         => GetImgServiceResizeFactor(classAttribute);
 
-    public static string TacGetPictureClasses(string classAttribute)
+    public static string GetPictureClassesTac(string classAttribute)
     => GetPictureClasses(classAttribute);
 
-    public static bool TacUseLightbox(string classAttribute)
+    public static bool UseLightboxTac(string classAttribute)
         => UseLightbox(classAttribute);
 
 }

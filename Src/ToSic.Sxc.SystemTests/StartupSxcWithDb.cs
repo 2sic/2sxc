@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Integration;
-using ToSic.Eav.StartUp;
 using ToSic.Sxc.Startup;
 using ToSic.Testing.Shared;
 

@@ -10,26 +10,22 @@ namespace ToSic.Sxc.ServicesTests.SecureData;
 /// Test data created using https://emn178.github.io/online-tools/sha256.html
 /// </remarks>
 [Startup(typeof(StartupSxcCoreOnly))]
-public class SecureDataHashTests(ISecureDataService sds) // : TestBaseSxc
+public class SecureDataHashTests(ISecureDataService sds)
 {
     private ISecureDataService GetSecureDataService()
     {
-        //var sds = GetService<ISecureDataService>();
         sds.Debug = true;
         return sds;
     }
 
     [Fact]
-    //[ExpectedException(typeof(ArgumentNullException))]
-    public void TestSha256RootWithNull()
-    {
+    public void TestSha256RootWithNull() =>
         Throws<ArgumentNullException>(() =>
         {
             string value = null;
             var result = Sha256.Hash(null);
             Equal("", result);//, $"failed on '{value}'");
         });
-    }
 
     /// <remarks>
     /// test data created using https://emn178.github.io/online-tools/sha256.html

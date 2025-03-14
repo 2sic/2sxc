@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.ConfigurationTests;
-using ToSic.Sxc.Services;
+﻿using ToSic.Sxc.Services;
 using Xunit.Abstractions;
 
 namespace ToSic.Sxc.ServicesTests.ImageServiceTests;

@@ -3,7 +3,7 @@ using ToSic.Lib.Coding;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 
-namespace ToSic.Sxc.Tests.DataTests;
+namespace ToSic.Sxc.DataTests;
 
 internal static class CodeDataConverterTestAccessors
 {

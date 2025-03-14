@@ -1,7 +1,7 @@
 ﻿using ToSic.Sxc.Services;
 using Xunit.Sdk;
 
-namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
+namespace ToSic.Sxc.LinksAndImages.LinkHelperTests;
 
 [Startup(typeof(StartupSxcCoreOnly))]
 public class LinkHelperToVerifyTests(ILinkService link) : LinkHelperToTestBase(link)

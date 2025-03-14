@@ -2,14 +2,13 @@
 using ToSic.Eav.Context;
 using ToSic.Testing.Shared.Platforms;
 
-namespace ToSic.Sxc.ConfigurationTests;
+namespace ToSic.Sxc;
 
 public class StartupSxcWithDbBasic : StartupSxcWithDb
 {
     public override void ConfigureServices(IServiceCollection services) =>
         base.ConfigureServices(
             services
-                //.AddTransient<VerifyPatronsHelper>()
                 .AddTransient<IPlatformInfo, TestPlatformNotPatron>()
         );
 }

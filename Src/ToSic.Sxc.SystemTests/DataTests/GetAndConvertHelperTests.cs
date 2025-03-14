@@ -1,7 +1,6 @@
-﻿using System;
-using static ToSic.Sxc.Tests.DataTests.GetAndConvertHelperTestAccessors;
+﻿using static ToSic.Sxc.DataTests.GetAndConvertHelperTestAccessors;
 
-namespace ToSic.Sxc.Tests.DataTests;
+namespace ToSic.Sxc.DataTests;
 
 
 public class GetAndConvertHelperTests

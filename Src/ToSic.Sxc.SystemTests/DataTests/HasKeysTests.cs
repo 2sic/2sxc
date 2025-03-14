@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Data.Internal.Typed;
 
-namespace ToSic.Sxc.Tests.DataTests;
+namespace ToSic.Sxc.DataTests;
 
 
 public class HasKeysTests

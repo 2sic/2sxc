@@ -1,7 +1,7 @@
 ﻿using ToSic.Sxc.Services;
-using static ToSic.Sxc.Tests.LinksAndImages.ParametersTestExtensions;
+using static ToSic.Sxc.LinksAndImages.ParametersTestExtensions;
 
-namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
+namespace ToSic.Sxc.LinksAndImages.LinkHelperTests;
 
 [Startup(typeof(StartupSxcCoreOnly))]
 public class LinkHelperToApiPartUndefinedTests(ILinkService Link)

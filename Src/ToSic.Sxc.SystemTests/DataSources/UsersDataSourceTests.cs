@@ -3,10 +3,9 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Cms.Users.Internal;
-using ToSic.Sxc.DataSources;
 using ToSic.Testing.Shared;
 
-namespace ToSic.Sxc.Tests.DataSources;
+namespace ToSic.Sxc.DataSources;
 
 // Note: most of these tests are useless ATM
 // Reason is that previously the filtering for superusers etc. happened in the UserDataSource

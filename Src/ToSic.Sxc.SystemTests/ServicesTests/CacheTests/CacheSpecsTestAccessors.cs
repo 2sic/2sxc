@@ -3,7 +3,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
 
-namespace ToSic.Sxc.Tests.ServicesTests.CacheTests;
+namespace ToSic.Sxc.ServicesTests.CacheTests;
 
 internal static class CacheSpecsTestAccessors
 {

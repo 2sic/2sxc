@@ -1,7 +1,6 @@
-﻿using System;
-using ToSic.Sxc.Services;
+﻿using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
+namespace ToSic.Sxc.LinksAndImages.LinkHelperTests;
 
 [Startup(typeof(StartupSxcCoreOnly))]
 public class LinkHelperToCommonTests(ILinkService Link)

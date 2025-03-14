@@ -3,7 +3,7 @@ using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
 using static ToSic.Sxc.Services.Cache.CacheServiceConstants;
 
-namespace ToSic.Sxc.Tests.ServicesTests.CacheTests;
+namespace ToSic.Sxc.ServicesTests.CacheTests;
 
 [Startup(typeof(StartupSxcCoreOnly))]
 public class CacheSpecsTests(ICacheService svc) //: TestBaseSxcDb

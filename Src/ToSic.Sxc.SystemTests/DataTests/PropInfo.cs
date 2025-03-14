@@ -1,6 +1,6 @@
 ﻿using Xunit.Abstractions;
 
-namespace ToSic.Sxc.Tests.DataTests;
+namespace ToSic.Sxc.DataTests;
 
 /// <summary>
 /// Helper structure to create data describing what a property is like

@@ -2,7 +2,7 @@
 using ToSic.Eav.Serialization;
 using ToSic.Sxc.Images;
 
-namespace ToSic.Sxc.Tests.DataForImageTests;
+namespace ToSic.Sxc.DataForImageTests;
 
 internal class ResizeRecipesData
 {

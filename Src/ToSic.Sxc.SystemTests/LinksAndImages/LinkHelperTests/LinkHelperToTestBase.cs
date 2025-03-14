@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
+namespace ToSic.Sxc.LinksAndImages.LinkHelperTests;
 
 
 public class LinkHelperToTestBase(ILinkService Link)

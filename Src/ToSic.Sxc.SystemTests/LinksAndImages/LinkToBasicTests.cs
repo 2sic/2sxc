@@ -1,8 +1,8 @@
-﻿using ToSic.Sxc.Services;
+﻿using ToSic.Sxc.LinksAndImages.LinkHelperTests;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
-using ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
 
-namespace ToSic.Sxc.Tests.LinksAndImages;
+namespace ToSic.Sxc.LinksAndImages;
 
 [Startup(typeof(StartupSxcCoreOnly))]
 public class LinkToBasicTests(ILinkService Link)

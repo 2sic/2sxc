@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
+namespace ToSic.Sxc.LinksAndImages.LinkHelperTests;
 
 [Startup(typeof(StartupSxcCoreOnly))]
 public class LinkHelperImagePartUndefinedTests(ILinkService Link)

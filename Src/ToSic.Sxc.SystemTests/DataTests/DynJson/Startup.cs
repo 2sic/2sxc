@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ToSic.Sxc.Tests.DataTests;
 
 namespace ToSic.Sxc.DataTests.DynJson;
 

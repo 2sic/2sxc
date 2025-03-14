@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Sxc.Data.Internal;
 
-namespace ToSic.Sxc.Tests.DataTests.DynConverterTests;
+namespace ToSic.Sxc.DataTests.DynConverterTests;
 
 [Startup(typeof(StartupSxcCoreOnly))]
 public class AsConverterFakeTests(CodeDataFactory Cdf)//: TestBaseSxcDb

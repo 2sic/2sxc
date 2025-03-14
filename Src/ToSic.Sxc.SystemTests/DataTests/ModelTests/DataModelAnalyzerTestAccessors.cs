@@ -1,8 +1,7 @@
-﻿using System;
-using ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 
-namespace ToSic.Sxc.Tests.DataTests.ModelTests;
+namespace ToSic.Sxc.DataTests.ModelTests;
 
 internal static class DataModelAnalyzerTestAccessors
 {
