@@ -20,10 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Testing.Shared\ToSic.Testing.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 
