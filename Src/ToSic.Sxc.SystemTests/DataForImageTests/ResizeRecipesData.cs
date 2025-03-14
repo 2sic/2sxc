@@ -4,7 +4,6 @@ using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Tests.DataForImageTests;
 
-// Moved!
 internal class ResizeRecipesData
 {
     public const int W100 = 990;

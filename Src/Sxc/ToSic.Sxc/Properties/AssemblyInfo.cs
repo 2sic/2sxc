@@ -19,3 +19,4 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("ToSic.Sxc.Tests")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.UnitTests")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.SystemTests")]
