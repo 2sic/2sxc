@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net472</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+    <RootNamespace>ToSic.Sxc</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\eav-server\ToSic.Eav.Apps.TestsHelpers\ToSic.Eav.Apps.TestHelpers.csproj" />
+    <ProjectReference Include="..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
+  </ItemGroup>
+
+</Project>

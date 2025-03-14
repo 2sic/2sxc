@@ -10,9 +10,8 @@ using ToSic.Sxc.Web.Internal.HtmlParsing;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using static ToSic.Sxc.Blocks.Internal.Render.RenderService;
 
-namespace ToSic.Sxc.Services.CmsService;
+namespace ToSic.Sxc.Services.CmsService.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class CmsServiceStringWysiwyg(CmsServiceImageExtractor imageExtractor)
     : ServiceForDynamicCode("Cms.StrWys", connect: [imageExtractor])
 {

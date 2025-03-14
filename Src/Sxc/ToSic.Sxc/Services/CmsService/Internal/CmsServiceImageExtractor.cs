@@ -4,9 +4,8 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Web.Internal.HtmlParsing;
 
-namespace ToSic.Sxc.Services.CmsService;
+namespace ToSic.Sxc.Services.CmsService.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
 {
     internal const string WysiwygLightboxClass = "wysiwyg-lightbox";

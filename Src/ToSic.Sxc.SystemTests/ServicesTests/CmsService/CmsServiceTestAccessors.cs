@@ -1,4 +1,4 @@
-﻿using static ToSic.Sxc.Services.CmsService.CmsServiceImageExtractor;
+﻿using static ToSic.Sxc.Services.CmsService.Internal.CmsServiceImageExtractor;
 
 namespace ToSic.Sxc.ServicesTests.CmsService;
 

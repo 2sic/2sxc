@@ -15,7 +15,7 @@ public class CmsServiceTestBase: IClassFixture<DoFixtureStartup<ScenarioFullPatr
     public const string SomeTextField = "SomeText";
     public const string SomeHtmlField = "SomeHtml";
 
-    public CmsServiceTestBase(EavSystemLoader eavSystemLoader, IAppReaderFactory appStates, CodeDataFactory cdf, DataBuilder dataBuilder, ICmsService cmsService)
+    public CmsServiceTestBase(EavSystemLoader eavSystemLoader, IAppReaderFactory appStates, CodeDataFactory cdf, DataBuilder dataBuilder, ICmsService cmsService, ContentTypeFactory contentTypeFactory)
     {
         eavSystemLoader.StartUp();
         eavSystemLoader.LoadLicenseAndFeatures();
@@ -24,6 +24,9 @@ public class CmsServiceTestBase: IClassFixture<DoFixtureStartup<ScenarioFullPatr
         //TstDataContentType = app.GetContentType("TstData");
         //if (TstDataContentType == null)
         //    throw new("TstData content type not found. Probably JSON is missing.");
+
+        TstDataContentType = contentTypeFactory.Create(typeof(MockHtmlContentType));
+
         Cdf = cdf;
         _dataBuilder = dataBuilder;
         _cmsService = cmsService;
@@ -31,7 +34,7 @@ public class CmsServiceTestBase: IClassFixture<DoFixtureStartup<ScenarioFullPatr
     public readonly CodeDataFactory Cdf;
     private readonly DataBuilder _dataBuilder;
     private readonly ICmsService _cmsService;
-    //public readonly IContentType TstDataContentType;
+    public readonly IContentType TstDataContentType;
 
     [Theory]
     [InlineData(null, "", "")]
@@ -55,7 +58,7 @@ public class CmsServiceTestBase: IClassFixture<DoFixtureStartup<ScenarioFullPatr
     public IHtmlTag CmsServiceShow(string someHtmlValue, string? container = default)
     {
         const string someTextValue = "Just Basic Text";
-        var entity = TstDataEntity(someTextValue, someHtmlValue);//, TstDataContentType);
+        var entity = TstDataEntity(someTextValue, someHtmlValue, TstDataContentType);
         var dynamicEntity = DynEntStrict(entity);
         var dynamicField = dynamicEntity.Field(SomeHtmlField);
         return _cmsService.Html(dynamicField, container: container);

@@ -6,12 +6,11 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Edit.Toolbar.Internal;
 
-namespace ToSic.Sxc.Services.CmsService;
+namespace ToSic.Sxc.Services.CmsService.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class CmsServiceContainerHelper(
     ICodeApiService dynCodeRoot,
-    IField field,
+    IField entityField,
     object container,
     string classes,
     bool? toolbar,
@@ -41,20 +40,20 @@ internal class CmsServiceContainerHelper(
         if (Classes.HasValue()) tag = tag.Class(Classes);
 
         // Add Toolbar if relevant
-        if (field.Parent.IsDemoItem)
+        if (entityField.Parent.IsDemoItem)
             return l.Return(tag, "demo-item, so no toolbar");
 
-        if (field.Parent.Entity.DisableInlineEditSafe())
+        if (entityField.Parent.Entity.DisableInlineEditSafe())
             return l.Return(tag, "decorator no-edit");
 
         var toolbar1 = toolbar ?? defaultToolbar;
-        if (!toolbar1 || field == null)
+        if (!toolbar1 || entityField == null)
             return l.Return(tag, "no toolbar added");
 
         l.A("Will add toolbar");
-        tag = tag.Attr(ServiceKit.Toolbar.Empty().Edit(field.Parent, tweak: b => b
+        tag = tag.Attr(ServiceKit.Toolbar.Empty().Edit(entityField.Parent, tweak: b => b
             .Icon(EditFieldIcon)
-            .Parameters(ToolbarBuilder.BetaEditUiFieldsParamName, field.Name)
+            .Parameters(ToolbarBuilder.BetaEditUiFieldsParamName, entityField.Name)
         ));
         return l.Return(tag, "added toolbar");
 

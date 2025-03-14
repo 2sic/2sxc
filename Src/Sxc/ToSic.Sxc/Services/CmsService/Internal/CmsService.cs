@@ -5,10 +5,8 @@ using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Services.Tweaks;
 using InputTypes = ToSic.Sxc.Compatibility.Internal.InputTypes;
 
-namespace ToSic.Sxc.Services.CmsService;
+namespace ToSic.Sxc.Services.CmsService.Internal;
 
-[PrivateApi("WIP + Hide Implementation")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
     : ServiceForDynamicCode($"{SxcLogName}.CmsSrv", connect: [stringWysiwyg]), ICmsService
 {

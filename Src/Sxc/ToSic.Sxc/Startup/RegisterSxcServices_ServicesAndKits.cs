@@ -11,6 +11,7 @@ using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.CmsService;
+using ToSic.Sxc.Services.CmsService.Internal;
 using ToSic.Sxc.Services.DataServices;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Services.Templates;
