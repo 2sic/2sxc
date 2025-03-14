@@ -25,13 +25,6 @@ public class UsersDataSourceTests(DataBuilder dataBuilder, DataSourcesTstBuilder
             base.ConfigureServices(services.AddTransient<IUsersProvider, MockUsersProvider>());
     }
 
-    //// Start the test with a platform-info that has a patron
-    //protected override IServiceCollection SetupServices(IServiceCollection services) =>
-    //    base.SetupServices(services)
-    //        .AddTransient<IUsersProvider, MockUsersProvider>();
-
-    //private DataSourcesTstBuilder DsSvc => field ??= GetService<DataSourcesTstBuilder>();
-
     [Fact]
     public void UsersDefault()
     {

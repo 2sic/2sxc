@@ -95,7 +95,7 @@ internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
     }
 
     internal static bool UseLightbox(string classes)
-        => classes.Contains(WysiwygLightboxClass);
+        => classes?.Contains(WysiwygLightboxClass) ?? false;
 
     internal static string GetImgServiceResizeFactor(string value)
     {

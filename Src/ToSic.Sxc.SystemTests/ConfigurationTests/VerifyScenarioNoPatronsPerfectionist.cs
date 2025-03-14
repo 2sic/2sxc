@@ -1,19 +1,17 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Context;
-using ToSic.Testing.Shared.Platforms;
 
 namespace ToSic.Sxc.ConfigurationTests;
 
 public class VerifyScenarioNoPatronsPerfectionist(VerifyPatronsHelper patronsHelper) : IClassFixture<DoFixtureStartup<ScenarioBasic>>
 {
     // Start the test with a platform-info that has a patron
-    public class Startup : StartupSxcWithDb
+    public class Startup : StartupSxcWithDbBasic
     {
         public override void ConfigureServices(IServiceCollection services) =>
             base.ConfigureServices(
                 services
                     .AddTransient<VerifyPatronsHelper>()
-                    .AddTransient<IPlatformInfo, TestPlatformNotPatron>()
+                    //.AddTransient<IPlatformInfo, TestPlatformNotPatron>()
             );
     }
 

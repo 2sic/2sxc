@@ -17,13 +17,6 @@ public class RolesDataSourceTests(DataBuilder dataBuilder, DataSourcesTstBuilder
             base.ConfigureServices(services.AddTransient<IUserRolesProvider, MockUserRolesProvider>());
     }
 
-    //// Start the test with a platform-info that has a patron
-    //protected override IServiceCollection SetupServices(IServiceCollection services) =>
-    //    base.SetupServices(services)
-    //        .AddTransient<IUserRolesProvider, MockUserRolesProvider>();
-
-    //private DataSourcesTstBuilder DsSvc => field ??= GetService<DataSourcesTstBuilder>();
-
     [Fact]
     public void RolesDefault()
     {
