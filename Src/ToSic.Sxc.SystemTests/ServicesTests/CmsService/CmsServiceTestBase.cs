@@ -34,11 +34,14 @@ public class CmsServiceTestBase: IClassFixture<DoFixtureStartup<ScenarioFullPatr
     //public readonly IContentType TstDataContentType;
 
     [Theory]
-    [InlineData(null, "")]
-    [InlineData("", "")]
-    [InlineData("<p>some html</p>", "<p>some html</p>")]
-    public void BasicCmsService(string html, string expectedHtml)
-        => Equal(expectedHtml, CmsServiceShow(html).ToString());
+    [InlineData(null, "", "")]
+    [InlineData(null, null, "<div></div>")]
+    [InlineData("", "", "")]
+    [InlineData("", null, "<div></div>")]
+    [InlineData("<p>some html</p>", "", "<p>some html</p>")]
+    [InlineData("<p>some html</p>", null, "<div><p>some html</p></div>")]
+    public void BasicCmsService(string html, string container, string expectedHtml)
+        => Equal(expectedHtml, CmsServiceShow(html, container).ToString());
 
 
     [Theory]
@@ -47,15 +50,15 @@ public class CmsServiceTestBase: IClassFixture<DoFixtureStartup<ScenarioFullPatr
     [InlineData("<img src='tst.jpg' data-cmsid='file:1' class='img-fluid' loading='lazy' alt='description' width='1230' height='760' style='width:auto;'>",
         "<picture><source type='' srcset='http://mock.converted/file:1?w=1230'><img src='http://mock.converted/file:1?w=1230' alt='description' class='img-fluid' loading='lazy' height='760' style='width:auto;'></picture>")]
     public void ImgBecomesPicture(string html, string expectedHtml)
-        => Equal(expectedHtml, CmsServiceShow(html).ToString());
+        => Equal(expectedHtml, CmsServiceShow(html, "").ToString());
 
-    public IHtmlTag CmsServiceShow(string someHtmlValue)
+    public IHtmlTag CmsServiceShow(string someHtmlValue, string? container = default)
     {
         const string someTextValue = "Just Basic Text";
         var entity = TstDataEntity(someTextValue, someHtmlValue);//, TstDataContentType);
         var dynamicEntity = DynEntStrict(entity);
         var dynamicField = dynamicEntity.Field(SomeHtmlField);
-        return _cmsService.Html(dynamicField, container: "");
+        return _cmsService.Html(dynamicField, container: container);
     }
 
     public IEntity TstDataEntity(string text = "", string html = "", IContentType? contentType = null)
