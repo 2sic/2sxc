@@ -21,6 +21,9 @@ namespace ToSic.Sxc.Code.Internal;
 /// If you create code for dynamic compilation, you'll always inherit from ToSic.Sxc.Dnn.DynamicCode.
 /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
 /// </summary>
+/// <remarks>
+/// It can usually not be created directly, but through the <see cref="CodeApiServiceFactory"/> which would return a <see cref="CodeApiServiceUnknown"/>.
+/// </remarks>
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServices>, ICodeApiService, IHasPiggyBack

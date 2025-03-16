@@ -13,9 +13,9 @@ internal class OqtCodeApiService<TModel, TServiceKit> : CodeApiService<TModel, T
     private readonly LazySvc<AliasResolver> _aliasResolverLazy;
     public OqtCodeApiService(MyServices services, LazySvc<AliasResolver> aliasResolverLazy) : base(services, OqtConstants.OqtLogPrefix)
     {
-        ConnectServices(
+        ConnectLogs([
             _aliasResolverLazy = aliasResolverLazy
-        );
+        ]);
     }
 
     public override ICodeApiService InitDynCodeRoot(IBlock block, ILog parentLog)

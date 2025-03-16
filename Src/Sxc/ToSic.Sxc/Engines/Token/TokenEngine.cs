@@ -84,7 +84,7 @@ public class TokenEngine(
     }
 
     private void InitDataHelper() => _codeApiSvc = codeRootFactory.Value
-        .BuildCodeRoot(null, Block, Log, CompatibilityLevels.CompatibilityLevel9Old);
+        .New(null, Block, Log, CompatibilityLevels.CompatibilityLevel9Old);
 
     private void InitTokenReplace()
     {

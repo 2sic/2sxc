@@ -10,29 +10,44 @@ namespace ToSic.Sxc.Code.Internal;
 /// If the parent is generic supporting IDynamicModel[Model, Kit] it will create the generic root
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeApiServiceFactory(IServiceProvider serviceProvider) : ServiceBase($"{SxcLogName}.CDRFac", connect: [/* never! serviceProvider */ ])
+public class CodeApiServiceFactory(IServiceProvider serviceProvider)
+    : ServiceBase($"{SxcLogName}.CDRFac", connect: [/* never! serviceProvider */ ])
 {
-    public CodeApiService BuildCodeRoot(object customCodeOrNull, IBlock blockOrNull, ILog parentLog, int compatibilityFallback)
+    /// <summary>
+    /// Creates a CodeApiService - if possible based on the parent class requesting it.
+    /// </summary>
+    /// <param name="parentClassOrNull"></param>
+    /// <param name="blockOrNull"></param>
+    /// <param name="parentLog"></param>
+    /// <param name="compatibilityFallback"></param>
+    /// <returns></returns>
+    public CodeApiService New(object parentClassOrNull, IBlock blockOrNull, ILog parentLog, int compatibilityFallback)
     {
-        var compatibility = (customCodeOrNull as ICompatibilityLevel)?.CompatibilityLevel ?? compatibilityFallback;
+        var compatibility = (parentClassOrNull as ICompatibilityLevel)?.CompatibilityLevel ?? compatibilityFallback;
         var l = Log.Fn<CodeApiService>($"{nameof(compatibility)}: {compatibility}");
+
         // New v14 case - the Razor component implements IDynamicData<model, Kit>
-        // Will return null if error or not such interface
-        var codeRoot = customCodeOrNull != null ? BuildGenericCodeRoot(customCodeOrNull.GetType()) : null;
+        // which specifies what kit version to use.
+        // Try to respect that or null if error or not such interface
+        var codeApiSvc = parentClassOrNull == null 
+            ? null
+            : TryBuildCodeApiServiceForDynamic(parentClassOrNull.GetType());
 
         // Default case / old case - just a non-generic DnnDynamicCodeRoot
-        codeRoot ??= serviceProvider.Build<CodeApiService>(Log);
+        codeApiSvc ??= serviceProvider.Build<CodeApiService>(Log);
 
-        codeRoot.InitDynCodeRoot(blockOrNull, parentLog).SetCompatibility(compatibility);
+        codeApiSvc
+            .InitDynCodeRoot(blockOrNull, parentLog)
+            .SetCompatibility(compatibility);
 
-        return l.ReturnAsOk(codeRoot);
+        return l.ReturnAsOk(codeApiSvc);
     }
 
     /// <summary>
     /// Special helper for new Kit-based Razor templates in v14
     /// </summary>
     /// <returns>`null` if not applicable, otherwise the typed DynamicRoot</returns>
-    private CodeApiService BuildGenericCodeRoot(Type customType)
+    private CodeApiService? TryBuildCodeApiServiceForDynamic(Type customType)
     {
         var l = Log.Fn<CodeApiService>();
         try
@@ -44,13 +59,16 @@ public class CodeApiServiceFactory(IServiceProvider serviceProvider) : ServiceBa
                 .GetInterfaces()
                 .FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == requiredDynCode);
 
-            if (interfaceOnCode == null) return l.ReturnNull();
+            if (interfaceOnCode == null)
+                return l.ReturnNull();
 
             var typesArgs = interfaceOnCode.GetGenericArguments();
-            if (typesArgs.Length != requiredDynCode.GetGenericArguments().Length) return null;
+            if (typesArgs.Length != requiredDynCode.GetGenericArguments().Length)
+                return null;
 
             var kitType = typesArgs[typesArgs.Length - 1];
-            if (!kitType.IsSubclassOf(typeof(ServiceKit))) return null;
+            if (!kitType.IsSubclassOf(typeof(ServiceKit)))
+                return null;
 
             // 2. If yes, generate a CodeApiService<TModel, TServiceKit> using the same types
             var finalType = typeof(CodeApiService<,>).MakeGenericType(typeof(object), kitType);

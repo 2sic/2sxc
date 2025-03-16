@@ -28,7 +28,7 @@ public partial class DynamicCodeService
         ActivateEditUi();
         var cmsBlock = _myScopedServices.ModAndBlockBuilder.Value.BuildBlock(pageId, moduleId);
         var codeRoot = _myScopedServices.CodeRootGenerator.New()
-            .BuildCodeRoot(customCodeOrNull: null, cmsBlock, Log, CompatibilityLevels.CompatibilityLevel12);
+            .New(parentClassOrNull: null, cmsBlock, Log, CompatibilityLevels.CompatibilityLevel12);
 
         return l.ReturnAsOk(codeRoot);
     }
@@ -45,7 +45,7 @@ public partial class DynamicCodeService
         MakeSureLogIsInHistory();
         ActivateEditUi();
         var codeRoot = _myScopedServices.CodeRootGenerator.New()
-            .BuildCodeRoot(customCodeOrNull: null, null, Log, CompatibilityLevels.CompatibilityLevel12);
+            .New(parentClassOrNull: null, null, Log, CompatibilityLevels.CompatibilityLevel12);
         var app = App(zoneId: zoneId, appId: appId);
         ((ICodeApiServiceInternal)codeRoot).AttachApp(app);
         return l.ReturnAsOk(codeRoot);

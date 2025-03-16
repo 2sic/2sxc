@@ -69,7 +69,7 @@ internal class RazorEngine(
                     if (rzv.RazorPage is not IRazor asSxc) return;
 
                     var dynCode = codeRootFactory.Value
-                        .BuildCodeRoot(asSxc, Block, Log,
+                        .New(asSxc, Block, Log,
                             compatibilityFallback: CompatibilityLevels.CompatibilityLevel12);
 
                     asSxc.ConnectToRoot(dynCode);

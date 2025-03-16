@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Data;
-using ToSic.Eav.Data.Mocks;
+using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.PageService;
 
 namespace ToSic.Sxc.ServicesTests.CmsService;
 
@@ -10,7 +9,12 @@ public class Startup: StartupSxcWithDb
     public override void ConfigureServices(IServiceCollection services)
     {
         //services.TryAddTransient<IValueConverter, MockValueConverter>();
-        base.ConfigureServices(services);
+        base.ConfigureServices(
+            services
+                // Add the MockPageService to the services - needed as a sub-dependency of the CmsService / StringWysiwyg
+                .AddTransient<IPageService, MockPageService>()
+                .AddTransient<CmsServiceTestData>()
+        );
     }
 
 }

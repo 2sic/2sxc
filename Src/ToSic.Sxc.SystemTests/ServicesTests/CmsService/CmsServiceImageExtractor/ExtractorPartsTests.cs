@@ -1,8 +1,8 @@
 ﻿using ToSic.Sxc.Web.Internal.HtmlParsing;
 
-namespace ToSic.Sxc.ServicesTests.CmsService;
+namespace ToSic.Sxc.ServicesTests.CmsService.CmsServiceImageExtractor;
 
-public class CmsServiceImageExtractorTests
+public class ExtractorPartsTests
 {
     [Theory]
     [InlineData("css", null)]
@@ -11,7 +11,7 @@ public class CmsServiceImageExtractorTests
     [InlineData("class1   WYSIWYG-66 class3 wysiwyg-width1of5", "2/3")]
     [InlineData("wysiwyg-7", "7")]//, DisplayName = "odd unprepared number")]
     public void GetFactor(string classAttribute, string expectedFactor)
-        => Equal(expectedFactor, CmsServiceTestAccessors.GetImgServiceResizeFactorTac(classAttribute));
+        => Equal(expectedFactor, CmsServiceImageExtractorTestAccessors.GetImgServiceResizeFactorTac(classAttribute));
 
     [Theory]
     [InlineData("<p>some html</p>", 0)]
@@ -26,5 +26,5 @@ public class CmsServiceImageExtractorTests
     [InlineData("other-class", false)]
     [InlineData(null, false)]
     public void UseLightbox(string classAttribute, bool expected)
-        => Equal(expected, CmsServiceTestAccessors.UseLightboxTac(classAttribute));
+        => Equal(expected, CmsServiceImageExtractorTestAccessors.UseLightboxTac(classAttribute));
 }

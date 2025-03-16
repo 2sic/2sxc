@@ -10,23 +10,22 @@ internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
 {
     internal const string WysiwygLightboxClass = "wysiwyg-lightbox";
 
-    internal ImagePropertiesExtracted ExtractImageProperties(string oldImgTag, Guid guid, IFolder folder)
+    internal ImagePropertiesExtracted ExtractImageProperties(string imgTag, IFolder folder)
     {
-        var l = Log.Fn<ImagePropertiesExtracted>($"old: '{oldImgTag}'");
+        var l = Log.Fn<ImagePropertiesExtracted>($"old: '{imgTag}'");
         string src = null;
         string factor = null;
         object width = default;
         string imgAlt = null;
         string imgClasses = null;
         string picClasses = null;
-        //var useLightbox = false;
         var otherAttributes = new Dictionary<string, string>();
         IFile file = null;
 
         var files = folder.Files.ToList();
 
         // get all attributes
-        var attributes = RegexUtil.AttributesDetection.Value.Matches(oldImgTag);
+        var attributes = RegexUtil.AttributesDetection.Value.Matches(imgTag);
         foreach (Match attributeMatch in attributes)
         {
             var key = attributeMatch.Groups["Key"].Value;
@@ -58,7 +57,6 @@ internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
                     imgClasses = value; // add it as class
                     factor = GetImgServiceResizeFactor(value); // use the "#/#" as the `factor` parameter
                     picClasses = GetPictureClasses(value);
-                    //useLightbox = UseLightbox(value);
                     break;
                 default:
                     // store alt-attribute, class etc. from the original if it had it (to re-attach latter)
@@ -76,7 +74,6 @@ internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
             ImgClasses = imgClasses,
             PicClasses = picClasses,
             Width = width,
-            //UseLightbox = useLightbox,
             OtherAttributes = otherAttributes
         };
         return l.Return(result, $"src:{src}");
@@ -93,6 +90,12 @@ internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
         return classes;
     }
 
+    /// <summary>
+    /// ATM not used at all, only tested. Idea was that there would be a class to mark it for lightbox,
+    /// but the decision was made to use image settings instead.
+    /// </summary>
+    /// <param name="classes"></param>
+    /// <returns></returns>
     internal static bool UseLightbox(string classes)
         => classes?.Contains(WysiwygLightboxClass) ?? false;
 
@@ -128,7 +131,6 @@ internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
         public string ImgClasses { get; init; }
         public string PicClasses { get; init; }
         public object Width { get; init; }
-        //public bool UseLightbox;
         public Dictionary<string, string> OtherAttributes { get; init; }
     }
 }
