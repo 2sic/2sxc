@@ -11,10 +11,13 @@ namespace ToSic.Sxc.Services.CmsService.Internal;
 internal class CmsServiceStringWysiwyg()
     : ServiceForDynamicCode("Cms.StrWys", connect: [])
 {
-    private IPageService PageService => field ??= _CodeApiSvc.GetService<IPageService>(reuse: true);
+    #region Sub-Services which should come from the same Code context
 
+    private IPageService PageService => field ??= _CodeApiSvc.GetService<IPageService>(reuse: true);
     private HtmlImgToPictureHelper HtmlImgToPictureHelper => field ??= _CodeApiSvc.GetService<HtmlImgToPictureHelper>();
     private HtmlInnerContentHelper HtmlInnerContentHelper => field ??= _CodeApiSvc.GetService<HtmlInnerContentHelper>();
+
+    #endregion
 
     #region Init
 
