@@ -13,7 +13,7 @@ public class MetaTagUpdaterTests
     {
         var headContent = """<meta name="keywords" content="apple, banana, cherry">""";
         var result = AddOrUpdateMetaTagContent(headContent, "keywords", "orange, grape, strawberry");
-        True(result.Contains(MetaFruitDoubleQuote));
+        Contains(MetaFruitDoubleQuote, result);
     }
 
     [Fact]
@@ -21,7 +21,7 @@ public class MetaTagUpdaterTests
     {
         var headContent = """<meta name="description" content="This is a description.">""";
         var result = AddOrUpdateMetaTagContent(headContent, "keywords", "orange, grape, strawberry");
-        True(result.Contains(MetaFruitSingleQuote));
+        Contains(MetaFruitSingleQuote, result);
     }
 
     [Fact]
@@ -29,14 +29,14 @@ public class MetaTagUpdaterTests
     {
         var headContent = @"";
         var result = AddOrUpdateMetaTagContent(headContent, "keywords", "orange, grape, strawberry");
-        True(result.Contains(MetaFruitSingleQuote));
+        Contains(MetaFruitSingleQuote, result);
     }
 
     [Fact]
     public void Test_NullHeadContent_ReturnsOriginal()
     {
         var result = AddOrUpdateMetaTagContent(null!, "keywords", "orange, grape, strawberry");
-        True(result.Contains(MetaFruitSingleQuote));
+        Contains(MetaFruitSingleQuote, result);
     }
 
     [Fact]
@@ -59,10 +59,8 @@ public class MetaTagUpdaterTests
     public void Test_NullContentValue_UpdatesToEmpty()
     {
         var headContent = """<meta name="keywords" content="apple, banana, cherry">""";
-#pragma warning disable CS8625
-        var result = AddOrUpdateMetaTagContent(headContent, "keywords", null);
-#pragma warning restore CS8625
-        True(result.Contains("""<meta name="keywords" content="">"""));
+        var result = AddOrUpdateMetaTagContent(headContent, "keywords", null!);
+        Contains("""<meta name="keywords" content="">""", result);
     }
 
     [Fact]
@@ -70,6 +68,6 @@ public class MetaTagUpdaterTests
     {
         var headContent = """<meta name="keywords" content="apple, banana, cherry">""";
         var result = AddOrUpdateMetaTagContent(headContent, "keywords", "");
-        True(result.Contains("""<meta name="keywords" content="">"""));
+        Contains("""<meta name="keywords" content="">""", result);
     }
 }

@@ -8,7 +8,7 @@ public class MetaTagExtractorTests
     [Fact]
     public void Test_ValidMetaTag_ReturnsContentValue()
     {
-        var html = @"<meta name=""keywords"" content=""apple, banana, cherry"">";
+        var html = """<meta name="keywords" content="apple, banana, cherry">""";
         var result = GetMetaTagContent(html, "keywords");
         Equal("apple, banana, cherry", result);
     }
@@ -16,7 +16,7 @@ public class MetaTagExtractorTests
     [Fact]
     public void Test_NoMetaTag_ReturnsNull()
     {
-        var html = @"<meta name=""description"" content=""This is a description."">";
+        var html = """<meta name="description" content="This is a description.">""";
         var result = GetMetaTagContent(html, "keywords");
         Null(result);
     }
@@ -24,7 +24,7 @@ public class MetaTagExtractorTests
     [Fact]
     public void Test_EmptyContentAttribute_ReturnsEmptyString()
     {
-        var html = @"<meta name=""keywords"" content="""">";
+        var html = """<meta name="keywords" content="">""";
         var result = GetMetaTagContent(html, "keywords");
         Equal(string.Empty, result);
     }
@@ -32,7 +32,7 @@ public class MetaTagExtractorTests
     [Fact]
     public void Test_MetaTagNameCaseInsensitive_ReturnsContentValue()
     {
-        var html = @"<meta NAME=""KEYWORDS"" content=""apple, banana, cherry"">";
+        var html = """<meta NAME="KEYWORDS" content="apple, banana, cherry">""";
         var result = GetMetaTagContent(html, "keywords");
         Equal("apple, banana, cherry", result);
     }
@@ -40,17 +40,15 @@ public class MetaTagExtractorTests
     [Fact]
     public void Test_ContentValueWithQuotes_ReturnsCorrectValue()
     {
-        var html = @"<meta name=""keywords"" content=""apple, ""banana"", cherry"">";
+        var html = """<meta name="keywords" content="apple, "banana", cherry">""";
         var result = GetMetaTagContent(html, "keywords");
-        Equal(@"apple, ""banana"", cherry", result);
+        Equal("""apple, "banana", cherry""", result);
     }
 
     [Fact]
     public void Test_NullHtml_ReturnsNull()
     {
-#pragma warning disable CS8625
-        var result = GetMetaTagContent(null, "keywords");
-#pragma warning restore CS8625
+        var result = GetMetaTagContent(null!, "keywords");
         Null(result);
     }
 
@@ -64,17 +62,15 @@ public class MetaTagExtractorTests
     [Fact]
     public void Test_NullMetaTagName_ReturnsNull()
     {
-        var html = @"<meta name=""keywords"" content=""apple, banana, cherry"">";
-#pragma warning disable CS8625
-        var result = GetMetaTagContent(html, null);
-#pragma warning restore CS8625
+        var html = """<meta name="keywords" content="apple, banana, cherry">""";
+        var result = GetMetaTagContent(html, null!);
         Null(result);
     }
 
     [Fact]
     public void Test_EmptyMetaTagName_ReturnsNull()
     {
-        var html = @"<meta name=""keywords"" content=""apple, banana, cherry"">";
+        var html = """<meta name="keywords" content="apple, banana, cherry">""";
         var result = GetMetaTagContent(html, string.Empty);
         Null(result);
     }
@@ -82,7 +78,7 @@ public class MetaTagExtractorTests
     [Fact]
     public void Test_MetaTagWithSpaces_ReturnsContentValue()
     {
-        var html = @"<meta    name   =   ""keywords""   content   =   ""apple, banana, cherry""   >";
+        var html = """<meta    name   =   "keywords"   content   =   "apple, banana, cherry"   >""";
         var result = GetMetaTagContent(html, "keywords");
         Equal("apple, banana, cherry", result);
     }

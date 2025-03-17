@@ -36,7 +36,7 @@ public class HtmlHelperScriptTests(ITestOutputHelper output)
         output.WriteLine($"Expected: {expected}");
         output.WriteLine($"Result: {result}");
         //Assert.Equal(expected, result);
-        True(result.Contains(expected));
+        Contains(expected, result);
 
     }
 
@@ -52,7 +52,7 @@ public class HtmlHelperScriptTests(ITestOutputHelper output)
     //    var result = AddScriptTac(html, src, alias);
 
     //    // Assert
-    //    Assert.True(result.Contains("""<script src="https://example.com/script.js"></script>"""));
+    //    Assert.Contains("""<script src="https://example.com/script.js"></script>""", result);
     //}
 
     [Fact]
@@ -83,7 +83,7 @@ public class HtmlHelperScriptTests(ITestOutputHelper output)
         var result = AddScriptTac(html, src, alias);
 
         // Assert
-        True(result.Contains("""<script src="https://example.com/script.js"></script>"""));
+        Contains("""<script src="https://example.com/script.js"></script>""", result);
     }
 
     [Fact]
@@ -132,6 +132,6 @@ public class HtmlHelperScriptTests(ITestOutputHelper output)
         var result = AddScriptTac(html, src, alias);
 
         // Assert
-        True(result.Contains("""<script src="https://cdn.example.com/script.js"></script>"""));
+        Contains("""<script src="https://cdn.example.com/script.js"></script>""", result);
     }
 }
