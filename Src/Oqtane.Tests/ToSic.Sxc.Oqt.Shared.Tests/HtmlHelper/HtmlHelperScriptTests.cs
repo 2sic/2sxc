@@ -1,18 +1,16 @@
-﻿using System.Diagnostics;
-using Oqtane.Models;
-using ToSic.Sxc.Oqt.Shared.Helpers;
-using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+﻿using Oqtane.Models;
+using Xunit.Abstractions;
 
-namespace ToSic.Sxc.Oqt.Client.Tests;
+namespace ToSic.Sxc.Oqtane.Shared.HtmlHelper;
 
-[TestClass]
-public class HtmlHelperScriptTests
+
+public class HtmlHelperScriptTests(ITestOutputHelper output)
 {
     /// <summary>
     ///  Add Script Test Accessor
     /// </summary>
     private static string AddScriptTac(string html, string src, Alias alias) =>
-        HtmlHelper.ManageScripts(
+        Oqt.Shared.Helpers.HtmlHelper.ManageScripts(
             html,
             new()
             {
@@ -22,8 +20,8 @@ public class HtmlHelperScriptTests
             alias
         );
 
-    [TestMethod]
-    [DataRow("Add Script", """<!-- just a comment --><script src="https://example.com/script.js"></script>""", "<!-- just a comment -->", "script.js")]
+    [Theory]
+    [InlineData("Add Script", """<!-- just a comment --><script src="https://example.com/script.js"></script>""", "<!-- just a comment -->", "script.js")]
     public void TestVariousCombinationsOfAdd(string name, string expected, string html, string src)
     {
         // Arrange
@@ -35,14 +33,14 @@ public class HtmlHelperScriptTests
         var result = AddScriptTac(html, src, alias);
 
         // Assert
-        Trace.WriteLine($"Expected: {expected}");
-        Trace.WriteLine($"Result: {result}");
-        //Assert.AreEqual(expected, result);
-        IsTrue(result.Contains(expected));
+        output.WriteLine($"Expected: {expected}");
+        output.WriteLine($"Result: {result}");
+        //Assert.Equal(expected, result);
+        True(result.Contains(expected));
 
     }
 
-    //[TestMethod]
+    //[Fact]
     //public void AddScript_WithValidHtmlAndSrc_AddsScript()
     //{
     //    // Arrange
@@ -54,10 +52,10 @@ public class HtmlHelperScriptTests
     //    var result = AddScriptTac(html, src, alias);
 
     //    // Assert
-    //    Assert.IsTrue(result.Contains("""<script src="https://example.com/script.js"></script>"""));
+    //    Assert.True(result.Contains("""<script src="https://example.com/script.js"></script>"""));
     //}
 
-    [TestMethod]
+    [Fact]
     public void AddScript_WithExistingScript_DoesNotAddScript()
     {
         // Arrange
@@ -70,10 +68,10 @@ public class HtmlHelperScriptTests
 
         // Assert
         var scriptCount = result.Split(["""<script src="https://example.com/script.js"></script>"""], StringSplitOptions.None).Length - 1;
-        AreEqual(1, scriptCount);
+        Equal(1, scriptCount);
     }
 
-    [TestMethod]
+    [Fact]
     public void AddScript_WithEmptyHtml_AddsScript()
     {
         // Arrange
@@ -85,10 +83,10 @@ public class HtmlHelperScriptTests
         var result = AddScriptTac(html, src, alias);
 
         // Assert
-        IsTrue(result.Contains("""<script src="https://example.com/script.js"></script>"""));
+        True(result.Contains("""<script src="https://example.com/script.js"></script>"""));
     }
 
-    [TestMethod]
+    [Fact]
     public void AddScript_WithNullSrc_ReturnsOriginalHtml()
     {
         // Arrange
@@ -104,10 +102,10 @@ public class HtmlHelperScriptTests
 #pragma warning restore CS8600
 
         // Assert
-        AreEqual(html, result);
+        Equal(html, result);
     }
 
-    [TestMethod]
+    [Fact]
     public void AddScript_WithEmptySrc_ReturnsOriginalHtml()
     {
         // Arrange
@@ -119,10 +117,10 @@ public class HtmlHelperScriptTests
         var result = AddScriptTac(html, src, alias);
 
         // Assert
-        AreEqual(html, result);
+        Equal(html, result);
     }
 
-    [TestMethod]
+    [Fact]
     public void AddScript_WithFullUrlSrc_AddsScriptWithFullUrl()
     {
         // Arrange
@@ -134,6 +132,6 @@ public class HtmlHelperScriptTests
         var result = AddScriptTac(html, src, alias);
 
         // Assert
-        IsTrue(result.Contains("""<script src="https://cdn.example.com/script.js"></script>"""));
+        True(result.Contains("""<script src="https://cdn.example.com/script.js"></script>"""));
     }
 }
