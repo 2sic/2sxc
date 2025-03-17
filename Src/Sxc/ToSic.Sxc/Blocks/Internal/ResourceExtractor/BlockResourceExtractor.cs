@@ -29,7 +29,7 @@ public abstract partial class BlockResourceExtractor(PageServiceShared pageServi
     /// <summary>
     /// List of extracted assets - this must be processed later by the caller
     /// </summary>
-    protected List<IClientAsset> Assets { get; private set; }
+    protected List<ClientAsset> Assets { get; set; }
 
     public RenderEngineResult Process(string html) => Process(html, Settings);
 

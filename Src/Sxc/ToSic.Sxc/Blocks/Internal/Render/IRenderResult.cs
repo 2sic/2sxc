@@ -37,7 +37,7 @@ public interface IRenderResult
     /// <summary>
     /// Assets (js, css) which must be added to the page
     /// </summary>
-    IList<IClientAsset> Assets { get; }
+    IList<ClientAsset> Assets { get; }
 
     /// <summary>
     /// Changes to the page properties - like Title, Description, Keywords etc.

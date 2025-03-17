@@ -24,7 +24,7 @@ public record RenderResult : IRenderResult, ICanEstimateSize
     public IList<IPageFeature> Features { get; init; }
 
     /// <inheritdoc />
-    public IList<IClientAsset> Assets { get; init; }
+    public IList<ClientAsset> Assets { get; init; }
 
     /// <inheritdoc />
     public IList<PagePropertyChange> PageChanges { get; init; }

@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Engines;
 public class RenderEngineResult(
     string html,
     bool activateJsApi,
-    List<IClientAsset> assets,
+    List<ClientAsset> assets,
     string errorCode = default,
     List<Exception> exsOrNull = default)
 {
@@ -16,7 +16,7 @@ public class RenderEngineResult(
         RenderEngineResult original,
         string html = default,
         bool activateJsApi = default,
-        List<IClientAsset> assets = default, 
+        List<ClientAsset> assets = default, 
         string errorCode = default,
         List<Exception> exsOrNull = default)
         : this(original?.Html ?? html,
@@ -31,7 +31,7 @@ public class RenderEngineResult(
 
     public bool ActivateJsApi { get; } = activateJsApi;
 
-    public List<IClientAsset> Assets { get; } = assets ?? [];
+    public List<ClientAsset> Assets { get; } = assets ?? [];
 
     public string ErrorCode { get; } = errorCode;
 

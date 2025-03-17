@@ -73,10 +73,10 @@ public class PageChangeSummary(
 
 
 
-    private (List<IClientAsset> newAssets, List<IPageFeature> rest) ConvertSettingsAssetsIntoReal(List<PageFeatureFromSettings> featuresFromSettings, RenderSpecs specs)
+    private (List<ClientAsset> newAssets, List<IPageFeature> rest) ConvertSettingsAssetsIntoReal(List<PageFeatureFromSettings> featuresFromSettings, RenderSpecs specs)
     {
-        var l = Log.Fn<(List<IClientAsset> newAssets, List<IPageFeature> rest)>($"{featuresFromSettings.Count}");
-        var newAssets = new List<IClientAsset>();
+        var l = Log.Fn<(List<ClientAsset> newAssets, List<IPageFeature> rest)>($"{featuresFromSettings.Count}");
+        var newAssets = new List<ClientAsset>();
         foreach (var settingFeature in featuresFromSettings)
         {
             var autoOpt = settingFeature.AutoOptimize;
@@ -118,7 +118,7 @@ public class PageChangeSummary(
         return l.Return((newAssets, featsLeft), $"New: {newAssets.Count}; Rest: {featsLeft.Count}");
     }
 
-    private static CspParameters GetCspListFromAssets(IReadOnlyCollection<IClientAsset> assets)
+    private static CspParameters GetCspListFromAssets(IReadOnlyCollection<ClientAsset> assets)
     {
         if (assets == null || assets.Count == 0)
             return null;
