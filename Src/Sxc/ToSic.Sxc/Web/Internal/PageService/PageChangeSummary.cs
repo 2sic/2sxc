@@ -31,7 +31,8 @@ public class PageChangeSummary(
         }
 
         var assets = pss.GetAssetsAndFlush();
-        var (newAssets, rest) = ConvertSettingsAssetsIntoReal(pss.PageFeatures.FeaturesFromSettingsGetNew(specs, Log), specs);
+        var newPageFeaturesFromSettings = pss.PageFeatures.FeaturesFromSettingsGetNew(specs, Log);
+        var (newAssets, rest) = ConvertSettingsAssetsIntoReal(newPageFeaturesFromSettings, specs);
 
         assets.AddRange(newAssets);
         assets = [.. assets.OrderBy(a => a.PosInPage)];
@@ -101,9 +102,12 @@ public class PageChangeSummary(
             //    });
 
             // All resources from the settings are seen as safe
-            extracted.Assets.ForEach(a => a.WhitelistInCsp = true);
+            // older code till 2025-03-17, not functional
+            //extracted.Assets.ForEach(a => a.WhitelistInCsp = true);
+            var assetsWithWhitelisting = extracted.Assets
+                .Select(a => a with { WhitelistInCsp = true });
 
-            newAssets.AddRange(extracted.Assets);
+            newAssets.AddRange(assetsWithWhitelisting);
 
             // Reset the HTML to what's left after extracting the resources, except for Oqtane where we will keep it all
             if (!specs.IncludeAllAssetsInOqtane)

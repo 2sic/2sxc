@@ -79,8 +79,9 @@ public partial class BlockBuilder
         var l = Log.Fn<(string, bool, List<Exception>)>(timer: true);
 
         // any errors from dnn requirements check (like missing c# 8.0)
-        if (specs.RenderEngineResult?.ExceptionsOrNull != null)
-            return l.Return(new(specs.RenderEngineResult.Html, specs.RenderEngineResult.ExceptionsOrNull != null, specs.RenderEngineResult.ExceptionsOrNull), "dnn requirements (c# 8.0...) not met");
+        var oldExceptions = specs.RenderEngineResult?.ExceptionsOrNull;
+        if (oldExceptions != null)
+            return l.Return((specs.RenderEngineResult.Html, true, oldExceptions), "dnn requirements (c# 8.0...) not met");
 
         var exceptions = new List<Exception>();
         try
@@ -121,7 +122,7 @@ public partial class BlockBuilder
                 {
                     if (Block.View != null) // when a content block is still new, there is no definition yet
                     {
-                        Log.A("standard case, found template, will render");
+                        l.A("standard case, found template, will render");
                         var engine = GetEngine();
                         var renderEngineResult = engine.Render(specs);
                         body = renderEngineResult.Html;

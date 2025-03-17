@@ -10,12 +10,12 @@ public record ClientAsset
     public bool IsJs { get; init; }= true;
     public string Url { get; init; }
     public int Priority {get; init; }
-    public string PosInPage { get; set; } = "body"; // TODO: INIT
+    public string PosInPage { get; init; } = "body";
 
     public bool IsExternal { get; init; } = true;
     public string Content { get; init; } = null;
 
-    public bool WhitelistInCsp { get; set; } = false; // TODO: INIT
+    public bool WhitelistInCsp { get; init; } = false;
 
     /// <summary>
     /// Used to store all other html attributes from html tag.

@@ -26,13 +26,15 @@ public abstract partial class BlockResourceExtractor
             // ...and another for the priority etc.
 
             // skip if not stylesheet
-            if (!RegexUtil.StyleRelDetect.Value.IsMatch(match.Value)) continue;
+            if (!RegexUtil.StyleRelDetect.Value.IsMatch(match.Value))
+                continue;
 
             // skip if not matched and setting only wants matches
             var (skip, posInPage, priority) = CheckOptimizationSettings(match.Value, settings.Css);
             if (skip)
             {
-                if (!settings.Css.ExtractAll) continue;
+                if (!settings.Css.ExtractAll)
+                    continue;
                 // if Auto-Optimize, then set these defaults
                 posInPage = ClientAssetConstants.AddToBottom;
                 priority = ClientAssetConstants.CssDefaultPriority;
@@ -45,7 +47,15 @@ public abstract partial class BlockResourceExtractor
 
             // Register, then remember to remove later on
             var url = FixUrlWithSpaces(match.Groups["Src"].Value);
-            Assets.Add(new ClientAsset { Id = id, IsJs = false, PosInPage = posInPage, Priority = priority, Url = url, WhitelistInCsp = forCsp});
+            Assets.Add(new()
+            {
+                Id = id,
+                IsJs = false,
+                PosInPage = posInPage,
+                Priority = priority,
+                Url = url,
+                WhitelistInCsp = forCsp,
+            });
             styleMatchesToRemove.Add(match);
         }
         

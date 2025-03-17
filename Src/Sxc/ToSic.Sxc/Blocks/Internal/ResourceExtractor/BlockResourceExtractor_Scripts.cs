@@ -15,7 +15,7 @@ public abstract partial class BlockResourceExtractor
         var scriptMatches = RegexUtil.ScriptSrcDetection.Value.Matches(renderedTemplate);
         var scriptMatchesToRemove = new List<Match>();
 
-        Log.A($"Found {scriptMatches.Count} external scripts");
+        l.A($"Found {scriptMatches.Count} external scripts");
         foreach (Match match in scriptMatches.Cast<Match>())
         {
             var url = FixUrlWithSpaces(match.Groups[RegexUtil.SrcKey].Value);
@@ -48,7 +48,16 @@ public abstract partial class BlockResourceExtractor
             if (jsSettings.AutoAsync && !attributes.ContainsKey(AttributeAsync)) attributes[AttributeAsync] = null;
 
             // Register, then add to remove-queue
-            Assets.Add(new ClientAsset { Id = id, IsJs = true, PosInPage = posInPage, Priority = priority, Url = url, HtmlAttributes = attributes, WhitelistInCsp = forCsp });
+            Assets.Add(new()
+            {
+                Id = id,
+                IsJs = true,
+                PosInPage = posInPage,
+                Priority = priority,
+                Url = url,
+                HtmlAttributes = attributes,
+                WhitelistInCsp = forCsp,
+            });
             scriptMatchesToRemove.Add(match);
         }
 
@@ -62,7 +71,8 @@ public abstract partial class BlockResourceExtractor
     {
         // Check if we have the optimize attribute
         var optMatch = RegexUtil.OptimizeDetection.Value.Match(value);
-        if (!optMatch.Success && !settings.ExtractAll) return (true, settings.Location, settings.Priority);
+        if (!optMatch.Success && !settings.ExtractAll)
+            return (true, settings.Location, settings.Priority);
 
         var finalPosInPage = (optMatch.Groups[RegexUtil.PositionKey]?.Value).UseFallbackIfNoValue(settings.Location);
 
@@ -82,20 +92,24 @@ public abstract partial class BlockResourceExtractor
     }
 
 
-    protected string ExtractInlineScripts(string renderedTemplate) => Log.Func(() =>
+    protected string ExtractInlineScripts(string renderedTemplate)
     {
+        var l = Log.Fn<string>();
         var scriptMatches = RegexUtil.ScriptContentDetection.Value.Matches(renderedTemplate);
         var scriptMatchesToRemove = new List<Match>();
 
-        Log.A($"Found {scriptMatches.Count} inline scripts");
+        l.A($"Found {scriptMatches.Count} inline scripts");
         var order = 1000;
         foreach (Match match in scriptMatches)
         {
             // Register, then add to remove-queue
-            Assets.Add(new ClientAsset
+            Assets.Add(new()
             {
-                IsJs = true, Priority = order++, PosInPage = "inline", Content = match.Groups["Content"]?.Value,
-                IsExternal = false
+                IsJs = true,
+                Priority = order++,
+                PosInPage = "inline",
+                Content = match.Groups["Content"]?.Value,
+                IsExternal = false,
             });
             scriptMatchesToRemove.Add(match);
         }
@@ -103,7 +117,7 @@ public abstract partial class BlockResourceExtractor
         // remove in reverse order, so that the indexes don't change
         scriptMatchesToRemove.Reverse();
         scriptMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
-        return renderedTemplate;
-    });
+        return l.Return(renderedTemplate);
+    }
 
 }
