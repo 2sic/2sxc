@@ -175,18 +175,20 @@ public partial class BlockBuilder
 
             // This is not ideal, because it actually changes what's in the DIV
             // We would rather add it to the end, but ATM that doesn't trigger turnOn in AJAX reload
-#if NETCOREAPP
+            // Note: DNN implementation will ignore the module ID, but Oqtane needs it
             var additionalTags = Services.ModuleService.GetMoreTagsAndFlush(Block.Context.Module.Id);
-#else
-            var additionalTags = Services.ModuleService.GetMoreTagsAndFlush();
-#endif
+
             var bodyWithAddOns = additionalTags.Any()
                 ? body + "\n" + string.Join("\n", additionalTags.Select(t => t?.ToString()))
                 : body;
 
-#endregion
+            #endregion
 
-            var stats = new RenderStatistics { RenderMs = (int)l.Timer.ElapsedMilliseconds, UseLightSpeed = specs.UseLightspeed};
+            var stats = new RenderStatistics
+            {
+                RenderMs = (int)l.Timer.ElapsedMilliseconds,
+                UseLightSpeed = specs.UseLightspeed,
+            };
 
             // Wrap
             var result = WrapInDiv
