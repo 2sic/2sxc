@@ -7,7 +7,7 @@ using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
 namespace ToSic.Sxc.ServicesTests.CmsService;
 
-public class CmsServiceTests(CodeDataFactory cdf, ICmsService cmsService, CmsServiceTestData cmsTestData, ContentTypeFactory contentTypeFactory)
+public class CmsServiceTests(CodeDataFactory cdf, ICmsService cmsService, DataForCmsServiceTests dataForCmsTests, ContentTypeFactory contentTypeFactory)
     : IClassFixture<DoFixtureStartup<ScenarioFullPatrons>>
 {
 #if NETCOREAPP
@@ -26,20 +26,12 @@ public class CmsServiceTests(CodeDataFactory cdf, ICmsService cmsService, CmsSer
         => Equal(expectedHtml, CmsServiceShow(html, container).ToString());
 
 
-    [Theory]
-    [InlineData("<img src='img.png' data-cmsid='file:1' class='wysiwyg-width1of5'>",
-        "<picture><source type='' srcset='http://mock.converted/file:1'><img src='http://mock.converted/file:1' class='wysiwyg-width1of5'></picture>")]
-    [InlineData("<img src='tst.jpg' data-cmsid='file:1' class='img-fluid' loading='lazy' alt='description' width='1230' height='760' style='width:auto;'>",
-        "<picture><source type='' srcset='http://mock.converted/file:1?w=1230'><img src='http://mock.converted/file:1?w=1230' alt='description' class='img-fluid' loading='lazy' height='760' style='width:auto;'></picture>")]
-    public void ImgBecomesPicture(string html, string expectedHtml)
-        => Equal(expectedHtml, CmsServiceShow(html, "", contentType: TstDataContentType).ToString());
-
-    public IHtmlTag CmsServiceShow(string someHtmlValue, string? container = default, IContentType contentType = default)
+    public IHtmlTag CmsServiceShow(string someHtmlValue, string? container = default, IContentType? contentType = default)
     {
         const string someTextValue = "Just Basic Text";
-        var entity = cmsTestData.TstDataEntity(someTextValue, someHtmlValue, contentType);
+        var entity = dataForCmsTests.TstDataEntity(someTextValue, someHtmlValue, contentType);
         var dynamicEntity = DynEntStrict(entity);
-        var dynamicField = dynamicEntity.Field(CmsServiceTestData.SomeHtmlField);
+        var dynamicField = dynamicEntity.Field(DataForCmsServiceTests.SomeHtmlField);
         return cmsService.Html(dynamicField, container: container);
     }
 

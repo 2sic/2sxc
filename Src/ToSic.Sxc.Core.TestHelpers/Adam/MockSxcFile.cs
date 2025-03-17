@@ -1,9 +1,10 @@
 ﻿using ToSic.Eav.Metadata;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Adam;
 
-public class MockSxcFile : Eav.Apps.Assets.MockFile, IFile
+public class MockSxcFile : Eav.Apps.Assets.MockFile, IFile, IHasLink
 {
     private IMetadataOf _metadata;
     private IMetadata _metadata1;
@@ -12,7 +13,7 @@ public class MockSxcFile : Eav.Apps.Assets.MockFile, IFile
     IMetadata IAsset.Metadata => _metadata1;
 
     public string Url { get; init; }
-    public string Type { get; init; }
+    public string Type => Classification.TypeName(Extension);
 
     IMetadataOf IHasMetadata.Metadata => _metadata;
 

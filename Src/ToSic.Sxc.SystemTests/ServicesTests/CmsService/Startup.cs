@@ -13,7 +13,7 @@ public class Startup: StartupSxcWithDb
             services
                 // Add the MockPageService to the services - needed as a sub-dependency of the CmsService / StringWysiwyg
                 .AddTransient<IPageService, MockPageService>()
-                .AddTransient<CmsServiceTestData>()
+                .AddTransient<DataForCmsServiceTests>()
         );
     }
 

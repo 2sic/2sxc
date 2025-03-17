@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Web.Internal.HtmlParsing;
 
-namespace ToSic.Sxc.ServicesTests.CmsService.CmsServiceImageExtractor;
+namespace ToSic.Sxc.ServicesTests.CmsService.ImageExtractor;
 
 public class ExtractorPartsTests
 {

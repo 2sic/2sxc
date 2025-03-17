@@ -1,7 +1,7 @@
 ﻿using ToSic.Sxc.Adam;
 using static ToSic.Sxc.Services.CmsService.Internal.CmsServiceImageExtractor;
 
-namespace ToSic.Sxc.ServicesTests.CmsService.CmsServiceImageExtractor;
+namespace ToSic.Sxc.ServicesTests.CmsService.ImageExtractor;
 
 internal static class CmsServiceImageExtractorTestAccessors
 {

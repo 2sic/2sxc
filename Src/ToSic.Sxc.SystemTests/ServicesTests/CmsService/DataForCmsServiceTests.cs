@@ -4,26 +4,34 @@ using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.ServicesTests.CmsService;
 
-public class CmsServiceTestData(DataBuilder dataBuilder)
+public class DataForCmsServiceTests(DataBuilder dataBuilder)
 {
     public const int AppId = -1;
     public const string SomeTextField = "SomeText";
     public const string SomeHtmlField = "SomeHtml";
 
+    internal const string ImgExtension = "png";
     internal const string ImageName = "test.png";
     internal const string AltText = "testing";
     internal const string ImageTag = $"<img src='{ImageName}' data-cmsid='file:{ImageName}' class='wysiwyg-width1of5' alt='{AltText}'>";
+
+    internal const string FolderName = "TestFolder";
+    internal const string FolderBase = "/Portals/0/Adam/9876";
+    internal const string FolderUrl = FolderBase + "/TestFolder";
 
     internal static MockSxcFolder GenerateFolderWithTestPng()
     {
         var mockFile = new MockSxcFile
         {
+            Extension = ImgExtension,
             FullName = ImageName,
-            Url = "http://test.png/"
+            Url = $"{FolderUrl}/{ImageName}"
         };
         var folder = new MockSxcFolder
         {
-            Files = [mockFile]
+            Name = FolderName,
+            Files = [mockFile],
+            Url = $"{FolderUrl}/",
         };
         return folder;
     }
@@ -32,10 +40,11 @@ public class CmsServiceTestData(DataBuilder dataBuilder)
     {
         var values = new Dictionary<string, object>
         {
-            { CmsServiceTestData.SomeTextField, text },
-            { CmsServiceTestData.SomeHtmlField, html }
+            { SomeTextField, text },
+            { SomeHtmlField, html }
         };
-        return dataBuilder.CreateEntityTac(appId: CmsServiceTestData.AppId, entityId: 1, contentType: contentType, values: values, titleField: CmsServiceTestData.SomeTextField);
+        return dataBuilder.CreateEntityTac(appId: AppId, entityId: 1, contentType: contentType, values: values, titleField: SomeTextField);
     }
+
 
 }
