@@ -19,53 +19,44 @@ public partial class BlockBuilder
 
     public IRenderResult Run(bool topLevel, RenderSpecs specs)
     {
-        // Cache Result on multiple runs
-        if (_result != null) return _result;
+        // Cache Result in case of multiple runs on the same service instance
+        if (_cached != null)
+            return _cached;
+
         var l = Log.Fn<IRenderResult>(timer: true);
         try
         {
-            var (html, isErr, exsOrNull) = RenderInternal(specs);
+            var (html, isErr, exceptionsOrNull) = RenderInternal(specs);
 
-            var result = new RenderResult(html)
+            // Caching only allowed if no errors, no exceptions, and the content-block is real (no preview etc.)
+            var canCache = !isErr
+                           && exceptionsOrNull.SafeNone()
+                           && (Block.ContentGroupExists || Block.Configuration?.PreviewViewEntity != null);
+
+            // The change summary should only happen at top-level
+            // Because once these properties are picked up, they are flushed
+            // So only the top-level should get them
+            var changeSummary = topLevel
+                ? Services.PageChangeSummary.Value
+                    .FinalizeAndGetAllChanges(Block.Context.PageServiceShared, specs, Block.Context.Permissions.IsContentAdmin)
+                : new();
+
+
+            var result = changeSummary with
             {
-                IsError = isErr,
-                ModuleId = Block.ParentId,
-                // Note 2023-10-30 2dm changed the handling of the preview template and checks if it's set. In case caching is too aggressive this can be the problem. Remove early 2024
-                //CanCache = !isErr && exsOrNull.SafeNone() && (Block.ContentGroupExists || Block.Configuration?.PreviewTemplateId.HasValue == true),
-                CanCache = !isErr && exsOrNull.SafeNone() && (Block.ContentGroupExists || Block.Configuration?.PreviewViewEntity != null),
+                AppId = Block.AppId,        // info for LightSpeedStats
+                Html = html,                // Final HTML to add to page
+                IsError = isErr,            // Error status
+                ModuleId = Block.ParentId,  // ModuleId for caching
+                CanCache = canCache,        // Can this be cached?
             };
 
-            // case when we do not have an app
+            // If data comes from other apps, ensure that cache-tracking knows to depend on these changes
             if (DependentApps.Any())
                 result.DependentApps.AddRange(DependentApps);
 
-            // The remaining stuff should only happen at top-level
-            // Because once these properties are picked up, they are flushed
-            // So only the top-level should get them
-            if (topLevel)
-            {
-                var allChanges = Services.PageChangeSummary.Value
-                    .FinalizeAndGetAllChanges(Block.Context.PageServiceShared, specs, Block.Context.Permissions.IsContentAdmin);
-
-                // Head & Page Changes
-                result.HeadChanges = allChanges.HeadChanges;
-                result.PageChanges = allChanges.PageChanges;
-                result.Assets = allChanges.Assets;
-                result.Features = allChanges.Features;
-                result.FeaturesFromSettings = allChanges.FeaturesFromSettings;
-
-                result.HttpStatusCode = allChanges.HttpStatusCode;
-                result.HttpStatusMessage = allChanges.HttpStatusMessage;
-                result.HttpHeaders = allChanges.HttpHeaders;
-
-                // CSP settings
-                result.CspEnabled = allChanges.CspEnabled;
-                result.CspEnforced = allChanges.CspEnforced;
-                result.CspParameters = allChanges.CspParameters;
-                result.Errors = allChanges.Errors;
-            }
-
-            _result = result;
+            // Cache Result in case of multiple runs on the same service instance
+            _cached = result;
         }
         catch (Exception ex)
         {
@@ -77,11 +68,11 @@ public partial class BlockBuilder
         Services.CodeInfos.AddContext(() => new SpecsForLogHistory().BuildSpecsForLogHistory(Block));
 
 
-        return l.Return(_result);
+        return l.Return(_cached);
     }
 
 
-    private IRenderResult _result;
+    private IRenderResult _cached;
 
     private (string Html, bool IsError, List<Exception> exsOrNull) RenderInternal(RenderSpecs specs)
     {
@@ -225,7 +216,8 @@ public partial class BlockBuilder
 
     private (string Html, bool Error) GenerateErrorMsgIfInstallationNotOk()
     {
-        if (InstallationOk) return (null, false);
+        if (InstallationOk)
+            return (null, false);
 
         var installer = Services.EnvInstGen.New();
         var notReady = installer.UpgradeMessages();
@@ -249,7 +241,8 @@ public partial class BlockBuilder
 
     private string GenerateWarningMsgIfLicenseNotOk()
     {
-        if (AnyLicenseOk) return null;
+        if (AnyLicenseOk)
+            return null;
 
         Log.A("none of the licenses are valid");
         var warningLink = Tag.A("go.2sxc.org/license-warning").Href("https://go.2sxc.org/license-warning").Target("_blank");
@@ -270,28 +263,15 @@ public partial class BlockBuilder
     public IEngine GetEngine()
     {
         var l = Log.Fn<IEngine>(timer: true);
-        if (_engine != null) return l.Return(_engine, "cached");
+        if (_engine != null)
+            return l.Return(_engine, "cached");
         // edge case: view hasn't been built/configured yet, so no engine to find/attach
-        if (Block.View == null) return l.ReturnNull("no view");
+        if (Block.View == null)
+            return l.ReturnNull("no view");
         _engine = Services.EngineFactory.CreateEngine(Block.View);
         _engine.Init(Block);
         return l.Return(_engine, "created");
     }
     private IEngine _engine;
 
-    // 2023-11-14 2dm - nicer implementation
-    // but not sure about side effects
-    // as the note below mentions edge cases where the view hasn't been built yet...
-    // so don't use until you're ready to test all use cases
-    //public IEngine Engine => _engine.Get(() =>
-    //{
-    //    var l = Log.Fn<IEngine>(timer: true);
-    //    // edge case: view hasn't been built/configured yet, so no engine to find/attach
-    //    if (Block.View == null) return l.ReturnNull("no view");
-    //    var engine = Services.EngineFactory.CreateEngine(Block.View);
-    //    engine.Init(Block);
-    //    return l.Return(engine, "created");
-    //});
-
-    //private readonly GetOnce<IEngine> _engine = new GetOnce<IEngine>();
 }

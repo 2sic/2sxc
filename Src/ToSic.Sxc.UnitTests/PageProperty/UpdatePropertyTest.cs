@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Web.Internal.PageService;
 
-namespace ToSic.Sxc.Tests.PageProperty;
+namespace ToSic.Sxc.PageProperty;
 
 
 public class UpdatePropertyTest

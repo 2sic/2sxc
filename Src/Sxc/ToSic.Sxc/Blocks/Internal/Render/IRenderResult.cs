@@ -19,11 +19,6 @@ public interface IRenderResult
     string Html { get; }
 
     /// <summary>
-    /// WIP - should tell us how big this is in memory - estimate
-    /// </summary>
-    int Size { get; }
-
-    /// <summary>
     /// Determines if this render-result can be cached.
     /// Should be false in case of errors or not-yet initialized content
     /// </summary>
@@ -91,10 +86,10 @@ public interface IRenderResult
     /// <summary>
     /// Errors such as not-activated features
     /// </summary>
-    List<string> Errors { get; set; }
+    List<string> Errors { get; /*set;*/ }
 
     /// <summary>
     /// Info for LightSpeedStats (to group by AppId)
     /// </summary>
-    int AppId { get; set; }
+    int AppId { get; /*set;*/ }
 }

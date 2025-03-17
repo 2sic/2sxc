@@ -21,9 +21,9 @@ public class PageChangeSummary(
     LazySvc<RequirementsService> requirements)
     : ServiceBase(SxcLogName + "PgChSm", connect: [requirements, resourceExtractor])
 {
-    public IRenderResult FinalizeAndGetAllChanges(PageServiceShared pss, RenderSpecs specs, bool enableEdit)
+    public RenderResult FinalizeAndGetAllChanges(PageServiceShared pss, RenderSpecs specs, bool enableEdit)
     {
-        var l = Log.Fn<IRenderResult>(timer: true);
+        var l = Log.Fn<RenderResult>(timer: true);
         if (enableEdit)
         {
             pss.Activate(SxcPageFeatures.ToolbarsInternal.NameId);
@@ -44,13 +44,14 @@ public class PageChangeSummary(
             .Select(f => f.Message)
             .ToList();
 
-        var result = new RenderResult(null)
+        var result = new RenderResult
         {
             Assets = assets,
             FeaturesFromSettings = rest,
             Features = features,
             HeadChanges = pss.GetHeadChangesAndFlush(Log),
             PageChanges = pss.GetPropertyChangesAndFlush(Log),
+
             HttpStatusCode = pss.HttpStatusCode,
             HttpStatusMessage = pss.HttpStatusMessage,
             HttpHeaders = pss.HttpHeaders,
@@ -79,9 +80,13 @@ public class PageChangeSummary(
         foreach (var settingFeature in featuresFromSettings)
         {
             var autoOpt = settingFeature.AutoOptimize;
-            var extracted = resourceExtractor.Value.Process(settingFeature.Html, new(
-                css: new(autoOpt, AddToBottom, CssDefaultPriority, false, false),
-                js: new(autoOpt, AddToBottom, JsDefaultPriority, autoOpt, autoOpt)));
+            var extracted = resourceExtractor.Value.Process(
+                settingFeature.Html,
+                new(
+                    css: new(autoOpt, AddToBottom, CssDefaultPriority, false, false),
+                    js: new(autoOpt, AddToBottom, JsDefaultPriority, autoOpt, autoOpt)
+                )
+            );
             l.A($"Feature: {settingFeature.Name} - assets extracted: {extracted.Assets.Count}");
             if (!extracted.Assets.Any())
                 continue;
@@ -115,12 +120,14 @@ public class PageChangeSummary(
 
     private static CspParameters GetCspListFromAssets(IReadOnlyCollection<IClientAsset> assets)
     {
-        if (assets == null || assets.Count == 0) return null;
+        if (assets == null || assets.Count == 0)
+            return null;
         var toWhitelist = assets
             .Where(a => a.WhitelistInCsp)
             .Where(a => !a.Url.NeverNull().StartsWith("/")) // skip local files
             .ToList();
-        if (!toWhitelist.Any()) return null;
+        if (!toWhitelist.Any())
+            return null;
         var whitelist = new CspParameters();
         foreach (var asset in toWhitelist)
             whitelist.Add((asset.IsJs ? "script" : "style") + "-src", asset.Url);

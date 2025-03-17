@@ -1,32 +1,16 @@
 ﻿namespace ToSic.Sxc.Web.Internal.PageService;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class PagePropertyChange
+public record PagePropertyChange
 {
-    public PagePropertyChange()  { }
-
-    /// <summary>
-    /// Clone-Constructor
-    /// </summary>
-    /// <param name="original"></param>
-    public PagePropertyChange(PagePropertyChange original)
-    {
-        ChangeMode = original.ChangeMode;
-        Property = original.Property;
-        Value = original.Value;
-        ReplacementIdentifier = original.ReplacementIdentifier;
-    }
-
-    public PageChangeModes ChangeMode { get; set; }
+    public PageChangeModes ChangeMode { get; init; }
         
-    internal PageProperties Property { get; set; }
+    internal PageProperties Property { get; init; }
 
-    public string Value { get; set; }
+    public string Value { get; init; }
 
     /// <summary>
     /// This is part of the original property, which would be replaced.
     /// </summary>
-    public string ReplacementIdentifier { get; set; }
-
-
+    public string ReplacementIdentifier { get; init; }
 }

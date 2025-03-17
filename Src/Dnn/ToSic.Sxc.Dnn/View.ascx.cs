@@ -127,7 +127,7 @@ public partial class View : PortalModuleBase, IActionable
             if (OutputCache?.Existing != null)
                 l.A("Lightspeed hit - will use cached");
 
-            IRenderResult data = null;
+            IRenderResult renderResult = null;
             var headersAndScriptsAdded = false;
 
             // skip this if something before this caused an error
@@ -135,23 +135,25 @@ public partial class View : PortalModuleBase, IActionable
                 TryCatchAndLogToDnn(() =>
                 {
                     // Try to build the html and everything
-                    data = OutputCache?.Existing?.Data;
+                    renderResult = OutputCache?.Existing?.Data;
 
                     var useLightspeed = OutputCache?.IsEnabled ?? false;
-                    finalMessage = !useLightspeed ? "" : data != null ? "⚡⚡" : "⚡⏳";
+                    finalMessage = !useLightspeed ? "" : renderResult != null ? "⚡⚡" : "⚡⏳";
 
-                    data ??= RenderViewAndGatherJsCssSpecs(useLightspeed);
-                    // in this case assets & page settings were not applied
+                    // Generate Render Result if not already provided by cache
+                    renderResult ??= RenderViewAndGatherJsCssSpecs(useLightspeed);
+
+                    // Apply page settings, assets, resources etc. from Render Result
                     try
                     {
-                        GetService<DnnPageChanges>().Apply(Page, data);
+                        GetService<DnnPageChanges>().Apply(Page, renderResult);
                     }
                     catch
                     {
                         /* ignore */
                     }
 
-                    // 16.02 - try to add page specs about the request to the log
+                    // Try to add page specs about the request to the log (new v16.02)
                     try
                     {
                         _logInStore?.UpdateSpecs(new SpecsForLogHistory().BuildSpecsForLogHistory(Block));
@@ -162,25 +164,26 @@ public partial class View : PortalModuleBase, IActionable
                     }
 
                     // call this after rendering templates, because the template may change what resources are registered
-                    _dnnClientResources.AddEverything(data.Features);
+                    _dnnClientResources.AddEverything(renderResult.Features);
                     headersAndScriptsAdded = true; // will be true if we make it this far
+
                     // If standalone is specified, output just the template without anything else
                     if (RenderNaked)
-                        SendStandalone(data.Html);
+                        SendStandalone(renderResult.Html);
                     else
-                        phOutput.Controls.Add(new LiteralControl(data.Html));
+                        phOutput.Controls.Add(new LiteralControl(renderResult.Html));
 
                     // #Lightspeed
                     var lLightSpeed = Log.Fn(message: "Lightspeed", timer: true);
-                    OutputCache?.Save(data, _enforcePre1025JQueryLoading);
+                    OutputCache?.Save(renderResult, _enforcePre1025JQueryLoading);
                     lLightSpeed.Done();
 
-                    return true; // dummy result
+                    return true; // dummy result for TryCatchAndLogToDnn
                 });
 
             // if we had an error before, or have one now, re-check assets
             if (IsError && !headersAndScriptsAdded)
-                _dnnClientResources?.AddEverything(data?.Features);
+                _dnnClientResources?.AddEverything(renderResult?.Features);
         });
         LogTimer.Done(IsError ? "⚠️" : finalMessage);
         l.Done();
@@ -190,24 +193,33 @@ public partial class View : PortalModuleBase, IActionable
     {
         var l = Log.Fn<IRenderResult>(message: $"module {ModuleId} on page {TabId}", timer: true);
 
-        var result = new RenderResult(null);
+        var result = new RenderResult();
         TryCatchAndLogToDnn(() =>
         {
-            var bb = Block.BlockBuilder;
-            if (RenderNaked) bb.WrapInDiv = false;
-            result = (RenderResult)bb.Run(true, specs: new() { UseLightspeed = useLightspeed, 
-                RenderEngineResult = GetService<DnnRequirements>().GetMessageForRequirements() });
+            var blockBuilder = Block.BlockBuilder;
+            if (RenderNaked)
+                blockBuilder.WrapInDiv = false;
+            result = (RenderResult)blockBuilder.Run(
+                true,
+                specs: new()
+                {
+                    UseLightspeed = useLightspeed,
+                    RenderEngineResult = GetService<DnnRequirements>().GetMessageForRequirements()
+                }
+            );
 
             if (result.Errors?.Any() ?? false)
             {
                 var warnings = result.Errors
-                    .Select(e => bb.RenderingHelper.DesignError(e));
+                    .Select(e => blockBuilder.RenderingHelper.DesignError(e));
 
-                result.Html = string.Join("", warnings) + result.Html;
+                result = result with { Html = string.Join("", warnings) + result.Html };
+                //result.Html = string.Join("", warnings) + result.Html;
             }
 
-            result.Html += GetOptionalDetailedLogToAttach();
-            return true; // dummy result
+            result = result with { Html = result.Html + GetOptionalDetailedLogToAttach() };
+            //result.Html += GetOptionalDetailedLogToAttach();
+            return true; // dummy result for TryCatchAndLogToDnn
         });
 
         return l.ReturnAsOk(result);
