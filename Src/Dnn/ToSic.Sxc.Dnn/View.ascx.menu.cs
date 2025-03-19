@@ -10,22 +10,17 @@ partial class View
 {
     #region ModuleActions on THIS DNN-Module
 
-    /// <summary>
-    /// Causes DNN to create the menu with all actions like edit entity, new, etc.
-    /// </summary>
-    private ModuleActionCollection _moduleActions;
-
     public ModuleActionCollection ModuleActions => Log.Getter(() =>
     {
         try
         {
-            if (_moduleActions != null) return _moduleActions;
+            if (field != null) return field;
 
             // Don't offer options if it's from another portal
             if (ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID)
-                _moduleActions = [];
+                field = [];
 
-            return _moduleActions = InitModuleActions();
+            return field = InitModuleActions();
         }
         catch (Exception e)
         {
@@ -37,7 +32,8 @@ partial class View
     private ModuleActionCollection InitModuleActions()
     {
         var actions = new ModuleActionCollection();
-        if (Block == null) return actions;
+        if (Block == null)
+            return actions;
         var block = Block;
         var appIsKnown = block.AppId > 0;
         if (appIsKnown)

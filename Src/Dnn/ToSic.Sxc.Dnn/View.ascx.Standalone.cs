@@ -4,8 +4,7 @@ namespace ToSic.Sxc.Dnn;
 
 partial class View
 {
-    public bool RenderNaked
-        => _renderNaked ??= Request.QueryString["standalone"] == "true";
+    public bool RenderNaked => _renderNaked ??= Request.QueryString["standalone"] == "true";
     private bool? _renderNaked;
 
     private void SendStandalone(string renderedTemplate)

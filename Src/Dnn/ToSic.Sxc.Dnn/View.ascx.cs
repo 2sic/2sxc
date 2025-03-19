@@ -32,8 +32,8 @@ public partial class View : PortalModuleBase, IActionable
     /// Get the service provider only once - ideally in Dnn9.4 we will get it from Dnn
     /// If we would get it multiple times, there are edge cases where it could be different each time! #2614
     /// </summary>
-    private IServiceProvider ServiceProvider => _serviceProvider.Get(Log, DnnStaticDi.CreateModuleScopedServiceProvider);
-    private readonly GetOnce<IServiceProvider> _serviceProvider = new();
+    private IServiceProvider ServiceProvider => field ??= DnnStaticDi.CreateModuleScopedServiceProvider();
+
     private TService GetService<TService>() => ServiceProvider.Build<TService>(Log);
 
     #endregion
@@ -59,8 +59,7 @@ public partial class View : PortalModuleBase, IActionable
     /// <summary>
     /// Page Load event
     /// </summary>
-    protected void Page_Load(object sender, EventArgs e)
-    {
+    protected void Page_Load(object sender, EventArgs e) =>
         LogTimer.DoInTimer(() =>
         {
             // add to insights-history for analytic
@@ -106,7 +105,6 @@ public partial class View : PortalModuleBase, IActionable
             });
             l.Done();
         });
-    }
 
     private DnnClientResources _dnnClientResources;
     private bool _enforcePre1025JQueryLoading;
@@ -214,17 +212,14 @@ public partial class View : PortalModuleBase, IActionable
                     .Select(e => blockBuilder.RenderingHelper.DesignError(e));
 
                 result = result with { Html = string.Join("", warnings) + result.Html };
-                //result.Html = string.Join("", warnings) + result.Html;
             }
 
             result = result with { Html = result.Html + GetOptionalDetailedLogToAttach() };
-            //result.Html += GetOptionalDetailedLogToAttach();
             return true; // dummy result for TryCatchAndLogToDnn
         });
 
         return l.ReturnAsOk(result);
     }
 
-    protected IOutputCache OutputCache => _oc.Get(Log, () => GetService<IOutputCache>().Init(ModuleId, TabId, Block), timer: true);
-    private readonly GetOnce<IOutputCache> _oc = new();
+    protected IOutputCache OutputCache => field ??= GetService<IOutputCache>().Init(ModuleId, TabId, Block);
 }
