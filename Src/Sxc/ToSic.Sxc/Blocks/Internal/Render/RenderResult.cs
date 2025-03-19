@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using ToSic.Lib.Memory;
+using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageFeatures;
@@ -57,6 +58,8 @@ public record RenderResult : IRenderResult, ICanEstimateSize
 
     /// <inheritdoc />
     public int AppId { get; init; }
+
+    public OutputCacheSettings? OutputCacheSettings { get; init; }
 
     /// <summary>
     /// Cache information to report size etc. when needed

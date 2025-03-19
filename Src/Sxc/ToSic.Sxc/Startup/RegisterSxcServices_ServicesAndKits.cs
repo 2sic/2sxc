@@ -14,6 +14,7 @@ using ToSic.Sxc.Services.CmsService;
 using ToSic.Sxc.Services.CmsService.Internal;
 using ToSic.Sxc.Services.DataServices;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Services.Templates;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageService;
@@ -85,6 +86,8 @@ static partial class RegisterSxcServices
         // 19.03-03 - CmsService improving SoC
         services.TryAddTransient<HtmlImgToPictureHelper>();
         services.TryAddTransient<HtmlInnerContentHelper>();
+        services.TryAddTransient<IOutputCacheService, OutputCacheService>();    // WIP v19.03-03, not official ATM
+        services.TryAddTransient<OutputCacheService>();                         // WIP v19.03-03, not official ATM
 
         // v15 CustomDataSources - just the dependencies needed
         services.TryAddTransient<DataSource16.MyServices>();

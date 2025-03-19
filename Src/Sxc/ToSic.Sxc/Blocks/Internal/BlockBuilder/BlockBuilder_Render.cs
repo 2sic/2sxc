@@ -14,8 +14,7 @@ public partial class BlockBuilder
     public bool WrapInDiv { get; set; } = true;
 
     [PrivateApi]
-    public IRenderingHelper RenderingHelper => _rendHelp.Get(() => Services.RenderHelpGen.New().Init(Block));
-    private readonly GetOnce<IRenderingHelper> _rendHelp = new();
+    public IRenderingHelper RenderingHelper => field ??= Services.RenderHelpGen.New().Init(Block);
 
     public IRenderResult Run(bool topLevel, RenderSpecs specs)
     {
@@ -38,7 +37,7 @@ public partial class BlockBuilder
             // So only the top-level should get them
             var changeSummary = topLevel
                 ? Services.PageChangeSummary.Value
-                    .FinalizeAndGetAllChanges(Block.Context.PageServiceShared, specs, Block.Context.Permissions.IsContentAdmin)
+                    .FinalizeAndGetAllChanges(Block.ParentId /*.Context.Module.Id*/, Block.Context.PageServiceShared, specs, Block.Context.Permissions.IsContentAdmin)
                 : new();
 
 
@@ -47,7 +46,7 @@ public partial class BlockBuilder
                 AppId = Block.AppId,        // info for LightSpeedStats
                 Html = html,                // Final HTML to add to page
                 IsError = isErr,            // Error status
-                ModuleId = Block.ParentId,  // ModuleId for caching
+                //ModuleId = Block.ParentId, // already set in change-summary
                 CanCache = canCache,        // Can this be cached?
             };
 
@@ -117,6 +116,7 @@ public partial class BlockBuilder
             #endregion
 
             #region try to render the block or generate the error message
+
             if (body == null)
                 try
                 {
@@ -201,7 +201,7 @@ public partial class BlockBuilder
                     exsOrNull: exceptions,
                     statistics: stats)
                 : bodyWithAddOns;
-#endregion
+            #endregion
 
             return l.ReturnAsOk((result, err, exceptions));
         }

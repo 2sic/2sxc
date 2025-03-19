@@ -54,6 +54,7 @@ internal class LightSpeed(
         if (data == null) return l.ReturnFalse("null");
         if (data.IsError) return l.ReturnFalse("error");
         if (!data.CanCache) return l.ReturnFalse("can't cache");
+        if (data.OutputCacheSettings?.IsEnabled == false) return l.ReturnFalse("disabled in settings from code"); // new v19.03-03
         if (data == Existing?.Data) return l.ReturnFalse("not new");
         if (data.DependentApps.SafeNone()) return l.ReturnFalse("app not initialized");
         if (!UrlParams.CachingAllowed) return l.ReturnFalse("url params not allowed");
@@ -117,7 +118,7 @@ internal class LightSpeed(
     {
         var l = Log.Fn<bool>(timer: true);
         var appWhereNotEnabled = appStates
-            .FirstOrDefault(appState => !GetLightSpeedConfig(appState).IsEnabled);
+            .FirstOrDefault(appState => !GetLightSpeedConfigOfApp(appState).IsEnabled);
 
         return appWhereNotEnabled != null
             ? l.ReturnFalse($"Can't cache; caching disabled on dependent app {appWhereNotEnabled.AppId}")
@@ -254,7 +255,7 @@ internal class LightSpeed(
     /// <summary>
     /// Lightspeed Configuration at App Level
     /// </summary>
-    private LightSpeedDecorator AppConfig => _lsd.Get(() => GetLightSpeedConfig(AppReader));
+    private LightSpeedDecorator AppConfig => _lsd.Get(() => GetLightSpeedConfigOfApp(AppReader));
     private readonly GetOnce<LightSpeedDecorator> _lsd = new();
 
     /// <summary>
@@ -268,10 +269,10 @@ internal class LightSpeed(
     );
     private readonly GetOnce<LightSpeedDecorator> _viewConfig = new();
 
-    private LightSpeedDecorator GetLightSpeedConfig(IAppReader appReader)
+    private LightSpeedDecorator GetLightSpeedConfigOfApp(IAppReader appReader)
     {
         var l = Log.Fn<LightSpeedDecorator>();
-        var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(appReader, Log);
+        var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(appReader/*, Log*/);
         return l.Return(decoFromPiggyBack, $"has decorator: {decoFromPiggyBack.Entity != null}");
     }
 

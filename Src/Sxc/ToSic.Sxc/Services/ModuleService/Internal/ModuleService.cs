@@ -1,5 +1,6 @@
 ﻿using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Services.OutputCache;
 
 namespace ToSic.Sxc.Services.Internal;
 
@@ -21,7 +22,7 @@ internal class ModuleService() : ServiceBase(SxcLogName + ".ModSvc"), IModuleSer
     /// <summary>
     /// Stores ModuleServiceData instances, scoped by ModuleId.
     /// </summary>
-    private readonly Dictionary<int, ModuleTags> _moduleData = new();
+    private readonly Dictionary<int, ModuleTags> _moduleTags = new();
 
     /// <inheritdoc />
     public void AddTag(IHtmlTag tag, int moduleId, string nameId = null, bool noDuplicates = false)
@@ -50,11 +51,11 @@ internal class ModuleService() : ServiceBase(SxcLogName + ".ModSvc"), IModuleSer
 #endif
 
         // If there is nothing to get, exit early
-        if (!_moduleData.TryGetValue(moduleId, out var moduleServiceData))
+        if (!_moduleTags.TryGetValue(moduleId, out var moduleServiceData))
             return [];
 
         // Reset module data to avoid duplicates on subsequent calls
-        _moduleData.Remove(moduleId);
+        _moduleTags.Remove(moduleId);
         // old code till 2025-03-17, remove ca. Q3 2025
         // _moduleData[moduleId] = new();
 
@@ -63,10 +64,23 @@ internal class ModuleService() : ServiceBase(SxcLogName + ".ModSvc"), IModuleSer
 
     private ModuleTags GetOrCreateModuleData(int moduleId)
     {
-       if (_moduleData.TryGetValue(moduleId, out var moduleServiceData))
+       if (_moduleTags.TryGetValue(moduleId, out var moduleServiceData))
             return moduleServiceData;
 
         // Handle the case where the moduleId does not exist
-        return _moduleData[moduleId] = new();
+        return _moduleTags[moduleId] = new();
     }
+
+    #region Output Caching
+
+    public void ConfigureOutputCache(int moduleId, OutputCacheSettings settings) =>
+        _moduleOutputCache[moduleId] = settings;
+
+    public OutputCacheSettings GetOutputCache(int moduleId) =>
+        _moduleOutputCache.TryGetValue(moduleId, out var settings) ? settings : null;
+
+    private readonly Dictionary<int, OutputCacheSettings> _moduleOutputCache = new();
+
+
+    #endregion
 }

@@ -3,6 +3,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageFeatures;
@@ -18,10 +19,19 @@ namespace ToSic.Sxc.Web.Internal.PageService;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class PageChangeSummary(
     LazySvc<IBlockResourceExtractor> resourceExtractor,
-    LazySvc<RequirementsService> requirements)
-    : ServiceBase(SxcLogName + "PgChSm", connect: [requirements, resourceExtractor])
+    LazySvc<RequirementsService> requirements,
+    IModuleService moduleService)
+    : ServiceBase(SxcLogName + "PgChSm", connect: [requirements, resourceExtractor, moduleService])
 {
-    public RenderResult FinalizeAndGetAllChanges(PageServiceShared pss, RenderSpecs specs, bool enableEdit)
+    /// <summary>
+    /// Finalize the page and get all changes such as header modifications etc.
+    /// </summary>
+    /// <param name="moduleId">The module ID to check for any output caching instructions; use `0` if it should be ignored.</param>
+    /// <param name="pss"></param>
+    /// <param name="specs"></param>
+    /// <param name="enableEdit"></param>
+    /// <returns></returns>
+    public RenderResult FinalizeAndGetAllChanges(int moduleId, PageServiceShared pss, RenderSpecs specs, bool enableEdit)
     {
         var l = Log.Fn<RenderResult>(timer: true);
         if (enableEdit)
@@ -45,6 +55,9 @@ public class PageChangeSummary(
             .Select(f => f.Message)
             .ToList();
 
+        // New beta 2025-03-18 v19.03-03
+        var cacheSettings = moduleId != 0 ? ((ModuleService)moduleService).GetOutputCache(moduleId) : null;
+
         var result = new RenderResult
         {
             Assets = assets,
@@ -62,6 +75,10 @@ public class PageChangeSummary(
             CspEnforced = pss.Csp.IsEnforced,
             CspParameters = pss.Csp.CspParameters(),
             Errors = errors,
+
+            // New 19.03-03
+            ModuleId = moduleId,                    // ModuleId for caching
+            OutputCacheSettings = cacheSettings,    // Additional output-cache settings (often null)
         };
 
         // Whitelist any assets which were officially ok, or which were from the settings
