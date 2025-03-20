@@ -67,7 +67,7 @@ internal class LightSpeed(
             if (data.IsError) return l.ReturnFalse("error");
             if (!data.CanCache) return l.ReturnFalse("can't cache");
             if (data.OutputCacheSettings?.IsEnabled == false)
-                return l.ReturnFalse("disabled in settings from code"); // new v19.03-03
+                return l.ReturnFalse("disabled in settings from code"); // new v19.03.03
             if (data == Existing?.Data) return l.ReturnFalse("not new");
             if (data.DependentApps.SafeNone()) return l.ReturnFalse("app not initialized");
             if (!UrlParams.CachingAllowed) return l.ReturnFalse("url params not allowed");

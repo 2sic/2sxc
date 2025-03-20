@@ -94,7 +94,7 @@ public interface IRenderResult
     int AppId { get; }
 
     /// <summary>
-    /// Optional caching settings. New 19.03-03
+    /// Optional caching settings. New 19.03.03
     /// </summary>
     public OutputCacheSettings? OutputCacheSettings { get; init; }
 
