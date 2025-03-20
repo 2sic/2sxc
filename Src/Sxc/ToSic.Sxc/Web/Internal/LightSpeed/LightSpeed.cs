@@ -31,7 +31,17 @@ internal class LightSpeed(
         _moduleId = moduleId;
         _pageId = pageId;
         _block = block;
-        return l.Return(this, $"{IsEnabled}");
+        bool isEnabled;
+        try
+        {
+            isEnabled = IsEnabled;
+        }
+        catch (Exception ex)
+        {
+            l.Ex(ex);
+            return l.Return(this, "exception during init");
+        }
+        return l.Return(this, $"{isEnabled}");
     }
     private int _moduleId;
     private int _pageId;
@@ -50,65 +60,94 @@ internal class LightSpeed(
         var l = Log.Fn<bool>(timer: true);
 
         // Check many exit-early clauses
-        if (!IsEnabled) return l.ReturnFalse("disabled");
-        if (data == null) return l.ReturnFalse("null");
-        if (data.IsError) return l.ReturnFalse("error");
-        if (!data.CanCache) return l.ReturnFalse("can't cache");
-        if (data.OutputCacheSettings?.IsEnabled == false) return l.ReturnFalse("disabled in settings from code"); // new v19.03-03
-        if (data == Existing?.Data) return l.ReturnFalse("not new");
-        if (data.DependentApps.SafeNone()) return l.ReturnFalse("app not initialized");
-        if (!UrlParams.CachingAllowed) return l.ReturnFalse("url params not allowed");
-
-        // get dependent appStates
-        var dependentAppsStates = data.DependentApps
-            .Select(da => appReadersLazy.Value.Get(da.AppId))
-            .ToList();
-        l.A($"{nameof(dependentAppsStates)} count {dependentAppsStates.Count}");
-
-        // when dependent apps have disabled caching, parent app should not cache also 
-        if (!IsEnabledOnDependentApps(dependentAppsStates))
-            return l.ReturnFalse("disabled in dependent app");
-
-        // respect primary app (of site) as dependent app to ensure cache invalidation when primary app is changed
-        var appState = AppReader;
-        if (appState == null)
-            return l.ReturnFalse("no app");
-
-        if (appState.ZoneId >= 0)
+        try
         {
-            l.A("dependentAppsStates add");
-            var primary = appsCatalog.Value.PrimaryAppIdentity(appState.ZoneId);
-            dependentAppsStates.Add(appReadersLazy.Value.Get(primary));
+            if (!IsEnabled) return l.ReturnFalse("disabled");
+            if (data == null) return l.ReturnFalse("null");
+            if (data.IsError) return l.ReturnFalse("error");
+            if (!data.CanCache) return l.ReturnFalse("can't cache");
+            if (data.OutputCacheSettings?.IsEnabled == false)
+                return l.ReturnFalse("disabled in settings from code"); // new v19.03-03
+            if (data == Existing?.Data) return l.ReturnFalse("not new");
+            if (data.DependentApps.SafeNone()) return l.ReturnFalse("app not initialized");
+            if (!UrlParams.CachingAllowed) return l.ReturnFalse("url params not allowed");
+        }
+        catch (Exception ex)
+        {
+            l.Ex(ex);
+            return l.ReturnFalse("exception during exit-early clauses");
         }
 
-        l.A($"Found {data.DependentApps.Count} apps: " + string.Join(",", data.DependentApps.Select(da => da.AppId)));
+        // Figure out dependent apps
+        List<IAppReader> dependentAppsStates;
+        try
+        {
+            // get dependent appStates
+            dependentAppsStates = data.DependentApps
+                .Select(da => appReadersLazy.Value.Get(da.AppId))
+                .ToList();
+            l.A($"{nameof(dependentAppsStates)} count {dependentAppsStates.Count}");
 
-        var cacheItem = new OutputCacheItem(data);
-        doOtherStuff?.Invoke(cacheItem);
+            // when dependent apps have disabled caching, parent app should not cache also 
+            if (!IsEnabledOnDependentApps(dependentAppsStates))
+                return l.ReturnFalse("disabled in dependent app");
 
-        var duration = Duration;
-        // only add if we really have a duration; -1 is disabled, 0 is not set...
-        if (duration <= 0)
-            return l.ReturnFalse($"not added as duration is {duration}");
+            // respect primary app (of site) as dependent app to ensure cache invalidation when primary app is changed
+            var appState = AppReader;
+            if (appState == null)
+                return l.ReturnFalse("no app");
 
-        var appPathsToMonitor = features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
-            ? _appPaths.Get(() => AppPaths(dependentAppsStates))
-            : null;
-        l.A($"{nameof(appPathsToMonitor)} done");
+            if (appState.ZoneId >= 0)
+            {
+                l.A("dependentAppsStates add");
+                var primary = appsCatalog.Value.PrimaryAppIdentity(appState.ZoneId);
+                dependentAppsStates.Add(appReadersLazy.Value.Get(primary));
+            }
 
-        // add to cache and log
-        string cacheKey = null;
-        l.Do(message: "outputCacheManager add", timer: true,
-            action: () => cacheKey = OutCacheMan.Add(
-                CacheKey,
-                cacheItem,
-                duration,
-                dependentAppsStates.Select(r => r.GetCache()).Cast<ICanBeCacheDependency>().ToList(),
-                appPathsToMonitor
-            )
-        );
+            l.A($"Found {data.DependentApps.Count} apps: " +
+                string.Join(",", data.DependentApps.Select(da => da.AppId)));
+        }
+        catch (Exception ex)
+        {
+            l.Ex(ex);
+            return l.ReturnFalse("exception during dependent apps");
+        }
 
-        return l.ReturnTrue($"added for {duration}s; cache key: '{cacheKey}'");
+        // Add to cache
+        try
+        {
+            var cacheItem = new OutputCacheItem(data);
+            doOtherStuff?.Invoke(cacheItem);
+
+            var duration = Duration;
+            // only add if we really have a duration; -1 is disabled, 0 is not set...
+            if (duration <= 0)
+                return l.ReturnFalse($"not added as duration is {duration}");
+
+            var appPathsToMonitor = features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
+                ? _appPaths.Get(() => AppPaths(dependentAppsStates))
+                : null;
+            l.A($"{nameof(appPathsToMonitor)} done");
+
+            // add to cache and log
+            string cacheKey = null;
+            l.Do(message: "outputCacheManager add", timer: true,
+                action: () => cacheKey = OutCacheMan.Add(
+                    CacheKey,
+                    cacheItem,
+                    duration,
+                    dependentAppsStates.Select(r => r.GetCache()).Cast<ICanBeCacheDependency>().ToList(),
+                    appPathsToMonitor
+                )
+            );
+
+            return l.ReturnTrue($"added for {duration}s; cache key: '{cacheKey}'");
+        }
+        catch (Exception ex)
+        {
+            l.Ex(ex);
+            return l.ReturnFalse("exception during add to cache");
+        }
     }
 
     /// <summary>
@@ -167,7 +206,7 @@ internal class LightSpeed(
     private int? _duration;
 
     private (bool CachingAllowed, string Extension) UrlParams => _urlParams.Get(() =>
-        LightSpeedUrlParams.GetUrlParams(ViewConfig ?? AppConfig, _block.Context.Page.Parameters, Log)
+        LightSpeedUrlParams.GetUrlParams(ViewConfigOrNull ?? AppConfig, _block.Context.Page.Parameters, Log)
     );
     private readonly GetOnce<(bool CachingAllowed, string Extension)> _urlParams = new();
     
@@ -230,26 +269,43 @@ internal class LightSpeed(
     private bool GetIsEnabled()
     {
         var l = Log.Fn<bool>();
-        // special - Oqtane seems to call this much earlier than Dnn, even on non-existing modules.
-        // so on new modules this would fail and throw an error. So we'll just return false in this case.
-        if (AppReader == null)
-            return l.ReturnFalse("disabled, no app");
 
-        // Normal check.
-        var feat = features.IsEnabled(LightSpeedOutputCache.NameId);
-        if (!feat)
-            return l.ReturnFalse("disabled, feature");
+        // This is called from outside, so we need to catch all exceptions as it should never break in production
+        try
+        {
+            // special - Oqtane seems to call this much earlier than Dnn, even on non-existing modules.
+            // so on new modules this would fail and throw an error. So we'll just return false in this case.
+            if (AppReader == null)
+                return l.ReturnFalse("disabled, no app");
 
-        if (!AppConfig.IsEnabled)
-            return l.ReturnFalse("disabled, app not enabled");
+            // Normal check.
+            l.A("before features check");
+            var feat = features.IsEnabled(LightSpeedOutputCache.NameId);
+            l.A($"features: {feat}");
+            if (!feat)
+                return l.ReturnFalse("disabled, feature");
 
-        if (ViewConfig.IsEnabledNullable == false)
-            return l.ReturnFalse("disabled at view explicit");
+            l.A("before app config check");
 
-        if (!UrlParams.CachingAllowed)
-            return l.ReturnFalse("disabled, url params not allowed");
+            if (!AppConfig.IsEnabled)
+                return l.ReturnFalse("disabled, app not enabled");
 
-        return l.ReturnTrue("enabled");
+            l.A("before view config check");
+            if (ViewConfigOrNull?.IsEnabledNullable == false)
+                return l.ReturnFalse("disabled at view explicit");
+
+            l.A("before url params check");
+            if (!UrlParams.CachingAllowed)
+                return l.ReturnFalse("disabled, url params not allowed");
+
+            l.A("all done");
+            return l.ReturnTrue("enabled");
+        }
+        catch (Exception ex)
+        {
+            l.Ex(ex);
+            return l.ReturnFalse("exception");
+        }
     }
 
     /// <summary>
@@ -261,7 +317,7 @@ internal class LightSpeed(
     /// <summary>
     /// Lightspeed Configuration at View Level
     /// </summary>
-    private LightSpeedDecorator ViewConfig => _viewConfig.Get(() =>
+    private LightSpeedDecorator ViewConfigOrNull => _viewConfig.Get(() =>
         _block.View?.Metadata
             .OfType(LightSpeedDecorator.TypeNameId)
             .FirstOrDefault()
