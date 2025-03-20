@@ -10,24 +10,30 @@ partial class View
 {
     #region ModuleActions on THIS DNN-Module
 
-    public ModuleActionCollection ModuleActions => Log.Getter(() =>
+    /// <summary>
+    /// Dnn will create the menu with all actions like edit entity, app settings, etc.
+    /// </summary>
+    public ModuleActionCollection ModuleActions => field ??= GetModuleActions();
+
+    private ModuleActionCollection GetModuleActions()
     {
+        var l = Log.Fn<ModuleActionCollection>();
         try
         {
-            if (field != null) return field;
-
             // Don't offer options if it's from another portal
             if (ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID)
-                field = [];
+                return l.Return([]);
 
-            return field = InitModuleActions();
+            var result = InitModuleActions();
+            return l.Return(result);
         }
         catch (Exception e)
         {
             Exceptions.LogException(e);
-            return [];
+            return l.ReturnAsError([]);
         }
-    });
+
+    }
 
     private ModuleActionCollection InitModuleActions()
     {
