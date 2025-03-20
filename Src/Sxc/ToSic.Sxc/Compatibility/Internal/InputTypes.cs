@@ -2,7 +2,11 @@
 
 internal class InputTypes
 {
-    public static string InputTypeWysiwyg = "string-wysiwyg";
+    /// <summary>
+    /// This is the input type for a wysiwyg editor.
+    /// It should probably be in another class, as it's not just for compatibility...
+    /// </summary>
+    public const string InputTypeWysiwyg = "string-wysiwyg";
 
     /// <summary>
     /// This lists old, obsolete or never-used input types and what the new name should be

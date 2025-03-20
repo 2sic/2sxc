@@ -3,8 +3,20 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.Internal;
 
+/// <summary>
+/// 
+/// </summary>
+/// <typeparam name="TModel"></typeparam>
+/// <typeparam name="TServiceKit"></typeparam>
+/// <param name="services"></param>
+/// <param name="logPrefix"></param>
+/// <remarks>
+/// Note that it used to be abstract, but we changed that so it can be used in unit tests.
+///
+/// Both Dnn and Oqtane have their own version of this class, but the changes are minimal.
+/// </remarks>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public abstract class CodeApiService<TModel, TServiceKit>(CodeApiService.MyServices services, string logPrefix)
+public class CodeApiService<TModel, TServiceKit>(CodeApiService.MyServices services, string logPrefix)
     : CodeApiService(services, logPrefix), ICodeApiService<TModel, TServiceKit>
     where TModel : class
     where TServiceKit : ServiceKit

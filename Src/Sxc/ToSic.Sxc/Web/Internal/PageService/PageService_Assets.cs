@@ -32,7 +32,7 @@ partial class PageService
 
         var result = string.Join(" ", attributes);
 
-        return new RawHtmlString(result); // HybridHtmlString(result);
+        return new RawHtmlString(result);
     }
 
 }

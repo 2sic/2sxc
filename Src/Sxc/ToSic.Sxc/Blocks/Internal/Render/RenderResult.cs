@@ -1,8 +1,6 @@
-﻿using ToSic.Eav.Apps.Internal.Insights;
-using ToSic.Lib.Data;
-using ToSic.Lib.Helpers;
+﻿using System.ComponentModel;
 using ToSic.Lib.Memory;
-using ToSic.Razor.Markup;
+using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageFeatures;
@@ -10,77 +8,78 @@ using ToSic.Sxc.Web.Internal.PageService;
 
 namespace ToSic.Sxc.Blocks.Internal.Render;
 
-/// <inheritdoc />
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class RenderResult(string html) : TagText(null), IRenderResult, ICanEstimateSize
+[EditorBrowsable(EditorBrowsableState.Never)]
+public record RenderResult : IRenderResult, ICanEstimateSize
 {
     /// <inheritdoc />
-    public string Html { get; set; } = html;
-
-    public int Size => _size.Get(() => Html?.Length ?? 0);
-    private readonly GetOnce<int> _size = new();
+    public string Html { get; init; }
 
     /// <inheritdoc />
-    public bool CanCache { get; set; }
+    public bool CanCache { get; init; }
 
     /// <inheritdoc />
-    public bool IsError { get; set; }
+    public bool IsError { get; init; }
 
     /// <inheritdoc />
-    public IList<IPageFeature> Features { get; set; }
+    public IList<IPageFeature> Features { get; init; }
 
     /// <inheritdoc />
-    public IList<IClientAsset> Assets { get; set; }
+    public IList<ClientAsset> Assets { get; init; }
 
     /// <inheritdoc />
-    public IList<PagePropertyChange> PageChanges { get; set; }
+    public IList<PagePropertyChange> PageChanges { get; init; }
 
     /// <inheritdoc />
-    public IList<HeadChange> HeadChanges { get; set; }
+    public IList<HeadChange> HeadChanges { get; init; }
 
     /// <inheritdoc />
-    public IList<IPageFeature> FeaturesFromSettings { get; set; }
+    public IList<IPageFeature> FeaturesFromSettings { get; init; }
 
     /// <inheritdoc />
-    public int? HttpStatusCode { get; set; }
+    public int? HttpStatusCode { get; init; }
 
     /// <inheritdoc />
-    public string HttpStatusMessage { get; set; }
+    public string HttpStatusMessage { get; init; }
 
     /// <inheritdoc />
     public List<IDependentApp> DependentApps { get; } = [];
 
 
-    public int ModuleId { get; set; }
+    public int ModuleId { get; init; }
 
-    public override string ToString() => Html;
+    public IList<HttpHeader> HttpHeaders { get; init; }
 
-    public IList<HttpHeader> HttpHeaders { get; set; }
+    public bool CspEnabled { get; init; } = false;
+    public bool CspEnforced { get; init; } = false;
+    public IList<CspParameters> CspParameters { get; init; }
 
-    public bool CspEnabled { get; set; } = false;
-    public bool CspEnforced { get; set; } = false;
-    public IList<CspParameters> CspParameters { get; set; }
+    public List<string> Errors { get; init; }
 
-    public List<string> Errors { get; set; }
+    /// <inheritdoc />
+    public int AppId { get; init; }
 
+    public OutputCacheSettings? OutputCacheSettings { get; init; }
+
+    /// <summary>
+    /// Cache information to report size etc. when needed
+    /// </summary>
     SizeEstimate ICanEstimateSize.EstimateSize(ILog log)
     {
         var l = log.Fn<SizeEstimate>();
         var estimator = new MemorySizeEstimator(log);
         try
         {
-            var known = new SizeEstimate(Size, 300, Unknown: true);
+            var size = Html?.Length ?? 0;
+            var known = new SizeEstimate(size, 300, Unknown: true);
             if (Errors != null)
                 known += estimator.Estimate(Errors);
             return l.Return(known);
         }
         catch
         {
-            return l.ReturnAsError(new(0, 0, Error: true));
+            return l.ReturnAsError(new(Error: true));
         }
     }
 
-    /// <inheritdoc />
-    public int AppId { get; set; }
 }

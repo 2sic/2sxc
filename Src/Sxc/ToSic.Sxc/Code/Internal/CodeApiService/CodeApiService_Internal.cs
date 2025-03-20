@@ -28,19 +28,22 @@ public partial class CodeApiService : ICodeApiServiceInternal
     [PrivateApi] public IBlock _Block { get; private set; }
 
     [PrivateApi]
-    public IAppTyped AppTyped => _appTyped ??= new Func<IAppTyped>(() => GetService<IAppTyped>(reuse: true))();
-    private IAppTyped _appTyped;
-    
+    public IAppTyped AppTyped => field ??= new Func<IAppTyped>(() => GetService<IAppTyped>(reuse: true))();
+
     #region Kit Handling
 
     public TService GetService<TService>(NoParamOrder protector = default, bool reuse = false, Type type = default) where TService : class
     {
-        if (!reuse) return BuildWithOptionalType();
+        // No reuse - just build and return, but optionally with the type specified
+        if (!reuse)
+            return BuildWithOptionalType();
 
+        // Reuse - check if we already have it, if not, build it and store it
         var typeInCache = type ?? typeof(TService);
         if (_reusableServices.TryGetValue(typeInCache, out var service))
             return (TService)service;
-        
+
+        // Not found, so build it and store it
         var generated = BuildWithOptionalType();
         _reusableServices[typeInCache] = generated;
         return generated;
@@ -65,6 +68,14 @@ public partial class CodeApiService : ICodeApiServiceInternal
     /// This allows us to just get an object, kit, and if it's already created, we get the same instance.
     /// </summary>
     private readonly Dictionary<Type, object> _reusableServices = [];
+
+    /// <summary>
+    /// WIP 19.03.xx - replace a service in the cache, mainly for unit testing
+    /// </summary>
+    /// <typeparam name="TService"></typeparam>
+    /// <param name="service"></param>
+    internal void ReplaceServiceInCache<TService>(TService service) =>
+        _reusableServices[typeof(TService)] = service;
 
     /// <summary>
     /// Get or Create a Kit by type

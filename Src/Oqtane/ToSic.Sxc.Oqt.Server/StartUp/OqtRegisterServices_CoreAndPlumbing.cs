@@ -55,8 +55,9 @@ partial class OqtRegisterServices
         // Views / Templates / Razor: Get url params in the request
         services.TryAddTransient<IHttp, HttpBlazor>();
 
+        // 2025-03-07 2dm disabled as not needed any more https://github.com/2sic/2sxc/issues/3594
         // Special Key generator for security implementation, which doesn't exist in .net standard
-        services.TryAddTransient<Rfc2898Generator, Rfc2898NetCoreGenerator>();
+        // services.TryAddTransient<Rfc2898Generator, Rfc2898NetCoreGenerator>();
 
         return services;
     }

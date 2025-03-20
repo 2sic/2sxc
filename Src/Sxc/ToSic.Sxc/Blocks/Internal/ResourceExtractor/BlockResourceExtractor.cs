@@ -29,7 +29,7 @@ public abstract partial class BlockResourceExtractor(PageServiceShared pageServi
     /// <summary>
     /// List of extracted assets - this must be processed later by the caller
     /// </summary>
-    protected List<IClientAsset> Assets { get; private set; }
+    protected List<ClientAsset> Assets { get; set; }
 
     public RenderEngineResult Process(string html) => Process(html, Settings);
 
@@ -42,7 +42,12 @@ public abstract partial class BlockResourceExtractor(PageServiceShared pageServi
         // Pre-Flush Assets, so each call gets its own list
         Assets = [];
         var (template, include2SxcJs) = ExtractFromHtml(html, settings);
-        return new(template, include2SxcJs, Assets);
+        return new()
+        {
+            Html = template,
+            ActivateJsApi = include2SxcJs,
+            Assets = Assets
+        };
     }
 
     protected abstract (string Template, bool Include2sxcJs) ExtractFromHtml(string html, ClientAssetsExtractSettings settings);

@@ -27,7 +27,11 @@ public class BlockResourceExtractorWithInline(PageServiceShared pageServiceShare
         // Handle Styles
         html = ExtractStyles(html, settings);
 
-        Assets.ForEach(a => a.PosInPage = PositionNameUnchanged(a.PosInPage));
+        // 2025-03-17 optimized to functional - remove comment in a few weeks
+        //Assets.ForEach(a => a.PosInPage = PositionNameUnchanged(a.PosInPage));
+        Assets = Assets
+            .Select(a => a with { PosInPage = PositionNameUnchanged(a.PosInPage) })
+            .ToList();
 
         return (html, include2SxcJs);
     }

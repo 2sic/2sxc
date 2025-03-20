@@ -1,23 +1,20 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Oqt.Server.Plumbing;
+﻿
+using ToSic.Eav.Security.Encryption;
 
-namespace ToSic.Eav.Security.Encryption.Tests
+namespace ToSic.Sxc.Oqt.Security.Encryption;
+
+public class AesCryptographyServiceTests
 {
-    [TestClass()]
-    public class AesCryptographyServiceTests
+    [Fact]
+    public void DecryptTest()
     {
-        [TestMethod()]
-        [Ignore]
-        public void DecryptTest()
-        {
 #pragma warning disable CS0219
-            var x = "secure:pycbhspVSBHE662IjdEfFG8rwwCdxN9jCQaMJK6/QfLl/JxaDhAk+6q1WU4BSXw4;iv:HUyYDwdMhsuiaxZo3TG4Zg==";
-            var v = "pycbhspVSBHE662IjdEfFG8rwwCdxN9jCQaMJK6/QfLl/JxaDhAk+6q1WU4BSXw4";
+        var x = "secure:pycbhspVSBHE662IjdEfFG8rwwCdxN9jCQaMJK6/QfLl/JxaDhAk+6q1WU4BSXw4;iv:HUyYDwdMhsuiaxZo3TG4Zg==";
+        var v = "pycbhspVSBHE662IjdEfFG8rwwCdxN9jCQaMJK6/QfLl/JxaDhAk+6q1WU4BSXw4";
 #pragma warning restore CS0219
-            var r = new Rfc2898NetCoreGenerator();
-            var aes = new AesCryptographyService(r);
-            var ret = aes.DecryptFromBase64(v, new AesConfiguration(true) { InitializationVector64 = "HUyYDwdMhsuiaxZo3TG4Zg==" } );
-            Assert.AreEqual("todo", ret);
-        }
+        var r = new Rfc2898Generator();
+        var aes = new AesCryptographyService(r);
+        var ret = aes.DecryptFromBase64(v, new(true) { InitializationVector64 = "HUyYDwdMhsuiaxZo3TG4Zg==" } );
+        Equal("AIzaSyAKEFBVw7SddUQR0YnAuTam5wpXvDomzts", ret);
     }
 }

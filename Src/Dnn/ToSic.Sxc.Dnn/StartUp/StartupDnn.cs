@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Web.Hosting;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Internal.Configuration;
+using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Internal.Loaders;
 using ToSic.Eav.StartUp;
 using ToSic.Lib.DI;
@@ -64,11 +65,7 @@ public class StartupDnn : IServiceRouteMapper
         var sxcSysLoader = transientSp.Build<SystemLoader>();
         sxcSysLoader.StartUp();
 
-        // After the SysLoader got the features, we must attach it to an old API which had was public
-        // This was used in Mobius etc. to see if features are activated
-#pragma warning disable CS0618
-        Eav.Configuration.Features.FeaturesFromDi = sxcSysLoader.EavSystemLoader.Features;
-#pragma warning restore CS0618
+        SetupOldStaticFeaturesForCompatibility(sxcSysLoader.EavSystemLoader.Features);
 
         // Optional registration of query string rewrite functionality implementation for dnn imageflow module
         Imageflow.Dnn.StartUp.RegisterQueryStringRewrite(ImageflowRewrite.QueryStringRewrite);
@@ -78,5 +75,17 @@ public class StartupDnn : IServiceRouteMapper
 
         _alreadyConfigured = true;
         return l.ReturnTrue();
+    }
+
+    /// <summary>
+    /// After the SysLoader got the features, we must attach it to an old API which had was public
+    /// This was used in Mobius etc. to see if features are activated
+    /// </summary>
+    public void SetupOldStaticFeaturesForCompatibility(IEavFeaturesService featuresSvc)
+    {
+#pragma warning disable CS0618
+        Eav.Configuration.Features.FeaturesFromDi = featuresSvc;
+#pragma warning restore CS0618
+
     }
 }
