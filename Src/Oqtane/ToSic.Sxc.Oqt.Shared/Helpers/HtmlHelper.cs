@@ -220,7 +220,7 @@ public class HtmlHelper
     {
         if (!resource.Content.IsNullOrEmpty())
             return "<script" +
-                (resource.ES6Module ? " type=\"module\"" : "") +
+                (resource.Type == "module" ? " type=\"module\"" : "") +
                 ">" + resource.Content + "</script>";
 
         // use custom element which can execute script on every page transition
@@ -235,7 +235,7 @@ public class HtmlHelper
             //" id=\"app-script-" + ResourceLevel.Page.ToString().ToLower() + "-" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + "-" + count.ToString("00") + "\"" +
             (!string.IsNullOrEmpty(resource.Integrity) ? " integrity=\"" + resource.Integrity + "\"" : "") +
             (!string.IsNullOrEmpty(resource.CrossOrigin) ? " crossorigin=\"" + resource.CrossOrigin + "\"" : "") +
-            (resource.ES6Module ? " type=\"module\"" : "") +
+            (resource.Type == "module" ? " type=\"module\"" : "") +
             " src=\"" + str + "\"></script>";
     }
 
