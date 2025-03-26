@@ -102,6 +102,7 @@ public class AppQueryControllerReal(
             throw l.Done(new HttpExceptionAbstraction(HttpStatusCode.NotFound, msg, "query not found"));
         }
 
+        l.A($"Check permission on query {query.Definition.Id}");
         var permissionChecker = appPermissionCheck.New()
             .ForItem(context, app, query.Definition.Entity);
         var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething);

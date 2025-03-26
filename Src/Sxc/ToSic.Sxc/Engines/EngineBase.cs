@@ -86,7 +86,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
         Services.EngineCheckTemplate.CheckExpectedTemplateErrors(view, appState);
 
         // check access permissions - before initializing or running data-code in the template
-        Services.EngineCheckTemplate.CheckTemplatePermissions(view, block.Context);
+        Services.EngineCheckTemplate.ThrowIfViewPermissionsDenyAccess(view, block.Context);
 
         // All ok, set properties
         Block = block;

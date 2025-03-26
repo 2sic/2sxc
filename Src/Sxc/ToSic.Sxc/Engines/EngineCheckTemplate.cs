@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Code.Help;
 using ToSic.Eav.Context;
 using ToSic.Eav.Security.Internal;
@@ -38,12 +37,12 @@ public class EngineCheckTemplate(LazySvc<AppPermissionCheck> appPermCheckLazy)
 
 
 
-    internal void CheckTemplatePermissions(IView Template, IContextOfApp appContext)
+    internal void ThrowIfViewPermissionsDenyAccess(IView view, IContextOfApp appContext)
     {
         // do security check IF security exists
         // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
         var templatePermissions = appPermCheckLazy.Value
-            .ForItem(appContext, appContext.AppReader, Template.Entity);
+            .ForItem(appContext, appContext.AppReader, view.Entity);
 
         // Views only use permissions to prevent access, so only check if there are any configured permissions
         if (appContext.User.IsSiteAdmin || !templatePermissions.HasPermissions)
