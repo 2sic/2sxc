@@ -431,66 +431,6 @@
                 "IsTitle": true,
                 "Metadata": [
                   {
-                    "Id": 41690,
-                    "Version": 9,
-                    "Guid": "e061de25-75e8-4408-bf19-397b72347fca",
-                    "Type": {
-                      "Id": "@All",
-                      "Name": "@All"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "CustomJavaScript": {
-                          "en-us": ""
-                        },
-                        "DefaultValue": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "en-us": "string-picker"
-                        },
-                        "Name": {
-                          "en-us": "Entity Type"
-                        },
-                        "Notes": {
-                          "en-us": "<p>The type name of the entity to select. If empty, will return all entities (not usually a good idea). <br /><br />If you are using a query, this can still be usefull if you want to enable the users to create new items, as this type would be used.</p>"
-                        },
-                        "Placeholder": {
-                          "en-us": ""
-                        },
-                        "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Entity": {
-                        "Errors": {
-                          "*": []
-                        },
-                        "Formulas": {
-                          "*": []
-                        },
-                        "Warnings": {
-                          "*": []
-                        }
-                      },
-                      "Boolean": {
-                        "Disabled": {
-                          "en-us": false
-                        },
-                        "DisableTranslation": {
-                          "en-us": true
-                        },
-                        "Required": {
-                          "en-us": false
-                        },
-                        "VisibleInEditUI": {
-                          "en-us": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=1"
-                  },
-                  {
                     "Id": 41696,
                     "Version": 5,
                     "Guid": "3f7376b2-03a6-42d0-bd21-7fc16c8e4d48",
@@ -574,8 +514,68 @@
                     "Owner": "dnn:userid=1"
                   },
                   {
+                    "Id": 41690,
+                    "Version": 10,
+                    "Guid": "e061de25-75e8-4408-bf19-397b72347fca",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-picker"
+                        },
+                        "Name": {
+                          "en-us": "Entity Type"
+                        },
+                        "Notes": {
+                          "en-us": "<p>The type name of the entity to select. If empty, will return all entities (not usually a good idea). <br /><br />If you are using a query, this can still be usefull if you want to enable the users to create new items, as this type would be used.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": true
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=1"
+                  },
+                  {
                     "Id": 183980,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "5348b0a9-0816-4e18-8512-f8a3bef47a5f",
                     "Type": {
                       "Id": "e64dd20e-0055-4410-87a1-1238fe44707f",
@@ -629,7 +629,7 @@
                           "en-us": false
                         },
                         "EnableTextEntry": {
-                          "en-us": false
+                          "en-us": true
                         }
                       }
                     },
