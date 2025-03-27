@@ -22,7 +22,9 @@ public class OqtSxcRenderController(
     IOqtSxcRenderService oqtSxcRenderService)
     : ModuleControllerBase(logger, accessor)
 {
-    private readonly IHttpContextAccessor _accessor = accessor;
+    // ReSharper disable once InconsistentNaming
+    private readonly ILogManager logger = logger;
+
     private bool IsSuperUser => User.IsInRole(RoleNames.Host) || User.IsInRole(RoleNames.Admin);
 
 
