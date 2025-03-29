@@ -55,7 +55,7 @@ public class PageChangeSummary(
             .Select(f => f.Message)
             .ToList();
 
-        // New beta 2025-03-18 v19.03-03
+        // New beta 2025-03-18 v19.03.03
         var cacheSettings = moduleId != 0 ? ((ModuleService)moduleService).GetOutputCache(moduleId) : null;
 
         var result = new RenderResult
@@ -76,7 +76,7 @@ public class PageChangeSummary(
             CspParameters = pss.Csp.CspParameters(),
             Errors = errors,
 
-            // New 19.03-03
+            // New 19.03.03
             ModuleId = moduleId,                    // ModuleId for caching
             OutputCacheSettings = cacheSettings,    // Additional output-cache settings (often null)
         };

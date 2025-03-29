@@ -83,11 +83,11 @@ static partial class RegisterSxcServices
         services.TryAddTransient<CmsServiceImageExtractor>();
         services.TryAddTransient<IDataService, DataService>();
 
-        // 19.03-03 - CmsService improving SoC
+        // 19.03.03 - CmsService improving SoC
         services.TryAddTransient<HtmlImgToPictureHelper>();
         services.TryAddTransient<HtmlInnerContentHelper>();
-        services.TryAddTransient<IOutputCacheService, OutputCacheService>();    // WIP v19.03-03, not official ATM
-        services.TryAddTransient<OutputCacheService>();                         // WIP v19.03-03, not official ATM
+        services.TryAddTransient<IOutputCacheService, OutputCacheService>();    // WIP v19.03.03, not official ATM
+        services.TryAddTransient<OutputCacheService>();                         // WIP v19.03.03, not official ATM
 
         // v15 CustomDataSources - just the dependencies needed
         services.TryAddTransient<DataSource16.MyServices>();

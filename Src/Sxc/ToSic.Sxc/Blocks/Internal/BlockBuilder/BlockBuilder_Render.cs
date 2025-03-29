@@ -115,6 +115,19 @@ public partial class BlockBuilder
             }
             #endregion
 
+            #region App is unhealthy
+
+            if (Block.Context?.AppReader?.IsHealthy == false)
+            {
+                Log.A("app is unhealthy, show health message");
+                exceptions.Add(new(AppIsUnhealthy + Block.Context.AppReader.HealthMessage));
+                body = RenderingHelper.DesignErrorMessage(exceptions, true, AppIsUnhealthy + Render.RenderingHelper.DefaultVisitorError)
+                       + $"{body}";
+                err = true;
+                errorCode = ErrorAppIsUnhealthy;
+            }
+            #endregion
+
             #region try to render the block or generate the error message
 
             if (body == null)

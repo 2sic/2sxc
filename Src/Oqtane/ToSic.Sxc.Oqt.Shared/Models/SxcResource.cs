@@ -65,32 +65,4 @@ public class SxcResource: Resource
             if (value != null) base.Url = value;
         }
     }
-
-    /// <summary>
-    /// The type of the resource, e.g. "module" for ES6 modules
-    /// </summary>
-    /// <remarks>
-    /// Added for compatibility with Oqtane 6.0.0 or older.
-    /// Remove when Oqtane dependency is updated to 6.0.1
-    /// </remarks>
-    public string Type { get; set; }
-
-    /// <summary>
-    /// Old property used to determine if the resource is an ES6 module before Oqtane 6.0.1 where is replayed with Type property.
-    /// </summary>
-    /// <remarks>
-    /// Added for compatibility with Oqtane 6.0.0 or older.
-    /// Remove when Oqtane dependency is updated to 6.0.1
-    /// </remarks>
-    public bool ES6Module
-    {
-        get => (Type == "module");
-        set
-        {
-            if (value)
-            {
-                Type = "module";
-            };
-        }
-    }
 }

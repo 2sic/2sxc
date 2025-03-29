@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Services.OutputCache;
 
-// WIP v19.03-03
+// WIP v19.03.03
 // Not complete. To finish:
 // - Create interface and also apply it to the LightSpeedDecorator
 // - Figure out how to best implement the logic for combining settings from different sources - eg. skip zeros

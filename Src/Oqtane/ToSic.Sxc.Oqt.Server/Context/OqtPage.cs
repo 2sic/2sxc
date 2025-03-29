@@ -23,6 +23,9 @@ internal class OqtPage(
     LazySvc<ILinkPaths> linkPathsLazy)
     : Page(httpBlazor), IWrapper<Oqtane.Models.Page>
 {
+    // ReSharper disable once InconsistentNaming
+    private readonly LazySvc<IHttp> httpBlazor = httpBlazor;
+
     public Alias Alias { get; set; }
 
     protected Oqtane.Models.Page UnwrappedPage;
