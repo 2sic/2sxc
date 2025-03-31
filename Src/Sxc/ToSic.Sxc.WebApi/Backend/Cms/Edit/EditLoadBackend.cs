@@ -63,7 +63,9 @@ public partial class EditLoadBackend(
         // This is important because the main context may not contain the module
 
         // Look up the types, and repeat security check with type-names
-        var permCheck = typesPermissions.New().Init(context, context.AppReader, items);
+        l.A($"Will do permission check; app has {context.AppReader.List.Count} items");
+        var permCheck = typesPermissions.New()
+            .Init(context, context.AppReader, items);
         if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
             throw HttpException.PermissionDenied(error);
 

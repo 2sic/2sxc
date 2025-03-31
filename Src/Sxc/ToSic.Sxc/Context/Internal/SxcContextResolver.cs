@@ -13,9 +13,12 @@ internal partial class SxcContextResolver(
     LazySvc<AppIdResolver> appIdResolverLazy,
     Generator<IContextOfSite> siteCtxGenerator,
     Generator<IContextOfApp> appCtxGenerator,
-    Lazy<IFeaturesService> featuresService,
+    LazySvc<IFeaturesService> featuresService,
+    LazySvc<AppReaderFactory> appReaderFactory,
     LazySvc<IHttp> http)
-    : ContextResolver(siteCtxGenerator, appCtxGenerator, "Sxc.CtxRes", connect: [appIdResolverLazy, siteCtxGenerator, appCtxGenerator, featuresService, http]), ISxcContextResolver
+    : ContextResolver(siteCtxGenerator, appCtxGenerator, "Sxc.CtxRes",
+        connect: [appIdResolverLazy, siteCtxGenerator, appCtxGenerator, featuresService, http, appReaderFactory]),
+        ISxcContextResolver
 {
     private const string CookieTemplate = "app-{0}-data-preview";
     private const string CookieLive = "live";
@@ -37,8 +40,10 @@ internal partial class SxcContextResolver(
     private EffectivePermissions GetUserPermissions()
     {
         var perms = (BlockContextOrNull() ?? AppOrNull() ?? Site())?.Permissions;
-        if (perms == null) return new(false);
-        if (!perms.ShowDraftData) return perms;
+        if (perms == null)
+            return new(false);
+        if (!perms.ShowDraftData)
+            return perms;
 
         // Check if an all-apps cookie is set
         return CookieExpectsLive("*") 
@@ -58,7 +63,8 @@ internal partial class SxcContextResolver(
 
     public IContextOfApp SetAppOrNull(string nameOrPath)
     {
-        if (string.IsNullOrWhiteSpace(nameOrPath)) return null;
+        if (string.IsNullOrWhiteSpace(nameOrPath))
+            return null;
         var zoneId = Site().Site.ZoneId;
         var appId = appIdResolverLazy.Value.GetAppIdFromPath(zoneId, nameOrPath, false);
         return appId <= Eav.Constants.AppIdEmpty

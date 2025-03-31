@@ -8,6 +8,7 @@ partial class SxcContextResolver
 {
     public IContextOfApp GetBlockOrSetApp(int appId)
     {
+        var l = Log.Fn<IContextOfApp>($"a#{appId}");
         // get the current block context
         var moduleCtx = BlockContextOrNull();
 
@@ -22,7 +23,8 @@ partial class SxcContextResolver
 
 
         // If the app in the request matches the app in the context, everything is fine
-        if (appId == moduleCtx.AppReader?.AppId) return moduleCtx;
+        if (appId == moduleCtx.AppReader?.AppId)
+            return moduleCtx;
         
         // If the app in the request doesn't match the app in the context
         // Set the app in the context to the real one to be sure about security check
@@ -30,12 +32,21 @@ partial class SxcContextResolver
         // still verify module permissions.
         // Only do this if the feature is enabled, as we are opening security when we do this
         if (!featuresService.Value.IsEnabled(SxcFeatures.PermissionPrioritizeModuleContext.NameId))
+            // Get a simpler App-Context without the module context
+            // so that module permissions will not allow editing of apps which are really in the current one.
             return SetApp(SiteAppIdentity());
 
         moduleCtx.ResetApp(SiteAppIdentity());
         return moduleCtx;
 
-        AppIdentity SiteAppIdentity() => new(Site().Site.ZoneId, appId);
+        // Old implementation
+        //AppIdentity SiteAppIdentity() => new(Site().Site.ZoneId, appId);
+
+        // New implementation 2025-03-31
+        // Previous version had edge cases where the wrong zone/app combinations were created
+        // Which would still load the App, but would result in 2 different AppIdentities being cached
+        // leading to unexpected results.
+        IAppIdentityPure SiteAppIdentity() => appReaderFactory.Value.AppIdentity(appId);
     }
 
 
