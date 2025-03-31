@@ -1,10 +1,11 @@
 ﻿using ToSic.Eav.Caching;
 using ToSic.Eav.Internal.Features;
+using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
-internal class OutputCacheManager(MemoryCacheService memoryCacheService, Lazy<IEavFeaturesService> featuresDoNotConnect) : ServiceBase(SxcLogName + ".OutputCacheManager", connect: [memoryCacheService])
+internal class OutputCacheManager(MemoryCacheService memoryCacheService, LazySvc<IEavFeaturesService> featuresDoNotConnect) : ServiceBase(SxcLogName + ".OutputCacheManager", connect: [memoryCacheService])
 {
     internal const string GlobalCacheRoot = "Sxc-LightSpeed.Module.";
 

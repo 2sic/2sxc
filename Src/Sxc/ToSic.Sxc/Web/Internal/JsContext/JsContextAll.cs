@@ -2,7 +2,7 @@
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Code.InfoSystem;
 using ToSic.Eav.Data.Shared;
-using ToSic.Eav.Internal.Features;
+using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
@@ -14,7 +14,7 @@ using ToSic.Sxc.Web.Internal.PageFeatures;
 namespace ToSic.Sxc.Web.Internal.JsContext;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class JsContextAll(JsContextLanguage jsLangCtxSvc, IJsApiService jsApiService, CodeInfosInScope codeWarnings, IAppJsonService appJson, Lazy<IFeaturesService> featuresSvc)
+public class JsContextAll(JsContextLanguage jsLangCtxSvc, IJsApiService jsApiService, CodeInfosInScope codeWarnings, IAppJsonService appJson, LazySvc<IFeaturesService> featuresSvc)
     : ServiceBase("Sxc.CliInf", connect: [jsLangCtxSvc, jsApiService, codeWarnings])
 {
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
