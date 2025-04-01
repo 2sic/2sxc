@@ -57,7 +57,7 @@ public class ViewsBackend(
                     Used = view.Entity.Parents().Count,
                     IsShared = view.IsShared,
                     EditInfo = new(view.Entity),
-                    Metadata = ser?.CreateListOfSubEntities(view.Metadata, SubEntitySerialization.NeverSerializeChildren()),
+                    Metadata = ser?.SubConverter.CreateListOfSubEntities(view.Metadata, SubEntitySerialization.NeverSerializeChildren()),
                     Permissions = new() { Count = view.Entity.Metadata.Permissions.Count() },
                     Lightspeed = lightspeed,
                 };
