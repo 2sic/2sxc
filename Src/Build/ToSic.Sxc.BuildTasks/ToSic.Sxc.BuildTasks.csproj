@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFrameworks>net472;net9.0</TargetFrameworks>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <LangVersion>preview</LangVersion>
+    <WarningLevel>9999</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
