@@ -56,7 +56,7 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
         // Note that BlockOptional was already retrieved in the base class
         var codeRoot = context.HttpContext.RequestServices
             .Build<CodeApiServiceFactory>()
-            .BuildCodeRoot(_owner, BlockOptional, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel12);
+            .New(_owner, BlockOptional, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel12);
         ConnectToRoot(codeRoot);
 
         AdamCode = codeRoot.GetService<AdamCode>();

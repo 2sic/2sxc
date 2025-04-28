@@ -212,13 +212,12 @@ public static partial class RegisterSxcServices
 
         // Add possibly missing fallback services
         // This must always be at the end here so it doesn't accidentally replace something we actually need
-        services
-            .AddSxcCoreLookUps()
-            .AddServicesAndKits()
-            .AddCmsContext()
-            .ExternalConfig()
-            .AddKoi()
-            .AddSxcCoreFallbackServices();
+        services.AddSxcCoreLookUps();
+        services.AddServicesAndKits();
+        services.AddCmsContext();
+        services.ExternalConfig();
+        services.AddKoi();
+        services.AddSxcCoreFallbackServices();
 
         return services;
     }

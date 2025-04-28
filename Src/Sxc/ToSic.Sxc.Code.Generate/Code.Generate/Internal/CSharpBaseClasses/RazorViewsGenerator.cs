@@ -40,7 +40,7 @@ public class RazorViewsGenerator(IUser user, IAppReaderFactory appReadFac)
 
     private GeneratedFile AppRazors(CSharpCodeSpecs cSharpSpecs)
     {
-        var (_, appSnip, allUsings) = BaseClassHelper.BaseClassTools(cSharpSpecs);
+        var (_, appSnip, allUsings) = BaseClassHelper.BaseClassTools(cSharpSpecs, Log);
 
         var file = new GeneratedFile
         {

@@ -222,7 +222,7 @@ public class Recipe: ICanDump
         return this;
     }
 
-    public string Dump() =>
+    public string Dump() => "Recipe " +
         $"{nameof(Name)}: '{Name}', {nameof(ForCss)}: {ForCss}, " +
         $"{nameof(ForFactor)}: {ForFactor}, {nameof(FactorParsed)}: {FactorParsed}, " +
         $"{nameof(Variants)}: '{Variants}', {nameof(VariantsParsed)}: {VariantsParsed}, " +

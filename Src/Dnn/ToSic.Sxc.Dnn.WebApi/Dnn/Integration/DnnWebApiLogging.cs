@@ -15,7 +15,8 @@ namespace ToSic.Sxc.Dnn.Integration;
 internal class DnnWebApiLogging(ILog log, ILogStore logStore, string logGroup, string firstMessage = default)
 {
     // Add the first message with the current path
-    private readonly ILogCall _timerWrapLog = log.Fn(message: firstMessage ?? $"Path: {HttpContext.Current?.Request.Url.AbsoluteUri}", timer: true);
+    // ReSharper disable once ExplicitCallerInfoArgument
+    private readonly ILogCall _timerWrapLog = log.Fn(message: firstMessage ?? $": {HttpContext.Current?.Request.Url.AbsoluteUri}", timer: true, cName: "Api");
 
         // Add it to the log store
     public LogStoreEntry LogStoreEntry = logStore.Add(logGroup ?? EavWebApiConstants.HistoryNameWebApi, log);

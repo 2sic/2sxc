@@ -1,8 +1,8 @@
 ﻿using Microsoft.CodeAnalysis;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Internal;
@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Razor
 {
     internal class HotBuildReferenceManager(
         RazorReferenceManager referenceManager,
-        Lazy<DependenciesLoader> dependenciesLoader,
+        LazySvc<DependenciesLoader> dependenciesLoader,
         AssemblyResolver assemblyResolver)
         : ServiceBase($"{SxcLogging.SxcLogName}.HbRefMgr",
             connect: [referenceManager, dependenciesLoader, assemblyResolver])

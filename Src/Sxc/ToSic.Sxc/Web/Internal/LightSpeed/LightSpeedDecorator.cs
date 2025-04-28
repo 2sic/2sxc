@@ -1,10 +1,11 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Internal;
+using ToSic.Sxc.Services.OutputCache;
 
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class LightSpeedDecorator(IEntity entity) : EntityBasedType(entity)
+internal class LightSpeedDecorator(IEntity entity) : EntityBasedType(entity), IOutputCacheSettings
 {
     /// <summary>
     /// Nice name. If it ever changes, remember to also update UI as it has references to it.
@@ -34,13 +35,13 @@ internal class LightSpeedDecorator(IEntity entity) : EntityBasedType(entity)
 
     public string Advanced => GetThis("");
 
-    public static LightSpeedDecorator GetFromAppStatePiggyBack(IAppReader appReader, ILog log)
+    public static LightSpeedDecorator GetFromAppStatePiggyBack(IAppReader appReader/*, ILog log*/)
     {
         var appState = appReader.GetCache();
         var decoFromPiggyBack = appState?.PiggyBack
             .GetOrGenerate(appState, $"decorator-{TypeNameId}", () =>
             {
-                log.A("Debug WIP - remove once this has proven to work; get LightSpeed PiggyBack - recreate");
+                //log.A("Debug WIP - remove once this has proven to work; get LightSpeed PiggyBack - recreate");
                 var decoEntityOrNullPb = appState.Metadata?.FirstOrDefaultOfType(TypeNameId);
                 return new LightSpeedDecorator(decoEntityOrNullPb);
             })

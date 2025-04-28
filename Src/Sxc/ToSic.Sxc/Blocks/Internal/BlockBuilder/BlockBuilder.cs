@@ -22,37 +22,24 @@ namespace ToSic.Sxc.Blocks.Internal;
 public partial class BlockBuilder(BlockBuilder.MyServices services)
     : ServiceBase<BlockBuilder.MyServices>(services, "Sxc.BlkBld"), IBlockBuilder
 {
-    public class MyServices: MyServicesBase
+    public class MyServices(
+        EngineFactory engineFactory,
+        Generator<IEnvironmentInstaller> envInstGen,
+        Generator<IRenderingHelper> renderHelpGen,
+        LazySvc<PageChangeSummary> pageChangeSummary,
+        LazySvc<ILicenseService> licenseService,
+        IModuleService moduleService,
+        CodeInfosInScope codeInfos)
+        : MyServicesBase(connect:
+            [engineFactory, envInstGen, renderHelpGen, pageChangeSummary, licenseService, moduleService, codeInfos])
     {
-
-        public MyServices(
-            EngineFactory engineFactory,
-            Generator<IEnvironmentInstaller> envInstGen,
-            Generator<IRenderingHelper> renderHelpGen,
-            LazySvc<PageChangeSummary> pageChangeSummary,
-            LazySvc<ILicenseService> licenseService,
-            IModuleService moduleService,
-            CodeInfosInScope codeInfos
-        )
-        {
-            ConnectLogs([
-                EngineFactory = engineFactory,
-                EnvInstGen = envInstGen,
-                RenderHelpGen = renderHelpGen,
-                PageChangeSummary = pageChangeSummary,
-                LicenseService = licenseService,
-                ModuleService = moduleService,
-                CodeInfos = codeInfos
-            ]);
-        }
-
-        public CodeInfosInScope CodeInfos { get; }
-        public EngineFactory EngineFactory { get; }
-        public Generator<IEnvironmentInstaller> EnvInstGen { get; }
-        public Generator<IRenderingHelper> RenderHelpGen { get; }
-        public LazySvc<PageChangeSummary> PageChangeSummary { get; }
-        public LazySvc<ILicenseService> LicenseService { get; }
-        public IModuleService ModuleService { get; }
+        public CodeInfosInScope CodeInfos { get; } = codeInfos;
+        public EngineFactory EngineFactory { get; } = engineFactory;
+        public Generator<IEnvironmentInstaller> EnvInstGen { get; } = envInstGen;
+        public Generator<IRenderingHelper> RenderHelpGen { get; } = renderHelpGen;
+        public LazySvc<PageChangeSummary> PageChangeSummary { get; } = pageChangeSummary;
+        public LazySvc<ILicenseService> LicenseService { get; } = licenseService;
+        public IModuleService ModuleService { get; } = moduleService;
     }
 
     #region Constructor

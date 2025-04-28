@@ -21,7 +21,7 @@ partial class OqtPageOutput
         return resources;
     }
 
-    private static List<SxcResource> SxcResourcesBuilder(IList<IClientAsset> assets)
+    private static List<SxcResource> SxcResourcesBuilder(IList<ClientAsset> assets)
     {
         var resources = assets.Select(a => new SxcResource
         {
@@ -35,9 +35,9 @@ partial class OqtPageOutput
         return resources;
     }
 
-    private List<IClientAsset> GetAssetsFromManualFeatures(IList<IPageFeature> manualFeatures)
+    private List<ClientAsset> GetAssetsFromManualFeatures(IList<IPageFeature> manualFeatures)
     {
-        var assets = new List<IClientAsset>();
+        var assets = new List<ClientAsset>();
         foreach (var manualFeature in manualFeatures)
         {
             // process manual features to get assets

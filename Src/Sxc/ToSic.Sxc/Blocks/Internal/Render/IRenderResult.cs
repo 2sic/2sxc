@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Web.Internal.ClientAssets;
+﻿using ToSic.Sxc.Services.OutputCache;
+using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.Internal.PageService;
@@ -19,11 +20,6 @@ public interface IRenderResult
     string Html { get; }
 
     /// <summary>
-    /// WIP - should tell us how big this is in memory - estimate
-    /// </summary>
-    int Size { get; }
-
-    /// <summary>
     /// Determines if this render-result can be cached.
     /// Should be false in case of errors or not-yet initialized content
     /// </summary>
@@ -42,7 +38,7 @@ public interface IRenderResult
     /// <summary>
     /// Assets (js, css) which must be added to the page
     /// </summary>
-    IList<IClientAsset> Assets { get; }
+    IList<ClientAsset> Assets { get; }
 
     /// <summary>
     /// Changes to the page properties - like Title, Description, Keywords etc.
@@ -62,7 +58,6 @@ public interface IRenderResult
     /// <summary>
     /// List of HttpHeaders to add to the response in format "key:value"
     /// </summary>
-    //IList<string> HttpHeaders { get; }
     IList<HttpHeader> HttpHeaders { get; }
 
     /// <summary>
@@ -91,10 +86,16 @@ public interface IRenderResult
     /// <summary>
     /// Errors such as not-activated features
     /// </summary>
-    List<string> Errors { get; set; }
+    List<string> Errors { get; }
 
     /// <summary>
     /// Info for LightSpeedStats (to group by AppId)
     /// </summary>
-    int AppId { get; set; }
+    int AppId { get; }
+
+    /// <summary>
+    /// Optional caching settings. New 19.03.03
+    /// </summary>
+    public OutputCacheSettings? OutputCacheSettings { get; init; }
+
 }

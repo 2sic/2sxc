@@ -78,6 +78,10 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
                     .WithTime(l)
                 );
 
+            // Make sure the generator has the logger - if supported
+            (gen as IHasLog)?.LinkLog(Log);
+
+            // generate and save files
             fileSaver.GenerateAndSaveFiles(gen, specs);
 
             return l.Return(new RichResult

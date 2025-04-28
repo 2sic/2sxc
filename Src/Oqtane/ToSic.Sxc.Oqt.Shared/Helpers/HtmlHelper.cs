@@ -148,21 +148,34 @@ public class HtmlHelper
 
     public static string ManageScripts(string html, OqtViewResultsDto viewResults, Alias alias, string pageHtml = "")
     {
-        if (viewResults == null) return html;
+        // If no view result, exit early
+        if (viewResults == null)
+            return html;
+
+        // Ensure html is a safe non-null string
         html ??= string.Empty;
 
-        foreach (var sxcResource in viewResults.TemplateResources.Where(r => r.IsExternal && r.ResourceType == ResourceType.Script))
+        // Extract external JS resources
+        var externalScripts = viewResults.TemplateResources
+            .Where(r => r.IsExternal && r.ResourceType == ResourceType.Script)
+            .ToList();
+
+        foreach (var sxcResource in externalScripts)
             html = AddScript(html, sxcResource, alias, pageHtml);
+
         var count = 0;
-        foreach (var sxcScript in viewResults.SxcScripts) 
-            html = AddScript(html, new Resource { Url = sxcScript, Reload = false }, alias, pageHtml, ++count);
+        foreach (var url in viewResults.SxcScripts) 
+            html = url.IsNullOrEmpty()
+                ? html
+                : AddScript(html, new Resource { Url = url, Reload = false }, alias, pageHtml, ++count);
 
         return html;
     }
 
     public static string ManageInlineScripts(string html, OqtViewResultsDto viewResults, Alias alias, string pageHtml = "")
     {
-        if (viewResults == null) return html;
+        if (viewResults == null)
+            return html;
         html ??= string.Empty;
 
         foreach (var sxcResource in viewResults.TemplateResources.Where(r => !r.IsExternal))
@@ -173,7 +186,15 @@ public class HtmlHelper
 
     private static string AddScript(string html, Resource resource, Alias alias, string pageHtml = "", int count = 0)
     {
-        if (resource == null || resource.Url.IsNullOrEmpty() && resource.Content.IsNullOrEmpty()) return html;
+        // If no resource, exit early
+        if (resource == null)
+            return html;
+
+        // Newer oqtane defaults empty resources to being "/" which we don't want to process
+        var resourceHasNoUrl = resource.Url.IsNullOrEmpty() || resource.Url == "/";
+        if (resourceHasNoUrl && resource.Content.IsNullOrEmpty())
+            return html;
+
         html ??= string.Empty;
 
         var script = CreateScript(resource, alias, count);
@@ -185,7 +206,8 @@ public class HtmlHelper
 
     private static string AddAssetWhenMissing(string html, string assetHtml)
     {
-        if (assetHtml.IsNullOrEmpty())  return html;
+        if (assetHtml.IsNullOrEmpty())
+            return html;
         html ??= string.Empty;
 
         if (!html.Contains(assetHtml, StringComparison.OrdinalIgnoreCase))
@@ -198,19 +220,22 @@ public class HtmlHelper
     {
         if (!resource.Content.IsNullOrEmpty())
             return "<script" +
-                (resource.ES6Module ? " type=\"module\">" : ">") +
-                resource.Content + "</script>";
+                (resource.Type == "module" ? " type=\"module\"" : "") +
+                ">" + resource.Content + "</script>";
 
         // use custom element which can execute script on every page transition
         if (resource.Reload)
             return "<page-script src=\"" + resource.Url + "\"></page-script>";
 
-        var str = resource.Url.Contains("://") ? resource.Url : alias.BaseUrl + resource.Url;
+        var str = resource.Url.Contains("://")
+            ? resource.Url
+            : alias.BaseUrl + (alias.BaseUrl.EndsWith('/') ? resource.Url.TrimStart('/') : resource.Url); // avoid "path//file.js" in URL
+
         return "<script" + 
             //" id=\"app-script-" + ResourceLevel.Page.ToString().ToLower() + "-" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + "-" + count.ToString("00") + "\"" +
             (!string.IsNullOrEmpty(resource.Integrity) ? " integrity=\"" + resource.Integrity + "\"" : "") +
             (!string.IsNullOrEmpty(resource.CrossOrigin) ? " crossorigin=\"" + resource.CrossOrigin + "\"" : "") +
-            (resource.ES6Module ? " type=\"module\"" : "") +
+            (resource.Type == "module" ? " type=\"module\"" : "") +
             " src=\"" + str + "\"></script>";
     }
 

@@ -2,8 +2,8 @@
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Services;
-using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 
 namespace ToSic.Sxc.Images.Internal;
 
@@ -54,7 +54,7 @@ public record ResponsivePicture: ResponsiveBase, IResponsivePicture
             ? defFormat.ResizeFormats
             : [defFormat];
             
-        var useMultiSrcSet = ImgService.Features.IsEnabled(ImageServiceMultipleSizes.NameId);
+        var useMultiSrcSet = ImgService.Features.IsEnabled(SxcFeatures.ImageServiceMultipleSizes.NameId);
 
         l.A($"{nameof(formats)}: {formats.Count}, {nameof(useMultiSrcSet)}: {useMultiSrcSet}");
 

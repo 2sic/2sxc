@@ -177,7 +177,7 @@ internal class DnnRazorCompiler(
         // Only generate this for the first / top EntryRazorComponent
         // All children which are then generated here should re-use that CodeApiService
         var createCodeApiService = _sharedCodeApiService == null;
-        _sharedCodeApiService ??= codeApiServiceFactory.BuildCodeRoot(webPage, Block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel9Old);
+        _sharedCodeApiService ??= codeApiServiceFactory.New(webPage, Block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel9Old);
 
         // If we just created a new CodeApiService, we must add this razor engine to it's piggyback
         if (createCodeApiService)

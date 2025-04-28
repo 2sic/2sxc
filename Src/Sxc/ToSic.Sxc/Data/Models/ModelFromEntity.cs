@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Data.Models;
 /// 
 /// - Released in v19.01 (BETA)
 /// </remarks>
-[InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change to CustomModelOfItem or something")]
+[InternalApi_DoNotUse_MayChangeWithoutNotice("Still beta, name may change")]
 public abstract partial class ModelFromEntity: ICanWrap<IEntity>, ICanBeEntity //, IHasPropLookup
 {
     #region Explicit Interfaces for internal use - Setup, etc.

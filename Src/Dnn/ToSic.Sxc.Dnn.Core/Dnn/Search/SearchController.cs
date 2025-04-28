@@ -334,7 +334,7 @@ internal class SearchController(
         {
             l.A($"attach DynamicCode context to class instance");
             var parentDynamicCodeRoot = codeRootFactory.New()
-                .BuildCodeRoot(null, block, Log, CompatibilityLevels.CompatibilityLevel10);
+                .New(null, block, Log, CompatibilityLevels.CompatibilityLevel10);
             instanceWithContext.ConnectToRoot(parentDynamicCodeRoot);
         }
 

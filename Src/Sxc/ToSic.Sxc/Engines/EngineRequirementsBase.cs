@@ -38,9 +38,20 @@ public abstract class EngineRequirementsBase(string logName, object[] connect = 
             "</p>",
             EngineMessages.Warning);
 
-        var result = new RenderEngineResult(html, false, [], null, exList2);
+        var result = new RenderEngineResult
+        {
+            Html = html,
+            ActivateJsApi = false,
+            Assets = [],
+            ErrorCode = null,
+            ExceptionsOrNull = exList2,
+        };
         return result;
     }
 
-    private static CodeHelp ErrHelpRequirementsNotMet = new(name: "Requirement Not Met", detect: "",
-        linkCode: "err-view-config-missing", uiMessage: "Important Requirements not Met");}
+    private static readonly CodeHelp ErrHelpRequirementsNotMet = new(
+        name: "Requirement Not Met",
+        detect: "",
+        linkCode: "err-view-config-missing",
+        uiMessage: "Important Requirements not Met");
+}

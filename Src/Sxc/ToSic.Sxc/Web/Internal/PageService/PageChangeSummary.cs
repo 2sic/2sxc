@@ -3,6 +3,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageFeatures;
@@ -18,12 +19,21 @@ namespace ToSic.Sxc.Web.Internal.PageService;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class PageChangeSummary(
     LazySvc<IBlockResourceExtractor> resourceExtractor,
-    LazySvc<RequirementsService> requirements)
-    : ServiceBase(SxcLogName + "PgChSm", connect: [requirements, resourceExtractor])
+    LazySvc<RequirementsService> requirements,
+    IModuleService moduleService)
+    : ServiceBase(SxcLogName + "PgChSm", connect: [requirements, resourceExtractor, moduleService])
 {
-    public IRenderResult FinalizeAndGetAllChanges(PageServiceShared pss, RenderSpecs specs, bool enableEdit)
+    /// <summary>
+    /// Finalize the page and get all changes such as header modifications etc.
+    /// </summary>
+    /// <param name="moduleId">The module ID to check for any output caching instructions; use `0` if it should be ignored.</param>
+    /// <param name="pss"></param>
+    /// <param name="specs"></param>
+    /// <param name="enableEdit"></param>
+    /// <returns></returns>
+    public RenderResult FinalizeAndGetAllChanges(int moduleId, PageServiceShared pss, RenderSpecs specs, bool enableEdit)
     {
-        var l = Log.Fn<IRenderResult>(timer: true);
+        var l = Log.Fn<RenderResult>(timer: true);
         if (enableEdit)
         {
             pss.Activate(SxcPageFeatures.ToolbarsInternal.NameId);
@@ -31,7 +41,8 @@ public class PageChangeSummary(
         }
 
         var assets = pss.GetAssetsAndFlush();
-        var (newAssets, rest) = ConvertSettingsAssetsIntoReal(pss.PageFeatures.FeaturesFromSettingsGetNew(specs, Log), specs);
+        var newPageFeaturesFromSettings = pss.PageFeatures.FeaturesFromSettingsGetNew(specs, Log);
+        var (newAssets, rest) = ConvertSettingsAssetsIntoReal(newPageFeaturesFromSettings, specs);
 
         assets.AddRange(newAssets);
         assets = [.. assets.OrderBy(a => a.PosInPage)];
@@ -44,13 +55,17 @@ public class PageChangeSummary(
             .Select(f => f.Message)
             .ToList();
 
-        var result = new RenderResult(null)
+        // New beta 2025-03-18 v19.03.03
+        var cacheSettings = moduleId != 0 ? ((ModuleService)moduleService).GetOutputCache(moduleId) : null;
+
+        var result = new RenderResult
         {
             Assets = assets,
             FeaturesFromSettings = rest,
             Features = features,
             HeadChanges = pss.GetHeadChangesAndFlush(Log),
             PageChanges = pss.GetPropertyChangesAndFlush(Log),
+
             HttpStatusCode = pss.HttpStatusCode,
             HttpStatusMessage = pss.HttpStatusMessage,
             HttpHeaders = pss.HttpHeaders,
@@ -60,6 +75,10 @@ public class PageChangeSummary(
             CspEnforced = pss.Csp.IsEnforced,
             CspParameters = pss.Csp.CspParameters(),
             Errors = errors,
+
+            // New 19.03.03
+            ModuleId = moduleId,                    // ModuleId for caching
+            OutputCacheSettings = cacheSettings,    // Additional output-cache settings (often null)
         };
 
         // Whitelist any assets which were officially ok, or which were from the settings
@@ -72,16 +91,20 @@ public class PageChangeSummary(
 
 
 
-    private (List<IClientAsset> newAssets, List<IPageFeature> rest) ConvertSettingsAssetsIntoReal(List<PageFeatureFromSettings> featuresFromSettings, RenderSpecs specs)
+    private (List<ClientAsset> newAssets, List<IPageFeature> rest) ConvertSettingsAssetsIntoReal(List<PageFeatureFromSettings> featuresFromSettings, RenderSpecs specs)
     {
-        var l = Log.Fn<(List<IClientAsset> newAssets, List<IPageFeature> rest)>($"{featuresFromSettings.Count}");
-        var newAssets = new List<IClientAsset>();
+        var l = Log.Fn<(List<ClientAsset> newAssets, List<IPageFeature> rest)>($"{featuresFromSettings.Count}");
+        var newAssets = new List<ClientAsset>();
         foreach (var settingFeature in featuresFromSettings)
         {
             var autoOpt = settingFeature.AutoOptimize;
-            var extracted = resourceExtractor.Value.Process(settingFeature.Html, new(
-                css: new(autoOpt, AddToBottom, CssDefaultPriority, false, false),
-                js: new(autoOpt, AddToBottom, JsDefaultPriority, autoOpt, autoOpt)));
+            var extracted = resourceExtractor.Value.Process(
+                settingFeature.Html,
+                new(
+                    css: new(autoOpt, AddToBottom, CssDefaultPriority, false, false),
+                    js: new(autoOpt, AddToBottom, JsDefaultPriority, autoOpt, autoOpt)
+                )
+            );
             l.A($"Feature: {settingFeature.Name} - assets extracted: {extracted.Assets.Count}");
             if (!extracted.Assets.Any())
                 continue;
@@ -96,9 +119,12 @@ public class PageChangeSummary(
             //    });
 
             // All resources from the settings are seen as safe
-            extracted.Assets.ForEach(a => a.WhitelistInCsp = true);
+            // older code till 2025-03-17, not functional
+            //extracted.Assets.ForEach(a => a.WhitelistInCsp = true);
+            var assetsWithWhitelisting = extracted.Assets
+                .Select(a => a with { WhitelistInCsp = true });
 
-            newAssets.AddRange(extracted.Assets);
+            newAssets.AddRange(assetsWithWhitelisting);
 
             // Reset the HTML to what's left after extracting the resources, except for Oqtane where we will keep it all
             if (!specs.IncludeAllAssetsInOqtane)
@@ -113,14 +139,16 @@ public class PageChangeSummary(
         return l.Return((newAssets, featsLeft), $"New: {newAssets.Count}; Rest: {featsLeft.Count}");
     }
 
-    private static CspParameters GetCspListFromAssets(IReadOnlyCollection<IClientAsset> assets)
+    private static CspParameters GetCspListFromAssets(IReadOnlyCollection<ClientAsset> assets)
     {
-        if (assets == null || assets.Count == 0) return null;
+        if (assets == null || assets.Count == 0)
+            return null;
         var toWhitelist = assets
             .Where(a => a.WhitelistInCsp)
             .Where(a => !a.Url.NeverNull().StartsWith("/")) // skip local files
             .ToList();
-        if (!toWhitelist.Any()) return null;
+        if (!toWhitelist.Any())
+            return null;
         var whitelist = new CspParameters();
         foreach (var asset in toWhitelist)
             whitelist.Add((asset.IsJs ? "script" : "style") + "-src", asset.Url);

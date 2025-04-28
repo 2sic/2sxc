@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <RazorLangVersion>3.0</RazorLangVersion>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>preview</LangVersion>
     <AssemblyName>ToSic.Sxc.Oqtane.Client</AssemblyName>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
     <Deterministic>true</Deterministic>

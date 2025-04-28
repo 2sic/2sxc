@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="19.03.01">
+    <package name="2SexyContent" type="Module" version="19.03.05">
       <friendlyName> Content</friendlyName>
       <description>2sxc is a DNN Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -79,7 +79,7 @@
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>19.03.01</version>
+              <version>19.03.05</version>
             </script>
           </scripts>
         </component>
@@ -130,7 +130,7 @@
               <businessControllerClass>ToSic.SexyContent.DnnBusinessController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
               <!-- This must contain all versions which have upgrade-code. By convention, we also add the main entry versions, even if no upgrade code exists for them -->
-              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,10.00.00,11.00.00,12.00.00,13.00.00,13.01.00,13.04.00,14.00.00,15.00.00,15.02.00,16.00.00,16.07.01,17.00.00,18.00.00,18.03.00,19.00.00,19.03.01</upgradeVersionsList>
+              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,10.00.00,11.00.00,12.00.00,13.00.00,13.01.00,13.04.00,14.00.00,15.00.00,15.02.00,16.00.00,16.07.01,17.00.00,18.00.00,18.03.00,19.00.00,19.03.05</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>
@@ -233,8 +233,10 @@
             </assembly>
             <!-- System.Text.Json transitive dependency -->
             <assembly>
+              <path>bin\2sxc</path>
               <name>Microsoft.Bcl.AsyncInterfaces.dll</name>
-              <version>9.0.0.0</version>
+              <version>9.0.0.0</version><!-- find 'part2', with related config component
+              and ensure that 'codeBase' element has same 'version' (currently `9.0.0.0`) -->
             </assembly>
             <!-- CsvHelper transitive dependency -->
             <assembly>
@@ -401,6 +403,32 @@
               <version>4.0.3.0</version>
             </assembly>
           </assemblies>
+        </component>
+
+        <component type="Config">
+          <config>
+            <!-- more on this here https://www.dnnsoftware.com/wiki/manifest-xml-merge -->
+            <configFile>web.config</configFile>
+            <install>
+              <configuration>
+                <nodes>
+                  <!-- part2: ensure that correct version and href for 'Microsoft.Bcl.AsyncInterfaces' is used in 'path' attribute and 'codeBase' element -->
+                  <node path="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='Microsoft.Bcl.AsyncInterfaces'][ab:bindingRedirect/@newVersion='9.0.0.0'][not(ab:codeBase/@version='9.0.0.0'/@href='bin\2sxc\Microsoft.Bcl.AsyncInterfaces')]"
+                        action="add"
+                        collision="overwrite"
+                        nameSpace="urn:schemas-microsoft-com:asm.v1"
+                        nameSpacePrefix="ab">
+                    <codeBase version="9.0.0.0" href="bin\2sxc\Microsoft.Bcl.AsyncInterfaces.dll" xmlns="urn:schemas-microsoft-com:asm.v1" />
+                  </node>
+                </nodes>
+              </configuration>
+            </install>
+            <uninstall>
+              <configuration>
+                <nodes></nodes>
+              </configuration>
+            </uninstall>
+          </config>
         </component>
 
         <component type="File">
@@ -642,7 +670,7 @@
       </components>
     </package>
 
-    <package name="2SexyContent-App" type="Module" version="19.03.01">
+    <package name="2SexyContent-App" type="Module" version="19.03.05">
       <friendlyName> App</friendlyName>
       <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>

@@ -60,7 +60,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
 
         var services = SysHlp.GetService<ApiControllerMyServices>().ConnectServices(Log);
         var codeRoot = services.CodeApiServiceFactory
-            .BuildCodeRoot(_owner, block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel10);
+            .New(_owner, block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel10);
 
         SysHlp.ConnectToRoot(codeRoot);
 

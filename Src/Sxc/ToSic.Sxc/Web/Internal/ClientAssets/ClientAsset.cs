@@ -1,21 +1,24 @@
 ﻿namespace ToSic.Sxc.Web.Internal.ClientAssets;
 
-internal class ClientAsset : IClientAsset
+public record ClientAsset
 {
-    /// <inheritdoc />
-    public string Id { get; set; }
+    /// <summary>
+    /// Asset ID for use in HTML - ideally should ensure that this asset is only loaded once
+    /// </summary>
+    public string Id { get; init; }
         
-    public bool IsJs { get; set; }= true;
-    public string Url { get; set; }
-    public int Priority {get; set; }
-    public string PosInPage { get; set; } = "body";
-    //public bool AutoOpt { get; set; } = false;
+    public bool IsJs { get; init; }= true;
+    public string Url { get; init; }
+    public int Priority {get; init; }
+    public string PosInPage { get; init; } = "body";
 
-    public bool IsExternal { get; set; } = true;
-    public string Content { get; set; } = null;
+    public bool IsExternal { get; init; } = true;
+    public string Content { get; init; } = null;
 
-    public bool WhitelistInCsp { get; set; } = false;
+    public bool WhitelistInCsp { get; init; } = false;
 
-    /// <inheritdoc />
-    public IDictionary<string, string> HtmlAttributes { get; set; } = null;
+    /// <summary>
+    /// Used to store all other html attributes from html tag.
+    /// </summary>
+    public IDictionary<string, string> HtmlAttributes { get; init; } = null;
 }

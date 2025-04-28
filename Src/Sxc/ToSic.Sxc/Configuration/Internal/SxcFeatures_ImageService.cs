@@ -6,15 +6,17 @@ namespace ToSic.Sxc.Configuration.Internal;
 public partial class SxcFeatures
 {
 
-    public static readonly Feature ImageServiceMultipleSizes = new(){
+    public static readonly Feature ImageServiceMultipleSizes = new()
+    {
         NameId = "ImageServiceMultipleSizes",
         Guid = new("9dab12db-85e5-4fb8-a100-2f009bf32f72"),
         Name = "Image Service - Multiple Sizes",
         IsPublic = false,
         Ui = false,
-        Description = "Enables the ImageService to provide multiple sizes on <code>srcset</code> for <code>img</code> or <code>source</code> tags on a <code>picture</code>",
+        Description =
+            "Enables the ImageService to provide multiple sizes on <code>srcset</code> for <code>img</code> or <code>source</code> tags on a <code>picture</code>",
         Security = FeaturesCatalogRules.Security0Improved,
-        LicenseRules = Eav.Internal.Features.BuiltInFeatures.ForPatronsPerfectionist
+        LicenseRules = BuiltInFeatures.ForPatronsPerfectionist
     };
 
     public static readonly Feature ImageServiceUseFactors = new()
@@ -26,7 +28,7 @@ public partial class SxcFeatures
         Ui = false,
         Description = "Will change how the size of images is calculated to vary by factor. So a 1/2 image will not be 670px but 600 when using Bootstrap5. The exact values are configured in the settings.",
         Security = FeaturesCatalogRules.Security0Improved,
-        LicenseRules = Eav.Internal.Features.BuiltInFeatures.ForPatronsPerfectionist
+        LicenseRules = BuiltInFeatures.ForPatronsPerfectionist
     };
 
 
@@ -39,7 +41,7 @@ public partial class SxcFeatures
         Ui = false,
         Description = "The browser can pre-load faster if the img-tag has additional information about the final sizes of the image. The exact configuration can be adjusted in the settings.",
         Security = FeaturesCatalogRules.Security0Improved,
-        LicenseRules = Eav.Internal.Features.BuiltInFeatures.ForPatronsPerfectionist
+        LicenseRules = BuiltInFeatures.ForPatronsPerfectionist
     };
 
 
@@ -52,6 +54,6 @@ public partial class SxcFeatures
         Ui = false,
         Description = "Enables the ImageService to also provide WebP as better alternatives to JPG and PNG",
         Security = FeaturesCatalogRules.Security0Improved,
-        LicenseRules = Eav.Internal.Features.BuiltInFeatures.ForPatronsPerfectionist
+        LicenseRules = BuiltInFeatures.ForPatronsPerfectionist
     };
 }

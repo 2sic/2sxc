@@ -12,4 +12,8 @@ public class BlockBuildingConstants
     public static string ErrorGeneral = "General";
 
     public static string ErrorHtmlMarker = "<!--2sxc:error-->";
+
+    public static string ErrorAppIsUnhealthy = "AppIsUnhealthy";
+    
+    public static string AppIsUnhealthy = "2sxc app is unhealthy. ";
 }

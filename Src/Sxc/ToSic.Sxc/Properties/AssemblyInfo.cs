@@ -17,4 +17,7 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("ToSic.Sxc.Mvc")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Oqtane.Server")]
 
+[assembly: InternalsVisibleTo("ToSic.Sxc.Core.TestHelpers")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Tests")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.UnitTests")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.SystemTests")]

@@ -1,72 +1,55 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0EA1085A-D15F-4254-8A79-DE811C47EBF4}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <!-- 2025-02-28 2dm - no .net9 tests ATM - most fail complaining they can't find IHtmlString from .net 4 (which doesn't make sense) -->
+    <TargetFrameworks>net472</TargetFrameworks>
+    <!--<TargetFrameworks>net472;net9.0</TargetFrameworks>-->
     <RootNamespace>ToSic.Sxc.Tests</RootNamespace>
     <AssemblyName>ToSic.Sxc.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
-    <IsCodedUITest>False</IsCodedUITest>
-    <TestProjectType>UnitTest</TestProjectType>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
-    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
-    <!-- Don't generate assembly properties from this XML which should come from the core file, like version - these lines must be in sync in all ToSic.Eav.*.csproj files -->
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <!-- end: Don't generate... -->
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <IsTestProject>true</IsTestProject>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <LangVersion>preview</LangVersion>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>default</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugOqtane|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\DebugOqtane\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>default</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugDnn|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\DebugDnn\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>default</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
+
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSources\ToSic.Eav.DataSources.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.TokenEngine.Tests\ToSic.Eav.TokenEngine.Tests.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Testing.Shared\ToSic.Testing.Shared.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />
+    <PackageReference Include="NETStandard.Library" Version="2.0.3" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
+    <!--<PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.3.0" />-->
+    <FrameworkReference Include="Microsoft.NETCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ToSic.Razor">
+      <HintPath>..\..\Dnn\ToSic.Sxc.Dnn\razorblade\bin\ToSic.Razor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MSTest.TestAdapter" Version="3.4.3" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.4.3" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -74,244 +57,17 @@
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Numerics" />
-    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="ToSic.Razor, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dnn\ToSic.Sxc.Dnn\razorblade\bin\ToSic.Razor.dll</HintPath>
-    </Reference>
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs">
-      <Link>Properties\AssemblyInfoInherited.cs</Link>
-    </Compile>
-    <Compile Include="Adam\AdamPathsBaseTests.cs" />
-    <Compile Include="Adam\AdamSecurity.cs" />
-    <Compile Include="Blocks\Output\BlockResourceExtractorGetHtmlAttributesTests.cs" />
-    <Compile Include="CodeTests\LoggingTests\LogAdapterTests.cs" />
-    <Compile Include="CodeTests\LoggingTests\LogFnOldTests.cs" />
-    <Compile Include="CodeTests\LoggingTests\LogFnTests.cs" />
-    <Compile Include="CodeTests\LoggingTests\LogTestBase.cs" />
-    <Compile Include="Code\Help\SourceAnalyzerTests.cs" />
-    <Compile Include="ConfigurationTests\VerifyPatronsPerfectionistPackage.cs" />
-    <Compile Include="ContentSecurityPolicyTests\CspParametersTests.cs" />
-    <Compile Include="ContentSecurityPolicyTests\CspParameterFinalizerTests.cs" />
-    <Compile Include="ContentSecurityPolicyTests\CspPolicyTextProcessorTests.cs" />
-    <Compile Include="ContextTests\ParametersTestData.cs" />
-    <Compile Include="ContextTests\ParametersTests.cs" />
-    <Compile Include="ContextTests\UniqueKeyTests.cs" />
-    <Compile Include="ContextTests\ParametersAccessedTests.cs" />
-    <Compile Include="ContextTests\ParametersToStringTests.cs" />
-    <Compile Include="DataForImageTests\ResizeRecipesData.cs" />
-    <Compile Include="DataSources\MockRolesDataSource.cs" />
-    <Compile Include="DataSources\MockUsers.cs" />
-    <Compile Include="DataSources\UsersDataSourceTests.cs" />
-    <Compile Include="DataSources\RolesDataSourceTests.cs" />
-    <Compile Include="DataTests\CodeDataConverterTestAccessors.cs" />
-    <Compile Include="DataTests\ModelTests\DataModelAnalyzerTestAccessors.cs" />
-    <Compile Include="DataTests\DynAndTypedTestsBase.cs" />
-    <Compile Include="DataTests\DynConverterTests\AsConverterFakeTests.cs" />
-    <Compile Include="DataTests\DynConverterTests\AsConverterAsItem.cs" />
-    <Compile Include="DataTests\DynWrappers\WrapObjTypedItemEquality.cs" />
-    <Compile Include="DataTests\GetAndConvertHelperTestAccessors.cs" />
-    <Compile Include="DataTests\ModelTests\DataModelAnalyzerTypeTests.cs" />
-    <Compile Include="DataTests\ModelTests\DataModelAnalyzerTests.cs" />
-    <Compile Include="DataTests\PropInfo.cs" />
-    <Compile Include="DataTests\DynJson\WrapAllGps.cs" />
-    <Compile Include="DataTests\DynJson\WrapAllKeys.cs" />
-    <Compile Include="DataTests\DynJson\WrapAllSerialize.cs" />
-    <Compile Include="DataTests\DynStack\TypedStackGet.cs" />
-    <Compile Include="DataTests\DynStack\TypedStackKeys_NotImplemented.cs" />
-    <Compile Include="DataTests\DynStack\TypedStackTestData.cs" />
-    <Compile Include="DataTests\DynWrappers\WrapDicBasic.cs" />
-    <Compile Include="DataTests\DynWrappers\WrapObjBasic.cs" />
-    <Compile Include="DataTests\DynJson\WrapJsonArray.cs" />
-    <Compile Include="DataTests\DynJson\WrapJsonValues.cs" />
-    <Compile Include="DataTests\DynJson\WrapJsonDeep.cs" />
-    <Compile Include="DataTests\DynJson\WrapJsonMixed.cs" />
-    <Compile Include="DataTests\DynWrappers\TestPerson.cs" />
-    <Compile Include="DataTests\DynWrappers\WrapObjTypedItemMetadata.cs" />
-    <Compile Include="DataTests\DynWrappers\WrapObjTypedItemAdvanced.cs" />
-    <Compile Include="DataTests\DynWrappers\WrapObjTypedItemParents.cs" />
-    <Compile Include="DataTests\DynWrappers\WrapObjTypedItemChildren.cs" />
-    <Compile Include="DataTests\DynWrappers\WrapObjTypedItem.cs" />
-    <Compile Include="DataTests\HasKeysTests.cs" />
-    <Compile Include="DataTests\TypedItemTestAccessors.cs" />
-    <Compile Include="DataTests\GetAndConvertHelperTests.cs" />
-    <Compile Include="EditTests\ItemToolbarPickerTests\ItemToolbarPikerWithRulesTests.cs" />
-    <Compile Include="EditTests\ToolbarRuleTests\ToolbarRuleForTest.cs" />
-    <Compile Include="EditTests\ToolbarRuleTests\ToolbarRuleBasicTests.cs" />
-    <Compile Include="EditTests\ToolbarRuleTests\ToolbarRuleToolbarTests.cs" />
-    <Compile Include="EditTests\ToolbarRuleTests\ToolbarRuleOpPickTests.cs" />
-    <Compile Include="LinksAndImages\ParametersTestExtensions.cs" />
-    <Compile Include="ServicesTests\CacheTests\CacheSpecsTestAccessors.cs" />
-    <Compile Include="ServicesTests\CacheTests\CacheSpecsTests.cs" />
-    <Compile Include="ServicesTests\CacheTests\CacheKeyTests.cs" />
-    <Compile Include="ServicesTests\CmsService\CmsServiceTest.cs" />
-    <Compile Include="ServicesTests\CmsService\CmsServiceTestAccessors.cs" />
-    <Compile Include="ServicesTests\CmsService\CmsServiceTestBase.cs" />
-    <Compile Include="DataTests\DynWrappers\WrapObjDeep.cs" />
-    <Compile Include="LinksAndImages\LinkImageTests\MultiResizeTests.cs" />
-    <Compile Include="LinksAndImages\LinkImageTests\ImgSrcSet.cs" />
-    <Compile Include="LinksAndImages\SrcSetParsePart.cs" />
-    <Compile Include="LinksAndImages\LinkImageTests\ResizeParamMergeTests.cs" />
-    <Compile Include="LinksAndImages\UrlHelperTests\Obj2UrlTests.cs" />
-    <Compile Include="LinksAndImages\UrlHelperTests\Obj2UrlMerge.cs" />
-    <Compile Include="PageFeatures\SimpleFeatureManagement.cs" />
-    <Compile Include="PageProperty\UpdatePropertyTest.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServicesTests\CmsService\CmsServiceImageExtractorTests.cs" />
-    <Compile Include="ServicesTests\ImageServiceTests\ImageServiceFormatsPatronPerfectionist.cs" />
-    <Compile Include="ServicesTests\ImageServiceTests\ImageServiceFormatsNoPatron.cs" />
-    <Compile Include="ServicesTests\ImageServiceTests\ImageServiceFormatsBase_Best.cs" />
-    <Compile Include="ServicesTests\ImageServiceTests\ImageServiceFormatsBase.cs" />
-    <Compile Include="ServicesTests\ImageServiceTests\ImageServiceAttributes.cs" />
-    <Compile Include="ServicesTests\ImageServiceTests\ImageServiceTagsImgPatronPerfectionist.cs" />
-    <Compile Include="ServicesTests\ImageServiceTests\ImageServiceTagsImgNoPatron.cs" />
-    <Compile Include="ServicesTests\ImageServiceTests\ImageServiceTagsImgBase.cs" />
-    <Compile Include="ServicesTests\ImageServiceTests\ImageServiceTagsNoPatron.cs" />
-    <Compile Include="ServicesTests\ImageServiceTests\ImageServiceTagsBase.cs" />
-    <Compile Include="ServicesTests\ImageServiceTests\ImageServiceTestAccessors.cs" />
-    <Compile Include="ServicesTests\ImageServiceTests\ImageTagsTestPermutations.cs" />
-    <Compile Include="ServicesTests\ImageServiceTests\ImageServiceTagsPatronPerfectionist.cs" />
-    <Compile Include="ServicesTests\ImageServiceTests\ImageServiceResizeSettings.cs" />
-    <Compile Include="ServicesTests\ImageServiceTests\FactorMapTests.cs" />
-    <Compile Include="ServicesTests\ImageServiceTests\TweakMediaTests.cs" />
-    <Compile Include="ServicesTests\MailServiceBaseTests.cs" />
-    <Compile Include="ServicesTests\MailAddressCollectionTests.cs" />
-    <Compile Include="ServicesTests\AddMailAddressesInputTypeTests.cs" />
-    <Compile Include="ServicesTests\MailAddressTests.cs" />
-    <Compile Include="ServicesTests\MailAddressInputTypeTests.cs" />
-    <Compile Include="ServicesTests\MailServiceTestsBase.cs" />
-    <Compile Include="ServicesTests\PageServiceSharedTest.cs" />
-    <Compile Include="ServicesTests\SecureData\SecureDataHashTests.cs" />
-    <Compile Include="ServicesTests\SecureData\SecureDataTest.cs" />
-    <Compile Include="Images\ImageflowRewriteTests.cs" />
-    <Compile Include="ServicesTests\Templates\TemplatesHtmlTests.cs" />
-    <Compile Include="ServicesTests\Templates\TemplatesDefaultTests.cs" />
-    <Compile Include="ServicesTests\Templates\TemplatesDefaultSourcesTests.cs" />
-    <Compile Include="ServicesTests\Templates\TemplatesEmptySourcesTests.cs" />
-    <Compile Include="ServicesTests\Templates\TemplatesBasicTests.cs" />
-    <Compile Include="ServicesTests\Templates\TemplatesTestsBase.cs" />
-    <Compile Include="ServicesTests\Templates\TemplatesEmptyTests.cs" />
-    <Compile Include="ServicesTests\ToolbarService\TweakButtonParameters.cs" />
-    <Compile Include="ServicesTests\ToolbarService\TweakButtonOther.cs" />
-    <Compile Include="ServicesTests\ToolbarService\TweakButtonTestAccessors.cs" />
-    <Compile Include="ServicesTests\ToolbarService\TweakButtonShow.cs" />
-    <Compile Include="ServicesTests\ToolbarService\TweakButtonTestsBase.cs" />
-    <Compile Include="ServicesTests\ToolbarService\TweakButtonColor.cs" />
-    <Compile Include="ServicesTests\TurnOnTests\TurnOnTestAccessors.cs" />
-    <Compile Include="ServicesTests\TurnOnTests\PickOrBuildSpecsTests.cs" />
-    <Compile Include="ServiceTweaks\TweakListTests.cs" />
-    <Compile Include="ServiceTweaks\CmsHtmlTweakTests.cs" />
-    <Compile Include="TestBaseSxcDb.cs" />
-    <Compile Include="TestBaseSxc.cs" />
-    <Compile Include="ServicesTests\ConvertService\ConvertServiceTest.cs" />
-    <Compile Include="LinksAndImages\LinkHelperTestBase.cs" />
-    <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperToVerifyTests.cs" />
-    <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperToTestBase.cs" />
-    <Compile Include="LinksAndImages\LinkHelperTests\LinkTestHelperExtensions.cs" />
-    <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperToPartTests.cs" />
-    <Compile Include="LinksAndImages\LinkImageTests\ImageBasic.cs" />
-    <Compile Include="LinksAndImages\LinkImageTests\ResizeParamsBestWh.cs" />
-    <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperImagePartFullTests.cs" />
-    <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperImagePartUndefinedTests.cs" />
-    <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperToApiPartUndefinedTests.cs" />
-    <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperToCommonTests.cs" />
-    <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperToPagePartUnknownTests.cs" />
-    <Compile Include="PlumbingTests\CleanParamTests.cs" />
-    <Compile Include="LinksAndImages\LinkImageTests\ImageWithSettings.cs" />
-    <Compile Include="LinksAndImages\LinkImageTests\LinkImageTestBase.cs" />
-    <Compile Include="LinksAndImages\LinkImageTests\LinkImageParameters.cs" />
-    <Compile Include="LinksAndImages\QueryHelperTests.cs" />
-    <Compile Include="LinksAndImages\LinkToBasicTests.cs" />
-    <Compile Include="LinksAndImages\UrlHelperTests\ParseQueryStringTests.cs" />
-    <Compile Include="LinksAndImages\UrlHelperTests\MergeNameValueCollectionTests.cs" />
-    <Compile Include="LinksAndImages\UrlParts\UrlPartsToLink.cs" />
-    <Compile Include="LinksAndImages\UrlParts\UrlPartsProtocolAndDomain.cs" />
-    <Compile Include="LinksAndImages\UrlParts\UrlPartsTrivial.cs" />
-    <Compile Include="LinksAndImages\UrlParts\UrlPartsTestBase.cs" />
-    <Compile Include="WebLightSpeed\LightSpeedTestData.cs" />
-    <Compile Include="WebLightSpeed\LightSpeedDecoratorTests.cs" />
-    <Compile Include="WebLightSpeed\LightSpeedUrlParamsTest.cs" />
-    <Compile Include="WebUrlTests\UrlValueCamelCaseTest.cs" />
-    <Compile Include="WebUrlTests\UrlValueFilterTests.cs" />
+    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs" Link="Properties\AssemblyInfoInherited.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">
-      <Project>{fa1b4495-6b85-400f-a5e3-0e292ccbfae2}</Project>
-      <Name>ToSic.Eav.Apps</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core.Tests\ToSic.Eav.Core.Tests.csproj">
-      <Project>{afed35b5-8e43-4f46-8e4d-fc3f07244d8b}</Project>
-      <Name>ToSic.Eav.Core.Tests</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj">
-      <Project>{82f94588-269b-4cdd-98d1-d5cb14c39090}</Project>
-      <Name>ToSic.Eav.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSources.Tests\ToSic.Eav.DataSources.Tests.csproj">
-      <Project>{c212a78c-25bb-4a77-afbb-b5939352ce36}</Project>
-      <Name>ToSic.Eav.DataSources.Tests</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSources\ToSic.Eav.DataSources.csproj">
-      <Project>{93149d23-e6cc-43af-97d0-32d89d29d714}</Project>
-      <Name>ToSic.Eav.DataSources</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport.Tests\ToSic.Eav.ImportExport.Tests.csproj">
-      <Project>{00c8672b-e79e-42d4-a512-6c0abccaf046}</Project>
-      <Name>ToSic.Eav.ImportExport.Tests</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj">
-      <Project>{5a75cd35-99f4-4cf0-944a-dc0f5d68b430}</Project>
-      <Name>ToSic.Eav.ImportExport</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.TokenEngine.Tests\ToSic.Eav.TokenEngine.Tests.csproj">
-      <Project>{ef7808df-f67f-4e0a-a851-21358773dd25}</Project>
-      <Name>ToSic.Eav.TokenEngine.Tests</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj">
-      <Project>{892f9d3b-0578-46a1-a46a-b694a7e15669}</Project>
-      <Name>ToSic.Eav</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj">
-      <Project>{bc93efb1-d740-4617-9c90-d9167f9e4545}</Project>
-      <Name>ToSic.Lib.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Testing.Shared\ToSic.Testing.Shared.csproj">
-      <Project>{41243C6D-2D10-4285-8AF2-719497AE00DB}</Project>
-      <Name>ToSic.Testing.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj">
-      <Project>{5d87eb0c-bf67-4814-a0ff-d96256c9b852}</Project>
-      <Name>ToSic.Sxc</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection">
-      <Version>2.1.1</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
-      <Version>2.1.1</Version>
-    </PackageReference>
-    <PackageReference Include="MSTest.TestAdapter">
-      <Version>3.4.3</Version>
-    </PackageReference>
-    <PackageReference Include="MSTest.TestFramework">
-      <Version>3.4.3</Version>
-    </PackageReference>
-    <PackageReference Include="NETStandard.Library">
-      <Version>2.0.3</Version>
-    </PackageReference>
-  </ItemGroup>
+
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>

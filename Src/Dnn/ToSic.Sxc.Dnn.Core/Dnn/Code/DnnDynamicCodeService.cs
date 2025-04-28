@@ -48,7 +48,11 @@ internal class DnnDynamicCodeService: DynamicCodeService
         var l = Log.Fn();
         var user = _user.Value;
         var changes = _scopedServices.PageChangeSummary.Value.FinalizeAndGetAllChanges(
-            _scopedServices.PageServiceShared.Value, new(), user.IsContentAdmin);
+            moduleId: 0, // ignore module Id, we don't expect any caching info here
+            _scopedServices.PageServiceShared.Value,
+            new(),
+            user.IsContentAdmin
+        );
         _scopedServices.DnnPageChanges.Value.Apply(Page, changes);
         var dnnClientResources = _scopedServices.DnnClientResources.Value.Init(Page, false, null);
         dnnClientResources.AddEverything(changes?.Features);

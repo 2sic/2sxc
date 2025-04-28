@@ -31,7 +31,7 @@ partial record ToolbarBuilder
     )
     {
         TargetCheck(target);
-        var clone = new ToolbarBuilder(this);
+        var clone = new ToolbarBuilder(this) { Rules = [.. Rules] }; // initialize Rules with spread operator syntax because it is reference type
 
         // see if we already have a params rule, if yes remove to then later clone and add again
         var previous = clone.FindRule<ToolbarRuleForParams>();

@@ -19,7 +19,7 @@ public class OqtViewResultsDto
     /// For special error messages, in case the backend has trouble with refs etc.
     /// </summary>
     public string ErrorMessage { get; set; }
-        
+
     /// <summary>
     /// The resources which the template will need
     /// </summary>

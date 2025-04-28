@@ -180,7 +180,7 @@ internal class DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generat
     }
 
 
-    public void AttachAssets(IList<IClientAsset> ass, Page page)
+    public void AttachAssets(IList<ClientAsset> ass, Page page)
     {
         ass.ToList().ForEach(a =>
         {
@@ -203,7 +203,7 @@ internal class DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generat
     /// </remarks>
     /// <param name="page"></param>
     /// <param name="clientAsset"></param>
-    private void RegisterJsScript(Page page, IClientAsset clientAsset)
+    private void RegisterJsScript(Page page, ClientAsset clientAsset)
     {
         var include = new DnnJsInclude 
         {

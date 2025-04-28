@@ -8,7 +8,8 @@ public class Helpers
     public static string UpdateProperty(string original, PagePropertyChange change)
     {
         change = InjectOriginalInValue(change, original);
-        if (string.IsNullOrEmpty(original)) return change.Value ?? original;
+        if (string.IsNullOrEmpty(original))
+            return change.Value ?? original;
 
         if (!string.IsNullOrEmpty(change.ReplacementIdentifier))
         {
@@ -20,7 +21,8 @@ public class Helpers
                 return original.Substring(0, pos) + change.Value + suffix;
             }
 
-            if (change.ChangeMode == PageChangeModes.ReplaceOrSkip) return original;
+            if (change.ChangeMode == PageChangeModes.ReplaceOrSkip)
+                return original;
         }
 
         switch (change.ChangeMode)
@@ -48,15 +50,18 @@ public class Helpers
     /// <param name="originalValue">old value</param>
     public static PagePropertyChange InjectOriginalInValue(PagePropertyChange original, string originalValue)
     {
+        // If it doesn't have the [Original] token, we're done
         if (string.IsNullOrEmpty(original.Value) || original.Value.IndexOf(OriginalToken, StringComparison.OrdinalIgnoreCase) == -1)
             return original;
 
-        var clone = new PagePropertyChange(original);
+        var clone = original with
+        {
+            Value = original.Value.ReplaceIgnoreCase(OriginalToken, originalValue),
+            ChangeMode = PageChangeModes.Replace,
+        };
 
-        clone.Value = clone.Value.ReplaceIgnoreCase(OriginalToken, originalValue);
-        clone.ChangeMode = PageChangeModes.Replace;
 
-        return original;
+        return clone;
     }
 
     private const string OriginalToken = "[original]"; // new value can have [original] placeholder to inject old value in that position

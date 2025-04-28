@@ -86,7 +86,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
         Services.EngineCheckTemplate.CheckExpectedTemplateErrors(view, appState);
 
         // check access permissions - before initializing or running data-code in the template
-        Services.EngineCheckTemplate.CheckTemplatePermissions(view, block.Context);
+        Services.EngineCheckTemplate.ThrowIfViewPermissionsDenyAccess(view, block.Context);
 
         // All ok, set properties
         Block = block;
@@ -109,13 +109,18 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
             
         // check if rendering is possible, or throw exceptions...
         var preFlightResult = CheckExpectedNoRenderConditions();
-        if (preFlightResult != null) return l.Return(preFlightResult, $"error: {preFlightResult.ErrorCode}");
+        if (preFlightResult != null)
+            return l.Return(preFlightResult, $"error: {preFlightResult.ErrorCode}");
 
         var renderedTemplate = RenderEntryRazor(specs);
-        var depMan = Services.BlockResourceExtractor;
-        var result = depMan.Process(renderedTemplate.Contents);
+        var resourceExtractor = Services.BlockResourceExtractor;
+        var result = resourceExtractor.Process(renderedTemplate.Contents);
         if (renderedTemplate.Exception != null)
-            result = new(result, exsOrNull: renderedTemplate.Exception);
+            result = result with
+            {
+                // Note: not sure why the existing exceptions have precedence or are not mixed, but this is how the original code before 2025-03-17 was.
+                ExceptionsOrNull = result.ExceptionsOrNull ?? renderedTemplate.Exception,
+            };
         return l.ReturnAsOk(result);
     }
 
@@ -125,12 +130,19 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
 
         // Check App Requirements (new 16.08)
         var appReqProblems = Services.EngineAppRequirements.GetMessageForRequirements(Block.Context.AppReader);
-        if (appReqProblems != null) return l.Return(appReqProblems, "error");
-
+        if (appReqProblems != null)
+            return l.Return(appReqProblems, "error");
 
         if (Template.ContentType != "" && Template.ContentItem == null && Block.Configuration.Content.All(e => e == null))
         {
-            var result = new RenderEngineResult(EngineMessages.ToolbarForEmptyTemplate, false, null, null, []);
+            var result = new RenderEngineResult
+            {
+                Html = EngineMessages.ToolbarForEmptyTemplate,
+                ActivateJsApi = false,
+                Assets = [],
+                ErrorCode = null,
+                ExceptionsOrNull = null, // changed from [], // TODO: NOT SURE If this is correct, I think it should be null?
+            };
             return l.Return(result, "error");
         }
 

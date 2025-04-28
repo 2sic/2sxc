@@ -5,6 +5,7 @@ namespace ToSic.Sxc.Web.Internal.PageService;
 partial class PageServiceShared
 {
     public IList<HeadChange> Headers { get; } = new List<HeadChange>();
+
     public IList<HeadChange> GetHeadChangesAndFlush(ILog log)
     {
         var l = log.Fn<IList<HeadChange>>();
@@ -17,7 +18,12 @@ partial class PageServiceShared
     internal void Add(IHtmlTag tag, string identifier = null)
     {
         if (tag == null) return;
-        Headers.Add(new() { ChangeMode = GetMode(PageChangeModes.Append), Tag = tag, ReplacementIdentifier = identifier });
+        Headers.Add(new()
+        {
+            ChangeMode = GetMode(PageChangeModes.Append),
+            Tag = tag,
+            ReplacementIdentifier = identifier,
+        });
     }
 
 }

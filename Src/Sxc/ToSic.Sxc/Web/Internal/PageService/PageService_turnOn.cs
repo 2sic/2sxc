@@ -15,7 +15,7 @@ partial class PageService
         string addContext = default
     )
     {
-        var l = Log.Fn<string>($"{runOrSpecs}: {runOrSpecs}; {require}; {data}");
+        var l = Log.Fn<string?>($"{runOrSpecs}: {runOrSpecs}; {require}; {data}");
 
         // Check condition - default is true - so if it's false, this overload was called
         if (!condition)
@@ -31,12 +31,10 @@ partial class PageService
         // and it does not change during subsequent SignalR communications (until a full page reload).
         // As a result, scoped services have the same instance for all 2sxc module instances across all pages during a user's browser session.
         // To prevent conflicts, we need to add the ModuleId to the ModuleService to scope its functionality to each module rendering.
-#if NETCOREAPP
-        moduleService.Value.AddToMore(tag, moduleId: _CodeApiSvc.CmsContext.Module.Id, noDuplicates: noDuplicates == true);
-#else
-        moduleService.Value.AddToMore(tag, noDuplicates: noDuplicates == true); // DNN implementation has missing moduleID on purpose.
-#endif
-        // Then return empty string
+        // Note: in DNN, the ModuleId will be ignored.
+        moduleService.Value.AddTag(tag, moduleId: _CodeApiSvc.CmsContext.Module.Id, noDuplicates: noDuplicates == true);
+
+        // Then return empty string for usage as @Kit.Page.TurnOn(...)
         return l.ReturnAsOk(null);
     }
 }

@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>ToSic.Sxc.Oqtane.Install</id>
-    <version>19.03.01</version>
+    <version>19.03.05</version>
     <authors>2sic internet solutions GmbH, Switzerland</authors>
     <owners>2sic internet solutions GmbH, Switzerland</owners>
     <title>2sxc CMS and Meta-Module for Oqtane</title>
@@ -43,19 +43,19 @@
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\Connect.Koi.dll" target="lib\net9.0" />
     <!-- ToSic.Eav.DataSources PackageReference -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\CsvHelper.dll" target="lib\net9.0" />
-    <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency -->
+    <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation v9.0.0 transitive dependency: Microsoft.AspNetCore.Mvc.Razor.Extensions (>= 6.0.0) -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll" target="lib\net9.0" />
     <!-- ToSic.Sxc.Razor PackageReference -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll" target="lib\net9.0" />
     <!-- Microsoft.CodeAnalysis.Razor transitive dependency -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\Microsoft.AspNetCore.Razor.Language.dll" target="lib\net9.0" />
-    <!-- Microsoft.CodeAnalysis.Razor transitive dependency -->
+    <!-- Microsoft.CodeAnalysis.Razor transitive dependency:  -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\Microsoft.CodeAnalysis.CSharp.dll" target="lib\net9.0" />
     <!-- Microsoft.CodeAnalysis.Razor transitive dependency -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\Microsoft.CodeAnalysis.dll" target="lib\net9.0" />
-    <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency -->
+    <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency: Microsoft.CodeAnalysis.Razor (>= 6.0.0) -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\Microsoft.CodeAnalysis.Razor.dll" target="lib\net9.0" />
-    <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency -->
+    <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency: Microsoft.Extensions.DependencyModel (>= 9.0.0) -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\Microsoft.Extensions.DependencyModel.dll" target="lib\net9.0" />
     <!-- ToSic.Sxc dependency -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\System.Runtime.Caching.dll" target="lib\net9.0" />
