@@ -1,17 +1,32 @@
 ﻿using System.ComponentModel;
 using ToSic.Lib.Memory;
 using ToSic.Sxc.Services.OutputCache;
+using ToSic.Sxc.Web.Internal;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.Internal.PageService;
 
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+
 namespace ToSic.Sxc.Blocks.Internal.Render;
 
 [PrivateApi]
 [EditorBrowsable(EditorBrowsableState.Never)]
-public record RenderResult : IRenderResult, ICanEstimateSize
+public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize
 {
+    #region HybridHtmlString / HybridHtmlRecord
+
+    protected override string ToHtmlString() => Html;
+
+    /// <summary>
+    /// Return a string for the recommended way in ASP.net to render it, which just uses a &lt;%= theRenderResult %&gt;
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString() => Html;
+
+    #endregion
+
     /// <inheritdoc />
     public string Html { get; init; }
 
