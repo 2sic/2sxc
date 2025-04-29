@@ -12,7 +12,7 @@
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
     <Deterministic>true</Deterministic>
     <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
-    <RestoreSources>$(RestoreSources);../../packages/;../../../../oqtane/oqtane-imageflow/InstallPackages/</RestoreSources>
+    <!--<RestoreSources>$(RestoreSources);../../packages/;../../../../oqtane/oqtane-imageflow/InstallPackages/</RestoreSources>-->
     <!-- Don't generate assembly properties from this XML which should come from the core file, like version - these lines must be in sync in all ToSic.Eav.*.csproj files -->
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
@@ -111,7 +111,7 @@
     <PackageReference Include="Oqtane.Client" Version="6.0.1" />
     <PackageReference Include="Oqtane.Server" Version="6.0.1" />
     <PackageReference Include="Oqtane.Shared" Version="6.0.1" />
-    <PackageReference Include="ToSic.Imageflow.Oqtane" Version="1.11.0" />
+    <PackageReference Include="ToSic.Imageflow.Oqtane" Version="1.12.0" />
   </ItemGroup>
 
   <ItemGroup>

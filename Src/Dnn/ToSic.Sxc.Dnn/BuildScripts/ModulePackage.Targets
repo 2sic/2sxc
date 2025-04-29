@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!-- WARNING, WARNING, WARNING -->
 <!-- REMEMBER THAT IF YOU MODIFY THE TARGETS FILE YOU NEED TO CLOSE/OPEN THE PROJECT FOR THE CHANGES TO TAKE EFFECT -->
 
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <Import Project="MSBuild.Community.Tasks.Targets" />
+  <UsingTask TaskName="CopyNewerFileVersion" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" />
   <UsingTask TaskName="ModifyXmlDocumentation" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" />
 
   <!-- The Dnn Build Package - Should only run after release compile -->
@@ -201,13 +201,9 @@
 
     <ItemGroup>
       <!-- DNN specific DLLs -->
-      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\ToSic.Imageflow.Dnn.dll" />
-
-      <!-- DNN shared assemblies, Imageflow.NET transient dependency -->
-      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Newtonsoft.Json.dll" />
+      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\*.dll" />
     </ItemGroup>
-
-    <Copy SourceFiles="@(ImageflowAssemblyInclude)" DestinationFolder="$(TempPackageFolder)\bin" />
+    <CopyNewerFileVersion SourceFiles="@(ImageflowAssemblyInclude)" DestinationFolder="$(TempPackageFolder)\bin" />
 
     <!-- include koi folder -->
     <ItemGroup>
@@ -217,7 +213,7 @@
     <ItemGroup>
       <KoiDllFiles Include="$(MSBuildProjectDirectory)/koi/bin/*.dll" />
     </ItemGroup>
-    <Copy SourceFiles="@(KoiDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
+    <CopyNewerFileVersion SourceFiles="@(KoiDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
 
     <!-- include new razorblade 3 module -->
     <ItemGroup>
@@ -227,7 +223,7 @@
     <ItemGroup>
       <RazorBlade3DllFiles Include="$(MSBuildProjectDirectory)/razorblade/bin/*.dll" />
     </ItemGroup>
-    <Copy SourceFiles="@(RazorBlade3DllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
+    <CopyNewerFileVersion SourceFiles="@(RazorBlade3DllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
 
     <!-- include razorblade old module -->
     <ItemGroup>
@@ -237,7 +233,7 @@
     <ItemGroup>
       <RazorBladeDllFiles Include="$(MSBuildProjectDirectory)/razorblade-old/bin/*.dll" />
     </ItemGroup>
-    <Copy SourceFiles="@(RazorBladeDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
+    <CopyNewerFileVersion SourceFiles="@(RazorBladeDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
 
 
     <!-- create the INSTALL RESOURCES.ZIP file -->

@@ -23,10 +23,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ToSic.Imageflow.Oqtane" Version="1.11.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Client\ToSic.Sxc.Oqt.Client.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Server\ToSic.Sxc.Oqt.Server.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj" />
@@ -48,7 +44,7 @@
     <PropertyGroup>
       <OqtaneInstallPackage Condition=" '$(OqtaneInstallPackage)' == '' ">$(MSBuildProjectDirectory)\..\..\..\InstallPackages\OqtaneModule\</OqtaneInstallPackage>
     </PropertyGroup>
-    <Exec Command="IF $(ConfigurationName) == Release (release.cmd $(Source) $(OqtaneInstallPackage))" />
+    <Exec Command="IF $(ConfigurationName) == Release (release.cmd $(Source) $(OqtaneInstallPackage) $(TargetFramework))" />
   </Target>
 
   <Target Name="PostBuild2" AfterTargets="Build" DependsOnTargets="BuildConfigTarget" Condition="'$(ConfigurationName)|$(OqtaneExist)' == 'Debug|true' OR '$(ConfigurationName)|$(OqtaneExist)' == 'DebugOqtane|true'">
