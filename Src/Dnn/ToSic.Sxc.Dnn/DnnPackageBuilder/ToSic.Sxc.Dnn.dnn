@@ -15,7 +15,7 @@
       <azureCompatible>true</azureCompatible>
       <dependencies>
         <dependency type="type">System.Dynamic.ExpandoObject</dependency>
-        <dependency type="CoreVersion">09.06.01</dependency>
+        <dependency type="CoreVersion">09.11.00</dependency>
       </dependencies>
       <components>
         <component type="Script">
