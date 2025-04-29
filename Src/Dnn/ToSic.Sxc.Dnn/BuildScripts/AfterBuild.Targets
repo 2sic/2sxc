@@ -94,18 +94,20 @@
 
     </ItemGroup>
 
-    <CopyNewerFileVersion SourceFiles="@(DnnBinInclude)" DestinationFolder="$(CurrentDnnRoot)/bin" />
+    <Copy SourceFiles="@(DnnBinInclude)" DestinationFolder="$(CurrentDnnRoot)/bin" />
     <CopyNewerFileVersion SourceFiles="@(DependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)/bin" />
     <CopyNewerFileVersion SourceFiles="@(SxcDependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)/bin/2sxc" />
 
     <!-- Copy Imageflow and dependecies -->
     <!-- include Imageflow folder -->
-    <!--<Exec Command="robocopy /S &quot;$(ProjectDir)Extensions/Imageflow/bin/&quot; &quot;$(CurrentDnnRoot)bin/&quot; /XF *.dll.pending" IgnoreExitCode="true"/>-->
+    <Exec Command="robocopy /S &quot;$(ProjectDir)Extensions/Imageflow/bin/&quot; &quot;$(CurrentDnnRoot)bin/&quot; /XF *.dll /XF *.dll.pending" IgnoreExitCode="true"/>
     <ItemGroup>
-      <ImageflowAssemblyInclude Include="$(ProjectDir)\Extensions\Imageflow\bin\**\*.dll" />
+      <ImageflowAssemblyInclude Include="$(ProjectDir)\Extensions\Imageflow\bin\**\ToSic.*.dll" />
+      <ImageflowDependeciesInclude Include="$(ProjectDir)\Extensions\Imageflow\bin\**\*.dll" Exclude="ToSic.*.dll"/>
       <ImageflowAssemblyInclude Include="$(ProjectDir)\Extensions\Imageflow\bin\**\imageflow.dll.pending" />
     </ItemGroup>
-    <CopyNewerFileVersion SourceFiles="@(ImageflowAssemblyInclude)" DestinationFolder="$(CurrentDnnRoot)bin" />
+    <Copy SourceFiles="@(ImageflowAssemblyInclude)" DestinationFolder="$(CurrentDnnRoot)bin" />
+    <CopyNewerFileVersion SourceFiles="@(ImageflowDependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)bin" />
     
     <!-- Imageflow.dll Handling -->
     <!-- this is optimization for development, to prevent second DNN restart that happens by 'imageflow' module when file 'imageflow.dll.pending' exists in 'bin/runtimes/win-???/native/' -->
