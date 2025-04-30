@@ -29,13 +29,14 @@ public class ModuleInfo : IModule
      * 16-07-01 - SQL - add Json for Attribute and ContentType configuration + Guid for Attribute
      * 18-03-00 - SQL - remove AttributeGroups SQL table and related
      * 19-00-00 - SQL - CASCADE DELETE on REFERENCE constraint FK_ToSIC_EAV_EntityRelationships_ToSIC_EAV_Attributes
+     * 19-03-05 - SQL - Drop table ToSIC_EAV_ContextInfo
      */
 
     /// <summary>
     /// The SQL versions must use a "-" to avoid being replaced on search/replace when releasing a new version.
     /// When SQL script is added in new version, include new version explicitly in this array.
     /// </summary>
-    internal static string[] SqlScriptVersions = ["0-0-1", "12-00-00", "12-02-01", "12-05-00", "13-00-00", "13-01-00", "15-00-00", "16-07-01", "18-03-00", "19-00-00"];
+    internal static string[] SqlScriptVersions = ["0-0-1", "12-00-00", "12-02-01", "12-05-00", "13-00-00", "13-01-00", "15-00-00", "16-07-01", "18-03-00", "19-00-00", "19-03-05"];
 
     /// <summary>
     /// Merge versions for use in Oqtane version list

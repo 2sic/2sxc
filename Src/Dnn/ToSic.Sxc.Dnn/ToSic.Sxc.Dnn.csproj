@@ -199,8 +199,6 @@
     <Content Include="DnnPackageBuilder\SqlDataProvider\09.03.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\09.07.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\12.00.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\require-2sxc-9.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.00.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.01.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.04.00.SqlDataProvider" />
@@ -208,6 +206,9 @@
     <Content Include="DnnPackageBuilder\SqlDataProvider\16.07.01.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\18.03.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\19.00.00.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\19.03.05.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\require-2sxc-9.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\Uninstall.SqlDataProvider" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="web.config" />
     <None Include="web.Debug.config">
