@@ -206,7 +206,6 @@
     <Content Include="DnnPackageBuilder\SqlDataProvider\16.07.01.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\18.03.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\19.00.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\19.03.05.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\require-2sxc-9.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\Uninstall.SqlDataProvider" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />

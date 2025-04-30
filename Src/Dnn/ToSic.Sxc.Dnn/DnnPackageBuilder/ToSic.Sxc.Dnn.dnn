@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="19.03.05">
+    <package name="2SexyContent" type="Module" version="19.99.00">
       <friendlyName> Content</friendlyName>
       <description>2sxc is a DNN Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -78,13 +78,13 @@
             </script>
             <script type="Install">
               <path>SqlDataProvider</path>
-              <name>19.03.05.SqlDataProvider</name>
-              <version>19.03.05</version>
+              <name>19.99.00.SqlDataProvider</name>
+              <version>19.99.00</version>
             </script>
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>19.03.05</version>
+              <version>19.99.00</version>
             </script>
           </scripts>
         </component>
@@ -135,7 +135,7 @@
               <businessControllerClass>ToSic.SexyContent.DnnBusinessController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
               <!-- This must contain all versions which have upgrade-code. By convention, we also add the main entry versions, even if no upgrade code exists for them -->
-              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,10.00.00,11.00.00,12.00.00,13.00.00,13.01.00,13.04.00,14.00.00,15.00.00,15.02.00,16.00.00,16.07.01,17.00.00,18.00.00,18.03.00,19.00.00,19.03.05</upgradeVersionsList>
+              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,10.00.00,11.00.00,12.00.00,13.00.00,13.01.00,13.04.00,14.00.00,15.00.00,15.02.00,16.00.00,16.07.01,17.00.00,18.00.00,18.03.00,19.00.00,19.99.00</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>
@@ -672,7 +672,7 @@
       </components>
     </package>
 
-    <package name="2SexyContent-App" type="Module" version="19.03.05">
+    <package name="2SexyContent-App" type="Module" version="19.99.00">
       <friendlyName> App</friendlyName>
       <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>
