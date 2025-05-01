@@ -26,7 +26,7 @@ internal abstract class CmsContextPartBase<T> : Wrapper<T>, IHasMetadata where T
     /// <summary>
     /// Typed IMetadata accessor to all the metadata of this object.
     /// </summary>
-    public IMetadata Metadata => _dynMeta.Get(() => Parent._CodeApiSvc.Cdf.Metadata(/*(this as IHasMetadata).Metadata*/MetadataRaw));
+    public IMetadata Metadata => _dynMeta.Get(() => Parent._CodeApiSvc.Cdf.Metadata(MetadataRaw));
     private readonly GetOnce<IMetadata> _dynMeta = new();
 
     [JsonIgnore] // ignore, as it's published through the Metadata property which is better typed.
@@ -40,12 +40,12 @@ internal abstract class CmsContextPartBase<T> : Wrapper<T>, IHasMetadata where T
     /// Enhance the MetadataOf with recommendations,
     /// so that other systems can review this object and determine what additional metadata to suggest adding.
     /// </summary>
-    /// <param name="md"></param>
     /// <returns></returns>
-    protected IMetadataOf ExtendWithRecommendations(IMetadataOf md)
+    protected IMetadataOf ExtendWithRecommendations(IMetadataOf md, string[] recommendations = default)
     {
-        if (md == null) return null;
-        md.Target.Recommendations = [Decorators.NoteDecoratorName];
+        if (md == null)
+            return null;
+        md.Target.Recommendations = recommendations ?? [Decorators.NoteDecoratorName];
         return md;
     }
 }

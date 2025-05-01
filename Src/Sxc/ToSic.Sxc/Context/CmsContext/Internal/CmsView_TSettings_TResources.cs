@@ -23,7 +23,7 @@ internal class CmsView<TSettings, TResources>(CmsContext parent, IBlock block, b
 {
     private readonly IView _view = block.View;
 
-    public TSettings Settings => field ??= parent._CodeApiSvc.Cdf.AsCustom<TSettings>(parent._CodeApiSvc.Cdf.AsItem(_view.Settings, propsRequired: settingsPropsRequired));
+    public TSettings Settings => field ??= Parent._CodeApiSvc.Cdf.AsCustom<TSettings>(Parent._CodeApiSvc.Cdf.AsItem(_view.Settings, propsRequired: settingsPropsRequired));
 
-    public TResources Resources => field ??= parent._CodeApiSvc.Cdf.AsCustom<TResources>(_view.Resources);
+    public TResources Resources => field ??= Parent._CodeApiSvc.Cdf.AsCustom<TResources>(_view.Resources);
 }

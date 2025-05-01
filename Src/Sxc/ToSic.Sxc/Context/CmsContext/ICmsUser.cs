@@ -14,9 +14,11 @@ namespace ToSic.Sxc.Context;
 /// </example>
 /// <remarks>
 /// History
-/// 
+/// * v12 first release
+/// * v14.08/v14.09 added ca. 5 properties
 /// * v18 enhanced to serialize - so it can be returned by a WebApi Controller
-/// * v20 inheriting from <see cref="IUserModel"/> now, so most properties are from there
+/// * v20 inheriting from <see cref="IUserModel"/> now, so most properties are from there and many properties were added
+/// * v20 especially the <see cref="ICmsUser.Roles"/> is new and useful
 /// </remarks>
 [PublicApi]
 public interface ICmsUser: IUserModel, IHasMetadata
@@ -57,7 +59,7 @@ public interface ICmsUser: IUserModel, IHasMetadata
     /// 🪒 Use in Typed Razor: `MyUser.IsAnonymous`
     /// </example>
     /// <remarks>
-    /// History: This was added fairly late in v14.08
+    /// History: Added in v14.08
     /// </remarks>
     bool IsAnonymous { get; }
 
@@ -76,7 +78,7 @@ public interface ICmsUser: IUserModel, IHasMetadata
     /// * For the site it would be IsSiteDeveloper
     /// * For the entire system that would be IsSystemAdmin.
     /// 
-    /// History: New in 2sxc 12
+    /// History: Added in 2sxc 12
     /// </remarks>
     bool IsSiteAdmin { get; }
 
@@ -95,7 +97,7 @@ public interface ICmsUser: IUserModel, IHasMetadata
     /// * For the site it would be IsSiteDeveloper
     /// * For the entire system that would be IsSystemAdmin.
     /// 
-    /// History: New in 2sxc 14.09
+    /// History: Added in 2sxc 14.09
     /// </remarks>
     bool IsContentAdmin { get; }
 
@@ -110,7 +112,7 @@ public interface ICmsUser: IUserModel, IHasMetadata
     /// Basically this means a user has maximum permissions - incl. the ability
     /// to install additional components or do dangerous things like edit razor.
     /// 
-    /// History: New in 2sxc 12
+    /// History: Added in 2sxc 12
     /// </remarks>
     bool IsSystemAdmin { get; }
 
@@ -129,7 +131,7 @@ public interface ICmsUser: IUserModel, IHasMetadata
     /// 
     /// * For the entire system that would be IsSystemAdmin.
     /// 
-    /// History: New in 2sxc 12
+    /// History: Added in 2sxc 12
     /// </remarks>
     bool IsSiteDeveloper { get; }
 
