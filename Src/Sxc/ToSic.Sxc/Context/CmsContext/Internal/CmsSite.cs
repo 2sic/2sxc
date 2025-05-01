@@ -5,22 +5,14 @@ using ToSic.Eav.Metadata;
 namespace ToSic.Sxc.Context.Internal;
 
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class CmsSite: CmsContextPartBase<ISite>, ICmsSite
+internal class CmsSite(CmsContext parent, IAppReader appReader)
+    : CmsContextPartBase<ISite>(parent, parent.CtxSite.Site), ICmsSite
 {
-    public ICmsSite Init(CmsContext parent, IAppReader appReader)
-    {
-        Init(parent, parent.CtxSite.Site);
-        _appReader = appReader;
-        return this;
-    }
-
-    private IAppReader _appReader;
-
     public int Id => GetContents()?.Id ?? Eav.Constants.NullId;
     public string Url => GetContents()?.Url ?? string.Empty;
     public string UrlRoot => GetContents().UrlRoot ?? string.Empty;
 
     protected override IMetadataOf GetMetadataOf() 
-        => _appReader.Metadata.GetMetadataOf(TargetTypes.Site, Id, title: Url)
+        => appReader.Metadata.GetMetadataOf(TargetTypes.Site, Id, title: Url)
             .AddRecommendations();
 }

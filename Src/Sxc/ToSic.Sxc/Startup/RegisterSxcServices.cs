@@ -214,24 +214,16 @@ public static partial class RegisterSxcServices
         // This must always be at the end here so it doesn't accidentally replace something we actually need
         services.AddSxcCoreLookUps();
         services.AddServicesAndKits();
-        services.AddCmsContext();
         services.ExternalConfig();
         services.AddKoi();
         services.AddSxcCoreFallbackServices();
 
-        return services;
-    }
-
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public static IServiceCollection AddCmsContext(this IServiceCollection services)
-    {
+        // CmsContext / MyContext
         services.TryAddTransient<ICmsContext, CmsContext>();
 
-        // v13 Site
-        services.TryAddTransient<ICmsSite, CmsSite>();
-
         return services;
     }
+
 
     [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static IServiceCollection ExternalConfig(this IServiceCollection services)

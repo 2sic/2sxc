@@ -19,10 +19,9 @@ internal class CmsContext(
     IPlatform platform,
     IContextOfSite siteCtxFallback,
     LazySvc<IPage> pageLazy,
-    IAppReaderFactory appReaders,
-    LazySvc<ICmsSite> cmsSiteLazy)
+    IAppReaderFactory appReaders)
     : ServiceForDynamicCode(SxcLogName + ".CmsCtx",
-        connect: [siteCtxFallback, pageLazy, appReaders, cmsSiteLazy, platform]), ICmsContext
+        connect: [siteCtxFallback, pageLazy, appReaders, platform]), ICmsContext
 {
     #region Internal context
 
@@ -35,16 +34,15 @@ internal class CmsContext(
 
     internal IContextOfSite CtxSite => CtxBlockOrNull ?? siteCtxFallback;
 
-    private IAppReader SiteAppState => field ??= appReaders.GetZonePrimary(CtxSite.Site.ZoneId);
+    private IAppReader SiteAppReader => field ??= appReaders.GetZonePrimary(CtxSite.Site.ZoneId);
 
     #endregion
 
     public ICmsPlatform Platform { get; } = platform;
 
-    public ICmsSite Site => _site.Get(() => ((CmsSite)cmsSiteLazy.Value).Init(this, SiteAppState));
-    private readonly GetOnce<ICmsSite> _site = new();
+    public ICmsSite Site => field ??= new CmsSite(this, SiteAppReader);
 
-    public ICmsPage Page => field ??= new CmsPage(this, SiteAppState.Metadata, pageLazy);
+    public ICmsPage Page => field ??= new CmsPage(this, SiteAppReader.Metadata, pageLazy);
 
     public ICmsCulture Culture => field ??= new CmsCulture(this);
 
@@ -56,7 +54,7 @@ internal class CmsContext(
     {
         var userSvc = _CodeApiSvc.GetService<IUserService>(reuse: true);
         var userModel = userSvc?.GetCurrentUser();
-        return new CmsUser(this, userModel, SiteAppState.Metadata);
+        return new CmsUser(this, userModel, SiteAppReader.Metadata);
     }
 
     public ICmsView View => field ??= new CmsView(this, RealBlockOrNull);
