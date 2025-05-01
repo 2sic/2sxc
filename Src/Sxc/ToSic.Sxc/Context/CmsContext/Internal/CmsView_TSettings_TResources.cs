@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.Helpers;
-using ToSic.Sxc.Blocks.Internal;
+﻿using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Context.Internal;
@@ -23,11 +22,8 @@ internal class CmsView<TSettings, TResources>(CmsContext parent, IBlock block, b
     where TResources : class, ICanWrapData, new()
 {
     private readonly IView _view = block.View;
-    private readonly CmsContext _parent = parent;
 
-    public TSettings Settings => _settings.Get(() => _parent._CodeApiSvc.Cdf.AsCustom<TSettings>(_parent._CodeApiSvc.Cdf.AsItem(_view.Settings, propsRequired: settingsPropsRequired)));
-    private readonly GetOnce<TSettings> _settings = new();
+    public TSettings Settings => field ??= parent._CodeApiSvc.Cdf.AsCustom<TSettings>(parent._CodeApiSvc.Cdf.AsItem(_view.Settings, propsRequired: settingsPropsRequired));
 
-    public TResources Resources => _resources.Get(() => _parent._CodeApiSvc.Cdf.AsCustom<TResources>(_view.Resources));
-    private readonly GetOnce<TResources> _resources = new();
+    public TResources Resources => field ??= parent._CodeApiSvc.Cdf.AsCustom<TResources>(_view.Resources);
 }

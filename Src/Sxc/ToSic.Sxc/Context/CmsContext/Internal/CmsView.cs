@@ -9,7 +9,6 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Context.Internal;
 
-[PrivateApi("Hide implementation")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IView>(parent, block.View), ICmsView
 {
@@ -30,8 +29,7 @@ internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IVi
     protected override IMetadataOf GetMetadataOf()
         => ExtendWithRecommendations(_view?.Metadata);
 
-    public IFolder Folder => _folder ??= FolderAdvanced();
-    private IFolder _folder;
+    public IFolder Folder => field ??= FolderAdvanced();
 
     [PrivateApi]
     private IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string location = default)
