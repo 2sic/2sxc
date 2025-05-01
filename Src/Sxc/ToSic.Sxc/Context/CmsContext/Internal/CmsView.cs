@@ -27,7 +27,7 @@ internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IVi
     public string Edition => _view?.Edition;
 
     protected override IMetadataOf GetMetadataOf()
-        => ExtendWithRecommendations(_view?.Metadata);
+        => _view?.Metadata.AddRecommendations();
 
     public IFolder Folder => field ??= FolderAdvanced();
 

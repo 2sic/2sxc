@@ -4,16 +4,9 @@ namespace ToSic.Sxc.Context.Internal;
 
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal class CmsCulture: ICmsCulture
+internal class CmsCulture(CmsContext parent) : ICmsCulture
 {
-    private readonly CmsContext _parent;
+    public string DefaultCode => parent.CtxSite.Site.DefaultCultureCode;
 
-    internal CmsCulture(CmsContext parent)
-    {
-        _parent = parent;
-    }
-
-    public string DefaultCode => _parent.CtxSite.Site.DefaultCultureCode;
-
-    public string CurrentCode => _parent.CtxSite.Site.SafeCurrentCultureCode();
+    public string CurrentCode => parent.CtxSite.Site.SafeCurrentCultureCode();
 }

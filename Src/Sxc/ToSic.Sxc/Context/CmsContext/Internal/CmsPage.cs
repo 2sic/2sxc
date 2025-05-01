@@ -13,6 +13,6 @@ internal class CmsPage(CmsContext parent, IMetadataOfSource appState, LazySvc<IP
     public string Url => GetContents().Url ?? string.Empty;
 
     protected override IMetadataOf GetMetadataOf() =>
-        ExtendWithRecommendations(appState.GetMetadataOf(TargetTypes.Page, Id, title: Url),
-            [Decorators.NoteDecoratorName, Decorators.OpenGraphName]);
+        appState.GetMetadataOf(TargetTypes.Page, Id, title: Url)
+            .AddRecommendations([Decorators.NoteDecoratorName, Decorators.OpenGraphName]);
 }

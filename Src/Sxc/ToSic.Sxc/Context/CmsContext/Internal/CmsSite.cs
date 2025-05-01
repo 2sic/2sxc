@@ -21,5 +21,6 @@ internal class CmsSite: CmsContextPartBase<ISite>, ICmsSite
     public string UrlRoot => GetContents().UrlRoot ?? string.Empty;
 
     protected override IMetadataOf GetMetadataOf() 
-        => ExtendWithRecommendations(_appReader.Metadata.GetMetadataOf(TargetTypes.Site, Id, title: Url));
+        => _appReader.Metadata.GetMetadataOf(TargetTypes.Site, Id, title: Url)
+            .AddRecommendations();
 }

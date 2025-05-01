@@ -8,10 +8,10 @@ internal class CmsModule(CmsContext parent, IModule module, IBlock block)
 {
     public int Id => GetContents()?.Id ?? 0;
 
-    public ICmsBlock Block => _cmsBlock ??= new CmsBlock(block.BlockBuilder.RootBuilder.Block);
-    private ICmsBlock _cmsBlock;
+    public ICmsBlock Block => field ??= new CmsBlock(block.BlockBuilder.RootBuilder.Block);
 
     protected override IMetadataOf GetMetadataOf() 
-        => ExtendWithRecommendations(block.Context.AppReader.Metadata.GetMetadataOf(TargetTypes.Module, Id, title: "Module " + Id));
+        => block.Context.AppReader.Metadata.GetMetadataOf(TargetTypes.Module, Id, title: "Module " + Id)
+            .AddRecommendations();
 
 }

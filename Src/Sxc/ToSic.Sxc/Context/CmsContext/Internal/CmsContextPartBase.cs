@@ -31,21 +31,9 @@ internal abstract class CmsContextPartBase<T> : Wrapper<T>, IHasMetadata where T
 
     [JsonIgnore] // ignore, as it's published through the Metadata property which is better typed.
     IMetadataOf IHasMetadata.Metadata => MetadataRaw;
+
     private IMetadataOf MetadataRaw => _md.Get(GetMetadataOf);
     private readonly GetOnce<IMetadataOf> _md = new();
 
     protected abstract IMetadataOf GetMetadataOf();
-
-    /// <summary>
-    /// Enhance the MetadataOf with recommendations,
-    /// so that other systems can review this object and determine what additional metadata to suggest adding.
-    /// </summary>
-    /// <returns></returns>
-    protected IMetadataOf ExtendWithRecommendations(IMetadataOf md, string[] recommendations = default)
-    {
-        if (md == null)
-            return null;
-        md.Target.Recommendations = recommendations ?? [Decorators.NoteDecoratorName];
-        return md;
-    }
 }

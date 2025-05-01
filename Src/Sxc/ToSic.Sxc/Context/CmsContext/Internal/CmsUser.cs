@@ -33,7 +33,8 @@ internal class CmsUser(CmsContext parent, IUserModel userModel, IMetadataOfSourc
 
 
     protected override IMetadataOf GetMetadataOf() 
-        => ExtendWithRecommendations(appReader.GetMetadataOf(TargetTypes.User, Id, title: "User (" + Id + ")"));
+        => appReader.GetMetadataOf(TargetTypes.User, Id, title: "User (" + Id + ")")
+            .AddRecommendations();
 
     public IEnumerable<IUserRoleModel> Roles => userModel.Roles;
 }
