@@ -1,10 +1,10 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.State;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Context.Internal;
@@ -17,27 +17,25 @@ namespace ToSic.Sxc.Context.Internal;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class CmsContext(
     IPlatform platform,
-    IContextOfSite initialContext,
+    IContextOfSite siteCtxFallback,
     LazySvc<IPage> pageLazy,
     IAppReaderFactory appReaders,
     LazySvc<ICmsSite> cmsSiteLazy)
     : ServiceForDynamicCode(SxcLogName + ".CmsCtx",
-        connect: [initialContext, pageLazy, appReaders, cmsSiteLazy, platform]), ICmsContext
+        connect: [siteCtxFallback, pageLazy, appReaders, cmsSiteLazy, platform]), ICmsContext
 {
-    #region Constructor
-
-    internal IContextOfSite CtxSite => _ctxSite.Get(() => CtxBlockOrNull ?? initialContext);
-    private readonly GetOnce<IContextOfSite> _ctxSite = new();
-
-    private IAppReader SiteAppState => _siteAppState ??= appReaders.GetZonePrimary(CtxSite.Site.ZoneId);
-    private IAppReader _siteAppState;
+    #region Internal context
 
     // Note: Internal so it can be used for View<T, T>
     internal IBlock RealBlockOrNull => _realBlock.Get(() => ((ICodeApiServiceInternal)_CodeApiSvc)?._Block);
     private readonly GetOnce<IBlock> _realBlock = new();
 
-    internal IContextOfBlock CtxBlockOrNull => _ctxBlock.Get(() => ((ICodeApiServiceInternal)_CodeApiSvc)?._Block?.Context);
+    internal IContextOfBlock CtxBlockOrNull => _ctxBlock.Get(() => RealBlockOrNull?.Context);
     private readonly GetOnce<IContextOfBlock> _ctxBlock = new();
+
+    internal IContextOfSite CtxSite => CtxBlockOrNull ?? siteCtxFallback;
+
+    private IAppReader SiteAppState => field ??= appReaders.GetZonePrimary(CtxSite.Site.ZoneId);
 
     #endregion
 
@@ -46,22 +44,22 @@ internal class CmsContext(
     public ICmsSite Site => _site.Get(() => ((CmsSite)cmsSiteLazy.Value).Init(this, SiteAppState));
     private readonly GetOnce<ICmsSite> _site = new();
 
-    public ICmsPage Page => _page ??= new CmsPage(this, SiteAppState.Metadata, pageLazy);
-    private ICmsPage _page;
+    public ICmsPage Page => field ??= new CmsPage(this, SiteAppState.Metadata, pageLazy);
 
-    public ICmsCulture Culture => _culture ??= new CmsCulture(this);
-    private ICmsCulture _culture;
+    public ICmsCulture Culture => field ??= new CmsCulture(this);
 
-    public ICmsModule Module => _cmsModule ??= new CmsModule(this, RealBlockOrNull.Context?.Module ?? new ModuleUnknown(null), RealBlockOrNull);
-    private ICmsModule _cmsModule;
+    public ICmsModule Module => field ??= new CmsModule(this, RealBlockOrNull.Context?.Module ?? new ModuleUnknown(null), RealBlockOrNull);
 
-    public ICmsUser User => _user ??= new CmsUser(this, SiteAppState.Metadata);
-    private ICmsUser _user;
+    public ICmsUser User => field ??= CreateCurrent();
 
-    public ICmsView View => _view ??= new CmsView(this, RealBlockOrNull);
-    private ICmsView _view;
+    private ICmsUser CreateCurrent()
+    {
+        var userSvc = _CodeApiSvc.GetService<IUserService>(reuse: true);
+        var userModel = userSvc?.GetCurrentUser();
+        return new CmsUser(this, userModel, SiteAppState.Metadata);
+    }
 
-    public ICmsBlock Block => _cmsBlock ??= new CmsBlock(RealBlockOrNull);
-    private ICmsBlock _cmsBlock;
+    public ICmsView View => field ??= new CmsView(this, RealBlockOrNull);
 
+    public ICmsBlock Block => field ??= new CmsBlock(RealBlockOrNull);
 }

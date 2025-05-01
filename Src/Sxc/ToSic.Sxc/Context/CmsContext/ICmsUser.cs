@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Metadata;
+using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Context;
@@ -15,9 +16,10 @@ namespace ToSic.Sxc.Context;
 /// History
 /// 
 /// * v18 enhanced to serialize - so it can be returned by a WebApi Controller
+/// * v20 inheriting from <see cref="IUserModel"/> now, so most properties are from there
 /// </remarks>
 [PublicApi]
-public interface ICmsUser: IHasMetadata
+public interface ICmsUser: IUserModel, IHasMetadata
 {
     /// <summary>
     /// The user e-mail.

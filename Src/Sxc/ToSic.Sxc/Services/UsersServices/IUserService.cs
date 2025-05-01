@@ -13,6 +13,18 @@ namespace ToSic.Sxc.Services;
 public interface IUserService: INeedsCodeApiService
 {
     /// <summary>
+    /// Get current user.
+    /// </summary>
+    /// <returns>
+    /// The current user or a default anonymous user if not logged in.
+    /// </returns>
+    /// <remarks>
+    /// New v20
+    /// </remarks>
+    public IUserModel GetCurrentUser();
+
+
+    /// <summary>
     /// Get a user by id.
     /// </summary>
     /// <param name="id">the user id</param>

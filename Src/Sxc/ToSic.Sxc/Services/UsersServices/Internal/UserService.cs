@@ -13,7 +13,22 @@ namespace ToSic.Sxc.Services.Internal;
 public class UserService(LazySvc<IContextOfSite> context, LazySvc<IUsersProvider> usersSvc, LazySvc<IUserRolesProvider> rolesSvc)
     : ServiceForDynamicCode($"{SxcLogName}.UsrSrv", connect: [context, usersSvc]), IUserService
 {
-    #region Get
+    #region GetCurrentUser
+
+    public IUserModel GetCurrentUser()
+    {
+        var l = Log.Fn<IUserModel>();
+        var user = context.Value.User;
+        if (user == null || user.IsAnonymous)
+            return l.Return(UserConstants.AnonymousUser, "no user/anonymous");
+
+        var model = GetUser(user.Id);
+        return l.Return(model, $"got user {model.Id}");
+    }
+
+    #endregion
+
+    #region GetUser
 
     // FYI: PublicApi
     public IUserModel GetUser(string nameId)

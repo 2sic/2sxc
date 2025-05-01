@@ -26,11 +26,12 @@ internal abstract class CmsContextPartBase<T> : Wrapper<T>, IHasMetadata where T
     /// <summary>
     /// Typed IMetadata accessor to all the metadata of this object.
     /// </summary>
-    public IMetadata Metadata => _dynMeta.Get(() => Parent._CodeApiSvc.Cdf.Metadata((this as IHasMetadata).Metadata));
+    public IMetadata Metadata => _dynMeta.Get(() => Parent._CodeApiSvc.Cdf.Metadata(/*(this as IHasMetadata).Metadata*/MetadataRaw));
     private readonly GetOnce<IMetadata> _dynMeta = new();
 
     [JsonIgnore] // ignore, as it's published through the Metadata property which is better typed.
-    IMetadataOf IHasMetadata.Metadata => _md.Get(GetMetadataOf);
+    IMetadataOf IHasMetadata.Metadata => MetadataRaw;
+    private IMetadataOf MetadataRaw => _md.Get(GetMetadataOf);
     private readonly GetOnce<IMetadataOf> _md = new();
 
     protected abstract IMetadataOf GetMetadataOf();
