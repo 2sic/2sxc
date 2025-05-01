@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Cms.Sites.Internal;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 [ContentTypeSpecs(
     Guid = "89ef9f2c-98d3-42e9-a190-b9b3fc814284",
-    Description = "User-Role in the site",
+    Description = "Site information",
     Name = TypeName
 )]
 public record SiteModel: IRawEntity, ISiteModel
