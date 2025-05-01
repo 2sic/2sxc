@@ -3,11 +3,11 @@
 internal interface IToolbarBuilderInternal
 {
     [PrivateApi("WIP / Debugging")]
-    [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     ToolbarContext GetContext();
 
     [PrivateApi("WIP 14.07.04")]
-    [System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     IToolbarBuilder Context(
         object target
     );
@@ -68,18 +68,27 @@ public partial interface IToolbarBuilder
 
     /// <summary>
     /// Specify an audience for the toolbar - to activate even if the user wouldn't normally see it.
-    /// Normally only people with admin permissions would see a toolbar.
-    /// Specifying the audience will make it appear even if you are not an admin.
-    ///
-    /// Reasons for this would be to have some special buttons for a certain group of users.
     /// </summary>
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="everyone">default is `null`, set to true to make everybody see this.</param>
+    /// <param name="roleNames">list/array of role names which should _also_ see the toolbar (new v20)</param>
+    /// <param name="denyRoleNames">list/array of role names which should _never_ see the toolbar - has precedence over allow (new v20)</param>
     /// <returns></returns>
     /// <remarks>
-    /// New in v17.08, for now should be regarded as experimental. Naming might still change.
+    /// Normally only people with admin permissions would see a toolbar.
+    /// Specifying the audience will make it appear even if you are not an admin.
+    /// 
+    /// Reasons for this would be to have some special buttons for a certain group of users.
+    ///
+    /// * New in v17.08, experimental
+    /// * released v19
+    /// * updated with roleNames/denyRoleNames v20
     /// </remarks>
-    IToolbarBuilder Audience(NoParamOrder protector = default, bool? everyone = default);
+    IToolbarBuilder Audience(
+        NoParamOrder protector = default,
+        bool? everyone = default,
+        IEnumerable<string> roleNames = default,
+        IEnumerable<string> denyRoleNames = default);
 
     /// <summary>
     /// Adds a button group to the toolbar.

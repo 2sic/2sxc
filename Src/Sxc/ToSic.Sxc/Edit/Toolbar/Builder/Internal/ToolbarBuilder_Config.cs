@@ -20,8 +20,26 @@ partial record ToolbarBuilder
     public IToolbarBuilder Condition(Func<bool> condition) =>
         this with { Configuration = (Configuration ?? new()) with { ConditionFunc = condition } };
 
-    public IToolbarBuilder Audience(NoParamOrder protector = default, bool? everyone = default) =>
-        everyone == null ? this : this with { Configuration = (Configuration ?? new()) with { ForceShow = everyone } };
+    public IToolbarBuilder Audience(
+        NoParamOrder protector = default,
+        bool? everyone = default,
+        IEnumerable<string> roleNames = default,
+        IEnumerable<string> denyRoleNames = default)
+    {
+        if (everyone == null && roleNames == null && denyRoleNames == null)
+            return this;
+
+        var config = Configuration ?? new();
+
+        if (everyone != null)
+            config = config with { ShowForEveryone = everyone };
+        if (roleNames != null)
+            config = config with { ShowForRoles = roleNames.ToList() };
+        if (denyRoleNames != null)
+            config = config with { ShowDenyRoles = denyRoleNames.ToList() };
+
+        return this with { Configuration = config };
+    }
 
     public IToolbarBuilder Group(string name = null)
     {

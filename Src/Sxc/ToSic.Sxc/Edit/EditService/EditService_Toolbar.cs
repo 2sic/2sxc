@@ -48,7 +48,7 @@ partial class EditService
 
         // new v17.08 - force-show for everyone
         var tlbConfig = (target as ToolbarBuilder)?.Configuration;
-        var forceShow = tlbConfig?.ForceShow == true;
+        var forceShow = tlbConfig?.ShowForce == true;
 
         if (!Enabled && !forceShow)
             return l.ReturnNull("not enabled");

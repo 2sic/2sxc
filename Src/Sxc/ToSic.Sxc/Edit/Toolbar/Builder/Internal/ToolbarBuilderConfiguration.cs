@@ -17,7 +17,23 @@ internal record ToolbarBuilderConfiguration
     /// </summary>
     public Func<bool> ConditionFunc { get; init; }
 
-    public bool? ForceShow { get; init; }
+    /// <summary>
+    /// Setting from toolbar API.
+    /// </summary>
+    public bool? ShowForEveryone { get; init; }
+
+    /// <summary>
+    /// Final effect, which will be reviewed when showing the toolbar; set/read internally.
+    /// </summary>
+    internal bool? ShowForce { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>New v20</remarks>
+    public List<string> ShowForRoles { get; init; }
+
+    public List<string> ShowDenyRoles { get; init; }
 
     /// <summary>
     /// Temporary group identifier, which is used for all following buttons which are specified.

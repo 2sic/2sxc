@@ -1,11 +1,8 @@
 ﻿using System.Text.Json;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Serialization;
-using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using static ToSic.Sxc.Edit.Toolbar.ItemToolbarBase;
-using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleToolbar;
 using Attribute = ToSic.Razor.Markup.Attribute;
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
@@ -14,38 +11,8 @@ partial record ToolbarBuilder
 {
     private const string ErrRenderMessage = "error: can't render toolbar to html, missing context";
 
-    private IToolbarBuilder With(
-        NoParamOrder noParamOrder = default,
-        string mode = default,
-        object target = default)
-    {
-        // Create clone before starting to log so it's in there too
-        var clone = target == null
-            ? new(this)
-            : (ToolbarBuilder)Parameters(target);   // Params will already copy/clone it
-
-        return mode != null
-            ? clone with
-            {
-                Configuration = (Configuration ?? new()) with
-                {
-                    HtmlMode = mode
-                }
-            }
-            : clone;
-    }
-
-    public IToolbarBuilder AsTag(object target = null) =>
-        With(mode: ToolbarHtmlModes.Standalone, target: target);
-
-    public IToolbarBuilder AsAttributes(object target = null) =>
-        With(mode: ToolbarHtmlModes.OnTag, target: target);
-
-    public IToolbarBuilder AsJson(object target = null) =>
-        With(mode: ToolbarHtmlModes.Json, target: target);
-
     /// <summary>
-    /// Also overwrite ToString() to keep functionality similar to before switch to record.
+    /// Also overwrite ToString() to keep functionality similar to before switch from class to record.
     /// Probably not relevant though.
     /// </summary>
     /// <returns></returns>
@@ -56,83 +23,67 @@ partial record ToolbarBuilder
         // Get edit, but don't exit if null, as the Render (later on) will add comments if Edit is null
         var edit = CodeApiSvc?.Edit;
 
-        // TODO:
-        // - force
-        var forceEnable = Configuration?.ForceShow == true;
-        var enabled = edit?.Enabled == true || forceEnable;
+        // As the config can change before render, put `this` into a variable first
+        var finalToolbar = this;
+        var (enabled, showNonAdmin) = CheckShowConditions();
 
-        // If we override force-show, then we must make sure that the toolbars API is loaded in JS
+        // If we show to everyone, then we must make sure that the toolbars API is loaded in JS
         // since in this case it may not be activated
-        if (forceEnable) 
+        if (showNonAdmin)
+        {
             CodeApiSvc?.GetService<IPageService>(reuse: true)
                 .Activate(SxcPageFeatures.ToolbarsInternal.NameId);
 
-        // Check if conditions don't allow. Only test conditions if the toolbar would show - otherwise ignore
-        if (enabled && Configuration != null)
-        {
-            if (Configuration.Condition == false) return "";
-            if (Configuration.ConditionFunc?.Invoke() == false) return "";
+
+            finalToolbar = this with { Configuration = Configuration with { ShowForce = true } };
         }
 
         // Show toolbar or a Demo-Informative-Toolbar
-        var finalToolbar = ShouldSwitchToItemDemoMode()
-            ? CreateStandaloneItemDemoToolbar()       // Implement Demo-Mode with info-button only
-            : this;                         // Normal render of the current toolbar
+        if (ShouldSwitchToItemDemoMode())
+            finalToolbar = CreateStandaloneItemDemoToolbar();       // Implement Demo-Mode with info-button only
+
         return finalToolbar.Render(edit, enabled);
     }
 
-    /// <summary>
-    /// Create a fresh Toolbar which only shows infos about item being in demo-mode
-    /// </summary>
-    /// <returns></returns>
-    private ToolbarBuilder CreateStandaloneItemDemoToolbar()
+    private (bool enabled, bool showNonAdmin) CheckShowConditions()
     {
-        var rules = new List<ToolbarRuleBase>();
+        // Get initial enabled from the Edit Service
+        var enabled = CodeApiSvc?.Edit?.Enabled == true;
+        var config = Configuration;
+        if (config == null)
+            return (enabled, false);
 
-        bool AddRuleIfFound<T>(Func<T, T> tweak = null) where T : ToolbarRuleBase
+        // Check force show for Everyone, because
+        // 1. the configuration says so
+        // 2. because the page-level Edit object says we're in demo mode
+        var showNonAdmins = config.ShowForEveryone == true;
+        enabled = enabled || showNonAdmins;
+
+        // Check if enabled for certain groups
+        if (CodeApiSvc != null)
         {
-            var possibleParams = FindRule<T>();
-            if (possibleParams == null) return false;
-            var tweaked = tweak?.Invoke(possibleParams);
-            rules.Add(tweaked ?? possibleParams);
-            return true;
+            var user = CodeApiSvc.CmsContext.User;
+            var overrideShow = new ToolbarConfigurationShowHelper()
+                .OverrideShowBecauseOfRoles(config, user);
+            enabled = overrideShow ?? enabled;
+            showNonAdmins = overrideShow ?? showNonAdmins;
         }
 
-        if (!AddRuleIfFound<ToolbarRuleToolbar>(t => new(Empty, t.Ui)))
-            rules.Add(new ToolbarRuleToolbar(Empty));
-        AddRuleIfFound<ToolbarRuleForParams>();
-        AddRuleIfFound<ToolbarRuleSettings>();
+        // If enabled, then still check if conditions would deny again
+        // Check if conditions don't allow - in which case we return nothing.
+        // Only test conditions if the toolbar would show - otherwise ignore
+        if (enabled)
+        {
+            if (config.Condition == false)
+                return (false, false);
+            if (config.ConditionFunc?.Invoke() == false)
+                return (false, false);
+        }
 
-        var tlb = this with { Rules = rules }; // new ToolbarBuilder(this, rules);}
-        var keyOrMessage = Configuration?.DemoMessage;
-        var message = keyOrMessage == null
-            ? CodeApiSvc.Resources.Get<string>($"{AppStackConstants.RootNameResources}.Toolbar.IsDemoSubItem")
-            : keyOrMessage.StartsWith($"{AppStackConstants.RootNameResources}.")
-                ? CodeApiSvc.Resources.Get<string>(keyOrMessage)
-                : keyOrMessage;
-        tlb = (ToolbarBuilder)tlb.Info(tweak: b => b.Note(message));
-        return tlb;
+        return (enabled, showNonAdmins);
     }
 
-    private bool ShouldSwitchToItemDemoMode()
-    {
-        // If no root provided, we can't check demo mode as of now, so return
-        var root = Configuration?.DemoCheckItem?.Entity;
-        if (root == null) return false;
 
-        // If root is not demo, then don't use demo mode
-        if (!root.IsDemoItemSafe()) return false;
-
-        // Check if we have a target, if not, then go into demo-mode
-        var target = (FindRule<ToolbarRuleForParams>()?.Target as ICanBeEntity)?.Entity;
-        if (target == null) return true;
-
-        // If the root and target are the same, then the toolbar should work
-        // because it's meant to create a new entry right here
-        if (root.EntityId == target.EntityId) return false;
-
-        return true;
-    }
 
 
     private string Render(IEditService edit, bool enabled)
