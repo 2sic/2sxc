@@ -61,8 +61,7 @@ internal class ContextOfBlock: ContextOfApp, IContextOfBlock
     public PageServiceShared PageServiceShared { get; }
 
     /// <inheritdoc />
-    public BlockPublishingSettings Publishing => _publishing ??= _publishingResolver.Value.Value.SettingsOfModule(Module?.Id ?? -1);
-    private BlockPublishingSettings _publishing;
+    public BlockPublishingSettings Publishing => field ??= _publishingResolver.Value.Value.SettingsOfModule(Module?.Id ?? -1);
 
     /// <inheritdoc />
     public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(Page, Module, _publishingResolver, PageServiceShared, AppServices)

@@ -19,7 +19,7 @@ internal class DynamicEntityListHelper
     public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, bool propsRequired, Internal.CodeDataFactory cdf)
         : this(cdf, propsRequired, getDebug)
     {
-        _list = [singleItem ?? throw new ArgumentException(nameof(singleItem))];
+        DynEntities = [singleItem ?? throw new ArgumentException(nameof(singleItem))];
     }
         
     public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug, bool propsRequired, Internal.CodeDataFactory cdf)
@@ -36,8 +36,7 @@ internal class DynamicEntityListHelper
         PropsRequired = propsRequired;
         _getDebug = getDebug;
     }
-        
-    private List<IDynamicEntity> _list;
+
     private readonly IEntity[] _entities;
 
     [PrivateApi]
@@ -46,7 +45,7 @@ internal class DynamicEntityListHelper
         get
         {
             // Case #1 & Case #2- already created before or because of Single-Item
-            if (_list != null) return _list;
+            if (field != null) return field;
 
             // Case #3 - Real sub-list
             // If it has a parent, it should apply numbering to the things inside
@@ -54,7 +53,7 @@ internal class DynamicEntityListHelper
             var reWrapWithListNumbering = ParentOrNull != null;
 
             var debug = _getDebug?.Invoke();
-            return _list = _entities
+            return field = _entities
                 .Select((e, i) =>
                 {
                     // If we should re-wrap, we create an Entity with some metadata-decoration, so that toolbars know it's part of a list

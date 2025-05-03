@@ -56,15 +56,14 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
     {
         get
         {
-            if (_view != null) return _view;
+            if (field != null) return field;
 
             // if we're previewing another template, look that up
             var viewEntity = PreviewViewEntity ?? Entity?.Children(ViewParts.ViewFieldInContentBlock).FirstOrDefault();
-            return _view = viewEntity == null ? null : new View(viewEntity, LookupLanguages, Log, _qDefBuilder);
+            return field = viewEntity == null ? null : new View(viewEntity, LookupLanguages, Log, _qDefBuilder);
         }
     }
-    private IView _view;
-        
+
     #endregion
 
     #region Retrieve the lists - either as object or by the type-indexer

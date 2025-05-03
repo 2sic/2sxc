@@ -15,19 +15,18 @@ public sealed partial class CmsBlock
     {
         get
         {
-            if (_block != null) return _block;
+            if (field != null) return field;
 
             if (!Configuration.LookUpEngine.HasSource(LookUpConstants.InstanceContext))
                 throw new("value provider didn't have sxc provider - can't use module data source");
 
             var instanceProvider = Configuration.LookUpEngine.FindSource(LookUpConstants.InstanceContext) as LookUpCmsBlock;
-            _block = instanceProvider?.Block
-                     ?? throw new("value provider didn't have sxc provider - can't use module data source");
+            field = instanceProvider?.Block
+                    ?? throw new("value provider didn't have sxc provider - can't use module data source");
 
-            return _block;
+            return field;
         }
     }
-    private IBlock _block;
 
     internal bool UseSxcInstanceContentGroup = false;
 }

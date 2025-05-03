@@ -21,7 +21,7 @@ public class HelpForRazor12
     /// <summary>
     /// List re-used in v12 and v14
     /// </summary>
-    internal static List<CodeHelp> Issues12To14 => _help12And14 ??= BuildListFromDiverseSources(
+    internal static List<CodeHelp> Issues12To14 => field ??= BuildListFromDiverseSources(
         // Access .List
         BuildVariations(
             HelpNotExists12("List", "AsDynamic(Data)"),
@@ -70,7 +70,6 @@ You are probably calling <code>CreateSource(stringNameOfSource, ...)</code> whic
         //[PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataSource source) => Obsolete10.AsDynamicForList();
         //[PrivateApi] public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => Obsolete10.AsDynamicForList();
     );
-    private static List<CodeHelp> _help12And14;
 
     /// <summary>
     /// All issues for v12 - ATM identical with the shared list.

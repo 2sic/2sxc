@@ -127,14 +127,13 @@ public abstract class BlockBase(BlockBase.MyServices services, string logName, o
     // #. possible override in url - and allowed by permissions (admin/host), use that
     public IView View
     {
-        get => _view;
+        get => field;
         set => Log.Setter(() =>
         {
-            _view = value;
+            field = value;
             _data.Reset(); // reset this if the view changed...
         });
     }
-    private IView _view;
 
     #endregion
 

@@ -13,18 +13,16 @@ public class HttpNetCore : HttpAbstractionBase, IHttp
     {
         get
         {
-            if (_queryStringValues != null) return _queryStringValues;
+            if (field != null) return field;
             // ReSharper disable once ConvertIfStatementToReturnStatement
             if (Request == null) 
-                return _queryStringValues = [];
+                return field = [];
 
             var paramList = new NameValueCollection();
             Request.Query.ToList().ForEach(i => paramList.Add(i.Key, i.Value));
-            return _queryStringValues = paramList;
+            return field = paramList;
         }
     }
-    private NameValueCollection _queryStringValues;
-
 }
 
 #endif

@@ -18,8 +18,7 @@ internal partial class Metadata: DynamicEntity, IMetadata, IHasPropLookup, IHasJ
     private PropLookupMetadata _propLookup;
 
     [PrivateApi]
-    private CodeItemHelper ItemHelper => _itemHelper ??= new(GetHelper, this);
-    private CodeItemHelper _itemHelper;
+    private CodeItemHelper ItemHelper => field ??= new(GetHelper, this);
 
     [PrivateApi("Hide this")]
     private readonly IMetadataOf _metadata;

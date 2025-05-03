@@ -170,12 +170,10 @@ public class ImgResizeLinker(
     {
         get
         {
-            if (_resizeParamMerger != null) return _resizeParamMerger;
-            _resizeParamMerger = new(Log);
-            if (Debug) _resizeParamMerger.Debug = true;
-            return _resizeParamMerger;
+            if (field != null) return field;
+            field = new(Log);
+            if (Debug) field.Debug = true;
+            return field;
         }
     }
-    private ResizeParamMerger _resizeParamMerger;
-        
 }

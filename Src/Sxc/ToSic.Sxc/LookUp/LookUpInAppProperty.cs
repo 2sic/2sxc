@@ -17,24 +17,21 @@ internal class LookUpInAppProperty(string name, IApp app) : LookUpBase(name, "Lo
     {
         get
         {
-            if (_settings != null || app.Settings == null) return _settings;
+            if (field != null || app.Settings == null) return field;
             var dynEnt = app.Settings as IDynamicEntity;
-            return _settings = new LookUpInEntity("appsettings", dynEnt?.Entity, dynEnt?.Cdf.Dimensions);
+            return field = new LookUpInEntity("appsettings", dynEnt?.Entity, dynEnt?.Cdf.Dimensions);
         }
     }
-    private ILookUp _settings;
 
     private ILookUp Resources
     {
         get
         {
-            if (_resources != null || app.Resources == null) return _resources;
+            if (field != null || app.Resources == null) return field;
             var dynEnt = app.Resources as IDynamicEntity;
-            return _resources = new LookUpInEntity("appresources", dynEnt?.Entity, dynEnt?.Cdf.Dimensions);
+            return field = new LookUpInEntity("appresources", dynEnt?.Entity, dynEnt?.Cdf.Dimensions);
         }
     }
-    private ILookUp _resources;
-
 
     #endregion
 

@@ -217,8 +217,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     #region Not Supported Properties such as Entity, Type, Child, Folder, Presentation, Metadata
 
     [JsonIgnore] // prevent serialization as it's not a normal property
-    IMetadata ITypedItem.Metadata => _metadata ??= BuildMetadata(PreWrap.TryGetWrap(nameof(Metadata.Metadata)).Raw);
-    private IMetadata _metadata;
+    IMetadata ITypedItem.Metadata => field ??= BuildMetadata(PreWrap.TryGetWrap(nameof(Metadata.Metadata)).Raw);
 
     private IMetadata BuildMetadata(object raw)
     {

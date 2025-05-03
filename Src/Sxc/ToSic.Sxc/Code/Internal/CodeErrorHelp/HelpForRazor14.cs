@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 internal class HelpForRazor14
 {
-    internal static List<CodeHelp> Compile14 => _help ??= CodeHelpBuilder.BuildListFromDiverseSources(
+    internal static List<CodeHelp> Compile14 => field ??= CodeHelpBuilder.BuildListFromDiverseSources(
         // All which are common in 12 and 14
         Issues12To14,
 
@@ -20,7 +20,6 @@ internal class HelpForRazor14
         HelpRemoved14("AsTyped", "brc-1602", null),
         HelpRemoved14("AsTypedList", "brc-1602", null)
     );
-    private static List<CodeHelp> _help;
 
 
     internal static CodeHelp HelpRemoved14(string property, string linkCode, params (string Code, string Comment)[] alt)

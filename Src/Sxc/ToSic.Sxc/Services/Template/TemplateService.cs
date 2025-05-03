@@ -56,8 +56,7 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getEngineLazy) : S
 
     #region Quick Parse
 
-    private ITemplateEngine Engine => _engine ??= Default();
-    private ITemplateEngine _engine;
+    private ITemplateEngine Engine => field ??= Default();
 
 
     string ITemplateService.Parse(string template, NoParamOrder protector, bool allowHtml, IEnumerable<ILookUp> sources)

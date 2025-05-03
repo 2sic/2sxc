@@ -48,11 +48,9 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.MySe
 
     protected IBlock Block;
 
-    private BlockConfiguration _cGroup;
-        
     #region methods which are fairly stable / the same across content-block implementations
 
-    protected BlockConfiguration BlockConfiguration => _cGroup ??= Block.Configuration;
+    protected BlockConfiguration BlockConfiguration => field ??= Block.Configuration;
         
     public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
     {

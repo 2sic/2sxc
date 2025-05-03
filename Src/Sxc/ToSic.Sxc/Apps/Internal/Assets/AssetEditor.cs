@@ -98,8 +98,7 @@ public class AssetEditor(
         return template;
     }
 
-    public string InternalPath => _internalPath ??= NormalizePath(Path.Combine(_appPaths.PhysicalPathSwitch(EditInfo.IsShared), EditInfo.FileName));
-    private string _internalPath;
+    public string InternalPath => field ??= NormalizePath(Path.Combine(_appPaths.PhysicalPathSwitch(EditInfo.IsShared), EditInfo.FileName));
 
     private static string NormalizePath(string path) => Path.GetFullPath(new Uri(path).LocalPath);
 

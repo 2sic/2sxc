@@ -46,8 +46,7 @@ public partial class CodeApiService
     #region Convert
 
     /// <inheritdoc />
-    public IConvertService Convert => _convert ??= Services.ConvertService.Value;
-    private IConvertService _convert;
+    public IConvertService Convert => field ??= Services.ConvertService.Value;
 
     #endregion
 

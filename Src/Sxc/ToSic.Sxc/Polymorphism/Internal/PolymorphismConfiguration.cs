@@ -14,14 +14,13 @@ public class PolymorphismConfiguration(IEntity entity) : EntityBasedType(entity)
 
     public string UsersWhoMaySwitchEditions => GetThisIfEntity("");
 
-    public List<int> UsersWhoMaySwitch => _usersWhoMaySwitch ??= new Func<List<int>>(() => UsersWhoMaySwitchEditions
+    public List<int> UsersWhoMaySwitch => field ??= new Func<List<int>>(() => UsersWhoMaySwitchEditions
         .Split(',')
         .Select(s => s.Trim())
         .Select(s => int.TryParse(s, out var result) ? result : -1)
         .Where(i => i > 0)
         .ToList()
     )();
-    private List<int> _usersWhoMaySwitch;
 
     public string Resolver => SplitMode().Resolver;
 

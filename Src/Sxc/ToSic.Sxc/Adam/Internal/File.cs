@@ -23,8 +23,7 @@ public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets
 
     /// <inheritdoc />
     [JsonIgnore]
-    public IMetadata Metadata => _metadata ??= AdamManager.Create(CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations);
-    private IMetadata _metadata;
+    public IMetadata Metadata => field ??= AdamManager.Create(CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations);
 
     /// <summary>
     /// Attach metadata recommendations

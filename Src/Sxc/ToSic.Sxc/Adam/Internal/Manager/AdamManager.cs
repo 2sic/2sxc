@@ -88,8 +88,7 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
     /// <summary>
     /// Path to the app assets
     /// </summary>
-    public string Path => _path ??= Services.AdamConfiguration.PathForApp(AppContext.AppReader.Specs);
-    private string _path;
+    public string Path => field ??= Services.AdamConfiguration.PathForApp(AppContext.AppReader.Specs);
 
 
     [PrivateApi]

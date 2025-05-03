@@ -30,8 +30,7 @@ internal class UniqueKeysServices
     /// (currently 8 characters)
     /// </summary>
     [PrivateApi]
-    public string UniqueKey => _uniqueKey ??= UniqueKeyGen();
-    private string _uniqueKey;
+    public string UniqueKey => field ??= UniqueKeyGen();
 
 
     [PrivateApi]

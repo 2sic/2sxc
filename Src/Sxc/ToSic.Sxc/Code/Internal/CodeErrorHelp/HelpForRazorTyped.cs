@@ -62,7 +62,7 @@ Correct: <code>var testItem = MyItem;</code><br>
     /// <summary>
     /// Compile Help for RazorTyped etc.
     /// </summary>
-    public static List<CodeHelp> Compile16 => _help ??= BuildListFromDiverseSources(
+    public static List<CodeHelp> Compile16 => field ??= BuildListFromDiverseSources(
         // use old `Convert` object
         HelpForRazor14.SystemConvertIncorrectUse,
 
@@ -164,5 +164,4 @@ Correct: <code>var testItem = MyItem;</code><br>
         GenericExpressionMistakenForHtml,
         IncorrectDynamicUsage
     );
-    private static List<CodeHelp> _help;
 }

@@ -26,8 +26,7 @@ internal class GetAndConvertHelper(
     public bool Debug => _debug ?? canDebug.Debug;
     private bool? _debug;
 
-    internal SubDataFactory SubDataFactory => _subData ??= new(Cdf, PropsRequired, canDebug);
-    private SubDataFactory _subData;
+    internal SubDataFactory SubDataFactory => field ??= new(Cdf, PropsRequired, canDebug);
 
     public ILog LogOrNull => _logOrNull.Get(() => Cdf?.Log?.SubLogOrNull("Sxc.GetCnv", Debug));
     private readonly GetOnce<ILog> _logOrNull = new();

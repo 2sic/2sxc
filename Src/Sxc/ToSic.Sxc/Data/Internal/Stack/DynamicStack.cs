@@ -35,12 +35,10 @@ public class DynamicStack: DynamicObject,
     public IPropertyLookup PropertyLookup { get; }
 
     [PrivateApi]
-    internal GetAndConvertHelper GetHelper => _getHelper ??= new(this, Cdf, Strict, childrenShouldBeDynamic: true, canDebug: this);
-    private GetAndConvertHelper _getHelper;
+    internal GetAndConvertHelper GetHelper => field ??= new(this, Cdf, Strict, childrenShouldBeDynamic: true, canDebug: this);
 
     [PrivateApi]
-    internal SubDataFactory SubDataFactory => _subData ??= new(Cdf, Strict, canDebug: this);
-    private SubDataFactory _subData;
+    internal SubDataFactory SubDataFactory => field ??= new(Cdf, Strict, canDebug: this);
 
     /// <inheritdoc />
     public bool Debug { get; set; }
@@ -111,12 +109,10 @@ public class DynamicStack: DynamicObject,
 
     #region IEnumerable<IDynamicEntity>
 
-    private List<IDynamicEntity> List => _list ??= _stack.Sources
+    private List<IDynamicEntity> List => field ??= _stack.Sources
         .Select(src => SourceToDynamicEntity(src.Value))
         .Where(e => e != null)
         .ToList();
-
-    private List<IDynamicEntity> _list;
 
     public IEnumerator<IDynamicEntity> GetEnumerator() => List.GetEnumerator();
 

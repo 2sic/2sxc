@@ -68,8 +68,7 @@ internal class AdvancedSettings : IHasPiggyBack
     });
 
     [PrivateApi]
-    public ReadOnlyCollection<Recipe> AllSubRecipes => _recipesFlat ??= GetAllRecipesRecursive(Recipe?.Recipes).AsReadOnly();
-    private ReadOnlyCollection<Recipe> _recipesFlat;
+    public ReadOnlyCollection<Recipe> AllSubRecipes => field ??= GetAllRecipesRecursive(Recipe?.Recipes).AsReadOnly();
 
     private static List<Recipe> GetAllRecipesRecursive(IEnumerable<Recipe> recipes)
     {
@@ -91,6 +90,5 @@ internal class AdvancedSettings : IHasPiggyBack
     /// </summary>
     [PrivateApi("internal use only")]
     [JsonIgnore]
-    public PiggyBack PiggyBack => _piggyBack ??= new();
-    private PiggyBack _piggyBack;
+    public PiggyBack PiggyBack => field ??= new();
 }

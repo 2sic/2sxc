@@ -19,8 +19,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
     internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => _CodeApiSvc?.GetService<IToolbarService>(reuse: true));
     private readonly GetOnce<IToolbarService> _toolbarSvc = new();
 
-    private IPageService PageService => _pageService ??= _CodeApiSvc?.GetService<IPageService>(reuse: true);
-    private IPageService _pageService;
+    private IPageService PageService => field ??= _CodeApiSvc?.GetService<IPageService>(reuse: true);
 
     #endregion
 
@@ -99,14 +98,12 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
     /// <inheritdoc />
     public override bool Debug
     {
-        get => _debug;
+        get => field;
         set
         {
-            _debug = value;
+            field = value;
             ImgLinker.Debug = value;
             Features.Debug = value;
         }
     }
-    private bool _debug;
-
 }

@@ -14,8 +14,8 @@ public class HttpNetFramework: HttpAbstractionBase, IHttp
 
     #region Request and properties thereof
 
-    public override NameValueCollection QueryStringParams => _queryStringValues ??= Request?.QueryString ?? [];
-    private NameValueCollection _queryStringValues;
+    public override NameValueCollection QueryStringParams => field ??= Request?.QueryString ?? [];
+
     #endregion Request
 
 }
