@@ -36,6 +36,6 @@ public class HistoryController() : OqtStatefulControllerBase(RealController.LogS
     [HttpPost]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Restore(int appId, int changeId, [FromBody] ItemIdentifier item) 
-        => Real.Restore(appId, changeId, item);
+    public bool Restore(int appId, [FromQuery(Name = "changeId")] int transactionId, [FromBody] ItemIdentifier item) 
+        => Real.Restore(appId, transactionId, item);
 }

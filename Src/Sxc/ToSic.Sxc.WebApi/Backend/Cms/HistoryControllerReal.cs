@@ -15,9 +15,9 @@ public class HistoryControllerReal(GenWorkDb<WorkEntityVersioning> versioning)
         => versioning.New(appId: appId).VersionHistory(item.EntityId);
 
 
-    public bool Restore(int appId, int changeId, ItemIdentifier item)
+    public bool Restore(int appId, int transactionId, ItemIdentifier item)
     {
-        versioning.New(appId: appId).VersionRestore(item.EntityId, changeId);
+        versioning.New(appId: appId).VersionRestore(item.EntityId, transactionId);
         return true;
     }
 }
