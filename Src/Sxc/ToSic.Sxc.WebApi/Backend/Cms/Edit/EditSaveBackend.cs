@@ -101,11 +101,7 @@ public class EditSaveBackend(
 
                 ent = dataBuilder.Entity.CreateFrom(ent,
                     id: resultValidator.ResetId,
-                    isPublished: package.IsPublished,
-                    // #WipDraftShouldBranch
-                    // placeDraftInBranch: package.DraftShouldBranch
-
-                    owner: ent.Owner.NullIfNoValue() ?? _context.User.IdentityToken
+                    isPublished: package.IsPublished, owner: ent.Owner.NullIfNoValue() ?? _context.User.IdentityToken
                 );
 
                 // new in 11.01
