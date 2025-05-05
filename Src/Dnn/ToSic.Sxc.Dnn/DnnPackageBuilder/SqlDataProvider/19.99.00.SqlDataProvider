@@ -202,7 +202,7 @@ BEGIN
     PRINT '... Recreating foreign key FK_ToSIC_EAV_Entities_TsDynDataTargetType';
     ALTER TABLE [dbo].[ToSIC_EAV_Entities]  WITH NOCHECK
     ADD CONSTRAINT [FK_ToSIC_EAV_Entities_TsDynDataTargetType]
-    FOREIGN KEY([TargetTypeId]) -- Use the new column name here
+    FOREIGN KEY([TargetTypeId])
     REFERENCES [dbo].[TsDynDataTargetType] ([TargetTypeId]);
 END
 GO
@@ -1002,6 +1002,7 @@ BEGIN
 END
 GO
 
+/*
 -- 8. Recreate the foreign key constraint on ToSIC_EAV_Apps with the new names
 
 -- Add Index on ZoneId if it doesn't exist
@@ -1020,7 +1021,7 @@ BEGIN
     PRINT '... Recreating foreign key FK_ToSIC_EAV_Apps_TsDynDataZone';
     ALTER TABLE [dbo].[ToSIC_EAV_Apps] WITH NOCHECK
     ADD CONSTRAINT [FK_ToSIC_EAV_Apps_TsDynDataZone]
-    FOREIGN KEY([ZoneId]) -- Use the new column name here
+    FOREIGN KEY([ZoneId])
     REFERENCES [dbo].[TsDynDataZone] ([ZoneId]);
 END
 GO
@@ -1031,6 +1032,7 @@ BEGIN
     PRINT '... Checking Transaction foreign key constraints on FK_ToSIC_EAV_Apps_TsDynDataZone';
     ALTER TABLE [dbo].[ToSIC_EAV_Apps] CHECK CONSTRAINT [FK_ToSIC_EAV_Apps_TsDynDataZone];
 END
+*/
 
 -- 9. Recreate the foreign key constraint on ToSIC_EAV_Dimensions with the new names
 
@@ -1050,7 +1052,7 @@ BEGIN
     PRINT '... Recreating foreign key FK_ToSIC_EAV_Dimensions_TsDynDataZone';
     ALTER TABLE [dbo].[ToSIC_EAV_Dimensions] WITH NOCHECK
     ADD CONSTRAINT [FK_ToSIC_EAV_Dimensions_TsDynDataZone]
-    FOREIGN KEY([ZoneId]) -- Use the new column name here
+    FOREIGN KEY([ZoneId])
     REFERENCES [dbo].[TsDynDataZone] ([ZoneId]);
 END
 GO
@@ -1150,6 +1152,292 @@ BEGIN
     PRINT '... Checking Transaction foreign key constraints on FK_TsDynDataZone_TsDynDataTransactionDeleted';
     ALTER TABLE [dbo].[TsDynDataZone] CHECK CONSTRAINT [FK_TsDynDataZone_TsDynDataTransactionDeleted];
 END
+
+-- Rename ToSIC_EAV_Apps to TsDynDataApp and update related objects
+PRINT 'Renaming table ToSIC_EAV_Apps to TsDynDataApp and related objects';
+
+-- 1. Drop referencing foreign keys
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Apps_TsDynDataZone')
+BEGIN
+    PRINT '... Dropping Zone foreign key from ToSIC_EAV_Apps';
+    ALTER TABLE [dbo].[ToSIC_EAV_Apps] DROP CONSTRAINT [FK_ToSIC_EAV_Apps_TsDynDataZone];
+END
+GO
+
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_AttributeSets_ToSIC_EAV_Apps')
+BEGIN
+    PRINT '... Dropping App foreign key from ToSIC_EAV_AttributeSets';
+    ALTER TABLE [dbo].[ToSIC_EAV_AttributeSets] DROP CONSTRAINT [FK_ToSIC_EAV_AttributeSets_ToSIC_EAV_Apps];
+END
+GO
+
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Entities_ToSIC_EAV_Apps')
+BEGIN
+    PRINT '... Dropping App foreign key from ToSIC_EAV_Entities';
+    ALTER TABLE [dbo].[ToSIC_EAV_Entities] DROP CONSTRAINT [FK_ToSIC_EAV_Entities_ToSIC_EAV_Apps];
+END
+GO
+
+-- 2. Rename the unique constraint
+IF EXISTS (SELECT * FROM sys.objects WHERE name = 'ToSIC_EAV_Apps_PreventDuplicates' AND type = 'UQ')
+BEGIN
+    PRINT '... Renaming unique constraint ToSIC_EAV_Apps_PreventDuplicates to UQ_TsDynDataApp_Name_ZoneId';
+    EXEC sp_rename N'[dbo].[ToSIC_EAV_Apps_PreventDuplicates]', N'UQ_TsDynDataApp_Name_ZoneId', N'OBJECT';
+END
+GO
+
+-- 3. Rename the primary key constraint
+IF EXISTS (SELECT * FROM sys.key_constraints WHERE name = 'PK_ToSIC_EAV_Apps' AND parent_object_id = OBJECT_ID('[dbo].[ToSIC_EAV_Apps]'))
+BEGIN
+    PRINT '... Renaming PK_ToSIC_EAV_Apps to PK_TsDynDataApp';
+    EXEC sp_rename N'[dbo].[PK_ToSIC_EAV_Apps]', N'PK_TsDynDataApp', N'OBJECT';
+END
+GO
+
+-- 4. Rename the table
+IF EXISTS (SELECT * FROM sys.objects WHERE name = 'ToSIC_EAV_Apps' AND type = 'U')
+BEGIN
+    PRINT '... Renaming table ToSIC_EAV_Apps to TsDynDataApp';
+    EXEC sp_rename N'[dbo].[ToSIC_EAV_Apps]', N'TsDynDataApp';
+END
+GO
+
+-- 5. Rename the primary key column
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'AppID' AND Object_ID = Object_ID(N'[dbo].[TsDynDataApp]'))
+BEGIN
+    PRINT '... Renaming column AppID to AppId in TsDynDataApp';
+    EXEC sp_rename N'[dbo].[TsDynDataApp].[AppID]', N'AppId', N'COLUMN';
+END
+GO
+
+-- 6. Add new Transaction ID columns
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'TransactionIdCreated' AND Object_ID = OBJECT_ID('TsDynDataApp'))
+    AND OBJECT_ID('TsDynDataApp', 'U') IS NOT NULL
+BEGIN
+    PRINT '... Adding TransactionIdCreated column to TsDynDataApp';
+    ALTER TABLE [dbo].[TsDynDataApp] ADD [TransactionIdCreated] INT NULL;
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'TransactionIdModified' AND Object_ID = OBJECT_ID('TsDynDataApp'))
+    AND OBJECT_ID('TsDynDataApp', 'U') IS NOT NULL
+BEGIN
+    PRINT '... Adding TransactionIdModified column to TsDynDataApp';
+    ALTER TABLE [dbo].[TsDynDataApp] ADD [TransactionIdModified] INT NULL;
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'TransactionIdDeleted' AND Object_ID = OBJECT_ID('TsDynDataApp'))
+    AND OBJECT_ID('TsDynDataApp', 'U') IS NOT NULL
+BEGIN
+    PRINT '... Adding TransactionIdDeleted column to TsDynDataApp';
+    ALTER TABLE [dbo].[TsDynDataApp] ADD [TransactionIdDeleted] INT NULL;
+END
+GO
+
+-- 7. Rename the foreign key column in the referencing table (ToSIC_EAV_AttributeSets)
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'AppID' AND Object_ID = Object_ID(N'[dbo].[ToSIC_EAV_AttributeSets]'))
+BEGIN
+    PRINT '... Renaming column AppID to AppId in ToSIC_EAV_AttributeSets';
+    EXEC sp_rename N'[dbo].[ToSIC_EAV_AttributeSets].[AppID]', N'AppId', N'COLUMN';
+END
+GO
+
+-- 8. Rename the foreign key column in the referencing table (ToSIC_EAV_Entities)
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'AppID' AND Object_ID = Object_ID(N'[dbo].[ToSIC_EAV_Entities]'))
+BEGIN
+    PRINT '... Renaming column AppID to AppId in ToSIC_EAV_Entities';
+    EXEC sp_rename N'[dbo].[ToSIC_EAV_Entities].[AppID]', N'AppId', N'COLUMN';
+END
+GO
+
+-- 9. Recreate the foreign key constraint on ToSIC_EAV_Apps with the new names
+
+-- Rename index IX_ToSIC_EAV_Apps_ZoneId to IX_TsDynDataApp_ZoneId if exists
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_ToSIC_EAV_Apps_ZoneId' AND object_id = OBJECT_ID('[dbo].[TsDynDataApp]'))
+    AND OBJECT_ID('[dbo].[TsDynDataApp]', 'U') IS NOT NULL
+BEGIN
+    PRINT '... Renaming index IX_ToSIC_EAV_Apps_ZoneId to IX_TsDynDataApp_ZoneId';
+    EXEC sp_rename N'[dbo].[TsDynDataApp].[IX_ToSIC_EAV_Apps_ZoneId]', N'IX_TsDynDataApp_ZoneId', N'INDEX';
+END
+GO
+
+-- Add Index on ZoneId if it doesn't exist
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataApp_ZoneId' AND object_id = OBJECT_ID('[dbo].[TsDynDataApp]'))
+    AND OBJECT_ID('[dbo].[TsDynDataApp]', 'U') IS NOT NULL
+BEGIN
+    PRINT '... Adding index IX_TsDynDataApp_ZoneId';
+    CREATE NONCLUSTERED INDEX [IX_TsDynDataApp_ZoneId] ON [dbo].[TsDynDataApp] ([ZoneId] ASC)
+    WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_TsDynDataApp_TsDynDataZone')
+    AND OBJECT_ID('[dbo].[TsDynDataApp]', 'U') IS NOT NULL
+BEGIN
+    PRINT '... Recreating foreign key FK_TsDynDataApp_TsDynDataZone';
+    ALTER TABLE [dbo].[TsDynDataApp] WITH NOCHECK
+    ADD CONSTRAINT [FK_TsDynDataApp_TsDynDataZone]
+    FOREIGN KEY([ZoneId])
+    REFERENCES [dbo].[TsDynDataZone] ([ZoneId]);
+END
+GO
+
+-- Check constraint
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_TsDynDataApp_TsDynDataZone')
+BEGIN
+    PRINT '... Checking Transaction foreign key constraints on FK_TsDynDataApp_TsDynDataZone';
+    ALTER TABLE [dbo].[TsDynDataApp] CHECK CONSTRAINT [FK_TsDynDataApp_TsDynDataZone];
+END
+GO
+
+-- 10. Recreate the foreign key constraint on ToSIC_EAV_AttributeSets with the new names
+-- Add Index on AppId if it doesn't exist
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_ToSIC_EAV_AttributeSets_AppId' AND object_id = OBJECT_ID('[dbo].[ToSIC_EAV_AttributeSets]'))
+    AND OBJECT_ID('[dbo].[ToSIC_EAV_AttributeSets]', 'U') IS NOT NULL
+BEGIN
+    PRINT '... Adding index IX_ToSIC_EAV_AttributeSets_AppId';
+    CREATE NONCLUSTERED INDEX [IX_ToSIC_EAV_AttributeSets_AppId] ON [dbo].[ToSIC_EAV_AttributeSets] ([AppId] ASC)
+    WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_AttributeSets_TsDynDataApp')
+    AND OBJECT_ID('[dbo].[ToSIC_EAV_AttributeSets]', 'U') IS NOT NULL
+BEGIN
+    PRINT '... Recreating foreign key FK_ToSIC_EAV_AttributeSets_TsDynDataApp';
+    ALTER TABLE [dbo].[ToSIC_EAV_AttributeSets] WITH NOCHECK
+    ADD CONSTRAINT [FK_ToSIC_EAV_AttributeSets_TsDynDataApp]
+    FOREIGN KEY([AppId])
+    REFERENCES [dbo].[TsDynDataApp] ([AppId]);
+END
+GO
+
+-- Check constraint
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_AttributeSets_TsDynDataApp')
+BEGIN
+    PRINT '... Checking constraint FK_ToSIC_EAV_AttributeSets_TsDynDataApp';
+    ALTER TABLE [dbo].[ToSIC_EAV_AttributeSets] CHECK CONSTRAINT [FK_ToSIC_EAV_AttributeSets_TsDynDataApp];
+END
+GO
+
+-- 11. Recreate the foreign key constraint on ToSIC_EAV_Entities with the new names
+-- Add Index on AppId if it doesn't exist
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_ToSIC_EAV_Entities_AppId' AND object_id = OBJECT_ID('[dbo].[ToSIC_EAV_Entities]'))
+    AND OBJECT_ID('[dbo].[ToSIC_EAV_Entities]', 'U') IS NOT NULL
+BEGIN
+    PRINT '... Adding index IX_ToSIC_EAV_Entities_AppId';
+    CREATE NONCLUSTERED INDEX [IX_ToSIC_EAV_Entities_AppId] ON [dbo].[ToSIC_EAV_Entities] ([AppId] ASC)
+    WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Entities_TsDynDataApp')
+    AND OBJECT_ID('[dbo].[ToSIC_EAV_Entities]', 'U') IS NOT NULL
+BEGIN
+    PRINT '... Recreating foreign key FK_ToSIC_EAV_Entities_TsDynDataApp';
+    ALTER TABLE [dbo].[ToSIC_EAV_Entities] WITH NOCHECK
+    ADD CONSTRAINT [FK_ToSIC_EAV_Entities_TsDynDataApp]
+    FOREIGN KEY([AppId])
+    REFERENCES [dbo].[TsDynDataApp] ([AppId]);
+END
+GO
+
+-- Check constraint
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Entities_TsDynDataApp')
+BEGIN
+    PRINT '... Checking constraint FK_ToSIC_EAV_Entities_TsDynDataApp';
+    ALTER TABLE [dbo].[ToSIC_EAV_Entities] CHECK CONSTRAINT [FK_ToSIC_EAV_Entities_TsDynDataApp];
+END
+GO
+
+-- 12. Recreate the foreign key constraints on TsDynDataApp for Transaction IDs
+-- Add Index on TransactionIdCreated if it doesn't exist
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataApp_TransactionIdCreated' AND object_id = OBJECT_ID('[dbo].[TsDynDataApp]'))
+    AND OBJECT_ID('[dbo].[TsDynDataApp]', 'U') IS NOT NULL
+BEGIN
+    PRINT '... Adding index IX_TsDynDataApp_TransactionIdCreated';
+    CREATE NONCLUSTERED INDEX [IX_TsDynDataApp_TransactionIdCreated] ON [dbo].[TsDynDataApp] ([TransactionIdCreated] ASC)
+    WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_TsDynDataApp_TsDynDataTransactionCreated')
+   AND OBJECT_ID('[dbo].[TsDynDataApp]', 'U') IS NOT NULL
+BEGIN
+    PRINT '... Recreating foreign key FK_TsDynDataApp_TsDynDataTransactionCreated';
+    ALTER TABLE [dbo].[TsDynDataApp] WITH NOCHECK
+    ADD CONSTRAINT [FK_TsDynDataApp_TsDynDataTransactionCreated]
+    FOREIGN KEY([TransactionIdCreated])
+    REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+END
+GO
+
+-- Check constraint
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_TsDynDataApp_TsDynDataTransactionCreated')
+BEGIN
+    PRINT '... Checking Transaction foreign key constraints on FK_TsDynDataApp_TsDynDataTransactionCreated';
+    ALTER TABLE [dbo].[TsDynDataApp] CHECK CONSTRAINT [FK_TsDynDataApp_TsDynDataTransactionCreated];
+END
+GO
+
+-- Add Index on TransactionIdModified if it doesn't exist
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataApp_TransactionIdModified' AND object_id = OBJECT_ID('[dbo].[TsDynDataApp]'))
+    AND OBJECT_ID('[dbo].[TsDynDataApp]', 'U') IS NOT NULL
+BEGIN
+    PRINT '... Adding index IX_TsDynDataApp_TransactionIdModified';
+    CREATE NONCLUSTERED INDEX [IX_TsDynDataApp_TransactionIdModified] ON [dbo].[TsDynDataApp] ([TransactionIdModified] ASC)
+    WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_TsDynDataApp_TsDynDataTransactionModified')
+   AND OBJECT_ID('[dbo].[TsDynDataApp]', 'U') IS NOT NULL
+BEGIN
+    PRINT '... Recreating foreign key FK_TsDynDataApp_TsDynDataTransactionModified';
+    ALTER TABLE [dbo].[TsDynDataApp] WITH NOCHECK
+    ADD CONSTRAINT [FK_TsDynDataApp_TsDynDataTransactionModified]
+    FOREIGN KEY([TransactionIdModified])
+    REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+END
+GO
+
+-- Check constraint
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_TsDynDataApp_TsDynDataTransactionModified')
+BEGIN
+    PRINT '... Checking Transaction foreign key constraints on FK_TsDynDataApp_TsDynDataTransactionModified';
+    ALTER TABLE [dbo].[TsDynDataApp] CHECK CONSTRAINT [FK_TsDynDataApp_TsDynDataTransactionModified];
+END
+GO
+
+-- Add Index on TransactionIdDeleted if it doesn't exist
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataApp_TransactionIdDeleted' AND object_id = OBJECT_ID('[dbo].[TsDynDataApp]'))
+    AND OBJECT_ID('[dbo].[TsDynDataApp]', 'U') IS NOT NULL
+BEGIN
+    PRINT '... Adding index IX_TsDynDataApp_TransactionIdDeleted';
+    CREATE NONCLUSTERED INDEX [IX_TsDynDataApp_TransactionIdDeleted] ON [dbo].[TsDynDataApp] ([TransactionIdDeleted] ASC)
+    WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_TsDynDataApp_TsDynDataTransactionDeleted')
+   AND OBJECT_ID('[dbo].[TsDynDataApp]', 'U') IS NOT NULL
+BEGIN
+    PRINT '... Recreating foreign key FK_TsDynDataApp_TsDynDataTransactionDeleted';
+    ALTER TABLE [dbo].[TsDynDataApp] WITH NOCHECK
+    ADD CONSTRAINT [FK_TsDynDataApp_TsDynDataTransactionDeleted]
+    FOREIGN KEY([TransactionIdDeleted])
+    REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+END
+GO
+
+-- Check the constraints
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_TsDynDataApp_TsDynDataTransactionDeleted')
+BEGIN
+    PRINT '... Checking Transaction foreign key constraints on FK_TsDynDataApp_TsDynDataTransactionDeleted';
+    ALTER TABLE [dbo].[TsDynDataApp] CHECK CONSTRAINT [FK_TsDynDataApp_TsDynDataTransactionDeleted];
+END
+GO
 
 PRINT '*** Finished migration script.';
 GO
