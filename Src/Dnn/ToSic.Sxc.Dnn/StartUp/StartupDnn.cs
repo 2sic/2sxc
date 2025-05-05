@@ -65,7 +65,11 @@ public class StartupDnn : IServiceRouteMapper
         var sxcSysLoader = transientSp.Build<SystemLoader>();
         sxcSysLoader.StartUp();
 
-        SetupOldStaticFeaturesForCompatibility(sxcSysLoader.EavSystemLoader.Features);
+        // Place a copy of the features service on the old static variable
+        // Note: not perfect, it doesn't update on changes
+        // But since we don't want to encourage this old mechanism, it's ok
+        var featuresSvc = transientSp.Build<IEavFeaturesService>();
+        SetupOldStaticFeaturesForCompatibility(featuresSvc);
 
         // Optional registration of query string rewrite functionality implementation for dnn imageflow module
         Imageflow.Dnn.StartUp.RegisterQueryStringRewrite(ImageflowRewrite.QueryStringRewrite);

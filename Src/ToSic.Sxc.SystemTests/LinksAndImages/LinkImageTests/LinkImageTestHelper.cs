@@ -15,12 +15,12 @@ public class LinkImageTestHelper
     private readonly ImgResizeLinker _linker;
     private readonly ILinkService _linkHelper;
 
-    public LinkImageTestHelper(CodeDataWrapper cdf, ImgResizeLinker linker, ILinkService linkHelper, EavSystemLoader systemLoader)
+    public LinkImageTestHelper(CodeDataWrapper cdf, ImgResizeLinker linker, ILinkService linkHelper, EavFeaturesLoader featuresLoader)
     {
         _cdf = cdf;
         _linker = linker;
         _linkHelper = linkHelper;
-        systemLoader.LoadLicenseAndFeatures();
+        featuresLoader.LoadLicenseAndFeatures();
     }
 
     public ImgResizeLinker GetLinker() => _linker;
