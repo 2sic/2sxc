@@ -1,5 +1,5 @@
 ﻿using System.Web.Http.Filters;
-using ToSic.Eav.Generics;
+using ToSic.Eav.Internal.Generics;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.Run;
 

@@ -1,5 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-using ToSic.Eav.Generics;
+using ToSic.Eav.Internal.Generics;
 using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;

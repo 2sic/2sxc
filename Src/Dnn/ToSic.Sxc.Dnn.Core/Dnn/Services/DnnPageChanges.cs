@@ -2,6 +2,7 @@
 using DotNetNuke.Web.Client.Providers;
 using System.Web;
 using System.Web.UI;
+using ToSic.Eav.Internal.Generics;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;

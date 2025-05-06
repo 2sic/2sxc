@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using ToSic.Eav.Internal.Generics;
 using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Web.Internal.Url;

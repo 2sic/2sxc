@@ -2,7 +2,7 @@
 using System.Web.Http.Controllers;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Code.InfoSystem;
-using ToSic.Eav.Generics;
+using ToSic.Eav.Internal.Generics;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;

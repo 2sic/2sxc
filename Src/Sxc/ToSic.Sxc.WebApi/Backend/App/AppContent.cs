@@ -4,7 +4,7 @@ using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.Api01;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.Generics;
+using ToSic.Eav.Internal.Generics;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security;

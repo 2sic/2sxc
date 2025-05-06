@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Generics;
+﻿using ToSic.Eav.Internal.Generics;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Images.Internal;
@@ -106,7 +106,7 @@ internal record TweakMedia(ImageService ImageSvc, ResponsiveSpecsOfTarget Target
         {
             null => null,
             IDictionary<string, object> ok => ok.ToInvariant(),
-            IDictionary<string, string> strDic => strDic.ToDictionary(pair => pair.Key, pair => pair.Value as object, InvariantCultureIgnoreCase),
+            IDictionary<string, string> strDic => strDic.ToDictionary(pair => pair.Key, object (pair) => pair.Value, InvariantCultureIgnoreCase),
             _ => attributes.IsAnonymous()
                 ? attributes.ToDicInvariantInsensitive()
                 : throw new ArgumentException($@"format of {name} unknown: {name.GetType().Name}", nameof(attributes))
