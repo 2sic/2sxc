@@ -2,8 +2,8 @@
 using Microsoft.CSharp.RuntimeBinder;
 using ToSic.Eav;
 using ToSic.Eav.Code.Help;
-using ToSic.Eav.Internal.Generics;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Internal.Generics;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal.SourceCode;
 #if NETFRAMEWORK

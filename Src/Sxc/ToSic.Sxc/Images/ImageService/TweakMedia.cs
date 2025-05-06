@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Internal.Generics;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Plumbing;
+using ToSic.Lib.Internal.Generics;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Images.Internal;
 using static System.StringComparer;

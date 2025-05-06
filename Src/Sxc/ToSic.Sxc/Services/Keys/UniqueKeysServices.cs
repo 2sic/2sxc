@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Identity;
-using ToSic.Eav.Internal.Generics;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Internal.Generics;
 using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.Services;

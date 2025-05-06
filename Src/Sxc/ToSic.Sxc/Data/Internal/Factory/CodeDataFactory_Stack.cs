@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Eav.Internal.Generics;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Internal.Generics;
 using ToSic.Sxc.Data.Internal.Stack;
 
 namespace ToSic.Sxc.Data.Internal;
