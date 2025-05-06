@@ -10,6 +10,7 @@ using ToSic.Eav.Security;
 using ToSic.Sxc.Apps.Internal.Work;
 using ISite = ToSic.Eav.Context.ISite;
 using ToSic.Eav.ImportExport.Internal;
+using ToSic.Eav.Internal;
 
 
 #if NETFRAMEWORK
@@ -123,7 +124,7 @@ public class ExportApp(
         using var fileStream = zipExport.ExportApp(specs);
         var fileBytes = fileStream.ToArray();
         l.A("will stream so many bytes:" + fileBytes.Length);
-        var mimeType = MimeHelper.FallbackType;
+        var mimeType = MimeTypeConstants.FallbackType;
 
 #if NETFRAMEWORK
         return l.Return(HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, mimeType, new MemoryStream(fileBytes)));

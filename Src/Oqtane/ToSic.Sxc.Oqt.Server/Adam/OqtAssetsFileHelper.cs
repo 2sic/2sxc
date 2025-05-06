@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using Oqtane.Models;
 using Oqtane.Shared;
 using ToSic.Eav.Helpers;
-using ToSic.Eav.Plumbing;
+using ToSic.Eav.Internal;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Oqt.Shared;
 
@@ -19,7 +19,7 @@ public class OqtAssetsFileHelper() : ServiceBase(OqtConstants.OqtLogPrefix + ".F
 
     public static readonly Regex RiskyDetector = Eav.Security.Files.FileNames.RiskyDownloadDetector;
 
-    public const string FallbackMimeType = MimeHelper.FallbackType;
+    public const string FallbackMimeType = MimeTypeConstants.FallbackType;
 
 
     public static string GetMimeType(string fileName)
