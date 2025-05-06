@@ -145,6 +145,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Lib.Utils", "..\..\ea
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Lib.Code", "..\..\eav-server\ToSic.Lib.Code\ToSic.Lib.Code.csproj", "{918D4D29-AF04-47E6-8354-FA26B7CD50D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Lib.Features", "..\..\eav-server\ToSic.Lib.Features\ToSic.Lib.Features.csproj", "{21B6CF7B-9960-4565-A12C-410F87299621}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1427,6 +1429,30 @@ Global
 		{918D4D29-AF04-47E6-8354-FA26B7CD50D1}.Testing|Windows-x64.Build.0 = Debug|Any CPU
 		{918D4D29-AF04-47E6-8354-FA26B7CD50D1}.Testing|Windows-x86.ActiveCfg = Debug|Any CPU
 		{918D4D29-AF04-47E6-8354-FA26B7CD50D1}.Testing|Windows-x86.Build.0 = Debug|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Debug|DNN.ActiveCfg = Debug|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Debug|DNN.Build.0 = Debug|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Debug|Windows-x64.Build.0 = Debug|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Release|DNN.ActiveCfg = Release|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Release|DNN.Build.0 = Release|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Release|Windows-x64.ActiveCfg = Release|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Release|Windows-x64.Build.0 = Release|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Testing|DNN.ActiveCfg = Debug|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Testing|DNN.Build.0 = Debug|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Testing|Windows-x64.ActiveCfg = Debug|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Testing|Windows-x64.Build.0 = Debug|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Testing|Windows-x86.ActiveCfg = Debug|Any CPU
+		{21B6CF7B-9960-4565-A12C-410F87299621}.Testing|Windows-x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1488,6 +1514,7 @@ Global
 		{BE3193C4-61CC-479B-8B0E-604F22B7AFBC} = {B13B9CB4-3835-4F0F-A812-6E5C3F9E8580}
 		{00E352CC-021D-4D44-8B64-D2574CABD949} = {32E45183-6A02-41A2-A4D5-6CB58A6D39A9}
 		{918D4D29-AF04-47E6-8354-FA26B7CD50D1} = {32E45183-6A02-41A2-A4D5-6CB58A6D39A9}
+		{21B6CF7B-9960-4565-A12C-410F87299621} = {32E45183-6A02-41A2-A4D5-6CB58A6D39A9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
