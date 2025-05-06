@@ -9,7 +9,7 @@ using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Internal;
-using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
+using static ToSic.Lib.Code.Infos.CodeInfoObsolete;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 using ILog = ToSic.Lib.Logging.ILog;

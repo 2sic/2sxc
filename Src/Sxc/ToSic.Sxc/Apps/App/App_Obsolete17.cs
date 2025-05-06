@@ -1,6 +1,6 @@
-﻿#if NETFRAMEWORK
-using ToSic.Eav.Code.Infos;
+﻿using ToSic.Lib.Code.Infos;
 
+#if NETFRAMEWORK
 namespace ToSic.Sxc.Apps
 {
     public partial class App

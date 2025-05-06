@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Sxc.Dnn;
-using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
+using static ToSic.Lib.Code.Infos.CodeInfoObsolete;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Eav.Conversion;

@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Code.Help;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Plumbing;
+using ToSic.Lib.Code.Help;
 
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 

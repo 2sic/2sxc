@@ -1,8 +1,8 @@
 ﻿#if NETFRAMEWORK
 using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Code.Infos;
+using ToSic.Lib.Code.Infos;
 using ToSic.Sxc.Dnn;
-using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
+using static ToSic.Lib.Code.Infos.CodeInfoObsolete;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Eav;

@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Code.Help;
-using ToSic.Eav.LookUp;
+﻿using ToSic.Eav.LookUp;
+using ToSic.Lib.Code.Help;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Dnn.Razor;

@@ -1,12 +1,12 @@
-﻿using ToSic.Eav.Code.Infos;
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Data;
+using ToSic.Lib.Code.Infos;
 using ToSic.Lib.Coding;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Internal;
-using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
+using static ToSic.Lib.Code.Infos.CodeInfoObsolete;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Blocks;
