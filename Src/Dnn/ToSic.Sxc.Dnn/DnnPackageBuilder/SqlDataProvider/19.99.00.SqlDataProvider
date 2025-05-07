@@ -1148,8 +1148,9 @@ GO
 -- 10. Rename the foreign key constraint FK_ToSIC_EAV_Apps_TsDynDataZone
 IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Apps_TsDynDataZone')
 BEGIN
-    PRINT '... Rename Zone foreign key from ToSIC_EAV_Apps';
-    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_Apps_TsDynDataZone]', N'FK_TsDynDataApp_TsDynDataZone', N'OBJECT';
+
+    PRINT '... Renaming Zone foreign key from ToSIC_EAV_Apps';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_Apps_TsDynDataZone]', N'FK_ToSIC_EAV_Apps_TsDynDataApp', N'OBJECT';
 END
 GO
 
@@ -1383,7 +1384,7 @@ GO
 IF EXISTS (SELECT * FROM sys.key_constraints WHERE name = 'PK_ToSIC_EAV_AttributeSets' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataContentType]'))
 BEGIN
     PRINT '... Rename PK_ToSIC_EAV_AttributeSets';
-    EXEC sp_rename N'[dbo].[TsDynDataContentType].[PK_ToSIC_EAV_AttributeSets]', N'PK_TsDynDataContentType';
+    EXEC sp_rename N'[dbo].[PK_ToSIC_EAV_AttributeSets]', N'PK_TsDynDataContentType', N'OBJECT';
 END
 GO
 
@@ -1773,6 +1774,187 @@ IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_TsDynDataAttribute_To
 BEGIN
     PRINT '... Renaming FK_TsDynDataAttribute_ToSIC_EAV_AttributeTypes to FK_TsDynDataAttribute_TsDynDataAttributeType';
     EXEC sp_rename N'[dbo].[FK_TsDynDataAttribute_ToSIC_EAV_AttributeTypes]', N'FK_TsDynDataAttribute_TsDynDataAttributeType', N'OBJECT';
+END
+GO
+
+
+
+-- *** Renaming table ToSIC_EAV_Entities to TsDynDataEntity and related objects
+PRINT '*** Renaming table ToSIC_EAV_Entities to TsDynDataEntity and related objects';
+
+-- 1. Rename the table ToSIC_EAV_Entities to TsDynDataEntity
+IF EXISTS (SELECT * FROM sys.objects WHERE name = 'ToSIC_EAV_Entities' AND type = 'U')
+BEGIN
+    PRINT '... Renaming table ToSIC_EAV_Entities to TsDynDataEntity';
+    EXEC sp_rename N'[dbo].[ToSIC_EAV_Entities]', N'TsDynDataEntity';
+END
+GO
+
+-- 2. Rename the primary key column EntityID to EntityId
+IF EXISTS (SELECT * FROM sys.columns WHERE Name COLLATE Latin1_General_CS_AS = N'EntityID' AND Object_ID = Object_ID(N'[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... Renaming PK column EntityID to EntityId in TsDynDataEntity';
+    EXEC sp_rename N'[dbo].[TsDynDataEntity].[EntityID]', N'EntityId', N'COLUMN';
+END
+GO
+
+-- 3. Rename column EntityGUID to EntityGuid
+IF EXISTS (SELECT * FROM sys.columns WHERE Name COLLATE Latin1_General_CS_AS = N'EntityGUID' AND Object_ID = Object_ID(N'[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... Renaming column EntityGUID to EntityGuid in TsDynDataEntity';
+    EXEC sp_rename N'[dbo].[TsDynDataEntity].[EntityGUID]', N'EntityGuid', N'COLUMN';
+END
+GO
+
+-- 4. Rename the primary key constraint PK_ToSIC_EAV_Entities to PK_TsDynDataEntity
+IF EXISTS (SELECT * FROM sys.key_constraints WHERE name = 'PK_ToSIC_EAV_Entities' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... Renaming PK_ToSIC_EAV_Entities to PK_TsDynDataEntity';
+    EXEC sp_rename N'[dbo].[PK_ToSIC_EAV_Entities]', N'PK_TsDynDataEntity', N'OBJECT';
+END
+GO
+
+-- 5. Drop the foreign key constraint FK_ToSIC_EAV_Entities_ToSIC_EAV_Entities
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Entities_ToSIC_EAV_Entities')
+BEGIN
+    PRINT '... Dropping foreign key constraint FK_ToSIC_EAV_Entities_ToSIC_EAV_Entities';
+    ALTER TABLE [dbo].[TsDynDataEntity] DROP CONSTRAINT [FK_ToSIC_EAV_Entities_ToSIC_EAV_Entities];
+END
+GO
+
+-- 6. Drop the ConfigurationSet column
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'ConfigurationSet' AND Object_ID = Object_ID(N'[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... Dropping column ConfigurationSet from TsDynDataEntity';
+    ALTER TABLE [dbo].[TsDynDataEntity] DROP COLUMN [ConfigurationSet];
+END
+GO
+
+-- 7. Rename the column EntityID to EntityId in ToSIC_EAV_Values
+IF EXISTS (SELECT * FROM sys.columns WHERE Name COLLATE Latin1_General_CS_AS = N'EntityID' AND Object_ID = Object_ID(N'[dbo].[ToSIC_EAV_Values]'))
+BEGIN
+    PRINT '... Renaming column EntityID to EntityId in ToSIC_EAV_Values';
+    EXEC sp_rename N'[dbo].[ToSIC_EAV_Values].[EntityID]', N'EntityId', N'COLUMN';
+END
+GO
+
+-- 8. Renaming FK FK_ToSIC_EAV_Entities_TsDynDataApp to FK_TsDynDataEntity_TsDynDataApp
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Entities_TsDynDataApp' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... Renaming FK FK_ToSIC_EAV_Entities_TsDynDataApp to FK_TsDynDataEntity_TsDynDataApp';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_Entities_TsDynDataApp]', N'FK_TsDynDataEntity_TsDynDataApp', N'OBJECT';
+END
+GO
+
+-- 9. Renaming FK FK_ToSIC_EAV_Entities_TsDynDataContentType to FK_TsDynDataEntity_TsDynDataContentType
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Entities_TsDynDataContentType' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... Renaming FK FK_ToSIC_EAV_Entities_TsDynDataContentType to FK_TsDynDataEntity_TsDynDataContentType';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_Entities_TsDynDataContentType]', N'FK_TsDynDataEntity_TsDynDataContentType', N'OBJECT';
+END
+GO
+
+-- 10. Renaming FK FK_ToSIC_EAV_Entities_TsDynDataTargetType to FK_TsDynDataEntity_TsDynDataTargetType
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Entities_TsDynDataTargetType' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... Renaming FK FK_ToSIC_EAV_Entities_TsDynDataTargetType to FK_TsDynDataEntity_TsDynDataTargetType';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_Entities_TsDynDataTargetType]', N'FK_TsDynDataEntity_TsDynDataTargetType', N'OBJECT';
+END
+GO
+
+-- 11. Renaming FK FK_ToSIC_EAV_Entities_TsDynDataTransactionCreated to FK_TsDynDataEntity_TsDynDataTransactionCreated
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Entities_TsDynDataTransactionCreated' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... Renaming FK FK_ToSIC_EAV_Entities_TsDynDataTransactionCreated to FK_TsDynDataEntity_TsDynDataTransactionCreated';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_Entities_TsDynDataTransactionCreated]', N'FK_TsDynDataEntity_TsDynDataTransactionCreated', N'OBJECT';
+END
+GO
+
+-- 12. Renaming FK FK_ToSIC_EAV_Entities_TsDynDataTransactionModified to FK_TsDynDataEntity_TsDynDataTransactionModified
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Entities_TsDynDataTransactionModified' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... Renaming FK FK_ToSIC_EAV_Entities_TsDynDataTransactionModified to FK_TsDynDataEntity_TsDynDataTransactionModified';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_Entities_TsDynDataTransactionModified]', N'FK_TsDynDataEntity_TsDynDataTransactionModified', N'OBJECT';
+END
+GO
+
+-- 12b. Renaming FK FK_ToSIC_EAV_Entities_TsDynDataTransactionDeleted to FK_TsDynDataEntity_TsDynDataTransactionDeleted
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Entities_TsDynDataTransactionDeleted' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... Renaming FK FK_ToSIC_EAV_Entities_TsDynDataTransactionDeleted to FK_TsDynDataEntity_TsDynDataTransactionDeleted';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_Entities_TsDynDataTransactionDeleted]', N'FK_TsDynDataEntity_TsDynDataTransactionDeleted', N'OBJECT';
+END
+GO
+
+-- 14. Renaming Default Constraint DF_ToSIC_EAV_Entities_EntityGUID to DF_TsDynDataEntity_EntityGuid
+IF EXISTS (SELECT * FROM sys.default_constraints WHERE name = 'DF_ToSIC_EAV_Entities_EntityGUID' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... Renaming Default Constraint DF_ToSIC_EAV_Entities_EntityGUID to DF_TsDynDataEntity_EntityGuid';
+    EXEC sp_rename N'[dbo].[DF_ToSIC_EAV_Entities_EntityGUID]', N'DF_TsDynDataEntity_EntityGuid', N'OBJECT';
+END
+GO
+
+-- 15. Renaming Default Constraint DF_ToSIC_EAV_Entities_IsPublished to DF_TsDynDataEntity_IsPublished
+IF EXISTS (SELECT * FROM sys.default_constraints WHERE name = 'DF_ToSIC_EAV_Entities_IsPublished' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... Renaming Default Constraint DF_ToSIC_EAV_Entities_IsPublished to DF_TsDynDataEntity_IsPublished';
+    EXEC sp_rename N'[dbo].[DF_ToSIC_EAV_Entities_IsPublished]', N'DF_TsDynDataEntity_IsPublished', N'OBJECT';
+END
+GO
+
+-- 16. Renaming Index IX_KeyNumber to IX_TsDynDataEntity_KeyNumber
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_KeyNumber' AND object_id = OBJECT_ID('[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... Renaming Index IX_KeyNumber to IX_TsDynDataEntity_KeyNumber';
+    EXEC sp_rename N'[dbo].[TsDynDataEntity].[IX_KeyNumber]', N'IX_TsDynDataEntity_KeyNumber', N'INDEX';
+END
+GO
+
+-- 17. Renaming Index IX_ToSIC_EAV_Entities_AppId to IX_TsDynDataEntity_AppId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_ToSIC_EAV_Entities_AppId' AND object_id = OBJECT_ID('[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... Renaming Index IX_ToSIC_EAV_Entities_AppId to IX_TsDynDataEntity_AppId';
+    EXEC sp_rename N'[dbo].[TsDynDataEntity].[IX_ToSIC_EAV_Entities_AppId]', N'IX_TsDynDataEntity_AppId', N'INDEX';
+END
+GO
+
+-- 18. Renaming Index IX_ToSIC_EAV_Entities_ContentTypeId to IX_TsDynDataEntity_ContentTypeId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_ToSIC_EAV_Entities_ContentTypeId' AND object_id = OBJECT_ID('[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... Renaming Index IX_ToSIC_EAV_Entities_ContentTypeId to IX_TsDynDataEntity_ContentTypeId';
+    EXEC sp_rename N'[dbo].[TsDynDataEntity].[IX_ToSIC_EAV_Entities_ContentTypeId]', N'IX_TsDynDataEntity_ContentTypeId', N'INDEX';
+END
+GO
+
+-- 19. Renaming Index IX_ToSIC_EAV_Entities_TargetTypeId to IX_TsDynDataEntity_TargetTypeId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_ToSIC_EAV_Entities_TargetTypeId' AND object_id = OBJECT_ID('[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... Renaming Index IX_ToSIC_EAV_Entities_TargetTypeId to IX_TsDynDataEntity_TargetTypeId';
+    EXEC sp_rename N'[dbo].[TsDynDataEntity].[IX_ToSIC_EAV_Entities_TargetTypeId]', N'IX_TsDynDataEntity_TargetTypeId', N'INDEX';
+END
+GO
+
+-- 20. Renaming Index IX_ToSIC_EAV_Entities_TransactionIdCreated to IX_TsDynDataEntity_TransactionIdCreated
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_ToSIC_EAV_Entities_TransactionIdCreated' AND object_id = OBJECT_ID('[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... Renaming Index IX_ToSIC_EAV_Entities_TransactionIdCreated to IX_TsDynDataEntity_TransactionIdCreated';
+    EXEC sp_rename N'[dbo].[TsDynDataEntity].[IX_ToSIC_EAV_Entities_TransactionIdCreated]', N'IX_TsDynDataEntity_TransactionIdCreated', N'INDEX';
+END
+GO
+
+-- 21. Renaming Index IX_ToSIC_EAV_Entities_TransactionIdModified to IX_TsDynDataEntity_TransactionIdModified
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_ToSIC_EAV_Entities_TransactionIdModified' AND object_id = OBJECT_ID('[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... Renaming Index IX_ToSIC_EAV_Entities_TransactionIdModified to IX_TsDynDataEntity_TransactionIdModified';
+    EXEC sp_rename N'[dbo].[TsDynDataEntity].[IX_ToSIC_EAV_Entities_TransactionIdModified]', N'IX_TsDynDataEntity_TransactionIdModified', N'INDEX';
+END
+GO
+
+-- 22. Renaming Index IX_ToSIC_EAV_Entities_TransactionIdDeleted to IX_TsDynDataEntity_TransactionIdDeleted
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_ToSIC_EAV_Entities_TransactionIdDeleted' AND object_id = OBJECT_ID('[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... Renaming Index IX_ToSIC_EAV_Entities_TransactionIdDeleted to IX_TsDynDataEntity_TransactionIdDeleted';
+    EXEC sp_rename N'[dbo].[TsDynDataEntity].[IX_ToSIC_EAV_Entities_TransactionIdDeleted]', N'IX_TsDynDataEntity_TransactionIdDeleted', N'INDEX';
 END
 GO
 
