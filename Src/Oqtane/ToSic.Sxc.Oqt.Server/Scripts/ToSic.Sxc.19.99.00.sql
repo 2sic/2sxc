@@ -1782,7 +1782,7 @@ GO
 -- *** Renaming table ToSIC_EAV_Entities to TsDynDataEntity and related objects
 PRINT '*** Renaming table ToSIC_EAV_Entities to TsDynDataEntity and related objects';
 
--- 1. Rename the table ToSIC_EAV_Entities to TsDynDataEntity
+-- 1. Rename table ToSIC_EAV_Entities to TsDynDataEntity
 IF EXISTS (SELECT * FROM sys.objects WHERE name = 'ToSIC_EAV_Entities' AND type = 'U')
 BEGIN
     PRINT '... Renaming table ToSIC_EAV_Entities to TsDynDataEntity';
@@ -1958,6 +1958,96 @@ BEGIN
 END
 GO
 
+
+
+-- *** Rename ToSIC_EAV_EntityRelationships to TsDynDataRelationship and related objects
+PRINT '*** Renaming table ToSIC_EAV_EntityRelationships to TsDynDataRelationship and related objects';
+
+-- 1. Rename table ToSIC_EAV_EntityRelationships to TsDynDataRelationship
+IF EXISTS (SELECT * FROM sys.objects WHERE name = 'ToSIC_EAV_EntityRelationships' AND type = 'U')
+BEGIN
+    PRINT '... Renaming table ToSIC_EAV_EntityRelationships to TsDynDataRelationship';
+    EXEC sp_rename N'[dbo].[ToSIC_EAV_EntityRelationships]', N'TsDynDataRelationship';
+END
+GO
+
+-- 2. Rename column AttributeID to AttributeId
+IF EXISTS (SELECT * FROM sys.columns WHERE Name COLLATE Latin1_General_CS_AS = N'AttributeID' AND Object_ID = Object_ID(N'[dbo].[TsDynDataRelationship]'))
+BEGIN
+    PRINT '... Renaming column AttributeID to AttributeId in TsDynDataRelationship';
+    EXEC sp_rename N'[dbo].[TsDynDataRelationship].[AttributeID]', N'AttributeId', N'COLUMN';
+END
+GO
+
+-- 3. Rename column ParentEntityID to ParentEntityId
+IF EXISTS (SELECT * FROM sys.columns WHERE Name COLLATE Latin1_General_CS_AS = N'ParentEntityID' AND Object_ID = Object_ID(N'[dbo].[TsDynDataRelationship]'))
+BEGIN
+    PRINT '... Renaming column ParentEntityID to ParentEntityId in TsDynDataRelationship';
+    EXEC sp_rename N'[dbo].[TsDynDataRelationship].[ParentEntityID]', N'ParentEntityId', N'COLUMN';
+END
+GO
+
+-- 4. Rename column ChildEntityID to ChildEntityId
+IF EXISTS (SELECT * FROM sys.columns WHERE Name COLLATE Latin1_General_CS_AS = N'ChildEntityID' AND Object_ID = Object_ID(N'[dbo].[TsDynDataRelationship]'))
+BEGIN
+    PRINT '... Renaming column ChildEntityID to ChildEntityId in TsDynDataRelationship';
+    EXEC sp_rename N'[dbo].[TsDynDataRelationship].[ChildEntityID]', N'ChildEntityId', N'COLUMN';
+END
+GO
+
+-- 5. Rename the primary key constraint PK_ToSIC_EAV_EntityRelationships to PK_TsDynDataRelationship
+IF EXISTS (SELECT * FROM sys.key_constraints WHERE name = 'PK_ToSIC_EAV_EntityRelationships' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataRelationship]'))
+BEGIN
+    PRINT '... Renaming PK_ToSIC_EAV_EntityRelationships to PK_TsDynDataRelationship';
+    EXEC sp_rename N'[dbo].[PK_ToSIC_EAV_EntityRelationships]', N'PK_TsDynDataRelationship', N'OBJECT';
+END
+GO
+
+-- 6. Renaming FK FK_ToSIC_EAV_EntityRelationships_TsDynDataAttribute to FK_TsDynDataRelationship_TsDynDataAttribute
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_EntityRelationships_TsDynDataAttribute' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataRelationship]'))
+BEGIN
+    PRINT '... Renaming FK FK_ToSIC_EAV_EntityRelationships_TsDynDataAttribute to FK_TsDynDataRelationship_TsDynDataAttribute';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_EntityRelationships_TsDynDataAttribute]', N'FK_TsDynDataRelationship_TsDynDataAttribute', N'OBJECT';
+END
+GO
+
+-- 7. Renaming FK FK_ToSIC_EAV_EntityRelationships_ToSIC_EAV_ParentEntities to FK_TsDynDataRelationship_TsDynDataEntityParent
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_EntityRelationships_ToSIC_EAV_ParentEntities' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataRelationship]'))
+BEGIN
+    PRINT '... Renaming FK FK_ToSIC_EAV_EntityRelationships_ToSIC_EAV_ParentEntities to FK_TsDynDataRelationship_TsDynDataEntityParent';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_EntityRelationships_ToSIC_EAV_ParentEntities]', N'FK_TsDynDataRelationship_TsDynDataEntityParent', N'OBJECT';
+END
+GO
+
+-- 8. Renaming FK FK_ToSIC_EAV_EntityRelationships_ToSIC_EAV_ChildEntities to FK_TsDynDataRelationship_TsDynDataEntityChild
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_EntityRelationships_ToSIC_EAV_ChildEntities' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataRelationship]'))
+BEGIN
+    PRINT '... Renaming FK FK_ToSIC_EAV_EntityRelationships_ToSIC_EAV_ChildEntities to FK_TsDynDataRelationship_TsDynDataEntityChild';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_EntityRelationships_ToSIC_EAV_ChildEntities]', N'FK_TsDynDataRelationship_TsDynDataEntityChild', N'OBJECT';
+END
+GO
+
+-- 9. Adding index IX_TsDynDataRelationship_ParentEntityId
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataRelationship_ParentEntityId' AND object_id = OBJECT_ID('[dbo].[TsDynDataRelationship]'))
+    AND OBJECT_ID('[dbo].[TsDynDataRelationship]', 'U') IS NOT NULL
+    AND EXISTS (SELECT * FROM sys.columns WHERE Name = 'ParentEntityId' AND Object_ID = Object_ID(N'[dbo].[TsDynDataRelationship]')) -- Ensure column exists
+BEGIN
+    PRINT '... Adding index IX_TsDynDataRelationship_ParentEntityId';
+    CREATE NONCLUSTERED INDEX [IX_TsDynDataRelationship_ParentEntityId] ON [dbo].[TsDynDataRelationship] ([ParentEntityId] ASC)
+    WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+END
+GO
+
+-- 10. Adding index IX_TsDynDataRelationship_ChildEntityId
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataRelationship_ChildEntityId' AND object_id = OBJECT_ID('[dbo].[TsDynDataRelationship]'))
+    AND OBJECT_ID('[dbo].[TsDynDataRelationship]', 'U') IS NOT NULL
+    AND EXISTS (SELECT * FROM sys.columns WHERE Name = 'ChildEntityId' AND Object_ID = Object_ID(N'[dbo].[TsDynDataRelationship]')) -- Ensure column exists
+BEGIN
+    PRINT '... Adding index IX_TsDynDataRelationship_ChildEntityId';
+    CREATE NONCLUSTERED INDEX [IX_TsDynDataRelationship_ChildEntityId] ON [dbo].[TsDynDataRelationship] ([ChildEntityId] ASC)
+    WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+END
+GO
 
 
 
