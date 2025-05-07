@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Integration;
+using ToSic.Lib.Internal.FeatSys;
 using ToSic.Sxc.Startup;
 using ToSic.Testing.Shared;
 
@@ -27,6 +28,7 @@ public class StartupSxcWithDb
             .AddDataSourceTestHelpers()
             // 2sxc core
             .AddSxcCore()
-            .AddEavEverything();
-            
+            .AddEavEverything()
+            .AddLibFeatSys();
+
 }
