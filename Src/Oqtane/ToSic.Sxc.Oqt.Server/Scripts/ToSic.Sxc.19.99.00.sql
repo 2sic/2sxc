@@ -1748,6 +1748,33 @@ GO
 
 
 
+-- *** Renaming table ToSIC_EAV_AttributeTypes to TsDynDataAttributeType and related objects 
+PRINT 'Renaming table ToSIC_EAV_AttributeTypes to TsDynDataAttributeType and related objects';
+GO
+
+-- 1. Rename the table ToSIC_EAV_AttributeTypes to TsDynDataAttributeType
+IF EXISTS (SELECT * FROM sys.objects WHERE name = 'ToSIC_EAV_AttributeTypes' AND type = 'U')
+BEGIN
+    PRINT '... Renaming table ToSIC_EAV_AttributeTypes to TsDynDataAttributeType';
+    EXEC sp_rename N'[dbo].[ToSIC_EAV_AttributeTypes]', N'TsDynDataAttributeType';
+END
+GO
+
+-- 2. Rename the primary key constraint PK_ToSIC_EAV_AttributeTypes to PK_TsDynDataAttributeType
+IF EXISTS (SELECT * FROM sys.key_constraints WHERE name = 'PK_ToSIC_EAV_AttributeTypes' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataAttributeType]'))
+BEGIN
+    PRINT '... Renaming PK_ToSIC_EAV_AttributeTypes to PK_TsDynDataAttributeType';
+    EXEC sp_rename N'[dbo].[PK_ToSIC_EAV_AttributeTypes]', N'PK_TsDynDataAttributeType', N'OBJECT';
+END
+GO
+
+-- 3. Rename the foreign key constraint in TsDynDataAttribute that references this table.
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_TsDynDataAttribute_ToSIC_EAV_AttributeTypes' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... Renaming FK_TsDynDataAttribute_ToSIC_EAV_AttributeTypes to FK_TsDynDataAttribute_TsDynDataAttributeType';
+    EXEC sp_rename N'[dbo].[FK_TsDynDataAttribute_ToSIC_EAV_AttributeTypes]', N'FK_TsDynDataAttribute_TsDynDataAttributeType', N'OBJECT';
+END
+GO
 
 PRINT '*** Finished migration script.';
 GO
