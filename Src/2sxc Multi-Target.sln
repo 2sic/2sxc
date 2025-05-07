@@ -83,11 +83,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Oqt.Server.Tests"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2sxc Core Tests", "2sxc Core Tests", "{E392C073-28AD-4164-B71B-B1BB4A163159}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{32E45183-6A02-41A2-A4D5-6CB58A6D39A9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ToSic.Sys", "ToSic.Sys", "{32E45183-6A02-41A2-A4D5-6CB58A6D39A9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sys.Core", "..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj", "{BC93EFB1-D740-4617-9C90-D9167F9E4545}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs Tests", "Libs Tests", "{896200CD-54AF-462D-881C-0C7A43F0D6AF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ToSic.Sys Tests", "ToSic.Sys Tests", "{896200CD-54AF-462D-881C-0C7A43F0D6AF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sys.Core.Tests", "..\..\eav-server\ToSic.Sys.Core.Tests\ToSic.Sys.Core.Tests.csproj", "{2B1FE78B-9BB5-4B7D-9409-B2B5A3BF85A8}"
 EndProject
