@@ -11,6 +11,6 @@ internal class SysFeatureDnn() : SysFeatureDetector(DefStatic, true)
         NameId = "Dnn",
         Guid = new("00cb8d98-bfac-4a18-b7de-b1237498f183"),
         Name = "Dnn",
-        LicenseRules = BuiltInFeatures.SystemEnabled,
+        LicenseRules = BuiltInLicenseRules.SystemEnabled,
     };
 }
