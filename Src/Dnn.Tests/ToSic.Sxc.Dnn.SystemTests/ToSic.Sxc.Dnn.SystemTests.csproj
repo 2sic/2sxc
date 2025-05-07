@@ -27,7 +27,7 @@
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core.TestHelpers\ToSic.Eav.Core.TestHelpers.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Testing.FullDbFixtures\ToSic.Eav.Testing.FullDbFixtures.csproj" />
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj" />
     <ProjectReference Include="..\..\Dnn\ToSic.Sxc.Dnn\ToSic.Sxc.Dnn.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
   </ItemGroup>

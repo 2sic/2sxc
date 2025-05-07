@@ -39,8 +39,8 @@
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSources\ToSic.Eav.DataSources.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj" />
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj" />
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Utils\ToSic.Lib.Utils.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Utils\ToSic.Sys.Utils.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">

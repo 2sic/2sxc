@@ -48,7 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj" />
     <!--<ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Client\Oqtane.Client.csproj" />-->
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj" />
   </ItemGroup>

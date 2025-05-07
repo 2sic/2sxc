@@ -43,7 +43,7 @@
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSources\ToSic.Eav.DataSources.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj" />
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
   </ItemGroup>
 

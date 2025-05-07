@@ -85,11 +85,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2sxc Core Tests", "2sxc Cor
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{32E45183-6A02-41A2-A4D5-6CB58A6D39A9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Lib.Core", "..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj", "{BC93EFB1-D740-4617-9C90-D9167F9E4545}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sys.Core", "..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj", "{BC93EFB1-D740-4617-9C90-D9167F9E4545}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs Tests", "Libs Tests", "{896200CD-54AF-462D-881C-0C7A43F0D6AF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Lib.Core.Tests", "..\..\eav-server\ToSic.Lib.Core.Tests\ToSic.Lib.Core.Tests.csproj", "{2B1FE78B-9BB5-4B7D-9409-B2B5A3BF85A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sys.Core.Tests", "..\..\eav-server\ToSic.Sys.Core.Tests\ToSic.Sys.Core.Tests.csproj", "{2B1FE78B-9BB5-4B7D-9409-B2B5A3BF85A8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Oqtane (Framework)", "Oqtane (Framework)", "{C4B25918-A3FA-49E6-8CE1-BF2A41FC4F45}"
 EndProject
@@ -105,7 +105,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Configuration.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Core.TestsBasic", "..\..\eav-server\ToSic.Eav.Core.TestsBasic\ToSic.Eav.Core.TestsBasic.csproj", "{B02907A6-64C8-4804-B65E-E0F1E1E1BE68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Lib.DI.Tests", "..\..\eav-server\ToSic.Lib.DI.Tests\ToSic.Lib.DI.Tests.csproj", "{1BAF0475-B349-44EC-907F-5F87E949D560}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sys.DI.Tests", "..\..\eav-server\ToSic.Sys.DI.Tests\ToSic.Sys.DI.Tests.csproj", "{1BAF0475-B349-44EC-907F-5F87E949D560}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Data.Tests", "..\..\eav-server\ToSic.Eav.Data.Tests\ToSic.Eav.Data.Tests.csproj", "{AA955C7C-5D29-4125-85E3-557D254257C5}"
 EndProject
@@ -141,15 +141,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Core.TestHelpers"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Oqt.Shared.Tests", "Oqtane.Tests\ToSic.Sxc.Oqt.Shared.Tests\ToSic.Sxc.Oqt.Shared.Tests.csproj", "{BE3193C4-61CC-479B-8B0E-604F22B7AFBC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Lib.Utils", "..\..\eav-server\ToSic.Lib.Utils\ToSic.Lib.Utils.csproj", "{00E352CC-021D-4D44-8B64-D2574CABD949}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sys.Utils", "..\..\eav-server\ToSic.Sys.Utils\ToSic.Sys.Utils.csproj", "{00E352CC-021D-4D44-8B64-D2574CABD949}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Lib.Code", "..\..\eav-server\ToSic.Lib.Code\ToSic.Lib.Code.csproj", "{918D4D29-AF04-47E6-8354-FA26B7CD50D1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sys.Code", "..\..\eav-server\ToSic.Sys.Code\ToSic.Sys.Code.csproj", "{918D4D29-AF04-47E6-8354-FA26B7CD50D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Lib.Features", "..\..\eav-server\ToSic.Lib.Features\ToSic.Lib.Features.csproj", "{21B6CF7B-9960-4565-A12C-410F87299621}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sys.Features", "..\..\eav-server\ToSic.Sys.Features\ToSic.Sys.Features.csproj", "{21B6CF7B-9960-4565-A12C-410F87299621}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Lib.Features.Tests", "..\..\eav-server\ToSic.Lib.Features.Tests\ToSic.Lib.Features.Tests.csproj", "{B6FCFFF3-2832-4BEB-BB00-134F8F28B7F8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sys.Features.Tests", "..\..\eav-server\ToSic.Sys.Features.Tests\ToSic.Sys.Features.Tests.csproj", "{B6FCFFF3-2832-4BEB-BB00-134F8F28B7F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Lib.Caching", "..\..\eav-server\ToSic.Lib.Caching\ToSic.Lib.Caching.csproj", "{F0B3DAEE-647E-4394-8493-B4436C988DA4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sys.Caching", "..\..\eav-server\ToSic.Sys.Caching\ToSic.Sys.Caching.csproj", "{F0B3DAEE-647E-4394-8493-B4436C988DA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1571,7 +1571,7 @@ Global
 		{F0B3DAEE-647E-4394-8493-B4436C988DA4} = {32E45183-6A02-41A2-A4D5-6CB58A6D39A9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 EndGlobal

@@ -152,11 +152,11 @@
       <Project>{f93f5fb1-95a6-4c4b-bdcf-b001e82f766f}</Project>
       <Name>ToSic.Eav.WebApi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj">
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj">
       <Project>{bc93efb1-d740-4617-9c90-d9167f9e4545}</Project>
       <Name>ToSic.Lib.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Utils\ToSic.Lib.Utils.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Utils\ToSic.Sys.Utils.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj">
       <Project>{80d15f35-334b-4c7c-af94-b0ff1e6cc354}</Project>
       <Name>ToSic.Sxc.WebApi</Name>

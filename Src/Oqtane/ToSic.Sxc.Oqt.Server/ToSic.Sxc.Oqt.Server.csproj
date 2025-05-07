@@ -118,7 +118,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj" />
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj" />
     <!--<ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Server\Oqtane.Server.csproj" />-->
     <!--<ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Shared\Oqtane.Shared.csproj" />-->
     <ProjectReference Include="..\..\Razor\ToSic.Sxc.Razor\ToSic.Sxc.Razor.csproj" />

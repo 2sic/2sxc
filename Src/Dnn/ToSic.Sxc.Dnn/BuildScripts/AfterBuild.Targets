@@ -29,9 +29,6 @@
       <!-- itmes included only in Release configuration -->
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.xml" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Dnn.xml" />
-      <!--<DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc*.xml" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Eav*.xml" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Lib*.xml" />-->
     </ItemGroup>
     
     <ItemGroup>
@@ -46,6 +43,8 @@
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Eav*.pdb" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Lib*.dll" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Lib*.pdb" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sys*.dll" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sys*.pdb" />
 
       <!-- DNN specific DLLs -->
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Dnn*.dll" />
