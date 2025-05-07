@@ -1580,5 +1580,174 @@ GO
 
 
 
+-- *** Rename ToSIC_EAV_Attributes to TsDynDataAttribute and update related objects
+PRINT 'Renaming table ToSIC_EAV_Attributes to TsDynDataAttribute and related objects';
+
+-- 1. Rename the table ToSIC_EAV_Attributes to TsDynDataAttribute
+IF EXISTS (SELECT * FROM sys.objects WHERE name = 'ToSIC_EAV_Attributes' AND type = 'U')
+BEGIN
+    PRINT '... Renaming table ToSIC_EAV_Attributes to TsDynDataAttribute';
+    EXEC sp_rename N'[dbo].[ToSIC_EAV_Attributes]', N'TsDynDataAttribute';
+END
+GO
+
+-- 2. Rename the primary key column AttributeID to AttributeId in TsDynDataAttribute
+IF EXISTS (SELECT * FROM sys.columns WHERE Name COLLATE Latin1_General_CS_AS = N'AttributeID' AND Object_ID = Object_ID(N'[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... Renaming column AttributeID to AttributeId in TsDynDataAttribute';
+    EXEC sp_rename N'[dbo].[TsDynDataAttribute].[AttributeID]', N'AttributeId', N'COLUMN';
+END
+GO
+
+-- 3. Rename the primary key constraint PK_ToSIC_EAV_Attributes to PK_TsDynDataAttribute
+IF EXISTS (SELECT * FROM sys.key_constraints WHERE name = 'PK_ToSIC_EAV_Attributes' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... Renaming PK_ToSIC_EAV_Attributes to PK_TsDynDataAttribute';
+    EXEC sp_rename N'[dbo].[PK_ToSIC_EAV_Attributes]', N'PK_TsDynDataAttribute', N'OBJECT';
+END
+GO
+
+-- 4. Add new column TransactionIdModified to TsDynDataAttribute
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdModified' AND Object_ID = Object_ID(N'[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... Adding column TransactionIdModified to TsDynDataAttribute';
+    ALTER TABLE [dbo].[TsDynDataAttribute] ADD [TransactionIdModified] INT NULL;
+END
+GO
+
+-- 5. Rename FK_ToSIC_EAV_Attributes_ToSIC_EAV_Types
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Attributes_ToSIC_EAV_Types' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... Renaming FK_ToSIC_EAV_Attributes_ToSIC_EAV_Types to FK_TsDynDataAttribute_ToSIC_EAV_AttributeTypes';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_Attributes_ToSIC_EAV_Types]', N'FK_TsDynDataAttribute_ToSIC_EAV_AttributeTypes', N'OBJECT';
+END
+GO
+
+-- 6. Rename FK_ToSIC_EAV_Attributes_TsDynDataContentTyp
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Attributes_TsDynDataContentType' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... Renaming FK_ToSIC_EAV_Attributes_TsDynDataContentType to FK_TsDynDataAttribute_TsDynDataContentType';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_Attributes_TsDynDataContentType]', N'FK_TsDynDataAttribute_TsDynDataContentType', N'OBJECT';
+END
+GO
+
+-- 7. Rename FK_ToSIC_EAV_Attributes_TsDynDataTransactionCreated
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Attributes_TsDynDataTransactionCreated' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... Renaming FK_ToSIC_EAV_Attributes_TsDynDataTransactionCreated to FK_TsDynDataAttribute_TsDynDataTransactionCreated';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_Attributes_TsDynDataTransactionCreated]', N'FK_TsDynDataAttribute_TsDynDataTransactionCreated', N'OBJECT';
+END
+GO
+
+-- 8. Rename FK_ToSIC_EAV_Attributes_TsDynDataTransactionDeleted
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Attributes_TsDynDataTransactionDeleted' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... Renaming FK_ToSIC_EAV_Attributes_TsDynDataTransactionDeleted to FK_TsDynDataAttribute_TsDynDataTransactionDeleted';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_Attributes_TsDynDataTransactionDeleted]', N'FK_TsDynDataAttribute_TsDynDataTransactionDeleted', N'OBJECT';
+END
+GO
+
+-- 9. Add new Foreign Key for TransactionIdModified on TsDynDataAttribute
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_TsDynDataAttribute_TsDynDataTransactionModified' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... Adding FK_TsDynDataAttribute_TsDynDataTransactionModified to TsDynDataAttribute';
+    ALTER TABLE [dbo].[TsDynDataAttribute] WITH CHECK
+    ADD CONSTRAINT [FK_TsDynDataAttribute_TsDynDataTransactionModified]
+    FOREIGN KEY([TransactionIdModified]) REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+END
+GO
+
+-- 10. Renaming index IX_ToSIC_EAV_Attributes_ContentTypeId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_ToSIC_EAV_Attributes_ContentTypeId' AND object_id = OBJECT_ID('[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... Renaming index IX_ToSIC_EAV_Attributes_ContentTypeId to IX_TsDynDataAttribute_ContentTypeId';
+    EXEC sp_rename N'[dbo].[TsDynDataAttribute].[IX_ToSIC_EAV_Attributes_ContentTypeId]', N'IX_TsDynDataAttribute_ContentTypeId', N'INDEX';
+END
+GO
+
+-- 11. Renaming index IX_ToSIC_EAV_Attributes_TransactionIdCreated
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_ToSIC_EAV_Attributes_TransactionIdCreated' AND object_id = OBJECT_ID('[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... Renaming index IX_ToSIC_EAV_Attributes_TransactionIdCreated to IX_TsDynDataAttribute_TransactionIdCreated';
+    EXEC sp_rename N'[dbo].[TsDynDataAttribute].[IX_ToSIC_EAV_Attributes_TransactionIdCreated]', N'IX_TsDynDataAttribute_TransactionIdCreated', N'INDEX';
+END
+GO
+
+-- 12. Renaming index IX_ToSIC_EAV_Attributes_TransactionIdDeleted
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_ToSIC_EAV_Attributes_TransactionIdDeleted' AND object_id = OBJECT_ID('[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... Renaming index IX_ToSIC_EAV_Attributes_TransactionIdDeleted to IX_TsDynDataAttribute_TransactionIdDeleted';
+    EXEC sp_rename N'[dbo].[TsDynDataAttribute].[IX_ToSIC_EAV_Attributes_TransactionIdDeleted]', N'IX_TsDynDataAttribute_TransactionIdDeleted', N'INDEX';
+END
+GO
+
+-- 12b. Add new Index for TransactionIdModified on TsDynDataAttribute
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataAttribute_TransactionIdModified' AND object_id = OBJECT_ID('[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... Adding index IX_TsDynDataAttribute_TransactionIdModified on TsDynDataAttribute';
+    CREATE NONCLUSTERED INDEX [IX_TsDynDataAttribute_TransactionIdModified] ON [dbo].[TsDynDataAttribute] ([TransactionIdModified] ASC)
+    WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+END
+GO
+
+-- 14. Rename Default Constraints DF_ToSIC_EAV_Attributes_ContentTypeId
+IF EXISTS (SELECT * FROM sys.default_constraints WHERE name = 'DF_ToSIC_EAV_Attributes_ContentTypeId' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... Renaming default constraint DF_ToSIC_EAV_Attributes_ContentTypeId to DF_TsDynDataAttribute_ContentTypeId';
+    EXEC sp_rename N'[dbo].[DF_ToSIC_EAV_Attributes_ContentTypeId]', N'DF_TsDynDataAttribute_ContentTypeId', N'OBJECT';
+END
+GO
+
+-- 15. Rename Default Constraints DF_ToSIC_EAV_Attributes_SortOrder
+IF EXISTS (SELECT * FROM sys.default_constraints WHERE name = 'DF_ToSIC_EAV_Attributes_SortOrder' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... Renaming default constraint DF_ToSIC_EAV_Attributes_SortOrder to DF_TsDynDataAttribute_SortOrder';
+    EXEC sp_rename N'[dbo].[DF_ToSIC_EAV_Attributes_SortOrder]', N'DF_TsDynDataAttribute_SortOrder', N'OBJECT';
+END
+GO
+
+-- 16. Rename Default Constraints DF_ToSIC_EAV_Attributes_IsTitle
+IF EXISTS (SELECT * FROM sys.default_constraints WHERE name = 'DF_ToSIC_EAV_Attributes_IsTitle' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... Renaming default constraint DF_ToSIC_EAV_Attributes_IsTitle to DF_TsDynDataAttribute_IsTitle';
+    EXEC sp_rename N'[dbo].[DF_ToSIC_EAV_Attributes_IsTitle]', N'DF_TsDynDataAttribute_IsTitle', N'OBJECT';
+END
+GO
+
+-- 17. Renaming column AttributeID to AttributeId in ToSIC_EAV_EntityRelationships
+IF EXISTS (SELECT * FROM sys.columns WHERE Name COLLATE Latin1_General_CS_AS = N'AttributeID' AND Object_ID = Object_ID(N'[dbo].[ToSIC_EAV_EntityRelationships]'))
+BEGIN
+    PRINT '... Renaming column AttributeID to AttributeId in ToSIC_EAV_EntityRelationships';
+    EXEC sp_rename N'[dbo].[ToSIC_EAV_EntityRelationships].[AttributeID]', N'AttributeId', N'COLUMN';
+END
+GO
+
+-- 18. Renaming column AttributeID to AttributeId in ToSIC_EAV_Values
+IF EXISTS (SELECT * FROM sys.columns WHERE Name COLLATE Latin1_General_CS_AS = N'AttributeID' AND Object_ID = Object_ID(N'[dbo].[ToSIC_EAV_Values]'))
+BEGIN
+    PRINT '... Renaming column AttributeID to AttributeId in ToSIC_EAV_Values';
+    EXEC sp_rename N'[dbo].[ToSIC_EAV_Values].[AttributeID]', N'AttributeId', N'COLUMN';
+END
+GO
+
+-- 19. Rename FK_ToSIC_EAV_EntityRelationships_ToSIC_EAV_Attributes
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_EntityRelationships_ToSIC_EAV_Attributes')
+BEGIN
+    PRINT '... Rename FK_ToSIC_EAV_EntityRelationships_ToSIC_EAV_Attributes';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_EntityRelationships_ToSIC_EAV_Attributes]', N'FK_ToSIC_EAV_EntityRelationships_TsDynDataAttribute' , N'OBJECT';
+END
+GO
+
+-- 20. Rename FK_ToSIC_EAV_Values_ToSIC_EAV_Attributes
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Values_ToSIC_EAV_Attributes')
+BEGIN
+    PRINT '... Rename FK_ToSIC_EAV_Values_ToSIC_EAV_Attributes';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_Values_ToSIC_EAV_Attributes]', N'FK_ToSIC_EAV_Values_TsDynDataAttribute' , N'OBJECT';
+END
+GO
+
+
+
+
 PRINT '*** Finished migration script.';
 GO
