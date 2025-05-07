@@ -1780,7 +1780,7 @@ GO
 
 
 -- *** Renaming table ToSIC_EAV_Entities to TsDynDataEntity and related objects
-PRINT '*** Renaming table ToSIC_EAV_Entities to TsDynDataEntity and related objects';
+PRINT 'Renaming table ToSIC_EAV_Entities to TsDynDataEntity and related objects';
 
 -- 1. Rename table ToSIC_EAV_Entities to TsDynDataEntity
 IF EXISTS (SELECT * FROM sys.objects WHERE name = 'ToSIC_EAV_Entities' AND type = 'U')
@@ -1961,7 +1961,7 @@ GO
 
 
 -- *** Rename ToSIC_EAV_EntityRelationships to TsDynDataRelationship and related objects
-PRINT '*** Renaming table ToSIC_EAV_EntityRelationships to TsDynDataRelationship and related objects';
+PRINT 'Renaming table ToSIC_EAV_EntityRelationships to TsDynDataRelationship and related objects';
 
 -- 1. Rename table ToSIC_EAV_EntityRelationships to TsDynDataRelationship
 IF EXISTS (SELECT * FROM sys.objects WHERE name = 'ToSIC_EAV_EntityRelationships' AND type = 'U')
@@ -2045,6 +2045,212 @@ IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataRelationship_
 BEGIN
     PRINT '... Adding index IX_TsDynDataRelationship_ChildEntityId';
     CREATE NONCLUSTERED INDEX [IX_TsDynDataRelationship_ChildEntityId] ON [dbo].[TsDynDataRelationship] ([ChildEntityId] ASC)
+    WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+END
+GO
+
+
+
+-- *** Rename ToSIC_EAV_Values to TsDynDataValue and related objects
+PRINT 'Renaming table ToSIC_EAV_Values to TsDynDataValue and related objects';
+
+-- 1. Dropping FK FK_ToSIC_EAV_Values_TsDynDataTransactionCreated
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Values_TsDynDataTransactionCreated' AND parent_object_id = OBJECT_ID('[dbo].[ToSIC_EAV_Values]'))
+BEGIN
+    PRINT '... Dropping FK FK_ToSIC_EAV_Values_TsDynDataTransactionCreated';
+    ALTER TABLE [dbo].[ToSIC_EAV_Values] DROP CONSTRAINT [FK_ToSIC_EAV_Values_TsDynDataTransactionCreated];
+END
+GO
+
+-- 2. Dropping FK FK_ToSIC_EAV_Values_TsDynDataTransactionModified
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Values_TsDynDataTransactionModified' AND parent_object_id = OBJECT_ID('[dbo].[ToSIC_EAV_Values]'))
+BEGIN
+    PRINT '... Dropping FK FK_ToSIC_EAV_Values_TsDynDataTransactionModified';
+    ALTER TABLE [dbo].[ToSIC_EAV_Values] DROP CONSTRAINT [FK_ToSIC_EAV_Values_TsDynDataTransactionModified];
+END
+GO
+
+-- 3. Dropping FK FK_ToSIC_EAV_Values_TsDynDataTransactionDeleted
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Values_TsDynDataTransactionDeleted' AND parent_object_id = OBJECT_ID('[dbo].[ToSIC_EAV_Values]'))
+BEGIN
+    PRINT '... Dropping FK FK_ToSIC_EAV_Values_TsDynDataTransactionDeleted';
+    ALTER TABLE [dbo].[ToSIC_EAV_Values] DROP CONSTRAINT [FK_ToSIC_EAV_Values_TsDynDataTransactionDeleted];
+END
+GO
+
+-- 4. Drop old complex index IX_EAV_Values1 from ToSIC_EAV_Values (as they included TransactionId columns)
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_EAV_Values1' AND object_id = OBJECT_ID('[dbo].[ToSIC_EAV_Values]'))
+BEGIN
+    PRINT '... Dropping Index IX_EAV_Values1';
+    DROP INDEX [IX_EAV_Values1] ON [dbo].[ToSIC_EAV_Values];
+END
+GO
+
+-- 5. Drop old complex index IX_EAV_Values2 from ToSIC_EAV_Values (as they included TransactionId columns)
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_EAV_Values2' AND object_id = OBJECT_ID('[dbo].[ToSIC_EAV_Values]'))
+BEGIN
+    PRINT '... Dropping Index IX_EAV_Values2';
+    DROP INDEX [IX_EAV_Values2] ON [dbo].[ToSIC_EAV_Values];
+END
+GO
+
+-- 6. Dropping Index IX_ToSIC_EAV_Values_TransactionIdCreated
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_ToSIC_EAV_Values_TransactionIdCreated' AND object_id = OBJECT_ID('[dbo].[ToSIC_EAV_Values]'))
+BEGIN
+    PRINT '... Dropping Index IX_ToSIC_EAV_Values_TransactionIdCreated';
+    DROP INDEX [IX_ToSIC_EAV_Values_TransactionIdCreated] ON [dbo].[ToSIC_EAV_Values];
+END
+GO
+
+-- 7. Dropping Index IX_ToSIC_EAV_Values_TransactionIdModified
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_ToSIC_EAV_Values_TransactionIdModified' AND object_id = OBJECT_ID('[dbo].[ToSIC_EAV_Values]'))
+BEGIN
+    PRINT '... Dropping Index IX_ToSIC_EAV_Values_TransactionIdModified';
+    DROP INDEX [IX_ToSIC_EAV_Values_TransactionIdModified] ON [dbo].[ToSIC_EAV_Values];
+END
+GO
+
+-- 8. Dropping Index IX_ToSIC_EAV_Values_TransactionIdDeleted
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_ToSIC_EAV_Values_TransactionIdDeleted' AND object_id = OBJECT_ID('[dbo].[ToSIC_EAV_Values]'))
+BEGIN
+    PRINT '... Dropping Index IX_ToSIC_EAV_Values_TransactionIdDeleted';
+    DROP INDEX [IX_ToSIC_EAV_Values_TransactionIdDeleted] ON [dbo].[ToSIC_EAV_Values];
+END
+GO
+
+-- 9. Dropping column TransactionIdCreated from ToSIC_EAV_Values
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdCreated' AND Object_ID = Object_ID(N'[dbo].[ToSIC_EAV_Values]'))
+BEGIN
+    PRINT '... Dropping column TransactionIdCreated from ToSIC_EAV_Values';
+    ALTER TABLE [dbo].[ToSIC_EAV_Values] DROP COLUMN [TransactionIdCreated];
+END
+GO
+
+-- 10. Dropping column TransactionIdModified from ToSIC_EAV_Values
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdModified' AND Object_ID = Object_ID(N'[dbo].[ToSIC_EAV_Values]'))
+BEGIN
+    PRINT '... Dropping column TransactionIdModified from ToSIC_EAV_Values';
+    ALTER TABLE [dbo].[ToSIC_EAV_Values] DROP COLUMN [TransactionIdModified];
+END
+GO
+
+-- 11. Dropping column TransactionIdDeleted from ToSIC_EAV_Values
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdDeleted' AND Object_ID = Object_ID(N'[dbo].[ToSIC_EAV_Values]'))
+BEGIN
+    PRINT '... Dropping column TransactionIdDeleted from ToSIC_EAV_Values';
+    ALTER TABLE [dbo].[ToSIC_EAV_Values] DROP COLUMN [TransactionIdDeleted];
+END
+GO
+
+-- 12. Renaming table ToSIC_EAV_Values to TsDynDataValue
+IF EXISTS (SELECT * FROM sys.objects WHERE name = 'ToSIC_EAV_Values' AND type = 'U')
+BEGIN
+    PRINT '... Renaming table ToSIC_EAV_Values to TsDynDataValue';
+    EXEC sp_rename N'[dbo].[ToSIC_EAV_Values]', N'TsDynDataValue';
+END
+GO
+
+-- 12b. Renaming column ValueID to ValueId in TsDynDataValue
+IF EXISTS (SELECT * FROM sys.columns WHERE Name COLLATE Latin1_General_CS_AS = N'ValueID' AND Object_ID = Object_ID(N'[dbo].[TsDynDataValue]'))
+BEGIN
+    PRINT '... Renaming column ValueID to ValueId in TsDynDataValue';
+    EXEC sp_rename N'[dbo].[TsDynDataValue].[ValueID]', N'ValueId', N'COLUMN';
+END
+GO
+
+-- 14. Renaming column EntityID to EntityId in TsDynDataValue
+IF EXISTS (SELECT * FROM sys.columns WHERE Name COLLATE Latin1_General_CS_AS = N'EntityID' AND Object_ID = Object_ID(N'[dbo].[TsDynDataValue]'))
+BEGIN
+    PRINT '... Renaming column EntityID to EntityId in TsDynDataValue';
+    EXEC sp_rename N'[dbo].[TsDynDataValue].[EntityID]', N'EntityId', N'COLUMN';
+END
+GO
+
+-- 15. Renaming column AttributeID to AttributeId in TsDynDataValue
+IF EXISTS (SELECT * FROM sys.columns WHERE Name COLLATE Latin1_General_CS_AS = N'AttributeID' AND Object_ID = Object_ID(N'[dbo].[TsDynDataValue]'))
+BEGIN
+    PRINT '... Renaming column AttributeID to AttributeId in TsDynDataValue (defensive)';
+    EXEC sp_rename N'[dbo].[TsDynDataValue].[AttributeID]', N'AttributeId', N'COLUMN';
+END
+GO
+
+-- 16. Renaming PK_ToSIC_EAV_Values to PK_TsDynDataValue
+IF EXISTS (SELECT * FROM sys.key_constraints WHERE name = 'PK_ToSIC_EAV_Values' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataValue]'))
+BEGIN
+    PRINT '... Renaming PK_ToSIC_EAV_Values to PK_TsDynDataValue';
+    EXEC sp_rename N'[dbo].[PK_ToSIC_EAV_Values]', N'PK_TsDynDataValue', N'OBJECT';
+END
+GO
+
+-- 17. Renaming FK FK_ToSIC_EAV_ValuesDimensions_ToSIC_EAV_Values to FK_ToSIC_EAV_ValuesDimensions_TsDynDataValue
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_ValuesDimensions_ToSIC_EAV_Values' AND parent_object_id = OBJECT_ID('[dbo].[ToSIC_EAV_ValuesDimensions]'))
+BEGIN
+    PRINT '... Renaming FK FK_ToSIC_EAV_ValuesDimensions_ToSIC_EAV_Values to FK_ToSIC_EAV_ValuesDimensions_TsDynDataValue';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_ValuesDimensions_ToSIC_EAV_Values]', N'FK_ToSIC_EAV_ValuesDimensions_TsDynDataValue', N'OBJECT';
+END
+GO
+
+-- 18. Renaming FK FK_ToSIC_EAV_Values_ToSIC_EAV_Entities to FK_TsDynDataValue_TsDynDataEntity
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Values_ToSIC_EAV_Entities' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataValue]'))
+BEGIN
+    PRINT '... Renaming FK FK_ToSIC_EAV_Values_ToSIC_EAV_Entities to FK_TsDynDataValue_TsDynDataEntity';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_Values_ToSIC_EAV_Entities]', N'FK_TsDynDataValue_TsDynDataEntity', N'OBJECT';
+END
+GO
+
+-- 19. Renaming FK FK_ToSIC_EAV_Values_TsDynDataAttribute to FK_TsDynDataValue_TsDynDataAttribute
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Values_TsDynDataAttribute' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataValue]'))
+BEGIN
+    PRINT '... Renaming FK FK_ToSIC_EAV_Values_TsDynDataAttribute to FK_TsDynDataValue_TsDynDataAttribute';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_Values_TsDynDataAttribute]', N'FK_TsDynDataValue_TsDynDataAttribute', N'OBJECT';
+END
+GO
+
+-- 20. Adding index IX_TsDynDataValue_EntityId
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataValue_EntityId' AND object_id = OBJECT_ID('[dbo].[TsDynDataValue]'))
+    AND OBJECT_ID('[dbo].[TsDynDataValue]', 'U') IS NOT NULL
+    AND EXISTS (SELECT * FROM sys.columns WHERE Name = 'EntityId' AND Object_ID = Object_ID(N'[dbo].[TsDynDataValue]'))
+BEGIN
+    PRINT '... Adding index IX_TsDynDataValue_EntityId';
+    CREATE NONCLUSTERED INDEX [IX_TsDynDataValue_EntityId] ON [dbo].[TsDynDataValue] ([EntityId] ASC)
+    WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+END
+GO
+
+-- 21. Adding index IX_TsDynDataValue_AttributeId
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataValue_AttributeId' AND object_id = OBJECT_ID('[dbo].[TsDynDataValue]'))
+    AND OBJECT_ID('[dbo].[TsDynDataValue]', 'U') IS NOT NULL
+    AND EXISTS (SELECT * FROM sys.columns WHERE Name = 'AttributeId' AND Object_ID = Object_ID(N'[dbo].[TsDynDataValue]'))
+BEGIN
+    PRINT '... Adding index IX_TsDynDataValue_AttributeId';
+    CREATE NONCLUSTERED INDEX [IX_TsDynDataValue_AttributeId] ON [dbo].[TsDynDataValue] ([AttributeId] ASC)
+    WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+END
+GO
+
+-- 22. Adding index IX_TsDynDataValue_AttributeId_EntityId
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataValue_AttributeId_EntityId' AND object_id = OBJECT_ID('[dbo].[TsDynDataValue]'))
+    AND OBJECT_ID('[dbo].[TsDynDataValue]', 'U') IS NOT NULL
+    AND EXISTS (SELECT * FROM sys.columns WHERE Name = 'AttributeId' AND Object_ID = Object_ID(N'[dbo].[TsDynDataValue]'))
+    AND EXISTS (SELECT * FROM sys.columns WHERE Name = 'EntityId' AND Object_ID = Object_ID(N'[dbo].[TsDynDataValue]'))
+BEGIN
+    PRINT '... Adding index IX_TsDynDataValue_AttributeId_EntityId';
+    CREATE NONCLUSTERED INDEX [IX_TsDynDataValue_AttributeId_EntityId] ON [dbo].[TsDynDataValue] ([AttributeId] ASC, [EntityId] ASC)
+    WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+END
+GO
+
+-- 23. Adding index IX_TsDynDataValue_EntityId_AttributeId_ValueId_Include_Value
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataValue_EntityId_AttributeId_ValueId_Include_Value' AND object_id = OBJECT_ID('[dbo].[TsDynDataValue]'))
+    AND OBJECT_ID('[dbo].[TsDynDataValue]', 'U') IS NOT NULL
+    AND EXISTS (SELECT * FROM sys.columns WHERE Name = 'EntityId' AND Object_ID = Object_ID(N'[dbo].[TsDynDataValue]'))
+    AND EXISTS (SELECT * FROM sys.columns WHERE Name = 'AttributeId' AND Object_ID = Object_ID(N'[dbo].[TsDynDataValue]'))
+    AND EXISTS (SELECT * FROM sys.columns WHERE Name = 'ValueId' AND Object_ID = Object_ID(N'[dbo].[TsDynDataValue]'))
+    AND EXISTS (SELECT * FROM sys.columns WHERE Name = 'Value' AND Object_ID = Object_ID(N'[dbo].[TsDynDataValue]'))
+BEGIN
+    PRINT '... Adding index IX_TsDynDataValue_EntityId_AttributeId_ValueId_Include_Value';
+    CREATE NONCLUSTERED INDEX [IX_TsDynDataValue_EntityId_AttributeId_ValueId_Include_Value] ON [dbo].[TsDynDataValue] ([EntityId] ASC, [AttributeId] ASC, [ValueId] ASC)
+    INCLUDE([Value])
     WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
 END
 GO
