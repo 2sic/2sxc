@@ -151,6 +151,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sys.Features.Tests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sys.Caching", "..\..\eav-server\ToSic.Sys.Caching\ToSic.Sys.Caching.csproj", "{F0B3DAEE-647E-4394-8493-B4436C988DA4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Lib.LookUp", "..\..\eav-server\ToSic.Lib.LookUp\ToSic.Lib.LookUp.csproj", "{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1505,6 +1507,30 @@ Global
 		{F0B3DAEE-647E-4394-8493-B4436C988DA4}.Testing|Windows-x64.Build.0 = Debug|Any CPU
 		{F0B3DAEE-647E-4394-8493-B4436C988DA4}.Testing|Windows-x86.ActiveCfg = Debug|Any CPU
 		{F0B3DAEE-647E-4394-8493-B4436C988DA4}.Testing|Windows-x86.Build.0 = Debug|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Debug|DNN.ActiveCfg = Debug|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Debug|DNN.Build.0 = Debug|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Debug|Windows-x64.Build.0 = Debug|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Release|DNN.ActiveCfg = Release|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Release|DNN.Build.0 = Release|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Release|Windows-x64.ActiveCfg = Release|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Release|Windows-x64.Build.0 = Release|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Testing|DNN.ActiveCfg = Debug|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Testing|DNN.Build.0 = Debug|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Testing|Windows-x64.ActiveCfg = Debug|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Testing|Windows-x64.Build.0 = Debug|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Testing|Windows-x86.ActiveCfg = Debug|Any CPU
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2}.Testing|Windows-x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1569,9 +1595,10 @@ Global
 		{21B6CF7B-9960-4565-A12C-410F87299621} = {32E45183-6A02-41A2-A4D5-6CB58A6D39A9}
 		{B6FCFFF3-2832-4BEB-BB00-134F8F28B7F8} = {896200CD-54AF-462D-881C-0C7A43F0D6AF}
 		{F0B3DAEE-647E-4394-8493-B4436C988DA4} = {32E45183-6A02-41A2-A4D5-6CB58A6D39A9}
+		{1BB3C427-3D35-40AA-8D7B-5E7043A639A2} = {32E45183-6A02-41A2-A4D5-6CB58A6D39A9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 	EndGlobalSection
 EndGlobal

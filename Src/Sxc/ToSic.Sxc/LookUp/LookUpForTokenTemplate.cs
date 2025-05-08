@@ -93,7 +93,8 @@ internal partial class LookUpForTokenTemplate(
     }
 
 
-    private CultureInfo GetCultureInfo() => IZoneCultureResolverExtensions.SafeCultureInfo(codeApiService.Cdf.Dimensions);
+    private CultureInfo GetCultureInfo()
+        => CultureHelpers.SafeCultureInfo(codeApiService.Cdf.Dimensions);
 
     public string Get(string key, string strFormat) => GetProperty(key, strFormat);
 
