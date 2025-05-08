@@ -131,6 +131,8 @@ DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_ChangeLogGet]
 GO
 DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_ChangeLogAdd]
 GO
+DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_DeleteApp]
+GO
 
 -- Remove Tables
 PRINT 'Removing obsolete Tables';
@@ -2257,8 +2259,8 @@ GO
 
 
 
--- *** Rename table ToSIC_EAV_Dimensions to TsDynDataDimension and related objects
-PRINT 'Rename table ToSIC_EAV_Dimensions to TsDynDataDimension and related objects';
+-- *** Renaming table ToSIC_EAV_Dimensions to TsDynDataDimension and related objects
+PRINT 'Renaming table ToSIC_EAV_Dimensions to TsDynDataDimension and related objects';
 
 -- 1. Rename table ToSIC_EAV_Dimensions to TsDynDataDimension
 IF EXISTS (SELECT * FROM sys.objects WHERE name = 'ToSIC_EAV_Dimensions' AND type = 'U')
@@ -2318,7 +2320,64 @@ GO
 
 
 
+-- *** Renaming table ToSIC_EAV_ValuesDimensions to TsDynDataValueDimension and related objects
+PRINT 'Renaming table ToSIC_EAV_ValuesDimensions to TsDynDataValueDimension and related objects';
 
+-- 1. Rename table ToSIC_EAV_ValuesDimensions to TsDynDataValueDimension
+IF EXISTS (SELECT * FROM sys.objects WHERE name = 'ToSIC_EAV_ValuesDimensions' AND type = 'U')
+BEGIN
+    PRINT '... Renaming table ToSIC_EAV_ValuesDimensions to TsDynDataValueDimension';
+    EXEC sp_rename N'[dbo].[ToSIC_EAV_ValuesDimensions]', N'TsDynDataValueDimension';
+END
+GO
+
+-- 2. Rename column ValueID to ValueId in TsDynDataValueDimension
+IF EXISTS (SELECT * FROM sys.columns WHERE Name COLLATE Latin1_General_CS_AS = N'ValueID' AND Object_ID = Object_ID(N'[dbo].[TsDynDataValueDimension]'))
+BEGIN
+    PRINT '... Renaming column ValueID to ValueId in TsDynDataValueDimension';
+    EXEC sp_rename N'[dbo].[TsDynDataValueDimension].[ValueID]', N'ValueId', N'COLUMN';
+END
+GO
+
+-- 3. Rename column DimensionID to DimensionId in TsDynDataValueDimension
+IF EXISTS (SELECT * FROM sys.columns WHERE Name COLLATE Latin1_General_CS_AS = N'DimensionID' AND Object_ID = Object_ID(N'[dbo].[TsDynDataValueDimension]'))
+BEGIN
+    PRINT '... Renaming column DimensionID to DimensionId in TsDynDataValueDimension';
+    EXEC sp_rename N'[dbo].[TsDynDataValueDimension].[DimensionID]', N'DimensionId', N'COLUMN';
+END
+GO
+
+-- 4. Rename Primary Key constraint for TsDynDataValueDimension
+IF EXISTS (SELECT * FROM sys.key_constraints WHERE name = 'PK_ToSIC_EAV_ValuesDimensions' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataValueDimension]'))
+BEGIN
+    PRINT '... Renaming PK_ToSIC_EAV_ValuesDimensions to PK_TsDynDataValueDimension';
+    EXEC sp_rename N'[dbo].[PK_ToSIC_EAV_ValuesDimensions]', N'PK_TsDynDataValueDimension', N'OBJECT';
+END
+GO
+
+-- 5. Renaming FK FK_ToSIC_EAV_ValuesDimensions_ToSIC_EAV_Dimensions to FK_TsDynDataValueDimension_TsDynDataDimension
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_ValuesDimensions_ToSIC_EAV_Dimensions' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataValueDimension]'))
+BEGIN
+    PRINT '... Renaming FK FK_ToSIC_EAV_ValuesDimensions_ToSIC_EAV_Dimensions to FK_TsDynDataValueDimension_TsDynDataDimension';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_ValuesDimensions_ToSIC_EAV_Dimensions]', N'FK_TsDynDataValueDimension_TsDynDataDimension', N'OBJECT';
+END
+GO
+
+-- 6. Renaming FK FK_ToSIC_EAV_ValuesDimensions_TsDynDataValue to FK_TsDynDataValueDimension_TsDynDataValue
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_ValuesDimensions_TsDynDataValue' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataValueDimension]'))
+BEGIN
+    PRINT '... Renaming FK FK_ToSIC_EAV_ValuesDimensions_TsDynDataValue to FK_TsDynDataValueDimension_TsDynDataValue';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_ValuesDimensions_TsDynDataValue]', N'FK_TsDynDataValueDimension_TsDynDataValue', N'OBJECT';
+END
+GO
+
+-- 7. Renaming Default Constraint DF_ToSIC_EAV_ValuesDimensions_ReadOnly to DF_TsDynDataValueDimension_ReadOnly
+IF EXISTS (SELECT * FROM sys.default_constraints WHERE name = 'DF_ToSIC_EAV_ValuesDimensions_ReadOnly' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataValueDimension]'))
+BEGIN
+    PRINT '... Renaming Default Constraint DF_ToSIC_EAV_ValuesDimensions_ReadOnly to DF_TsDynDataValueDimension_ReadOnly';
+    EXEC sp_rename N'[dbo].[DF_ToSIC_EAV_ValuesDimensions_ReadOnly]', N'DF_TsDynDataValueDimension_ReadOnly', N'OBJECT';
+END
+GO
 
 
 
