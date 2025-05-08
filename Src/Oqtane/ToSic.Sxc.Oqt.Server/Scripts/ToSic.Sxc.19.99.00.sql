@@ -1372,7 +1372,7 @@ BEGIN
 END
 GO
 
--- 2. Rename PK column AttributeSetID → ContentTypeId
+-- 2. Rename PK column AttributeSetID to ContentTypeId
 IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'AttributeSetID' AND Object_ID = Object_ID(N'[dbo].[TsDynDataContentType]'))
 BEGIN
     PRINT '... Renaming column AttributeSetID to ContentTypeId';
@@ -1388,7 +1388,7 @@ BEGIN
 END
 GO
 
--- 4. Rename columns UsesConfigurationOfAttributeSet → InheritContentTypeId
+-- 4. Rename columns UsesConfigurationOfAttributeSet to InheritContentTypeId
 IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'UsesConfigurationOfAttributeSet' AND Object_ID = Object_ID(N'[dbo].[TsDynDataContentType]'))
 BEGIN
     PRINT '... Renaming column UsesConfigurationOfAttributeSet to InheritContentTypeId';
@@ -1396,7 +1396,7 @@ BEGIN
 END
 GO
 
--- 5. Rename columns AlwaysShareConfiguration → IsGlobal
+-- 5. Rename columns AlwaysShareConfiguration to IsGlobal
 IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'AlwaysShareConfiguration' AND Object_ID = Object_ID(N'[dbo].[TsDynDataContentType]'))
 BEGIN
     PRINT '... Renaming column AlwaysShareConfiguration to IsGlobal';
@@ -1413,7 +1413,7 @@ BEGIN
 END
 GO
 
--- 7. Rename columns AttributeSetID → InheritContentTypeId
+-- 7. Rename columns AttributeSetID to InheritContentTypeId
 IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'AttributeSetID' AND Object_ID = Object_ID(N'[dbo].[ToSIC_EAV_Entities]'))
 BEGIN
     PRINT '... Renaming column AttributeSetID to ContentTypeId';
@@ -2254,6 +2254,69 @@ BEGIN
     WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
 END
 GO
+
+
+
+-- *** Rename table ToSIC_EAV_Dimensions to TsDynDataDimension and related objects
+PRINT 'Rename table ToSIC_EAV_Dimensions to TsDynDataDimension and related objects';
+
+-- 1. Rename table ToSIC_EAV_Dimensions to TsDynDataDimension
+IF EXISTS (SELECT * FROM sys.objects WHERE name = 'ToSIC_EAV_Dimensions' AND type = 'U')
+BEGIN
+    PRINT '... Renaming table ToSIC_EAV_Dimensions to TsDynDataDimension';
+    EXEC sp_rename N'[dbo].[ToSIC_EAV_Dimensions]', N'TsDynDataDimension';
+END
+GO
+
+-- 2. Rename column DimensionID to DimensionId in TsDynDataDimension
+IF EXISTS (SELECT * FROM sys.columns WHERE Name COLLATE Latin1_General_CS_AS = N'DimensionID' AND Object_ID = Object_ID(N'[dbo].[TsDynDataDimension]'))
+BEGIN
+    PRINT '... Renaming column DimensionID to DimensionId in TsDynDataDimension';
+    EXEC sp_rename N'[dbo].[TsDynDataDimension].[DimensionID]', N'DimensionId', N'COLUMN';
+END
+GO
+
+-- 3. Rename Primary Key constraint for TsDynDataDimension
+IF EXISTS (SELECT * FROM sys.key_constraints WHERE name = 'PK_ToSIC_EAV_Dimensions' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataDimension]'))
+BEGIN
+    PRINT '... Renaming PK_ToSIC_EAV_Dimensions to PK_TsDynDataDimension';
+    EXEC sp_rename N'[dbo].[PK_ToSIC_EAV_Dimensions]', N'PK_TsDynDataDimension', N'OBJECT';
+END
+GO
+
+-- 4. Renaming FK FK_ToSIC_EAV_Dimensions_ToSIC_EAV_Dimensions1 to FK_TsDynDataDimension_TsDynDataDimension
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Dimensions_ToSIC_EAV_Dimensions1' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataDimension]'))
+BEGIN
+    PRINT '... Renaming FK FK_ToSIC_EAV_Dimensions_ToSIC_EAV_Dimensions1 to FK_TsDynDataDimension_TsDynDataDimension';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_Dimensions_ToSIC_EAV_Dimensions1]', N'FK_TsDynDataDimension_TsDynDataDimension', N'OBJECT';
+END
+GO
+
+-- 5. Renaming FK FK_ToSIC_EAV_Dimensions_TsDynDataZone to FK_TsDynDataDimension_TsDynDataZone
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Dimensions_TsDynDataZone' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataDimension]'))
+BEGIN
+    PRINT '... Renaming FK FK_ToSIC_EAV_Dimensions_TsDynDataZone to FK_TsDynDataDimension_TsDynDataZone';
+    EXEC sp_rename N'[dbo].[FK_ToSIC_EAV_Dimensions_TsDynDataZone]', N'FK_TsDynDataDimension_TsDynDataZone', N'OBJECT';
+END
+GO
+
+-- 6. Renaming Default Constraint DF_ToSIC_EAV_Dimensions_Active to DF_TsDynDataDimension_Active
+IF EXISTS (SELECT * FROM sys.default_constraints WHERE name = 'DF_ToSIC_EAV_Dimensions_Active' AND parent_object_id = OBJECT_ID('[dbo].[TsDynDataDimension]'))
+BEGIN
+    PRINT '... Renaming Default Constraint DF_ToSIC_EAV_Dimensions_Active to DF_TsDynDataDimension_Active';
+    EXEC sp_rename N'[dbo].[DF_ToSIC_EAV_Dimensions_Active]', N'DF_TsDynDataDimension_Active', N'OBJECT';
+END
+GO
+
+-- 7. Renaming Index IX_ToSIC_EAV_Dimensions_ZoneId to IX_TsDynDataDimension_ZoneId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_ToSIC_EAV_Dimensions_ZoneId' AND object_id = OBJECT_ID('[dbo].[TsDynDataDimension]'))
+BEGIN
+    PRINT '... Renaming Index IX_ToSIC_EAV_Dimensions_ZoneId to IX_TsDynDataDimension_ZoneId';
+    EXEC sp_rename N'[dbo].[TsDynDataDimension].[IX_ToSIC_EAV_Dimensions_ZoneId]', N'IX_TsDynDataDimension_ZoneId', N'INDEX';
+END
+GO
+
+
 
 
 
