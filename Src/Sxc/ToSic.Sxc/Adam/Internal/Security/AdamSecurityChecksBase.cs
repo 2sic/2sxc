@@ -33,9 +33,9 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices s
         AdamContext = adamContext;
 
         var firstChecker = AdamContext.Permissions.PermissionCheckers.First().Value;
-        var userMayAdminSomeFiles = firstChecker.UserMay(GrantSets.WritePublished);
-        var userMayAdminSiteFiles = firstChecker.GrantedBecause == Conditions.EnvironmentGlobal ||
-                                    firstChecker.GrantedBecause == Conditions.EnvironmentInstance;
+        var permissionInfo = firstChecker.UserMay(GrantSets.WritePublished);
+        var userMayAdminSomeFiles = permissionInfo.Allowed;
+        var userMayAdminSiteFiles = permissionInfo.Condition is Conditions.EnvironmentGlobal or Conditions.EnvironmentInstance;
 
         UserIsRestricted = !(usePortalRoot
             ? userMayAdminSiteFiles
@@ -142,7 +142,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices s
         var fieldPermissions = Services.AppPermissionChecks.New()
             .ForAttribute(AdamContext.Permissions.Context, AdamContext.Context.AppReader, AdamContext.Attribute);
 
-        return fieldPermissions.UserMay(requiredGrant);
+        return fieldPermissions.UserMay(requiredGrant).Allowed;
     }
 
     internal bool SuperUserOrAccessingItemFolder(string path, out HttpExceptionAbstraction preparedException)

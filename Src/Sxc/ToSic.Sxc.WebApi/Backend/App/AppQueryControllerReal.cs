@@ -105,7 +105,7 @@ public class AppQueryControllerReal(
         l.A($"Check permission on query {query.Definition.Id}");
         var permissionChecker = appPermissionCheck.New()
             .ForItem(context, app, query.Definition.Entity);
-        var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething);
+        var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething).Allowed;
 
         var isAdmin = context.User.IsContentAdmin;
 

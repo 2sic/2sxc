@@ -48,7 +48,7 @@ public class EngineCheckTemplate(LazySvc<AppPermissionCheck> appPermCheckLazy)
         if (appContext.User.IsSiteAdmin || !templatePermissions.HasPermissions)
             return;
 
-        if (!templatePermissions.UserMay(GrantSets.ReadSomething))
+        if (!templatePermissions.UserMay(GrantSets.ReadSomething).Allowed)
             // TODO: maybe create an exception which inherits from UnauthorizedAccess - in case this improves behavior / HTTP response
             throw new RenderingException(ErrorHelpNotAuthorized, new UnauthorizedAccessException(
                 $"{ErrorHelpNotAuthorized.UiMessage} See {ErrorHelpNotAuthorized.LinkCode}"));
