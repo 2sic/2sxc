@@ -1,81 +1,48 @@
 ﻿-- Remove Tables
+-- DROP TABLE IF EXISTS [dbo].[ToSIC_SexyContent_ContentGroupItems]
+-- GO
 
-DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_EntityRelationships]
+-- DROP TABLE IF EXISTS [dbo].[ToSIC_SexyContent_Templates]
+-- GO
+
+-- DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_Attachments]
+-- GO
+
+DROP TABLE IF EXISTS [dbo].[TsDynDataRelationship]
 GO
 
-DROP TABLE IF EXISTS [dbo].[ToSIC_SexyContent_ContentGroupItems]
+DROP TABLE IF EXISTS [dbo].[TsDynDataValueDimension]
 GO
 
-DROP TABLE IF EXISTS [dbo].[ToSIC_SexyContent_Templates]
+DROP TABLE IF EXISTS [dbo].[TsDynDataDimension]
 GO
 
-DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_ValuesDimensions]
+DROP TABLE IF EXISTS [dbo].[TsDynDataValue]
 GO
 
-DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_Dimensions]
+DROP TABLE IF EXISTS [dbo].[TsDynDataEntity]
 GO
 
-DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_Values]
+DROP TABLE IF EXISTS [dbo].[TsDynDataHistory]
 GO
 
-DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_Entities]
+DROP TABLE IF EXISTS [dbo].[TsDynDataAttribute]
 GO
 
-DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_DataTimeline]
+DROP TABLE IF EXISTS [dbo].[TsDynDataAttributeType]
 GO
 
-DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_AttributesInSets]
+DROP TABLE IF EXISTS [dbo].[TsDynDataContentType]
 GO
 
-DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_Attributes]
+DROP TABLE IF EXISTS [dbo].[TsDynDataTargetType]
 GO
 
-DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_AttributeTypes]
+DROP TABLE IF EXISTS [dbo].[TsDynDataApp]
 GO
 
-DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_AttributeGroups]
+DROP TABLE IF EXISTS [dbo].[TsDynDataZone]
 GO
 
-DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_AttributeSets]
+DROP TABLE IF EXISTS [dbo].[TsDynDataTransaction]
 GO
-
-DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_Attachments]
-GO
-
-DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_AssignmentObjectTypes]
-GO
-
-DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_Apps]
-GO
-
-DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_Zones]
-GO
-
-DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_ChangeLog]
-GO
-
-DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_ContextInfo]
-GO
-
--- Remove Stored Procedures
-
-DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_DeleteApp]
-GO
-
-DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_ChangeLogAdd]
-GO
-
-DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_ChangeLogSet]
-GO
-
---DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_LogToTimeline]
---GO
-
-DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_ChangeLogGet]
-GO
-
-
--- Remove PortalSettings
-
-DELETE FROM PortalSettings
-WHERE (SettingName = N'ToSIC_SexyContent_ZoneID')
