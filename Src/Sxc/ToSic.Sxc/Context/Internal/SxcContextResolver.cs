@@ -47,7 +47,7 @@ internal partial class SxcContextResolver(
 
         // Check if an all-apps cookie is set
         return CookieExpectsLive("*") 
-            ? new(perms.IsSiteAdmin, perms.IsContentAdmin, perms.IsContentEditor, showDrafts: false) :
+            ? new(perms.IsSiteAdmin, perms.IsContentAdmin, perms.IsContentEditor, ShowDraftData: false) :
             perms;
 
         // Check if a cookie is set to this specific app
