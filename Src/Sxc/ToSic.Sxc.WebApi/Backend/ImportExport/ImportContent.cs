@@ -51,7 +51,7 @@ public class ImportContent(
             try
             {
                 zipImport.Init(zoneId, appId, userLazy.Value.IsSystemAdmin);
-                var temporaryDirectory = Path.Combine(globalConfiguration.TemporaryFolder, Mapper.GuidCompress(Guid.NewGuid()).Substring(0, 8));
+                var temporaryDirectory = Path.Combine(globalConfiguration.TemporaryFolder(), Guid.NewGuid().GuidCompress().Substring(0, 8));
 
                 result.Success = zipImport.ImportZip(stream, temporaryDirectory);
                 result.Messages.AddRange(zipImport.Messages);

@@ -101,14 +101,15 @@ public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, 
     protected (string SymbolsPath, string AssemblyPath) GetAssemblyLocations(HotBuildSpecWithSharedSuffix spec, string sourceRootPath)
     {
         var l = Log.Fn<(string, string)>($"{spec}");
-        l.A($"TempAssemblyFolderPath: '{globalConfiguration.TempAssemblyFolder}'");
+        var tempAssemblyFolder = globalConfiguration.TempAssemblyFolder();
+        l.A($"TempAssemblyFolderPath: '{tempAssemblyFolder}'");
 
         // need name 
         var assemblyName = GetAppCodeDllName(sourceRootPath, spec);
         l.A($"AssemblyName: '{assemblyName}'");
-        var assemblyFilePath = Path.Combine(globalConfiguration.TempAssemblyFolder, $"{assemblyName}.dll");
+        var assemblyFilePath = Path.Combine(tempAssemblyFolder, $"{assemblyName}.dll");
         l.A($"AssemblyFilePath: '{assemblyFilePath}'");
-        var symbolsFilePath = Path.Combine(globalConfiguration.TempAssemblyFolder, $"{assemblyName}.pdb");
+        var symbolsFilePath = Path.Combine(tempAssemblyFolder, $"{assemblyName}.pdb");
         l.A($"SymbolsFilePath: '{symbolsFilePath}'");
         var assemblyLocations = (symbolsFilePath, assemblyFilePath);
         return l.ReturnAsOk(assemblyLocations);
@@ -117,12 +118,13 @@ public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, 
     protected internal string GetDependencyAssemblyLocations(string dependency, HotBuildSpecWithSharedSuffix spec)
     {
         var l = Log.Fn<string>($"{spec}");
-        l.A($"TempAssemblyFolderPath: '{globalConfiguration.TempAssemblyFolder}'");
+        var tempAssemblyFolder = globalConfiguration.TempAssemblyFolder();
+        l.A($"TempAssemblyFolderPath: '{tempAssemblyFolder}'");
 
         // need random name, because assemblies has to be preserved on disk, and we can not replace them until AppDomain is unloaded 
-        var assemblyName = GetDependencyDllName(globalConfiguration.TempAssemblyFolder, spec, dependency);
+        var assemblyName = GetDependencyDllName(tempAssemblyFolder, spec, dependency);
         l.A($"AssemblyName: '{assemblyName}'");
-        var assemblyFilePath = Path.Combine(globalConfiguration.TempAssemblyFolder, $"{assemblyName}.dll");
+        var assemblyFilePath = Path.Combine(tempAssemblyFolder, $"{assemblyName}.dll");
         l.A($"AssemblyFilePath: '{assemblyFilePath}'");
 
         return l.ReturnAsOk(assemblyFilePath);

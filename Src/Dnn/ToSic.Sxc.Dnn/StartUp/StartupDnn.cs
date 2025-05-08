@@ -56,11 +56,11 @@ public class StartupDnn : IServiceRouteMapper
         transientSp.Build<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
         var globalConfig = transientSp.Build<IGlobalConfiguration>();
 
-        globalConfig.GlobalFolder = HostingEnvironment.MapPath(DnnConstants.SysFolderRootVirtual);
-        globalConfig.AssetsVirtualUrl = DnnConstants.SysFolderRootVirtual + "assets/";
-        globalConfig.SharedAppsFolder = "~/Portals/_default/" + AppConstants.AppsRootFolder + "/";
-        globalConfig.TempAssemblyFolder = HostingEnvironment.MapPath($"~/{Eav.Constants.AppDataProtectedFolder}/{Eav.Constants.TempAssemblyFolder}/"); // ".../App_Data/2sxc.bin"
-        globalConfig.CryptoFolder = HostingEnvironment.MapPath($"~/{Eav.Constants.AppDataProtectedFolder}/{Eav.Constants.CryptoFolder}/");
+        globalConfig.GlobalFolder(HostingEnvironment.MapPath(DnnConstants.SysFolderRootVirtual));
+        globalConfig.AssetsVirtualUrl(DnnConstants.SysFolderRootVirtual + "assets/");
+        globalConfig.SharedAppsFolder("~/Portals/_default/" + AppConstants.AppsRootFolder + "/");
+        globalConfig.TempAssemblyFolder(HostingEnvironment.MapPath($"~/{Eav.Constants.AppDataProtectedFolder}/{Eav.Constants.TempAssemblyFolder}/")); // ".../App_Data/2sxc.bin"
+        globalConfig.CryptoFolder(HostingEnvironment.MapPath($"~/{Eav.Constants.AppDataProtectedFolder}/{Eav.Constants.CryptoFolder}/"));
 
         var sxcSysLoader = transientSp.Build<SystemLoader>();
         sxcSysLoader.StartUp();

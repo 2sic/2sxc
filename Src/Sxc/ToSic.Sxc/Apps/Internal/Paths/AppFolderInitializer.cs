@@ -20,7 +20,7 @@ public class AppFolderInitializer(IServerPaths serverPaths, IGlobalConfiguration
     {
         var l = Log.Fn($"{isShared}");
         var portalPath = isShared
-            ? serverPaths.FullAppPath(globalConfiguration.SharedAppsFolder)
+            ? serverPaths.FullAppPath(globalConfiguration.SharedAppsFolder())
             : site.AppsRootPhysicalFull ?? "";
 
         var sxcFolder = new DirectoryInfo(portalPath);
@@ -32,7 +32,7 @@ public class AppFolderInitializer(IServerPaths serverPaths, IGlobalConfiguration
         // Note that DNN needs it because many razor file don't use @inherits and the web.config contains the default class
         // but in Oqtane we'll require that to work
         var webConfigTemplateFilePath =
-            Path.Combine(globalConfiguration.GlobalFolder, SpecialFiles.WebConfigTemplateFile);
+            Path.Combine(globalConfiguration.GlobalFolder(), SpecialFiles.WebConfigTemplateFile);
         if (File.Exists(webConfigTemplateFilePath) && !sxcFolder.GetFiles(SpecialFiles.WebConfigFileName).Any())
             File.Copy(webConfigTemplateFilePath, Path.Combine(sxcFolder.FullName, SpecialFiles.WebConfigFileName));
 
@@ -51,7 +51,7 @@ public class AppFolderInitializer(IServerPaths serverPaths, IGlobalConfiguration
         appDataProtectedFolder.Create();
 
         var appJsonTemplateFilePath =
-            Path.Combine(globalConfiguration.AppDataTemplateFolder, Eav.Constants.AppJson);
+            Path.Combine(globalConfiguration.AppDataTemplateFolder(), Eav.Constants.AppJson);
         if (File.Exists(appJsonTemplateFilePath) && !appDataProtectedFolder.GetFiles(Eav.Constants.AppJson).Any())
             File.Copy(appJsonTemplateFilePath,
                 Path.Combine(appDataProtectedFolder.FullName, Eav.Constants.AppJson));

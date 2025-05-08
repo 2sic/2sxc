@@ -84,7 +84,8 @@ public class AppControllerReal(
     {
         var l = Log.Fn<string>($"{nameof(templateId)}:{templateId}");
 
-        var templatesJsonPath = Path.Combine(globalConfiguration.NewAppsTemplateFolder, TemplatesJson);
+        var newAppTemplateFolder = globalConfiguration.NewAppsTemplateFolder();
+        var templatesJsonPath = Path.Combine(newAppTemplateFolder, TemplatesJson);
 
         if (!File.Exists(templatesJsonPath))
             throw l.Ex(new FileNotFoundException($"{TemplatesJson} file not found"));
@@ -94,7 +95,7 @@ public class AppControllerReal(
         var template = templates.FirstOrDefault(t => t.Id == templateId) 
             ?? throw l.Ex(new Exception($"Template with id {templateId} not found in {TemplatesJson}"));
 
-        var zipPath = Path.Combine(globalConfiguration.NewAppsTemplateFolder, template.Zip);
+        var zipPath = Path.Combine(newAppTemplateFolder, template.Zip);
         if (!File.Exists(zipPath))
             throw l.Ex(new FileNotFoundException($"Template {Path.GetFileName(zipPath)} not found"));
 

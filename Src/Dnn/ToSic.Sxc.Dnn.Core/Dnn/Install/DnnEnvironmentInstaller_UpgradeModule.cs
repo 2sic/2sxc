@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
 using ToSic.Eav;
+using ToSic.Eav.Internal.Configuration;
 using Exception = System.Exception;
 
 namespace ToSic.Sxc.Dnn.Install;
@@ -73,14 +74,17 @@ partial class DnnEnvironmentInstaller
                         _appJsonService.Value.MoveAppJsonTemplateFromOldToNewLocation();
 
                         // migrate old .data-custom folder
-                        var oldDataCustomFolder = Path.Combine(Path.Combine(_globalConfiguration.Value.GlobalFolder, ".data-custom"));
-                        if (Directory.Exists(oldDataCustomFolder) && !Directory.Exists(_globalConfiguration.Value.DataCustomFolder))
-                            Directory.Move(oldDataCustomFolder, _globalConfiguration.Value.DataCustomFolder);
+                        var globalFolder = _globalConfiguration.Value.GlobalFolder();
+                        var oldDataCustomFolder = Path.Combine(Path.Combine(globalFolder, ".data-custom"));
+                        var dataCustomFolder = _globalConfiguration.Value.DataCustomFolder();
+                        if (Directory.Exists(oldDataCustomFolder) && !Directory.Exists(dataCustomFolder))
+                            Directory.Move(oldDataCustomFolder, dataCustomFolder);
 
                         // migrate old .databeta folder
-                        var oldDataBetaFolder = Path.Combine(Path.Combine(_globalConfiguration.Value.GlobalFolder, ".databeta"));
-                        if (Directory.Exists(oldDataBetaFolder) && !Directory.Exists(_globalConfiguration.Value.DataBetaFolder))
-                            Directory.Move(oldDataBetaFolder, _globalConfiguration.Value.DataBetaFolder);
+                        var oldDataBetaFolder = Path.Combine(Path.Combine(globalFolder, ".databeta"));
+                        var dataBetaFolder = _globalConfiguration.Value.DataBetaFolder();
+                        if (Directory.Exists(oldDataBetaFolder) && !Directory.Exists(dataBetaFolder))
+                            Directory.Move(oldDataBetaFolder, dataBetaFolder);
                     }
                     catch
                     {

@@ -21,11 +21,11 @@ public class Util(IGlobalConfiguration globalConfiguration)
         lock (CleaningLock)
         {
             if (Cleaned) return;
-
-            if (Directory.Exists(globalConfiguration.TempAssemblyFolder))
+            var tempAssemblyFolder = globalConfiguration.TempAssemblyFolder();
+            if (Directory.Exists(tempAssemblyFolder))
             {
                 // *** Step 1. delete all files without Hash
-                var filesWithoutHashToDelete = Directory.GetFiles(globalConfiguration.TempAssemblyFolder, "*.*", SearchOption.TopDirectoryOnly)
+                var filesWithoutHashToDelete = Directory.GetFiles(tempAssemblyFolder, "*.*", SearchOption.TopDirectoryOnly)
                     .Where(file => GetFilePrefix(file) == null);
 
                 foreach(var file in filesWithoutHashToDelete)
@@ -45,7 +45,7 @@ public class Util(IGlobalConfiguration globalConfiguration)
                 var currentDateTime = DateTime.Now;
 
                 // Group files by their prefix (excluding the hash part if valid)
-                var groupedFiles = Directory.GetFiles(globalConfiguration.TempAssemblyFolder, "*" + Dll, SearchOption.TopDirectoryOnly)
+                var groupedFiles = Directory.GetFiles(tempAssemblyFolder, "*" + Dll, SearchOption.TopDirectoryOnly)
                     .Select(f => new FileInfo(f))
                     .GroupBy(fileInfo => GetFilePrefix(fileInfo.Name));
 
@@ -75,7 +75,7 @@ public class Util(IGlobalConfiguration globalConfiguration)
             else
             {
                 // Ensure "2sxc.bin" folder exists to preserve dlls
-                Directory.CreateDirectory(globalConfiguration.TempAssemblyFolder);
+                Directory.CreateDirectory(tempAssemblyFolder);
             }
 
             Cleaned = true;
