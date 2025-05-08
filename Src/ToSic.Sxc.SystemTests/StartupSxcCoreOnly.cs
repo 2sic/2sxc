@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ToSic.Eav.Data.Startup;
 using ToSic.Eav.StartUp;
 using ToSic.Lib.Internal.FeatSys;
 using ToSic.Sxc.Startup;
@@ -29,6 +30,7 @@ public class StartupSxcCoreOnly
             // 2sxc core
             .AddSxcCore()
             .AddLibCore()
+            .AddEavDataPersistence()
             .AddEavCore()
             .AddEavCoreFallbackServices()
             .AddLibFeatSys();

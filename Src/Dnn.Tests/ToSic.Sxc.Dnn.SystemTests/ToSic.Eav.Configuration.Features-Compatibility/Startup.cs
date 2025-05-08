@@ -42,6 +42,7 @@ public class Startup
             // DataSources
             .AddDataSources()
             // EAV Core
+            //.AddEavDataPersistence()
             .AddEavCore()
             .AddEavCoreFallbackServices()
             // Library
