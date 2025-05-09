@@ -7,11 +7,11 @@ public class HasKeysTests
 {
     [Fact]
     public void IsFilledNull() 
-        => Equal(false, HasKeysHelper.IsNotEmpty(null, blankIsEmpty: null));
+        => False(HasKeysHelper.IsNotEmpty(null, blankIsEmpty: null));
 
     [Fact]
     public void IsEmptyNull() 
-        => Equal(true, HasKeysHelper.IsEmpty(null, blankIsEmpty: null));
+        => True(HasKeysHelper.IsEmpty(null, blankIsEmpty: null));
 
     public static IEnumerable<object[]> BlankStrings =>
     [
@@ -28,33 +28,33 @@ public class HasKeysTests
 
     [Theory]
     [MemberData(nameof(BlankStrings))]
-    public void IsFilled_StringsBlank_BlankIsDefault(string value, string testName = default) 
-        => Equal(false, HasKeysHelper.IsNotEmpty(value, blankIsEmpty: null));//, testName ?? value + " blankIs: null");
+    public void IsFilled_StringsBlank_BlankIsDefault(string value, string? testName = default) 
+        => False(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: null));//, testName ?? value + " blankIs: null");
 
     [Theory]
     [MemberData(nameof(BlankStrings))]
-    public void IsFilled_StringsBlank_BlankFalse(string value, string testName = default) 
-        => Equal(false, HasKeysHelper.IsNotEmpty(value, blankIsEmpty: false));//, testName ?? value + " blankIs: false");
+    public void IsFilled_StringsBlank_BlankFalse(string value, string? testName = default) 
+        => False(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: false));//, testName ?? value + " blankIs: false");
 
     [Theory]
     [MemberData(nameof(BlankStrings))]
-    public void IsFilled_StringsBlank_BlankTrue(string value, string testName = default) 
-        => Equal(true, HasKeysHelper.IsNotEmpty(value, blankIsEmpty: true));//, testName ?? value + " blankIs: true");
+    public void IsFilled_StringsBlank_BlankTrue(string value, string? testName = default) 
+        => True(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: true));//, testName ?? value + " blankIs: true");
         
     [Theory]
     [MemberData(nameof(BlankStrings))]
-    public void IsEmpty_StringsBlank_BlankIsDefault(string value, string testName = default) 
-        => Equal(true, HasKeysHelper.IsEmpty(value, blankIsEmpty: null));//, testName ?? value + " blankIs: null");
+    public void IsEmpty_StringsBlank_BlankIsDefault(string value, string? testName = default) 
+        => True(HasKeysHelper.IsEmpty(value, blankIsEmpty: null));//, testName ?? value + " blankIs: null");
 
     [Theory]
     [MemberData(nameof(BlankStrings))]
-    public void IsEmpty_StringsBlank_BlankFalse(string value, string testName = default) 
-        => Equal(false, HasKeysHelper.IsEmpty(value, blankIsEmpty: false));//, testName ?? value + " blankIs: null");
+    public void IsEmpty_StringsBlank_BlankFalse(string value, string? testName = default) 
+        => False(HasKeysHelper.IsEmpty(value, blankIsEmpty: false));//, testName ?? value + " blankIs: null");
 
     [Theory]
     [MemberData(nameof(BlankStrings))]
-    public void IsEmpty_StringsBlank_BlankTrue(string value, string testName = default) 
-        => Equal(true, HasKeysHelper.IsEmpty(value, blankIsEmpty: true));//, testName ?? value + " blankIs: null");
+    public void IsEmpty_StringsBlank_BlankTrue(string value, string? testName = default) 
+        => True(HasKeysHelper.IsEmpty(value, blankIsEmpty: true));//, testName ?? value + " blankIs: null");
 
 
     public static IEnumerable<object[]> SimpleData =>
@@ -71,17 +71,17 @@ public class HasKeysTests
     [Theory]
     [MemberData(nameof(SimpleData))]
     public void IsFilled_SimpleData_BlankIsDefault(object value, string testName = default) 
-        => Equal(true, HasKeysHelper.IsNotEmpty(value, blankIsEmpty: null));//, testName ?? value + " blankIs: null");
+        => True(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: null));//, testName ?? value + " blankIs: null");
 
     [Theory]
     [MemberData(nameof(SimpleData))]
     public void IsFilled_SimpleData_BlankFalse(object value, string testName = default) 
-        => Equal(true, HasKeysHelper.IsNotEmpty(value, blankIsEmpty: false));//, testName ?? value + " blankIs: false");
+        => True(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: false));//, testName ?? value + " blankIs: false");
 
     [Theory]
     [MemberData(nameof(SimpleData))]
     public void IsFilled_SimpleData_BlankTrue(object value, string testName = default) 
-        => Equal(true, HasKeysHelper.IsNotEmpty(value, blankIsEmpty: true));//, testName ?? value + " blankIs: true");
+        => True(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: true));//, testName ?? value + " blankIs: true");
         
 
     [Fact]
@@ -89,9 +89,9 @@ public class HasKeysTests
     {
         var value = new object();
         var testName = "object";
-        Equal(true, HasKeysHelper.IsNotEmpty(value, blankIsEmpty: null));//, testName ?? value + " blankIs: null");
-        Equal(true, HasKeysHelper.IsNotEmpty(value, blankIsEmpty: false));//, testName ?? value + " blankIs: false");
-        Equal(true, HasKeysHelper.IsNotEmpty(value, blankIsEmpty: true));//, testName ?? value + " blankIs: true");
+        True(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: null));//, testName ?? value + " blankIs: null");
+        True(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: false));//, testName ?? value + " blankIs: false");
+        True(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: true));//, testName ?? value + " blankIs: true");
     }
 
     [Fact]
@@ -99,9 +99,9 @@ public class HasKeysTests
     {
         var value = new List<string>();
         var testName = "object";
-        Equal(false, HasKeysHelper.IsNotEmpty(value, blankIsEmpty: null));//, testName ?? value + " blankIs: null");
-        Equal(false, HasKeysHelper.IsNotEmpty(value, blankIsEmpty: false));//, testName ?? value + " blankIs: false");
-        Equal(false, HasKeysHelper.IsNotEmpty(value, blankIsEmpty: true));//, testName ?? value + " blankIs: true");
+        False(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: null));//, testName ?? value + " blankIs: null");
+        False(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: false));//, testName ?? value + " blankIs: false");
+        False(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: true));//, testName ?? value + " blankIs: true");
     }
 
     [Fact]
@@ -109,8 +109,8 @@ public class HasKeysTests
     {
         var value = new List<string> { "hello" };
         var testName = "object";
-        Equal(true, HasKeysHelper.IsNotEmpty(value, blankIsEmpty: null));//, testName ?? value + " blankIs: null");
-        Equal(true, HasKeysHelper.IsNotEmpty(value, blankIsEmpty: false));//, testName ?? value + " blankIs: false");
-        Equal(true, HasKeysHelper.IsNotEmpty(value, blankIsEmpty: true));//, testName ?? value + " blankIs: true");
+        True(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: null));//, testName ?? value + " blankIs: null");
+        True(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: false));//, testName ?? value + " blankIs: false");
+        True(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: true));//, testName ?? value + " blankIs: true");
     }
 }

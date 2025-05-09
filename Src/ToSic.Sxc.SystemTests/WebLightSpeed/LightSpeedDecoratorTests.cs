@@ -16,7 +16,7 @@ public class LightSpeedDecoratorTests(DataBuilder dataBuilder)//: TestBaseEavCor
     {
         var lsDecorator = new LightSpeedDecorator(null);
         TestEmptyDecorator(lsDecorator);
-        Equal(true, lsDecorator.UrlParametersOthersDisableCache);
+        True(lsDecorator.UrlParametersOthersDisableCache);
     }
 
     [Fact]
@@ -29,20 +29,20 @@ public class LightSpeedDecoratorTests(DataBuilder dataBuilder)//: TestBaseEavCor
 
     private static void TestEmptyDecorator(LightSpeedDecorator lsDecorator)
     {
-        Equal(false, lsDecorator.IsEnabled);
+        False(lsDecorator.IsEnabled);
         Equal("", lsDecorator.UrlParameterNames);
-        Equal(false, lsDecorator.ByUrlParameters);
-        Equal(false, lsDecorator.UrlParametersCaseSensitive);
-        Equal(true, lsDecorator.UrlParametersOthersDisableCache);
+        False(lsDecorator.ByUrlParameters);
+        False(lsDecorator.UrlParametersCaseSensitive);
+        True(lsDecorator.UrlParametersOthersDisableCache);
     }
 
     [Fact]
     public void DecoratorWithByUrlParameter()
-        => Equal(true, _testData.Decorator(byUrlParameters: true).ByUrlParameters);
+        => True(_testData.Decorator(byUrlParameters: true).ByUrlParameters);
 
     [Fact]
     public void DecoratorWithCaseSensitive()
-        => Equal(true, _testData.Decorator(caseSensitive: true).UrlParametersCaseSensitive);
+        => True(_testData.Decorator(caseSensitive: true).UrlParametersCaseSensitive);
 
     [Fact]
     public void DecoratorWithNames()
@@ -50,6 +50,6 @@ public class LightSpeedDecoratorTests(DataBuilder dataBuilder)//: TestBaseEavCor
 
     [Fact]
     public void DecoratorWithDisableCache()
-        => Equal(false, _testData.Decorator(othersDisableCache: false).UrlParametersOthersDisableCache);
+        => False(_testData.Decorator(othersDisableCache: false).UrlParametersOthersDisableCache);
 
 }

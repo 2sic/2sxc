@@ -24,7 +24,7 @@ internal class ResizeRecipesData
     {
         { "class", "img-fluid" },
         { "test", "value" },
-        { "toReset", null } // null will reset the originally set attribute by the parent
+        { "toReset", null! } // null will reset the originally set attribute by the parent
     };
 
     public static AdvancedSettings TestRecipeSet() =>
@@ -45,7 +45,7 @@ internal class ResizeRecipesData
     // ReSharper disable once FieldCanBeMadeReadOnly.Local
     private static object JsonAttributes75MixIn = new { loading = "lazy", toReset = "parent" };
     // ReSharper disable once FieldCanBeMadeReadOnly.Local
-    private static object JsonAttributes75 = new { @class = "img-fluid", test = "value", toReset = (string)null };
+    private static object JsonAttributes75 = new { @class = "img-fluid", test = "value", toReset = (string?)null };
 
     private static string JsonRecipe()
     {

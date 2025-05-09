@@ -68,7 +68,7 @@ public class LightSpeedUrlParamsTest(DataBuilder dataBuilder)//: TestBaseEavCore
     {
         var lsDecorator = _testData.Decorator(isEnabled: true, byUrlParameters: true, names: names, othersDisableCache: true);
         var result = GetUrlParamsTac(lsDecorator, urlParameters);
-        Equal(true, result.CachingAllowed);//, message);
+        True(result.CachingAllowed);//, message);
         Equal(expValue, result.Extension);
     }
 
@@ -100,7 +100,7 @@ public class LightSpeedUrlParamsTest(DataBuilder dataBuilder)//: TestBaseEavCore
     {
         var lsDecorator = _testData.Decorator(isEnabled: true, byUrlParameters: true, names: names, othersDisableCache: true);
         var result = GetUrlParamsTac(lsDecorator, urlParameters);
-        Equal(true, result.CachingAllowed);//, message);
+        True(result.CachingAllowed);//, message);
         Equal(expValue, result.Extension);
     }
 

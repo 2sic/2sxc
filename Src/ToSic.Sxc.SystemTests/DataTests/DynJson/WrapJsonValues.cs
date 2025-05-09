@@ -6,12 +6,12 @@ namespace ToSic.Sxc.DataTests.DynJson;
 public class WrapJsonValues(DynAndTypedTestHelper helper)
 {
     private dynamic BoolDataDynLoose => _dynBool ??= helper.Obj2Json2Dyn(WrapAllKeys.TestDataAnonObject);
-    private static object _dynBool;
+    private static object? _dynBool;
 
     private ITyped BoolTestDataStrict => _boolTestDataStrict ??= helper.Obj2Json2TypedStrict(WrapAllKeys.TestDataAnonObject);
-    private static ITyped _boolTestDataStrict;
+    private static ITyped? _boolTestDataStrict;
     private ITyped BoolTestDataLoose => _boolTestDataLoose ??= helper.Obj2Json2TypedLoose(WrapAllKeys.TestDataAnonObject);
-    private static ITyped _boolTestDataLoose;
+    private static ITyped? _boolTestDataLoose;
 
     [Fact]
     public void JsonBool_Dyn()
