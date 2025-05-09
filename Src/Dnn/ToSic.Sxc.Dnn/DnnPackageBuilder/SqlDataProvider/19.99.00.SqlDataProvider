@@ -115,7 +115,8 @@ END
 GO
 
 -- 1.4. Add foreign key constraint from ContentTypeId to AttributeSets.AttributeSetID
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Attributes_ContentTypeId_ToSIC_EAV_AttributeSets' AND Object_ID = OBJECT_ID('ToSIC_EAV_AttributeSets'))
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ToSIC_EAV_Attributes_ContentTypeId_ToSIC_EAV_AttributeSets')
+    AND OBJECT_ID('[dbo].[ToSIC_EAV_Attributes]', 'U') IS NOT NULL
     AND OBJECT_ID('[dbo].[ToSIC_EAV_AttributeSets]', 'U') IS NOT NULL
 BEGIN
     PRINT '... 1.4. Adding foreign key FK_ToSIC_EAV_Attributes_ContentTypeId_ToSIC_EAV_AttributeSets';
@@ -134,7 +135,6 @@ GO
 IF OBJECT_ID('[dbo].[ToSIC_EAV_ChangeLogSet]', 'P') IS NOT NULL
 BEGIN
     PRINT '... 2.1. Removing obsolete Stored Procedures';
-    DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_ChangeLogSet];
     DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_ChangeLogSet];
     DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_ChangeLogGet];
     DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_ChangeLogAdd];
@@ -1369,6 +1369,7 @@ GO
 
 -- 7.31. Rename index IX_ToSIC_EAV_Apps_ZoneId to IX_TsDynDataApp_ZoneId if exists
 IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_ToSIC_EAV_Apps_ZoneId' AND object_id = OBJECT_ID('[dbo].[TsDynDataApp]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataApp_ZoneId' AND object_id = OBJECT_ID('[dbo].[TsDynDataApp]'))
     AND OBJECT_ID('[dbo].[TsDynDataApp]', 'U') IS NOT NULL
 BEGIN
     PRINT '... 7.31. Renaming index IX_ToSIC_EAV_Apps_ZoneId to IX_TsDynDataApp_ZoneId';
