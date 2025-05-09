@@ -13,7 +13,7 @@ public struct PropInfo(string name, bool exists, bool hasData = false, object va
     public bool HasData = hasData;
     public object Value = value;
     public string Note = note;
-    public override string ToString() => $"{Name} {Note}";
+    public override string ToString() => $"Name: '{Name}' Note: '{Note}'";
 
     //public static IEnumerable<object[]> ToTestEnum(IEnumerable<PropertyTestInfo> source)
     //    => source.Select(bk => new object[] { bk }).ToList();
