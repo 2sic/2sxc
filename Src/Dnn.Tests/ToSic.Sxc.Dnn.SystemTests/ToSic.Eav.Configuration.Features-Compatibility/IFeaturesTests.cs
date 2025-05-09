@@ -11,7 +11,7 @@ public class IFeaturesTests(IFeaturesService Features) : IClassFixture<DoFixture
     public void PasteClipboardActive()
     {
         var x = Features.Enabled(BuiltInFeatures.PasteImageFromClipboard.Guid);
-        Assert.True(x, "this should be enabled and non-expired");
+        True(x, "this should be enabled and non-expired");
     }
 
     [Fact]
@@ -19,6 +19,6 @@ public class IFeaturesTests(IFeaturesService Features) : IClassFixture<DoFixture
     {
         var inventedGuid = new Guid("12345678-1c8b-4286-a33b-3210ed3b2d9a");
         var x = Features.Enabled(inventedGuid);
-        Assert.False(x, "this should be enabled and expired");
+        False(x, "this should be enabled and expired");
     }
 }
