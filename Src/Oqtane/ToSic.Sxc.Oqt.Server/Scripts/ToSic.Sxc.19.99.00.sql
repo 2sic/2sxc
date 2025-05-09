@@ -905,7 +905,8 @@ END
 GO
 
 -- 6.4. Add new column TransactionIdCreated
-IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'TransactionIdCreated' AND Object_ID = OBJECT_ID('TsDynDataZone'))
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'TransactionIdCreated' AND Object_ID = OBJECT_ID('[dbo].[TsDynDataZone]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransCreatedId' AND Object_ID = OBJECT_ID('[dbo].[TsDynDataZone]'))
     AND OBJECT_ID('TsDynDataZone', 'U') IS NOT NULL
 BEGIN
     PRINT '... 6.4. Adding TransactionIdCreated column to TsDynDataZone';
@@ -914,7 +915,8 @@ END
 GO
 
 -- 6.5. Add new column TransactionIdModified
-IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'TransactionIdModified' AND Object_ID = OBJECT_ID('TsDynDataZone'))
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'TransactionIdModified' AND Object_ID = OBJECT_ID('[dbo].[TsDynDataZone]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransModifiedId' AND Object_ID = OBJECT_ID('[dbo].[TsDynDataZone]'))
     AND OBJECT_ID('TsDynDataZone', 'U') IS NOT NULL
 BEGIN
     PRINT '... 6.5. Adding TransactionIdModified column to TsDynDataZone';
@@ -923,7 +925,8 @@ END
 GO
 
 -- 6.6. Add new column TransactionIdDeleted
-IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'TransactionIdDeleted' AND Object_ID = OBJECT_ID('TsDynDataZone'))
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'TransactionIdDeleted' AND Object_ID = OBJECT_ID('[dbo].[TsDynDataZone]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransDeletedId' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataZone]'))
     AND OBJECT_ID('TsDynDataZone', 'U') IS NOT NULL
 BEGIN
     PRINT '... 6.6. Adding TransactionIdDeleted column to TsDynDataZone';
@@ -995,6 +998,7 @@ GO
 
 -- 6.14. Add Index IX_TsDynDataZone_TransactionIdCreated
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataZone_TransactionIdCreated' AND object_id = OBJECT_ID('[dbo].[TsDynDataZone]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataZone_TransCreatedId' AND object_id = OBJECT_ID('[dbo].[TsDynDataZone]'))
     AND OBJECT_ID('[dbo].[TsDynDataZone]', 'U') IS NOT NULL
 BEGIN
     PRINT '... 6.14. Adding index IX_TsDynDataZone_TransactionIdCreated';
@@ -1025,6 +1029,7 @@ GO
 
 -- 6.17. Add Index IX_TsDynDataZone_TransactionIdModified
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataZone_TransactionIdModified' AND object_id = OBJECT_ID('[dbo].[TsDynDataZone]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataZone_TransModifiedId' AND object_id = OBJECT_ID('[dbo].[TsDynDataZone]'))
     AND OBJECT_ID('[dbo].[TsDynDataZone]', 'U') IS NOT NULL
 BEGIN
     PRINT '... 6.17. Adding index IX_TsDynDataZone_TransactionIdModified';
@@ -1055,6 +1060,7 @@ GO
 
 -- 6.20. Add Index IX_TsDynDataZone_TransactionIdDeleted
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataZone_TransactionIdDeleted' AND object_id = OBJECT_ID('[dbo].[TsDynDataZone]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataZone_TransDeletedId' AND object_id = OBJECT_ID('[dbo].[TsDynDataZone]'))
     AND OBJECT_ID('[dbo].[TsDynDataZone]', 'U') IS NOT NULL
 BEGIN
     PRINT '... 6.20. Adding index IX_TsDynDataZone_TransactionIdDeleted';
@@ -1120,7 +1126,8 @@ END
 GO
 
 -- 7.5. Add new column TransactionIdCreated
-IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'TransactionIdCreated' AND Object_ID = OBJECT_ID('TsDynDataApp'))
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'TransactionIdCreated' AND Object_ID = OBJECT_ID('[dbo].[TsDynDataApp]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransCreatedId' AND Object_ID = OBJECT_ID('[dbo].[TsDynDataApp]'))
     AND OBJECT_ID('TsDynDataApp', 'U') IS NOT NULL
 BEGIN
     PRINT '... 7.5. Adding TransactionIdCreated column to TsDynDataApp';
@@ -1129,7 +1136,8 @@ END
 GO
 
 -- 7.6. Add new column TransactionIdModified
-IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'TransactionIdModified' AND Object_ID = OBJECT_ID('TsDynDataApp'))
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'TransactionIdModified' AND Object_ID = OBJECT_ID('[dbo].[TsDynDataApp]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransModifiedId' AND Object_ID = OBJECT_ID('[dbo].[TsDynDataApp]'))
     AND OBJECT_ID('TsDynDataApp', 'U') IS NOT NULL
 BEGIN
     PRINT '... 7.6. Adding TransactionIdModified column to TsDynDataApp';
@@ -1138,7 +1146,8 @@ END
 GO
 
 -- 7.7. Add new column TransactionIdDeleted
-IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'TransactionIdDeleted' AND Object_ID = OBJECT_ID('TsDynDataApp'))
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'TransactionIdDeleted' AND Object_ID = OBJECT_ID('[dbo].[TsDynDataApp]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransDeletedId' AND Object_ID = OBJECT_ID('[dbo].[TsDynDataApp]'))
     AND OBJECT_ID('TsDynDataApp', 'U') IS NOT NULL
 BEGIN
     PRINT '... 7.7. Adding TransactionIdDeleted column to TsDynDataApp';
@@ -1279,6 +1288,7 @@ GO
 
 -- 7.22. Add Index IX_TsDynDataApp_TransactionIdCreated
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataApp_TransactionIdCreated' AND object_id = OBJECT_ID('[dbo].[TsDynDataApp]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataApp_TransCreatedId' AND object_id = OBJECT_ID('[dbo].[TsDynDataApp]'))
     AND OBJECT_ID('[dbo].[TsDynDataApp]', 'U') IS NOT NULL
 BEGIN
     PRINT '... 7.22. Adding index IX_TsDynDataApp_TransactionIdCreated';
@@ -1309,6 +1319,7 @@ GO
 
 -- 7.25. Add Index IX_TsDynDataApp_TransactionIdModified
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataApp_TransactionIdModified' AND object_id = OBJECT_ID('[dbo].[TsDynDataApp]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataApp_TransModifiedId' AND object_id = OBJECT_ID('[dbo].[TsDynDataApp]'))
     AND OBJECT_ID('[dbo].[TsDynDataApp]', 'U') IS NOT NULL
 BEGIN
     PRINT '... 7.25. Adding index IX_TsDynDataApp_TransactionIdModified';
@@ -1339,6 +1350,7 @@ GO
 
 -- 7.28. Add Index IX_TsDynDataApp_TransactionIdDeleted
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataApp_TransactionIdDeleted' AND object_id = OBJECT_ID('[dbo].[TsDynDataApp]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataApp_TransDeletedId' AND object_id = OBJECT_ID('[dbo].[TsDynDataApp]'))
     AND OBJECT_ID('[dbo].[TsDynDataApp]', 'U') IS NOT NULL
 BEGIN
     PRINT '... 7.28. Adding index IX_TsDynDataApp_TransactionIdDeleted';
@@ -1423,7 +1435,8 @@ END
 GO
 
 -- 8.6. Add column TransactionIdModified
-IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'TransactionIdModified' AND Object_ID = OBJECT_ID('TsDynDataContentType'))
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'TransactionIdModified' AND Object_ID = OBJECT_ID('[dbo].[TsDynDataContentType]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransModifiedId' AND Object_ID = OBJECT_ID('[dbo].[TsDynDataContentType]'))
     AND OBJECT_ID('TsDynDataContentType', 'U') IS NOT NULL
 BEGIN
     PRINT '... 8.6. Adding TransactionIdModified column to TsDynDataContentType';
@@ -1519,6 +1532,7 @@ GO
 
 -- 8.17. Add Index IX_TsDynDataContentType_TransactionIdModified
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataContentType_TransactionIdModified' AND object_id = OBJECT_ID('[dbo].[TsDynDataContentType]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataContentType_TransModifiedId' AND object_id = OBJECT_ID('[dbo].[TsDynDataContentType]'))
     AND OBJECT_ID('[dbo].[TsDynDataContentType]', 'U') IS NOT NULL
 BEGIN
     PRINT '... 8.17. Adding index IX_TsDynDataContentType_TransactionIdModified';
@@ -1628,6 +1642,7 @@ GO
 
 -- 9.4. Add new column TransactionIdModified to TsDynDataAttribute
 IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdModified' AND Object_ID = Object_ID(N'[dbo].[TsDynDataAttribute]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransModifiedId' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataAttribute]'))
 BEGIN
     PRINT '... 9.4. Adding column TransactionIdModified to TsDynDataAttribute';
     ALTER TABLE [dbo].[TsDynDataAttribute] ADD [TransactionIdModified] INT NULL;
@@ -1702,6 +1717,7 @@ GO
 
 -- 9.12b. Add new Index for TransactionIdModified on TsDynDataAttribute
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataAttribute_TransactionIdModified' AND object_id = OBJECT_ID('[dbo].[TsDynDataAttribute]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataAttribute_TransModifiedId' AND object_id = OBJECT_ID('[dbo].[TsDynDataAttribute]'))
 BEGIN
     PRINT '... 9.12b. Adding index IX_TsDynDataAttribute_TransactionIdModified on TsDynDataAttribute';
     CREATE NONCLUSTERED INDEX [IX_TsDynDataAttribute_TransactionIdModified] ON [dbo].[TsDynDataAttribute] ([TransactionIdModified] ASC)
@@ -2395,6 +2411,286 @@ BEGIN
 END
 GO
 
+
+
+-- *** 16. TransactionId column => TransId migration script for all tables
+PRINT '16. TransactionId column => TransId migration script for all tables';
+GO
+
+-- 16.1. Processing table TsDynDataApp
+-- 16.1.1. Rename column TransactionIdCreated to TransCreatedId
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdCreated' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataApp]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransCreatedId' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataApp]'))
+BEGIN
+    PRINT '... 16.1.1. Renaming column TsDynDataApp.TransactionIdCreated to TransCreatedId';
+    EXEC sp_rename N'[dbo].[TsDynDataApp].[TransactionIdCreated]', N'TransCreatedId', N'COLUMN';
+END
+GO
+
+-- 16.1.2. Rename column TransactionIdModified to TransModifiedId
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdModified' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataApp]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransModifiedId' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataApp]'))
+BEGIN
+    PRINT '... 16.1.2. Renaming column TsDynDataApp.TransactionIdModified to TransModifiedId';
+    EXEC sp_rename N'[dbo].[TsDynDataApp].[TransactionIdModified]', N'TransModifiedId', N'COLUMN';
+END
+GO
+
+-- 16.1.3. Rename column TransactionIdDeleted to TransDeletedId
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdDeleted' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataApp]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransDeletedId' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataApp]'))
+BEGIN
+    PRINT '... 16.1.3. Renaming column TsDynDataApp.TransactionIdDeleted to TransDeletedId';
+    EXEC sp_rename N'[dbo].[TsDynDataApp].[TransactionIdDeleted]', N'TransDeletedId', N'COLUMN';
+END
+GO
+
+-- 16.1.4. Rename index IX_TsDynDataApp_TransactionIdCreated to IX_TsDynDataApp_TransCreatedId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataApp_TransactionIdCreated' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataApp]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataApp_TransCreatedId' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataApp]'))
+BEGIN
+    PRINT '... 16.1.4. Renaming index IX_TsDynDataApp_TransactionIdCreated to IX_TsDynDataApp_TransCreatedId';
+    EXEC sp_rename N'[dbo].[TsDynDataApp].[IX_TsDynDataApp_TransactionIdCreated]', N'IX_TsDynDataApp_TransCreatedId', N'INDEX';
+END
+GO
+
+-- 16.1.5. Rename index IX_TsDynDataApp_TransactionIdModified to IX_TsDynDataApp_TransModifiedId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataApp_TransactionIdModified' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataApp]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataApp_TransModifiedId' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataApp]'))
+BEGIN
+    PRINT '... 16.1.5. Renaming index IX_TsDynDataApp_TransactionIdModified to IX_TsDynDataApp_TransModifiedId';
+    EXEC sp_rename N'[dbo].[TsDynDataApp].[IX_TsDynDataApp_TransactionIdModified]', N'IX_TsDynDataApp_TransModifiedId', N'INDEX';
+END
+GO
+
+-- 16.1.6. Rename index IX_TsDynDataApp_TransactionIdDeleted to IX_TsDynDataApp_TransDeletedId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataApp_TransactionIdDeleted' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataApp]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataApp_TransDeletedId' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataApp]'))
+BEGIN
+    PRINT '... 16.1.6. Renaming index IX_TsDynDataApp_TransactionIdDeleted to IX_TsDynDataApp_TransDeletedId';
+    EXEC sp_rename N'[dbo].[TsDynDataApp].[IX_TsDynDataApp_TransactionIdDeleted]', N'IX_TsDynDataApp_TransDeletedId', N'INDEX';
+END
+GO
+
+-- 16.2. Processing table TsDynDataAttribute
+-- 16.2.1. Rename column TransactionIdCreated to TransCreatedId
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdCreated' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataAttribute]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransCreatedId' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... 16.2.1. Renaming column TsDynDataAttribute.TransactionIdCreated to TransCreatedId';
+    EXEC sp_rename N'[dbo].[TsDynDataAttribute].[TransactionIdCreated]', N'TransCreatedId', N'COLUMN';
+END
+GO
+
+-- 16.2.2. Rename column TransactionIdModified to TransModifiedId
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdModified' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataAttribute]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransModifiedId' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... 16.2.2. Renaming column TsDynDataAttribute.TransactionIdModified to TransModifiedId';
+    EXEC sp_rename N'[dbo].[TsDynDataAttribute].[TransactionIdModified]', N'TransModifiedId', N'COLUMN';
+END
+GO
+
+-- 16.2.3. Rename column TransactionIdDeleted to TransDeletedId
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdDeleted' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataAttribute]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransDeletedId' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... 16.2.3. Renaming column TsDynDataAttribute.TransactionIdDeleted to TransDeletedId';
+    EXEC sp_rename N'[dbo].[TsDynDataAttribute].[TransactionIdDeleted]', N'TransDeletedId', N'COLUMN';
+END
+GO
+
+-- 16.2.4. Rename index IX_TsDynDataAttribute_TransactionIdCreated to IX_TsDynDataAttribute_TransCreatedId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataAttribute_TransactionIdCreated' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataAttribute]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataAttribute_TransCreatedId' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... 16.2.4. Renaming index IX_TsDynDataAttribute_TransactionIdCreated to IX_TsDynDataAttribute_TransCreatedId';
+    EXEC sp_rename N'[dbo].[TsDynDataAttribute].[IX_TsDynDataAttribute_TransactionIdCreated]', N'IX_TsDynDataAttribute_TransCreatedId', N'INDEX';
+END
+GO
+
+-- 16.2.5. Rename index IX_TsDynDataAttribute_TransactionIdModified to IX_TsDynDataAttribute_TransModifiedId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataAttribute_TransactionIdModified' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataAttribute]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataAttribute_TransModifiedId' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... 16.2.5. Renaming index IX_TsDynDataAttribute_TransactionIdModified to IX_TsDynDataAttribute_TransModifiedId';
+    EXEC sp_rename N'[dbo].[TsDynDataAttribute].[IX_TsDynDataAttribute_TransactionIdModified]', N'IX_TsDynDataAttribute_TransModifiedId', N'INDEX';
+END
+GO
+
+-- 16.2.6. Rename index IX_TsDynDataAttribute_TransactionIdDeleted to IX_TsDynDataAttribute_TransDeletedId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataAttribute_TransactionIdDeleted' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataAttribute]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataAttribute_TransDeletedId' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataAttribute]'))
+BEGIN
+    PRINT '... 16.2.6. Renaming index IX_TsDynDataAttribute_TransactionIdDeleted to IX_TsDynDataAttribute_TransDeletedId';
+    EXEC sp_rename N'[dbo].[TsDynDataAttribute].[IX_TsDynDataAttribute_TransactionIdDeleted]', N'IX_TsDynDataAttribute_TransDeletedId', N'INDEX';
+END
+GO
+
+-- 16.3. Processing table TsDynDataContentType
+-- 16.3.1. Rename column TransactionIdCreated to TransCreatedId
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdCreated' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataContentType]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransCreatedId' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataContentType]'))
+BEGIN
+    PRINT '... 16.3.1. Renaming column TsDynDataContentType.TransactionIdCreated to TransCreatedId';
+    EXEC sp_rename N'[dbo].[TsDynDataContentType].[TransactionIdCreated]', N'TransCreatedId', N'COLUMN';
+END
+GO
+
+-- 16.3.2. Rename column TransactionIdModified to TransModifiedId
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdModified' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataContentType]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransModifiedId' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataContentType]'))
+BEGIN
+    PRINT '... 16.3.2. Renaming column TsDynDataContentType.TransactionIdModified to TransModifiedId';
+    EXEC sp_rename N'[dbo].[TsDynDataContentType].[TransactionIdModified]', N'TransModifiedId', N'COLUMN';
+END
+GO
+
+-- 16.3.3. Rename column TransactionIdDeleted to TransDeletedId
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdDeleted' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataContentType]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransDeletedId' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataContentType]'))
+BEGIN
+    PRINT '... 16.3.3. Renaming column TsDynDataContentType.TransactionIdDeleted to TransDeletedId';
+    EXEC sp_rename N'[dbo].[TsDynDataContentType].[TransactionIdDeleted]', N'TransDeletedId', N'COLUMN';
+END
+GO
+
+-- 16.3.4. Rename index IX_TsDynDataContentType_TransactionIdCreated to IX_TsDynDataContentType_TransCreatedId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataContentType_TransactionIdCreated' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataContentType]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataContentType_TransCreatedId' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataContentType]'))
+BEGIN
+    PRINT '... 16.3.4. Renaming index IX_TsDynDataContentType_TransactionIdCreated to IX_TsDynDataContentType_TransCreatedId';
+    EXEC sp_rename N'[dbo].[TsDynDataContentType].[IX_TsDynDataContentType_TransactionIdCreated]', N'IX_TsDynDataContentType_TransCreatedId', N'INDEX';
+END
+GO
+
+-- 16.3.5. Rename index IX_TsDynDataContentType_TransactionIdModified to IX_TsDynDataContentType_TransModifiedId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataContentType_TransactionIdModified' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataContentType]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataContentType_TransModifiedId' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataContentType]'))
+BEGIN
+    PRINT '... 16.3.5. Renaming index IX_TsDynDataContentType_TransactionIdModified to IX_TsDynDataContentType_TransModifiedId';
+    EXEC sp_rename N'[dbo].[TsDynDataContentType].[IX_TsDynDataContentType_TransactionIdModified]', N'IX_TsDynDataContentType_TransModifiedId', N'INDEX';
+END
+GO
+
+-- 16.3.6. Rename index IX_TsDynDataContentType_TransactionIdDeleted to IX_TsDynDataContentType_TransDeletedId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataContentType_TransactionIdDeleted' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataContentType]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataContentType_TransDeletedId' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataContentType]'))
+BEGIN
+    PRINT '... 16.3.6. Renaming index IX_TsDynDataContentType_TransactionIdDeleted to IX_TsDynDataContentType_TransDeletedId';
+    EXEC sp_rename N'[dbo].[TsDynDataContentType].[IX_TsDynDataContentType_TransactionIdDeleted]', N'IX_TsDynDataContentType_TransDeletedId', N'INDEX';
+END
+GO
+
+-- 16.4. Processing table TsDynDataEntity
+-- 16.4.1. Rename column TransactionIdCreated to TransCreatedId
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdCreated' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataEntity]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransCreatedId' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... 16.4.1. Renaming column TsDynDataEntity.TransactionIdCreated to TransCreatedId';
+    EXEC sp_rename N'[dbo].[TsDynDataEntity].[TransactionIdCreated]', N'TransCreatedId', N'COLUMN';
+END
+GO
+
+-- 16.4.2. Rename column TransactionIdModified to TransModifiedId
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdModified' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataEntity]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransModifiedId' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... 16.4.2. Renaming column TsDynDataEntity.TransactionIdModified to TransModifiedId';
+    EXEC sp_rename N'[dbo].[TsDynDataEntity].[TransactionIdModified]', N'TransModifiedId', N'COLUMN';
+END
+GO
+
+-- 16.4.3. Rename column TransactionIdDeleted to TransDeletedId
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdDeleted' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataEntity]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransDeletedId' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... 16.4.3. Renaming column TsDynDataEntity.TransactionIdDeleted to TransDeletedId';
+    EXEC sp_rename N'[dbo].[TsDynDataEntity].[TransactionIdDeleted]', N'TransDeletedId', N'COLUMN';
+END
+GO
+
+-- 16.4.4. Rename index IX_TsDynDataEntity_TransactionIdCreated to IX_TsDynDataEntity_TransCreatedId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataEntity_TransactionIdCreated' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataEntity]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataEntity_TransCreatedId' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... 16.4.4. Renaming index IX_TsDynDataEntity_TransactionIdCreated to IX_TsDynDataEntity_TransCreatedId';
+    EXEC sp_rename N'[dbo].[TsDynDataEntity].[IX_TsDynDataEntity_TransactionIdCreated]', N'IX_TsDynDataEntity_TransCreatedId', N'INDEX';
+END
+GO
+
+-- 16.4.5. Rename index IX_TsDynDataEntity_TransactionIdModified to IX_TsDynDataEntity_TransModifiedId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataEntity_TransactionIdModified' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataEntity]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataEntity_TransModifiedId' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... 16.4.5. Renaming index IX_TsDynDataEntity_TransactionIdModified to IX_TsDynDataEntity_TransModifiedId';
+    EXEC sp_rename N'[dbo].[TsDynDataEntity].[IX_TsDynDataEntity_TransactionIdModified]', N'IX_TsDynDataEntity_TransModifiedId', N'INDEX';
+END
+GO
+
+-- 16.4.6. Rename index IX_TsDynDataEntity_TransactionIdDeleted to IX_TsDynDataEntity_TransDeletedId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataEntity_TransactionIdDeleted' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataEntity]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataEntity_TransDeletedId' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataEntity]'))
+BEGIN
+    PRINT '... 16.4.6. Renaming index IX_TsDynDataEntity_TransactionIdDeleted to IX_TsDynDataEntity_TransDeletedId';
+    EXEC sp_rename N'[dbo].[TsDynDataEntity].[IX_TsDynDataEntity_TransactionIdDeleted]', N'IX_TsDynDataEntity_TransDeletedId', N'INDEX';
+END
+GO
+
+-- 16.5. Processing table TsDynDataZone
+-- 16.5.1. Rename column TransactionIdCreated to TransCreatedId
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdCreated' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataZone]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransCreatedId' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataZone]'))
+BEGIN
+    PRINT '... 16.5.1. Renaming column TsDynDataZone.TransactionIdCreated to TransCreatedId';
+    EXEC sp_rename N'[dbo].[TsDynDataZone].[TransactionIdCreated]', N'TransCreatedId', N'COLUMN';
+END
+GO
+
+-- 16.5.2. Rename column TransactionIdModified to TransModifiedId
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdModified' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataZone]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransModifiedId' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataZone]'))
+BEGIN
+    PRINT '... 16.5.2. Renaming column TsDynDataZone.TransactionIdModified to TransModifiedId';
+    EXEC sp_rename N'[dbo].[TsDynDataZone].[TransactionIdModified]', N'TransModifiedId', N'COLUMN';
+END
+GO
+
+-- 16.5.3. Rename column TransactionIdDeleted to TransDeletedId
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransactionIdDeleted' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataZone]'))
+    AND NOT EXISTS (SELECT * FROM sys.columns WHERE Name = N'TransDeletedId' AND Object_ID = OBJECT_ID(N'[dbo].[TsDynDataZone]'))
+BEGIN
+    PRINT '... 16.5.3. Renaming column TsDynDataZone.TransactionIdDeleted to TransDeletedId';
+    EXEC sp_rename N'[dbo].[TsDynDataZone].[TransactionIdDeleted]', N'TransDeletedId', N'COLUMN';
+END
+GO
+
+-- 16.5.4. Rename index IX_TsDynDataZone_TransactionIdCreated to IX_TsDynDataZone_TransCreatedId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataZone_TransactionIdCreated' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataZone]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataZone_TransCreatedId' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataZone]'))
+BEGIN
+    PRINT '... 16.5.4. Renaming index IX_TsDynDataZone_TransactionIdCreated to IX_TsDynDataZone_TransCreatedId';
+    EXEC sp_rename N'[dbo].[TsDynDataZone].[IX_TsDynDataZone_TransactionIdCreated]', N'IX_TsDynDataZone_TransCreatedId', N'INDEX';
+END
+GO
+
+-- 16.5.5. Rename index IX_TsDynDataZone_TransactionIdModified to IX_TsDynDataZone_TransModifiedId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataZone_TransactionIdModified' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataZone]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataZone_TransModifiedId' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataZone]'))
+BEGIN
+    PRINT '... 16.5.5. Renaming index IX_TsDynDataZone_TransactionIdModified to IX_TsDynDataZone_TransModifiedId';
+    EXEC sp_rename N'[dbo].[TsDynDataZone].[IX_TsDynDataZone_TransactionIdModified]', N'IX_TsDynDataZone_TransModifiedId', N'INDEX';
+END
+GO
+
+-- 16.5.6. Rename index IX_TsDynDataZone_TransactionIdDeleted to IX_TsDynDataZone_TransDeletedId
+IF EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataZone_TransactionIdDeleted' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataZone]'))
+    AND NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_TsDynDataZone_TransDeletedId' AND object_id = OBJECT_ID(N'[dbo].[TsDynDataZone]'))
+BEGIN
+    PRINT '... 16.5.6. Renaming index IX_TsDynDataZone_TransactionIdDeleted to IX_TsDynDataZone_TransDeletedId';
+    EXEC sp_rename N'[dbo].[TsDynDataZone].[IX_TsDynDataZone_TransactionIdDeleted]', N'IX_TsDynDataZone_TransDeletedId', N'INDEX';
+END
+GO
 
 
 PRINT '*** Finished migration script.';
