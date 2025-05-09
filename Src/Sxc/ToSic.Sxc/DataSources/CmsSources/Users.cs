@@ -168,10 +168,12 @@ public partial class Users : CustomDataSourceAdvanced
         // Figure out options to be sure we have the roles/roleids
         var relationships = new LazyLookup<object, IEntity>();
         var userFactory = _dataFactory.New(
-            options: UserModel.Options,
-            relationships: relationships,
-            // Option to tell the entity conversion to add the "Roles" to each user
-            rawConvertOptions: new(addKeys: ["Roles"])
+            options: UserModel.Options with
+            {
+                // Option to tell the entity conversion to add the "Roles" to each user
+                RawConvertOptions = new(addKeys: ["Roles"])
+            },
+            relationships: relationships
         );
 
         var users = userFactory.Create(usersRaw);

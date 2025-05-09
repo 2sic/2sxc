@@ -6,7 +6,7 @@
     <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-    <RootNamespace>ToSic.Sxc</RootNamespace>
+    <RootNamespace>ToSic.Sxc.Dnn</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
