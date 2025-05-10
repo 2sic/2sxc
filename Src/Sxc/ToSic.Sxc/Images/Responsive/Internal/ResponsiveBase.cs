@@ -59,8 +59,11 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     protected override string ToHtmlString() => Tag.ToString();
 
     /// <inheritdoc />
-    public virtual Img Img => _imgTag.GetL(Log, _ =>
+    public virtual Img Img => field ??= GetImg();
+
+    private Img GetImg()
     {
+        var l = Log.Fn<Img>(enabled: ImgService.Debug);
         var imgTag = ToSic.Razor.Blade.Tag.Img().Src(Src);
 
         // Add all kind of attributes if specified
@@ -69,14 +72,18 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         imgTag = AddAttributes(imgTag, ThisResize.Recipe?.Attributes, imgSpecs.Attributes?.Keys);
 
         // Only add Alt, Class etc. if they were really specified / known
-        if (Alt != null) imgTag = imgTag.Alt(Alt);
-        if (Class != null) imgTag = imgTag.Class(Class);
+        if (Alt != null)
+            imgTag = imgTag.Alt(Alt);
+        if (Class != null)
+            imgTag = imgTag.Class(Class);
         if (TryGetAttribute(imgSpecs.Attributes, Recipe.SpecialPropertyStyle, out var style))
             imgTag = imgTag.Style(style);
-        if (TryGetAttribute(ThisResize.Recipe?.Attributes, Recipe.SpecialPropertyStyle, out style)) 
+        if (TryGetAttribute(ThisResize.Recipe?.Attributes, Recipe.SpecialPropertyStyle, out style))
             imgTag = imgTag.Style(style);
-        if (Width != null) imgTag = imgTag.Width(Width);
-        if (Height != null) imgTag = imgTag.Height(Height);
+        if (Width != null)
+            imgTag = imgTag.Width(Width);
+        if (Height != null)
+            imgTag = imgTag.Height(Height);
 
         // Add lightbox if configured & enabled on the specific image...
         var enabled = Tweaker.VDec?.LightboxIsEnabled
@@ -97,11 +104,12 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         //if (Params.Toolbar as string == "img")
         {
             var tlb = ToolbarOrNull(/*true*/);
-            if (tlb != null) imgTag = imgTag.Attr(tlb);
+            if (tlb != null)
+                imgTag = imgTag.Attr(tlb);
         }
 
-        return imgTag;
-    }, enabled: ImgService.Debug);
+        return l.Return(imgTag);
+    }
 
 
     /// <summary>
@@ -164,7 +172,6 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         return l.Return(imgTag, "added");
     }
 
-    private readonly GetOnce<Img> _imgTag = new();
 
     public IHtmlTag Tag => _tag.Get(GetOutermostTag);
     private readonly GetOnce<IHtmlTag> _tag = new();

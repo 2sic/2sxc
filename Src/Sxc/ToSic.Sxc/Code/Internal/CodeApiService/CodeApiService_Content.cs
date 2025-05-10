@@ -14,16 +14,25 @@ public partial class CodeApiService
 
 
     /// <inheritdoc cref="IDynamicCode.Header" />
-    public dynamic Header => _header.GetL(Log, l =>
-    {
-        var header = TryToBuildFirstOfStream(StreamHeader);
-        if (header != null) return header;
-        // If header isn't found, it could be that an old query is used which attached the stream to the old name
-        l.A($"Header not yet found in {StreamHeader}, will try {StreamHeaderOld}");
-        return TryToBuildFirstOfStream(StreamHeaderOld);
-    });
+    public dynamic Header => _header.Get(GetHeaderOrNull);
     private readonly GetOnce<object> _header = new();
 
+    private object GetHeaderOrNull()
+    {
+        var l = Log.Fn<object>();
+        if (TryToBuildFirstOfStream(StreamHeader) is object header)
+            return l.Return(header, "found");
+        // If header isn't found, it could be that an old query is used which attached the stream to the old name
+        l.A($"Header not yet found in {StreamHeader}, will try {StreamHeaderOld}");
+        return l.Return((object)TryToBuildFirstOfStream(StreamHeaderOld), "old query");
+
+    }
+
+    /// <summary>
+    /// Note: can be null
+    /// </summary>
+    /// <param name="sourceStream"></param>
+    /// <returns></returns>
     private dynamic TryToBuildFirstOfStream(string sourceStream)
     {
         var l = Log.Fn<object>(sourceStream);

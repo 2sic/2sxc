@@ -131,7 +131,7 @@ public abstract class BlockBase(BlockBase.MyServices services, string logName, o
         set => Log.Setter(() =>
         {
             field = value;
-            _data.Reset(); // reset this if the view changed...
+            Data = null; // reset this if the view changed...
         });
     }
 
@@ -143,13 +143,19 @@ public abstract class BlockBase(BlockBase.MyServices services, string logName, o
 
 
 
-    public IDataSource  Data => _data.GetL(Log, l =>
+    public IDataSource  Data
     {
+        get => field ??= GetData();
+        set => field = value;
+    }
+
+    private IDataSource GetData()
+    {
+        var l = Log.Fn<IDataSource>();
         l.A($"About to load data source with possible app configuration provider. App is probably null: {App}");
         var dataSource = Services.BdsFactoryLazy.Value.GetContextDataSource(this, App?.ConfigurationProvider);
-        return dataSource;
-    });
-    private readonly GetOnce<IDataSource> _data = new();
+        return l.Return(dataSource);
+    }
 
     public BlockConfiguration Configuration { get; protected set; }
         

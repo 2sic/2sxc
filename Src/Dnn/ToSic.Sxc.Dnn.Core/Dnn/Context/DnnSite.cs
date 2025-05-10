@@ -138,8 +138,12 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     });
     private readonly GetOnce<string> _currentCulture = new();
 
-    public List<string> CultureCodesWithFallbacks => _currentCodeFallbacks.GetL(Log, l =>
+    public List<string> CultureCodesWithFallbacks => _currentCodeFallbacks.Get(GetCultureCodesWithFallbacks);
+    private readonly GetOnce<List<string>> _currentCodeFallbacks = new();
+
+    private List<string> GetCultureCodesWithFallbacks()
     {
+        var l = Log.Fn<List<string>>();
         // 2023-08-31 2dm - new code, as it could contain risks, use try/catch/null to default
         try
         {
@@ -186,9 +190,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
         {
             return null;
         }
-    });
-    private readonly GetOnce<List<string>> _currentCodeFallbacks = new();
-
+    }
 
     #endregion
 

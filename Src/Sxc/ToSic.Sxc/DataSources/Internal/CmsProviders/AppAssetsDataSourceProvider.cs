@@ -68,7 +68,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
     public (List<FolderModelRaw> Folders, List<FileModelRaw> Files) GetAll()
         => Log.Func(l => (Folders, Files));
 
-    public List<FileModelRaw> Files => _files.GetM(Log, l =>
+    public List<FileModelRaw> Files => _files.GetM(Log, _ =>
     {
         var pathsFromRoot = PreparePaths(_appPaths, "");
 

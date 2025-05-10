@@ -33,8 +33,9 @@ public class InTextContentBlockRenderer(SimpleRenderer simpleRenderer)
         var items = parent.Children(field);
 
         foreach (Match curMatch in matches)
-            l.Do($"Match at text pos: {curMatch.Index}", l2 =>
+            l.Do(message: $"Match at text pos: {curMatch.Index}", action: () =>
             {
+                var l2 = l.Fn();
                 // Get characters before the first match
                 if (curMatch.Index > charProgress)
                     result.Append(textTemplate.Substring(charProgress, curMatch.Index - charProgress));
@@ -44,21 +45,27 @@ public class InTextContentBlockRenderer(SimpleRenderer simpleRenderer)
                 var marker = curMatch.Value.Replace("\'", "\"");
 
                 if (marker.IndexOf("sxc=\"sxc-content-block\"", StringComparison.Ordinal) == 0)
-                    return "marker is incomplete, won't process";
+                {
+                    l2.Done("marker is incomplete, won't process");
+                    return;
+                }
 
                 var guidMatch = GuidExtractor.Match(marker);
                 var likelyGuid = guidMatch.Groups[1].Value;
 
                 // check if guid is valid
                 if (!Guid.TryParse(likelyGuid, out var guid))
-                    return "Marker can't be converted to guid, won't process";
+                {
+                    l2.Done("Marker can't be converted to guid, won't process");
+                    return;
+                }
 
                 var subItem = items.FirstOrDefault(i => i.EntityGuid == guid);
 
                 var contents = simpleRenderer.RenderWithEditContext(block, parent, subItem, field, guid, edit);
 
                 result.Append(contents);
-                return "done";
+                l2.Done("done");
             });
 
         // attach the rest of the text (after the last match)
