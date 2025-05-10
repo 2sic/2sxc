@@ -36,7 +36,7 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
     [PrivateApi]
     public class MyServices(
         IServiceProvider serviceProvider,
-        LazySvc<CodeCompiler> codeCompilerLazy,
+        LazySvc<IClassCompiler> codeCompilerLazy,
         AppDataStackService dataStackService,
         LazySvc<IConvertService> convertService,
         LazySvc<CodeCreateDataSourceSvc> dataSources,
@@ -49,7 +49,7 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
         public LazySvc<CodeCreateDataSourceSvc> DataSources { get; } = dataSources;
         public LazySvc<IConvertService> ConvertService { get; } = convertService;
         internal IServiceProvider ServiceProvider { get; } = serviceProvider;
-        public LazySvc<CodeCompiler> CodeCompilerLazy { get; } = codeCompilerLazy;
+        public LazySvc<IClassCompiler> CodeCompilerLazy { get; } = codeCompilerLazy;
         public AppDataStackService DataStackService { get; } = dataStackService;
         public Polymorphism.Internal.PolymorphConfigReader Polymorphism { get; } = polymorphism;
     }

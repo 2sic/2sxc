@@ -7,16 +7,20 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
+/// <summary>
+/// Code / Class Compiler.
+/// </summary>
+/// <param name="serviceProvider"></param>
+/// <remarks>
+/// This is abstract, as each platform (Dnn/Oqtane) has its own implementation for specific parts of this.
+///
+/// We also have a minimal IClassCompiler interface, for use in the CodeApiService.
+/// </remarks>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class CodeCompiler(IServiceProvider serviceProvider) : ServiceBase("Sys.CsCmpl", connect: [/* never! serviceProvider */ ])
+public abstract class CodeCompiler(IServiceProvider serviceProvider, object[] connect = default) : ServiceBase("Sys.CsCmpl", connect: connect /* never! serviceProvider */), IClassCompiler
 {
-    public const string CsFileExtension = ".cs";
-    public const string CsHtmlFileExtension = ".cshtml";
-    public const string SharedCodeRootPathKeyInCache = "SharedCodeRootPath";
-    public const string SharedCodeRootFullPathKeyInCache = "SharedCodeRootFullPath";
-
-    internal object InstantiateClass(string virtualPath, HotBuildSpec spec, string className = null, string relativePath = null, bool throwOnError = true)
+    public object InstantiateClass(string virtualPath, HotBuildSpec spec, string className = null, string relativePath = null, bool throwOnError = true)
     {
         var l = Log.Fn<object>($"{virtualPath}; {spec}; {nameof(className)}:{className}; {nameof(relativePath)}:{relativePath}; {nameof(throwOnError)}: {throwOnError}");
 
@@ -31,8 +35,8 @@ public abstract class CodeCompiler(IServiceProvider serviceProvider) : ServiceBa
         }
 
         var pathLowerCase = virtualPath.ToLowerInvariant();
-        var isCs = pathLowerCase.EndsWith(CsFileExtension);
-        var isCshtml = pathLowerCase.EndsWith(CsHtmlFileExtension);
+        var isCs = pathLowerCase.EndsWith(SourceCodeConstants.CsFileExtension);
+        var isCshtml = pathLowerCase.EndsWith(SourceCodeConstants.CsHtmlFileExtension);
 
         Type compiledType = null;
         string errorMessages;
@@ -99,7 +103,7 @@ public abstract class CodeCompiler(IServiceProvider serviceProvider) : ServiceBa
         return l.Return((compiledType, errorMessages), errorMessages == null ? "ok" : "errors");
     }
 
-    protected internal abstract AssemblyResult GetAssembly(string relativePath, string className, HotBuildSpec spec);
+    public abstract AssemblyResult GetAssembly(string relativePath, string className, HotBuildSpec spec);
 
 
     protected abstract (Type Type, string ErrorMessage) GetCsHtmlType(string relativePath);

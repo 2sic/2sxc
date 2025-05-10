@@ -81,11 +81,11 @@ internal class DynamicApiCodeHelpers: CodeHelper
         reqProperties.Add(DnnConstants.DnnContextKey, (codeRoot as IHasDnn)?.Dnn);
 
         /*if (*/
-        reqProperties.TryGetTyped(CodeCompiler.SharedCodeRootPathKeyInCache, out string path);
+        reqProperties.TryGetTyped(SourceCodeConstants.SharedCodeRootPathKeyInCache, out string path);
         /*) CreateInstancePath = path; */
 
         // 16.02 - try to log more details about the current API call
-        var currentPath = reqProperties.TryGetTyped(CodeCompiler.SharedCodeRootFullPathKeyInCache, out string p2) ? p2.AfterLast("/") : null;
+        var currentPath = reqProperties.TryGetTyped(SourceCodeConstants.SharedCodeRootFullPathKeyInCache, out string p2) ? p2.AfterLast("/") : null;
         SysHlp.WebApiLogging?.AddLogSpecs(block, codeRoot.App, currentPath, SysHlp.GetService<CodeInfosInScope>());
 
 

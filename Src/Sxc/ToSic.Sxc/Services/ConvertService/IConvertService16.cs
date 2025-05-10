@@ -25,7 +25,6 @@ namespace ToSic.Sxc.Services;
 /// * Difference to <see cref="IConvertService"/> is that the param `fallback` must always be named
 /// </remarks>
 [PublicApi]
-[Docs(AutoLink = true, Messages = ["Helper to convert any object into another - like a string to int."])]
 public interface IConvertService16
 {
     // Important internal information

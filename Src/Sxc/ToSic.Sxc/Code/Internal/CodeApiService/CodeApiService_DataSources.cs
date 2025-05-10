@@ -21,8 +21,8 @@ public partial class CodeApiService
     private readonly GetOnce<ILookUpEngine> _lookupEngine = new();
 
     [PrivateApi]
-    public CodeCreateDataSourceSvc DataSources => _dataSources.Get(() => Services.DataSources.Value.Setup(App, () => LookUpForDataSources));
-    private readonly GetOnce<CodeCreateDataSourceSvc> _dataSources = new();
+    public CodeCreateDataSourceSvc DataSources =>
+        field ??= Services.DataSources.Value.Setup(App, () => LookUpForDataSources);
 
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />

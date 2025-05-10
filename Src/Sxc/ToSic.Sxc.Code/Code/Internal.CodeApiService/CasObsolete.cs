@@ -30,7 +30,7 @@ public class CodeApiServiceObsolete(ICodeApiService dynCode)
                 LookUp = configuration,
             };
             if (links != null)
-                return dataSources.DataSources.Value/*_root.DataSourceFactory*/.Create(type: type, attach: links, options: cnf2Wip);
+                return dataSources.DataSources.Value.Create(type: type, attach: links, options: cnf2Wip);
 
             var initialSource = dataSources.DataSources.Value.CreateDefault(new DataSourceOptions
             {

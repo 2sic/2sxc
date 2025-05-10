@@ -101,6 +101,7 @@ internal static class StartUpDnnCore
 
         // new in v12 - .net specific code compiler
         services.TryAddTransient<CodeCompiler, CodeCompilerNetFull>();
+        services.TryAddTransient<IClassCompiler, CodeCompilerNetFull>();
 
         // new in v12.02 - RazorBlade DI
         services.TryAddScoped<DnnPageChanges>();

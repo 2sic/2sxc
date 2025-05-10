@@ -99,6 +99,8 @@
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Code.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Code.Generate.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Code.Generate.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Code.HotBuild.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Code.HotBuild.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Custom.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Custom.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.WebApi.dll" />

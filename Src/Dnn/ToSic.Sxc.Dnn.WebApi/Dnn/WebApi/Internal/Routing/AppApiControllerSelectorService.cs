@@ -13,6 +13,7 @@ using ToSic.Eav.WebApi.Routing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
@@ -228,7 +229,7 @@ internal partial class AppApiControllerSelectorService(
     private void PreservePathForGetCodeInController(string controllerFolder, string controllerPath)
     {
         if (Request == null) return;
-        Request.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
-        Request.Properties.Add(CodeCompiler.SharedCodeRootFullPathKeyInCache, controllerPath);
+        Request.Properties.Add(SourceCodeConstants.SharedCodeRootPathKeyInCache, controllerFolder);
+        Request.Properties.Add(SourceCodeConstants.SharedCodeRootFullPathKeyInCache, controllerPath);
     }
 }

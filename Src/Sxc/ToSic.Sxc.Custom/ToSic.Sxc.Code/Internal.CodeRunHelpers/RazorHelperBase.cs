@@ -26,7 +26,7 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
 
         l.A("Will try to use absolute path relative to the app.");
 
-        if (!path.EndsWith(CodeCompiler.CsFileExtension))
+        if (!path.EndsWith(SourceCodeConstants.CsFileExtension))
             throw l.Done(new ArgumentException("Only '.cs' file paths can start with a slash"));
         var app = (overrideCodeRoot ?? _CodeApiSvc)?.AppTyped
                   ?? throw l.Done(new Exception("Absolute paths require an App, which was null"));
@@ -69,7 +69,7 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
 
         try
         {
-            object result = path.EndsWith(CodeCompiler.CsFileExtension)
+            object result = path.EndsWith(SourceCodeConstants.CsFileExtension)
                 ? _CodeApiSvc.CreateInstance(path, noParamOrder, name: name, relativePath: null, throwOnError: throwOnError)
                 : GetCodeCshtml(path);
             return l.Return(result, "ok");

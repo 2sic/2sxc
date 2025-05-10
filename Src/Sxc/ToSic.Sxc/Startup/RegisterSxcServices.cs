@@ -15,7 +15,6 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Customizer;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
-using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Internal.Typed;
@@ -193,20 +192,20 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<WrapObjectTypedItem>();
 
         // v17
-        services.TryAddTransient<AssemblyCacheManager>();
-        services.TryAddTransient<AppCodeLoader>();
+        //services.TryAddTransient<AssemblyCacheManager>();
+        //services.TryAddTransient<AppCodeLoader>();
         //services.TryAddTransient<SourceAnalyzer>();
-        services.TryAddSingleton<AssemblyResolver>();
-        services.TryAddTransient<DependenciesLoader>();
+        //services.TryAddSingleton<AssemblyResolver>();
+        //services.TryAddTransient<DependenciesLoader>();
 
         // Polymorphism - moved here v17.08
         services.AddTransient<IPolymorphismResolver, PolymorphismKoi>();
         services.AddTransient<IPolymorphismResolver, PolymorphismPermissions>();
 
         // v18
-        services.TryAddSingleton<Util>();
+        //services.TryAddSingleton<Util>();
         services.TryAddTransient<LightSpeedStats>();
-        services.TryAddTransient<SourceCodeHasher>();
+        //services.TryAddTransient<SourceCodeHasher>();
 
         // Add possibly missing fallback services
         // This must always be at the end here so it doesn't accidentally replace something we actually need

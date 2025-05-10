@@ -70,7 +70,7 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
 
         // Ensure the Api knows what path it's on, in case it will
         // create instances of .cs files
-        if (context.HttpContext.Items.TryGetValue(CodeCompiler.SharedCodeRootPathKeyInCache, out var createInstancePath))
+        if (context.HttpContext.Items.TryGetValue(SourceCodeConstants.SharedCodeRootPathKeyInCache, out var createInstancePath))
             if (_owner is IGetCodePath withCodePath)
                 withCodePath.CreateInstancePath = createInstancePath as string;
     }

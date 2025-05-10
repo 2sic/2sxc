@@ -18,7 +18,6 @@ namespace ToSic.Sxc.Services;
 /// - Added this implementation in 13.01
 /// </remarks>
 [PublicApi]
-[Docs(AutoLink = true, Messages = ["Service to verify if a feature is enabled."])]
 public interface IFeaturesService: IHasLog, ICanDebug
 {
     /// <summary>

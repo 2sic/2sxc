@@ -105,7 +105,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             // Compile the template
             lTimer = Log.Fn("timer for Compile", timer: true);
             var pathLowerCase = codeFileInfo.RelativePath.ToLowerInvariant();
-            var isCshtml = pathLowerCase.EndsWith(CodeCompiler.CsHtmlFileExtension);
+            var isCshtml = pathLowerCase.EndsWith(SourceCodeConstants.CsHtmlFileExtension);
             if (isCshtml) className = GetSafeClassName(codeFileInfo.FullPath);
             l.A($"Compiling template. Class: {className}");
 

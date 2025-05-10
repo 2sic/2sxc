@@ -169,6 +169,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Custom", "Sxc\ToS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Code", "Sxc\ToSic.Sxc.Code\ToSic.Sxc.Code.csproj", "{7723AE83-8207-4689-94BC-FA3E6473C851}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Code.HotBuild", "Sxc\ToSic.Sxc.Code.HotBuild\ToSic.Sxc.Code.HotBuild.csproj", "{ED7E1D31-1124-4A9E-9FB2-FBCDA7928BA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -498,6 +500,12 @@ Global
 		{7723AE83-8207-4689-94BC-FA3E6473C851}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7723AE83-8207-4689-94BC-FA3E6473C851}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
 		{7723AE83-8207-4689-94BC-FA3E6473C851}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{ED7E1D31-1124-4A9E-9FB2-FBCDA7928BA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED7E1D31-1124-4A9E-9FB2-FBCDA7928BA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED7E1D31-1124-4A9E-9FB2-FBCDA7928BA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED7E1D31-1124-4A9E-9FB2-FBCDA7928BA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED7E1D31-1124-4A9E-9FB2-FBCDA7928BA8}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED7E1D31-1124-4A9E-9FB2-FBCDA7928BA8}.Testing|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -570,6 +578,7 @@ Global
 		{A72F1D56-0967-4065-A4C8-C52F11D96B17} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{E36C050F-0B20-D6DB-E59D-04E16BF967A2} = {5CD8015A-76D8-4633-8469-53B62A6C1894}
 		{7723AE83-8207-4689-94BC-FA3E6473C851} = {5CD8015A-76D8-4633-8469-53B62A6C1894}
+		{ED7E1D31-1124-4A9E-9FB2-FBCDA7928BA8} = {5CD8015A-76D8-4633-8469-53B62A6C1894}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35

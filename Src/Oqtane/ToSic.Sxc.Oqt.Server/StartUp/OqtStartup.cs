@@ -21,6 +21,7 @@ using ToSic.Lib.DI;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Backend;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.HotBuild;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Integration.Startup;
@@ -71,6 +72,7 @@ public class OqtStartup : IServerStartup
             .AddSxcWebApi()                 // This adds all the standard backend services for WebAPIs to work
             .AddSxcCustom()                 // Anything around custom code
             .AddSxcCode()
+            .AddSxcCodeHotBuild()
             .AddSxcCore()                   // Core 2sxc services
             .AddSxcCodeGen()                // Code generation services
             .AddEavEverything()             // Core EAV services

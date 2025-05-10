@@ -7,23 +7,14 @@ using ToSic.Sxc.Code.Internal.SourceCode;
 namespace ToSic.Sxc.Dnn.Compile.Internal;
 
 [PrivateApi]
-internal class CodeCompilerNetFull : CodeCompiler
+internal class CodeCompilerNetFull(
+    IServiceProvider serviceProvider,
+    IRoslynBuildManager roslynBuildManager,
+    LazySvc<SourceAnalyzer> sourceAnalyzer,
+    LazySvc<IAppJsonService> appJson)
+    : CodeCompiler(serviceProvider, connect: [roslynBuildManager, sourceAnalyzer, appJson])
 {
-    private readonly IRoslynBuildManager _roslynBuildManager;
-    private readonly LazySvc<SourceAnalyzer> _sourceAnalyzer;
-    private readonly LazySvc<IAppJsonService> _appJson;
-
-    public CodeCompilerNetFull(IServiceProvider serviceProvider, IRoslynBuildManager roslynBuildManager, LazySvc<SourceAnalyzer> sourceAnalyzer, LazySvc<IAppJsonService> appJson) : base(serviceProvider)
-    {
-
-        ConnectLogs([
-            _roslynBuildManager = roslynBuildManager,
-            _sourceAnalyzer = sourceAnalyzer,
-            _appJson = appJson
-        ]);
-    }
-
-    protected internal override AssemblyResult GetAssembly(string relativePath, string className, HotBuildSpec spec)
+    public override AssemblyResult GetAssembly(string relativePath, string className, HotBuildSpec spec)
     {
         var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {nameof(className)}: '{className}'; {spec}", timer: true);
 
@@ -38,12 +29,12 @@ internal class CodeCompilerNetFull : CodeCompiler
         try
         {
             // TODO: SHOULD OPTIMIZE so the file doesn't need to read multiple times
-            var codeFileInfo = _sourceAnalyzer.Value.TypeOfVirtualPath(relativePath);
+            var codeFileInfo = sourceAnalyzer.Value.TypeOfVirtualPath(relativePath);
 
             try
             {
-                if (_appJson.Value.DnnCompilerAlwaysUseRoslyn(spec.AppId) || codeFileInfo.IsHotBuildSupported())
-                    return l.Return(_roslynBuildManager.GetCompiledAssembly(codeFileInfo, className, spec),
+                if (appJson.Value.DnnCompilerAlwaysUseRoslyn(spec.AppId) || codeFileInfo.IsHotBuildSupported())
+                    return l.Return(roslynBuildManager.GetCompiledAssembly(codeFileInfo, className, spec),
                         "Ok, RoslynBuildManager");
             }
             catch (Exception ex)

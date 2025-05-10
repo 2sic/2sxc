@@ -14,6 +14,7 @@ using ToSic.Lib.DI;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Backend;
 using ToSic.Sxc.Backend.Context;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.WebApi;
@@ -134,7 +135,7 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
             values.Add("dllName", dllName);
 
             // help with path resolution for compilers running inside the created controller
-            httpContext./*Request?.HttpContext.*/Items.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
+            httpContext./*Request?.HttpContext.*/Items.Add(SourceCodeConstants.SharedCodeRootPathKeyInCache, controllerFolder);
 
             httpContext./*Request?.HttpContext.*/Items.Add(SxcWebApiConstants.HttpContextKeyForAppFolder, appFolder);
 

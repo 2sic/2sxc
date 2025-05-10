@@ -10,10 +10,8 @@ namespace ToSic.Sxc.Code.Internal.HotBuild;
 public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, SourceCodeHasher sourceCodeHasher, object[] connect = default) : ServiceBase("Sxc.MyApCd", connect: connect)
 {
     protected const string AppCodeDll = "AppCode.dll";
-    private const string CsFiles = ".cs";
-    private const bool UseSubfolders = true;
 
-    protected internal abstract AssemblyResult GetAppCode(string relativePath, HotBuildSpecWithSharedSuffix spec);
+    public abstract AssemblyResult GetAppCode(string relativePath, HotBuildSpecWithSharedSuffix spec);
 
     protected string[] GetSourceFiles(string fullPath)
     {

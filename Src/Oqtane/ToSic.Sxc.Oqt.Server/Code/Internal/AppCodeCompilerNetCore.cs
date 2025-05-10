@@ -16,7 +16,7 @@ internal class AppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, Generat
 {
     private readonly TryLockTryDo _lockAppCodeAssemblyProvider = new();
 
-    protected internal override AssemblyResult GetAppCode(string virtualPath, HotBuildSpecWithSharedSuffix spec)
+    public override AssemblyResult GetAppCode(string virtualPath, HotBuildSpecWithSharedSuffix spec)
     {
         var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {spec}", timer: true);
 

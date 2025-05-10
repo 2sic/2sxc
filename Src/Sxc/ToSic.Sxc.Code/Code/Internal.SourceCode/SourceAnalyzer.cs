@@ -51,7 +51,7 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
         if (sourceCode.Length < 10)
             return l.Return(new(CodeFileInfo.TemplateUnknown, sourceCode: sourceCode), "file too short");
 
-        var isCs = relativePath.ToLowerInvariant().EndsWith(CodeCompiler.CsFileExtension, StringComparison.InvariantCultureIgnoreCase);
+        var isCs = relativePath.ToLowerInvariant().EndsWith(SourceCodeConstants.CsFileExtension, StringComparison.InvariantCultureIgnoreCase);
         l.A($"isCs: {isCs}");
 
         if (isCs)
