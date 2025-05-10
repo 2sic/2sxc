@@ -51,27 +51,32 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
         return OqtToAdam(file);
     }
 
-    public override void Rename(IFile file, string newName) => Log.Do(l =>
+    public override void Rename(IFile file, string newName)
     {
+        var l = Log.Fn();
         try
         {
             var path = _serverPaths.FullContentPath(file.Path);
 
             var currentFilePath = Path.Combine(path, file.FullName);
-            if (!FsHelpers.TryToRenameFile(currentFilePath, newName)) return "";
+            if (!FsHelpers.TryToRenameFile(currentFilePath, newName))
+            {
+                l.Done("");
+                return;
+            }
 
             var oqtFile = OqtFileRepository.GetFile(file.AsOqt().SysId);
             oqtFile.Name = newName;
             OqtFileRepository.UpdateFile(oqtFile);
             l.A($"VirtualFile {oqtFile.FileId} renamed to {oqtFile.Name}");
 
-            return "ok";
+            l.Done("ok");
         }
         catch (Exception e)
         {
-            return $"Error:{e.Message}; {e.InnerException}";
+            l.Done($"Error:{e.Message}; {e.InnerException}");
         }
-    });
+    }
 
     public override void Delete(IFile file)
     {
