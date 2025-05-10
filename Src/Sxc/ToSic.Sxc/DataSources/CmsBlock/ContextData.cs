@@ -11,6 +11,8 @@ using CodeInfoService = ToSic.Lib.Code.InfoSystem.CodeInfoService;
 
 namespace ToSic.Sxc.DataSources;
 
+// TODO: MAKE class INTERNAL AGAIN AFTER MOVING TO ToSic.Sxc.Custom
+
 /// <summary>
 /// The main data source for Blocks. Internally often uses <see cref="CmsBlock"/> to find what it should provide.
 /// </summary>
@@ -21,7 +23,7 @@ namespace ToSic.Sxc.DataSources;
 /// </remarks>
 [PrivateApi("used to be Internal... till 16.01, then changed to private to hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal partial class ContextData : PassThrough
+public partial class ContextData : PassThrough
 {
     #region Constructor and Init
 
@@ -47,10 +49,12 @@ internal partial class ContextData : PassThrough
 
     #region New v16
 
-    internal IEnumerable<IEntity> MyItems => _myContent.Get(() => _blockSource.GetStream(emptyIfNotFound: true).List);
+    // TODO: MAKE class INTERNAL AGAIN AFTER MOVING TO ToSic.Sxc.Custom
+    public IEnumerable<IEntity> MyItems => _myContent.Get(() => _blockSource.GetStream(emptyIfNotFound: true).List);
     private readonly GetOnce<IEnumerable<IEntity>> _myContent = new();
 
-    internal IEnumerable<IEntity> MyHeaders => _header.Get(() => _blockSource.GetStream(ViewParts.StreamHeader, emptyIfNotFound: true).List);
+    // TODO: MAKE class INTERNAL AGAIN AFTER MOVING TO ToSic.Sxc.Custom
+    public IEnumerable<IEntity> MyHeaders => _header.Get(() => _blockSource.GetStream(ViewParts.StreamHeader, emptyIfNotFound: true).List);
     private readonly GetOnce<IEnumerable<IEntity>> _header = new();
         
     #endregion

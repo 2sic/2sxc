@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Data.Internal;
 
 partial class CodeDataFactory
 {
-    private const string NameOfAsTyped = nameof(IDynamicCode16.AsTyped) + "(...)";
+    private const string NameOfAsTyped = /*nameof(IDynamicCode16.AsTyped)*/ "AsTyped" + "(...)";
 
     public ITyped AsTyped(object data, bool required = false, bool? propsRequired = default, string detailsMessage = default)
     {
@@ -26,7 +26,7 @@ partial class CodeDataFactory
         throw l.Done(new ArgumentException($"Can't wrap/convert the original '{data.GetType()}'"));
     }
 
-    private const string NameOfAsTypedList = nameof(IDynamicCode16.AsTypedList) + "(...)";
+    private const string NameOfAsTypedList = /*nameof(IDynamicCode16.AsTypedList)*/ "AsTypedList" + "(...)";
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder, bool? required = false, bool? propsRequired = default)
     {
         var l = Log.Fn<IEnumerable<ITyped>>();

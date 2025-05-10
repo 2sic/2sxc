@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using ToSic.Lib.Data;
 
-// TODO: MAKE PRIVATE AGAIN AFTER MOVING TO ToSic.Sxc.Custom
+// TODO: MAKE INTERNAL AGAIN AFTER MOVING TO ToSic.Sxc.Custom
 
 // ReSharper disable ExplicitCallerInfoArgument
 
