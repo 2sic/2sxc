@@ -68,8 +68,42 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
     public (List<FolderModelRaw> Folders, List<FileModelRaw> Files) GetAll()
         => Log.Func(l => (Folders, Files));
 
-    public List<FileModelRaw> Files => _files.GetM(Log, _ =>
+    public List<FileModelRaw> Files => _files.Get(GetFiles);
+    //    .GetM(Log, _ =>
+    //{
+    //    var pathsFromRoot = PreparePaths(_appPaths, "");
+
+    //    var files = _fileManager.GetAllTransferableFiles(_filter)
+    //        .Select(p => new FileInfo(p))
+    //        .Select(f =>
+    //        {
+    //            var fullNameFromAppRoot = FullNameWithoutAppFolder(f.FullName, pathsFromRoot);
+    //            var name = Path.GetFileNameWithoutExtension(f.FullName);
+    //            var path = fullNameFromAppRoot.TrimPrefixSlash();
+    //            return new FileModelRaw
+    //            {
+    //                Name = name,
+    //                Extension = f.Extension.TrimStart('.'), // Extension is without the dot
+    //                FullName = $"{name}{f.Extension}",
+    //                ParentFolderInternal = path.BeforeLast("/").SuffixSlash(),
+    //                Path = path,
+    //                // TODO convert characters for safe HTML
+    //                Url = $"{_appPaths.Path}{fullNameFromAppRoot}",
+
+    //                Size = (int)f.Length,
+    //                Created = f.CreationTime,
+    //                Modified = f.LastWriteTime
+    //            };
+    //        })
+    //        .ToList();
+
+    //    return (files, $"files:{files.Count}");
+    //});
+    private readonly GetOnce<List<FileModelRaw>> _files = new();
+
+    public List<FileModelRaw> GetFiles()
     {
+        var l = Log.Fn<List<FileModelRaw>>();
         var pathsFromRoot = PreparePaths(_appPaths, "");
 
         var files = _fileManager.GetAllTransferableFiles(_filter)
@@ -96,12 +130,37 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
             })
             .ToList();
 
-        return (files, $"files:{files.Count}");
-    });
-    private readonly GetOnce<List<FileModelRaw>> _files = new();
+        return l.Return(files, $"files:{files.Count}");
+    }
 
-    public List<FolderModelRaw> Folders => _folders.GetM(Log, l =>
+    public List<FolderModelRaw> Folders => _folders.Get(GetFolders);
+    //    .GetM(Log, l =>
+    //{
+    //    var pathsFromRoot = PreparePaths(_appPaths, "");
+
+    //    var folders = _fileManager.GetAllTransferableFolders(/*filter*/)
+    //        .Select(p => new DirectoryInfo(p))
+    //        .Select(d => ToFolderData(d, pathsFromRoot))
+    //        .ToList();
+
+    //    // if the root is just "/" then we need to add the root folder, otherwise not
+    //    var root = new DirectoryInfo(
+    //        $"{_appPaths.PhysicalPath}/{_root}"
+    //            .FlattenMultipleForwardSlashes()
+    //            .TrimLastSlash()
+    //    );
+    //    folders.Insert(0, ToFolderData(root, pathsFromRoot) with
+    //    {
+    //        Name = "",                  // Make name blank, since it's the root folder
+    //        ParentFolderInternal = "",  // reset the ParentFolder, otherwise the root thinks it's a subfolder of itself
+    //    });
+        
+    //    return (folders, $"found:{folders.Count}");
+    //});
+
+    private List<FolderModelRaw> GetFolders()
     {
+        var l = Log.Fn<List<FolderModelRaw>>();
         var pathsFromRoot = PreparePaths(_appPaths, "");
 
         var folders = _fileManager.GetAllTransferableFolders(/*filter*/)
@@ -120,9 +179,9 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
             Name = "",                  // Make name blank, since it's the root folder
             ParentFolderInternal = "",  // reset the ParentFolder, otherwise the root thinks it's a subfolder of itself
         });
-        
-        return (folders, $"found:{folders.Count}");
-    });
+
+        return l.Return(folders, $"found:{folders.Count}");
+    }
 
     private FolderModelRaw ToFolderData(DirectoryInfo d, PreparedPaths pathsFromRoot)
     {

@@ -119,24 +119,45 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     private string _defaultLanguage;
 
 
-    public override string CurrentCultureCode => _currentCulture.GetM(Log, l =>
+    public override string CurrentCultureCode => _currentCulture.Get(GetCurrentCultureCode);
+    //    .GetM(Log, l =>
+    //{
+    //    // First check if we know more about the site
+    //    var portal = UnwrappedSite;
+    //    if (portal == null) return (null, "no portal");
+    //    var aliasCulture = portal.PortalAlias?.CultureCode ?? "";
+
+    //    if (aliasCulture.HasValue())
+    //    {
+    //        var aliasCult = aliasCulture.ToLowerInvariant();
+    //        return (aliasCult, $"{nameof(portal.PortalAlias)}: {aliasCult}");
+    //    }
+
+    //    // if alias is unknown, then we might be in search mode or something
+    //    var result = portal.CultureCode?.ToLowerInvariant();
+    //    return (result, $"Portal.CultureCode: {result}");
+    //});
+    private readonly GetOnce<string> _currentCulture = new();
+
+    private string GetCurrentCultureCode()
     {
+        var l = Log.Fn<string>();
         // First check if we know more about the site
         var portal = UnwrappedSite;
-        if (portal == null) return (null, "no portal");
+        if (portal == null)
+            return l.ReturnNull("no portal");
         var aliasCulture = portal.PortalAlias?.CultureCode ?? "";
 
         if (aliasCulture.HasValue())
         {
             var aliasCult = aliasCulture.ToLowerInvariant();
-            return (aliasCult, $"{nameof(portal.PortalAlias)}: {aliasCult}");
+            return l.Return(aliasCult, $"{nameof(portal.PortalAlias)}: {aliasCult}");
         }
 
         // if alias is unknown, then we might be in search mode or something
         var result = portal.CultureCode?.ToLowerInvariant();
-        return (result, $"Portal.CultureCode: {result}");
-    });
-    private readonly GetOnce<string> _currentCulture = new();
+        return l.Return(result, $"Portal.CultureCode: {result}");
+    }
 
     public List<string> CultureCodesWithFallbacks => _currentCodeFallbacks.Get(GetCultureCodesWithFallbacks);
     private readonly GetOnce<List<string>> _currentCodeFallbacks = new();

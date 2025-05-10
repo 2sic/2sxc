@@ -34,10 +34,7 @@ internal partial class DnnRazorEngine(EngineBase.MyServices helpers, DnnRazorCom
         // Catch web.config Error on DNNs upgraded to 7
         catch (ConfigurationErrorsException exc)
         {
-            var e = new Exception("Configuration Error. Your web.config seems to be wrong in the 2sxc folder.", exc);
-            //old till 2023-05-11 " Please follow this checklist to solve the problem: http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7", exc);
-            // see https://web.archive.org/web/20131201093234/http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7
-            throw l.Done(e);
+            throw l.Done(new Exception("Configuration Error. Your web.config seems to be wrong in the 2sxc folder.", exc));
         }
         l.Done();
     }
@@ -45,11 +42,9 @@ internal partial class DnnRazorEngine(EngineBase.MyServices helpers, DnnRazorCom
     [PrivateApi]
     private RazorComponentBase EntryRazorComponent
     {
-        get => Log.Getter(() => _entryRazorComponent);
-        set => Log.Setter(() => _entryRazorComponent = value);
+        get => Log.Getter(() => field);
+        set => Log.Do(cName: $"set{nameof(EntryRazorComponent)}", action: () => field = value);
     }
-    private RazorComponentBase _entryRazorComponent;
-
 
 
     [PrivateApi]

@@ -4,7 +4,6 @@ using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.DataSource;
 using ToSic.Lib.DI;
-using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
@@ -128,7 +127,8 @@ public abstract class BlockBase(BlockBase.MyServices services, string logName, o
     public IView View
     {
         get => field;
-        set => Log.Setter(() =>
+        // ReSharper disable once ExplicitCallerInfoArgument
+        set => Log.Do(cName: $"set{nameof(value)}", action: () =>
         {
             field = value;
             Data = null; // reset this if the view changed...
