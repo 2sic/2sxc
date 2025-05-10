@@ -26,8 +26,11 @@
     <NoWarn>1701;1702;CS1570;CS1572;CS1573;CS1574;CS1587;CS1591;CS1710;CS1711</NoWarn>
   </PropertyGroup>
 
+  <!-- Import common files which change how the project compiles; AssemblyInfo from 2sxc; rest form Lib.Imports -->
   <ItemGroup>
-    <Compile Include="..\ToSic.Sxc\Properties\AssemblyInfoInherited.cs" Link="Properties\AssemblyInfoInherited.cs" />
+    <Compile Include="..\ToSic.Sxc\Properties\SxcSharedAssemblyInfo.cs" Link="Properties\SxcSharedAssemblyInfo.cs" />
+    <Compile Include="..\..\..\..\eav-server\ToSic.Lib.Imports\System.Runtime.CompilerServices.cs" Link="Properties\System.Runtime.CompilerServices.cs" />
+    <Compile Include="..\..\..\..\eav-server\ToSic.Lib.Imports\HideInternalApisOnReleaseOnly.cs" Link="Properties\HideInternalApisOnReleaseOnly.cs" />
   </ItemGroup>
 
   <ItemGroup>

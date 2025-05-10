@@ -24,15 +24,11 @@
     <NoWarn>1701;1702;CS1570;CS1572;CS1573;CS1574;CS1587;CS1591;CS1710;CS1711</NoWarn>
   </PropertyGroup>
 
+  <!-- Import common files which change how the project compiles; AssemblyInfo from 2sxc; rest form Lib.Imports -->
   <ItemGroup>
-    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs" Link="Properties\AssemblyInfoInherited.cs" />
-    <!--<Compile Include="..\..\Sxc\ToSic.Sxc\Web\Url\UrlHelpers.cs" Link="Shared\UrlHelpers2.cs" />
-	<Compile Include="..\..\Sxc\ToSic.Sxc\Web\UrlParts.cs" Link="Shared\UrlParts2.cs" />
-	<Compile Include="..\..\Sxc\ToSic.Sxc\Web\ContentSecurityPolicy\CspOfPage.cs" Link="Shared\CspOfPage2.cs" />
-	<Compile Include="..\..\Sxc\ToSic.Sxc\Web\ContentSecurityPolicy\CspParameters.cs" Link="Shared\CspParameters2.cs" />
-	<Compile Include="..\..\Sxc\ToSic.Sxc\Web\ContentSecurityPolicy\CspConstants.cs" Link="Shared\CspConstants2.cs" />
-	<Compile Include="..\..\Sxc\ToSic.Sxc\Web\ContentSecurityPolicy\CspParameterFinalizer.cs" Link="Shared\CspParameterFinalizer2.cs" />
-	<Compile Include="..\..\..\..\eav-server\ToSic.Eav.Core\EavSystemInfo.cs" Link="Shared\EavSystemInfo.cs" />-->
+    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\SxcSharedAssemblyInfo.cs" Link="Properties\SxcSharedAssemblyInfo.cs" />
+    <Compile Include="..\..\..\..\eav-server\ToSic.Lib.Imports\System.Runtime.CompilerServices.cs" Link="Properties\System.Runtime.CompilerServices.cs" />
+    <Compile Include="..\..\..\..\eav-server\ToSic.Lib.Imports\HideInternalApisOnReleaseOnly.cs" Link="Properties\HideInternalApisOnReleaseOnly.cs" />
   </ItemGroup>
 
   <ItemGroup>

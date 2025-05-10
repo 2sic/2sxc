@@ -32,10 +32,11 @@
     <None Remove="Run\**" />
   </ItemGroup>
 
+  <!-- Import common files which change how the project compiles; AssemblyInfo from 2sxc; rest form Lib.Imports -->
   <ItemGroup>
-    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs" Link="Properties\AssemblyInfoInherited.cs" />
-    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
-    <Compile Include="..\..\..\..\eav-server\ToSic.Eav.Core\Properties\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
+    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\SxcSharedAssemblyInfo.cs" Link="Properties\SxcSharedAssemblyInfo.cs" />
+    <Compile Include="..\..\..\..\eav-server\ToSic.Lib.Imports\System.Runtime.CompilerServices.cs" Link="Properties\System.Runtime.CompilerServices.cs" />
+    <Compile Include="..\..\..\..\eav-server\ToSic.Lib.Imports\HideInternalApisOnReleaseOnly.cs" Link="Properties\HideInternalApisOnReleaseOnly.cs" />
   </ItemGroup>
 
   <ItemGroup>

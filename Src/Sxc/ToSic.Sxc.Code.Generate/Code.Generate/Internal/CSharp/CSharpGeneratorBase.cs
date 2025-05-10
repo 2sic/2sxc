@@ -22,7 +22,7 @@ public abstract class CSharpGeneratorBase(IUser user, IAppReaderFactory appReadF
 
     public string Name => GetType().Name;
 
-    public string Version => SharedAssemblyInfo.AssemblyVersion;
+    public string Version => SxcSharedAssemblyInfo.AssemblyVersion;
 
     public string OutputLanguage => "CSharp";
 
