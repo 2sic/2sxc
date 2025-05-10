@@ -20,6 +20,9 @@ public static class SxcCodeStartup
         services.TryAddTransient<ICodeApiServiceFactory, CodeApiServiceFactory>();
 
         // Code / Dynamic Code
+        services.TryAddTransient<CodeApiService.MyServices>();
+
+        // Code Fallbacks if not registered by the platform
         services.TryAddTransient<CodeApiService, CodeApiServiceUnknown>();
         services.TryAddTransient(typeof(CodeApiService<,>), typeof(CodeApiServiceUnknown<,>));
 

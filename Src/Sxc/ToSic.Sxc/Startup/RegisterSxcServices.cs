@@ -53,7 +53,7 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<WorkAppsRemove>();
 
         // Code
-        services.TryAddTransient<CodeApiService.MyServices>();
+        //services.TryAddTransient<CodeApiService.MyServices>();
 
         // Block Editors
         services.TryAddTransient<BlockEditorForEntity>();
