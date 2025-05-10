@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Data.Internal;
@@ -14,16 +16,18 @@ using ToSic.Sxc.Services.DataServices;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Services.Templates;
+using ToSic.Sxc.Startup;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageService;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
-namespace ToSic.Sxc.Startup;
+namespace ToSic.Sxc.Services;
 
-static partial class RegisterSxcServices
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public static class SxcServicesStartup
 {
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public static IServiceCollection AddServicesAndKits(this IServiceCollection services)
+    public static IServiceCollection AddSxcServices(this IServiceCollection services)
     {
         services.TryAddTransient<IContentSecurityPolicyService, ContentSecurityPolicyService>();
 
@@ -76,7 +80,7 @@ static partial class RegisterSxcServices
         // V15
         services.TryAddScoped<IModuleService, ModuleService>(); // Must be scoped & shared on the module
         services.TryAddTransient<ITurnOnService, TurnOnService>();
-        services.TryAddTransient<ICmsService, CmsService>();
+        services.TryAddTransient<ICmsService, CmsService.Internal.CmsService>();
         services.TryAddTransient<CmsServiceStringWysiwyg>();
         services.TryAddTransient<CmsServiceImageExtractor>();
         services.TryAddTransient<IDataService, DataService>();
@@ -105,7 +109,9 @@ static partial class RegisterSxcServices
 
         // Cache Service - WIP v17
         services.TryAddTransient<ICacheService, CacheService>();
-
         return services;
     }
+
+
+        
 }

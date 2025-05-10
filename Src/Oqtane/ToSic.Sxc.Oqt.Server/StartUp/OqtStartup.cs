@@ -30,6 +30,7 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Razor;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Startup;
 using static ToSic.Sxc.Oqt.Server.StartUp.OqtStartupHelper;
 using static ToSic.Sxc.Oqt.Server.WebApi.OqtWebApiConstants;
@@ -74,6 +75,7 @@ public class OqtStartup : IServerStartup
             .AddSxcCode()
             .AddSxcCodeHotBuild()
             .AddSxcCore()                   // Core 2sxc services
+            .AddSxcServices()
             .AddSxcCodeGen()                // Code generation services
             .AddEavEverything()             // Core EAV services
             .AddEavWebApiTypedAfterEav()

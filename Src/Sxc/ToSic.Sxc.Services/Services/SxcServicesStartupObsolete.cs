@@ -7,7 +7,7 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Startup;
 
-internal static class RegisterSxcObsolete
+internal static class SxcServicesStartupObsolete
 {
     public static IServiceCollection AddObsoleteServicesAndKits(this IServiceCollection services)
     {

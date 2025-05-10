@@ -103,6 +103,8 @@
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Code.HotBuild.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Custom.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Custom.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Services.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Services.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.WebApi.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.WebApi.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Eav*.dll" />

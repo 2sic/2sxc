@@ -24,3 +24,7 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("ToSic.Sxc.Code")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Code.HotBuild")]
+
+
+// WIP till services are moved
+[assembly: InternalsVisibleTo("ToSic.Sxc.Services")]

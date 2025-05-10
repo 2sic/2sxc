@@ -3,6 +3,7 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Startup;
 using ToSic.Eav.StartUp;
 using ToSic.Lib.Internal.FeatSys;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Startup;
 
 #pragma warning disable CA1822
@@ -29,6 +30,7 @@ public class StartupSxcCoreOnly
             .AddDataSourceTestHelpers()
             // 2sxc core
             .AddSxcCore()
+            .AddSxcServices()
             .AddLibCore()
             .AddEavDataPersistence()
             .AddEavDataBuild()

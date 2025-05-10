@@ -12,6 +12,7 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Dnn.Startup;
 using ToSic.Sxc.Integration.Startup;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Startup;
 
 
@@ -46,7 +47,8 @@ public static class DnnDi
             .AddSxcCustom()
             .AddSxcCode()
             .AddSxcCodeHotBuild()
-            .AddSxcCore() 
+            .AddSxcCore()
+            .AddSxcServices()
             .AddSxcCodeGen() // Code generation services
             .AddEavEverything()
             .AddEavWebApiTypedAfterEav()

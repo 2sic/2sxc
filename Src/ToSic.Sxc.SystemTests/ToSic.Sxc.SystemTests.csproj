@@ -54,6 +54,7 @@
     <ProjectReference Include="..\..\..\eav-server\ToSic.Eav.DataSource.TestHelpers\ToSic.Eav.DataSource.TestHelpers.csproj" />
     <ProjectReference Include="..\..\..\eav-server\ToSic.Eav.Testing.FullDbFixtures\ToSic.Eav.Testing.FullDbFixtures.csproj" />
     <ProjectReference Include="..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj" />
+    <ProjectReference Include="..\Sxc\ToSic.Sxc.Services\ToSic.Sxc.Services.csproj" />
     <ProjectReference Include="..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Core.TestHelpers\ToSic.Sxc.Core.TestHelpers.csproj" />
   </ItemGroup>
