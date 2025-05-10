@@ -1,6 +1,5 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Lib.Code.InfoSystem;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using static System.Text.Json.Serialization.JsonIgnoreCondition;
 using static ToSic.Sxc.Blocks.Internal.ProblemReport;

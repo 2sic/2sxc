@@ -2,7 +2,6 @@
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
-using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Internal;
 
 namespace ToSic.Sxc.Adam.Internal;

@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Plumbing;
-using ToSic.Lib.Data;
 using ToSic.Lib.GetByName;
 
 namespace ToSic.Sxc.Images;

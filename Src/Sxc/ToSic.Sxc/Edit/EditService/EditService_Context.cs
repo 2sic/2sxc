@@ -1,9 +1,7 @@
 ﻿using System.Text.Json;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Serialization;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Internal;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.EditService;

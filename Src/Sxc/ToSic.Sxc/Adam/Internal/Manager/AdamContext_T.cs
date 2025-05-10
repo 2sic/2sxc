@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Internal;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 

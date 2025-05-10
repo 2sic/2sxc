@@ -1,5 +1,4 @@
 ﻿using ToSic.Lib.Code.Infos;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using CodeInfoService = ToSic.Lib.Code.InfoSystem.CodeInfoService;
 
