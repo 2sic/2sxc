@@ -5,7 +5,6 @@ using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Cms.Users.Internal;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.DataSources.Internal;
@@ -46,9 +45,9 @@ static partial class RegisterSxcServices
         services.AddTransient<IPagePublishingGetSettings, PagePublishingGetSettingsForbidden>();
 
         // Code / Dynamic Code
-        services.TryAddTransient<CodeApiServiceFactory>();
-        services.TryAddTransient<CodeApiService, CodeApiServiceUnknown>();
-        services.TryAddTransient(typeof(CodeApiService<,>), typeof(CodeApiServiceUnknown<,>));
+        //services.TryAddTransient<ICodeApiServiceFactory, CodeApiServiceFactory>();
+        //services.TryAddTransient<CodeApiService, CodeApiServiceUnknown>();
+        //services.TryAddTransient(typeof(CodeApiService<,>), typeof(CodeApiServiceUnknown<,>));
         services.TryAddTransient<IModule, ModuleUnknown>();
             
         // 11.08 - fallback in case not added

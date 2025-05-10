@@ -11,8 +11,6 @@ using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Customizer;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
@@ -80,7 +78,7 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<SxcImportExportEnvironmentBase.MyServices>();
         services.TryAddTransient<IAppTyped, AppTyped>();
         services.TryAddTransient(typeof(IAppTyped<,>), typeof(AppTyped<,>));    // new v17
-        services.TryAddTransient<ICodeCustomizer, Customizer>();
+        //services.TryAddTransient<ICodeCustomizer, Customizer>();
 
         // Rendering
         services.TryAddTransient<IRenderingHelper, RenderingHelper>();

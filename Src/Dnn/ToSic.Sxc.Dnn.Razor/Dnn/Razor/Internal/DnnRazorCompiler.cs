@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal;
 // ReSharper disable once UnusedMember.Global
 internal class DnnRazorCompiler(
     EngineBase.MyServices helpers,
-    CodeApiServiceFactory codeApiServiceFactory,
+    ICodeApiServiceFactory codeApiServiceFactory,
     LazySvc<CodeErrorHelpService> errorHelp,
     LazySvc<SourceAnalyzer> sourceAnalyzer,
     LazySvc<IRoslynBuildManager> roslynBuildManager,

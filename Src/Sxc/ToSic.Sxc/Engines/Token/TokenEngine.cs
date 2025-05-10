@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Engines;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class TokenEngine(
     EngineBase.MyServices services,
-    LazySvc<CodeApiServiceFactory> codeRootFactory,
+    LazySvc<ICodeApiServiceFactory> codeRootFactory,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
     : EngineBase(services, connect: [codeRootFactory, tokenEngineWithContext])
 {

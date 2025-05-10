@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
 /// </summary>
 /// <remarks>
-/// It can usually not be created directly, but through the <see cref="CodeApiServiceFactory"/> which would return a <see cref="CodeApiServiceUnknown"/>.
+/// It can usually not be created directly, but through the <see cref="ICodeApiServiceFactory"/> which would return a <see cref="CodeApiServiceUnknown"/>.
 /// </remarks>
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

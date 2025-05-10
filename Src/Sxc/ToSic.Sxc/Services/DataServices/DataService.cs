@@ -27,7 +27,7 @@ public partial class DataService(
     public override void ConnectToRoot(ICodeApiService codeRoot)
     {
         base.ConnectToRoot(codeRoot);
-        Setup(codeRoot.App, () => (codeRoot as CodeApiService)?.LookUpForDataSources);
+        Setup(codeRoot.App, () => (codeRoot as ICodeApiServiceInternal)?.LookUpForDataSources);
     }
 
     // TODO: MAKE PRIVATE AGAIN AFTER MOVING TO ToSic.Sxc.Custom

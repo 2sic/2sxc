@@ -10,7 +10,7 @@ public partial class CodeApiService
     #region DataSource and ConfigurationProvider (for DS) section
 
     [PrivateApi]
-    internal ILookUpEngine LookUpForDataSources => _lookupEngine.Get(() =>
+    public ILookUpEngine LookUpForDataSources => _lookupEngine.Get(() =>
         // check if we have a block-context, in which case the lookups also know about the module
         Data?.Configuration?.LookUpEngine
         // otherwise try to fallback to the App configuration provider, which has a lot, but not the module-context

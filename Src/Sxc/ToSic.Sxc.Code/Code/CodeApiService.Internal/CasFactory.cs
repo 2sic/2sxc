@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeApiServiceFactory(IServiceProvider serviceProvider)
-    : ServiceBase($"{SxcLogName}.CDRFac", connect: [/* never! serviceProvider */ ])
+    : ServiceBase($"{SxcLogName}.CDRFac", connect: [/* never! serviceProvider */ ]), ICodeApiServiceFactory
 {
     /// <summary>
     /// Creates a CodeApiService - if possible based on the parent class requesting it.
@@ -21,7 +21,7 @@ public class CodeApiServiceFactory(IServiceProvider serviceProvider)
     /// <param name="parentLog"></param>
     /// <param name="compatibilityFallback"></param>
     /// <returns></returns>
-    public CodeApiService New(object parentClassOrNull, IBlock blockOrNull, ILog parentLog, int compatibilityFallback)
+    public ICodeApiService New(object parentClassOrNull, IBlock blockOrNull, ILog parentLog, int compatibilityFallback)
     {
         var compatibility = (parentClassOrNull as ICompatibilityLevel)?.CompatibilityLevel ?? compatibilityFallback;
         var l = Log.Fn<CodeApiService>($"{nameof(compatibility)}: {compatibility}");
@@ -29,7 +29,7 @@ public class CodeApiServiceFactory(IServiceProvider serviceProvider)
         // New v14 case - the Razor component implements IDynamicData<model, Kit>
         // which specifies what kit version to use.
         // Try to respect that or null if error or not such interface
-        var codeApiSvc = parentClassOrNull == null 
+        var codeApiSvc = parentClassOrNull == null
             ? null
             : TryBuildCodeApiServiceForDynamic(parentClassOrNull.GetType());
 

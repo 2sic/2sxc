@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.SourceCode;
 
@@ -14,6 +15,13 @@ public static class SxcCodeStartup
         services.TryAddTransient<CodeErrorHelpService>();
         services.TryAddTransient<SourceAnalyzer>();
 
+        services.TryAddTransient<ICodeCustomizer, Customizer.Customizer>();
+
+        services.TryAddTransient<ICodeApiServiceFactory, CodeApiServiceFactory>();
+
+        // Code / Dynamic Code
+        services.TryAddTransient<CodeApiService, CodeApiServiceUnknown>();
+        services.TryAddTransient(typeof(CodeApiService<,>), typeof(CodeApiServiceUnknown<,>));
 
         return services;
     }

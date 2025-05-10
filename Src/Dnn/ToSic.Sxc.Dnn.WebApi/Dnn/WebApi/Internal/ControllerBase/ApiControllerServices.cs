@@ -12,12 +12,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal;
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ApiControllerMyServices(
-    CodeApiServiceFactory codeApiServiceFactory,
+    ICodeApiServiceFactory codeApiServiceFactory,
     DnnAppFolderUtilities appFolderUtilities,
     LazySvc<Apps.App> appOverrideLazy)
     : MyServicesBase(connect: [codeApiServiceFactory, appFolderUtilities, appOverrideLazy])
 {
     public LazySvc<Apps.App> AppOverrideLazy { get; } = appOverrideLazy;
-    public CodeApiServiceFactory CodeApiServiceFactory { get; } = codeApiServiceFactory;
+    public ICodeApiServiceFactory CodeApiServiceFactory { get; } = codeApiServiceFactory;
     public DnnAppFolderUtilities AppFolderUtilities { get; } = appFolderUtilities;
 }

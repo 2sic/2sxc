@@ -20,7 +20,7 @@ internal class AdamService: IAdamService, INeedsCodeApiService
     /// <inheritdoc />
     public IFile File(int id)
     {
-        var admManager = (_codeRoot as CodeApiService)?.Cdf.AdamManager;
+        var admManager = (_codeRoot as ICodeApiServiceInternal)?.Cdf.AdamManager;
         return admManager?.File(id);
     }
 
@@ -43,7 +43,7 @@ internal class AdamService: IAdamService, INeedsCodeApiService
     /// <inheritdoc />
     public IFolder Folder(int id)
     {
-        var admManager = (_codeRoot as CodeApiService)?.Cdf.AdamManager;
+        var admManager = (_codeRoot as ICodeApiServiceInternal)?.Cdf.AdamManager;
         return admManager?.Folder(id);
     }
 
