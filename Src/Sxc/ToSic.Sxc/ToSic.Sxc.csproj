@@ -80,4 +80,9 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Custom.Data\" />
+    <Folder Include="Custom.Hybrid\" />
+  </ItemGroup>
+
 </Project>

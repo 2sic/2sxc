@@ -26,6 +26,8 @@ namespace ToSic.Sxc.Data;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICanWrap<in TSource>: ICanWrapData
 {
+    // TODO: MAKE PRIVATE AGAIN AFTER MOVING TO ToSic.Sxc.Custom
+
     /// <summary>
     /// Add the data to use for the wrapper.
     /// We are not doing this in the constructor,
@@ -33,5 +35,5 @@ public interface ICanWrap<in TSource>: ICanWrapData
     /// </summary>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    internal void Setup(TSource source, IModelFactory modelFactory);
+    public void Setup(TSource source, IModelFactory modelFactory);
 }

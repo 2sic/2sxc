@@ -40,6 +40,7 @@ public sealed class ModelSourceAttribute: Attribute
     /// </summary>
     public string Streams { get; init; }
 
+    // TODO: MAKE INTERNAL AGAIN AFTER MOVING TO ToSic.Sxc.Custom
     [PrivateApi]
-    internal const string ForAnyContentType = "*";
+    public const string ForAnyContentType = "*";
 }

@@ -171,6 +171,7 @@
       <Project>{bc93efb1-d740-4617-9c90-d9167f9e4545}</Project>
       <Name>ToSic.Lib.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Custom\ToSic.Sxc.Custom.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Dnn.Core\ToSic.Sxc.Dnn.Core.csproj">
       <Project>{a94de6d7-d1e6-4be2-b5b5-dc4a6a61cd80}</Project>
       <Name>ToSic.Sxc.Dnn.Core</Name>
