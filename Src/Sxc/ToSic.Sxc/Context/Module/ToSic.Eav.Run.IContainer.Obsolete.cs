@@ -10,5 +10,5 @@ namespace ToSic.Eav.Run;
 /// </summary>
 [PrivateApi("Obsolete")]
 [Obsolete("this was replaced by IModule")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IContainer;

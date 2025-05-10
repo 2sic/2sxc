@@ -7,7 +7,7 @@ using static ToSic.Sxc.Blocks.Internal.ProblemReport;
 
 namespace ToSic.Sxc.Web.Internal.JsContextEdit;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ErrorDto
 {
     [JsonPropertyName("type")]

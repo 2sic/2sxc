@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Data.Internal.Decorators;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal static class IEntityExtensions
 {
     public static bool IsDemoItemSafe(this IEntity entity) => entity?.GetDecorator<EntityInBlockDecorator>()?.IsDemoItem ?? false;

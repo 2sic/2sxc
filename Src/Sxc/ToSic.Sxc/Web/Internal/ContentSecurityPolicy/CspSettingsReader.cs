@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 /// <summary>
 /// Helper class to read the dynamic settings for the current site or global to be used in CSP
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CspSettingsReader(DynamicStack settingsOrNull, IUser user, bool devMode, ILog parentLog)
     : HelperBase(parentLog, $"{CspConstants.LogPrefix}.Setting")
 {

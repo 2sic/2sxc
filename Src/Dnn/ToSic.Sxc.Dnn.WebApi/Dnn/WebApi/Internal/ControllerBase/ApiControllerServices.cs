@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal;
 /// This doesn't work in DNN.
 /// But for consistency, we're building a comparable structure here.
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ApiControllerMyServices(
     CodeApiServiceFactory codeApiServiceFactory,
     DnnAppFolderUtilities appFolderUtilities,

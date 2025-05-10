@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
 /// <summary>
 /// </summary>
 [DnnLogExceptions]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal abstract class ApiTempShimmed : DnnSxcCustomControllerBase, IDynamicWebApi, IHasCodeApiService, INetCoreCompatibility
 {
 

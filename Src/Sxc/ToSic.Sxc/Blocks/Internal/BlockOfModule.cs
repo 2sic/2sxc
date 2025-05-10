@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Blocks.Internal;
 /// Official constructor, must call Init afterward
 /// </summary>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public sealed class BlockFromModule(BlockBase.MyServices services) : BlockBase(services, "CB.Mod")
 {
     /// <summary>

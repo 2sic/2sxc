@@ -73,7 +73,7 @@ public interface ICmsView: IHasMetadata
     /// </remarks>
     [Obsolete("Obsolete in v16, pls use Folder.Url instead")]
     [PrivateApi("Hidden in 16.04, because we want people to use the Folder. Can't remove it though, because there are many apps that already published this.")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     [JsonIgnore] // old property
     string Path { get; }
 

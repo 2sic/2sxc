@@ -19,7 +19,7 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 
 namespace ToSic.Sxc.Backend.Sys;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class InstallControllerReal(
     LazySvc<IContextOfSite> context,
     LazySvc<IEnvironmentInstaller> envInstallerLazy,

@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Engines;
 /// </summary>
 [PrivateApi("used to be InternalApi_DoNotUse_MayChangeWithoutNotice, hidden in 17.08")]
 [EngineDefinition(Name = "Token")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class TokenEngine(
     EngineBase.MyServices services,
     LazySvc<CodeApiServiceFactory> codeRootFactory,

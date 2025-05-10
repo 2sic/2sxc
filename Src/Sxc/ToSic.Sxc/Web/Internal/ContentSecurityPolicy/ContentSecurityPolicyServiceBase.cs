@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 /// Very experimental, do not use
 /// </summary>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentSecurityPolicyServiceBase() : ServiceBase($"{SxcLogName}.CspSvc"), IContentSecurityPolicyService
 {
     public CspParameters Policy = [];

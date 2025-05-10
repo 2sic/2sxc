@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Data.Internal.Typed;
 
 [PrivateApi]
 [JsonConverter(typeof(DynamicJsonConverter))]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeService> forCodeConverter)
     : IWrapper<IPreWrap>, ITyped, IHasPropLookup, IHasJsonSource
 {

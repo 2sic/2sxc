@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Polymorphism.Internal;
 /// Mini service to read the polymorph config of the app
 /// and then resolve the edition based on an <see cref="IPolymorphismResolver"/>
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class PolymorphConfigReader(LazySvc<ServiceSwitcher<IPolymorphismResolver>> resolvers, LazySvc<IHttp> http) : ServiceBase("Plm.Managr", connect: [resolvers ])
 {
     public string Parameters;

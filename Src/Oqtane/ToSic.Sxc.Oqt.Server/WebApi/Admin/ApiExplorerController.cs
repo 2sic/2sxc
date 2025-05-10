@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [Authorize(Roles = RoleNames.Admin)]
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ApiExplorerController() : OqtStatefulControllerBase(RealController.LogSuffix), IApiExplorerController
 {
     private RealController Real => GetService<RealController>();

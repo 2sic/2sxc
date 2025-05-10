@@ -9,7 +9,7 @@ using ToSic.Sxc.Data.Internal.Decorators;
 namespace ToSic.Sxc.Code.Internal;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeApiServiceObsolete(ICodeApiService dynCode)
 {
     [PrivateApi("obsolete")]

@@ -4,7 +4,7 @@ using System.Web;
 
 namespace ToSic.Sxc.Web.Internal.DotNet;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class HttpNetFramework: HttpAbstractionBase, IHttp
 {
     /// <summary>

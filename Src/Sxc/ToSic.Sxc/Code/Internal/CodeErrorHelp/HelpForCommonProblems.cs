@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class HelpForCommonProblems
 {
     private static readonly CodeHelp IEntityOnEavNamespace = new(name: "ToSic.Eav.IEntity",

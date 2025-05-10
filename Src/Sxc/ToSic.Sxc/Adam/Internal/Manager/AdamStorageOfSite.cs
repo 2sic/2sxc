@@ -4,7 +4,7 @@
 /// A container for the tenant (top level)
 /// For browsing the tenants content files
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamStorageOfSite<TFolderId, TFileId>: AdamStorage<TFolderId, TFileId>
 {
 

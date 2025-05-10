@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Internal;
 /// In this case `.Filter` would fail because the tooltip comes from a dynamic object,
 /// so then the compiler will eval the resulting object, and it can't be internal.
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class TweakButton: ITweakButton, ITweakButtonInternal
 {
     IImmutableList<object> ITweakButtonInternal.UiMerge => _uiMerge;

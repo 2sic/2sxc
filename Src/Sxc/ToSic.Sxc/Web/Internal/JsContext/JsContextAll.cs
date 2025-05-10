@@ -13,7 +13,7 @@ using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Web.Internal.JsContext;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class JsContextAll(JsContextLanguage jsLangCtxSvc, IJsApiService jsApiService, CodeInfosInScope codeWarnings, IAppJsonService appJson, LazySvc<IFeaturesService> featuresSvc)
     : ServiceBase("Sxc.CliInf", connect: [jsLangCtxSvc, jsApiService, codeWarnings])
 {

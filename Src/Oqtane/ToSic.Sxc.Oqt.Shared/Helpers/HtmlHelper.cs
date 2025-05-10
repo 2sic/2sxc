@@ -11,7 +11,7 @@ using ResourceLevel = Oqtane.Shared.ResourceLevel;
 
 namespace ToSic.Sxc.Oqt.Shared.Helpers;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class HtmlHelper
 {
     private static readonly string Timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmssfff");

@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Cms.Internal.Publishing;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public enum PagePublishingPriorities
 {
     Unknown = 0,

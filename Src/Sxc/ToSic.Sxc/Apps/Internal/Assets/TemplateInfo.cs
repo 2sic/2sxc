@@ -3,7 +3,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Apps.Internal.Assets;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class TemplateInfo(
     string key,
     string name,

@@ -6,7 +6,7 @@ using RealController = ToSic.Sxc.Backend.App.AppQueryControllerReal;
 namespace ToSic.Sxc.Dnn.Backend.App;
 
 [AllowAnonymous] // All functions will check security internally, so assume no requirements
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppQueryController() : DnnSxcControllerBase(RealController.LogSuffix), IAppQueryController
 {
     private RealController Real => SysHlp.GetService<RealController>();

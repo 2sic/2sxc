@@ -11,7 +11,7 @@ using MailMessage = System.Net.Mail.MailMessage;
 
 namespace ToSic.Sxc.Services.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class MailServiceBase(LazySvc<IUser> userLazy)
     : ServiceForDynamicCode($"{SxcLogName}.MailSrv", connect: [userLazy]), IMailService
 {

@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Web.Internal.PageService;
 /// This should bundle all the page changes once a module is done.
 /// Usually used at the top-level of render-result, and in future also on page-level dynamic code
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class PageChangeSummary(
     LazySvc<IBlockResourceExtractor> resourceExtractor,
     LazySvc<RequirementsService> requirements,

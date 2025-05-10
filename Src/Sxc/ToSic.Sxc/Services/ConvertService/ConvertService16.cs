@@ -9,7 +9,7 @@ using ToSic.Sxc.Services.Internal;
 namespace ToSic.Sxc.Services;
 
 [PrivateApi("Hide implementation")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ConvertService16(
     ConvertValueService cnvSvc,
     LazySvc<ConvertForCodeService> code,
@@ -24,7 +24,7 @@ internal class ConvertService16(
     /// </summary>
     /// <returns></returns>
     [PrivateApi("WIP, don't publish yet")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     T IConvertService16.As<T>(ICanBeEntity source, NoParamOrder protector, bool nullIfNull)
         => _CodeApiSvc.Cdf.AsCustom<T>(source: source, protector: protector, mock: nullIfNull);
 
@@ -33,7 +33,7 @@ internal class ConvertService16(
     /// </summary>
     /// <returns></returns>
     [PrivateApi("WIP, don't publish yet")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     IEnumerable<T> IConvertService16.AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector, bool nullIfNull)
         => _CodeApiSvc.Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
 

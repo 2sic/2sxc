@@ -204,6 +204,6 @@ public interface ITweakButton
     /// <param name="value"></param>
     /// <returns></returns>
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     ITweakButton Condition(bool value);
 }

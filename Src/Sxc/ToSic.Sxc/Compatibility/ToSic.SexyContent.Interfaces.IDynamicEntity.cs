@@ -11,7 +11,7 @@ namespace ToSic.SexyContent.Interfaces
     /// But this interface shouldn't be enhanced or documented publicly
     /// </summary>
     [PrivateApi("this was an old interface which must still work for compatibility, but shouldn't be used any more")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public interface IDynamicEntity: IEntityWrapper
     {
         /// <summary>

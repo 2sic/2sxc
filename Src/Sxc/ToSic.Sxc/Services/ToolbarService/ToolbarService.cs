@@ -7,7 +7,7 @@ using ToSic.Sxc.Services.Internal;
 namespace ToSic.Sxc.Services;
 
 [PrivateApi("Hide implementation")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ToolbarService(Generator<IToolbarBuilder> toolbarGenerator)
     : ServiceForDynamicCode($"{SxcLogName}.TlbSvc", connect: [toolbarGenerator]), IToolbarService
 {

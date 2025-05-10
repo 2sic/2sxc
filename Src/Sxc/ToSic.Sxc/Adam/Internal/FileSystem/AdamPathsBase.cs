@@ -5,7 +5,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Adam.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamPathsBase : ServiceBase, IAdamPaths
 {
     #region DI Constructor & Init

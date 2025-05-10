@@ -28,7 +28,7 @@ namespace ToSic.SexyContent.Razor;
 /// The core page type for delivering a 2sxc page
 /// Provides context infos like the Dnn object, helpers like Edit and much more. 
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class SexyContentWebPage : 
     RazorComponentBase,
     ICreateInstance,

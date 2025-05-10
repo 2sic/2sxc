@@ -45,7 +45,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
         => CodeRootOrError().GetService<TService>();
 
     [PrivateApi("WIP 17.06,x")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
         => CodeHelper.GetService<TService>(protector, typeName);
 
@@ -53,7 +53,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
         => field ??= new(owner: this, helperSpecs: new(CodeRootOrError(), false, "c# code file"), getRazorModel: () => null, getModelDic: () => null);
 
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
 
     #endregion
@@ -77,7 +77,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     #region Stuff added by Code12
 
     [PrivateApi("Not yet ready")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public IDevTools DevTools => CodeHelper.DevTools;
 
     #endregion
@@ -209,7 +209,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     /// * Introduced in v17.03 (beta)
     /// * Stable and ready for production in v18.00
     /// </remarks>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     protected ICodeCustomizer Customize
         => field ??= _CodeApiSvc.GetService<ICodeCustomizer>(reuse: true);
 

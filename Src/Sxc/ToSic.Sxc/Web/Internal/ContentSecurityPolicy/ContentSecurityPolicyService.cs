@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 /// Very experimental, do not use
 /// </summary>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentSecurityPolicyService : ContentSecurityPolicyServiceBase, IContentSecurityPolicyService
 {
     public ContentSecurityPolicyService(PageServiceShared pageServiceShared)

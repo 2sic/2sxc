@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// This is important, so that CreateInstance knows what path to start in. 
 /// </summary>
 [PrivateApi("Hidden now, as all implementing objects show the API. Before 16.02 2023-07 it was public!")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICreateInstance: IGetCodePath
 {
     /// <summary>

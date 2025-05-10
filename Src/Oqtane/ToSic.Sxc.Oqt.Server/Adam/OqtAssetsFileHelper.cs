@@ -10,7 +10,7 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Adam;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class OqtAssetsFileHelper() : ServiceBase(OqtConstants.OqtLogPrefix + ".FilHlp")
 {
     public const string RouteAdam = "adam";

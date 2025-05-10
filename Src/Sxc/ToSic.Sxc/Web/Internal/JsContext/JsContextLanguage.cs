@@ -5,7 +5,7 @@ using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Web.Internal.JsContext;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class JsContextLanguage(LazySvc<IZoneMapper> zoneMapperLazy)
 {
     public string Current { get; private set; }
@@ -23,7 +23,7 @@ public class JsContextLanguage(LazySvc<IZoneMapper> zoneMapperLazy)
     }
 }
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ClientInfoLanguage
 {
     // key and name must be lowercase, has side effects in EAV

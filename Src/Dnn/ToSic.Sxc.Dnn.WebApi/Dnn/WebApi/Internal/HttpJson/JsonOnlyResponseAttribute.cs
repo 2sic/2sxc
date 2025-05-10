@@ -10,7 +10,7 @@ using ToSic.Lib.Logging;
 // It's only needed in .net4x where the default is xml
 namespace ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]   // unclear if this needs to be public
+[ShowApiWhenReleased(ShowApiMode.Never)]   // unclear if this needs to be public
 public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfiguration
 {
     /// <summary>

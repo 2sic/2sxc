@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab) 
 // we can't set this globally (only needed for imports)
 [DnnLogExceptions]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), IAppController<HttpResponseMessage>
 {
     private RealController Real => SysHlp.GetService<RealController>();

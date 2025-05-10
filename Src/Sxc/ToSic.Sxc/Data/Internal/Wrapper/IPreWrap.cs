@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Data.Internal.Wrapper;
 
 [PrivateApi]
 [JsonConverter(typeof(DynamicJsonConverter))]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal interface IPreWrap : IHasJsonSource, IPropertyLookup, IWrapper<object>
 {
     TryGetResult TryGetWrap(string name, bool wrapDefault = true);

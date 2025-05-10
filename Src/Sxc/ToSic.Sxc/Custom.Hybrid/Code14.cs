@@ -24,7 +24,7 @@ namespace Custom.Hybrid;
 /// Important: The property `Convert` which exited on Razor12 was removed. use `Kit.Convert` instead.
 /// </remarks>
 [PublicApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]   // #DocsButNotForIntellisense
+[ShowApiWhenReleased(ShowApiMode.Never)]   // #DocsButNotForIntellisense
 public abstract class Code14 : CustomCodeBase, IHasCodeLog, IDynamicCode, IDynamicCode14<object, ServiceKit14>
 {
 
@@ -62,7 +62,7 @@ public abstract class Code14 : CustomCodeBase, IHasCodeLog, IDynamicCode, IDynam
     public dynamic Settings => _CodeApiSvc?.Settings;
 
     [PrivateApi("Not yet ready")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public IDevTools DevTools => CodeHelper.DevTools;
 
     #endregion
@@ -111,7 +111,7 @@ public abstract class Code14 : CustomCodeBase, IHasCodeLog, IDynamicCode, IDynam
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
     [PrivateApi("added in 16.05, but not sure if it should be public")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
         => CodeHlp.GetCode(path: path, className: className);
 

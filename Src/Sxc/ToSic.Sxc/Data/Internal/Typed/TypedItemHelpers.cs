@@ -5,7 +5,7 @@ using ToSic.Sxc.Services.Tweaks;
 
 namespace ToSic.Sxc.Data.Internal.Typed;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class TypedItemHelpers
 {
     public static IHtmlTag Html(

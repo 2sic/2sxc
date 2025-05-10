@@ -64,7 +64,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     public new TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
 
     [PrivateApi("WIP 17.06,x")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
         => CodeHelper.GetService<TService>(protector, typeName);
 
@@ -231,7 +231,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     #region Customize
 
     /// <inheritdoc cref="CodeTyped.Customize"/>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     protected ICodeCustomizer Customize => _customize ??= _CodeApiSvc.GetService<ICodeCustomizer>(reuse: true);
     private ICodeCustomizer _customize;
 

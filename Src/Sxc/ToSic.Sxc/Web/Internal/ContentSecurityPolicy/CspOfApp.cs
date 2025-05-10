@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 /// This object reads the CSP settings of an app and passes it to the <see cref="CspOfModule"/>.
 /// This is important because a module can have multiple apps in it, so it must merge the Csp Settings
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CspOfApp : ServiceForDynamicCode
 {
     public int AppId => ((ICodeApiServiceInternal)_CodeApiSvc)?._Block?.AppId ?? 0;

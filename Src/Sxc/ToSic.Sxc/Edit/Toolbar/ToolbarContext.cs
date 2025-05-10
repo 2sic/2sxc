@@ -5,7 +5,7 @@ using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ToolbarContext: IAppIdentity
 {
     internal const string CtxZone = "context:zoneId";
@@ -33,7 +33,7 @@ internal class ToolbarContext: IAppIdentity
     public string Custom { get; } = null;
 }
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal static class ToolbarContextExtensions
 {
     public static string ToRuleString(this ToolbarContext tlbCtx) => tlbCtx == null 

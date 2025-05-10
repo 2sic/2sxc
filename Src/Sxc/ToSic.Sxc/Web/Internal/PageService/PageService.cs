@@ -7,7 +7,7 @@ using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 namespace ToSic.Sxc.Web.Internal.PageService;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class PageService(
     PageServiceShared pageServiceShared,
     LazySvc<ContentSecurityPolicyService> cspServiceLazy,

@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Cms.Internal.Publishing;
 
 // Note: maybe some day this should go into a .Cms namespace
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IPagePublishing: IHasLog
 {
     /// <summary>

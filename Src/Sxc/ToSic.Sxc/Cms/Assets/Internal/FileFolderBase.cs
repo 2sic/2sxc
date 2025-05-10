@@ -4,7 +4,7 @@ using ToSic.Eav.Data.Raw;
 namespace ToSic.Sxc.Cms.Assets.Internal;
 
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract record FileFolderBase: IRawEntity, IHasRelationshipKeys
 {
     /// <inheritdoc />

@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [DnnLogExceptions]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ZoneController() : DnnSxcControllerBase(RealController.LogSuffix), IZoneController
 {
     private RealController Real => SysHlp.GetService<RealController>();

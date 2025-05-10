@@ -3,7 +3,7 @@ using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Web.Internal.Url;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class UrlHelpers
 {
     /// <summary>

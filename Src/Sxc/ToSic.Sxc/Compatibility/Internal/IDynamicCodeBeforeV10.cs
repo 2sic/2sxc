@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Compatibility.Internal
 	/// <summary>
     /// Old interface for the SexyContent Web Page
     /// </summary>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public interface IDynamicCodeBeforeV10
     {
 

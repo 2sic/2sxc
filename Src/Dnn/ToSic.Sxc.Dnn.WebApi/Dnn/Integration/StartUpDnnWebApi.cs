@@ -11,7 +11,7 @@ using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
 
 namespace ToSic.Sxc.Dnn.Integration;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class StartUpDnnWebApi
 {
     public static IServiceCollection AddDnnWebApi(this IServiceCollection services)

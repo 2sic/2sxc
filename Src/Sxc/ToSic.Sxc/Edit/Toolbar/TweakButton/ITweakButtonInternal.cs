@@ -8,15 +8,15 @@ internal interface ITweakButtonInternal
     /// List of changes to apply to the UI parameter
     /// </summary>
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)] 
+    [ShowApiWhenReleased(ShowApiMode.Never)] 
     IImmutableList<object> UiMerge { get; }
 
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     IImmutableList<object> ParamsMerge { get; }
 
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     bool? _condition { get; }
 
     /// <summary>

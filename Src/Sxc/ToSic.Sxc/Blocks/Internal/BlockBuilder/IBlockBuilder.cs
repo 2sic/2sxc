@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Blocks.Internal;
 /// Sxc Block to get everything rendered. 
 /// </summary>
 [PrivateApi("not sure yet what to call this, or if it should be public")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IBlockBuilder: IHasLog
 {
     /// <summary>

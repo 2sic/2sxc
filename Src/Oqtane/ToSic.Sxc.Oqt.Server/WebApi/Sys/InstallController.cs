@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + "/" + AreaRoutes.Sys)]
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class InstallController()
     : OqtStatefulControllerBase(RealController.LogSuffix), IInstallController<IActionResult>
 {

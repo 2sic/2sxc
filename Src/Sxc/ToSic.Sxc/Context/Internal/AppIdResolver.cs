@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Context.Internal;
 /// This helps API calls to get the app which is currently needed
 /// It does not perform security checks ATM and maybe never will
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class AppIdResolver(IHttp http, AppFinder appFinder) : ServiceBase("Api.FindAp", connect: [http, appFinder])
 {
     /// <summary>

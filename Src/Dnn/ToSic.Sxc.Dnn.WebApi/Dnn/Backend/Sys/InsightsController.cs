@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Dnn.Backend.Sys;
 
 [DnnLogExceptions]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class InsightsController() : DnnSxcControllerRoot(RealController.LogSuffix)
 {
     private RealController Real => SysHlp.GetService<RealController>();

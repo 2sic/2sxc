@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 /// </remarks>
 [SupportedModules(DnnSupportedModuleNames)]
 [ValidateAntiForgeryToken]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class FeatureController() : DnnSxcControllerRoot(RealController.LogSuffix), IFeatureController
 {
     private RealController Real => SysHlp.GetService<RealController>();

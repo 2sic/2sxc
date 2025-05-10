@@ -8,7 +8,7 @@ namespace ToSic.Sxc.LookUp;
 /// Look up things in app-settings, app-resources etc.
 /// </summary>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class LookUpInAppProperty(string name, IApp app) : LookUpBase(name, "LookUp in App Properties - mainly path")
 {
     #region Internal stuff to be able to supply sub-properties

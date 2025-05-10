@@ -12,7 +12,7 @@ using static ToSic.Sxc.Dnn.DnnSxcSettings;
 namespace ToSic.Sxc.Dnn.Run;
 
 // TODO: probably change this to use an interface so we can make it internal
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 [PrivateApi]
 public class DnnSecurity(LazySvc<RoleController> roleController) : ServiceBase("dnnSec", connect: [roleController])
 {

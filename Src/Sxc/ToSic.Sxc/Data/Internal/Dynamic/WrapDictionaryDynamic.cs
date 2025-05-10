@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Data.Internal.Dynamic;
 /// <remarks>
 /// Will always return true even if the property doesn't exist, in which case it resolves to null.
 /// </remarks>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class WrapDictionaryDynamic<TKey, TVal>: DynamicObject, IWrapper<IDictionary<TKey, TVal>>, IHasKeys
 {
     protected readonly IDictionary<TKey, TVal> UnwrappedDictionary;

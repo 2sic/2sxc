@@ -4,7 +4,7 @@ using ToSic.Sxc.Context.Internal;
 
 namespace ToSic.Sxc.Apps.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppFolder(ISxcContextResolver ctxResolver) : ServiceBase("AppFld")
 {
     /// <summary>

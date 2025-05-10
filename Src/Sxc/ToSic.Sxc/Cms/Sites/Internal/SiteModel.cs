@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Cms.Sites.Internal;
 /// TODO:
 /// </summary>
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 [ContentTypeSpecs(
     Guid = "89ef9f2c-98d3-42e9-a190-b9b3fc814284",
     Description = "Site information",

@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Blocks.Internal.Render;
 /// See also [](xref:Basics.Cms.InnerContent.Index)
 /// </summary>
 [PrivateApi("Hide Implementation")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class RenderService: ServiceForDynamicCode,
     ToSic.Sxc.Services.IRenderService
 #if NETFRAMEWORK

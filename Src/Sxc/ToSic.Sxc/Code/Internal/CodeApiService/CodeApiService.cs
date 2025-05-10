@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// It can usually not be created directly, but through the <see cref="CodeApiServiceFactory"/> which would return a <see cref="CodeApiServiceUnknown"/>.
 /// </remarks>
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServices>, ICodeApiService, IHasPiggyBack
 {
     #region Constructor

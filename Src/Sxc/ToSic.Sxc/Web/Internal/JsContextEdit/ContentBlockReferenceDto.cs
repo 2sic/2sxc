@@ -6,7 +6,7 @@ using ToSic.Sxc.Data.Internal.Decorators;
 
 namespace ToSic.Sxc.Web.Internal.JsContextEdit;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentBlockReferenceDto
 {
     /// <summary>

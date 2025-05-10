@@ -3,7 +3,7 @@ using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Data.Internal.Typed;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class HasKeysHelper
 {
     public static bool IsEmpty(ITyped item, string name, NoParamOrder noParamOrder, bool? blankIs)

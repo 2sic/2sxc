@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Code.Internal;
 
 [PrivateApi("v14")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IHasKit<out TServiceKit> where TServiceKit : ServiceKit
 {
     /// <summary>

@@ -3,7 +3,7 @@ using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeHelperBase : ServiceForDynamicCode
 {
     protected CodeHelperBase(string logName) : base(logName)

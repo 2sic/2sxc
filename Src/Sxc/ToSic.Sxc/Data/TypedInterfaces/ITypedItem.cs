@@ -24,7 +24,7 @@ public partial interface ITypedItem: ITyped, ICanBeEntity, ICanBeItem, IEquatabl
     /// Example: `Dyn.FirstName` might just work - and return the first name or `null` if not found.
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("This should be avoided")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     [JsonIgnore] // prevent serialization as it's not a normal property
     dynamic Dyn { get; }
 

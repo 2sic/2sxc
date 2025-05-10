@@ -6,7 +6,7 @@ using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.Backend.Cms;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockControllerReal(
     LazySvc<IContextOfSite> context,
     LazySvc<ContentBlockBackend> blockBackend,

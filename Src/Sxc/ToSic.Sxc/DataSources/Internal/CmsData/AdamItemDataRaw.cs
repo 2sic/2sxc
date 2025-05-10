@@ -4,7 +4,7 @@ using ToSic.Eav.Data.Raw;
 namespace ToSic.Sxc.DataSources.Internal;
 
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamItemDataRaw: IRawEntity
 {
     public const string TypeName = "AdamItem";

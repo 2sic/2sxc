@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 /// Security checking is possible, because the cookie still contains user information
 /// </remarks>
 [DnnLogExceptions]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), ITypeController
 {
     private RealController Real => SysHlp.GetService<RealController>();

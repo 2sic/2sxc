@@ -32,7 +32,7 @@ namespace ToSic.Sxc.DataSources;
     ConfigurationType = "" // TODO: ...
 )]
 [PrivateApi("Was till v17 InternalApi_DoNotUse_MayChangeWithoutNotice(still wip / finishing specs etc.)")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamFiles : CustomDataSourceAdvanced
 {
     private readonly AdamDataSourceProvider<int, int> _provider;

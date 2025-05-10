@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Services.OutputCache;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class OutputCacheService(IModuleService moduleService)
     : ServiceForDynamicCode("Sxc.OutCac", connect: [moduleService]), IOutputCacheService
 {

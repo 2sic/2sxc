@@ -9,7 +9,7 @@ using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Internal.Wrapper;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal abstract class PreWrapBase(object data) : IWrapper<object>, IHasJsonSource
 {
     #region IWrapper

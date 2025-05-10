@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Data.Internal.Wrapper;
 /// Will always return a value even if the property doesn't exist, in which case it resolves to null.
 /// </remarks>
 [JsonConverter(typeof(DynamicJsonConverter))]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal partial class PreWrapObject: PreWrapBase, /*IWrapper<object>,*/ IPropertyLookup, IHasJsonSource, IPreWrap
 {
     #region Constructor / Setup

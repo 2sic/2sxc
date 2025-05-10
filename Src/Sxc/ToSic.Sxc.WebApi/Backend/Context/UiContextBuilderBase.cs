@@ -13,7 +13,7 @@ using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Backend.Context;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
     : ServiceBase<UiContextBuilderBase.MyServices>(services, SxcLogName + ".UiCtx"), IUiContextBuilder
 {

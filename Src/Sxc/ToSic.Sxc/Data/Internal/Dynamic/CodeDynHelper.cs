@@ -5,7 +5,7 @@ using ToSic.Sxc.Data.Internal.Typed;
 
 namespace ToSic.Sxc.Data.Internal.Dynamic;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CodeDynHelper(IEntity entity, SubDataFactory subDataFactory)
 {
     public IEntity Entity { get; } = entity;

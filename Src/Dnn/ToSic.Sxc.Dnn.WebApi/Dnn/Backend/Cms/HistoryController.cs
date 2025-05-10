@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Dnn.Backend.Cms;
 [PrivateApi]
 [SupportedModules(DnnSupportedModuleNames)]
 [ValidateAntiForgeryToken]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class HistoryController() : DnnSxcControllerBase(RealController.LogSuffix), IHistoryController
 {
     private RealController Real => SysHlp.GetService<RealController>();

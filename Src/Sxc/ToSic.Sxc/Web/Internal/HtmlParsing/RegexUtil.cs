@@ -3,7 +3,7 @@ using ToSic.Lib.Helpers;
 
 namespace ToSic.Sxc.Web.Internal.HtmlParsing;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class RegexUtil
 {
     /// <summary>

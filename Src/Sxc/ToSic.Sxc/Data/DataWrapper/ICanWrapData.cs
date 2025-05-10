@@ -17,5 +17,5 @@
 /// * Made visible in the docs for better understanding in v19.01
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("may change or rename at any time")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICanWrapData;

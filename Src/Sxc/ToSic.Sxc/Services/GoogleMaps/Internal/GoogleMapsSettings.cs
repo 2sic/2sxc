@@ -4,7 +4,7 @@ using ToSic.Lib.Helpers;
 namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class GoogleMapsSettings(IJsonService jsonService)
     : EntityBasedService<GoogleMapsSettings>($"{SxcLogName}.GMapSt")
 {

@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Backend.ImportExport;
 /// <summary>
 /// This object will ensure that an app is reset to the state it was in when the app.xml was last exported
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ResetApp(
     LazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
     ImpExpHelpers impExpHelpers,

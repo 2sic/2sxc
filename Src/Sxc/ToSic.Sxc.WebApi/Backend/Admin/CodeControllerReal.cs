@@ -7,7 +7,7 @@ using ToSic.Sxc.Code.Internal.Documentation;
 
 namespace ToSic.Sxc.Backend.Admin;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGenerator>> generators, LazySvc<IAppJsonService> appJsonService) 
     : ServiceBase("Api.CodeRl", connect: [appJsonService])
 {

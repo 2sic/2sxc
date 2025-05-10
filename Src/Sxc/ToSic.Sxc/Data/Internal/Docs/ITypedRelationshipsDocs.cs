@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Data.Internal.Docs;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ITypedRelationshipsDocs
 {
     /// <summary>

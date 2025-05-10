@@ -4,7 +4,7 @@
 /// Carries information about what compatibility level to use. Important for components that have an older and newer API.
 /// </summary>
 [PrivateApi("this is just fyi, was published as internal till v14")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICompatibilityLevel
 {
     /// <summary>

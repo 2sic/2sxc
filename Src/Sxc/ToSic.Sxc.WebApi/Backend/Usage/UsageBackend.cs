@@ -7,7 +7,7 @@ using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Backend.Usage;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class UsageBackend(
     GenWorkPlus<WorkBlocks> appBlocks,
     GenWorkPlus<WorkViews> workViews,

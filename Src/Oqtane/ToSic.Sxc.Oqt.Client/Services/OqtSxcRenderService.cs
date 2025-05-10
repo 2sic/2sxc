@@ -8,7 +8,7 @@ using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Client.Services;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class OqtSxcRenderService(HttpClient http, SiteState siteState) : ServiceBase(http, siteState), IOqtSxcRenderService, IClientService
 {
     private string ApiUrl => CreateApiUrl("OqtSxcRender");

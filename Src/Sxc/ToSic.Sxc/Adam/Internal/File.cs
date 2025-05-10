@@ -7,7 +7,7 @@ using ToSic.Sxc.Images.Internal;
 
 namespace ToSic.Sxc.Adam.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets.Internal.File<TFolderId, TFileId>,
 #if NETFRAMEWORK
 #pragma warning disable 618

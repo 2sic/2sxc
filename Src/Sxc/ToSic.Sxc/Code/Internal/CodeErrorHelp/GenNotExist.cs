@@ -4,7 +4,7 @@ using ToSic.Lib.Internal.Generics;
 
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class GenNotExist(string name, (string Code, string Comment)[] alt)
 {
     public GenNotExist(string name, params string[] alt) : this(name, alt?.Select(r => (r, null as string)).ToArray()) { }

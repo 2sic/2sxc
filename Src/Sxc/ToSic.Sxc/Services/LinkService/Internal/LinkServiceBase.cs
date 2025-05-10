@@ -10,7 +10,7 @@ using ToSic.Sxc.Web.Internal.Url;
 namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy, object[] connect = default)
     : ServiceForDynamicCode($"{SxcLogName}.LnkHlp", connect: [..connect ?? [], linkPathsLazy, imgLinker]), ILinkService
 {

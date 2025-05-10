@@ -10,7 +10,7 @@ using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Client.Services;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingService noCache)
 {
     /// <summary>

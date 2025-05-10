@@ -4,7 +4,7 @@
 /// Interface for ImageDecorator,
 /// so we can also use it when not created from an IEntity.
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal interface IImageDecorator
 {
     bool? LightboxIsEnabled { get; }

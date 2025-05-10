@@ -9,7 +9,7 @@ using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.Backend;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CustomApiHelpers
 {
     public static string FileParamsInitialCheck(NoParamOrder noParamOrder, bool? download, string virtualPath,

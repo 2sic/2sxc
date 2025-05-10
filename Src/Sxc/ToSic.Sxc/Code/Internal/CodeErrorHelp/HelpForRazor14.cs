@@ -3,7 +3,7 @@ using static ToSic.Sxc.Code.Internal.CodeErrorHelp.HelpForRazor12;
 
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class HelpForRazor14
 {
     internal static List<CodeHelp> Compile14 => field ??= CodeHelpBuilder.BuildListFromDiverseSources(

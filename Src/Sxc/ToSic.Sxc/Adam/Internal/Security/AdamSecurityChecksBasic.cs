@@ -4,7 +4,7 @@
 /// This is a simple AdamSecurityChecks which doesn't know much about the environment but works to get started.
 /// 
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class AdamSecurityChecksBasic(AdamSecurityChecksBase.MyServices services)
     : AdamSecurityChecksBase(services, LogScopes.Base)
 {

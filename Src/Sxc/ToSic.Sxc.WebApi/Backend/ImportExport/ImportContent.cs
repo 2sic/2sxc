@@ -18,7 +18,7 @@ using ToSic.Lib.Internal.Generics;
 
 namespace ToSic.Sxc.Backend.ImportExport;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ImportContent(
     IEnvironmentLogger envLogger,
     LazySvc<ImportService> importerLazy,

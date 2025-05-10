@@ -3,7 +3,7 @@
 /// <summary>
 /// 2023-11-14 Can't make this internal, would cause trouble, going public is necessary otherwise IResponsiveImage etc. fail
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract record HybridHtmlStringLog: HybridHtmlString, IHasLog
 {
     protected HybridHtmlStringLog(string logName)

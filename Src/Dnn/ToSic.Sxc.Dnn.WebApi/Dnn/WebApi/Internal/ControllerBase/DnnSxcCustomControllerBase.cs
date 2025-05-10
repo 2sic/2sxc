@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal;
 // Note: 2022-02 2dm I'm not sure if this was ever published as the official api controller, but it may have been?
 [DnnLogExceptions]
 // Can't hide in Intellisense, because that would hide it for all derived classes too
-// [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+// [ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
 public abstract class DnnSxcCustomControllerBase(string logSuffix, string insightsGroup = default)
     : DnnSxcControllerBase(logSuffix, insightsGroup), IHasCodeApiService
@@ -42,7 +42,7 @@ public abstract class DnnSxcCustomControllerBase(string logSuffix, string insigh
     #region Internal / Plumbing / Obsolete
 
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public ICodeApiService _CodeApiSvc { get; private set; }
 
 
@@ -53,7 +53,7 @@ public abstract class DnnSxcCustomControllerBase(string logSuffix, string insigh
     [Obsolete("Deprecated in v13.03 - doesn't serve a purpose any more. Will just remain to avoid breaking public uses of this property.")]
     // ReSharper disable once UnassignedGetOnlyAutoProperty
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     protected virtual string HistoryLogName { get; }
 
     #endregion

@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Web.Internal.PageService;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record PagePropertyChange
 {
     public PageChangeModes ChangeMode { get; init; }

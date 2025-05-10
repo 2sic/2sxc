@@ -34,7 +34,7 @@ using static ToSic.Sxc.Oqt.Server.WebApi.OqtWebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class OqtStartup : IServerStartup
 {
     internal IConfigurationRoot Configuration { get; }

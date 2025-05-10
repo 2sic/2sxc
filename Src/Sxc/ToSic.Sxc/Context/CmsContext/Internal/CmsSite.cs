@@ -4,7 +4,7 @@ using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Context.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CmsSite(CmsContext parent, IAppReader appReader)
     : CmsContextPartBase<ISite>(parent, parent.CtxSite.Site), ICmsSite
 {

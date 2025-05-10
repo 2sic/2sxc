@@ -8,7 +8,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Apps.Internal.Work;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkAppsRemove(
     LazySvc<ZoneManager> zoneManagerLazy,
     IAppReaderFactory appReaders,

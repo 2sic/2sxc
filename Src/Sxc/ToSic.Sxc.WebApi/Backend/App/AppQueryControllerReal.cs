@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Backend.App;
 /// In charge of delivering Pipeline-Queries on the fly
 /// They will only be delivered if the security is confirmed - it must be publicly available
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppQueryControllerReal(
     ISxcContextResolver ctxResolver,
     IConvertToEavLight dataConverter,

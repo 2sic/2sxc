@@ -7,7 +7,7 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.EditService;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal partial class EditService(IJsonService jsonService)
     : ServiceForDynamicCode("Sxc.Edit", connect: [jsonService]), IEditService
 {

@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Cms.Assets.Internal;
 /// Make sure the property names never change, as they are critical for the created Entity.
 /// </remarks>
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 [ContentTypeSpecs(
     Guid = "3cf0822f-d276-469a-bbd1-cc84fd6ff748",
     Description = "File in an App",

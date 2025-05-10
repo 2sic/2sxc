@@ -32,7 +32,7 @@ static partial class RegisterSxcServices
     /// <remarks>
     /// All calls in here MUST use TryAddTransient, and never without the Try
     /// </remarks>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcCoreFallbackServices(this IServiceCollection services)
     {
         // basic environment, pages, modules etc.

@@ -15,7 +15,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class BlockBase(BlockBase.MyServices services, string logName, object[] connect = default)
     : ServiceBase<BlockBase.MyServices>(services, logName, connect: connect ?? []), IBlock
 {

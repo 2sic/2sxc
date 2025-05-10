@@ -10,7 +10,7 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DependenciesLoader(ILogStore logStore, IAppReaderFactory appReadFac, LazySvc<IAppPathsMicroSvc> appPathsLazy, AssemblyCacheManager assemblyCacheManager, LazySvc<AppCodeCompiler> appCodeCompilerLazy)
     : ServiceBase("Sys.AppCodeLoad", connect: [logStore, appReadFac, appPathsLazy, assemblyCacheManager, appCodeCompilerLazy])
 {

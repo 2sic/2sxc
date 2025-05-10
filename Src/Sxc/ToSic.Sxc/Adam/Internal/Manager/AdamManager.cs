@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Adam.Internal;
 /// <remarks>
 /// It's abstract, because there will be a typed implementation inheriting this
 /// </remarks>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompatibilityLevel
 {
     #region MyServices

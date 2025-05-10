@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Backend.Admin;
 /// Experimental new class
 /// Goal is to reduce code in the Dnn and Oqtane controllers, which basically does the same thing, mostly DI work
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppControllerReal(
     LazySvc<AppsBackend> appsBackendLazy,
     LazySvc<WorkAppsRemove> workAppsRemove,

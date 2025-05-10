@@ -3,7 +3,7 @@ using ToSic.Eav.WebApi.Errors;
 
 namespace ToSic.Sxc.Backend.Adam;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamControllerReal<TIdentifier>(
     LazySvc<AdamTransUpload<TIdentifier, TIdentifier>> adamUpload,
     LazySvc<AdamTransGetItems<TIdentifier, TIdentifier>> adamItems,

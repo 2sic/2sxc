@@ -13,7 +13,7 @@ using static ToSic.Sxc.Blocks.Internal.BlockBuildingConstants;
 
 namespace ToSic.Sxc.Blocks.Internal.Render;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class RenderingHelper(
     ILinkPaths linkPaths,
     LazySvc<IEnvironmentLogger> errorLogger,

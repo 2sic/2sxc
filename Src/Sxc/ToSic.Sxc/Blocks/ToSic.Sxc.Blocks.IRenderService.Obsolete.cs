@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Blocks;
 /// Will continue to work, but shouldn't be used. Please use <see cref="ToSic.Sxc.Services.IRenderService"/>  instead
 /// </summary>
 [Obsolete("Old name, used in 2-3 v12 apps released. Pls use ToSic.Sxc.Services.IRenderService instead.")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IRenderService
 {
     [PrivateApi]

@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Blocks.Internal;
 /// Defines a view configuration which is loaded from a <see cref="EntityBasedType"/>.
 /// </summary>
 [PrivateApi("Was Public API till v17, but I can't see any reason why people would have used it since it would go through ICmsView")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IView: IEntityBasedType
 {
     /// <summary>

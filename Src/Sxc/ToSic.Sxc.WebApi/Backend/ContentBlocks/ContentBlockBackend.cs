@@ -12,7 +12,7 @@ using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Backend.ContentBlocks;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentBlockBackend(
     GenWorkPlus<WorkViews> workViews,
     Generator<MultiPermissionsApp> multiPermissionsApp,

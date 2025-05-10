@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Web.Internal.PageService;
 
 [PrivateApi("not final yet, probably will not be implemented like this")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public enum PageChangeModes
 {
     /// <summary>

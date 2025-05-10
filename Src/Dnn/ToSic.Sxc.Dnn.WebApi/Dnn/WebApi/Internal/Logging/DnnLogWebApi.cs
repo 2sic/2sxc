@@ -5,7 +5,7 @@ using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DnnLogWebApi : ActionFilterAttribute
 {
     public override bool AllowMultiple => false;

@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Images.Internal;
 /// Must be public, otherwise it breaks in dynamic use :(
 /// </remarks>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record ResponsiveImage: ResponsiveBase
 {
     [PrivateApi("don't show")]

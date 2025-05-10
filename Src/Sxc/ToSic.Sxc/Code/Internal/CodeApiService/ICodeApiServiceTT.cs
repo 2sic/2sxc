@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Code.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICodeApiService<out TModel, out TServiceKit>: ICodeApiService, IHasKit<TServiceKit>
     where TModel : class
     where TServiceKit : ServiceKit

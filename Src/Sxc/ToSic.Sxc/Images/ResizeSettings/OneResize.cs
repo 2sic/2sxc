@@ -3,7 +3,7 @@
 /// <summary>
 /// The final sizes to be used when resizing
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class OneResize: ICanDump
 {
     public int Width;

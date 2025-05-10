@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn.Backend;
 [SupportedModules(DnnSupportedModuleNames)]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
 [ValidateAntiForgeryToken]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamController() : DnnSxcControllerBase("Adam"), IAdamController<int>
 {
     private RealController Real => SysHlp.GetService<RealController>();

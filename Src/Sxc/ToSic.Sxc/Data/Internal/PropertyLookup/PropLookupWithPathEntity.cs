@@ -4,7 +4,7 @@ using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Data.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class PropLookupWithPathEntity(IEntity entity, ICanDebug canDebug) :
     ICanBeEntity, // This is important, to ensure that when used in a stack it can be converted to something else again
     IPropertyLookup

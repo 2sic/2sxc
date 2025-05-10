@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Backend.Cms;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class LoadSettingsProviderParameters
 {
     public IContextOfApp ContextOfApp { get; set; }

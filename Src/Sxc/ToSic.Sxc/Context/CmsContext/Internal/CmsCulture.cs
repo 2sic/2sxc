@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Context.Internal;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CmsCulture(CmsContext parent) : ICmsCulture
 {
     public string DefaultCode => parent.CtxSite.Site.DefaultCultureCode;

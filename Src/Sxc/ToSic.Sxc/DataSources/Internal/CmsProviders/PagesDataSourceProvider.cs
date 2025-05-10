@@ -8,7 +8,7 @@ namespace ToSic.Sxc.DataSources.Internal;
 ///
 /// Must be overriden in each platform.
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class PagesDataSourceProvider(string logName, object[] connect = default) : ServiceBase(logName, connect: connect)
 {
     public const int NoParent = 0;

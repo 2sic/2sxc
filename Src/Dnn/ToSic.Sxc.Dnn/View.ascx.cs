@@ -14,7 +14,7 @@ using ToSic.Sxc.Web.Internal.LightSpeed;
 
 namespace ToSic.Sxc.Dnn;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class View : PortalModuleBase, IActionable
 {
     private static bool _loggedToBootLog;

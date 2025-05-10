@@ -4,7 +4,7 @@ using ToSic.Eav.Plumbing;
 namespace ToSic.Sxc.Web.Internal.EditUi;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class HtmlDialog
 {
     public const string PageIdInUrl = "pageId";

@@ -4,7 +4,7 @@
 /// Attribute to mark all IEngine implementations
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class EngineDefinitionAttribute: Attribute
 {
     public EngineDefinitionAttribute() { }

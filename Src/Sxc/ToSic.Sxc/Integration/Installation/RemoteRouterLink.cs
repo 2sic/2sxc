@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Integration.Installation;
 /// WIP - single location for building router links for installer and app/content infos
 /// </summary>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class RemoteRouterLink(SystemFingerprint fingerprint, IPlatformInfo platformInfo)
 {
     public string LinkToRemoteRouter(RemoteDestinations destination, ISite site, int moduleId, IAppSpecs appSpecsOrNull, bool isContentApp)
@@ -48,7 +48,7 @@ public class RemoteRouterLink(SystemFingerprint fingerprint, IPlatformInfo platf
 
 }
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public enum RemoteDestinations
 {
     AutoConfigure,

@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Data.Internal.Dynamic;
 /// Will always return a value even if the property doesn't exist, in which case it resolves to null.
 /// </remarks>
 [JsonConverter(typeof(DynamicJsonConverter))]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class WrapObjectDynamic: DynamicObject, IWrapper<object>, IPropertyLookup, IHasJsonSource, ICanGetByName
 {
     [PrivateApi]

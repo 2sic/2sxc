@@ -5,7 +5,7 @@ using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Images;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService features)
     : ServiceForDynamicCode(SxcLogName + ".ImgSvc", connect: [features, imgLinker]), IImageService
 {

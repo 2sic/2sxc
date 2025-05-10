@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
 /// </summary>
 [PrivateApi("This is the .net core Shim class for v12+")]
 [DnnLogExceptions]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal partial class WebApiCoreShim: ServiceBase
 {
     public HttpRequestMessage Request { get; }

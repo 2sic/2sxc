@@ -7,7 +7,7 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Blocks.Internal.Render;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class SimpleRenderer(Generator<BlockFromEntity> blkFrmEntGen)
     : ServiceBase(SxcLogName + "RndSmp", connect: [blkFrmEntGen])
 {

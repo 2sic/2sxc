@@ -6,7 +6,7 @@ using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Integration;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class SxcImportExportEnvironmentBase: EavImportExportEnvironmentBase
 {
     #region constructor / DI

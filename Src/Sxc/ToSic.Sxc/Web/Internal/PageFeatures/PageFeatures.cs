@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Web.Internal.PageFeatures;
 
 [PrivateApi("Internal stuff, hide implementation")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class PageFeatures(IPageFeaturesManager pfm) : IPageFeatures
 {
     /// <inheritdoc />

@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [DnnLogExceptions]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppFilesController() : DnnSxcControllerBase(RealController.LogSuffix), IAppFilesController
 {
     private RealController Real => SysHlp.GetService<RealController>();

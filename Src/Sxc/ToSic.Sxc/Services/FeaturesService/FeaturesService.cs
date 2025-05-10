@@ -3,7 +3,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Services;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class FeaturesService(IEavFeaturesService eavFeaturesSvc)
     : ServiceBase($"{SxcLogName}.FeatSv"), IFeaturesService, ICanDebug
 {

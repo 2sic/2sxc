@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [SupportedModules(DnnSupportedModuleNames)]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class MetadataController() : DnnSxcControllerBase(RealController.LogSuffix), IMetadataController
 {
     private RealController Real => SysHlp.GetService<RealController>();

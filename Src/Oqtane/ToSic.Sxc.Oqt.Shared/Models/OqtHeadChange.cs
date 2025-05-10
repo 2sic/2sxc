@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Oqt.Shared.Models;
 
 // Equivalent to ToSic.Sxc.Web.PageService.HeadChange
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class OqtHeadChange
 {
     public OqtPagePropertyOperation PropertyOperation { get; set; }

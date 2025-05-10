@@ -7,7 +7,7 @@ using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Apps.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppFolderInitializer(IServerPaths serverPaths, IGlobalConfiguration globalConfiguration, ISite site)
     : ServiceBase("Viw.Help", connect: [serverPaths, globalConfiguration, site])
 {

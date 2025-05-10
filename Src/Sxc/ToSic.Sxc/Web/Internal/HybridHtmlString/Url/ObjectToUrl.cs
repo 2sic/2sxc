@@ -4,7 +4,7 @@ using ToSic.Lib.Internal.Generics;
 
 namespace ToSic.Sxc.Web.Internal.Url;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ObjectToUrl
 {
     public ObjectToUrl() { }

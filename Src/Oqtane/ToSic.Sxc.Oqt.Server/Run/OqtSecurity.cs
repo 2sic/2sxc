@@ -11,7 +11,7 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class OqtSecurity(LazySvc<IUserRoleRepository> userRoleRepository, UserManager<IdentityUser> identityUserManager)
     : ServiceBase($"{OqtConstants.OqtLogPrefix}.User", connect: [userRoleRepository, identityUserManager])
 {

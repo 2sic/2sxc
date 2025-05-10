@@ -7,7 +7,7 @@
 /// <typeparam name="TTypedItem"></typeparam>
 /// <param name="original"></param>
 /// <param name="fieldInfo"></param>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ListTypedItems<TTypedItem>(IEnumerable<TTypedItem> original, IEntity fieldInfo)
     : List<TTypedItem>(original), ICanBeEntity
     where TTypedItem : class

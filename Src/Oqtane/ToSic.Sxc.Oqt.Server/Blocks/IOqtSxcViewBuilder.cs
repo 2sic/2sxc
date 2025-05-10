@@ -4,7 +4,7 @@ using ToSic.Sxc.Oqt.Shared.Models;
 namespace ToSic.Sxc.Oqt.Server.Blocks;
 
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IOqtSxcViewBuilder
 {
     /// <summary>

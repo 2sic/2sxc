@@ -7,7 +7,7 @@
 /// Default constructor will always work, and use the current service provider as the source
 /// </remarks>
 /// <param name="serviceProvider"></param>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class PageScopeAccessor(IServiceProvider serviceProvider)
 {
     public void InitPageOfModule(IServiceProvider pageServiceProvider)

@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 
 [ApiController]
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DialogController() : OqtStatefulControllerBase(RealController.LogSuffix), IDialogController
 {
     private RealController Real => GetService<RealController>();

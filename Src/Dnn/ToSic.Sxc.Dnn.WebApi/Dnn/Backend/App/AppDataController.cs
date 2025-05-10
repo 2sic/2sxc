@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Dnn.Backend.App;
 
 /// <inheritdoc />
 [AllowAnonymous]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppDataController() : DnnSxcControllerBase(RealController.LogSuffix), IAppDataController
 {
     private RealController Real => SysHlp.GetService<RealController>();

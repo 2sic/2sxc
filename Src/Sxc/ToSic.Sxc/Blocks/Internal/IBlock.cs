@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Blocks.Internal;
 /// INTERNAL: A unit / block of output in a CMS. 
 /// </summary>
 [PrivateApi("Was InternalApi_DoNotUse_... till v17")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IBlock: IAppIdentity, IHasLog
 {
     /// <summary>

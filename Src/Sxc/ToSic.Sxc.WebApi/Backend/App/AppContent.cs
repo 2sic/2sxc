@@ -17,7 +17,7 @@ using static ToSic.Eav.Apps.Internal.Api01.SaveApiAttributes;
 
 namespace ToSic.Sxc.Backend.App;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppContent(
     EntityApi api,
     LazySvc<IConvertToEavLight> entToDicLazy,

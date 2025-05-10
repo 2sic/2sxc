@@ -9,7 +9,7 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.Services.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class UserService(LazySvc<IContextOfSite> context, LazySvc<IUsersProvider> usersSvc, LazySvc<IUserRolesProvider> rolesSvc)
     : ServiceForDynamicCode($"{SxcLogName}.UsrSrv", connect: [context, usersSvc]), IUserService
 {

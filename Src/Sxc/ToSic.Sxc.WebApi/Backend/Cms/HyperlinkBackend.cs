@@ -4,7 +4,7 @@ using ToSic.Sxc.Backend.Adam;
 
 namespace ToSic.Sxc.Backend.Cms;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class HyperlinkBackend<TFolderId, TFileId>(
     LazySvc<AdamContext<TFolderId, TFileId>> adamState,
     ISxcContextResolver ctxResolver,

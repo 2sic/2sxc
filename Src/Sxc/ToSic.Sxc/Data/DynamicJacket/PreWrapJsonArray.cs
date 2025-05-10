@@ -9,7 +9,7 @@ using ToSic.Sxc.Data.Internal.Wrapper;
 
 namespace ToSic.Sxc.Data;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class PreWrapJsonArray(CodeJsonWrapper wrapper, JsonArray jsonArray)
     : PreWrapJsonBase(wrapper, jsonArray), IWrapper<JsonArray>
 {

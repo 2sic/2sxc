@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Context.Internal;
 /// This lets the code be platform-agnostic, so that it works across implementations (Dnn, Oqtane, NopCommerce)
 /// </summary>
 [PrivateApi("we only show the interface in the docs")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CmsContext(
     IPlatform platform,
     IContextOfSite siteCtxFallback,

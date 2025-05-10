@@ -3,7 +3,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CspParameterFinalizer() : ServiceBase($"{CspConstants.LogPrefix}.ParFin")
 {
     public CspParameters Finalize(CspParameters original)

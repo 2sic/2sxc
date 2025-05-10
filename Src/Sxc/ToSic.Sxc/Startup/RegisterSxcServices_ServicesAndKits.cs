@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Startup;
 
 static partial class RegisterSxcServices
 {
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddServicesAndKits(this IServiceCollection services)
     {
         services.TryAddTransient<IContentSecurityPolicyService, ContentSecurityPolicyService>();

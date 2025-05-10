@@ -36,7 +36,7 @@ public interface IKeyService
     string UniqueKey { get; }
 
     [PrivateApi("not yet sure if we should publish this")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     string UniqueKeyOf(object data);
 
     /// <summary>

@@ -8,7 +8,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Adam.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices services, string logPrefix)
     : ServiceBase<AdamSecurityChecksBase.MyServices>(services, $"{logPrefix}.TnScCk")
 {

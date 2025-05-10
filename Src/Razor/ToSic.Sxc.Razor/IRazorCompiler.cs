@@ -8,7 +8,7 @@ using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Razor;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IRazorCompiler
 {
     Task<(IView view, ActionContext context)> CompileView(string partialName, Action<RazorView> configure = null, IApp app = null, HotBuildSpec spec = default);

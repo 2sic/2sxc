@@ -9,7 +9,7 @@ namespace ToSic.Sxc.WebApi.ActionFilters;
 /// TODO: @STV pls document what this is for
 /// </summary>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class HttpResponseExceptionFilter : IActionFilter, IOrderedFilter
 {
     public int Order { get; } = int.MaxValue - 10;

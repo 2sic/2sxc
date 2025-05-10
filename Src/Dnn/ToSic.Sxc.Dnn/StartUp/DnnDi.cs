@@ -15,7 +15,7 @@ using ToSic.Sxc.Startup;
 
 namespace ToSic.Sxc.Dnn.StartUp;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class DnnDi
 {
     private static bool _alreadyRegistered;

@@ -6,7 +6,7 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi("Hide implementation")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ConvertForCodeService(ConvertValueService cnvSvc) : ServiceBase("Sxc.CnvSrv", connect: [cnvSvc])
 {
     public string ForCode(object value, NoParamOrder noParamOrder = default, string fallback = default)

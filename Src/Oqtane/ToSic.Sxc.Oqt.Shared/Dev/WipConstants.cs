@@ -3,7 +3,7 @@
 /// <summary>
 /// Temporary constants which should be removed soon
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class WipConstants
 {
     // ADAM

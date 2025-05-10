@@ -9,7 +9,7 @@ using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Engines;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class EngineCheckTemplate(LazySvc<AppPermissionCheck> appPermCheckLazy)
     : ServiceBase("Sxc.EngChk", connect: [appPermCheckLazy])
 {

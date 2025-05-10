@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Web.Internal.EditUi;
 /// <summary>
 /// Provide all resources (fonts, icons, etc.) needed for the edit-ui
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class EditUiResources(AppDataStackService stackServiceHelper, IZoneMapper zoneMapper, IFeaturesService features)
     : ServiceBase("Sxc.EUiRes", connect: [stackServiceHelper, zoneMapper, features])
 {

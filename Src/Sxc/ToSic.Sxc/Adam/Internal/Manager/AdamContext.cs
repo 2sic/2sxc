@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Adam.Internal;
 /// <remarks>
 /// It's abstract, because there will be a typed implementation inheriting this
 /// </remarks>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AdamContext(AdamContext.MyServices services, string logName)
     : ServiceBase<AdamContext.MyServices>(services, logName ?? "Adm.Ctx")
 {

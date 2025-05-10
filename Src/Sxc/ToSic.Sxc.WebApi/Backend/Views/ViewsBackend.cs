@@ -7,7 +7,7 @@ using ToSic.Sxc.Web.Internal.LightSpeed;
 
 namespace ToSic.Sxc.Backend.Views;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ViewsBackend(
     GenWorkBasic<WorkViewsMod> workViewsMod,
     GenWorkPlus<WorkViews> workViews,

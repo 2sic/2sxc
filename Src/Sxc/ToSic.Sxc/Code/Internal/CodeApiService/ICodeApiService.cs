@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// We create another interface to ensure we don't accidentally pass around a sub-object where the root is really needed.
 /// </summary>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICodeApiService : IDynamicCode12, IHasPiggyBack
 {
     new IDynamicStack Resources { get; }
@@ -21,7 +21,7 @@ public interface ICodeApiService : IDynamicCode12, IHasPiggyBack
     #region AsConverter (internal)
 
     [PrivateApi("internal use only")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     CodeDataFactory Cdf { get; }
 
     /// <summary>

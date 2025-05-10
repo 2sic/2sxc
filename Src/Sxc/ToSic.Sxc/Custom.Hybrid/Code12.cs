@@ -20,7 +20,7 @@ namespace Custom.Hybrid;
 /// > This is an old base class and works, but you should use a newer one such as <see cref="CodeTyped"/>
 /// </summary>
 [PublicApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class Code12 : CustomCodeBase, IHasCodeLog, IDynamicCode, IDynamicCode12
 {
     #region Constructor / Setup
@@ -53,7 +53,7 @@ public abstract class Code12 : CustomCodeBase, IHasCodeLog, IDynamicCode, IDynam
     public dynamic Settings => _CodeApiSvc?.Settings;
 
     [PrivateApi("Not yet ready")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public IDevTools DevTools => _CodeApiSvc.DevTools;
 
     #endregion

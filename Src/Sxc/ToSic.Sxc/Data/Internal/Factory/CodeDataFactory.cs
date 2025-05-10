@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Data.Internal;
 
 // todo: make internal once we have an interface
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class CodeDataFactory(
     IServiceProvider serviceProvider,
     LazySvc<CodeDataServices> codeDataServices,

@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Dnn.StartUp;
 /// This way DNN will auto-run this code before anything else
 /// </summary>
 // ReSharper disable once UnusedMember.Global
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class StartupDnn : IServiceRouteMapper
 {
     /// <summary>

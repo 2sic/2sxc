@@ -6,7 +6,7 @@ using ToSic.Lib.Data;
 namespace ToSic.Sxc.Code;
 
 [PrivateApi("Hide implementation")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CodeLog(ILog log) : Wrapper<ILog>(log ?? new Log(LogConstants.NameUnknown)), ICodeLog
 {
     /// <inheritdoc />

@@ -7,7 +7,7 @@ using static ToSic.Sxc.Code.Internal.CodeErrorHelp.CodeHelpBuilder;
 
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class HelpForRazorTyped
 {
     #region Methods to help build the data

@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// Important for dynamic code files like Razor or WebApi. Note that there are many overloads to ensure that AsDynamic and AsEntity "just work" even if you give them the original data.
 /// </summary>
 [PrivateApi("Was public an on ToSic.Sxc.Code before, but now all docs should be on the object so it doesn't need to have the interface in the docs")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IDynamicCode12 : IDynamicCode
 {
     #region IDynamicCode Repeats - keep this in sync

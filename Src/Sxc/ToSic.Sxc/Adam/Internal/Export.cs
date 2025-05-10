@@ -4,7 +4,7 @@
 /// Export helper
 /// provides a list of all files / folders in ADAM for export
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class Export<TFolderId, TFileId>(AdamManager<TFolderId, TFileId> adm)
 {
     private readonly Folder<TFolderId, TFileId> _root = adm.RootFolder;

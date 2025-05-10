@@ -8,7 +8,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources;
 // - and otherwise im might be in razor-code, which we couldn't auto-update
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 [Obsolete("This class was moved / to ToSic.Sxc.Dnn.DataSources.DnnSql, use that instead.")]
 public class DnnSqlDataSource(Sql.MyServices services)
     : Sxc.Dnn.DataSources.DnnSql(services);

@@ -43,10 +43,10 @@ using ToSic.Sxc.Web.Internal.PageService;
 
 namespace ToSic.Sxc.Startup;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static partial class RegisterSxcServices
 {
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcCore(this IServiceCollection services)
     {
         // Runtimes - new: better architecture v16.07+
@@ -225,7 +225,7 @@ public static partial class RegisterSxcServices
     }
 
 
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection ExternalConfig(this IServiceCollection services)
     {
         // new v15
@@ -233,7 +233,7 @@ public static partial class RegisterSxcServices
         return services;
     }
 
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddKoi(this IServiceCollection services)
     {
         services.TryAddTransient<Connect.Koi.KoiCss.Dependencies>();
@@ -243,7 +243,7 @@ public static partial class RegisterSxcServices
     }
 
 
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddNetVariations(this IServiceCollection services)
     {
 #if NETFRAMEWORK

@@ -6,7 +6,7 @@ using Attribute = ToSic.Razor.Markup.Attribute;
 
 namespace ToSic.Sxc.Services;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class TurnOnService(LazySvc<IHtmlTagsService> htmlTagsService)
     : ServiceBase(SxcLogName + ".TrnOnS", connect: [htmlTagsService]), ITurnOnService
 {

@@ -5,7 +5,7 @@ using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.Services;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class UniqueKeysServices
 {
     internal const int UniqueKeyLength = 8;

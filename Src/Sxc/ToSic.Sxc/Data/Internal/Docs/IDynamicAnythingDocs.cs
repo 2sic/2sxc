@@ -6,7 +6,7 @@
 namespace ToSic.Sxc.Data.Internal.Docs;
 /* IMPORTANT: These are just fake properties for documentation - Keep in Sync between IDynamicEntity and IDynamicStack */
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IDynamicAnythingDocs
 {
     /// <summary>

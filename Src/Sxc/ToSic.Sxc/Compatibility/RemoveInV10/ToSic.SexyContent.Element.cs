@@ -5,7 +5,7 @@
 namespace ToSic.SexyContent;
 
 [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v11 or v12")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class Element
 {
     /// <summary>

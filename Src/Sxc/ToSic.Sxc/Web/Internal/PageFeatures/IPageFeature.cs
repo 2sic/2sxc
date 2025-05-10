@@ -4,7 +4,7 @@ using ToSic.Lib.Data;
 namespace ToSic.Sxc.Web.Internal.PageFeatures;
 
 [PrivateApi("Internal / not final - neither name, namespace or anything")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IPageFeature : IHasIdentityNameId, IHasRequirements
 {
     /// <summary>

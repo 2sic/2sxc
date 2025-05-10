@@ -21,7 +21,7 @@ namespace ToSic.Sxc.LookUp;
 /// use in other systems.
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
 internal partial class LookUpForTokenTemplate(
     string name,

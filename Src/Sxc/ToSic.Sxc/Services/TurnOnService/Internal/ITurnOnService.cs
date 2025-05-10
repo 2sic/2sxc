@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Services.Internal;
 /// turnOn Service helps initialize / boot JavaScripts when all requirements (usually dependencies) are ready.
 /// </summary>
 [PrivateApi("Don't publish yet - the functionality is surfaced on the PageService!")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ITurnOnService: IHasLog
 {
 

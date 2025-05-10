@@ -47,7 +47,7 @@ public interface ICmsModule: IHasMetadata
     ICmsBlock Block { get; }
 
     [PrivateApi("WIP")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     [JsonIgnore] // prevent serialization as it's not a normal property
 #pragma warning disable CS0108, CS0114
     IMetadata Metadata { get; }

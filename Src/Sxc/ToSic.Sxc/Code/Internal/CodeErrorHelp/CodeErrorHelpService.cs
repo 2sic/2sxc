@@ -16,7 +16,7 @@ using HttpCompileException = System.Exception;
 
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeErrorHelpService: ServiceBase
 {
     public CodeErrorHelpService() : base("Sxc.CErrHS")

@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal;
 [DnnLogExceptions]
 [PrivateApi("This was only ever used as an internal base class, so it can be modified as needed - just make sure the derived types don't break")]
 // Can't hide in Intellisense, because that would hide it for all derived classes too
-// [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+// [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class DnnSxcControllerBase(string logSuffix, string insightsGroup = default, string firstMessage = default)
     : DnnSxcControllerRoot(logSuffix, insightsGroup, firstMessage)
 {

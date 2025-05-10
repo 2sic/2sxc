@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Web.Internal.ClientAssets;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ClientAssetExtractSettings(bool extractAll, string location, int priority, bool autoDefer, bool autoAsync)
 {
     /// <summary>

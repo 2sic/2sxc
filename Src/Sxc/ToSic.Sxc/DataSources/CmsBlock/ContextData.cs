@@ -20,7 +20,7 @@ namespace ToSic.Sxc.DataSources;
 /// ...so if anybody had code using that name, it could break, but we assume this is never the case since people would always just use the `Data` object without casting a variable.
 /// </remarks>
 [PrivateApi("used to be Internal... till 16.01, then changed to private to hide implementation")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal partial class ContextData : PassThrough
 {
     #region Constructor and Init

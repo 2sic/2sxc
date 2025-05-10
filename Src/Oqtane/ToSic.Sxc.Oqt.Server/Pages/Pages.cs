@@ -10,7 +10,7 @@ using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Oqt.Server.Pages;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class Pages(
     IPageModuleRepository pageModuleRepository,
     IPageRepository pageRepository,

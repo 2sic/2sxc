@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Web;
 /// </summary>
 [PrivateApi]
 [Obsolete("Use ToSic.Sxc.Services.IPageService instead")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IPageService // : ToSic.Sxc.Services.IPageService
 {
     // This repeats the definition on the IPage Service

@@ -8,7 +8,7 @@
 /// <remarks>New in v17 - NOT YET IN USE IN PUBLIC APIs</remarks>
 /// <typeparam name="TValue"></typeparam>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal interface ITweakData<out TValue>
 {
     /// <summary>

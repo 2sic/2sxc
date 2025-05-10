@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Adam.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class Security
 {
     internal static bool PathIsInItemAdam(Guid guid, string field, string path)

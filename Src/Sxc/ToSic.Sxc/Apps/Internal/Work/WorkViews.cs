@@ -14,7 +14,7 @@ using ToSic.Sxc.Blocks.Internal;
 // note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
 namespace ToSic.Sxc.Apps.Internal.Work;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkViews(
     GenWorkPlus<WorkEntities> appEntities,
     LazySvc<IValueConverter> valConverterLazy,
@@ -33,7 +33,7 @@ public class WorkViews(
     /// <param name="UrlIdentifier"></param>
     /// <param name="IsRegex"></param>
     /// <param name="MainKey"></param>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public record ViewInfoForPathSelect(IView View, string Name, string UrlIdentifier, bool IsRegex, string MainKey);
 
     private List<IEntity> ViewEntities => _viewDs.Get(() => AppWorkCtx.AppReader.GetPiggyBackPropExpiring(

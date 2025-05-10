@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Web.Internal.JsContextEdit;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class EntityDto
 {
     public int ZoneId { get; protected set; }  // the zone of the content-block

@@ -9,7 +9,7 @@ using static ToSic.Sxc.Backend.SxcWebApiConstants;
 
 namespace ToSic.Sxc.Dnn.Integration;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DnnGetBlock(
     Generator<BlockFromEntity> blockFromEntity,
     Generator<IModuleAndBlockBuilder> moduleAndBlockBuilder)

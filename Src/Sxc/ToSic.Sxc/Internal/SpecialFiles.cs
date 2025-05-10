@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class SpecialFiles
 {
     /// <summary>

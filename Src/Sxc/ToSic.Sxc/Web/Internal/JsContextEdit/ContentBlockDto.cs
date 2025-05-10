@@ -7,7 +7,7 @@ using ToSic.Sxc.Blocks.Internal.Render;
 
 namespace ToSic.Sxc.Web.Internal.JsContextEdit;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentBlockDto : EntityDto
 {
     public bool IsCreated { get; }

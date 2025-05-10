@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing;
 /// We're not 100% sure of this purpose again, but we believe the Razor compiler tries to go through application
 /// parts and fails if this isn't included
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class MyApplicationPartFactory : ApplicationPartFactory
 {
     public override IEnumerable<ApplicationPart> GetApplicationParts(Assembly assembly)

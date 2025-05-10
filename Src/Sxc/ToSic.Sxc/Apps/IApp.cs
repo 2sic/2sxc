@@ -53,7 +53,7 @@ public interface IApp:
     IDictionary<string, IQuery> Query { get; }
 
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     IQuery GetQuery(string name);
 
     #endregion

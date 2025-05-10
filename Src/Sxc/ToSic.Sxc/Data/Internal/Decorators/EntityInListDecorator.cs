@@ -6,7 +6,7 @@
 /// So for now, only the EntityInBlockDecorator should be used anywhere explicitly
 /// </summary>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal abstract class EntityInListDecorator(string field, int index = 0, IEntity parent = default)
     : IDecorator<IEntity>
 {

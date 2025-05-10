@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Apps.Internal.Assets;
 /// <summary>
 /// Information class needed by the edit-ui, to provide optimal syntax helpers etc.
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AssetEditInfo
 {
         

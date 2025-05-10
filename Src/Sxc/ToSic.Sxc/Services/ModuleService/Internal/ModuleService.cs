@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Services.Internal;
 /// To prevent conflicts, the `ModuleId` is used to scope the `ModuleService` functionality to each module rendering.
 /// </remarks>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ModuleService() : ServiceBase(SxcLogName + ".ModSvc"), IModuleService
 {
     /// <summary>

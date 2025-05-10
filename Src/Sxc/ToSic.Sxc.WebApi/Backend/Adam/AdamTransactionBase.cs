@@ -5,7 +5,7 @@ using ToSic.Sxc.Adam.Internal;
 
 namespace ToSic.Sxc.Backend.Adam;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>(
     AdamTransactionBase<T, TFolderId, TFileId>.MyServices services,
     string logName)

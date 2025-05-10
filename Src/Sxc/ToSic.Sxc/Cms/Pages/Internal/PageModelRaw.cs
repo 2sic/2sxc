@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Cms.Pages.Internal;
 /// * [Oqtane Page](https://docs.oqtane.org/api/Oqtane.Models.Page.html)
 /// </summary>
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 [ContentTypeSpecs(
     Guid = "c648a91d-b650-42bf-ad6a-9582015c165e",
     Description = "Page in the site",

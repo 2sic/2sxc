@@ -3,7 +3,7 @@ using ToSic.Eav.WebApi.Errors;
 
 namespace ToSic.Sxc.Backend.Adam;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamTransFolder<TFolderId, TFileId>(
     AdamTransactionBase<AdamTransFolder<TFolderId, TFileId>, TFolderId, TFileId>.MyServices services)
     : AdamTransactionBase<AdamTransFolder<TFolderId, TFileId>, TFolderId, TFileId>(services, "Adm.TrnFld")

@@ -5,7 +5,7 @@ using ToSic.Sxc.Cms.Users;
 
 namespace ToSic.Sxc.Context.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CmsUser(CmsContext parent, IUserModel userModel, IMetadataOfSource appReader)
     : CmsContextPartBase<IUser>(parent, parent.CtxSite.User), ICmsUser
 {

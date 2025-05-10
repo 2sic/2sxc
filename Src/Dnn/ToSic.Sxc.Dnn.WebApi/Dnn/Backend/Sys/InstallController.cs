@@ -5,7 +5,7 @@ using RealController = ToSic.Sxc.Backend.Sys.InstallControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Sys;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class InstallController()
     : DnnSxcControllerRoot(RealController.LogSuffix), IInstallController<HttpResponseMessage>
 {

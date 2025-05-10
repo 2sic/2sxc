@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Blocks.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockBuildingConstants
 {
     public static string ErrorInstallationNotOk = "InstallationNotOk";

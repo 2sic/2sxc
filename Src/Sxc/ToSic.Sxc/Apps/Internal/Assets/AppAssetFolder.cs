@@ -4,7 +4,7 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Apps.Internal.Assets;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal abstract class AppAssetFolder: IFolder
 {
     protected const string NotImplemented = "not implemented";

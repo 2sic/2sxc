@@ -28,7 +28,7 @@ public class ServiceKit14() : ServiceKit("Sxc.Kit14")
     /// </summary>
     [PrivateApi("Was never public but could be in use")]
     [Obsolete("This API was never published, do not use.")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     internal ICmsService Cms => _cms.Get(GetKitService<ICmsService>);
     private readonly GetOnce<ICmsService> _cms = new();
 
@@ -114,7 +114,7 @@ public class ServiceKit14() : ServiceKit("Sxc.Kit14")
     /// If we create a Kit15, this should be removed
     /// </summary>
     [PrivateApi("was the official name before v15.06, probably never used publicly, but should stay in for a while")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public new ISystemLogService Log => SystemLog;
 
 

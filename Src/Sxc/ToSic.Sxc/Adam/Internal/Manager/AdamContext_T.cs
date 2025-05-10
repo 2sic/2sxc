@@ -8,7 +8,7 @@ using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 namespace ToSic.Sxc.Adam.Internal;
 
 /// <inheritdoc />
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamContext<TFolderId, TFileId>: AdamContext
 {
     private readonly Generator<AdamStorageOfSite<TFolderId, TFileId>> _siteStoreGenerator;

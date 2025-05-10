@@ -4,7 +4,7 @@ using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
 namespace ToSic.Sxc.Code.Internal.SourceCode;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeFileInfo
 {
     private CodeFileInfo(string inherits, CodeFileTypes type, List<CodeHelp> help, bool useAppCode = false, string sourceCode = default, string relativePath = default, string fullPath = default)

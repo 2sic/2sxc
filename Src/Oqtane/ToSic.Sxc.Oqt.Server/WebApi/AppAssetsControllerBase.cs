@@ -10,7 +10,7 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AppAssetsControllerBase : OqtControllerBase
 {
     private string Route { get; }

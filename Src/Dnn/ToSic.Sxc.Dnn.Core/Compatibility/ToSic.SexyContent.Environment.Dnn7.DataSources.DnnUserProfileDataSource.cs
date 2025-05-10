@@ -9,7 +9,7 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources;
 // - and otherwise im might be in razor-code, which we couldn't auto-update
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 [Obsolete("This class was moved / to ToSic.Sxc.Dnn.DataSources.DnnUserProfile, use that instead.")]
 public class DnnUserProfileDataSource(DnnUserProfile.MyServices services, IDataFactory dataFactory)
     : ToSic.Sxc.Dnn.DataSources.DnnUserProfile(services);

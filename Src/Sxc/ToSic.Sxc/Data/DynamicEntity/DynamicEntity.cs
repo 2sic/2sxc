@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Data;
 /// Note that it will provide many things not listed here, usually things like `.Image`, `.FirstName` etc. based on your ContentType.
 /// </summary>
 [PrivateApi("Changed to private in v16.01, previously was public/stable")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata, IHasPropLookup, ISxcDynamicObject, ICanDebug, ICanBeItem, ICanGetByName
 {
     #region Constructor / Setup
@@ -199,7 +199,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
 
     #region Any*** properties just for documentation
 
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public dynamic AnyProperty => null;
 
     #endregion

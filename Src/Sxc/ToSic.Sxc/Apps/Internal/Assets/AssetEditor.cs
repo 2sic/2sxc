@@ -12,7 +12,7 @@ using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Apps.Internal.Assets;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AssetEditor(
     GenWorkPlus<WorkViews> workViews,
     IUser user,

@@ -4,7 +4,7 @@ using ToSic.Sxc.Blocks.Internal.Render;
 
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class OutputCacheItem(IRenderResult data): ICanEstimateSize, ITimestamped
 {
     public IRenderResult Data => data;

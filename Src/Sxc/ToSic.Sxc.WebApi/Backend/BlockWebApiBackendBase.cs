@@ -5,7 +5,7 @@ using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Backend;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class BlockWebApiBackendBase(
     Generator<MultiPermissionsApp> multiPermissionsApp,
     AppWorkContextService appWorkCtxService,

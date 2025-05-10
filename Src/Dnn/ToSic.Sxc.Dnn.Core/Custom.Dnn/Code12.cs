@@ -11,7 +11,7 @@ namespace Custom.Dnn;
 /// By inheriting from this base class, you will automatically have the context like the App object etc. available. 
 /// </summary>
 [PublicApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]   // #DocsButNotForIntellisense
+[ShowApiWhenReleased(ShowApiMode.Never)]   // #DocsButNotForIntellisense
 public abstract class Code12 : DynamicCode12, IHasDnn
 {
     /// <inheritdoc />

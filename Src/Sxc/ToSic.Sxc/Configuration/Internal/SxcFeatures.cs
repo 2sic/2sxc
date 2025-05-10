@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Configuration.Internal;
 /// <summary>
 /// Internal - built-in features.
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 [PrivateApi]
 public partial class SxcFeatures
 {

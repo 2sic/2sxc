@@ -12,7 +12,7 @@ using ToSic.Sxc.Edit.Toolbar;
 namespace ToSic.Sxc.Code;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class TypedModel(
     CodeHelperSpecs helperSpecs,
     IDictionary<string, object> paramsDictionary,

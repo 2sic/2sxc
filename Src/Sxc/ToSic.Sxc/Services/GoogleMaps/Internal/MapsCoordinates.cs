@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class MapsCoordinates
 {
     public double Latitude { get; set; }

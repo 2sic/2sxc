@@ -16,7 +16,7 @@ using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class LightSpeed(
     IEavFeaturesService features,
     LazySvc<IAppsCatalog> appsCatalog,

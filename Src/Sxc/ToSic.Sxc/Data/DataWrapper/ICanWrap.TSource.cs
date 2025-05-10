@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Data;
 /// Must be <see cref="IEntity"/> or <see cref="ITypedItem"/> (other types not supported for now).
 /// </typeparam>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("may change or rename at any time")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICanWrap<in TSource>: ICanWrapData
 {
     /// <summary>
@@ -32,6 +32,6 @@ public interface ICanWrap<in TSource>: ICanWrapData
     /// because the object needs to have an empty or DI-compatible constructor. 
     /// </summary>
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     internal void Setup(TSource source, IModelFactory modelFactory);
 }

@@ -16,7 +16,7 @@ using ToSic.Sxc.Oqt.Shared.Models;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.App;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class Index : ModuleProBase
 {
     #region Injected Services

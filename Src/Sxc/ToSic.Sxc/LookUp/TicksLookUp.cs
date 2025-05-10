@@ -4,7 +4,7 @@ using ToSic.Eav.LookUp;
 
 namespace ToSic.Sxc.LookUp
 {
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public class TicksLookUp() : LookUpBase("Ticks", "LookUp ticks of now, today, TicksPerDay")
     {
         public override string Get(string key, string format)

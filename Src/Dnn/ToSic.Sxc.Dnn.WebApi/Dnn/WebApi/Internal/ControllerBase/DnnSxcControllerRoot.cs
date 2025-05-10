@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal;
 [DnnLogWebApi, JsonOnlyResponse]
 [PrivateApi("This controller is never used publicly, you can rename any time you want")]
 // Can't hide in Intellisense, because that would hide it for all derived classes too
-// [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+// [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class DnnSxcControllerRoot : DnnApiController, IHasLog
 {
     internal const string DnnSupportedModuleNames = "2sxc,2sxc-app";
@@ -28,7 +28,7 @@ public abstract class DnnSxcControllerRoot : DnnApiController, IHasLog
     internal DnnWebApiHelper SysHlp { get; }
 
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     protected override void Initialize(HttpControllerContext controllerContext)
     {
         var l = Log.Fn();
@@ -39,7 +39,7 @@ public abstract class DnnSxcControllerRoot : DnnApiController, IHasLog
     }
 
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     protected override void Dispose(bool disposing)
     {
         SysHlp.OnDispose();
@@ -48,7 +48,7 @@ public abstract class DnnSxcControllerRoot : DnnApiController, IHasLog
 
     /// <inheritdoc />
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public ILog Log { get; }
 
     /// <summary>
@@ -56,7 +56,7 @@ public abstract class DnnSxcControllerRoot : DnnApiController, IHasLog
     /// Helps group various calls by use case. 
     /// </summary>
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
 
 }

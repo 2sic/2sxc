@@ -13,7 +13,7 @@ namespace AppCode;
 /// To use, see TODO: Add link to docs
 /// </summary>
 [PublicApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 // ReSharper disable once UnusedType.Global
 // ReSharper disable once InconsistentNaming
 #pragma warning disable IDE1006

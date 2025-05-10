@@ -6,7 +6,7 @@ using ToSic.Sxc.Integration.Paths;
 namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi("for testing / un-implemented use")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 #pragma warning disable CS9113 // Parameter is unread.
 internal class LinkServiceUnknown(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy, WarnUseOfUnknown<LinkServiceUnknown> _)
 #pragma warning restore CS9113 // Parameter is unread.

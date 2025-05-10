@@ -5,7 +5,7 @@ using ToSic.Sxc.Context.Internal;
 
 namespace ToSic.Sxc.Blocks.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class ModuleAndBlockBuilder(Generator<BlockFromModule> blockGenerator, string logPrefix)
     : ServiceBase($"{logPrefix}.BnMBld", connect: [blockGenerator]), IModuleAndBlockBuilder
 {

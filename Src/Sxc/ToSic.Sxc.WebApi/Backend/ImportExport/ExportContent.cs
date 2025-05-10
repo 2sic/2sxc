@@ -12,7 +12,7 @@ using ToSic.Sxc.Backend.App;
 
 namespace ToSic.Sxc.Backend.ImportExport;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExportContent(
     XmlExporter xmlExporter,
     GenWorkPlus<WorkViews> workViews,

@@ -9,10 +9,10 @@ using RuntimeViewCompiler = ToSic.Sxc.Razor.DotNetOverrides.RuntimeViewCompiler;
 namespace ToSic.Sxc.Razor;
 
 // ReSharper disable once InconsistentNaming
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class StartupRazor
 {
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcRazor(this IServiceCollection services)
     {
         // .net Core parts

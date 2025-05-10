@@ -5,7 +5,7 @@ using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Backend.InPage;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppViewPickerBackend(
     Generator<MultiPermissionsApp> multiPermissionsApp,
     ISxcContextResolver ctxResolver,

@@ -27,7 +27,7 @@ public interface IDataService
     /// <param name="appId"></param>
     /// <returns></returns>
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     IDataService New(NoParamOrder noParamOrder = default,
         IAppIdentity appIdentity = default,
         int zoneId = default,

@@ -12,7 +12,7 @@ using ToSic.Sxc.Polymorphism.Internal;
 
 namespace ToSic.Sxc.Engines;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class EnginePolymorphism(PolymorphConfigReader polymorphism, IServerPaths serverPaths)
     : ServiceBase("Sxc.EngPly", connect: [polymorphism, serverPaths])
 {

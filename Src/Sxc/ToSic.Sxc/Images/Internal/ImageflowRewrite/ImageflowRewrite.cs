@@ -4,7 +4,7 @@ namespace ToSic.Sxc.Images.Internal;
 
 // Is executed in dnn imageflow module and oqtane imageflow module to
 // rewrite query string params before imageflow middleware take a care of them.
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ImageflowRewrite
 {
     public static readonly string Quality = "quality";

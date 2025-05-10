@@ -9,7 +9,7 @@ using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Blocks.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ProblemSuggestions
 {
     private const string Mobius5NameId = "ea777610-00e3-462f-8a3e-90a09a6e1109";

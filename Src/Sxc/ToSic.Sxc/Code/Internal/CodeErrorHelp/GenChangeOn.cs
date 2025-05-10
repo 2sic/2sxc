@@ -3,7 +3,7 @@ using ToSic.Lib.Code.Help;
 
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class GenChangeOn(string fullNamespace, string name, (string Code, string Comment)[] alt)
     : GenNotExist(name, alt)
 {

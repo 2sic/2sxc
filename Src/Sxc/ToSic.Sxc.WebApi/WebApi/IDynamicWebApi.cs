@@ -11,7 +11,7 @@ namespace ToSic.Sxc.WebApi;
 /// It's important, because if 2sxc also runs on other CMS platforms, then the Dnn Context won't be available, so it's in a separate interface.
 /// </summary>
 [PrivateApi("Was public till v17, but now the docs are all objects directly")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IDynamicWebApi
 {
     /// <summary>
@@ -26,7 +26,7 @@ public interface IDynamicWebApi
     /// <param name="field"></param>
     /// <param name="subFolder"></param>
     /// <returns></returns>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     IFile SaveInAdam(NoParamOrder noParamOrder = default,
         Stream stream = null,
         string fileName = null,
@@ -52,7 +52,7 @@ public interface IDynamicWebApi
     /// <remarks>
     /// Added in 2sxc 12.05
     /// </remarks>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     dynamic File(NoParamOrder noParamOrder = default,
         // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
         bool? download = null,

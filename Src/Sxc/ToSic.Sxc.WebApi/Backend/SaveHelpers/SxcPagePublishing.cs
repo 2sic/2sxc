@@ -5,7 +5,7 @@ using ToSic.Sxc.Cms.Internal.Publishing;
 
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class SxcPagePublishing(ContentGroupList contentGroupList, IPagePublishing pagePublishing, IAppsCatalog appsCatalog)
     : SaveHelperBase("Sxc.PgPubl", connect: [contentGroupList, pagePublishing, appsCatalog])
 {

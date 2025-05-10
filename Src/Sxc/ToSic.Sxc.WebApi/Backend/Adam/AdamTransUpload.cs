@@ -4,7 +4,7 @@ using ToSic.Sxc.Adam.Internal;
 
 namespace ToSic.Sxc.Backend.Adam;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class AdamTransUpload<TFolderId, TFileId>: AdamTransactionBase<AdamTransUpload<TFolderId, TFileId>, TFolderId, TFileId>
 {
     public AdamItemDtoMaker<TFolderId, TFileId> DtoMaker { get; }

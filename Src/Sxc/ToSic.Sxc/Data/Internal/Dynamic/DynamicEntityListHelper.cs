@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Data.Internal.Dynamic;
 /// This is a helper in charge of the list-behavior of a DynamicEntity
 /// </summary>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class DynamicEntityListHelper
 {
     protected bool PropsRequired { get; }

@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Images;
 
 [PrivateApi("Hide implementation")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class RecipeVariant
 {
     public const char SizeDefault = 'd';

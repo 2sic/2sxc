@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Data;
 /// To check if something is an array or an object, use "IsArray"
 /// </summary>
 [PrivateApi("was Internal-API till v17 - just use the objects from AsDynamic, don't use this directly")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal abstract class DynamicJacketBase: DynamicObject, IReadOnlyList<object>, ISxcDynamicObject, ICanGetByName, IHasPropLookup, IHasJsonSource
 {
     #region Constructor / Setup

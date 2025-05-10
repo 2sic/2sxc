@@ -3,7 +3,7 @@ using static ToSic.Lib.Code.Infos.CodeInfoWarning;
 
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DynamicCode16Warnings
 {
     public static ICodeInfo AvoidSettingsResources = Warn("no-settings-resources-on-code16",

@@ -3,7 +3,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CspOfPage(Generator<CspParameterFinalizer> cspParameterFinalizer)
     : ServiceBase(CspConstants.LogPrefix + ".Page", connect: [cspParameterFinalizer])
 {

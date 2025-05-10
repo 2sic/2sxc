@@ -13,7 +13,7 @@ using ISite = ToSic.Eav.Context.ISite;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppCodeLoader(
     ILogStore logStore,
     ISite site,

@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Blocks.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ViewParts
 {
     public const string ViewFieldInContentBlock = "Template";

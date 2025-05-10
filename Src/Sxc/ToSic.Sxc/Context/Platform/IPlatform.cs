@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Context;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IPlatform: ICmsPlatform
 {
 }

@@ -220,12 +220,12 @@ public interface IConvertService16
     #region New v17 As conversions
 
     [PrivateApi("WIP, don't publish yet")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool nullIfNull = false)
         where T : class, ICanWrapData;
 
     [PrivateApi("WIP, don't publish yet")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
         where T : class, ICanWrapData;
 

@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Data.Internal.Decorators;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class EntityInBlockDecorator: EntityInListDecorator
 {
     private EntityInBlockDecorator(string field, 

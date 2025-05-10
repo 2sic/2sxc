@@ -5,7 +5,7 @@ using ToSic.Sxc.Context;
 namespace ToSic.Sxc.Integration.Modules;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IPlatformModuleUpdater: IHasLog
 {
     /// <summary>

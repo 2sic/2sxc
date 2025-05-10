@@ -6,7 +6,7 @@ using ToSic.Eav.WebApi.Security;
 
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class SaveSecurity: SaveHelperBase
 {
     private readonly Generator<MultiPermissionsTypes> _multiPermissionsTypesGen;

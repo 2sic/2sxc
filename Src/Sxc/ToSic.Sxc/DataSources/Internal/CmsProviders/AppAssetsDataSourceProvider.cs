@@ -16,7 +16,7 @@ namespace ToSic.Sxc.DataSources.Internal;
 ///
 /// Must be overriden in each platform.
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices services)
     : ServiceBase<AppAssetsDataSourceProvider.MyServices>(services, $"{SxcLogName}.AppFls")
 {

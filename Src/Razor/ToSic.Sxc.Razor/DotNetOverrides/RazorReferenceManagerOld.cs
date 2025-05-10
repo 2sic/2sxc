@@ -15,7 +15,7 @@
 //    /// It's not used in runtime, but we need during development to to verify what's happening
 //    /// when dependencies are missing
 //    /// </summary>
-//    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+//    [ShowApiWhenReleased(ShowApiMode.Never)]
 //    internal class RazorReferenceManager
 //    {
 //        private readonly ApplicationPartManager _partManager;

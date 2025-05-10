@@ -8,7 +8,7 @@ namespace ToSic.SexyContent.Search
     /// <remarks>
     /// This is part of a public API, so don't touch the name or namespace
     /// </remarks>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public interface ISearchInfo
     {
         string UniqueKey { get; set; }

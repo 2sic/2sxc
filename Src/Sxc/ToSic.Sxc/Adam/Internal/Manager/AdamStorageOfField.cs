@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Adam.Internal;
 /// Container of the assets of a field
 /// each entity+field combination has its own container for assets
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamStorageOfField<TFolderId, TFileId>: AdamStorage<TFolderId, TFileId>
 {
     private Guid _entityGuid;

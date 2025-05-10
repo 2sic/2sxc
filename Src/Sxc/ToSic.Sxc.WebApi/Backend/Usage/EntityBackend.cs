@@ -3,7 +3,7 @@ using ToSic.Eav.WebApi.Errors;
 
 namespace ToSic.Sxc.Backend.Usage;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class EntityBackend(
     ISxcContextResolver ctxResolver,
     Generator<MultiPermissionsApp> appPermissions)

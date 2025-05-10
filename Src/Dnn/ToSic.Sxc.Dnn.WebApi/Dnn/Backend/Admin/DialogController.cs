@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 // And not need this any more - then we can switch back to "Admin"
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
 [ValidateAntiForgeryToken]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DialogController() : DnnSxcControllerBase(RealController.LogSuffix), IDialogController
 {
     private RealController Real => SysHlp.GetService<RealController>();

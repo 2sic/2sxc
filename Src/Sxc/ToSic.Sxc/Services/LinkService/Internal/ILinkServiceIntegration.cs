@@ -5,7 +5,7 @@
 /// 2024-05-14 it's difficult though, because the inner workings need the _CodeApiService, which is not available in the interface.
 /// </summary>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ILinkServiceIntegration
 {
     string ToApi(string api, string parameters = default);

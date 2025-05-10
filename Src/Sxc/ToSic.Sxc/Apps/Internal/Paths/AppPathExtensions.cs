@@ -5,7 +5,7 @@ using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Apps.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class AppPathExtensions
 {
     public static string PhysicalPathSwitch(this IAppPaths app, bool isShared) =>

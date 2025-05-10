@@ -7,7 +7,7 @@ using static ToSic.Sxc.Internal.Plumbing.ParseObject;
 namespace ToSic.Sxc.Images;
 
 [PrivateApi("Hide implementation")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal record ResizeSettings : IResizeSettings, IResizeSettingsInternal
 {
     /// <summary>

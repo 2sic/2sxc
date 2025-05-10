@@ -8,7 +8,7 @@ using ToSic.Sxc.Web.Internal.DotNet;
 
 namespace ToSic.Sxc.Context.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal partial class SxcContextResolver(
     LazySvc<AppIdResolver> appIdResolverLazy,
     Generator<IContextOfSite> siteCtxGenerator,

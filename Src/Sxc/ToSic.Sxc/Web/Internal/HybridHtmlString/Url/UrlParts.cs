@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Web.Internal.Url;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class UrlParts
 {
     public const char QuerySeparator = '?';

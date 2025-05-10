@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Web.Internal.JsContext;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IJsApiService
 {
     string GetJsApiJson(int? pageId = null, string siteRoot = null, string rvt = null, bool withPublicKey = false);

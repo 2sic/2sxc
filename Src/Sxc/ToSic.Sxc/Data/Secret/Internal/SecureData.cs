@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Data.Internal;
 
 [PrivateApi("hide implementation")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class SecureData<T>(T result, bool isSecure) : ISecureData<T>
 {
     public T Value { get; internal set; } = result;

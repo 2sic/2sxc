@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Engines;
 /// and using all that to produce an html-string for the browser. 
 /// </summary>
 [PrivateApi("used to be InternalApi_DoNotUse_MayChangeWithoutNotice, hidden in 17.08")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IEngine: IHasLog
 {
     void Init(IBlock block);

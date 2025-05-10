@@ -4,7 +4,7 @@ using ToSic.Sxc.Services.OutputCache;
 
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class LightSpeedDecorator(IEntity entity) : EntityBasedType(entity), IOutputCacheSettings
 {
     /// <summary>

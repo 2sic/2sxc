@@ -4,7 +4,7 @@ using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AssemblyResult(
     Assembly assembly = null,
     string errorMessages = null,

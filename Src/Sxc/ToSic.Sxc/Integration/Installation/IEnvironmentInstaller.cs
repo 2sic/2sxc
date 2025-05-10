@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Integration.Installation;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IEnvironmentInstaller: IHasLog
 {
     /// <summary>

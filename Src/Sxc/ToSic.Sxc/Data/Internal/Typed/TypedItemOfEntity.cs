@@ -21,7 +21,7 @@ using ToSic.Sxc.Cms.Data;
 namespace ToSic.Sxc.Data.Internal.Typed;
 
 [JsonConverter(typeof(DynamicJsonConverter))]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, CodeDataFactory cdf, bool propsRequired)
     : ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName, IWrapper<IEntity>,
         IEntityWrapper, IHasMetadata, IHasJsonSource

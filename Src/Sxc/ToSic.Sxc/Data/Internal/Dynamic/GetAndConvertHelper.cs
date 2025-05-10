@@ -7,7 +7,7 @@ using static System.StringComparer;
 
 namespace ToSic.Sxc.Data.Internal.Dynamic;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class GetAndConvertHelper(
     IHasPropLookup parent,
     CodeDataFactory cdf,

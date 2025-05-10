@@ -131,7 +131,7 @@ public class Recipe: ICanDump
     /// Used in cases where there are many such rules and the one will be picked that matches this factor.
     /// </summary>
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public double FactorParsed { get; private set; }
 
     /// <summary>
@@ -164,7 +164,7 @@ public class Recipe: ICanDump
     public string Variants { get; private set; }
 
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public string Sizes => Attributes?.TryGetValue(SpecialPropertySizes, out var strSizes) == true ? strSizes.ToString() : null;
 
 

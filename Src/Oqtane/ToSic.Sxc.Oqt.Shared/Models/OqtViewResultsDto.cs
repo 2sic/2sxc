@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Oqt.Shared.Models;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class OqtViewResultsDto
 {
     /// <summary>

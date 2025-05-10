@@ -8,7 +8,7 @@ using System.Collections.Specialized;
 
 namespace ToSic.Sxc.Web.Internal.DotNet;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class HttpAbstractionBase: IHttp
 {
     /// <inheritdoc />

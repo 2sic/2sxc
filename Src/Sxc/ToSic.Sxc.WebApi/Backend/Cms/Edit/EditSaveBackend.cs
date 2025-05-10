@@ -9,7 +9,7 @@ using ToSic.Sxc.Backend.SaveHelpers;
 
 namespace ToSic.Sxc.Backend.Cms;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class EditSaveBackend(
     SxcPagePublishing pagePublishing,
     GenWorkPlus<WorkEntities> workEntities,

@@ -12,7 +12,7 @@ using static System.StringComparer;
 
 namespace ToSic.Sxc.Blocks.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract partial class BlockResourceExtractor(PageServiceShared pageServiceShared)
     : ServiceBase("Sxc.AstOpt"), IBlockResourceExtractor
 {

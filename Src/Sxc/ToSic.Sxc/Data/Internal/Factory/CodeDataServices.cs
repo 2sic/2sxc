@@ -8,7 +8,7 @@ using ToSic.Sxc.Services.Internal;
 namespace ToSic.Sxc.Data.Internal;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeDataServices(
     LazySvc<IValueConverter> valueConverterLazy,
     Generator<IRenderService> renderServiceGenerator,

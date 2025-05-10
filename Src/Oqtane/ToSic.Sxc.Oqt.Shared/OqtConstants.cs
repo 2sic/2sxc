@@ -3,7 +3,7 @@
 /// <summary>
 /// This should only contain constants which should really be final, no WIP or similar
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class OqtConstants
 {
     // used as PackageID in nupkg, oqtane module PackageName, wwwroot/Modules/PackageName, namespace in module.js, etc...

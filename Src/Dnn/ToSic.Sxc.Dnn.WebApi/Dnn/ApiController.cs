@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Dnn;
 [DnnLogExceptions]
 [Obsolete("This will continue to work, but you should use the Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.")]
 [DefaultToNewtonsoftForHttpJson]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class ApiController : DnnSxcCustomControllerBase, 
     IDnnDynamicWebApi,
     ICreateInstance,
@@ -44,11 +44,11 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
     /// We will only add it to ApiController but not to Api12, because no new code should ever use that.
     /// </remarks>
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public IBlock Block => SysHlp.GetBlockAndContext(Request);
 
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel9Old;
 
     /// <inheritdoc cref="IDynamicCode.App" />

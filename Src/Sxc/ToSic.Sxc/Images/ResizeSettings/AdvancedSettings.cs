@@ -8,7 +8,7 @@ using ToSic.Lib.Internal.Generics;
 
 namespace ToSic.Sxc.Images;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class AdvancedSettings : IHasPiggyBack
 {
     [JsonConstructor]

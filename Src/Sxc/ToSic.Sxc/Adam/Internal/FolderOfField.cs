@@ -4,7 +4,7 @@
 /// The ADAM Navigator creates a folder object for an entity/field combination
 /// This is the root folder where all files for this field are stored
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class FolderOfField<TFolderId, TFileId> : Folder<TFolderId, TFileId>
 {
     public FolderOfField(AdamManager<TFolderId, TFileId> adamManager, AdamStorageOfField<TFolderId, TFileId> adamStorageOfField) : base(adamManager)

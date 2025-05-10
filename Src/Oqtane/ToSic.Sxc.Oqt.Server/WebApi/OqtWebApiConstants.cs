@@ -4,7 +4,7 @@ using ToSic.Sxc.Web.Internal.EditUi;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal static class OqtWebApiConstants
 {
     public const string Auto = "auto";

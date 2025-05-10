@@ -5,7 +5,7 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Adam.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class Folder<TFolderId, TFileId>(AdamManager<TFolderId, TFileId> adamManager)
     : Eav.Apps.Assets.Internal.Folder<TFolderId, TFileId>, IFolder
 {

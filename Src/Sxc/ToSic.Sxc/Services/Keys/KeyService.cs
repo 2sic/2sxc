@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Services;
 
 [PrivateApi("Hide implementation")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class KeyService : IKeyService
 {
     private UniqueKeysServices UniqueKeysSvc => field ??= new();

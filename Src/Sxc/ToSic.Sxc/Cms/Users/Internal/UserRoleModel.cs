@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Cms.Users.Internal;
 /// TODO:
 /// </summary>
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 [ContentTypeSpecs(
     Guid = "dc104414-e61a-4a59-bda8-455772ceb0cc",
     Description = "User-Role in the site",

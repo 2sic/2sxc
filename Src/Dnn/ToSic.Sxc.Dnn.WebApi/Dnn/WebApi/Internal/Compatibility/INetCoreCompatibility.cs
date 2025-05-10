@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface INetCoreCompatibility
 {
     /// <inheritdoc cref="WebApiCoreShim.Ok()"/>

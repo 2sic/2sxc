@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Backend.ImportExport;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ImpExpHelpers(IAppReaderFactory appReadFac) : ServiceBase("Sxc.ImExHl", connect: [appReadFac])
 {
     /// <summary>

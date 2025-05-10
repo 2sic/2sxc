@@ -7,7 +7,7 @@ using ToSic.Sxc.Oqt.Shared.Models;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.Content;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ModuleInfo : IModule
 {
     /*

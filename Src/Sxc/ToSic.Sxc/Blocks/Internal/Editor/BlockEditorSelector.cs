@@ -3,7 +3,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Blocks.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockEditorSelector(
     LazySvc<BlockEditorForModule> blkEdtForMod,
     LazySvc<BlockEditorForEntity> blkEdtForEnt)

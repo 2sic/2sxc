@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Polymorphism.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class PolymorphismConstants
 {
     //public const string StaticName = "3937fa17-ef2d-40a7-b089-64164eb10bab";

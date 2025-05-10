@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Blocks.Internal;
 /// <summary>
 /// ATM only used in Oqtane, where external and internal scripts must be extracted
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockResourceExtractorWithInline(PageServiceShared pageServiceShared)
     : BlockResourceExtractor(pageServiceShared)
 {

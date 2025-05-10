@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Demo;
 ///
 /// Not meant for production, could change at any time. 
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class ToolbarServiceExtensions
 {
     /// <summary>

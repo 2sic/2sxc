@@ -3,7 +3,7 @@ using static ToSic.Sxc.Code.Internal.CodeErrorHelp.CodeHelpBuilder;
 
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class HelpForRazor12
 {
     #region Methods to build Help DB

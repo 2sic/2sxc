@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Services.Internal;
 /// </summary>
 [PrivateApi]
 // #NoEditorBrowsableBecauseOfInheritance
-//[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+//[ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
 public abstract class ServiceForDynamicCode(string logName, NoParamOrder protect = default, bool errorIfNotConnected = false, object[] connect = default)
     : ServiceBase(logName, protect: protect, connect: connect), INeedsCodeApiService, IHasCodeApiService, ICanDebug
@@ -18,7 +18,7 @@ public abstract class ServiceForDynamicCode(string logName, NoParamOrder protect
     /// </summary>
     /// <param name="codeRoot"></param>
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public virtual void ConnectToRoot(ICodeApiService codeRoot) => ConnectToRoot(codeRoot, null);
 
     /// <summary>
@@ -27,7 +27,7 @@ public abstract class ServiceForDynamicCode(string logName, NoParamOrder protect
     /// <param name="codeRoot"></param>
     /// <param name="parentLog"></param>
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public void ConnectToRoot(ICodeApiService codeRoot, ILog parentLog)
     {
         // Avoid unnecessary reconnects
@@ -44,12 +44,12 @@ public abstract class ServiceForDynamicCode(string logName, NoParamOrder protect
     private bool _alreadyConnected;
 
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public virtual ICodeApiService _CodeApiSvc { get; private set; }
 
     protected ICodeApiService CodeApiSvc => _CodeApiSvc ?? (errorIfNotConnected ? throw new($"{nameof(CodeApiSvc)} is null") : null);
 
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public virtual bool Debug { get; set; }
 }

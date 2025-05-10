@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Cms}")]
 [PrivateApi]
 [ValidateAntiForgeryToken]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class HistoryController() : OqtStatefulControllerBase(RealController.LogSuffix), IHistoryController
 {
     private RealController Real => GetService<RealController>();

@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Web.Internal.PageService;
 /// This controller should collect what all the <see cref="ToSic.Sxc.Services.IPageService"/> objects do, for use on the final page
 /// It must be scoped, so that it's the same object across the entire page-lifecycle.
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class PageServiceShared(IPageFeatures pageFeatures, IFeaturesService featuresService, CspOfModule csp)
     : IChangeQueue
 {

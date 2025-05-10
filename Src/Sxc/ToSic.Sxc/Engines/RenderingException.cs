@@ -4,7 +4,7 @@ using ToSic.Lib.Code.Help;
 
 namespace ToSic.Sxc.Engines;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class RenderingException: Exception, IExceptionWithHelp
 {
     public RenderingException(CodeHelp help, string message = default) : base(message ?? help.UiMessage)

@@ -22,7 +22,7 @@ using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 namespace ToSic.Sxc.Data.Internal.Typed;
 
 [JsonConverter(typeof(DynamicJsonConverter))]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeService> forCodeConverter)
     : WrapObjectTyped(scrubSvc, forCodeConverter), ITypedItem
 {

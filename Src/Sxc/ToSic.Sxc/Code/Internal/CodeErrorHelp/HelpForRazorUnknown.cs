@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 /// <summary>
 /// Help for compile errors before the Razor base class is known.
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class HelpForRazorCompileErrors
 {
     /// <summary>

@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Code.Internal.SourceCode;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class CodeFileInfoExtensions
 {
     /// <summary>

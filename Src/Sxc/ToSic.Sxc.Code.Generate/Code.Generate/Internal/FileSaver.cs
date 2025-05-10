@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Code.Generate.Internal;
 /// Service to take generated files and save them to the file system
 /// </summary>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class FileSaver(ISite site, IAppReaderFactory appReadFac, IAppPathsMicroSvc appPaths)
     : ServiceBase(SxcLogName + ".GenFSv", connect: [site, appReadFac, appPaths])
 {

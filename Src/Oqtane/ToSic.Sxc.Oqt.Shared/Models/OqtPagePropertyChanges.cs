@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Oqt.Shared.Models;
 /// <summary>
 /// Used to transfer what / how page properties should change based on the Razor file
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public struct OqtPagePropertyChanges
 {
     public OqtPagePropertyOperation Change { get; set; }

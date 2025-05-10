@@ -5,7 +5,7 @@ using ToSic.Sxc.Context.Internal;
 
 namespace ToSic.Sxc.Blocks.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ModuleAndBlockBuilderUnknown: ModuleAndBlockBuilder
 {
     public ModuleAndBlockBuilderUnknown(WarnUseOfUnknown<ModuleAndBlockBuilderUnknown> _, Generator<BlockFromModule>bfmGenerator) : base(bfmGenerator, "Unk")

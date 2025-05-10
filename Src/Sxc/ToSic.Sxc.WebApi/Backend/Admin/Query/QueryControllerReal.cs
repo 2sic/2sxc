@@ -7,7 +7,7 @@ using ToSic.Sxc.LookUp.Internal;
 
 namespace ToSic.Sxc.Backend.Admin.Query;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class QueryControllerReal(
     QueryControllerBase<QueryControllerReal>.MyServices services,
     GenWorkPlus<WorkViews> workViews,

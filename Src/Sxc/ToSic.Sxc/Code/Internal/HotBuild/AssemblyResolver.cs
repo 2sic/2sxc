@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Code.Internal.HotBuild;
 /// This is a singleton!
 /// </remarks>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AssemblyResolver : ServiceBase, ILogShouldNeverConnect
 {
     private static bool _isHandlerRegistered = false;

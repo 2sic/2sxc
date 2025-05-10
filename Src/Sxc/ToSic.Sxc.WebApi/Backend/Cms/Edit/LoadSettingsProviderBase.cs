@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Backend.Cms;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class LoadSettingsProviderBase(string logName) : ServiceBase(logName)
 {
     protected Dictionary<string, object> SettingsByKeys(PropertyStack appSettings, List<string> keys)

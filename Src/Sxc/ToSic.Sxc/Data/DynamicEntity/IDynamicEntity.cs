@@ -138,7 +138,7 @@ public partial interface IDynamicEntity:
     dynamic Presentation { get; }
 
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     // ReSharper disable once InconsistentNaming
     Internal.CodeDataFactory Cdf {get; }
 

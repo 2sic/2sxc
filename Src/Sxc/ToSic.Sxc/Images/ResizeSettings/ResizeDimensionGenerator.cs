@@ -7,7 +7,7 @@ using static ToSic.Sxc.Internal.Plumbing.ParseObject;
 namespace ToSic.Sxc.Images;
 
 [PrivateApi("Internal stuff")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ResizeDimensionGenerator() : ServiceBase("Img.ResDim")
 {
     internal bool Debug = false;

@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Blocks.Internal.Render;
 
 [PrivateApi("Internal only")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IRenderingHelper: IHasLog
 {
     IRenderingHelper Init(IBlock block);

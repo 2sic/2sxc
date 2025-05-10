@@ -10,7 +10,7 @@ namespace ToSic.Sxc.LookUp;
 /// LookUp provider for query string parameters.
 /// It handles the normal `key=value` query string parameters and also the special `OriginalParameters` query string parameter.
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class QueryStringLookUp(LazySvc<IHttp> httpLazy) : LookUpBase(LookUpConstants.SourceQueryString, "LookUp in QueryString")
 {
     private NameValueCollection _source;

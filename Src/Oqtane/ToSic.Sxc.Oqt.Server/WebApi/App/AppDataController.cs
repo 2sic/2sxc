@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 [Route(OqtWebApiConstants.AppRootPathOrLang + "/{appPath}/data")] // new, v13
 [Route(OqtWebApiConstants.AppRootPathAndLang + "/{appPath}/data")] // new, v13
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppDataController() : OqtStatefulControllerBase(RealController.LogSuffix), IAppDataController
 {
     private RealController Real => GetService<RealController>();

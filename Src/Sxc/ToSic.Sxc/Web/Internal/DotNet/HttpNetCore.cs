@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace ToSic.Sxc.Web.Internal.DotNet;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class HttpNetCore : HttpAbstractionBase, IHttp
 {
     public HttpNetCore(IHttpContextAccessor contextAccessor) => Current = contextAccessor.HttpContext;

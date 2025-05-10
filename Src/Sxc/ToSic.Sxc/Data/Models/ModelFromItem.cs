@@ -70,7 +70,7 @@ public abstract partial class ModelFromItem : ICanWrap<ITypedItem>, ICanBeItem, 
     /// This is necessary so the object can be used in places where an IEntity is expected, like toolbars.
     /// It's an explicit interface implementation, so that the object itself doesn't broadcast this.
     /// </summary>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     IEntity ICanBeEntity.Entity => _item.Entity;
 
     IBlock ICanBeItem.TryGetBlockContext() => _item.TryGetBlockContext();

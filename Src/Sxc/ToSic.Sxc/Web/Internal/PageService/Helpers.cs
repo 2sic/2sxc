@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Web.Internal.PageService;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class Helpers
 {
     public static string UpdateProperty(string original, PagePropertyChange change)

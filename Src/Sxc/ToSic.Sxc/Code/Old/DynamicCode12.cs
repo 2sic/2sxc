@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Code;
 /// > This is an old base class and works, but you should use a newer one such as <see cref="CodeTyped"/>
 /// </summary>
 [PrivateApi("Was public till v17")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DynamicCode12: CustomCodeBase, IHasCodeLog, IDynamicCode, IDynamicCode12
 {
     #region Constructor / Setup
@@ -51,7 +51,7 @@ public class DynamicCode12: CustomCodeBase, IHasCodeLog, IDynamicCode, IDynamicC
     public dynamic Settings => _CodeApiSvc?.Settings;
 
     [PrivateApi("Not yet ready")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public IDevTools DevTools => _CodeApiSvc.DevTools;
 
     #endregion

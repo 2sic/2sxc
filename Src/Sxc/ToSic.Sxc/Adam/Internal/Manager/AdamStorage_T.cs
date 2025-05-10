@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Adam.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AdamStorage<TFolderId, TFileId>() : AdamStorage("Adm.Base")
 {
     public void Init(AdamManager<TFolderId, TFileId> manager) => Manager = manager;

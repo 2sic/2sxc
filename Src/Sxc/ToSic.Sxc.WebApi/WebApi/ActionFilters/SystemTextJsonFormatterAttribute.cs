@@ -16,7 +16,7 @@ namespace ToSic.Sxc.WebApi.ActionFilters;
 /// </summary>
 // https://blogs.taiga.nl/martijn/2020/05/28/system-text-json-and-newtonsoft-json-side-by-side-in-asp-net-core/
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class SystemTextJsonFormatterAttribute : ActionFilterAttribute, IControllerModelConvention, IActionModelConvention
 {
     public SystemTextJsonFormatterAttribute()

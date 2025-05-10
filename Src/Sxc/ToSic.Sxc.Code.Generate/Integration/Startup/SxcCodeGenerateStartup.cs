@@ -6,10 +6,10 @@ using ToSic.Sxc.Code.Generate.Internal.CSharpBaseClasses;
 
 namespace ToSic.Sxc.Integration.Startup;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class SxcCodeGenerateStartup
 {
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcCodeGen(this IServiceCollection services)
     {
         // v17 Code Generators

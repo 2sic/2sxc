@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi("Probably always internal, as there is probably no reason to make it public")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IModuleService: IHasLog
 {
     /// <summary>

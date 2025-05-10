@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Backend.Adam;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamTransRename<TFolderId, TFileId>(
     AdamTransactionBase<AdamTransRename<TFolderId, TFileId>, TFolderId, TFileId>.MyServices services)
     : AdamTransactionBase<AdamTransRename<TFolderId, TFileId>, TFolderId, TFileId>(services, "Adm.TrnRen")

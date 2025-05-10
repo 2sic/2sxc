@@ -5,7 +5,7 @@ using ToSic.Eav.WebApi.Formats;
 namespace ToSic.Sxc.Backend.Cms;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class HistoryControllerReal(GenWorkDb<WorkEntityVersioning> versioning)
     : ServiceBase("Api.CmsHistoryRl", connect: [versioning]), IHistoryController
 {

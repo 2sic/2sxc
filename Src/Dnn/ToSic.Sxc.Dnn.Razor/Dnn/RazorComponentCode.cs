@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Dnn;
 /// Use it to move logic / functions etc. into a kind of code-behind razor instead of as part of your view-template.
 /// </summary>
 [PrivateApi("Made private in v16.02 since it shouldn't be used any more")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely. There are now better ways of doing this")]
 public abstract class RazorComponentCode: RazorComponent
 {

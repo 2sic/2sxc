@@ -6,7 +6,7 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Context.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal abstract class CmsContextPartBase<T> : Wrapper<T>, IHasMetadata where T : class
 {
     protected CmsContextPartBase(CmsContext parent, T contents) : base(contents)

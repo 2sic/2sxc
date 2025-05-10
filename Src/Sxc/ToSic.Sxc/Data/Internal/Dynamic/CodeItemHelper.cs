@@ -8,7 +8,7 @@ using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Internal.Dynamic;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CodeItemHelper(GetAndConvertHelper helper, ITyped data)
 {
     public ITyped Data { get; } = data;

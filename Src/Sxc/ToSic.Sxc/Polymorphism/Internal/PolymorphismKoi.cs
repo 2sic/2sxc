@@ -4,7 +4,7 @@ using static System.StringComparison;
 namespace ToSic.Sxc.Polymorphism.Internal;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class PolymorphismKoi(ICss pageCss) : IPolymorphismResolver
 {
     public string NameId => "Koi";

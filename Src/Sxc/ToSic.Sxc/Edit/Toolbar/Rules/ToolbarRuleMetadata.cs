@@ -5,7 +5,7 @@ using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ToolbarRuleMetadata(
     object target,
     string typeName,

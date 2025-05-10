@@ -19,7 +19,7 @@ using ToSic.Sxc.Polymorphism.Internal;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class AppDataSourcesLoader(
     ILogStore logStore,
     ISite site,

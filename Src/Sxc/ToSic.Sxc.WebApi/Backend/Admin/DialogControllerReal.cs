@@ -5,7 +5,7 @@ using ToSic.Eav.WebApi.Errors;
 
 namespace ToSic.Sxc.Backend.Admin;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DialogControllerReal(
     ISxcContextResolver ctxResolver,
     IUiContextBuilder uiContextBuilder,

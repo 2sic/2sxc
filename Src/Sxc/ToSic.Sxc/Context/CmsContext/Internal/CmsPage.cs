@@ -4,7 +4,7 @@ using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Context.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CmsPage(CmsContext parent, IMetadataOfSource appState, LazySvc<IPage> fallbackPage)
     : CmsContextPartBase<IPage>(parent, parent?.CtxBlockOrNull?.Page ?? fallbackPage.Value), ICmsPage
 {

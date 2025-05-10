@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Backend.Adam;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamTransDelete<TFolderId, TFileId>(
     AdamTransactionBase<AdamTransDelete<TFolderId, TFileId>, TFolderId, TFileId>.MyServices services)
     : AdamTransactionBase<AdamTransDelete<TFolderId, TFileId>, TFolderId, TFileId>(services, "Adm.TrnDel")

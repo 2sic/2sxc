@@ -10,7 +10,7 @@ using ToSic.Lib.Helpers;
 namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeCreateDataSourceSvc(LazySvc<IDataSourcesService> dataSources, LazySvc<DataSourceCatalog> catalog)
 {
     public readonly LazySvc<IDataSourcesService> DataSources = dataSources;

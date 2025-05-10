@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Web.Internal.JsContext;
 /// This is a special json-structure which will be added to the page head.
 /// It's necessary for API calls to just-work, since the JS needs to know the API-URLs and more.
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class JsApi
 {
     public const string MetaName = "_jsApi";

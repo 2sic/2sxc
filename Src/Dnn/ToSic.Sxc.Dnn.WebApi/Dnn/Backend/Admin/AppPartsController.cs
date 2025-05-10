@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] can't be used, because it forces the security
 // token, which fails in the cases where the url is called using get, which should result in a download
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppPartsController() : DnnSxcControllerRoot(RealController.LogSuffix), IAppPartsController
 {
     private RealController Real => SysHlp.GetService<RealController>();

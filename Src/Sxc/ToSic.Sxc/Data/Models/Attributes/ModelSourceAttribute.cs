@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Data.Models;
 /// History: New / WIP in v19.01
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("may change or rename at any time")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public sealed class ModelSourceAttribute: Attribute
 {
     /// <summary>

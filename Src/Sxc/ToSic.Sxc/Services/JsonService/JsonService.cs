@@ -8,7 +8,7 @@ using static ToSic.Eav.Serialization.JsonOptions;
 namespace ToSic.Sxc.Services;
 
 [PrivateApi("Hide implementation")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class JsonService(Generator<CodeJsonWrapper> wrapJsonGenerator)
     : ServiceBase("Sxc.JsnSvc", connect: [wrapJsonGenerator]), IJsonService
 {

@@ -4,7 +4,7 @@ using ToSic.Sxc.Web.Internal.DotNet;
 
 namespace ToSic.Sxc.Web.Internal.JsContext;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class JsApiCacheService(IHttp http) : ServiceBase("JsApi", connect: [http])
 {
     private const string JsApiKey = "JsApi";

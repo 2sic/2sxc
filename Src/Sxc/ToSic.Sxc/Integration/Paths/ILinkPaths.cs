@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Integration.Paths;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ILinkPaths
 {
     string AsSeenFromTheDomainRoot(string virtualPath);

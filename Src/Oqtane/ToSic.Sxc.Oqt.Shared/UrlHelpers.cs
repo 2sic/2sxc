@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ToSic.Sxc.Oqt.Shared;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class UrlHelpers
 {
     /// <summary>
@@ -15,7 +15,7 @@ public static class UrlHelpers
     /// <remarks>
     /// See https://stackoverflow.com/questions/68624/how-to-parse-a-query-string-into-a-namevaluecollection-in-net
     /// </remarks>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static NameValueCollection ParseQueryString(string query)
     {
         // Note that this NameValueCollection is different than the one from HttpUtility
@@ -55,7 +55,7 @@ public static class UrlHelpers
         //public string[] AllValues;
     }
 
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static string NvcToString(NameValueCollection nvc, string keyValueSeparator, string pairSeparator,
         string terminator, string empty, bool repeatKeyForEachValue, string valueSeparator)
     {
@@ -118,7 +118,7 @@ public static class UrlHelpers
     /// Import an NVC into another
     /// </summary>
     /// <returns></returns>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static NameValueCollection Merge(this NameValueCollection first, NameValueCollection source, bool replace = false)
     {
         var target = new NameValueCollection(first);
@@ -141,15 +141,15 @@ public static class UrlHelpers
     }
 
 
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static string QuickAddUrlParameter(string url, string name, string value)
         => $"{url}{(url.IndexOf('?') > 0 ? '&' : '?')}{name}={value}";
 
 
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)] 
+    [ShowApiWhenReleased(ShowApiMode.Never)] 
     public static string AddQueryString(string url, string newParams) => AddQueryString(url, UrlHelpers.ParseQueryString(newParams));
 
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static string AddQueryString(string url, NameValueCollection newParams)
     {
         // check do we have any work to do
@@ -182,11 +182,11 @@ public static class UrlHelpers
 
     }
 
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static string RemoveQuery(this string url) => RemoveAfterSeparator(url, UrlParts.QuerySeparator);
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static string RemoveFragment(this string url) => RemoveAfterSeparator(url, UrlParts.FragmentSeparator);
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static string RemoveQueryAndFragment(this string url) => url.RemoveQuery().RemoveFragment();
     private static string RemoveAfterSeparator(string @string, char separator)
     {

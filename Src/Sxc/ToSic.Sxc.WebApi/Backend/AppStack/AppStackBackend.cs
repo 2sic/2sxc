@@ -8,7 +8,7 @@ using static ToSic.Eav.Apps.AppStackConstants;
 
 namespace ToSic.Sxc.Backend.AppStack;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppStackBackend(
     AppDataStackService dataStackService,
     IZoneCultureResolver zoneCulture,

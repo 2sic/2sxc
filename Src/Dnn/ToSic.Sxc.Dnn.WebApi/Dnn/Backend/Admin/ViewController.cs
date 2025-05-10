@@ -13,7 +13,7 @@ using RealController = ToSic.Sxc.Backend.Admin.ViewControllerReal;
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
 [DnnLogExceptions]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ViewController() : DnnSxcControllerBase(RealController.LogSuffix), IViewController
 {
     private RealController Real => SysHlp.GetService<RealController>();

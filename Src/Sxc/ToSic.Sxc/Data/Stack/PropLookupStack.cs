@@ -4,7 +4,7 @@ using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Data;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class PropLookupStack(IPropertyStack stack, Func<bool> getDebug) : IPropertyLookup
 {
     public IPropertyStack Stack { get; } = stack;

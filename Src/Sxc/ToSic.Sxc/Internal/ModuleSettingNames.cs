@@ -5,7 +5,7 @@
 ///
 /// Note that for historical reasons, the keys are different in Dnn and Oqtane.
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ModuleSettingNames
 {
     // Important note: always use static-readonly, NOT constant

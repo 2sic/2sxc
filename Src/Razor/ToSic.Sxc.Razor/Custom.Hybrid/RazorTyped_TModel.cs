@@ -193,7 +193,7 @@ public abstract class RazorTyped<TModel>()
     public new TModel Model => CodeHelper.GetModel<TModel>();
 
     /// <inheritdoc cref="CodeTyped.Customize"/>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     protected ICodeCustomizer Customize => _customize ??= _CodeApiSvc.GetService<ICodeCustomizer>(reuse: true);
     private ICodeCustomizer _customize;
 

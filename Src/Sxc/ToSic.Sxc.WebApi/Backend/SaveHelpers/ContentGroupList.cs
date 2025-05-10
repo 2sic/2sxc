@@ -8,7 +8,7 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentGroupList(
     GenWorkPlus<WorkBlocks> blocks,
     LazySvc<BlockEditorSelector> blockEditorSelectorLazy,

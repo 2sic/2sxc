@@ -4,7 +4,7 @@ using System.Reflection;
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 [PrivateApi("Internal stuff")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class AppCodeExtensions
 {
     /// <summary>

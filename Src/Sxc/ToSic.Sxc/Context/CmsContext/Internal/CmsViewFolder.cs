@@ -6,7 +6,7 @@ using ToSic.Sxc.Apps.Internal.Assets;
 
 namespace ToSic.Sxc.Context.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CmsViewFolder(CmsView cmsView, IApp app, bool shared) : AppAssetFolder
 {
     public override string Path => field ??= FigureOutPath(shared ? app.RelativePathShared : app.RelativePath).Backslash();

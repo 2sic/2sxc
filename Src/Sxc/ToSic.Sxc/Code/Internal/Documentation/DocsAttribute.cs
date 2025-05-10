@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Code.Internal.Documentation;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DocsAttribute: Attribute
 {
     public string[] Messages { get; set; }

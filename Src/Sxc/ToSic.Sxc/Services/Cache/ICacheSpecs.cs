@@ -23,11 +23,11 @@ public interface ICacheSpecs
     /// The Key itself is only ever needed if you want to see a key manually, mainly for debugging purposes.
     /// </remarks>
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     string Key { get; }
 
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     internal IPolicyMaker PolicyMaker { get; }
 
     /// <summary>

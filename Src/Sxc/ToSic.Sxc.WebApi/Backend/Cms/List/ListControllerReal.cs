@@ -7,7 +7,7 @@ using ToSic.Sxc.Cms.Internal.Publishing;
 
 namespace ToSic.Sxc.Backend.Cms;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class ListControllerReal(
     Generator<MultiPermissionsApp> multiPermissionsApp,
     GenWorkPlus<WorkEntities> workEntities,

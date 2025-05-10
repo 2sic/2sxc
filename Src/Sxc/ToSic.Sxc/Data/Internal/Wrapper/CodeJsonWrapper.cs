@@ -9,7 +9,7 @@ using static ToSic.Sxc.Data.Internal.Wrapper.JsonProcessingHelpers;
 
 namespace ToSic.Sxc.Data.Internal.Wrapper;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)
     : ServiceBase($"{SxcLogName}.CdJsWr", connect: [wrapTypeGenerator])
 {

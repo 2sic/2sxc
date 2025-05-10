@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Code.Generate.Internal.CSharpBaseClasses;
 /// Experimental
 /// </summary>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class WebApiGenerator(IUser user, IAppReaderFactory appReadFac)
     : CSharpServicesGenerator(user, appReadFac), IFileGenerator
 {

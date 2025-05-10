@@ -7,7 +7,7 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
 {
     public const string LogSuffix = "AppAss";

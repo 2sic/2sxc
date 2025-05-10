@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [SupportedModules(DnnSupportedModuleNames)]
 [ValidateAntiForgeryToken]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class FieldController() : DnnSxcControllerBase(RealController.LogSuffix), IFieldController
 {
     private RealController Real => SysHlp.GetService<RealController>();

@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Code.Generate.Internal;
 /// Experimental
 /// </summary>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CSharpDataModelsGenerator(IUser user, IAppReaderFactory appReadFac)
     : CSharpGeneratorBase(user, appReadFac, SxcLogName + ".DMoGen"), IFileGenerator
 {

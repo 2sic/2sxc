@@ -6,7 +6,7 @@
 // - Figure out how to best implement the logic for combining settings from different sources - eg. skip zeros
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record OutputCacheSettings : IOutputCacheSettings
 {
     public bool IsEnabled { get; init; } = true;

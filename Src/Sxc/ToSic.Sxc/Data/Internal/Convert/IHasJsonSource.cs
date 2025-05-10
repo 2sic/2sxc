@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Data.Internal.Convert;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IHasJsonSource
 {
     /// <summary>

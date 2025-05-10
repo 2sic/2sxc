@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 /// <param name="helperSpecs"></param>
 /// <param name="logName"></param>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class CodeHelperV00Base(CodeHelperSpecs helperSpecs, string logName)
     : HelperBase(helperSpecs.CodeApiSvc.Log, logName)
 {

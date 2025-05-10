@@ -5,7 +5,7 @@ using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
 {
     public List<Exception> ExceptionsOrNull { get; private set; }

@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Code;
 /// <summary>
 /// Helper to convert some unknown object into the possible result.
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class TypedConverter(CodeDataFactory cdf)
 {
     public CodeDataFactory Cdf { get; } = cdf;

@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Web.Internal.PageFeatures;
 /// <summary>
 /// Important: This is a singleton!
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class PageFeaturesCatalog: GlobalCatalogBase<IPageFeature>
 {
     /// <summary>

@@ -3,7 +3,7 @@
 /// <summary>
 /// Configuration which icons/fonts are needed by the various edit-UIs
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public struct EditUiResourceSettings
 {
     public bool IconsMaterial { get; set; }

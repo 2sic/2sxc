@@ -5,7 +5,7 @@ using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
 namespace ToSic.Sxc.Adam.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamManager<TFolderId, TFileId>: AdamManager
 {
     private readonly Generator<AdamStorageOfField<TFolderId, TFileId>> _fieldStorageGenerator;

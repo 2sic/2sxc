@@ -1,9 +1,9 @@
 ﻿namespace ToSic.Sxc.Code.Internal;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface INeedsCodeApiService
 {
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)] 
+    [ShowApiWhenReleased(ShowApiMode.Never)] 
     void ConnectToRoot(ICodeApiService codeRoot);
 }

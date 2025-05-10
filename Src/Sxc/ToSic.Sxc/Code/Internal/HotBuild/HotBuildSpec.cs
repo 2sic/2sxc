@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class HotBuildSpec(int appId, string edition, string appName)
 {
     public int AppId => appId;

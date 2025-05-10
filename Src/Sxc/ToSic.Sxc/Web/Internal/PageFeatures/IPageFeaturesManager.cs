@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Web.Internal.PageFeatures;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IPageFeaturesManager
 {
     IReadOnlyDictionary<string, IPageFeature> Features { get; }

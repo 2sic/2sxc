@@ -3,7 +3,7 @@ using ToSic.Eav.Apps.Internal.Work;
 
 namespace ToSic.Sxc.Blocks.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockEditorForEntity : BlockEditorBase
 {
     private readonly IAppsCatalog _appsCatalog;

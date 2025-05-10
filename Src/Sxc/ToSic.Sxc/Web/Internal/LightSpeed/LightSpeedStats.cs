@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Web.Internal.LightSpeed;
 /// <summary>
 /// Statistics for LightSpeed
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class LightSpeedStats(MemoryCacheService memoryCacheService) : ServiceBase(SxcLogName + ".LightSpeedStats", connect: [memoryCacheService])
 {
     public Dictionary<int, int> ItemsCount => All

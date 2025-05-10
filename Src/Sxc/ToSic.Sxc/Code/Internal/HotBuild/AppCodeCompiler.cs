@@ -6,7 +6,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, SourceCodeHasher sourceCodeHasher, object[] connect = default) : ServiceBase("Sxc.MyApCd", connect: connect)
 {
     protected const string AppCodeDll = "AppCode.dll";

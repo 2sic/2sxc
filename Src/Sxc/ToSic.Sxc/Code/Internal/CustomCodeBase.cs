@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Code.Internal;
 
 [PrivateApi]
 // #NoEditorBrowsableBecauseOfInheritance
-//[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+//[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class CustomCodeBase : ServiceForDynamicCode, ICompatibilityLevel
 {
     #region Constructor / Setup
@@ -20,12 +20,12 @@ public abstract class CustomCodeBase : ServiceForDynamicCode, ICompatibilityLeve
     /// For architecture of Composition over Inheritance.
     /// </summary>
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     protected internal CodeHelper CodeHlp => field ??= _CodeApiSvc.GetService<CodeHelper>().Init(this as IGetCodePath); // inheriting classes must implement IGetCodePath
 
 
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public override void ConnectToRoot(ICodeApiService codeRoot)
     {
         base.ConnectToRoot(codeRoot);
@@ -33,7 +33,7 @@ public abstract class CustomCodeBase : ServiceForDynamicCode, ICompatibilityLeve
     }
 
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public abstract int CompatibilityLevel { get; }
 
     #endregion

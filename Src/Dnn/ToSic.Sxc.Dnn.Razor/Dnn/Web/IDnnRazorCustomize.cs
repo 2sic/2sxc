@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Dnn.Web;
 /// All DNN Razor Pages inherit from this class
 /// </summary>
 [PrivateApi("used to be public till 16.09, but all methods were marked as obsolete a long time ago")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
 public interface IDnnRazorCustomize: IDnnDynamicCode
 {

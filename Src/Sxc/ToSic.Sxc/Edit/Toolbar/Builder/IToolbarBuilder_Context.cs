@@ -3,11 +3,11 @@
 internal interface IToolbarBuilderInternal
 {
     [PrivateApi("WIP / Debugging")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     ToolbarContext GetContext();
 
     [PrivateApi("WIP 14.07.04")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     IToolbarBuilder Context(
         object target
     );

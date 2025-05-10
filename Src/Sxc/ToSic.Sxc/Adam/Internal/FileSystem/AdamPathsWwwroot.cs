@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Adam.Internal;
 /// <summary>
 /// Basic AdamPaths resolver, assumes that files are in wwwroot/adam for now.
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamPathsWwwroot(IServerPaths serverPaths) : AdamPathsBase(serverPaths, LogScopes.Base)
 {
     /// <summary>

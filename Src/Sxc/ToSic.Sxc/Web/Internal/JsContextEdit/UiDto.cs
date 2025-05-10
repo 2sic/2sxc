@@ -3,7 +3,7 @@
 
 namespace ToSic.Sxc.Web.Internal.JsContextEdit;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class UiDto(bool autoToolbar)
 {
     public bool AutoToolbar { get; } = autoToolbar;

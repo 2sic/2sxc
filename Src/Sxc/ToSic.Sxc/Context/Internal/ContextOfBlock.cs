@@ -8,7 +8,7 @@ using ToSic.Sxc.Web.Internal.PageService;
 namespace ToSic.Sxc.Context.Internal;
 
 [PrivateApi("Internal stuff, not for public use")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ContextOfBlock: ContextOfApp, IContextOfBlock
 {
     #region Constructor / DI

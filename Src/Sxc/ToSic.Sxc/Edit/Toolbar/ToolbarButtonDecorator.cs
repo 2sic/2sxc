@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Edit.Toolbar;
 /// <remarks>
 /// WIP new in v14; as of now only used on NoteDecorator, should have more soon
 /// </remarks>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ToolbarButtonDecorator(IEntity entity) : EntityBasedType(entity)
 {
     public static string TypeName = "ToolbarButtonDecorator";

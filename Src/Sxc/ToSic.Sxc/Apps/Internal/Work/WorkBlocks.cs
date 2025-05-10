@@ -9,7 +9,7 @@ using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Apps.Internal.Work;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkBlocks(
     IZoneCultureResolver cultureResolver,
     Generator<QueryDefinitionBuilder> qDefBuilder,

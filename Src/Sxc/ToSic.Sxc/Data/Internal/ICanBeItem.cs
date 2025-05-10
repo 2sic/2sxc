@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Data.Internal;
 /// To make sure that APIs which use this have a consistent structure, these objects all implement this interface.
 /// </summary>
 [PrivateApi("Was InternalApi till v17, but Just FYI")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICanBeItem: ICanBeEntity
 {
     /// <summary>
@@ -20,10 +20,10 @@ public interface ICanBeItem: ICanBeEntity
     /// </summary>
     /// <returns></returns>
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     IBlock TryGetBlockContext();
 
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     ITypedItem Item { get; }
 }

@@ -6,7 +6,7 @@
 /// Must be overriden in each platform.
 /// </summary>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IUsersProvider
 {
     public string PlatformIdentityTokenPrefix { get; }

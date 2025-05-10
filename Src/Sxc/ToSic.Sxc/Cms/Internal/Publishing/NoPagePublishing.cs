@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Cms.Internal.Publishing;
 /// NOTE: It is currently not in use, and that's ok. 
 /// </summary>
 // ReSharper disable once UnusedMember.Global
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class NoPagePublishing() : ServiceBase("Eav.NoPubl"), IPagePublishing
 {
     public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)

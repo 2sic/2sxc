@@ -8,7 +8,7 @@ using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Images.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBasedType(entity, languageCodes), IImageDecorator
 {
     #region Constants and Type Names

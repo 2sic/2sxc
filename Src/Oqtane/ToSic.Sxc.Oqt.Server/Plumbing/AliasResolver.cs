@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing;
 /// in general to get Alias use AliasResolver, instead of working directly with IAliasRepository, 
 /// to ensure that not mapped properties are also set
 /// </remarks>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AliasResolver(
     SiteState siteState,
     IHttpContextAccessor httpContextAccessor,

@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Adam.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IAdamFileSystem<TFolderId, TFileId>: IHasLog
 {
     void Init(AdamManager<TFolderId, TFileId> adamManager);

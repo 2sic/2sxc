@@ -14,7 +14,7 @@ using ToSic.Sxc.Services.Internal;
 namespace ToSic.Sxc.Services.DataServices;
 
 [PrivateApi("hide implementation")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal partial class DataService(
     LazySvc<IDataSourcesService> dataSources,
     LazySvc<DataSourceCatalog> catalog,

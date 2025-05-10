@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Dnn.Backend.Cms;
 
 //[SupportedModules(DnnSupportedModuleNames)]
 [ValidateAntiForgeryToken]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class EditController() : DnnSxcControllerBase(RealController.LogSuffix), IEditController
 {
     #region Setup / Infrastructure

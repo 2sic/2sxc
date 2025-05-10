@@ -7,7 +7,7 @@ using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Code.Internal.SourceCode;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc", connect: [serverPaths])
 {
     public CodeFileInfo TypeOfVirtualPath(string virtualPath)

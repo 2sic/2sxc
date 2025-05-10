@@ -8,7 +8,7 @@ using static System.StringComparison;
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class CodeCompiler(IServiceProvider serviceProvider) : ServiceBase("Sys.CsCmpl", connect: [/* never! serviceProvider */ ])
 {
     public const string CsFileExtension = ".cs";

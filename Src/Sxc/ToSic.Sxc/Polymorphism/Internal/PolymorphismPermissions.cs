@@ -4,7 +4,7 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.Polymorphism.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class PolymorphismPermissions(IUser user) : IPolymorphismResolver
 {
     public string NameId => "Permissions";

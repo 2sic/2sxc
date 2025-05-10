@@ -5,7 +5,7 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ToolbarButtonDecoratorHelper(IAppReaderFactory appReaders) : ServiceBase($"{SxcLogName}.TbdHlp", connect: [appReaders])
 {
     public IAppIdentity MainAppIdentity { get; set; }

@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Images.Internal;
 /// <remarks>
 /// Must be public, otherwise it breaks in dynamic use :(
 /// </remarks>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record ResponsivePicture: ResponsiveBase, IResponsivePicture
 {
     internal ResponsivePicture(ImageService imgService, IPageService pageService, ResponsiveSpecs specs, ILog parentLog)

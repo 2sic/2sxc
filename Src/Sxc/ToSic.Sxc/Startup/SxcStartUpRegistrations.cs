@@ -5,7 +5,7 @@ using ToSic.Sxc.Configuration.Internal;
 
 namespace ToSic.Sxc.Startup;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class SxcStartUpRegistrations(FeaturesCatalog featuresCatalog)
     : ServiceBase($"{SxcLogName}.SUpReg"), IStartUpRegistrations
 {

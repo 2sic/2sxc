@@ -4,7 +4,7 @@ using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Engines;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class EngineFactory(Generator<IRazorEngine> razorEngineGen, Generator<TokenEngine> tokenEngineGen)
     : ServiceBase($"{SxcLogName}.EngFct", connect: [razorEngineGen, tokenEngineGen])
 {

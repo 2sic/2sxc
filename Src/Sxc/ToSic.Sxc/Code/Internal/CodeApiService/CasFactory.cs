@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// Special helper which will create the code-root based on the parent class requesting it.
 /// If the parent is generic supporting IDynamicModel[Model, Kit] it will create the generic root
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeApiServiceFactory(IServiceProvider serviceProvider)
     : ServiceBase($"{SxcLogName}.CDRFac", connect: [/* never! serviceProvider */ ])
 {

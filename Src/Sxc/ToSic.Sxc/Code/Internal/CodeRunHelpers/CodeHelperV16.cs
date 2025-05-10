@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 /// <param name="helperSpecs"></param>
 /// <param name="getRazorModel"></param>
 /// <param name="getModelDic"></param>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class TypedCode16Helper(object owner, CodeHelperSpecs helperSpecs, Func<object> getRazorModel, Func<IDictionary<string, object>> getModelDic)
     : CodeHelperV00Base(helperSpecs, SxcLogName + ".TCd16H")
 {

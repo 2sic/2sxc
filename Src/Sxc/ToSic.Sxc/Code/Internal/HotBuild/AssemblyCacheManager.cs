@@ -4,7 +4,7 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : ServiceBase(SxcLogName + ".AssCMn", connect: [memoryCacheService])
 {
     private const string GlobalCacheRoot = "Sxc-AssemblyCache.App.";

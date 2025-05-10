@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn.Razor;
 /// </summary>
 [PrivateApi("used to be InternalApi_DoNotUse_MayChangeWithoutNotice till v16.09")]
 [EngineDefinition(Name = "Razor")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 // ReSharper disable once UnusedMember.Global
 internal partial class DnnRazorEngine(EngineBase.MyServices helpers, DnnRazorCompiler razorCompiler)
     : EngineBase(helpers, connect: [razorCompiler]),

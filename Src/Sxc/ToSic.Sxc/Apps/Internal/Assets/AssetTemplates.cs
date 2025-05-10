@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Apps.Internal.Assets;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class Purpose
 {
     // TODO: Once the UIs are updated, we'll kill the 'auto' case
@@ -14,7 +14,7 @@ public class Purpose
 }
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class AssetTemplates() : ServiceBase("SxcAss.Templt")
 {
     #region Constants

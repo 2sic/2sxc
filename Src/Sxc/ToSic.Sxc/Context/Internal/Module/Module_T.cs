@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Context.Internal;
 /// </summary>
 /// <typeparam name="T"></typeparam>
 [PrivateApi("this is just fyi")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class Module<T>(string logName) : ServiceBase(logName), IModule, IWrapper<T>
     where T : class
 {

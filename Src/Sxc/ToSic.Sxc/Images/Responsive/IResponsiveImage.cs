@@ -62,7 +62,7 @@ public interface IResponsiveImage: IRawHtmlString
     /// The outermost tag - name not yet final
     /// </summary>
     [PrivateApi("Name not yet final")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     IHtmlTag Tag { get; }
 
     /// <summary>

@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn.Context;
 /// <summary>
 /// The DNN implementation of a Block Container (a Module).
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 [PrivateApi("this is just internal, external users don't really have anything to do with this")]
 public class DnnModule: Module<ModuleInfo>
 {

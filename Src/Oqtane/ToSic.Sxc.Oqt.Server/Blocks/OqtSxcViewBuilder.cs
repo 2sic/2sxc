@@ -14,7 +14,7 @@ using Page = Oqtane.Models.Page;
 namespace ToSic.Sxc.Oqt.Server.Blocks;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
 {
     #region Constructor and DI

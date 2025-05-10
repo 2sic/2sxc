@@ -13,7 +13,7 @@ using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
 namespace ToSic.Sxc.Dnn.Integration;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DnnAppFolderUtilities(
     Generator<AppFolder> folder,
     Generator<DnnGetBlock> dnnGetBlock,

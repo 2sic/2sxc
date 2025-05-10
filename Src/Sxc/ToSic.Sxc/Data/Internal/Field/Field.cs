@@ -5,7 +5,7 @@ using ToSic.Sxc.Images.Internal;
 namespace ToSic.Sxc.Data.Internal;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class Field(ITypedItem parent, string name, CodeDataFactory cdf) : IField
 {
     /// <inheritdoc />

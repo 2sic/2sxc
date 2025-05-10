@@ -24,11 +24,11 @@ public interface IDynamicStack: ISxcDynamicObject, ICanDebug, ICanGetByName
     /// Added in 2sxc 12.03
     /// </remarks>
     [PrivateApi("was public till v16.02, but since I'm not sure if it is really used, we decided to hide it again since it's probably not an important API")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)] 
+    [ShowApiWhenReleased(ShowApiMode.Never)] 
     dynamic GetSource(string name);
 
     [PrivateApi("Never published in docs")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)] 
+    [ShowApiWhenReleased(ShowApiMode.Never)] 
     dynamic GetStack(params string[] names);
 
     #region Get and Get<T>

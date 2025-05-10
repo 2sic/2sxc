@@ -4,7 +4,7 @@ using System.Web;
 
 namespace ToSic.Sxc.Integration.Paths;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class LinkPaths: ILinkPaths
 {
 

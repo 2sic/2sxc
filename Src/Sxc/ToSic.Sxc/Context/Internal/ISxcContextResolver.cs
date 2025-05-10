@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Context.Internal;
 /// This provides other systems with a context
 /// Note that it's important to always make this **Scoped**, not transient, as there is some re-use after initialization
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ISxcContextResolver: IContextResolver
 {
     /// <summary>

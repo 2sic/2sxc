@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Context.Internal;
 /// <summary>
 /// TODO: SHOULD actually be called ContextOfModule!
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IContextOfBlock: IContextOfApp
 {
     /// <summary>

@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Code.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class IHasKitExtensions
 {
     public static TServiceKit GetKit<TServiceKit>(this ICodeApiService codeRoot) where TServiceKit : ServiceKit

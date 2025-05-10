@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 
 // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [Authorize(Roles = RoleNames.Admin)]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class LogController() : OqtStatefulControllerBase(RealController.LogSuffix), ILogController
 {
     private RealController Real => GetService<RealController>();

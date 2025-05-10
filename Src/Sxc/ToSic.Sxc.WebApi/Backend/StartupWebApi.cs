@@ -28,7 +28,7 @@ using ToSic.Sxc.Integration.Paths;
 
 namespace ToSic.Sxc.Backend;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class StartupWebApi
 {
     public static IServiceCollection AddSxcWebApi(this IServiceCollection services)

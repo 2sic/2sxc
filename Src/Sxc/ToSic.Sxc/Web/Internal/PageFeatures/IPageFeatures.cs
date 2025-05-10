@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Web.Internal.PageFeatures;
 /// Part of the <see cref="ToSic.Sxc.Services.IPageService"/> to activate features on the page.
 /// </summary>
 [PrivateApi("should never be public, could be confused with the IPageService")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IPageFeatures
 {
     IEnumerable<string> Activate(params string[] keys);

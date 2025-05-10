@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Dnn.Backend.Cms;
 
 [SupportedModules(DnnSupportedModuleNames)]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ListController() : DnnSxcControllerBase(RealController.LogSuffix), IListController
 {
     private RealController Real => SysHlp.GetService<RealController>();

@@ -4,7 +4,7 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Client;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class SxcInterop : Oqtane.UI.Interop
 {
     private readonly IJSRuntime _jsRuntime;

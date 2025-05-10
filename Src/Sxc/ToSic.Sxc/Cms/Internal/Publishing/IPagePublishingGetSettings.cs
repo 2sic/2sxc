@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Cms.Internal.Publishing;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IPagePublishingGetSettings: IHasLog, ISwitchableService
 {
     BlockPublishingSettings SettingsOfModule(int moduleId);

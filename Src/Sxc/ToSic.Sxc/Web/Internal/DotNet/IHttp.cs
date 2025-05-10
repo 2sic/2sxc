@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Web.Internal.DotNet;
 /// To abstract .net451 and .net core
 /// </summary>
 [PrivateApi("used to be InternalApi_DoNotUse_MayChangeWithoutNotice, hidden 2021-12")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IHttp
 {
     /// <summary>

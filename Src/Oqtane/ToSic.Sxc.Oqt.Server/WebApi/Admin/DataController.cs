@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DataController() : OqtStatefulControllerBase(DataControllerReal.LogSuffix), IAdminDataController
 {
     private DataControllerReal Real => GetService<DataControllerReal>();

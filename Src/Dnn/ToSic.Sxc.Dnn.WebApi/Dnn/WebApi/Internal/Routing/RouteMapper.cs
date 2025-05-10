@@ -11,7 +11,7 @@ using ToSic.Sxc.Dnn.Providers;
 namespace ToSic.Sxc.Dnn.WebApi;
 
 // ReSharper disable once UnusedMember.Global
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class RouteMapper : IServiceRouteMapper
 {
     // DNN Module Name used in the route
@@ -32,7 +32,7 @@ public class RouteMapper : IServiceRouteMapper
     private static readonly object AppContentDefs = new {controller = ControllerNames.AppContent, id = RouteParameter.Optional };
 
 
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public void RegisterRoutes(IMapRoute mapRouteManager)
     {
         _mapRouteManager = mapRouteManager;

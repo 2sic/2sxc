@@ -14,7 +14,7 @@ public enum Casing
     /// Will preserve casing as it is, usually Pascal case (old behavior for 2sxc Apis).
     /// </summary>
     [PrivateApi("Hidden for now, as it doesn't matter to external users")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     Unspecified = 0,
 
     /// <summary>

@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Code.Generate.Internal;
 /// Experimental
 /// </summary>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class CSharpGeneratorBase(IUser user, IAppReaderFactory appReadFac, string logName)
     : ServiceBase(logName ?? (SxcLogName + ".DMoGen"))
 {

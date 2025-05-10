@@ -6,7 +6,7 @@ using ToSic.Eav.Apps.Services;
 namespace ToSic.Sxc.Code.Generate.Internal;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CSharpCodeSpecs: FileGeneratorSpecs
 {
     private const string ItemAccessorDefault = nameof(CustomItem._item);

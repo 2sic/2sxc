@@ -38,7 +38,7 @@ public interface IField: IHasLink, IHasMetadata
     /// To get the value as a link, use <see cref="Value"/>
     /// </summary>
     [PrivateApi("Was public till 16.03, but don't think it should be surfaced...")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     object Raw { get; }
 
     /// <summary>
@@ -47,7 +47,7 @@ public interface IField: IHasLink, IHasMetadata
     /// To get the raw value, use <see cref="Raw"/>
     /// </summary>
     [PrivateApi("Was public till 16.03, but don't think it should be surfaced...")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     object Value { get; }
 
     /// <summary>
@@ -59,6 +59,6 @@ public interface IField: IHasLink, IHasMetadata
 
 
     //[PrivateApi("Internal use only, may change at any time")]
-    //[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    //[ShowApiWhenReleased(ShowApiMode.Never)]
     //ImageDecorator ImageDecoratorOrNull { get; }
 }

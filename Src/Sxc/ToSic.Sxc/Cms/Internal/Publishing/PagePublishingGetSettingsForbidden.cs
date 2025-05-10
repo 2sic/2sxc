@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Cms.Internal.Publishing;
 /// <summary>
 /// This is the fallback page publishing strategy, which basically says that page publishing isn't enabled
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class PagePublishingGetSettingsForbidden(IFeaturesService featuresService)
     : ServiceBase("Cms.PubForb", connect: [featuresService]), IPagePublishingGetSettings
 {

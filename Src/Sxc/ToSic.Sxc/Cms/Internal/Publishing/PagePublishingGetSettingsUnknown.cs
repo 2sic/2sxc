@@ -3,7 +3,7 @@ using ToSic.Eav.Internal.Unknown;
 
 namespace ToSic.Sxc.Cms.Internal.Publishing;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class PagePublishingGetSettingsUnknown : PagePublishingGetSettingsBase
 {
     public PagePublishingGetSettingsUnknown(WarnUseOfUnknown<PagePublishingGetSettingsUnknown> _) : base(LogScopes.NotImplemented) { }

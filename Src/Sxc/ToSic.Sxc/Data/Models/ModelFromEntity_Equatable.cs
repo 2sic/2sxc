@@ -12,7 +12,7 @@ partial class ModelFromEntity: IMultiWrapper<IEntity>, IEquatable<IEntity>
         => MultiWrapperEquality.EqualsObj(this, b);
 
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public override int GetHashCode()
         => MultiWrapperEquality.GetWrappedHashCode(this);
 

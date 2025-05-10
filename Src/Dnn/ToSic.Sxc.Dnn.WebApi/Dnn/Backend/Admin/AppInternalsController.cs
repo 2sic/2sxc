@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 /// Proxy Class to the AppInternalsController (Web API Controller)
 /// </summary>
 [DnnLogExceptions]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppInternalsController() : DnnSxcControllerBase(RealController.LogSuffix), IAppInternalsController
 {
     private RealController Real => SysHlp.GetService<RealController>();

@@ -4,7 +4,7 @@ using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ToolbarRuleForEntity: ToolbarRuleTargeted
 {
     internal ToolbarRuleForEntity(

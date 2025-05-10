@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers;
 //[Route("{alias:int}/api/[controller]")]
 [Route(ControllerRoutes.ApiRoute)]
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class OqtSxcRenderController(
     IHttpContextAccessor accessor,
     ILogManager logger,

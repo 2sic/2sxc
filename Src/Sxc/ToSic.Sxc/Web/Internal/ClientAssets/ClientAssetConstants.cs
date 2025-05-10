@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Web.Internal.ClientAssets;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ClientAssetConstants
 {
     #region Constants for placement in resulting HTML

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 
 namespace ToSic.Sxc.Integration.Paths;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class LinkPaths(IUrlHelper urlHelper) : ILinkPaths
 {
     public string AsSeenFromTheDomainRoot(string virtualPath)

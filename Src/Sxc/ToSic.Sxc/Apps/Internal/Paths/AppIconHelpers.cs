@@ -10,7 +10,7 @@ using static ToSic.Eav.Apps.Internal.AppConstants;
 
 namespace ToSic.Sxc.Apps.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppIconHelpers(LazySvc<IValueConverter> iconConverterLazy)
     : ServiceBase("Viw.Help", connect: [iconConverterLazy])
 {

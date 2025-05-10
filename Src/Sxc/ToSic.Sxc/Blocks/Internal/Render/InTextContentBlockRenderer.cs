@@ -5,7 +5,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Blocks.Internal.Render;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class InTextContentBlockRenderer(SimpleRenderer simpleRenderer)
     : ServiceBase(SxcLogName + ".RndTxt", connect: [simpleRenderer])
 {

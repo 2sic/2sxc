@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Engines;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record RenderEngineResult
 {
     public required string Html { get; init; }

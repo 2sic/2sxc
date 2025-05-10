@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Context.Internal;
 /// <summary>
 /// Constructor for DI
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class Page(LazySvc<IHttp> httpLazy) : IPage
 {
     public IPage Init(int id)

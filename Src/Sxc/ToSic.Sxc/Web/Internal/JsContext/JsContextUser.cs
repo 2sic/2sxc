@@ -4,7 +4,7 @@ using ToSic.Sxc.Polymorphism.Internal;
 
 namespace ToSic.Sxc.Web.Internal.JsContext;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class JsContextUser(IUser user, IEnumerable<IEntity> dataList)
 {
     public bool CanDevelop { get; } = user.IsSystemAdmin;

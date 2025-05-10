@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Code.Internal;
 ///
 /// Both Dnn and Oqtane have their own version of this class, but the changes are minimal.
 /// </remarks>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeApiService<TModel, TServiceKit>(CodeApiService.MyServices services, string logPrefix)
     : CodeApiService(services, logPrefix), ICodeApiService<TModel, TServiceKit>
     where TModel : class

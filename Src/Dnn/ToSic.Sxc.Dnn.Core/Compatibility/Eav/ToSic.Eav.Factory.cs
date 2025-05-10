@@ -14,7 +14,7 @@ namespace ToSic.Eav;
 /// </summary>
 [PrivateApi("Up to v19 used to PublicApi(Careful - obsolete!)")]
 [Obsolete("Deprecated, please use Dnn 9 DI instead https://go.2sxc.org/brc-13-eav-factory")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class Factory
 {
     [Obsolete("Not used any more, but keep for API consistency in case something calls ActivateNetCoreDi")]
@@ -25,7 +25,7 @@ public class Factory
     /// </summary>
     /// <typeparam name="T">The type / interface we need.</typeparam>
     [Obsolete("Please use standard Dnn 9.4+ Dnn DI instead https://go.2sxc.org/brc-13-eav-factory")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static T Resolve<T>()
     {
         DnnStaticDi.CodeInfos.Warn(WarnObsolete.UsedAs(specificId: typeof(T).FullName));

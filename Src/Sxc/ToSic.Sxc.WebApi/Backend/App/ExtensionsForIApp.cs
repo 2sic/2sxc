@@ -3,7 +3,7 @@
 
 //namespace ToSic.Sxc.Backend.App;
 
-//[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+//[ShowApiWhenReleased(ShowApiMode.Never)]
 //public static class ExtensionsForIApp
 //{
 //    //public static string VersionSafe(this IAppSpecs app)

@@ -4,7 +4,7 @@ using ToSic.Sxc.Services.Tweaks;
 namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi("not published, use Item.Html() instead")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICmsService
 {
     IHtmlTag Html(object thing,

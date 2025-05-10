@@ -6,7 +6,7 @@ using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Apps.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
 {
     public  int ZoneId { get; }

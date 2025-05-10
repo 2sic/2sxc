@@ -6,7 +6,7 @@ using ToSic.Lib.Internal.Generics;
 
 namespace ToSic.Sxc.Engines;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class EngineAppRequirements(IRequirementsService requirements) : EngineRequirementsBase("Eng.AppReq", connect: [requirements])
 {
     internal bool RequirementsMet(IAppReader appState) 

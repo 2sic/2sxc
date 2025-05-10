@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Apps.Internal.Work;
 // Note: Unclear if this worker makes any sense, or should just be dropped.
 // ATM it only has delete-entity without real view-specific logic
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkViewsMod(GenWorkPlus<WorkViews> appViews, GenWorkDb<WorkEntityDelete> entityDelete)
     : WorkUnitBase<IAppWorkCtx>("AWk.EntCre", connect: [appViews, entityDelete])
 {

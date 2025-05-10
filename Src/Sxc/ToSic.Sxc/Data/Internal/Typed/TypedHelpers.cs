@@ -6,7 +6,7 @@ using ToSic.Lib.Code.Help;
 
 namespace ToSic.Sxc.Data.Internal.Typed;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal static class TypedHelpers
 {
     public static bool ContainsKey<TNode>(string name, TNode start, Func<TNode, string, bool> checkNode, Func<TNode, string, TNode> dig) where TNode: class

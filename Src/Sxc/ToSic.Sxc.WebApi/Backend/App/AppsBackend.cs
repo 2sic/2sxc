@@ -10,7 +10,7 @@ using ToSic.Sxc.Web.Internal.LightSpeed;
 
 namespace ToSic.Sxc.Backend.App;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppsBackend(
     WorkApps workApps,
     IContextOfSite context,

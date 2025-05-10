@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Backend.Adam;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IAdamTransGetItems: IAdamTransactionBase
 {
     /// <summary>

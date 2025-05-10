@@ -8,7 +8,7 @@ using ToSic.Sxc.Data.Internal.Wrapper;
 
 namespace ToSic.Sxc.Data;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item)
     : PreWrapJsonBase(wrapper, item), IWrapper<JsonObject>
 {

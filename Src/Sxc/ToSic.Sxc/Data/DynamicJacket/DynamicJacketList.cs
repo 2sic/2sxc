@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Data;
 /// This is a DynamicJacket for JSON arrays. You can enumerate through it. 
 /// </summary>
 [PrivateApi("was Internal-API till v17 - just use the objects from AsDynamic, don't use this directly")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class DynamicJacketList : DynamicJacketBase<JsonArray>, IReadOnlyList<object>
 {
     /// <inheritdoc />

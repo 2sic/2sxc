@@ -4,7 +4,7 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi("Hide implementation")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ConvertValueService() : ServiceBase("Sxc.CnvSrv")
 {
     public bool OptimizeNumbers => true;

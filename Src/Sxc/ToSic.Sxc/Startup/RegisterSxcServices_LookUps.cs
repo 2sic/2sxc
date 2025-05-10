@@ -13,7 +13,7 @@ static partial class RegisterSxcServices
     /// This will add LookUps for DI
     /// All must use AddTransient, not TryAdd
     /// </summary>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcCoreLookUps(this IServiceCollection services)
     {
         // QueryStringLookUp is used in Dnn and Oqtane

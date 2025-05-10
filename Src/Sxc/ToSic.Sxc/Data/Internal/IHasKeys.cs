@@ -5,7 +5,7 @@
 /// The name isn't quite ideal, but it's not too important as it's not public. 
 /// </summary>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IHasKeys
 {
     /// <summary>

@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Blocks.Internal;
 
 [PrivateApi("internal use only")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IModuleAndBlockBuilder: IHasLog
 {
     IBlock BuildBlock(int pageId, int moduleId);

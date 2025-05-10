@@ -3,7 +3,7 @@ using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
 namespace ToSic.Sxc.Code;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class DevTools(CodeHelperSpecs specs, ILog parentLog) : HelperBase(parentLog, $"{SxcLogName}.DevTls"), IDevTools
 {
     private string RequireMsg(string requires, string but, string[] names) =>

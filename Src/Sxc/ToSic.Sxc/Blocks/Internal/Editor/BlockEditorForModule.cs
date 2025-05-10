@@ -3,7 +3,7 @@ using ToSic.Sxc.Integration.Modules;
 
 namespace ToSic.Sxc.Blocks.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockEditorForModule : BlockEditorBase
 {
     public BlockEditorForModule(MyServices services,

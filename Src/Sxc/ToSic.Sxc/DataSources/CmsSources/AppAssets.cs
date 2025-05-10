@@ -44,7 +44,7 @@ namespace ToSic.Sxc.DataSources;
     Audience = Audience.Advanced,
     UiHint = "Files and folders in the App folder")]
 [PublicApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppAssets: CustomDataSourceAdvanced
 {
     private readonly AppAssetsDataSourceProvider _appAssetsSource;

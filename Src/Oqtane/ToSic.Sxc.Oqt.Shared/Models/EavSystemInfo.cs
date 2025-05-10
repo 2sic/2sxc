@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace ToSic.Sxc.Oqt.Shared.Models;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class EavSystemInfo
 {
     public static Version Version => Assembly.GetExecutingAssembly().GetName().Version;

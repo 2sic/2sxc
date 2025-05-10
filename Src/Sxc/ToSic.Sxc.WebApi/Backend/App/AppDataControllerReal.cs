@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Backend.App;
 
 /// <inheritdoc cref="IAppDataController" />
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppDataControllerReal(LazySvc<AppContent> appContentLazy)
     : ServiceBase("Api.DataRl", connect: [appContentLazy]), IAppDataController
 {

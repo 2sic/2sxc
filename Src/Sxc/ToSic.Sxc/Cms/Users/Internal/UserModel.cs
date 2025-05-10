@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Cms.Users.Internal;
 /// * TODO:
 /// </summary>
 [PrivateApi("this is only internal - public access is always through interface")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 [ContentTypeSpecs(
     Guid = "612f9341-ff91-443d-be58-500e55bec2d8",
     Description = "User Information",

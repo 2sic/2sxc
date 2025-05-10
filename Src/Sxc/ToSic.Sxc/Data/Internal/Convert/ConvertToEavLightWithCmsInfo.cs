@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Data.Internal.Convert;
 /// Standard constructor, important for opening this class in dependency-injection
 /// </remarks>
 [PrivateApi("Hide implementation; this was never public; the DataToDictionary was with empty constructor, but that's already polyfilled")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
 public class ConvertToEavLightWithCmsInfo(ConvertToEavLight.MyServices services) : ConvertToEavLight(services)
 {

@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 /// It inherits from the helper base so in Custom Code it will also provide the log,
 /// but when used in APIs it only provides the GetCode and CreateInstance methods.
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeHelper() : CodeHelperBase("Sxc.CdHlp")
 {
     #region Setup

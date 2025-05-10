@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Context;
 /// A unit / block within the CMS. Contains all necessary identification to pass around.
 /// </summary>
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IModule
 #if NETFRAMEWORK
 #pragma warning disable 618
@@ -16,7 +16,7 @@ public interface IModule
 #endif
 {
     [PrivateApi("Workaround till we have DI to inject the current container")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     IModule Init(int id);
 
     int Id { get; }
@@ -26,13 +26,13 @@ public interface IModule
     /// Determines if this is a the primary App (the content-app) as opposed to any additional app
     /// </summary>
     [PrivateApi("don't think this should be here! also not sure if it's the primary - or the contentApp! reason seems to be that we detect it by the DNN module name")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     bool IsContent { get; }
 
     /// <summary>
     /// Identifies the content-block which should be shown in this container
     /// </summary>
     [PrivateApi("still experimental")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     IBlockIdentifier BlockIdentifier { get; }
 }

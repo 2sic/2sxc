@@ -10,7 +10,7 @@ using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CspOfModule(IUser user, IFeaturesService featuresService)
     : ServiceForDynamicCode($"{CspConstants.LogPrefix}.ModLvl")
 {

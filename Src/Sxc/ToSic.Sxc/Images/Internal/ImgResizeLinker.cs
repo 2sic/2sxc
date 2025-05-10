@@ -18,7 +18,7 @@ using static ToSic.Sxc.Images.RecipeVariant;
 namespace ToSic.Sxc.Images.Internal;
 
 [PrivateApi("Internal stuff")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ImgResizeLinker(
     LazySvc<IEavFeaturesService> features,
     LazySvc<ICss> koi,

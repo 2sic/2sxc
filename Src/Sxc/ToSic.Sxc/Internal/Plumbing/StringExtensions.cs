@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Internal.Plumbing;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal static class StringExtensions
 {
     /// <summary>

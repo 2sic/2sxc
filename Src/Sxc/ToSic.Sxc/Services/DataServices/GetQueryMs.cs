@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Services.DataServices;
 /// <summary>
 /// Get-Query Micro Service
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class GetQueryMs: ServiceBase
 {
     private readonly LazySvc<QueryManager> _queryManager;

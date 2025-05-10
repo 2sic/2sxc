@@ -8,7 +8,7 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.Backend.Cms;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentGroupControllerReal(
     GenWorkDb<WorkFieldList> workFieldList,
     GenWorkPlus<WorkBlocks> appBlocks,

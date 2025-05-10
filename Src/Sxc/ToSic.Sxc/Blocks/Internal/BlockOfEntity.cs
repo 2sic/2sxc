@@ -5,7 +5,7 @@ using ToSic.Sxc.Context.Internal;
 
 namespace ToSic.Sxc.Blocks.Internal;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public sealed class BlockFromEntity(BlockBase.MyServices services, LazySvc<AppFinder> appFinderLazy)
     : BlockBase(services, "CB.Ent", connect: [appFinderLazy])
 {

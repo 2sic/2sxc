@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Data;
 /// </summary>
 [PrivateApi("was Internal-API till v17 - just use the objects from AsDynamic(...), don't use this directly")]
 [JsonConverter(typeof(DynamicJsonConverter))]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class DynamicJacket: DynamicJacketBase<JsonObject>
 {
     /// <inheritdoc />

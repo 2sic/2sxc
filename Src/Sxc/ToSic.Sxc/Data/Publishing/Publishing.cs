@@ -5,7 +5,7 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Data;
 
 // this can just be internal, it's only ever used as an interface
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class Publishing(ITypedItem currentItem, Internal.CodeDataFactory cdf) : HelperBase(cdf.Log, "Pub"), IPublishing
 {
     private readonly IAppReader _appState = ((IAppWithInternal)cdf._CodeApiSvc.App).AppReader;

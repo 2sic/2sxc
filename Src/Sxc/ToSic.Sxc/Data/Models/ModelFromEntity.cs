@@ -65,7 +65,7 @@ public abstract partial class ModelFromEntity: ICanWrap<IEntity>, ICanBeEntity /
     /// It's an explicit interface implementation, so that the object itself doesn't broadcast this.
     /// </summary>
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     IEntity ICanBeEntity.Entity => _entity;
 
     //IBlock ICanBeItem.TryGetBlockContext() => Item.TryGetBlockContext();

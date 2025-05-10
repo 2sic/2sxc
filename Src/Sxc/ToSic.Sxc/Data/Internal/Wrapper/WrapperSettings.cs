@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Data.Internal.Wrapper;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public readonly struct WrapperSettings
 {
     private WrapperSettings(bool wrapChildren, bool wrapRealObjects, bool wrapToDynamic, bool propsRequired = false)

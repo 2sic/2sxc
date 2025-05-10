@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Data.Internal.Stack;
 
 // Must be pbulic so that `Resources.Get...` work
 [PrivateApi("Keep implementation hidden, only publish interface")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DynamicStack: DynamicObject,
     IWrapper<IPropertyStack>,
     IDynamicStack,
@@ -122,7 +122,7 @@ public class DynamicStack: DynamicObject,
 
     #region Any*** properties just for documentation
 
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public dynamic AnyProperty => null;
 
     #endregion

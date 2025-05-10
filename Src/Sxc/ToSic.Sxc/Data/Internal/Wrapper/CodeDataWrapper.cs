@@ -9,7 +9,7 @@ using ToSic.Sxc.Data.Internal.Typed;
 namespace ToSic.Sxc.Data.Internal.Wrapper;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeDataWrapper(
     LazySvc<CodeDataFactory> cdf,
     Generator<WrapObjectTyped> wrapTypeGenerator,
