@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc.Web.Internal.ClientAssets;
 
 namespace ToSic.Sxc.Web.Internal.HtmlParsing;
 
@@ -32,7 +33,7 @@ internal class RegexUtil
     private const string IdFormula = "('|\"|\\s)id=('|\")(?<Id>.*?)('|\")";
     // language=regex
     private const string ClientDependencyRegex =
-        "\\s" + PageService.PageService.AssetOptimizationsAttributeName + "=('|\")(?<Priority>true|[0-9]+)?(?::)?(?<Position>bottom|head|body)?('|\")(>|\\s)";
+        "\\s" + ClientAssetConstants.AssetOptimizationsAttributeName + "=('|\")(?<Priority>true|[0-9]+)?(?::)?(?<Position>bottom|head|body)?('|\")(>|\\s)";
 
     public const string PriorityKey = "Priority";
     public const string PositionKey = "Position";

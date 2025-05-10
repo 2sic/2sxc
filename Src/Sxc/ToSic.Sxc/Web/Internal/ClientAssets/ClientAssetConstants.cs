@@ -19,6 +19,8 @@ internal class ClientAssetConstants
     public const string AttributeDefer = "defer";
     public const string AttributeAsync = "async";
 
+    public const string AssetOptimizationsAttributeName = "data-enableoptimizations";
+
     /// <summary>
     /// List of special attributes like "src", "id", "data-enableoptimizations"
     /// that we need to skip from adding in general HtmlAttributes dictionary
@@ -28,8 +30,7 @@ internal class ClientAssetConstants
     [
         "src",
         "id",
-        PageService.PageService.AssetOptimizationsAttributeName,
+        AssetOptimizationsAttributeName,
         CspConstants.CspWhitelistAttribute
     ];
-
 }

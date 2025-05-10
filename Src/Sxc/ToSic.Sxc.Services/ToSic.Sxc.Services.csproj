@@ -67,4 +67,8 @@
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\PageService\" />
+  </ItemGroup>
 </Project>

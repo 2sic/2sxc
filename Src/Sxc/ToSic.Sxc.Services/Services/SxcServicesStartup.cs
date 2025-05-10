@@ -4,7 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Edit.EditService;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Edit.Toolbar.Internal;
@@ -109,9 +111,38 @@ public static class SxcServicesStartup
 
         // Cache Service - WIP v17
         services.TryAddTransient<ICacheService, CacheService>();
+
+        // v17.01
+        services.TryAddTransient<IUserService, UserService>();
+
+        services.AddSxcServicesFallbacks();
+
+        return services;
+    }
+
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    public static IServiceCollection AddSxcServicesFallbacks(this IServiceCollection services)
+    {
+        // v12.05 - linkhelperunknown - for testing etc.
+        services.TryAddTransient<ILinkService, LinkServiceUnknown>();
+
+        // v12.05
+        services.TryAddTransient<ISystemLogService, SystemLogServiceUnknown>();
+
+        // v12.05
+        services.TryAddTransient<IMailService, MailServiceUnknown>();
+
+        // v13.02
+        services.TryAddTransient<IDynamicCodeService, DynamicCodeServiceUnknown>();
+
+        // v15 DataSource
+        services.TryAddTransient<PagesDataSourceProvider, PagesDataSourceProviderUnknown>();
+        services.TryAddTransient<IUsersProvider, UsersProviderUnknown>();
+        services.TryAddTransient<IUserRolesProvider, UserRolesProviderUnknown>();
+        services.TryAddTransient<SitesDataSourceProvider, SitesDataSourceProviderUnknown>();
+
         return services;
     }
 
 
-        
 }

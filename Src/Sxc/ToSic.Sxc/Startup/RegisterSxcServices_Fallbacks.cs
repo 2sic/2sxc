@@ -4,16 +4,12 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Cms.Internal.Publishing;
-using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.Integration.Modules;
 using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Polymorphism.Internal;
-using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc.Startup;
@@ -57,17 +53,17 @@ static partial class RegisterSxcServices
         // TODO: this doesn't warn yet, there should be an AdamFileSystemUnknown(WarnUseOfUnknown<AdamFileSystemUnknown> warn)
         services.TryAddTransient<IAdamFileSystem<string, string>, AdamFileSystemBasic>();
 
-        // v12.05 - linkhelperunknown - for testing etc.
-        services.TryAddTransient<ILinkService, LinkServiceUnknown>();
+        //// v12.05 - linkhelperunknown - for testing etc.
+        //services.TryAddTransient<ILinkService, LinkServiceUnknown>();
 
-        // v12.05
-        services.TryAddTransient<ISystemLogService, SystemLogServiceUnknown>();
+        //// v12.05
+        //services.TryAddTransient<ISystemLogService, SystemLogServiceUnknown>();
 
-        // v12.05
-        services.TryAddTransient<IMailService, MailServiceUnknown>();
+        //// v12.05
+        //services.TryAddTransient<IMailService, MailServiceUnknown>();
 
-        // v13.02
-        services.TryAddTransient<IDynamicCodeService, DynamicCodeServiceUnknown>();
+        //// v13.02
+        //services.TryAddTransient<IDynamicCodeService, DynamicCodeServiceUnknown>();
 
         // v13.02
         services.TryAddTransient<ILinkPaths, LinkPathsUnknown>();
@@ -76,17 +72,17 @@ static partial class RegisterSxcServices
         // Koi, mainly so tests don't fail
         services.TryAddTransient<ICssFrameworkDetector, CssFrameworkDetectorUnknown>();
 
-        // v15 DataSource
-        services.TryAddTransient<PagesDataSourceProvider, PagesDataSourceProviderUnknown>();
-        services.TryAddTransient<IUsersProvider, UsersProviderUnknown>();
-        services.TryAddTransient<IUserRolesProvider, UserRolesProviderUnknown>();
-        services.TryAddTransient<SitesDataSourceProvider, SitesDataSourceProviderUnknown>();
+        //// v15 DataSource
+        //services.TryAddTransient<PagesDataSourceProvider, PagesDataSourceProviderUnknown>();
+        //services.TryAddTransient<IUsersProvider, UsersProviderUnknown>();
+        //services.TryAddTransient<IUserRolesProvider, UserRolesProviderUnknown>();
+        //services.TryAddTransient<SitesDataSourceProvider, SitesDataSourceProviderUnknown>();
 
         // v16
         services.TryAddScoped<IJsApiService, JsApiServiceUnknown>();
 
-        // v17.01
-        services.TryAddTransient<IUserService, UserService>();
+        //// v17.01
+        //services.TryAddTransient<IUserService, UserService>();
 
         return services;
     }
