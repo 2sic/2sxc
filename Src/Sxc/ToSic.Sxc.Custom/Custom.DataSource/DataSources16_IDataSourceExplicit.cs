@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Caching;
 using ToSic.Eav.DataSource;
 
-// ReSharper disable once CheckNamespace
 namespace Custom.DataSource;
 
 public abstract partial class DataSource16

@@ -143,14 +143,15 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj" />
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj"/>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj"/>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj"/>
-    <ProjectReference Include="..\ToSic.Sxc.Dnn.WebApi\ToSic.Sxc.Dnn.WebApi.csproj"/>
-    <ProjectReference Include="..\ToSic.Sxc.Dnn.Core\ToSic.Sxc.Dnn.Core.csproj"/>
-    <ProjectReference Include="..\ToSic.Sxc.Dnn.Razor\ToSic.Sxc.Dnn.Razor.csproj"/>
-    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj"/>
-    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj"/>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Custom\ToSic.Sxc.Custom.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Dnn.WebApi\ToSic.Sxc.Dnn.WebApi.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Dnn.Core\ToSic.Sxc.Dnn.Core.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Dnn.Razor\ToSic.Sxc.Dnn.Razor.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

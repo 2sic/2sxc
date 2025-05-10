@@ -10,12 +10,13 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services.Internal;
 
+// TODO: MAKE PRIVATE AGAIN AFTER MOVING TO ToSic.Sxc.Custom
 
 namespace ToSic.Sxc.Services.DataServices;
 
 [PrivateApi("hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal partial class DataService(
+public partial class DataService(
     LazySvc<IDataSourcesService> dataSources,
     LazySvc<DataSourceCatalog> catalog,
     LazySvc<IAppsCatalog> appsCatalog,
@@ -29,7 +30,8 @@ internal partial class DataService(
         Setup(codeRoot.App, () => (codeRoot as CodeApiService)?.LookUpForDataSources);
     }
 
-    internal IDataService Setup(IAppIdentity appIdentity, Func<ILookUpEngine> getLookup)
+    // TODO: MAKE PRIVATE AGAIN AFTER MOVING TO ToSic.Sxc.Custom
+    public IDataService Setup(IAppIdentity appIdentity, Func<ILookUpEngine> getLookup)
     {
         _appIdentity = appIdentity ?? _appIdentity;
         _getLookup = getLookup ?? _getLookup;

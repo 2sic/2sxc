@@ -41,6 +41,7 @@ public static class DnnDi
             .AddDnnCompatibility()
             .AddAdamWebApi<int, int>()
             .AddSxcWebApi()
+            .AddSxcCustom()
             .AddSxcCore() 
             .AddSxcCodeGen() // Code generation services
             .AddEavEverything()

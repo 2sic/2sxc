@@ -7,8 +7,7 @@ using static ToSic.Eav.Data.DataConstants;
 
 
 namespace ToSic.Sxc.Services.DataServices;
-
-internal partial class DataService
+partial class DataService
 {
 
     // IMPORTANT - this is different! from the _DynCodeRoot - as it should NOT auto attach!

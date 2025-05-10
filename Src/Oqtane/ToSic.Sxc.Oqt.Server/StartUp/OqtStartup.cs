@@ -68,6 +68,7 @@ public class OqtStartup : IServerStartup
             .AddSxcRazor()                  // this is the .net core Razor compiler
             .AddAdamWebApi<int, int>()      // This is used to enable ADAM WebAPIs
             .AddSxcWebApi()                 // This adds all the standard backend services for WebAPIs to work
+            .AddSxcCustom()                 // Anything around custom code
             .AddSxcCore()                   // Core 2sxc services
             .AddSxcCodeGen()                // Code generation services
             .AddEavEverything()             // Core EAV services

@@ -10,20 +10,20 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;
 
-// ReSharper disable once CheckNamespace
+
 namespace Custom.DataSource;
 
 /// <summary>
 /// The Base Class for custom Dynamic DataSources in your App.
 /// </summary>
-[ToSic.Lib.Documentation.PublicApi]
+[PublicApi]
 public abstract partial class DataSource16: ServiceBase<DataSource16.MyServices>, IDataSource, IAppIdentitySync
 {
     /// <summary>
     /// Dependencies of DataSource15.
     /// This ensures that all users must have this in the constructor, so we can be sure we can add more dependencies as we need them.
     /// </summary>
-    [ToSic.Lib.Documentation.PrivateApi]
+    [PrivateApi]
     public class MyServices(CustomDataSource.MyServices parentServices, ServiceKitLight16 kit)
         : MyServicesBase<CustomDataSource.MyServices>(parentServices, connect: [kit])
     {

@@ -39,8 +39,6 @@ internal class AppDataSourcesLoader(
 {
     private const string DataSourcesFolder = "DataSources";
 
-    private readonly MemoryCacheService _memoryCacheService = memoryCacheService;
-
     public (List<DataSourceInfo> data, TimeSpan slidingExpiration, IList<string> folderPaths, IEnumerable<string> cacheKeys) CompileDynamicDataSources(int appId)
     {
         logStore.Add(EavLogs.LogStoreAppDataSourcesLoader, Log);

@@ -1,13 +1,15 @@
 ﻿using System.Runtime.CompilerServices;
 using ToSic.Lib.Data;
 
+// TODO: MAKE PRIVATE AGAIN AFTER MOVING TO ToSic.Sxc.Custom
+
 // ReSharper disable ExplicitCallerInfoArgument
 
 namespace ToSic.Sxc.Code;
 
 [PrivateApi("Hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class CodeLog(ILog log) : Wrapper<ILog>(log ?? new Log(LogConstants.NameUnknown)), ICodeLog
+public class CodeLog(ILog log) : Wrapper<ILog>(log ?? new Log(LogConstants.NameUnknown)), ICodeLog
 {
     /// <inheritdoc />
     public string Add(string message, [CallerFilePath] string cPath = null, [CallerMemberName] string cName = null, [CallerLineNumber] int cLine = 0)

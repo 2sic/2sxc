@@ -1,5 +1,4 @@
-﻿using Custom.DataSource;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
@@ -10,7 +9,6 @@ using ToSic.Sxc.Edit.Toolbar.Internal;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
-using ToSic.Sxc.Services.CmsService;
 using ToSic.Sxc.Services.CmsService.Internal;
 using ToSic.Sxc.Services.DataServices;
 using ToSic.Sxc.Services.Internal;
@@ -89,8 +87,8 @@ static partial class RegisterSxcServices
         services.TryAddTransient<IOutputCacheService, OutputCacheService>();    // WIP v19.03.03, not official ATM
         services.TryAddTransient<OutputCacheService>();                         // WIP v19.03.03, not official ATM
 
-        // v15 CustomDataSources - just the dependencies needed
-        services.TryAddTransient<DataSource16.MyServices>();
+        //// v15 CustomDataSources - just the dependencies needed
+        //services.TryAddTransient<DataSource16.MyServices>();
 
         // v16 AsConverter
         services.TryAddTransient<CodeDataFactory>(sp => ActivatorUtilities.CreateInstance<CodeDataFactory>(sp));
@@ -100,7 +98,7 @@ static partial class RegisterSxcServices
         services.TryAddTransient<ServiceKit>();
         services.TryAddTransient<ServiceKit14>();
         services.TryAddTransient<ServiceKit16>();
-        services.TryAddTransient<ServiceKitLight16>();
+        //services.TryAddTransient<ServiceKitLight16>();
 
         // Lookup Service - WIP v17
         services.TryAddTransient<ITemplateService, TemplateService>();

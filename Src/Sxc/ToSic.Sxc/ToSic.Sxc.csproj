@@ -45,6 +45,12 @@
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Utils\ToSic.Sys.Utils.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Connect.Koi">
+      <HintPath>..\..\..\Dependencies\Koi\netstandard2.0\Connect.Koi.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Net.Http" />
@@ -61,29 +67,14 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net9.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.8.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="4.8.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
     <PackageReference Include="System.Runtime.Caching" Version="9.0.0" />
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Connect.Koi">
-      <HintPath>..\..\..\Dependencies\Koi\netstandard2.0\Connect.Koi.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <Reference Include="ToSic.Razor">
-      <HintPath>..\..\..\Dependencies\RazorBlade\Release\netstandard2.0\ToSic.Razor.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
-    <!--<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />-->
     <Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
     </Reference>

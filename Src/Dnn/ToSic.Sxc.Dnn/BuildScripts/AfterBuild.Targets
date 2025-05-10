@@ -35,6 +35,8 @@
       <!-- Global / Shared 2sxc and EAV DLLs-->
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.dll" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.pdb" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Custom.dll" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Custom.pdb" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Code.Generate.dll" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Code.Generate.pdb" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.WebApi.dll" />

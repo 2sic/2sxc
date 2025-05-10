@@ -180,7 +180,7 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<AppAssetsDataSourceProvider.MyServices>();
         services.TryAddTransient(typeof(AdamDataSourceProvider<,>));
         services.TryAddTransient(typeof(AdamDataSourceProvider<,>.MyServices));
-        services.TryAddTransient<IAppDataSourcesLoader, AppDataSourcesLoader>();
+        //services.TryAddTransient<IAppDataSourcesLoader, AppDataSourcesLoader>();
 
         // v15 EditUi Resources
         services.TryAddTransient<EditUiResources>();
