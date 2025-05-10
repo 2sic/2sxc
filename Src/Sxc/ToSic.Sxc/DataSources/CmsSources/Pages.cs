@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
@@ -39,7 +38,6 @@ namespace ToSic.Sxc.DataSources;
     UiHint = "Pages in this site")]
 public class Pages: CustomDataSourceAdvanced
 {
-    private readonly IDataFactory _pageFactory;
     private readonly PagesDataSourceProvider _provider;
 
     #region Configuration properties
@@ -126,11 +124,9 @@ public class Pages: CustomDataSourceAdvanced
     #region Constructor
 
     [PrivateApi]
-    public Pages(MyServices services, PagesDataSourceProvider provider, IDataFactory dataFactory)
-        : base(services, "CDS.Pages", connect: [provider, dataFactory])
+    public Pages(MyServices services, PagesDataSourceProvider provider) : base(services, "CDS.Pages", connect: [provider])
     {
         _provider = provider;
-        _pageFactory = dataFactory.New(options: PageModelRaw.Option);
 
         ProvideOut(GetPages);
     }
@@ -156,7 +152,9 @@ public class Pages: CustomDataSourceAdvanced
             return l.Return([], "null/empty");
 
         // Convert to Entity-Stream
-        var pages = _pageFactory.Create(pagesFromSystem);
+        var pageFactory = DataFactory.New(options: PageModelRaw.Option);
+
+        var pages = pageFactory.Create(pagesFromSystem);
 
         return l.Return(pages, $"{pages.Count}");
         //// Try to add Navigation properties

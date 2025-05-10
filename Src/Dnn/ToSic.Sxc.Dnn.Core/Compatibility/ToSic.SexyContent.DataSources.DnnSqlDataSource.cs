@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Data.Build;
-using ToSic.Eav.DataSources;
+﻿using ToSic.Eav.DataSources;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.DataSources;
@@ -9,5 +8,5 @@ namespace ToSic.SexyContent.DataSources;
 // - and otherwise im might be in razor-code, which we couldn't auto-update
 
 [Obsolete("This class was moved / to the ToSic.Sxc.Dnn.DataSources namespace, use that instead.")]
-public class DnnSqlDataSource(Sql.MyServices services, IDataFactory dataFactory)
-    : Sxc.Dnn.DataSources.DnnSql(services, dataFactory);
+public class DnnSqlDataSource(Sql.MyServices services)
+    : Sxc.Dnn.DataSources.DnnSql(services);

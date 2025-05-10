@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
@@ -41,7 +40,6 @@ namespace ToSic.Sxc.DataSources;
 )]
 public class UserRoles : CustomDataSourceAdvanced
 {
-    private readonly IDataFactory _rolesFactory;
     private readonly IUserRolesProvider _provider;
 
     #region Other Constants
@@ -83,11 +81,10 @@ public class UserRoles : CustomDataSourceAdvanced
     /// Constructor to tell the system what out-streams we have
     /// </summary>
     [PrivateApi]
-    public UserRoles(MyServices services, IUserRolesProvider provider, IDataFactory rolesFactory)
-        : base(services, "SDS.Roles", connect: [provider, rolesFactory])
+    public UserRoles(MyServices services, IUserRolesProvider provider)
+        : base(services, "SDS.Roles", connect: [provider])
     {
         _provider = provider;
-        _rolesFactory = rolesFactory.New(options: UserRoleModel.Options);
 
         ProvideOut(GetList);
     }
@@ -116,7 +113,9 @@ public class UserRoles : CustomDataSourceAdvanced
         if (excludeRolesPredicate != null)
             roles = roles!.Where(excludeRolesPredicate).ToList();
 
-        var result = _rolesFactory.Create(roles);
+        var rolesFactory = DataFactory.New(options: UserRoleModel.Options);
+
+        var result = rolesFactory.Create(roles);
 
         return l.Return(result, $"found {result.Count} roles");
     }

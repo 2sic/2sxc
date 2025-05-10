@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
@@ -46,10 +45,8 @@ namespace ToSic.Sxc.DataSources;
     UiHint = "Files and folders in the App folder")]
 [PublicApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-//[ConfigurationSpecsWip(SpecsType = typeof(AppAssetsGetSpecs))]
 public class AppAssets: CustomDataSourceAdvanced
 {
-    private readonly IDataFactory _dataFactory;
     private readonly AppAssetsDataSourceProvider _appAssetsSource;
 
     private const string StreamFiles = "Files";
@@ -89,10 +86,9 @@ public class AppAssets: CustomDataSourceAdvanced
     #region Constructor
 
     [PrivateApi]
-    public AppAssets(MyServices services, AppAssetsDataSourceProvider appAssetsSource, IDataFactory dataFactory) : base(services, "CDS.AppFiles", connect: [appAssetsSource, dataFactory])
+    public AppAssets(MyServices services, AppAssetsDataSourceProvider appAssetsSource) : base(services, "CDS.AppFiles", connect: [appAssetsSource])
     {
         _appAssetsSource = appAssetsSource;
-        _dataFactory = dataFactory;
 
         ProvideOut(() => Get(DataSourceConstants.StreamDefaultName));
         ProvideOut(() => Get(StreamFolders), StreamFolders);
@@ -159,7 +155,7 @@ public class AppAssets: CustomDataSourceAdvanced
             return l.Return(([], []), "null/empty");
 
         // Convert Folders to Entities
-        var folderFactory = _dataFactory.New(options: FolderModelRaw.Options with
+        var folderFactory = DataFactory.New(options: FolderModelRaw.Options with
         {
             AppId = AppId,
             IdSeed = -100001,
@@ -168,14 +164,14 @@ public class AppAssets: CustomDataSourceAdvanced
         var folders = folderFactory.Create(rawFolders);
 
         // Convert Files to Entities
-        var fileFactory = _dataFactory.New(options: FileModelRaw.Options with
-            {
-                AppId = AppId,
-                IdSeed = -1,
-                Type = typeof(FileModelRaw),
-            },
+        var fileFactory = DataFactory.New(options: FileModelRaw.Options with
+        {
+            AppId = AppId,
+            IdSeed = -1,
+            Type = typeof(FileModelRaw),
             // Make sure we share relationships source with folders, as files need folders and folders need files
-            relationships: folderFactory.Relationships);
+            Relationships = folderFactory.Relationships,
+        });
         var files = fileFactory.Create(rawFiles);
 
         return l.Return((folders, files), $"folders: {folders.Count}, files: {files.Count}");

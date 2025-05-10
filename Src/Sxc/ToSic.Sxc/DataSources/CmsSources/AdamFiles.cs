@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
@@ -34,9 +33,8 @@ namespace ToSic.Sxc.DataSources;
 )]
 [PrivateApi("Was till v17 InternalApi_DoNotUse_MayChangeWithoutNotice(still wip / finishing specs etc.)")]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class AdamFiles : DataSourceBase
+public class AdamFiles : CustomDataSourceAdvanced
 {
-    private readonly IDataFactory _dataFactory;
     private readonly AdamDataSourceProvider<int, int> _provider;
 
     #region Configuration properties
@@ -70,12 +68,9 @@ public class AdamFiles : DataSourceBase
     #region Constructor
 
     [PrivateApi]
-    public AdamFiles(MyServices services, AdamDataSourceProvider<int, int> provider, IDataFactory dataDataFactory) : base(services, "CDS.Adam")
+    public AdamFiles(MyServices services, AdamDataSourceProvider<int, int> provider) : base(services, "CDS.Adam", connect: [provider])
     {
-        ConnectLogs([
-            _provider = provider,
-            _dataFactory = dataDataFactory
-        ]);
+        _provider = provider;
 
         ProvideOut(GetInternal);
         ProvideOut(GetFolders, "Folders");
@@ -91,23 +86,26 @@ public class AdamFiles : DataSourceBase
         .Where(e => !e.Get<bool>("IsFolder"))
         .ToImmutableList();
 
-    private IImmutableList<IEntity> GetInternal() => _getInternal.Get(() => Log.Func(l =>
+    private IImmutableList<IEntity> GetInternal() => _getInternal.Get(() =>
     {
+        var l = Log.Fn<IImmutableList<IEntity>>(timer: true);
         Configuration.Parse();
 
         // Make sure we have an In - otherwise error
         var source = TryGetIn();
-        if (source is null) return (Error.TryGetInFailed(), "error");
+        if (source is null)
+            return l.Return(Error.TryGetInFailed(), "error");
 
-        _provider.Configure(appId: AppId, entityIds: EntityIds, entityGuids: EntityGuids, fields: Fields, filter: Filter);
+        _provider.Configure(appId: AppId, entityIds: EntityIds, entityGuids: EntityGuids, fields: Fields,
+            filter: Filter);
         var find = _provider.GetInternal();
 
-        var adamFactory = _dataFactory.New(options: AdamItemDataRaw.Options with { AppId = AppId });
+        var adamFactory = DataFactory.New(options: AdamItemDataRaw.Options with { AppId = AppId });
 
         var entities = adamFactory.Create(source.SelectMany(o => find(o)));
 
-        return (entities, "ok");
-    }));
+        return l.Return(entities, "ok");
+    });
     private readonly GetOnce<IImmutableList<IEntity>> _getInternal = new();
 
 }

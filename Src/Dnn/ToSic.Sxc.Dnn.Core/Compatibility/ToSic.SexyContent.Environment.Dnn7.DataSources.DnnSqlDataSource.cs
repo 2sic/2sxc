@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Data.Build;
-using ToSic.Eav.DataSources;
+﻿using ToSic.Eav.DataSources;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7.DataSources;
@@ -11,5 +10,5 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources;
 [PrivateApi]
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 [Obsolete("This class was moved / to ToSic.Sxc.Dnn.DataSources.DnnSql, use that instead.")]
-public class DnnSqlDataSource(Sql.MyServices services, IDataFactory dataFactory)
-    : Sxc.Dnn.DataSources.DnnSql(services, dataFactory);
+public class DnnSqlDataSource(Sql.MyServices services)
+    : Sxc.Dnn.DataSources.DnnSql(services);

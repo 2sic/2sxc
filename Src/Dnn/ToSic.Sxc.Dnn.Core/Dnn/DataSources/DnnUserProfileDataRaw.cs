@@ -33,8 +33,6 @@ namespace ToSic.Sxc.Dnn.DataSources;
 )]
 public class DnnUserProfile : CustomDataSourceAdvanced
 {
-    private readonly IDataFactory _dataFactory;
-
     #region Configuration-properties
 
     /// <summary>
@@ -93,11 +91,8 @@ public class DnnUserProfile : CustomDataSourceAdvanced
         public LazySvc<DnnSecurity> DnnSecurity { get; } = dnnSecurity;
     }
 
-    public DnnUserProfile(MyServices services, IDataFactory dataFactory) : base(services, "Dnn.Profile")
+    public DnnUserProfile(MyServices services) : base(services, "Dnn.Profile")
     {
-        ConnectLogs([
-            _dataFactory = dataFactory
-        ]);
         _services = services;
         ProvideOut(GetList);
     }
@@ -152,7 +147,7 @@ public class DnnUserProfile : CustomDataSourceAdvanced
             results.Add(dnnUserProfile);
         }
         l.A($"results: {results.Count}");
-        var userProfileDataFactory = _dataFactory.New(options: DnnUserProfileDataRaw.Options with { TypeName = ContentType?.NullIfNoValue() });
+        var userProfileDataFactory = DataFactory.New(options: DnnUserProfileDataRaw.Options with { TypeName = ContentType?.NullIfNoValue() });
         return l.Return(userProfileDataFactory.Create(results), "ok");
     }
 

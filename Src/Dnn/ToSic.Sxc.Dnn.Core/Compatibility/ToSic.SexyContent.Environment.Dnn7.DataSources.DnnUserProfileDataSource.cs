@@ -12,4 +12,4 @@ namespace ToSic.SexyContent.Environment.Dnn7.DataSources;
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 [Obsolete("This class was moved / to ToSic.Sxc.Dnn.DataSources.DnnUserProfile, use that instead.")]
 public class DnnUserProfileDataSource(DnnUserProfile.MyServices services, IDataFactory dataFactory)
-    : ToSic.Sxc.Dnn.DataSources.DnnUserProfile(services, dataFactory);
+    : ToSic.Sxc.Dnn.DataSources.DnnUserProfile(services);

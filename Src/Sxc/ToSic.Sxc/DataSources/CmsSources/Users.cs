@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Context;
-using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Source;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
@@ -7,7 +6,6 @@ using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Services;
 using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Cms.Users.Internal;
-using ToSic.Sxc.DataSources.Internal;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -43,7 +41,6 @@ namespace ToSic.Sxc.DataSources;
 public partial class Users : CustomDataSourceAdvanced
 {
     private readonly IDataSourceGenerator<UserRoles> _rolesGenerator;
-    private readonly IDataFactory _dataFactory;
     private readonly IUsersProvider _provider;
 
     #region Configuration-properties
@@ -142,11 +139,10 @@ public partial class Users : CustomDataSourceAdvanced
     /// Constructor to tell the system what out-streams we have
     /// </summary>
     [PrivateApi]
-    public Users(MyServices services, IUsersProvider provider, IDataFactory dataFactory, IDataSourceGenerator<UserRoles> rolesGenerator)
-        : base(services, "SDS.Users", connect: [provider, dataFactory, rolesGenerator])
+    public Users(MyServices services, IUsersProvider provider, IDataSourceGenerator<UserRoles> rolesGenerator)
+        : base(services, "SDS.Users", connect: [provider, rolesGenerator])
     {
         _provider = provider;
-        _dataFactory = dataFactory;
         _rolesGenerator = rolesGenerator;
 
         ProvideOut(() => UsersAndRoles.Users); // default out, if accessed, will deliver GetList
@@ -167,14 +163,12 @@ public partial class Users : CustomDataSourceAdvanced
 
         // Figure out options to be sure we have the roles/roleids
         var relationships = new LazyLookup<object, IEntity>();
-        var userFactory = _dataFactory.New(
-            options: UserModel.Options with
-            {
-                // Option to tell the entity conversion to add the "Roles" to each user
-                RawConvertOptions = new(addKeys: ["Roles"])
-            },
-            relationships: relationships
-        );
+        var userFactory = DataFactory.New(options: UserModel.Options with
+        {
+            // Option to tell the entity conversion to add the "Roles" to each user
+            RawConvertOptions = new(addKeys: ["Roles"]),
+            Relationships = relationships,
+        });
 
         var users = userFactory.Create(usersRaw);
         List<IEntity> roles = [];
