@@ -5,6 +5,7 @@ using ToSic.Eav.StartUp;
 using ToSic.Eav.WebApi;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Backend;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Integration;
@@ -42,6 +43,7 @@ public static class DnnDi
             .AddAdamWebApi<int, int>()
             .AddSxcWebApi()
             .AddSxcCustom()
+            .AddSxcCode()
             .AddSxcCore() 
             .AddSxcCodeGen() // Code generation services
             .AddEavEverything()

@@ -1,7 +1,5 @@
 ﻿#if NETFRAMEWORK
-using System.Linq;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent;
 using ToSic.Sxc.Data.Internal.Decorators;

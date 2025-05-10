@@ -1,24 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-  <TargetFrameworks>net472;net9.0;</TargetFrameworks>
-  <RootNamespace></RootNamespace>
-  <AssemblyName>ToSic.Sxc.Custom</AssemblyName>
-  <Deterministic>true</Deterministic>
-  <FileAlignment>512</FileAlignment>
-  <NoWarn>7035;CS1591</NoWarn>
-  <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
-  <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
-  <!-- Don't generate assembly properties from this XML which should come from the core file, like version - these lines must be in sync in all ToSic.Eav.*.csproj files -->
-  <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-  <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-  <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-  <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-  <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-  <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-  <LangVersion>preview</LangVersion>
-  <!-- end: Don't generate... -->
-</PropertyGroup>
+    <TargetFrameworks>net472;net9.0;</TargetFrameworks>
+    <RootNamespace>ToSic.Sxc</RootNamespace>
+    <AssemblyName>ToSic.Sxc.Code</AssemblyName>
+    <Deterministic>true</Deterministic>
+    <FileAlignment>512</FileAlignment>
+    <NoWarn>7035;CS1591</NoWarn>
+    <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
+    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
+    <!-- Don't generate assembly properties from this XML which should come from the core file, like version - these lines must be in sync in all ToSic.Eav.*.csproj files -->
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <LangVersion>preview</LangVersion>
+    <!-- end: Don't generate... -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Code\NewFolder\**" />
+    <EmbeddedResource Remove="Code\NewFolder\**" />
+    <None Remove="Code\NewFolder\**" />
+  </ItemGroup>
 
   <!--<PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -33,7 +39,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ToSic.Sxc.Code\ToSic.Sxc.Code.csproj" />
     <ProjectReference Include="..\ToSic.Sxc\ToSic.Sxc.csproj" />
   </ItemGroup>
 

@@ -7,8 +7,7 @@ namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 public class CodeHelperBase : ServiceForDynamicCode
 {
     protected CodeHelperBase(string logName) : base(logName)
-    {
-    }
+    { }
 
     public override void ConnectToRoot(ICodeApiService codeRoot)
     {

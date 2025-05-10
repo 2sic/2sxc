@@ -4,8 +4,6 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
 using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
-// ReSharper disable PossibleMultipleEnumeration
-
 namespace ToSic.Sxc.Code;
 
 /// <summary>

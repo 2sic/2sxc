@@ -95,10 +95,12 @@
       <!-- Global / Shared 2sxc and EAV DLLs-->
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.pdb" />
-      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Custom.dll" />
-      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Custom.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Code.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Code.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Code.Generate.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Code.Generate.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Custom.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Custom.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.WebApi.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.WebApi.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Eav*.dll" />

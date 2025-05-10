@@ -16,7 +16,6 @@ using ToSic.Sxc.Code.Customizer;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
-using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Internal.Typed;
@@ -196,7 +195,7 @@ public static partial class RegisterSxcServices
         // v17
         services.TryAddTransient<AssemblyCacheManager>();
         services.TryAddTransient<AppCodeLoader>();
-        services.TryAddTransient<SourceAnalyzer>();
+        //services.TryAddTransient<SourceAnalyzer>();
         services.TryAddSingleton<AssemblyResolver>();
         services.TryAddTransient<DependenciesLoader>();
 
