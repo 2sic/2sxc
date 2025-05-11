@@ -81,8 +81,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\DynamicCode\" />
-    <Folder Include="Services\GoogleMaps\" />
     <Folder Include="Services\TurnOnService\Internal\" />
   </ItemGroup>
 
