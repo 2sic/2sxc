@@ -82,7 +82,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Mail\" />
     <Folder Include="Services\KeyService\" />
     <Folder Include="Services\GoogleMaps\" />
     <Folder Include="Services\Features\" />

@@ -80,8 +80,4 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\TurnOnService\Internal\" />
-  </ItemGroup>
-
 </Project>
