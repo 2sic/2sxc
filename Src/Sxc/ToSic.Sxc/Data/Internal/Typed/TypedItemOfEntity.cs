@@ -217,7 +217,7 @@ internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, CodeDa
 
     IFile ITypedItem.File(string name, NoParamOrder noParamOrder, bool? required)
     {
-        var typedThis = (ITypedItem)this;
+        ITypedItem typedThis = this;
         // Case 1: The field contains a direct reference to a file
         var field = typedThis.Field(name, required: required);
         var file = Cdf.GetServiceKitOrThrow().Adam.File(field);

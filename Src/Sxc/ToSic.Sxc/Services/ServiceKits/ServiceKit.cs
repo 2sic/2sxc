@@ -13,7 +13,8 @@ namespace ToSic.Sxc.Services;
 /// </remarks>
 [PrivateApi("Hidden in v17.02, previously public, but no good reason for it.")]
 // #NoEditorBrowsableBecauseOfInheritance
-// [ShowApiWhenReleased(ShowApiMode.Never)]
+// 2025-05-11 re-enabled, since it shouldn't matter anymore with the new setup
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ServiceKit(string logName) : ServiceForDynamicCode(logName)
 {
 

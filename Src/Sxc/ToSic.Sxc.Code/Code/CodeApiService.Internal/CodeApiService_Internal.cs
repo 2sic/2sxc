@@ -2,6 +2,7 @@
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Services;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Code.Internal;
@@ -83,6 +84,9 @@ public partial class CodeApiService : ICodeApiServiceInternal
     /// <typeparam name="TKit"></typeparam>
     /// <returns></returns>
     TKit ICodeApiServiceInternal.GetKit<TKit>() => GetService<TKit>(reuse: true);
+
+    IServiceKitForTypedData ICodeApiServiceInternal.GetKitForTypedData()
+        => ((ICodeApiServiceInternal)this).GetKit<ServiceKit16>();
 
     #endregion
 }

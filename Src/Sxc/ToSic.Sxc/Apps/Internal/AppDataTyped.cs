@@ -4,7 +4,6 @@ using ToSic.Eav.DataSource.Internal.Caching;
 using ToSic.Eav.DataSources.Internal;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Data.Internal;
-using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Apps.Internal;
 
@@ -26,15 +25,15 @@ internal class AppDataTyped(
 
     #region Kit Attachments
 
-    internal AppDataTyped Setup(ServiceKit16 kit)
+    internal AppDataTyped Setup(CodeDataFactory cdfConnected)
     {
-        Kit = kit;
+        CdfConnected = cdfConnected;
         return this;
     }
 
-    private ServiceKit16 Kit
+    private CodeDataFactory CdfConnected
     {
-        get => field ?? throw new("ServiceKit16 not set");
+        get => field ?? throw new(nameof(CdfConnected) + " not set");
         set => field = value;
     }
 
@@ -71,14 +70,14 @@ internal class AppDataTyped(
 
         return list == null
             ? null
-            : Kit._CodeApiSvc.Cdf.AsCustomList<T>(source: list, protector: protector, nullIfNull: nullIfNotFound);
+            : CdfConnected.AsCustomList<T>(source: list, protector: protector, nullIfNull: nullIfNotFound);
     }
 
     /// <inheritdoc />
     T IAppDataTyped.GetOne<T>(int id, NoParamOrder protector, bool skipTypeCheck)
-        => Kit._CodeApiSvc.Cdf.GetOne<T>(() => List.One(id), id, skipTypeCheck);
+        => CdfConnected.GetOne<T>(() => List.One(id), id, skipTypeCheck);
 
     /// <inheritdoc />
     T IAppDataTyped.GetOne<T>(Guid id, NoParamOrder protector, bool skipTypeCheck)
-        => Kit._CodeApiSvc.Cdf.GetOne<T>(() => List.One(id), id, skipTypeCheck);
+        => CdfConnected.GetOne<T>(() => List.One(id), id, skipTypeCheck);
 }

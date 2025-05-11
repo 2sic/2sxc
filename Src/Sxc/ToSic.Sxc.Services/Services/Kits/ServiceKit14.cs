@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Services;
 /// </remarks>
 [PublicApi]
 [method: PrivateApi("Public constructor for DI")]
-public class ServiceKit14() : ServiceKit("Sxc.Kit14")
+public class ServiceKit14() : ServiceKit("Sxc.Kit14") // , IServiceKitForTypedData /* probably not needed, since typed data is always newer base classes */
 {
     /// <summary>
     /// The ADAM Service, used to retrieve files and maybe more. 
@@ -23,14 +23,20 @@ public class ServiceKit14() : ServiceKit("Sxc.Kit14")
     public IAdamService Adam => _adam.Get(GetKitService<IAdamService>);
     private readonly GetOnce<IAdamService> _adam = new();
 
-    /// <summary>
-    /// The CMS Service - not for use
-    /// </summary>
-    [PrivateApi("Was never public but could be in use")]
-    [Obsolete("This API was never published, do not use.")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    internal ICmsService Cms => _cms.Get(GetKitService<ICmsService>);
-    private readonly GetOnce<ICmsService> _cms = new();
+    // 2025-05-11 2dm commented out, previous was internal / marked obsolete
+    ///// <summary>
+    ///// The CMS Service - not for use
+    ///// </summary>
+    //[PrivateApi("Was never public but could be in use")]
+    //[Obsolete("This API was never published, do not use.")]
+    //[ShowApiWhenReleased(ShowApiMode.Never)]
+    //internal ICmsService Cms => field ??= GetKitService<ICmsService>();
+
+    ///// <summary>
+    ///// Access for TypedData when using this service kit with the interface.
+    ///// New & internal v20.
+    ///// </summary>
+    //ICmsService IServiceKitForTypedData.Cms => Cms;
 
     /// <summary>
     /// The Convert Service, used to convert any kind of data type to another data type

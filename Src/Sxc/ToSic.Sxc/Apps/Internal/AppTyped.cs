@@ -45,7 +45,7 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> 
     /// <inheritdoc />
     public IAppDataTyped Data => field ??= App
         .BuildDataForTyped<AppDataTyped, AppDataTyped>()
-        .Setup(((ICodeApiServiceInternal)CodeApiSvc).GetKit<ServiceKit16>());
+        .Setup(CodeApiSvc.Cdf);
 
     /// <inheritdoc />
     public IDataSource GetQuery(string name = default, NoParamOrder noParamOrder = default, IDataSourceLinkable attach = default, object parameters = default)

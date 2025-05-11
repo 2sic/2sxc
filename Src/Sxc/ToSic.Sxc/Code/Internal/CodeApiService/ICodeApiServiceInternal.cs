@@ -19,4 +19,6 @@ internal interface ICodeApiServiceInternal: ICodeApiService
     ITypedStack AllSettings { get; }
 
     TKit GetKit<TKit>() where TKit : ServiceKit;
+
+    IServiceKitForTypedData GetKitForTypedData();
 }

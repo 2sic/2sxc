@@ -45,7 +45,12 @@
     <ProjectReference Include="..\ToSic.Sxc\ToSic.Sxc.csproj" />
   </ItemGroup>
 
-
+  <!-- Include Connect.Koi -->
+  <ItemGroup>
+    <Reference Include="Connect.Koi">
+      <HintPath>..\..\..\Dependencies\Koi\netstandard2.0\Connect.Koi.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
     <!--<Reference Include="System.Runtime.Caching" />
