@@ -29,3 +29,4 @@ using System.Runtime.CompilerServices;
 // WIP till services are moved
 [assembly: InternalsVisibleTo("ToSic.Sxc.Services")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Engines")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Images")]

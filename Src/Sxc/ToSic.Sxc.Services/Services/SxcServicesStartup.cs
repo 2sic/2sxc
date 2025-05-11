@@ -63,7 +63,7 @@ public static class SxcServicesStartup
         // 13 - ToolbarService & IFeaturesService
         services.TryAddTransient<IToolbarService, ToolbarService>();    // New 13.00
         services.TryAddTransient<IFeaturesService, FeaturesService>();  // New 13.01
-        services.TryAddTransient<IImageService, ImageService>();
+        //services.TryAddTransient<IImageService, ImageService>();
         services.TryAddTransient<IEditService, EditService>();
         services.TryAddTransient<ResizeDimensionGenerator>();
 

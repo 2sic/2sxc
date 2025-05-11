@@ -41,6 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ToSic.Sxc.Images\ToSic.Sxc.Images.csproj" />
     <ProjectReference Include="..\ToSic.Sxc\ToSic.Sxc.csproj" />
   </ItemGroup>
 
