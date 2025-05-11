@@ -56,7 +56,7 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
 
         if (virtualPath.IsEmptyOrWs())
             return !throwOnError
-                ? null as object
+                ? null
                 : throw l.Done(new ArgumentException("path can't be empty"));
 
         var path = ResolvePathIfAbsoluteToApp(virtualPath)?.ForwardSlash().PrefixSlash()
@@ -64,13 +64,13 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
 
         if (!File.Exists(GetCodeFullPathForExistsCheck(path)))
             return !throwOnError
-                ? null as object
+                ? null
                 : throw l.Done(new FileNotFoundException("The file does not exist.", path));
 
         try
         {
             object result = path.EndsWith(SourceCodeConstants.CsFileExtension)
-                ? _CodeApiSvc.CreateInstance(path, noParamOrder, name: name, relativePath: null, throwOnError: throwOnError)
+                ? ((ICreateInstance)_CodeApiSvc).CreateInstance(path, noParamOrder, name: name, relativePath: null, throwOnError: throwOnError)
                 : GetCodeCshtml(path);
             return l.Return(result, "ok");
         }

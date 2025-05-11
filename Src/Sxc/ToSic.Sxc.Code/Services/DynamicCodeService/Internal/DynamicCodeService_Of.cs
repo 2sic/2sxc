@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Internal;
 
@@ -22,14 +23,15 @@ public partial class DynamicCodeService
     /// <inheritdoc />
     public IDynamicCode12 OfModule(int pageId, int moduleId)
     {
-        var l = Log.Fn<ICodeApiService>($"{pageId}, {moduleId}");
+        var l = Log.Fn<IDynamicCode12>($"{pageId}, {moduleId}");
         MakeSureLogIsInHistory();
         ActivateEditUi();
         var cmsBlock = _myScopedServices.ModAndBlockBuilder.Value.BuildBlock(pageId, moduleId);
         var codeRoot = _myScopedServices.CodeRootGenerator.New()
             .New(parentClassOrNull: null, cmsBlock, Log, CompatibilityLevels.CompatibilityLevel12);
 
-        return l.ReturnAsOk(codeRoot);
+        var code12 = new DynamicCode12Proxy(codeRoot);
+        return l.ReturnAsOk(code12);
     }
 
     /// <inheritdoc />
@@ -47,6 +49,7 @@ public partial class DynamicCodeService
             .New(parentClassOrNull: null, null, Log, CompatibilityLevels.CompatibilityLevel12);
         var app = App(zoneId: zoneId, appId: appId);
         ((ICodeApiServiceInternal)codeRoot).AttachApp(app);
-        return l.ReturnAsOk(codeRoot);
+        var code12 = new DynamicCode12Proxy(codeRoot);
+        return l.ReturnAsOk(code12);
     }
 }

@@ -31,7 +31,8 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> 
     : ServiceForDynamicCode(SxcLogName + ".AppTyp", errorIfNotConnected: true, connect: [globalPaths, queryManager]),
         IAppTyped
 {
-    protected App App => CodeApiSvc.App as App ?? throw new($"Can't access {nameof(App)} - either null or can't convert");
+    protected App App => CodeApiSvc.App as App
+                         ?? throw new($"Can't access {nameof(App)} - either null or can't convert");
 
     /// <inheritdoc />
     int IZoneIdentity.ZoneId => App.ZoneId;

@@ -39,7 +39,7 @@ public class CodeHelper() : CodeHelperBase("Sxc.CdHlp")
 
         // usually we don't have a relative path, so we use the preset path from when this class was instantiated
         relativePath ??= _parent?.CreateInstancePath;
-        object instance = _CodeApiSvc?.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
+        object instance = ((ICreateInstance)_CodeApiSvc)?.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
         return l.Return(instance);
     }
 

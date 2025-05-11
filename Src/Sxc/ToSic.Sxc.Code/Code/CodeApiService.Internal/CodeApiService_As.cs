@@ -27,8 +27,9 @@ public partial class CodeApiService
     /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
     public dynamic AsDynamic(object dynamicEntity) => Cdf.AsDynamicFromObject(dynamicEntity);
 
-    /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
-    public dynamic AsDynamic(params object[] entities) => Cdf.MergeDynamic(entities);
+    // 2025-05-11 2dm disabled since we're not supporting DynamicCode12 any more...
+    ///// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
+    //public dynamic AsDynamic(params object[] entities) => Cdf.MergeDynamic(entities);
 
 
     /// <inheritdoc cref="IDynamicCode.AsEntity" />

@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface ICodeApiService : IDynamicCode12, IHasPiggyBack
+public interface ICodeApiService : /*IDynamicCode12,*/ ICodeApiServiceForDynamicCode12Wip, IHasLog, IHasPiggyBack
 {
     new IDynamicStack Resources { get; }
     new IDynamicStack Settings { get; }

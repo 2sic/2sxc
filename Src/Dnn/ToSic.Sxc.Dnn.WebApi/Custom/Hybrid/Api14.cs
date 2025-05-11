@@ -132,7 +132,7 @@ public abstract partial class Api14: DnnSxcCustomControllerBase, IDynamicCode14<
     #region Convert-Service - should NOT be in v14, but was by accident!
 
     /// <inheritdoc cref="IDynamicCode12.Convert" />
-    public IConvertService Convert => _CodeApiSvc.Convert;
+    public IConvertService Convert => field ??= _CodeApiSvc.GetConvertService();
 
     #endregion
 

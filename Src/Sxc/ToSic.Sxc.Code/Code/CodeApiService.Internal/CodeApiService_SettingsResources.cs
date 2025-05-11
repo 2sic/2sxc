@@ -36,6 +36,7 @@ public partial class CodeApiService
     public ITypedStack AllSettings => _allSettings.Get(() => Cdf.AsTypedStack(RootNameSettings, SetSrc));
     private readonly GetOnce<ITypedStack> _allSettings = new();
 
-    dynamic IDynamicCode12.Resources => Resources;
-    dynamic IDynamicCode12.Settings => Settings;
+    // TODO: 2025-05-11 2dm WIP
+    //dynamic IDynamicCode12.Resources => Resources;
+    //dynamic IDynamicCode12.Settings => Settings;
 }

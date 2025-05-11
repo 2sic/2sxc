@@ -118,7 +118,7 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
     #endregion
 
     #region Convert-Service
-    [PrivateApi] public IConvertService Convert => _CodeApiSvc.Convert;
+    [PrivateApi] public IConvertService Convert => field ??= _CodeApiSvc.GetConvertService();
 
     #endregion
 
