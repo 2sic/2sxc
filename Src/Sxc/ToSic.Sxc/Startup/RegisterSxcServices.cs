@@ -61,7 +61,8 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<BlockEditorBase.MyServices>();
 
         // Engine and Rendering
-        services.TryAddTransient<EngineFactory>();
+        //services.TryAddTransient<EngineFactory>();
+        //services.TryAddTransient<IEngineFactory, EngineFactory>();
         services.TryAddTransient<BlockBuilder>();
         services.TryAddTransient<BlockBuilder.MyServices>();
 
@@ -82,7 +83,7 @@ public static partial class RegisterSxcServices
 
         // Rendering
         services.TryAddTransient<IRenderingHelper, RenderingHelper>();
-        services.TryAddTransient<TokenEngine>();
+        //services.TryAddTransient<TokenEngine>();
 
         // Context stuff in general
         services.TryAddTransient<IContextOfBlock, ContextOfBlock>();

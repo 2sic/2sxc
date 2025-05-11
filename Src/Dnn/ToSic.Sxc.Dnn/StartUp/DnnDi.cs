@@ -11,6 +11,8 @@ using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Dnn.Startup;
+using ToSic.Sxc.Engines;
+using ToSic.Sxc.Images;
 using ToSic.Sxc.Integration.Startup;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Startup;
@@ -47,6 +49,8 @@ public static class DnnDi
             .AddSxcCustom()
             .AddSxcCode()
             .AddSxcCodeHotBuild()
+            .AddSxcEngines()
+            .AddSxcImages()
             .AddSxcCore()
             .AddSxcServices()
             .AddSxcCodeGen() // Code generation services

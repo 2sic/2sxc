@@ -41,10 +41,10 @@ public static class StartupWebApi
         services.TryAddScoped<ILinkPaths, LinkPaths>();
         // Removed v19.03.03 2025-03-11 by 2dm https://github.com/2sic/2sxc/issues/3598
         //services.TryAddTransient<XmlImportWithFiles, XmlImportFull>();
-        services.TryAddTransient<EngineBase.MyServices>();
-        services.TryAddTransient<EngineCheckTemplate>();
-        services.TryAddTransient<EnginePolymorphism>();
-        services.TryAddTransient<EngineAppRequirements>();
+        //services.TryAddTransient<EngineBase.MyServices>();
+        //services.TryAddTransient<EngineCheckTemplate>();
+        //services.TryAddTransient<EnginePolymorphism>();
+        //services.TryAddTransient<EngineAppRequirements>();
 
         // These are usually replaced by the target platform
         services.TryAddTransient<IBlockResourceExtractor, BlockResourceExtractorUnknown>();

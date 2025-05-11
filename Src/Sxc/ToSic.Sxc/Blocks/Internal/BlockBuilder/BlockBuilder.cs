@@ -23,7 +23,7 @@ public partial class BlockBuilder(BlockBuilder.MyServices services)
     : ServiceBase<BlockBuilder.MyServices>(services, "Sxc.BlkBld"), IBlockBuilder
 {
     public class MyServices(
-        EngineFactory engineFactory,
+        IEngineFactory engineFactory,
         Generator<IEnvironmentInstaller> envInstGen,
         Generator<IRenderingHelper> renderHelpGen,
         LazySvc<PageChangeSummary> pageChangeSummary,
@@ -34,7 +34,7 @@ public partial class BlockBuilder(BlockBuilder.MyServices services)
             [engineFactory, envInstGen, renderHelpGen, pageChangeSummary, licenseService, moduleService, codeInfos])
     {
         public CodeInfosInScope CodeInfos { get; } = codeInfos;
-        public EngineFactory EngineFactory { get; } = engineFactory;
+        public IEngineFactory EngineFactory { get; } = engineFactory;
         public Generator<IEnvironmentInstaller> EnvInstGen { get; } = envInstGen;
         public Generator<IRenderingHelper> RenderHelpGen { get; } = renderHelpGen;
         public LazySvc<PageChangeSummary> PageChangeSummary { get; } = pageChangeSummary;
@@ -44,11 +44,11 @@ public partial class BlockBuilder(BlockBuilder.MyServices services)
 
     #region Constructor
 
-    public BlockBuilder Init(IBlockBuilder rootBlockBuilder, IBlock cb)
+    public BlockBuilder Init(IBlockBuilder rootBlockBuilderOrNull, IBlock cb)
     {
         Log.A($"get CmsInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}");
         // the root block is the main container. If there is none yet, use this, as it will be the root
-        RootBuilder = rootBlockBuilder ?? this;
+        RootBuilder = rootBlockBuilderOrNull ?? this;
         Block = cb;
         return this;
     }

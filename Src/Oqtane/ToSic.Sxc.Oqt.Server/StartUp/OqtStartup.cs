@@ -24,6 +24,8 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.HotBuild;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Engines;
+using ToSic.Sxc.Images;
 using ToSic.Sxc.Integration.Startup;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -74,6 +76,8 @@ public class OqtStartup : IServerStartup
             .AddSxcCustom()                 // Anything around custom code
             .AddSxcCode()
             .AddSxcCodeHotBuild()
+            .AddSxcEngines()
+            .AddSxcImages()
             .AddSxcCore()                   // Core 2sxc services
             .AddSxcServices()
             .AddSxcCodeGen()                // Code generation services

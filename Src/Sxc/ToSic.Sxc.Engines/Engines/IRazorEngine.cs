@@ -2,6 +2,4 @@
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IRazorEngine: IEngine
-{
-}
+public interface IRazorEngine: IEngine;
