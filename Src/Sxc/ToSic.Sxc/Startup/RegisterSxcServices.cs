@@ -209,7 +209,7 @@ public static partial class RegisterSxcServices
         // This must always be at the end here so it doesn't accidentally replace something we actually need
         services.AddSxcCoreLookUps();
         //services.AddServicesAndKits();
-        services.ExternalConfig();
+        //services.ExternalConfig();
         services.AddKoi();
         services.AddSxcCoreFallbackServices();
 
@@ -220,13 +220,13 @@ public static partial class RegisterSxcServices
     }
 
 
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    public static IServiceCollection ExternalConfig(this IServiceCollection services)
-    {
-        // new v15
-        services.TryAddTransient<GoogleMapsSettings>();
-        return services;
-    }
+    //[ShowApiWhenReleased(ShowApiMode.Never)]
+    //public static IServiceCollection ExternalConfig(this IServiceCollection services)
+    //{
+    //    // new v15
+    //    services.TryAddTransient<GoogleMapsSettings>();
+    //    return services;
+    //}
 
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddKoi(this IServiceCollection services)

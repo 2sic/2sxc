@@ -21,6 +21,13 @@
     <!-- end: Don't generate... -->
   </PropertyGroup>
 
+
+  <ItemGroup>
+    <Compile Remove="Services\Cms\NewFolder\**" />
+    <EmbeddedResource Remove="Services\Cms\NewFolder\**" />
+    <None Remove="Services\Cms\NewFolder\**" />
+  </ItemGroup>
+
   <!--<PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -69,6 +76,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\PageService\" />
+    <Folder Include="Services\Mail\" />
+    <Folder Include="Services\KeyService\" />
+    <Folder Include="Services\GoogleMaps\" />
+    <Folder Include="Services\Features\" />
+    <Folder Include="Services\Adam\" />
+    <Folder Include="Services\Data\" />
   </ItemGroup>
 </Project>

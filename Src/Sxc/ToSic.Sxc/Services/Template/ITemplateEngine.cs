@@ -1,5 +1,7 @@
 ﻿using ToSic.Eav.LookUp;
 
+// TODO: unclear if the namespace is correct, feels a bit off...
+
 namespace ToSic.Sxc.Services.Template;
 
 /// <summary>

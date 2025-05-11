@@ -81,8 +81,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Custom.Data\" />
-    <Folder Include="Custom.Hybrid\" />
+    <Folder Include="Services\DynamicCode\" />
+    <Folder Include="Services\GoogleMaps\" />
+    <Folder Include="Services\TurnOnService\Internal\" />
   </ItemGroup>
 
 </Project>

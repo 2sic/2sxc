@@ -111,7 +111,7 @@ public class ServiceKit16() : ServiceKit("Sxc.Kit16")
     /// <remarks>
     /// * New in v16.04
     /// </remarks>
-    public IKeyService Key => field ??= new KeyService();
+    public IKeyService Key => field ??= GetKitService<IKeyService>(); // new KeyService();
 
     /// <summary>
     /// Templates service, which can parse strings containing placeholders.

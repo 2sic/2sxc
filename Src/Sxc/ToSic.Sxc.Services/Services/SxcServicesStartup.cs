@@ -11,6 +11,7 @@ using ToSic.Sxc.Edit.EditService;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Edit.Toolbar.Internal;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.CmsService.Internal;
@@ -58,11 +59,6 @@ public static class SxcServicesStartup
 
         // New 12.05: SecureData
         services.TryAddTransient<ISecureDataService, SecureDataService>();
-
-        // v13 DynamicCodeService
-        services.TryAddTransient<DynamicCodeService.MyServices>();
-        services.TryAddTransient<DynamicCodeService.MyScopedServices>();  // new v15
-        services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
 
         // 13 - ToolbarService & IFeaturesService
         services.TryAddTransient<IToolbarService, ToolbarService>();    // New 13.00
@@ -115,10 +111,22 @@ public static class SxcServicesStartup
         // v17.01
         services.TryAddTransient<IUserService, UserService>();
 
+        services.TryAddTransient<IKeyService, KeyService>();
+
         services.AddSxcServicesFallbacks();
+        services.ExternalConfig();
 
         return services;
     }
+
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    public static IServiceCollection ExternalConfig(this IServiceCollection services)
+    {
+        // new v15
+        services.TryAddTransient<GoogleMapsSettings>();
+        return services;
+    }
+
 
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcServicesFallbacks(this IServiceCollection services)
@@ -131,9 +139,6 @@ public static class SxcServicesStartup
 
         // v12.05
         services.TryAddTransient<IMailService, MailServiceUnknown>();
-
-        // v13.02
-        services.TryAddTransient<IDynamicCodeService, DynamicCodeServiceUnknown>();
 
         // v15 DataSource
         services.TryAddTransient<PagesDataSourceProvider, PagesDataSourceProviderUnknown>();
