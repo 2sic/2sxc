@@ -4,6 +4,7 @@ using System.Web.UI;
 using ToSic.Eav.StartUp;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc.Blocks.BlockBuilder.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Dnn.Features;
@@ -98,7 +99,8 @@ public partial class View : PortalModuleBase, IActionable
                 if (checkPortalIsReady)
                     if (!DnnReadyCheckTurbo.QuickCheckSiteAndAppFoldersAreReady(this, Log))
                         GetService<DnnReadyCheckTurbo>().EnsureSiteAndAppFoldersAreReady(this, block);
-                _dnnClientResources = GetService<DnnClientResources>().Init(Page, null, requiresPre1025Behavior == false ? null : block?.BlockBuilder);
+                var blockBuilder = requiresPre1025Behavior == false ? null : block?.GetBlockBuilder();
+                _dnnClientResources = GetService<DnnClientResources>().Init(Page, null, blockBuilder);
                 _enforcePre1025JQueryLoading = requiresPre1025Behavior ?? _dnnClientResources.NeedsPre1025Behavior();
                 if (_enforcePre1025JQueryLoading) _dnnClientResources.EnforcePre1025Behavior();
                 return true;
@@ -194,7 +196,7 @@ public partial class View : PortalModuleBase, IActionable
         var result = new RenderResult();
         TryCatchAndLogToDnn(() =>
         {
-            var blockBuilder = Block.BlockBuilder;
+            var blockBuilder = Block.GetBlockBuilder();
             if (RenderNaked)
                 blockBuilder.WrapInDiv = false;
             result = (RenderResult)blockBuilder.Run(

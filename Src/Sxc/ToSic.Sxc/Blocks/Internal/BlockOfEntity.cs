@@ -37,7 +37,7 @@ public sealed class BlockFromEntity(BlockBase.MyServices services, LazySvc<AppFi
         // but the current instance can be of another block
         AppId = blockId.AppId;
 
-        CompleteInit(parent, parent.BlockBuilder, blockId, -blockEntity.EntityId);
+        CompleteInit(parent, blockId, -blockEntity.EntityId);
 
         return l.Return(this);
     }

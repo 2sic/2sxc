@@ -43,7 +43,7 @@ public abstract class BlockBase(BlockBase.MyServices services, string logName, o
         AppId = appId.AppId;
     }
 
-    protected bool CompleteInit(IBlock parentBlockOrNull, IBlockBuilder rootBuilderOrNull, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded)
+    protected bool CompleteInit(IBlock parentBlockOrNull, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded)
     {
         var l = Log.Fn<bool>();
 
@@ -167,7 +167,8 @@ public abstract class BlockBase(BlockBase.MyServices services, string logName, o
 
     public BlockConfiguration Configuration { get; protected set; }
         
-    public IBlockBuilder BlockBuilder { get; protected set; }
+    /// <inheritdoc />
+    public object BlockBuilder { get; protected set; }
 
     public bool IsContentApp { get; protected set; }
 }

@@ -3,6 +3,7 @@ using ToSic.Eav.Helpers;
 using ToSic.Eav.Security.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Backend.InPage;
+using ToSic.Sxc.Blocks.BlockBuilder.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Cms.Internal.Publishing;
@@ -33,7 +34,7 @@ public class ContentBlockBackend(
 
         // now return a rendered instance
         var newContentBlock = entityBlockGenerator.New().Init(Block, null, entityId);
-        return newContentBlock.BlockBuilder.Run(true, specs: new());
+        return newContentBlock.GetBlockBuilder().Run(true, specs: new());
     }
 
     // todo: probably move to CmsManager.Block
@@ -115,7 +116,7 @@ public class ContentBlockBackend(
             Block.View = template;
         }
 
-        var result = Block.BlockBuilder.Run(true, specs: new());
+        var result = Block.GetBlockBuilder().Run(true, specs: new());
         return callLog.ReturnAsOk(result);
     }
 

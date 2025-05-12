@@ -2,6 +2,7 @@
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Blocks.BlockBuilder.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Edit.EditService;
@@ -145,7 +146,7 @@ public class RenderService: ServiceForDynamicCode,
 
         block.BlockFeatureKeys?.Add(SxcPageFeatures.JsApiOnModule.NameId);
 
-        var result = block.BlockBuilder.Run(true, specs: new() { Data = data });
+        var result = block.GetBlockBuilder().Run(true, specs: new() { Data = data });
 
         return l.ReturnAsOk(result);
     }

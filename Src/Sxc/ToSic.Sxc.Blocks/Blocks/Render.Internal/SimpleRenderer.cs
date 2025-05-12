@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps.Internal;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Blocks.BlockBuilder.Internal;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Blocks.Internal.Render;
@@ -27,7 +28,7 @@ public class SimpleRenderer(Generator<BlockFromEntity> blkFrmEntGen)
         // render it
         l.A("found, will render");
         var cb = blkFrmEntGen.New().Init(parentBlock, entity);
-        var result = cb.BlockBuilder.Run(false, specs: new() { Data = data });
+        var result = cb.GetBlockBuilder().Run(false, specs: new() { Data = data });
 
         // Special: during Run() various things are picked up like header changes, activations etc.
         // Depending on the code flow, it could have picked up changes of other templates (not this one)

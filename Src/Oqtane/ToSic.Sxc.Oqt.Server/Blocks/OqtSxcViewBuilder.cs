@@ -1,6 +1,7 @@
 ﻿using Oqtane.Models;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Blocks.BlockBuilder.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Oqt.Server.Context;
@@ -72,7 +73,11 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
             var useLightspeed = OutputCache?.IsEnabled ?? false;
             if (OutputCache?.Existing != null) Log.A("Lightspeed hit - will use cached");
             var renderResult = OutputCache?.Existing?.Data
-                               ?? Block.BlockBuilder.Run(true, specs: new() { UseLightspeed = useLightspeed, IncludeAllAssetsInOqtane = (site.RenderMode == "Interactive") });
+                               ?? Block.GetBlockBuilder().Run(true, specs: new()
+                               {
+                                   UseLightspeed = useLightspeed,
+                                   IncludeAllAssetsInOqtane = site.RenderMode == "Interactive",
+                               });
             finalMessage = !useLightspeed ? "" :
                 OutputCache?.Existing?.Data != null ? "⚡⚡" : "⚡⏳";
             OutputCache?.Save(renderResult);

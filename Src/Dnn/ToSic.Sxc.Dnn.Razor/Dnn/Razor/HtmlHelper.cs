@@ -2,6 +2,7 @@
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Blocks.BlockBuilder.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Dnn.Razor.Internal;
@@ -132,8 +133,9 @@ internal class HtmlHelper(
         // Note that if anything breaks here, it will just use the normal error - but for what breaks in here
         // Note that if withHelp already has help, it won't be extended any more
         exWithHelp = codeErrService.Value.AddHelpIfKnownError(exWithHelp, _page);
-        var nice = ((ICodeApiServiceInternal)_page._CodeApiSvc)._Block.BlockBuilder.RenderingHelper.DesignErrorMessage(
-            [exWithHelp], true);
+        var nice = ((ICodeApiServiceInternal)_page._CodeApiSvc)._Block
+            .GetBlockBuilder()
+            .RenderingHelper.DesignErrorMessage([exWithHelp], true);
         _helper.Add(exWithHelp);
         return nice;
     }
