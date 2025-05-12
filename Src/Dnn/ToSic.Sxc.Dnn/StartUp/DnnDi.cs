@@ -52,6 +52,9 @@ public static class DnnDi
             .AddSxcEngines()
             .AddSxcImages()
             .AddSxcCore()
+            .AddSxcEdit()
+            .AddSxcBlocks()
+            .AddSxcCms()
             .AddSxcServices()
             .AddSxcCodeGen() // Code generation services
             .AddEavEverything()

@@ -146,9 +146,12 @@
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Blocks\ToSic.Sxc.Blocks.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Cms\ToSic.Sxc.Cms.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Code.HotBuild\ToSic.Sxc.Code.HotBuild.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Code\ToSic.Sxc.Code.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Custom\ToSic.Sxc.Custom.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Edit\ToSic.Sxc.Edit.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Images\ToSic.Sxc.Images.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Services\ToSic.Sxc.Services.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Dnn.WebApi\ToSic.Sxc.Dnn.WebApi.csproj" />

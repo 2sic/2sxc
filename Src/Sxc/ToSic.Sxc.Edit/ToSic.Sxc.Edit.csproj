@@ -4,7 +4,7 @@
   <PropertyGroup>
     <TargetFrameworks>net472;net9.0;</TargetFrameworks>
     <RootNamespace>ToSic.Sxc</RootNamespace>
-    <AssemblyName>ToSic.Sxc.Services</AssemblyName>
+    <AssemblyName>ToSic.Sxc.Edit</AssemblyName>
     <Deterministic>true</Deterministic>
     <!--<FileAlignment>512</FileAlignment>-->
     <NoWarn>7035;CS1591</NoWarn>
@@ -21,13 +21,6 @@
     <!-- end: Don't generate... -->
   </PropertyGroup>
 
-
-  <ItemGroup>
-    <Compile Remove="Services\Cms\NewFolder\**" />
-    <EmbeddedResource Remove="Services\Cms\NewFolder\**" />
-    <None Remove="Services\Cms\NewFolder\**" />
-  </ItemGroup>
-
   <!--<PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -41,32 +34,24 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ToSic.Sxc.Cms\ToSic.Sxc.Cms.csproj" />
-    <ProjectReference Include="..\ToSic.Sxc.Edit\ToSic.Sxc.Edit.csproj" />
-    <ProjectReference Include="..\ToSic.Sxc.Images\ToSic.Sxc.Images.csproj" />
     <ProjectReference Include="..\ToSic.Sxc\ToSic.Sxc.csproj" />
   </ItemGroup>
 
-  <!-- Include Connect.Koi -->
-  <ItemGroup>
-    <Reference Include="Connect.Koi">
-      <HintPath>..\..\..\Dependencies\Koi\netstandard2.0\Connect.Koi.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
     <!--<Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />-->
-    <Reference Include="System.Web" />
+    <!--<Reference Include="System.Web" />-->
     <!--<Reference Include="System.Web.Http">
       <HintPath>..\..\..\Dependencies\System.Web\System.Web.Http.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>-->
-    <Reference Include="ToSic.Razor">
+    <!--<Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.dll</HintPath>
-    </Reference>
+    </Reference>-->
     <!--<Reference Include="Microsoft.CSharp" />-->
   </ItemGroup>
 
@@ -78,16 +63,9 @@
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />-->
 
-    <Reference Include="ToSic.Razor">
+    <!--<Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
-    </Reference>
+    </Reference>-->
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\KeyService\" />
-    <Folder Include="Services\GoogleMaps\" />
-    <Folder Include="Services\Features\" />
-    <Folder Include="Services\Adam\" />
-    <Folder Include="Services\Data\" />
-  </ItemGroup>
 </Project>

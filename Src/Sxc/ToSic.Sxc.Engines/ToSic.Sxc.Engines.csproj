@@ -67,8 +67,4 @@
     </Reference>-->
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="LookUp\" />
-  </ItemGroup>
-
 </Project>

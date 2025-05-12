@@ -177,6 +177,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Images", "Sxc\ToS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Engines", "Sxc\ToSic.Sxc.Engines\ToSic.Sxc.Engines.csproj", "{238BADBB-E464-4865-A16B-89273C63193B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Blocks", "Sxc\ToSic.Sxc.Blocks\ToSic.Sxc.Blocks.csproj", "{ACA628BE-DD0B-41BE-B964-47DA6B1C8C36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Cms", "Sxc\ToSic.Sxc.Cms\ToSic.Sxc.Cms.csproj", "{0938A266-FF63-459A-AFE7-FAFC3D0E4818}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Edit", "Sxc\ToSic.Sxc.Edit\ToSic.Sxc.Edit.csproj", "{5A485FF9-6DD9-4C3D-AB3F-41F0BA864853}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -530,6 +536,24 @@ Global
 		{238BADBB-E464-4865-A16B-89273C63193B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{238BADBB-E464-4865-A16B-89273C63193B}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
 		{238BADBB-E464-4865-A16B-89273C63193B}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{ACA628BE-DD0B-41BE-B964-47DA6B1C8C36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACA628BE-DD0B-41BE-B964-47DA6B1C8C36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACA628BE-DD0B-41BE-B964-47DA6B1C8C36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACA628BE-DD0B-41BE-B964-47DA6B1C8C36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACA628BE-DD0B-41BE-B964-47DA6B1C8C36}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACA628BE-DD0B-41BE-B964-47DA6B1C8C36}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{0938A266-FF63-459A-AFE7-FAFC3D0E4818}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0938A266-FF63-459A-AFE7-FAFC3D0E4818}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0938A266-FF63-459A-AFE7-FAFC3D0E4818}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0938A266-FF63-459A-AFE7-FAFC3D0E4818}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0938A266-FF63-459A-AFE7-FAFC3D0E4818}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{0938A266-FF63-459A-AFE7-FAFC3D0E4818}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{5A485FF9-6DD9-4C3D-AB3F-41F0BA864853}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A485FF9-6DD9-4C3D-AB3F-41F0BA864853}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A485FF9-6DD9-4C3D-AB3F-41F0BA864853}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A485FF9-6DD9-4C3D-AB3F-41F0BA864853}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A485FF9-6DD9-4C3D-AB3F-41F0BA864853}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A485FF9-6DD9-4C3D-AB3F-41F0BA864853}.Testing|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -606,9 +630,12 @@ Global
 		{079C92D4-F250-4343-ACF0-4EBE567B0CBE} = {5CD8015A-76D8-4633-8469-53B62A6C1894}
 		{DA6E8814-3D50-485C-8687-ECD1C8D143A9} = {5CD8015A-76D8-4633-8469-53B62A6C1894}
 		{238BADBB-E464-4865-A16B-89273C63193B} = {5CD8015A-76D8-4633-8469-53B62A6C1894}
+		{ACA628BE-DD0B-41BE-B964-47DA6B1C8C36} = {5CD8015A-76D8-4633-8469-53B62A6C1894}
+		{0938A266-FF63-459A-AFE7-FAFC3D0E4818} = {5CD8015A-76D8-4633-8469-53B62A6C1894}
+		{5A485FF9-6DD9-4C3D-AB3F-41F0BA864853} = {5CD8015A-76D8-4633-8469-53B62A6C1894}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 EndGlobal

@@ -95,6 +95,10 @@
       <!-- Global / Shared 2sxc and EAV DLLs-->
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Blocks.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Blocks.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Cms.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Cms.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Code.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Code.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Code.Generate.dll" />
@@ -103,6 +107,8 @@
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Code.HotBuild.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Custom.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Custom.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Edit.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Edit.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Engines.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Engines.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Images.dll" />

@@ -29,6 +29,9 @@ public class StartupSxcWithDb
             .AddDataSourceTestHelpers()
             // 2sxc core
             .AddSxcCore()
+            .AddSxcEdit()
+            .AddSxcBlocks()
+            .AddSxcCms()
             .AddSxcServices()
             .AddEavEverything()
             .AddLibFeatSys();

@@ -171,7 +171,7 @@ public static partial class RegisterSxcServices
         services.AddTransient<IStartUpRegistrations, SxcStartUpRegistrations>();
 
         // v15 DataSource Dependencies
-        services.TryAddTransient<SitesDataSourceProvider.MyServices>();
+        //services.TryAddTransient<SitesDataSourceProvider.MyServices>();
         services.TryAddTransient<AppAssetsDataSourceProvider>();
         services.TryAddTransient<AppAssetsDataSourceProvider.MyServices>();
         services.TryAddTransient(typeof(AdamDataSourceProvider<,>));

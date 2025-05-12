@@ -35,6 +35,10 @@
       <!-- Global / Shared 2sxc and EAV DLLs-->
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.dll" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.pdb" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Blocks.dll" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Blocks.pdb" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Cms.dll" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Cms.pdb" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Code.dll" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Code.pdb" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Code.Generate.dll" />
@@ -43,6 +47,8 @@
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Code.HotBuild.pdb" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Custom.dll" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Custom.pdb" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Edit.dll" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Edit.pdb" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Engines.dll" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Engines.pdb" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Images.dll" />

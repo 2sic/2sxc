@@ -79,6 +79,9 @@ public class OqtStartup : IServerStartup
             .AddSxcEngines()
             .AddSxcImages()
             .AddSxcCore()                   // Core 2sxc services
+            .AddSxcEdit()
+            .AddSxcBlocks()
+            .AddSxcCms()
             .AddSxcServices()
             .AddSxcCodeGen()                // Code generation services
             .AddEavEverything()             // Core EAV services
