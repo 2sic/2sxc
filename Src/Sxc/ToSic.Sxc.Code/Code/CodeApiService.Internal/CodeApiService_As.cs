@@ -11,7 +11,7 @@ public partial class CodeApiService
     [PrivateApi]
     public ICodeDataFactory Cdf => _cdf.Get(() =>
     {
-        Services.Cdf.ConnectToRoot(this);
+        ((CodeDataFactory)Services.Cdf).ConnectToRoot(this);
         return Services.Cdf;
     });
     private readonly GetOnce<ICodeDataFactory> _cdf = new();

@@ -70,20 +70,20 @@ public static partial class RegisterSxcServices
         //services.TryAddTransient<IRenderingHelper, RenderingHelper>();
         //services.TryAddTransient<TokenEngine>();
 
-        // Context stuff in general
-        services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
+        //// Context stuff in general
+        //services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
 
         // Context stuff for the page (not EAV)
         services.TryAddTransient<IPage, Page>();
         services.TryAddTransient<Page>();
 
 
-        // Context stuff, which is explicitly scoped
-        services.TryAddScoped<ISxcContextResolver, SxcContextResolver>();
-        // New v15.04 WIP
-        services.TryAddScoped<IContextResolver>(x => x.GetRequiredService<ISxcContextResolver>());
-        services.TryAddScoped<IContextResolverUserPermissions>(x => x.GetRequiredService<ISxcContextResolver>());
-        services.TryAddScoped<AppIdResolver>();
+        //// Context stuff, which is explicitly scoped
+        //services.TryAddScoped<ISxcContextResolver, SxcContextResolver>();
+        //// New v15.04 WIP
+        //services.TryAddScoped<IContextResolver>(x => x.GetRequiredService<ISxcContextResolver>());
+        //services.TryAddScoped<IContextResolverUserPermissions>(x => x.GetRequiredService<ISxcContextResolver>());
+        //services.TryAddScoped<AppIdResolver>();
 
 
         // JS UI Context

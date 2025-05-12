@@ -16,12 +16,9 @@ namespace ToSic.Sxc.DataSources.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSourceProvider<TFolderId, TFileId>.MyServices>
 {
-    private readonly MyServices _services;
     private IContextOfApp _context;
 
-    public class MyServices(
-        LazySvc<AdamContext<TFolderId, TFileId>> adamContext,
-        ISxcContextResolver ctxResolver)
+    public class MyServices(LazySvc<AdamContext<TFolderId, TFileId>> adamContext, ISxcContextResolver ctxResolver)
         : MyServicesBase(connect: [adamContext, ctxResolver])
     {
         public LazySvc<AdamContext<TFolderId, TFileId>> AdamContext { get; } = adamContext;
@@ -30,7 +27,6 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
 
     protected AdamDataSourceProvider(MyServices services) : base(services, $"{SxcLogName}.AdamDs")
     {
-        _services = services;
     }
 
     public AdamDataSourceProvider<TFolderId, TFileId> Configure(
@@ -40,15 +36,18 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
         string entityGuids = default,
         string fields = default,
         string filter = default
-    ) => Log.Func($"a:{appId}; entityIds:{entityIds}, entityGuids:{entityGuids}, fields:{fields}, filter:{filter}", l =>
+    )
     {
-        _context = appId > 0 ? Services.CtxResolver.GetBlockOrSetApp(appId) : Services.CtxResolver.AppNameRouteBlock(null);
+        var l = Log.Fn<AdamDataSourceProvider<TFolderId, TFileId>>($"a:{appId}; entityIds:{entityIds}, entityGuids:{entityGuids}, fields:{fields}, filter:{filter}");
+        _context = appId > 0
+            ? Services.CtxResolver.GetBlockOrSetApp(appId)
+            : Services.CtxResolver.AppNameRouteBlock(null);
         _entityIds = entityIds;
         _entityGuids = entityGuids;
         _fields = fields;
         _filter = filter;
-        return this;
-    });
+        return l.Return(this);
+    }
 
     private string _entityIds;
     private string _entityGuids;
@@ -65,10 +64,10 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
         var list = new List<AdamItemDataRaw>();
 
         // TODO: this is just tmp code to get some data...
-        _services.AdamContext.Value.Init(_context, entity.Type.Name, string.Empty, entity.EntityGuid, false, cdf: null);
+        Services.AdamContext.Value.Init(_context, entity.Type.Name, string.Empty, entity.EntityGuid, false, cdf: null);
 
         // get root and at the same time auto-create the core folder in case it's missing (important)
-        var root = _services.AdamContext.Value.AdamRoot.Folder(false);
+        var root = Services.AdamContext.Value.AdamRoot.Folder(false);
 
         // if no root exists then quit now
         if (root == null)

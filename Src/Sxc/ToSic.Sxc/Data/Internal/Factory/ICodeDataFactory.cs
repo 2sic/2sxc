@@ -57,9 +57,9 @@ public interface ICodeDataFactory
     /// List of dimensions for value lookup, incl. priorities etc. and null-trailing.
     /// lower case safe guaranteed. 
     /// </summary>
-// If we don't have a DynCodeRoot, try to generate the language codes and compatibility
-// There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
-string[] Dimensions { get; }
+    // If we don't have a DynCodeRoot, try to generate the language codes and compatibility
+    // There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
+    string[] Dimensions { get; }
 
     CodeInfoService CodeInfo { get; }
 
@@ -119,19 +119,6 @@ string[] Dimensions { get; }
     IField Field(ITypedItem parent, string name, bool propsRequired, NoParamOrder noParamOrder = default, bool? required = default);
     IEntity AsEntity(object thingToConvert);
     IEntity FakeEntity(int? appId);
-
-    /// <summary>
-    /// Connect to CodeRoot and it's log
-    /// </summary>
-    /// <param name="codeRoot"></param>
-    void ConnectToRoot(ICodeApiService codeRoot);
-
-    /// <summary>
-    /// Connect to CodeRoot and a custom log
-    /// </summary>
-    /// <param name="codeRoot"></param>
-    /// <param name="parentLog"></param>
-    void ConnectToRoot(ICodeApiService codeRoot, ILog parentLog);
 
     TCustom GetOne<TCustom>(Func<IEntity> getItem, object id, bool skipTypeCheck)
         where TCustom : class, ICanWrapData;

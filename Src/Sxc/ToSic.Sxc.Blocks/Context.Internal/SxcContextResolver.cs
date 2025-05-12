@@ -14,7 +14,7 @@ internal partial class SxcContextResolver(
     Generator<IContextOfSite> siteCtxGenerator,
     Generator<IContextOfApp> appCtxGenerator,
     LazySvc<IFeaturesService> featuresService,
-    LazySvc<AppReaderFactory> appReaderFactory,
+    LazySvc<IAppReaderFactory> appReaderFactory,
     LazySvc<IHttp> http)
     : ContextResolver(siteCtxGenerator, appCtxGenerator, "Sxc.CtxRes",
         connect: [appIdResolverLazy, siteCtxGenerator, appCtxGenerator, featuresService, http, appReaderFactory]),

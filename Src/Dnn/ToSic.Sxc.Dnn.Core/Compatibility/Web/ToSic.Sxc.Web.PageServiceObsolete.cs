@@ -1,6 +1,8 @@
-﻿using ToSic.Razor.Blade;
+﻿using ToSic.Lib.Coding;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Code.Internal;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Web;
 
 /// <summary>

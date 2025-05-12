@@ -16,6 +16,7 @@ using ToSic.Sxc.Images;
 using ToSic.Sxc.Integration.Startup;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Startup;
+using ToSic.Sxc.Web;
 
 
 namespace ToSic.Sxc.Dnn.StartUp;
@@ -38,6 +39,7 @@ public static class DnnDi
 
         services
             .AddDnnPlugins()
+            .AddObsoleteServicesAndKits()
             .AddDnnCore() // TODO: Move core stuff from AddDnn to AddDnnCore and make implementations internal
             .AddDnnSxcDataSources()
             .AddDnnDataSources()
@@ -80,4 +82,15 @@ public static class DnnDi
         services.TryAddTransient<Connect.Koi.Detectors.ICssFrameworkDetector, Connect.Koi.Dnn.DetectAndCacheDnnThemeCssFramework>();
         return services;
     }
+
+
+#pragma warning disable CS0612 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
+    public static IServiceCollection AddObsoleteServicesAndKits(this IServiceCollection services)
+    {
+        services.TryAddTransient<ToSic.Sxc.Web.IPageService, WebPageServiceObsolete>();  // Obsolete version, needed to keep old Apps working which used this
+        return services;
+    }
+#pragma warning restore CS0618 // Type or member is obsolete
+#pragma warning restore CS0618 // Type or member is obsolete
 }

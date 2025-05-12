@@ -30,7 +30,7 @@ public static class SxcServicesStartup
         // new in v12.02 - PageService & Page Features
         services.TryAddTransient<IPageService, PageService>();  // must be unique per module where it's used
 
-        services.AddObsoleteServicesAndKits();
+        //services.AddObsoleteServicesAndKits();
 
 //        services.TryAddTransient<Services.IRenderService, RenderService>();  // new 12.05
 //        services.TryAddTransient<RenderService.MyServices>();

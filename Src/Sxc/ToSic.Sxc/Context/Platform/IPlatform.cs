@@ -2,6 +2,4 @@
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IPlatform: ICmsPlatform
-{
-}
+public interface IPlatform: ICmsPlatform;

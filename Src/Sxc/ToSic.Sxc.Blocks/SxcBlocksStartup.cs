@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Context;
+using ToSic.Eav.Context.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.LookUp.Internal;
 using ToSic.Sxc.Web.Internal.JsContext;
@@ -53,6 +56,17 @@ public static class SxcBlocksStartup
         services.TryAddTransient<JsContextAll>();
         services.TryAddTransient<JsContextLanguage>();
         services.TryAddScoped<JsApiCacheService>(); // v16.01
+
+        // Context stuff in general
+        services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
+        // Context stuff, which is explicitly scoped
+        services.TryAddScoped<ISxcContextResolver, SxcContextResolver>();
+        // New v15.04 WIP
+        services.TryAddScoped<IContextResolver>(x => x.GetRequiredService<ISxcContextResolver>());
+        services.TryAddScoped<IContextResolverUserPermissions>(x => x.GetRequiredService<ISxcContextResolver>());
+        services.TryAddScoped<AppIdResolver>();
+
+
 
         services.AddSxcBlocksFallback();
 
