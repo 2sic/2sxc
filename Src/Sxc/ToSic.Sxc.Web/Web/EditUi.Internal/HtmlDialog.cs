@@ -3,6 +3,11 @@ using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Web.Internal.EditUi;
 
+/// <summary>
+/// Helper to add resources etc. to the JS dialogs.
+/// It will take the HTML and make necessary changes.
+/// TODO: Rename to HtmlJsDialogHelper
+/// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class HtmlDialog

@@ -80,8 +80,4 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Web\Internal\LightSpeed\" />
-  </ItemGroup>
-
 </Project>

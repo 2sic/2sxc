@@ -26,7 +26,6 @@ using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.DotNet;
-using ToSic.Sxc.Web.Internal.EditUi;
 using ToSic.Sxc.Web.Internal.JsContext;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.Internal.PageService;
@@ -173,8 +172,8 @@ public static partial class RegisterSxcServices
         //services.TryAddTransient(typeof(AdamDataSourceProvider<,>.MyServices));
         //services.TryAddTransient<IAppDataSourcesLoader, AppDataSourcesLoader>();
 
-        // v15 EditUi Resources
-        services.TryAddTransient<EditUiResources>();
+        //// v15 EditUi Resources
+        //services.TryAddTransient<EditUiResources>();
 
         // v15
         services.TryAddTransient<CodeCreateDataSourceSvc>();
