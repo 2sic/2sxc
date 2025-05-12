@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Dnn.Integration;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class DnnGetBlock(
-    Generator<BlockFromEntity> blockFromEntity,
+    Generator<BlockOfEntity> blockFromEntity,
     Generator<IModuleAndBlockBuilder> moduleAndBlockBuilder)
     : ServiceBase($"{LogName}.GetBlk", connect: [blockFromEntity, moduleAndBlockBuilder])
 {

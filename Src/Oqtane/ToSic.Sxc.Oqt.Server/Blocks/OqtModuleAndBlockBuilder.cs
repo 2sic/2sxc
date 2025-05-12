@@ -16,7 +16,7 @@ internal class OqtModuleAndBlockBuilder : ModuleAndBlockBuilder
     public OqtModuleAndBlockBuilder(
         Generator<IModule> moduleGenerator,
         Generator<IContextOfBlock> contextGenerator,
-        Generator<BlockFromModule> blockGenerator,
+        Generator<BlockOfModule> blockGenerator,
         Generator<IModuleRepository> moduleRepositoryGenerator,
         RequestHelper requestHelper
     ) : base(blockGenerator, OqtConstants.OqtLogPrefix)

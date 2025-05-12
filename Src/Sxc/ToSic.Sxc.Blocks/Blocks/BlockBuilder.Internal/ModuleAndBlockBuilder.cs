@@ -6,7 +6,7 @@ using ToSic.Sxc.Context.Internal;
 namespace ToSic.Sxc.Blocks.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class ModuleAndBlockBuilder(Generator<BlockFromModule> blockGenerator, string logPrefix)
+public abstract class ModuleAndBlockBuilder(Generator<BlockOfModule> blockGenerator, string logPrefix)
     : ServiceBase($"{logPrefix}.BnMBld", connect: [blockGenerator]), IModuleAndBlockBuilder
 {
     /// <summary>

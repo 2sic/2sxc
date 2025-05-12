@@ -18,8 +18,8 @@ internal class OqtGetBlock(
     RequestHelper requestHelper,
     ISxcContextResolver contextResolverToInit,
     Generator<IContextOfBlock> cntOfBlkGen,
-    Generator<BlockFromModule> blkFromModGen,
-    Generator<BlockFromEntity> blkFromEntGen)
+    Generator<BlockOfModule> blkFromModGen,
+    Generator<BlockOfEntity> blkFromEntGen)
     : ServiceBase("Sxc.GetBlk",
             connect: [modRepoLazy, requestHelper, contextResolverToInit, cntOfBlkGen, blkFromModGen, blkFromEntGen]),
         IWebApiContextBuilder

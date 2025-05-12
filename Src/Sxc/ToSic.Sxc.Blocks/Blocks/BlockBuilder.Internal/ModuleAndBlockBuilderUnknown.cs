@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Blocks.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ModuleAndBlockBuilderUnknown: ModuleAndBlockBuilder
 {
-    public ModuleAndBlockBuilderUnknown(WarnUseOfUnknown<ModuleAndBlockBuilderUnknown> _, Generator<BlockFromModule>bfmGenerator) : base(bfmGenerator, "Unk")
+    public ModuleAndBlockBuilderUnknown(WarnUseOfUnknown<ModuleAndBlockBuilderUnknown> _, Generator<BlockOfModule>bfmGenerator) : base(bfmGenerator, "Unk")
     {
     }
 

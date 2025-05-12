@@ -1,40 +1,20 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.DataSource;
-using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal;
-using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.LookUp.Internal;
-using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class BlockBase(BlockBase.MyServices services, string logName, object[] connect = default)
-    : ServiceBase<BlockBase.MyServices>(services, logName, connect: connect ?? []), IBlock
+public abstract class BlockOfBase(BlockServices services, string logName, object[] connect = default)
+    : ServiceBase<BlockServices>(services, logName, connect: connect ?? []), IBlock
 {
     #region Constructor and DI
-
-    public class MyServices(
-        GenWorkPlus<WorkViews> workViews,
-        GenWorkPlus<WorkBlocks> appBlocks,
-        LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
-        LazySvc<App> appLazy,
-        LazySvc<IBlockBuilder> blockBuilder)
-        : MyServicesBase(connect: [bdsFactoryLazy, appLazy, blockBuilder, workViews, appBlocks])
-    {
-        internal LazySvc<BlockDataSourceFactory> BdsFactoryLazy { get; } = bdsFactoryLazy;
-        internal LazySvc<App> AppLazy { get; } = appLazy;
-        public LazySvc<IBlockBuilder> BlockBuilder { get; } = blockBuilder;
-        public GenWorkPlus<WorkViews> WorkViews { get; } = workViews;
-        public GenWorkPlus<WorkBlocks> AppBlocks { get; } = appBlocks;
-    }
 
     protected void Init(IContextOfBlock context, IAppIdentity appId)
     {

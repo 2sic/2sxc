@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Blocks.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class SpecsForLogHistory
 {
-    internal IDictionary<string, string> BuildSpecsForLogHistory(IBlock block, IApp app = default, string entry = default, bool addView = true)
+    public IDictionary<string, string> BuildSpecsForLogHistory(IBlock block, IApp app = default, string entry = default, bool addView = true)
     {
         try
         {

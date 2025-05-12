@@ -18,8 +18,8 @@ public class BlockEditorSelector(
 
     private BlockEditorBase GetEditorInternal(IBlock block)
     {
-        if (block is BlockFromModule) return blkEdtForMod.Value;
-        if (block is BlockFromEntity) return blkEdtForEnt.Value;
+        if (block is BlockOfModule) return blkEdtForMod.Value;
+        if (block is BlockOfEntity) return blkEdtForEnt.Value;
         throw new("Can't find BlockEditor - the base block type in unknown");
     }
 }

@@ -63,9 +63,9 @@ public static partial class RegisterSxcServices
         // Block functionality
         services.TryAddTransient<BlockDataSourceFactory>();
         services.TryAddTransient<DataSources.CmsBlock.MyServices>(); // new v15
-        services.TryAddTransient<BlockFromModule>();
-        services.TryAddTransient<BlockFromEntity>();
-        services.TryAddTransient<BlockBase.MyServices>();
+        //services.TryAddTransient<BlockOfModule>();
+        //services.TryAddTransient<BlockOfEntity>();
+        //services.TryAddTransient<BlockOfBase.MyServices>();
 
         // Configuration Provider WIP
         services.TryAddTransient<IAppDataConfigProvider, SxcAppDataConfigProvider>(); // new v17
@@ -76,7 +76,7 @@ public static partial class RegisterSxcServices
         //services.TryAddTransient<ICodeCustomizer, Customizer>();
 
         // Rendering
-        services.TryAddTransient<IRenderingHelper, RenderingHelper>();
+        //services.TryAddTransient<IRenderingHelper, RenderingHelper>();
         //services.TryAddTransient<TokenEngine>();
 
         // Context stuff in general

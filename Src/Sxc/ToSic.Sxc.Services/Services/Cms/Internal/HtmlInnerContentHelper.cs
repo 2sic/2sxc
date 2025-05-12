@@ -25,7 +25,7 @@ internal class HtmlInnerContentHelper()
         var nextField = sortedFields[index + 1];
         var nextIsEntityField = nextField.Type == ValueTypes.Entity;
         var nextInputType = nextField.InputType();
-        var nextHasContentBlocks = nextInputType.EqualsInsensitive(RenderConstants.InputTypeForContentBlocksField);
+        var nextHasContentBlocks = nextInputType.EqualsInsensitive(BlockBuildingConstants.InputTypeForContentBlocksField);
 
         // Next ist not inner content, exit early
         if (!nextIsEntityField || !nextHasContentBlocks)

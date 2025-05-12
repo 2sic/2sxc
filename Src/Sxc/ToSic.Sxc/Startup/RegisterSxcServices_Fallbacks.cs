@@ -67,7 +67,7 @@ static partial class RegisterSxcServices
 
         // v13.02
         services.TryAddTransient<ILinkPaths, LinkPathsUnknown>();
-        services.TryAddTransient<IModuleAndBlockBuilder, ModuleAndBlockBuilderUnknown>();
+        //services.TryAddTransient<IModuleAndBlockBuilder, ModuleAndBlockBuilderUnknown>();
 
         // Koi, mainly so tests don't fail
         services.TryAddTransient<ICssFrameworkDetector, CssFrameworkDetectorUnknown>();

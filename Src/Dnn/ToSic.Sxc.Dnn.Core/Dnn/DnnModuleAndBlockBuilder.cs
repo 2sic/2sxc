@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Dnn;
 
 internal class DnnModuleAndBlockBuilder: ModuleAndBlockBuilder
 {
-    public DnnModuleAndBlockBuilder(Generator<IModule> moduleGenerator, Generator<IContextOfBlock> contextGenerator, Generator<BlockFromModule> blockGenerator) : base(blockGenerator, DnnConstants.LogName)
+    public DnnModuleAndBlockBuilder(Generator<IModule> moduleGenerator, Generator<IContextOfBlock> contextGenerator, Generator<BlockOfModule> blockGenerator) : base(blockGenerator, DnnConstants.LogName)
     {
         ConnectLogs([
             _moduleGenerator = moduleGenerator,

@@ -36,17 +36,17 @@ public class BlockEditorForEntity : BlockEditorBase
             var zoneAppId = _appsCatalog.AppIdentity(appId.Value);
             appName = _appsCatalog.AppNameId(zoneAppId);
         }
-        UpdateValue(BlockFromEntity.CbPropertyApp, appName);
+        UpdateValue(BlockBuildingConstants.CbPropertyApp, appName);
     }
 
     internal override void EnsureLinkToContentGroup(Guid cgGuid)
-        => UpdateValue(BlockFromEntity.CbPropertyContentGroup, cgGuid.ToString()); // must pre-convert to string, as it's not a reference to an entity in the same app
+        => UpdateValue(BlockBuildingConstants.CbPropertyContentGroup, cgGuid.ToString()); // must pre-convert to string, as it's not a reference to an entity in the same app
 
 
     internal override void UpdateTitle(IEntity titleItem)
     {
         if (titleItem?.GetBestTitle() == null) return;
-        UpdateValue(BlockFromEntity.CbPropertyTitle, titleItem.GetBestTitle());
+        UpdateValue(BlockBuildingConstants.CbPropertyTitle, titleItem.GetBestTitle());
     }
 
     #endregion
@@ -58,7 +58,7 @@ public class BlockEditorForEntity : BlockEditorBase
 
     private void Update(Dictionary<string, object> newValues)
     {
-        var parentBlockAppState = ((IAppWithInternal)((BlockBase)Block).ParentBlock.App).AppReader;
+        var parentBlockAppState = ((IAppWithInternal)((BlockOfBase)Block).ParentBlock.App).AppReader;
         _entityUpdate.New(parentBlockAppState)
             .UpdateParts(Math.Abs(Block.ContentBlockId), newValues, new());
     }

@@ -6,24 +6,20 @@ using ToSic.Sxc.Context.Internal;
 namespace ToSic.Sxc.Blocks.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public sealed class BlockFromEntity(BlockBase.MyServices services, LazySvc<AppFinder> appFinderLazy)
-    : BlockBase(services, "CB.Ent", connect: [appFinderLazy])
+public sealed class BlockOfEntity(BlockServices services, LazySvc<AppFinder> appFinderLazy)
+    : BlockOfBase(services, "CB.Ent", connect: [appFinderLazy]), ICanBeEntity
 {
-    internal const string CbPropertyApp = "App";
-    internal const string CbPropertyTitle = Attributes.TitleNiceName;
-    internal const string CbPropertyContentGroup = "ContentGroup";
-
     /// <summary>
     /// This is the entity that was used to configure the block
     /// We need it for later operations, like mentioning what index it was on in a list
     /// </summary>
-    public IEntity Entity;
+    public IEntity Entity { get; private set; }
         
     #region Init
 
-    public BlockFromEntity Init(IBlock parent, IEntity blockEntity, int contentBlockId = -1)
+    public BlockOfEntity Init(IBlock parent, IEntity blockEntity, int contentBlockId = -1)
     {
-        var l = Log.Fn<BlockFromEntity>($"{nameof(contentBlockId)}:{contentBlockId}; {nameof(blockEntity)}:{blockEntity?.EntityId}", timer: true);
+        var l = Log.Fn<BlockOfEntity>($"{nameof(contentBlockId)}:{contentBlockId}; {nameof(blockEntity)}:{blockEntity?.EntityId}", timer: true);
         var ctx = parent.Context.Clone(Log) as IContextOfBlock;
         Init(ctx, parent);
         blockEntity ??= GetBlockEntity(parent, contentBlockId);
@@ -63,9 +59,9 @@ public sealed class BlockFromEntity(BlockBase.MyServices services, LazySvc<AppFi
     /// <returns></returns>
     private IBlockIdentifier LoadBlockDefinition(int zoneId, IEntity blockDefinition, ILog log)
     {
-        var appNameId = blockDefinition.Get(CbPropertyApp, fallback: "");
+        var appNameId = blockDefinition.Get(BlockBuildingConstants.CbPropertyApp, fallback: "");
         IsContentApp = appNameId == Eav.Constants.DefaultAppGuid;
-        var temp = blockDefinition.Get(CbPropertyContentGroup, fallback: "");
+        var temp = blockDefinition.Get(BlockBuildingConstants.CbPropertyContentGroup, fallback: "");
         Guid.TryParse(temp, out var contentGroupGuid);
 
         temp = blockDefinition.Get(ViewParts.TemplateContentType, fallback: "");

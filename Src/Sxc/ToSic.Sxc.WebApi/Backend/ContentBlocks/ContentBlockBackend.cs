@@ -23,7 +23,7 @@ public class ContentBlockBackend(
     LazySvc<IBlockResourceExtractor> optimizerLazy,
     LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
     AppWorkContextService appWorkCtxService,
-    Generator<BlockFromEntity> entityBlockGenerator)
+    Generator<BlockOfEntity> entityBlockGenerator)
     : BlockWebApiBackendBase(multiPermissionsApp, appWorkCtxService, ctxResolver, "Bck.FldLst",
         connect: [optimizerLazy, workBlocksMod, workViews, publishing, entityBlockGenerator, blockEditorSelectorLazy])
 {

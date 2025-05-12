@@ -11,6 +11,10 @@ public static class SxcBlocksStartup
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcBlocks(this IServiceCollection services)
     {
+        // Note: not sure if this is the best way, it's connected to the blocks needing services
+        services.TryAddTransient<BlockOfModule>();
+        services.TryAddTransient<BlockOfEntity>();
+        services.TryAddTransient<BlockServices>();
 
         services.TryAddTransient<Services.IRenderService, RenderService>();  // new 12.05
         services.TryAddTransient<RenderService.MyServices>();
@@ -33,6 +37,19 @@ public static class SxcBlocksStartup
         services.TryAddTransient<BlockBuilder.MyServices>();
 
         services.TryAddTransient<IBlockBuilder, BlockBuilder>();
+        services.TryAddTransient<IRenderingHelper, RenderingHelper>();
+
+        services.AddSxcBlocksFallback();
+
+        return services;
+    }
+
+    public static IServiceCollection AddSxcBlocksFallback(this IServiceCollection services)
+    {
+
+        services.TryAddTransient<IModuleAndBlockBuilder, ModuleAndBlockBuilderUnknown>();
+
+
         return services;
     }
 

@@ -56,7 +56,8 @@ public class ContentBlockReferenceDto
         PublishingMode = publishingMode.ToString();
             
         // try to get more information about the block
-        var decorator = (contentBlock as BlockFromEntity)?.Entity.GetDecorator<EntityInListDecorator>();
+        // if it's an inner-content having a configuration entity
+        var decorator = (contentBlock as ICanBeEntity)?.Entity.GetDecorator<EntityInListDecorator>();
         if (decorator == null) return;
         ParentGuid = decorator.ParentGuid;
         ParentField = decorator.Field;

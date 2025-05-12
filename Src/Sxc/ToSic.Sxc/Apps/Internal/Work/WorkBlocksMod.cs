@@ -59,8 +59,8 @@ public class WorkBlocksMod(
         var contentTypeName = AppConstants.ContentGroupRefTypeName;
         var values = new Dictionary<string, object>
         {
-            {BlockFromEntity.CbPropertyTitle, ""},
-            {BlockFromEntity.CbPropertyApp, app},
+            {BlockBuildingConstants.CbPropertyTitle, ""},
+            {BlockBuildingConstants.CbPropertyApp, app},
         };
         var newGuid = guid ?? Guid.NewGuid();
         var entityId = CreateItemAndAddToList(parentId, field, index, contentTypeName, values, newGuid);

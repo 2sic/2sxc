@@ -7,16 +7,16 @@ namespace ToSic.Sxc.Blocks.Internal;
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public sealed class BlockFromModule(BlockBase.MyServices services) : BlockBase(services, "CB.Mod")
+public sealed class BlockOfModule(BlockServices services) : BlockOfBase(services, "CB.Mod")
 {
     /// <summary>
     /// Create a module-content block
     /// </summary>
     /// <param name="ctx"></param>
     ///// <param name="overrideParams">optional override parameters</param>
-    public BlockFromModule Init(IContextOfBlock ctx)
+    public BlockOfModule Init(IContextOfBlock ctx)
     {
-        var l = Log.Fn<BlockFromModule>(timer: true);
+        var l = Log.Fn<BlockOfModule>(timer: true);
         Init(ctx, ctx.Module.BlockIdentifier);
         IsContentApp = ctx.Module.IsContent;
         CompleteInit(null, ctx.Module.BlockIdentifier, ctx.Module.Id);

@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Blocks.Internal.Render;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class SimpleRenderer(Generator<BlockFromEntity> blkFrmEntGen)
+public class SimpleRenderer(Generator<BlockOfEntity> blkFrmEntGen)
     : ServiceBase(SxcLogName + "RndSmp", connect: [blkFrmEntGen])
 {
     private static readonly string _emptyMessage = "<!-- auto-render of item {0} -->";
