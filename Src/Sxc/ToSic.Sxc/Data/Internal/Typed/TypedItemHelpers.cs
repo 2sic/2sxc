@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Data.Internal.Typed;
 internal class TypedItemHelpers
 {
     public static IHtmlTag Html(
-        CodeDataFactory cdf,
+        ICodeDataFactory cdf,
         ITypedItem item,
         string name,
         NoParamOrder noParamOrder,
@@ -27,7 +27,7 @@ internal class TypedItemHelpers
     }
 
     public static IResponsivePicture Picture(
-        CodeDataFactory cdf,
+        ICodeDataFactory cdf,
         ITypedItem item,
         string name,
         NoParamOrder noParamOrder,
@@ -56,7 +56,7 @@ internal class TypedItemHelpers
     }
 
     public static IResponsiveImage Img(
-        CodeDataFactory cdf,
+        ICodeDataFactory cdf,
         ITypedItem item,
         string name,
         NoParamOrder noParamOrder,

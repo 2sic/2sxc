@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Data.Internal.Stack;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPropLookup, ICanDebug, ICanGetByName
 {
-    public TypedStack(string name, CodeDataFactory cdf, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources)
+    public TypedStack(string name, ICodeDataFactory cdf, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources)
     {
         _stack = new PropertyStack().Init(name, sources);
         Cdf = cdf;
@@ -28,7 +28,7 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
 
     public IPropertyStack GetContents() => _stack;
 
-    public CodeDataFactory Cdf { get; }
+    public ICodeDataFactory Cdf { get; }
 
     public bool Debug { get; set; }
 

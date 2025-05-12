@@ -4,7 +4,7 @@ using ToSic.Sxc.Data.Internal.Wrapper;
 
 namespace ToSic.Sxc.Data.Internal;
 
-partial class CodeDataFactory
+partial class CodeDataFactory : ICodeDataFactory
 {
 
     #region Dynamic
@@ -25,7 +25,7 @@ partial class CodeDataFactory
     /// Convert a list of Entities into a DynamicEntity.
     /// Only used in DynamicCodeRoot.
     /// </summary>
-    internal DynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, bool propsRequired) 
+    public DynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, bool propsRequired) 
         => new(list: list, parent: null, field: null, appIdOrNull: null, propsRequired: propsRequired, cdf: this);
 
     /// <summary>

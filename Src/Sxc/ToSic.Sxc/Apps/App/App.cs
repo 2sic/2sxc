@@ -6,7 +6,7 @@ using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps.Internal.Assets;
-using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
+using ToSic.Sxc.Data.Internal;
 using CodeInfoService = ToSic.Lib.Code.InfoSystem.CodeInfoService;
 
 namespace ToSic.Sxc.Apps;
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Apps;
 public partial class App(
     EavApp.MyServices services,
     LazySvc<GlobalPaths> globalPaths,
-    LazySvc<CodeDataFactory> cdfLazy,
+    LazySvc<ICodeDataFactory> cdfLazy,
     LazySvc<CodeInfoService> codeChanges,
     IAppPathsMicroSvc pathFactoryTemp)
     // Note: If this is ever changed to not inherit from the EavApp, make sure you correct/update the LightSpeed code as well as it checks for this base class
@@ -29,8 +29,8 @@ public partial class App(
 {
     #region Special objects
 
-    private CodeDataFactory Cdf => _cdf.Get(() => cdfLazy.SetInit(obj => obj.SetFallbacks(Site)).Value);
-    private readonly GetOnce<CodeDataFactory> _cdf = new();
+    private ICodeDataFactory Cdf => _cdf.Get(() => cdfLazy.SetInit(obj => obj.SetFallbacks(Site)).Value);
+    private readonly GetOnce<ICodeDataFactory> _cdf = new();
 
 
     private IAppPaths AppPaths => _appPaths.Get(() => pathFactoryTemp.Get(AppReaderInt, Site));

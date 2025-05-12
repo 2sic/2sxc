@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Data.Internal.Wrapper;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeDataWrapper(
-    LazySvc<CodeDataFactory> cdf,
+    LazySvc<ICodeDataFactory> cdf,
     Generator<WrapObjectTyped> wrapTypeGenerator,
     Generator<WrapObjectTypedItem> wrapItemGenerator)
     : ServiceBase("Sxc.DWrpFk", connect: [wrapTypeGenerator, wrapItemGenerator, cdf])
@@ -30,7 +30,7 @@ public class CodeDataWrapper(
         var preWrap = new PreWrapObject(data, settings, this);
         return wrapTypeGenerator.New().Setup(preWrap);
     }
-    public ITypedItem TypedItemFromObject(object data, WrapperSettings settings, ILazyLike<CodeDataFactory> cdf1 = default)
+    public ITypedItem TypedItemFromObject(object data, WrapperSettings settings, ILazyLike<ICodeDataFactory> cdf1 = default)
     {
         var preWrap = new PreWrapObject(data, settings, this);
         return wrapItemGenerator.New().Setup(cdf1 ?? cdf, this, preWrap);

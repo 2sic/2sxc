@@ -30,7 +30,7 @@ public partial class CodeDataFactory(
     : ServiceForDynamicCode("Sxc.AsConv",
         connect: [/* never: serviceProvider */codeDataServices, adamManager, contextOfAppLazy, dataBuilderLazy, codeDataWrapper, wrapJsonGenerator, codeInfoSvc, zoneMapper])
 {
-    internal CodeInfoService CodeInfo => codeInfoSvc.Value;
+    public CodeInfoService CodeInfo => codeInfoSvc.Value;
 
     public void SetCompatibilityLevel(int compatibilityLevel) => _priorityCompatibilityLevel = compatibilityLevel;
 
@@ -69,13 +69,13 @@ public partial class CodeDataFactory(
     /// </summary>
     // If we don't have a DynCodeRoot, try to generate the language codes and compatibility
     // There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
-    internal string[] Dimensions => field ??=
+    public string[] Dimensions => field ??=
         // note: can't use SiteFromContextOrFallback.SafeLanguagePriorityCodes() because it will error during testing
         (_CodeApiSvc?.CmsContext as CmsContext)?.CtxSite.Site.SafeLanguagePriorityCodes()
         ?? _siteOrNull.SafeLanguagePriorityCodes();
 
 
-    internal IBlock BlockOrNull => ((ICodeApiServiceInternal)_CodeApiSvc)?._Block;
+    public IBlock BlockOrNull => ((ICodeApiServiceInternal)_CodeApiSvc)?._Block;
 
     #endregion
 

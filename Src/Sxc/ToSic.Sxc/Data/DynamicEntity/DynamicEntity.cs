@@ -28,13 +28,13 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     /// Constructor with EntityModel and DimensionIds
     /// </summary>
     [PrivateApi]
-    public DynamicEntity(IEntity entity, CodeDataFactory cdf, bool propsRequired)
+    public DynamicEntity(IEntity entity, ICodeDataFactory cdf, bool propsRequired)
         : this(cdf, propsRequired, entity)
     {
         ListHelper = new(this, () => Debug, propsRequired: propsRequired, cdf);
     }
 
-    internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, bool propsRequired, CodeDataFactory cdf)
+    internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, bool propsRequired, ICodeDataFactory cdf)
         : this(cdf, propsRequired,
             // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
             list.FirstOrDefault() ?? cdf.PlaceHolderInBlock(appIdOrNull, parent, field))
@@ -47,7 +47,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     [PrivateApi]
     internal readonly DynamicEntityListHelper ListHelper;
 
-    private DynamicEntity(CodeDataFactory cdf, bool propsRequired, IEntity entity)
+    private DynamicEntity(ICodeDataFactory cdf, bool propsRequired, IEntity entity)
     {
         Cdf = cdf;
         _propsRequired = propsRequired;
@@ -59,7 +59,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
 
 
     // ReSharper disable once InconsistentNaming
-    [PrivateApi] public CodeDataFactory Cdf { get; }
+    [PrivateApi] public ICodeDataFactory Cdf { get; }
     [PrivateApi] public IEntity Entity { get; }
     private readonly bool _propsRequired;
 

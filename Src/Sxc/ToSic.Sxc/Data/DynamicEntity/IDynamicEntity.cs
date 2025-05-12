@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data.Internal.Docs;
+﻿using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Data.Internal.Docs;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 #if !NETFRAMEWORK
@@ -140,7 +141,7 @@ public partial interface IDynamicEntity:
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     // ReSharper disable once InconsistentNaming
-    Internal.CodeDataFactory Cdf {get; }
+    ICodeDataFactory Cdf {get; }
 
 
     /* IMPORTANT: These are just fake properties for documentation - Keep in Sync between IDynamicEntity and IDynamicStack */

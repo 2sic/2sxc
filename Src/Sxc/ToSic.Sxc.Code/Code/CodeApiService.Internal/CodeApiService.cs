@@ -7,9 +7,10 @@ using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
-using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
+
 using IApp = ToSic.Sxc.Apps.IApp;
 // ReSharper disable InheritdocInvalidUsage
 
@@ -40,12 +41,12 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
         AppDataStackService dataStackService,
         LazySvc<IConvertService> convertService,
         LazySvc<CodeCreateDataSourceSvc> dataSources,
-        LazySvc<CodeDataFactory> cdf,
+        LazySvc<ICodeDataFactory> cdf,
         Polymorphism.Internal.PolymorphConfigReader polymorphism)
         : MyServicesBase(connect:
             [/* never! serviceProvider */ codeCompilerLazy, dataStackService, convertService, dataSources, cdf, polymorphism])
     {
-        public CodeDataFactory Cdf => cdf.Value;
+        public ICodeDataFactory Cdf => cdf.Value;
         public LazySvc<CodeCreateDataSourceSvc> DataSources { get; } = dataSources;
         public LazySvc<IConvertService> ConvertService { get; } = convertService;
         internal IServiceProvider ServiceProvider { get; } = serviceProvider;

@@ -26,7 +26,7 @@ partial class CodeDataFactory
 
         // If we don't even have a _DynCodeRoot (like when exporting from a neutral WebAPI)
         if (_CodeApiSvc is null)
-            throw new($"Can't create App Context for {nameof(AdamManager)} in {nameof(Internal.CodeDataFactory)} - no block, no App");
+            throw new($"Can't create App Context for {nameof(AdamManager)} in {nameof(ICodeDataFactory)} - no block, no App");
 
         IContextOfApp contextOfApp = ((ICodeApiServiceInternal)_CodeApiSvc)._Block?.Context;
         // TODO: @2dm - find out / document why this could even be null

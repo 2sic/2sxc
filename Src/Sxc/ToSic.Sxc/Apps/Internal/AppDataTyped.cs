@@ -25,13 +25,13 @@ internal class AppDataTyped(
 
     #region Kit Attachments
 
-    internal AppDataTyped Setup(CodeDataFactory cdfConnected)
+    internal AppDataTyped Setup(ICodeDataFactory cdfConnected)
     {
         CdfConnected = cdfConnected;
         return this;
     }
 
-    private CodeDataFactory CdfConnected
+    private ICodeDataFactory CdfConnected
     {
         get => field ?? throw new(nameof(CdfConnected) + " not set");
         set => field = value;

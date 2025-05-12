@@ -19,7 +19,7 @@ partial class CodeDataFactory
         if (mock == true)
             return codeDataWrapper.Value.TypedItemFromObject(data,
                 WrapperSettings.Typed(true, true, propsRequired ?? true),
-                new LazyLike<CodeDataFactory>(this));
+                new LazyLike<ICodeDataFactory>(this));
 
         return AsItemInternal(data, MaxRecursions, propsRequired: propsRequired ?? false)
                ?? fallback;

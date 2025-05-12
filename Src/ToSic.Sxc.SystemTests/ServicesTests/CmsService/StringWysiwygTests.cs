@@ -11,7 +11,7 @@ public class StringWysiwygTests(
     CodeApiService codeApiSvc,
     ContentTypeFactory contentTypeFactory,
     DataForCmsServiceTests dataForCmsTests,
-    CodeDataFactory cdf,
+    ICodeDataFactory cdf,
     IImageService imageSvc, // needed to inject into CodeApiSvc
     ITestOutputHelper output
     )

@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data.PiggyBack;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Data;
-using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
+using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Code.Internal;
 
@@ -22,7 +22,7 @@ public interface ICodeApiService : /*IDynamicCode12,*/ ICodeApiServiceForDynamic
 
     [PrivateApi("internal use only")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    CodeDataFactory Cdf { get; }
+    ICodeDataFactory Cdf { get; }
 
     /// <summary>
     /// Special GetService which can cache the found service so any other use could get the same instance.

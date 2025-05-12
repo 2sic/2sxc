@@ -1,8 +1,8 @@
 ﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Edit.Toolbar;
-using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
 namespace ToSic.Sxc.Code;
 
@@ -10,9 +10,9 @@ namespace ToSic.Sxc.Code;
 /// Helper to convert some unknown object into the possible result.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class TypedConverter(CodeDataFactory cdf)
+internal class TypedConverter(ICodeDataFactory cdf)
 {
-    public CodeDataFactory Cdf { get; } = cdf;
+    public ICodeDataFactory Cdf { get; } = cdf;
 
     public (T typed, object untyped, bool ok) EvalInterface<T>(object maybe, T fallback = default) where T: class 
     {

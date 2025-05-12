@@ -12,17 +12,17 @@ internal class DynamicEntityListHelper
     protected bool PropsRequired { get; }
     public readonly IEntity ParentOrNull;
     public readonly string FieldOrNull;
-    private readonly Internal.CodeDataFactory _cdf;
+    private readonly ICodeDataFactory _cdf;
 
     private readonly Func<bool?> _getDebug;
 
-    public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, bool propsRequired, Internal.CodeDataFactory cdf)
+    public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, bool propsRequired, ICodeDataFactory cdf)
         : this(cdf, propsRequired, getDebug)
     {
         DynEntities = [singleItem ?? throw new ArgumentException(nameof(singleItem))];
     }
         
-    public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug, bool propsRequired, Internal.CodeDataFactory cdf)
+    public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug, bool propsRequired, ICodeDataFactory cdf)
         : this(cdf, propsRequired, getDebug)
     {
         ParentOrNull = parentOrNull;
@@ -30,7 +30,7 @@ internal class DynamicEntityListHelper
         _entities = entities?.ToArray() ?? throw new ArgumentNullException(nameof(entities));
     }
 
-    private DynamicEntityListHelper(Internal.CodeDataFactory cdf, bool propsRequired, Func<bool?> getDebug)
+    private DynamicEntityListHelper(ICodeDataFactory cdf, bool propsRequired, Func<bool?> getDebug)
     {
         _cdf = cdf ?? throw new ArgumentNullException(nameof(cdf));
         PropsRequired = propsRequired;

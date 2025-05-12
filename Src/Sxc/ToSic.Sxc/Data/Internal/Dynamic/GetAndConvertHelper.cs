@@ -10,14 +10,14 @@ namespace ToSic.Sxc.Data.Internal.Dynamic;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class GetAndConvertHelper(
     IHasPropLookup parent,
-    CodeDataFactory cdf,
+    ICodeDataFactory cdf,
     bool propsRequired,
     bool childrenShouldBeDynamic,
     ICanDebug canDebug)
 {
     #region Setup and Log
 
-    public CodeDataFactory Cdf { get; } = cdf;
+    public ICodeDataFactory Cdf { get; } = cdf;
 
     public bool PropsRequired { get; } = propsRequired;
 

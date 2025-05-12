@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Data.Internal.Typed;
 
 [JsonConverter(typeof(DynamicJsonConverter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, CodeDataFactory cdf, bool propsRequired)
+internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, ICodeDataFactory cdf, bool propsRequired)
     : ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName, IWrapper<IEntity>,
         IEntityWrapper, IHasMetadata, IHasJsonSource
 {
@@ -31,7 +31,7 @@ internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, CodeDa
     // internal TypedItemOfEntity
 
     public IEntity Entity { get; } = entity;
-    private CodeDataFactory Cdf { get; } = cdf;
+    private ICodeDataFactory Cdf { get; } = cdf;
 
     #endregion
 

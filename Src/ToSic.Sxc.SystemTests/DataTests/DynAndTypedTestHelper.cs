@@ -1,19 +1,19 @@
 ﻿using ToSic.Eav.Serialization;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Internal.Dynamic;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using static System.Text.Json.JsonSerializer;
-using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
 namespace ToSic.Sxc.DataTests;
 
 
-public class DynAndTypedTestHelper(CodeDataFactory factory, CodeDataWrapper wrapper, Generator<CodeJsonWrapper> codeJsonGenerator)
+public class DynAndTypedTestHelper(ICodeDataFactory factory, CodeDataWrapper wrapper, Generator<CodeJsonWrapper> codeJsonGenerator)
 {
     #region Helper / Factories
 
-    public CodeDataFactory Factory => factory;
+    public ICodeDataFactory Factory => factory;
 
     public CodeDataWrapper Wrapper => wrapper;
 

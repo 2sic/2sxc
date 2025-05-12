@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Data.Internal;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class Field(ITypedItem parent, string name, CodeDataFactory cdf) : IField
+public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IField
 {
     /// <inheritdoc />
     public string Name { get; } = name;

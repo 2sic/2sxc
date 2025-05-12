@@ -1,12 +1,13 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Data;
 
 // this can just be internal, it's only ever used as an interface
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class Publishing(ITypedItem currentItem, Internal.CodeDataFactory cdf) : HelperBase(cdf.Log, "Pub"), IPublishing
+internal class Publishing(ITypedItem currentItem, ICodeDataFactory cdf) : HelperBase(cdf.Log, "Pub"), IPublishing
 {
     private readonly IAppReader _appState = ((IAppWithInternal)cdf._CodeApiSvc.App).AppReader;
 

@@ -14,7 +14,7 @@ partial class CodeDataFactory
 
     public IEntity FakeEntity(int? appId) => dataBuilderLazy.Value.FakeEntity(appId ?? 0);
 
-    internal IEntity PlaceHolderInBlock(int? appIdOrNull, IEntity parent, string field)
+    public IEntity PlaceHolderInBlock(int? appIdOrNull, IEntity parent, string field)
     {
         var dummyEntity = FakeEntity(appIdOrNull ?? parent.AppId);
         return parent == null ? dummyEntity : EntityInBlockDecorator.Wrap(entity: dummyEntity, field: field, parent: parent);
@@ -27,7 +27,7 @@ partial class CodeDataFactory
     /// <param name="parent"></param>
     /// <param name="field"></param>
     /// <returns></returns>
-    internal IEnumerable<TTypedItem> CreateEmptyChildList<TTypedItem>(IEntity parent, string field) where TTypedItem : class, ITypedItem
+    public IEnumerable<TTypedItem> CreateEmptyChildList<TTypedItem>(IEntity parent, string field) where TTypedItem : class, ITypedItem
     {
         // Generate a marker/placeholder to remember what field this is etc.
         var fakeEntity = PlaceHolderInBlock(parent.AppId, parent, field);

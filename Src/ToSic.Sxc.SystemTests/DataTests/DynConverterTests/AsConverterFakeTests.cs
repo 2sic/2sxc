@@ -4,7 +4,7 @@ using ToSic.Sxc.Data.Internal;
 namespace ToSic.Sxc.DataTests.DynConverterTests;
 
 [Startup(typeof(StartupSxcCoreOnly))]
-public class AsConverterFakeTests(CodeDataFactory cdf)
+public class AsConverterFakeTests(ICodeDataFactory cdf)
 {
     [Fact]
     public void EntityFake()

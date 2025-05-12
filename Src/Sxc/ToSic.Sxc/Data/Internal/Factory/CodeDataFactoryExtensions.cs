@@ -10,7 +10,7 @@ internal static class CodeDataFactoryExtensions
     /// Will check if the CodeDataFactory exists and try to get the ServiceKit - or throw an error. 
     /// </summary>
     /// <exception cref="NotSupportedException"></exception>
-    internal static IServiceKitForTypedData GetServiceKitOrThrow(this CodeDataFactory cdf, [CallerMemberName] string cName = default)
+    internal static IServiceKitForTypedData GetServiceKitOrThrow(this ICodeDataFactory cdf, [CallerMemberName] string cName = default)
     {
         if (cdf == null)
             throw new NotSupportedException($"Trying to use {cName}(...) in a scenario where the {nameof(cdf)} is not available.");

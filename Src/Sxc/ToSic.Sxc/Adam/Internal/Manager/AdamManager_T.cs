@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Data;
-using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
+using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Adam.Internal;
 
@@ -24,7 +24,7 @@ public class AdamManager<TFolderId, TFileId>: AdamManager
         ]);
     }
 
-    public override AdamManager Init(IContextOfApp ctx, CodeDataFactory cdf, int compatibility)
+    public override AdamManager Init(IContextOfApp ctx, ICodeDataFactory cdf, int compatibility)
     {
         base.Init(ctx, cdf, compatibility);
         AdamFs = _adamFsLazy.Value;

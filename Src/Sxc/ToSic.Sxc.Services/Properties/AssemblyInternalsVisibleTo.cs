@@ -10,3 +10,4 @@
 [assembly: InternalsVisibleTo("ToSic.Sxc.Oqtane.Server")]
 
 [assembly: InternalsVisibleTo("ToSic.Sxc.UnitTests")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.SystemTests")]

@@ -1,8 +1,8 @@
 ﻿using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Internal;
-using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
 namespace ToSic.Sxc.Adam.Internal;
 
@@ -32,7 +32,7 @@ public class AdamContext<TFolderId, TFileId>: AdamContext
 
     // TODO: @2dm #AdamTyped
     public override AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid,
-        bool usePortalRoot, CodeDataFactory cdf)
+        bool usePortalRoot, ICodeDataFactory cdf)
     {
         var logCall = Log.Fn<AdamContext>($"..., usePortalRoot: {usePortalRoot}");
         AdamManager.Init(context, cdf, CompatibilityLevels.CompatibilityLevel10);

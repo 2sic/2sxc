@@ -1,6 +1,6 @@
 ﻿using ToSic.Lib.Helpers;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Services;
-using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
@@ -9,12 +9,12 @@ namespace ToSic.Sxc.Code.Internal;
 public partial class CodeApiService
 {
     [PrivateApi]
-    public CodeDataFactory Cdf => _cdf.Get(() =>
+    public ICodeDataFactory Cdf => _cdf.Get(() =>
     {
         Services.Cdf.ConnectToRoot(this);
         return Services.Cdf;
     });
-    private readonly GetOnce<CodeDataFactory> _cdf = new();
+    private readonly GetOnce<ICodeDataFactory> _cdf = new();
 
     #region AsDynamic Implementations
 

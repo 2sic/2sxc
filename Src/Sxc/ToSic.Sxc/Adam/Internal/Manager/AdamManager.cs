@@ -6,7 +6,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
-using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
+using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Adam.Internal;
 
@@ -22,18 +22,11 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
 {
     #region MyServices
 
-    public class MyServices: MyServicesBase
+    public class MyServices(LazySvc<ICodeDataFactory> cdf, AdamConfiguration adamConfiguration)
+        : MyServicesBase(connect: [cdf, adamConfiguration])
     {
-        public LazySvc<CodeDataFactory> Cdf { get; }
-        public AdamConfiguration AdamConfiguration { get; }
-
-        public MyServices(LazySvc<CodeDataFactory> cdf, AdamConfiguration adamConfiguration)
-        {
-            ConnectLogs([
-                Cdf = cdf,
-                AdamConfiguration = adamConfiguration
-            ]);
-        }
+        public LazySvc<ICodeDataFactory> Cdf { get; } = cdf;
+        public AdamConfiguration AdamConfiguration { get; } = adamConfiguration;
     }
 
     #endregion
@@ -50,7 +43,7 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
 
     #region Init
 
-    public virtual AdamManager Init(IContextOfApp ctx, CodeDataFactory cdf, int compatibility)
+    public virtual AdamManager Init(IContextOfApp ctx, ICodeDataFactory cdf, int compatibility)
     {
         var l = Log.Fn<AdamManager>();
         AppContext = ctx;
@@ -67,8 +60,8 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
 
     public ISite Site { get; private set; }
 
-    internal CodeDataFactory Cdf => _cdf ??= Services.Cdf.Value;
-    private CodeDataFactory _cdf;
+    internal ICodeDataFactory Cdf => _cdf ??= Services.Cdf.Value;
+    private ICodeDataFactory _cdf;
     #endregion
 
     #region Static Helpers

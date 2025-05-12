@@ -3,9 +3,9 @@
 /// <summary>
 /// This helps create sub-items for a specific context, obeying the rules of the context
 /// </summary>
-internal class SubDataFactory(CodeDataFactory cdf, bool propsRequired, ICanDebug canDebug)
+internal class SubDataFactory(ICodeDataFactory cdf, bool propsRequired, ICanDebug canDebug)
 {
-    public CodeDataFactory Cdf { get; } = cdf;
+    public ICodeDataFactory Cdf { get; } = cdf;
     public bool PropsRequired { get; } = propsRequired;
 
     /// <summary>
@@ -17,7 +17,7 @@ internal class SubDataFactory(CodeDataFactory cdf, bool propsRequired, ICanDebug
     public IDynamicEntity SubDynEntityOrNull(IEntity contents)
         => SubDynEntityOrNull(contents, Cdf, canDebug.Debug, propsRequired: PropsRequired);
 
-    internal static DynamicEntity SubDynEntityOrNull(IEntity contents, CodeDataFactory cdf, bool? debug, bool propsRequired)
+    internal static DynamicEntity SubDynEntityOrNull(IEntity contents, ICodeDataFactory cdf, bool? debug, bool propsRequired)
     {
         if (contents == null) return null;
         var result = cdf.AsDynamic(contents, propsRequired);

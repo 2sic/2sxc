@@ -6,8 +6,8 @@ using ToSic.Eav.Security.Internal;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Data.Internal;
 using static ToSic.Eav.Internal.Features.BuiltInFeatures;
-using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
 namespace ToSic.Sxc.Adam.Internal;
 
@@ -52,7 +52,7 @@ public abstract class AdamContext(AdamContext.MyServices services, string logNam
     /// <summary>
     /// Initializes the object and performs all the initial security checks
     /// </summary>
-    public virtual AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, CodeDataFactory cdf)
+    public virtual AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ICodeDataFactory cdf)
     {
         var callLog = Log.Fn<AdamContext>($"app: {context.AppReader.Show()}, field:{fieldName}, guid:{entityGuid}");
         Context = context;

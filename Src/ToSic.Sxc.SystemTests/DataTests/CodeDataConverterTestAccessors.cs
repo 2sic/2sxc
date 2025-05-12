@@ -7,9 +7,9 @@ namespace ToSic.Sxc.DataTests;
 
 internal static class CodeDataConverterTestAccessors
 {
-    public static ITypedItem AsItemTac(this CodeDataFactory cdf, object data, NoParamOrder noParamOrder = default, bool? required = default, ITypedItem fallback = default, bool? propsRequired = default, bool? mock = default)
+    public static ITypedItem AsItemTac(this ICodeDataFactory cdf, object data, NoParamOrder noParamOrder = default, bool? required = default, ITypedItem fallback = default, bool? propsRequired = default, bool? mock = default)
         => cdf.AsItem(data, noParamOrder, required, fallback, propsRequired, mock);
 
-    public static IEntity FakeEntityTac(this CodeDataFactory cdf, int? appId)
+    public static IEntity FakeEntityTac(this ICodeDataFactory cdf, int? appId)
         => cdf.FakeEntity(appId);
 }

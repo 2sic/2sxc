@@ -16,7 +16,6 @@ using ToSic.Sxc.Services.Templates;
 using ToSic.Sxc.Startup;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageService;
-using CodeDataFactory = ToSic.Sxc.Data.Internal.CodeDataFactory;
 
 namespace ToSic.Sxc.Services;
 
@@ -87,7 +86,9 @@ public static class SxcServicesStartup
         //services.TryAddTransient<DataSource16.MyServices>();
 
         // v16 AsConverter
-        services.TryAddTransient<CodeDataFactory>(sp => ActivatorUtilities.CreateInstance<CodeDataFactory>(sp));
+        //services.TryAddTransient<CodeDataFactory>(sp => ActivatorUtilities.CreateInstance<CodeDataFactory>(sp));
+        services.TryAddTransient<CodeDataFactory>();
+        services.TryAddTransient<ICodeDataFactory, CodeDataFactory>();
         services.TryAddTransient<CodeDataServices>();
 
         // Kits v14 - v16

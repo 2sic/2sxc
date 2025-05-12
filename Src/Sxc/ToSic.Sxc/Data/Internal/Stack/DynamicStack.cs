@@ -19,7 +19,7 @@ public class DynamicStack: DynamicObject,
 {
     #region Constructor and Helpers (Composition)
 
-    public DynamicStack(string name, Internal.CodeDataFactory cdf, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources)
+    public DynamicStack(string name, ICodeDataFactory cdf, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources)
     {
         Cdf = cdf;
         var stack = new PropertyStack().Init(name, sources);
@@ -27,7 +27,7 @@ public class DynamicStack: DynamicObject,
         PropertyLookup = new PropLookupStack(stack, () => Debug);
     }
     // ReSharper disable once InconsistentNaming
-    [PrivateApi] public Internal.CodeDataFactory Cdf { get; }
+    [PrivateApi] public ICodeDataFactory Cdf { get; }
     private readonly IPropertyStack _stack;
     private const bool Strict = false;
 

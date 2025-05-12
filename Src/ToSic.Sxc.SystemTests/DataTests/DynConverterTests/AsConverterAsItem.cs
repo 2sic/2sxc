@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.DataTests.DynConverterTests;
 
 [Startup(typeof(StartupSxcCoreOnly))]
-public class AsConverterAsItem(CodeDataFactory cdf)
+public class AsConverterAsItem(ICodeDataFactory cdf)
 {
     [Fact]
     public void AsItemWithFakeOk()

@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Data.Internal.Typed;
 public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeService> forCodeConverter)
     : WrapObjectTyped(scrubSvc, forCodeConverter), ITypedItem
 {
-    internal WrapObjectTypedItem Setup(ILazyLike<CodeDataFactory> cdf, CodeDataWrapper wrapper, PreWrapObject preWrap)
+    internal WrapObjectTypedItem Setup(ILazyLike<ICodeDataFactory> cdf, CodeDataWrapper wrapper, PreWrapObject preWrap)
     {
         Setup(preWrap);
         Wrapper = wrapper;
@@ -33,8 +33,8 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
         return this;
     }
 
-    private CodeDataFactory Cdf => _cdf.Value;
-    private ILazyLike<CodeDataFactory> _cdf;
+    private ICodeDataFactory Cdf => _cdf.Value;
+    private ILazyLike<ICodeDataFactory> _cdf;
     private CodeDataWrapper Wrapper { get; set; }
 
 
