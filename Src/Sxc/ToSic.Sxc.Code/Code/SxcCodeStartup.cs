@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.SourceCode;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
@@ -39,6 +41,10 @@ public static class SxcCodeStartup
         //services.TryAddTransient<CodeDataFactory>();
         services.TryAddTransient<ICodeDataFactory, CodeDataFactory>();
         services.TryAddTransient<CodeDataServices>();
+
+        // CmsContext / MyContext
+        services.TryAddTransient<ICmsContext, CmsContext>();
+
         return services;
     }
 

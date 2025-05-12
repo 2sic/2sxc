@@ -199,8 +199,8 @@ public static partial class RegisterSxcServices
         services.AddKoi();
         services.AddSxcCoreFallbackServices();
 
-        // CmsContext / MyContext
-        services.TryAddTransient<ICmsContext, CmsContext>();
+        //// CmsContext / MyContext
+        //services.TryAddTransient<ICmsContext, CmsContext>();
 
         return services;
     }
