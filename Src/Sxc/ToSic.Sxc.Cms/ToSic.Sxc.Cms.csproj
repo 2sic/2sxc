@@ -49,9 +49,11 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>-->
-    <!--<Reference Include="ToSic.Razor">
+
+    <!--RazorBlade is only included in the ToSic.Sxc.Cms for some string operations; could be removed if necessary-->
+    <Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.dll</HintPath>
-    </Reference>-->
+    </Reference>
     <!--<Reference Include="Microsoft.CSharp" />-->
   </ItemGroup>
 
@@ -63,12 +65,9 @@
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />-->
 
-    <!--<Reference Include="ToSic.Razor">
+    <!--RazorBlade is only included in the ToSic.Sxc.Cms for some string operations; could be removed if necessary-->
+    <Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
-    </Reference>-->
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Cms\Publishing.Internal\" />
+    </Reference>
   </ItemGroup>
 </Project>

@@ -9,9 +9,6 @@ namespace ToSic.Sxc.Cms.Internal.Publishing;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class PagePublishingGetSettingsOptional() : ServiceBase("Cms.PubNone"), IPagePublishingGetSettings
 {
-    #region Constructors
-
-    #endregion
 
     public BlockPublishingSettings SettingsOfModule(int moduleId) => new()
     {

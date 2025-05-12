@@ -34,11 +34,11 @@ static partial class RegisterSxcServices
         services.TryAddTransient<IPlatformAppInstaller, BasicEnvironmentInstaller>();
         services.TryAddTransient<IPlatformModuleUpdater, BasicModuleUpdater>();
         //services.TryAddTransient<IPagePublishingResolver, BasicPagePublishingResolver>();
-        services.TryAddTransient<IPagePublishing, BasicPagePublishing>();
+        //services.TryAddTransient<IPagePublishing, BasicPagePublishing>();
 
-        // This must never have a TRY! but only an AddTransient, as many can be registered by this type
-        services.AddTransient<IPagePublishingGetSettings, PagePublishingGetSettingsOptional>(); // new v13 BETA #SwitchServicePagePublishingResolver
-        services.AddTransient<IPagePublishingGetSettings, PagePublishingGetSettingsForbidden>();
+        //// This must never have a TRY! but only an AddTransient, as many can be registered by this type
+        //services.AddTransient<IPagePublishingGetSettings, PagePublishingGetSettingsOptional>(); // new v13 BETA #SwitchServicePagePublishingResolver
+        //services.AddTransient<IPagePublishingGetSettings, PagePublishingGetSettingsForbidden>();
 
         // Code / Dynamic Code
         //services.TryAddTransient<ICodeApiServiceFactory, CodeApiServiceFactory>();
