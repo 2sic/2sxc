@@ -2701,6 +2701,21 @@ BEGIN
 END
 GO
 
+-- 17. Adding new table type TsDynDataIntList
+-- 2025-05-12, stv, test alternative strategy to load values
+-- DROP TYPE IF EXISTS [dbo].[TsDynDataIntList];
+-- GO
+/*
+IF TYPE_ID(N'[dbo].[TsDynDataIntList]') IS NULL
+BEGIN
+    PRINT '... 17.1. Creating new table type TsDynDataIntList for TVP';
+    CREATE TYPE [dbo].[TsDynDataIntList] AS TABLE
+    (
+        Id int NOT NULL
+    );
+END
+GO
+*/
 
 PRINT '*** Finished migration script.';
 GO
