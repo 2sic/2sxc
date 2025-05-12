@@ -8,7 +8,6 @@ using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.Integration.Modules;
 using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Polymorphism.Internal;
-using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc.Startup;
 
@@ -76,8 +75,8 @@ static partial class RegisterSxcServices
         //services.TryAddTransient<IUserRolesProvider, UserRolesProviderUnknown>();
         //services.TryAddTransient<SitesDataSourceProvider, SitesDataSourceProviderUnknown>();
 
-        // v16
-        services.TryAddScoped<IJsApiService, JsApiServiceUnknown>();
+        //// v16
+        //services.TryAddScoped<IJsApiService, JsApiServiceUnknown>();
 
         //// v17.01
         //services.TryAddTransient<IUserService, UserService>();

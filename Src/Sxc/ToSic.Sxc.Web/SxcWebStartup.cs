@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.Web.Internal.DotNet;
 using ToSic.Sxc.Web.Internal.EditUi;
 
 namespace ToSic.Sxc;
@@ -17,10 +18,23 @@ public static class SxcWebStartup
 
         services.AddTransient<ILookUp, QueryStringLookUp>();
 
+        // WIP - add net-core specific stuff
+        services.AddNetVariations();
+
 
         return services;
     }
 
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    public static IServiceCollection AddNetVariations(this IServiceCollection services)
+    {
+#if NETFRAMEWORK
+        // WebForms implementations
+        services.TryAddScoped<IHttp, HttpNetFramework>();
+#else
+        services.TryAddTransient<IHttp, HttpNetCore>();
+#endif
+        return services;
+    }
 
-        
 }

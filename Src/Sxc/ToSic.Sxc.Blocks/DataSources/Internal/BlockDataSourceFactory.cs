@@ -49,7 +49,7 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
             // Note: Deprecated feature in v13, remove ca. 14 - should warn
             // TODO: #WarnDeprecated
 #if NETFRAMEWORK
-            if (contextDataSource is Internal.Compatibility.IBlockDataSource old)
+            if (contextDataSource is Compatibility.IBlockDataSource old)
             {
 #pragma warning disable CS0618 // Type or member is obsolete
                 old.Publish.Enabled = view.PublishData;

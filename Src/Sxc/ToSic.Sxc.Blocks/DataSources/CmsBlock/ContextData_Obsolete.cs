@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps;
 using ToSic.Lib.Code.InfoSystem;
 using ToSic.Lib.DI;
-using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.DataSources.Internal.Compatibility;
 using static ToSic.Lib.Code.Infos.CodeInfoObsolete;
 
@@ -15,10 +14,8 @@ partial class ContextData: IBlockDataSource
     private readonly IAppReaderFactory _appReaders;
 
 #pragma warning disable 618
-    [System.Obsolete(
-        "Old property on this data source, should really not be used at all. Must add warning in v13, and remove ca. v15")]
+    [Obsolete("Old property on this data source, should really not be used at all. Must add warning in v13, and remove ca. v15")]
     [PrivateApi]
-    [field: System.Obsolete]
     public CacheWithGetContentType Cache
     {
         get

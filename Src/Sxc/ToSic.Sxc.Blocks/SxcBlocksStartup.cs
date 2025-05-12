@@ -5,6 +5,7 @@ using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.LookUp.Internal;
+using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc;
 
@@ -48,6 +49,10 @@ public static class SxcBlocksStartup
 
         services.TryAddTransient<IAppDataConfigProvider, SxcAppDataConfigProvider>(); // new v17
 
+        // JS UI Context for render
+        services.TryAddTransient<JsContextAll>();
+        services.TryAddTransient<JsContextLanguage>();
+        services.TryAddScoped<JsApiCacheService>(); // v16.01
 
         services.AddSxcBlocksFallback();
 
@@ -59,6 +64,8 @@ public static class SxcBlocksStartup
 
         services.TryAddTransient<IModuleAndBlockBuilder, ModuleAndBlockBuilderUnknown>();
 
+        // v16
+        services.TryAddScoped<IJsApiService, JsApiServiceUnknown>();
 
         return services;
     }

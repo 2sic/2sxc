@@ -15,7 +15,8 @@ internal class DnnHttp: HttpNetFramework
     {
         get
         {
-            if (_queryStringValues != null) return _queryStringValues;
+            if (field != null)
+                return field;
 
             // This would be the better way, but it doesn't work, because DNN will often create paths like
             // /value/27 instead of ?value=27
@@ -25,11 +26,9 @@ internal class DnnHttp: HttpNetFramework
             //var lightList = HttpUtility.ParseQueryString(queryPart);
 
             var rewrapped = new NameValueCollection(base.QueryStringParams);
-            return _queryStringValues = FilterOutDnnParams(rewrapped);
+            return field = FilterOutDnnParams(rewrapped);
         }
     }
-
-    private NameValueCollection _queryStringValues;
 
     private NameValueCollection FilterOutDnnParams(NameValueCollection original)
     {

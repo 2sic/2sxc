@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace ToSic.Sxc.Web.Internal.JsContext;
 
@@ -49,7 +48,4 @@ public class JsApi
     /// </summary>
     [JsonIgnore]
     public string Source => "module JsApi";
-
-    public static string JsApiJson(JsApi jsApi) => JsonSerializer.Serialize(jsApi);
-
 }

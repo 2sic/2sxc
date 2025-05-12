@@ -14,17 +14,6 @@ internal class WebResourceProcessor(IFeaturesService features, string cdnSource,
 {
     #region Constants
 
-    // Note: this should not change often
-    // As usually new versions of assets will often run side-by side with older versions
-    // But do keep in sync w/2sxc versions (possibly just not upgrade as only small things change) for clarity
-    public const string VersionSuffix = "/v15";
-
-    //internal const string Cdn2SxcRoot = "https://cdn.2sxc.org/packages";
-    //internal const string CdnLocalRoot = "/cdn/packages";
-
-    internal const string CdnDefault = "cdn";
-    //internal const string Cdn2Sxc = "cdn.2sxc.org";
-    //internal const string CdnLocal = "local";
 
     private const string WebResHtmlField = "Html";
 
@@ -53,7 +42,7 @@ internal class WebResourceProcessor(IFeaturesService features, string cdnSource,
         // TODO: HANDLE AUTO-ENABLE-OPTIMIZATIONS
         var autoOptimize = webRes.Get(WebResAutoOptimizeField, fallback: false);
 
-        if (!CdnSource.HasValue() || CdnSource == CdnDefault)
+        if (!CdnSource.HasValue() || CdnSource == WebResourceConstants.CdnDefault)
             return l.Return(new() { NameId = key, Html = html, AutoOptimize = autoOptimize }, "ok, using built-in cdn-path");
 
         // check if feature is enabled
@@ -61,7 +50,7 @@ internal class WebResourceProcessor(IFeaturesService features, string cdnSource,
             return l.Return(new() { NameId = key, Html = html, AutoOptimize = autoOptimize }, "ok, cdn-swap feature not enabled");
 
         // Set new root based on CdnSource settings
-        var newRoot = CdnSource + VersionSuffix;
+        var newRoot = CdnSource + WebResourceConstants.VersionSuffix;
 
         // Replacements will be delayed until preparing to generate the final HTML
         // to be sure we only replace things in the url.

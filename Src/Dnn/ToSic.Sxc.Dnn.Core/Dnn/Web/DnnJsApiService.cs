@@ -1,4 +1,5 @@
-﻿using DotNetNuke.Entities.Portals;
+﻿using System.Text.Json;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Framework;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -16,7 +17,7 @@ internal class DnnJsApiService(JsApiCacheService jsApiCache, RsaCryptographyServ
     public const string PortalIdParamName = "portalId";
 
     public string GetJsApiJson(int? pageId = null, string siteRoot = null, string rvt = null, bool withPublicKey = false) 
-        => JsApi.JsApiJson(GetJsApi(pageId, siteRoot, rvt, withPublicKey: withPublicKey));
+        => JsonSerializer.Serialize(GetJsApi(pageId, siteRoot, rvt, withPublicKey: withPublicKey));
 
     public JsApi GetJsApi(int? pageId, string siteRoot, string rvt, bool withPublicKey)
     {

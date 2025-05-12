@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Internal;
 using ToSic.Eav.Internal.Environment;
@@ -16,12 +15,9 @@ using ToSic.Sxc.Integration;
 using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Internal.Plumbing;
-using ToSic.Sxc.LookUp.Internal;
 using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
-using ToSic.Sxc.Web.Internal.DotNet;
-using ToSic.Sxc.Web.Internal.JsContext;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.Internal.PageService;
 
@@ -91,9 +87,9 @@ public static partial class RegisterSxcServices
 
 
         // JS UI Context
-        services.TryAddTransient<JsContextAll>();
-        services.TryAddTransient<JsContextLanguage>();
-        services.TryAddScoped<JsApiCacheService>(); // v16.01
+        //services.TryAddTransient<JsContextAll>();
+        //services.TryAddTransient<JsContextLanguage>();
+        //services.TryAddScoped<JsApiCacheService>(); // v16.01
 
         // Adam stuff
         services.TryAddTransient<AdamSecurityChecksBase, AdamSecurityChecksBasic>();
@@ -102,8 +98,8 @@ public static partial class RegisterSxcServices
 
         services.AddTransient<AdamManager.MyServices>();
 
-        // WIP - add net-core specific stuff
-        services.AddNetVariations();
+        //// WIP - add net-core specific stuff
+        //services.AddNetVariations();
 
         // Polymorphism
         services.TryAddTransient<Polymorphism.Internal.PolymorphConfigReader>();
@@ -228,16 +224,16 @@ public static partial class RegisterSxcServices
     }
 
 
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    public static IServiceCollection AddNetVariations(this IServiceCollection services)
-    {
-#if NETFRAMEWORK
-        // WebForms implementations
-        services.TryAddScoped<IHttp, HttpNetFramework>();
-#else
-        services.TryAddTransient<IHttp, HttpNetCore>();
-#endif
-        return services;
-    }
+//    [ShowApiWhenReleased(ShowApiMode.Never)]
+//    public static IServiceCollection AddNetVariations(this IServiceCollection services)
+//    {
+//#if NETFRAMEWORK
+//        // WebForms implementations
+//        services.TryAddScoped<IHttp, HttpNetFramework>();
+//#else
+//        services.TryAddTransient<IHttp, HttpNetCore>();
+//#endif
+//        return services;
+//    }
         
 }

@@ -6,7 +6,6 @@ using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Services;
 using static ToSic.Eav.Apps.AppStackConstants;
 using static ToSic.Sxc.Web.WebResources.WebResourceConstants;
-using static ToSic.Sxc.Web.WebResources.WebResourceProcessor;
 
 namespace ToSic.Sxc.Web.Internal.EditUi;
 
