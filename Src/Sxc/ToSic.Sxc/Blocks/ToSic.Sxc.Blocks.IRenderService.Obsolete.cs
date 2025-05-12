@@ -1,6 +1,5 @@
 ﻿#if NETFRAMEWORK
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Blocks;

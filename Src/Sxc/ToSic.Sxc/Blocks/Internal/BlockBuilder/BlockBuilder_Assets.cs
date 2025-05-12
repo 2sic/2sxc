@@ -12,11 +12,17 @@ public partial class BlockBuilder
 
     private void PreSetAppDependenciesToRoot()
     {
-        if (Block == null) return;
-        if (RootBuilder is not BlockBuilder parentBlock) return;
-        if (Block.AppId != 0)// && Block.App?.AppState != null)
-            if (parentBlock.DependentApps.All(a => a.AppId != Block.AppId)) // add dependent appId only ounce
-                parentBlock.DependentApps.Add(new DependentApp { AppId = Block.AppId });
+        // this is only relevant for the root builder, so we can skip it for child builders
+        if (Block == null || Block.AppId == 0)
+            return;
+
+        // Cast to current object type to access internal APIs
+        if ((Block.RootBlock.BlockBuilder ?? this) is not BlockBuilder rootBuilder)
+            return;
+
+        // add dependent appId only once
+        if (rootBuilder.DependentApps.All(a => a.AppId != Block.AppId))
+            rootBuilder.DependentApps.Add(new DependentApp { AppId = Block.AppId });
     }
 
 }

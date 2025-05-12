@@ -24,6 +24,7 @@
 [assembly: InternalsVisibleTo("ToSic.Sxc.Images")]
 
 
+[assembly: InternalsVisibleTo("ToSic.Sxc.Blocks")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Cms")]
 
 [assembly: InternalsVisibleTo("ToSic.Sxc.LightSpeed")]

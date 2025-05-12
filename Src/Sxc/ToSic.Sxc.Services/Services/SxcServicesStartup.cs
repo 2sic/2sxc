@@ -33,15 +33,15 @@ public static class SxcServicesStartup
 
         services.AddObsoleteServicesAndKits();
 
-        services.TryAddTransient<Services.IRenderService, RenderService>();  // new 12.05
-        services.TryAddTransient<RenderService.MyServices>();
-        services.TryAddTransient<SimpleRenderer>();
-        services.TryAddTransient<InTextContentBlockRenderer>();
-#if NETFRAMEWORK
-#pragma warning disable CS0618
-        services.TryAddTransient<Blocks.IRenderService, RenderService>();  // Obsolete, but keep for the few apps we already released in v12
-#pragma warning restore CS0618
-#endif
+//        services.TryAddTransient<Services.IRenderService, RenderService>();  // new 12.05
+//        services.TryAddTransient<RenderService.MyServices>();
+//        services.TryAddTransient<SimpleRenderer>();
+//        services.TryAddTransient<InTextContentBlockRenderer>();
+//#if NETFRAMEWORK
+//#pragma warning disable CS0618
+//        services.TryAddTransient<Blocks.IRenderService, RenderService>();  // Obsolete, but keep for the few apps we already released in v12
+//#pragma warning restore CS0618
+//#endif
 
         // WIP 12.05 - json converter
         services.TryAddTransient<IJsonService, JsonService>();

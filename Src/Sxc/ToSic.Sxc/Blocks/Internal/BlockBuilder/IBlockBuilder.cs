@@ -11,6 +11,8 @@ namespace ToSic.Sxc.Blocks.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IBlockBuilder: IHasLog
 {
+    public IBlockBuilder Setup(IBlock cb);
+
     /// <summary>
     /// 
     /// </summary>
@@ -30,11 +32,6 @@ public interface IBlockBuilder: IHasLog
     /// The real block / unit of content which will be rendered. 
     /// </summary>
     IBlock Block { get; }
-
-    /// <summary>
-    /// The root block, which controls what assets / js etc. will be rendered
-    /// </summary>
-    IBlockBuilder RootBuilder { get; }
 
     /// <summary>
     /// Determines if the output should be wrapped in a div or not

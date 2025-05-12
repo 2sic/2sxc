@@ -44,22 +44,17 @@ public partial class BlockBuilder(BlockBuilder.MyServices services)
 
     #region Constructor
 
-    public BlockBuilder Init(IBlockBuilder rootBlockBuilderOrNull, IBlock cb)
+    public IBlockBuilder Setup(IBlock cb)
     {
-        Log.A($"get CmsInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}");
+        var l = Log.Fn<BlockBuilder>($"get CmsInstance for a:{cb.AppId} cb:{cb.ContentBlockId}");
         // the root block is the main container. If there is none yet, use this, as it will be the root
-        RootBuilder = rootBlockBuilderOrNull ?? this;
         Block = cb;
-        return this;
+        return l.Return(this);
     }
-    #region Info for current runtime instance
+
 
     /// <inheritdoc />
     public IBlock Block { get; private set; }
-
-    public IBlockBuilder RootBuilder { get; private set; }
-    #endregion
-
 
 
     #endregion

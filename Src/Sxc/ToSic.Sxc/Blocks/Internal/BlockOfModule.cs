@@ -19,7 +19,7 @@ public sealed class BlockFromModule(BlockBase.MyServices services) : BlockBase(s
         var l = Log.Fn<BlockFromModule>(timer: true);
         Init(ctx, ctx.Module.BlockIdentifier);
         IsContentApp = ctx.Module.IsContent;
-        CompleteInit(null, ctx.Module.BlockIdentifier, ctx.Module.Id);
+        CompleteInit(null, null, ctx.Module.BlockIdentifier, ctx.Module.Id);
         return l.ReturnAsOk(this);
     }
 

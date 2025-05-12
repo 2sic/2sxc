@@ -25,13 +25,13 @@ internal partial class EditService(IJsonService jsonService)
 
     internal IEditService SetBlock(ICodeApiService codeRoot, IBlock block)
     {
-        Block = block;
+        //Block = block;
         var user = codeRoot?.CmsContext?.User;
-        Enabled = Block?.Context.Permissions.IsContentAdmin ?? (user?.IsSiteAdmin ?? false);
+        Enabled = block?.Context.Permissions.IsContentAdmin ?? (user?.IsSiteAdmin ?? false);
         return this;
     }
 
-    protected IBlock Block;
+    //protected IBlock Block;
 
     #region Attribute-helper
 

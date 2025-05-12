@@ -49,16 +49,16 @@ public static partial class RegisterSxcServices
         // Code
         //services.TryAddTransient<CodeApiService.MyServices>();
 
-        // Block Editors
-        services.TryAddTransient<BlockEditorForEntity>();
-        services.TryAddTransient<BlockEditorForModule>();
-        services.TryAddTransient<BlockEditorBase.MyServices>();
+        //// Block Editors
+        //services.TryAddTransient<BlockEditorForEntity>();
+        //services.TryAddTransient<BlockEditorForModule>();
+        //services.TryAddTransient<BlockEditorBase.MyServices>();
 
         // Engine and Rendering
         //services.TryAddTransient<EngineFactory>();
         //services.TryAddTransient<IEngineFactory, EngineFactory>();
-        services.TryAddTransient<BlockBuilder>();
-        services.TryAddTransient<BlockBuilder.MyServices>();
+        //services.TryAddTransient<BlockBuilder>();
+        //services.TryAddTransient<BlockBuilder.MyServices>();
 
         // Block functionality
         services.TryAddTransient<BlockDataSourceFactory>();
@@ -159,7 +159,7 @@ public static partial class RegisterSxcServices
         //// v13 LightSpeed
         //services.TryAddTransient<IOutputCache, LightSpeed>();
 
-        services.TryAddTransient<BlockEditorSelector>();
+        //services.TryAddTransient<BlockEditorSelector>();
 
         // Sxc StartUp Routines - MUST be AddTransient, not TryAddTransient so many start-ups can be registered
         services.AddTransient<IStartUpRegistrations, SxcStartUpRegistrations>();

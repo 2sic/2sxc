@@ -58,7 +58,7 @@ public class BlockEditorForEntity : BlockEditorBase
 
     private void Update(Dictionary<string, object> newValues)
     {
-        var parentBlockAppState = ((IAppWithInternal)((BlockBase)Block).Parent.App).AppReader;
+        var parentBlockAppState = ((IAppWithInternal)((BlockBase)Block).ParentBlock.App).AppReader;
         _entityUpdate.New(parentBlockAppState)
             .UpdateParts(Math.Abs(Block.ContentBlockId), newValues, new());
     }

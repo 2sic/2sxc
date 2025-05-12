@@ -12,7 +12,7 @@ internal class CmsBlock(IBlock block) : ICmsBlock
     public Guid Guid => block?.Configuration.Guid ?? Guid.Empty;
 
     /// <inheritdoc />
-    public bool IsRoot => block != null && block.BlockBuilder.RootBuilder == block.BlockBuilder;
+    public bool IsRoot => block is { ParentBlock: null };
 
     /// <inheritdoc />
     public IMetadataOf Metadata => block.Configuration.Metadata;

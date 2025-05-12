@@ -66,4 +66,16 @@ public interface IBlock: IAppIdentity, IHasLog
 
     [PrivateApi("WIP 13.x do get/set if toolbar/context are used")]
     List<string> BlockFeatureKeys { get; }
+
+    /// <summary>
+    /// The parent block of this block, if any.
+    /// </summary>
+    [PrivateApi]
+    IBlock? ParentBlock { get; }
+
+    /// <summary>
+    /// The root block of this block - can be the same as `this`.
+    /// </summary>
+    [PrivateApi]
+    public IBlock RootBlock { get; }
 }

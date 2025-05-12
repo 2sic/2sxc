@@ -26,8 +26,6 @@ public class RenderService: ServiceForDynamicCode,
 #pragma warning restore CS0618
 #endif
 {
-    internal const string InputTypeForContentBlocksField = "entity-content-blocks";
-
     #region Constructor & ConnectToRoot
 
     public class MyServices(

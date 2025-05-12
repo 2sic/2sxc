@@ -26,12 +26,12 @@ public abstract class BlockBase(BlockBase.MyServices services, string logName, o
         GenWorkPlus<WorkBlocks> appBlocks,
         LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
         LazySvc<App> appLazy,
-        LazySvc<BlockBuilder> blockBuilder)
+        LazySvc<IBlockBuilder> blockBuilder)
         : MyServicesBase(connect: [bdsFactoryLazy, appLazy, blockBuilder, workViews, appBlocks])
     {
         internal LazySvc<BlockDataSourceFactory> BdsFactoryLazy { get; } = bdsFactoryLazy;
         internal LazySvc<App> AppLazy { get; } = appLazy;
-        public LazySvc<BlockBuilder> BlockBuilder { get; } = blockBuilder;
+        public LazySvc<IBlockBuilder> BlockBuilder { get; } = blockBuilder;
         public GenWorkPlus<WorkViews> WorkViews { get; } = workViews;
         public GenWorkPlus<WorkBlocks> AppBlocks { get; } = appBlocks;
     }
@@ -43,10 +43,14 @@ public abstract class BlockBase(BlockBase.MyServices services, string logName, o
         AppId = appId.AppId;
     }
 
-    protected bool CompleteInit(IBlockBuilder rootBuilderOrNull, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded)
+    protected bool CompleteInit(IBlock parentBlockOrNull, IBlockBuilder rootBuilderOrNull, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded)
     {
         var l = Log.Fn<bool>();
 
+        ParentBlock = parentBlockOrNull;
+        RootBlock = parentBlockOrNull?.RootBlock ?? this; // if parent is null, this is the root block
+
+        // Note: this is "just" the module id, not the block id
         ParentId = Context.Module.Id;
         ContentBlockId = blockNumberUnsureIfNeeded;
 
@@ -54,7 +58,7 @@ public abstract class BlockBase(BlockBase.MyServices services, string logName, o
 
         // 2020-09-04 2dm - new change, moved BlockBuilder up, so it's never null - may solve various issues
         // but may introduce new ones
-        BlockBuilder = Services.BlockBuilder.Value.Init(rootBuilderOrNull, this);
+        BlockBuilder = Services.BlockBuilder.Value.Setup(this);
 
         switch (AppId)
         {
@@ -71,14 +75,15 @@ public abstract class BlockBase(BlockBase.MyServices services, string logName, o
         l.A("Real app specified, will load App object with Data");
 
         // Get App for this block
-        var app = Services.AppLazy.Value; //.PreInit(Context.Site);
+        var app = Services.AppLazy.Value;
         app.Init(Context.Site, this.PureIdentity(), new SxcAppDataConfigSpecs { BlockForLookupOrNull = this });
         App = app;
         l.A("App created");
 
         // note: requires EditAllowed, which isn't ready till App is created
         var appWorkCtxPlus = Services.WorkViews.CtxSvc.ContextPlus(this);
-        Configuration = Services.AppBlocks.New(appWorkCtxPlus).GetOrGeneratePreviewConfig(blockId);
+        Configuration = Services.AppBlocks.New(appWorkCtxPlus)
+            .GetOrGeneratePreviewConfig(blockId);
 
         // handle cases where the content group is missing - usually because of incomplete import
         if (Configuration.DataIsMissing)
@@ -89,13 +94,16 @@ public abstract class BlockBase(BlockBase.MyServices services, string logName, o
         }
 
         // use the content-group template, which already covers stored data + module-level stored settings
-        View = new BlockViewLoader(Log).PickView(this, Configuration.View, Context, Services.WorkViews.New(appWorkCtxPlus));
+        View = new BlockViewLoader(Log)
+            .PickView(this, Configuration.View, Context, Services.WorkViews.New(appWorkCtxPlus));
         return l.ReturnTrue($"ok a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
     }
 
     #endregion
 
-    public IBlock Parent;
+    public IBlock ParentBlock { get; private set; }
+
+    public IBlock RootBlock { get; private set; }
 
     public int ZoneId { get; protected set; }
 

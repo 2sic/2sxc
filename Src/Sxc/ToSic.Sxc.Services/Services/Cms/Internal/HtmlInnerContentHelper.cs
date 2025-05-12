@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
-using static ToSic.Sxc.Blocks.Internal.Render.RenderService;
 
 namespace ToSic.Sxc.Services.CmsService.Internal;
 
@@ -25,7 +25,7 @@ internal class HtmlInnerContentHelper()
         var nextField = sortedFields[index + 1];
         var nextIsEntityField = nextField.Type == ValueTypes.Entity;
         var nextInputType = nextField.InputType();
-        var nextHasContentBlocks = nextInputType.EqualsInsensitive(InputTypeForContentBlocksField);
+        var nextHasContentBlocks = nextInputType.EqualsInsensitive(RenderConstants.InputTypeForContentBlocksField);
 
         // Next ist not inner content, exit early
         if (!nextIsEntityField || !nextHasContentBlocks)
