@@ -9,8 +9,6 @@ using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
