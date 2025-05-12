@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc", "Sxc\ToSic.Sxc\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dnn", "Dnn", "{82831295-FA89-4F5A-9420-DB6E15A8AD99}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2sxc Core", "2sxc Core", "{5CD8015A-76D8-4633-8469-53B62A6C1894}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2sxc Parts", "2sxc Parts", "{5CD8015A-76D8-4633-8469-53B62A6C1894}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Eav", "Eav", "{2DBCC960-1C0B-494F-9E21-8707A1D344C3}"
 EndProject
@@ -187,7 +187,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.LightSpeed", "Sxc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Web", "Sxc\ToSic.Sxc.Web\ToSic.Sxc.Web.csproj", "{1755959F-9267-7500-91F3-72E0477F0532}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2sxc Base", "2sxc Base", "{94A758E0-FE77-4E90-8ACF-75DDDC6224B5}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2sxc Core", "2sxc Core", "{94A758E0-FE77-4E90-8ACF-75DDDC6224B5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2sxc Parts Tests", "2sxc Parts Tests", "{717061B4-B843-4619-8B96-E8767D57B06F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
