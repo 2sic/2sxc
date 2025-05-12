@@ -11,15 +11,12 @@ using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.DataSources.Internal;
-using ToSic.Sxc.Engines;
-using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Integration;
 using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.Integration.Paths;
@@ -27,12 +24,10 @@ using ToSic.Sxc.Internal.Plumbing;
 using ToSic.Sxc.LookUp.Internal;
 using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Polymorphism.Internal;
-using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.DotNet;
 using ToSic.Sxc.Web.Internal.EditUi;
 using ToSic.Sxc.Web.Internal.JsContext;
-using ToSic.Sxc.Web.Internal.LightSpeed;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.Internal.PageService;
 
@@ -162,8 +157,8 @@ public static partial class RegisterSxcServices
         services.TryAddScoped(typeof(PageScopedService<>));
 
 
-        // v13 LightSpeed
-        services.TryAddTransient<IOutputCache, LightSpeed>();
+        //// v13 LightSpeed
+        //services.TryAddTransient<IOutputCache, LightSpeed>();
 
         services.TryAddTransient<BlockEditorSelector>();
 
@@ -203,7 +198,7 @@ public static partial class RegisterSxcServices
 
         // v18
         //services.TryAddSingleton<Util>();
-        services.TryAddTransient<LightSpeedStats>();
+        //services.TryAddTransient<LightSpeedStats>();
         //services.TryAddTransient<SourceCodeHasher>();
 
         // Add possibly missing fallback services

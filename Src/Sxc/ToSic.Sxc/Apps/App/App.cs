@@ -24,6 +24,7 @@ public partial class App(
     LazySvc<CodeDataFactory> cdfLazy,
     LazySvc<CodeInfoService> codeChanges,
     IAppPathsMicroSvc pathFactoryTemp)
+    // Note: If this is ever changed to not inherit from the EavApp, make sure you correct/update the LightSpeed code as well as it checks for this base class
     : EavApp(services, "App.SxcApp", connect: [globalPaths, cdfLazy, codeChanges, pathFactoryTemp]), IApp
 {
     #region Special objects

@@ -34,6 +34,8 @@ public class StartupSxcCoreOnly
             .AddSxcBlocks()
             .AddSxcCms()
             .AddSxcServices()
+            .AddSxcWeb()
+            .AddSxcLightSpeed()
             .AddLibCore()
             .AddEavDataPersistence()
             .AddEavDataBuild()

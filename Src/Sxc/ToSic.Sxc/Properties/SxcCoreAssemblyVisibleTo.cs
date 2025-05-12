@@ -25,3 +25,5 @@
 
 
 [assembly: InternalsVisibleTo("ToSic.Sxc.Cms")]
+
+[assembly: InternalsVisibleTo("ToSic.Sxc.LightSpeed")]

@@ -33,6 +33,8 @@ public class StartupSxcWithDb
             .AddSxcBlocks()
             .AddSxcCms()
             .AddSxcServices()
+            .AddSxcWeb()
+            .AddSxcLightSpeed()
             .AddEavEverything()
             .AddLibFeatSys();
 

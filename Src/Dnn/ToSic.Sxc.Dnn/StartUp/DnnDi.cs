@@ -56,6 +56,8 @@ public static class DnnDi
             .AddSxcBlocks()
             .AddSxcCms()
             .AddSxcServices()
+            .AddSxcWeb()
+            .AddSxcLightSpeed()
             .AddSxcCodeGen() // Code generation services
             .AddEavEverything()
             .AddEavWebApiTypedAfterEav()

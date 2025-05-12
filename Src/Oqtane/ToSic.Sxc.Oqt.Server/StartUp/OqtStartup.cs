@@ -83,6 +83,8 @@ public class OqtStartup : IServerStartup
             .AddSxcBlocks()
             .AddSxcCms()
             .AddSxcServices()
+            .AddSxcWeb()
+            .AddSxcLightSpeed()             // LightSpeed services
             .AddSxcCodeGen()                // Code generation services
             .AddEavEverything()             // Core EAV services
             .AddEavWebApiTypedAfterEav()
