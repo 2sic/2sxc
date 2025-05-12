@@ -4,7 +4,7 @@
   <PropertyGroup>
     <TargetFrameworks>net472;net9.0;</TargetFrameworks>
     <RootNamespace>ToSic.Sxc</RootNamespace>
-    <AssemblyName>ToSic.Sxc.Blocks</AssemblyName>
+    <AssemblyName>ToSic.Sxc.Apps</AssemblyName>
     <Deterministic>true</Deterministic>
     <!--<FileAlignment>512</FileAlignment>-->
     <NoWarn>7035;CS1591</NoWarn>
@@ -21,6 +21,13 @@
     <!-- end: Don't generate... -->
   </PropertyGroup>
 
+
+  <ItemGroup>
+    <Compile Remove="NewFolder\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
+    <None Remove="NewFolder\**" />
+  </ItemGroup>
+
   <!--<PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -34,7 +41,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ToSic.Sxc.Apps\ToSic.Sxc.Apps.csproj" />
     <ProjectReference Include="..\ToSic.Sxc\ToSic.Sxc.csproj" />
   </ItemGroup>
 
@@ -44,16 +50,16 @@
     <!--<Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />-->
-    <Reference Include="System.Web" />
+    <!--<Reference Include="System.Web" />-->
     <!--<Reference Include="System.Web.Http">
       <HintPath>..\..\..\Dependencies\System.Web\System.Web.Http.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>-->
-    <!--<Reference Include="Microsoft.CSharp" />-->
-    <Reference Include="ToSic.Razor">
+    <!--<Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.dll</HintPath>
-    </Reference>
+    </Reference>-->
+    <!--<Reference Include="Microsoft.CSharp" />-->
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
@@ -64,9 +70,13 @@
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />-->
 
-    <Reference Include="ToSic.Razor">
+    <!--<Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
-    </Reference>
+    </Reference>-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Apps\Assets\Internal\" />
   </ItemGroup>
 
 </Project>

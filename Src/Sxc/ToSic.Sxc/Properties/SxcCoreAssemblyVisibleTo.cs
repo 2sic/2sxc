@@ -29,3 +29,5 @@
 
 [assembly: InternalsVisibleTo("ToSic.Sxc.LightSpeed")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Web")]
+
+[assembly: InternalsVisibleTo("ToSic.Sxc.Apps")]

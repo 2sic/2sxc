@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Context;
 using ToSic.Lib.Services;
-using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Integration;
 
@@ -11,14 +10,13 @@ public abstract class SxcImportExportEnvironmentBase: EavImportExportEnvironment
 {
     #region constructor / DI
 
-    public class MyServices(ISite site, App newApp, IAppReaderFactory appReaders, IAppsCatalog appsCatalog, IAppPathsMicroSvc appPaths)
-        : MyServicesBase(connect: [site, newApp, appReaders, appPaths])
+    public class MyServices(ISite site, IAppReaderFactory appReaders, IAppsCatalog appsCatalog, IAppPathsMicroSvc appPaths)
+        : MyServicesBase(connect: [site, appReaders, appPaths])
     {
         internal readonly IAppPathsMicroSvc AppPaths = appPaths;
         internal readonly IAppsCatalog AppsCatalog = appsCatalog;
         internal readonly IAppReaderFactory AppReaders = appReaders;
         internal readonly ISite Site = site;
-        internal readonly App NewApp = newApp;
     }
 
 

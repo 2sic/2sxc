@@ -2,17 +2,6 @@
 
 namespace ToSic.Sxc.Apps.Internal.Assets;
 
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public class Purpose
-{
-    // TODO: Once the UIs are updated, we'll kill the 'auto' case
-    public const string Auto = "auto";
-    //public const string Razor = "razor";
-    //public const string Token = "token";
-    //public const string Api = "api";
-    //public const string Search = "search";
-}
-
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class AssetTemplates() : ServiceBase("SxcAss.Templt")

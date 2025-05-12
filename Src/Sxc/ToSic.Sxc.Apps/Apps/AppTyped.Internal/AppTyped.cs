@@ -75,7 +75,7 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> 
 
     /// <inheritdoc />
     public IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string location = default)
-        => new AppAssetFolderMain(App.AppPathsForTyped, App.Folder, DetermineShared(location) ?? App.AppReaderForTyped.IsShared());
+        => new AppAssetFolderMain(App.AppPathsForTyped, App.Folder, AppAssetsHelpers.DetermineShared(location) ?? App.AppReaderForTyped.IsShared());
 
     /// <inheritdoc />
     public IFile Thumbnail => _thumbnailFile.Get(() => new AppAssetThumbnail(App.AppReaderForTyped, App.AppPathsForTyped, globalPaths));

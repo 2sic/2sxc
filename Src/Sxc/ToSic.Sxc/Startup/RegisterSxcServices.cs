@@ -67,10 +67,10 @@ public static partial class RegisterSxcServices
 
         // Configuration Provider WIP
         services.TryAddTransient<IAppDataConfigProvider, SxcAppDataConfigProvider>(); // new v17
-        services.TryAddTransient<App>();
+        //services.TryAddTransient<App>();
         services.TryAddTransient<SxcImportExportEnvironmentBase.MyServices>();
-        services.TryAddTransient<IAppTyped, AppTyped>();
-        services.TryAddTransient(typeof(IAppTyped<,>), typeof(AppTyped<,>));    // new v17
+        //services.TryAddTransient<IAppTyped, AppTyped>();
+        //services.TryAddTransient(typeof(IAppTyped<,>), typeof(AppTyped<,>));    // new v17
         //services.TryAddTransient<ICodeCustomizer, Customizer>();
 
         // Rendering
@@ -145,7 +145,7 @@ public static partial class RegisterSxcServices
 
             
         // 13 - cleaning up handling of app paths
-        services.TryAddTransient<AppFolderInitializer>();
+        //services.TryAddTransient<AppFolderInitializer>();
         services.TryAddTransient<AppIconHelpers>();
 
         // v13 Provide page scoped services

@@ -59,7 +59,7 @@ public class View(
 
     public bool IsHidden => GetThis(false);
 
-    public bool IsShared => _isShared ??= AppAssets.IsShared(Get(FieldLocation, AppAssets.AppInSite));
+    public bool IsShared => _isShared ??= AppAssetsHelpers.IsShared(Get(FieldLocation, AppAssetsHelpers.AppInSite));
     private bool? _isShared;
 
     public bool UseForList => GetThis(false);

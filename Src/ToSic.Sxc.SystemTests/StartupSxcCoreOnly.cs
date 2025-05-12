@@ -30,6 +30,7 @@ public class StartupSxcCoreOnly
             .AddDataSourceTestHelpers()
             // 2sxc core
             .AddSxcCore()
+            .AddSxcApps()
             .AddSxcEdit()
             .AddSxcBlocks()
             .AddSxcCms()

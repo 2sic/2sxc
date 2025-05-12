@@ -33,7 +33,7 @@ internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IVi
 
     [PrivateApi]
     private IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string location = default)
-        => new CmsViewFolder(this, block.App, AppAssetFolderMain.DetermineShared(location) ?? block.View.IsShared);
+        => new CmsViewFolder(this, block.App, AppAssetsHelpers.DetermineShared(location) ?? block.View.IsShared);
 
     /// <summary>
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work. This is by design.
