@@ -15,7 +15,7 @@ internal abstract class CmsContextPartBase<T> : Wrapper<T>, IHasMetadata where T
     }
     protected CmsContext Parent;
 
-    protected CmsContextPartBase() : base(null) { }
+    //protected CmsContextPartBase() : base(null) { }
 
     protected void Init(CmsContext parent, T contents)
     {
