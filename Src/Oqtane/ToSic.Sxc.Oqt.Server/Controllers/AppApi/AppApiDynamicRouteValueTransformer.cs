@@ -92,7 +92,7 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
                 // but as a transient dependencies from the request service provider
                 var blockInitializer = httpContext.RequestServices.Build<IWebApiContextBuilder>();
                 blockInitializer.PrepareContextResolverForApiRequest();
-                appFolder = httpContext.RequestServices.Build<AppFolder>().GetAppFolder();
+                appFolder = httpContext.RequestServices.Build<AppFolderLookupForWebApi>().GetAppFolder();
             }
 
             if (!values.ContainsKey("controller"))

@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.LookUp;
+using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Web.Internal.EditUi;
 
 namespace ToSic.Sxc;
@@ -12,6 +14,8 @@ public static class SxcWebStartup
     {
         // v15 EditUi Resources
         services.TryAddTransient<EditUiResources>();
+
+        services.AddTransient<ILookUp, QueryStringLookUp>();
 
 
         return services;

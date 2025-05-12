@@ -5,7 +5,7 @@ using ToSic.Sxc.Context.Internal;
 namespace ToSic.Sxc.Apps.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppFolder(ISxcContextResolver ctxResolver) : ServiceBase("AppFld")
+public class AppFolderLookupForWebApi(ISxcContextResolver ctxResolver) : ServiceBase("AppFld")
 {
     /// <summary>
     /// This is necessary for special calls where the _ctxResolve may not yet be complete...
@@ -13,7 +13,7 @@ public class AppFolder(ISxcContextResolver ctxResolver) : ServiceBase("AppFld")
     /// </summary>
     /// <param name="block"></param>
     /// <returns></returns>
-    public AppFolder Init(IBlock block)
+    public AppFolderLookupForWebApi Init(IBlock block)
     {
         ctxResolver.AttachBlock(block);
         return this;

@@ -3,18 +3,18 @@ using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Cms.Users;
 
-internal class UserConstants
+public class UserConstants
 {
     #region Constant user objects for Unknown/Anonymous
 
-    internal static readonly UserModel AnonymousUser = new()
+    public static readonly UserModel AnonymousUser = new()
     {
         Id = -1,
         Name = SxcUserConstants.Anonymous,
         Roles = [],
     };
 
-    internal static readonly UserModel UnknownUser = new()
+    public static readonly UserModel UnknownUser = new()
     {
         Id = -2,
         Name = Eav.Constants.NullNameId,

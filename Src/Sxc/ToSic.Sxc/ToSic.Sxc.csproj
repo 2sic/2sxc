@@ -80,4 +80,8 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DataSources\Internal\CmsProviders\" />
+  </ItemGroup>
+
 </Project>

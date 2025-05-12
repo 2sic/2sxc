@@ -7,33 +7,21 @@ using ToSic.Sxc.Web.Internal.PageService;
 
 namespace ToSic.Sxc.Context.Internal;
 
+/// <remarks>
+/// Important: this is the third inheritance, so it cannot create
+/// another MyServices to inherit again, as it's not supported across three level
+/// So these dependencies must be in the constructor
+/// </remarks>
 [PrivateApi("Internal stuff, not for public use")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class ContextOfBlock: ContextOfApp, IContextOfBlock
+internal class ContextOfBlock(
+    IPage page,
+    IModule module,
+    LazySvc<ServiceSwitcher<IPagePublishingGetSettings>> publishingResolver,
+    PageServiceShared pageServiceShared,
+    ContextOfApp.MyServices appServices)
+    : ContextOfApp(appServices, "Sxc.CtxBlk", connect: [module, pageServiceShared, publishingResolver]), IContextOfBlock
 {
-    #region Constructor / DI
-
-    // Important: this is the third inheritance, so it cannot create
-    // another MyServices to inherit again, as it's not supported across three level
-    // So these dependencies must be in the constructor
-    public ContextOfBlock(
-        IPage page, 
-        IModule module,
-        LazySvc<ServiceSwitcher<IPagePublishingGetSettings>> publishingResolver,
-        PageServiceShared pageServiceShared,
-        MyServices appServices
-    ) : base(appServices, "Sxc.CtxBlk")
-    {
-        Page = page;
-        ConnectLogs([
-            Module = module,
-            PageServiceShared = pageServiceShared,
-            _publishingResolver = publishingResolver
-        ]);
-    }
-    private readonly LazySvc<ServiceSwitcher<IPagePublishingGetSettings>> _publishingResolver;
-
-    #endregion
 
     #region Override AppIdentity based on module information
 
@@ -53,17 +41,17 @@ internal class ContextOfBlock: ContextOfApp, IContextOfBlock
     #endregion
 
     /// <inheritdoc />
-    public IPage Page { get; }
+    public IPage Page { get; } = page;
 
     /// <inheritdoc />
-    public IModule Module { get; }
+    public IModule Module { get; } = module;
 
-    public PageServiceShared PageServiceShared { get; }
-
-    /// <inheritdoc />
-    public BlockPublishingSettings Publishing => field ??= _publishingResolver.Value.Value.SettingsOfModule(Module?.Id ?? -1);
+    public PageServiceShared PageServiceShared { get; } = pageServiceShared;
 
     /// <inheritdoc />
-    public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(Page, Module, _publishingResolver, PageServiceShared, AppServices)
+    public BlockPublishingSettings Publishing => field ??= publishingResolver.Value.Value.SettingsOfModule(Module?.Id ?? -1);
+
+    /// <inheritdoc />
+    public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(Page, Module, publishingResolver, PageServiceShared, AppServices)
         .LinkLog(parentLog);
 }

@@ -72,7 +72,7 @@ public static class StartupWebApi
         services.TryAddTransient<ExportContent>();
         services.TryAddTransient<ResetApp>();
         services.TryAddTransient<AppStackBackend>();
-        services.TryAddTransient<AppFolder>();
+        services.TryAddTransient<AppFolderLookupForWebApi>();
         services.TryAddTransient<ViewsExportImport>();
 
         // Small WebApi Helpers

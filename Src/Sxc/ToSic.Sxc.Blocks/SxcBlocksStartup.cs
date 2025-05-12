@@ -1,7 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.LookUp.Internal;
 
 namespace ToSic.Sxc;
 
@@ -38,6 +41,13 @@ public static class SxcBlocksStartup
 
         services.TryAddTransient<IBlockBuilder, BlockBuilder>();
         services.TryAddTransient<IRenderingHelper, RenderingHelper>();
+
+        // Block functionality
+        services.TryAddTransient<BlockDataSourceFactory>();
+        services.TryAddTransient<DataSources.CmsBlock.MyServices>(); // new v15
+
+        services.TryAddTransient<IAppDataConfigProvider, SxcAppDataConfigProvider>(); // new v17
+
 
         services.AddSxcBlocksFallback();
 

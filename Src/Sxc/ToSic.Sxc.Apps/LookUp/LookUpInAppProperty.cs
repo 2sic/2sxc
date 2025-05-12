@@ -9,7 +9,7 @@ namespace ToSic.Sxc.LookUp;
 /// </summary>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class LookUpInAppProperty(string name, IApp app) : LookUpBase(name, "LookUp in App Properties - mainly path")
+public class LookUpInAppProperty(string name, IApp app) : LookUpBase(name, "LookUp in App Properties - mainly path")
 {
     #region Internal stuff to be able to supply sub-properties
 

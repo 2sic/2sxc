@@ -59,7 +59,7 @@ public class WorkBlocks(
     }
 
 
-    internal BlockConfiguration GetOrGeneratePreviewConfig(IBlockIdentifier blockId)
+    public BlockConfiguration GetOrGeneratePreviewConfig(IBlockIdentifier blockId)
     {
         var l = Log.Fn<BlockConfiguration>($"grp#{blockId.Guid}, preview#{blockId.PreviewView}");
         // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)

@@ -47,7 +47,7 @@ public class ApiExplorerController() : OqtStatefulControllerBase(RealController.
     {
         // get path from root
         var siteId = GetService<SiteState>()?.Alias?.SiteId ?? GetService<AliasResolver>().Alias.SiteId;
-        var appFolder = GetService<AppFolder>().GetAppFolder();
+        var appFolder = GetService<AppFolderLookupForWebApi>().GetAppFolder();
         var pathFromRoot = OqtServerPaths.GetAppApiPath(siteId, appFolder, path);
 
         // Figure out the current edition

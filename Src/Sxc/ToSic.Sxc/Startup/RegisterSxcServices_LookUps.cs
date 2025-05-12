@@ -19,7 +19,7 @@ static partial class RegisterSxcServices
         // QueryStringLookUp is used in Dnn and Oqtane
         // It does both standard QueryString lookup but also respects OriginalParameters for AJAX cases
 
-        services.AddTransient<ILookUp, QueryStringLookUp>();
+        //services.AddTransient<ILookUp, QueryStringLookUp>();
 
         // This is more of a fallback, in DNN it's pre-registered so it won't use this
         services.TryAddTransient<ILookUpEngineResolver, LookUpEngineResolver>();

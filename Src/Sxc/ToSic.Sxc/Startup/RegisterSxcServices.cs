@@ -6,15 +6,12 @@ using ToSic.Eav.Context.Internal;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.StartUp;
 using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Internal;
-using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Data.Internal.Wrapper;
-using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Integration;
 using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.Integration.Paths;
@@ -36,13 +33,13 @@ public static partial class RegisterSxcServices
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcCore(this IServiceCollection services)
     {
-        // Runtimes - new: better architecture v16.07+
-        services.TryAddTransient<WorkBlocks>();
-        services.TryAddTransient<WorkViews>();
-        services.TryAddTransient<WorkViewsMod>();
-        services.TryAddTransient<WorkBlocksMod>();
-        services.TryAddTransient<WorkApps>();
-        services.TryAddTransient<WorkAppsRemove>();
+        //// Runtimes - new: better architecture v16.07+
+        //services.TryAddTransient<WorkBlocks>();
+        //services.TryAddTransient<WorkViews>();
+        //services.TryAddTransient<WorkViewsMod>();
+        //services.TryAddTransient<WorkBlocksMod>();
+        //services.TryAddTransient<WorkApps>();
+        //services.TryAddTransient<WorkAppsRemove>();
 
         // Code
         //services.TryAddTransient<CodeApiService.MyServices>();
@@ -59,14 +56,14 @@ public static partial class RegisterSxcServices
         //services.TryAddTransient<BlockBuilder.MyServices>();
 
         // Block functionality
-        services.TryAddTransient<BlockDataSourceFactory>();
-        services.TryAddTransient<DataSources.CmsBlock.MyServices>(); // new v15
+        //services.TryAddTransient<BlockDataSourceFactory>();
+        //services.TryAddTransient<DataSources.CmsBlock.MyServices>(); // new v15
         //services.TryAddTransient<BlockOfModule>();
         //services.TryAddTransient<BlockOfEntity>();
         //services.TryAddTransient<BlockOfBase.MyServices>();
 
         // Configuration Provider WIP
-        services.TryAddTransient<IAppDataConfigProvider, SxcAppDataConfigProvider>(); // new v17
+        //services.TryAddTransient<IAppDataConfigProvider, SxcAppDataConfigProvider>(); // new v17
         //services.TryAddTransient<App>();
         services.TryAddTransient<SxcImportExportEnvironmentBase.MyServices>();
         //services.TryAddTransient<IAppTyped, AppTyped>();

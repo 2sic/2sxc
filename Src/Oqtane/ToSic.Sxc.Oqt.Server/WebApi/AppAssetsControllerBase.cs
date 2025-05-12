@@ -21,12 +21,12 @@ public abstract class AppAssetsControllerBase : OqtControllerBase
     {
         internal LazySvc<OqtAssetsFileHelper> FileHelper { get; }
         public IWebHostEnvironment HostingEnvironment { get; }
-        public LazySvc<AppFolder> AppFolder { get; }
+        public LazySvc<AppFolderLookupForWebApi> AppFolder { get; }
         public SiteState SiteState { get; }
 
         public MyServices(
             IWebHostEnvironment hostingEnvironment,
-            LazySvc<AppFolder> appFolder,
+            LazySvc<AppFolderLookupForWebApi> appFolder,
             SiteState siteState,
             LazySvc<OqtAssetsFileHelper> fileHelper
         )

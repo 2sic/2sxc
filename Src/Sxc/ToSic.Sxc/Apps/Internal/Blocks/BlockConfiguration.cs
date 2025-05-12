@@ -59,8 +59,13 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
             if (field != null) return field;
 
             // if we're previewing another template, look that up
-            var viewEntity = PreviewViewEntity ?? Entity?.Children(ViewParts.ViewFieldInContentBlock).FirstOrDefault();
-            return field = viewEntity == null ? null : new View(viewEntity, LookupLanguages, Log, _qDefBuilder);
+            var viewEntity = PreviewViewEntity
+                             ?? Entity
+                                 ?.Children(ViewParts.ViewFieldInContentBlock)
+                                 .FirstOrDefault();
+            return field = viewEntity == null
+                ? null
+                : new View(viewEntity, LookupLanguages, Log, _qDefBuilder);
         }
     }
 

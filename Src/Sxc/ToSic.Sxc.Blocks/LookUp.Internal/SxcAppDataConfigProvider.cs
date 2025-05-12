@@ -7,11 +7,16 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Web.Internal.DotNet;
-using CmsBlock = ToSic.Sxc.DataSources.CmsBlock;
 
 namespace ToSic.Sxc.LookUp.Internal;
 
+/// <summary>
+/// Service to find the configuration for the AppData, especially the lookup...
+/// </summary>
+/// <param name="getEngineLazy"></param>
+/// <param name="httpLazy"></param>
 public class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngineLazy, LazySvc<IHttp> httpLazy)
     : ServiceBase("Sxc.CnfPrv", connect: [getEngineLazy, httpLazy]), IAppDataConfigProvider
 {
@@ -41,10 +46,10 @@ public class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngineLa
         var newSources = new List<ILookUp> { new LookUpInAppProperty("app", appForLookup) };
 
         // add module if it was not already added previously
-        if (!existSources.HasSource(CmsBlock.InstanceLookupName))
+        if (!existSources.HasSource(BlockInstanceConstants.InstanceLookupName))
         {
-            var modulePropertyAccess = new LookUpInDictionary(CmsBlock.InstanceLookupName);
-            modulePropertyAccess.Properties.Add(CmsBlock.ModuleIdKey, modId.ToString(CultureInfo.InvariantCulture));
+            var modulePropertyAccess = new LookUpInDictionary(BlockInstanceConstants.InstanceLookupName);
+            modulePropertyAccess.Properties.Add(BlockInstanceConstants.ModuleIdKey, modId.ToString(CultureInfo.InvariantCulture));
             newSources.Add(modulePropertyAccess);
         }
 

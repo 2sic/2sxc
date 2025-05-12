@@ -9,7 +9,7 @@ using ToSic.Sxc.Edit.Toolbar.Internal;
 namespace ToSic.Sxc.Services.CmsService.Internal;
 
 internal class CmsServiceContainerHelper(
-    ICodeApiService dynCodeRoot,
+    ICodeApiService codeApiSvc,
     IField entityField,
     object container,
     string classes,
@@ -19,7 +19,7 @@ internal class CmsServiceContainerHelper(
 {
     private string Classes { get; set; } = classes;
 
-    private ServiceKit14 ServiceKit => field ??= dynCodeRoot.GetKit<ServiceKit14>();
+    private ServiceKit14 ServiceKit => field ??= codeApiSvc.GetKit<ServiceKit14>();
 
     public IHtmlTag Wrap(CmsProcessed result, bool defaultToolbar)
     {

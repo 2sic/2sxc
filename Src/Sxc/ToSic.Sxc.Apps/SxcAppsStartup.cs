@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Internal;
+using ToSic.Sxc.Apps.Internal.Work;
 
 namespace ToSic.Sxc;
 
@@ -17,6 +18,15 @@ public static class SxcAppsStartup
         services.TryAddTransient(typeof(IAppTyped<,>), typeof(AppTyped<,>));    // new v17
 
         services.TryAddTransient<AppFolderInitializer>();
+
+
+        // Runtimes - new: better architecture v16.07+
+        services.TryAddTransient<WorkBlocks>();
+        services.TryAddTransient<WorkViews>();
+        services.TryAddTransient<WorkViewsMod>();
+        services.TryAddTransient<WorkBlocksMod>();
+        services.TryAddTransient<WorkApps>();
+        services.TryAddTransient<WorkAppsRemove>();
 
 
         return services;

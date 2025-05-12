@@ -34,15 +34,11 @@ namespace ToSic.Sxc.DataSources;
     NameIds = ["ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent"])]
 public sealed partial class CmsBlock : DataSourceBase
 {
-    [PrivateApi] internal const string InstanceLookupName = "module";
-    [PrivateApi] internal const string ModuleIdKey = "Id";
-    [PrivateApi] internal const string FieldInstanceId = "InstanceId";
-
     /// <summary>
     /// The instance-id of the CmsBlock (2sxc instance, DNN ModId). <br/>
     /// It's named Instance-Id to be more neutral as we're opening it to other platforms
     /// </summary>
-    [Configuration(Field = FieldInstanceId, Fallback = $"[{InstanceLookupName}:{ModuleIdKey}]")]
+    [Configuration(Field = BlockInstanceConstants.FieldInstanceId, Fallback = $"[{BlockInstanceConstants.InstanceLookupName}:{BlockInstanceConstants.ModuleIdKey}]")]
     public int? ModuleId
     {
         get => field ?? (int.TryParse(Configuration.GetThis(), out var listId) ? listId : new int?());

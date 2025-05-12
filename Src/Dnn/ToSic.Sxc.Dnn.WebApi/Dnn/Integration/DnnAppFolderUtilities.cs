@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Dnn.Integration;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class DnnAppFolderUtilities(
-    Generator<AppFolder> folder,
+    Generator<AppFolderLookupForWebApi> folder,
     Generator<DnnGetBlock> dnnGetBlock,
     LazySvc<CodeErrorHelpService> errorHelp)
     : ServiceBase($"{DnnConstants.LogName}.AppFld", connect: [errorHelp, folder, dnnGetBlock])
