@@ -87,9 +87,9 @@ public static class SxcServicesStartup
 
         // v16 AsConverter
         //services.TryAddTransient<CodeDataFactory>(sp => ActivatorUtilities.CreateInstance<CodeDataFactory>(sp));
-        services.TryAddTransient<CodeDataFactory>();
-        services.TryAddTransient<ICodeDataFactory, CodeDataFactory>();
-        services.TryAddTransient<CodeDataServices>();
+        //services.TryAddTransient<CodeDataFactory>();
+        //services.TryAddTransient<ICodeDataFactory, CodeDataFactory>();
+        //services.TryAddTransient<CodeDataServices>();
 
         // Kits v14 - v16
         services.TryAddTransient<ServiceKit>();

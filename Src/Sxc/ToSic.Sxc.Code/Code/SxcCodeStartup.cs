@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.SourceCode;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 
@@ -35,6 +36,9 @@ public static class SxcCodeStartup
         // note: unclear why this exists, since it will always have a real DynCode Service with the previous TryAdd
         services.TryAddTransient<IDynamicCodeService, DynamicCodeServiceUnknown>();
 
+        //services.TryAddTransient<CodeDataFactory>();
+        services.TryAddTransient<ICodeDataFactory, CodeDataFactory>();
+        services.TryAddTransient<CodeDataServices>();
         return services;
     }
 
