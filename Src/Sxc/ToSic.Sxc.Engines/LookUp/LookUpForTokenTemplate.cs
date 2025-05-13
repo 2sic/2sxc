@@ -1,10 +1,8 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
-using ToSic.Eav.Context;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.LookUp;
@@ -26,7 +24,7 @@ namespace ToSic.Sxc.LookUp;
 internal partial class LookUpForTokenTemplate(
     string name,
     IDynamicEntity dynEntity,
-    ICodeApiService codeApiService,
+    CultureInfo cultureInfo,
     int repeaterIndex = -1,
     int repeaterTotal = -1)
     : ILookUp
@@ -66,7 +64,7 @@ internal partial class LookUpForTokenTemplate(
             string str => LookUpBase.FormatString(str, strFormat),
             bool b => LookUpBase.Format(b),
             DateTime or double or float or short or int or long or decimal =>
-                ((IFormattable)valueObject).ToString(strFormat.NullIfNoValue() ?? "g", GetCultureInfo()),
+                ((IFormattable)valueObject).ToString(strFormat.NullIfNoValue() ?? "g", cultureInfo),
             _ => (string)LookUpBase.FormatString(valueObject.ToString(), strFormat),
         };
     }
@@ -87,14 +85,10 @@ internal partial class LookUpForTokenTemplate(
 
         if (subEntity == null) return "";
 
-        var subLookup = new LookUpForTokenTemplate(null, subEntity, codeApiService);
+        var subLookup = new LookUpForTokenTemplate(null, subEntity, cultureInfo);
 
         return subLookup.GetProperty(subProp, "") ?? "";
     }
-
-
-    private CultureInfo GetCultureInfo()
-        => CultureHelpers.SafeCultureInfo(codeApiService.Cdf.Dimensions);
 
     public string Get(string key, string strFormat) => GetProperty(key, strFormat);
 

@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Internal;
+using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.DataSources.Internal;
@@ -53,6 +54,9 @@ public static class SxcBlocksStartup
         // Integration stuff - must be implemented by each platform
         services.TryAddTransient<IPlatformModuleUpdater, BasicModuleUpdater>();
 
+        // Work
+        services.TryAddTransient<WorkBlocks>();
+        services.TryAddTransient<WorkBlocksMod>();
 
         services.AddSxcBlocksFallback();
 

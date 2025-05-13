@@ -68,8 +68,4 @@
     </Reference>-->
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Apps\Assets\Internal\" />
-  </ItemGroup>
-
 </Project>

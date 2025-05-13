@@ -83,7 +83,7 @@ public static partial class RegisterSxcServices
             
         // 13 - cleaning up handling of app paths
         //services.TryAddTransient<AppFolderInitializer>();
-        services.TryAddTransient<AppIconHelpers>();
+        //services.TryAddTransient<AppIconHelpers>();
 
         // v13 Provide page scoped services
         // This is important, as most services are module scoped, but very few are actually scoped one level higher

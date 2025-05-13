@@ -3,7 +3,7 @@
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockBuildingConstants
 {
-    internal const string InputTypeForContentBlocksField = "entity-content-blocks";
+    public const string InputTypeForContentBlocksField = "entity-content-blocks";
     internal const string CbPropertyApp = "App";
     internal const string CbPropertyTitle = Attributes.TitleNiceName;
     internal const string CbPropertyContentGroup = "ContentGroup";

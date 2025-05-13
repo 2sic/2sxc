@@ -19,12 +19,13 @@ public static class SxcAppsStartup
 
         services.TryAddTransient<AppFolderInitializer>();
 
+        services.TryAddTransient<AppIconHelpers>();
 
         // Runtimes - new: better architecture v16.07+
-        services.TryAddTransient<WorkBlocks>();
-        services.TryAddTransient<WorkViews>();
+        //services.TryAddTransient<WorkBlocks>();
+        //services.TryAddTransient<WorkBlocksMod>();
         services.TryAddTransient<WorkViewsMod>();
-        services.TryAddTransient<WorkBlocksMod>();
+        services.TryAddTransient<WorkViews>();
         services.TryAddTransient<WorkApps>();
         services.TryAddTransient<WorkAppsRemove>();
 

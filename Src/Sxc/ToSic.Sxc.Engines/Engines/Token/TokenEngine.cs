@@ -1,8 +1,10 @@
 ﻿using System.Collections.Immutable;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Context;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Blocks.Internal;
@@ -79,12 +81,10 @@ public class TokenEngine(
     public override void Init(IBlock block)
     {
         base.Init(block);
-        InitDataHelper();
+        _codeApiSvc = codeRootFactory.Value
+            .New(null, Block, Log, CompatibilityLevels.CompatibilityLevel9Old);
         InitTokenReplace();
     }
-
-    private void InitDataHelper() => _codeApiSvc = codeRootFactory.Value
-        .New(null, Block, Log, CompatibilityLevels.CompatibilityLevel9Old);
 
     private void InitTokenReplace()
     {
@@ -92,12 +92,15 @@ public class TokenEngine(
         var appDataConfig = tokenEngineWithContext.New().GetDataConfiguration(Block.App as EavApp, specs);
 
         var lookUpEngine = new LookUpEngine(appDataConfig.Configuration, Log, sources: [
-            new LookUpForTokenTemplate(ViewParts.ListContentLower, _codeApiSvc.Header, _codeApiSvc),
-            new LookUpForTokenTemplate(ViewParts.ContentLower, _codeApiSvc.Content, _codeApiSvc),
+            new LookUpForTokenTemplate(ViewParts.ListContentLower, _codeApiSvc.Header, CultureInfo),
+            new LookUpForTokenTemplate(ViewParts.ContentLower, _codeApiSvc.Content, CultureInfo),
         ]);
 
         _tokenReplace = new(lookUpEngine);
     }
+
+    private CultureInfo CultureInfo => field ??= CultureHelpers.SafeCultureInfo(_codeApiSvc.Cdf.Dimensions);
+
 
     [PrivateApi]
     protected override (string Contents, List<Exception> Exception) RenderEntryRazor(RenderSpecs specs)
@@ -154,7 +157,7 @@ public class TokenEngine(
             var dynEntity = _codeApiSvc.Cdf.AsDynamic(dataItems.ElementAt(i), propsRequired: false);
             var propertySources = new Dictionary<string, ILookUp>
             {
-                { sourceName, new LookUpForTokenTemplate(sourceName, dynEntity, _codeApiSvc, i, itemsCount) }
+                { sourceName, new LookUpForTokenTemplate(sourceName, dynEntity, CultureInfo, i, itemsCount) }
             };
             builder.Append(RenderSection(template, propertySources));
         }

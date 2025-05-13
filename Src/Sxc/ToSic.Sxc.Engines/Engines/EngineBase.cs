@@ -18,31 +18,21 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
 {
     #region MyServices
 
-    public class MyServices : MyServicesBase
+    public class MyServices(
+        IServerPaths serverPaths,
+        IBlockResourceExtractor blockResourceExtractor,
+        EngineCheckTemplate engineCheckTemplate,
+        EnginePolymorphism enginePolymorphism,
+        EngineAppRequirements engineAppRequirements)
+        : MyServicesBase(connect:
+            [serverPaths, blockResourceExtractor, engineCheckTemplate, engineAppRequirements, enginePolymorphism])
     {
-        internal EngineAppRequirements EngineAppRequirements { get; }
-        internal EnginePolymorphism EnginePolymorphism { get; }
-        internal EngineCheckTemplate EngineCheckTemplate { get; }
+        internal EngineAppRequirements EngineAppRequirements { get; } = engineAppRequirements;
+        internal EnginePolymorphism EnginePolymorphism { get; } = enginePolymorphism;
+        internal EngineCheckTemplate EngineCheckTemplate { get; } = engineCheckTemplate;
 
-        public MyServices(IServerPaths serverPaths,
-            IBlockResourceExtractor blockResourceExtractor,
-            EngineCheckTemplate engineCheckTemplate,
-            EnginePolymorphism enginePolymorphism,
-            EngineAppRequirements engineAppRequirements
-        )
-        {
-            ConnectLogs([
-                ServerPaths = serverPaths,
-                BlockResourceExtractor = blockResourceExtractor,
-                EngineCheckTemplate = engineCheckTemplate,
-                EngineAppRequirements = engineAppRequirements,
-                EnginePolymorphism = enginePolymorphism
-            ]);
-        }
-
-        internal IServerPaths ServerPaths { get; }
-        internal IBlockResourceExtractor BlockResourceExtractor { get; }
-
+        internal IServerPaths ServerPaths { get; } = serverPaths;
+        internal IBlockResourceExtractor BlockResourceExtractor { get; } = blockResourceExtractor;
     }
 
     #endregion
