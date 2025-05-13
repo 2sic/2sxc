@@ -43,7 +43,7 @@
     <!--<Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />-->
-    <!--<Reference Include="System.Web" />-->
+    <Reference Include="System.Web" />
     <!--<Reference Include="System.Web.Http">
       <HintPath>..\..\..\Dependencies\System.Web\System.Web.Http.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>

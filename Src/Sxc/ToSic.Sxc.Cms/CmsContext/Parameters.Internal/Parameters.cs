@@ -135,7 +135,7 @@ public partial record Parameters : IParameters
     /// <param name="protector"></param>
     /// <param name="sort"></param>
     /// <returns></returns>
-    internal string ToString(NoParamOrder protector = default, bool sort = false)
+    public string ToString(NoParamOrder protector = default, bool sort = false)
         => sort ? _sorted ??= Nvc.Sort(PriorityFields).NvcToString() : Nvc.NvcToString();
     private string _sorted;
 

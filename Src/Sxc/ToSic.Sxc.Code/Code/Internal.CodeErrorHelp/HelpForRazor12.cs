@@ -96,7 +96,7 @@ You are probably trying to use the <code>Dnn</code> object which is not supporte
 
     #region Exceptions to throw in various not-supported cases
 
-    internal static dynamic ExAsDynamicForList()
+    public static dynamic ExAsDynamicForList()
         => throw new("AsDynamic for lists isn't supported in RazorComponent. Please use AsList instead.");
 
     internal static dynamic ExCreateSourceString()

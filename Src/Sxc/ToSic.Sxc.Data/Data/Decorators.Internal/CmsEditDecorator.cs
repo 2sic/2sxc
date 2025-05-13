@@ -1,6 +1,9 @@
 ﻿namespace ToSic.Sxc.Data.Internal.Decorators;
 
-internal class CmsEditDecorator : IDecorator<IEntity>
+/// <summary>
+/// Decorator for demo entities and similar, to disable editing so that the demo data isn't accidentally changed.
+/// </summary>
+public class CmsEditDecorator : IDecorator<IEntity>
 {
     public bool DisableEdit { get; }
 

@@ -89,6 +89,7 @@
   <ItemGroup>
     <Folder Include="Apps\Internal\Paths\" />
     <Folder Include="Code\TypedModel\" />
+    <Folder Include="Data\Internal\Dynamic\" />
     <Folder Include="Data\Internal\Metadata\" />
     <Folder Include="Edit\Internal\" />
   </ItemGroup>
