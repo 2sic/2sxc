@@ -83,7 +83,7 @@ public interface ICodeDataFactory
     /// Convert a list of Entities into a DynamicEntity.
     /// Only used in DynamicCodeRoot.
     /// </summary>
-    IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, bool propsRequired);
+    IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, bool propsRequired, NoParamOrder protector = default, IEntity parent = default, string field = default);
 
     /// <summary>
     /// Convert any object into a dynamic list.

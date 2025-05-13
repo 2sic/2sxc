@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Data.Internal.Typed;
 
 [JsonConverter(typeof(DynamicJsonConverter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, ICodeDataFactory cdf, bool propsRequired)
+internal class TypedItemOfEntity(/*DynamicEntity*/ object dynOrNull, IEntity entity, ICodeDataFactory cdf, bool propsRequired)
     : ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName, IWrapper<IEntity>,
         IEntityWrapper, IHasMetadata, IHasJsonSource
 {
@@ -131,7 +131,7 @@ internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, ICodeD
 
     [PrivateApi]
     [JsonIgnore]
-    dynamic ITypedItem.Dyn => _dyn ??= dynOrNull ?? new DynamicEntity(Entity, Cdf, propsRequired: propsRequired);
+    dynamic ITypedItem.Dyn => _dyn ??= dynOrNull ?? Cdf.AsDynamic(Entity, propsRequired: propsRequired);
     private object _dyn;
 
     [PrivateApi]
