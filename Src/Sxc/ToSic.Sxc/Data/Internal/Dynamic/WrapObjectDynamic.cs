@@ -29,13 +29,12 @@ public class WrapObjectDynamic: DynamicObject, IWrapper<object>, IPropertyLookup
     internal readonly PreWrapObject PreWrap;
 
     [PrivateApi]
-    internal WrapObjectDynamic(PreWrapObject preWrap, CodeDataWrapper wrapper)
+    internal WrapObjectDynamic(PreWrapObject preWrap, ICodeDataPoCoWrapperService wrapperSvc)
     {
-        Wrapper = wrapper;
+        WrapperSvc = wrapperSvc;
         PreWrap = preWrap;
     }
-    protected readonly CodeDataWrapper Wrapper;
-    //protected readonly object UnwrappedObject;
+    protected readonly ICodeDataPoCoWrapperService WrapperSvc;
 
     public override bool TryGetMember(GetMemberBinder binder, out object result)
     {

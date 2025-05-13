@@ -11,13 +11,13 @@ namespace ToSic.Sxc.LinksAndImages.LinkImageTests;
 
 public class LinkImageTestHelper
 {
-    private readonly CodeDataWrapper _cdf;
+    private readonly ICodeDataPoCoWrapperService _wrapper;
     private readonly ImgResizeLinker _linker;
     private readonly ILinkService _linkHelper;
 
-    public LinkImageTestHelper(CodeDataWrapper cdf, ImgResizeLinker linker, ILinkService linkHelper, EavFeaturesLoader featuresLoader)
+    public LinkImageTestHelper(ICodeDataPoCoWrapperService wrapper, ImgResizeLinker linker, ILinkService linkHelper, EavFeaturesLoader featuresLoader)
     {
-        _cdf = cdf;
+        _wrapper = wrapper;
         _linker = linker;
         _linkHelper = linkHelper;
         featuresLoader.LoadLicenseAndFeatures();
@@ -26,8 +26,8 @@ public class LinkImageTestHelper
     public ImgResizeLinker GetLinker() => _linker;
     public ILinkService GetLinkHelper() => _linkHelper;
 
-    public WrapObjectDynamic ToDyn(object contents) => _cdf
-        .FromObject(contents, WrapperSettings.Dyn(children: false, realObjectsToo: false));
+    public WrapObjectDynamic ToDyn(object contents) => _wrapper
+        .DynamicFromObject(contents, WrapperSettings.Dyn(children: false, realObjectsToo: false));
 
 
     public void TestOnLinkerAndHelper(string expected,

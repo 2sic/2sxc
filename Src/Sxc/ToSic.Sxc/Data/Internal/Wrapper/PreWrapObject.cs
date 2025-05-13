@@ -26,7 +26,7 @@ internal partial class PreWrapObject: PreWrapBase, /*IWrapper<object>,*/ IProper
     //public object GetContents() => _innerObject;
 
     /// <summary>
-    /// Case insensitive property dictionary
+    /// Case-insensitive property dictionary
     /// </summary>
     private Dictionary<string, PropertyInfo> PropDic { get; }
 
@@ -38,17 +38,17 @@ internal partial class PreWrapObject: PreWrapBase, /*IWrapper<object>,*/ IProper
     /// Determines if properties which are objects should again be wrapped.
     /// When using this for DynamicModel it should be false, otherwise usually true.
     /// </param>
-    /// <param name="wrapper"></param>
+    /// <param name="wrapperSvc"></param>
     [PrivateApi]
-    internal PreWrapObject(object data, WrapperSettings settings, CodeDataWrapper wrapper): base(data)
+    internal PreWrapObject(object data, WrapperSettings settings, ICodeDataPoCoWrapperService wrapperSvc): base(data)
     {
-        _wrapper = wrapper;
+        _wrapperSvc = wrapperSvc;
         _innerObject = data;
         Settings = settings;
         PropDic = CreateDictionary(data);
     }
 
-    private readonly CodeDataWrapper _wrapper;
+    private readonly ICodeDataPoCoWrapperService _wrapperSvc;
     private readonly object _innerObject;
     public override WrapperSettings Settings { get; }
 
@@ -110,7 +110,7 @@ internal partial class PreWrapObject: PreWrapBase, /*IWrapper<object>,*/ IProper
         // Probably re-wrap for further dynamic navigation!
         return new(true, result,
             Settings.WrapChildren && wrapDefault
-                ? _wrapper.ChildNonJsonWrapIfPossible(result, Settings.WrapRealObjects, Settings)
+                ? _wrapperSvc.ChildNonJsonWrapIfPossible(result, Settings.WrapRealObjects, Settings)
                 : result);
 
     }

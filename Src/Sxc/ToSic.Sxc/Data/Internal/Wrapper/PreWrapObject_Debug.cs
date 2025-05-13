@@ -37,7 +37,7 @@ partial class PreWrapObject
                 return result != null && result is not string && !result.GetType().IsValueType;
             }).Select(p =>
             {
-                var maybeDump = _wrapper.ChildNonJsonWrapIfPossible(data: p.Pdi.Property.Result, wrapNonAnon: false,
+                var maybeDump = _wrapperSvc.ChildNonJsonWrapIfPossible(data: p.Pdi.Property.Result, wrapNonAnon: false,
                     WrapperSettings.Dyn(children: true, realObjectsToo: true));
                 return new
                 {

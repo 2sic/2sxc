@@ -5,10 +5,10 @@ using ToSic.Sxc.Data.Internal.Wrapper;
 namespace ToSic.Sxc.DataTests.DynWrappers;
 
 [Startup(typeof(StartupSxcCoreOnly))]
-public class WrapDicBasic(CodeDataWrapper cdf)
+public class WrapDicBasic(ICodeDataPoCoWrapperService wrapper)
 {
-    private WrapDictionaryDynamic<TKey, TValue> ToDyn<TKey, TValue>(Dictionary<TKey, TValue> dic)
-        => cdf.FromDictionary(dic);
+    private DynamicFromDictionary<TKey, TValue> ToDyn<TKey, TValue>(Dictionary<TKey, TValue> dic)
+        => wrapper.FromDictionary(dic);
 
     [Fact]
     public void BasicUseDictionary()

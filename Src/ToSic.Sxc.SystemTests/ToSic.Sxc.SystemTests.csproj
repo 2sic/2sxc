@@ -58,7 +58,6 @@
     <ProjectReference Include="..\Sxc\ToSic.Sxc.Blocks\ToSic.Sxc.Blocks.csproj" />
     <ProjectReference Include="..\Sxc\ToSic.Sxc.Cms\ToSic.Sxc.Cms.csproj" />
     <ProjectReference Include="..\Sxc\ToSic.Sxc.Code\ToSic.Sxc.Code.csproj" />
-    <ProjectReference Include="..\Sxc\ToSic.Sxc.Data.Typed\ToSic.Sxc.Data.Typed.csproj" />
     <ProjectReference Include="..\Sxc\ToSic.Sxc.Edit\ToSic.Sxc.Edit.csproj" />
     <ProjectReference Include="..\Sxc\ToSic.Sxc.LightSpeed\ToSic.Sxc.LightSpeed.csproj" />
     <ProjectReference Include="..\Sxc\ToSic.Sxc.Render\ToSic.Sxc.Render.csproj" />

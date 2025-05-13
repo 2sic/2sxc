@@ -100,7 +100,7 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<CodeCreateDataSourceSvc>();
 
         // v16 DynamicJacket and DynamicRead factories
-        services.TryAddTransient<CodeDataWrapper>();
+        services.TryAddTransient<ICodeDataPoCoWrapperService, CodeDataPoCoWrapperService>();
         services.TryAddTransient<CodeJsonWrapper>();
         services.TryAddTransient<WrapObjectTyped>();
         services.TryAddTransient<WrapObjectTypedItem>();

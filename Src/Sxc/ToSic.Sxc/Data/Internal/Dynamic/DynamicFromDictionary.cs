@@ -16,19 +16,19 @@ namespace ToSic.Sxc.Data.Internal.Dynamic;
 /// Will always return true even if the property doesn't exist, in which case it resolves to null.
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class WrapDictionaryDynamic<TKey, TVal>: DynamicObject, IWrapper<IDictionary<TKey, TVal>>, IHasKeys
+internal class DynamicFromDictionary<TKey, TVal>: DynamicObject, IWrapper<IDictionary<TKey, TVal>>, IHasKeys
 {
     protected readonly IDictionary<TKey, TVal> UnwrappedDictionary;
-    private readonly CodeDataWrapper _factory;
+    private readonly ICodeDataPoCoWrapperService _wrapperSvc;
 
     [PrivateApi]
     public IDictionary<TKey, TVal> GetContents() => UnwrappedDictionary;
     private readonly Dictionary<string, object> _ignoreCaseLookup = new(StringComparer.InvariantCultureIgnoreCase);
 
-    public WrapDictionaryDynamic(IDictionary<TKey, TVal> dictionary, CodeDataWrapper factory)
+    public DynamicFromDictionary(IDictionary<TKey, TVal> dictionary, ICodeDataPoCoWrapperService wrapperSvc)
     {
         UnwrappedDictionary = dictionary;
-        _factory = factory;
+        _wrapperSvc = wrapperSvc;
         if (dictionary == null) return;
 
         foreach (var de in dictionary) 
@@ -44,7 +44,7 @@ internal class WrapDictionaryDynamic<TKey, TVal>: DynamicObject, IWrapper<IDicti
         // if result is an anonymous object, re-wrap again for consistency with other APIs
         if (result is null) return true;
         if (result.IsAnonymous())
-            result = _factory.ChildNonJsonWrapIfPossible(data: result, wrapNonAnon: false, WrapperSettings.Dyn(children: true, realObjectsToo: false));
+            result = _wrapperSvc.ChildNonJsonWrapIfPossible(data: result, wrapNonAnon: false, WrapperSettings.Dyn(children: true, realObjectsToo: false));
 
         return true;
     }

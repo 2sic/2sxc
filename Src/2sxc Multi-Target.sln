@@ -195,7 +195,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Apps", "Sxc\ToSic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Render", "Sxc\ToSic.Sxc.Render\ToSic.Sxc.Render.csproj", "{173D3C32-4964-3514-6733-7185517086AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Data.Typed", "Sxc\ToSic.Sxc.Data.Typed\ToSic.Sxc.Data.Typed.csproj", "{A52393BC-7838-9A36-B049-F98F631BF195}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Data", "Sxc\ToSic.Sxc.Data\ToSic.Sxc.Data.csproj", "{B7445FDD-EFFC-A31A-3437-E3F1A36B70E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -592,12 +592,12 @@ Global
 		{173D3C32-4964-3514-6733-7185517086AE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{173D3C32-4964-3514-6733-7185517086AE}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
 		{173D3C32-4964-3514-6733-7185517086AE}.Testing|Any CPU.Build.0 = Debug|Any CPU
-		{A52393BC-7838-9A36-B049-F98F631BF195}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A52393BC-7838-9A36-B049-F98F631BF195}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A52393BC-7838-9A36-B049-F98F631BF195}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A52393BC-7838-9A36-B049-F98F631BF195}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A52393BC-7838-9A36-B049-F98F631BF195}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
-		{A52393BC-7838-9A36-B049-F98F631BF195}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{B7445FDD-EFFC-A31A-3437-E3F1A36B70E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7445FDD-EFFC-A31A-3437-E3F1A36B70E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7445FDD-EFFC-A31A-3437-E3F1A36B70E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7445FDD-EFFC-A31A-3437-E3F1A36B70E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7445FDD-EFFC-A31A-3437-E3F1A36B70E3}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7445FDD-EFFC-A31A-3437-E3F1A36B70E3}.Testing|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -681,7 +681,7 @@ Global
 		{1755959F-9267-7500-91F3-72E0477F0532} = {5CD8015A-76D8-4633-8469-53B62A6C1894}
 		{06706A1F-6B97-5773-2786-48045DD25A9A} = {5CD8015A-76D8-4633-8469-53B62A6C1894}
 		{173D3C32-4964-3514-6733-7185517086AE} = {5CD8015A-76D8-4633-8469-53B62A6C1894}
-		{A52393BC-7838-9A36-B049-F98F631BF195} = {5CD8015A-76D8-4633-8469-53B62A6C1894}
+		{B7445FDD-EFFC-A31A-3437-E3F1A36B70E3} = {5CD8015A-76D8-4633-8469-53B62A6C1894}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35

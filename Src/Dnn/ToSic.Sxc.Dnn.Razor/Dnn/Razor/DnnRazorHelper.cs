@@ -95,15 +95,15 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
 
     #region DynamicModel and Factory
 
-    private CodeDataWrapper CodeDataWrapper => _dynJacketFactory.Get(() => _CodeApiSvc.GetService<CodeDataWrapper>());
-    private readonly GetOnce<CodeDataWrapper> _dynJacketFactory = new();
+    private ICodeDataPoCoWrapperService CodeDataWrapper => _dynJacketFactory.Get(() => _CodeApiSvc.GetService<ICodeDataPoCoWrapperService>());
+    private readonly GetOnce<ICodeDataPoCoWrapperService> _dynJacketFactory = new();
 
     /// <inheritdoc cref="IRazor14{TModel,TServiceKit}.DynamicModel"/>
     public dynamic DynamicModel => _dynamicModel ??= CodeDataWrapper.FromDictionary(Page.PageData);
     private dynamic _dynamicModel;
 
     internal void SetDynamicModel(object data) =>
-        _dynamicModel = CodeDataWrapper.FromObject(data, WrapperSettings.Dyn(children: false, realObjectsToo: false));
+        _dynamicModel = CodeDataWrapper.DynamicFromObject(data, WrapperSettings.Dyn(children: false, realObjectsToo: false));
 
     #endregion
 }

@@ -109,8 +109,8 @@
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Code.HotBuild.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Custom.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Custom.pdb" />
-      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Data.Typed.dll" />
-      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Data.Typed.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Data.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Data.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Edit.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Edit.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Engines.dll" />

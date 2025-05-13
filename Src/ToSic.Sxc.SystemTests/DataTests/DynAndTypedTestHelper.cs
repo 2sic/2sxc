@@ -9,13 +9,13 @@ using static System.Text.Json.JsonSerializer;
 namespace ToSic.Sxc.DataTests;
 
 
-public class DynAndTypedTestHelper(ICodeDataFactory factory, CodeDataWrapper wrapper, Generator<CodeJsonWrapper> codeJsonGenerator)
+public class DynAndTypedTestHelper(ICodeDataFactory factory, ICodeDataPoCoWrapperService wrapper, Generator<CodeJsonWrapper> codeJsonGenerator)
 {
     #region Helper / Factories
 
     public ICodeDataFactory Factory => factory;
 
-    public CodeDataWrapper Wrapper => wrapper;
+    public ICodeDataPoCoWrapperService Wrapper => wrapper;
 
     public CodeJsonWrapper JsonWrapper => codeJsonGenerator.New();
 
@@ -37,7 +37,7 @@ public class DynAndTypedTestHelper(ICodeDataFactory factory, CodeDataWrapper wra
 
 
     public WrapObjectDynamic Obj2WrapObj(object data, bool wrapChildren = true, bool realObjectsToo = true)
-        => Wrapper.FromObject(data, WrapperSettings.Dyn(children: wrapChildren, realObjectsToo: realObjectsToo));
+        => Wrapper.DynamicFromObject(data, WrapperSettings.Dyn(children: wrapChildren, realObjectsToo: realObjectsToo));
 
     public dynamic Obj2WrapObjAsDyn(object data) => Obj2WrapObj(data);
 

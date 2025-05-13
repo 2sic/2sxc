@@ -3,10 +3,10 @@
 namespace ToSic.Sxc;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public static class SxcDataTypedStartup
+public static class SxcDataStartup
 {
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public static IServiceCollection AddSxcDataTyped(this IServiceCollection services)
+    public static IServiceCollection AddSxcData(this IServiceCollection services)
     {
         
 

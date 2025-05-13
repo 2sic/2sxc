@@ -49,8 +49,8 @@
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Code.HotBuild.pdb" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Custom.dll" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Custom.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Data.Typed.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Data.Typed.pdb" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Data.dll" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Data.pdb" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Edit.dll" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Edit.pdb" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Engines.dll" />
