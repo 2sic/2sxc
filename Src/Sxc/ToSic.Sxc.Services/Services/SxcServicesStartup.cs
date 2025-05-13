@@ -8,7 +8,6 @@ using ToSic.Sxc.Services.DataServices;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Services.Templates;
-using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageService;
 
 namespace ToSic.Sxc.Services;
@@ -19,22 +18,10 @@ public static class SxcServicesStartup
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcServices(this IServiceCollection services)
     {
-        services.TryAddTransient<IContentSecurityPolicyService, ContentSecurityPolicyService>();
-
         // new in v12.02 - PageService & Page Features
         services.TryAddTransient<IPageService, PageService>();  // must be unique per module where it's used
 
         //services.AddObsoleteServicesAndKits();
-
-//        services.TryAddTransient<Services.IRenderService, RenderService>();  // new 12.05
-//        services.TryAddTransient<RenderService.MyServices>();
-//        services.TryAddTransient<SimpleRenderer>();
-//        services.TryAddTransient<InTextContentBlockRenderer>();
-//#if NETFRAMEWORK
-//#pragma warning disable CS0618
-//        services.TryAddTransient<Blocks.IRenderService, RenderService>();  // Obsolete, but keep for the few apps we already released in v12
-//#pragma warning restore CS0618
-//#endif
 
         // WIP 12.05 - json converter
         services.TryAddTransient<IJsonService, JsonService>();
@@ -53,11 +40,6 @@ public static class SxcServicesStartup
         //services.TryAddTransient<IImageService, ImageService>();
         //services.TryAddTransient<IEditService, EditService>();
         services.TryAddTransient<ResizeDimensionGenerator>();
-
-        //// v14 Toolbar Builder
-        //services.TryAddTransient<IToolbarBuilder, ToolbarBuilder>();
-        //services.TryAddTransient<ToolbarBuilder.MyServices>();
-        //services.TryAddTransient<ToolbarButtonDecoratorHelper>();
 
         // WIP v14
         services.TryAddTransient<IAdamService, AdamService>();

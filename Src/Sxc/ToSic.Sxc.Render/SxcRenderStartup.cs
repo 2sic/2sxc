@@ -2,7 +2,10 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.JsContext;
+using ToSic.Sxc.Web.Internal.PageService;
 
 namespace ToSic.Sxc;
 
@@ -31,6 +34,28 @@ public static class SxcRenderStartup
         services.TryAddTransient<JsContextAll>();
         services.TryAddTransient<JsContextLanguage>();
         services.TryAddScoped<JsApiCacheService>(); // v16.01
+
+
+        // Content Security Policies (CSP)
+        services.TryAddTransient<IContentSecurityPolicyService, ContentSecurityPolicyService>();
+        services.TryAddTransient<CspOfApp>();   // must be transient
+        services.TryAddScoped<CspOfModule>();   // important: must be scoped!
+        services.TryAddTransient<CspOfPage>();
+        services.TryAddTransient<CspParameterFinalizer>();
+
+        // Polymorphism
+        services.TryAddTransient<Polymorphism.Internal.PolymorphConfigReader>();
+
+
+        // 2022-02-07 2dm experimental
+        // The PageServiceShared must always be generated from the PageScope
+        // I previously thought the PageServiceShared must be scoped at page level, but this is wrong
+        // Reason is that it seems to collect specs per module, and then actually only flushes it
+        // Because it shouldn't remain in the list for the second module
+        // So it actually looks like it's very module-scoped already, but had workarounds for it.
+        // So I think it really doesn't need to be have workarounds for it
+        services.TryAddScoped<PageServiceShared>();
+        services.TryAddTransient<PageChangeSummary>();
 
         services.AddSxcRenderFallback();
 

@@ -62,9 +62,14 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
             || !ValueConverterBase.CouldBeReference(rawString))
             return null;
 
+        // 2025-05-13 2dm old code, must ensure that this code doesn't need the IBlockContext
+        //var appReader = cdf?.BlockOrNull?.Context?.AppReader;
+
         // Get AppState to retrieve metadata - but exit early if we don't have it
-        var appReader = cdf?.BlockOrNull?.Context?.AppReader;
-        if (appReader == null) return null;
+        var appReader = (cdf as ICodeDataFactoryDeepWip)?.AppReaderOrNull;
+
+        if (appReader == null)
+            return null;
 
         var mdOf = appReader.Metadata.GetMetadataOf(TargetTypes.CmsItem, rawString, title: "");
         ImageDecorator.AddRecommendations(mdOf, Url, cdf?._CodeApiSvc); // needs the url so it can check if we use image recommendations

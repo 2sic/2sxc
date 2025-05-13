@@ -1,10 +1,11 @@
 ﻿using System.Dynamic;
+using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
 using ToSic.Sxc.Data.Internal.Wrapper;
 
 namespace ToSic.Sxc.Data.Internal;
 
-partial class CodeDataFactory : ICodeDataFactory
+partial class CodeDataFactory: ICodeDataFactoryDeepWip
 {
 
     #region Dynamic
@@ -107,4 +108,6 @@ partial class CodeDataFactory : ICodeDataFactory
 
     #endregion
 
+    bool ICodeDataFactoryDeepWip.IsContentAdmin => BlockOrNull?.Context.Permissions.IsContentAdmin ?? false;
+    public IAppReader AppReaderOrNull => BlockOrNull?.Context?.AppReader;
 }

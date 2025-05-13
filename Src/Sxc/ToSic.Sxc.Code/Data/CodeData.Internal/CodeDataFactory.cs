@@ -28,7 +28,8 @@ public partial class CodeDataFactory(
     LazySvc<CodeInfoService> codeInfoSvc,
     LazySvc<IZoneMapper> zoneMapper)
     : ServiceForDynamicCode("Sxc.AsConv",
-        connect: [/* never: serviceProvider */codeDataServices, adamManager, contextOfAppLazy, dataBuilderLazy, codeDataWrapper, wrapJsonGenerator, codeInfoSvc, zoneMapper])
+        connect: [/* never: serviceProvider */codeDataServices, adamManager, contextOfAppLazy, dataBuilderLazy, codeDataWrapper, wrapJsonGenerator, codeInfoSvc, zoneMapper]),
+        ICodeDataFactory
 {
     public CodeInfoService CodeInfo => codeInfoSvc.Value;
 

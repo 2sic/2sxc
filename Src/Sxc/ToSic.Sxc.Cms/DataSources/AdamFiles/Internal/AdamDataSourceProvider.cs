@@ -18,11 +18,11 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
 {
     private IContextOfApp _context;
 
-    public class MyServices(LazySvc<AdamContext<TFolderId, TFileId>> adamContext, ISxcContextResolver ctxResolver)
+    public class MyServices(LazySvc<AdamContext<TFolderId, TFileId>> adamContext, ISxcAppContextResolver ctxResolver)
         : MyServicesBase(connect: [adamContext, ctxResolver])
     {
         public LazySvc<AdamContext<TFolderId, TFileId>> AdamContext { get; } = adamContext;
-        public ISxcContextResolver CtxResolver { get; } = ctxResolver;
+        public ISxcAppContextResolver CtxResolver { get; } = ctxResolver;
     }
 
     protected AdamDataSourceProvider(MyServices services) : base(services, $"{SxcLogName}.AdamDs")
@@ -58,25 +58,27 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
     public Func<IEntity, IEnumerable<AdamItemDataRaw>> GetInternal()
         => GetAdamListOfItems;
 
-    private IEnumerable<AdamItemDataRaw> GetAdamListOfItems(IEntity entity) => Log.Func(() =>
+    private IEnumerable<AdamItemDataRaw> GetAdamListOfItems(IEntity entity)
     {
+        var l = Log.Fn<IEnumerable<AdamItemDataRaw>>();
         // This will contain the list of items
         var list = new List<AdamItemDataRaw>();
 
         // TODO: this is just tmp code to get some data...
-        Services.AdamContext.Value.Init(_context, entity.Type.Name, string.Empty, entity.EntityGuid, false, cdf: null);
+        Services.AdamContext.Value
+            .Init(_context, entity.Type.Name, string.Empty, entity.EntityGuid, false, cdf: null);
 
         // get root and at the same time auto-create the core folder in case it's missing (important)
         var root = Services.AdamContext.Value.AdamRoot.Folder(false);
 
         // if no root exists then quit now
         if (root == null)
-            return ([], "null/empty");
+            return l.Return([], "null/empty");
 
         AddAdamItemsFromFolder(root, list);
 
-        return (list, $"found:{list.Count}");
-    });
+        return l.Return(list, $"found:{list.Count}");
+    }
 
     private void AddAdamItemsFromFolder(IFolder folder, List<AdamItemDataRaw> list)
     {

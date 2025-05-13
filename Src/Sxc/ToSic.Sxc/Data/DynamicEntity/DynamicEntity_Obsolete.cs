@@ -1,6 +1,7 @@
 ﻿#if NETFRAMEWORK
 
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Data
@@ -18,8 +19,11 @@ namespace ToSic.Sxc.Data
                 if (Cdf.BlockOrNull == null)
                     return new System.Web.HtmlString("");
 
+                // 2025-05-13 2dm old code, must ensure that this code doesn't need the IBlockContext
+                //var userMayEdit = Cdf.BlockOrNull?.Context.Permissions.IsContentAdmin ?? false;
+
                 // If we're not in a running context, of which we know the permissions, no toolbar
-                var userMayEdit = Cdf.BlockOrNull?.Context.Permissions.IsContentAdmin ?? false;
+                var userMayEdit = (Cdf as ICodeDataFactoryDeepWip)?.IsContentAdmin ?? false;
 
                 if (!userMayEdit)
                     return new System.Web.HtmlString("");
