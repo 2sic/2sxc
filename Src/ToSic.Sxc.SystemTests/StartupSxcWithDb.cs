@@ -31,6 +31,7 @@ public class StartupSxcWithDb
             .AddSxcCore()
             .AddSxcApps()
             .AddSxcEdit()
+            .AddSxcDataTyped()
             .AddSxcBlocks()
             .AddSxcRender()
             .AddSxcCms()

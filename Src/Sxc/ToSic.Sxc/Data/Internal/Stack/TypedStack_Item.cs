@@ -3,7 +3,6 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Cms.Data;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Images;

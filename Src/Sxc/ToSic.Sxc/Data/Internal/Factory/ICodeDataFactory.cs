@@ -4,7 +4,6 @@ using ToSic.Eav.Metadata;
 using ToSic.Lib.Code.InfoSystem;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data.Internal.Stack;
 

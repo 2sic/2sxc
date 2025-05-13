@@ -1,11 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Context;
-using ToSic.Eav.Context.Internal;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.StartUp;
 using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
@@ -17,9 +14,6 @@ using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Internal.Plumbing;
 using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Polymorphism.Internal;
-using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
-using ToSic.Sxc.Web.Internal.PageFeatures;
-using ToSic.Sxc.Web.Internal.PageService;
 
 namespace ToSic.Sxc.Startup;
 
