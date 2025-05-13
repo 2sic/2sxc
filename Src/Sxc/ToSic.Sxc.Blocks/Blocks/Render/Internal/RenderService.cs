@@ -164,6 +164,6 @@ public class RenderService: ServiceForDynamicCode,
         // Otherwise create a new one - even though it's not clear if this would have any real effect
         var newEdit = _Deps.EditGenerator.New();
         newEdit.ConnectToRoot(_CodeApiSvc);
-        return ((EditService)newEdit).SetBlock(_CodeApiSvc, blockOrNull);
+        return ((IEditServiceSetup)newEdit).SetBlock(_CodeApiSvc, blockOrNull);
     }
 }

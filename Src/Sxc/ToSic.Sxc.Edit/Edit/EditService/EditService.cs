@@ -9,29 +9,20 @@ namespace ToSic.Sxc.Edit.EditService;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal partial class EditService(IJsonService jsonService)
-    : ServiceForDynamicCode("Sxc.Edit", connect: [jsonService]), IEditService
+    : ServiceForDynamicCode("Sxc.Edit", connect: [jsonService]), IEditService, IEditServiceSetup
 {
-    // 2024-01-10 2dm disabled #WrapInContext - was for internal only, seems not to be used? Was created 2018? https://github.com/2sic/2sxc/issues/1479
-    //_renderHelper = renderHelper.SetInit(h => h.Init(Block))
-
-    // 2024-01-10 2dm disabled #WrapInContext - was for internal only, seems not to be used? Was created 2018? https://github.com/2sic/2sxc/issues/1479
-    //private readonly LazySvc<IRenderingHelper> _renderHelper;
-
     public override void ConnectToRoot(ICodeApiService codeRoot)
     {
         base.ConnectToRoot(codeRoot);
-        SetBlock(codeRoot, ((ICodeApiServiceInternal)codeRoot)._Block);
+        ((IEditServiceSetup)this).SetBlock(codeRoot, ((ICodeApiServiceInternal)codeRoot)._Block);
     }
 
-    internal IEditService SetBlock(ICodeApiService codeRoot, IBlock block)
+    IEditService IEditServiceSetup.SetBlock(ICodeApiService codeRoot, IBlock block)
     {
-        //Block = block;
         var user = codeRoot?.CmsContext?.User;
         Enabled = block?.Context.Permissions.IsContentAdmin ?? (user?.IsSiteAdmin ?? false);
         return this;
     }
-
-    //protected IBlock Block;
 
     #region Attribute-helper
 

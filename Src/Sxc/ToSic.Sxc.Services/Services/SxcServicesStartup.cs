@@ -57,7 +57,7 @@ public static class SxcServicesStartup
         services.TryAddTransient<IToolbarService, ToolbarService>();    // New 13.00
         services.TryAddTransient<IFeaturesService, FeaturesService>();  // New 13.01
         //services.TryAddTransient<IImageService, ImageService>();
-        services.TryAddTransient<IEditService, EditService>();
+        //services.TryAddTransient<IEditService, EditService>();
         services.TryAddTransient<ResizeDimensionGenerator>();
 
         // v14 Toolbar Builder

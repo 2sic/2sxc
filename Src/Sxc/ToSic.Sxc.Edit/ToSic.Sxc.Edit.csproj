@@ -21,6 +21,13 @@
     <!-- end: Don't generate... -->
   </PropertyGroup>
 
+
+  <ItemGroup>
+    <Compile Remove="NewFolder\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
+    <None Remove="NewFolder\**" />
+  </ItemGroup>
+
   <!--<PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -43,15 +50,15 @@
     <!--<Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />-->
-    <!--<Reference Include="System.Web" />-->
+    <Reference Include="System.Web" />
     <!--<Reference Include="System.Web.Http">
       <HintPath>..\..\..\Dependencies\System.Web\System.Web.Http.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>-->
-    <!--<Reference Include="ToSic.Razor">
+    <Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.dll</HintPath>
-    </Reference>-->
+    </Reference>
     <!--<Reference Include="Microsoft.CSharp" />-->
   </ItemGroup>
 
@@ -63,9 +70,13 @@
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />-->
 
-    <!--<Reference Include="ToSic.Razor">
+    <Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
-    </Reference>-->
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>
