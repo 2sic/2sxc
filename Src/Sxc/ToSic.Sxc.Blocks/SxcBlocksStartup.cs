@@ -6,6 +6,7 @@ using ToSic.Eav.Context.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Integration.Modules;
 using ToSic.Sxc.LookUp.Internal;
 
 namespace ToSic.Sxc;
@@ -49,6 +50,8 @@ public static class SxcBlocksStartup
         services.TryAddScoped<IContextResolverUserPermissions>(x => x.GetRequiredService<ISxcContextResolver>());
         services.TryAddScoped<AppIdResolver>();
 
+        // Integration stuff - must be implemented by each platform
+        services.TryAddTransient<IPlatformModuleUpdater, BasicModuleUpdater>();
 
 
         services.AddSxcBlocksFallback();

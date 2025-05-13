@@ -26,8 +26,8 @@ public class SimpleRenderer(Generator<BlockOfEntity> blkFrmEntGen, Generator<IBl
 
         // render it
         l.A("found, will render");
-        var cb = blkFrmEntGen.New().Init(parentBlock, entity);
-        var builder = blockBuilderGenerator.New().Setup(cb);
+        var blockOfEntity = blkFrmEntGen.New().Init(parentBlock, entity);
+        var builder = blockBuilderGenerator.New().Setup(blockOfEntity);
         var result = builder.Run(false, specs: new() { Data = data });
 
         // Special: during Run() various things are picked up like header changes, activations etc.
@@ -46,9 +46,13 @@ public class SimpleRenderer(Generator<BlockOfEntity> blkFrmEntGen, Generator<IBl
     {
         var l = Log.Fn<string>();
         var attribs = edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid);
-        var inner = subItem == null ? "": Render(block, subItem.Entity, data: data);
+        var inner = subItem == null
+            ? ""
+            : Render(block, subItem.Entity, data: data);
         var cbClasses = edit.Enabled ? WrapperSingleItem : "";
-        return l.Return(string.Format(WrapperTemplate, [cbClasses, attribs, inner]));
+        // ReSharper disable FormatStringProblem
+        return l.Return(string.Format(WrapperTemplate, args: [cbClasses, attribs, inner]));
+        // ReSharper restore FormatStringProblem
     }
 
     public string RenderListWithContext(IBlock block, IEntity parent, string fieldName, string apps, int max, IEditService edit)
@@ -64,11 +68,13 @@ public class SimpleRenderer(Generator<BlockOfEntity> blkFrmEntGen, Generator<IBl
         //    foreach (var cb in items)
         //        innerBuilder.Append(Render(block, cb.Entity));
 
-        var result = string.Format(WrapperTemplate, [
+        // ReSharper disable FormatStringProblem
+        var result = string.Format(WrapperTemplate, args: [
             edit.Enabled ? WrapperMultiItems : "",
             edit.ContextAttributes(parent, field: fieldName, apps: apps, max: max),
             innerBuilder
         ]);
+        // ReSharper restore FormatStringProblem
         return l.Return(result);
     }
 }

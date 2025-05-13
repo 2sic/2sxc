@@ -98,7 +98,7 @@ public class RenderService: ServiceForDynamicCode,
         item ??= parent.Item;
         MakeSureLogIsInHistory();
         var simpleRenderer = Services.SimpleRenderer.New();
-        var block = parent.TryGetBlockContext();
+        var block = parent.TryGetBlock();
         return Tag.Custom(field == null
             ? simpleRenderer.Render(block, item.Entity, data: data) // without field edit-context
             : simpleRenderer.RenderWithEditContext(block, parent, item, field, newGuid, GetEditService(block), data)); // with field-edit-context data-list-context
@@ -128,7 +128,9 @@ public class RenderService: ServiceForDynamicCode,
         if (string.IsNullOrWhiteSpace(field)) throw new ArgumentNullException(nameof(field));
 
         MakeSureLogIsInHistory();
-        var block = parent.TryGetBlockContext();
+        var block = parent.TryGetBlock();
+        if (block == null)
+            throw new NullReferenceException($"Tried to get the block off of this item but got null, can't do inner render as expected");
         return Tag.Custom(merge == null
             ? Services.SimpleRenderer.New().RenderListWithContext(block, parent.Entity, field, apps, max, GetEditService(block))
             : Services.InTextRenderer.New().RenderMerge(block, parent.Entity, field, merge, GetEditService(block)));

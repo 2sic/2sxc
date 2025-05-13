@@ -5,7 +5,6 @@ using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Integration.Installation;
-using ToSic.Sxc.Integration.Modules;
 using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Polymorphism.Internal;
 
@@ -29,13 +28,7 @@ static partial class RegisterSxcServices
         // basic environment, pages, modules etc.
         services.TryAddTransient<IEnvironmentInstaller, BasicEnvironmentInstaller>();
         services.TryAddTransient<IPlatformAppInstaller, BasicEnvironmentInstaller>();
-        services.TryAddTransient<IPlatformModuleUpdater, BasicModuleUpdater>();
-        //services.TryAddTransient<IPagePublishingResolver, BasicPagePublishingResolver>();
-        //services.TryAddTransient<IPagePublishing, BasicPagePublishing>();
-
-        //// This must never have a TRY! but only an AddTransient, as many can be registered by this type
-        //services.AddTransient<IPagePublishingGetSettings, PagePublishingGetSettingsOptional>(); // new v13 BETA #SwitchServicePagePublishingResolver
-        //services.AddTransient<IPagePublishingGetSettings, PagePublishingGetSettingsForbidden>();
+        //services.TryAddTransient<IPlatformModuleUpdater, BasicModuleUpdater>();
 
         // Code / Dynamic Code
         //services.TryAddTransient<ICodeApiServiceFactory, CodeApiServiceFactory>();

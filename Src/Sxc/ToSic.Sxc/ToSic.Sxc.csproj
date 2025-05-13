@@ -88,6 +88,8 @@
 
   <ItemGroup>
     <Folder Include="Code\TypedModel\" />
+    <Folder Include="Edit\Internal\" />
+    <Folder Include="Integration\Modules\" />
   </ItemGroup>
 
 </Project>

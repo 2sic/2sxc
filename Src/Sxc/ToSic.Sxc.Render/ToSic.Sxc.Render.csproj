@@ -35,6 +35,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ToSic.Sxc.Blocks\ToSic.Sxc.Blocks.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Edit\ToSic.Sxc.Edit.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Engines\ToSic.Sxc.Engines.csproj" />
     <ProjectReference Include="..\ToSic.Sxc\ToSic.Sxc.csproj" />
   </ItemGroup>
 

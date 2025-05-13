@@ -19,6 +19,9 @@ public static class SxcEnginesStartup
         services.TryAddTransient<EnginePolymorphism>();
         services.TryAddTransient<EngineAppRequirements>();
 
+        // Polymorphism
+        services.TryAddTransient<Polymorphism.Internal.PolymorphConfigReader>();
+
         return services;
     }
 

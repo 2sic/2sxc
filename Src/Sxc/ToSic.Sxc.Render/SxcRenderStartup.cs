@@ -43,9 +43,6 @@ public static class SxcRenderStartup
         services.TryAddTransient<CspOfPage>();
         services.TryAddTransient<CspParameterFinalizer>();
 
-        // Polymorphism
-        services.TryAddTransient<Polymorphism.Internal.PolymorphConfigReader>();
-
 
         // 2022-02-07 2dm experimental
         // The PageServiceShared must always be generated from the PageScope
