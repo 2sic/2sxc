@@ -142,6 +142,7 @@
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Blocks\ToSic.Sxc.Blocks.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Engines\ToSic.Sxc.Engines.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Images\ToSic.Sxc.Images.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Render\ToSic.Sxc.Render.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Services\ToSic.Sxc.Services.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Web\ToSic.Sxc.Web.csproj" />
