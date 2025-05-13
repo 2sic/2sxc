@@ -61,7 +61,7 @@ public class DynamicStack: DynamicObject,
     {
         var source = _stack.GetSource(name)
                      // If not found, create a fake one
-                     ?? Cdf.FakeEntity(Cdf.BlockOrNull?.AppId);
+                     ?? Cdf.FakeEntity(((ICodeDataFactoryDeepWip)Cdf).AppIdOrZero);
 
         return SourceToDynamicEntity(source);
     }

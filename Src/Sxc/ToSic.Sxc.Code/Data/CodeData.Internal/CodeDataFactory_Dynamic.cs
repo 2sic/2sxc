@@ -110,4 +110,5 @@ partial class CodeDataFactory: ICodeDataFactoryDeepWip
 
     bool ICodeDataFactoryDeepWip.IsContentAdmin => BlockOrNull?.Context.Permissions.IsContentAdmin ?? false;
     public IAppReader AppReaderOrNull => BlockOrNull?.Context?.AppReader;
+    int ICodeDataFactoryDeepWip.AppIdOrZero => BlockOrNull?.AppId ?? 0;
 }

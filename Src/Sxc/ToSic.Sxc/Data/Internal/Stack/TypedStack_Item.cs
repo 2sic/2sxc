@@ -20,7 +20,7 @@ internal partial class TypedStack: ITypedItem
 
     IEntity ICanBeEntity.Entity => throw new NotImplementedException(NotImplementedError);
 
-    IBlock ICanBeItem.TryGetBlockContext() => Cdf?.BlockOrNull;
+    object ICanBeItem.TryGetBlock() => Cdf?.BlockAsObjectOrNull;
 
     ITypedItem ICanBeItem.Item => this;
 

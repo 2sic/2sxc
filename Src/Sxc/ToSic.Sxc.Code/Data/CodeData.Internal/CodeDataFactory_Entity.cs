@@ -12,7 +12,7 @@ partial class CodeDataFactory
               ?? (thingToConvert as ICanBeEntity)?.Entity
               ?? throw new ArgumentException($"Tried to convert an object to {nameof(IEntity)} but cannot convert a {thingToConvert.GetType()}");
 
-    public IEntity FakeEntity(int? appId) => dataBuilderLazy.Value.FakeEntity(appId ?? 0);
+    public IEntity FakeEntity(int appId) => dataBuilderLazy.Value.FakeEntity(appId);
 
     public IEntity PlaceHolderInBlock(int? appIdOrNull, IEntity parent, string field)
     {

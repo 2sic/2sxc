@@ -78,6 +78,8 @@ public partial class CodeDataFactory(
 
     public IBlock BlockOrNull => ((ICodeApiServiceInternal)_CodeApiSvc)?._Block;
 
+    public object BlockAsObjectOrNull => BlockOrNull;
+
     #endregion
 
     public object Json2Jacket(string json, string fallback = default)

@@ -37,7 +37,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, bool propsRequired, ICodeDataFactory cdf)
         : this(cdf, propsRequired,
             // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
-            list.FirstOrDefault() ?? cdf.PlaceHolderInBlock(appIdOrNull, parent, field))
+            list.FirstOrDefault() ?? cdf.PlaceHolderInBlock(appIdOrNull ?? 0, parent, field))
     {
         ListHelper = new(list, parent, field, () => Debug, propsRequired: propsRequired, cdf);
     }
@@ -171,10 +171,19 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     public bool IsPublished => Entity?.IsPublished ?? true;
 
     /// <inheritdoc />
-    public dynamic GetDraft() => SubDataFactory.SubDynEntityOrNull(Entity == null ? null : (Cdf.BlockOrNull?.App as IAppWithInternal)?.AppReader?.GetDraft(Entity));
+
+    public dynamic GetDraft() => SubDataFactory.SubDynEntityOrNull(Entity == null
+        ? null
+        : (Cdf as ICodeDataFactoryDeepWip)?.AppReaderOrNull?.GetDraft(Entity)
+    );
+    //public dynamic GetDraft() => SubDataFactory.SubDynEntityOrNull(Entity == null ? null : (Cdf.BlockOrNull?.App as IAppWithInternal)?.AppReader?.GetDraft(Entity));
 
     /// <inheritdoc />
-    public dynamic GetPublished() => SubDataFactory.SubDynEntityOrNull(Entity == null ? null : (Cdf.BlockOrNull?.App as IAppWithInternal)?.AppReader?.GetPublished(Entity));
+    public dynamic GetPublished() => SubDataFactory.SubDynEntityOrNull(Entity == null
+        ? null
+        : (Cdf as ICodeDataFactoryDeepWip)?.AppReaderOrNull?.GetPublished(Entity)
+    );
+    //public dynamic GetPublished() => SubDataFactory.SubDynEntityOrNull(Entity == null ? null : (Cdf.BlockOrNull?.App as IAppWithInternal)?.AppReader?.GetPublished(Entity));
 
     #endregion
 
@@ -203,7 +212,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
 
     #endregion
 
-    [PrivateApi] IBlock ICanBeItem.TryGetBlockContext() => Cdf?.BlockOrNull;
+    [PrivateApi] object ICanBeItem.TryGetBlock() => Cdf?.BlockAsObjectOrNull;
     [PrivateApi] ITypedItem ICanBeItem.Item => TypedItem;
 
 

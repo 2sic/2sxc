@@ -6,6 +6,7 @@ using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Internal;
+using ToSic.Sxc.Render.Internal;
 using static ToSic.Lib.Code.Infos.CodeInfoObsolete;
 
 // ReSharper disable once CheckNamespace
@@ -74,7 +75,7 @@ public class Render
                 "For v14+ use the Kit.Render (IRenderService) or for v12+ use the GetService<ToSic.Sxc.Services.IRenderService>().");
 
 
-        var block = cdf.BlockOrNull;
+        var block = parent.GetRequiredBlockForRender();
         DnnStaticDi.CodeInfos.WarnSxc(WarnObsolete.UsedAs(appId: parent.Entity.AppId, specificId: $"View:{block?.View?.Id}"), block: block);
 
         return cdf.Services.RenderServiceGenerator.New();

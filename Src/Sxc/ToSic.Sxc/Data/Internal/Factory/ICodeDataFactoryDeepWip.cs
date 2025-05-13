@@ -10,4 +10,6 @@ public interface ICodeDataFactoryDeepWip
 {
     bool IsContentAdmin { get; }
     IAppReader AppReaderOrNull { get; }
+
+    int AppIdOrZero { get; }
 }

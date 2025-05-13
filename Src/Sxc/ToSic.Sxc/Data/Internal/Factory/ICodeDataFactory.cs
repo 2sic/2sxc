@@ -51,7 +51,13 @@ public interface ICodeDataFactory
 
     ICodeApiService _CodeApiSvc { get; }
     bool Debug { get; set; }
-    IBlock BlockOrNull { get; }
+    //IBlock BlockOrNull { get; }
+
+    /// <summary>
+    /// Temporary workaround to allow forwarding the Block object without having to know the interface of it.
+    /// WIP to get dynamic data to keep the context of where it's from, without the API having to be typed.
+    /// </summary>
+    object BlockAsObjectOrNull { get; }
 
     /// <summary>
     /// List of dimensions for value lookup, incl. priorities etc. and null-trailing.
@@ -118,7 +124,7 @@ public interface ICodeDataFactory
     ITypedStack AsTypedStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources);
     IField Field(ITypedItem parent, string name, bool propsRequired, NoParamOrder noParamOrder = default, bool? required = default);
     IEntity AsEntity(object thingToConvert);
-    IEntity FakeEntity(int? appId);
+    IEntity FakeEntity(int appId);
 
     TCustom GetOne<TCustom>(Func<IEntity> getItem, object id, bool skipTypeCheck)
         where TCustom : class, ICanWrapData;

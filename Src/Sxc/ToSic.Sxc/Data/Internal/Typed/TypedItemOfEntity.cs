@@ -66,7 +66,7 @@ internal class TypedItemOfEntity(DynamicEntity dynOrNull, IEntity entity, ICodeD
     IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= new(Entity, canDebug: this);
     private PropLookupWithPathEntity _propLookup;
 
-    [PrivateApi] IBlock ICanBeItem.TryGetBlockContext() => Cdf?.BlockOrNull;
+    [PrivateApi] object ICanBeItem.TryGetBlock() => Cdf?.BlockAsObjectOrNull;
     [PrivateApi] ITypedItem ICanBeItem.Item => this;
 
     #endregion

@@ -15,14 +15,11 @@ namespace ToSic.Sxc.Data
         {
             get
             {
-                // if it's neither in a running context nor in a running portal, no toolbar
-                if (Cdf.BlockOrNull == null)
-                    return new System.Web.HtmlString("");
-
                 // 2025-05-13 2dm old code, must ensure that this code doesn't need the IBlockContext
                 //var userMayEdit = Cdf.BlockOrNull?.Context.Permissions.IsContentAdmin ?? false;
 
                 // If we're not in a running context, of which we know the permissions, no toolbar
+                // Internally also verifies that we have a context (otherwise it's false), so no toolbar
                 var userMayEdit = (Cdf as ICodeDataFactoryDeepWip)?.IsContentAdmin ?? false;
 
                 if (!userMayEdit)

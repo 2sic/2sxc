@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Blocks.Internal;
-
-namespace ToSic.Sxc.Data.Internal;
+﻿namespace ToSic.Sxc.Data.Internal;
 
 /// <summary>
 /// This is just a helper interface.
@@ -21,7 +19,7 @@ public interface ICanBeItem: ICanBeEntity
     /// <returns></returns>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    IBlock TryGetBlockContext();
+    object TryGetBlock();
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]

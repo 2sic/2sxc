@@ -92,8 +92,8 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     [ShowApiWhenReleased(ShowApiMode.Never)]
     IEntity ICanBeEntity.Entity => _item.Entity;
 
-    IBlock ICanBeItem.TryGetBlockContext()
-        => _item.TryGetBlockContext();
+    object ICanBeItem.TryGetBlock()
+        => _item.TryGetBlock();
 
     IPropertyLookup IHasPropLookup.PropertyLookup
         => field ??= ((IHasPropLookup)((ICanBeItem)this).Item).PropertyLookup;
