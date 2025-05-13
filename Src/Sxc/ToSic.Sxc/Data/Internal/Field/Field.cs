@@ -50,7 +50,7 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
     /// 2023-08-14 v16.03 removed by 2dm as never used; KISS
     /// ...but reactivated for some reason I don't know...
     /// </summary>
-    public IMetadata Metadata => _dynMeta.Get(() => new Metadata.Metadata(MetadataOfValue, cdf));
+    public IMetadata Metadata => _dynMeta.Get(() => cdf.Metadata(MetadataOfValue));
     private readonly GetOnce<IMetadata> _dynMeta = new();
 
 

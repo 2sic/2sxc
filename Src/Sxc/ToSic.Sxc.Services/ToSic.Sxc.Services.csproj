@@ -43,6 +43,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ToSic.Sxc.Apps\ToSic.Sxc.Apps.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Cms\ToSic.Sxc.Cms.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Data\ToSic.Sxc.Data.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Edit\ToSic.Sxc.Edit.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Images\ToSic.Sxc.Images.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Render\ToSic.Sxc.Render.csproj" />

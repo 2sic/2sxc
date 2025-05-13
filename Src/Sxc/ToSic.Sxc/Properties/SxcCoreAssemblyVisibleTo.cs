@@ -34,3 +34,4 @@
 [assembly: InternalsVisibleTo("ToSic.Sxc.Web")]
 
 [assembly: InternalsVisibleTo("ToSic.Sxc.Apps")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Data")]

@@ -49,23 +49,15 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>-->
-    <!--<Reference Include="ToSic.Razor">
+    <Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.dll</HintPath>
-    </Reference>-->
-    <!--<Reference Include="Microsoft.CSharp" />-->
+    </Reference>
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
-    <!--<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.8.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="4.8.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
-    <PackageReference Include="System.Runtime.Caching" Version="9.0.0" />
-    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />-->
-
-    <!--<Reference Include="ToSic.Razor">
+    <Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
-    </Reference>-->
+    </Reference>
   </ItemGroup>
 
 </Project>
