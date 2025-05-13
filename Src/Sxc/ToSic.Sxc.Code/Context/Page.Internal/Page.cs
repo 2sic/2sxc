@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Context.Internal;
 /// Constructor for DI
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class Page(LazySvc<IHttp> httpLazy) : IPage
+public class Page(LazySvc<IHttp> httpLazy) : IPage
 {
     public IPage Init(int id)
     {

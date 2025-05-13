@@ -30,8 +30,8 @@ public static partial class RegisterSxcServices
         services.TryAddTransient<SxcImportExportEnvironmentBase.MyServices>();
 
         // Context stuff for the page (not EAV)
-        services.TryAddTransient<IPage, Page>();
-        services.TryAddTransient<Page>();
+        //services.TryAddTransient<IPage, Page>();
+        //services.TryAddTransient<Page>();
 
 
         // Adam stuff

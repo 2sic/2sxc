@@ -49,6 +49,11 @@ public static class SxcCodeStartup
 
         // CmsContext / MyContext
         services.TryAddTransient<ICmsContext, CmsContext>();
+        // Module fallback context
+        services.TryAddTransient<IModule, ModuleUnknown>();
+        services.TryAddTransient<IPage, Page>();
+        services.TryAddTransient<Page>();
+        services.TryAddSingleton<IPlatform, PlatformUnknown>();
 
         return services;
     }

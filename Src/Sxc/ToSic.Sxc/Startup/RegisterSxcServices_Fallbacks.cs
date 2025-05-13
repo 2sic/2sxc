@@ -34,10 +34,10 @@ static partial class RegisterSxcServices
         //services.TryAddTransient<ICodeApiServiceFactory, CodeApiServiceFactory>();
         //services.TryAddTransient<CodeApiService, CodeApiServiceUnknown>();
         //services.TryAddTransient(typeof(CodeApiService<,>), typeof(CodeApiServiceUnknown<,>));
-        services.TryAddTransient<IModule, ModuleUnknown>();
+        //services.TryAddTransient<IModule, ModuleUnknown>();
             
         // 11.08 - fallback in case not added
-        services.TryAddSingleton<IPlatform, PlatformUnknown>();
+        //services.TryAddSingleton<IPlatform, PlatformUnknown>();
 
         // ADAM basics
         // TODO: this doesn't warn yet, there should be an AdamFileSystemUnknown(WarnUseOfUnknown<AdamFileSystemUnknown> warn)

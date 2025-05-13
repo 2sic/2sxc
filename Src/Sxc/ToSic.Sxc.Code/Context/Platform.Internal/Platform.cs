@@ -8,7 +8,7 @@
 /// </remarks>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal abstract class Platform: IPlatform
+public  abstract class Platform: IPlatform
 {
 
     /// <summary>
