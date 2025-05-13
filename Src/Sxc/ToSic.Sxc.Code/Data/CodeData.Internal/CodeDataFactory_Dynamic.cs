@@ -16,41 +16,33 @@ partial class CodeDataFactory: ICodeDataFactoryDeepWip
     /// </summary>
     /// <param name="entity"></param>
     /// <returns></returns>
-    public DynamicEntity CodeAsDyn(IEntity entity)
-        => new(entity, this, propsRequired: false);
+    public IDynamicEntity CodeAsDyn(IEntity entity)
+        => new DynamicEntity(entity, this, propsRequired: false);
 
-    public DynamicEntity AsDynamic(IEntity entity, bool propsRequired) =>
-        new(entity, this, propsRequired: propsRequired);
+    public IDynamicEntity AsDynamic(IEntity entity, bool propsRequired) =>
+        new DynamicEntity(entity, this, propsRequired: propsRequired);
 
     /// <summary>
     /// Convert a list of Entities into a DynamicEntity.
     /// Only used in DynamicCodeRoot.
     /// </summary>
-    public DynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, bool propsRequired) 
-        => new(list: list, parent: null, field: null, appIdOrNull: null, propsRequired: propsRequired, cdf: this);
+    public IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, bool propsRequired) 
+        => new DynamicEntity(list: list, parent: null, field: null, appIdOrNull: null, propsRequired: propsRequired, cdf: this);
 
     /// <summary>
     /// Convert any object into a dynamic list.
     /// Only used in Dynamic Code for the public API.
     /// </summary>
-    public IEnumerable<dynamic> CodeAsDynList(object list, bool propsRequired = false)
-    {
-        switch (list)
+    public IEnumerable<dynamic> CodeAsDynList(object list, bool propsRequired = false) =>
+        list switch
         {
-            case null:
-                return new List<dynamic>();
-            case IDataSource dsEntities:
-                return CodeAsDynList(dsEntities.List);
-            case IEnumerable<IEntity> iEntities:
-                return iEntities.Select(e => AsDynamic(e, propsRequired: propsRequired));
-            case IEnumerable<IDynamicEntity> dynIDynEnt:
-                return dynIDynEnt;
-            case IEnumerable<dynamic> dynEntities:
-                return dynEntities;
-            default:
-                return null;
-        }
-    }
+            null => new List<dynamic>(),
+            IDataSource dsEntities => CodeAsDynList(dsEntities.List),
+            IEnumerable<IEntity> iEntities => iEntities.Select(e => AsDynamic(e, propsRequired: propsRequired)),
+            IEnumerable<IDynamicEntity> dynIDynEnt => dynIDynEnt,
+            IEnumerable<dynamic> dynEntities => dynEntities,
+            _ => null
+        };
 
 
     /// <summary>

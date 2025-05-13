@@ -17,7 +17,7 @@ internal class SubDataFactory(ICodeDataFactory cdf, bool propsRequired, ICanDebu
     public IDynamicEntity SubDynEntityOrNull(IEntity contents)
         => SubDynEntityOrNull(contents, Cdf, canDebug.Debug, propsRequired: PropsRequired);
 
-    internal static DynamicEntity SubDynEntityOrNull(IEntity contents, ICodeDataFactory cdf, bool? debug, bool propsRequired)
+    internal static IDynamicEntity SubDynEntityOrNull(IEntity contents, ICodeDataFactory cdf, bool? debug, bool propsRequired)
     {
         if (contents == null) return null;
         var result = cdf.AsDynamic(contents, propsRequired);

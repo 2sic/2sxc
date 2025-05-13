@@ -14,7 +14,7 @@ public partial class App
     /// <inheritdoc />
     public IAppConfiguration Configuration => AppReaderInt.Specs.Configuration;
 
-    private DynamicEntity MakeDynProperty(IEntity contents, bool propsRequired)
+    private dynamic MakeDynProperty(IEntity contents, bool propsRequired)
     {
         var wrapped = CmsEditDecorator.Wrap(contents, false);
         return Cdf.AsDynamic(wrapped, propsRequired: propsRequired);

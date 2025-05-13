@@ -76,15 +76,15 @@ public interface ICodeDataFactory
     /// </summary>
     /// <param name="entity"></param>
     /// <returns></returns>
-    DynamicEntity CodeAsDyn(IEntity entity);
+    IDynamicEntity CodeAsDyn(IEntity entity);
 
-    DynamicEntity AsDynamic(IEntity entity, bool propsRequired);
+    IDynamicEntity AsDynamic(IEntity entity, bool propsRequired);
 
     /// <summary>
     /// Convert a list of Entities into a DynamicEntity.
     /// Only used in DynamicCodeRoot.
     /// </summary>
-    DynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, bool propsRequired);
+    IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, bool propsRequired);
 
     /// <summary>
     /// Convert any object into a dynamic list.

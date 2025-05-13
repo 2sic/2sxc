@@ -54,13 +54,13 @@ internal class DynamicEntityListHelper
 
             var debug = _getDebug?.Invoke();
             return field = _entities
-                .Select((e, i) =>
+                .Select(IDynamicEntity (e, i) =>
                 {
                     // If we should re-wrap, we create an Entity with some metadata-decoration, so that toolbars know it's part of a list
                     var blockEntity = reWrapWithListNumbering
                         ? EntityInBlockDecorator.Wrap(entity: e, field: FieldOrNull, index: i, parent: ParentOrNull)
                         : e;
-                    return SubDataFactory.SubDynEntityOrNull(blockEntity, _cdf, debug, propsRequired: PropsRequired) as IDynamicEntity;
+                    return SubDataFactory.SubDynEntityOrNull(blockEntity, _cdf, debug, propsRequired: PropsRequired);
                 })
                 .ToList();
         }
