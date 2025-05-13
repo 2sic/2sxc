@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Edit.EditService;
+using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Edit.Toolbar.Internal;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc;
@@ -13,9 +15,12 @@ public static class SxcEditStartup
     {
         services.TryAddTransient<IEditService, EditService>();
 
+        // v14 Toolbar Builder
+        services.TryAddTransient<IToolbarBuilder, ToolbarBuilder>();
+        services.TryAddTransient<ToolbarBuilder.MyServices>();
+        services.TryAddTransient<ToolbarButtonDecoratorHelper>();
+
         return services;
     }
-
-
         
 }

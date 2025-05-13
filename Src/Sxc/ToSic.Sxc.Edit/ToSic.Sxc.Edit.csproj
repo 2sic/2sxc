@@ -23,8 +23,11 @@
 
 
   <ItemGroup>
+    <Compile Remove="Edit\Builder\NewFolder\**" />
     <Compile Remove="NewFolder\**" />
+    <EmbeddedResource Remove="Edit\Builder\NewFolder\**" />
     <EmbeddedResource Remove="NewFolder\**" />
+    <None Remove="Edit\Builder\NewFolder\**" />
     <None Remove="NewFolder\**" />
   </ItemGroup>
 
@@ -76,7 +79,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <Folder Include="Edit\Builder\" />
   </ItemGroup>
 
 </Project>

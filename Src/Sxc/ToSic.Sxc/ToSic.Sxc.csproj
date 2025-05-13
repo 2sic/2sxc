@@ -80,4 +80,8 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Edit\Toolbar\TweakButton\Internal\" />
+  </ItemGroup>
+
 </Project>

@@ -1,11 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Internal;
-using ToSic.Sxc.Blocks.Internal.Render;
-using ToSic.Sxc.Data.Internal;
-using ToSic.Sxc.Edit.EditService;
-using ToSic.Sxc.Edit.Toolbar;
-using ToSic.Sxc.Edit.Toolbar.Internal;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.CmsService.Internal;
@@ -13,7 +8,6 @@ using ToSic.Sxc.Services.DataServices;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Services.Templates;
-using ToSic.Sxc.Startup;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageService;
 
@@ -60,10 +54,10 @@ public static class SxcServicesStartup
         //services.TryAddTransient<IEditService, EditService>();
         services.TryAddTransient<ResizeDimensionGenerator>();
 
-        // v14 Toolbar Builder
-        services.TryAddTransient<IToolbarBuilder, ToolbarBuilder>();
-        services.TryAddTransient<ToolbarBuilder.MyServices>();
-        services.TryAddTransient<ToolbarButtonDecoratorHelper>();
+        //// v14 Toolbar Builder
+        //services.TryAddTransient<IToolbarBuilder, ToolbarBuilder>();
+        //services.TryAddTransient<ToolbarBuilder.MyServices>();
+        //services.TryAddTransient<ToolbarButtonDecoratorHelper>();
 
         // WIP v14
         services.TryAddTransient<IAdamService, AdamService>();

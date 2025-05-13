@@ -8,7 +8,6 @@ using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
-using ToSic.Sxc.Edit.Toolbar.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal;
 using ToSic.Sxc.Web.Internal.PageFeatures;
@@ -236,7 +235,7 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
             {
                 // Add note only for the ImageDecorator Metadata, not for other buttons
                 // Note: Using experimental AddNamed feature which doesn't exist on the ITweakButton interface
-                var modified = (t as TweakButton)?.AddNamed(ImageDecorator.TypeNameId, btn =>
+                var modified = (t as ITweakButtonInternal)?.AddNamed(ImageDecorator.TypeNameId, btn =>
                 {
                     // add label like "Image Settings and Cropping" - i18n
                     btn = btn.Tooltip($"{ToolbarConstants.ToolbarLabelPrefix}MetadataImage");
@@ -263,7 +262,7 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
                     .DoIfNotNull(cpEntity =>
                     {
                         var copyright = new CopyrightDecorator(cpEntity);
-                        modified = (modified as TweakButton)?
+                        modified = (modified as ITweakButtonInternal)?
                             .AddNamed(CopyrightDecorator.TypeNameId, btn => btn
                                 .Tooltip("Copyright")
                                 .Note(copyright.CopyrightMessage.NullIfNoValue() ??

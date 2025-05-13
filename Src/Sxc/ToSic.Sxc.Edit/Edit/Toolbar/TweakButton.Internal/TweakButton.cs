@@ -183,7 +183,7 @@ internal class TweakButton: ITweakButton, ITweakButtonInternal
     /// <param name="name"></param>
     /// <param name="value"></param>
     /// <returns></returns>
-    internal ITweakButton AddNamed(string name, Func<ITweakButton, ITweakButton> value)
+    public ITweakButton AddNamed(string name, Func<ITweakButton, ITweakButton> value)
         => value == null ? this : new(this, named: _named.Add(name, value));
 
     #endregion

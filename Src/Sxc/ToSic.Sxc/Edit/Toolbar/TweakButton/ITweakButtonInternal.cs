@@ -24,4 +24,18 @@ internal interface ITweakButtonInternal
     /// each with a different tweak.
     /// </summary>
     public IImmutableDictionary<string, Func<ITweakButton, ITweakButton>> Named { get; }
+
+    /// <summary>
+    /// Special internal add-rule, which is typically on the main toolbar,
+    /// but will then only be applied to buttons with exactly this name...?
+    ///
+    /// Used in image responsive to add notes to the buttons,
+    /// but different notes for e.g. Copyright etc.
+    ///
+    /// Not fully documented or standardized.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    ITweakButton AddNamed(string name, Func<ITweakButton, ITweakButton> value);
 }
