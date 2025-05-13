@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -42,7 +43,8 @@ internal class OqtaneBlobService(IServiceProvider serviceProvider) : IBlobProvid
             using var scope = serviceProvider.CreateScope();
 
             var webHostEnvironment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
-            if (ExistUnderWebRootPath(webHostEnvironment, virtualPath, out var webRootFilePath)) BlobData(webRootFilePath);
+            if (ExistUnderWebRootPath(webHostEnvironment, virtualPath, out var webRootFilePath)) 
+                return BlobData(webRootFilePath);
 
             // Get alias.
             var aliasResolver = scope.ServiceProvider.GetRequiredService<AliasResolver>();
@@ -51,7 +53,17 @@ internal class OqtaneBlobService(IServiceProvider serviceProvider) : IBlobProvid
             // Build physicalPath.
             var fileHelper = scope.ServiceProvider.GetService<OqtAssetsFileHelper>(); // this service sometimes was not working when was lazy and not scoped
             var physicalPath = fileHelper.GetFilePath(webHostEnvironment.ContentRootPath, alias, route, appName, filePath);
-            if (string.IsNullOrEmpty(physicalPath)) throw new BlobMissingException($"Oqtane blob \"{virtualPath}\" not found.");
+
+            try
+            {
+                if (string.IsNullOrEmpty(physicalPath)) throw new BlobMissingException($"Oqtane blob \"{virtualPath}\" not found.");
+            }
+            catch (BlobMissingException) when (Debugger.IsAttached)
+            {
+                // Ignore during interactive debugging – still logs for visibility
+                Debug.WriteLine("Blob was missing; ignored in debug session.");
+                return null;
+            }
 
             return BlobData(physicalPath);
         });
