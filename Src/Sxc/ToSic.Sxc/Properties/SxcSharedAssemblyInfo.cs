@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Internal;
 /// <summary>
 /// Contains information for all assemblies to use
 /// </summary>
-[ShowApiWhenReleased(ShowApiMode.Never)]
+//[ShowApiWhenReleased(ShowApiMode.Never)]
 internal static class SxcSharedAssemblyInfo
 {
     public const string AssemblyVersion = "19.99.00";

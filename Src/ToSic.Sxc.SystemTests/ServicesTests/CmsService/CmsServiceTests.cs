@@ -35,6 +35,6 @@ public class CmsServiceTests(ICodeDataFactory cdf, ICmsService cmsService, DataF
         return cmsService.Html(dynamicField, container: container);
     }
 
-    public DynamicEntity DynEntStrict(IEntity? entity = null) => cdf.AsDynamic(entity, true);
+    public IDynamicEntity DynEntStrict(IEntity? entity = null) => cdf.AsDynamic(entity, true);
 
 }

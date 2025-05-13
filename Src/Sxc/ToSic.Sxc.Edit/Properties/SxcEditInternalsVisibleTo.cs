@@ -2,3 +2,5 @@
 
 [assembly: InternalsVisibleTo("ToSic.Sxc.Services")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Render")]
+
+[assembly: InternalsVisibleTo("ToSic.Sxc.UnitTests")]

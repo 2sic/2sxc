@@ -11,5 +11,5 @@ internal static class CodeDataConverterTestAccessors
         => cdf.AsItem(data, noParamOrder, required, fallback, propsRequired, mock);
 
     public static IEntity FakeEntityTac(this ICodeDataFactory cdf, int? appId)
-        => cdf.FakeEntity(appId);
+        => cdf.FakeEntity(appId ?? 0);
 }
