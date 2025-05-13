@@ -15,7 +15,7 @@ partial class PageServiceShared
     }
 
 
-    internal void Add(IHtmlTag tag, string identifier = null)
+    public void Add(IHtmlTag tag, string identifier = null)
     {
         if (tag == null) return;
         Headers.Add(new()

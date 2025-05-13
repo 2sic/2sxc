@@ -3,13 +3,16 @@
 partial class PageService
 {
     /// <inheritdoc />
-    public string SetTitle(string value, string placeholder = null) => PageServiceShared.Queue(PageProperties.Title, value, PageChangeModes.Prepend, placeholder);
+    public string SetTitle(string value, string placeholder = null)
+        => PageServiceShared.Queue(PageProperties.Title, value, PageChangeModes.Prepend, placeholder);
 
     /// <inheritdoc />
-    public string SetDescription(string value, string placeholder = null) => PageServiceShared.Queue(PageProperties.Description, value, PageChangeModes.Prepend, placeholder);
+    public string SetDescription(string value, string placeholder = null)
+        => PageServiceShared.Queue(PageProperties.Description, value, PageChangeModes.Prepend, placeholder);
 
     /// <inheritdoc />
-    public string SetKeywords(string value, string placeholder = null) => PageServiceShared.Queue(PageProperties.Keywords, value, PageChangeModes.Prepend, placeholder);
+    public string SetKeywords(string value, string placeholder = null)
+        => PageServiceShared.Queue(PageProperties.Keywords, value, PageChangeModes.Prepend, placeholder);
 
     /// <inheritdoc />
     public string SetHttpStatus(int statusCode, string message = null)
@@ -20,6 +23,7 @@ partial class PageService
     }
 
     /// <inheritdoc />
-    public string SetBase(string url) => PageServiceShared.Queue(PageProperties.Base, url, PageChangeModes.Replace, null);
+    public string SetBase(string url)
+        => PageServiceShared.Queue(PageProperties.Base, url, PageChangeModes.Replace, null);
 
 }

@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Blocks.Internal;
 /// ATM only used in Oqtane, where external and internal scripts must be extracted
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class BlockResourceExtractorWithInline(PageServiceShared pageServiceShared)
+public class BlockResourceExtractorWithInline(IPageServiceShared pageServiceShared)
     : BlockResourceExtractor(pageServiceShared)
 {
     protected override ClientAssetsExtractSettings Settings => _settings.Get(() => new(extractAll: true));

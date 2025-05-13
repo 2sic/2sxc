@@ -6,7 +6,7 @@ using ToSic.Sxc.Web.Internal.PageService;
 
 namespace ToSic.Sxc.Dnn.Web;
 
-internal class DnnBlockResourceExtractor(PageServiceShared pageServiceShared)
+internal class DnnBlockResourceExtractor(IPageServiceShared pageServiceShared)
     : BlockResourceExtractor(pageServiceShared)
 {
     protected override ClientAssetsExtractSettings Settings => _settings.Get(() => new(

@@ -66,9 +66,9 @@ public static partial class RegisterSxcServices
 
 
         // Page Features
-        services.TryAddTransient<IPageFeatures, PageFeatures>();
-        services.TryAddTransient<IPageFeaturesManager, PageFeaturesManager>();
-        services.TryAddSingleton<PageFeaturesCatalog>();
+        //services.TryAddTransient<IPageFeatures, PageFeatures>();
+        //services.TryAddTransient<IPageFeaturesManager, PageFeaturesManager>();
+        //services.TryAddSingleton<PageFeaturesCatalog>();
 
         //// new in v12.02/12.04 Image Link Resize Helper
         //services.TryAddTransient<ImgResizeLinker>();

@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Web.Internal.PageService;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class PageService(
-    PageServiceShared pageServiceShared,
+    IPageServiceShared pageServiceShared,
     LazySvc<ContentSecurityPolicyService> cspServiceLazy,
     LazySvc<IHtmlTagsService> htmlTagsLazy,
     LazySvc<ITurnOnService> turnOn,
@@ -19,7 +19,7 @@ public partial class PageService(
             connect: [cspServiceLazy, htmlTagsLazy, moduleService, turnOn, pageServiceShared, features]),
         ToSic.Sxc.Services.IPageService // Important: Write with namespace, because it's easy to confuse with IPageService it supports
 {
-    public PageServiceShared PageServiceShared { get; } = pageServiceShared;
+    public IPageServiceShared PageServiceShared { get; } = pageServiceShared;
 
     ///// <summary>
     ///// How the changes given to this object should be processed.

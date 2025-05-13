@@ -5,7 +5,7 @@ using ToSic.Sxc.Blocks.Internal;
 namespace ToSic.Sxc.Engines;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class EngineFactory(Generator<IRazorEngine> razorEngineGen, Generator<TokenEngine> tokenEngineGen)
+public class EngineFactory(Generator<IRazorEngine> razorEngineGen, Generator<ITokenEngine> tokenEngineGen)
     : ServiceBase($"{SxcLogName}.EngFct", connect: [razorEngineGen, tokenEngineGen]), IEngineFactory
 {
     public IEngine CreateEngine(IView view) => view.IsRazor

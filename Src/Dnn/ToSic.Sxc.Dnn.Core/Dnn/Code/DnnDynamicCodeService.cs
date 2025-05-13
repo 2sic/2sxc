@@ -17,13 +17,13 @@ namespace ToSic.Sxc.Dnn.Code;
 internal class DnnDynamicCodeService: DynamicCodeService
 {
     public new class MyScopedServices(
-        LazySvc<PageServiceShared> pageServiceShared,
+        LazySvc<IPageServiceShared> pageServiceShared,
         LazySvc<PageChangeSummary> pageChangeSummary,
         LazySvc<DnnPageChanges> dnnPageChanges,
         LazySvc<DnnClientResources> dnnClientResources)
         : MyServicesBase(connect: [pageServiceShared, pageChangeSummary, dnnPageChanges, dnnClientResources])
     {
-        public LazySvc<PageServiceShared> PageServiceShared { get; } = pageServiceShared;
+        public LazySvc<IPageServiceShared> PageServiceShared { get; } = pageServiceShared;
         public LazySvc<PageChangeSummary> PageChangeSummary { get; } = pageChangeSummary;
         public LazySvc<DnnPageChanges> DnnPageChanges { get; } = dnnPageChanges;
         public LazySvc<DnnClientResources> DnnClientResources { get; } = dnnClientResources;

@@ -13,7 +13,7 @@ using static System.StringComparer;
 namespace ToSic.Sxc.Blocks.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract partial class BlockResourceExtractor(PageServiceShared pageServiceShared)
+public abstract partial class BlockResourceExtractor(IPageServiceShared pageServiceShared)
     : ServiceBase("Sxc.AstOpt"), IBlockResourceExtractor
 {
 

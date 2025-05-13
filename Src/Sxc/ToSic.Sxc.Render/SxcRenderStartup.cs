@@ -5,6 +5,7 @@ using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.JsContext;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.Internal.PageService;
 
 namespace ToSic.Sxc;
@@ -51,8 +52,14 @@ public static class SxcRenderStartup
         // Because it shouldn't remain in the list for the second module
         // So it actually looks like it's very module-scoped already, but had workarounds for it.
         // So I think it really doesn't need to be have workarounds for it
-        services.TryAddScoped<PageServiceShared>();
+        services.TryAddScoped<IPageServiceShared, PageServiceShared>();
         services.TryAddTransient<PageChangeSummary>();
+
+        // Page Features
+        services.TryAddTransient<IPageFeatures, PageFeatures>();
+        services.TryAddTransient<IPageFeaturesManager, PageFeaturesManager>();
+        services.TryAddSingleton<PageFeaturesCatalog>();
+
 
         services.AddSxcRenderFallback();
 

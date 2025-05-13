@@ -6,9 +6,11 @@ using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Engines;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Code;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -41,6 +43,9 @@ public static class SxcCodeStartup
         //services.TryAddTransient<CodeDataFactory>();
         services.TryAddTransient<ICodeDataFactory, CodeDataFactory>();
         services.TryAddTransient<CodeDataServices>();
+
+        // Temporary solution for the TokenEngine
+        services.TryAddTransient<ITokenEngine, TokenEngine>();
 
         // CmsContext / MyContext
         services.TryAddTransient<ICmsContext, CmsContext>();

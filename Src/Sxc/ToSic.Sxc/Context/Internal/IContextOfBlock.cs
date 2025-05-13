@@ -28,6 +28,6 @@ public interface IContextOfBlock: IContextOfApp
     /// <summary>
     /// WIP
     /// </summary>
-    PageServiceShared PageServiceShared { get; }
+    IPageServiceShared PageServiceShared { get; }
 
 }

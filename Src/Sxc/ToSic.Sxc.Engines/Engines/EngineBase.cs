@@ -30,8 +30,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
         internal EngineAppRequirements EngineAppRequirements { get; } = engineAppRequirements;
         internal EnginePolymorphism EnginePolymorphism { get; } = enginePolymorphism;
         internal EngineCheckTemplate EngineCheckTemplate { get; } = engineCheckTemplate;
-
-        internal IServerPaths ServerPaths { get; } = serverPaths;
+        public IServerPaths ServerPaths { get; } = serverPaths;
         internal IBlockResourceExtractor BlockResourceExtractor { get; } = blockResourceExtractor;
     }
 

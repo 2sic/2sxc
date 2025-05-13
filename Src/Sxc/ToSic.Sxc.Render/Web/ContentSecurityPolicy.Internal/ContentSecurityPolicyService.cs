@@ -10,12 +10,12 @@ namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentSecurityPolicyService : ContentSecurityPolicyServiceBase, IContentSecurityPolicyService
 {
-    public ContentSecurityPolicyService(PageServiceShared pageServiceShared)
+    public ContentSecurityPolicyService(IPageServiceShared pageServiceShared)
     {
         _pageSvcShared = pageServiceShared;
         pageServiceShared.Csp.AddCspService(this);
     }
-    private readonly PageServiceShared _pageSvcShared;
+    private readonly IPageServiceShared _pageSvcShared;
 
     public override bool IsEnforced => _pageSvcShared.Csp.IsEnforced;
 

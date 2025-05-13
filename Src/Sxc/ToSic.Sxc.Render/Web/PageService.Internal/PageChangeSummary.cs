@@ -31,7 +31,7 @@ public class PageChangeSummary(
     /// <param name="specs"></param>
     /// <param name="enableEdit"></param>
     /// <returns></returns>
-    public RenderResult FinalizeAndGetAllChanges(int moduleId, PageServiceShared pss, RenderSpecs specs, bool enableEdit)
+    public RenderResult FinalizeAndGetAllChanges(int moduleId, IPageServiceShared pss, RenderSpecs specs, bool enableEdit)
     {
         var l = Log.Fn<RenderResult>(timer: true);
         if (enableEdit)

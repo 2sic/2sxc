@@ -26,7 +26,9 @@ public class TokenEngine(
     EngineBase.MyServices services,
     LazySvc<ICodeApiServiceFactory> codeRootFactory,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
-    : EngineBase(services, connect: [codeRootFactory, tokenEngineWithContext])
+    : EngineBase(services, connect: [codeRootFactory, tokenEngineWithContext]),
+        ITokenEngine
+        
 {
     #region Replacement List to still support old Tokens
 

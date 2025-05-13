@@ -18,7 +18,7 @@ internal class ContextOfBlock(
     IPage page,
     IModule module,
     LazySvc<ServiceSwitcher<IPagePublishingGetSettings>> publishingResolver,
-    PageServiceShared pageServiceShared,
+    IPageServiceShared pageServiceShared,
     ContextOfApp.MyServices appServices)
     : ContextOfApp(appServices, "Sxc.CtxBlk", connect: [module, pageServiceShared, publishingResolver]), IContextOfBlock
 {
@@ -46,7 +46,7 @@ internal class ContextOfBlock(
     /// <inheritdoc />
     public IModule Module { get; } = module;
 
-    public PageServiceShared PageServiceShared { get; } = pageServiceShared;
+    public IPageServiceShared PageServiceShared { get; } = pageServiceShared;
 
     /// <inheritdoc />
     public BlockPublishingSettings Publishing => field ??= publishingResolver.Value.Value.SettingsOfModule(Module?.Id ?? -1);

@@ -3,7 +3,7 @@ using ToSic.Sxc.Web.Internal.ClientAssets;
 
 namespace ToSic.Sxc.Web.Internal.PageService;
 
-partial class PageServiceShared
+partial class PageServiceShared : IPageServiceShared
 {
     /// <summary>
     /// Assets consolidated from all render-results 
