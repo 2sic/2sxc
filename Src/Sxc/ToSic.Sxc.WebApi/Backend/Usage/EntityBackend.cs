@@ -13,7 +13,7 @@ public class EntityBackend(
 
     public dynamic Usage(int appId, Guid guid)
     {
-        var context = ctxResolver.GetBlockOrSetApp(appId);
+        var context = ctxResolver.GetExistingAppOrSet(appId);
         var permCheck = appPermissions.New().Init(context, context.AppReader);
         if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
             throw HttpException.PermissionDenied(error);

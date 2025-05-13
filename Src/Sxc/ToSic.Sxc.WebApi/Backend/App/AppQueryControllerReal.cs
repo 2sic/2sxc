@@ -37,7 +37,7 @@ public class AppQueryControllerReal(
     public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(string name, QueryParameters more, int? appId, string stream = null, bool includeGuid = false)
     {
         var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
-        var appCtx = appId != null ? ctxResolver.GetBlockOrSetApp(appId.Value) : ctxResolver.BlockContextRequired();
+        var appCtx = appId != null ? ctxResolver.GetExistingAppOrSet(appId.Value) : ctxResolver.BlockContextRequired();
 
         // If the appId wasn't specified or == to the Block-AppId, then also include block info to enable more data-sources like CmsBlock
         var maybeBlock = appId == null || appId == appCtx.AppReader.AppId ? ctxResolver.BlockOrNull() : null;

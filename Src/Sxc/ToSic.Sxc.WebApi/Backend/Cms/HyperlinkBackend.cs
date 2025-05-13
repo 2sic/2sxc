@@ -24,7 +24,7 @@ public class HyperlinkBackend<TFolderId, TFileId>(
             if (string.IsNullOrEmpty(hyperlink))
                 return new() { Value = hyperlink };
 
-            var context = ctxResolver.GetBlockOrSetApp(appId);
+            var context = ctxResolver.GetExistingAppOrSet(appId);
             // different security checks depending on the link-type
             var lookupPage = hyperlink.Trim().StartsWith(ValueConverterBase.PrefixPage, StringComparison.OrdinalIgnoreCase);
 

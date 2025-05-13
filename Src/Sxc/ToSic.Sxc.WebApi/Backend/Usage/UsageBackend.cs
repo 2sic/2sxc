@@ -18,7 +18,7 @@ public class UsageBackend(
     public IEnumerable<ViewDto> ViewUsage(int appId, Guid guid, Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
     {
         var l = Log.Fn<IEnumerable<ViewDto>>($"{appId}, {guid}");
-        var context = ctxResolver.GetBlockOrSetApp(appId);
+        var context = ctxResolver.GetExistingAppOrSet(appId);
 
         // extra security to only allow zone change if host user
         var permCheck = appPermissions.New().Init(context, context.AppReader);

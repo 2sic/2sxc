@@ -35,7 +35,7 @@ public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>(
 
     public T Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot)
     {
-        var context = appId > 0 ? Services.CtxResolver.GetBlockOrSetApp(appId) : Services.CtxResolver.AppNameRouteBlock(null);
+        var context = appId > 0 ? Services.CtxResolver.GetExistingAppOrSet(appId) : Services.CtxResolver.AppNameRouteBlock(null);
         var logCall = Log.Fn<T>($"app: {context.AppReader.Show()}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
         AdamContext.Init(context, contentType, field, itemGuid, usePortalRoot, cdf: null);
         return logCall.Return(this as T);

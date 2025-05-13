@@ -31,7 +31,7 @@ public class EditSaveBackend(
         _appId = appId;
         // The context should be from the block if there is one, because it affects saving/publishing
         // Basically it can result in things being saved draft or titles being updated
-        _context = ctxResolver.GetBlockOrSetApp(appId);
+        _context = ctxResolver.GetExistingAppOrSet(appId);
         pagePublishing.Init(_context);
         return this;
     }

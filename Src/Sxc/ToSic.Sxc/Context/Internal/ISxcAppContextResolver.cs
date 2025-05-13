@@ -17,7 +17,7 @@ public interface ISxcAppContextResolver: IContextResolver
     /// </summary>
     /// <param name="appId"></param>
     /// <returns></returns>
-    IContextOfApp GetBlockOrSetApp(int appId);
+    IContextOfApp GetExistingAppOrSet(int appId);
 
     IContextOfApp SetAppOrGetBlock(string nameOrPath);
 

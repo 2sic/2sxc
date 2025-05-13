@@ -21,7 +21,7 @@ public class DialogControllerReal(
         // reset app-id if we get a info-token like -100
         if (appId < 0) appId = Eav.Constants.AppIdEmpty;
 
-        var appContext = appId != Eav.Constants.AppIdEmpty ? ctxResolver.GetBlockOrSetApp(appId) : null;
+        var appContext = appId != Eav.Constants.AppIdEmpty ? ctxResolver.GetExistingAppOrSet(appId) : null;
 
         // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions
         if (appContext != null)

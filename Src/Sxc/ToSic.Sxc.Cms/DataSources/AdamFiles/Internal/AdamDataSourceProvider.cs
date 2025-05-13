@@ -40,7 +40,7 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
     {
         var l = Log.Fn<AdamDataSourceProvider<TFolderId, TFileId>>($"a:{appId}; entityIds:{entityIds}, entityGuids:{entityGuids}, fields:{fields}, filter:{filter}");
         _context = appId > 0
-            ? Services.CtxResolver.GetBlockOrSetApp(appId)
+            ? Services.CtxResolver.GetExistingAppOrSet(appId)
             : Services.CtxResolver.AppNameRouteBlock(null);
         _entityIds = entityIds;
         _entityGuids = entityGuids;

@@ -6,8 +6,7 @@ namespace ToSic.Sxc.Context.Internal;
 
 partial class SxcContextResolver
 {
-    // TODO: RENAME TO GetExistingAppOrSet
-    public IContextOfApp GetBlockOrSetApp(int appId)
+    public IContextOfApp GetExistingAppOrSet(int appId)
     {
         var l = Log.Fn<IContextOfApp>($"a#{appId}");
         // get the current block context
