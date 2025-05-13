@@ -8,6 +8,7 @@ using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Edit.Toolbar.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal;
 using ToSic.Sxc.Web.Internal.PageFeatures;

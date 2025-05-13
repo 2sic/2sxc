@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Internal;
+using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context.Internal;
@@ -67,6 +68,9 @@ public static class SxcBlocksStartup
     {
 
         services.TryAddTransient<IModuleAndBlockBuilder, ModuleAndBlockBuilderUnknown>();
+
+        // This is more of a fallback, in DNN it's pre-registered so it won't use this
+        services.TryAddTransient<ILookUpEngineResolver, LookUpEngineResolver>();
 
         return services;
     }

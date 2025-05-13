@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.LookUp;
-using ToSic.Sxc.LookUp.Internal;
 
 namespace ToSic.Sxc.Startup;
 
@@ -21,8 +20,8 @@ static partial class RegisterSxcServices
 
         //services.AddTransient<ILookUp, QueryStringLookUp>();
 
-        // This is more of a fallback, in DNN it's pre-registered so it won't use this
-        services.TryAddTransient<ILookUpEngineResolver, LookUpEngineResolver>();
+        //// This is more of a fallback, in DNN it's pre-registered so it won't use this
+        //services.TryAddTransient<ILookUpEngineResolver, LookUpEngineResolver>();
 
 #if NETCOREAPP
         services.AddTransient<ILookUp, DateTimeLookUp>();

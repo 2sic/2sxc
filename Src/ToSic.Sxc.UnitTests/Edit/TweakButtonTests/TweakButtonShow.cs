@@ -1,4 +1,4 @@
-﻿using static ToSic.Sxc.Edit.Toolbar.ToolbarConstants;
+﻿using static ToSic.Sxc.Edit.Toolbar.Internal.ToolbarConstants;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ToolbarService;
 

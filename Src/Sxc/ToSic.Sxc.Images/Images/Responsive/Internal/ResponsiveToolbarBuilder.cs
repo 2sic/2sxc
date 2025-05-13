@@ -2,6 +2,7 @@
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Edit.Toolbar.Internal;
 
 namespace ToSic.Sxc.Images.Internal;
 

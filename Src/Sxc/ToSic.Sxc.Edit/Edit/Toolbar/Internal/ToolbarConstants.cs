@@ -1,7 +1,7 @@
-﻿namespace ToSic.Sxc.Edit.Toolbar;
+﻿namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class ToolbarConstants
+public class ToolbarConstants
 {
     private const string ForI18N = "i18n:";
     private const string ToolbarPrefixRaw = "Toolbar.";
