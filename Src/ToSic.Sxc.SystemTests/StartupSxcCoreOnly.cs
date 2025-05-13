@@ -3,6 +3,8 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Startup;
 using ToSic.Eav.StartUp;
 using ToSic.Lib.Internal.FeatSys;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Startup;
 
@@ -36,8 +38,10 @@ public class StartupSxcCoreOnly
             .AddSxcBlocks()
             .AddSxcRender()
             .AddSxcCms()
+            .AddSxcImages()
             .AddSxcServices()
             .AddSxcWeb()
+            .AddSxcCode()
             .AddSxcLightSpeed()
             .AddLibCore()
             .AddEavDataPersistence()
