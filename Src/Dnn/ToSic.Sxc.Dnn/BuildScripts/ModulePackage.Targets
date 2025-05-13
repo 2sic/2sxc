@@ -117,6 +117,8 @@
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Images.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.LightSpeed.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.LightSpeed.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Render.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Render.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Services.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Services.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Web.dll" />

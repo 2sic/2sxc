@@ -82,6 +82,7 @@ public class OqtStartup : IServerStartup
             .AddSxcApps()
             .AddSxcEdit()
             .AddSxcBlocks()
+            .AddSxcRender()
             .AddSxcCms()
             .AddSxcServices()
             .AddSxcWeb()

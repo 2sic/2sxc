@@ -60,6 +60,7 @@
     <ProjectReference Include="..\Sxc\ToSic.Sxc.Code\ToSic.Sxc.Code.csproj" />
     <ProjectReference Include="..\Sxc\ToSic.Sxc.Edit\ToSic.Sxc.Edit.csproj" />
     <ProjectReference Include="..\Sxc\ToSic.Sxc.LightSpeed\ToSic.Sxc.LightSpeed.csproj" />
+    <ProjectReference Include="..\Sxc\ToSic.Sxc.Render\ToSic.Sxc.Render.csproj" />
     <ProjectReference Include="..\Sxc\ToSic.Sxc.Services\ToSic.Sxc.Services.csproj" />
     <ProjectReference Include="..\Sxc\ToSic.Sxc.Web\ToSic.Sxc.Web.csproj" />
     <ProjectReference Include="..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />

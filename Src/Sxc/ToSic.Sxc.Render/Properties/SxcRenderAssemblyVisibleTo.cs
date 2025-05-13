@@ -1,4 +1,3 @@
 ﻿using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("ToSic.Sxc.WebApi")]
-[assembly: InternalsVisibleTo("ToSic.Sxc.Render")]

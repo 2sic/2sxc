@@ -23,15 +23,15 @@ public static class SxcBlocksStartup
         services.TryAddTransient<BlockOfEntity>();
         services.TryAddTransient<BlockServices>();
 
-        services.TryAddTransient<Services.IRenderService, RenderService>();  // new 12.05
-        services.TryAddTransient<RenderService.MyServices>();
-        services.TryAddTransient<SimpleRenderer>();
-        services.TryAddTransient<InTextContentBlockRenderer>();
-#if NETFRAMEWORK
-#pragma warning disable CS0618
-        services.TryAddTransient<Blocks.IRenderService, RenderService>();  // Obsolete, but keep for the few apps we already released in v12
-#pragma warning restore CS0618
-#endif
+//        services.TryAddTransient<Services.IRenderService, RenderService>();  // new 12.05
+//        services.TryAddTransient<RenderService.MyServices>();
+//        services.TryAddTransient<SimpleRenderer>();
+//        services.TryAddTransient<InTextContentBlockRenderer>();
+//#if NETFRAMEWORK
+//#pragma warning disable CS0618
+//        services.TryAddTransient<Blocks.IRenderService, RenderService>();  // Obsolete, but keep for the few apps we already released in v12
+//#pragma warning restore CS0618
+//#endif
 
         services.TryAddTransient<BlockEditorSelector>();
 
@@ -40,11 +40,11 @@ public static class SxcBlocksStartup
         services.TryAddTransient<BlockEditorForModule>();
         services.TryAddTransient<BlockEditorBase.MyServices>();
 
-        services.TryAddTransient<BlockBuilder>();
-        services.TryAddTransient<BlockBuilder.MyServices>();
+        //services.TryAddTransient<BlockBuilder>();
+        //services.TryAddTransient<BlockBuilder.MyServices>();
 
-        services.TryAddTransient<IBlockBuilder, BlockBuilder>();
-        services.TryAddTransient<IRenderingHelper, RenderingHelper>();
+        //services.TryAddTransient<IBlockBuilder, BlockBuilder>();
+        //services.TryAddTransient<IRenderingHelper, RenderingHelper>();
 
         // Block functionality
         services.TryAddTransient<BlockDataSourceFactory>();

@@ -32,6 +32,7 @@ public class StartupSxcWithDb
             .AddSxcApps()
             .AddSxcEdit()
             .AddSxcBlocks()
+            .AddSxcRender()
             .AddSxcCms()
             .AddSxcServices()
             .AddSxcWeb()

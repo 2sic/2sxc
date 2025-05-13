@@ -33,6 +33,7 @@ public class StartupSxcCoreOnly
             .AddSxcApps()
             .AddSxcEdit()
             .AddSxcBlocks()
+            .AddSxcRender()
             .AddSxcCms()
             .AddSxcServices()
             .AddSxcWeb()
