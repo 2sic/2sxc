@@ -4,7 +4,6 @@ using System.Web.UI;
 using ToSic.Eav.StartUp;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Blocks.BlockBuilder.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Dnn.Features;
@@ -43,8 +42,14 @@ public partial class View : PortalModuleBase, IActionable
     /// Block needs to self-initialize when first requested, because it's used in the Actions-Menu builder
     /// which runs before page-load
     /// </summary>
-    private IBlock Block => _blockGetOnce.Get(Log, () => LogTimer.DoInTimer(() => GetService<IModuleAndBlockBuilder>().BuildBlock(ModuleConfiguration, null)), timer: true);
+    private IBlock Block => _blockGetOnce.Get(Log,
+        () => LogTimer.DoInTimer(()
+            => GetService<IModuleAndBlockBuilder>().BuildBlock(ModuleConfiguration, null)
+        ), timer: true
+    );
     private readonly GetOnce<IBlock> _blockGetOnce = new();
+
+    private IBlockBuilder BlockBuilder => field ??= GetService<IBlockBuilder>().Setup(Block);
 
     #region Logging
 
@@ -99,7 +104,7 @@ public partial class View : PortalModuleBase, IActionable
                 if (checkPortalIsReady)
                     if (!DnnReadyCheckTurbo.QuickCheckSiteAndAppFoldersAreReady(this, Log))
                         GetService<DnnReadyCheckTurbo>().EnsureSiteAndAppFoldersAreReady(this, block);
-                var blockBuilder = requiresPre1025Behavior == false ? null : block?.GetBlockBuilder();
+                var blockBuilder = requiresPre1025Behavior == false ? null : BlockBuilder;
                 _dnnClientResources = GetService<DnnClientResources>().Init(Page, null, blockBuilder);
                 _enforcePre1025JQueryLoading = requiresPre1025Behavior ?? _dnnClientResources.NeedsPre1025Behavior();
                 if (_enforcePre1025JQueryLoading) _dnnClientResources.EnforcePre1025Behavior();
@@ -196,10 +201,9 @@ public partial class View : PortalModuleBase, IActionable
         var result = new RenderResult();
         TryCatchAndLogToDnn(() =>
         {
-            var blockBuilder = Block.GetBlockBuilder();
             if (RenderNaked)
-                blockBuilder.WrapInDiv = false;
-            result = (RenderResult)blockBuilder.Run(
+                BlockBuilder.WrapInDiv = false;
+            result = (RenderResult)BlockBuilder.Run(
                 true,
                 specs: new()
                 {
@@ -211,7 +215,7 @@ public partial class View : PortalModuleBase, IActionable
             if (result.Errors?.Any() ?? false)
             {
                 var warnings = result.Errors
-                    .Select(e => blockBuilder.RenderingHelper.DesignError(e));
+                    .Select(e => BlockBuilder.RenderingHelper.DesignError(e));
 
                 result = result with { Html = string.Join("", warnings) + result.Html };
             }

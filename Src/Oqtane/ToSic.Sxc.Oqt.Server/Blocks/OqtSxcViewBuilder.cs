@@ -1,7 +1,7 @@
 ﻿using Oqtane.Models;
+using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks.BlockBuilder.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Oqt.Server.Context;
@@ -27,17 +27,16 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         ISxcContextResolver contextResolverForLookUps,
         ILogStore logStore,
         GlobalTypesCheck globalTypesCheck,
-        IOutputCache outputCache
-    ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
+        IOutputCache outputCache,
+        Generator<IBlockBuilder> blockBuilderGenerator) : base($"{OqtConstants.OqtLogPrefix}.Buildr", connect: [pageOutput, contextOfBlockEmpty, blockModuleEmpty, contextResolverForLookUps, globalTypesCheck, outputCache, pageOutput, blockBuilderGenerator])
     {
-        ConnectLogs([
-            _contextOfBlockEmpty = contextOfBlockEmpty,
-            _blockModuleEmpty = blockModuleEmpty,
-            _contextResolverForLookUps = contextResolverForLookUps,
-            _globalTypesCheck = globalTypesCheck,
-            _outputCache = outputCache,
-            PageOutput = pageOutput,
-        ]);
+        _contextOfBlockEmpty = contextOfBlockEmpty;
+        _blockModuleEmpty = blockModuleEmpty;
+        _contextResolverForLookUps = contextResolverForLookUps;
+        _globalTypesCheck = globalTypesCheck;
+        OutputCache = outputCache;
+        PageOutput = pageOutput;
+        _blockBuilderGenerator = blockBuilderGenerator;
         logStore.Add("oqt-view", Log);
     }
 
@@ -46,7 +45,8 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     private readonly BlockOfModule _blockModuleEmpty;
     private readonly ISxcContextResolver _contextResolverForLookUps;
     private readonly GlobalTypesCheck _globalTypesCheck;
-    private readonly IOutputCache _outputCache;
+    private readonly Generator<IBlockBuilder> _blockBuilderGenerator;
+
     #endregion
 
     #region Prepare
@@ -73,7 +73,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
             var useLightspeed = OutputCache?.IsEnabled ?? false;
             if (OutputCache?.Existing != null) Log.A("Lightspeed hit - will use cached");
             var renderResult = OutputCache?.Existing?.Data
-                               ?? Block.GetBlockBuilder().Run(true, specs: new()
+                               ?? _blockBuilderGenerator.New().Setup(Block).Run(true, specs: new()
                                {
                                    UseLightspeed = useLightspeed,
                                    IncludeAllAssetsInOqtane = site.RenderMode == "Interactive",
@@ -143,7 +143,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     private readonly GetOnce<ILogCall> _logTimer = new();
 
 
-    private IOutputCache OutputCache => _oc.Get(() => _outputCache.Init(Module.ModuleId, Page?.PageId ?? 0, Block));
+    private IOutputCache OutputCache => _oc.Get(() => field.Init(Module.ModuleId, Page?.PageId ?? 0, Block));
     private readonly GetOnce<IOutputCache> _oc = new();
 
     #endregion

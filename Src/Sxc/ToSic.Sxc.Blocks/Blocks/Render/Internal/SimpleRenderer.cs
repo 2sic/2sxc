@@ -2,17 +2,16 @@
 using ToSic.Eav.Apps.Internal;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks.BlockBuilder.Internal;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Blocks.Internal.Render;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class SimpleRenderer(Generator<BlockOfEntity> blkFrmEntGen)
-    : ServiceBase(SxcLogName + "RndSmp", connect: [blkFrmEntGen])
+public class SimpleRenderer(Generator<BlockOfEntity> blkFrmEntGen, Generator<IBlockBuilder> blockBuilderGenerator)
+    : ServiceBase(SxcLogName + "RndSmp", connect: [blkFrmEntGen, blockBuilderGenerator])
 {
-    private static readonly string _emptyMessage = "<!-- auto-render of item {0} -->";
+    private const string EmptyMessage = "<!-- auto-render of item {0} -->";
 
     public string Render(IBlock parentBlock, IEntity entity, object data = default)
     {
@@ -22,13 +21,14 @@ public class SimpleRenderer(Generator<BlockOfEntity> blkFrmEntGen)
         if (entity.Type.Name != AppConstants.ContentGroupRefTypeName)
         {
             l.A("empty, will return hidden html placeholder");
-            return string.Format(_emptyMessage, entity.EntityId);
+            return string.Format(EmptyMessage, entity.EntityId);
         }
 
         // render it
         l.A("found, will render");
         var cb = blkFrmEntGen.New().Init(parentBlock, entity);
-        var result = cb.GetBlockBuilder().Run(false, specs: new() { Data = data });
+        var builder = blockBuilderGenerator.New().Setup(cb);
+        var result = builder.Run(false, specs: new() { Data = data });
 
         // Special: during Run() various things are picked up like header changes, activations etc.
         // Depending on the code flow, it could have picked up changes of other templates (not this one)

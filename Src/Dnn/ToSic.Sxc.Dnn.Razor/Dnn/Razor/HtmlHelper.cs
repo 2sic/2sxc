@@ -2,7 +2,7 @@
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Blocks.BlockBuilder.Internal;
+using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Dnn.Razor.Internal;
@@ -19,8 +19,9 @@ namespace ToSic.Sxc.Dnn.Razor;
 internal class HtmlHelper(
     LazySvc<CodeErrorHelpService> codeErrService,
     LazySvc<IFeaturesService> featureSvc,
-    LazySvc<SourceAnalyzer> codeAnalysis)
-    : ServiceBase("Dnn.HtmHlp", connect: [codeErrService, featureSvc, codeAnalysis]), IHtmlHelper
+    LazySvc<SourceAnalyzer> codeAnalysis,
+    Generator<IRenderingHelper> renderingHelperGenerator)
+    : ServiceBase("Dnn.HtmHlp", connect: [codeErrService, featureSvc, codeAnalysis, renderingHelperGenerator]), IHtmlHelper
 {
     public HtmlHelper Init(RazorComponentBase page, DnnRazorHelper helper, bool isSystemAdmin)
     {
@@ -133,9 +134,9 @@ internal class HtmlHelper(
         // Note that if anything breaks here, it will just use the normal error - but for what breaks in here
         // Note that if withHelp already has help, it won't be extended any more
         exWithHelp = codeErrService.Value.AddHelpIfKnownError(exWithHelp, _page);
-        var nice = ((ICodeApiServiceInternal)_page._CodeApiSvc)._Block
-            .GetBlockBuilder()
-            .RenderingHelper.DesignErrorMessage([exWithHelp], true);
+        var block = ((ICodeApiServiceInternal)_page._CodeApiSvc)._Block;
+        var renderHelper = renderingHelperGenerator.New().Init(block);
+        var nice = renderHelper.DesignErrorMessage([exWithHelp], true);
         _helper.Add(exWithHelp);
         return nice;
     }

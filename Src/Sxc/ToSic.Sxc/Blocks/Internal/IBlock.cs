@@ -58,13 +58,13 @@ public interface IBlock: IAppIdentity, IHasLog
     bool IsContentApp { get; }
     #endregion
 
-    /// <summary>
-    /// The BlockBuilder.
-    /// Must be stored on this object, but the type is in another project so here it's untyped.
-    /// Access to this must go through the extension method `GetBlockBuilder()`
-    /// </summary>
-    [PrivateApi("naming not final")]
-    object BlockBuilder { get; }
+    ///// <summary>
+    ///// The BlockBuilder.
+    ///// Must be stored on this object, but the type is in another project so here it's untyped.
+    ///// Access to this must go through the extension method `GetBlockBuilder()`
+    ///// </summary>
+    //[PrivateApi("naming not final")]
+    //object BlockBuilder { get; }
 
     [PrivateApi("naming not final")]
     bool ContentGroupExists { get; }

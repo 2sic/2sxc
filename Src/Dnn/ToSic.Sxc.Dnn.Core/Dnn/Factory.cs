@@ -2,7 +2,6 @@
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Sxc.Blocks.BlockBuilder.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
@@ -62,10 +61,9 @@ public static class Factory
     {
         var l = parentLog.Fn<IBlockBuilder>($"{pageId}, {modId}");
         DnnStaticDi.CodeInfos.Warn(V13To17($"ToSic.Sxc.Dnn.Factory.{nameof(CmsBlock)}", "https://go.2sxc.org/brc-13-dnn-factory"));
-        return l.ReturnAsOk(StaticBuild<IModuleAndBlockBuilder>(parentLog)
-            .BuildBlock(pageId, modId)
-            .GetBlockBuilder()
-        );
+        var block = StaticBuild<IModuleAndBlockBuilder>(parentLog).BuildBlock(pageId, modId);
+        var builder = StaticBuild<IBlockBuilder>().Setup(block);
+        return l.ReturnAsOk(builder);
     }
 
     /// <summary>
@@ -89,9 +87,10 @@ public static class Factory
         DnnStaticDi.CodeInfos.Warn(V13To17($"ToSic.Sxc.Dnn.Factory.{nameof(CmsBlock)}", "https://go.2sxc.org/brc-13-dnn-factory"));
         parentLog = parentLog ?? NewLog();
         var dnnModule = ((Module<ModuleInfo>)module)?.GetContents();
-        return StaticBuild<IModuleAndBlockBuilder>(parentLog)
-            .BuildBlock(dnnModule, null)
-            .GetBlockBuilder();
+        var block = StaticBuild<IModuleAndBlockBuilder>(parentLog)
+            .BuildBlock(dnnModule, null);
+        var builder = StaticBuild<IBlockBuilder>().Setup(block);
+        return builder;
     }
 
     /// <summary>

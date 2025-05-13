@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.IO;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal;
-using ToSic.Sxc.Blocks.BlockBuilder.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Internal;
 
@@ -40,7 +39,7 @@ internal class DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitial
 
         // throw better error if SxcInstance isn't available
         // not sure if this doesn't have side-effects...
-        if (block?.GetBlockBuilder() == null)
+        if (block == null)
             throw l.Done(new Exception("Error - can't find 2sxc instance configuration. " +
                                        "Probably trying to show an app or content that has been deleted or not yet installed. " +
                                        "You may also have EnterpriseCMS features enabled but are missing the license activation (but this is super rare). "));

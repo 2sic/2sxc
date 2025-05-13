@@ -3,11 +3,9 @@ using ToSic.Eav.Helpers;
 using ToSic.Eav.Security.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Backend.InPage;
-using ToSic.Sxc.Blocks.BlockBuilder.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Cms.Internal.Publishing;
-using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.Internal.Url;
 
@@ -23,9 +21,10 @@ public class ContentBlockBackend(
     LazySvc<IBlockResourceExtractor> optimizerLazy,
     LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
     AppWorkContextService appWorkCtxService,
-    Generator<BlockOfEntity> entityBlockGenerator)
+    Generator<BlockOfEntity> entityBlockGenerator,
+    Generator<IBlockBuilder> blockBuilderGenerator)
     : BlockWebApiBackendBase(multiPermissionsApp, appWorkCtxService, ctxResolver, "Bck.FldLst",
-        connect: [optimizerLazy, workBlocksMod, workViews, publishing, entityBlockGenerator, blockEditorSelectorLazy])
+        connect: [optimizerLazy, workBlocksMod, workViews, publishing, entityBlockGenerator, blockEditorSelectorLazy, blockBuilderGenerator])
 {
 
     public IRenderResult NewBlockAndRender(int parentId, string field, int index, string app = "", Guid? guid = null) 
@@ -34,7 +33,8 @@ public class ContentBlockBackend(
 
         // now return a rendered instance
         var newContentBlock = entityBlockGenerator.New().Init(Block, null, entityId);
-        return newContentBlock.GetBlockBuilder().Run(true, specs: new());
+        var builder = blockBuilderGenerator.New().Setup(newContentBlock);
+        return builder.Run(true, specs: new());
     }
 
     // todo: probably move to CmsManager.Block
@@ -116,7 +116,8 @@ public class ContentBlockBackend(
             Block.View = template;
         }
 
-        var result = Block.GetBlockBuilder().Run(true, specs: new());
+        var builder = blockBuilderGenerator.New().Setup(Block);
+        var result = builder.Run(true, specs: new());
         return callLog.ReturnAsOk(result);
     }
 

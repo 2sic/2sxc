@@ -2,7 +2,6 @@
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Blocks.BlockBuilder.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Edit.Internal;
@@ -34,10 +33,12 @@ public class RenderService: ServiceForDynamicCode,
         LazySvc<IModuleAndBlockBuilder> builder,
         Generator<SimpleRenderer> simpleRenderer,
         Generator<InTextContentBlockRenderer> inTextRenderer,
+        Generator<IBlockBuilder> blockBuilderGenerator,
         LazySvc<ILogStore> logStore)
-        : MyServicesBase(connect: [editGenerator, builder, simpleRenderer, inTextRenderer, logStore])
+        : MyServicesBase(connect: [editGenerator, builder, simpleRenderer, inTextRenderer, logStore, blockBuilderGenerator])
     {
         public Generator<InTextContentBlockRenderer> InTextRenderer { get; } = inTextRenderer;
+        public Generator<IBlockBuilder> BlockBuilderGenerator { get; } = blockBuilderGenerator;
         public Generator<SimpleRenderer> SimpleRenderer { get; } = simpleRenderer;
         public Generator<IEditService> EditGenerator { get; } = editGenerator;
         public LazySvc<IModuleAndBlockBuilder> Builder { get; } = builder;
@@ -46,10 +47,11 @@ public class RenderService: ServiceForDynamicCode,
 
     public RenderService(MyServices services) : base("Sxc.RndSvc")
     {
-        _Deps = services.ConnectServices(Log);
+        Services = services.ConnectServices(Log);
     }
 
-    private readonly MyServices _Deps;
+    // ReSharper disable once InconsistentNaming
+    private readonly MyServices Services;
 
     public override void ConnectToRoot(ICodeApiService codeRoot)
     {
@@ -67,7 +69,7 @@ public class RenderService: ServiceForDynamicCode,
     {
         if (_logIsInHistory) return;
         _logIsInHistory = true;
-        _Deps.LogStore.Value.Add("render-service", Log);
+        Services.LogStore.Value.Add("render-service", Log);
     }
 
     #endregion
@@ -95,7 +97,7 @@ public class RenderService: ServiceForDynamicCode,
     {
         item ??= parent.Item;
         MakeSureLogIsInHistory();
-        var simpleRenderer = _Deps.SimpleRenderer.New();
+        var simpleRenderer = Services.SimpleRenderer.New();
         var block = parent.TryGetBlockContext();
         return Tag.Custom(field == null
             ? simpleRenderer.Render(block, item.Entity, data: data) // without field edit-context
@@ -128,25 +130,21 @@ public class RenderService: ServiceForDynamicCode,
         MakeSureLogIsInHistory();
         var block = parent.TryGetBlockContext();
         return Tag.Custom(merge == null
-            ? _Deps.SimpleRenderer.New().RenderListWithContext(block, parent.Entity, field, apps, max, GetEditService(block))
-            : _Deps.InTextRenderer.New().RenderMerge(block, parent.Entity, field, merge, GetEditService(block)));
+            ? Services.SimpleRenderer.New().RenderListWithContext(block, parent.Entity, field, apps, max, GetEditService(block))
+            : Services.InTextRenderer.New().RenderMerge(block, parent.Entity, field, merge, GetEditService(block)));
     }
 
 
     /// <inheritdoc />
-    public virtual IRenderResult Module(
-        int pageId,
-        int moduleId,
-        NoParamOrder noParamOrder = default,
-        object data = null)
+    public virtual IRenderResult Module(int pageId, int moduleId, NoParamOrder noParamOrder = default, object data = null)
     {
         var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
         MakeSureLogIsInHistory();
-        var block = _Deps.Builder.Value.BuildBlock(pageId, moduleId);
+        var block = Services.Builder.Value.BuildBlock(pageId, moduleId);
 
         block.BlockFeatureKeys?.Add(SxcPageFeatures.JsApiOnModule.NameId);
-
-        var result = block.GetBlockBuilder().Run(true, specs: new() { Data = data });
+        var builder = Services.BlockBuilderGenerator.New().Setup(block);
+        var result = builder.Run(true, specs: new() { Data = data });
 
         return l.ReturnAsOk(result);
     }
@@ -162,7 +160,7 @@ public class RenderService: ServiceForDynamicCode,
             return _CodeApiSvc.Edit;
 
         // Otherwise create a new one - even though it's not clear if this would have any real effect
-        var newEdit = _Deps.EditGenerator.New();
+        var newEdit = Services.EditGenerator.New();
         newEdit.ConnectToRoot(_CodeApiSvc);
         return ((IEditServiceSetup)newEdit).SetBlock(_CodeApiSvc, blockOrNull);
     }

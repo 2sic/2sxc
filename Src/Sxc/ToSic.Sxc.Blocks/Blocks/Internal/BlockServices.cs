@@ -11,13 +11,14 @@ public class BlockServices(
     GenWorkPlus<WorkViews> workViews,
     GenWorkPlus<WorkBlocks> appBlocks,
     LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
-    LazySvc<App> appLazy,
-    LazySvc<IBlockBuilder> blockBuilder)
-    : MyServicesBase(connect: [bdsFactoryLazy, appLazy, blockBuilder, workViews, appBlocks])
+    LazySvc<App> appLazy
+    //LazySvc<IBlockBuilder> blockBuilder
+    )
+    : MyServicesBase(connect: [bdsFactoryLazy, appLazy, /*blockBuilder,*/ workViews, appBlocks])
 {
     internal LazySvc<BlockDataSourceFactory> BdsFactoryLazy { get; } = bdsFactoryLazy;
     internal LazySvc<App> AppLazy { get; } = appLazy;
-    public LazySvc<IBlockBuilder> BlockBuilder { get; } = blockBuilder;
+    //public LazySvc<IBlockBuilder> BlockBuilder { get; } = blockBuilder;
     public GenWorkPlus<WorkViews> WorkViews { get; } = workViews;
     public GenWorkPlus<WorkBlocks> AppBlocks { get; } = appBlocks;
 }

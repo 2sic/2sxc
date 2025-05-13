@@ -4,6 +4,7 @@ using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal;
+using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.LookUp.Internal;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -38,7 +39,7 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
 
         // 2020-09-04 2dm - new change, moved BlockBuilder up, so it's never null - may solve various issues
         // but may introduce new ones
-        BlockBuilder = Services.BlockBuilder.Value.Setup(this);
+        //BlockBuilder = Services.BlockBuilder.Value.Setup(this);
 
         switch (AppId)
         {
@@ -151,4 +152,32 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
     public object BlockBuilder { get; protected set; }
 
     public bool IsContentApp { get; protected set; }
+
+    #region Dependent Apps List so that caching knows what to monitor; relevant for inner-content scenarios
+
+    /// <summary>
+    /// This list is only populated on the root builder. Child builders don't actually use this.
+    /// </summary>
+    internal IList<IDependentApp> DependentApps { get; } = new List<IDependentApp>();
+
+    internal void PushAppDependenciesToRoot()
+    {
+        var myAppId = AppId;
+        // this is only relevant for the root builder, so we can skip it for child builders
+        if (/*Block == null || Block.*/myAppId == 0)
+            return;
+
+        // Cast to current object type to access internal APIs
+        if ((/*Block.*/RootBlock/*.BlockBuilder*/ ?? this) is not BlockOfBase rootBuilder)
+            return;
+
+        // add dependent appId only once
+        if (rootBuilder.DependentApps.All(a => a.AppId != myAppId /*Block.AppId*/))
+            rootBuilder.DependentApps.Add(new DependentApp { AppId = myAppId /*Block.AppId*/ });
+    }
+
+
+    #endregion
+
+
 }

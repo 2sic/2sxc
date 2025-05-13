@@ -51,8 +51,8 @@ public partial class BlockBuilder
             };
 
             // If data comes from other apps, ensure that cache-tracking knows to depend on these changes
-            if (DependentApps.Any())
-                result.DependentApps.AddRange(DependentApps);
+            if ((Block as BlockOfBase)?.DependentApps.Any() == true)
+                result.DependentApps.AddRange(((BlockOfBase)Block).DependentApps);
 
             // Cache Result in case of multiple runs on the same service instance
             _cached = result;
@@ -85,9 +85,12 @@ public partial class BlockBuilder
         var exceptions = new List<Exception>();
         try
         {
-            // New 13.11 - must set appid etc. for dependencies before we start
-            // So that in a stack of renders, the top-most was set first
-            PreSetAppDependenciesToRoot();
+            // Make sure that each block pushes its App dependencies to the root block
+            // for collecting later when it's done.
+            // This way first the top block does this, later on inner-child blocks
+            // will also do it (since this same code is called for them when they render).
+            // Later on we'll collect the result.
+            (Block as BlockOfBase)?.PushAppDependenciesToRoot();
 
             // do pre-check to see if system is stable & ready
             var (body, err) = GenerateErrorMsgIfInstallationNotOk();
@@ -168,7 +171,8 @@ public partial class BlockBuilder
 
 
             var licenseNotOk = GenerateWarningMsgIfLicenseNotOk();
-            if (licenseNotOk != null) body = licenseNotOk + body;
+            if (licenseNotOk != null)
+                body = licenseNotOk + body;
 
             #region Wrap it all up into a nice wrapper tag
 
