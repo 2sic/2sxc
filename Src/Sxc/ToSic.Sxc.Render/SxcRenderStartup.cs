@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.Web.Internal.JsContext;
 
 namespace ToSic.Sxc;
 
@@ -26,11 +27,22 @@ public static class SxcRenderStartup
         services.TryAddTransient<IBlockBuilder, BlockBuilder>();
         services.TryAddTransient<IRenderingHelper, RenderingHelper>();
 
+        // JS UI Context for render
+        services.TryAddTransient<JsContextAll>();
+        services.TryAddTransient<JsContextLanguage>();
+        services.TryAddScoped<JsApiCacheService>(); // v16.01
 
+        services.AddSxcRenderFallback();
 
         return services;
     }
 
+    public static IServiceCollection AddSxcRenderFallback(this IServiceCollection services)
+    {
+        // v16
+        services.TryAddScoped<IJsApiService, JsApiServiceUnknown>();
 
-        
+        return services;
+    }
+
 }

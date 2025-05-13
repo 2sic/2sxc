@@ -39,12 +39,12 @@
   </ItemGroup>
 
 
-  <!--TODO: @2dm - probably turn of web/razor blade again in this project!-->
+  <!--TODO: @2dm - RazorBlade only used for String methods, try to remove dependency -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
     <!--<Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />-->
-    <Reference Include="System.Web" />
+    <!--<Reference Include="System.Web" />-->
     <!--<Reference Include="System.Web.Http">
       <HintPath>..\..\..\Dependencies\System.Web\System.Web.Http.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
@@ -67,6 +67,10 @@
     <Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Blocks\Render\" />
   </ItemGroup>
 
 </Project>
