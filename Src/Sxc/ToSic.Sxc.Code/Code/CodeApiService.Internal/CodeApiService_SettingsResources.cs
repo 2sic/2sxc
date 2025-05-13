@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps.Services;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Internal.Stack;
 using static ToSic.Eav.Apps.AppStackConstants;
 using SettingsSources = System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, ToSic.Eav.Data.PropertyLookup.IPropertyLookup>>;
 
@@ -13,7 +12,7 @@ public partial class CodeApiService
     /// <inheritdoc />
     [PublicApi]
     public IDynamicStack Resources => _resources.Get(() => Cdf.AsDynStack(RootNameResources, ResSrc));
-    private readonly GetOnce<DynamicStack> _resources = new();
+    private readonly GetOnce<IDynamicStack> _resources = new();
 
     [PrivateApi]
     public ITypedStack AllResources => _allRes.Get(() => Cdf.AsTypedStack(RootNameResources, ResSrc));
@@ -31,7 +30,7 @@ public partial class CodeApiService
     /// <inheritdoc />
     [PublicApi]
     public IDynamicStack Settings => _settings.Get(() => Cdf.AsDynStack(RootNameSettings, SetSrc));
-    private readonly GetOnce<DynamicStack> _settings = new();
+    private readonly GetOnce<IDynamicStack> _settings = new();
 
     public ITypedStack AllSettings => _allSettings.Get(() => Cdf.AsTypedStack(RootNameSettings, SetSrc));
     private readonly GetOnce<ITypedStack> _allSettings = new();

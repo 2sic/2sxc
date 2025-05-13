@@ -70,8 +70,8 @@ partial class CodeDataFactory
             _ => null
         };
 
-    public DynamicStack AsDynStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources)
-        => new(name, this, sources);
+    public IDynamicStack AsDynStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources)
+        => new DynamicStack(name, this, sources);
 
     public ITypedStack AsTypedStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources)
         => new TypedStack(name, this, sources);

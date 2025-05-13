@@ -55,9 +55,9 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
 
     #region Dynamic Model / MyModel
 
-    public dynamic DynamicModel => _dynamicModel ??= owner.GetService<ICodeDataPoCoWrapperService>()
+    public dynamic DynamicModel => field ??= owner.GetService<ICodeDataPoCoWrapperService>()
         .DynamicFromObject(_overridePageData ?? owner.Model, WrapperSettings.Dyn(false, false));
-    private dynamic _dynamicModel;
+
     private object _overridePageData;
 
     public void SetDynamicModel(object data) => _overridePageData = data;

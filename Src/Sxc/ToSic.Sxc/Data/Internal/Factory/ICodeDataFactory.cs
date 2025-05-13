@@ -5,7 +5,6 @@ using ToSic.Lib.Code.InfoSystem;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Data.Internal.Stack;
 
 namespace ToSic.Sxc.Data.Internal;
 
@@ -119,7 +118,7 @@ public interface ICodeDataFactory
     T AsStack<T>(object[] parts)
         where T : class, ICanWrapData, new();
 
-    DynamicStack AsDynStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources);
+    IDynamicStack AsDynStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources);
     ITypedStack AsTypedStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources);
     IField Field(ITypedItem parent, string name, bool propsRequired, NoParamOrder noParamOrder = default, bool? required = default);
     IEntity AsEntity(object thingToConvert);

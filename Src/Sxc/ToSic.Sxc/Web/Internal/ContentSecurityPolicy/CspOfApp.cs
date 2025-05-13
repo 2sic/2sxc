@@ -2,7 +2,6 @@
 using ToSic.Eav.Context;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Data.Internal.Stack;
 using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
@@ -54,14 +53,14 @@ public class CspOfApp : ServiceForDynamicCode
         var cLog = Log.Fn<string>(AppId.ToString());
 
         // Get Stack
-        if (_CodeApiSvc?.Settings is not DynamicStack stack) 
+        if (_CodeApiSvc?.Settings is not { } stack) 
             return cLog.ReturnNull("no stack");
 
         // Enable this for detailed debugging
         //stack.Debug = true;
 
         // Dynamic Stack of the App Settings
-        var appSettings = stack.GetStack(AppStackConstants.PartAppSystem) as DynamicStack;
+        var appSettings = stack.GetStack(AppStackConstants.PartAppSystem);
         Log.A($"has {nameof(appSettings)}: {appSettings != null}");
 
         // CSP Settings Reader from Dynamic Entity for the App

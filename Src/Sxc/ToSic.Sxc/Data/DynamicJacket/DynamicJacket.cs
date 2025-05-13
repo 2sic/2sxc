@@ -7,7 +7,7 @@ using ToSic.Sxc.Data.Internal.Wrapper;
 namespace ToSic.Sxc.Data;
 
 /// <summary>
-/// Case insensitive dynamic read-object for JSON. <br/>
+/// Case-insensitive dynamic read-object for JSON. <br/>
 /// Used in various cases where you start with JSON and want to
 /// provide the contents to custom code without having to mess with
 /// JS/C# code style differences. <br/>

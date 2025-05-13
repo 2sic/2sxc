@@ -3,7 +3,6 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Configuration.Internal;
-using ToSic.Sxc.Data.Internal.Stack;
 using ToSic.Sxc.Services.Internal;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
@@ -13,35 +12,6 @@ namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 public class CspOfModule(IUser user, IFeaturesService featuresService)
     : ServiceForDynamicCode($"{CspConstants.LogPrefix}.ModLvl")
 {
-    #region Constructor
-
-    ///// <summary>
-    ///// Connect to code root, so page-parameters and settings will be available later on.
-    ///// Important: page-parameters etc. are not available at this time, so don't try to get them until needed
-    ///// </summary>
-    ///// <param name="codeRoot"></param>
-    //public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
-    //{
-    //    if (_alreadyConnected) return;
-    //    _alreadyConnected = true;
-    //    (Log as Log)?.LinkTo(codeRoot.Log);
-    //    _codeRoot = codeRoot;
-    //    Log.Fn().Done();
-    //}
-
-    //private bool _alreadyConnected;
-
-    //private IDynamicCodeRoot _codeRoot;
-    private DynamicStack CodeRootSettings()
-    {
-        var stack = _CodeApiSvc?.Settings as DynamicStack;
-        // Enable this for detailed debugging
-        //if (stack != null) stack.Debug = true;
-        return stack;
-    }
-
-    #endregion
-
     #region App Level CSP Providers
 
     /// <summary>
@@ -91,7 +61,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
     /// </summary>
     private CspSettingsReader SiteCspSettings => _siteCspSettings.Get(Log, () =>
     {
-        var pageSettings = CodeRootSettings()?.GetStack(AppStackConstants.PartSiteSystem, AppStackConstants.PartGlobalSystem, AppStackConstants.PartPresetSystem);
+        var pageSettings = _CodeApiSvc?.Settings?.GetStack(AppStackConstants.PartSiteSystem, AppStackConstants.PartGlobalSystem, AppStackConstants.PartPresetSystem);
         return new CspSettingsReader(pageSettings, user, UrlIsDevMode, Log);
     });
     private readonly GetOnce<CspSettingsReader> _siteCspSettings = new();

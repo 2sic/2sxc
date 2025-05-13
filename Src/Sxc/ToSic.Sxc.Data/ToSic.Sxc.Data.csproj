@@ -21,6 +21,13 @@
     <!-- end: Don't generate... -->
   </PropertyGroup>
 
+
+  <ItemGroup>
+    <Compile Remove="Data\Typed\NewFolder\**" />
+    <EmbeddedResource Remove="Data\Typed\NewFolder\**" />
+    <None Remove="Data\Typed\NewFolder\**" />
+  </ItemGroup>
+
   <!--<PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
