@@ -105,10 +105,17 @@ public partial class BlockBuilder
                 {
                     l.A("content-block is missing data - will show error or just stop if not-admin-user");
                     var blockId = Block.Configuration?.BlockIdentifierOrNull;
-                    var msg = "Data is missing. This is common when a site is copied " +
-                              "but the content / apps have not been imported yet" +
-                              " - check 2sxc.org/help?tag=export-import - " +
-                              $" Zone/App: {Block.ZoneId}/{Block.AppId}; App NameId: {blockId?.AppNameId}; ContentBlock GUID: {blockId?.Guid}";
+                    var msg = "Data is missing. ";
+
+                    msg += (Block.Context?.AppReader?.IsHealthy == false)
+                        ? "The app is unhealthy, indicating that data wasn't properly loaded from SQL. "
+                          + "This is the message: '" + Block.Context.AppReader.HealthMessage + "'. "
+                          + "Please check the insights to see in more detail what happened."
+                        : "This is common when a site is copied " +
+                          "but the content / apps have not been imported yet" +
+                          " - check 2sxc.org/help?tag=export-import - ";
+                    msg += $" Zone/App: {Block.ZoneId}/{Block.AppId}; App NameId: {blockId?.AppNameId}; ContentBlock GUID: {blockId?.Guid}";
+
                     var ex = new Exception(msg);
                     exceptions.Add(ex);
                     body = RenderingHelper.DesignErrorMessage(exceptions, true);
