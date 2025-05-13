@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Context.Internal;
 /// Note that it's important to always make this **Scoped**, not transient, as there is some re-use after initialization
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface ISxcContextResolver: IContextResolver
+public interface ISxcContextResolver: IContextResolver, ISxcAppContextResolver
 {
     /// <summary>
     /// Return the block or throw an error
@@ -22,18 +22,18 @@ public interface ISxcContextResolver: IContextResolver
     /// <returns>The current block or null</returns>
     IContextOfBlock BlockContextOrNull();
 
-    /// <summary>
-    /// Return the block if known, or an app context if not
-    /// </summary>
-    /// <param name="appId"></param>
-    /// <returns></returns>
-    IContextOfApp GetBlockOrSetApp(int appId);
+    ///// <summary>
+    ///// Return the block if known, or an app context if not
+    ///// </summary>
+    ///// <param name="appId"></param>
+    ///// <returns></returns>
+    //IContextOfApp GetBlockOrSetApp(int appId);
 
-    IContextOfApp SetAppOrGetBlock(string nameOrPath);
+    //IContextOfApp SetAppOrGetBlock(string nameOrPath);
 
-    IContextOfApp SetAppOrNull(string nameOrPath);
+    //IContextOfApp SetAppOrNull(string nameOrPath);
 
-    IContextOfApp AppNameRouteBlock(string nameOrPath);
+    //IContextOfApp AppNameRouteBlock(string nameOrPath);
 
     void AttachBlock(IBlock block);
 
