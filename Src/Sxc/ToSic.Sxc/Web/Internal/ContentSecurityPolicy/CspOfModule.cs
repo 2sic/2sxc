@@ -140,13 +140,14 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
 
 
 
-    internal void AddCspService(ContentSecurityPolicyServiceBase provider) => CspServices.Add(provider);
-    internal readonly List<ContentSecurityPolicyServiceBase> CspServices = [];
+    internal void AddCspService(IContentSecurityPolicyService provider) => CspServices.Add(provider);
+    internal readonly List<IContentSecurityPolicyService> CspServices = [];
 
     public List<CspParameters> CspParameters()
     {
         var l = Log.Fn<List<CspParameters>>();
-        if (!IsEnabled) return l.Return([], "disabled");
+        if (!IsEnabled)
+            return l.Return([], "disabled");
 
         if (Policies.Any())
         {
@@ -158,8 +159,12 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
             AddCspService(policyCsp);
         }
 
-        if (!CspServices.Any()) return l.Return([], "no services to add");
-        var result = CspServices.Select(c => c?.Policy).Where(c => c != null).ToList();
+        if (!CspServices.Any())
+            return l.Return([], "no services to add");
+        var result = CspServices
+            .Select(c => c?.Policy)
+            .Where(c => c != null)
+            .ToList();
         return l.ReturnAsOk(result);
 
     }

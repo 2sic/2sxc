@@ -72,7 +72,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
     <Folder Include="Web\PageServiceShared.Internal\" />
     <Folder Include="Web\PageService.Internal\" />
   </ItemGroup>

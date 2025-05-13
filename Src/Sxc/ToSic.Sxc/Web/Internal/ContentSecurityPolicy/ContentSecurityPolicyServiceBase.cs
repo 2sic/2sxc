@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentSecurityPolicyServiceBase() : ServiceBase($"{SxcLogName}.CspSvc"), IContentSecurityPolicyService
 {
-    public CspParameters Policy = [];
+    public CspParameters Policy { get; } = [];
 
     public virtual bool IsEnforced => false;
 

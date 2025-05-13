@@ -69,8 +69,4 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Blocks\Render\" />
-  </ItemGroup>
-
 </Project>

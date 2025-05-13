@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Services.Internal;
+﻿using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
+
+namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi("The service isn't publicly documented, as the functionality happens on the IPageService object")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -17,6 +19,8 @@ public interface IContentSecurityPolicyService
     /// To enable, do this in the settings (Global or Site)
     /// </summary>
     bool IsEnabled { get; }
+
+    CspParameters Policy { get; }
 
     /// <summary>
     /// Add a CSP rule where you also specify the name.
