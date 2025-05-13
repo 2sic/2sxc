@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Internal.Loaders;
 using ToSic.Lib.Coding;
+using ToSic.Lib.GetByName;
 using ToSic.Sxc.Data.Internal.Dynamic;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Images;
@@ -26,7 +27,7 @@ public class LinkImageTestHelper
     public ImgResizeLinker GetLinker() => _linker;
     public ILinkService GetLinkHelper() => _linkHelper;
 
-    public WrapObjectDynamic ToDyn(object contents) => _wrapper
+    public /*WrapObjectDynamic*/ICanGetByName ToDyn(object contents) => (ICanGetByName)_wrapper
         .DynamicFromObject(contents, WrapperSettings.Dyn(children: false, realObjectsToo: false));
 
 

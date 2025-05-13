@@ -36,7 +36,7 @@ public class DynAndTypedTestHelper(ICodeDataFactory factory, ICodeDataPoCoWrappe
     }
 
 
-    public WrapObjectDynamic Obj2WrapObj(object data, bool wrapChildren = true, bool realObjectsToo = true)
+    public  object Obj2WrapObj(object data, bool wrapChildren = true, bool realObjectsToo = true)
         => Wrapper.DynamicFromObject(data, WrapperSettings.Dyn(children: wrapChildren, realObjectsToo: realObjectsToo));
 
     public dynamic Obj2WrapObjAsDyn(object data) => Obj2WrapObj(data);

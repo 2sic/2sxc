@@ -7,7 +7,7 @@ namespace ToSic.Sxc.DataTests.DynWrappers;
 [Startup(typeof(StartupSxcCoreOnly))]
 public class WrapDicBasic(ICodeDataPoCoWrapperService wrapper)
 {
-    private DynamicFromDictionary<TKey, TValue> ToDyn<TKey, TValue>(Dictionary<TKey, TValue> dic)
+    private /*DynamicFromDictionary<TKey, TValue>*/ object ToDyn<TKey, TValue>(Dictionary<TKey, TValue> dic)
         => wrapper.FromDictionary(dic);
 
     [Fact]

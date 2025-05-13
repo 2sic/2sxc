@@ -16,13 +16,13 @@ public class CodeDataPoCoWrapperService(
     Generator<WrapObjectTypedItem> wrapItemGenerator)
     : ServiceBase("Sxc.DWrpFk", connect: [wrapTypeGenerator, wrapItemGenerator, cdf]), ICodeDataPoCoWrapperService
 {
-    DynamicFromDictionary<TKey, TValue> ICodeDataPoCoWrapperService.FromDictionary<TKey, TValue>(IDictionary<TKey, TValue> original) =>
-        new(original, this);
+    /*DynamicFromDictionary<TKey, TValue>*/object ICodeDataPoCoWrapperService.FromDictionary<TKey, TValue>(IDictionary<TKey, TValue> original) =>
+        new DynamicFromDictionary<TKey, TValue>(original, this);
 
-    public WrapObjectDynamic DynamicFromObject(object data, WrapperSettings settings)
+    public object DynamicFromObject(object data, WrapperSettings settings)
     {
         var preWrap = new PreWrapObject(data, settings, this);
-        return new(preWrap, this);
+        return new WrapObjectDynamic(preWrap, this);
     }
 
     public ITyped TypedFromObject(object data, WrapperSettings settings)
