@@ -5,7 +5,7 @@ using ToSic.Razor.Markup;
 using ToSic.Sxc.Blocks.BlockBuilder.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data.Internal;
-using ToSic.Sxc.Edit.EditService;
+using ToSic.Sxc.Edit.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web.Internal.PageFeatures;

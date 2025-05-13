@@ -27,6 +27,12 @@
     <NoWarn>1701;1702;CS1570;CS1572;CS1573;CS1574;CS1587;CS1591;CS1710;CS1711</NoWarn>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Edit\Toolbar\TweakButton\Internal\**" />
+    <EmbeddedResource Remove="Edit\Toolbar\TweakButton\Internal\**" />
+    <None Remove="Edit\Toolbar\TweakButton\Internal\**" />
+  </ItemGroup>
+
   <!-- Import common files which change how the project compiles -->
   <ItemGroup>
     <!--<Compile Include="..\ToSic.Lib.Imports\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />-->
@@ -81,7 +87,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Edit\Toolbar\TweakButton\Internal\" />
+    <Folder Include="Code\TypedModel\" />
   </ItemGroup>
 
 </Project>

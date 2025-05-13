@@ -2,7 +2,7 @@
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Edit.EditService;
+namespace ToSic.Sxc.Edit.Internal;
 
 public interface IEditServiceSetup
 {
