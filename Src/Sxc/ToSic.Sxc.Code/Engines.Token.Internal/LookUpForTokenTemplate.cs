@@ -41,10 +41,21 @@ internal partial class LookUpForTokenTemplate(
     /// <returns></returns>
     private string GetProperty(string key, string strFormat)
     {
+
+        // As of 2025-05-13 v20 (2dm) the toolbar will only work in DNN
+        // and not in Oqtane, since the DynamicEntity.Toolbar doesn't exist there
+        // since we don't really plan to support token templates in future
+        // this is acceptable for now.
+#if NETFRAMEWORK
         // Create Toolbar if requested, even if dynEntity is null
         if (key == ViewConstants.FieldToolbar)
-            return new Edit.Toolbar.ItemToolbar(dynEntity?.Entity).ToolbarAsTag;
+#pragma warning disable CS0618 // Type or member is obsolete
+            return (dynEntity as DynamicEntity)?.Toolbar.ToString();
+#pragma warning restore CS0618 // Type or member is obsolete
+        // old till 2025-05-13, changed to not depend on the ItemToolbar object
+        // return new Edit.Toolbar.ItemToolbar(dynEntity?.Entity).ToolbarAsTag;
 
+#endif
         // Return empty string if Entity is null
         if (dynEntity == null || key.IsEmptyOrWs())
             return "";

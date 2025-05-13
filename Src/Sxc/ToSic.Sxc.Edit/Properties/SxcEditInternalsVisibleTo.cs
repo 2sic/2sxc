@@ -4,3 +4,7 @@
 [assembly: InternalsVisibleTo("ToSic.Sxc.Render")]
 
 [assembly: InternalsVisibleTo("ToSic.Sxc.UnitTests")]
+
+
+// for old toolbars
+[assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.Core")]
