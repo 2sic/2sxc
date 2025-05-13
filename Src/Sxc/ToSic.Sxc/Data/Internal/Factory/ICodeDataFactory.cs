@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Context;
+﻿using ToSic.Eav.Code;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.Code.InfoSystem;
@@ -8,7 +9,7 @@ using ToSic.Sxc.Code.Internal;
 
 namespace ToSic.Sxc.Data.Internal;
 
-public interface ICodeDataFactory
+public interface ICodeDataFactory: ICanGetService
 {
     IMetadata Metadata(IMetadataOf mdOf);
 

@@ -59,7 +59,7 @@ public partial class CodeDataFactory(
     {
         var cds = codeDataServices.Value;
         // if the render service is ever needed, it should be connected to the root
-        cds.RenderServiceGenerator.SetInit(nowRs => (nowRs as INeedsCodeApiService)?.ConnectToRoot(_CodeApiSvc));
+        //cds.RenderServiceGenerator.SetInit(nowRs => (nowRs as INeedsCodeApiService)?.ConnectToRoot(_CodeApiSvc));
         return cds;
     });
     private readonly GetOnce<CodeDataServices> _services = new();
@@ -99,4 +99,14 @@ public partial class CodeDataFactory(
                 .Select(c => c.Code.ToLowerInvariant())
                 .ToList()
             ?? [];
+
+    /// <summary>
+    /// Special service provider for Data objects. Use with caution and as little as possible!
+    ///
+    /// Important: this will auto-attach to the root CodeApiSvc and get the context as well, which is important for render services etc.!
+    /// </summary>
+    /// <typeparam name="TService"></typeparam>
+    /// <returns></returns>
+    public TService GetService<TService>() where TService : class
+        => _CodeApiSvc?.GetService<TService>() ?? serviceProvider.Build<TService>();
 }

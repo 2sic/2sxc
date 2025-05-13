@@ -78,7 +78,7 @@ public class Render
         var block = parent.GetRequiredBlockForRender();
         DnnStaticDi.CodeInfos.WarnSxc(WarnObsolete.UsedAs(appId: parent.Entity.AppId, specificId: $"View:{block?.View?.Id}"), block: block);
 
-        return cdf.Services.RenderServiceGenerator.New();
+        return cdf.GetService<Services.IRenderService>();
     }
 
     private static readonly ICodeInfo WarnObsolete = V13To17("Deprecated Static RenderService", "https://go.2sxc.org/brc-13-static-render");
