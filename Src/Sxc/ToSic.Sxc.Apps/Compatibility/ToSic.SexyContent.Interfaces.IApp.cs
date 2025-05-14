@@ -1,4 +1,11 @@
-﻿#if NETFRAMEWORK
+﻿// 2025-05-14 2dm
+// This was introduced to ensure compatibility with the old namespace
+// but AFAIK all old code was never typed, so it would probably never have been using this interface anyhow!
+//
+// #TryToDropOldIApp: 2025-05-14 2dm v20 try to remove this for now
+
+
+#if NETFRAMEWORK
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Interfaces
 {

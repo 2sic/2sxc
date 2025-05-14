@@ -2,6 +2,7 @@
 using ToSic.Eav.DataSource;
 using ToSic.Sxc.Data;
 
+
 // ReSharper disable UnusedMemberInSuper.Global
 
 namespace ToSic.Sxc.Apps;
@@ -13,9 +14,10 @@ namespace ToSic.Sxc.Apps;
 public interface IApp: 
     Eav.Apps.IApp,
     IAppPaths
-#if NETFRAMEWORK
-        , SexyContent.Interfaces.IApp // inherits from old namespace for compatibility
-#endif
+// #TryToDropOldIApp: 2025-05-14 2dm v20 try to remove this for now
+//#if NETFRAMEWORK
+//        , SexyContent.Interfaces.IApp // inherits from old namespace for compatibility
+//#endif
 {
     /// <summary>
     /// Configuration object with information about the App.
