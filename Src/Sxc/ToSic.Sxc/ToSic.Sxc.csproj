@@ -88,6 +88,7 @@
 
   <ItemGroup>
     <Folder Include="Code\Internal\HotBuild\" />
+    <Folder Include="Data\Internal\Decorators\" />
   </ItemGroup>
 
 </Project>

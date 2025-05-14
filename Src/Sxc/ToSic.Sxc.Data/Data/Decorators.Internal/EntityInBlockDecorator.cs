@@ -2,7 +2,7 @@
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class EntityInBlockDecorator: EntityInListDecorator
+public class EntityInBlockDecorator: EntityInListDecorator
 {
     private EntityInBlockDecorator(string field, 
         int index = DefIndex,
