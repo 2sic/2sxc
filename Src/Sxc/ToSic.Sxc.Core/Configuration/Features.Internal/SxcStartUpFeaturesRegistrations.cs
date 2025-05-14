@@ -6,7 +6,7 @@ using ToSic.Sxc.Configuration.Internal;
 namespace ToSic.Sxc.Startup;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class SxcStartUpRegistrations(FeaturesCatalog featuresCatalog)
+public class SxcStartUpFeaturesRegistrations(FeaturesCatalog featuresCatalog)
     : ServiceBase($"{SxcLogName}.SUpReg"), IStartUpRegistrations
 {
     public string NameId => Log.NameId;

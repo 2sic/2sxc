@@ -18,6 +18,13 @@ public static class SxcWebStartup
 
         services.AddTransient<ILookUp, QueryStringLookUp>();
 
+        // Add Lookups which are in DNN but not in Oqtane
+        // These could be in any project, but for now we want them as far down as possible, so they are in Sxc.Web
+#if NETCOREAPP
+        services.AddTransient<ILookUp, DateTimeLookUp>();
+        services.AddTransient<ILookUp, TicksLookUp>();
+#endif
+
         // WIP - add net-core specific stuff
         services.AddNetVariations();
 

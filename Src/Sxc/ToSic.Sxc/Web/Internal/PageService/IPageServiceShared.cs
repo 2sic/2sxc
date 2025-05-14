@@ -1,7 +1,6 @@
 ﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web.Internal.ClientAssets;
-using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Web.Internal.PageService;
