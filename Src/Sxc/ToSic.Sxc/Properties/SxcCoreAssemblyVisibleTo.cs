@@ -23,6 +23,7 @@
 [assembly: InternalsVisibleTo("ToSic.Sxc.Engines")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Edit")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Images")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Adam")]
 
 
 [assembly: InternalsVisibleTo("ToSic.Sxc.Blocks")]

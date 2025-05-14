@@ -21,7 +21,7 @@ public static class StartUpDnnWebApi
         services.TryAddTransient<IApiInspector, DnnApiInspector>();
 
         // new #2160
-        services.TryAddTransient<AdamSecurityChecksBase, DnnAdamSecurityChecks>();
+        services.TryAddTransient<IAdamSecurityCheckService, DnnAdamSecurityChecks>();
 
         services.TryAddTransient<DnnGetBlock>();
 

@@ -3,11 +3,11 @@
 namespace ToSic.Sxc.Adam.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class Security
+public class Security
 {
-    internal static bool PathIsInItemAdam(Guid guid, string field, string path)
+    public static bool PathIsInItemAdam(Guid guid, string field, string path)
     {
-        var shortGuid = Mapper.GuidCompress(guid);
+        var shortGuid = guid.GuidCompress();
         // will do check, case-sensitive because the compressed guid is case-sensitive
         return path.Replace('\\', '/').Contains(shortGuid + "/" + field);
     }

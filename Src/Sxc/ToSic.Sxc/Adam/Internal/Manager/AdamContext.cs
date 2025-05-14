@@ -23,26 +23,18 @@ public abstract class AdamContext(AdamContext.MyServices services, string logNam
 {
     #region Constructor and DI
 
-    public class MyServices: MyServicesBase
+    public class MyServices(
+        Generator<MultiPermissionsTypes> typesPermissions,
+        Generator<IAdamSecurityCheckService> adamSecurityGenerator,
+        LazySvc<IEavFeaturesService> featuresSvc)
+        : MyServicesBase(connect: [typesPermissions, adamSecurityGenerator, featuresSvc])
     {
-        public LazySvc<IEavFeaturesService> FeaturesSvc { get; }
-        public Generator<AdamSecurityChecksBase> AdamSecurityGenerator { get; }
-        public Generator<MultiPermissionsTypes> TypesPermissions { get; }
-
-        public MyServices(
-            Generator<MultiPermissionsTypes> typesPermissions,
-            Generator<AdamSecurityChecksBase> adamSecurityGenerator,
-            LazySvc<IEavFeaturesService> featuresSvc)
-        {
-            ConnectLogs([
-                TypesPermissions = typesPermissions,
-                AdamSecurityGenerator = adamSecurityGenerator,
-                FeaturesSvc = featuresSvc
-            ]);
-        }
+        public LazySvc<IEavFeaturesService> FeaturesSvc { get; } = featuresSvc;
+        public Generator<IAdamSecurityCheckService> AdamSecurityGenerator { get; } = adamSecurityGenerator;
+        public Generator<MultiPermissionsTypes> TypesPermissions { get; } = typesPermissions;
     }
 
-    public AdamSecurityChecksBase Security;
+    public IAdamSecurityCheckService Security;
     public MultiPermissionsTypes Permissions;
 
     #endregion

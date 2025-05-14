@@ -128,10 +128,10 @@ public static class StartupWebApi
     {
         // Adam Controllers etc.
         services.TryAddTransient(typeof(AdamTransactionBase<,,>.MyServices));
-        services.TryAddTransient<AdamSecurityChecksBase.MyServices>();
-        services.TryAddTransient(typeof(AdamManager<,>));
-        services.TryAddTransient(typeof(AdamContext<,>));
-        services.TryAddTransient<AdamContext.MyServices>();
+        //services.TryAddTransient<AdamSecurityChecksBase.MyServices>();
+        //services.TryAddTransient(typeof(AdamManager<,>));
+        //services.TryAddTransient(typeof(AdamContext<,>));
+        //services.TryAddTransient<AdamContext.MyServices>();
         services.TryAddTransient(typeof(HyperlinkBackend<,>));
         services.TryAddTransient(typeof(AdamTransGetItems<,>));
         services.TryAddTransient(typeof(AdamTransDelete<,>));

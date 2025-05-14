@@ -12,9 +12,9 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
 {
     #region Constructor / DI
 
-    public class MyServices(AdamSecurityChecksBase security)
+    public class MyServices(IAdamSecurityCheckService security)
     {
-        public AdamSecurityChecksBase Security { get; } = security;
+        public IAdamSecurityCheckService Security { get; } = security;
     }
 
     public AdamItemDtoMaker<TFolderId, TFileId> Init(AdamContext adamContext)
@@ -23,7 +23,7 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
         return this;
     }
 
-    private readonly AdamSecurityChecksBase _security = services.Security;
+    private readonly IAdamSecurityCheckService _security = services.Security;
     public AdamContext AdamContext;
 
     #endregion

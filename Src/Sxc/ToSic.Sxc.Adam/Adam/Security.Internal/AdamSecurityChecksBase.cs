@@ -10,26 +10,20 @@ namespace ToSic.Sxc.Adam.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices services, string logPrefix)
-    : ServiceBase<AdamSecurityChecksBase.MyServices>(services, $"{logPrefix}.TnScCk")
+    : ServiceBase<AdamSecurityChecksBase.MyServices>(services, $"{logPrefix}.TnScCk"), IAdamSecurityCheckService
 {
 
     #region DI / Constructor
 
-    public class MyServices: MyServicesBase
+    public class MyServices(Generator<AppPermissionCheck> appPermissionChecks)
+        : MyServicesBase(connect: [appPermissionChecks])
     {
-        public Generator<AppPermissionCheck> AppPermissionChecks { get; }
-
-        public MyServices(Generator<AppPermissionCheck> appPermissionChecks)
-        {
-            ConnectLogs([
-                AppPermissionChecks = appPermissionChecks
-            ]);
-        }
+        public Generator<AppPermissionCheck> AppPermissionChecks { get; } = appPermissionChecks;
     }
 
-    internal AdamSecurityChecksBase Init(AdamContext adamContext, bool usePortalRoot)
+    public IAdamSecurityCheckService Init(AdamContext adamContext, bool usePortalRoot)
     {
-        var callLog = Log.Fn<AdamSecurityChecksBase>();
+        var callLog = Log.Fn<IAdamSecurityCheckService>();
         AdamContext = adamContext;
 
         var firstChecker = AdamContext.Permissions.PermissionCheckers.First().Value;
@@ -47,7 +41,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices s
     }
 
     internal AdamContext AdamContext;
-    public bool UserIsRestricted;
+    public bool UserIsRestricted { get; private set; }
 
     #endregion
 
@@ -59,7 +53,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices s
 
     #endregion
 
-    internal bool ExtensionIsOk(string fileName, out HttpExceptionAbstraction preparedException)
+    public bool ExtensionIsOk(string fileName, out HttpExceptionAbstraction preparedException)
     {
         if (!SiteAllowsExtension(fileName))
         {
@@ -80,7 +74,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices s
     /// <summary>
     /// Returns true if user isn't restricted, or if the restricted user is accessing a draft item
     /// </summary>
-    internal bool UserIsNotRestrictedOrItemIsDraft(Guid guid, out HttpExceptionAbstraction exp)
+    public bool UserIsNotRestrictedOrItemIsDraft(Guid guid, out HttpExceptionAbstraction exp)
     {
         Log.A($"check if user is restricted ({UserIsRestricted}) or if the item '{guid}' is draft");
         exp = null;
@@ -97,7 +91,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices s
         return false;
     }
 
-    internal bool FileTypeIsOkForThisField(out HttpExceptionAbstraction preparedException)
+    public bool FileTypeIsOkForThisField(out HttpExceptionAbstraction preparedException)
     {
         var l = Log.Fn<bool>();
         var fieldDef = AdamContext.Attribute;
@@ -120,7 +114,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices s
     }
 
 
-    internal bool UserIsPermittedOnField(List<Grants> requiredPermissions, out HttpExceptionAbstraction preparedException)
+    public bool UserIsPermittedOnField(List<Grants> requiredPermissions, out HttpExceptionAbstraction preparedException)
     {
         // check field permissions, but only for non-publish-data
         if (UserIsRestricted && !FieldPermissionOk(requiredPermissions))
@@ -145,7 +139,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices s
         return fieldPermissions.UserMay(requiredGrant).Allowed;
     }
 
-    internal bool SuperUserOrAccessingItemFolder(string path, out HttpExceptionAbstraction preparedException)
+    public bool SuperUserOrAccessingItemFolder(string path, out HttpExceptionAbstraction preparedException)
     {
         preparedException = null;
         return !UserIsRestricted || DestinationIsInItem(AdamContext.ItemGuid, AdamContext.ItemField, path, out preparedException);
@@ -161,7 +155,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices s
     }
 
 
-    internal bool MustThrowIfAccessingRootButNotAllowed(bool usePortalRoot, out HttpExceptionAbstraction preparedException)
+    public bool MustThrowIfAccessingRootButNotAllowed(bool usePortalRoot, out HttpExceptionAbstraction preparedException)
     {
         if (usePortalRoot && UserIsRestricted)
         {

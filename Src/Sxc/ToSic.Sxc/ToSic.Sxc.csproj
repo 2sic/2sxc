@@ -88,7 +88,6 @@
 
   <ItemGroup>
     <Folder Include="Data\Internal\Decorators\" />
-    <Folder Include="Integration\" />
   </ItemGroup>
 
 </Project>
