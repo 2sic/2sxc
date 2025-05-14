@@ -1,5 +1,4 @@
 ﻿using ToSic.Sxc.Adam;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
 
@@ -11,7 +10,7 @@ internal class AdamService(): ServiceForDynamicCode("Svc.AdamSv"), IAdamService
 {
     /// <inheritdoc />
     public IFile File(int id)
-        => (_CodeApiSvc as ICodeApiServiceInternal)?.Cdf?.File(id);
+        => _CodeApiSvc?.Cdf?.File(id);
 
     /// <inheritdoc />
     public IFile File(string id)
@@ -34,7 +33,7 @@ internal class AdamService(): ServiceForDynamicCode("Svc.AdamSv"), IAdamService
 
     /// <inheritdoc />
     public IFolder Folder(int id)
-        => (_CodeApiSvc as ICodeApiServiceInternal)?.Cdf?.Folder(id);
+        => _CodeApiSvc?.Cdf?.Folder(id);
 
     /// <inheritdoc />
     public IFolder Folder(IField field) => _CodeApiSvc?.AsAdam(field.Parent, field.Name);

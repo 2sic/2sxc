@@ -29,7 +29,7 @@ public static class SxcAdamStartup
 
         //// Add possibly missing fallback services
         //// This must always be at the end here so it doesn't accidentally replace something we actually need
-        services.AddSxcCoreFallbackServices();
+        services.AddSxcAdamFallbackServices();
 
         return services;
     }
@@ -45,7 +45,7 @@ public static class SxcAdamStartup
     /// All calls in here MUST use TryAddTransient, and never without the Try
     /// </remarks>
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public static IServiceCollection AddSxcCoreFallbackServices(this IServiceCollection services)
+    public static IServiceCollection AddSxcAdamFallbackServices(this IServiceCollection services)
     {
         // ADAM basics
         // TODO: this doesn't warn yet, there should be an AdamFileSystemUnknown(WarnUseOfUnknown<AdamFileSystemUnknown> warn)
