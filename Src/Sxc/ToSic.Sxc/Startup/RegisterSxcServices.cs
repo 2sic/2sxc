@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.StartUp;
 using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Internal.Typed;
@@ -96,8 +95,8 @@ public static partial class RegisterSxcServices
         //// v15 EditUi Resources
         //services.TryAddTransient<EditUiResources>();
 
-        // v15
-        services.TryAddTransient<CodeCreateDataSourceSvc>();
+        //// v15
+        //services.TryAddTransient<CodeCreateDataSourceSvc>();
 
         // v16 DynamicJacket and DynamicRead factories
         //services.TryAddTransient<ICodeDataPoCoWrapperService, CodeDataPoCoWrapperService>();

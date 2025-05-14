@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Data.PiggyBack;
+using ToSic.Lib.GetByName;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
@@ -13,8 +14,11 @@ namespace ToSic.Sxc.Code.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICodeApiService : ICodeApiServiceForDynamicCode12Wip, IHasLog, IHasPiggyBack
 {
-    IDynamicStack Resources { get; }
-    IDynamicStack Settings { get; }
+    /// <summary>
+    /// Almost every use 
+    /// </summary>
+    /*IDynamicStack*/ object Resources { get; }
+    /*IDynamicStack*/ object Settings { get; }
 
     IAppTyped AppTyped { get; }
 

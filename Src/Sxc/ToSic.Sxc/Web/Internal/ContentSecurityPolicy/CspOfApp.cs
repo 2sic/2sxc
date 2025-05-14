@@ -2,6 +2,7 @@
 using ToSic.Eav.Context;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
@@ -53,7 +54,7 @@ public class CspOfApp : ServiceForDynamicCode
         var cLog = Log.Fn<string>(AppId.ToString());
 
         // Get Stack
-        if (_CodeApiSvc?.Settings is not { } stack) 
+        if (_CodeApiSvc?.Settings is not IDynamicStack stack) 
             return cLog.ReturnNull("no stack");
 
         // Enable this for detailed debugging

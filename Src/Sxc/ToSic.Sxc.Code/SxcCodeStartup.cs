@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
+using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
@@ -54,6 +55,9 @@ public static class SxcCodeStartup
         services.TryAddTransient<IPage, Page>();
         services.TryAddTransient<Page>();
         services.TryAddSingleton<IPlatform, PlatformUnknown>();
+
+        // v15
+        services.TryAddTransient<CodeCreateDataSourceSvc>();
 
         return services;
     }

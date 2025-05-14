@@ -3,6 +3,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Configuration.Internal;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
@@ -61,7 +62,8 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
     /// </summary>
     private CspSettingsReader SiteCspSettings => _siteCspSettings.Get(Log, () =>
     {
-        var pageSettings = _CodeApiSvc?.Settings?.GetStack(AppStackConstants.PartSiteSystem, AppStackConstants.PartGlobalSystem, AppStackConstants.PartPresetSystem);
+        var pageSettings = (_CodeApiSvc?.Settings as IDynamicStack)
+            ?.GetStack(AppStackConstants.PartSiteSystem, AppStackConstants.PartGlobalSystem, AppStackConstants.PartPresetSystem);
         return new CspSettingsReader(pageSettings, user, UrlIsDevMode, Log);
     });
     private readonly GetOnce<CspSettingsReader> _siteCspSettings = new();

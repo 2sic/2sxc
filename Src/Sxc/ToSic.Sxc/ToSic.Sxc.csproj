@@ -87,9 +87,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Code\TypedModel\" />
-    <Folder Include="Data\Internal\Dynamic\" />
-    <Folder Include="Data\Internal\Metadata\" />
+    <Folder Include="Code\Internal\HotBuild\" />
   </ItemGroup>
 
 </Project>

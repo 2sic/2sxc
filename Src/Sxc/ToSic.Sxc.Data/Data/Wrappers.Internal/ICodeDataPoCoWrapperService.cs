@@ -19,7 +19,7 @@ public interface ICodeDataPoCoWrapperService
     ITyped TypedFromObject(object data, WrapperSettings settings);
     ITypedItem TypedItemFromObject(object data, WrapperSettings settings, ILazyLike<ICodeDataFactory> cdf1 = default);
 
-    internal /*DynamicFromDictionary<TKey, TValue>*/object FromDictionary<TKey, TValue>(IDictionary<TKey, TValue> original);
+    public /*DynamicFromDictionary<TKey, TValue>*/object FromDictionary<TKey, TValue>(IDictionary<TKey, TValue> original);
 
     internal object ChildNonJsonWrapIfPossible(object data, bool wrapNonAnon, WrapperSettings settings);
 }

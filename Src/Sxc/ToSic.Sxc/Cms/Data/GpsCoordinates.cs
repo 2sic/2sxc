@@ -30,9 +30,8 @@ public class GpsCoordinates
     /// since it may be used in places where the IJsonService is not available.
     /// </summary>
     [PrivateApi]
-    internal static GpsCoordinates FromJson(string json)
-    {
-        var safeJson = json.NullIfNoValue() ?? WrapperConstants.EmptyJson;
-        return JsonSerializer.Deserialize<GpsCoordinates>(safeJson, options: JsonOptions.SafeJsonForHtmlAttributes);
-    }
+    internal static GpsCoordinates FromJson(string json) =>
+        json.HasValue()
+            ? JsonSerializer.Deserialize<GpsCoordinates>(json, options: JsonOptions.SafeJsonForHtmlAttributes)
+            : new();
 }
