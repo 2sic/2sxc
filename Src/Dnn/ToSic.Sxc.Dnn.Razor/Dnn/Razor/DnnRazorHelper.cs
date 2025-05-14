@@ -5,6 +5,7 @@ using ToSic.Lib.Code.Help;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.Razor;
 
@@ -49,9 +50,8 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
 
     #region Html Helper
 
-    internal IHtmlHelper Html => _html ??= _CodeApiSvc.GetService<HtmlHelper>().Init(Page, this,
-        ((ICodeApiServiceInternal)_CodeApiSvc)._Block?.Context.User.IsSystemAdmin ?? false);
-    private IHtmlHelper _html;
+    internal IHtmlHelper Html => field ??= _CodeApiSvc.GetService<HtmlHelper>().Init(Page, this,
+        ((IExConBlock)_CodeApiSvc)._Block?.Context.User.IsSystemAdmin ?? false);
 
     #endregion
 

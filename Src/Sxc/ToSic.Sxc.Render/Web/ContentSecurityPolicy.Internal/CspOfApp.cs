@@ -4,6 +4,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CspOfApp : ServiceForDynamicCode
 {
-    public int AppId => ((ICodeApiServiceInternal)_CodeApiSvc)?._Block?.AppId ?? 0;
+    public int AppId => ((IExConBlock)_CodeApiSvc)?._Block?.AppId ?? 0;
 
     #region Constructor
 

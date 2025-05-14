@@ -2,6 +2,7 @@
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Stack;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.WebResources;
 using static ToSic.Sxc.Web.WebResources.WebResourceConstants;
 
@@ -39,7 +40,7 @@ partial class PageService
         var added = PageServiceShared.Activate(keys);
 
         // also add to this specific module, as we need a few module-level features to activate in case...
-        ((ICodeApiServiceInternal)_CodeApiSvc)?._Block?.BlockFeatureKeys.AddRange(added);
+        ((IExConBlock)_CodeApiSvc)?._Block?.BlockFeatureKeys.AddRange(added);
 
         return l.ReturnAsOk(""); // empty string, just so it can be used as `@Kit.Page.Activate(...)` and not produce anything
     }

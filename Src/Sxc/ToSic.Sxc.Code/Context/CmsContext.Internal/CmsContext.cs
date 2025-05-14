@@ -6,6 +6,7 @@ using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Context.Internal;
 
@@ -26,7 +27,7 @@ internal class CmsContext(
     #region Internal context
 
     // Note: Internal so it can be used for View<T, T>
-    internal IBlock RealBlockOrNull => _realBlock.Get(() => ((ICodeApiServiceInternal)_CodeApiSvc)?._Block);
+    internal IBlock RealBlockOrNull => _realBlock.Get(() => ((IExConBlock)_CodeApiSvc)?._Block);
     private readonly GetOnce<IBlock> _realBlock = new();
 
     internal IContextOfBlock CtxBlockOrNull => _ctxBlock.Get(() => RealBlockOrNull?.Context);

@@ -10,8 +10,8 @@ internal interface ICodeApiServiceInternal: ICodeApiService
     [PrivateApi]
     void AttachApp(IApp app);
 
-    [PrivateApi("WIP")]
-    IBlock _Block { get; }
+    //[PrivateApi("WIP")]
+    //IBlock _Block { get; }
 
     ILookUpEngine LookUpForDataSources { get; }
 

@@ -4,6 +4,7 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Edit.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.EditService;
@@ -15,7 +16,7 @@ internal partial class EditService(IJsonService jsonService)
     public override void ConnectToRoot(ICodeApiService codeApiSvc)
     {
         base.ConnectToRoot(codeApiSvc);
-        ((IEditServiceSetup)this).SetBlock(codeApiSvc, ((ICodeApiServiceInternal)codeApiSvc)._Block);
+        ((IEditServiceSetup)this).SetBlock(codeApiSvc, ((IExConBlock)codeApiSvc)._Block);
     }
 
     IEditService IEditServiceSetup.SetBlock(ICodeApiService codeRoot, IBlock block)

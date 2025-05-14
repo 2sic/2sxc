@@ -11,6 +11,7 @@ using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Data.Internal;
 
@@ -82,7 +83,7 @@ public partial class CodeDataFactory(
         ?? _siteOrNull.SafeLanguagePriorityCodes();
 
 
-    public IBlock BlockOrNull => ((ICodeApiServiceInternal)_CodeApiSvc)?._Block;
+    public IBlock BlockOrNull => ((IExConBlock)_CodeApiSvc)?._Block;
 
     public object BlockAsObjectOrNull => BlockOrNull;
 

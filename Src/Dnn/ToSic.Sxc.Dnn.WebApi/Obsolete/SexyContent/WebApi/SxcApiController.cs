@@ -23,6 +23,7 @@ using IFolder = ToSic.Sxc.Adam.IFolder;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable InheritdocInvalidUsage
 
@@ -60,7 +61,7 @@ public abstract partial class SxcApiController() :
 
     [Obsolete]
     [PrivateApi]
-    public SxcHelper Sxc => _sxc ??= new((_CodeApiSvc as ICodeApiServiceInternal)?._Block?.Context?.Permissions.IsContentAdmin ?? false, SysHlp.GetService<IConvertToEavLight> ());
+    public SxcHelper Sxc => _sxc ??= new(((IExConBlock)_CodeApiSvc)?._Block?.Context?.Permissions.IsContentAdmin ?? false, SysHlp.GetService<IConvertToEavLight> ());
     [Obsolete]
     private SxcHelper _sxc;
 

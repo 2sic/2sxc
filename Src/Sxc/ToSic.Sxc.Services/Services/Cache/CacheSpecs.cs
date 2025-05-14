@@ -8,6 +8,7 @@ using ToSic.Lib.DI;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Services.Cache;
@@ -76,7 +77,7 @@ internal record CacheSpecs : ICacheSpecs
 
     public ICacheSpecs WatchAppFolder(NoParamOrder protector = default, bool? withSubfolders = true)
     {
-        var appPaths = AppPathsLazy.New().Get(AppReader, ((ICodeApiServiceInternal)CodeApiSvc)?._Block?.Context.Site);
+        var appPaths = AppPathsLazy.New().Get(AppReader, ((IExConBlock)CodeApiSvc)?._Block?.Context.Site);
         return this with
         {
             PolicyMaker = PolicyMaker.WatchFolders(new Dictionary<string, bool>

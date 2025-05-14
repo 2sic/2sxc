@@ -4,6 +4,7 @@ using ToSic.Lib.Coding;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.WebApi;
 using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 
@@ -36,7 +37,7 @@ public class AdamCode(
         if (!featuresLazy.Value.IsEnabled(feats, "can't save in ADAM", out var exp))
             throw exp;
 
-        var appId = ((ICodeApiServiceInternal)_CodeApiSvc)?._Block?.AppId ?? _CodeApiSvc?.App?.AppId ?? throw new("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
+        var appId = ((IExConBlock)_CodeApiSvc)?._Block?.AppId ?? _CodeApiSvc?.App?.AppId ?? throw new("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
         return adamUploadGenerator.New()
             .Init(appId, contentType, guid.Value, field, false)
             .UploadOne(stream, fileName, subFolder, true);

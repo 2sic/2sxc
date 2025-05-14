@@ -3,6 +3,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent;
 using ToSic.Sxc.Data.Internal.Decorators;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Internal;
 
@@ -76,7 +77,7 @@ public class CodeApiServiceObsolete(ICodeApiService dynCode)
         dynCode.Log.A("try to build old List");
         _list = [];
 
-        if (dynCode.Data == null || ((ICodeApiServiceInternal)dynCode)._Block.View == null) return;
+        if (dynCode.Data == null || ((IExConBlock)dynCode)._Block.View == null) return;
         if (!dynCode.Data.Out.ContainsKey(DataSourceConstants.StreamDefaultName)) return;
 
         var entities = dynCode.Data.List.ToList();
