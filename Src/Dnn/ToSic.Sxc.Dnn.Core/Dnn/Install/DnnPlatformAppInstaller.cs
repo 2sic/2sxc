@@ -6,13 +6,14 @@ using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Integration.Installation;
+using ToSic.Sxc.WebApi.ExternalLinks;
 
 namespace ToSic.Sxc.Dnn.Install;
 
 internal class DnnPlatformAppInstaller(
     LazySvc<IAppsCatalog> appsCatalog,
     GenWorkPlus<WorkViews> workViews,
-    LazySvc<RemoteRouterLink> remoteRouterLazy)
+    LazySvc<ExternalLinksService> remoteRouterLazy)
     : ServiceBase("Dnn.AppIns", connect: [workViews, appsCatalog, remoteRouterLazy]), IPlatformAppInstaller
 {
     public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp)
@@ -40,8 +41,8 @@ internal class DnnPlatformAppInstaller(
                 /* ignore */
             }
 
-        var gettingStartedSrc = remoteRouterLazy.Value.LinkToRemoteRouter(
-            RemoteDestinations.AutoConfigure,
+        var gettingStartedSrc = remoteRouterLazy.Value.LinkToDestination(
+            ExternalSxcDestinations.AutoConfigure,
             site,
             module.Id,
             appSpecsOrNull: null,

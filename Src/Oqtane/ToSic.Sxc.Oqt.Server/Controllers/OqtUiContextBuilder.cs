@@ -4,8 +4,8 @@ using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.Integration.Paths;
+using ToSic.Sxc.WebApi.ExternalLinks;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers;
@@ -14,7 +14,7 @@ internal class OqtUiContextBuilder(
     ILinkPaths linkPaths,
     IContextOfSite ctx,
     SiteState siteState,
-    RemoteRouterLink remoteRouterLink,
+    ExternalLinksService externalLinksService,
     UiContextBuilderBase.MyServices deps)
     : UiContextBuilderBase(deps)
 {
@@ -52,8 +52,8 @@ internal class OqtUiContextBuilder(
     {
         var blockCtx = ctx as IContextOfBlock; // may be null!
 
-        var gsUrl = remoteRouterLink.LinkToRemoteRouter(
-            RemoteDestinations.GettingStarted,
+        var gsUrl = externalLinksService.LinkToDestination(
+            ExternalSxcDestinations.GettingStarted,
             Services.SiteCtx.Site,
             blockCtx?.Module.Id ?? 0,
             AppSpecsOrNull,

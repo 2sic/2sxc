@@ -1,24 +1,28 @@
 ﻿using ToSic.Eav;
 using ToSic.Eav.Apps.Internal.Specs;
-using ToSic.Eav.Context;
 using ToSic.Eav.Security.Fingerprint;
+using ToSic.Sxc.Integration.Installation;
 
-namespace ToSic.Sxc.Integration.Installation;
+namespace ToSic.Sxc.WebApi.ExternalLinks;
 
 /// <summary>
-/// WIP - single location for building router links for installer and app/content infos
+/// Service to generate links to getting started, app-details and more.
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class RemoteRouterLink(SystemFingerprint fingerprint, IPlatformInfo platformInfo)
+public class ExternalLinksService(SystemFingerprint fingerprint, IPlatformInfo platformInfo)
 {
-    public string LinkToRemoteRouter(RemoteDestinations destination, ISite site, int moduleId, IAppSpecs appSpecsOrNull, bool isContentApp)
+    /// <summary>
+    /// Link to a page in the 2sxc.org destination such as getting started, app-home, etc.
+    /// </summary>
+    /// <returns>a link</returns>
+    public string LinkToDestination(ExternalSxcDestinations destination, ISite site, int moduleId, IAppSpecs appSpecsOrNull, bool isContentApp)
     {
         var destinationPart = "";
-        if (destination == RemoteDestinations.AutoConfigure)
+        if (destination == ExternalSxcDestinations.AutoConfigure)
             destinationPart =
                 $"&destination=autoconfigure{(isContentApp ? Eav.Constants.ContentAppAutoConfigureId : Eav.Constants.AppAutoConfigureId)}";
-        else if (destination == RemoteDestinations.Features) 
+        else if (destination == ExternalSxcDestinations.Features) 
             destinationPart = "&destination=features";
 
         var link = "//gettingstarted.2sxc.org/router.aspx?"
@@ -46,12 +50,4 @@ public class RemoteRouterLink(SystemFingerprint fingerprint, IPlatformInfo platf
         return link;
     }
 
-}
-
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public enum RemoteDestinations
-{
-    AutoConfigure,
-    GettingStarted,
-    Features
 }

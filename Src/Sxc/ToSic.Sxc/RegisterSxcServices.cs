@@ -1,15 +1,9 @@
-﻿using Connect.Koi.Detectors;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Internal.Environment;
-using ToSic.Eav.StartUp;
 using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Integration;
-using ToSic.Sxc.Integration.Installation;
-using ToSic.Sxc.Integration.Paths;
-using ToSic.Sxc.Internal.Plumbing;
-using ToSic.Sxc.Polymorphism;
-using ToSic.Sxc.Polymorphism.Internal;
+//using ToSic.Sxc.Integration;
+//using ToSic.Sxc.Integration.Installation;
+//using ToSic.Sxc.Integration.Paths;
 
 namespace ToSic.Sxc.Startup;
 
@@ -19,8 +13,8 @@ public static partial class RegisterSxcServices
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcCore(this IServiceCollection services)
     {
-        // Configuration Provider WIP
-        services.TryAddTransient<SxcImportExportEnvironmentBase.MyServices>();
+        //// Configuration Provider WIP
+        //services.TryAddTransient<SxcImportExportEnvironmentBase.MyServices>();
 
 
         // Adam stuff
@@ -31,25 +25,25 @@ public static partial class RegisterSxcServices
         services.AddTransient<AdamManager.MyServices>();
 
 
-        // WIP - objects which are not really final
-        services.TryAddTransient<RemoteRouterLink>();
+        //// WIP - objects which are not really final
+        //services.TryAddTransient<RemoteRouterLink>();
 
 
-        // 12.06.01 moved here from WebApi, but it should probably be in Dnn as it's probably just used there
-        services.TryAddTransient<IServerPaths, ServerPaths>();
+        //// 12.06.01 moved here from WebApi, but it should probably be in Dnn as it's probably just used there
+        //services.TryAddTransient<IServerPaths, ServerPaths>();
 
 
-        // v13 Provide page scoped services
-        // This is important, as most services are module scoped, but very few are actually scoped one level higher
-        services.TryAddScoped<PageScopeAccessor>();
-        services.TryAddScoped(typeof(PageScopedService<>));
+        //// v13 Provide page scoped services
+        //// This is important, as most services are module scoped, but very few are actually scoped one level higher
+        //services.TryAddScoped<PageScopeAccessor>();
+        //services.TryAddScoped(typeof(PageScopedService<>));
 
         //// Sxc StartUp Routines - MUST be AddTransient, not TryAddTransient so many start-ups can be registered
         //services.AddTransient<IStartUpRegistrations, SxcStartUpRegistrations>();
 
-        // Polymorphism - moved here v17.08
-        services.AddTransient<IPolymorphismResolver, PolymorphismKoi>();
-        services.AddTransient<IPolymorphismResolver, PolymorphismPermissions>();
+        //// Polymorphism - moved here v17.08
+        //services.AddTransient<IPolymorphismResolver, PolymorphismKoi>();
+        //services.AddTransient<IPolymorphismResolver, PolymorphismPermissions>();
 
 
         // Add possibly missing fallback services
@@ -84,20 +78,20 @@ public static partial class RegisterSxcServices
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcCoreFallbackServices(this IServiceCollection services)
     {
-        // basic environment, pages, modules etc.
-        services.TryAddTransient<IEnvironmentInstaller, BasicEnvironmentInstaller>();
-        services.TryAddTransient<IPlatformAppInstaller, BasicEnvironmentInstaller>();
+        //// basic environment, pages, modules etc.
+        //services.TryAddTransient<IEnvironmentInstaller, BasicEnvironmentInstaller>();
+        //services.TryAddTransient<IPlatformAppInstaller, BasicEnvironmentInstaller>();
 
         // ADAM basics
         // TODO: this doesn't warn yet, there should be an AdamFileSystemUnknown(WarnUseOfUnknown<AdamFileSystemUnknown> warn)
         services.TryAddTransient<IAdamFileSystem<string, string>, AdamFileSystemBasic>();
 
         // v13.02
-        services.TryAddTransient<ILinkPaths, LinkPathsUnknown>();
+        //services.TryAddTransient<ILinkPaths, LinkPathsUnknown>();
         //services.TryAddTransient<IModuleAndBlockBuilder, ModuleAndBlockBuilderUnknown>();
 
-        // Koi, mainly so tests don't fail
-        services.TryAddTransient<ICssFrameworkDetector, CssFrameworkDetectorUnknown>();
+        //// Koi, mainly so tests don't fail
+        //services.TryAddTransient<ICssFrameworkDetector, CssFrameworkDetectorUnknown>();
 
         return services;
     }

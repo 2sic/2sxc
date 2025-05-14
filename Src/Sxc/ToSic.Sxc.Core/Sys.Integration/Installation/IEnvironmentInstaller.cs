@@ -14,6 +14,4 @@ public interface IEnvironmentInstaller: IHasLog
     /// </summary>
     /// <returns></returns>
     bool ResumeAbortedUpgrade();
-
-    //string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp);
 }

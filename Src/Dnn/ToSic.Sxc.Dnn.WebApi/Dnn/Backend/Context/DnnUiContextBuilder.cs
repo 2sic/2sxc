@@ -8,12 +8,13 @@ using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Integration.Installation;
+using ToSic.Sxc.WebApi.ExternalLinks;
 
 namespace ToSic.Sxc.Dnn.WebApi.Context;
 
 internal sealed class DnnUiContextBuilder(
     ISxcContextResolver ctxResolver,
-    RemoteRouterLink remoteRouterLink,
+    ExternalLinksService externalLinksService,
     UiContextBuilderBase.MyServices deps)
     : UiContextBuilderBase(deps)
 {
@@ -75,8 +76,8 @@ internal sealed class DnnUiContextBuilder(
     {
         if (AppSpecsOrNull is not { } app) return "";
 
-        var gsUrl = remoteRouterLink.LinkToRemoteRouter(
-            RemoteDestinations.GettingStarted,
+        var gsUrl = externalLinksService.LinkToDestination(
+            ExternalSxcDestinations.GettingStarted,
             Services.SiteCtx.Site,
             Module.ModuleID,
             app,

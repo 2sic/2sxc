@@ -22,6 +22,7 @@ using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Backend.Views;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Integration.Paths;
+using ToSic.Sxc.WebApi.ExternalLinks;
 
 namespace ToSic.Sxc.Backend;
 
@@ -30,6 +31,9 @@ public static class StartupWebApi
 {
     public static IServiceCollection AddSxcWebApi(this IServiceCollection services)
     {
+        // WIP - objects which are not really final
+        services.TryAddTransient<ExternalLinksService>();
+
 
         services.TryAddScoped<ILinkPaths, LinkPaths>();
         // Removed v19.03.03 2025-03-11 by 2dm https://github.com/2sic/2sxc/issues/3598

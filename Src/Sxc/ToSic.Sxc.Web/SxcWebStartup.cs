@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Connect.Koi.Detectors;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Data.Internal.Convert;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.Polymorphism;
+using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.Web.Internal.DotNet;
 using ToSic.Sxc.Web.Internal.EditUi;
 
@@ -31,6 +34,14 @@ public static class SxcWebStartup
         services.TryAddTransient<ConvertToEavLight, ConvertToEavLightWithCmsInfo>(); // this is needed for all the EAV uses of conversion
         services.TryAddTransient<ConvertToEavLightWithCmsInfo>(); // WIP, not public, should use interface instead
         services.TryAddTransient<IConvertToEavLight, ConvertToEavLightWithCmsInfo>();
+
+        // Polymorphism - moved here v17.08
+        services.AddTransient<IPolymorphismResolver, PolymorphismKoi>();
+        services.AddTransient<IPolymorphismResolver, PolymorphismPermissions>();
+
+        // Koi, mainly so tests don't fail
+        services.TryAddTransient<ICssFrameworkDetector, CssFrameworkDetectorUnknown>();
+
 
         // WIP - add net-core specific stuff
         services.AddNetVariations();
