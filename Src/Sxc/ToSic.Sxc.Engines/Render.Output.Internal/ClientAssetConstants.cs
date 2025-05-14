@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Web.Internal.ClientAssets;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class ClientAssetConstants
+public class ClientAssetConstants
 {
     #region Constants for placement in resulting HTML
 

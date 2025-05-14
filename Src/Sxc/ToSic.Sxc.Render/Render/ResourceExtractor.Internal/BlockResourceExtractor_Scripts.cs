@@ -67,7 +67,7 @@ public abstract partial class BlockResourceExtractor
         return l.Return(renderedTemplate);
     }
 
-    private (bool Skip, string PosInPage, int Priority) CheckOptimizationSettings(string value, ClientAssetExtractSettings settings)
+    private (bool Skip, string PosInPage, int Priority) CheckOptimizationSettings(string value, ClientAssetExtractSettingsForOneAssetType settings)
     {
         // Check if we have the optimize attribute
         var optMatch = RegexUtil.OptimizeDetection.Value.Match(value);

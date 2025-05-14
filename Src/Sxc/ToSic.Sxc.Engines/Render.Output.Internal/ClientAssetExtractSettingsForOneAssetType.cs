@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Web.Internal.ClientAssets;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ClientAssetExtractSettings(bool extractAll, string location, int priority, bool autoDefer, bool autoAsync)
+public class ClientAssetExtractSettingsForOneAssetType(bool extractAll, string location, int priority, bool autoDefer, bool autoAsync)
 {
     /// <summary>
     /// Extract all assets, even if they don't have an auto-optimize attribute.

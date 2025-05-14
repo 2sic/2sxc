@@ -9,19 +9,19 @@ public class ClientAssetsExtractSettings
         string cssLocation = default,
         int jsPriority = default,
         string jsLocation = default,
-        ClientAssetExtractSettings js = default,
-        ClientAssetExtractSettings css = default)
+        ClientAssetExtractSettingsForOneAssetType js = default,
+        ClientAssetExtractSettingsForOneAssetType css = default)
     {
         var jsLoc = jsLocation ?? ClientAssetConstants.AddToBody;
         var cssLoc = cssLocation ?? ClientAssetConstants.AddToHead;
         var jsPrio = jsPriority == default ? ClientAssetConstants.JsDefaultPriority : jsPriority;
         var cssPrio = cssPriority == default ? ClientAssetConstants.CssDefaultPriority : cssPriority;
 
-        Css = css ?? new ClientAssetExtractSettings(extractAll, cssLoc, cssPrio, false, false);
-        Js = js ?? new ClientAssetExtractSettings(extractAll, jsLoc, jsPrio, false, false);
+        Css = css ?? new ClientAssetExtractSettingsForOneAssetType(extractAll, cssLoc, cssPrio, false, false);
+        Js = js ?? new ClientAssetExtractSettingsForOneAssetType(extractAll, jsLoc, jsPrio, false, false);
     }
 
-    public ClientAssetExtractSettings Css { get; }
+    public ClientAssetExtractSettingsForOneAssetType Css { get; }
 
-    public ClientAssetExtractSettings Js { get; }
+    public ClientAssetExtractSettingsForOneAssetType Js { get; }
 }
