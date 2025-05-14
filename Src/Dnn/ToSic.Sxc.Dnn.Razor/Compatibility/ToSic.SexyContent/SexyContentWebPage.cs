@@ -69,7 +69,7 @@ public abstract class SexyContentWebPage :
     /// <inheritdoc />
     [PrivateApi("never public, shouldn't be in use elsewhere")]
     [Obsolete]
-    public SxcHelper Sxc => _sxc ??= new(((IExConBlock)_CodeApiSvc)._Block?.Context.Permissions.IsContentAdmin ?? false, GetService<IConvertToEavLight>());
+    public SxcHelper Sxc => _sxc ??= new(((IExCtxBlock)_CodeApiSvc).Block?.Context.Permissions.IsContentAdmin ?? false, GetService<IConvertToEavLight>());
     [Obsolete]
     private SxcHelper _sxc;
 #pragma warning restore 612
@@ -77,7 +77,7 @@ public abstract class SexyContentWebPage :
     /// <summary>
     /// Old API - probably never used, but we shouldn't remove it as we could break some existing code out there
     /// </summary>
-    [PrivateApi] public IBlock Block => ((IExConBlock)_CodeApiSvc)._Block;
+    [PrivateApi] public IBlock Block => ((IExCtxBlock)_CodeApiSvc).Block;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
@@ -103,7 +103,7 @@ public abstract class SexyContentWebPage :
     /// <inheritdoc />
     IDataSource IDynamicCode.Data => _CodeApiSvc.Data;
 
-    public RazorPermissions Permissions => new(((IExConBlock)_CodeApiSvc)._Block?.Context.Permissions.IsContentAdmin ?? false);
+    public RazorPermissions Permissions => new(((IExCtxBlock)_CodeApiSvc).Block?.Context.Permissions.IsContentAdmin ?? false);
 
     #region AsDynamic in many variations
 

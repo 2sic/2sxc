@@ -83,7 +83,7 @@ public partial class CodeDataFactory(
         ?? _siteOrNull.SafeLanguagePriorityCodes();
 
 
-    public IBlock BlockOrNull => ((IExConBlock)_CodeApiSvc)?._Block;
+    public IBlock BlockOrNull => ((IExCtxBlock)_CodeApiSvc)?.Block;
 
     public object BlockAsObjectOrNull => BlockOrNull;
 

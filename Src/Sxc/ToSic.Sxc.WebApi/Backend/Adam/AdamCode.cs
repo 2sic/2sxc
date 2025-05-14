@@ -37,7 +37,7 @@ public class AdamCode(
         if (!featuresLazy.Value.IsEnabled(feats, "can't save in ADAM", out var exp))
             throw exp;
 
-        var appId = ((IExConBlock)_CodeApiSvc)?._Block?.AppId ?? _CodeApiSvc?.App?.AppId ?? throw new("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
+        var appId = ((IExCtxBlock)_CodeApiSvc)?.Block?.AppId ?? _CodeApiSvc?.App?.AppId ?? throw new("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
         return adamUploadGenerator.New()
             .Init(appId, contentType, guid.Value, field, false)
             .UploadOne(stream, fileName, subFolder, true);

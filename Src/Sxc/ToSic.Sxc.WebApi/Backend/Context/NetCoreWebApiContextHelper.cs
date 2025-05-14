@@ -11,6 +11,7 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Backend.Context;
@@ -94,7 +95,7 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
                 // Look up if page publishing is enabled - if module context is not available, always false
                 base.Log.A($"AppId: {appId}");
                 var app = LoadAppOnly(appId, CtxResolver.Site().Site);
-                ((ICodeApiServiceInternal)_CodeApiSvc).AttachApp(app);
+                ((IExCtxAttachApp)_CodeApiSvc).AttachApp(app);
                 found = true;
             }
         }

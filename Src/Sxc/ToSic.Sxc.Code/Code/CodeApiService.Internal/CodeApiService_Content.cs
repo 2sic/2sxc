@@ -36,7 +36,7 @@ public partial class CodeApiService
     private dynamic TryToBuildFirstOfStream(string sourceStream)
     {
         var l = Log.Fn<object>(sourceStream);
-        if (Data == null || _Block.View == null) return l.ReturnNull("no data/block");
+        if (Data == null || Block.View == null) return l.ReturnNull("no data/block");
         if (!Data.Out.ContainsKey(sourceStream)) return l.ReturnNull("stream not found");
 
         var list = Data[sourceStream].List.ToList();

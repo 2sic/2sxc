@@ -2,7 +2,9 @@
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 
-public interface IExConAllResources
+[PrivateApi]
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public interface IExCtxAllResources
 {
     ITypedStack AllResources { get; }
 }

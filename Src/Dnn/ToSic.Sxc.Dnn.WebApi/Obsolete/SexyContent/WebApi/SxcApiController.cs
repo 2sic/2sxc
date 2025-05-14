@@ -61,7 +61,7 @@ public abstract partial class SxcApiController() :
 
     [Obsolete]
     [PrivateApi]
-    public SxcHelper Sxc => _sxc ??= new(((IExConBlock)_CodeApiSvc)?._Block?.Context?.Permissions.IsContentAdmin ?? false, SysHlp.GetService<IConvertToEavLight> ());
+    public SxcHelper Sxc => _sxc ??= new(((IExCtxBlock)_CodeApiSvc)?.Block?.Context?.Permissions.IsContentAdmin ?? false, SysHlp.GetService<IConvertToEavLight> ());
     [Obsolete]
     private SxcHelper _sxc;
 

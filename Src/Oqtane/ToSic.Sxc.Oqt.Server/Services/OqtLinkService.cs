@@ -35,7 +35,7 @@ internal class OqtLinkService(
     public override void ConnectToRoot(ICodeApiService codeRoot)
     {
         base.ConnectToRoot(codeRoot);
-        _context = ((IExConBlock)codeRoot)._Block?.Context;
+        _context = ((IExCtxBlock)codeRoot).Block?.Context;
     }
 
     protected override string ToApi(string api, string parameters = null) => ApiNavigateUrl(api, parameters);

@@ -9,6 +9,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 // TODO: MAKE PRIVATE AGAIN AFTER MOVING TO ToSic.Sxc.Custom
 
@@ -27,7 +28,7 @@ public partial class DataService(
     public override void ConnectToRoot(ICodeApiService codeRoot)
     {
         base.ConnectToRoot(codeRoot);
-        Setup(codeRoot.App, () => (codeRoot as ICodeApiServiceInternal)?.LookUpForDataSources);
+        Setup(codeRoot.App, () => (codeRoot as IExCtxLookUpEngine)?.LookUpForDataSources);
     }
 
     // TODO: MAKE PRIVATE AGAIN AFTER MOVING TO ToSic.Sxc.Custom

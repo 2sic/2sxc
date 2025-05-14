@@ -93,10 +93,9 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
         if (block == null)
             return cLog.Return(this, "no block");
 
-        _Block = block;
+        Block = block;
         Data = block.Data;
         AttachApp(block.App);
-
 
         return cLog.Return(this, $"AppId: {App?.AppId}, Block: {block.Configuration?.BlockIdentifierOrNull?.Guid}");
     }

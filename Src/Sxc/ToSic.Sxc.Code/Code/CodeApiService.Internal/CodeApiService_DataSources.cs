@@ -2,10 +2,11 @@
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Internal;
 
-public partial class CodeApiService
+public partial class CodeApiService: IExCtxLookUpEngine
 {
     #region DataSource and ConfigurationProvider (for DS) section
 
@@ -21,8 +22,8 @@ public partial class CodeApiService
     private readonly GetOnce<ILookUpEngine> _lookupEngine = new();
 
     [PrivateApi]
-    public CodeCreateDataSourceSvc DataSources =>
-        field ??= Services.DataSources.Value.Setup(App, () => LookUpForDataSources);
+    public CodeCreateDataSourceSvc DataSources => field
+        ??= Services.DataSources.Value.Setup(App, () => LookUpForDataSources);
 
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />

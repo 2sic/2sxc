@@ -14,6 +14,7 @@ using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal;
@@ -72,7 +73,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
             Log.A("DynCode.App is null");
             var app = GetAppOrNullFromUrlParams(services, request);
             if (app != null)
-                ((ICodeApiServiceInternal)codeRoot).AttachApp(app);
+                ((IExCtxAttachApp)codeRoot).AttachApp(app);
         }
 
         var reqProperties = request.Properties;

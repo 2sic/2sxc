@@ -77,7 +77,7 @@ public class CodeApiServiceObsolete(ICodeApiService dynCode)
         dynCode.Log.A("try to build old List");
         _list = [];
 
-        if (dynCode.Data == null || ((IExConBlock)dynCode)._Block.View == null) return;
+        if (dynCode.Data == null || ((IExCtxBlock)dynCode).Block.View == null) return;
         if (!dynCode.Data.Out.ContainsKey(DataSourceConstants.StreamDefaultName)) return;
 
         var entities = dynCode.Data.List.ToList();

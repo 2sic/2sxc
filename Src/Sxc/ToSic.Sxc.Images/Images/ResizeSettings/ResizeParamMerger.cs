@@ -108,7 +108,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
     internal static ICanGetByName GetImageSettingsByName(ICodeApiService codeApiSvcOrNull, string strName, bool debug, ILog log)
     {
         var l = log.Fn<ICanGetByName>($"{strName}; code root: {codeApiSvcOrNull != null}", enabled: debug);
-        var result = (codeApiSvcOrNull as IExConAllSettings)?.AllSettings?.Get($"Settings.Images.{strName}") as ICanGetByName;
+        var result = (codeApiSvcOrNull as IExCtxAllSettings)?.AllSettings?.Get($"Settings.Images.{strName}") as ICanGetByName;
         return l.Return(result, $"found: {result != null}");
     }
 

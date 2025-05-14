@@ -16,7 +16,7 @@ internal partial class EditService(IJsonService jsonService)
     public override void ConnectToRoot(ICodeApiService codeApiSvc)
     {
         base.ConnectToRoot(codeApiSvc);
-        ((IEditServiceSetup)this).SetBlock(codeApiSvc, ((IExConBlock)codeApiSvc)._Block);
+        ((IEditServiceSetup)this).SetBlock(codeApiSvc, ((IExCtxBlock)codeApiSvc).Block);
     }
 
     IEditService IEditServiceSetup.SetBlock(ICodeApiService codeRoot, IBlock block)

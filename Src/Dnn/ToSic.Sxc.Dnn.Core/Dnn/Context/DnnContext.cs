@@ -17,7 +17,7 @@ internal class DnnContext : IDnnContext, INeedsCodeApiService
     /// </summary>
     public void ConnectToRoot(ICodeApiService codeRoot)
     {
-        var moduleContext = ((IExConBlock)codeRoot)._Block?.Context?.Module;
+        var moduleContext = ((IExCtxBlock)codeRoot).Block?.Context?.Module;
         Module = (moduleContext as Module<ModuleInfo>)?.GetContents();
         // note: this may be a bug, I assume it should be Module.OwnerPortalId
         Portal = PortalSettings.Current ?? 

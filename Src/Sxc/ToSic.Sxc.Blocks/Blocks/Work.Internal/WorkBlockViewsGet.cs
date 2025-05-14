@@ -3,7 +3,6 @@ using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks.Internal;
@@ -20,9 +19,10 @@ public class WorkBlockViewsGet(GenWorkPlus<WorkViews> workViews, LazySvc<AppIcon
             .GetAll()
             .ToList();
 
-    internal IEnumerable<TemplateUiInfo> GetCompatibleViews(IApp app, BlockConfiguration blockConfiguration)
+    internal IEnumerable<TemplateUiInfo> GetCompatibleViews(IBlock block)
     {
         List<IView> availableTemplates;
+        var blockConfiguration = block.Configuration;
         var items = blockConfiguration.Content;
 
         // if any items were already initialized...
@@ -46,7 +46,7 @@ public class WorkBlockViewsGet(GenWorkPlus<WorkViews> workViews, LazySvc<AppIcon
                 Name = t.Name,
                 ContentTypeStaticName = t.ContentType,
                 IsHidden = t.IsHidden,
-                Thumbnail = thumbnailHelper.IconPathOrNull(app, t, PathTypes.Link),
+                Thumbnail = thumbnailHelper.IconPathOrNull(block?.App, t, PathTypes.Link),
                 IsDefault = t.Metadata.HasType(Decorators.IsDefaultDecorator),
             })
             .ToList();

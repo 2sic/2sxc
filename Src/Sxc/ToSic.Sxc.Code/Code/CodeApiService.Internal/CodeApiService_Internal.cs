@@ -11,7 +11,9 @@ namespace ToSic.Sxc.Code.Internal;
 
 public partial class CodeApiService
     : ICodeApiServiceInternal,
-        IExConBlock,
+        IExCtxBlock,
+        IExCtxAttachApp,
+        IExCtxGetKit,
         IWrapper<IServiceKitForTypedData>
 {
     [PrivateApi]
@@ -22,7 +24,7 @@ public partial class CodeApiService
 
         App = app;
 
-        _edition = Services.Polymorphism.UseViewEditionOrGet(_Block?.View, ((IAppWithInternal)App).AppReader);
+        _edition = Services.Polymorphism.UseViewEditionOrGet(Block?.View, ((IAppWithInternal)App).AppReader);
     }
 
     private string _edition;
@@ -31,7 +33,7 @@ public partial class CodeApiService
     [Obsolete("Warning - avoid using this on the DynamicCode Root - always use the one on the AsC")]
     public int CompatibilityLevel => Cdf.CompatibilityLevel;
 
-    [PrivateApi] public IBlock _Block { get; private set; }
+    [PrivateApi] public IBlock Block { get; private set; }
 
     [PrivateApi]
     public IAppTyped AppTyped => field ??= new Func<IAppTyped>(() => GetService<IAppTyped>(reuse: true))();
@@ -80,18 +82,16 @@ public partial class CodeApiService
     /// </summary>
     /// <typeparam name="TService"></typeparam>
     /// <param name="service"></param>
-    internal void ReplaceServiceInCache<TService>(TService service) =>
-        _reusableServices[typeof(TService)] = service;
+    internal void ReplaceServiceInCache<TService>(TService service)
+        => _reusableServices[typeof(TService)] = service;
 
     /// <summary>
     /// Get or Create a Kit by type
     /// </summary>
     /// <typeparam name="TKit"></typeparam>
     /// <returns></returns>
-    TKit ICodeApiServiceInternal.GetKit<TKit>() => GetService<TKit>(reuse: true);
-
-    //IServiceKitForTypedData ICodeApiServiceInternal.GetKitForTypedData()
-    //    => ((ICodeApiServiceInternal)this).GetKit<ServiceKit16>();
+    public TKit GetKit<TKit>() where TKit : ServiceKit
+        => GetService<TKit>(reuse: true);
 
     /// <summary>
     /// Special workaround so this can provide the data without

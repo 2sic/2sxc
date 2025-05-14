@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CspOfApp : ServiceForDynamicCode
 {
-    public int AppId => ((IExConBlock)_CodeApiSvc)?._Block?.AppId ?? 0;
+    public int AppId => ((IExCtxBlock)_CodeApiSvc)?.Block?.AppId ?? 0;
 
     #region Constructor
 

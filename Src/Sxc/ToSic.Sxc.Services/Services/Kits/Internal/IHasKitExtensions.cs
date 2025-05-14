@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Services;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Internal;
 
@@ -12,7 +13,7 @@ public static class IHasKitExtensions
             IHasKit<TServiceKit> { Kit: not null } withKit => withKit.Kit,
 
             // if it has a service that can provide the kit, return it
-            ICodeApiServiceInternal cas => cas.GetKit<TServiceKit>(),
+            IExCtxGetKit cas => cas.GetKit<TServiceKit>(),
 
             // Unexpected - but old fallback: just generate a new one
             _ => codeRoot.GetService<TServiceKit>()

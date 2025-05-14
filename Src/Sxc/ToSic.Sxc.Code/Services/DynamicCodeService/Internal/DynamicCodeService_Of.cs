@@ -2,6 +2,7 @@
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Services.Internal;
 
@@ -48,7 +49,7 @@ public partial class DynamicCodeService
         var codeRoot = _myScopedServices.CodeRootGenerator.New()
             .New(parentClassOrNull: null, null, Log, CompatibilityLevels.CompatibilityLevel12);
         var app = App(zoneId: zoneId, appId: appId);
-        ((ICodeApiServiceInternal)codeRoot).AttachApp(app);
+        ((IExCtxAttachApp)codeRoot).AttachApp(app);
         var code12 = new DynamicCode12Proxy(codeRoot);
         return l.ReturnAsOk(code12);
     }

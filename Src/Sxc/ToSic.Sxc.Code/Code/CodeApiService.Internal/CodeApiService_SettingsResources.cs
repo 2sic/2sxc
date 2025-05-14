@@ -9,8 +9,8 @@ using SettingsSources = System.Collections.Generic.List<System.Collections.Gener
 namespace ToSic.Sxc.Code.Internal;
 
 public partial class CodeApiService
-    : IExConAllResources,
-        IExConAllSettings
+    : IExCtxAllResources,
+        IExCtxAllSettings
 {
     /// <inheritdoc />
     [PublicApi]
@@ -23,11 +23,11 @@ public partial class CodeApiService
 
     private AppDataStackService AppDss => field ??= Services.DataStackService.Init(((IAppWithInternal)App).AppReader);
 
-    private SettingsSources ResSrc => _resSrc.Get(() => AppDss.GetStack(AppStackConstants.Resources, _Block?.View?.Resources));
+    private SettingsSources ResSrc => _resSrc.Get(() => AppDss.GetStack(AppStackConstants.Resources, Block?.View?.Resources));
     private readonly GetOnce<SettingsSources> _resSrc = new();
 
 
-    private SettingsSources SetSrc => _setSrc.Get(() => AppDss.GetStack(AppStackConstants.Settings, _Block?.View?.Settings));
+    private SettingsSources SetSrc => _setSrc.Get(() => AppDss.GetStack(AppStackConstants.Settings, Block?.View?.Settings));
     private readonly GetOnce<SettingsSources> _setSrc = new();
 
     /// <inheritdoc />

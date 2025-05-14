@@ -77,7 +77,7 @@ internal record CacheSpecs : ICacheSpecs
 
     public ICacheSpecs WatchAppFolder(NoParamOrder protector = default, bool? withSubfolders = true)
     {
-        var appPaths = AppPathsLazy.New().Get(AppReader, ((IExConBlock)CodeApiSvc)?._Block?.Context.Site);
+        var appPaths = AppPathsLazy.New().Get(AppReader, ((IExCtxBlock)CodeApiSvc)?.Block?.Context.Site);
         return this with
         {
             PolicyMaker = PolicyMaker.WatchFolders(new Dictionary<string, bool>

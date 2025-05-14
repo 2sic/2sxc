@@ -2,7 +2,9 @@
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 
-public interface IExConAllSettings
+[PrivateApi]
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public interface IExCtxAllSettings
 {
     ITypedStack AllSettings { get; }
 }

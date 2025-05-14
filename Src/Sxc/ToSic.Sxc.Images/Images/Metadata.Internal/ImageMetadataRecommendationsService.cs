@@ -30,7 +30,7 @@ class ImageMetadataRecommendationsService(IFeaturesService featuresSvc) : Servic
     // but because we'll need to merge the code with v17, we try do keep it this way.
     public string[] GetImageRecommendations()
     {
-        if (_CodeApiSvc is not IExConAllSettings codeRootTyped)
+        if (_CodeApiSvc is not IExCtxAllSettings codeRootTyped)
             return ImageRecommendationsBasic;
 
         if (!featuresSvc.IsEnabled(BuiltInFeatures.CopyrightManagement.NameId))

@@ -51,7 +51,7 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
     #region Html Helper
 
     internal IHtmlHelper Html => field ??= _CodeApiSvc.GetService<HtmlHelper>().Init(Page, this,
-        ((IExConBlock)_CodeApiSvc)._Block?.Context.User.IsSystemAdmin ?? false);
+        ((IExCtxBlock)_CodeApiSvc).Block?.Context.User.IsSystemAdmin ?? false);
 
     #endregion
 

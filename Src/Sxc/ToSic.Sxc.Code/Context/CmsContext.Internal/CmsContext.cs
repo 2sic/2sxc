@@ -27,7 +27,7 @@ internal class CmsContext(
     #region Internal context
 
     // Note: Internal so it can be used for View<T, T>
-    internal IBlock RealBlockOrNull => _realBlock.Get(() => ((IExConBlock)_CodeApiSvc)?._Block);
+    internal IBlock RealBlockOrNull => _realBlock.Get(() => ((IExCtxBlock)_CodeApiSvc)?.Block);
     private readonly GetOnce<IBlock> _realBlock = new();
 
     internal IContextOfBlock CtxBlockOrNull => _ctxBlock.Get(() => RealBlockOrNull?.Context);

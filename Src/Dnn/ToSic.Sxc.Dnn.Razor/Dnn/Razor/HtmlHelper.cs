@@ -135,7 +135,7 @@ internal class HtmlHelper(
         // Note that if anything breaks here, it will just use the normal error - but for what breaks in here
         // Note that if withHelp already has help, it won't be extended any more
         exWithHelp = codeErrService.Value.AddHelpIfKnownError(exWithHelp, _page);
-        var block = ((IExConBlock)_page._CodeApiSvc)._Block;
+        var block = ((IExCtxBlock)_page._CodeApiSvc).Block;
         var renderHelper = renderingHelperGenerator.New().Init(block);
         var nice = renderHelper.DesignErrorMessage([exWithHelp], true);
         _helper.Add(exWithHelp);

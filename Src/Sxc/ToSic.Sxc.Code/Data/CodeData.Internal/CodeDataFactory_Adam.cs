@@ -29,7 +29,7 @@ partial class CodeDataFactory
         if (_CodeApiSvc is null)
             throw new($"Can't create App Context for {nameof(AdamManager)} in {nameof(ICodeDataFactory)} - no block, no App");
 
-        IContextOfApp contextOfApp = ((IExConBlock)_CodeApiSvc)._Block?.Context;
+        IContextOfApp contextOfApp = ((IExCtxBlock)_CodeApiSvc).Block?.Context;
         // TODO: @2dm - find out / document why this could even be null
         if (contextOfApp == null)
         {
