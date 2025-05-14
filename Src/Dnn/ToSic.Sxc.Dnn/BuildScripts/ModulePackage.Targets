@@ -95,6 +95,10 @@
       <!-- Global / Shared 2sxc and EAV DLLs-->
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Core.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Core.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Adam.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Adam.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Apps.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Apps.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Blocks.dll" />

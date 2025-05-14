@@ -64,6 +64,7 @@ public static class DnnDi
             .AddSxcWeb()
             .AddSxcLightSpeed()
             .AddSxcCodeGen() // Code generation services
+            .AddSxcCoreNew()
             .AddEavEverything()
             .AddEavWebApiTypedAfterEav()
             .AddRazorBlade();

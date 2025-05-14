@@ -3,10 +3,10 @@
 namespace ToSic.Sxc;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public static class SxcEditStartup
+public static class SxcCoreStartup
 {
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public static IServiceCollection AddSxcEdit(this IServiceCollection services)
+    public static IServiceCollection AddSxcCoreNew(this IServiceCollection services)
     {
         
 

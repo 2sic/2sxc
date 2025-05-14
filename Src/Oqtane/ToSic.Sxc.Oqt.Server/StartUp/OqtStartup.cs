@@ -82,6 +82,7 @@ public class OqtStartup : IServerStartup
             .AddSxcApps()
             .AddSxcEdit()
             .AddSxcData()
+            .AddSxcAdam()
             .AddSxcBlocks()
             .AddSxcRender()
             .AddSxcCms()
@@ -89,6 +90,7 @@ public class OqtStartup : IServerStartup
             .AddSxcWeb()
             .AddSxcLightSpeed()             // LightSpeed services
             .AddSxcCodeGen()                // Code generation services
+            .AddSxcCoreNew()
             .AddEavEverything()             // Core EAV services
             .AddEavWebApiTypedAfterEav()
             .AddOqtAppWebApi()              // Oqtane App WebAPI stuff

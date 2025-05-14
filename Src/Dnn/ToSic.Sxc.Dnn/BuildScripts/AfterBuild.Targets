@@ -35,6 +35,10 @@
       <!-- Global / Shared 2sxc and EAV DLLs-->
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.dll" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.pdb" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Core.dll" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Core.pdb" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Adam.dll" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Adam.pdb" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Apps.dll" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Apps.pdb" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Blocks.dll" />
