@@ -28,9 +28,10 @@ namespace ToSic.Sxc.Data;
 /// </remarks>
 [PublicApi]
 public partial interface IDynamicEntity:
-#if NETFRAMEWORK
-        SexyContent.Interfaces.IDynamicEntity,
-#endif
+// #TryToDropOldIDynamicEntity: 2025-05-14 2dm v20 try to remove this for now
+//#if NETFRAMEWORK
+//        SexyContent.Interfaces.IDynamicEntity,
+//#endif
     IEntityWrapper, 
     /*IDynamicEntityBase,*/ 
     ISxcDynamicObject, 
