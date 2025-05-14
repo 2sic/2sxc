@@ -7,6 +7,7 @@ using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageFeatures;
+using ToSic.Sxc.Web.PageServiceShared.Internal;
 using static ToSic.Sxc.Web.Internal.ClientAssets.ClientAssetConstants;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
@@ -58,6 +59,7 @@ public class PageChangeSummary(
         // New beta 2025-03-18 v19.03.03
         var cacheSettings = moduleId != 0 ? ((ModuleService)moduleService).GetOutputCache(moduleId) : null;
 
+        var csp = ((IPageServiceSharedInternal)pss).Csp;
         var result = new RenderResult
         {
             Assets = assets,
@@ -71,9 +73,9 @@ public class PageChangeSummary(
             HttpHeaders = pss.HttpHeaders,
 
             // CSP settings
-            CspEnabled = pss.Csp.IsEnabled,
-            CspEnforced = pss.Csp.IsEnforced,
-            CspParameters = pss.Csp.CspParameters(),
+            CspEnabled = csp.IsEnabled,
+            CspEnforced = csp.IsEnforced,
+            CspParameters = csp.CspParameters(),
             Errors = errors,
 
             // New 19.03.03

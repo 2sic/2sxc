@@ -11,7 +11,9 @@ public interface IPageServiceShared: IChangeQueue
     List<ClientAsset> GetAssetsAndFlush();
     void AddAssets(RenderEngineResult result);
     IPageFeatures PageFeatures { get; }
-    CspOfModule Csp { get; }
+
+    // Moving CspOfModule to internal
+    //CspOfModule Csp { get; }
     string CspEphemeralMarker { get; }
 
     /// <summary>

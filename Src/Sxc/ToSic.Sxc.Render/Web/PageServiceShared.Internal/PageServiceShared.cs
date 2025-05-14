@@ -1,6 +1,7 @@
 ﻿using ToSic.Lib.Helpers;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageFeatures;
+using ToSic.Sxc.Web.PageServiceShared.Internal;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Web.Internal.PageService;
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Web.Internal.PageService;
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class PageServiceShared(IPageFeatures pageFeatures, IFeaturesService featuresService, CspOfModule csp)
-    : IChangeQueue
+    : IPageServiceShared, IPageServiceSharedInternal, IChangeQueue
 {
     internal readonly IFeaturesService FeaturesService = featuresService;
     public IPageFeatures PageFeatures { get; } = pageFeatures;
