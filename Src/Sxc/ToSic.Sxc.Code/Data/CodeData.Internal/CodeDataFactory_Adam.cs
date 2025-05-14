@@ -45,6 +45,9 @@ partial class CodeDataFactory
     public IFile File(int id)
         => AdamManager.File(id);
 
+    //public IFile File(IField field)
+    //    => AdamManager.File(field);
+
     public IFolder Folder(int id)
         => AdamManager.Folder(id);
 

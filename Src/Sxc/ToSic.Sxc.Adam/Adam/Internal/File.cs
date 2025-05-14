@@ -30,9 +30,11 @@ public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets
     /// <param name="mdOf"></param>
     private void AttachMdRecommendations(IMetadataOf mdOf)
     {
-        if (mdOf?.Target == null) return;
-        if (Type == Classification.Image)
-            mdOf.Target.Recommendations = ImageDecorator.GetImageRecommendations(AdamManager?.Cdf?._CodeApiSvc);
+        if (mdOf?.Target == null || Type != Classification.Image)
+            return;
+        mdOf.Target.Recommendations = AdamManager?.Cdf ?.GetService<IImageMetadataRecommendationsService>()
+            .GetImageRecommendations()
+            ?? [];
     }
 
     IMetadataOf IHasMetadata.Metadata => (Metadata as IHasMetadata)?.Metadata;

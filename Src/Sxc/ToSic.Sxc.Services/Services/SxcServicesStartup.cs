@@ -41,9 +41,6 @@ public static class SxcServicesStartup
         //services.TryAddTransient<IEditService, EditService>();
         services.TryAddTransient<ResizeDimensionGenerator>();
 
-        // WIP v14
-        services.TryAddTransient<IAdamService, AdamService>();
-
         // V15
         services.TryAddScoped<IModuleService, ModuleService>(); // Must be scoped & shared on the module
         services.TryAddTransient<ITurnOnService, TurnOnService>();

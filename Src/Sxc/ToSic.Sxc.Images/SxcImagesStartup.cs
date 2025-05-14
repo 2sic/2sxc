@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Services;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Images;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -15,9 +16,9 @@ public static class SxcImagesStartup
         services.TryAddTransient<ImgResizeLinker>();
         services.TryAddTransient<IImageService, ImageService>();
 
+        // New v20 ImageMetadataRecommendation
+        services.TryAddTransient<IImageMetadataRecommendationsService, ImageMetadataRecommendationsService>();
+
         return services;
     }
-
-
-        
 }

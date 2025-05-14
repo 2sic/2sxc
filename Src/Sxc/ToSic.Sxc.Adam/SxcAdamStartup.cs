@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc;
 
@@ -22,6 +23,9 @@ public static class SxcAdamStartup
         services.TryAddTransient<AdamContext.MyServices>();
 
         services.AddTransient<AdamManager.MyServices>();
+
+        // WIP v14
+        services.TryAddTransient<IAdamService, AdamService>();
 
         //// Add possibly missing fallback services
         //// This must always be at the end here so it doesn't accidentally replace something we actually need

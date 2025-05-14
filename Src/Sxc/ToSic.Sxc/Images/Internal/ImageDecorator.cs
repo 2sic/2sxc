@@ -1,15 +1,10 @@
-﻿using System.IO;
-using ToSic.Eav.Internal.Features;
-using ToSic.Eav.Metadata;
-using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Adam;
-using ToSic.Sxc.Code.Internal;
-using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
+﻿using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Images.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBasedType(entity, languageCodes), IImageDecorator
+public class ImageDecorator(IEntity entity, string[] languageCodes)
+    : EntityBasedType(entity, languageCodes), IImageDecorator
 {
     #region Constants and Type Names
 
@@ -136,39 +131,6 @@ public class ImageDecorator(IEntity entity, string[] languageCodes) : EntityBase
             default: return null;
         }
     }
-
-    #endregion
-
-    #region AddRecommendations
-
-    /// <summary>
-    /// Optionally add image-metadata recommendations
-    /// </summary>
-    internal static void AddRecommendations(IMetadataOf mdOf, string path, ICodeApiService codeRoot)
-    {
-        if (mdOf?.Target == null || !path.HasValue()) return;
-        var ext = Path.GetExtension(path);
-        if (ext.HasValue() && Classification.IsImage(ext))
-            mdOf.Target.Recommendations = GetImageRecommendations(codeRoot);
-    }
-
-    // TODO: THIS IS ALL very temporary - it should be in a proper service, 
-    // but because we'll need to merge the code with v17, we try do keep it this way.
-    internal static string[] GetImageRecommendations(ICodeApiService codeRoot)
-    {
-        if (codeRoot is not ICodeApiServiceInternal codeRootTyped)
-            return ImageRecommendationsBasic;
-
-        if (!codeRootTyped.GetService<IFeaturesService>().IsEnabled(BuiltInFeatures.CopyrightManagement.NameId))
-            return ImageRecommendationsBasic;
-
-        var useCopyright = codeRootTyped.AllSettings?.Bool($"Copyright.{nameof(CopyrightSettings.ImagesInputEnabled)}") ?? false;
-        return useCopyright
-            ? ImageRecommendationsCopyright
-            : ImageRecommendationsBasic;
-    }
-    private static string[] ImageRecommendationsBasic => [TypeNameId];
-    private static string[] ImageRecommendationsCopyright => [CopyrightDecorator.TypeNameId, TypeNameId];
 
     #endregion
 }
