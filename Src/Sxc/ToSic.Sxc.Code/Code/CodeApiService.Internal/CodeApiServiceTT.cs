@@ -28,7 +28,7 @@ public class CodeApiService<TModel, TServiceKit>(CodeApiService.MyServices servi
     /// The primary kit for this service.
     /// Other kit versions can be accessed using `GetKit{TKit}`
     /// </summary>
-    public TServiceKit Kit => _kit.Get(((ICodeApiServiceInternal)this).GetKit<TServiceKit>);
+    public TServiceKit Kit => _kit.Get(GetKit<TServiceKit>);
     private readonly GetOnce<TServiceKit> _kit = new();
 
 }

@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Services;
 /// <summary>
 /// Special interface for handing a partial service kit to TypedData helpers.
 /// </summary>
-public interface IServiceKitForTypedData
+public interface IExCtxServicesForTypedData
 {
     /// <inheritdoc cref="ServiceKit14.Adam"/>
     IAdamService Adam { get; }

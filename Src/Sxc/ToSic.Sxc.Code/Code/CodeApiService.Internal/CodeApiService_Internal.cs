@@ -10,11 +10,8 @@ using IApp = ToSic.Sxc.Apps.IApp;
 namespace ToSic.Sxc.Code.Internal;
 
 public partial class CodeApiService
-    : ICodeApiServiceInternal,
-        IExCtxBlock,
-        IExCtxAttachApp,
-        IExCtxGetKit,
-        IWrapper<IServiceKitForTypedData>
+    : IWrapper<IExCtxServicesForTypedData>,
+        IExCtxBlock
 {
     [PrivateApi]
     public void AttachApp(IApp app)
@@ -99,8 +96,8 @@ public partial class CodeApiService
     /// To call this, you must explicitly cast it to IWrapper&lt;IServiceKitForTypedData&gt;
     /// </summary>
     /// <returns></returns>
-    IServiceKitForTypedData IWrapper<IServiceKitForTypedData>.GetContents()
-        => ((ICodeApiServiceInternal)this).GetKit<ServiceKit16>();
+    IExCtxServicesForTypedData IWrapper<IExCtxServicesForTypedData>.GetContents()
+        => GetKit<ServiceKit16>();
 
     #endregion
 

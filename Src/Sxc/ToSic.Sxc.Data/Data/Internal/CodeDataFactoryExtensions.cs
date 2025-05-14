@@ -10,14 +10,14 @@ internal static class CodeDataFactoryExtensions
     /// Will check if the CodeDataFactory exists and try to get the ServiceKit - or throw an error. 
     /// </summary>
     /// <exception cref="NotSupportedException"></exception>
-    internal static IServiceKitForTypedData GetServiceKitOrThrow(this ICodeDataFactory cdf, [CallerMemberName] string cName = default)
+    internal static IExCtxServicesForTypedData GetServiceKitOrThrow(this ICodeDataFactory cdf, [CallerMemberName] string cName = default)
     {
         if (cdf == null)
             throw new NotSupportedException($"Trying to use {cName}(...) in a scenario where the {nameof(cdf)} is not available.");
 
-        var kit = ((IWrapper<IServiceKitForTypedData>)cdf._CodeApiSvc).GetContents(); // before v20 it was .GetKit<ServiceKit16>();
+        var kit = ((IWrapper<IExCtxServicesForTypedData>)cdf._CodeApiSvc).GetContents(); // before v20 it was .GetKit<ServiceKit16>();
         return kit ?? throw new NotSupportedException(
-            $"Trying to use {cName}(...) in a scenario where the {nameof(IServiceKitForTypedData)} is not available.");
+            $"Trying to use {cName}(...) in a scenario where the {nameof(IExCtxServicesForTypedData)} is not available.");
     }
 
 }
