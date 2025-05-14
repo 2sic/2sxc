@@ -87,6 +87,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Apps\Internal\Blocks\" />
     <Folder Include="Data\Internal\Decorators\" />
   </ItemGroup>
 

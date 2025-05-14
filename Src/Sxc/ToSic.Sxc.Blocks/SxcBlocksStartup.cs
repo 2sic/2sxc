@@ -6,6 +6,7 @@ using ToSic.Eav.Context.Internal;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Work.Internal;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Integration.Modules;
@@ -58,6 +59,7 @@ public static class SxcBlocksStartup
         // Work
         services.TryAddTransient<WorkBlocks>();
         services.TryAddTransient<WorkBlocksMod>();
+        services.TryAddTransient<WorkBlockViewsGet>();
 
         services.AddSxcBlocksFallback();
 

@@ -2,6 +2,7 @@
 using ToSic.Eav.Security.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Work.Internal;
 
 namespace ToSic.Sxc.Backend.InPage;
 
@@ -11,6 +12,7 @@ public class AppViewPickerBackend(
     ISxcContextResolver ctxResolver,
     LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
     GenWorkPlus<WorkViews> workViews,
+    GenWorkPlus<WorkBlockViewsGet> workBlockViews,
     AppWorkContextService appWorkCtxService,
     GenWorkDb<WorkEntityPublish> publisher)
     : BlockWebApiBackendBase(multiPermissionsApp, appWorkCtxService, ctxResolver, "Bck.ViwApp",
@@ -21,7 +23,9 @@ public class AppViewPickerBackend(
     public IEnumerable<TemplateUiInfo> Templates() =>
         Block?.App == null 
             ? Array.Empty<TemplateUiInfo>()
-            : workViews.New(AppWorkCtxPlus).GetCompatibleViews(Block?.App, Block?.Configuration);
+            : workBlockViews.New(AppWorkCtxPlus)
+                .GetCompatibleViews(Block?.App, Block?.Configuration);
+        //: workViews.New(AppWorkCtxPlus).GetCompatibleViews(Block?.App, Block?.Configuration);
 
     public IEnumerable<ContentTypeUiInfo> ContentTypes()
     {

@@ -2,9 +2,8 @@
 using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Blocks.Internal;
 
-namespace ToSic.Sxc.Apps.Internal;
+namespace ToSic.Sxc.Blocks.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
@@ -12,9 +11,9 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
     public  int ZoneId { get; }
     public  int AppId { get; }
 
-    internal IEntity PreviewViewEntity { get; set; }
+    public IEntity PreviewViewEntity { get; }
 
-    internal IBlockIdentifier BlockIdentifierOrNull;
+    public IBlockIdentifier BlockIdentifierOrNull;
 
     private readonly Generator<QueryDefinitionBuilder> _qDefBuilder;
 
@@ -28,14 +27,13 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
         PreviewViewEntity = previewViewEntity;
     }
         
-    internal BlockConfiguration WarnIfMissingData()
-    {
-        if (Entity != null) return this;
-        throw new("BlockConfiguration entity is null. " +
-                  "This usually happens when you are duplicating a site, and have not yet imported the other content/apps. " +
-                  "If that is your issue, check 2sxc.org/help?tag=export-import");
-    }
-        
+    internal BlockConfiguration WarnIfMissingData() =>
+        Entity != null
+            ? this
+            : throw new("BlockConfiguration entity is null. " +
+                        "This usually happens when you are duplicating a site, and have not yet imported the other content/apps. " +
+                        "If that is your issue, check 2sxc.org/help?tag=export-import");
+
     /// <summary>
     /// Returns true if a content group entity for this group really exists
     /// Means for example, that the app can't be changed anymore

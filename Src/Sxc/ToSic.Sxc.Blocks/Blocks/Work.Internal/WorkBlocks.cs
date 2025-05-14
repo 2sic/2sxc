@@ -10,12 +10,8 @@ using ToSic.Sxc.Blocks.Internal;
 namespace ToSic.Sxc.Apps.Internal.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class WorkBlocks(
-    IZoneCultureResolver cultureResolver,
-    Generator<QueryDefinitionBuilder> qDefBuilder,
-    GenWorkPlus<WorkEntities> workEntities,
-    LazySvc<WorkViews> workViews)
-    : WorkUnitBase<IAppWorkCtxPlus>("SxS.Blocks", connect: [cultureResolver, qDefBuilder, workEntities, workViews])
+public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDefinitionBuilder> qDefBuilder, GenWorkPlus<WorkEntities> workEntities)
+    : WorkUnitBase<IAppWorkCtxPlus>("SxS.Blocks", connect: [cultureResolver, qDefBuilder, workEntities])
 {
     public const string BlockTypeName = "2SexyContent-ContentGroup";
 
