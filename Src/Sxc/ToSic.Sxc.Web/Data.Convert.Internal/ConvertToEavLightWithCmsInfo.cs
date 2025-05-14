@@ -71,7 +71,7 @@ public class ConvertToEavLightWithCmsInfo(ConvertToEavLight.MyServices services)
         var editDecorator = entity.GetDecorator<EntityInBlockDecorator>();
 
         dictionary.Add(SxcUiConstants.JsonEntityEditNodeName, editDecorator != null // entity is IHasEditingData entWithEditing
-            ? (object)new
+            ? new
             {
                 sortOrder = editDecorator.SortOrder,
                 isPublished = entity.IsPublished,

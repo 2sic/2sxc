@@ -142,18 +142,15 @@ public abstract class CodeCompiler(IServiceProvider serviceProvider, object[] co
     }
 
 
-    private void AttachRelativePath(string virtualPath, object instance)
+    private bool AttachRelativePath(string virtualPath, object instance)
     {
-        var l = Log.Fn($"{nameof(virtualPath)}: {virtualPath}");
+        var l = Log.Fn<bool>($"{nameof(virtualPath)}: {virtualPath}");
 
         if (instance is not IGetCodePath codeForwarding)
-        {
-            l.Done("didn't attach");
-            return;
-        }
+            return l.ReturnFalse("didn't attach");
 
         // in case it supports shared code again, give it the relative path
         codeForwarding.CreateInstancePath = Path.GetDirectoryName(virtualPath);
-        l.Done("attached");
+        return l.ReturnTrue("attached");
     }
 }

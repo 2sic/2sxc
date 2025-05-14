@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.LookUp;
+using ToSic.Sxc.Data.Internal.Convert;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Web.Internal.DotNet;
 using ToSic.Sxc.Web.Internal.EditUi;
@@ -24,6 +26,11 @@ public static class SxcWebStartup
         services.AddTransient<ILookUp, DateTimeLookUp>();
         services.AddTransient<ILookUp, TicksLookUp>();
 #endif
+
+        // The top version should be deprecated soon, so we just use DataToDictionary or an Interface instead
+        services.TryAddTransient<ConvertToEavLight, ConvertToEavLightWithCmsInfo>(); // this is needed for all the EAV uses of conversion
+        services.TryAddTransient<ConvertToEavLightWithCmsInfo>(); // WIP, not public, should use interface instead
+        services.TryAddTransient<IConvertToEavLight, ConvertToEavLightWithCmsInfo>();
 
         // WIP - add net-core specific stuff
         services.AddNetVariations();

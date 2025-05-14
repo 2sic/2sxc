@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Internal.Insights;
-using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Sxc.Adam.Internal;
@@ -22,8 +21,6 @@ using ToSic.Sxc.Backend.Sys;
 using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Backend.Views;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Data.Internal.Convert;
-using ToSic.Sxc.Engines;
 using ToSic.Sxc.Integration.Paths;
 
 namespace ToSic.Sxc.Backend;
@@ -33,10 +30,6 @@ public static class StartupWebApi
 {
     public static IServiceCollection AddSxcWebApi(this IServiceCollection services)
     {
-        // The top version should be deprecated soon, so we just use DataToDictionary or an Interface instead
-        services.TryAddTransient<ConvertToEavLight, ConvertToEavLightWithCmsInfo>(); // this is needed for all the EAV uses of conversion
-        services.TryAddTransient<ConvertToEavLightWithCmsInfo>(); // WIP, not public, should use interface instead
-        services.TryAddTransient<IConvertToEavLight, ConvertToEavLightWithCmsInfo>();
 
         services.TryAddScoped<ILinkPaths, LinkPaths>();
         // Removed v19.03.03 2025-03-11 by 2dm https://github.com/2sic/2sxc/issues/3598

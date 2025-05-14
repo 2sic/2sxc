@@ -67,8 +67,4 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\Convert.Internal\" />
-  </ItemGroup>
-
 </Project>

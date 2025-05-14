@@ -1,12 +1,12 @@
 ﻿namespace ToSic.Sxc.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class SxcUiConstants
+public class SxcUiConstants
 {
     /// <summary>
     /// Additional json-node for metadata in serialized entities, if user has edit rights
     /// </summary>
-    internal const string JsonEntityEditNodeName = "_2sxcEditInformation";
+    public const string JsonEntityEditNodeName = "_2sxcEditInformation";
 
     /// <summary>
     /// Wrapper tag which contains the context information.
