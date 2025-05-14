@@ -16,7 +16,7 @@ public abstract class AdamStorage<TFolderId, TFileId>() : AdamStorage("Adm.Base"
     /// <remarks>
     /// Will create the folder if it does not exist
     /// </remarks>
-    internal Folder<TFolderId, TFileId> Folder(string subFolder, bool autoCreate)
+    public Folder<TFolderId, TFileId> Folder(string subFolder, bool autoCreate)
     {
         var callLog = Log.Fn<Folder<TFolderId, TFileId>>($"{nameof(Folder)}(\"{subFolder}\", {autoCreate})");
         var fld = Manager.Folder(GeneratePath(subFolder), autoCreate);
@@ -28,7 +28,7 @@ public abstract class AdamStorage<TFolderId, TFileId>() : AdamStorage("Adm.Base"
     /// Get a (root) folder object for this container
     /// </summary>
     /// <returns></returns>
-    internal Folder<TFolderId, TFileId> Folder(bool autoCreate = false) => _folder.Get(() => Folder("", autoCreate));
+    public Folder<TFolderId, TFileId> Folder(bool autoCreate = false) => _folder.Get(() => Folder("", autoCreate));
     private readonly GetOnce<Folder<TFolderId, TFileId>> _folder = new();
 
 }

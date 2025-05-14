@@ -64,19 +64,6 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
     private ICodeDataFactory _cdf;
     #endregion
 
-    #region Static Helpers
-
-    public static int? CheckIdStringForId(string id)
-    {
-        if (!id.HasValue()) return null;
-        var linkParts = new LinkParts(id);
-        if (!linkParts.IsMatch || linkParts.Id == 0) return null;
-        return linkParts.Id;
-    }
-
-
-    #endregion
-
     /// <summary>
     /// Path to the app assets
     /// </summary>

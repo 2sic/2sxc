@@ -87,6 +87,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Adam\Internal\" />
     <Folder Include="Data\Internal\Decorators\" />
   </ItemGroup>
 

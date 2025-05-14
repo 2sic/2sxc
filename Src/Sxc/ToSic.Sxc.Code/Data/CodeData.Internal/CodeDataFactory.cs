@@ -35,11 +35,17 @@ public partial class CodeDataFactory(
 
     public void SetCompatibilityLevel(int compatibilityLevel) => _priorityCompatibilityLevel = compatibilityLevel;
 
-    public void SetFallbacks(ISite site, int? compatibility = default, AdamManager adamManagerPrepared = default)
+    public void SetFallbacks(ISite site, int? compatibility = default, object adamManagerPrepared = default)
     {
         _siteOrNull = site;
         _compatibilityLevel = compatibility ?? _compatibilityLevel;
-        AdamManager = adamManagerPrepared;
+
+        // Handle Adam Manager - passed in as an object so that the Type doesn't have to exist at top level definition
+        // but if we get it, we must really make sure it's the correct type
+        if (adamManagerPrepared is AdamManager adamManagerTyped)
+            AdamManager = adamManagerTyped;
+        else
+            throw new($"The {nameof(adamManager)} must be of type {nameof(Adam.Internal.AdamManager)}");
     }
     private ISite _siteOrNull;
 

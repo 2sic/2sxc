@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Adam.Internal;
+﻿using ToSic.Eav.WebApi.Dto;
+using ToSic.Sxc.Adam.Internal;
 
 namespace ToSic.Sxc.Backend.Adam;
 
@@ -52,13 +53,13 @@ partial class AdamTransactionBase<T, TFolderId, TFileId>
         var adamFolders = subfolders
             .Cast<Folder<TFolderId, TFileId>>()
             .Where(s => !EqualityComparer<TFolderId>.Default.Equals(s.SysId, currentFolder.SysId))
-            .Select(f => dtoMaker.Create(f))
+            .Select(dtoMaker.Create)
             .ToList();
         list.AddRange(adamFolders);
 
         var adamFiles = files
             .Cast<File<TFolderId, TFileId>>()
-            .Select(f => dtoMaker.Create(f))
+            .Select(dtoMaker.Create)
             .ToList();
         list.AddRange(adamFiles);
 

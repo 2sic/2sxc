@@ -42,8 +42,17 @@ partial class CodeDataFactory
     }
     #region ADAM / Folder
 
+    public IFile File(int id)
+        => AdamManager.File(id);
+
+    public IFolder Folder(int id)
+        => AdamManager.Folder(id);
+
     public IFolder Folder(ICanBeEntity item, string name, IField field)
         => AdamManager.Folder(item.Entity.EntityGuid, name, field);
+
+    public IFolder Folder(Guid entityGuid, string fieldName, IField field = default)
+        => AdamManager.Folder(entityGuid, fieldName, field);
 
     #endregion
 

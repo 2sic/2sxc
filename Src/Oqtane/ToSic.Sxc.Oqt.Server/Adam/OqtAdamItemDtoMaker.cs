@@ -10,10 +10,6 @@ namespace ToSic.Sxc.Oqt.Server.Adam;
 internal class OqtAdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TFileId>.MyServices services)
     : AdamItemDtoMaker<TFolderId, TFileId>(services)
 {
-    #region Constructor / DI
-
-    #endregion
-
     public override AdamItemDto Create(File<TFolderId, TFileId> original)
     {
         var item = base.Create(original);

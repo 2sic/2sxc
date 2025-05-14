@@ -1,7 +1,12 @@
-﻿using JetBrains.Annotations;
+﻿//using JetBrains.Annotations;
+
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Assets.Internal;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Context.Internal;
 
 namespace ToSic.Sxc.Backend.Adam;
 
@@ -14,28 +19,22 @@ public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>(
 {
 
     #region Constructor / DI
-    public class MyServices : MyServicesBase
+    public class MyServices(
+        Generator<AdamItemDtoMaker<TFolderId, TFileId>> adamDtoMaker,
+        LazySvc<AdamContext<TFolderId, TFileId>> adamState,
+        ISxcAppContextResolver ctxResolver)
+        : MyServicesBase(connect: [adamDtoMaker, adamState, ctxResolver])
     {
-        public LazySvc<AdamContext<TFolderId, TFileId>> AdamState { get; }
-        public ISxcContextResolver CtxResolver { get; }
-        public Generator<AdamItemDtoMaker<TFolderId, TFileId>> AdamDtoMaker { get; }
-
-        public MyServices(
-            Generator<AdamItemDtoMaker<TFolderId, TFileId>> adamDtoMaker,
-            LazySvc<AdamContext<TFolderId, TFileId>> adamState,
-            ISxcContextResolver ctxResolver)
-        {
-            ConnectLogs([
-                AdamDtoMaker = adamDtoMaker,
-                AdamState = adamState,
-                CtxResolver = ctxResolver
-            ]);
-        }
+        public LazySvc<AdamContext<TFolderId, TFileId>> AdamState { get; } = adamState;
+        public ISxcAppContextResolver CtxResolver { get; } = ctxResolver;
+        public Generator<AdamItemDtoMaker<TFolderId, TFileId>> AdamDtoMaker { get; } = adamDtoMaker;
     }
 
     public T Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot)
     {
-        var context = appId > 0 ? Services.CtxResolver.GetExistingAppOrSet(appId) : Services.CtxResolver.AppNameRouteBlock(null);
+        var context = appId > 0
+            ? Services.CtxResolver.GetExistingAppOrSet(appId)
+            : Services.CtxResolver.AppNameRouteBlock(null);
         var logCall = Log.Fn<T>($"app: {context.AppReader.Show()}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
         AdamContext.Init(context, contentType, field, itemGuid, usePortalRoot, cdf: null);
         return logCall.Return(this as T);
@@ -58,7 +57,7 @@ public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>(
     /// <param name="parentFolder"></param>
     /// <param name="target"></param>
     /// <param name="errPrefix"></param>
-    [AssertionMethod]
+    //[AssertionMethod]
     protected void VerifySecurityAndStructure(Eav.Apps.Assets.Internal.Folder<TFolderId, TFileId> parentFolder, IAssetWithParentSysId<TFolderId> target, string errPrefix)
     {
         // In case the primary file system is used (usePortalRoot) then also check higher permissions

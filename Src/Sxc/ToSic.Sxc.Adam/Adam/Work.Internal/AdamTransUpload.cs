@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Adam.Internal;
 

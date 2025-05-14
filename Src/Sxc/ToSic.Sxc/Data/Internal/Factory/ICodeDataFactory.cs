@@ -4,7 +4,6 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.Code.InfoSystem;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Code.Internal;
 
 namespace ToSic.Sxc.Data.Internal;
@@ -32,7 +31,7 @@ public interface ICodeDataFactory: ICanGetService
 
     ITyped AsTyped(object data, bool required = false, bool? propsRequired = default, string detailsMessage = default);
     IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder, bool? required = false, bool? propsRequired = default);
-    AdamManager AdamManager { get; }
+    //AdamManager AdamManager { get; }
     int CompatibilityLevel { get; }
     CodeDataServices Services { get; }
 
@@ -112,7 +111,7 @@ public interface ICodeDataFactory: ICanGetService
     IEnumerable<ITypedItem> EntitiesToItems(IEnumerable<IEntity> entities, bool propsRequired = false);
     IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? required = default, IEnumerable<ITypedItem> fallback = default, bool? propsRequired = default);
     void SetCompatibilityLevel(int compatibilityLevel);
-    void SetFallbacks(ISite site, int? compatibility = default, AdamManager adamManagerPrepared = default);
+    void SetFallbacks(ISite site, int? compatibility = default, /*AdamManager*/ object adamManagerPrepared = default);
     object Json2Jacket(string json, string fallback = default);
     ITypedStack AsStack(object[] parts);
 
@@ -138,4 +137,8 @@ public interface ICodeDataFactory: ICanGetService
     /// <param name="field"></param>
     /// <returns></returns>
     IEnumerable<TTypedItem> CreateEmptyChildList<TTypedItem>(IEntity parent, string field) where TTypedItem : class, ITypedItem;
+
+    IFile File(int id);
+    IFolder Folder(Guid entityGuid, string fieldName, IField field = default);
+    IFolder Folder(int id);
 }

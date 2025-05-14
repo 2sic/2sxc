@@ -8,7 +8,6 @@ using ToSic.Lib.GetByName;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Cms.Data;
 using ToSic.Sxc.Data.Internal.Convert;
 using ToSic.Sxc.Data.Internal.Wrapper;
@@ -169,7 +168,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     {
         return IsErrStrict(this, name, required, PreWrap.Settings.PropsRequired)
             ? throw ErrStrictForTyped(this, name)
-            : Cdf.AdamManager.Folder(Guid, name, Field(name: name, noParamOrder: default, required: required));
+            : Cdf.Folder(Guid, name, Field(name: name, noParamOrder: default, required: required));
     }
 
     public IFile File(string name, NoParamOrder noParamOrder, bool? required)
@@ -182,8 +181,8 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
         // TODO: SEE if we can also provide optional metadata
 
-        var fileId = AdamManager.CheckIdStringForId(idString);
-        return fileId == null ? null : Cdf.AdamManager.File(fileId.Value);
+        var fileId = LinkParts.CheckIdStringForId(idString);
+        return fileId == null ? null : Cdf.File(fileId.Value);
     }
 
     #endregion

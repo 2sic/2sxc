@@ -19,15 +19,12 @@ internal class AdamService: IAdamService, INeedsCodeApiService
 
     /// <inheritdoc />
     public IFile File(int id)
-    {
-        var admManager = (_codeRoot as ICodeApiServiceInternal)?.Cdf.AdamManager;
-        return admManager?.File(id);
-    }
+        => (_codeRoot as ICodeApiServiceInternal)?.Cdf?.File(id);
 
     /// <inheritdoc />
     public IFile File(string id)
     {
-        var fileId = AdamManager.CheckIdStringForId(id);
+        var fileId = LinkParts.CheckIdStringForId(id);
         return fileId == null ? null : File(fileId.Value);
     }
 
@@ -42,10 +39,7 @@ internal class AdamService: IAdamService, INeedsCodeApiService
 
     /// <inheritdoc />
     public IFolder Folder(int id)
-    {
-        var admManager = (_codeRoot as ICodeApiServiceInternal)?.Cdf.AdamManager;
-        return admManager?.Folder(id);
-    }
+        => (_codeRoot as ICodeApiServiceInternal)?.Cdf?.Folder(id);
 
     /// <inheritdoc />
     public IFolder Folder(IField field) => _codeRoot?.AsAdam(field.Parent, field.Name);
