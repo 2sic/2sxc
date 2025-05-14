@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.Internal;
@@ -15,8 +14,6 @@ internal interface ICodeApiServiceInternal: ICodeApiService
     IBlock _Block { get; }
 
     ILookUpEngine LookUpForDataSources { get; }
-    ITypedStack AllResources { get; }
-    ITypedStack AllSettings { get; }
 
     TKit GetKit<TKit>() where TKit : ServiceKit;
 }

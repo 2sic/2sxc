@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
+using ToSic.Sxc.Sys.ExecutionContext;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleToolbar;
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
@@ -46,10 +46,11 @@ partial record ToolbarBuilder
 
         var tlb = this with { Rules = rules };
         var keyOrMessage = Configuration?.DemoMessage;
+        var allResources = ((IExConAllResources)CodeApiSvc).AllResources;
         var message = keyOrMessage == null
-            ? ((ICodeApiServiceInternal)CodeApiSvc).AllResources.Get<string>($"{AppStackConstants.RootNameResources}.Toolbar.IsDemoSubItem")
+            ? allResources.Get<string>($"{AppStackConstants.RootNameResources}.Toolbar.IsDemoSubItem")
             : keyOrMessage.StartsWith($"{AppStackConstants.RootNameResources}.")
-                ? ((ICodeApiServiceInternal)CodeApiSvc).AllResources.Get<string>(keyOrMessage)
+                ? allResources.Get<string>(keyOrMessage)
                 : keyOrMessage;
         tlb = (ToolbarBuilder)tlb.Info(tweak: b => b.Note(message));
         return tlb;

@@ -4,6 +4,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.GetByName;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 using static ToSic.Sxc.Images.Internal.ImageConstants;
 using static ToSic.Sxc.Internal.Plumbing.ParseObject;
 
@@ -107,7 +108,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
     internal static ICanGetByName GetImageSettingsByName(ICodeApiService codeApiSvcOrNull, string strName, bool debug, ILog log)
     {
         var l = log.Fn<ICanGetByName>($"{strName}; code root: {codeApiSvcOrNull != null}", enabled: debug);
-        var result = (codeApiSvcOrNull as ICodeApiServiceInternal)?.AllSettings?.Get($"Settings.Images.{strName}") as ICanGetByName;
+        var result = (codeApiSvcOrNull as IExConAllSettings)?.AllSettings?.Get($"Settings.Images.{strName}") as ICanGetByName;
         return l.Return(result, $"found: {result != null}");
     }
 

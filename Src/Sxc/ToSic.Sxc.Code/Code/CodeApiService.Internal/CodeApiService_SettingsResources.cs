@@ -1,14 +1,16 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Services;
-using ToSic.Lib.GetByName;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Sys.ExecutionContext;
 using static ToSic.Eav.Apps.AppStackConstants;
 using SettingsSources = System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, ToSic.Eav.Data.PropertyLookup.IPropertyLookup>>;
 
 namespace ToSic.Sxc.Code.Internal;
 
 public partial class CodeApiService
+    : IExConAllResources,
+        IExConAllSettings
 {
     /// <inheritdoc />
     [PublicApi]

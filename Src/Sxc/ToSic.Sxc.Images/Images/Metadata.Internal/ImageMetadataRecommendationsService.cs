@@ -5,6 +5,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Images.Internal;
@@ -12,7 +13,7 @@ namespace ToSic.Sxc.Images.Internal;
 /// <summary>
 /// Small service to image metadata additional recommendations as configured.
 /// </summary>
-class ImageMetadataRecommendationsService() : ServiceForDynamicCode("Img.MdRecS"), IImageMetadataRecommendationsService
+class ImageMetadataRecommendationsService(IFeaturesService featuresSvc) : ServiceForDynamicCode("Img.MdRecS", connect: [featuresSvc]), IImageMetadataRecommendationsService
 {
     /// <summary>
     /// Optionally add image-metadata recommendations
@@ -30,10 +31,10 @@ class ImageMetadataRecommendationsService() : ServiceForDynamicCode("Img.MdRecS"
     // but because we'll need to merge the code with v17, we try do keep it this way.
     public string[] GetImageRecommendations()
     {
-        if (_CodeApiSvc is not ICodeApiServiceInternal codeRootTyped)
+        if (_CodeApiSvc is not IExConAllSettings codeRootTyped)
             return ImageRecommendationsBasic;
 
-        if (!codeRootTyped.GetService<IFeaturesService>().IsEnabled(BuiltInFeatures.CopyrightManagement.NameId))
+        if (!featuresSvc.IsEnabled(BuiltInFeatures.CopyrightManagement.NameId))
             return ImageRecommendationsBasic;
 
         var useCopyright = codeRootTyped.AllSettings?.Bool($"Copyright.{nameof(CopyrightSettings.ImagesInputEnabled)}") ?? false;
