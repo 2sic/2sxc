@@ -141,10 +141,10 @@ public class RenderService: ServiceForDynamicCode,
     {
         var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
         MakeSureLogIsInHistory();
-        var block = Services.Builder.Value.BuildBlock(pageId, moduleId);
+        var moduleBlock = Services.Builder.Value.BuildBlock(pageId, moduleId);
 
-        block.BlockFeatureKeys?.Add(SxcPageFeatures.JsApiOnModule.NameId);
-        var builder = Services.BlockBuilderGenerator.New().Setup(block);
+        moduleBlock.BlockFeatureKeys.Add(SxcPageFeatures.JsApiOnModule.NameId);
+        var builder = Services.BlockBuilderGenerator.New().Setup(moduleBlock);
         var result = builder.Run(true, specs: new() { Data = data });
 
         return l.ReturnAsOk(result);

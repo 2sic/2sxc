@@ -2,6 +2,7 @@
 using ToSic.Lib.Internal.Generics;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using static ToSic.Sxc.Blocks.Internal.BlockBuildingConstants;
@@ -37,7 +38,7 @@ public partial class BlockBuilder
             // So only the top-level should get them
             var changeSummary = topLevel
                 ? Services.PageChangeSummary.Value
-                    .FinalizeAndGetAllChanges(Block.ParentId /*.Context.Module.Id*/, Block.Context.PageServiceShared, specs, Block.Context.Permissions.IsContentAdmin)
+                    .FinalizeAndGetAllChanges(Block.ParentId, ((ContextOfBlock)Block.Context).PageServiceShared, specs, Block.Context.Permissions.IsContentAdmin)
                 : new();
 
 
@@ -46,7 +47,6 @@ public partial class BlockBuilder
                 AppId = Block.AppId,        // info for LightSpeedStats
                 Html = html,                // Final HTML to add to page
                 IsError = isErr,            // Error status
-                //ModuleId = Block.ParentId, // already set in change-summary
                 CanCache = canCache,        // Can this be cached?
             };
 
@@ -107,7 +107,7 @@ public partial class BlockBuilder
                     var blockId = Block.Configuration?.BlockIdentifierOrNull;
                     var msg = "Data is missing. ";
 
-                    msg += (Block.Context?.AppReader?.IsHealthy == false)
+                    msg += (Block.Context.AppReader?.IsHealthy == false)
                         ? "The app is unhealthy, indicating that data wasn't properly loaded from SQL. "
                           + "This is the message: '" + Block.Context.AppReader.HealthMessage + "'. "
                           + "Please check the insights to see in more detail what happened."
@@ -127,7 +127,7 @@ public partial class BlockBuilder
 
             #region App is unhealthy
 
-            if (Block.Context?.AppReader?.IsHealthy == false)
+            if (Block.Context.AppReader?.IsHealthy == false)
             {
                 Log.A("app is unhealthy, show health message");
                 exceptions.Add(new(AppIsUnhealthy + Block.Context.AppReader.HealthMessage));
@@ -154,16 +154,19 @@ public partial class BlockBuilder
                         errorCode = renderEngineResult.ErrorCode ?? errorCode;
                         if (errorCode == null && body?.Contains(ErrorHtmlMarker) == true) 
                             errorCode = ErrorGeneral;
+
+                        var pageServiceShared = ((ContextOfBlock)Block.Context).PageServiceShared;
+
                         // Activate-js-api is true, if the html has some <script> tags which tell it to load the 2sxc
                         // only set if true, because otherwise we may accidentally overwrite the previous setting
                         if (renderEngineResult.ActivateJsApi)
                         {
                             l.A("template referenced 2sxc.api JS in script-tag: will enable");
-                            Block.Context.PageServiceShared.PageFeatures.Activate(SxcPageFeatures.JsCore.NameId);
+                            pageServiceShared.PageFeatures.Activate(SxcPageFeatures.JsCore.NameId);
                         }
 
                         // Put all assets into the global page service for final processing later on
-                        Block.Context.PageServiceShared.AddAssets(renderEngineResult);
+                        pageServiceShared.AddAssets(renderEngineResult);
                     }
                     else body = "";
                 }
@@ -190,7 +193,7 @@ public partial class BlockBuilder
             var addJsApiOnly = false;
             if (!addEditCtx && Block.BlockFeatureKeys.Any())
             {
-                var features = Block.Context.PageServiceShared.PageFeatures.GetWithDependents(Block.BlockFeatureKeys, Log);
+                var features = Block.BlockFeatures(Log);
                 addEditCtx = features.Contains(SxcPageFeatures.ContextModule);
                 addJsApiOnly = features.Contains(SxcPageFeatures.JsApiOnModule);
             }

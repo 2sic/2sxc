@@ -81,7 +81,8 @@ public class JsContextAll(JsContextLanguage jsLangCtxSvc, IJsApiService jsApiSer
 
         // If auto toolbar is false / not certain, and we have features activated...
         // find out if the Toolbars-Auto is enabled, in which case we should activate them
-        var autoToolbar = ctx.Permissions.IsContentAdmin || Features(block).Contains(SxcPageFeatures.ToolbarsAutoInternal);
+        var autoToolbar = ctx.Permissions.IsContentAdmin
+                          || Features(block).Contains(SxcPageFeatures.ToolbarsAutoInternal);
 
         l.A($"{nameof(autoToolbar)}: {autoToolbar}");
 
@@ -93,10 +94,7 @@ public class JsContextAll(JsContextLanguage jsLangCtxSvc, IJsApiService jsApiSer
         return l.Return(this);
     }
 
-    private List<IPageFeature> Features(IBlock block) =>
-        _pageFeatures ??= block.BlockFeatureKeys.Any()
-            ? block.Context.PageServiceShared.PageFeatures.GetWithDependents(block.BlockFeatureKeys, Log)
-            : [];
+    private List<IPageFeature> Features(IBlock block) => _pageFeatures ??= block.BlockFeatures(Log);
 
     private List<IPageFeature> _pageFeatures;
 }

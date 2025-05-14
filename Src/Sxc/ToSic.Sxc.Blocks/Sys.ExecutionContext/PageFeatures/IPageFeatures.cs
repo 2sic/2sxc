@@ -9,6 +9,11 @@ namespace ToSic.Sxc.Web.Internal.PageFeatures;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IPageFeatures
 {
+    /// <summary>
+    /// Register the feature keys to be activated on the page.
+    /// </summary>
+    /// <param name="keys"></param>
+    /// <returns>The keys it just activated (after trim/filter for empty)</returns>
     IEnumerable<string> Activate(params string[] keys);
         
     /// <summary>
@@ -34,12 +39,12 @@ public interface IPageFeatures
     /// <param name="newFeature"></param>
     void FeaturesFromSettingsAdd(PageFeatureFromSettings newFeature);
 
-    /// <summary>
-    /// Get the manual features which were added - skip those which were previously already added
-    /// </summary>
-    /// <param name="specs"></param>
-    /// <param name="log"></param>
-    /// <returns></returns>
-    List<PageFeatureFromSettings> FeaturesFromSettingsGetNew(RenderSpecs specs, ILog log);
+    ///// <summary>
+    ///// Get the manual features which were added - skip those which were previously already added
+    ///// </summary>
+    ///// <param name="specs"></param>
+    ///// <param name="log"></param>
+    ///// <returns></returns>
+    //List<PageFeatureFromSettings> FeaturesFromSettingsGetNew(RenderSpecs specs, ILog log);
 
 }

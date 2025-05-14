@@ -6,6 +6,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.LookUp.Internal;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks.Internal;
@@ -95,6 +96,10 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
 
     public List<string> BlockFeatureKeys { get; } = [];
 
+    public List<IPageFeature> BlockFeatures(ILog? log = default)
+        => !BlockFeatureKeys.Any()
+            ? []
+            : ((ContextOfBlock)Context).PageServiceShared.PageFeatures.GetWithDependents(BlockFeatureKeys, log ?? Log);
 
     public int ParentId { get; protected set; }
 

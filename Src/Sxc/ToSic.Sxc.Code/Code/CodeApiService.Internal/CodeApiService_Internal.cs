@@ -10,7 +10,8 @@ using IApp = ToSic.Sxc.Apps.IApp;
 namespace ToSic.Sxc.Code.Internal;
 
 public partial class CodeApiService
-    : IWrapper<IExCtxServicesForTypedData>,
+    : ICodeApiServiceTyped,
+        IWrapper<IExCtxServicesForTypedData>,
         IExCtxBlock
 {
     [PrivateApi]

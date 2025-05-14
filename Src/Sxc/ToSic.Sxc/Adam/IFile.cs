@@ -6,8 +6,6 @@
 /// </summary>
 [PublicApi]
 
-public interface IFile: 
+public interface IFile:
     IAsset,
-    Eav.Apps.Assets.IFile
-{
-}
+    Eav.Apps.Assets.IFile;

@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
 using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks.Internal;
@@ -67,6 +68,9 @@ public interface IBlock: IAppIdentity, IHasLog
     [PrivateApi("naming not final")]
     bool ContentGroupExists { get; }
 
+    /// <summary>
+    /// All the keys / features which were added in this block; in case the block should also modify its behavior.
+    /// </summary>
     [PrivateApi("WIP 13.x do get/set if toolbar/context are used")]
     List<string> BlockFeatureKeys { get; }
 
@@ -81,4 +85,6 @@ public interface IBlock: IAppIdentity, IHasLog
     /// </summary>
     [PrivateApi]
     public IBlock RootBlock { get; }
+
+    List<IPageFeature> BlockFeatures(ILog log = default);
 }

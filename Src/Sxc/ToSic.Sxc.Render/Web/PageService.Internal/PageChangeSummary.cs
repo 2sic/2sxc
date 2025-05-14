@@ -42,7 +42,7 @@ public class PageChangeSummary(
         }
 
         var assets = pss.GetAssetsAndFlush();
-        var newPageFeaturesFromSettings = pss.PageFeatures.FeaturesFromSettingsGetNew(specs, Log);
+        var newPageFeaturesFromSettings = ((PageFeatures.PageFeatures)pss.PageFeatures).FeaturesFromSettingsGetNew(specs, Log);
         var (newAssets, rest) = ConvertSettingsAssetsIntoReal(newPageFeaturesFromSettings, specs);
 
         assets.AddRange(newAssets);

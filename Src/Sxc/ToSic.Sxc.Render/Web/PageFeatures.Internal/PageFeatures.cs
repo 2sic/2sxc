@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Blocks.Internal;
+﻿using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Web.Internal.PageFeatures;
 
@@ -9,9 +10,7 @@ internal class PageFeatures(IPageFeaturesManager pfm) : IPageFeatures
     /// <inheritdoc />
     public IEnumerable<string> Activate(params string[] keys)
     {
-        var realKeys = keys
-            .Where(k => !string.IsNullOrWhiteSpace(k))
-            .ToArray();
+        var realKeys = keys.TrimmedAndWithoutEmpty();
         FeatureKeys.AddRange(realKeys);
         return realKeys;
     }
@@ -21,7 +20,13 @@ internal class PageFeatures(IPageFeaturesManager pfm) : IPageFeatures
     public void FeaturesFromSettingsAdd(PageFeatureFromSettings newFeature)
         => FeaturesFromSettings.Add(newFeature);
 
-    public List<PageFeatureFromSettings> FeaturesFromSettingsGetNew(RenderSpecs specs, ILog log)
+    /// <summary>
+    /// Get the manual features which were added - skip those which were previously already added
+    /// </summary>
+    /// <param name="specs"></param>
+    /// <param name="log"></param>
+    /// <returns></returns>
+    internal List<PageFeatureFromSettings> FeaturesFromSettingsGetNew(RenderSpecs specs, ILog log)
     {
         var l = log.Fn<List<PageFeatureFromSettings>>();
         // Filter out the ones which were already added in a previous round
