@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Lib.Data;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;
@@ -7,7 +8,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Code.Internal;
 
-public partial class CodeApiService : ICodeApiServiceInternal
+public partial class CodeApiService : ICodeApiServiceInternal, IWrapper<IServiceKitForTypedData>
 {
     [PrivateApi]
     public void AttachApp(IApp app)
@@ -85,8 +86,18 @@ public partial class CodeApiService : ICodeApiServiceInternal
     /// <returns></returns>
     TKit ICodeApiServiceInternal.GetKit<TKit>() => GetService<TKit>(reuse: true);
 
-    IServiceKitForTypedData ICodeApiServiceInternal.GetKitForTypedData()
+    //IServiceKitForTypedData ICodeApiServiceInternal.GetKitForTypedData()
+    //    => ((ICodeApiServiceInternal)this).GetKit<ServiceKit16>();
+
+    /// <summary>
+    /// Special workaround so this can provide the data without
+    /// having to support an interface.
+    /// To call this, you must explicitly cast it to IWrapper&lt;IServiceKitForTypedData&gt;
+    /// </summary>
+    /// <returns></returns>
+    IServiceKitForTypedData IWrapper<IServiceKitForTypedData>.GetContents()
         => ((ICodeApiServiceInternal)this).GetKit<ServiceKit16>();
 
     #endregion
+
 }

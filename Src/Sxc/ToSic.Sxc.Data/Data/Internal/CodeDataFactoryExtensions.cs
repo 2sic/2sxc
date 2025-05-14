@@ -1,5 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-using ToSic.Sxc.Code.Internal;
+using ToSic.Lib.Data;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Data.Internal;
@@ -15,7 +15,7 @@ internal static class CodeDataFactoryExtensions
         if (cdf == null)
             throw new NotSupportedException($"Trying to use {cName}(...) in a scenario where the {nameof(cdf)} is not available.");
 
-        var kit = ((ICodeApiServiceInternal)cdf._CodeApiSvc).GetKitForTypedData(); // before v20 it was .GetKit<ServiceKit16>();
+        var kit = ((IWrapper<IServiceKitForTypedData>)cdf._CodeApiSvc).GetContents(); // before v20 it was .GetKit<ServiceKit16>();
         return kit ?? throw new NotSupportedException(
             $"Trying to use {cName}(...) in a scenario where the {nameof(IServiceKitForTypedData)} is not available.");
     }

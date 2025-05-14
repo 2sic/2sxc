@@ -20,5 +20,5 @@ internal interface ICodeApiServiceInternal: ICodeApiService
 
     TKit GetKit<TKit>() where TKit : ServiceKit;
 
-    IServiceKitForTypedData GetKitForTypedData();
+    //IServiceKitForTypedData GetKitForTypedData();
 }
