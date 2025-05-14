@@ -46,6 +46,20 @@ public static class SxcWebStartup
         // WIP - add net-core specific stuff
         services.AddNetVariations();
 
+        // Add possibly missing fallback services
+        // This must always be at the end here so it doesn't accidentally replace something we actually need
+        services.AddKoi();
+
+
+        return services;
+    }
+
+
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    public static IServiceCollection AddKoi(this IServiceCollection services)
+    {
+        services.TryAddTransient<Connect.Koi.KoiCss.Dependencies>();
+        services.TryAddTransient<Connect.Koi.ICss, Connect.Koi.KoiCss>();
 
         return services;
     }
