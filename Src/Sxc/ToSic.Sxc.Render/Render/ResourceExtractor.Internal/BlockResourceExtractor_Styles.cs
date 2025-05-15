@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using ToSic.Sxc.Web.Internal.ClientAssets;
+using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.HtmlParsing;
 
 namespace ToSic.Sxc.Blocks.Internal;
@@ -65,6 +66,4 @@ public abstract partial class BlockResourceExtractor
         styleMatchesToRemove.ForEach(p => shrunkTemplate = shrunkTemplate.Remove(p.Index, p.Length));
         return l.Return(shrunkTemplate, $"extracted {styleMatches.Count} styles");
     }
-
-
 }

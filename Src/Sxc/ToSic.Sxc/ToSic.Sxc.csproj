@@ -86,8 +86,4 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\Internal\Decorators\" />
-  </ItemGroup>
-
 </Project>

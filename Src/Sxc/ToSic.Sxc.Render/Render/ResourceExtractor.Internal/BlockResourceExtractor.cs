@@ -16,6 +16,18 @@ namespace ToSic.Sxc.Blocks.Internal;
 public abstract partial class BlockResourceExtractor(IPageServiceShared pageServiceShared)
     : ServiceBase("Sxc.AstOpt"), IBlockResourceExtractor
 {
+    /// <summary>
+    /// List of special attributes like "src", "id", "data-enableoptimizations"
+    /// that we need to skip from adding in general HtmlAttributes dictionary
+    /// because this special attributes are handled in custom way.
+    /// </summary>
+    internal static readonly List<string> SpecialHtmlAttributes =
+    [
+        "src",
+        "id",
+        ClientAssetConstants.AssetOptimizationsAttributeName,
+        CspConstants.CspWhitelistAttribute
+    ];
 
     #region Settings
 
@@ -66,16 +78,19 @@ public abstract partial class BlockResourceExtractor(IPageServiceShared pageServ
 
         var attributesMatch = RegexUtil.AttributesDetection.Value.Matches(htmlTag);
 
-        if (attributesMatch.Count == 0) return (null, null);
+        if (attributesMatch.Count == 0)
+            return (null, null);
 
         var attributes = new Dictionary<string, string>(InvariantCultureIgnoreCase);
         foreach (Match attributeMatch in attributesMatch)
         {
-            if (!attributeMatch.Success) continue;
+            if (!attributeMatch.Success)
+                continue;
             var key = attributeMatch.Groups["Key"]?.Value.ToLowerInvariant();
 
             // skip special attributes like "src", "id", "data-enableoptimizations"
-            if (string.IsNullOrEmpty(key) || ClientAssetConstants.SpecialHtmlAttributes.Contains(key, InvariantCultureIgnoreCase)) continue;
+            if (string.IsNullOrEmpty(key) || SpecialHtmlAttributes.Contains(key, InvariantCultureIgnoreCase))
+                continue;
 
             var value = attributeMatch.Groups["Value"]?.Value;
 

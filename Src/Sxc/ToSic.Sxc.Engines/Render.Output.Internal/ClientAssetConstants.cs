@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
-
-namespace ToSic.Sxc.Web.Internal.ClientAssets;
+﻿namespace ToSic.Sxc.Web.Internal.ClientAssets;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ClientAssetConstants
@@ -21,16 +19,5 @@ public class ClientAssetConstants
 
     public const string AssetOptimizationsAttributeName = "data-enableoptimizations";
 
-    /// <summary>
-    /// List of special attributes like "src", "id", "data-enableoptimizations"
-    /// that we need to skip from adding in general HtmlAttributes dictionary
-    /// because this special attributes are handled in custom way.
-    /// </summary>
-    internal static readonly List<string> SpecialHtmlAttributes =
-    [
-        "src",
-        "id",
-        AssetOptimizationsAttributeName,
-        CspConstants.CspWhitelistAttribute
-    ];
+
 }
