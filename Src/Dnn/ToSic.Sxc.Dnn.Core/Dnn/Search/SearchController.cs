@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Dnn.Search;
 internal class SearchController(
     AppsCacheSwitch appsCache,
     Generator<CodeCompiler> codeCompiler,
-    Generator<ICodeApiServiceFactory> codeRootFactory,
+    Generator<IExecutionContextFactory> codeRootFactory,
     Generator<ISite> siteGenerator,
     LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
     LazySvc<ILookUpEngineResolver> dnnLookUpEngineResolver,

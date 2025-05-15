@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Dnn.Web;
 [PrivateApi("used to be public till 16.09, but all methods were marked as obsolete a long time ago")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
-public interface IDnnRazorCustomize: Sxc.Code.IDynamicCode, IHasDnn
+public interface IDnnRazorCustomize: IDynamicCode, IHasDnn
 {
     /// <summary>
     /// Override this to have your code change the (already initialized) Data object. 

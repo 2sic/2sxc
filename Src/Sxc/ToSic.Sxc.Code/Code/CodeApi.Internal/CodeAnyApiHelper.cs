@@ -7,9 +7,9 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.CodeApi;
 
-internal abstract class CodeAnyApiHelper(CodeApiService parent) : ICodeAnyApiHelper
+internal abstract class CodeAnyApiHelper(ExecutionContext parent) : ICodeAnyApiHelper
 {
-    protected CodeApiService Parent = parent;
+    protected ExecutionContext Parent = parent;
 
     public IBlock Block => Parent.Block;
 

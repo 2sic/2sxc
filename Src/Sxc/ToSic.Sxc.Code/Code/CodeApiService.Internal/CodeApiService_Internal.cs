@@ -16,7 +16,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Code.Internal;
 
-public partial class CodeApiService
+public partial class ExecutionContext
     : IWrapper<IExCtxServicesForTypedData>,
         IWrapper<ICodeDataFactory>,
         IExCtxAttachApp

@@ -7,9 +7,10 @@ namespace ToSic.Sxc.Data;
 
 // this can just be internal, it's only ever used as an interface
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class Publishing(ITypedItem currentItem, ICodeDataFactory cdf) : HelperBase(cdf.Log, "Pub"), IPublishing
+internal class Publishing(ITypedItem currentItem, ICodeDataFactory cdf)
+    : HelperBase(cdf.Log, "Pub"), IPublishing
 {
-    private IAppReader AppReader => field ??= cdf._CodeApiSvc.GetState<IAppReader>();
+    private IAppReader AppReader => field ??= cdf.ExecutionContextWipMustBeRemovedFromTheCdf.GetState<IAppReader>();
 
     // Always supported on IEntity
     public bool IsSupported => true;

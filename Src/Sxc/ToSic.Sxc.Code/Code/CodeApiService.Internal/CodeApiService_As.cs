@@ -6,7 +6,7 @@ using IFolder = ToSic.Sxc.Adam.IFolder;
 
 namespace ToSic.Sxc.Code.Internal;
 
-public partial class CodeApiService
+public partial class ExecutionContext
 {
     [PrivateApi]
     internal ICodeDataFactory Cdf => _cdf.Get(() =>

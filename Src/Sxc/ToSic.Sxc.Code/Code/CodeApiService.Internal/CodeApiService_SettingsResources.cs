@@ -7,7 +7,7 @@ using SettingsSources = System.Collections.Generic.List<System.Collections.Gener
 
 namespace ToSic.Sxc.Code.Internal;
 
-public partial class CodeApiService
+public partial class ExecutionContext
 {
     /// <inheritdoc />
     [PublicApi]

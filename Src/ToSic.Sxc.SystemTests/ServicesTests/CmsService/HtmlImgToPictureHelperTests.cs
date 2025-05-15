@@ -2,10 +2,11 @@
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.CmsService.Internal;
 using Xunit.Abstractions;
+using ExecutionContext = ToSic.Sxc.Code.Internal.ExecutionContext;
 
 namespace ToSic.Sxc.ServicesTests.CmsService;
 
-public class HtmlImgToPictureHelperTests(CodeApiService codeApiSvc, /*needed to inject into CodeApiSvc*/ IImageService imageSvc, ITestOutputHelper output)
+public class HtmlImgToPictureHelperTests(ExecutionContext codeApiSvc, /*needed to inject into CodeApiSvc*/ IImageService imageSvc, ITestOutputHelper output)
 {
     /// <summary>
     /// Swap the image service to one which doesn't know about the app (so it won't get settings etc.)

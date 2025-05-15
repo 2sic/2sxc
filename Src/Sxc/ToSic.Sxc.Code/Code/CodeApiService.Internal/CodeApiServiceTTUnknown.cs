@@ -4,5 +4,5 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.Internal;
 
-internal class CodeApiServiceUnknown<TModel, TServiceKit>(CodeApiService.MyServices services, WarnUseOfUnknown<CodeApiServiceUnknown> _)
-    : CodeApiService<object, ServiceKit>(services, LogScopes.Base);
+internal class ExecutionContextUnknown<TModel, TServiceKit>(ExecutionContext.MyServices services, WarnUseOfUnknown<ExecutionContextUnknown> _)
+    : ExecutionContext<object, ServiceKit>(services, LogScopes.Base);

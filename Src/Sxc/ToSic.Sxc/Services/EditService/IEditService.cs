@@ -1,5 +1,4 @@
 ﻿using ToSic.Razor.Markup;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Edit.Toolbar;
 // ReSharper disable RedundantExtendsListEntry
 #pragma warning disable CS0108, CS0114

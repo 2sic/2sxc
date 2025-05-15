@@ -25,14 +25,14 @@ public static class SxcCodeStartup
 
         services.TryAddTransient<ICodeCustomizer, Customizer.Customizer>();
 
-        services.TryAddTransient<ICodeApiServiceFactory, CodeApiServiceFactory>();
+        services.TryAddTransient<IExecutionContextFactory, ExecutionContextFactory>();
 
         // Code / Dynamic Code
-        services.TryAddTransient<CodeApiService.MyServices>();
+        services.TryAddTransient<ExecutionContext.MyServices>();
 
         // Code Fallbacks if not registered by the platform
-        services.TryAddTransient<CodeApiService, CodeApiServiceUnknown>();
-        services.TryAddTransient(typeof(CodeApiService<,>), typeof(CodeApiServiceUnknown<,>));
+        services.TryAddTransient<ExecutionContext, ExecutionContextUnknown>();
+        services.TryAddTransient(typeof(ExecutionContext<,>), typeof(ExecutionContextUnknown<,>));
 
         // v13 DynamicCodeService
         services.TryAddTransient<DynamicCodeService.MyServices>();

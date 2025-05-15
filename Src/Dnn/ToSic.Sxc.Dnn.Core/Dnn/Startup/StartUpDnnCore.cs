@@ -72,10 +72,10 @@ internal static class StartUpDnnCore
         services.TryAddTransient<DnnInstallLogger>();
 
 
-        services.TryAddTransient<CodeApiService, DnnCodeApiService>();
-        services.TryAddTransient<DnnCodeApiService>();
+        services.TryAddTransient<ExecutionContext, DnnExecutionContext>();
+        services.TryAddTransient<DnnExecutionContext>();
         // New v14
-        services.TryAddTransient(typeof(CodeApiService<,>), typeof(DnnCodeApiService<,>));
+        services.TryAddTransient(typeof(ExecutionContext<,>), typeof(DnnExecutionContext<,>));
 
 
         // ADAM

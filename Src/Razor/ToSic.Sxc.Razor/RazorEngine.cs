@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Razor;
 internal class RazorEngine(
     EngineBase.MyServices services,
     LazySvc<IRazorRenderer> razorRenderer,
-    LazySvc<ICodeApiServiceFactory> codeRootFactory,
+    LazySvc<IExecutionContextFactory> codeRootFactory,
     LazySvc<CodeErrorHelpService> errorHelp,
     LazySvc<IRenderingHelper> renderingHelper)
     : EngineBase(services, connect: [codeRootFactory, errorHelp, renderingHelper, razorRenderer]), IRazorEngine

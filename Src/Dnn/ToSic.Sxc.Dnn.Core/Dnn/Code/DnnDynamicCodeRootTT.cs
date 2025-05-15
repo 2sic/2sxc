@@ -6,8 +6,8 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Dnn.Code;
 
 [PrivateApi]
-internal class DnnCodeApiService<TModel, TServiceKit>(CodeApiService.MyServices services)
-    : CodeApiService<TModel, TServiceKit>(services, DnnConstants.LogName), IHasDnn //, Sxc.Code.IDynamicCode, IDnnDynamicCode
+internal class DnnExecutionContext<TModel, TServiceKit>(ExecutionContext.MyServices services)
+    : ExecutionContext<TModel, TServiceKit>(services, DnnConstants.LogName), IHasDnn
     where TModel : class
     where TServiceKit : ServiceKit
 {

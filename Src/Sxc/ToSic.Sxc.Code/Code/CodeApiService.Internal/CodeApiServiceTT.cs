@@ -16,8 +16,8 @@ namespace ToSic.Sxc.Code.Internal;
 /// Both Dnn and Oqtane have their own version of this class, but the changes are minimal.
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CodeApiService<TModel, TServiceKit>(CodeApiService.MyServices services, string logPrefix)
-    : CodeApiService(services, logPrefix), ICodeApiService<TModel, TServiceKit>
+public class ExecutionContext<TModel, TServiceKit>(ExecutionContext.MyServices services, string logPrefix)
+    : ExecutionContext(services, logPrefix), IExecutionContext<TModel, TServiceKit>
     where TModel : class
     where TServiceKit : ServiceKit
 {

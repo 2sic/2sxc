@@ -4,7 +4,7 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.Code.InfoSystem;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Data.Internal;
 
@@ -44,7 +44,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// </remarks>
     List<string> SiteCultures { get; }
 
-    ICodeApiService _CodeApiSvc { get; }
+    IExecutionContext ExecutionContextWipMustBeRemovedFromTheCdf { get; }
     bool Debug { get; set; }
 
     /// <summary>

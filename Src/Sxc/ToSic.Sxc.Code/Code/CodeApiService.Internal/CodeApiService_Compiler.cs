@@ -3,7 +3,7 @@ using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Code.Internal;
 
-public partial class CodeApiService
+public partial class ExecutionContext
 {
     #region SharedCode Compiler
 

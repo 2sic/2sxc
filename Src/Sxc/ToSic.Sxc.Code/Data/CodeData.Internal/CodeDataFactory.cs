@@ -35,7 +35,7 @@ public partial class CodeDataFactory(
 {
 
     // WIP finishing this
-    public ICodeApiService _CodeApiSvc => ExCtx as ICodeApiService;
+    public IExecutionContext ExecutionContextWipMustBeRemovedFromTheCdf => ExCtx;
 
     public CodeInfoService CodeInfo => codeInfoSvc.Value;
 

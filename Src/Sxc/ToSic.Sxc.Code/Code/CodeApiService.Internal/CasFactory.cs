@@ -2,6 +2,7 @@
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Internal;
 
@@ -10,8 +11,8 @@ namespace ToSic.Sxc.Code.Internal;
 /// If the parent is generic supporting IDynamicModel[Model, Kit] it will create the generic root
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CodeApiServiceFactory(IServiceProvider serviceProvider)
-    : ServiceBase($"{SxcLogName}.CDRFac", connect: [/* never! serviceProvider */ ]), ICodeApiServiceFactory
+public class ExecutionContextFactory(IServiceProvider serviceProvider)
+    : ServiceBase($"{SxcLogName}.CDRFac", connect: [/* never! serviceProvider */ ]), IExecutionContextFactory
 {
     /// <summary>
     /// Creates a CodeApiService - if possible based on the parent class requesting it.
@@ -21,10 +22,10 @@ public class CodeApiServiceFactory(IServiceProvider serviceProvider)
     /// <param name="parentLog"></param>
     /// <param name="compatibilityFallback"></param>
     /// <returns></returns>
-    public ICodeApiService New(object parentClassOrNull, IBlock blockOrNull, ILog parentLog, int compatibilityFallback)
+    public IExecutionContext New(object parentClassOrNull, IBlock blockOrNull, ILog parentLog, int compatibilityFallback)
     {
         var compatibility = (parentClassOrNull as ICompatibilityLevel)?.CompatibilityLevel ?? compatibilityFallback;
-        var l = Log.Fn<CodeApiService>($"{nameof(compatibility)}: {compatibility}");
+        var l = Log.Fn<ExecutionContext>($"{nameof(compatibility)}: {compatibility}");
 
         // New v14 case - the Razor component implements IDynamicData<model, Kit>
         // which specifies what kit version to use.
@@ -34,7 +35,7 @@ public class CodeApiServiceFactory(IServiceProvider serviceProvider)
             : TryBuildCodeApiServiceForDynamic(parentClassOrNull.GetType());
 
         // Default case / old case - just a non-generic DnnDynamicCodeRoot
-        codeApiSvc ??= serviceProvider.Build<CodeApiService>(Log);
+        codeApiSvc ??= serviceProvider.Build<ExecutionContext>(Log);
 
         codeApiSvc
             .InitDynCodeRoot(blockOrNull, parentLog)
@@ -47,9 +48,9 @@ public class CodeApiServiceFactory(IServiceProvider serviceProvider)
     /// Special helper for new Kit-based Razor templates in v14
     /// </summary>
     /// <returns>`null` if not applicable, otherwise the typed DynamicRoot</returns>
-    private CodeApiService? TryBuildCodeApiServiceForDynamic(Type customType)
+    private ExecutionContext? TryBuildCodeApiServiceForDynamic(Type customType)
     {
-        var l = Log.Fn<CodeApiService>();
+        var l = Log.Fn<ExecutionContext>();
         try
         {
             var requiredDynCode = typeof(IHasKit<>);
@@ -71,10 +72,10 @@ public class CodeApiServiceFactory(IServiceProvider serviceProvider)
                 return null;
 
             // 2. If yes, generate a CodeApiService<TModel, TServiceKit> using the same types
-            var finalType = typeof(CodeApiService<,>).MakeGenericType(typeof(object), kitType);
+            var finalType = typeof(ExecutionContext<,>).MakeGenericType(typeof(object), kitType);
 
             // 3. return that
-            var codeRoot = serviceProvider.Build<CodeApiService>(finalType);
+            var codeRoot = serviceProvider.Build<ExecutionContext>(finalType);
             return l.ReturnAsOk(codeRoot);
         }
         catch (Exception ex)

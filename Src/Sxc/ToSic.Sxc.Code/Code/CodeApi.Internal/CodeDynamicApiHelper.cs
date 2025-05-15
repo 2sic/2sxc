@@ -8,7 +8,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.CodeApi;
 
-internal class CodeDynamicApiHelper(CodeApiService parent) : CodeAnyApiHelper(parent), ICodeDynamicApiHelper
+internal class CodeDynamicApiHelper(ExecutionContext parent) : CodeAnyApiHelper(parent), ICodeDynamicApiHelper
 {
     public dynamic Content => Parent.Content;
     public dynamic Header => Parent.Header;

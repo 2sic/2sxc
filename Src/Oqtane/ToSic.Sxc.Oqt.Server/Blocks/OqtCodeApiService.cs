@@ -6,7 +6,7 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Oqt.Server.Blocks;
 
 [PrivateApi]
-internal class OqtCodeApiService(
-    CodeApiService.MyServices services,
+internal class OqtExecutionContext(
+    ExecutionContext.MyServices services,
     LazySvc<AliasResolver> aliasResolverLazy)
-    : OqtCodeApiService<object, ServiceKit>(services, aliasResolverLazy);
+    : OqtExecutionContext<object, ServiceKit>(services, aliasResolverLazy);

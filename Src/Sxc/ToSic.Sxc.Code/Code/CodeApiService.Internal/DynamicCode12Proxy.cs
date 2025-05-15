@@ -107,7 +107,7 @@ internal class DynamicCode12Proxy(IExecutionContext exCtx, ICodeDynamicApiHelper
     public dynamic AsDynamic(params object[] entities)
         => dynamicApi.Cdf.MergeDynamic(entities);
 
-    public IConvertService Convert => ((CodeApiService)exCtx).Convert;
+    public IConvertService Convert => ((ExecutionContext)exCtx).Convert;
 
     public dynamic Resources => dynamicApi.Resources;
 

@@ -68,16 +68,9 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
     #region DynCode Root
 
-    //[PrivateApi]
-    //[ShowApiWhenReleased(ShowApiMode.Never)]
-    //public ICodeApiService _CodeApiSvc => RzrHlp.DynCodeRootMain;
-
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     internal IExecutionContext ExCtx => RzrHlp.ExCtxRoot;
-
-    //internal ICodeTypedApiService CodeApi => RzrHlp.DynCodeRootMain.TypedApi;
-
 
     [PrivateApi]
     public void ConnectToRoot(IExecutionContext exCtx)

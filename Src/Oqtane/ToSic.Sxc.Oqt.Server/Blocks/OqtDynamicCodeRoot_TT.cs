@@ -9,10 +9,10 @@ using ToSic.Sxc.Sys.ExecutionContext;
 namespace ToSic.Sxc.Oqt.Server.Blocks;
 
 [PrivateApi]
-internal class OqtCodeApiService<TModel, TServiceKit> : CodeApiService<TModel, TServiceKit> where TServiceKit : ServiceKit where TModel : class
+internal class OqtExecutionContext<TModel, TServiceKit> : ExecutionContext<TModel, TServiceKit> where TServiceKit : ServiceKit where TModel : class
 {
     private readonly LazySvc<AliasResolver> _aliasResolverLazy;
-    public OqtCodeApiService(MyServices services, LazySvc<AliasResolver> aliasResolverLazy) : base(services, OqtConstants.OqtLogPrefix)
+    public OqtExecutionContext(MyServices services, LazySvc<AliasResolver> aliasResolverLazy) : base(services, OqtConstants.OqtLogPrefix)
     {
         ConnectLogs([
             _aliasResolverLazy = aliasResolverLazy

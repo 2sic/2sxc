@@ -37,7 +37,7 @@ public abstract class ServiceWithContext(string logName, NoParamOrder protect = 
         _alreadyConnected = true;
 
         // Remember the parent
-        ExCtxOrNull = exCtx as ICodeApiService;
+        ExCtxOrNull = exCtx;
         // Link the logs
         this.LinkLog(parentLog ?? exCtx?.Log);
         // report connection in log
@@ -47,12 +47,6 @@ public abstract class ServiceWithContext(string logName, NoParamOrder protect = 
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    ///*public virtual*/private ICodeApiService _CodeApiSvc { get; /*private*/ set; }
-
-    //protected ICodeApiService CodeApiSvc => _CodeApiSvc
-    //                                        ?? (errorIfNotConnected
-    //                                            ? throw new($"{nameof(CodeApiSvc)} is null")
-    //                                            : null);
 
     protected IExecutionContext ExCtx => ExCtxOrNull
                                          ?? (errorIfNotConnected

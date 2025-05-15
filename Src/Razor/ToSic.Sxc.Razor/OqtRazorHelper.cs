@@ -49,9 +49,6 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
         return value;
     }
 
-    // ReSharper disable once InconsistentNaming
-    //public override ICodeApiService _CodeApiSvc => base._CodeApiSvc ?? DynCodeRootMain as ICodeApiService;
-
     internal new IExecutionContext ExCtx => base.ExCtxOrNull ?? ExCtxRoot;
 
     #endregion

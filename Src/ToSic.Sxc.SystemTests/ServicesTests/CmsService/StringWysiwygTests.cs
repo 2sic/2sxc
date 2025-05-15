@@ -4,11 +4,12 @@ using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.CmsService.Internal;
 using Xunit.Abstractions;
+using ExecutionContext = ToSic.Sxc.Code.Internal.ExecutionContext;
 
 namespace ToSic.Sxc.ServicesTests.CmsService;
 
 public class StringWysiwygTests(
-    CodeApiService codeApiSvc,
+    ExecutionContext codeApiSvc,
     ContentTypeFactory contentTypeFactory,
     DataForCmsServiceTests dataForCmsTests,
     ICodeDataFactory cdf,

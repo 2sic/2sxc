@@ -6,7 +6,7 @@ using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Internal;
 
-public partial class CodeApiService: IExCtxLookUpEngine
+public partial class ExecutionContext: IExCtxLookUpEngine
 {
     #region DataSource and ConfigurationProvider (for DS) section
 

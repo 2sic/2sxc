@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Engines;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class TokenEngine(
     EngineBase.MyServices services,
-    LazySvc<ICodeApiServiceFactory> codeRootFactory,
+    LazySvc<IExecutionContextFactory> codeRootFactory,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
     : EngineBase(services, connect: [codeRootFactory, tokenEngineWithContext]),
         ITokenEngine

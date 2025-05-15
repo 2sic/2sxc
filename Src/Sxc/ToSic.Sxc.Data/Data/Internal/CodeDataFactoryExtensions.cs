@@ -15,7 +15,7 @@ internal static class CodeDataFactoryExtensions
         if (cdf == null)
             throw new NotSupportedException($"Trying to use {cName}(...) in a scenario where the {nameof(cdf)} is not available.");
 
-        var kit = ((IWrapper<IExCtxServicesForTypedData>)cdf._CodeApiSvc).GetContents(); // before v20 it was .GetKit<ServiceKit16>();
+        var kit = ((IWrapper<IExCtxServicesForTypedData>)cdf.ExecutionContextWipMustBeRemovedFromTheCdf).GetContents(); // before v20 it was .GetKit<ServiceKit16>();
         return kit ?? throw new NotSupportedException(
             $"Trying to use {cName}(...) in a scenario where the {nameof(IExCtxServicesForTypedData)} is not available.");
     }

@@ -37,12 +37,12 @@ namespace ToSic.Sxc.Dnn.Razor.Internal;
 // ReSharper disable once UnusedMember.Global
 internal class DnnRazorCompiler(
     EngineBase.MyServices helpers,
-    ICodeApiServiceFactory codeApiServiceFactory,
+    IExecutionContextFactory exCtxFactory,
     LazySvc<CodeErrorHelpService> errorHelp,
     LazySvc<SourceAnalyzer> sourceAnalyzer,
     LazySvc<IRoslynBuildManager> roslynBuildManager,
     LazySvc<IAppJsonService> appJson)
-    : ServiceBase<EngineBase.MyServices>(helpers, "Dnn.RzComp", connect: [codeApiServiceFactory, errorHelp, sourceAnalyzer, roslynBuildManager, appJson])
+    : ServiceBase<EngineBase.MyServices>(helpers, "Dnn.RzComp", connect: [exCtxFactory, errorHelp, sourceAnalyzer, roslynBuildManager, appJson])
 {
     protected HotBuildSpec HotBuildSpecs;
     [PrivateApi] protected IBlock Block;
@@ -180,7 +180,7 @@ internal class DnnRazorCompiler(
         // All children which are then generated here should re-use that CodeApiService
         if (_sharedCodeApiService == null)
         {
-            _sharedCodeApiService = codeApiServiceFactory
+            _sharedCodeApiService = exCtxFactory
                 .New(webPage, Block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel9Old);
 
             // Since we just created a new CodeApiService, we must add this razor engine to it's piggyback

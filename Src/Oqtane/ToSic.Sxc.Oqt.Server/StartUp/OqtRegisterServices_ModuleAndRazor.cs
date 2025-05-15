@@ -60,8 +60,8 @@ partial class OqtRegisterServices
         // Views / Templates / Razor: View Builder
         services.TryAddTransient<IOqtSxcViewBuilder, OqtSxcViewBuilder>();
 
-        services.TryAddTransient<CodeApiService, OqtCodeApiService>();
-        services.TryAddTransient(typeof(CodeApiService<,>), typeof(OqtCodeApiService<,>));
+        services.TryAddTransient<ExecutionContext, OqtExecutionContext>();
+        services.TryAddTransient(typeof(ExecutionContext<,>), typeof(OqtExecutionContext<,>));
         services.TryAddTransient<IWebApiContextBuilder, OqtGetBlock>();
 
         // v13

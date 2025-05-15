@@ -57,7 +57,7 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
         // Use the ServiceProvider of the current request to build DynamicCodeRoot
         // Note that BlockOptional was already retrieved in the base class
         var codeRoot = context.HttpContext.RequestServices
-            .Build<ICodeApiServiceFactory>()
+            .Build<IExecutionContextFactory>()
             .New(_owner, BlockOptional, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel12);
         ConnectToRoot(codeRoot);
 

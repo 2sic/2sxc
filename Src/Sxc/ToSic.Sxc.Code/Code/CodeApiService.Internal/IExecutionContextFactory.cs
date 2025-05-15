@@ -1,8 +1,9 @@
 ﻿using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Internal;
 
-public interface ICodeApiServiceFactory
+public interface IExecutionContextFactory
 {
     /// <summary>
     /// Creates a CodeApiService - if possible based on the parent class requesting it.
@@ -12,5 +13,5 @@ public interface ICodeApiServiceFactory
     /// <param name="parentLog"></param>
     /// <param name="compatibilityFallback"></param>
     /// <returns></returns>
-    ICodeApiService New(object parentClassOrNull, IBlock blockOrNull, ILog parentLog, int compatibilityFallback);
+    IExecutionContext New(object parentClassOrNull, IBlock blockOrNull, ILog parentLog, int compatibilityFallback);
 }

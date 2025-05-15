@@ -27,11 +27,11 @@ namespace ToSic.Sxc.Code.Internal;
 /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
 /// </summary>
 /// <remarks>
-/// It can usually not be created directly, but through the <see cref="ICodeApiServiceFactory"/> which would return a <see cref="CodeApiServiceUnknown"/>.
+/// It can usually not be created directly, but through the <see cref="IExecutionContextFactory"/> which would return a <see cref="ExecutionContextUnknown"/>.
 /// </remarks>
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServices>, ICodeApiService, IHasPiggyBack, ICanGetService
+public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.MyServices>, IExecutionContext, IHasPiggyBack, ICanGetService
 {
     #region Constructor
 
@@ -60,7 +60,7 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
     }
 
     [PrivateApi]
-    protected internal CodeApiService(MyServices services, string logPrefix) : base(services, logPrefix + ".DynCdR")
+    protected internal ExecutionContext(MyServices services, string logPrefix) : base(services, logPrefix + ".DynCdR")
     {
         // Prepare services which need to be attached to this dynamic code root
         CmsContext = GetService<ICmsContext>();
