@@ -1,10 +1,10 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
@@ -15,11 +15,12 @@ namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CspOfApp : ServiceForDynamicCode
 {
-    public int AppId => ((IExCtxBlock)_CodeApiSvc)?.Block?.AppId ?? 0;
+    public int AppId => appId ??= ExCtx.GetState<IBlock>()?.AppId ?? 0;
+    private int? appId;
 
     #region Constructor
 
-    public CspOfApp(IUser user, CspOfModule moduleCsp) : base(CspConstants.LogPrefix + ".AppLvl")
+    public CspOfApp(IUser user, CspOfModule moduleCsp) : base(CspConstants.LogPrefix + ".AppLvl", connect: [/* nothing everything is already connected */])
     {
         _user = user;
         _moduleCsp = moduleCsp;

@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Apps;
+﻿using ToSic.Eav.DataSource;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data;
@@ -15,7 +16,8 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
         where TResources : class, ICanWrapData, new()
     {
         // check if cache exists and was created with the sames specs
-        if (_app is IAppTyped<TSettings, TResources> typed) return typed;
+        if (_app is IAppTyped<TSettings, TResources> typed)
+            return typed;
 
         // Get and cache for next time
         var created = _CodeApiSvc.GetService<IAppTyped<TSettings, TResources>>(reuse: true);
@@ -32,7 +34,7 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
         if (_view is ICmsView<TSettings, TResources> typed) return typed;
 
         // Get and cache for reuse
-        var cmsContext = _CodeApiSvc.CmsContext as CmsContext;
+        var cmsContext = _CodeApiSvc.GetState<ICmsContext>() as CmsContext;
         var created = new CmsView<TSettings, TResources>(cmsContext, cmsContext?.RealBlockOrNull, false);
         _view = created;
         return created;
@@ -44,9 +46,11 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
         where TCustomType : class, ICanWrapData, new()
     {
         // check if cache exists and was created with the sames specs
-        if (_myItem is TCustomType typed) return typed;
+        if (_myItem is TCustomType typed)
+            return typed;
 
-        var created = _CodeApiSvc.Cdf.AsCustom<TCustomType>((_CodeApiSvc.Data as ContextData)?.MyItems.FirstOrDefault());
+        var firstEntity = (_CodeApiSvc.GetState<IDataSource>() as ContextData)?.MyItems.FirstOrDefault();
+        var created = _CodeApiSvc.Cdf.AsCustom<TCustomType>(firstEntity);
         _myItem = created;
         return created;
     }
@@ -59,7 +63,8 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
         if (_myItems is IEnumerable<TCustomType> typed) return typed;
         
         // Get and cache for reuse
-        var created = _CodeApiSvc.Cdf.AsCustomList<TCustomType>((_CodeApiSvc.Data as ContextData)?.MyItems ?? [], default, nullIfNull: false);
+        var items = (_CodeApiSvc.GetState<IDataSource>() as ContextData)?.MyItems ?? [];
+        var created = _CodeApiSvc.Cdf.AsCustomList<TCustomType>(items, default, nullIfNull: false);
         _myItems = created;
         return created;
     }
@@ -72,7 +77,8 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
         if (_myHeader is TCustomType typed) return typed;
 
         // Get and cache for reuse
-        var created = _CodeApiSvc.Cdf.AsCustom<TCustomType>((_CodeApiSvc.Data as ContextData)?.MyHeaders.FirstOrDefault());
+        var header = (_CodeApiSvc.GetState<IDataSource>() as ContextData)?.MyHeaders.FirstOrDefault();
+        var created = _CodeApiSvc.Cdf.AsCustom<TCustomType>(header);
         _myHeader = created;
         return created;
     }

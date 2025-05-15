@@ -1,11 +1,10 @@
 ﻿using System.Web.Hosting;
-using ToSic.Eav;
 using ToSic.Lib;
 using ToSic.Lib.Code.Help;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Dnn.Code;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.Razor;
 
@@ -51,7 +50,7 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
     #region Html Helper
 
     internal IHtmlHelper Html => field ??= _CodeApiSvc.GetService<HtmlHelper>().Init(Page, this,
-        ((IExCtxBlock)_CodeApiSvc).Block?.Context.User.IsSystemAdmin ?? false);
+        _CodeApiSvc.GetState<IContextOfBlock>()?.User.IsSystemAdmin ?? false);
 
     #endregion
 

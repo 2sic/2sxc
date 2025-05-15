@@ -23,7 +23,7 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy)
     public override void ConnectToRoot(ICodeApiService codeRoot)
     {
         base.ConnectToRoot(codeRoot);
-        App = codeRoot.App;
+        App = codeRoot.GetState<IApp>();
     }
 
     protected abstract SmtpClient SmtpClient();

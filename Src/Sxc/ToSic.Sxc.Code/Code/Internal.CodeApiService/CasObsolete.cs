@@ -2,8 +2,9 @@
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Internal;
 
@@ -24,7 +25,8 @@ public class CodeApiServiceObsolete(ICodeApiService dynCode)
         try
         {
             // try to find with assembly name, or otherwise with GlobalName / previous names
-            var type = dataSources.Catalog.Value.FindDataSourceInfo(typeName, dynCode.App.AppId)?.Type;
+            var app = dynCode.GetState<IApp>();
+            var type = dataSources.Catalog.Value.FindDataSourceInfo(typeName, app.AppId)?.Type;
             configuration ??= dataSources.LookUpEngine;
             var cnf2Wip = new DataSourceOptions
             {
@@ -35,7 +37,7 @@ public class CodeApiServiceObsolete(ICodeApiService dynCode)
 
             var initialSource = dataSources.DataSources.Value.CreateDefault(new DataSourceOptions
             {
-                AppIdentityOrReader = dynCode.App,
+                AppIdentityOrReader = app,
                 LookUp = dataSources.LookUpEngine,
             });
             return typeName != ""
@@ -77,12 +79,16 @@ public class CodeApiServiceObsolete(ICodeApiService dynCode)
         dynCode.Log.A("try to build old List");
         _list = [];
 
-        if (dynCode.Data == null || ((IExCtxBlock)dynCode).Block.View == null) return;
-        if (!dynCode.Data.Out.ContainsKey(DataSourceConstants.StreamDefaultName)) return;
+        var data = dynCode.GetState<IDataSource>();
+        if (data == null || dynCode.GetState<IBlock>().View == null)
+            return;
+        if (!data.Out.ContainsKey(DataSourceConstants.StreamDefaultName))
+            return;
 
-        var entities = dynCode.Data.List.ToList();
+        var entities = data.List.ToList();
 
         _list = entities.Select(GetElementFromEntity).ToList();
+        return;
 
         Element GetElementFromEntity(IEntity e)
         {

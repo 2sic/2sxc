@@ -49,7 +49,6 @@ public interface ICodeDataFactory: ICanGetService
 
     ICodeApiService _CodeApiSvc { get; }
     bool Debug { get; set; }
-    //IBlock BlockOrNull { get; }
 
     /// <summary>
     /// Temporary workaround to allow forwarding the Block object without having to know the interface of it.

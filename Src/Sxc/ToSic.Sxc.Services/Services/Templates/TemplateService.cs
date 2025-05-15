@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.LookUp;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Services.Internal;
@@ -19,7 +20,7 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getEngineLazy) : S
 
         // in some cases, like when testing, the _CodeApiSvc is not available
         // then it should still work, but of course not know about the app's sources
-        var original = ((Apps.App)_CodeApiSvc?.App)?.ConfigurationProvider
+        var original = ((Apps.App)_CodeApiSvc?.GetState<IApp>())?.ConfigurationProvider
             ?? getEngineLazy.Value.GetLookUpEngine(0);
         
         return noSources

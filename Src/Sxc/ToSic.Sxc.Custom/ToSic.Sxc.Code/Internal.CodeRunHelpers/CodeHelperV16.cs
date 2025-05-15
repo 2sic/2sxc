@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.DataSource;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Data;
@@ -41,7 +42,7 @@ public class TypedCode16Helper(object owner, CodeHelperSpecs helperSpecs, Func<o
         }
     }
 
-    internal ContextData Data { get; } = helperSpecs.CodeApiSvc.Data as ContextData;
+    internal ContextData Data { get; } = helperSpecs.CodeApiSvc.GetState<IDataSource>() as ContextData;
 
     public ITypedItem MyItem => _myItem.Get(() => CodeApiSvc.Cdf.AsItem(Data.MyItems.FirstOrDefault(), propsRequired: DefaultStrict));
     private readonly GetOnce<ITypedItem> _myItem = new();

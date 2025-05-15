@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Data;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class Publishing(ITypedItem currentItem, ICodeDataFactory cdf) : HelperBase(cdf.Log, "Pub"), IPublishing
 {
-    private readonly IAppReader _appState = ((IAppWithInternal)cdf._CodeApiSvc.App).AppReader;
+    private IAppReader AppReader => field ??= cdf._CodeApiSvc.GetState<IAppReader>();
 
     // Always supported on IEntity
     public bool IsSupported => true;
@@ -31,7 +31,7 @@ internal class Publishing(ITypedItem currentItem, ICodeDataFactory cdf) : Helper
     public ITypedItem GetPublished() => _published.Get(() =>
     {
         if (IsPublished) return currentItem;
-        var pubEntity = _appState.GetPublished(currentItem.Entity);
+        var pubEntity = AppReader.GetPublished(currentItem.Entity);
         return cdf.AsItem(pubEntity, true);
     });
     private readonly GetOnce<ITypedItem> _published = new();
@@ -50,7 +50,7 @@ internal class Publishing(ITypedItem currentItem, ICodeDataFactory cdf) : Helper
     private IEntity UnpublishedEntity => _unPubEntity.Get(() =>
     {
         if (!IsPublished) return currentItem.Entity;
-        var draftEntity = _appState.GetDraft(currentItem.Entity);
+        var draftEntity = AppReader.GetDraft(currentItem.Entity);
         return draftEntity;
     });
     private readonly GetOnce<IEntity> _unPubEntity = new();

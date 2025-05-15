@@ -6,6 +6,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Internal;
@@ -52,7 +53,7 @@ public partial class CodeDataFactory(
     private ISite _siteOrNull;
 
     private ISite SiteFromContextOrFallback => field 
-        ??= (_CodeApiSvc?.CmsContext as CmsContext)?.CtxSite.Site
+        ??= (_CodeApiSvc?.GetState<ICmsContext>() as CmsContext)?.CtxSite.Site
             ?? _siteOrNull
             ?? throw new("Tried getting site from context or fallback, neither returned anything useful. ");
 
@@ -80,11 +81,11 @@ public partial class CodeDataFactory(
     // There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
     public string[] Dimensions => field ??=
         // note: can't use SiteFromContextOrFallback.SafeLanguagePriorityCodes() because it will error during testing
-        (_CodeApiSvc?.CmsContext as CmsContext)?.CtxSite.Site.SafeLanguagePriorityCodes()
+        (_CodeApiSvc?.GetState<ICmsContext>() as CmsContext)?.CtxSite.Site.SafeLanguagePriorityCodes()
         ?? _siteOrNull.SafeLanguagePriorityCodes();
 
 
-    public IBlock BlockOrNull => ((IExCtxBlock)_CodeApiSvc)?.Block;
+    public IBlock BlockOrNull => _CodeApiSvc?.GetState<IBlock>();
 
     public object BlockAsObjectOrNull => BlockOrNull;
 

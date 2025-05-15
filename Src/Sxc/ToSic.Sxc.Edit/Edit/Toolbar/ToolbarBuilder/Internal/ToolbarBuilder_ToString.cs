@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using ToSic.Eav.Serialization;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using static ToSic.Sxc.Edit.Toolbar.ItemToolbarBase;
@@ -62,7 +63,7 @@ partial record ToolbarBuilder
         // Check if enabled for certain groups
         if (CodeApiSvc != null)
         {
-            var user = CodeApiSvc.CmsContext.User;
+            var user = CodeApiSvc.GetState<ICmsContext>().User;
             var overrideShow = new ToolbarConfigurationShowHelper()
                 .OverrideShowBecauseOfRoles(config, user);
             enabled = overrideShow ?? enabled;

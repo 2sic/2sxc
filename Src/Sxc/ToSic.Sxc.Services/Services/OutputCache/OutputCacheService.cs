@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Services.Internal;
+﻿using ToSic.Sxc.Context;
+using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Services.OutputCache;
 
@@ -9,7 +10,7 @@ internal class OutputCacheService(IModuleService moduleService)
 {
     public int ModuleId
     {
-        get => _moduleId ??= _CodeApiSvc?.CmsContext?.Module?.Id ?? 0;
+        get => _moduleId ??= _CodeApiSvc?.GetState<ICmsContext>()?.Module?.Id ?? 0;
         set => _moduleId = value;
     }
     private int? _moduleId;

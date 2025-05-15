@@ -4,6 +4,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Internal;
 
@@ -13,22 +14,8 @@ namespace ToSic.Sxc.Code.Internal;
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface ICodeApiService : IHasLog, IHasPiggyBack, IExecutionContextDataWip, ICanGetService
+public interface ICodeApiService : IExecutionContext, IHasLog, IHasPiggyBack, IExecutionContextDataWip, ICanGetService
 {
-    #region Context Information
-
-    /// <inheritdoc cref="IDynamicCode.App" />
-    IApp App { get; }
-
-    /// <inheritdoc cref="IDynamicCode.Data" />
-    IDataSource Data { get; }
-
-
-    /// <inheritdoc cref="IDynamicCode.CmsContext" />
-    ICmsContext CmsContext { get; }
-
-    #endregion
-
     #region AsConverter (internal)
 
     [PrivateApi("internal use only")]

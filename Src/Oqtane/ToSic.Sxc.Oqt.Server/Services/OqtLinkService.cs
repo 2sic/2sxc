@@ -11,7 +11,6 @@ using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
-using ToSic.Sxc.Sys.ExecutionContext;
 using Page = Oqtane.Models.Page;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
@@ -35,7 +34,7 @@ internal class OqtLinkService(
     public override void ConnectToRoot(ICodeApiService codeRoot)
     {
         base.ConnectToRoot(codeRoot);
-        _context = ((IExCtxBlock)codeRoot).Block?.Context;
+        _context = codeRoot.GetState<IContextOfBlock>();
     }
 
     protected override string ToApi(string api, string parameters = null) => ApiNavigateUrl(api, parameters);
@@ -49,7 +48,7 @@ internal class OqtLinkService(
         var alias = aliasResolver.Alias;
 
         var pathWithQueryString = CombineApiWithQueryString(
-            LinkPaths.ApiFromSiteRoot(App.Folder, api),
+            LinkPaths.ApiFromSiteRoot(AppFolder, api),
             parameters);
 
         var relativePath = string.IsNullOrEmpty(alias.Path)

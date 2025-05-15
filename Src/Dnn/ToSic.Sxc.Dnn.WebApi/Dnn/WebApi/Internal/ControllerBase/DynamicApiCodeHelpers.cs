@@ -69,10 +69,11 @@ internal class DynamicApiCodeHelpers: CodeHelper
         AdamCode = codeRoot.GetService<AdamCode>();
 
         // In case SxcBlock was null, there is no instance, but we may still need the app
-        if (codeRoot.App == null)
+        var app = codeRoot.GetState<IApp>();
+        if (app == null)
         {
             Log.A("DynCode.App is null");
-            var app = GetAppOrNullFromUrlParams(services, request);
+            app = GetAppOrNullFromUrlParams(services, request);
             if (app != null)
                 ((IExCtxAttachApp)codeRoot).AttachApp(app);
         }
@@ -88,7 +89,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
 
         // 16.02 - try to log more details about the current API call
         var currentPath = reqProperties.TryGetTyped(SourceCodeConstants.SharedCodeRootFullPathKeyInCache, out string p2) ? p2.AfterLast("/") : null;
-        SysHlp.WebApiLogging?.AddLogSpecs(block, codeRoot.App, currentPath, SysHlp.GetService<CodeInfosInScope>());
+        SysHlp.WebApiLogging?.AddLogSpecs(block, app, currentPath, SysHlp.GetService<CodeInfosInScope>());
 
 
         return (codeRoot, path);

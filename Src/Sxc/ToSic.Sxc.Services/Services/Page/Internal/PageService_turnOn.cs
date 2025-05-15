@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Web.Internal.PageFeatures;
+﻿using ToSic.Sxc.Context;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Web.Internal.PageService;
 
@@ -32,7 +33,7 @@ partial class PageService
         // As a result, scoped services have the same instance for all 2sxc module instances across all pages during a user's browser session.
         // To prevent conflicts, we need to add the ModuleId to the ModuleService to scope its functionality to each module rendering.
         // Note: in DNN, the ModuleId will be ignored.
-        moduleService.Value.AddTag(tag, moduleId: _CodeApiSvc.CmsContext.Module.Id, noDuplicates: noDuplicates == true);
+        moduleService.Value.AddTag(tag, moduleId: _CodeApiSvc.GetState<ICmsContext>().Module.Id, noDuplicates: noDuplicates == true);
 
         // Then return empty string for usage as @Kit.Page.TurnOn(...)
         return l.ReturnAsOk(null);

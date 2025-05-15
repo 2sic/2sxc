@@ -60,7 +60,7 @@ internal class DnnLinkService(
 
         var apiRoot = DnnJsApiService.GetApiRoots().AppApiRoot.TrimLastSlash();
 
-        var relativePath = $"{apiRoot}/app/{App.Folder}/{path}";    
+        var relativePath = $"{apiRoot}/app/{AppFolder}/{path}";    
 
         return relativePath;
     }

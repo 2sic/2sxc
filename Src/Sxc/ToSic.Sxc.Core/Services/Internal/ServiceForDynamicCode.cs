@@ -1,5 +1,6 @@
 ﻿using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Services.Internal;
 
@@ -19,7 +20,8 @@ public abstract class ServiceForDynamicCode(string logName, NoParamOrder protect
     /// <param name="codeRoot"></param>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public virtual void ConnectToRoot(ICodeApiService codeRoot) => ConnectToRoot(codeRoot, null);
+    public virtual void ConnectToRoot(ICodeApiService codeRoot)
+        => ConnectToRoot(codeRoot, null);
 
     /// <summary>
     /// Connect to CodeRoot and a custom log
@@ -47,7 +49,12 @@ public abstract class ServiceForDynamicCode(string logName, NoParamOrder protect
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public virtual ICodeApiService _CodeApiSvc { get; private set; }
 
-    protected ICodeApiService CodeApiSvc => _CodeApiSvc ?? (errorIfNotConnected ? throw new($"{nameof(CodeApiSvc)} is null") : null);
+    protected ICodeApiService CodeApiSvc => _CodeApiSvc
+                                            ?? (errorIfNotConnected
+                                                ? throw new($"{nameof(CodeApiSvc)} is null")
+                                                : null);
+
+    protected IExecutionContext ExCtx => CodeApiSvc;
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]

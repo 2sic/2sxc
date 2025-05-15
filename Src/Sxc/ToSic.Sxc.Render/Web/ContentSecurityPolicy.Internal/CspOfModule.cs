@@ -3,6 +3,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Configuration.Internal;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
@@ -22,7 +23,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
 
     internal bool RegisterAppCsp(CspOfApp appCsp)
     {
-        var cLog = Log.Fn<bool>($"appId: {appCsp?.AppId}");
+        var cLog = Log.Fn<bool>("appId: not yet known, not yet attached");
         if (appCsp == null)
             return cLog.ReturnFalse("null");
 
@@ -46,7 +47,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
     {
         if (!featuresService.IsEnabled(SxcFeatures.ContentSecurityPolicyTestUrl.NameId))
             return null;
-        var pageParameters = _CodeApiSvc?.CmsContext?.Page?.Parameters;
+        var pageParameters = _CodeApiSvc?.GetState<ICmsContext>()?.Page?.Parameters;
         if (pageParameters == null) return null;
         pageParameters.TryGetValue(CspConstants.CspUrlParameter, out var cspParam);
         return cspParam;

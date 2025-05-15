@@ -40,7 +40,7 @@ internal class CacheService(
     /// <summary>
     /// AppId to use in key generation, so it won't collide with other apps.
     /// </summary>
-    private int AppId => _appId ??= CodeApiSvc?.App.AppId ?? -1;
+    private int AppId => _appId ??= CodeApiSvc?.GetState<IApp>().AppId ?? -1;
     private int? _appId;
 
     private bool IsEnabled => _isEnabled ??= features.IsEnabled(SxcFeatures.SmartDataCache);

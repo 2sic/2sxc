@@ -1,7 +1,8 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Context.Internal;
 
 namespace ToSic.Sxc.Data.Internal;
 
@@ -28,14 +29,15 @@ partial class CodeDataFactory
         if (_CodeApiSvc is null)
             throw new($"Can't create App Context for {nameof(AdamManager)} in {nameof(ICodeDataFactory)} - no block, no App");
 
-        IContextOfApp contextOfApp = ((IExCtxBlock)_CodeApiSvc).Block?.Context;
+        IContextOfApp contextOfApp = _CodeApiSvc.GetState<IContextOfBlock>();
         // TODO: @2dm - find out / document why this could even be null
         if (contextOfApp == null)
         {
-            if (_CodeApiSvc.App == null)
+            var app = _CodeApiSvc.GetState<IApp>();
+            if (app == null)
                 throw new("Can't create App Context for ADAM - no block, no App");
             contextOfApp = contextOfAppLazy.Value;
-            contextOfApp.ResetApp(_CodeApiSvc.App);
+            contextOfApp.ResetApp(app);
         }
 
         return adamManager.Value.Init(contextOfApp, this, CompatibilityLevel);

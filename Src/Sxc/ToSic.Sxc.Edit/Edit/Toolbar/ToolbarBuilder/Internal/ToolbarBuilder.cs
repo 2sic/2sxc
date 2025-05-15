@@ -52,7 +52,7 @@ public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, ITo
     {
         if (codeRoot == null) return;
         CodeApiSvc = codeRoot;
-        CurrentAppIdentity = codeRoot.App;
+        CurrentAppIdentity = codeRoot.GetState<IApp>();
         Services.ToolbarButtonHelper.Value.MainAppIdentity = CurrentAppIdentity;
     }
 

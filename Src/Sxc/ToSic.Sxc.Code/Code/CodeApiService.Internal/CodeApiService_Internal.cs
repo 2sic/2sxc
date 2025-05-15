@@ -1,20 +1,20 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.DataSource;
 using ToSic.Lib.Data;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Kits.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Code.Internal;
 
 public partial class CodeApiService
-    : // ICodeTypedApiHelper,
-        IWrapper<IExCtxServicesForTypedData>,
-        IExCtxBlock,
-        IExecutionContextCanGetKit
+    : IWrapper<IExCtxServicesForTypedData>,
+        IExCtxAttachApp
 {
     [PrivateApi]
     public void AttachApp(IApp app)
@@ -104,4 +104,30 @@ public partial class CodeApiService
 
     #endregion
 
+    public TState GetState<TState>()
+    {
+        if (typeof(TState) == typeof(ICmsContext))
+            return (TState)CmsContext;
+
+        if (typeof(TState) == typeof(IApp))
+            return (TState)App;
+
+        if (typeof(TState) == typeof(IAppReader))
+            return (TState)((IAppWithInternal)App)?.AppReader;
+
+        if (typeof(TState) == typeof(IDataSource))
+            return (TState)Data;
+
+        if (typeof(TState) == typeof(IBlock))
+            return (TState)Block;
+
+        if (typeof(TState) == typeof(IContextOfBlock))
+            return (TState)Block?.Context;
+
+        if (typeof(TState) == typeof(IAppTyped))
+            return (TState)AppTyped;
+
+        throw new InvalidOperationException(
+            $"Can't get state of type {typeof(TState).Name} - only {nameof(IApp)}, {nameof(IDataSource)}, {nameof(IBlock)} and {nameof(IAppTyped)} are supported");
+    }
 }
