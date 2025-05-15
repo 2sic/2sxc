@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Data.Internal;
@@ -11,7 +10,7 @@ partial class CodeDataFactory
     public AdamManager AdamManager
     {
         get => field ??= GetAdamManager();
-        private set => field = value;
+        private set;
     }
 
     /// <summary>

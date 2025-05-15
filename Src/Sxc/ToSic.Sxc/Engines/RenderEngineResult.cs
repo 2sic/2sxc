@@ -12,7 +12,7 @@ public record RenderEngineResult
     public List<ClientAsset> Assets
     {
         get => field ??= [];
-        init => field = value;
+        init;
     }
 
     public string ErrorCode { get; init; }

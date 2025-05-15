@@ -119,7 +119,7 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
     // #. possible override in url - and allowed by permissions (admin/host), use that
     public IView View
     {
-        get => field;
+        get;
         // ReSharper disable once ExplicitCallerInfoArgument
         set => Log.Do(cName: $"set{nameof(value)}", action: () =>
         {
@@ -135,11 +135,10 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
     public IContextOfBlock Context { get; protected set; }
 
 
-
-    public IDataSource  Data
+    public IDataSource Data
     {
         get => field ??= GetData();
-        set => field = value;
+        set;
     }
 
     private IDataSource GetData()

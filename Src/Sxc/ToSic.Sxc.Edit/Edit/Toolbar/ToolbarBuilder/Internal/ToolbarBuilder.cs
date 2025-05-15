@@ -66,7 +66,11 @@ public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, ITo
 
     internal ToolbarBuilderConfiguration Configuration { get; init; }
 
-    private ToolbarBuilderUtilities Utils { get => field ??= new(); init => field = value; }
+    private ToolbarBuilderUtilities Utils
+    {
+        get => field ??= new();
+        init;
+    }
 
     internal List<ToolbarRuleBase> Rules { get; init; } = [];
 

@@ -34,7 +34,7 @@ internal class AppDataTyped(
     private ICodeDataFactory CdfConnected
     {
         get => field ?? throw new(nameof(CdfConnected) + " not set");
-        set => field = value;
+        set;
     }
 
     #endregion

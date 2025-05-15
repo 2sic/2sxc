@@ -98,7 +98,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
     /// <inheritdoc />
     public override bool Debug
     {
-        get => field;
+        get;
         set
         {
             field = value;

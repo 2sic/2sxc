@@ -58,7 +58,7 @@ public class UserRoles : CustomDataSourceAdvanced
     public string RoleIds
     {
         get => field ?? Configuration.GetThis();
-        set => field = value;
+        set;
     }
 
     /// <summary>
@@ -69,7 +69,7 @@ public class UserRoles : CustomDataSourceAdvanced
     public string ExcludeRoleIds
     {
         get => field ?? Configuration.GetThis();
-        set => field = value;
+        set;
     }
 
     #endregion

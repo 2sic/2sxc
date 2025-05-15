@@ -38,11 +38,12 @@ public sealed partial class CmsBlock : DataSourceBase
     /// The instance-id of the CmsBlock (2sxc instance, DNN ModId). <br/>
     /// It's named Instance-Id to be more neutral as we're opening it to other platforms
     /// </summary>
-    [Configuration(Field = BlockInstanceConstants.FieldInstanceId, Fallback = $"[{BlockInstanceConstants.InstanceLookupName}:{BlockInstanceConstants.ModuleIdKey}]")]
+    [Configuration(Field = BlockInstanceConstants.FieldInstanceId,
+        Fallback = $"[{BlockInstanceConstants.InstanceLookupName}:{BlockInstanceConstants.ModuleIdKey}]")]
     public int? ModuleId
     {
         get => field ?? (int.TryParse(Configuration.GetThis(), out var listId) ? listId : new int?());
-        set => field = value;
+        set;
     }
 
     #region Constructor

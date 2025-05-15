@@ -12,7 +12,7 @@ public class ImgConversionTest
     public string ImgNameAndFolder
     {
         get => field ??= $"{DataForCmsServiceTests.FolderUrl}/{ImgName}";
-        init => field = value;
+        init;
     }
 
     public string ImgClass { get; init; } = "wysiwyg-width1of5";
@@ -25,7 +25,7 @@ public class ImgConversionTest
     public string Original
     {
         get => field ??= $"<img src='{ImgNameAndFolder}' data-cmsid='file:{ImgName}' class='{ImgClass}'>";
-        init => field = value;
+        init;
     }
 
 #if NETCOREAPP
@@ -33,9 +33,8 @@ public class ImgConversionTest
 #endif
     public string Expected
     {
-        get => field ??= $"<picture class='{ImgClass}'><source type='{MimeType}' srcset='{ImgNameAndFolder}'><img src='{ImgNameAndFolder}' class='{ImgClass}'></picture>";
-        init => field = value;
+        get => field ??=
+            $"<picture class='{ImgClass}'><source type='{MimeType}' srcset='{ImgNameAndFolder}'><img src='{ImgNameAndFolder}' class='{ImgClass}'></picture>";
+        init;
     }
-
-
 }
