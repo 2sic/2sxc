@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
@@ -44,9 +45,9 @@ public class TypedCode16Helper(object owner, CodeHelperSpecs helperSpecs, Func<o
         }
     }
 
-    internal ContextData Data { get; } = helperSpecs.CodeApiSvc.GetState<IDataSource>() as ContextData;
+    internal ContextData Data { get; } = helperSpecs.ExCtx.GetState<IDataSource>() as ContextData;
 
-    private ICodeDataFactory Cdf => field ??= CodeApiSvc.GetCdf();
+    private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
 
     public ITypedItem MyItem => _myItem.Get(() => Cdf.AsItem(Data.MyItems.FirstOrDefault(), propsRequired: DefaultStrict));
     private readonly GetOnce<ITypedItem> _myItem = new();
@@ -60,10 +61,11 @@ public class TypedCode16Helper(object owner, CodeHelperSpecs helperSpecs, Func<o
     public ITypedModel MyModel => _myModel.Get(() => new TypedModel(Specs, MyModelDic, Specs.IsRazor, Specs.CodeFileName));
     private readonly GetOnce<ITypedModel> _myModel = new();
 
+    private ICodeTypedApiHelper TypedApiHelper => field ??= ExCtx.GetTypedApi();
 
-    public ITypedStack AllResources => (CodeApiSvc as CodeApiService)?.AllResources;
+    public ITypedStack AllResources => TypedApiHelper.AllResources;
 
-    public ITypedStack AllSettings => (CodeApiSvc as CodeApiService)?.AllSettings;
+    public ITypedStack AllSettings => TypedApiHelper.AllSettings;
 
     //public IDevTools DevTools => _devTools.Get(() => new DevTools(IsRazor, CodeFileName, Log));
     //private readonly GetOnce<IDevTools> _devTools = new GetOnce<IDevTools>();
@@ -71,7 +73,7 @@ public class TypedCode16Helper(object owner, CodeHelperSpecs helperSpecs, Func<o
     public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
     {
         if (typeName.IsEmptyOrWs())
-            return CodeApiSvc.GetService<TService>();
+            return ExCtx.GetService<TService>();
 
         var ownType = owner.GetType();
         var assembly = ownType.Assembly;
@@ -83,7 +85,7 @@ public class TypedCode16Helper(object owner, CodeHelperSpecs helperSpecs, Func<o
         
         return type == null
             ? throw Log.Ex(new Exception($"Type '{typeName}' not found in assembly '{assembly.FullName}'"))
-            : CodeApiSvc.GetService<TService>(type: type);
+            : ExCtx.GetService<TService>(type: type);
     }
 
 

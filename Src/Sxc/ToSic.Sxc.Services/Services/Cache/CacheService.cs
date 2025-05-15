@@ -54,7 +54,7 @@ internal class CacheService(
         {
             AppPathsLazy = appPathsLazy,
             AppReaders = appReaders,
-            CodeApiSvc = _CodeApiSvc,
+            ExCtx = ExCtx,
             KeySpecs = keySpecs,
             PolicyMaker = cache.NewPolicyMaker(),
         };

@@ -13,9 +13,9 @@ internal class CmsServiceStringWysiwyg()
 {
     #region Sub-Services which should come from the same Code context
 
-    private IPageService PageService => field ??= _CodeApiSvc.GetService<IPageService>(reuse: true);
-    private HtmlImgToPictureHelper HtmlImgToPictureHelper => field ??= _CodeApiSvc.GetService<HtmlImgToPictureHelper>();
-    private HtmlInnerContentHelper HtmlInnerContentHelper => field ??= _CodeApiSvc.GetService<HtmlInnerContentHelper>();
+    private IPageService PageService => field ??= ExCtx.GetService<IPageService>(reuse: true);
+    private HtmlImgToPictureHelper HtmlImgToPictureHelper => field ??= ExCtx.GetService<HtmlImgToPictureHelper>();
+    private HtmlInnerContentHelper HtmlInnerContentHelper => field ??= ExCtx.GetService<HtmlInnerContentHelper>();
 
     #endregion
 

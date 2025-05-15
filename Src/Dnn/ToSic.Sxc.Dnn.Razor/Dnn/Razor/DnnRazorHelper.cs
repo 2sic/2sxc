@@ -49,8 +49,8 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
 
     #region Html Helper
 
-    internal IHtmlHelper Html => field ??= _CodeApiSvc.GetService<HtmlHelper>().Init(Page, this,
-        ExCtx.GetState<IContextOfBlock>()?.User.IsSystemAdmin ?? false);
+    internal IHtmlHelper Html => field
+        ??= ExCtx.GetService<HtmlHelper>().Init(Page, this, ExCtx.GetState<IContextOfBlock>()?.User.IsSystemAdmin ?? false);
 
     #endregion
 
@@ -94,7 +94,7 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
 
     #region DynamicModel and Factory
 
-    private ICodeDataPoCoWrapperService CodeDataWrapper => _dynJacketFactory.Get(() => _CodeApiSvc.GetService<ICodeDataPoCoWrapperService>());
+    private ICodeDataPoCoWrapperService CodeDataWrapper => _dynJacketFactory.Get(() => ExCtx.GetService<ICodeDataPoCoWrapperService>());
     private readonly GetOnce<ICodeDataPoCoWrapperService> _dynJacketFactory = new();
 
     /// <inheritdoc cref="IRazor14{TModel,TServiceKit}.DynamicModel"/>

@@ -4,6 +4,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Internal;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -49,17 +50,18 @@ public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, ITo
     public ILog Log { get; } = new Log(SxcLogName + ".TlbBld");
     
 
-    public void ConnectToRoot(ICodeApiService codeRoot)
+    public void ConnectToRoot(ICodeApiService exCtx)
     {
-        if (codeRoot == null) return;
-        CodeApiSvc = codeRoot;
-        CurrentAppIdentity = codeRoot.GetState<IApp>();
+        if (exCtx == null)
+            return;
+        ExCtx = exCtx;
+        CurrentAppIdentity = exCtx.GetState<IApp>().PureIdentity();
         Services.ToolbarButtonHelper.Value.MainAppIdentity = CurrentAppIdentity;
     }
 
     private IAppIdentity CurrentAppIdentity { get; set; }
 
-    private ICodeApiService CodeApiSvc { get; set; }
+    private IExecutionContext ExCtx { get; set; }
 
     #endregion
 

@@ -5,6 +5,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Edit.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.EditService;
@@ -19,9 +20,9 @@ internal partial class EditService(IJsonService jsonService)
         ((IEditServiceSetup)this).SetBlock(codeApiSvc, codeApiSvc.GetState<IBlock>());
     }
 
-    IEditService IEditServiceSetup.SetBlock(ICodeApiService codeRoot, IBlock block)
+    IEditService IEditServiceSetup.SetBlock(IExecutionContext exCtx, IBlock block)
     {
-        var user = codeRoot?.GetState<ICmsContext>()?.User;
+        var user = exCtx?.GetState<ICmsContext>()?.User;
         Enabled = block?.Context.Permissions.IsContentAdmin ?? (user?.IsSiteAdmin ?? false);
         return this;
     }

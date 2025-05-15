@@ -195,8 +195,7 @@ public abstract class RazorTyped<TModel>()
 
     /// <inheritdoc cref="CodeTyped.Customize"/>
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    protected ICodeCustomizer Customize => _customize ??= CodeApi.GetService<ICodeCustomizer>(reuse: true);
-    private ICodeCustomizer _customize;
+    protected ICodeCustomizer Customize => field ??= CodeApi.GetService<ICodeCustomizer>(reuse: true);
 
     #endregion
 

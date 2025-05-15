@@ -24,7 +24,7 @@ internal class TypedModel(
     : ITypedModel
 {
     private readonly IDictionary<string, object> _paramsDictionary = paramsDictionary?.ToInvariant() ?? new Dictionary<string, object>();
-    private readonly TypedConverter _converter = new(helperSpecs.CodeApiSvc.GetCdf());
+    private readonly TypedConverter _converter = new(helperSpecs.ExCtx.GetCdf());
 
     #region Check if parameters were supplied
 

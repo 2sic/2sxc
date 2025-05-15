@@ -54,7 +54,7 @@ public partial class DataService(
         }
 
         var newDs = new DataService(dataSources, catalog, appsCatalog, queryManager, user);
-        if (_CodeApiSvc != null)
+        if (ExCtxOrNull != null)
         {
             newDs.ConnectToRoot(_CodeApiSvc);
             newDs.Setup(appIdentity, null);

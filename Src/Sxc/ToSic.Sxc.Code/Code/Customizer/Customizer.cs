@@ -22,7 +22,7 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
             return typed;
 
         // Get and cache for next time
-        var created = _CodeApiSvc.GetService<IAppTyped<TSettings, TResources>>(reuse: true);
+        var created = ExCtx.GetService<IAppTyped<TSettings, TResources>>(reuse: true);
         _app = created;
         return created;
     }

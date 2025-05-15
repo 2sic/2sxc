@@ -21,7 +21,8 @@ public abstract class CustomCodeBase : ServiceForDynamicCode, ICompatibilityLeve
     /// </summary>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    protected internal CodeHelper CodeHlp => field ??= _CodeApiSvc.GetService<CodeHelper>().Init(this as IGetCodePath); // inheriting classes must implement IGetCodePath
+    protected internal CodeHelper CodeHlp => field
+        ??= ExCtx.GetService<CodeHelper>().Init(this as IGetCodePath); // inheriting classes must implement IGetCodePath
 
 
     [PrivateApi]

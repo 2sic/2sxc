@@ -26,7 +26,7 @@ partial class CodeDataFactory
         //if (_adamManagerPrepared != null) return _adamManagerPrepared;
 
         // If we don't even have a _DynCodeRoot (like when exporting from a neutral WebAPI)
-        if (_CodeApiSvc is null)
+        if (ExCtxOrNull is null)
             throw new($"Can't create App Context for {nameof(AdamManager)} in {nameof(ICodeDataFactory)} - no block, no App");
 
         IContextOfApp contextOfApp = ExCtx.GetState<IContextOfBlock>();

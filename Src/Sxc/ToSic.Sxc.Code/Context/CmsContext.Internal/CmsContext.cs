@@ -51,7 +51,7 @@ internal class CmsContext(
 
     private ICmsUser CreateCurrent()
     {
-        var userSvc = _CodeApiSvc.GetService<IUserService>(reuse: true);
+        var userSvc = ExCtx.GetService<IUserService>(reuse: true);
         var userModel = userSvc?.GetCurrentUser();
         return new CmsUser(this, userModel, SiteAppReader.Metadata);
     }

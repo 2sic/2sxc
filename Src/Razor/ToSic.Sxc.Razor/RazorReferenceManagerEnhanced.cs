@@ -11,8 +11,7 @@ namespace ToSic.Sxc.Razor
     internal class RazorReferenceManagerEnhanced(ApplicationPartManager partManager, IOptions<MvcRazorRuntimeCompilationOptions> options) : RazorReferenceManager(partManager, options)
     {
         // cache references for reuse;
-        public override IReadOnlyList<MetadataReference> CompilationReferences => _compilationReferences ??= base.CompilationReferences;
-        private IReadOnlyList<MetadataReference> _compilationReferences;
+        public override IReadOnlyList<MetadataReference> CompilationReferences => field ??= base.CompilationReferences;
 
         public IReadOnlyList<MetadataReference> GetAdditionalCompilationReferences(IEnumerable<string> additionalReferencePaths)
         {

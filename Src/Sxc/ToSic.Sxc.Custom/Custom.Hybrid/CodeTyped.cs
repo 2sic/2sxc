@@ -1,11 +1,9 @@
 ﻿using System.Runtime.CompilerServices;
-using ToSic.Eav;
 using ToSic.Eav.DataSource;
 using ToSic.Lib;
 using ToSic.Lib.Code.Help;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.CodeApi;
 using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
@@ -69,10 +67,10 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
         => _codeApi ??= CodeRootOrError(propName).GetTypedApi();
     private ICodeTypedApiHelper _codeApi;
 
-    private ICodeApiService CodeRootOrError([CallerMemberName] string propName = default)
+    private IExecutionContext CodeRootOrError([CallerMemberName] string propName = default)
     {
-        if (_CodeApiSvc != null)
-            return _CodeApiSvc;
+        if (ExCtxOrNull != null)
+            return ExCtx;
 
         var message = $"Can't access properties such as {propName}, because the Code-Context is not known. " +
                       $"This is typical in code which is in the **AppCode** folder. " +
@@ -222,7 +220,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     /// </remarks>
     [ShowApiWhenReleased(ShowApiMode.Never)]
     protected ICodeCustomizer Customize
-        => field ??= _CodeApiSvc.GetService<ICodeCustomizer>(reuse: true);
+        => field ??= ExCtx.GetService<ICodeCustomizer>(reuse: true);
 
     #endregion
 

@@ -1,13 +1,15 @@
-﻿namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
+﻿using ToSic.Sxc.Sys.ExecutionContext;
+
+namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
 /// <summary>
 /// Helper information for all code helpers, which is often passed around from one helper to another.
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CodeHelperSpecs(ICodeApiService codeApiSvc, bool isRazor, string codeFileName)
+public class CodeHelperSpecs(IExecutionContext exCtx, bool isRazor, string codeFileName)
 {
-    public ICodeApiService CodeApiSvc { get; } = codeApiSvc;
+    public IExecutionContext ExCtx { get; } = exCtx;
     public bool IsRazor { get; } = isRazor;
     public string CodeFileName { get; } = codeFileName;
 }

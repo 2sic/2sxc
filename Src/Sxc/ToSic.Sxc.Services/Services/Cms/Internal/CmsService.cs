@@ -12,7 +12,8 @@ namespace ToSic.Sxc.Services.CmsService.Internal;
 internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
     : ServiceForDynamicCode($"{SxcLogName}.CmsSrv", connect: [stringWysiwyg]), ICmsService
 {
-    private Generator<CmsServiceStringWysiwyg> StringWysiwygGen => field ??= stringWysiwyg.SetInit(s => s.ConnectToRoot(_CodeApiSvc));
+    private Generator<CmsServiceStringWysiwyg> StringWysiwygGen => field
+        ??= stringWysiwyg.SetInit(s => s.ConnectToRoot(_CodeApiSvc));
 
     public IHtmlTag Html(
         object thing,

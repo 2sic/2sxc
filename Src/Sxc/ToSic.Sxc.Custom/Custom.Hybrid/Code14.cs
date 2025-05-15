@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
@@ -33,7 +32,7 @@ public abstract class Code14()
 
     #region Constructor / Setup
 
-    internal ICodeDynamicApiHelper CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
+    internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => CodeHlp.CodeLog;
@@ -43,7 +42,7 @@ public abstract class Code14()
 
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
-    private CodeHelperV14 CodeHelper => field ??= new(new( _CodeApiSvc, false, "c# code file"));
+    private CodeHelperV14 CodeHelper => field ??= new(new(ExCtx, false, "c# code file"));
 
     #endregion
 

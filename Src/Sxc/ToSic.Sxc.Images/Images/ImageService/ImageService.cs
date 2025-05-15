@@ -14,12 +14,12 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
     internal ImgResizeLinker ImgLinker { get; } = imgLinker;
     internal IFeaturesService Features { get; } = features;
 
-    internal IEditService EditOrNull => _CodeApiSvc?.GetService<IEditService>(reuse: true);
+    internal IEditService EditOrNull => ExCtxOrNull?.GetService<IEditService>(reuse: true);
 
-    internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => _CodeApiSvc?.GetService<IToolbarService>(reuse: true));
+    internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => ExCtxOrNull?.GetService<IToolbarService>(reuse: true));
     private readonly GetOnce<IToolbarService> _toolbarSvc = new();
 
-    private IPageService PageService => field ??= _CodeApiSvc?.GetService<IPageService>(reuse: true);
+    private IPageService PageService => field ??= ExCtxOrNull?.GetService<IPageService>(reuse: true);
 
     #endregion
 

@@ -20,7 +20,7 @@ partial class EditService
     {
         var l = Log.Fn<string>();
 
-        var ps = _CodeApiSvc.GetService<IPageService>(reuse: true);
+        var ps = ExCtx.GetService<IPageService>(reuse: true);
         if (ps == null)
             return l.ReturnNull("page service not found");
 

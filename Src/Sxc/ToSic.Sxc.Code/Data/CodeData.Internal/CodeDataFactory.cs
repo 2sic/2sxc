@@ -117,5 +117,5 @@ public partial class CodeDataFactory(
     /// <typeparam name="TService"></typeparam>
     /// <returns></returns>
     public TService GetService<TService>() where TService : class
-        => _CodeApiSvc?.GetService<TService>() ?? serviceProvider.Build<TService>();
+        => ExCtxOrNull?.GetService<TService>() ?? serviceProvider.Build<TService>();
 }

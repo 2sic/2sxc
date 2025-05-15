@@ -63,8 +63,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
 
     public void SetDynamicModel(object data) => _overridePageData = data;
 
-    public TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
-    private TypedCode16Helper _codeHelper;
+    public TypedCode16Helper CodeHelper => field ??= CreateCodeHelper();
 
     private TypedCode16Helper CreateCodeHelper() =>
         new(

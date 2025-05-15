@@ -8,6 +8,7 @@ using ToSic.Lib.DI;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Services.Cache;
@@ -18,7 +19,7 @@ internal record CacheSpecs : ICacheSpecs
 
     internal required CacheKeySpecs KeySpecs { get; init; }
 
-    internal required ICodeApiService CodeApiSvc { get; init; }
+    internal required IExecutionContext ExCtx { get; init; }
 
     internal required LazySvc<IAppReaderFactory> AppReaders { get; init; }
 
@@ -72,11 +73,11 @@ internal record CacheSpecs : ICacheSpecs
     public ICacheSpecs WatchAppData(NoParamOrder protector = default)
         => this with { PolicyMaker = PolicyMaker.WatchNotifyKeys([AppReader.GetCache()]) };
 
-    private IAppReader AppReader => field ??= CodeApiSvc.GetState<IAppReader>();
+    private IAppReader AppReader => field ??= ExCtx.GetState<IAppReader>();
 
     public ICacheSpecs WatchAppFolder(NoParamOrder protector = default, bool? withSubfolders = true)
     {
-        var appPaths = AppPathsLazy.New().Get(AppReader, CodeApiSvc?.GetState<IContextOfBlock>()?.Site);
+        var appPaths = AppPathsLazy.New().Get(AppReader, ExCtx.GetState<IContextOfBlock>()?.Site);
         return this with
         {
             PolicyMaker = PolicyMaker.WatchFolders(new Dictionary<string, bool>
@@ -111,7 +112,7 @@ internal record CacheSpecs : ICacheSpecs
     /// <inheritdoc />
     public ICacheSpecs VaryByPageParameters(string names = default, NoParamOrder protector = default, bool caseSensitive = false)
         => VaryByParamsInternal("PageParameters",
-            CodeApiSvc?.GetState<ICmsContext>().Page.Parameters ?? new Parameters { Nvc = [] }, names,
+            ExCtx.GetState<ICmsContext>().Page.Parameters ?? new Parameters { Nvc = [] }, names,
             caseSensitive: caseSensitive
         );
 
@@ -157,7 +158,7 @@ internal record CacheSpecs : ICacheSpecs
 
     /// <inheritdoc />
     public ICacheSpecs VaryByModule()
-        => VaryByModule(CodeApiSvc?.GetState<ICmsContext>().Module.Id ?? -1);
+        => VaryByModule(ExCtx.GetState<ICmsContext>()?.Module.Id ?? -1);
 
     /// <inheritdoc />
     public ICacheSpecs VaryByPage(int id)
@@ -169,7 +170,7 @@ internal record CacheSpecs : ICacheSpecs
 
     /// <inheritdoc />
     public ICacheSpecs VaryByPage()
-        => VaryByPage(CodeApiSvc?.GetState<ICmsContext>().Page.Id ?? -1);
+        => VaryByPage(ExCtx.GetState<ICmsContext>()?.Page.Id ?? -1);
 
     /// <inheritdoc />
     public ICacheSpecs VaryByUser(int id)
@@ -181,7 +182,7 @@ internal record CacheSpecs : ICacheSpecs
 
     /// <inheritdoc />
     public ICacheSpecs VaryByUser()
-        => VaryByUser(CodeApiSvc?.GetState<ICmsContext>()?.User?.Id ?? -1);
+        => VaryByUser(ExCtx.GetState<ICmsContext>()?.User?.Id ?? -1);
 
     #endregion
 

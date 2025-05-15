@@ -1,5 +1,6 @@
 ﻿using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
@@ -11,9 +12,9 @@ namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class CodeHelperV00Base(CodeHelperSpecs helperSpecs, string logName)
-    : HelperBase(helperSpecs.CodeApiSvc.Log, logName)
+    : HelperBase(helperSpecs.ExCtx.Log, logName)
 {
-    protected ICodeApiService CodeApiSvc => Specs.CodeApiSvc;
+    protected IExecutionContext ExCtx => Specs.ExCtx;
 
     protected CodeHelperSpecs Specs { get; } = helperSpecs;
 

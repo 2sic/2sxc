@@ -102,11 +102,10 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
     // Note: The path for CreateInstance / GetCode - unsure if this is actually used anywhere on this object
     string IGetCodePath.CreateInstancePath
     {
-        get => _createInstancePath ?? Path;
-        set => _createInstancePath = value;
+        get => field ?? Path;
+        set;
     }
-    private string _createInstancePath;
-        
+
     #endregion
 
 

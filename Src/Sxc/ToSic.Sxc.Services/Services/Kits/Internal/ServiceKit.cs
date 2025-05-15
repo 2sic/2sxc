@@ -28,5 +28,5 @@ public class ServiceKit(string logName) : ServiceForDynamicCode(logName)
     /// <returns></returns>
     [PrivateApi]
     protected TService GetKitService<TService>() where TService : class
-        => _CodeApiSvc.GetService<TService>(reuse: true);
+        => ExCtx.GetService<TService>(reuse: true);
 }

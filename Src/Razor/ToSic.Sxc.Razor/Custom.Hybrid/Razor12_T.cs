@@ -38,10 +38,9 @@ public abstract class Razor12<TModel>() : OqtRazorBase<TModel>(CompatibilityLeve
     // Note: The path for CreateInstance / GetCode - unsure if this is actually used anywhere on this object
     string IGetCodePath.CreateInstancePath
     {
-        get => _createInstancePath ?? Path;
-        set => _createInstancePath = value;
+        get => field ?? Path;
+        set;
     }
-    private string _createInstancePath;
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
     public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)

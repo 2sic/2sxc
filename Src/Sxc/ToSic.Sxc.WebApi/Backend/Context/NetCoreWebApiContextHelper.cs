@@ -94,7 +94,7 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
                 // Look up if page publishing is enabled - if module context is not available, always false
                 base.Log.A($"AppId: {appId}");
                 var app = LoadAppOnly(appId, CtxResolver.Site().Site);
-                ((IExCtxAttachApp)_CodeApiSvc).AttachApp(app);
+                ((IExCtxAttachApp)ExCtx).AttachApp(app);
                 found = true;
             }
         }
