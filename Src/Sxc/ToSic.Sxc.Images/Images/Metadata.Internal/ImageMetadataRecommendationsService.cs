@@ -3,6 +3,7 @@ using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
@@ -26,17 +27,13 @@ class ImageMetadataRecommendationsService(IFeaturesService featuresSvc) : Servic
             mdOf.Target.Recommendations = GetImageRecommendations();
     }
 
-    // TODO: THIS IS ALL very temporary - it should be in a proper service, 
-    // but because we'll need to merge the code with v17, we try do keep it this way.
     public string[] GetImageRecommendations()
     {
-        if (ExCtxOrNull is not IExCtxAllSettings codeRootTyped)
+        var settings = ExCtxOrNull?.GetState<ITypedStack>(ExecutionContextStateNames.AllSettings);
+        if (settings == null || !featuresSvc.IsEnabled(BuiltInFeatures.CopyrightManagement.NameId))
             return ImageRecommendationsBasic;
 
-        if (!featuresSvc.IsEnabled(BuiltInFeatures.CopyrightManagement.NameId))
-            return ImageRecommendationsBasic;
-
-        var useCopyright = codeRootTyped.AllSettings?.Bool($"Copyright.{nameof(CopyrightSettings.ImagesInputEnabled)}") ?? false;
+        var useCopyright = settings.Bool($"Copyright.{nameof(CopyrightSettings.ImagesInputEnabled)}");
         return useCopyright
             ? ImageRecommendationsCopyright
             : ImageRecommendationsBasic;

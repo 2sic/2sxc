@@ -57,7 +57,7 @@ public class CspOfApp : ServiceForDynamicCode
         var cLog = Log.Fn<string>(AppId.ToString());
 
         // Get Stack
-        if (ExCtxOrNull?.GetState<IDynamicStack>("Settings") is not { } stack) 
+        if (ExCtxOrNull?.GetState<IDynamicStack>(ExecutionContextStateNames.Settings) is not { } stack) 
             return cLog.ReturnNull("no stack");
 
         // Enable this for detailed debugging

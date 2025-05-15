@@ -58,7 +58,8 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
     public new ICodeLog Log => CtxHlp.CodeLog;
 
     // ReSharper disable once InconsistentNaming
-    [PrivateApi] public ICodeApiService _CodeApiSvc => CtxHlp._CodeApiSvc;
+    [PrivateApi]
+    public ICodeApiService _CodeApiSvc => CtxHlp._CodeApiSvc;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public new TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();

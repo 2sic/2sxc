@@ -2,6 +2,7 @@
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Stack;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.WebResources;
 using static ToSic.Sxc.Web.WebResources.WebResourceConstants;
 
@@ -98,6 +99,6 @@ partial class PageService
     private DynamicEntity WebResources => _webResources.Get(() => Settings?.Get(WebResourcesNode) as DynamicEntity);
     private readonly GetOnce<DynamicEntity> _webResources = new();
 
-    private DynamicStack Settings => _settings.Get(() => ExCtxOrNull?.GetState<IDynamicStack>("Settings") as DynamicStack);
+    private DynamicStack Settings => _settings.Get(() => ExCtxOrNull?.GetState<IDynamicStack>(ExecutionContextStateNames.Settings) as DynamicStack);
     private readonly GetOnce<DynamicStack> _settings = new();
 }

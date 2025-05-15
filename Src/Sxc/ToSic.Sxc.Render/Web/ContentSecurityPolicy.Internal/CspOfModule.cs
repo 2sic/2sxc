@@ -6,6 +6,7 @@ using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
@@ -63,7 +64,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
     /// </summary>
     private CspSettingsReader SiteCspSettings => _siteCspSettings.Get(Log, () =>
     {
-        var pageSettings = ExCtxOrNull?.GetState<IDynamicStack>("Settings")
+        var pageSettings = ExCtxOrNull?.GetState<IDynamicStack>(ExecutionContextStateNames.Settings)
             ?.GetStack(AppStackConstants.PartSiteSystem, AppStackConstants.PartGlobalSystem, AppStackConstants.PartPresetSystem);
         return new CspSettingsReader(pageSettings, user, UrlIsDevMode, Log);
     });

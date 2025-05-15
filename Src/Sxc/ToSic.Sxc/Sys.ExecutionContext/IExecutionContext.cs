@@ -25,7 +25,9 @@ public interface IExecutionContext: ICanGetService, IHasPiggyBack, IHasLog
     public TState GetState<TState>() where TState : class;
 
     /// <summary>
-    /// Special accessor - currently only for `IDynamicStack` and name "Settings"
+    /// Special accessor - currently only for
+    /// * `IDynamicStack` and name "Settings"
+    /// * `ITypedStack` and name `AllSettings`
     /// </summary>
     /// <typeparam name="TState"></typeparam>
     /// <param name="name"></param>

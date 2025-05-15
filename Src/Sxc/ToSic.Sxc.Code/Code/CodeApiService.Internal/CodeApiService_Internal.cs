@@ -145,10 +145,16 @@ public partial class CodeApiService
 
     public TState GetState<TState>(string name) where TState : class
     {
-        if (typeof(TState) == typeof(IDynamicStack) && name == "Settings")
+        if (typeof(TState) == typeof(IDynamicStack) && name == ExecutionContextStateNames.Settings)
             return (TState)Settings;
 
-        throw new InvalidOperationException("Can only retrieve 'Settings'");
+        if (typeof(TState) == typeof(ITypedStack) && name == ExecutionContextStateNames.AllSettings)
+            return (TState)AllSettings;
+
+        if (typeof(TState) == typeof(ITypedStack) && name == ExecutionContextStateNames.AllResources)
+            return (TState)AllResources;
+
+        throw new InvalidOperationException("Can only retrieve 'Settings', 'AllSettings', 'AllResources'");
     }
 
     ICodeDataFactory IWrapper<ICodeDataFactory>.GetContents()

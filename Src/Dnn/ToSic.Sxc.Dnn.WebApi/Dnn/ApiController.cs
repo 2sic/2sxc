@@ -63,7 +63,7 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
 
     /// <inheritdoc cref="IHasDnn.Dnn"/>
-    public IDnnContext Dnn => (_CodeApiSvc as IHasDnn)?.Dnn;
+    public IDnnContext Dnn => (ExCtx as IHasDnn)?.Dnn;
 
     #region AsDynamic implementations
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
