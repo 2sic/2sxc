@@ -23,6 +23,11 @@
             <basePath>DesktopModules\ToSIC_SexyContent</basePath>
             <script type="Install">
               <path>SqlDataProvider</path>
+              <name>Install.SqlDataProvider</name>
+              <version>19.99.00</version>
+            </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
               <name>00.99.00.SqlDataProvider</name>
               <version>00.99.00</version>
             </script>
@@ -143,37 +148,22 @@
           <assemblies>
             <basePath>bin</basePath>
             <assembly>
-              <name>ToSic.Sxc.Dnn.dll</name>
-            </assembly>
-            <assembly>
-              <name>ToSic.Sxc.dll</name>
-            </assembly>
-            <assembly>
-              <name>ToSic.Sxc.Code.Generate.dll</name>
-            </assembly>
-            <assembly>
-              <name>ToSic.Sxc.WebApi.dll</name>
-            </assembly>
-            <assembly>
-              <name>ToSic.Sxc.Dnn.Core.dll</name>
-            </assembly>
-            <assembly>
-              <name>ToSic.Sxc.Dnn.Razor.dll</name>
-            </assembly>
-            <assembly>
-              <name>ToSic.Sxc.Dnn.WebApi.dll</name>
-            </assembly>
-            <assembly>
-              <name>ToSic.Eav.dll</name>
-            </assembly>
-            <assembly>
               <name>ToSic.Eav.Apps.dll</name>
             </assembly>
             <assembly>
               <name>ToSic.Eav.Core.dll</name>
             </assembly>
             <assembly>
+              <name>ToSic.Eav.Data.Build.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.Data.Persistence.dll</name>
+            </assembly>
+            <assembly>
               <name>ToSic.Eav.DataSources.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.dll</name>
             </assembly>
             <assembly>
               <name>ToSic.Eav.ImportExport.dll</name>
@@ -184,14 +174,98 @@
             <assembly>
               <name>ToSic.Eav.Repository.Efc.dll</name>
             </assembly>
-            <!--<assembly>
-              <name>ToSic.Eav.Tokens.dll</name>
-            </assembly>-->
             <assembly>
               <name>ToSic.Eav.WebApi.dll</name>
             </assembly>
             <assembly>
-              <name>ToSic.Lib.Core.dll</name>
+              <name>ToSic.Lib.LookUp.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Adam.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Apps.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Blocks.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Cms.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Code.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Code.Generate.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Code.HotBuild.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Core.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Custom.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Data.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Dnn.Core.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Dnn.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Dnn.Razor.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Dnn.WebApi.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Edit.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Engines.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Images.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.LightSpeed.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Render.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Services.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.Web.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sxc.WebApi.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sys.Caching.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sys.Code.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sys.Core.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sys.Features.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sys.Security.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Sys.Utils.dll</name>
             </assembly>
 
             <!-- *** DNN shared (DNN assembly bindings) ***  -->
@@ -665,6 +739,16 @@
             <file>
               <path>bin</path>
               <name>ToSic.SexyContent.WebApi.dll</name>
+            </file>
+          </files>
+        </component>
+        
+        <!-- 2025-05-15, clean renamed 2sxc dnn assemblies-->
+        <component type="Cleanup" version="19.99.00">
+          <files>
+            <file>
+              <path>bin</path>
+              <name>ToSic.Lib.Core.dll </name>
             </file>
           </files>
         </component>

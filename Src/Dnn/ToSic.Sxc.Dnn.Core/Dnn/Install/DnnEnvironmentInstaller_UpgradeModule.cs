@@ -94,27 +94,31 @@ partial class DnnEnvironmentInstaller
                     // ToSic_EAV_DataTimeline cleaning data and change schema for CJson
                     const string sql150000 = @"                         
                             -- remove trigger generated data from 'ToSIC_EAV_DataTimeline' in batches
-                            WHILE (SELECT COUNT(*) FROM [dbo].[ToSIC_EAV_DataTimeline] WHERE [SourceTable] IN ('ToSIC_EAV_Values', 'ToSIC_EAV_EntityRelationships', 'ToSIC_EAV_ValuesDimensions')) > 0
-                            BEGIN
-                                ;WITH CTE AS
-                                (
-	                            SELECT TOP 100000 * 
-	                            FROM [dbo].[ToSIC_EAV_DataTimeline] 
-	                            WHERE [SourceTable] IN ('ToSIC_EAV_Values', 'ToSIC_EAV_EntityRelationships', 'ToSIC_EAV_ValuesDimensions')
-	                            )
-                                DELETE FROM CTE;
-                            END;
 
-                            -- drop NewData column from 'ToSIC_EAV_DataTimeline'
-                            IF EXISTS (SELECT * FROM sys.columns WHERE Name = 'NewData' AND Object_ID = OBJECT_ID('ToSIC_EAV_DataTimeline'))
+                            IF OBJECT_ID('dbo.ToSIC_EAV_DataTimeline', 'U') IS NOT NULL
                             BEGIN
-                                ALTER TABLE ToSIC_EAV_DataTimeline DROP COLUMN NewData;
-                            END;
+                                WHILE (SELECT COUNT(*) FROM [dbo].[ToSIC_EAV_DataTimeline] WHERE [SourceTable] IN ('ToSIC_EAV_Values', 'ToSIC_EAV_EntityRelationships', 'ToSIC_EAV_ValuesDimensions')) > 0
+                                BEGIN
+                                    ;WITH CTE AS
+                                    (
+	                                    SELECT TOP 100000 * 
+	                                    FROM [dbo].[ToSIC_EAV_DataTimeline] 
+	                                    WHERE [SourceTable] IN ('ToSIC_EAV_Values', 'ToSIC_EAV_EntityRelationships', 'ToSIC_EAV_ValuesDimensions')
+	                                    )
+                                    DELETE FROM CTE;
+                                END;
 
-                            -- add CJson column to 'ToSIC_EAV_DataTimeline'
-                            IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'CJson' AND Object_ID = OBJECT_ID('ToSIC_EAV_DataTimeline'))
-                            BEGIN
-                                ALTER TABLE ToSIC_EAV_DataTimeline ADD CJson varbinary(max) NULL;
+                                -- drop NewData column from 'ToSIC_EAV_DataTimeline'
+                                IF EXISTS (SELECT * FROM sys.columns WHERE Name = 'NewData' AND Object_ID = OBJECT_ID('ToSIC_EAV_DataTimeline'))
+                                BEGIN
+                                    ALTER TABLE ToSIC_EAV_DataTimeline DROP COLUMN NewData;
+                                END;
+
+                                -- add CJson column to 'ToSIC_EAV_DataTimeline'
+                                IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'CJson' AND Object_ID = OBJECT_ID('ToSIC_EAV_DataTimeline'))
+                                BEGIN
+                                    ALTER TABLE ToSIC_EAV_DataTimeline ADD CJson varbinary(max) NULL;
+                                END;
                             END;";
                     sqlConnection.Open();
                     var sqlCommand150000 = new SqlCommand(sql150000, sqlConnection);
