@@ -1,5 +1,4 @@
 ﻿using System.Web;
-using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.PublicApi;
 using RealController = ToSic.Sxc.Backend.Adam.AdamControllerReal<int>;
 

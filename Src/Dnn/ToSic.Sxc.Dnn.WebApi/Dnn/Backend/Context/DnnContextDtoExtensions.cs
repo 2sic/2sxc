@@ -2,7 +2,6 @@
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.WebApi.Context;
-using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Dnn.Pages;
 

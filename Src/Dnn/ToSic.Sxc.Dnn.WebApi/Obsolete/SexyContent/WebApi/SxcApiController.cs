@@ -24,7 +24,6 @@ using IFolder = ToSic.Sxc.Adam.IFolder;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable InheritdocInvalidUsage
 

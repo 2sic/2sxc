@@ -7,7 +7,6 @@ using ToSic.Lib.Data;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.WebApi.ExternalLinks;
 
 namespace ToSic.Sxc.Dnn.WebApi.Context;

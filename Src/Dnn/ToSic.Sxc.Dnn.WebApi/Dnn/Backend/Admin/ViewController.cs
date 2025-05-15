@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Web;
-using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.Logging;
