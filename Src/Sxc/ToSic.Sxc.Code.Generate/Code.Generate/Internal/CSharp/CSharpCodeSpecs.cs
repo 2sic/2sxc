@@ -1,5 +1,4 @@
-﻿using Custom.Data;
-using ToSic.Eav;
+﻿using ToSic.Eav;
 using ToSic.Eav.Apps;
 
 namespace ToSic.Sxc.Code.Generate.Internal;
@@ -40,7 +39,7 @@ internal class CSharpCodeSpecs: FileGeneratorSpecs
     /// <summary>
     /// Default class to inherit from - ATM CustomItem only
     /// </summary>
-    public string DataInherits { get; set; } = "Custom.Data." + nameof(CustomItem);
+    public string DataInherits { get; set; } = "Custom.Data.CustomItem";
 
     public string ItemAccessor { get; set; } = ItemAccessorDefault;
 
