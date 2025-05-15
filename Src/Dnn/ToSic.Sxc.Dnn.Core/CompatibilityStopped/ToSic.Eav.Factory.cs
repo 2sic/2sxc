@@ -2,9 +2,7 @@
 namespace ToSic.Eav;
 
 /// <summary>
-/// The Eav DI Factory, used to construct various objects through [Dependency Injection](xref:NetCode.DependencyInjection.Index).
-///
-/// If possible avoid using this, as it's a workaround for code which is outside the normal Dependency Injection and therefor a bad pattern.
+/// Deprecated since v13, announced for removal in v15, removed in v20.
 /// </summary>
 [PrivateApi("Up to v19 used to PublicApi(Careful - obsolete!)")]
 [Obsolete]
@@ -15,10 +13,6 @@ public class Factory
         => $"The old '{fullNameSpace}' API has been deprecated since v13 and announced for removal in v15. They were removed in v20. " +
            $"For guidance, see {link}.";
 
-    /// <summary>
-    /// Dependency Injection resolver with a known type as a parameter.
-    /// </summary>
-    /// <typeparam name="T">The type / interface we need.</typeparam>
     [Obsolete]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public static T Resolve<T>()

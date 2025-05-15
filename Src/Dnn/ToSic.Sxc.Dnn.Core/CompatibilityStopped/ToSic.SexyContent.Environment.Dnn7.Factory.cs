@@ -9,10 +9,10 @@ using IApp = ToSic.Sxc.Apps.IApp;
 namespace ToSic.SexyContent.Environment.Dnn7;
 
 /// <summary>
-/// This is a factory to create 2sxc-instance objects and related objects from
-/// non-2sxc environments.
+/// Deprecated since v13, announced for removal in v15, removed in v20.
 /// </summary>
 [Obsolete]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class Factory
 {
     [Obsolete]

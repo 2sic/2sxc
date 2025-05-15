@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Dnn.Code;
 
 [PrivateApi]
 internal class DnnCodeApiService<TModel, TServiceKit>(CodeApiService.MyServices services)
-    : CodeApiService<TModel, TServiceKit>(services, DnnConstants.LogName), Sxc.Code.IDynamicCode, IDnnDynamicCode
+    : CodeApiService<TModel, TServiceKit>(services, DnnConstants.LogName), IHasDnn //, Sxc.Code.IDynamicCode, IDnnDynamicCode
     where TModel : class
     where TServiceKit : ServiceKit
 {

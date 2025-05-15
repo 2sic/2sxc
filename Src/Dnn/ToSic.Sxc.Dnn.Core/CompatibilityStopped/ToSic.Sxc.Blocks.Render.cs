@@ -4,12 +4,11 @@
 namespace ToSic.Sxc.Blocks;
 
 /// <summary>
-/// Block-Rendering system. It's responsible for taking a Block and delivering HTML for the output. <br/>
-/// It's used for InnerContent, so that Razor-Code can easily render additional content blocks. <br/>
-/// See also [](xref:Basics.Cms.InnerContent.Index)
+/// Deprecated since v12, announced for removal in v15, removed in v20.
 /// </summary>
-[InternalApi_DoNotUse_MayChangeWithoutNotice]
-[Obsolete("Deprecated in v12 - please use IRenderService instead - will not work in v12 Base classes like Razor12")]
+[PrivateApi]
+[Obsolete]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class Render
 {
     internal static string GenerateMessage(string fullNameSpace)
