@@ -1,5 +1,4 @@
 ﻿using System.Dynamic;
-using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Internal.Dynamic;
 
 namespace ToSic.Sxc.Data;
@@ -12,7 +11,7 @@ public partial class DynamicEntity
         // Check special cases #1 Toolbar - only in DNN and only on the explicit dynamic entity; not available in Oqtane
 #if NETFRAMEWORK
 #pragma warning disable 618 // ignore Obsolete
-        if (binder.Name == ViewConstants.FieldToolbar)
+        if (binder.Name == nameof(Toolbar))
         {
             result = Toolbar.ToString();
             return true;

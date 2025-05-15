@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Blocks.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class ViewParts
+public class ViewParts
 {
     public const string ViewFieldInContentBlock = "Template";
     public const string TemplateContentType = "Template";
