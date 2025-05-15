@@ -51,12 +51,10 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     public ServiceKit16 Kit => _kit.Get(_CodeApiSvc.GetKit<ServiceKit16>);
     private readonly GetOnce<ServiceKit16> _kit = new();
 
-    internal TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
-    private TypedCode16Helper _codeHelper;
+    internal TypedCode16Helper CodeHelper => field ??= CreateCodeHelper();
 
     /// <inheritdoc cref="CodeTyped.Customize"/>
-    protected ICodeCustomizer Customize => _customize ??= _CodeApiSvc.GetService<ICodeCustomizer>(reuse: true);
-    private ICodeCustomizer _customize;
+    protected ICodeCustomizer Customize => field ??= _CodeApiSvc.GetService<ICodeCustomizer>(reuse: true);
 
     void ISetDynamicModel.SetDynamicModel(object data) => _overridePageData = data;
 

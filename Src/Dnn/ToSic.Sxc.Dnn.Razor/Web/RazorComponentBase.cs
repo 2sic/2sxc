@@ -21,8 +21,7 @@ public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHa
     /// For architecture of Composition over Inheritance.
     /// </summary>
     [PrivateApi]
-    internal DnnRazorHelper RzrHlp => _rzrHlp ??= new DnnRazorHelper().Init(this);
-    private DnnRazorHelper _rzrHlp;
+    internal DnnRazorHelper RzrHlp => field ??= new DnnRazorHelper().Init(this);
 
     /// <summary>
     /// Internal access to the underlying RenderPage.

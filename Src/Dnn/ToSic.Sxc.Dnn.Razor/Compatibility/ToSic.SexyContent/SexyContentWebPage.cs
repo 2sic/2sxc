@@ -69,9 +69,9 @@ public abstract class SexyContentWebPage :
     /// <inheritdoc />
     [PrivateApi("never public, shouldn't be in use elsewhere")]
     [Obsolete]
-    public SxcHelper Sxc => _sxc ??= new(((IExCtxBlock)_CodeApiSvc).Block?.Context.Permissions.IsContentAdmin ?? false, GetService<IConvertToEavLight>());
-    [Obsolete]
-    private SxcHelper _sxc;
+    [field: Obsolete]
+    public SxcHelper Sxc => field
+        ??= new(((IExCtxBlock)_CodeApiSvc).Block?.Context.Permissions.IsContentAdmin ?? false, GetService<IConvertToEavLight>());
 #pragma warning restore 612
 
     /// <summary>
@@ -220,9 +220,8 @@ public abstract class SexyContentWebPage :
     public dynamic ListPresentation => _CodeApiSvc.Header?.Presentation;
 
     [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
-    public List<Element> List => _list ??= new CodeApiServiceObsolete(_CodeApiSvc).ElementList;
-    [Obsolete("don't use any more")]
-    private List<Element> _list;
+    [field: Obsolete("don't use any more")]
+    public List<Element> List => field ??= new CodeApiServiceObsolete(_CodeApiSvc).ElementList;
 #pragma warning restore 618
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
