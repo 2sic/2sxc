@@ -112,7 +112,7 @@
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DotNetNuke.Core" Version="9.11.0">
+    <PackageReference Include="DotNetNuke.Core" Version="9.6.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNet.Razor" Version="3.1.1" />

@@ -77,16 +77,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetNuke.Core" Version="9.11.0">
+    <PackageReference Include="DotNetNuke.Core" Version="9.6.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="DotNetNuke.DependencyInjection" Version="9.11.0">
+    <PackageReference Include="DotNetNuke.DependencyInjection" Version="9.6.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="DotNetNuke.Web" Version="9.11.0">
+    <PackageReference Include="DotNetNuke.Web" Version="9.6.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="DotNetNuke.Web.Client" Version="9.11.0">
+    <PackageReference Include="DotNetNuke.Web.Client" Version="9.6.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1">
@@ -95,10 +95,10 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9">
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.3">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.2.9">
+    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.2.3">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="MSBuildTasks">
