@@ -207,6 +207,14 @@ public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     /// <returns></returns>
     new string ToString();
 
+    /// <summary>
+    /// Special sorted ToString - for the moment not public
+    /// </summary>
+    /// <param name="protector"></param>
+    /// <param name="sort"></param>
+    /// <returns></returns>
+    string ToString(NoParamOrder protector = default, bool sort = false);
+
     #endregion
 
     #region Handle duplicate interface methods

@@ -133,14 +133,11 @@ public partial record Parameters : IParameters
     public override string ToString() => _toString ??= ToString(sort: true);
     private string _toString;
 
-    /// <summary>
-    /// Special sorted ToString - for the moment not public
-    /// </summary>
-    /// <param name="protector"></param>
-    /// <param name="sort"></param>
-    /// <returns></returns>
+    /// <inheritdoc/>
     public string ToString(NoParamOrder protector = default, bool sort = false)
-        => sort ? _sorted ??= Nvc.Sort(PriorityFields).NvcToString() : Nvc.NvcToString();
+        => sort
+            ? _sorted ??= Nvc.Sort(PriorityFields).NvcToString()
+            : Nvc.NvcToString();
     private string _sorted;
 
 

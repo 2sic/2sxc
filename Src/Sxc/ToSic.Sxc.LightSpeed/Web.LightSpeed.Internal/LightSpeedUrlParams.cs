@@ -56,7 +56,7 @@ internal class LightSpeedUrlParams
         }
 
         // Finalize URL parameters
-        var urlParams = (pageParameters as Context.Internal.Parameters)?.ToString(sort: true) ?? pageParameters.ToString();
+        var urlParams = pageParameters?.ToString(sort: true);
         if (string.IsNullOrWhiteSpace(urlParams))
             return l.Return((true, ""), "no url params found");
 

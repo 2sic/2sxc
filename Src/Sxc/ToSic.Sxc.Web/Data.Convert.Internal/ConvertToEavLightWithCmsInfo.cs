@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
+using ToSic.Sxc.Edit.Internal;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Data.Internal.Convert;
@@ -70,7 +71,7 @@ public class ConvertToEavLightWithCmsInfo(ConvertToEavLight.MyServices services)
 
         var editDecorator = entity.GetDecorator<EntityInBlockDecorator>();
 
-        dictionary.Add(SxcUiConstants.JsonEntityEditNodeName, editDecorator != null // entity is IHasEditingData entWithEditing
+        dictionary.Add(SxcEditSharedConstants.JsonEntityEditNodeName, editDecorator != null // entity is IHasEditingData entWithEditing
             ? new
             {
                 sortOrder = editDecorator.SortOrder,

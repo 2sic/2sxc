@@ -4,11 +4,6 @@
 public class SxcUiConstants
 {
     /// <summary>
-    /// Additional json-node for metadata in serialized entities, if user has edit rights
-    /// </summary>
-    public const string JsonEntityEditNodeName = "_2sxcEditInformation";
-
-    /// <summary>
     /// Wrapper tag which contains the context information.
     /// Usually just used in edit mode, but in rare cases also at runtime
     /// </summary>
