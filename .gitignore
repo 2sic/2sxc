@@ -25,3 +25,4 @@ Src/Integration/SxcEdit01/wwwroot/adam/*
 **/2sxc-build.config.json
 .vs/
 /Src/2sxc Multi-Target Oqt510.sln
+/Src/Dnn/ToSic.Sxc.Dnn/DnnPackageBuilder/ToSic.Sxc.Dnn.dnn
