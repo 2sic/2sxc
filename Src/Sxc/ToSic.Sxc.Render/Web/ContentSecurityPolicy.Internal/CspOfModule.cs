@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CspOfModule(IUser user, IFeaturesService featuresService)
-    : ServiceForDynamicCode($"{CspConstants.LogPrefix}.ModLvl")
+    : ServiceWithContext($"{CspConstants.LogPrefix}.ModLvl")
 {
     #region App Level CSP Providers
 

@@ -5,7 +5,7 @@ using ToSic.Sxc.Sys.ExecutionContext;
 namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CodeHelperBase : ServiceForDynamicCode
+public class CodeHelperBase : ServiceWithContext
 {
     protected CodeHelperBase(string logName) : base(logName)
     { }

@@ -11,8 +11,8 @@ namespace ToSic.Sxc.Services.Internal;
 // #NoEditorBrowsableBecauseOfInheritance
 //[ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
-public abstract class ServiceForDynamicCode(string logName, NoParamOrder protect = default, bool errorIfNotConnected = false, object[] connect = default)
-    : ServiceBase(logName, protect: protect, connect: connect), INeedsCodeApiService, ICanDebug
+public abstract class ServiceWithContext(string logName, NoParamOrder protect = default, bool errorIfNotConnected = false, object[] connect = default)
+    : ServiceBase(logName, protect: protect, connect: connect), INeedsExecutionContext, ICanDebug
 {
     /// <summary>
     /// Connect to CodeRoot and it's log

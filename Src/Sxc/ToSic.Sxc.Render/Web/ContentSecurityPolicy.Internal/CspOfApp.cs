@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 /// This is important because a module can have multiple apps in it, so it must merge the Csp Settings
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CspOfApp : ServiceForDynamicCode
+public class CspOfApp : ServiceWithContext
 {
     public int AppId => appId ??= ExCtx.GetState<IBlock>()?.AppId ?? 0;
     private int? appId;

@@ -9,7 +9,7 @@ using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Services.Templates;
 
-internal class TemplateService(LazySvc<ILookUpEngineResolver> getEngineLazy) : ServiceForDynamicCode($"{SxcLogName}.LUpSvc"), ITemplateService
+internal class TemplateService(LazySvc<ILookUpEngineResolver> getEngineLazy) : ServiceWithContext($"{SxcLogName}.LUpSvc"), ITemplateService
 {
     #region Get Engine Default / Empty
 

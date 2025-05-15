@@ -34,7 +34,6 @@ using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.Integration.Modules;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web.Internal.DotNet;
 using ToSic.Sxc.Web.Internal.JsContext;
 

@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Services.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class MailServiceBase(LazySvc<IUser> userLazy)
-    : ServiceForDynamicCode($"{SxcLogName}.MailSrv", connect: [userLazy]), IMailService
+    : ServiceWithContext($"{SxcLogName}.MailSrv", connect: [userLazy]), IMailService
 {
     private static readonly Regex HtmlDetectionRegex = new("<(.*\\s*)>", RegexOptions.Compiled);
 

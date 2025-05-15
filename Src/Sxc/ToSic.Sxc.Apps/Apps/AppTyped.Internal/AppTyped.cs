@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Apps.Internal;
 // - use that instead
 
 internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> queryManager)
-    : ServiceForDynamicCode(SxcLogName + ".AppTyp", errorIfNotConnected: true, connect: [globalPaths, queryManager]),
+    : ServiceWithContext(SxcLogName + ".AppTyp", errorIfNotConnected: true, connect: [globalPaths, queryManager]),
         IAppTyped
 {
     protected App App => CodeApiSvc.GetApp() as App

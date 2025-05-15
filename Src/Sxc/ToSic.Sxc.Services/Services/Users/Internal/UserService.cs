@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Services.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class UserService(LazySvc<IContextOfSite> context, LazySvc<IUsersProvider> usersSvc, LazySvc<IUserRolesProvider> rolesSvc)
-    : ServiceForDynamicCode($"{SxcLogName}.UsrSrv", connect: [context, usersSvc]), IUserService
+    : ServiceWithContext($"{SxcLogName}.UsrSrv", connect: [context, usersSvc]), IUserService
 {
     #region GetCurrentUser
 

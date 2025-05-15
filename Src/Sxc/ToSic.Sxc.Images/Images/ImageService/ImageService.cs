@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Images;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService features)
-    : ServiceForDynamicCode(SxcLogName + ".ImgSvc", connect: [features, imgLinker]), IImageService
+    : ServiceWithContext(SxcLogName + ".ImgSvc", connect: [features, imgLinker]), IImageService
 {
     #region Constructor and Inits
 

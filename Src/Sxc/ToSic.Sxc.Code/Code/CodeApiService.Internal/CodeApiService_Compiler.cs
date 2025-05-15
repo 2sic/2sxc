@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Code.Internal;
 
@@ -26,7 +27,7 @@ public partial class CodeApiService
         var typeName = instance.GetType().FullName;
 
         // if it supports all our known context properties, attach them
-        if (instance is INeedsCodeApiService needsRoot)
+        if (instance is INeedsExecutionContext needsRoot)
         {
             l.A($"will attach root / Kit to {typeName}");
             needsRoot.ConnectToRoot(this);

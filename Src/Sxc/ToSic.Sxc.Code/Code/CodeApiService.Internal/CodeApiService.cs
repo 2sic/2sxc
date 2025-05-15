@@ -11,6 +11,7 @@ using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
@@ -80,7 +81,7 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
     public TService GetService<TService>() where TService : class
     {
         var newService = Services.ServiceProvider.Build<TService>(Log);
-        if (newService is INeedsCodeApiService newWithNeeds)
+        if (newService is INeedsExecutionContext newWithNeeds)
             newWithNeeds.ConnectToRoot(this);
         return newService;
     }

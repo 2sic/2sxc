@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Code.Internal;
 [PrivateApi]
 // #NoEditorBrowsableBecauseOfInheritance
 //[ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class CustomCodeBase : ServiceForDynamicCode, ICompatibilityLevel
+public abstract class CustomCodeBase : ServiceWithContext, ICompatibilityLevel
 {
     #region Constructor / Setup
 

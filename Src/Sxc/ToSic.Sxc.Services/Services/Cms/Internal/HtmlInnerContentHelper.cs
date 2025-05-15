@@ -6,7 +6,7 @@ using ToSic.Sxc.Services.Internal;
 namespace ToSic.Sxc.Services.CmsService.Internal;
 
 internal class HtmlInnerContentHelper()
-    : ServiceForDynamicCode("Cms.StrWys", connect: [])
+    : ServiceWithContext("Cms.StrWys", connect: [])
 {
     private IRenderService RenderService => field ??= ExCtx.GetService<IRenderService>(reuse: true);
 

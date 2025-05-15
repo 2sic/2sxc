@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Services;
 
 [PrivateApi("hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class AdamService(): ServiceForDynamicCode("Svc.AdamSv"), IAdamService
+internal class AdamService(): ServiceWithContext("Svc.AdamSv"), IAdamService
 {
     private AdamManager AdamManagerWithContext => field
         ??= ExCtxOrNull?.GetServiceForData<AdamManager>();

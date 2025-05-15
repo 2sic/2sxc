@@ -22,7 +22,7 @@ public partial class DataService(
     LazySvc<IAppsCatalog> appsCatalog,
     LazySvc<QueryManager> queryManager,
     IUser user)
-    : ServiceForDynamicCode("Sxc.DatSvc", connect: [user, dataSources, catalog, appsCatalog, queryManager]), IDataService
+    : ServiceWithContext("Sxc.DatSvc", connect: [user, dataSources, catalog, appsCatalog, queryManager]), IDataService
 {
     public override void ConnectToRoot(IExecutionContext exCtx)
     {

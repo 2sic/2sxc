@@ -1,6 +1,7 @@
 ﻿using System.Net.Mail;
 using System.Text;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Services.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Services;
@@ -12,7 +13,7 @@ namespace ToSic.Sxc.Services;
 /// History: New in 2sxc 12.05
 /// </remarks>
 [PublicApi]
-public interface IMailService: INeedsCodeApiService
+public interface IMailService: INeedsExecutionContext
 {
     /// <summary>
     /// Quickly create a MailMessage object for further modification and then sending using <see cref="Send(MailMessage)"/>

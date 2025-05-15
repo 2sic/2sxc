@@ -10,7 +10,7 @@ using InputTypes = ToSic.Sxc.Compatibility.Internal.InputTypes;
 namespace ToSic.Sxc.Services.CmsService.Internal;
 
 internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
-    : ServiceForDynamicCode($"{SxcLogName}.CmsSrv", connect: [stringWysiwyg]), ICmsService
+    : ServiceWithContext($"{SxcLogName}.CmsSrv", connect: [stringWysiwyg]), ICmsService
 {
     private Generator<CmsServiceStringWysiwyg> StringWysiwygGen => field
         ??= stringWysiwyg.SetInit(s => s.ConnectToRoot(ExCtxOrNull));

@@ -11,7 +11,7 @@ using ToSic.Sxc.Sys.ExecutionContext;
 namespace ToSic.Sxc.Code.Customizer;
 
 /// <inheritdoc cref="ICodeCustomizer" />
-internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICodeCustomizer
+internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCustomizer
 {
     public IAppTyped<TSettings, TResources> App<TSettings, TResources>()
         where TSettings : class, ICanWrapData, new()

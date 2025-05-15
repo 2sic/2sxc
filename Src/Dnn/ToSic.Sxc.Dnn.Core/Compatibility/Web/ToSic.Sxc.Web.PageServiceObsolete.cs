@@ -1,6 +1,6 @@
 ﻿using ToSic.Lib.Coding;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable once CheckNamespace
@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Web;
 /// </summary>
 /// <param name="pageServiceImplementation"></param>
 [Obsolete]
-internal class WebPageServiceObsolete(Services.IPageService pageServiceImplementation) : IPageService, INeedsCodeApiService
+internal class WebPageServiceObsolete(Services.IPageService pageServiceImplementation) : IPageService, INeedsExecutionContext
 {
     /// <summary>
     /// Forward execution context to the actual implementation.
@@ -22,7 +22,7 @@ internal class WebPageServiceObsolete(Services.IPageService pageServiceImplement
     /// <param name="exCtx"></param>
     public void ConnectToRoot(IExecutionContext exCtx)
     {
-        (pageServiceImplementation as INeedsCodeApiService)?.ConnectToRoot(exCtx);
+        (pageServiceImplementation as INeedsExecutionContext)?.ConnectToRoot(exCtx);
     }
 
     public string SetBase(string url = null)

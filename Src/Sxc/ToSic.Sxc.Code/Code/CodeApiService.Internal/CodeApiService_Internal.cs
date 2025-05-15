@@ -10,6 +10,7 @@ using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -66,7 +67,7 @@ public partial class CodeApiService
                 ? Services.ServiceProvider.Build<TService>(Log)
                 : Services.ServiceProvider.Build<TService>(type, Log);
 
-            if (newService is INeedsCodeApiService newWithNeeds)
+            if (newService is INeedsExecutionContext newWithNeeds)
                 newWithNeeds.ConnectToRoot(this);
             return newService;
         }

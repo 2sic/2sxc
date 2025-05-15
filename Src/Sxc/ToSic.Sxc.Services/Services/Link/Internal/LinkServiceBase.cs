@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Services.Internal;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy, object[] connect = default)
-    : ServiceForDynamicCode($"{SxcLogName}.LnkHlp", connect: [..connect ?? [], linkPathsLazy, imgLinker]), ILinkService
+    : ServiceWithContext($"{SxcLogName}.LnkHlp", connect: [..connect ?? [], linkPathsLazy, imgLinker]), ILinkService
 {
     [PrivateApi]
     protected ILinkPaths LinkPaths => linkPathsLazy.Value;

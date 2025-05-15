@@ -14,7 +14,7 @@ public partial class PageService(
     LazySvc<ITurnOnService> turnOn,
     LazySvc<IModuleService> moduleService,
     LazySvc<IFeaturesService> features)
-    : ServiceForDynamicCode("2sxc.PgeSrv",
+    : ServiceWithContext("2sxc.PgeSrv",
             connect: [cspServiceLazy, htmlTagsLazy, moduleService, turnOn, pageServiceShared, features]),
         IPageService // Important: Write with namespace, because it's easy to confuse with IPageService it supports
 {

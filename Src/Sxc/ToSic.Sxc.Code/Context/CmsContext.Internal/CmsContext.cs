@@ -19,7 +19,7 @@ internal class CmsContext(
     IContextOfSite siteCtxFallback,
     LazySvc<IPage> pageLazy,
     IAppReaderFactory appReaders)
-    : ServiceForDynamicCode(SxcLogName + ".CmsCtx",
+    : ServiceWithContext(SxcLogName + ".CmsCtx",
         connect: [siteCtxFallback, pageLazy, appReaders, platform]), ICmsContext
 {
     #region Internal context

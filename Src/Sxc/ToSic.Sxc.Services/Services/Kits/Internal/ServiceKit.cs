@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Services;
 // #NoEditorBrowsableBecauseOfInheritance
 // 2025-05-11 re-enabled, since it shouldn't matter anymore with the new setup
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ServiceKit(string logName) : ServiceForDynamicCode(logName)
+public class ServiceKit(string logName) : ServiceWithContext(logName)
 {
 
     /// <summary>

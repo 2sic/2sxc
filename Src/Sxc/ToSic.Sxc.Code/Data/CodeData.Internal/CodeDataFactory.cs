@@ -28,7 +28,7 @@ public partial class CodeDataFactory(
     Generator<CodeJsonWrapper> wrapJsonGenerator,
     LazySvc<CodeInfoService> codeInfoSvc,
     LazySvc<IZoneMapper> zoneMapper)
-    : ServiceForDynamicCode("Sxc.AsConv",
+    : ServiceWithContext("Sxc.AsConv",
         connect: [/* never: serviceProvider */codeDataServices, adamManager, contextOfAppLazy, dataBuilderLazy, codeDataWrapper, wrapJsonGenerator, codeInfoSvc, zoneMapper]),
         ICodeDataFactory
 {

@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Blocks.Internal.Render;
 /// </summary>
 [PrivateApi("Hide Implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class RenderService: ServiceForDynamicCode,
+public class RenderService: ServiceWithContext,
     ToSic.Sxc.Services.IRenderService
 #if NETFRAMEWORK
 #pragma warning disable CS0618

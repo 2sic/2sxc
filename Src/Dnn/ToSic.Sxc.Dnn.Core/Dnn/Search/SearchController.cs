@@ -26,6 +26,7 @@ using ToSic.Sxc.Engines;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.Search;
+using ToSic.Sxc.Services.Internal;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Dnn.Search;
@@ -330,7 +331,7 @@ internal class SearchController(
         if (!(instance is ICustomizeSearch customizeSearch)) return l.ReturnNull("exit, class do not implements ICustomizeSearch");
 
         // 3. Make sure it has the full context if it's based on DynamicCode (like Code12)
-        if (instance is INeedsCodeApiService instanceWithContext)
+        if (instance is INeedsExecutionContext instanceWithContext)
         {
             l.A($"attach DynamicCode context to class instance");
             var parentDynamicCodeRoot = codeRootFactory.New()

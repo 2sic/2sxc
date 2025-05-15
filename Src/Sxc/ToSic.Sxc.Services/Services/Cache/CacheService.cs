@@ -36,7 +36,7 @@ internal class CacheService(
     LazySvc<IAppReaderFactory> appReaders,
     Generator<IAppPathsMicroSvc> appPathsLazy,
     IEavFeaturesService features
-    ) : ServiceForDynamicCode($"{SxcLogName}.CchSvc", connect: [cache, appReaders]), ICacheService
+    ) : ServiceWithContext($"{SxcLogName}.CchSvc", connect: [cache, appReaders]), ICacheService
 {
     /// <summary>
     /// AppId to use in key generation, so it won't collide with other apps.

@@ -2,15 +2,14 @@
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Entities.Users;
-using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.Context;
 
-internal class DnnContext : IDnnContext, INeedsCodeApiService
+internal class DnnContext : IDnnContext, INeedsExecutionContext
 {
     /// <summary>
     /// Build DNN Helper

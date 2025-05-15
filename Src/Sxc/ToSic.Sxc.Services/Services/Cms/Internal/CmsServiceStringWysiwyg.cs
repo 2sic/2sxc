@@ -9,7 +9,7 @@ using ToSic.Sxc.Web.Internal.PageFeatures;
 namespace ToSic.Sxc.Services.CmsService.Internal;
 
 internal class CmsServiceStringWysiwyg()
-    : ServiceForDynamicCode("Cms.StrWys", connect: [])
+    : ServiceWithContext("Cms.StrWys", connect: [])
 {
     #region Sub-Services which should come from the same Code context
 

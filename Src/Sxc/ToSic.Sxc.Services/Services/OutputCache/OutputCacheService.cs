@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Services.OutputCache;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class OutputCacheService(IModuleService moduleService)
-    : ServiceForDynamicCode("Sxc.OutCac", connect: [moduleService]), IOutputCacheService
+    : ServiceWithContext("Sxc.OutCac", connect: [moduleService]), IOutputCacheService
 {
     public int ModuleId
     {

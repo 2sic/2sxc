@@ -1,10 +1,10 @@
 ﻿using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Code.Internal;
+namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface INeedsCodeApiService
+public interface INeedsExecutionContext
 {
     [ShowApiWhenReleased(ShowApiMode.Never)] 
     void ConnectToRoot(IExecutionContext exCtx);

@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Services;
 [PrivateApi("Hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ToolbarService(Generator<IToolbarBuilder> toolbarGenerator)
-    : ServiceForDynamicCode($"{SxcLogName}.TlbSvc", connect: [toolbarGenerator]), IToolbarService
+    : ServiceWithContext($"{SxcLogName}.TlbSvc", connect: [toolbarGenerator]), IToolbarService
 {
 
     /// <inheritdoc />

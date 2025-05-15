@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Backend.Adam;
 public class AdamCode(
     Generator<AdamTransUpload<int, int>> adamUploadGenerator,
     LazySvc<IEavFeaturesService> featuresLazy)
-    : ServiceForDynamicCode("AdamCode", connect: [adamUploadGenerator, featuresLazy])
+    : ServiceWithContext("AdamCode", connect: [adamUploadGenerator, featuresLazy])
 {
     public IFile SaveInAdam(NoParamOrder noParamOrder = default,
         Stream stream = null,
