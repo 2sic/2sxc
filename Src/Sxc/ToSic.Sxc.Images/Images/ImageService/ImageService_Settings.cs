@@ -76,7 +76,7 @@ partial class ImageService
 
 
     internal ICanGetByName GetSettingsByName(string strName)
-        => ResizeParamMerger.GetImageSettingsByName(_CodeApiSvc, strName, Debug, Log);
+        => ResizeParamMerger.GetImageSettingsByName(ExCtxOrNull, strName, Debug, Log);
 
     /// <summary>
     /// Convert to Multi-Resize Settings

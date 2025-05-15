@@ -3,7 +3,6 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.GetByName;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Sys.ExecutionContext;
 using static ToSic.Sxc.Images.Internal.ImageConstants;
@@ -41,7 +40,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         object aspectRatio = null,
         string parameters = null,
         AdvancedSettings advanced = default,
-        ICodeApiService codeApiSvc = default
+        IExecutionContext codeApiSvc = default
     )
     {
         var l = (Debug ? Log : null).Fn<ResizeSettings>();
@@ -94,11 +93,11 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         return l.Return(resizeParams, "");
     }
 
-    private ICanGetByName TryToCastSettings(object settings, ICodeApiService codeApiServiceOrNull) =>
+    private ICanGetByName TryToCastSettings(object settings, IExecutionContext exCtxOrNull) =>
         settings switch
         {
             null => null,
-            string name => GetImageSettingsByName(codeApiServiceOrNull, name, Debug, Log),
+            string name => GetImageSettingsByName(exCtxOrNull, name, Debug, Log),
             ICanGetByName getSettings => getSettings,
             IEnumerable<ICanGetByName> settingsList => settingsList.FirstOrDefault(),
             _ => settings.IsAnonymous()
@@ -106,10 +105,10 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
                 : null,
         };
 
-    internal static ICanGetByName GetImageSettingsByName(ICodeApiService codeApiSvcOrNull, string strName, bool debug, ILog log)
+    internal static ICanGetByName GetImageSettingsByName(IExecutionContext exCtxOrNull, string strName, bool debug, ILog log)
     {
-        var l = log.Fn<ICanGetByName>($"{strName}; code root: {codeApiSvcOrNull != null}", enabled: debug);
-        var settings = codeApiSvcOrNull?.GetState<ITypedStack>(ExecutionContextStateNames.AllSettings);
+        var l = log.Fn<ICanGetByName>($"{strName}; code root: {exCtxOrNull != null}", enabled: debug);
+        var settings = exCtxOrNull?.GetState<ITypedStack>(ExecutionContextStateNames.AllSettings);
         var result = settings?.Get($"Settings.Images.{strName}") as ICanGetByName;
         return l.Return(result, $"found: {result != null}");
     }

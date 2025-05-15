@@ -4,6 +4,7 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks;
 
@@ -18,7 +19,7 @@ internal class OqtCodeApiService<TModel, TServiceKit> : CodeApiService<TModel, T
         ]);
     }
 
-    public override ICodeApiService InitDynCodeRoot(IBlock block, ILog parentLog)
+    public override IExecutionContext InitDynCodeRoot(IBlock block, ILog parentLog)
     {
         _aliasResolverLazy.Value.InitIfEmpty(block?.Context?.Site?.Id);
         return base.InitDynCodeRoot(block, parentLog);

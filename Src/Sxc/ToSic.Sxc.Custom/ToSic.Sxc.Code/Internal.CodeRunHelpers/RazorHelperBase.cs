@@ -4,6 +4,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code.CodeApi;
 using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
@@ -18,9 +19,9 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
     /// 
     /// </summary>
     /// <param name="path"></param>
-    /// <param name="overrideCodeRoot">Insert another code Root, ATM a patch for Oqtane Razor</param>
+    /// <param name="overrideRootExCtx">Insert another code Root, ATM a patch for Oqtane Razor</param>
     /// <returns></returns>
-    protected string ResolvePathIfAbsoluteToApp(string path, ICodeApiService overrideCodeRoot = default)
+    protected string ResolvePathIfAbsoluteToApp(string path, IExecutionContext overrideRootExCtx = default)
     {
         var l = Log.Fn<string>(path);
         if (path == null || (!path.StartsWith("/") && !path.StartsWith("\\")))
@@ -30,7 +31,7 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
 
         if (!path.EndsWith(SourceCodeConstants.CsFileExtension))
             throw l.Done(new ArgumentException("Only '.cs' file paths can start with a slash"));
-        var app = (overrideCodeRoot ?? ExCtxOrNull)?.GetTypedApi()?.AppTyped
+        var app = (overrideRootExCtx ?? ExCtxOrNull)?.GetTypedApi()?.AppTyped
                   ?? throw l.Done(new Exception("Absolute paths require an App, which was null"));
         var appFolder = app.Folder?.Path
                         ?? throw l.Done(new Exception("Absolute paths require the App folder, which was null"));

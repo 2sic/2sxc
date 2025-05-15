@@ -11,6 +11,7 @@ using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -87,10 +88,10 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
 
 
     [PrivateApi]
-    public virtual ICodeApiService InitDynCodeRoot(IBlock block, ILog parentLog)
+    public virtual IExecutionContext InitDynCodeRoot(IBlock block, ILog parentLog)
     {
         this.LinkLog(parentLog ?? block?.Log);
-        var cLog = Log.Fn<ICodeApiService>();
+        var cLog = Log.Fn<IExecutionContext>();
 
         if (block == null)
             return cLog.Return(this, "no block");

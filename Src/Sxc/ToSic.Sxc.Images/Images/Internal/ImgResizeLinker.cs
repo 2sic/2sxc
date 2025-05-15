@@ -7,8 +7,8 @@ using ToSic.Eav.Metadata;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Internal.Url;
 using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 using static ToSic.Sxc.Images.Internal.ImageConstants;
@@ -47,7 +47,7 @@ public class ImgResizeLinker(
         string format = default,
         object aspectRatio = default,
         string parameters = default,
-        ICodeApiService codeApiSvc = default
+        IExecutionContext codeApiSvc = default
     )
     {
         var l = (Debug ? Log : null).Fn<string>($"{nameof(url)}:{url}");

@@ -10,7 +10,6 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
-using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Internal;
@@ -51,7 +50,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
     private bool _blockContextInitialized;
 
 
-    public (ICodeApiService Root, string Folder) Initialize(HttpControllerContext controllerContext)
+    public (IExecutionContext Root, string Folder) Initialize(HttpControllerContext controllerContext)
     {
         var request = controllerContext.Request;
         InitializeBlockContext(request);
