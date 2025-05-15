@@ -2,12 +2,9 @@
 using ToSic.Eav.Apps;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Internal;
-using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
@@ -30,13 +27,11 @@ public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, ITo
 
     public class MyServices(
         LazySvc<ToolbarButtonDecoratorHelper> toolbarButtonHelper,
-        LazySvc<IAppsCatalog> appsCatalog,
-        LazySvc<IUserService> userSvc)
-        : MyServicesBase(connect: [toolbarButtonHelper, appsCatalog, userSvc])
+        LazySvc<IAppsCatalog> appsCatalog)
+        : MyServicesBase(connect: [toolbarButtonHelper, appsCatalog])
     {
         internal LazySvc<ToolbarButtonDecoratorHelper> ToolbarButtonHelper { get; } = toolbarButtonHelper;
         public LazySvc<IAppsCatalog> AppsCatalog { get; } = appsCatalog;
-        public LazySvc<IUserService> UserSvc { get; } = userSvc;
     }
 
     /// <summary>
