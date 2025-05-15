@@ -20,7 +20,5 @@ public abstract class DnnSxcControllerBase(string logSuffix, string insightsGrou
         DynHlp.InitializeBlockContext(controllerContext.Request);
     }
 
-    internal DynamicApiCodeHelpers DynHlp => _dynHlp ??= new(this, SysHlp);
-    private DynamicApiCodeHelpers _dynHlp;
-        
+    internal DynamicApiCodeHelpers DynHlp => field ??= new(this, SysHlp);
 }

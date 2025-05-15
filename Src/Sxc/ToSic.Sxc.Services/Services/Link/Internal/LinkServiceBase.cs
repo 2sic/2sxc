@@ -5,6 +5,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Integration.Paths;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Services.Internal;
@@ -18,7 +19,7 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
     protected ILinkPaths LinkPaths => linkPathsLazy.Value;
 
     [PrivateApi]
-    protected string AppFolder => field ??= ExCtx.GetState<IApp>().Folder;
+    protected string AppFolder => field ??= ExCtx.GetApp().Folder;
 
 
     /// <inheritdoc />

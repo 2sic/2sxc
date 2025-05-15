@@ -7,7 +7,6 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.Services;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 
@@ -25,10 +24,10 @@ public partial class DataService(
     IUser user)
     : ServiceForDynamicCode("Sxc.DatSvc", connect: [user, dataSources, catalog, appsCatalog, queryManager]), IDataService
 {
-    public override void ConnectToRoot(ICodeApiService codeRoot)
+    public override void ConnectToRoot(IExecutionContext exCtx)
     {
-        base.ConnectToRoot(codeRoot);
-        Setup(codeRoot.GetState<IApp>(), () => (codeRoot as IExCtxLookUpEngine)?.LookUpForDataSources);
+        base.ConnectToRoot(exCtx);
+        Setup(exCtx.GetState<Sxc.Apps.IApp>(), () => (exCtx as IExCtxLookUpEngine)?.LookUpForDataSources);
     }
 
     // TODO: MAKE PRIVATE AGAIN AFTER MOVING TO ToSic.Sxc.Custom
@@ -56,7 +55,7 @@ public partial class DataService(
         var newDs = new DataService(dataSources, catalog, appsCatalog, queryManager, user);
         if (ExCtxOrNull != null)
         {
-            newDs.ConnectToRoot(_CodeApiSvc);
+            newDs.ConnectToRoot(ExCtxOrNull);
             newDs.Setup(appIdentity, null);
         }
         else

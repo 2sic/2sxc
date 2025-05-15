@@ -69,7 +69,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
         AdamCode = codeRoot.GetService<AdamCode>();
 
         // In case SxcBlock was null, there is no instance, but we may still need the app
-        var app = codeRoot.GetState<IApp>();
+        var app = codeRoot.GetApp();
         if (app == null)
         {
             Log.A("DynCode.App is null");

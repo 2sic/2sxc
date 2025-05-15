@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Code;
+using ToSic.Eav.Data.PiggyBack;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 ///
 /// The initial interface has none or few properties, so that we can pass it around without all projects being tied to each other.
 /// </remarks>
-public interface IExecutionContext: ICanGetService, IHasLog
+public interface IExecutionContext: ICanGetService, IHasPiggyBack, IHasLog
 {
     /// <summary>
     /// Get the current state of the execution context. Only works for a few types.

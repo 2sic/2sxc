@@ -54,7 +54,7 @@ public abstract partial class SxcApiController() :
 #pragma warning restore 618
     IHasCodeLog
 {
-    internal ICodeDynamicApiHelper CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
+    internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
@@ -133,7 +133,7 @@ public abstract partial class SxcApiController() :
     [Obsolete]
     [PrivateApi]
     public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
-        => new CodeApiServiceObsolete(_CodeApiSvc).CreateSource(typeName, inSource, configurationProvider);
+        => new CodeApiServiceObsolete(ExCtx).CreateSource(typeName, inSource, configurationProvider);
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
     public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
@@ -169,7 +169,7 @@ public abstract partial class SxcApiController() :
     public dynamic ListPresentation => CodeApi.Header?.Presentation;
 
     [Obsolete("This is an old way used to loop things. Use Data[\"Default\"] instead. Will be removed in 2sxc v10")]
-    public List<Element> List => new CodeApiServiceObsolete(_CodeApiSvc).ElementList;
+    public List<Element> List => new CodeApiServiceObsolete(ExCtx).ElementList;
 
     #endregion
 
@@ -190,8 +190,7 @@ public abstract partial class SxcApiController() :
 
     string IGetCodePath.CreateInstancePath { get; set; }
 
-    private CodeHelper CodeHlp => _codeHlp ??= GetService<CodeHelper>().Init(this);
-    private CodeHelper _codeHlp;
+    private CodeHelper CodeHlp => field ??= GetService<CodeHelper>().Init(this);
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
     public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)

@@ -7,6 +7,7 @@ using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 using MailMessage = System.Net.Mail.MailMessage;
 
 namespace ToSic.Sxc.Services.Internal;
@@ -20,10 +21,10 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy)
     [PrivateApi] protected IApp App;
 
     /// <inheritdoc />
-    public override void ConnectToRoot(ICodeApiService codeRoot)
+    public override void ConnectToRoot(IExecutionContext exCtx)
     {
-        base.ConnectToRoot(codeRoot);
-        App = codeRoot.GetState<IApp>();
+        base.ConnectToRoot(exCtx);
+        App = exCtx.GetApp();
     }
 
     protected abstract SmtpClient SmtpClient();

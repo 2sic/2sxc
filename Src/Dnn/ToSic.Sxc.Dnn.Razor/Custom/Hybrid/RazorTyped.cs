@@ -29,7 +29,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     #region Constructor, Setup, Helpers
 
     internal ICodeTypedApiHelper CodeApi => field
-        ??= _CodeApiSvc.GetTypedApi();
+        ??= ExCtx.GetTypedApi();
 
 
     /// <inheritdoc cref="DnnRazorHelper.RenderPageNotSupported"/>
@@ -67,7 +67,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     private TypedCode16Helper CreateCodeHelper() =>
         new(
             owner: this,
-            new(_CodeApiSvc, true, Path),
+            new(ExCtx, true, Path),
             getRazorModel: () => _overridePageData
                                  // the default/only value would be on a 0 key
                                  ?? (PageData?.TryGetValue(0, out var zeroData) ?? false ? zeroData as object : null),

@@ -15,7 +15,7 @@ namespace Custom.Dnn;
 public abstract class Code12 : DynamicCode12, IHasDnn
 {
     /// <inheritdoc />
-    public IDnnContext Dnn => (_CodeApiSvc as IHasDnn)?.Dnn;
+    public IDnnContext Dnn => (ExCtxOrNull as IHasDnn)?.Dnn;
 
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 

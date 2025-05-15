@@ -16,6 +16,7 @@ using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Compile.Internal;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.Razor.Internal;
 
@@ -177,17 +178,23 @@ internal class DnnRazorCompiler(
         var l = Log.Fn();
         // Only generate this for the first / top EntryRazorComponent
         // All children which are then generated here should re-use that CodeApiService
-        var createCodeApiService = _sharedCodeApiService == null;
-        _sharedCodeApiService ??= codeApiServiceFactory.New(webPage, Block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel9Old);
+        if (_sharedCodeApiService == null)
+        {
+            _sharedCodeApiService = codeApiServiceFactory
+                .New(webPage, Block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel9Old);
 
-        // If we just created a new CodeApiService, we must add this razor engine to it's piggyback
-        if (createCodeApiService)
+            // Since we just created a new CodeApiService, we must add this razor engine to it's piggyback
             _sharedCodeApiService.GetPiggyBack(nameof(DnnRazorCompiler), () => this);
+        }
+
         webPage.ConnectToRoot(_sharedCodeApiService);
         l.Done();
     }
 
-    private ICodeApiService _sharedCodeApiService;
+    /// <summary>
+    /// Reused CodeApiService for all Razor pages.
+    /// </summary>
+    private IExecutionContext _sharedCodeApiService;
 
     #region Helpers for Rendering Sub-Components
 
@@ -195,7 +202,7 @@ internal class DnnRazorCompiler(
     {
         var l = (parent as IHasLog).Log.Fn<RazorBuildTempResult<HelperResult>>();
         // Find the RazorEngine which MUST be on the CodeApiService PiggyBack, or throw an error
-        var razorEngine = parent._CodeApiSvc.PiggyBack.GetOrGenerate(nameof(DnnRazorCompiler), () => (DnnRazorCompiler)null)
+        var razorEngine = parent.ExCtx.PiggyBack.GetOrGenerate(nameof(DnnRazorCompiler), DnnRazorCompiler () => null)
                           ?? throw l.Ex(new Exception($"Error finding {nameof(DnnRazorCompiler)}. This is very unexpected."));
 
         // Figure out the real path, and make sure it's lower case

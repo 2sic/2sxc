@@ -34,7 +34,7 @@ public abstract partial class Api12(string logSuffix) : DnnSxcCustomControllerBa
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    internal ICodeDynamicApiHelper CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
+    internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => SysHlp.CodeLog;
@@ -146,8 +146,7 @@ public abstract partial class Api12(string logSuffix) : DnnSxcCustomControllerBa
 
     string IGetCodePath.CreateInstancePath { get; set; }
 
-    private CodeHelper CodeHlp => _codeHlp ??= GetService<CodeHelper>().Init(this);
-    private CodeHelper _codeHlp;
+    private CodeHelper CodeHlp => field ??= GetService<CodeHelper>().Init(this);
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
     public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)

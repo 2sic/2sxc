@@ -65,7 +65,7 @@ internal class ToolbarService(Generator<IToolbarBuilder> toolbarGenerator)
         
         // The following lines must be just as this, because it's a functional object, where each call may return a new copy
         var tlb = (ToolbarBuilder)toolbarGenerator.New();
-        tlb.ConnectToRoot(_CodeApiSvc);
+        tlb.ConnectToRoot(ExCtxOrNull);
 
         tlb = (ToolbarBuilder)tlb
             .Toolbar(toolbarTemplate: toolbarTemplate, target: target, tweak: tweak, ui: ui, parameters: parameters, prefill: prefill);

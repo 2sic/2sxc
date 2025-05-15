@@ -7,8 +7,8 @@ namespace ToSic.Sxc.Code.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class IHasKitExtensions
 {
-    internal static TServiceKit GetKit<TServiceKit>(object codeRoot) where TServiceKit : ServiceKit
-        => codeRoot switch
+    internal static TServiceKit GetKit<TServiceKit>(IExecutionContext exCtx) where TServiceKit : ServiceKit
+        => exCtx switch
         {
             // if it has the exact kit version, return it
             IHasKit<TServiceKit> { Kit: not null } withKit => withKit.Kit,
@@ -16,7 +16,7 @@ public static class IHasKitExtensions
             // Unexpected - but old fallback: just generate a new one
             ICanGetService cgs => cgs.GetService<TServiceKit>(),
             
-            _ => throw new($"GetKit: {codeRoot.GetType().Name} doesn't implement IHasKit or IExCtxGetKit")
+            _ => throw new($"GetKit: {exCtx.GetType().Name} doesn't implement IHasKit or IExCtxGetKit")
         };
 
 

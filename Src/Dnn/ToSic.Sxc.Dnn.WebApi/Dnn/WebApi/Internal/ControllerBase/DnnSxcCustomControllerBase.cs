@@ -1,6 +1,7 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal;
 
@@ -35,6 +36,7 @@ public abstract class DnnSxcCustomControllerBase(string logSuffix, string insigh
         if (this is IGetCodePath thisWithPath)
             thisWithPath.CreateInstancePath = init.Folder;
         _CodeApiSvc = init.Root;
+        ExCtx = init.Root;
     }
 
     #endregion
@@ -44,6 +46,11 @@ public abstract class DnnSxcCustomControllerBase(string logSuffix, string insigh
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public ICodeApiService _CodeApiSvc { get; private set; }
+
+    [PrivateApi]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    public IExecutionContext ExCtx { get; private set; }
+
 
 
     /// <summary>

@@ -9,6 +9,7 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Razor;
 
@@ -16,7 +17,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
 {
     #region DynamicCode Attachment / Handling through ViewData
 
-    public override void ConnectToRoot(ICodeApiService codeRoot)
+    public override void ConnectToRoot(IExecutionContext codeRoot)
     {
         base.ConnectToRoot(codeRoot);
         _dynCode = codeRoot;
@@ -26,7 +27,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
 
     private const string DynCode = "_dynCode";
 
-    public ICodeApiService DynCodeRootMain
+    public IExecutionContext DynCodeRootMain
     {
         get
         {
@@ -39,7 +40,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
             return _dynCode;
         }
     }
-    private ICodeApiService _dynCode;
+    private IExecutionContext _dynCode;
 
     public ViewDataDictionary<TModel> HandleViewDataInject(ViewDataDictionary<TModel> value)
     {
@@ -50,7 +51,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
     }
 
     // ReSharper disable once InconsistentNaming
-    public override ICodeApiService _CodeApiSvc => base._CodeApiSvc ?? DynCodeRootMain;
+    public override ICodeApiService _CodeApiSvc => base._CodeApiSvc ?? DynCodeRootMain as ICodeApiService;
 
     #endregion
 

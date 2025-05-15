@@ -5,7 +5,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.CodeApi;
 
-internal class CodeTypedApiHelper: CodeAnyApiHelper, ICodeTypedApiHelper
+internal class CodeTypedApiHelper(CodeApiService parent) : CodeAnyApiHelper(parent), ICodeTypedApiHelper
 {
     public IAppTyped AppTyped => Parent.AppTyped;
     public ITypedStack AllSettings => Parent.AllSettings;

@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface ICodeApiService : IExecutionContext, IHasLog, IHasPiggyBack
+public interface ICodeApiService : IExecutionContext
 {
     #region AsConverter (internal)
 

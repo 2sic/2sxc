@@ -43,7 +43,7 @@ public abstract class SexyContentWebPage :
     IAppAndDataHelpers
 #pragma warning restore 618
 {
-    internal ICodeDynamicApiHelper CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
+    internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
     #region Core Properties which should appear in docs
 
@@ -66,7 +66,7 @@ public abstract class SexyContentWebPage :
     /// <inheritdoc cref="IDynamicCode.Edit" />
     public IEditService Edit => CodeApi.Edit;
 
-    public IDnnContext Dnn => (_CodeApiSvc as IHasDnn)?.Dnn;
+    public IDnnContext Dnn => (ExCtx as IHasDnn)?.Dnn;
 
 #pragma warning disable 612
     /// <inheritdoc />
@@ -185,7 +185,7 @@ public abstract class SexyContentWebPage :
     /// <inheritdoc />
     [Obsolete]
     public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
-        => new CodeApiServiceObsolete(_CodeApiSvc).CreateSource(typeName, inSource, configurationProvider);
+        => new CodeApiServiceObsolete(ExCtx).CreateSource(typeName, inSource, configurationProvider);
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
     [Obsolete("this is the old implementation with ILookUp Engine, don't think it was ever used publicly because people couldn't create these engines")]
@@ -224,7 +224,7 @@ public abstract class SexyContentWebPage :
 
     [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
     [field: Obsolete("don't use any more")]
-    public List<Element> List => field ??= new CodeApiServiceObsolete(_CodeApiSvc).ElementList;
+    public List<Element> List => field ??= new CodeApiServiceObsolete(ExCtx).ElementList;
 #pragma warning restore 618
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />

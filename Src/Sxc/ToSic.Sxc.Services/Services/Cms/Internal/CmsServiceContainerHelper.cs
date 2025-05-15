@@ -5,11 +5,12 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Edit.Toolbar.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Services.CmsService.Internal;
 
 internal class CmsServiceContainerHelper(
-    ICodeApiService codeApiSvc,
+    IExecutionContext codeApiSvc,
     IField entityField,
     object container,
     string classes,

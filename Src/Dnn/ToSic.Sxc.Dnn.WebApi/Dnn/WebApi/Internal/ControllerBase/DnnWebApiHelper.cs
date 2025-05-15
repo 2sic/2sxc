@@ -46,9 +46,10 @@ internal class DnnWebApiHelper : CodeHelperBase
     /// <remarks>
     /// This will override the base functionality to ensure that any services created will be able to get the CodeContext.
     /// </remarks>
-    public TService GetService<TService>() where TService : class => _CodeApiSvc != null
-        ? _CodeApiSvc.GetService<TService>()
-        : _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
+    public TService GetService<TService>() where TService : class
+        => ExCtxOrNull != null
+            ? ExCtx.GetService<TService>()
+            : _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
     // Must cache it, to be really sure we use the same ServiceProvider in the same request
     private readonly GetOnce<IServiceProvider> _serviceProvider = new();
 

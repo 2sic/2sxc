@@ -7,13 +7,9 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.CodeApi;
 
-internal abstract class CodeAnyApiHelper: ICodeAnyApiHelper
+internal abstract class CodeAnyApiHelper(CodeApiService parent) : ICodeAnyApiHelper
 {
-    internal void Setup(CodeApiService parent)
-    {
-        Parent = parent;
-    }
-    protected CodeApiService Parent { get; private set; }
+    protected CodeApiService Parent = parent;
 
     public IBlock Block => Parent.Block;
 
@@ -29,13 +25,4 @@ internal abstract class CodeAnyApiHelper: ICodeAnyApiHelper
     public ILinkService Link => Parent.Link;
 
     public IConvertService Convert => Parent.Convert;
-}
-
-public static class CodeApiHelperExtensions
-{
-    internal static T SetupQ<T>(this T codeApiHelper, CodeApiService parent) where T : CodeAnyApiHelper
-    {
-        codeApiHelper.Setup(parent);
-        return codeApiHelper;
-    }
 }

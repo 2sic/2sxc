@@ -62,7 +62,7 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
         AdamCode = codeRoot.GetService<AdamCode>();
 
         // In case SxcBlock was null, there is no instance, but we may still need the app
-        if (ExCtx.GetState<IApp>() == null)
+        if (ExCtx.GetApp() == null)
         {
             Log.A("DynCode.App is null");
             TryToAttachAppFromUrlParams(context);

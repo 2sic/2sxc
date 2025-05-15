@@ -3,6 +3,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Data.Internal;
 
@@ -33,7 +34,7 @@ partial class CodeDataFactory
         // TODO: @2dm - find out / document why this could even be null
         if (contextOfApp == null)
         {
-            var app = ExCtx.GetState<IApp>();
+            var app = ExCtx.GetApp();
             if (app == null)
                 throw new("Can't create App Context for ADAM - no block, no App");
             contextOfApp = contextOfAppLazy.Value;

@@ -14,10 +14,10 @@ namespace ToSic.Sxc.Edit.EditService;
 internal partial class EditService(IJsonService jsonService)
     : ServiceForDynamicCode("Sxc.Edit", connect: [jsonService]), IEditService, IEditServiceSetup
 {
-    public override void ConnectToRoot(ICodeApiService codeApiSvc)
+    public override void ConnectToRoot(IExecutionContext exCtx)
     {
-        base.ConnectToRoot(codeApiSvc);
-        ((IEditServiceSetup)this).SetBlock(codeApiSvc, codeApiSvc.GetState<IBlock>());
+        base.ConnectToRoot(exCtx);
+        ((IEditServiceSetup)this).SetBlock(exCtx, exCtx.GetState<IBlock>());
     }
 
     IEditService IEditServiceSetup.SetBlock(IExecutionContext exCtx, IBlock block)

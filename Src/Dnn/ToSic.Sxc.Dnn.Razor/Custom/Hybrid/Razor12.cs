@@ -17,7 +17,7 @@ namespace Custom.Hybrid;
 [PublicApi]
 public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHelp, ICreateInstance
 {
-    internal ICodeDynamicApiHelper CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
+    internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
     /// <inheritdoc cref="DnnRazorHelper.RenderPageNotSupported"/>
     [PrivateApi]

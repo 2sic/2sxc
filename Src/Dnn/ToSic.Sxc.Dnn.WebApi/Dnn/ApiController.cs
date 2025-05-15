@@ -39,7 +39,7 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
 {
     internal const string ErrRecommendedNamespaces = "To use it, use the new base class from Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.";
 
-    internal ICodeDynamicApiHelper CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
+    internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
     /// <remarks>
     /// Probably obsolete, but a bit risky to just remove
@@ -147,9 +147,7 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
 
     string IGetCodePath.CreateInstancePath { get; set; }
 
-    private CodeHelper CodeHlp => _codeHlp ??= GetService<CodeHelper>().Init(this);
-    private CodeHelper _codeHlp;
-
+    private CodeHelper CodeHlp => field ??= GetService<CodeHelper>().Init(this);
 
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>

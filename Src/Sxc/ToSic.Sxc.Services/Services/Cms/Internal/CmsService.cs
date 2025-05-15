@@ -13,7 +13,7 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
     : ServiceForDynamicCode($"{SxcLogName}.CmsSrv", connect: [stringWysiwyg]), ICmsService
 {
     private Generator<CmsServiceStringWysiwyg> StringWysiwygGen => field
-        ??= stringWysiwyg.SetInit(s => s.ConnectToRoot(_CodeApiSvc));
+        ??= stringWysiwyg.SetInit(s => s.ConnectToRoot(ExCtxOrNull));
 
     public IHtmlTag Html(
         object thing,
@@ -29,7 +29,7 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
         var field = thing as IField;
         var l = Log.Fn<IHtmlTag>($"Field: {field?.Name}");
         // Initialize the container helper, as we'll use it a few times
-        var cntHelper = new CmsServiceContainerHelper(_CodeApiSvc, field, container, classes, toolbar, Log);
+        var cntHelper = new CmsServiceContainerHelper(ExCtx, field, container, classes, toolbar, Log);
 
         // New v17 - preprocess the tweaks if available
         // Note that we should use the field if one was found, only use the "thing" if there was no field

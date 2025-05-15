@@ -1,5 +1,6 @@
 ﻿using ToSic.Lib.Helpers;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
@@ -9,9 +10,9 @@ public class CodeHelperBase : ServiceForDynamicCode
     protected CodeHelperBase(string logName) : base(logName)
     { }
 
-    public override void ConnectToRoot(ICodeApiService codeRoot)
+    public override void ConnectToRoot(IExecutionContext exCtx)
     {
-        base.ConnectToRoot(codeRoot);
+        base.ConnectToRoot(exCtx);
         // Make sure the Code-Log is reset, in case it was used before this call
         _codeLog.Reset();
     }

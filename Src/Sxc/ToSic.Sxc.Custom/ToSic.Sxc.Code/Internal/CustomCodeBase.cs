@@ -1,5 +1,6 @@
 ﻿using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Internal;
 
@@ -27,9 +28,9 @@ public abstract class CustomCodeBase : ServiceForDynamicCode, ICompatibilityLeve
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public override void ConnectToRoot(ICodeApiService codeRoot)
+    public override void ConnectToRoot(IExecutionContext exCtx)
     {
-        base.ConnectToRoot(codeRoot);
+        base.ConnectToRoot(exCtx);
         //GetCodeHlp.ConnectToRoot(codeRoot);
     }
 

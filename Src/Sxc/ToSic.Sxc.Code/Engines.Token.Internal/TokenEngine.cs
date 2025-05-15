@@ -78,7 +78,7 @@ public class TokenEngine(
         | RegexOptions.IgnorePatternWhitespace);
     #endregion
 
-    private ICodeApiService _codeApiSvc;
+    private IExecutionContext _codeApiSvc;
     private ICodeDynamicApiHelper _dynamicApiSvc;
 
     private TokenReplace _tokenReplace;

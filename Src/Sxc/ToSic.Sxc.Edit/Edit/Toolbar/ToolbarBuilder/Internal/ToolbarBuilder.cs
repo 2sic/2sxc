@@ -50,12 +50,12 @@ public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, ITo
     public ILog Log { get; } = new Log(SxcLogName + ".TlbBld");
     
 
-    public void ConnectToRoot(ICodeApiService exCtx)
+    public void ConnectToRoot(IExecutionContext exCtx)
     {
         if (exCtx == null)
             return;
         ExCtx = exCtx;
-        CurrentAppIdentity = exCtx.GetState<IApp>().PureIdentity();
+        CurrentAppIdentity = exCtx.GetApp().PureIdentity();
         Services.ToolbarButtonHelper.Value.MainAppIdentity = CurrentAppIdentity;
     }
 

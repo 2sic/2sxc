@@ -51,7 +51,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     protected ApiTyped(string insightsGroup) : base("Api16", insightsGroup) { }
 
     internal ICodeTypedApiHelper CodeApi => field
-        ??= _CodeApiSvc.GetTypedApi();
+        ??= ExCtx.GetTypedApi();
 
     /// <inheritdoc cref="IHasKit{TServiceKit}.Kit" />
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
@@ -152,8 +152,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     #region CreateInstance
 
-    private CodeHelper CodeHlp => _codeHlp ??= GetService<CodeHelper>().Init(this);
-    private CodeHelper _codeHlp;
+    private CodeHelper CodeHlp => field ??= GetService<CodeHelper>().Init(this);
 
     string IGetCodePath.CreateInstancePath { get; set; }
 
@@ -165,13 +164,12 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     #region My... Stuff
 
-    private TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
-    private TypedCode16Helper _codeHelper;
+    private TypedCode16Helper CodeHelper => field ??= CreateCodeHelper();
 
     private TypedCode16Helper CreateCodeHelper()
     {
         // Create basic helper without any RazorModels, since that doesn't exist here
-        return new(owner: this, helperSpecs: new(_CodeApiSvc, false, ((IGetCodePath)this).CreateInstancePath), getRazorModel: () => null, getModelDic: () => null);
+        return new(owner: this, helperSpecs: new(ExCtx, false, ((IGetCodePath)this).CreateInstancePath), getRazorModel: () => null, getModelDic: () => null);
     }
 
     /// <inheritdoc />
@@ -324,8 +322,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     /// </summary>
     [PrivateApi("Experiment v17.02+")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    protected ICodeCustomizer Customize => _customize ??= CodeApi.GetService<ICodeCustomizer>(reuse: true);
-    private ICodeCustomizer _customize;
+    protected ICodeCustomizer Customize => field ??= CodeApi.GetService<ICodeCustomizer>(reuse: true);
 
     #endregion
 

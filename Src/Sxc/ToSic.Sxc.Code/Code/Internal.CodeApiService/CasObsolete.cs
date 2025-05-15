@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Code.Internal;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CodeApiServiceObsolete(ICodeApiService dynCode)
+public class CodeApiServiceObsolete(IExecutionContext dynCode)
 {
     [PrivateApi("obsolete")]
     [Obsolete("you should use the CreateSource<T> instead. Deprecated ca. v4 (but not sure), changed to error in v15.")]
@@ -27,7 +27,7 @@ public class CodeApiServiceObsolete(ICodeApiService dynCode)
         try
         {
             // try to find with assembly name, or otherwise with GlobalName / previous names
-            var app = dynCode.GetState<IApp>();
+            var app = dynCode.GetApp();
             var type = dataSources.Catalog.Value.FindDataSourceInfo(typeName, app.AppId)?.Type;
             configuration ??= dataSources.LookUpEngine;
             var cnf2Wip = new DataSourceOptions

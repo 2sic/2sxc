@@ -11,6 +11,7 @@ using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 using Page = Oqtane.Models.Page;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
@@ -27,14 +28,14 @@ internal class OqtLinkService(
     : LinkServiceBase(imgLinker, linkPathsLazy, connect: [pageRepository, aliasResolver])
 {
     public Razor12 RazorPage { get; set; }
-    private IContextOfBlock _context;
+    private IContextOfBlock _blockCtx;
 
     private new OqtLinkPaths LinkPaths => (OqtLinkPaths) base.LinkPaths;
 
-    public override void ConnectToRoot(ICodeApiService codeRoot)
+    public override void ConnectToRoot(IExecutionContext codeRoot)
     {
         base.ConnectToRoot(codeRoot);
-        _context = codeRoot.GetState<IContextOfBlock>();
+        _blockCtx = codeRoot.GetState<IContextOfBlock>();
     }
 
     protected override string ToApi(string api, string parameters = null) => ApiNavigateUrl(api, parameters);
@@ -61,7 +62,7 @@ internal class OqtLinkService(
     // Prepare Page link.
     private string PageNavigateUrl(int? pageId, string parameters, bool absoluteUrl = true)
     {
-        var currentPageId = _context?.Page?.Id;
+        var currentPageId = _blockCtx?.Page?.Id;
 
         if ((pageId ?? currentPageId) == null)
             throw new($"Error, PageId is unknown, pageId: {pageId}, currentPageId: {currentPageId} .");

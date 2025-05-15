@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// <summary>
 /// WIP
 /// </summary>
-public interface ICodeDynamicApiHelper: ICodeAnyApiHelper
+public interface ICodeDynamicApiHelper: ICodeAnyApiHelper, ICreateInstance
 {
 
     #region Content, Header, App, Data, Resources, Settings

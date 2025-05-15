@@ -8,6 +8,7 @@ using ToSic.Sxc.Edit.Internal;
 using ToSic.Sxc.Render.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Blocks.Internal.Render;
@@ -54,9 +55,9 @@ public class RenderService: ServiceForDynamicCode,
     // ReSharper disable once InconsistentNaming
     private readonly MyServices Services;
 
-    public override void ConnectToRoot(ICodeApiService codeRoot)
+    public override void ConnectToRoot(IExecutionContext exCtx)
     {
-        base.ConnectToRoot(codeRoot);
+        base.ConnectToRoot(exCtx);
         _logIsInHistory = true; // if we link it to a parent, we don't need to add own entry in log history
     }
 

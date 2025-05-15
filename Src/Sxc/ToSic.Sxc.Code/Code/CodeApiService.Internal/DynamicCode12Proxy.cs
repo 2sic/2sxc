@@ -5,19 +5,20 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code;
 
-internal class DynamicCode12Proxy(ICodeApiService parent, ICodeDynamicApiHelper dynamicApi): IDynamicCode12
+internal class DynamicCode12Proxy(IExecutionContext exCtx, ICodeDynamicApiHelper dynamicApi): IDynamicCode12
 {
-    public ILog Log => parent.Log;
+    public ILog Log => exCtx.Log;
 
     public string CreateInstancePath
     {
-        get => ((IGetCodePath)parent).CreateInstancePath;
+        get => ((IGetCodePath)exCtx).CreateInstancePath;
         set
         {
-            if (parent is not IGetCodePath getCodePath)
+            if (exCtx is not IGetCodePath getCodePath)
                 throw new InvalidOperationException("CreateInstancePath can only be set on a DynamicCode12Proxy which implements IGetCodePath");
             getCodePath.CreateInstancePath = value;
         }
@@ -26,19 +27,19 @@ internal class DynamicCode12Proxy(ICodeApiService parent, ICodeDynamicApiHelper 
     public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null,
         string relativePath = null, bool throwOnError = true)
         => (
-                (ICreateInstance)parent
+                (ICreateInstance)exCtx
                 ?? throw new InvalidOperationException(
                     "CreateInstance can only be set on a DynamicCode12Proxy which implements ICreateInstance")
             )
             .CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
 
-    public int CompatibilityLevel => ((ICompatibilityLevel)parent)?.CompatibilityLevel ?? 12;
+    public int CompatibilityLevel => ((ICompatibilityLevel)exCtx)?.CompatibilityLevel ?? 12;
 
     TService IDynamicCode.GetService<TService>()
-        => parent.GetService<TService>();
+        => exCtx.GetService<TService>();
 
     TService IDynamicCode12.GetService<TService>()
-        => parent.GetService<TService>();
+        => exCtx.GetService<TService>();
 
     public IApp App => dynamicApi.App;
 
@@ -89,10 +90,10 @@ internal class DynamicCode12Proxy(ICodeApiService parent, ICodeDynamicApiHelper 
         => dynamicApi.Cdf.AsDynamicFromObject(dynamicEntity);
 
     IEntity IDynamicCode.AsEntity(object dynamicEntity)
-        => ((IDynamicCode)parent).AsEntity(dynamicEntity);
+        => ((IDynamicCode)exCtx).AsEntity(dynamicEntity);
 
     IEnumerable<dynamic> IDynamicCode.AsList(object list)
-        => ((IDynamicCode)parent).AsList(list);
+        => ((IDynamicCode)exCtx).AsList(list);
 
     T IDynamicCode.CreateSource<T>(IDataStream source)
         => dynamicApi.CreateSource<T>(source);
@@ -106,7 +107,7 @@ internal class DynamicCode12Proxy(ICodeApiService parent, ICodeDynamicApiHelper 
     public dynamic AsDynamic(params object[] entities)
         => dynamicApi.Cdf.MergeDynamic(entities);
 
-    public IConvertService Convert => ((CodeApiService)parent).Convert;
+    public IConvertService Convert => ((CodeApiService)exCtx).Convert;
 
     public dynamic Resources => dynamicApi.Resources;
 

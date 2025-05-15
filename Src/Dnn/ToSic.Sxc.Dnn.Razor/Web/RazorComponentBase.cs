@@ -1,5 +1,6 @@
 ﻿using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Razor;
+using ToSic.Sxc.Sys.ExecutionContext;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
 using ILog = ToSic.Lib.Logging.ILog;
 
@@ -39,14 +40,14 @@ public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHa
 
     /// <inheritdoc />
     [PrivateApi]
-    public ICodeApiService _CodeApiSvc { get; private set; }
+    internal IExecutionContext ExCtx { get; private set; }
 
     /// <inheritdoc />
     [PrivateApi]
-    public void ConnectToRoot(ICodeApiService codeRoot)
+    public void ConnectToRoot(IExecutionContext exCtx)
     {
-        RzrHlp.ConnectToRoot(codeRoot);
-        _CodeApiSvc = codeRoot;
+        RzrHlp.ConnectToRoot(exCtx);
+        ExCtx = exCtx;
     }
 
     /// <summary>

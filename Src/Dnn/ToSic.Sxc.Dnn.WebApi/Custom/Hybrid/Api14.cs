@@ -37,7 +37,7 @@ public abstract partial class Api14(string logSuffix) : DnnSxcCustomControllerBa
 
     protected Api14() : this("Hyb14") { }
 
-    internal ICodeDynamicApiHelper CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
+    internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
     /// <inheritdoc cref="IHasKit{TServiceKit}.Kit" />
     public ServiceKit14 Kit => field ??= CodeApi.ServiceKit14;

@@ -8,7 +8,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.CodeApi;
 
-internal class CodeDynamicApiHelper: CodeAnyApiHelper, ICodeDynamicApiHelper
+internal class CodeDynamicApiHelper(CodeApiService parent) : CodeAnyApiHelper(parent), ICodeDynamicApiHelper
 {
     public dynamic Content => Parent.Content;
     public dynamic Header => Parent.Header;
@@ -28,4 +28,15 @@ internal class CodeDynamicApiHelper: CodeAnyApiHelper, ICodeDynamicApiHelper
         => Parent.CreateSource<T>(inSource, configurationProvider);
 
     public ServiceKit14 ServiceKit14 => Parent.GetKit<ServiceKit14>();
+
+    public string CreateInstancePath
+    {
+        get => Parent.CreateInstancePath;
+        set => Parent.CreateInstancePath = value;
+    }
+
+    public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null,
+        string relativePath = null, bool throwOnError = true) =>
+        Parent.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
+
 }

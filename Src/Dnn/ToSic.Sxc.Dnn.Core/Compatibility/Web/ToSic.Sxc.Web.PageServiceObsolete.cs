@@ -1,6 +1,7 @@
 ﻿using ToSic.Lib.Coding;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Web;
@@ -15,13 +16,13 @@ internal class WebPageServiceObsolete(Services.IPageService pageServiceImplement
 {
     /// <summary>
     /// Forward execution context to the actual implementation.
-    ///
+    /// 
     /// Fixes bug https://github.com/2sic/2sxc/issues/3424
     /// </summary>
-    /// <param name="codeRoot"></param>
-    public void ConnectToRoot(ICodeApiService codeRoot)
+    /// <param name="exCtx"></param>
+    public void ConnectToRoot(IExecutionContext exCtx)
     {
-        (pageServiceImplementation as INeedsCodeApiService)?.ConnectToRoot(codeRoot);
+        (pageServiceImplementation as INeedsCodeApiService)?.ConnectToRoot(exCtx);
     }
 
     public string SetBase(string url = null)

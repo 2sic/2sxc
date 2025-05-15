@@ -30,7 +30,7 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
 
         if (!path.EndsWith(SourceCodeConstants.CsFileExtension))
             throw l.Done(new ArgumentException("Only '.cs' file paths can start with a slash"));
-        var app = (overrideCodeRoot ?? _CodeApiSvc)?.GetTypedApi()?.AppTyped
+        var app = (overrideCodeRoot ?? ExCtxOrNull)?.GetTypedApi()?.AppTyped
                   ?? throw l.Done(new Exception("Absolute paths require an App, which was null"));
         var appFolder = app.Folder?.Path
                         ?? throw l.Done(new Exception("Absolute paths require the App folder, which was null"));
@@ -72,7 +72,7 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
         try
         {
             object result = path.EndsWith(SourceCodeConstants.CsFileExtension)
-                ? ((ICreateInstance)_CodeApiSvc).CreateInstance(path, noParamOrder, name: name, relativePath: null, throwOnError: throwOnError)
+                ? ExCtx.GetDynamicApi().CreateInstance(path, noParamOrder, name: name, relativePath: null, throwOnError: throwOnError)
                 : GetCodeCshtml(path);
             return l.Return(result, "ok");
         }

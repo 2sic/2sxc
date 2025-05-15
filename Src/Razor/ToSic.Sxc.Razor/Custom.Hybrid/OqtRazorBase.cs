@@ -9,6 +9,7 @@ using ToSic.Sxc.Razor;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
 using ILog = ToSic.Lib.Logging.ILog;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
@@ -75,7 +76,8 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
 
     [PrivateApi]
-    public void ConnectToRoot(ICodeApiService parent) => RzrHlp.ConnectToRoot(parent);
+    public void ConnectToRoot(IExecutionContext exCtx)
+        => RzrHlp.ConnectToRoot(exCtx);
 
     [RazorInject]
     [PrivateApi]

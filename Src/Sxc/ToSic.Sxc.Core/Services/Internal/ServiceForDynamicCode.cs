@@ -17,29 +17,29 @@ public abstract class ServiceForDynamicCode(string logName, NoParamOrder protect
     /// <summary>
     /// Connect to CodeRoot and it's log
     /// </summary>
-    /// <param name="codeRoot"></param>
+    /// <param name="exCtx"></param>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public virtual void ConnectToRoot(ICodeApiService codeRoot)
-        => ConnectToRoot(codeRoot, null);
+    public virtual void ConnectToRoot(IExecutionContext exCtx)
+        => ConnectToRoot(exCtx, null);
 
     /// <summary>
     /// Connect to CodeRoot and a custom log
     /// </summary>
-    /// <param name="codeRoot"></param>
+    /// <param name="exCtx"></param>
     /// <param name="parentLog"></param>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public void ConnectToRoot(ICodeApiService codeRoot, ILog parentLog)
+    public void ConnectToRoot(IExecutionContext exCtx, ILog parentLog)
     {
         // Avoid unnecessary reconnects
         if (_alreadyConnected) return;
         _alreadyConnected = true;
 
         // Remember the parent
-        _CodeApiSvc = codeRoot;
+        _CodeApiSvc = exCtx as ICodeApiService;
         // Link the logs
-        this.LinkLog(parentLog ?? codeRoot?.Log);
+        this.LinkLog(parentLog ?? exCtx?.Log);
         // report connection in log
         Log.Fn(message: "Linked to Root").Done();
     }

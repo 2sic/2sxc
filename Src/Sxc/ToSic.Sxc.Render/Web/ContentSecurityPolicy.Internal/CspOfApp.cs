@@ -5,6 +5,7 @@ using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
@@ -34,13 +35,13 @@ public class CspOfApp : ServiceForDynamicCode
     /// Connect to code root, so page-parameters and settings will be available later on.
     /// Important: page-parameters etc. are not available at this time, so don't try to get them until needed
     /// </summary>
-    /// <param name="codeRoot"></param>
-    public override void ConnectToRoot(ICodeApiService codeRoot)
+    /// <param name="exCtx"></param>
+    public override void ConnectToRoot(IExecutionContext exCtx)
     {
         var l = Log.Fn();
-        base.ConnectToRoot(codeRoot);
+        base.ConnectToRoot(exCtx);
         // Also connect upstream CspOfModule in case it's not yet connected
-        _moduleCsp.ConnectToRoot(codeRoot);
+        _moduleCsp.ConnectToRoot(exCtx);
         l.Done();
     }
 
