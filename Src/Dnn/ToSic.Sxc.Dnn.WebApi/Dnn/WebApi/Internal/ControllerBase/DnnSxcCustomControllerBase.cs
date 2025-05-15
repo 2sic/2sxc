@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal;
 // [ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
 public abstract class DnnSxcCustomControllerBase(string logSuffix, string insightsGroup = default)
-    : DnnSxcControllerBase(logSuffix, insightsGroup), IHasCodeApiService
+    : DnnSxcControllerBase(logSuffix, insightsGroup)
 {
     #region Constructor & DI / Setup
 

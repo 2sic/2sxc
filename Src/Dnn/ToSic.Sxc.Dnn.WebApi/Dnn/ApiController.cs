@@ -34,7 +34,6 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
     ICreateInstance,
     IDynamicCode, 
     IDynamicWebApi, 
-    IHasCodeApiService,
     IHasCodeLog
 {
     internal const string ErrRecommendedNamespaces = "To use it, use the new base class from Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.";

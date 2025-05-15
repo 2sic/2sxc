@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
 /// </summary>
 [DnnLogExceptions]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal abstract class ApiTempShimmed : DnnSxcCustomControllerBase, IDynamicWebApi, IHasCodeApiService, INetCoreCompatibility
+internal abstract class ApiTempShimmed : DnnSxcCustomControllerBase, IDynamicWebApi, INetCoreCompatibility
 {
 
     #region Net Core Compatibility Shims - Copy this entire section to WebApi Files

@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Services.Internal;
 //[ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
 public abstract class ServiceForDynamicCode(string logName, NoParamOrder protect = default, bool errorIfNotConnected = false, object[] connect = default)
-    : ServiceBase(logName, protect: protect, connect: connect), INeedsCodeApiService, IHasCodeApiService, ICanDebug
+    : ServiceBase(logName, protect: protect, connect: connect), INeedsCodeApiService, ICanDebug
 {
     /// <summary>
     /// Connect to CodeRoot and it's log
