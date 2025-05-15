@@ -7,14 +7,14 @@ namespace ToSic.Sxc.Services;
 /// </summary>
 public interface IExCtxServicesForTypedData
 {
-    /// <inheritdoc cref="ServiceKit14.Adam"/>
-    IAdamService Adam { get; }
+    ///// <inheritdoc cref="ServiceKit14.Adam"/>
+    //IAdamService Adam { get; }
 
-    /// <summary>
-    /// The CMS Service - WIP
-    /// </summary>
-    ICmsService Cms { get; }
+    ///// <summary>
+    ///// The CMS Service - WIP
+    ///// </summary>
+    //ICmsService Cms { get; }
 
-    /// <inheritdoc cref="ServiceKit14.Image"/>
-    IImageService Image { get; }
+    ///// <inheritdoc cref="ServiceKit14.Image"/>
+    //IImageService Image { get; }
 }

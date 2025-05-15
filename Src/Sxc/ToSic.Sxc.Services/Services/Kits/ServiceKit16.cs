@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Services;
 /// </remarks>
 [PublicApi]
 [method: PrivateApi("Public constructor for DI")]
-public class ServiceKit16() : ServiceKit("Sxc.Kit16"), IExCtxServicesForTypedData
+public class ServiceKit16() : ServiceKit("Sxc.Kit16")
 {
     #region Same as v14
 
@@ -32,12 +32,6 @@ public class ServiceKit16() : ServiceKit("Sxc.Kit16"), IExCtxServicesForTypedDat
     /// </summary>
     [PrivateApi("Not yet for public use, as API is not yet public")]
     private ICmsService Cms => field ??= GetKitService<ICmsService>();
-
-    /// <summary>
-    /// Access for TypedData when using this service kit with the interface.
-    /// New & internal v20.
-    /// </summary>
-    ICmsService IExCtxServicesForTypedData.Cms => Cms;
 
     /// <inheritdoc cref="ServiceKit14.Convert"/>
     public IConvertService16 Convert => field ??= GetKitService<IConvertService16>();

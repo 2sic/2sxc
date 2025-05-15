@@ -2,6 +2,7 @@
 
 namespace ToSic.Sxc.Images.Internal;
 
+[PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ImageDecorator(IEntity entity, string[] languageCodes)
     : EntityBasedType(entity, languageCodes), IImageDecorator
@@ -36,7 +37,7 @@ public class ImageDecorator(IEntity entity, string[] languageCodes)
     #endregion
 
 
-    internal static ImageDecorator GetOrNull(IHasMetadata source, string[] dimensions)
+    public static ImageDecorator GetOrNull(IHasMetadata source, string[] dimensions)
     {
         var decItem = source?.Metadata?.FirstOrDefaultOfType(TypeNameId);
         return decItem != null ? new ImageDecorator(decItem, dimensions) : null;

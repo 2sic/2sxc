@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Images.Internal;
 
-internal interface IImageMetadataRecommendationsService
+public interface IImageMetadataRecommendationsService
 {
     /// <summary>
     /// Optionally add image-metadata recommendations

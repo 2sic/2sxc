@@ -4,7 +4,7 @@ namespace ToSic.Sxc.Images;
 
 [PrivateApi("Hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class RecipeVariant
+public class RecipeVariant
 {
     public const char SizeDefault = 'd';
     public const char SizeWidth = 'w';

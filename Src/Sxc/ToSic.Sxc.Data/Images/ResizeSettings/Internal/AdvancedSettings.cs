@@ -8,7 +8,7 @@ using ToSic.Lib.Internal.Generics;
 namespace ToSic.Sxc.Images;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class AdvancedSettings : IHasPiggyBack
+public class AdvancedSettings : IHasPiggyBack
 {
     [JsonConstructor]
     public AdvancedSettings(Recipe recipe = default)

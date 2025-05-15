@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class Classification
+public class Classification
 {
     public const string Folder = "folder";
     public const string File = "file";

@@ -18,8 +18,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 namespace ToSic.Sxc.Code.Internal;
 
 public partial class ExecutionContext
-    : IWrapper<IExCtxServicesForTypedData>,
-        IWrapper<ICodeDataFactory>,
+    : IWrapper<ICodeDataFactory>,
         IExCtxAttachApp
 {
     [PrivateApi]
@@ -107,14 +106,14 @@ public partial class ExecutionContext
     public TKit GetKit<TKit>() where TKit : ServiceKit
         => GetService<TKit>(reuse: true);
 
-    /// <summary>
-    /// Special workaround so this can provide the data without
-    /// having to support an interface.
-    /// To call this, you must explicitly cast it to IWrapper&lt;IServiceKitForTypedData&gt;
-    /// </summary>
-    /// <returns></returns>
-    IExCtxServicesForTypedData IWrapper<IExCtxServicesForTypedData>.GetContents()
-        => GetKit<ServiceKit16>();
+    ///// <summary>
+    ///// Special workaround so this can provide the data without
+    ///// having to support an interface.
+    ///// To call this, you must explicitly cast it to IWrapper&lt;IServiceKitForTypedData&gt;
+    ///// </summary>
+    ///// <returns></returns>
+    //IExCtxServicesForTypedData IWrapper<IExCtxServicesForTypedData>.GetContents()
+    //    => GetKit<ServiceKit16>();
 
     #endregion
 

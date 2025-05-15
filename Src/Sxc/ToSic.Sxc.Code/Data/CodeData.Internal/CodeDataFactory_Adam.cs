@@ -1,8 +1,14 @@
 ﻿using ToSic.Eav.Context;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Images;
+using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Tweaks;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Data.Internal;
@@ -50,8 +56,12 @@ partial class CodeDataFactory
     //public IFile File(Field fel)
     //    => AdamManager.File(id);
 
-    //public IFile File(IField field)
-    //    => AdamManager.File(field);
+    private ExecutionContext ExCtxReal => ExCtxOrNull as ExecutionContext;
+    private ServiceKit16 ServiceKit16 => field ??= ExCtxReal.GetKit<ServiceKit16>();
+
+    // TODO: MUST FINISH THIS, NOT WORKING YET
+    public IFile File(IField field)
+        => ServiceKit16.Adam.File(field);
 
     public IFolder Folder(int id)
         => AdamManager.Folder(id);
@@ -61,6 +71,66 @@ partial class CodeDataFactory
 
     public IFolder Folder(Guid entityGuid, string fieldName, IField field = default)
         => AdamManager.Folder(entityGuid, fieldName, field);
+
+    private ICmsService CmsSvc => field ??= ExCtxReal.GetService<ICmsService>(reuse: true);
+
+    // TODO: MUST FINISH THIS, NOT WORKING YET
+    public IHtmlTag Html(object thing,
+        NoParamOrder noParamOrder = default,
+        object container = default,
+        string classes = default,
+        bool debug = default,
+        object imageSettings = default,
+        bool? toolbar = default,
+        Func<ITweakInput<string>, ITweakInput<string>> tweak = default)
+        => CmsSvc.Html(
+            thing,
+            noParamOrder: noParamOrder,
+            container: container,
+            classes: classes,
+            debug: debug,
+            imageSettings: imageSettings,
+            toolbar: toolbar,
+            tweak: tweak
+        );
+
+    private IImageService ImgSvc => field ??= ExCtxReal.GetService<IImageService>(reuse: true);
+
+
+    public IResponsivePicture Picture(
+        object link = null,
+        object settings = default,
+        NoParamOrder noParamOrder = default,
+        Func<ITweakMedia, ITweakMedia> tweak = default,
+        object factor = default,
+        object width = default,
+        string imgAlt = default,
+        string imgAltFallback = default,
+        string imgClass = default,
+        object imgAttributes = default,
+        string pictureClass = default,
+        object pictureAttributes = default,
+        object toolbar = default,
+        object recipe = default
+    ) => ImgSvc.Picture(link, settings, noParamOrder, tweak, factor, width, imgAlt, imgAltFallback, imgClass,
+        imgAttributes, pictureClass, pictureAttributes, toolbar, recipe);
+
+    public IResponsiveImage Img(
+        object link = null,
+        object settings = default,
+        NoParamOrder noParamOrder = default,
+        Func<ITweakMedia, ITweakMedia> tweak = default,
+        object factor = default,
+        object width = default,
+        string imgAlt = default,
+        string imgAltFallback = default,
+        string imgClass = default,
+        object imgAttributes = default,
+        object toolbar = default,
+        object recipe = default
+    )
+        => ImgSvc.Img(link, settings, noParamOrder, tweak, factor, width, imgAlt, imgAltFallback, imgClass,
+            imgAttributes, toolbar, recipe);
 
     #endregion
 

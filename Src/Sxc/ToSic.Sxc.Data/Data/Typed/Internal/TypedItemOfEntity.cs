@@ -219,7 +219,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object dynOrNull, IEntity ent
         ITypedItem typedThis = this;
         // Case 1: The field contains a direct reference to a file
         var field = typedThis.Field(name, required: required);
-        var file = Cdf.GetServiceKitOrThrow().Adam.File(field);
+        var file = Cdf.File(field);
         // Case 2: No direct reference, just get the first file in the folder of this field
         return file ?? typedThis.Folder(name).Files.FirstOrDefault();
     }

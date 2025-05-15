@@ -3,7 +3,10 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.Code.InfoSystem;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Images;
+using ToSic.Sxc.Services.Tweaks;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Data.Internal;
@@ -137,4 +140,46 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     IFolder Folder(int id);
     IFolder Folder(ICanBeEntity item, string name, IField field);
 
+    IFile File(IField field);
+
+    IHtmlTag Html(object thing,
+        NoParamOrder noParamOrder = default,
+        object container = default,
+        string classes = default,
+        bool debug = default,
+        object imageSettings = default,
+        bool? toolbar = default,
+        Func<ITweakInput<string>, ITweakInput<string>> tweak = default);
+
+    IResponsivePicture Picture(
+        object link = null,
+        object settings = default,
+        NoParamOrder noParamOrder = default,
+        Func<ITweakMedia, ITweakMedia> tweak = default,
+        object factor = default,
+        object width = default,
+        string imgAlt = default,
+        string imgAltFallback = default,
+        string imgClass = default,
+        object imgAttributes = default,
+        string pictureClass = default,
+        object pictureAttributes = default,
+        object toolbar = default,
+        object recipe = default
+    );
+
+    IResponsiveImage Img(
+        object link = null,
+        object settings = default,
+        NoParamOrder noParamOrder = default,
+        Func<ITweakMedia, ITweakMedia> tweak = default,
+        object factor = default,
+        object width = default,
+        string imgAlt = default,
+        string imgAltFallback = default,
+        string imgClass = default,
+        object imgAttributes = default,
+        object toolbar = default,
+        object recipe = default
+    );
 }

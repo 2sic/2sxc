@@ -2,7 +2,9 @@
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
-internal interface ITweakButtonInternal
+[PrivateApi]
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public interface ITweakButtonInternal
 {
     /// <summary>
     /// List of changes to apply to the UI parameter

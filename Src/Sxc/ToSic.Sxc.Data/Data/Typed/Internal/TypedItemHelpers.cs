@@ -22,8 +22,7 @@ internal class TypedItemHelpers
     )
     {
         var field = item.Field(name, required: required);
-        var kit = cdf.GetServiceKitOrThrow();
-        return kit.Cms.Html(field, container: container, classes: null, imageSettings: imageSettings, debug: debug, toolbar: toolbar, tweak: tweak);
+        return cdf.Html(field, container: container, classes: null, imageSettings: imageSettings, debug: debug, toolbar: toolbar, tweak: tweak);
     }
 
     public static IResponsivePicture Picture(
@@ -48,8 +47,7 @@ internal class TypedItemHelpers
         var field = item.Field(name, required: true);
         if (field.Url.IsEmptyOrWs())
             return null;
-        var kit = cdf.GetServiceKitOrThrow();
-        return kit.Image.Picture(field, tweak: tweak, settings: settings, factor: factor, width: width,
+        return cdf.Picture(field, tweak: tweak, settings: settings, factor: factor, width: width,
                 imgAlt: imgAlt, imgAltFallback: imgAltFallback, 
                 imgClass: imgClass, imgAttributes: imgAttributes, pictureClass: pictureClass, pictureAttributes: pictureAttributes,
                 toolbar: toolbar, recipe: recipe);
@@ -75,8 +73,7 @@ internal class TypedItemHelpers
         var field = item.Field(name, required: true);
         if (field.Url.IsEmptyOrWs())
             return null;
-        var kit = cdf.GetServiceKitOrThrow();
-        return kit.Image.Img(field, tweak: tweak, settings: settings, noParamOrder: noParamOrder, factor: factor, width: width,
+        return cdf.Img(field, tweak: tweak, settings: settings, noParamOrder: noParamOrder, factor: factor, width: width,
                 imgAlt: imgAlt, imgAltFallback: imgAltFallback,
                 imgClass: imgClass, imgAttributes: imgAttributes,
                 toolbar: toolbar, recipe: recipe);

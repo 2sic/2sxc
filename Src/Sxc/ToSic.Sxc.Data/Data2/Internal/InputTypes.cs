@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Compatibility.Internal;
 
-internal class InputTypes
+public class InputTypes
 {
     /// <summary>
     /// This is the input type for a wysiwyg editor.
@@ -30,7 +30,7 @@ internal class InputTypes
         { "string-wysiwyg-adv", InputTypeWysiwyg },
     };
 
-    internal static string MapInputTypeV10(string original) =>
+    public static string MapInputTypeV10(string original) =>
         InputTypeMap.TryGetValue(original, out var result)
             ? result
             : original;

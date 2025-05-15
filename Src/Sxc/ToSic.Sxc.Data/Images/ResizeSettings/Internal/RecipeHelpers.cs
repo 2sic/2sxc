@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Images;
 
-internal class RecipeHelpers
+public class RecipeHelpers
 {
     internal static ReadOnlyDictionary<string, object> MergeDics(IDictionary<string, object> parentOrNull, IDictionary<string, object> myOrNull)
     {
