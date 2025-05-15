@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// </remarks>
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.MyServices>, IExecutionContext, IHasPiggyBack, ICanGetService
+public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.MyServices>, IExecutionContext, IGetCodePath, IHasPiggyBack, ICanGetService
 {
     #region Constructor
 
