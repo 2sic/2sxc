@@ -75,7 +75,7 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
     PiggyBack IHasPiggyBack.PiggyBack { get; } = new();
 
 
-    /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class
     {
         var newService = Services.ServiceProvider.Build<TService>(Log);

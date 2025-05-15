@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Services;
 /// * Moved to `ToSic.Sxc.Services.IEditService` in v13.05
 /// </remarks>
 [PublicApi]
-public interface IEditService: IHasLog, INeedsCodeApiService
+public interface IEditService: IHasLog // , INeedsCodeApiService
 {
     /// <summary>
     /// If editing is enabled or not

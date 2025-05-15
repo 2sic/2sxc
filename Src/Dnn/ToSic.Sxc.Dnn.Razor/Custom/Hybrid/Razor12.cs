@@ -89,7 +89,7 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
     #region Convert-Service
 
     /// <inheritdoc />
-    public IConvertService Convert => field ??= _CodeApiSvc.GetConvertService();
+    public IConvertService Convert => field ??= CodeApi.Convert;
 
     #endregion
 

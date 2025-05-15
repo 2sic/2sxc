@@ -132,7 +132,7 @@ public abstract partial class Api14(string logSuffix) : DnnSxcCustomControllerBa
     #region Convert-Service - should NOT be in v14, but was by accident!
 
     /// <inheritdoc cref="IDynamicCode12.Convert" />
-    public IConvertService Convert => field ??= _CodeApiSvc.GetConvertService();
+    public IConvertService Convert => field ??= CodeApi.Convert;
 
     #endregion
 
@@ -153,8 +153,7 @@ public abstract partial class Api14(string logSuffix) : DnnSxcCustomControllerBa
 
     string IGetCodePath.CreateInstancePath { get; set; }
 
-    private CodeHelper CodeHlp => _codeHlp ??= GetService<CodeHelper>().Init(this);
-    private CodeHelper _codeHlp;
+    private CodeHelper CodeHlp => field ??= GetService<CodeHelper>().Init(this);
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
     public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)

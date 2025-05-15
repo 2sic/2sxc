@@ -74,13 +74,13 @@ public abstract class SexyContentWebPage :
     [Obsolete]
     [field: Obsolete]
     public SxcHelper Sxc => field
-        ??= new(((IExCtxBlock)CodeApi).Block?.Context.Permissions.IsContentAdmin ?? false, GetService<IConvertToEavLight>());
+        ??= new(CodeApi.Block?.Context.Permissions.IsContentAdmin ?? false, GetService<IConvertToEavLight>());
 #pragma warning restore 612
 
     /// <summary>
     /// Old API - probably never used, but we shouldn't remove it as we could break some existing code out there
     /// </summary>
-    [PrivateApi] public IBlock Block => ((IExCtxBlock)CodeApi).Block;
+    [PrivateApi] public IBlock Block => CodeApi.Block;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
@@ -106,7 +106,7 @@ public abstract class SexyContentWebPage :
     /// <inheritdoc />
     IDataSource IDynamicCode.Data => CodeApi.Data;
 
-    public RazorPermissions Permissions => new(((IExCtxBlock)CodeApi).Block?.Context.Permissions.IsContentAdmin ?? false);
+    public RazorPermissions Permissions => new(CodeApi.Block?.Context.Permissions.IsContentAdmin ?? false);
 
     #region AsDynamic in many variations
 

@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.DataSource;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Services;
@@ -12,7 +13,7 @@ public interface ICodeAnyApiHelper
     // 2. Convert
     // 3. Re-Type the Resources and Settings
 
-    //IBlock Block { get; }
+    IBlock Block { get; }
 
 
     #endregion
@@ -54,6 +55,8 @@ public interface ICodeAnyApiHelper
 
     /// <inheritdoc cref="Razor.Html5.Link" />
     ILinkService Link { get; }
+
+    IConvertService Convert { get; }
 
     #endregion
 

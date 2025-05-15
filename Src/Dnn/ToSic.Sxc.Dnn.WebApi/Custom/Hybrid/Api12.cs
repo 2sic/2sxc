@@ -112,7 +112,7 @@ public abstract partial class Api12(string logSuffix) : DnnSxcCustomControllerBa
     #region Convert-Service
 
     /// <inheritdoc cref="IDynamicCode12.Convert" />
-    public IConvertService Convert => field ??= _CodeApiSvc.GetConvertService();
+    public IConvertService Convert => field ??= CodeApi.Convert;
 
     #endregion
 

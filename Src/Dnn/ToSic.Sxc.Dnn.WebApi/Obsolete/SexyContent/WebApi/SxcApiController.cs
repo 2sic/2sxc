@@ -65,7 +65,7 @@ public abstract partial class SxcApiController() :
     [Obsolete]
     [PrivateApi]
     public SxcHelper Sxc => field
-        ??= new(((IExCtxBlock)CodeApi)?.Block?.Context?.Permissions.IsContentAdmin ?? false, SysHlp.GetService<IConvertToEavLight> ());
+        ??= new(CodeApi?.Block?.Context?.Permissions.IsContentAdmin ?? false, SysHlp.GetService<IConvertToEavLight> ());
 
     /// <summary>
     /// Old API - probably never used, but we shouldn't remove it as we could break some existing code out there

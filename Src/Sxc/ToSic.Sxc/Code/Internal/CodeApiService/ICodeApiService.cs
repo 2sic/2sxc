@@ -1,5 +1,8 @@
 ﻿using ToSic.Eav.Code;
 using ToSic.Eav.Data.PiggyBack;
+using ToSic.Eav.DataSource;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Code.Internal;
@@ -10,8 +13,22 @@ namespace ToSic.Sxc.Code.Internal;
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface ICodeApiService : ICodeApiServiceForDynamicCode12Wip, IHasLog, IHasPiggyBack, IExecutionContextDataWip, ICanGetService
+public interface ICodeApiService : IHasLog, IHasPiggyBack, IExecutionContextDataWip, ICanGetService
 {
+    #region Context Information
+
+    /// <inheritdoc cref="IDynamicCode.App" />
+    IApp App { get; }
+
+    /// <inheritdoc cref="IDynamicCode.Data" />
+    IDataSource Data { get; }
+
+
+    /// <inheritdoc cref="IDynamicCode.CmsContext" />
+    ICmsContext CmsContext { get; }
+
+    #endregion
+
     #region AsConverter (internal)
 
     [PrivateApi("internal use only")]
@@ -26,7 +43,7 @@ public interface ICodeApiService : ICodeApiServiceForDynamicCode12Wip, IHasLog, 
     /// <param name="protector"></param>
     /// <param name="reuse">if true, then a service requested multiple times will return the same instance</param>
     /// <returns></returns>
-    [PrivateApi("new v17.02")]
+    [PrivateApi]
     TService GetService<TService>(NoParamOrder protector = default, bool reuse = false, Type type = default) where TService : class;
 
     #endregion

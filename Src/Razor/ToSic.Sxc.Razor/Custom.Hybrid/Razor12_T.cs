@@ -116,7 +116,7 @@ public abstract class Razor12<TModel>() : OqtRazorBase<TModel>(CompatibilityLeve
 
     #region Convert-Service - V12 only!
 
-    [PrivateApi] public IConvertService Convert => field ??= CodeApi.GetConvertService();
+    [PrivateApi] public IConvertService Convert => field ??= CodeApi.Convert;
 
     #endregion
 

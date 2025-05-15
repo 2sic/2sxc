@@ -42,7 +42,7 @@ public abstract class DynamicCode12(): CustomCodeBase("Sxc.DynCod"), IHasCodeLog
     #region Stuff added by Code12
 
     /// <inheritdoc cref="IDynamicCode12.Convert" />
-    public IConvertService Convert => field ??= CodeApi.GetConvertService();
+    public IConvertService Convert => field ??= CodeApi.Convert;
 
     /// <inheritdoc cref="IDynamicCode12.Resources" />
     public dynamic Resources => CodeApi?.Resources;

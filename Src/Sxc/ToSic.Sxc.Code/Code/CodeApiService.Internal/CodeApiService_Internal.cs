@@ -36,7 +36,7 @@ public partial class CodeApiService
     [PrivateApi] public IBlock Block { get; private set; }
 
     [PrivateApi]
-    public IAppTyped AppTyped => field ??= new Func<IAppTyped>(() => GetService<IAppTyped>(reuse: true))();
+    internal IAppTyped AppTyped => field ??= new Func<IAppTyped>(() => GetService<IAppTyped>(reuse: true))();
 
     #region Kit Handling
 

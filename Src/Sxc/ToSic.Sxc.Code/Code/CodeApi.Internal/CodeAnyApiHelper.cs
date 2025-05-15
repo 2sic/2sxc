@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.DataSource;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Internal;
@@ -7,13 +8,15 @@ using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.CodeApi;
 
-internal abstract class CodeAnyApiHelper: ICodeAnyApiHelper, IExCtxGetKit
+internal abstract class CodeAnyApiHelper: ICodeAnyApiHelper
 {
     internal void Setup(CodeApiService parent)
     {
         Parent = parent;
     }
     protected CodeApiService Parent { get; private set; }
+
+    public IBlock Block => Parent.Block;
 
     public ICmsContext CmsContext => Parent.CmsContext;
     public IDataSource Data => Parent.Data;
@@ -25,8 +28,8 @@ internal abstract class CodeAnyApiHelper: ICodeAnyApiHelper, IExCtxGetKit
 
     public ICodeDataFactory Cdf => Parent.Cdf;
     public ILinkService Link => Parent.Link;
-    public TKit GetKit<TKit>() where TKit : ServiceKit
-        => Parent.GetKit<TKit>();
+
+    public IConvertService Convert => Parent.Convert;
 }
 
 public static class CodeApiHelperExtensions

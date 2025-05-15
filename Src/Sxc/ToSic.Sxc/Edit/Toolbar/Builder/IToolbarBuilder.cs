@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Edit.Toolbar;
 /// * most commands extended with [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) in v15.07
 /// </remarks>
 [PublicApi]
-public partial interface IToolbarBuilder: IRawHtmlString, IHasLog, INeedsCodeApiService
+public partial interface IToolbarBuilder: IRawHtmlString, IHasLog // , INeedsCodeApiService
 {
     //[PrivateApi("internal use only")]
     //IToolbarBuilder Toolbar(
