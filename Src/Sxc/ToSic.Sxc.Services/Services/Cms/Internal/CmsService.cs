@@ -1,8 +1,10 @@
 ﻿using ToSic.Lib.DI;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Services.Tweaks;
+using ToSic.Sxc.Sys.ExecutionContext;
 using InputTypes = ToSic.Sxc.Compatibility.Internal.InputTypes;
 
 namespace ToSic.Sxc.Services.CmsService.Internal;
@@ -60,6 +62,8 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
         // Fallback...
         return l.Return(cntHelper.Wrap(value, defaultToolbar: false), "nothing else hit, will treat as value");
     }
+    private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
+
 
     private IHtmlTag HtmlString(IContentType contentType, IContentTypeAttribute attribute, IField field, string value, object imageSettings, CmsServiceContainerHelper cntHelper, bool debug)
     {
@@ -72,7 +76,7 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
             return l.Return(cntHelper.Wrap(value, defaultToolbar: false), "string, default no toolbar");
 
         // WYSIWYG
-        var fieldAdam = _CodeApiSvc.Cdf.Folder(field.Parent, field.Name, field);
+        var fieldAdam = Cdf.Folder(field.Parent, field.Name, field);
         var htmlResult = StringWysiwygGen.New()
             .Init(field, contentType, attribute, fieldAdam, debug, imageSettings)
             .HtmlForStringAndWysiwyg(value);

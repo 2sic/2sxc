@@ -5,6 +5,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
 

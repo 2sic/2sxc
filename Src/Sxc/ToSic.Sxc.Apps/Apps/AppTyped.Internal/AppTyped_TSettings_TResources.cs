@@ -2,19 +2,22 @@
 using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Apps.Internal;
 
 internal class AppTyped<TSettings, TResources>(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> queryManager)
-    : AppTyped(globalPaths, queryManager), IAppTyped<TSettings, TResources>,
-        IAppTyped
+    : AppTyped(globalPaths, queryManager), IAppTyped<TSettings, TResources>
     where TSettings : class, ICanWrapData, new()
     where TResources : class, ICanWrapData, new()
 {
+    private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
+
     TSettings IAppTyped<TSettings, TResources>.Settings
-        => field ??= CodeApiSvc.Cdf.AsCustom<TSettings>(((IAppTyped)this).Settings);
+        => field ??= Cdf.AsCustom<TSettings>(((IAppTyped)this).Settings);
 
     TResources IAppTyped<TSettings, TResources>.Resources
-        => field ??= CodeApiSvc.Cdf.AsCustom<TResources>(((IAppTyped)this).Resources);
+        => field ??= Cdf.AsCustom<TResources>(((IAppTyped)this).Resources);
     
 }

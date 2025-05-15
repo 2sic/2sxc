@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Data.Models;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Data.Internal;
 
@@ -79,7 +80,7 @@ partial class CodeDataFactory: IModelFactory
         );
     }
 
-
+    private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
     /// <summary>
     /// Create list of custom-typed ITypedItems
     /// </summary>
@@ -103,7 +104,7 @@ partial class CodeDataFactory: IModelFactory
                 null => [],
                 IEnumerable enumerable when !enumerable.Cast<object>().Any() => [],
                 IEnumerable<ITypedItem> alreadyOk => alreadyOk,
-                _ => _CodeApiSvc.Cdf.AsItems(source)
+                _ => Cdf.AsItems(source)
             };
     }
 

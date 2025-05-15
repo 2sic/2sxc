@@ -1,5 +1,7 @@
 ﻿using ToSic.Lib.DI;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 // 2024-01-22 2dm
 // Remove all convert methods which are just missing the optional parameters, to make the API smaller.
@@ -19,6 +21,8 @@ internal class ConvertService16(
 
     #region New v17 As conversions
 
+    private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
+
     /// <summary>
     /// EXPERIMENTAL
     /// </summary>
@@ -26,7 +30,7 @@ internal class ConvertService16(
     [PrivateApi("WIP, don't publish yet")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     T IConvertService16.As<T>(ICanBeEntity source, NoParamOrder protector, bool nullIfNull)
-        => _CodeApiSvc.Cdf.AsCustom<T>(source: source, protector: protector, mock: nullIfNull);
+        => Cdf.AsCustom<T>(source: source, protector: protector, mock: nullIfNull);
 
     /// <summary>
     /// EXPERIMENTAL
@@ -35,7 +39,7 @@ internal class ConvertService16(
     [PrivateApi("WIP, don't publish yet")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     IEnumerable<T> IConvertService16.AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector, bool nullIfNull)
-        => _CodeApiSvc.Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
+        => Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
 
     #endregion
 

@@ -3,7 +3,9 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
@@ -44,13 +46,15 @@ public class TypedCode16Helper(object owner, CodeHelperSpecs helperSpecs, Func<o
 
     internal ContextData Data { get; } = helperSpecs.CodeApiSvc.GetState<IDataSource>() as ContextData;
 
-    public ITypedItem MyItem => _myItem.Get(() => CodeApiSvc.Cdf.AsItem(Data.MyItems.FirstOrDefault(), propsRequired: DefaultStrict));
+    private ICodeDataFactory Cdf => field ??= CodeApiSvc.GetCdf();
+
+    public ITypedItem MyItem => _myItem.Get(() => Cdf.AsItem(Data.MyItems.FirstOrDefault(), propsRequired: DefaultStrict));
     private readonly GetOnce<ITypedItem> _myItem = new();
 
-    public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => CodeApiSvc.Cdf.EntitiesToItems(Data.MyItems, propsRequired: DefaultStrict));
+    public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => Cdf.EntitiesToItems(Data.MyItems, propsRequired: DefaultStrict));
     private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new();
 
-    public ITypedItem MyHeader => _myHeader.Get(() => CodeApiSvc.Cdf.AsItem(Data.MyHeaders.FirstOrDefault(), propsRequired: DefaultStrict));
+    public ITypedItem MyHeader => _myHeader.Get(() => Cdf.AsItem(Data.MyHeaders.FirstOrDefault(), propsRequired: DefaultStrict));
     private readonly GetOnce<ITypedItem> _myHeader = new();
 
     public ITypedModel MyModel => _myModel.Get(() => new TypedModel(Specs, MyModelDic, Specs.IsRazor, Specs.CodeFileName));

@@ -10,9 +10,11 @@ using ToSic.Lib.DI;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.LookUp.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Engines;
@@ -103,8 +105,9 @@ public class TokenEngine(
 
         _tokenReplace = new(lookUpEngine);
     }
+    private ICodeDataFactory Cdf => field ??= _codeApiSvc.GetCdf();
 
-    private CultureInfo CultureInfo => field ??= CultureHelpers.SafeCultureInfo(_codeApiSvc.Cdf.Dimensions);
+    private CultureInfo CultureInfo => field ??= CultureHelpers.SafeCultureInfo(Cdf.Dimensions);
 
 
     [PrivateApi]
@@ -159,7 +162,7 @@ public class TokenEngine(
         for (var i = 0; i < itemsCount; i++)
         {
             // Create property sources for the current data item (for the current data item and its list information)
-            var dynEntity = _codeApiSvc.Cdf.AsDynamic(dataItems.ElementAt(i), propsRequired: false);
+            var dynEntity = Cdf.AsDynamic(dataItems.ElementAt(i), propsRequired: false);
             var propertySources = new Dictionary<string, ILookUp>
             {
                 { sourceName, new LookUpForTokenTemplate(sourceName, dynEntity, CultureInfo, i, itemsCount) }

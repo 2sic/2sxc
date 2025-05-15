@@ -9,9 +9,11 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Services.DataServices;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 using static ToSic.Sxc.Apps.Internal.Assets.AppAssetFolderMain;
 
 namespace ToSic.Sxc.Apps.Internal;
@@ -41,10 +43,12 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> 
     /// <inheritdoc />
     public string Name => App.Name;
 
+    private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
+
     /// <inheritdoc />
     public IAppDataTyped Data => field ??= App
         .BuildDataForTyped<AppDataTyped, AppDataTyped>()
-        .Setup(CodeApiSvc.Cdf);
+        .Setup(Cdf);
 
     /// <inheritdoc />
     public IDataSource GetQuery(string name = default, NoParamOrder noParamOrder = default, IDataSourceLinkable attach = default, object parameters = default)
@@ -67,7 +71,7 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> 
     private ITypedItem MakeTyped(ICanBeEntity contents, bool propsRequired)
     {
         var wrapped = CmsEditDecorator.Wrap(contents.Entity, false);
-        return CodeApiSvc.Cdf.AsItem(wrapped, propsRequired: propsRequired);
+        return Cdf.AsItem(wrapped, propsRequired: propsRequired);
     }
 
     /// <inheritdoc />

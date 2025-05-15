@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Code;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Internal;
 
@@ -19,10 +20,10 @@ public static class IHasKitExtensions
         };
 
 
-    internal static ICodeApiService SetCompatibility(this ICodeApiService codeRoot, int compatibility)
+    internal static /*IExecutionContext*/ void SetCompatibility(this IExecutionContext codeRoot, int compatibility)
     {
-        codeRoot.Cdf.SetCompatibilityLevel(compatibility);
-        return codeRoot;
+        codeRoot.GetCdf().SetCompatibilityLevel(compatibility);
+        //return codeRoot;
     }
 
 }

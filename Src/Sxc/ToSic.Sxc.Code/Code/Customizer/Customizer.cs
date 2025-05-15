@@ -3,8 +3,10 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Customizer;
 
@@ -42,6 +44,8 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
 
     private ICmsView _view;
 
+    private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
+
     public TCustomType MyItem<TCustomType>()
         where TCustomType : class, ICanWrapData, new()
     {
@@ -50,7 +54,7 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
             return typed;
 
         var firstEntity = (ExCtx.GetState<IDataSource>() as ContextData)?.MyItems.FirstOrDefault();
-        var created = _CodeApiSvc.Cdf.AsCustom<TCustomType>(firstEntity);
+        var created = Cdf.AsCustom<TCustomType>(firstEntity);
         _myItem = created;
         return created;
     }
@@ -64,7 +68,7 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
         
         // Get and cache for reuse
         var items = (ExCtx.GetState<IDataSource>() as ContextData)?.MyItems ?? [];
-        var created = _CodeApiSvc.Cdf.AsCustomList<TCustomType>(items, default, nullIfNull: false);
+        var created = Cdf.AsCustomList<TCustomType>(items, default, nullIfNull: false);
         _myItems = created;
         return created;
     }
@@ -78,7 +82,7 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
 
         // Get and cache for reuse
         var header = (ExCtx.GetState<IDataSource>() as ContextData)?.MyHeaders.FirstOrDefault();
-        var created = _CodeApiSvc.Cdf.AsCustom<TCustomType>(header);
+        var created = Cdf.AsCustom<TCustomType>(header);
         _myHeader = created;
         return created;
     }

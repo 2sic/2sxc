@@ -6,6 +6,8 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Context.Internal;
 
@@ -35,16 +37,18 @@ internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IVi
     private IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string location = default)
         => new CmsViewFolder(this, block.App, AppAssetsHelpers.DetermineShared(location) ?? block.View.IsShared);
 
+    private ICodeDataFactory Cdf => field ??= Parent._CodeApiSvc.GetCdf();
+
     /// <summary>
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work. This is by design.
     /// </summary>
-    ITypedItem ICmsView.Settings => _settings.Get(() => Parent._CodeApiSvc.Cdf.AsItem(_view.Settings));
+    ITypedItem ICmsView.Settings => _settings.Get(() => Cdf.AsItem(_view.Settings));
     private readonly GetOnce<ITypedItem> _settings = new();
 
     /// <summary>
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work. This is by design.
     /// </summary>
-    ITypedItem ICmsView.Resources => _resources.Get(() => Parent._CodeApiSvc.Cdf.AsItem(_view.Resources));
+    ITypedItem ICmsView.Resources => _resources.Get(() => Cdf.AsItem(_view.Resources));
     private readonly GetOnce<ITypedItem> _resources = new();
 
     /// <inheritdoc />

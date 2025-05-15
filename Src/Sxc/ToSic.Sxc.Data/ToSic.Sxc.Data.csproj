@@ -70,7 +70,6 @@
 
   <ItemGroup>
     <Folder Include="Data\Fields.Internal\" />
-    <Folder Include="Sys.ExecutionContext\" />
   </ItemGroup>
 
 </Project>

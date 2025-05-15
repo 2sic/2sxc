@@ -2,11 +2,13 @@
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Data;
 using ToSic.Lib.DI;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -15,6 +17,7 @@ namespace ToSic.Sxc.Code.Internal;
 
 public partial class CodeApiService
     : IWrapper<IExCtxServicesForTypedData>,
+        IWrapper<ICodeDataFactory>,
         IExCtxAttachApp
 {
     [PrivateApi]
@@ -69,6 +72,14 @@ public partial class CodeApiService
         }
     }
 
+    public TService GetServiceForData<TService>() where TService : class
+    {
+        if (typeof(TService) == typeof(AdamManager))
+            return ((CodeDataFactory)Cdf).AdamManager as TService;
+
+        throw new NotImplementedException();
+    }
+
     /// <summary>
     /// A kind of cache for:
     /// - all kinds of kits by version, like Kit14, Kit16
@@ -105,7 +116,7 @@ public partial class CodeApiService
 
     #endregion
 
-    public TState GetState<TState>()
+    public TState GetState<TState>() where TState : class
     {
         if (typeof(TState) == typeof(ICmsContext))
             return (TState)CmsContext;
@@ -132,11 +143,14 @@ public partial class CodeApiService
             $"Can't get state of type {typeof(TState).Name} - only {nameof(IApp)}, {nameof(IDataSource)}, {nameof(IBlock)} and {nameof(IAppTyped)} are supported");
     }
 
-    public TState GetState<TState>(string name)
+    public TState GetState<TState>(string name) where TState : class
     {
         if (typeof(TState) == typeof(IDynamicStack) && name == "Settings")
             return (TState)Settings;
 
         throw new InvalidOperationException("Can only retrieve 'Settings'");
     }
+
+    ICodeDataFactory IWrapper<ICodeDataFactory>.GetContents()
+        => Cdf;
 }

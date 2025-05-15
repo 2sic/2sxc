@@ -3,30 +3,28 @@ using ToSic.Eav.Metadata;
 using ToSic.Lib.Data;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Context.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal abstract class CmsContextPartBase<T> : Wrapper<T>, IHasMetadata where T : class
+internal abstract class CmsContextPartBase<T>(CmsContext parent, T contents) : Wrapper<T>(contents), IHasMetadata
+    where T : class
 {
-    protected CmsContextPartBase(CmsContext parent, T contents) : base(contents)
-    {
-        Parent = parent;
-    }
-    protected CmsContext Parent;
+    protected CmsContext Parent = parent;
 
     //protected CmsContextPartBase() : base(null) { }
 
-    protected void Init(CmsContext parent, T contents)
-    {
-        Wrap(contents);
-        Parent = parent;
-    }
+    //protected void Init(CmsContext parent, T contents)
+    //{
+    //    Wrap(contents);
+    //    Parent = parent;
+    //}
 
     /// <summary>
     /// Typed IMetadata accessor to all the metadata of this object.
     /// </summary>
-    public IMetadata Metadata => _dynMeta.Get(() => Parent._CodeApiSvc.Cdf.Metadata(MetadataRaw));
+    public IMetadata Metadata => _dynMeta.Get(() => Parent._CodeApiSvc.GetCdf().Metadata(MetadataRaw));
     private readonly GetOnce<IMetadata> _dynMeta = new();
 
     [JsonIgnore] // ignore, as it's published through the Metadata property which is better typed.

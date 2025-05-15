@@ -56,6 +56,8 @@ public abstract class ServiceForDynamicCode(string logName, NoParamOrder protect
 
     protected IExecutionContext ExCtx => CodeApiSvc;
 
+    protected IExecutionContext ExCtxOrNull => _CodeApiSvc;
+
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public virtual bool Debug { get; set; }

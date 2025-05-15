@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface ICodeApiService : IExecutionContext, IHasLog, IHasPiggyBack, ICanGetService
+public interface ICodeApiService : IExecutionContext, IHasLog, IHasPiggyBack
 {
     #region AsConverter (internal)
 
@@ -22,16 +22,6 @@ public interface ICodeApiService : IExecutionContext, IHasLog, IHasPiggyBack, IC
     [ShowApiWhenReleased(ShowApiMode.Never)]
     ICodeDataFactory Cdf { get; }
 
-    /// <summary>
-    /// Special GetService which can cache the found service so any other use could get the same instance.
-    /// This should ensure that an Edit service requested through Kit14 and Kit16 are both the same, etc.
-    /// </summary>
-    /// <typeparam name="TService"></typeparam>
-    /// <param name="protector"></param>
-    /// <param name="reuse">if true, then a service requested multiple times will return the same instance</param>
-    /// <returns></returns>
-    [PrivateApi]
-    TService GetService<TService>(NoParamOrder protector = default, bool reuse = false, Type type = default) where TService : class;
 
     #endregion
 }

@@ -8,6 +8,7 @@ using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code;
 
@@ -23,7 +24,7 @@ internal class TypedModel(
     : ITypedModel
 {
     private readonly IDictionary<string, object> _paramsDictionary = paramsDictionary?.ToInvariant() ?? new Dictionary<string, object>();
-    private readonly TypedConverter _converter = new(helperSpecs.CodeApiSvc.Cdf);
+    private readonly TypedConverter _converter = new(helperSpecs.CodeApiSvc.GetCdf());
 
     #region Check if parameters were supplied
 

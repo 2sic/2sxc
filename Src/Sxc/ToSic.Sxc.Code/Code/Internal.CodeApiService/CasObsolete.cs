@@ -4,7 +4,9 @@ using ToSic.Eav.LookUp;
 using ToSic.SexyContent;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Internal;
 
@@ -69,6 +71,7 @@ public class CodeApiServiceObsolete(ICodeApiService dynCode)
     }
     private List<Element> _list;
 
+    private ICodeDataFactory Cdf => field ??= dynCode.GetCdf();
 
     /// <remarks>
     /// This must be lazy-loaded, otherwise initializing the AppAndDataHelper will break when the Data-object fails 
@@ -95,14 +98,14 @@ public class CodeApiServiceObsolete(ICodeApiService dynCode)
             var el = new Element
             {
                 EntityId = e.EntityId,
-                Content = dynCode.Cdf.CodeAsDyn(e)
+                Content = Cdf.CodeAsDyn(e)
             };
 
             var editDecorator = e.GetDecorator<EntityInBlockDecorator>();
 
             if (editDecorator != null)
             {
-                el.Presentation = editDecorator.Presentation == null ? null : dynCode.Cdf.CodeAsDyn(editDecorator.Presentation);
+                el.Presentation = editDecorator.Presentation == null ? null : Cdf.CodeAsDyn(editDecorator.Presentation);
                 el.SortOrder = editDecorator.SortOrder;
             }
 

@@ -2,8 +2,10 @@
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Services.Template;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Services.Templates;
 
@@ -79,8 +81,10 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getEngineLazy) : S
     public ILookUp CreateSource(string name, Func<string, string, string> getter)
         => new LookUpWithFunctionAndFormat(NameOrErrorIfBad(name), getter);
 
+    private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
+
     public ILookUp CreateSource(string name, ICanBeEntity item, NoParamOrder protector = default, string[] dimensions = default) 
-        => new LookUpInEntity(name, item.Entity, dimensions: dimensions ?? _CodeApiSvc.Cdf.Dimensions);
+        => new LookUpInEntity(name, item.Entity, dimensions: dimensions ?? Cdf.Dimensions);
 
     public ILookUp MergeSources(string name, IEnumerable<ILookUp> sources)
     {
