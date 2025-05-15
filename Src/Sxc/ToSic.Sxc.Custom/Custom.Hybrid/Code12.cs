@@ -3,6 +3,7 @@ using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Internal;
@@ -29,7 +30,7 @@ public abstract class Code12() : CustomCodeBase("Sxc.Code12"), IHasCodeLog, IDyn
 {
     #region Constructor / Setup
 
-    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.DynamicApi;
+    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => CodeHlp.CodeLog;

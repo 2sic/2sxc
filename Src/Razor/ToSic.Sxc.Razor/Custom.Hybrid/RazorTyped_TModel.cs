@@ -12,6 +12,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
@@ -33,7 +34,7 @@ public abstract class RazorTyped<TModel>()
         ISetDynamicModel, IDynamicCode16, IHasCodeHelp
 {
     #region ServiceKit
-    internal ICodeTypedApiService CodeApi => RzrHlp.DynCodeRootMain.TypedApi;
+    internal ICodeTypedApiService CodeApi => field ??= RzrHlp.DynCodeRootMain.GetTypedApi();
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
     public ServiceKit16 Kit => _kit.Get(() => CodeApi.GetKit<ServiceKit16>());

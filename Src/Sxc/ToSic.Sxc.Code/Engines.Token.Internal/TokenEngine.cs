@@ -8,6 +8,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.LookUp;
@@ -86,7 +87,7 @@ public class TokenEngine(
         base.Init(block);
         _codeApiSvc = codeRootFactory.Value
             .New(null, Block, Log, CompatibilityLevels.CompatibilityLevel9Old);
-        _dynamicApiSvc = _codeApiSvc.DynamicApi;
+        _dynamicApiSvc = _codeApiSvc.GetDynamicApi();
         InitTokenReplace();
     }
 

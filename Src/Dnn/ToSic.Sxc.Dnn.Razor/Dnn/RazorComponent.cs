@@ -3,6 +3,7 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Search;
@@ -21,7 +22,7 @@ public abstract partial class RazorComponent : RazorComponentBase,
 #pragma warning restore CS0618
     IDnnRazorCompatibility, IDnnRazor11, ICreateInstance
 {
-    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.DynamicApi;
+    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
 
     /// <inheritdoc />
     public IDnnContext Dnn => (_CodeApiSvc as IHasDnn)?.Dnn;

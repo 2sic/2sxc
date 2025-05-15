@@ -2,6 +2,7 @@
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Internal;
@@ -25,7 +26,7 @@ public abstract class DynamicCode12(): CustomCodeBase("Sxc.DynCod"), IHasCodeLog
 {
     #region Constructor / Setup
 
-    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.DynamicApi;
+    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
 
 
     /// <inheritdoc cref="IHasCodeLog.Log" />

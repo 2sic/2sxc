@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Plumbing;
 using ToSic.Lib.Code.Help;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data;
@@ -27,7 +28,8 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 {
     #region Constructor, Setup, Helpers
 
-    internal ICodeTypedApiService CodeApi => field ??= _CodeApiSvc.TypedApi;
+    internal ICodeTypedApiService CodeApi => field
+        ??= _CodeApiSvc.GetTypedApi();
 
 
     /// <inheritdoc cref="DnnRazorHelper.RenderPageNotSupported"/>

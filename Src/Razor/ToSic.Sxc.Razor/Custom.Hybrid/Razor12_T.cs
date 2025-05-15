@@ -8,6 +8,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Engines;
@@ -22,7 +23,7 @@ namespace Custom.Hybrid;
 public abstract class Razor12<TModel>() : OqtRazorBase<TModel>(CompatibilityLevels.CompatibilityLevel12, "Oqt.Rzr12"),
     IHasCodeLog, IRazor, IRazor12, ISetDynamicModel
 {
-    internal ICodeDynamicApiService CodeApi => RzrHlp.DynCodeRootMain.DynamicApi;
+    internal ICodeDynamicApiService CodeApi => RzrHlp.DynCodeRootMain.GetDynamicApi();
 
     #region Dynamic Model
 

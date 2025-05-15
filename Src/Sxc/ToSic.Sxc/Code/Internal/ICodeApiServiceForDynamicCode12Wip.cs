@@ -16,9 +16,6 @@ public interface ICodeApiServiceForDynamicCode12Wip: IHasLog
     /// <inheritdoc cref="IDynamicCode.App" />
     IApp App { get; }
 
-    ///// <inheritdoc cref="IDynamicCode.AsAdam" />
-    //IFolder AsAdam(ICanBeEntity item, string fieldName);
-
     /// <inheritdoc cref="IDynamicCode.Data" />
     IDataSource Data { get; }
 

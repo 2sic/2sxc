@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Razor;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
@@ -44,7 +45,8 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
     #region GetService / Logs / DevTools
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
-    public TService GetService<TService>() where TService : class => RzrHlp.DynCodeRootMain.TypedApi.GetService<TService>();
+    public TService GetService<TService>() where TService : class
+        => RzrHlp.DynCodeRootMain.GetTypedApi().GetService<TService>();
 
     [PrivateApi("WIP 17.06,x")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -59,7 +61,7 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
     [PrivateApi("Not yet ready")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public IDevTools DevTools => RzrHlp.DynCodeRootMain.TypedApi.DevTools;
+    public IDevTools DevTools => RzrHlp.DynCodeRootMain.GetTypedApi().DevTools;
 
     #endregion
 

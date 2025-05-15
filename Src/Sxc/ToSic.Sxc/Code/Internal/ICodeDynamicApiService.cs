@@ -2,7 +2,6 @@
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.Internal;
@@ -36,15 +35,9 @@ public interface ICodeDynamicApiService: ICodeAnyApiHelper
     #endregion
 
 
-    ///// <inheritdoc cref="IDynamicCode.CmsContext" />
-    //ICmsContext CmsContext { get; }
-
     /// <inheritdoc cref="IDynamicCode.Edit" />
     IEditService Edit { get; }
 
-
-    ///// <inheritdoc cref="Razor.Html5.Link" />
-    //ILinkService Link { get; }
 
     /// <inheritdoc cref="IDynamicCode.AsAdam" />
     IFolder AsAdam(ICanBeEntity item, string fieldName);

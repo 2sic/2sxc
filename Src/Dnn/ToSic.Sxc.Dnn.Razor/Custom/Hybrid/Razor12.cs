@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.LookUp;
 using ToSic.Lib.Code.Help;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Dnn.Razor;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -16,7 +17,7 @@ namespace Custom.Hybrid;
 [PublicApi]
 public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHelp, ICreateInstance
 {
-    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.DynamicApi;
+    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
 
     /// <inheritdoc cref="DnnRazorHelper.RenderPageNotSupported"/>
     [PrivateApi]

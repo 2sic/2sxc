@@ -5,6 +5,8 @@ using ToSic.Lib;
 using ToSic.Lib.Code.Help;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.CodeApi;
+using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
@@ -63,7 +65,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
         => field ??= CodeApi().GetKit<ServiceKit16>();
 
     private ICodeTypedApiService CodeApi([CallerMemberName] string propName = default)
-        => _codeApi ??= CodeRootOrError(propName).TypedApi;
+        => _codeApi ??= CodeRootOrError(propName).GetTypedApi();
     private ICodeTypedApiService _codeApi;
 
     private ICodeApiService CodeRootOrError([CallerMemberName] string propName = default)

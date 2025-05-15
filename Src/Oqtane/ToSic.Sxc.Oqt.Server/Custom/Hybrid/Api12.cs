@@ -10,6 +10,7 @@ using ToSic.Lib.Coding;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
@@ -36,7 +37,7 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
 
     [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
-    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.DynamicApi;
+    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
 
     /// <summary>
     /// Our custom dynamic 2sxc app api controllers, depends on event OnActionExecuting to provide dependencies (without DI in constructor).

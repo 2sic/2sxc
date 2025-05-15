@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Code.CodeApi;
+using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
@@ -28,7 +30,7 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
 
         if (!path.EndsWith(SourceCodeConstants.CsFileExtension))
             throw l.Done(new ArgumentException("Only '.cs' file paths can start with a slash"));
-        var app = (overrideCodeRoot ?? _CodeApiSvc)?.TypedApi?.AppTyped
+        var app = (overrideCodeRoot ?? _CodeApiSvc)?.GetTypedApi()?.AppTyped
                   ?? throw l.Done(new Exception("Absolute paths require an App, which was null"));
         var appFolder = app.Folder?.Path
                         ?? throw l.Done(new Exception("Absolute paths require the App folder, which was null"));

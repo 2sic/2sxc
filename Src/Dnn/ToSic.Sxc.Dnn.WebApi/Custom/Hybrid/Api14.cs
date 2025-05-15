@@ -7,6 +7,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
@@ -36,7 +37,7 @@ public abstract partial class Api14(string logSuffix) : DnnSxcCustomControllerBa
 
     protected Api14() : this("Hyb14") { }
 
-    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.DynamicApi;
+    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
 
     /// <inheritdoc cref="IHasKit{TServiceKit}.Kit" />
     public ServiceKit14 Kit => _kit.Get(CodeApi.GetKit<ServiceKit14>);

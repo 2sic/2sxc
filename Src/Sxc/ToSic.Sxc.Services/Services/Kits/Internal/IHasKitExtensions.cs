@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Services;
+﻿using ToSic.Eav.Code;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Internal;
@@ -7,6 +8,22 @@ namespace ToSic.Sxc.Code.Internal;
 public static class IHasKitExtensions
 {
     public static TServiceKit GetKit<TServiceKit>(this ICodeAnyApiHelper codeRoot) where TServiceKit : ServiceKit
+        => GetKit<TServiceKit>(codeRoot as object);
+
+        //=> codeRoot switch
+        //{
+        //    // if it has the exact kit version, return it
+        //    IHasKit<TServiceKit> { Kit: not null } withKit => withKit.Kit,
+
+        //    // if it has a service that can provide the kit, return it
+        //    IExCtxGetKit cas => cas.GetKit<TServiceKit>(),
+
+        //    // Unexpected - but old fallback: just generate a new one
+        //    ICanGetService cgs => cgs.GetService<TServiceKit>(),
+            
+        //    _ => throw new($"GetKit: {codeRoot.GetType().Name} doesn't implement IHasKit or IExCtxGetKit")
+        //};
+    internal static TServiceKit GetKit<TServiceKit>(object codeRoot) where TServiceKit : ServiceKit
         => codeRoot switch
         {
             // if it has the exact kit version, return it
@@ -16,7 +33,9 @@ public static class IHasKitExtensions
             IExCtxGetKit cas => cas.GetKit<TServiceKit>(),
 
             // Unexpected - but old fallback: just generate a new one
-            _ => codeRoot.GetService<TServiceKit>()
+            ICanGetService cgs => cgs.GetService<TServiceKit>(),
+            
+            _ => throw new($"GetKit: {codeRoot.GetType().Name} doesn't implement IHasKit or IExCtxGetKit")
         };
 
 

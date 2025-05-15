@@ -19,7 +19,7 @@ internal class CmsServiceContainerHelper(
 {
     private string Classes { get; set; } = classes;
 
-    private ServiceKit14 ServiceKit => field ??= codeApiSvc.TypedApi.GetKit<ServiceKit14>();
+    private ServiceKit14 ServiceKit => field ??= IHasKitExtensions.GetKit<ServiceKit14>(codeApiSvc);
 
     public IHtmlTag Wrap(CmsProcessed result, bool defaultToolbar)
     {

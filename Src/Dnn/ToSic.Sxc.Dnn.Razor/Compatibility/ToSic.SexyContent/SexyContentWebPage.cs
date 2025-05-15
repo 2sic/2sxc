@@ -7,6 +7,7 @@ using ToSic.SexyContent.Search;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Compatibility.Internal;
 using ToSic.Sxc.Compatibility.RazorPermissions;
 using ToSic.Sxc.Compatibility.Sxc;
@@ -42,7 +43,7 @@ public abstract class SexyContentWebPage :
     IAppAndDataHelpers
 #pragma warning restore 618
 {
-    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.DynamicApi;
+    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
 
     #region Core Properties which should appear in docs
 

@@ -8,6 +8,7 @@ using ToSic.Lib.Coding;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Compatibility.Internal;
@@ -53,7 +54,7 @@ public abstract partial class SxcApiController() :
 #pragma warning restore 618
     IHasCodeLog
 {
-    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.DynamicApi;
+    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
@@ -63,7 +64,8 @@ public abstract partial class SxcApiController() :
 
     [Obsolete]
     [PrivateApi]
-    public SxcHelper Sxc => field ??= new(((IExCtxBlock)CodeApi)?.Block?.Context?.Permissions.IsContentAdmin ?? false, SysHlp.GetService<IConvertToEavLight> ());
+    public SxcHelper Sxc => field
+        ??= new(((IExCtxBlock)CodeApi)?.Block?.Context?.Permissions.IsContentAdmin ?? false, SysHlp.GetService<IConvertToEavLight> ());
 
     /// <summary>
     /// Old API - probably never used, but we shouldn't remove it as we could break some existing code out there

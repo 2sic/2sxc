@@ -99,6 +99,6 @@ partial class PageService
     private DynamicEntity WebResources => _webResources.Get(() => Settings?.Get(WebResourcesNode) as DynamicEntity);
     private readonly GetOnce<DynamicEntity> _webResources = new();
 
-    private DynamicStack Settings => _settings.Get(() => _CodeApiSvc?.DynamicApi?.Settings as DynamicStack);
+    private DynamicStack Settings => _settings.Get(() => _CodeApiSvc?.Settings as DynamicStack);
     private readonly GetOnce<DynamicStack> _settings = new();
 }

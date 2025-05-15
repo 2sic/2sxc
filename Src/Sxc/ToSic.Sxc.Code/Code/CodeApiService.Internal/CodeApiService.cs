@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Services;
+using ToSic.Eav.Code;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.DataSource;
 using ToSic.Lib.DI;
@@ -28,7 +29,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// </remarks>
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServices>, ICodeApiService, IHasPiggyBack
+public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServices>, ICodeApiService, IHasPiggyBack, ICanGetService
 {
     #region Constructor
 

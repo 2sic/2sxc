@@ -11,6 +11,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.WebApi;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
@@ -49,7 +50,8 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     /// <param name="insightsGroup">Name of the section in Insights</param>
     protected ApiTyped(string insightsGroup) : base("Api16", insightsGroup) { }
 
-    internal ICodeTypedApiService CodeApi => field ??= _CodeApiSvc.TypedApi;
+    internal ICodeTypedApiService CodeApi => field
+        ??= _CodeApiSvc.GetTypedApi();
 
     /// <inheritdoc cref="IHasKit{TServiceKit}.Kit" />
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
