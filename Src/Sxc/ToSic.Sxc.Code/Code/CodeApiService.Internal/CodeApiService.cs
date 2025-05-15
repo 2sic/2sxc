@@ -4,6 +4,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Code.CodeApi;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context;
@@ -130,7 +131,7 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
     /// <summary>
     /// WIP!
     /// </summary>
-    public ICodeDynamicApiService DynamicApi => this;
+    public ICodeDynamicApiService DynamicApi => field ??= new CodeDynamicApiHelper().SetupQ(this);
 
-    public ICodeTypedApiService TypedApi => this;
+    public ICodeTypedApiService TypedApi => field ??= new CodeTypedApiHelper().SetupQ(this);
 }

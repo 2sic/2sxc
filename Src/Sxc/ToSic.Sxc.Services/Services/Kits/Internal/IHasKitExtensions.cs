@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Code.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class IHasKitExtensions
 {
-    public static TServiceKit GetKit<TServiceKit>(this ICodeAllApiService codeRoot) where TServiceKit : ServiceKit
+    public static TServiceKit GetKit<TServiceKit>(this ICodeAnyApiHelper codeRoot) where TServiceKit : ServiceKit
         => codeRoot switch
         {
             // if it has the exact kit version, return it

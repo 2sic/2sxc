@@ -33,7 +33,7 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
 
-    public ServiceKit14 Kit => _kit.Get(() => _CodeApiSvc.GetKit<ServiceKit14>());
+    public ServiceKit14 Kit => _kit.Get(CodeApi.GetKit<ServiceKit14>);
     private readonly GetOnce<ServiceKit14> _kit = new();
 
 

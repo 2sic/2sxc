@@ -15,14 +15,6 @@ public interface ICodeApiService : ICodeApiServiceForDynamicCode12Wip, IHasLog, 
     public ICodeDynamicApiService DynamicApi { get; }
     public ICodeTypedApiService TypedApi { get; }
 
-    /// <summary>
-    /// Almost every use 
-    /// </summary>
-    ///*IDynamicStack*/ object Resources { get; }
-    ///*IDynamicStack*/ object Settings { get; }
-
-    //IAppTyped AppTyped { get; }
-
     #region AsConverter (internal)
 
     [PrivateApi("internal use only")]

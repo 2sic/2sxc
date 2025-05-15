@@ -39,7 +39,7 @@ public abstract partial class Api14(string logSuffix) : DnnSxcCustomControllerBa
     internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.DynamicApi;
 
     /// <inheritdoc cref="IHasKit{TServiceKit}.Kit" />
-    public ServiceKit14 Kit => _kit.Get(() => _CodeApiSvc.GetKit<ServiceKit14>());
+    public ServiceKit14 Kit => _kit.Get(CodeApi.GetKit<ServiceKit14>);
     private readonly GetOnce<ServiceKit14> _kit = new();
 
     /// <inheritdoc cref="IHasCodeLog.Log" />

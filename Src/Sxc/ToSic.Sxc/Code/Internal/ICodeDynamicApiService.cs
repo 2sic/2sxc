@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// <summary>
 /// WIP
 /// </summary>
-public interface ICodeDynamicApiService: ICodeAllApiService
+public interface ICodeDynamicApiService: ICodeAnyApiHelper
 {
 
     #region Content, Header, App, Data, Resources, Settings
@@ -24,9 +24,6 @@ public interface ICodeDynamicApiService: ICodeAllApiService
     /// <inheritdoc cref="Eav.DataSources.App" />
     IApp App { get; }
 
-    /// <inheritdoc cref="Razor.Html5.Data" />
-    IDataSource Data { get; }
-
     /// <summary>
     /// Almost every use 
     /// </summary>
@@ -39,15 +36,15 @@ public interface ICodeDynamicApiService: ICodeAllApiService
     #endregion
 
 
-    /// <inheritdoc cref="IDynamicCode.CmsContext" />
-    ICmsContext CmsContext { get; }
+    ///// <inheritdoc cref="IDynamicCode.CmsContext" />
+    //ICmsContext CmsContext { get; }
 
     /// <inheritdoc cref="IDynamicCode.Edit" />
     IEditService Edit { get; }
 
 
-    /// <inheritdoc cref="Razor.Html5.Link" />
-    ILinkService Link { get; }
+    ///// <inheritdoc cref="Razor.Html5.Link" />
+    //ILinkService Link { get; }
 
     /// <inheritdoc cref="IDynamicCode.AsAdam" />
     IFolder AsAdam(ICanBeEntity item, string fieldName);

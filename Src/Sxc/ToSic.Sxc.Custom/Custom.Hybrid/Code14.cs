@@ -46,7 +46,7 @@ public abstract class Code14()
 
     #endregion
 
-    public ServiceKit14 Kit => _kit.Get(() => _CodeApiSvc.GetKit<ServiceKit14>());
+    public ServiceKit14 Kit => _kit.Get(CodeApi.GetKit<ServiceKit14>);
     private readonly GetOnce<ServiceKit14> _kit = new();
 
     #region Stuff added by Code12

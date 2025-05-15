@@ -1,8 +1,11 @@
-﻿using ToSic.Sxc.Data.Internal;
+﻿using ToSic.Eav.DataSource;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.Internal;
 
-public interface ICodeAllApiService
+public interface ICodeAnyApiHelper
 {
     #region TODO: WHEN READY and moved deeper in the structure
     // 1. Block
@@ -10,6 +13,17 @@ public interface ICodeAllApiService
     // 3. Re-Type the Resources and Settings
 
     //IBlock Block { get; }
+
+
+    #endregion
+
+    #region Context & Data
+
+    /// <inheritdoc cref="IDynamicCode.CmsContext" />
+    ICmsContext CmsContext { get; }
+
+    /// <inheritdoc cref="Razor.Html5.Data" />
+    IDataSource Data { get; }
 
 
     #endregion
@@ -33,6 +47,13 @@ public interface ICodeAllApiService
     [PrivateApi("internal use only")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     ICodeDataFactory Cdf { get; }
+
+    #endregion
+
+    #region Common Services (Link)
+
+    /// <inheritdoc cref="Razor.Html5.Link" />
+    ILinkService Link { get; }
 
     #endregion
 
