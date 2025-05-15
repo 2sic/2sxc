@@ -6,6 +6,4 @@
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface ISxcDynamicObject //: ITyped
-{
-}
+public interface ISxcDynamicObject;

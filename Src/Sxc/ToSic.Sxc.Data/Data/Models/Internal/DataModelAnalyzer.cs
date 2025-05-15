@@ -3,7 +3,7 @@ using ToSic.Sxc.Data.Models;
 
 namespace ToSic.Sxc.Data.Internal;
 
-internal class DataModelAnalyzer
+public class DataModelAnalyzer
 {
 
     /// <summary>
@@ -38,7 +38,7 @@ internal class DataModelAnalyzer
     /// </summary>
     /// <typeparam name="TCustom"></typeparam>
     /// <returns></returns>
-    internal static (List<string> List, string Flat) GetContentTypeNamesList<TCustom>() where TCustom : ICanWrapData
+    public static (List<string> List, string Flat) GetContentTypeNamesList<TCustom>() where TCustom : ICanWrapData
         => ContentTypeNamesList.Get<TCustom, ModelSourceAttribute>(a => UseSpecifiedNameOrDeriveFromType<TCustom>(a?.ContentTypes));
     private static readonly ClassAttributeLookup<(List<string> List, string Flat)> ContentTypeNamesList = new();
 
@@ -47,7 +47,7 @@ internal class DataModelAnalyzer
     /// </summary>
     /// <typeparam name="TCustom"></typeparam>
     /// <returns></returns>
-    internal static (List<string> List, string Flat) GetStreamNameList<TCustom>() where TCustom : ICanWrapData
+    public static (List<string> List, string Flat) GetStreamNameList<TCustom>() where TCustom : ICanWrapData
         => StreamNames.Get<TCustom, ModelSourceAttribute>(attribute => UseSpecifiedNameOrDeriveFromType<TCustom>(attribute?.Streams));
 
     private static (List<string> List, string Flat) UseSpecifiedNameOrDeriveFromType<TCustom>(string names)
