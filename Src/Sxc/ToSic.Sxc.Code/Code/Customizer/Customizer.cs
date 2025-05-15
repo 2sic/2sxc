@@ -34,7 +34,7 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
         if (_view is ICmsView<TSettings, TResources> typed) return typed;
 
         // Get and cache for reuse
-        var cmsContext = _CodeApiSvc.GetState<ICmsContext>() as CmsContext;
+        var cmsContext = ExCtx.GetState<ICmsContext>() as CmsContext;
         var created = new CmsView<TSettings, TResources>(cmsContext, cmsContext?.RealBlockOrNull, false);
         _view = created;
         return created;
@@ -49,7 +49,7 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
         if (_myItem is TCustomType typed)
             return typed;
 
-        var firstEntity = (_CodeApiSvc.GetState<IDataSource>() as ContextData)?.MyItems.FirstOrDefault();
+        var firstEntity = (ExCtx.GetState<IDataSource>() as ContextData)?.MyItems.FirstOrDefault();
         var created = _CodeApiSvc.Cdf.AsCustom<TCustomType>(firstEntity);
         _myItem = created;
         return created;
@@ -63,7 +63,7 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
         if (_myItems is IEnumerable<TCustomType> typed) return typed;
         
         // Get and cache for reuse
-        var items = (_CodeApiSvc.GetState<IDataSource>() as ContextData)?.MyItems ?? [];
+        var items = (ExCtx.GetState<IDataSource>() as ContextData)?.MyItems ?? [];
         var created = _CodeApiSvc.Cdf.AsCustomList<TCustomType>(items, default, nullIfNull: false);
         _myItems = created;
         return created;
@@ -77,7 +77,7 @@ internal class Customizer(): ServiceForDynamicCode(SxcLogName + ".CdeCst"), ICod
         if (_myHeader is TCustomType typed) return typed;
 
         // Get and cache for reuse
-        var header = (_CodeApiSvc.GetState<IDataSource>() as ContextData)?.MyHeaders.FirstOrDefault();
+        var header = (ExCtx.GetState<IDataSource>() as ContextData)?.MyHeaders.FirstOrDefault();
         var created = _CodeApiSvc.Cdf.AsCustom<TCustomType>(header);
         _myHeader = created;
         return created;

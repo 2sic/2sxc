@@ -53,7 +53,7 @@ public partial class CodeDataFactory(
     private ISite _siteOrNull;
 
     private ISite SiteFromContextOrFallback => field 
-        ??= (_CodeApiSvc?.GetState<ICmsContext>() as CmsContext)?.CtxSite.Site
+        ??= (ExCtx?.GetState<ICmsContext>() as CmsContext)?.CtxSite.Site
             ?? _siteOrNull
             ?? throw new("Tried getting site from context or fallback, neither returned anything useful. ");
 
@@ -81,11 +81,11 @@ public partial class CodeDataFactory(
     // There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
     public string[] Dimensions => field ??=
         // note: can't use SiteFromContextOrFallback.SafeLanguagePriorityCodes() because it will error during testing
-        (_CodeApiSvc?.GetState<ICmsContext>() as CmsContext)?.CtxSite.Site.SafeLanguagePriorityCodes()
+        (ExCtx?.GetState<ICmsContext>() as CmsContext)?.CtxSite.Site.SafeLanguagePriorityCodes()
         ?? _siteOrNull.SafeLanguagePriorityCodes();
 
 
-    public IBlock BlockOrNull => _CodeApiSvc?.GetState<IBlock>();
+    public IBlock BlockOrNull => ExCtx?.GetState<IBlock>();
 
     public object BlockAsObjectOrNull => BlockOrNull;
 

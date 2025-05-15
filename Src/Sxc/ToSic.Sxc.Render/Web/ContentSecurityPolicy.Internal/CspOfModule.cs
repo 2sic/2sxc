@@ -47,7 +47,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
     {
         if (!featuresService.IsEnabled(SxcFeatures.ContentSecurityPolicyTestUrl.NameId))
             return null;
-        var pageParameters = _CodeApiSvc?.GetState<ICmsContext>()?.Page?.Parameters;
+        var pageParameters = ExCtx?.GetState<ICmsContext>()?.Page?.Parameters;
         if (pageParameters == null) return null;
         pageParameters.TryGetValue(CspConstants.CspUrlParameter, out var cspParam);
         return cspParam;

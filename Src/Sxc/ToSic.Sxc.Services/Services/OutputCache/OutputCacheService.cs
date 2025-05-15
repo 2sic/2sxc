@@ -10,7 +10,7 @@ internal class OutputCacheService(IModuleService moduleService)
 {
     public int ModuleId
     {
-        get => _moduleId ??= _CodeApiSvc?.GetState<ICmsContext>()?.Module?.Id ?? 0;
+        get => _moduleId ??= ExCtx?.GetState<ICmsContext>()?.Module?.Id ?? 0;
         set => _moduleId = value;
     }
     private int? _moduleId;

@@ -39,7 +39,7 @@ partial class PageService
         var added = PageServiceShared.Activate(keys);
 
         // also add to this specific module, as we need a few module-level features to activate in case...
-        _CodeApiSvc?.GetState<IBlock>()?.BlockFeatureKeys.AddRange(added);
+        ExCtx?.GetState<IBlock>()?.BlockFeatureKeys.AddRange(added);
 
         return l.ReturnAsOk(""); // empty string, just so it can be used as `@Kit.Page.Activate(...)` and not produce anything
     }
