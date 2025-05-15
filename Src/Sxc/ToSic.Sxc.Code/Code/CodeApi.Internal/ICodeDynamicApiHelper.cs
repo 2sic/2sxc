@@ -2,6 +2,7 @@
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.Internal;
@@ -26,10 +27,8 @@ public interface ICodeDynamicApiHelper: ICodeAnyApiHelper
     /// <summary>
     /// Almost every use 
     /// </summary>
-    /*IDynamicStack*/
-    object Resources { get; }
-    /*IDynamicStack*/
-    object Settings { get; }
+    IDynamicStack Resources { get; }
+    IDynamicStack Settings { get; }
 
 
     #endregion

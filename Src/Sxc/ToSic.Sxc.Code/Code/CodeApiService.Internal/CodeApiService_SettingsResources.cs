@@ -14,7 +14,7 @@ public partial class CodeApiService
 {
     /// <inheritdoc />
     [PublicApi]
-    public /*IDynamicStack*/object Resources => _resources.Get(() => Cdf.AsDynStack(RootNameResources, ResSrc));
+    public IDynamicStack Resources => _resources.Get(() => Cdf.AsDynStack(RootNameResources, ResSrc));
     private readonly GetOnce<IDynamicStack> _resources = new();
 
     [PrivateApi]
@@ -32,7 +32,7 @@ public partial class CodeApiService
 
     /// <inheritdoc />
     [PublicApi]
-    public /*IDynamicStack*/object Settings => _settings.Get(() => Cdf.AsDynStack(RootNameSettings, SetSrc));
+    public IDynamicStack Settings => _settings.Get(() => Cdf.AsDynStack(RootNameSettings, SetSrc));
     private readonly GetOnce<IDynamicStack> _settings = new();
 
     public ITypedStack AllSettings => _allSettings.Get(() => Cdf.AsTypedStack(RootNameSettings, SetSrc));

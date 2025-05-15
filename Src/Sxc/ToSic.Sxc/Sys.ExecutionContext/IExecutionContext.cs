@@ -16,8 +16,17 @@ public interface IExecutionContext
     /// <summary>
     /// Get the current state of the execution context. Only works for a few types.
     /// </summary>
-    /// <typeparam name="TState">The data type of known states: `IApp`, `ICmsContext` or `IDataSource`. Any other type will throw an error.</typeparam>
+    /// <typeparam name="TState">The data type of known states: `IApp`, `ICmsContext` or `IDataSource` and a few more.
+    /// Any other type will throw an error.</typeparam>
     /// <returns></returns>
     public TState GetState<TState>();
+
+    /// <summary>
+    /// Special accessor - currently only for `IDynamicStack` and name "Settings"
+    /// </summary>
+    /// <typeparam name="TState"></typeparam>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    public TState GetState<TState>(string name);
 }
 

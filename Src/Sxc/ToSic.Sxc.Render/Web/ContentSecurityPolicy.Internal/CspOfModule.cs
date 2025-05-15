@@ -63,7 +63,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
     /// </summary>
     private CspSettingsReader SiteCspSettings => _siteCspSettings.Get(Log, () =>
     {
-        var pageSettings = (_CodeApiSvc?.Settings as IDynamicStack)
+        var pageSettings = _CodeApiSvc?.GetState<IDynamicStack>("Settings")
             ?.GetStack(AppStackConstants.PartSiteSystem, AppStackConstants.PartGlobalSystem, AppStackConstants.PartPresetSystem);
         return new CspSettingsReader(pageSettings, user, UrlIsDevMode, Log);
     });

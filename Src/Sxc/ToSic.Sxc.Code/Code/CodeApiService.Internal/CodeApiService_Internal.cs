@@ -6,6 +6,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -129,5 +130,13 @@ public partial class CodeApiService
 
         throw new InvalidOperationException(
             $"Can't get state of type {typeof(TState).Name} - only {nameof(IApp)}, {nameof(IDataSource)}, {nameof(IBlock)} and {nameof(IAppTyped)} are supported");
+    }
+
+    public TState GetState<TState>(string name)
+    {
+        if (typeof(TState) == typeof(IDynamicStack) && name == "Settings")
+            return (TState)Settings;
+
+        throw new InvalidOperationException("Can only retrieve 'Settings'");
     }
 }
