@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Code.Internal;
 ///
 /// Note that our goal is to get rid of this again, or shrink as much as possible, once we've moved the dependencies
 /// </summary>
-public interface ICodeApiServiceForDynamicCode12Wip: IHasLog
+public interface ICodeApiServiceForDynamicCode12Wip: IHasLog, ICodeDynamicApiService, ICodeTypedApiService
 {
     /// <inheritdoc cref="IDynamicCode.App" />
     IApp App { get; }
@@ -25,12 +25,12 @@ public interface ICodeApiServiceForDynamicCode12Wip: IHasLog
     /// <inheritdoc cref="IDynamicCode.Data" />
     IDataSource Data { get; }
 
-    #region DevTools
+    //#region DevTools
 
-    [PrivateApi("Still WIP")]
-    IDevTools DevTools { get; }
+    //[PrivateApi("Still WIP")]
+    //IDevTools DevTools { get; }
 
-    #endregion
+    //#endregion
 
     #region Convert-Service
 
@@ -44,16 +44,16 @@ public interface ICodeApiServiceForDynamicCode12Wip: IHasLog
 
     #endregion
 
-    #region Create Data Sources
+    //#region Create Data Sources
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
-    T CreateSource<T>(IDataStream source) where T : IDataSource;
+    ///// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
+    //T CreateSource<T>(IDataStream source) where T : IDataSource;
 
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
-    T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource;
+    ///// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
+    //T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource;
 
-    #endregion
+    //#endregion
 
 
     /// <inheritdoc cref="IDynamicCode.CmsContext" />
@@ -62,15 +62,6 @@ public interface ICodeApiServiceForDynamicCode12Wip: IHasLog
     /// <inheritdoc cref="IDynamicCode.Edit" />
     IEditService Edit { get; }
 
-    #region Content and Header
-
-    /// <inheritdoc cref="IDynamicCode.Content" />
-    dynamic Content { get; }
-
-    /// <inheritdoc cref="IDynamicCode.Header" />
-    dynamic Header { get; }
-
-    #endregion
 
     /// <inheritdoc cref="IDynamicCode.Link" />
     ILinkService Link { get; }

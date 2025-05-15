@@ -1,11 +1,10 @@
-﻿using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Internal;
+﻿using ToSic.Sxc.Code.Internal;
 
 namespace ToSic.Sxc.Razor.Internal;
 
 [PrivateApi("not sure where/if it goes anywhere")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IRazor: IHasCodeApiService, INeedsCodeApiService
+public interface IRazor: /*IHasCodeApiService,*/ INeedsCodeApiService
 {
     /// <summary>
     /// The path to this Razor WebControl.
@@ -14,5 +13,4 @@ public interface IRazor: IHasCodeApiService, INeedsCodeApiService
     /// </summary>
     [PublicApi("This is a polyfill to ensure the old Razor has the same property as .net Core Razor")]
     string Path { get; }
-
 }

@@ -21,6 +21,8 @@ public abstract partial class RazorComponent : RazorComponentBase,
 #pragma warning restore CS0618
     IDnnRazorCompatibility, IDnnRazor11, ICreateInstance
 {
+    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.DynamicApi;
+
     /// <inheritdoc />
     public IDnnContext Dnn => (_CodeApiSvc as IHasDnn)?.Dnn;
 
@@ -85,29 +87,29 @@ public abstract partial class RazorComponent : RazorComponentBase,
     #region Link, Edit, Dnn, App, Data
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => _CodeApiSvc.Link;
+    public ILinkService Link => CodeApi.Link;
 
     /// <inheritdoc cref="IDynamicCode.Edit" />
-    public IEditService Edit => _CodeApiSvc.Edit;
+    public IEditService Edit => CodeApi.Edit;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
-    public TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
+    public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel10;
 
     /// <inheritdoc />
-    public new IApp App => _CodeApiSvc.App;
+    public new IApp App => CodeApi.App;
 
     #endregion
 
     #region Data - with old interface #DataInAddWontWork
 
     [PrivateApi]
-    public IBlockDataSource Data => (IBlockDataSource)_CodeApiSvc.Data;
+    public IBlockDataSource Data => (IBlockDataSource)CodeApi.Data;
 
     // This is explicitly implemented so the interfaces don't complain
     // but actually we're not showing this - in reality we're showing the Old (see above)
-    IDataSource IDynamicCode.Data => _CodeApiSvc.Data;
+    IDataSource IDynamicCode.Data => CodeApi.Data;
 
     #endregion
 
@@ -115,27 +117,27 @@ public abstract partial class RazorComponent : RazorComponentBase,
     #region AsDynamic in many variations
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-    public dynamic AsDynamic(string json, string fallback = default) => _CodeApiSvc.Cdf.Json2Jacket(json, fallback);
+    public dynamic AsDynamic(string json, string fallback = default) => CodeApi.Cdf.Json2Jacket(json, fallback);
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
-    public dynamic AsDynamic(IEntity entity) => _CodeApiSvc.Cdf.CodeAsDyn(entity);
+    public dynamic AsDynamic(IEntity entity) => CodeApi.Cdf.CodeAsDyn(entity);
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-    public dynamic AsDynamic(object dynamicEntity) => _CodeApiSvc.Cdf.AsDynamicFromObject(dynamicEntity);
+    public dynamic AsDynamic(object dynamicEntity) => CodeApi.Cdf.AsDynamicFromObject(dynamicEntity);
 
     #endregion
 
     #region AsEntity
 
     /// <inheritdoc cref="IDynamicCode.AsEntity" />
-    public IEntity AsEntity(object dynamicEntity) => _CodeApiSvc.Cdf.AsEntity(dynamicEntity);
+    public IEntity AsEntity(object dynamicEntity) => CodeApi.Cdf.AsEntity(dynamicEntity);
 
     #endregion
 
     #region AsList
 
     /// <inheritdoc cref="IDynamicCode.AsList" />
-    public IEnumerable<dynamic> AsList(object list) => _CodeApiSvc.Cdf.CodeAsDynList(list);
+    public IEnumerable<dynamic> AsList(object list) => CodeApi.Cdf.CodeAsDynList(list);
 
     #endregion
 
@@ -144,21 +146,21 @@ public abstract partial class RazorComponent : RazorComponentBase,
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
     public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
-        => _CodeApiSvc.CreateSource<T>(inSource, configurationProvider);
+        => CodeApi.CreateSource<T>(inSource, configurationProvider);
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
     public T CreateSource<T>(IDataStream source) where T : IDataSource
-        => _CodeApiSvc.CreateSource<T>(source);
+        => CodeApi.CreateSource<T>(source);
 
     #endregion
 
 
     #region Content, Header, etc. and List
     /// <inheritdoc cref="IDynamicCode.Content" />
-    public dynamic Content => _CodeApiSvc.Content;
+    public dynamic Content => CodeApi.Content;
 
     /// <inheritdoc cref="IDynamicCode.Header" />
-    public dynamic Header => _CodeApiSvc.Header;
+    public dynamic Header => CodeApi.Header;
 
     #endregion
 
@@ -166,14 +168,14 @@ public abstract partial class RazorComponent : RazorComponentBase,
     #region Adam 
 
     /// <inheritdoc cref="IDynamicCode.AsAdam" />
-    public IFolder AsAdam(ICanBeEntity item, string fieldName) => _CodeApiSvc.AsAdam(item, fieldName);
+    public IFolder AsAdam(ICanBeEntity item, string fieldName) => CodeApi.AsAdam(item, fieldName);
 
     #endregion
 
     #region CmsContext
 
     /// <inheritdoc cref="IDynamicCode.CmsContext" />
-    public ICmsContext CmsContext => _CodeApiSvc.CmsContext;
+    public ICmsContext CmsContext => CodeApi.CmsContext;
 
     #endregion
 

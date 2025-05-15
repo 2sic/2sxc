@@ -29,7 +29,7 @@ public abstract class OqtControllerBase : ControllerBase, IHasLog, IActionFilter
         Log = new Log($"Api.{logSuffix}", null, GetType().Name);
         _helper = new(this);
 
-        if (withBlockContext) _ctxHlp = new(this, _helper);
+        if (withBlockContext) CtxHlp = new(this, _helper);
     }
 
     #endregion
@@ -55,8 +55,7 @@ public abstract class OqtControllerBase : ControllerBase, IHasLog, IActionFilter
     /// </summary>
     [PrivateApi]
     internal NetCoreWebApiContextHelper CtxHlp 
-        => _ctxHlp ?? throw new($"This controller doesn't have a {nameof(CtxHlp)}. Check your constructor.");
-    private readonly NetCoreWebApiContextHelper _ctxHlp;
+        => field ?? throw new($"This controller doesn't have a {nameof(CtxHlp)}. Check your constructor.");
 
     /// <summary>
     /// Initializer - just ensure SiteState is initialized thanks to our paths
@@ -71,7 +70,8 @@ public abstract class OqtControllerBase : ControllerBase, IHasLog, IActionFilter
         // background processes can pass in an alias using the SiteState service
         GetService<AliasResolver>().InitIfEmpty();
             
-        if (_withBlockContext) CtxHlp.InitializeBlockContext(context);
+        if (_withBlockContext)
+            CtxHlp.InitializeBlockContext(context);
         l.Done();
     }
 
@@ -84,5 +84,6 @@ public abstract class OqtControllerBase : ControllerBase, IHasLog, IActionFilter
         l.Done();
     }
 
-    protected TService GetService<TService>() where TService : class => _helper.GetService<TService>();
+    protected TService GetService<TService>() where TService : class
+        => _helper.GetService<TService>();
 }

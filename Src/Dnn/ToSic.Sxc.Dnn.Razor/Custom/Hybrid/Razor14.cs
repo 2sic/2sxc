@@ -17,6 +17,8 @@ namespace Custom.Hybrid;
 [PublicApi]
 public abstract partial class Razor14: RazorComponentBase, IRazor14<object, ServiceKit14>, IHasCodeHelp, ICreateInstance
 {
+    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.DynamicApi;
+
     /// <inheritdoc cref="DnnRazorHelper.RenderPageNotSupported"/>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -28,7 +30,7 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
 
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
-    public TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
+    public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
 
     public ServiceKit14 Kit => _kit.Get(() => _CodeApiSvc.GetKit<ServiceKit14>());
@@ -49,10 +51,10 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
     #region Link, Edit
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => _CodeApiSvc.Link;
+    public ILinkService Link => CodeApi.Link;
 
     /// <inheritdoc cref="IDynamicCode.Edit" />
-    public IEditService Edit => _CodeApiSvc.Edit;
+    public IEditService Edit => CodeApi.Edit;
 
     #endregion
 
@@ -60,7 +62,7 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
     #region CmsContext
 
     /// <inheritdoc cref="IDynamicCode.CmsContext" />
-    public ICmsContext CmsContext => _CodeApiSvc.CmsContext;
+    public ICmsContext CmsContext => CodeApi.CmsContext;
 
     #endregion
 
@@ -68,13 +70,13 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
     #region Content, Header, etc. and List
 
     /// <inheritdoc cref="IDynamicCode.Content" />
-    public dynamic Content => _CodeApiSvc.Content;
+    public dynamic Content => CodeApi.Content;
 
     /// <inheritdoc cref="IDynamicCode.Header" />
-    public dynamic Header => _CodeApiSvc.Header;
+    public dynamic Header => CodeApi.Header;
 
     /// <inheritdoc />
-    public IDataSource Data => _CodeApiSvc.Data;
+    public IDataSource Data => CodeApi.Data;
 
     #endregion
 
@@ -82,11 +84,11 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
     public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
-        => _CodeApiSvc.CreateSource<T>(inSource, configurationProvider);
+        => CodeApi.CreateSource<T>(inSource, configurationProvider);
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
     public T CreateSource<T>(IDataStream source) where T : IDataSource
-        => _CodeApiSvc.CreateSource<T>(source);
+        => CodeApi.CreateSource<T>(source);
 
     #endregion
 
@@ -95,7 +97,7 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
     #region Dev Tools & Dev Helpers
 
     [PrivateApi("Not yet ready")]
-    public IDevTools DevTools => _CodeApiSvc.DevTools;
+    public IDevTools DevTools => CodeApi.DevTools;
 
     [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpForRazor14.Compile14;
 

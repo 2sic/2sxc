@@ -10,4 +10,10 @@ public static class CodeApiServiceWipMigrating
 {
     public static IConvertService GetConvertService(this ICodeApiService parent)
         => ((CodeApiService)parent).Convert;
+
+    public static IConvertService GetConvertService(this ICodeDynamicApiService parent)
+        => ((CodeApiService)parent).Convert;
+    public static IConvertService GetConvertService(this ICodeTypedApiService parent)
+        => ((CodeApiService)parent).Convert;
+
 }

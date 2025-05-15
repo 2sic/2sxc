@@ -31,7 +31,8 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
         get
         {
             // Child razor page will have _dynCode == null, so it is provided via ViewData from parent razor page.
-            if (_dynCode != null || owner.ViewData?[DynCode] is not ICodeApiService cdRt) return _dynCode;
+            if (_dynCode != null || owner.ViewData?[DynCode] is not ICodeApiService cdRt)
+                return _dynCode;
             ConnectToRoot(cdRt);
             Log.A( "DynCode attached from ViewData");
 

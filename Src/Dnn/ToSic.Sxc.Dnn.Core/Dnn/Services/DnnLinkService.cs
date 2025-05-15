@@ -22,10 +22,8 @@ internal class DnnLinkService(
     LazySvc<INavigationManager> navigationManager)
     : LinkServiceBase(imgLinker, linkPathsLazy, connect: [dnnValueConverterLazy, navigationManager])
 {
-    [PrivateApi] private IDnnContext Dnn => _dnn ??= _CodeApiSvc.GetService<IDnnContext>();
-    private IDnnContext _dnn;
-    [PrivateApi] private DnnValueConverter DnnValueConverter => _dnnValueConverter ??= dnnValueConverterLazy.Value as DnnValueConverter;
-    private DnnValueConverter _dnnValueConverter;
+    [PrivateApi] private IDnnContext Dnn => field ??= _CodeApiSvc.GetService<IDnnContext>();
+    [PrivateApi] private DnnValueConverter DnnValueConverter => field ??= dnnValueConverterLazy.Value as DnnValueConverter;
 
     protected override string ToApi(string api, string parameters = null) 
         => Api(path: CombineApiWithQueryString(api.TrimPrefixSlash(), parameters));

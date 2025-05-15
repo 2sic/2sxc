@@ -31,6 +31,7 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
     [PrivateApi] public int CompatibilityLevel { get; }
 
+
     /// <summary>
     /// Special helper to move all Razor logic into a separate class.
     /// For architecture of Composition over Inheritance.
@@ -43,7 +44,7 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
     #region GetService / Logs / DevTools
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
-    public TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
+    public TService GetService<TService>() where TService : class => RzrHlp.DynCodeRootMain.TypedApi.GetService<TService>();
 
     [PrivateApi("WIP 17.06,x")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -57,14 +58,19 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
     [PrivateApi] ILog IHasLog.Log => RzrHlp.Log;
 
     [PrivateApi("Not yet ready")]
-    public IDevTools DevTools => _CodeApiSvc.DevTools;
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    public IDevTools DevTools => RzrHlp.DynCodeRootMain.TypedApi.DevTools;
 
     #endregion
 
     #region DynCode Root
 
-    [PrivateApi]
-    public ICodeApiService _CodeApiSvc => RzrHlp.DynCodeRootMain;
+    //[PrivateApi]
+    //[ShowApiWhenReleased(ShowApiMode.Never)]
+    //public ICodeApiService _CodeApiSvc => RzrHlp.DynCodeRootMain;
+
+    //internal ICodeTypedApiService CodeApi => RzrHlp.DynCodeRootMain.TypedApi;
+
 
     [PrivateApi]
     public void ConnectToRoot(ICodeApiService parent) => RzrHlp.ConnectToRoot(parent);

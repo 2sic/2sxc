@@ -41,7 +41,8 @@ internal class DynamicApiCodeHelpers: CodeHelper
     /// <param name="request"></param>
     public void InitializeBlockContext(HttpRequestMessage request)
     {
-        if (_blockContextInitialized) return;
+        if (_blockContextInitialized)
+            return;
         _blockContextInitialized = true;
         SharedContextResolver = SysHlp.GetService<ISxcContextResolver>();
         SharedContextResolver.AttachBlock(SysHlp.GetBlockAndContext(request));

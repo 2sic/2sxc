@@ -127,4 +127,10 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
     [PrivateApi("Not yet ready")]
     public IDevTools DevTools => throw new NotImplementedException("This is a future feature, we're just reserving the object name");
 
+    /// <summary>
+    /// WIP!
+    /// </summary>
+    public ICodeDynamicApiService DynamicApi => this;
+
+    public ICodeTypedApiService TypedApi => this;
 }

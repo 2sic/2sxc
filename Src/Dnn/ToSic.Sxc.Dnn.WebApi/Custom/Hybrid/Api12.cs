@@ -24,13 +24,16 @@ namespace Custom.Hybrid;
 [PublicApi("This is the official base class for v12+")]
 [DnnLogExceptions]
 [DefaultToNewtonsoftForHttpJson]
-public abstract partial class Api12: DnnSxcCustomControllerBase, IDynamicCode12, IDynamicWebApi, IHasCodeLog, ICreateInstance
+public abstract partial class Api12(string logSuffix) : DnnSxcCustomControllerBase(logSuffix), IDynamicCode12,
+    IDynamicWebApi, IHasCodeLog, ICreateInstance
 {
     #region Setup
 
-    protected Api12() : base("Hyb12") { }
+    protected Api12() : this("Hyb12") { }
 
-    protected Api12(string logSuffix) : base(logSuffix) { }
+    [PrivateApi]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.DynamicApi;
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => SysHlp.CodeLog;
@@ -45,16 +48,16 @@ public abstract partial class Api12: DnnSxcCustomControllerBase, IDynamicCode12,
     #region Content, Presentation, Header, App, Data
 
     /// <inheritdoc cref="IDynamicCode.Content" />
-    public dynamic Content => _CodeApiSvc.Content;
+    public dynamic Content => CodeApi.Content;
 
     /// <inheritdoc cref="IDynamicCode.Header" />
-    public dynamic Header => _CodeApiSvc.Header;
+    public dynamic Header => CodeApi.Header;
 
     /// <inheritdoc cref="IDynamicCode.App" />
-    public IApp App => _CodeApiSvc.App;
+    public IApp App => CodeApi.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IDataSource Data => _CodeApiSvc.Data;
+    public IDataSource Data => CodeApi.Data;
 
     #endregion
 
@@ -62,22 +65,22 @@ public abstract partial class Api12: DnnSxcCustomControllerBase, IDynamicCode12,
     #region Link & Edit - added to API in 2sxc 10.01; CmsContext, Resources, Settings (v12)
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => _CodeApiSvc?.Link;
+    public ILinkService Link => CodeApi?.Link;
 
     /// <inheritdoc cref="IDynamicCode.Edit" />
-    public IEditService Edit => _CodeApiSvc?.Edit;
+    public IEditService Edit => CodeApi?.Edit;
 
     /// <inheritdoc cref="IDynamicCode.CmsContext" />
-    public ICmsContext CmsContext => _CodeApiSvc?.CmsContext;
+    public ICmsContext CmsContext => CodeApi?.CmsContext;
 
     /// <inheritdoc cref="IDynamicCode12.Resources" />
-    public dynamic Resources => _CodeApiSvc.Resources;
+    public dynamic Resources => CodeApi.Resources;
 
     /// <inheritdoc cref="IDynamicCode12.Settings" />
-    public dynamic Settings => _CodeApiSvc.Settings;
+    public dynamic Settings => CodeApi.Settings;
 
     [PrivateApi("Not yet ready")]
-    public IDevTools DevTools => _CodeApiSvc.DevTools;
+    public IDevTools DevTools => CodeApi.DevTools;
 
     #endregion
 
@@ -85,22 +88,22 @@ public abstract partial class Api12: DnnSxcCustomControllerBase, IDynamicCode12,
     #region AsDynamic implementations + AsList
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-    public dynamic AsDynamic(string json, string fallback = default) => _CodeApiSvc.Cdf.Json2Jacket(json, fallback);
+    public dynamic AsDynamic(string json, string fallback = default) => CodeApi.Cdf.Json2Jacket(json, fallback);
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
-    public dynamic AsDynamic(IEntity entity) => _CodeApiSvc.Cdf.CodeAsDyn(entity);
+    public dynamic AsDynamic(IEntity entity) => CodeApi.Cdf.CodeAsDyn(entity);
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
-    public dynamic AsDynamic(object dynamicEntity) => _CodeApiSvc.Cdf.AsDynamicFromObject(dynamicEntity);
+    public dynamic AsDynamic(object dynamicEntity) => CodeApi.Cdf.AsDynamicFromObject(dynamicEntity);
 
     /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
-    public dynamic AsDynamic(params object[] entities) => _CodeApiSvc.Cdf.MergeDynamic(entities);
+    public dynamic AsDynamic(params object[] entities) => CodeApi.Cdf.MergeDynamic(entities);
 
     /// <inheritdoc cref="IDynamicCode.AsEntity" />
-    public IEntity AsEntity(object dynamicEntity) => _CodeApiSvc.Cdf.AsEntity(dynamicEntity);
+    public IEntity AsEntity(object dynamicEntity) => CodeApi.Cdf.AsEntity(dynamicEntity);
 
     /// <inheritdoc cref="IDynamicCode.AsList" />
-    public IEnumerable<dynamic> AsList(object list) => _CodeApiSvc?.Cdf.CodeAsDynList(list);
+    public IEnumerable<dynamic> AsList(object list) => CodeApi?.Cdf.CodeAsDynList(list);
 
     #endregion
 
@@ -117,11 +120,11 @@ public abstract partial class Api12: DnnSxcCustomControllerBase, IDynamicCode12,
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
     public T CreateSource<T>(IDataStream source) where T : IDataSource
-        => _CodeApiSvc.CreateSource<T>(source);
+        => CodeApi.CreateSource<T>(source);
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
     public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
-        => _CodeApiSvc.CreateSource<T>(inSource, configurationProvider);
+        => CodeApi.CreateSource<T>(inSource, configurationProvider);
 
     #endregion
 
@@ -129,7 +132,7 @@ public abstract partial class Api12: DnnSxcCustomControllerBase, IDynamicCode12,
     #region Adam
 
     /// <inheritdoc cref="IDynamicCode.AsAdam" />
-    public IFolder AsAdam(ICanBeEntity item, string fieldName) => _CodeApiSvc.AsAdam(item, fieldName);
+    public IFolder AsAdam(ICanBeEntity item, string fieldName) => CodeApi.AsAdam(item, fieldName);
 
     /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
     public IFile SaveInAdam(NoParamOrder noParamOrder = default, Stream stream = null, string fileName = null, string contentType = null,

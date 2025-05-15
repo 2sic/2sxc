@@ -76,6 +76,7 @@ public class TokenEngine(
     #endregion
 
     private ICodeApiService _codeApiSvc;
+    private ICodeDynamicApiService _dynamicApiSvc;
 
     private TokenReplace _tokenReplace;
 
@@ -85,6 +86,7 @@ public class TokenEngine(
         base.Init(block);
         _codeApiSvc = codeRootFactory.Value
             .New(null, Block, Log, CompatibilityLevels.CompatibilityLevel9Old);
+        _dynamicApiSvc = _codeApiSvc.DynamicApi;
         InitTokenReplace();
     }
 
@@ -94,8 +96,8 @@ public class TokenEngine(
         var appDataConfig = tokenEngineWithContext.New().GetDataConfiguration(Block.App as EavApp, specs);
 
         var lookUpEngine = new LookUpEngine(appDataConfig.Configuration, Log, sources: [
-            new LookUpForTokenTemplate(ViewParts.ListContentLower, _codeApiSvc.Header, CultureInfo),
-            new LookUpForTokenTemplate(ViewParts.ContentLower, _codeApiSvc.Content, CultureInfo),
+            new LookUpForTokenTemplate(ViewParts.ListContentLower, _dynamicApiSvc.Header, CultureInfo),
+            new LookUpForTokenTemplate(ViewParts.ContentLower, _dynamicApiSvc.Content, CultureInfo),
         ]);
 
         _tokenReplace = new(lookUpEngine);

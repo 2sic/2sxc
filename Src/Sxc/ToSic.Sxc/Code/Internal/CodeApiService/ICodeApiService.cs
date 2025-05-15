@@ -12,13 +12,16 @@ namespace ToSic.Sxc.Code.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICodeApiService : ICodeApiServiceForDynamicCode12Wip, IHasLog, IHasPiggyBack
 {
+    public ICodeDynamicApiService DynamicApi { get; }
+    public ICodeTypedApiService TypedApi { get; }
+
     /// <summary>
     /// Almost every use 
     /// </summary>
-    /*IDynamicStack*/ object Resources { get; }
-    /*IDynamicStack*/ object Settings { get; }
+    ///*IDynamicStack*/ object Resources { get; }
+    ///*IDynamicStack*/ object Settings { get; }
 
-    IAppTyped AppTyped { get; }
+    //IAppTyped AppTyped { get; }
 
     #region AsConverter (internal)
 

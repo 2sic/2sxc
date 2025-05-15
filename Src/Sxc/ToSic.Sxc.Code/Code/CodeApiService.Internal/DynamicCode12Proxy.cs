@@ -8,7 +8,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code;
 
-internal class DynamicCode12Proxy(ICodeApiService parent): IDynamicCode12
+internal class DynamicCode12Proxy(ICodeApiService parent, ICodeDynamicApiService dynamicApi): IDynamicCode12
 {
     public ILog Log => parent.Log;
 
@@ -24,13 +24,13 @@ internal class DynamicCode12Proxy(ICodeApiService parent): IDynamicCode12
     }
 
     public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null,
-        string relativePath = null, bool throwOnError = true) =>
-        (
-            (ICreateInstance)parent
-            ?? throw new InvalidOperationException(
-                "CreateInstance can only be set on a DynamicCode12Proxy which implements ICreateInstance")
-        )
-        .CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
+        string relativePath = null, bool throwOnError = true)
+        => (
+                (ICreateInstance)parent
+                ?? throw new InvalidOperationException(
+                    "CreateInstance can only be set on a DynamicCode12Proxy which implements ICreateInstance")
+            )
+            .CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
 
     public int CompatibilityLevel => ((ICompatibilityLevel)parent)?.CompatibilityLevel ?? 12;
 
@@ -40,53 +40,53 @@ internal class DynamicCode12Proxy(ICodeApiService parent): IDynamicCode12
     TService IDynamicCode12.GetService<TService>()
         => parent.GetService<TService>();
 
-    public IApp App => parent.App;
+    public IApp App => dynamicApi.App;
 
-    public IDataSource Data => parent.Data;
+    public IDataSource Data => dynamicApi.Data;
 
-    public dynamic Content => parent.Content;
+    public dynamic Content => dynamicApi.Content;
 
-    public dynamic Header => parent.Header;
+    public dynamic Header => dynamicApi.Header;
 
     IFolder IDynamicCode.AsAdam(ICanBeEntity item, string fieldName)
-        => parent.AsAdam(item, fieldName);
+        => dynamicApi.AsAdam(item, fieldName);
 
     IFolder IDynamicCode12.AsAdam(ICanBeEntity item, string fieldName)
-        => parent.AsAdam(item, fieldName);
+        => dynamicApi.AsAdam(item, fieldName);
 
-    public ILinkService Link => parent.Link;
+    public ILinkService Link => dynamicApi.Link;
 
-    public IEditService Edit => parent.Edit;
+    public IEditService Edit => dynamicApi.Edit;
 
     dynamic IDynamicCode.AsDynamic(string json, string fallback)
-        => parent.Cdf.Json2Jacket(json, fallback);
+        => dynamicApi.Cdf.Json2Jacket(json, fallback);
 
     dynamic IDynamicCode12.AsDynamic(IEntity entity)
-        => parent.Cdf.CodeAsDyn(entity);
+        => dynamicApi.Cdf.CodeAsDyn(entity);
 
     dynamic IDynamicCode12.AsDynamic(object dynamicEntity)
-        => parent.Cdf.AsDynamicFromObject(dynamicEntity);
+        => dynamicApi.Cdf.AsDynamicFromObject(dynamicEntity);
 
     IEntity IDynamicCode12.AsEntity(object dynamicEntity)
-        => parent.Cdf.AsEntity(dynamicEntity);
+        => dynamicApi.Cdf.AsEntity(dynamicEntity);
 
     IEnumerable<dynamic> IDynamicCode12.AsList(object list)
-        => parent.Cdf.CodeAsDynList(list);
+        => dynamicApi.Cdf.CodeAsDynList(list);
 
     T IDynamicCode12.CreateSource<T>(IDataStream source)
-        => parent.CreateSource<T>(source);
+        => dynamicApi.CreateSource<T>(source);
 
     T IDynamicCode12.CreateSource<T>(IDataSource inSource, ILookUpEngine configurationProvider)
-        => parent.CreateSource<T>(inSource, configurationProvider);
+        => dynamicApi.CreateSource<T>(inSource, configurationProvider);
 
     dynamic IDynamicCode12.AsDynamic(string json, string fallback)
-        => parent.Cdf.Json2Jacket(json, fallback);
+        => dynamicApi.Cdf.Json2Jacket(json, fallback);
 
     dynamic IDynamicCode.AsDynamic(IEntity entity)
-        => parent.Cdf.CodeAsDyn(entity);
+        => dynamicApi.Cdf.CodeAsDyn(entity);
 
     dynamic IDynamicCode.AsDynamic(object dynamicEntity)
-        => parent.Cdf.AsDynamicFromObject(dynamicEntity);
+        => dynamicApi.Cdf.AsDynamicFromObject(dynamicEntity);
 
     IEntity IDynamicCode.AsEntity(object dynamicEntity)
         => ((IDynamicCode)parent).AsEntity(dynamicEntity);
@@ -95,22 +95,22 @@ internal class DynamicCode12Proxy(ICodeApiService parent): IDynamicCode12
         => ((IDynamicCode)parent).AsList(list);
 
     T IDynamicCode.CreateSource<T>(IDataStream source)
-        => parent.CreateSource<T>(source);
+        => dynamicApi.CreateSource<T>(source);
 
     T IDynamicCode.CreateSource<T>(IDataSource inSource, ILookUpEngine configurationProvider)
-        => parent.CreateSource<T>(inSource, configurationProvider);
+        => dynamicApi.CreateSource<T>(inSource, configurationProvider);
 
     public ICmsContext CmsContext
-        => parent.CmsContext;
+        => dynamicApi.CmsContext;
 
     public dynamic AsDynamic(params object[] entities)
-        => parent.Cdf.MergeDynamic(entities);
+        => dynamicApi.Cdf.MergeDynamic(entities);
 
     public IConvertService Convert => ((CodeApiService)parent).Convert;
 
-    public dynamic Resources => parent.Resources;
+    public dynamic Resources => dynamicApi.Resources;
 
-    public dynamic Settings => parent.Settings;
+    public dynamic Settings => dynamicApi.Settings;
 
-    public IDevTools DevTools => parent.DevTools;
+    public IDevTools DevTools => dynamicApi.DevTools;
 }

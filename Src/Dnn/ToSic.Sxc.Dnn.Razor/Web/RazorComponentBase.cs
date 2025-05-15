@@ -78,7 +78,6 @@ public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHa
     /// <inheritdoc />
     public string Path => VirtualPath;
 
-
     #endregion
 
     #region Core Properties which should appear in docs

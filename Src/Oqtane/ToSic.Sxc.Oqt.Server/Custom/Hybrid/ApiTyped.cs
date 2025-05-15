@@ -61,7 +61,8 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     [PrivateApi] public ICodeApiService _CodeApiSvc => CtxHlp._CodeApiSvc;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
-    public new TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
+    public new TService GetService<TService>() where TService : class
+        => _CodeApiSvc.GetService<TService>();
 
     [PrivateApi("WIP 17.06,x")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
