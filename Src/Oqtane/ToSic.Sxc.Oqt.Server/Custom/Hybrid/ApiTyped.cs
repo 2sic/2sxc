@@ -38,7 +38,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     protected ApiTyped() : this(EavWebApiConstants.HistoryNameWebApi) { }
 
-    internal ICodeTypedApiService CodeApi => field
+    internal ICodeTypedApiHelper CodeApi => field
         ??= _CodeApiSvc.GetTypedApi();
 
 
@@ -75,8 +75,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
         => CodeHelper.GetService<TService>(protector, typeName);
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
-    public ServiceKit16 Kit => _kit.Get(() => CodeApi.GetKit<ServiceKit16>());
-    private readonly GetOnce<ServiceKit16> _kit = new();
+    public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;
 
     [PrivateApi("Not yet ready")]
     public IDevTools DevTools => CodeHelper.DevTools;

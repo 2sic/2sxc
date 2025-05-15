@@ -77,7 +77,7 @@ public class TokenEngine(
     #endregion
 
     private ICodeApiService _codeApiSvc;
-    private ICodeDynamicApiService _dynamicApiSvc;
+    private ICodeDynamicApiHelper _dynamicApiSvc;
 
     private TokenReplace _tokenReplace;
 

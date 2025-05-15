@@ -61,12 +61,11 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     #endregion
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
-    public ServiceKit16 Kit
-        => field ??= CodeApi().GetKit<ServiceKit16>();
+    public ServiceKit16 Kit => field ??= CodeApi().ServiceKit16;
 
-    private ICodeTypedApiService CodeApi([CallerMemberName] string propName = default)
+    private ICodeTypedApiHelper CodeApi([CallerMemberName] string propName = default)
         => _codeApi ??= CodeRootOrError(propName).GetTypedApi();
-    private ICodeTypedApiService _codeApi;
+    private ICodeTypedApiHelper _codeApi;
 
     private ICodeApiService CodeRootOrError([CallerMemberName] string propName = default)
     {

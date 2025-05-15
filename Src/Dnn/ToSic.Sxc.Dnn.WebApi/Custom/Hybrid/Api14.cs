@@ -37,11 +37,10 @@ public abstract partial class Api14(string logSuffix) : DnnSxcCustomControllerBa
 
     protected Api14() : this("Hyb14") { }
 
-    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
+    internal ICodeDynamicApiHelper CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
 
     /// <inheritdoc cref="IHasKit{TServiceKit}.Kit" />
-    public ServiceKit14 Kit => _kit.Get(CodeApi.GetKit<ServiceKit14>);
-    private readonly GetOnce<ServiceKit14> _kit = new();
+    public ServiceKit14 Kit => field ??= CodeApi.ServiceKit14;
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => SysHlp.CodeLog;

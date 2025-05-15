@@ -28,7 +28,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 {
     #region Constructor, Setup, Helpers
 
-    internal ICodeTypedApiService CodeApi => field
+    internal ICodeTypedApiHelper CodeApi => field
         ??= _CodeApiSvc.GetTypedApi();
 
 
@@ -53,8 +53,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
         => CodeHelper.GetService<TService>(protector, typeName);
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
-    public ServiceKit16 Kit => _kit.Get(CodeApi.GetKit<ServiceKit16>);
-    private readonly GetOnce<ServiceKit16> _kit = new();
+    public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;
 
     internal TypedCode16Helper CodeHelper => field ??= CreateCodeHelper();
 

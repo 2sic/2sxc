@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// <summary>
 /// WIP
 /// </summary>
-public interface ICodeDynamicApiService: ICodeAnyApiHelper
+public interface ICodeDynamicApiHelper: ICodeAnyApiHelper
 {
 
     #region Content, Header, App, Data, Resources, Settings
@@ -53,4 +53,5 @@ public interface ICodeDynamicApiService: ICodeAnyApiHelper
 
     #endregion
 
+    ServiceKit14 ServiceKit14 { get; }
 }

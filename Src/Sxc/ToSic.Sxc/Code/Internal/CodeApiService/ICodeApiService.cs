@@ -12,9 +12,6 @@ namespace ToSic.Sxc.Code.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICodeApiService : ICodeApiServiceForDynamicCode12Wip, IHasLog, IHasPiggyBack, IExecutionContextDataWip, ICanGetService
 {
-    public ICodeDynamicApiService DynamicApi { get; }
-    public ICodeTypedApiService TypedApi { get; }
-
     #region AsConverter (internal)
 
     [PrivateApi("internal use only")]

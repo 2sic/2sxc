@@ -132,7 +132,7 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
     /// <summary>
     /// WIP!
     /// </summary>
-    public ICodeDynamicApiService DynamicApi => field ??= new CodeDynamicApiHelper().SetupQ(this);
+    public ICodeDynamicApiHelper DynamicApi => field ??= new CodeDynamicApiHelper().SetupQ(this);
 
-    public ICodeTypedApiService TypedApi => field ??= new CodeTypedApiHelper().SetupQ(this);
+    public ICodeTypedApiHelper TypedApi => field ??= new CodeTypedApiHelper().SetupQ(this);
 }

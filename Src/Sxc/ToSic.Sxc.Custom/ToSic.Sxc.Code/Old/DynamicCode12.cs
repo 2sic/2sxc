@@ -26,7 +26,7 @@ public abstract class DynamicCode12(): CustomCodeBase("Sxc.DynCod"), IHasCodeLog
 {
     #region Constructor / Setup
 
-    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
+    internal ICodeDynamicApiHelper CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
 
 
     /// <inheritdoc cref="IHasCodeLog.Log" />

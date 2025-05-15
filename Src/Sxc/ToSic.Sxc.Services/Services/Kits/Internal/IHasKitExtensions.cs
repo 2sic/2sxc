@@ -7,8 +7,8 @@ namespace ToSic.Sxc.Code.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class IHasKitExtensions
 {
-    public static TServiceKit GetKit<TServiceKit>(this ICodeAnyApiHelper codeRoot) where TServiceKit : ServiceKit
-        => GetKit<TServiceKit>(codeRoot as object);
+    //public static TServiceKit GetKit<TServiceKit>(this IExecutionContextCanGetKit codeRoot) where TServiceKit : ServiceKit
+    //    => GetKit<TServiceKit>(codeRoot as object);
 
         //=> codeRoot switch
         //{

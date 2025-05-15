@@ -54,7 +54,7 @@ public abstract partial class SxcApiController() :
 #pragma warning restore 618
     IHasCodeLog
 {
-    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
+    internal ICodeDynamicApiHelper CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();

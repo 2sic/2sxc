@@ -23,7 +23,7 @@ namespace Custom.Hybrid;
 public abstract class Razor12<TModel>() : OqtRazorBase<TModel>(CompatibilityLevels.CompatibilityLevel12, "Oqt.Rzr12"),
     IHasCodeLog, IRazor, IRazor12, ISetDynamicModel
 {
-    internal ICodeDynamicApiService CodeApi => RzrHlp.DynCodeRootMain.GetDynamicApi();
+    internal ICodeDynamicApiHelper CodeApi => RzrHlp.DynCodeRootMain.GetDynamicApi();
 
     #region Dynamic Model
 

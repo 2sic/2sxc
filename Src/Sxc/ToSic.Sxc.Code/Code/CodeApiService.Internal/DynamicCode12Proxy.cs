@@ -8,7 +8,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code;
 
-internal class DynamicCode12Proxy(ICodeApiService parent, ICodeDynamicApiService dynamicApi): IDynamicCode12
+internal class DynamicCode12Proxy(ICodeApiService parent, ICodeDynamicApiHelper dynamicApi): IDynamicCode12
 {
     public ILog Log => parent.Log;
 

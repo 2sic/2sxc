@@ -33,7 +33,7 @@ public abstract class Code14()
 
     #region Constructor / Setup
 
-    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
+    internal ICodeDynamicApiHelper CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => CodeHlp.CodeLog;
@@ -47,8 +47,7 @@ public abstract class Code14()
 
     #endregion
 
-    public ServiceKit14 Kit => _kit.Get(CodeApi.GetKit<ServiceKit14>);
-    private readonly GetOnce<ServiceKit14> _kit = new();
+    public ServiceKit14 Kit => field ??= CodeApi.ServiceKit14;
 
     #region Stuff added by Code12
 

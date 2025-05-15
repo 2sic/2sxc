@@ -7,7 +7,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.CodeApi;
 
-internal class CodeDynamicApiHelper: CodeAnyApiHelper, ICodeDynamicApiService
+internal class CodeDynamicApiHelper: CodeAnyApiHelper, ICodeDynamicApiHelper
 {
     public dynamic Content => Parent.Content;
     public dynamic Header => Parent.Header;
@@ -25,4 +25,6 @@ internal class CodeDynamicApiHelper: CodeAnyApiHelper, ICodeDynamicApiService
 
     public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
         => Parent.CreateSource<T>(inSource, configurationProvider);
+
+    public ServiceKit14 ServiceKit14 => Parent.GetKit<ServiceKit14>();
 }

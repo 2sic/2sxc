@@ -4,17 +4,17 @@ namespace ToSic.Sxc.Code.CodeApi.Internal;
 
 public static class ExecutionContextExtensions
 {
-    public static ICodeTypedApiService GetTypedApi(this ICodeApiService exCtx)
+    public static ICodeTypedApiHelper GetTypedApi(this ICodeApiService exCtx)
     {
-        if (exCtx is null)
+        if (exCtx is not CodeApiService exCtxReal)
             throw new InvalidOperationException("ExecutionContext must be of type ICodeApiService");
-        return exCtx.TypedApi;
+        return exCtxReal.TypedApi;
     }
 
-    public static ICodeDynamicApiService GetDynamicApi(this ICodeApiService exCtx)
+    public static ICodeDynamicApiHelper GetDynamicApi(this ICodeApiService exCtx)
     {
-        if (exCtx is null)
+        if (exCtx is not CodeApiService exCtxReal)
             throw new InvalidOperationException("ExecutionContext must be of type ICodeApiService");
-        return exCtx.DynamicApi;
+        return exCtxReal.DynamicApi;
     }
 }

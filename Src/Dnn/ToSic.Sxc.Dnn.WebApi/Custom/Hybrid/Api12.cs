@@ -34,7 +34,7 @@ public abstract partial class Api12(string logSuffix) : DnnSxcCustomControllerBa
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
+    internal ICodeDynamicApiHelper CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => SysHlp.CodeLog;

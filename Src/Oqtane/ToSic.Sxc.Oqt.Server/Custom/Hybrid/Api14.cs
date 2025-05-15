@@ -14,8 +14,7 @@ namespace Custom.Hybrid;
 [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
 public abstract class Api14 : Api12, IDynamicCode14<object, ServiceKit14>
 {
-    public ServiceKit14 Kit => _kit.Get(CodeApi.GetKit<ServiceKit14>);
-    private readonly GetOnce<ServiceKit14> _kit = new();
+    public ServiceKit14 Kit => field ??= CodeApi.ServiceKit14;
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
     [PrivateApi("added in 16.05, but not sure if it should be public")]

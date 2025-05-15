@@ -22,7 +22,7 @@ public abstract partial class RazorComponent : RazorComponentBase,
 #pragma warning restore CS0618
     IDnnRazorCompatibility, IDnnRazor11, ICreateInstance
 {
-    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
+    internal ICodeDynamicApiHelper CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
 
     /// <inheritdoc />
     public IDnnContext Dnn => (_CodeApiSvc as IHasDnn)?.Dnn;

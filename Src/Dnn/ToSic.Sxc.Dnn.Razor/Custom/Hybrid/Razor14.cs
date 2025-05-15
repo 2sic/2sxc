@@ -18,7 +18,7 @@ namespace Custom.Hybrid;
 [PublicApi]
 public abstract partial class Razor14: RazorComponentBase, IRazor14<object, ServiceKit14>, IHasCodeHelp, ICreateInstance
 {
-    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
+    internal ICodeDynamicApiHelper CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
 
     /// <inheritdoc cref="DnnRazorHelper.RenderPageNotSupported"/>
     [PrivateApi]
@@ -34,8 +34,7 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
 
-    public ServiceKit14 Kit => _kit.Get(CodeApi.GetKit<ServiceKit14>);
-    private readonly GetOnce<ServiceKit14> _kit = new();
+    public ServiceKit14 Kit => field ??= CodeApi.ServiceKit14;
 
 
     #region Core Properties which should appear in docs

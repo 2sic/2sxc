@@ -39,7 +39,7 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
 {
     internal const string ErrRecommendedNamespaces = "To use it, use the new base class from Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.";
 
-    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
+    internal ICodeDynamicApiHelper CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
 
     /// <remarks>
     /// Probably obsolete, but a bit risky to just remove

@@ -4,15 +4,17 @@ using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Kits.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Code.Internal;
 
 public partial class CodeApiService
-    : ICodeTypedApiService,
+    : // ICodeTypedApiHelper,
         IWrapper<IExCtxServicesForTypedData>,
-        IExCtxBlock
+        IExCtxBlock,
+        IExecutionContextCanGetKit
 {
     [PrivateApi]
     public void AttachApp(IApp app)

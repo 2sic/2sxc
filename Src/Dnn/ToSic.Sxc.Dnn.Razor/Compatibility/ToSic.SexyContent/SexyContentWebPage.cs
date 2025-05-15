@@ -43,7 +43,7 @@ public abstract class SexyContentWebPage :
     IAppAndDataHelpers
 #pragma warning restore 618
 {
-    internal ICodeDynamicApiService CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
+    internal ICodeDynamicApiHelper CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
 
     #region Core Properties which should appear in docs
 

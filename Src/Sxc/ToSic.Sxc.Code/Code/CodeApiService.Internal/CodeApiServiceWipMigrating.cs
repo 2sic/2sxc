@@ -11,9 +11,9 @@ public static class CodeApiServiceWipMigrating
     public static IConvertService GetConvertService(this ICodeApiService parent)
         => ((CodeApiService)parent).Convert;
 
-    public static IConvertService GetConvertService(this ICodeDynamicApiService parent)
+    public static IConvertService GetConvertService(this ICodeDynamicApiHelper parent)
         => ((CodeApiService)parent).Convert;
-    public static IConvertService GetConvertService(this ICodeTypedApiService parent)
+    public static IConvertService GetConvertService(this ICodeTypedApiHelper parent)
         => ((CodeApiService)parent).Convert;
 
 }
