@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Code.Internal.HotBuild;
+﻿using ToSic.Sxc.Code.CodeApi.Internal;
+using ToSic.Sxc.Code.Internal.HotBuild;
 
 namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 
@@ -39,7 +40,7 @@ public class CodeHelper() : CodeHelperBase("Sxc.CdHlp")
 
         // usually we don't have a relative path, so we use the preset path from when this class was instantiated
         relativePath ??= _parent?.CreateInstancePath;
-        object instance = ((ICreateInstance)_CodeApiSvc)?.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
+        object instance = ExCtxOrNull?.GetDynamicApi()?.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
         return l.Return(instance);
     }
 

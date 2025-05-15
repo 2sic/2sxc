@@ -20,6 +20,7 @@ using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
@@ -38,7 +39,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     protected ApiTyped() : this(EavWebApiConstants.HistoryNameWebApi) { }
 
     internal ICodeTypedApiHelper CodeApi => field
-        ??= _CodeApiSvc.GetTypedApi();
+        ??= ExCtxOrNull.GetTypedApi();
 
 
     /// <summary>
@@ -62,7 +63,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     public new ICodeLog Log => CtxHlp.CodeLog;
 
     // ReSharper disable once InconsistentNaming
-    [PrivateApi] public ICodeApiService _CodeApiSvc => CtxHlp._CodeApiSvc;
+    [PrivateApi] internal IExecutionContext ExCtxOrNull => CtxHlp.ExCtxOrNull;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public new TService GetService<TService>() where TService : class
@@ -122,7 +123,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     private TypedCode16Helper CodeHelper => field ??= CreateCodeHelper();
 
-    private TypedCode16Helper CreateCodeHelper() => new(owner: this, helperSpecs: new(_CodeApiSvc, false, ((IGetCodePath)this).CreateInstancePath), getRazorModel: () => null, getModelDic: () => null);
+    private TypedCode16Helper CreateCodeHelper() => new(owner: this, helperSpecs: new(ExCtxOrNull, false, ((IGetCodePath)this).CreateInstancePath), getRazorModel: () => null, getModelDic: () => null);
 
     public ITypedItem MyItem => CodeHelper.MyItem;
 

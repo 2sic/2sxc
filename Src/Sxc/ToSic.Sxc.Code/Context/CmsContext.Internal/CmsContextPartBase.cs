@@ -13,18 +13,10 @@ internal abstract class CmsContextPartBase<T>(CmsContext parent, T contents) : W
 {
     protected CmsContext Parent = parent;
 
-    //protected CmsContextPartBase() : base(null) { }
-
-    //protected void Init(CmsContext parent, T contents)
-    //{
-    //    Wrap(contents);
-    //    Parent = parent;
-    //}
-
     /// <summary>
     /// Typed IMetadata accessor to all the metadata of this object.
     /// </summary>
-    public IMetadata Metadata => _dynMeta.Get(() => Parent._CodeApiSvc.GetCdf().Metadata(MetadataRaw));
+    public IMetadata Metadata => _dynMeta.Get(() => Parent.ExCtx.GetCdf().Metadata(MetadataRaw));
     private readonly GetOnce<IMetadata> _dynMeta = new();
 
     [JsonIgnore] // ignore, as it's published through the Metadata property which is better typed.

@@ -5,7 +5,6 @@ using System.IO;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Engines;
@@ -27,7 +26,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
 
     private const string DynCode = "_dynCode";
 
-    public IExecutionContext DynCodeRootMain
+    public IExecutionContext ExCtxRoot
     {
         get
         {
@@ -51,7 +50,9 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
     }
 
     // ReSharper disable once InconsistentNaming
-    public override ICodeApiService _CodeApiSvc => base._CodeApiSvc ?? DynCodeRootMain as ICodeApiService;
+    //public override ICodeApiService _CodeApiSvc => base._CodeApiSvc ?? DynCodeRootMain as ICodeApiService;
+
+    internal new IExecutionContext ExCtx => base.ExCtxOrNull ?? ExCtxRoot;
 
     #endregion
 
@@ -69,7 +70,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
     private TypedCode16Helper CreateCodeHelper() =>
         new(
             owner: this,
-            helperSpecs: new(_CodeApiSvc, true, owner.Path),
+            helperSpecs: new(ExCtx, true, owner.Path),
             getRazorModel: () => _overridePageData ?? owner.Model,
             getModelDic: () => (_overridePageData ?? owner.Model)?.ToDicInvariantInsensitive()
         );
@@ -97,7 +98,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
     protected override string GetCodeFullPathForExistsCheck(string path)
     {
         var l = Log.Fn<string>(path);
-        var pathFinder = _CodeApiSvc.GetService<IServerPaths>();
+        var pathFinder = ExCtx.GetService<IServerPaths>();
         var fullPath = pathFinder.FullAppPath(path);
         return l.ReturnAndLog(fullPath);
     }

@@ -34,17 +34,12 @@ public abstract class DnnSxcCustomControllerBase(string logSuffix, string insigh
         var init = DynHlp.Initialize(controllerContext);
         if (this is IGetCodePath thisWithPath)
             thisWithPath.CreateInstancePath = init.Folder;
-        _CodeApiSvc = init.Root as ICodeApiService;
         ExCtx = init.Root;
     }
 
     #endregion
 
     #region Internal / Plumbing / Obsolete
-
-    [PrivateApi]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    public ICodeApiService _CodeApiSvc { get; private set; }
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]

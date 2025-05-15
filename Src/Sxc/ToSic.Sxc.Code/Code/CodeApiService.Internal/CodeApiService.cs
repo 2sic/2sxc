@@ -69,7 +69,8 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
         GetService<CspOfApp>();
     }
 
-    [PrivateApi] public ICmsContext CmsContext { get; }
+    [PrivateApi]
+    internal ICmsContext CmsContext { get; }
 
     #endregion
 
@@ -105,36 +106,29 @@ public abstract partial class CodeApiService : ServiceBase<CodeApiService.MyServ
     }
 
     /// <inheritdoc />
-    public IApp App { get; private set; }
+    internal IApp App { get; private set; }
 
     /// <inheritdoc />
-    public IDataSource Data { get; private set; }
+    internal IDataSource Data { get; private set; }
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => field ??= GetService<ILinkService>(reuse: true);
+    internal ILinkService Link => field ??= GetService<ILinkService>(reuse: true);
 
 
     #region Edit
 
     /// <inheritdoc />
-    public IEditService Edit => field ??= GetService<IEditService>(reuse: true);
-
-    #endregion
-
-    #region Accessor to Root
-
-    // ReSharper disable once InconsistentNaming
-    [PrivateApi] public ICodeApiService _CodeApiSvc => this;
+    internal IEditService Edit => field ??= GetService<IEditService>(reuse: true);
 
     #endregion
 
     [PrivateApi("Not yet ready")]
-    public IDevTools DevTools => throw new NotImplementedException("This is a future feature, we're just reserving the object name");
+    internal IDevTools DevTools => throw new NotImplementedException("This is a future feature, we're just reserving the object name");
 
     /// <summary>
     /// WIP!
     /// </summary>
-    public ICodeDynamicApiHelper DynamicApi => field ??= new CodeDynamicApiHelper(this);
+    internal ICodeDynamicApiHelper DynamicApi => field ??= new CodeDynamicApiHelper(this);
 
-    public ICodeTypedApiHelper TypedApi => field ??= new CodeTypedApiHelper(this);
+    internal ICodeTypedApiHelper TypedApi => field ??= new CodeTypedApiHelper(this);
 }

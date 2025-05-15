@@ -29,6 +29,8 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
 
     #region Initialize
 
+    internal new IExecutionContext ExCtxOrNull => base.ExCtxOrNull;
+
     /// <summary>
     /// This will make sure that any services requiring the context can get it.
     /// It must usually be called from the base class which expects to use this.

@@ -47,7 +47,7 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class
-        => RzrHlp.DynCodeRootMain.GetTypedApi().GetService<TService>();
+        => RzrHlp.ExCtxRoot.GetTypedApi().GetService<TService>();
 
     [PrivateApi("WIP 17.06,x")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -62,7 +62,7 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
     [PrivateApi("Not yet ready")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public IDevTools DevTools => RzrHlp.DynCodeRootMain.GetTypedApi().DevTools;
+    public IDevTools DevTools => RzrHlp.ExCtxRoot.GetTypedApi().DevTools;
 
     #endregion
 
@@ -71,6 +71,10 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
     //[PrivateApi]
     //[ShowApiWhenReleased(ShowApiMode.Never)]
     //public ICodeApiService _CodeApiSvc => RzrHlp.DynCodeRootMain;
+
+    [PrivateApi]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    internal IExecutionContext ExCtx => RzrHlp.ExCtxRoot;
 
     //internal ICodeTypedApiService CodeApi => RzrHlp.DynCodeRootMain.TypedApi;
 

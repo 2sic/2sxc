@@ -34,7 +34,7 @@ public abstract class RazorTyped<TModel>()
         ISetDynamicModel, IDynamicCode16, IHasCodeHelp
 {
     #region ServiceKit
-    internal ICodeTypedApiHelper CodeApi => field ??= RzrHlp.DynCodeRootMain.GetTypedApi();
+    internal ICodeTypedApiHelper CodeApi => field ??= RzrHlp.ExCtxRoot.GetTypedApi();
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
     public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;

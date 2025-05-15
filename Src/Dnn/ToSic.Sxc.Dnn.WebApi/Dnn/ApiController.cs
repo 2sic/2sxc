@@ -13,7 +13,6 @@ using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
@@ -24,13 +23,13 @@ namespace ToSic.Sxc.Dnn;
 /// This is the base class for all custom API Controllers. <br/>
 /// With this, your code receives the full context  incl. the current App, DNN, Data, etc.
 /// </summary>
-[PublicApi("This was the official base class before v12. Try to move away from it, go to the latest base class on Custom.Dnn.Api12")]
+[PublicApi("This was the official base class before v12. Try to move away from it, go to the latest base class on Custom.Hybrid.ApiTyped")]
 [DnnLogExceptions]
 [Obsolete("This will continue to work, but you should use the Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.")]
 [DefaultToNewtonsoftForHttpJson]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class ApiController : DnnSxcCustomControllerBase, 
-    IDnnDynamicWebApi,
+public abstract class ApiController : DnnSxcCustomControllerBase,
+    IHasDnn,
     ICreateInstance,
     IDynamicCode, 
     IDynamicWebApi, 

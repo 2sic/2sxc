@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Code.Internal;
 public partial class CodeApiService
 {
     [PrivateApi]
-    public ICodeDataFactory Cdf => _cdf.Get(() =>
+    internal ICodeDataFactory Cdf => _cdf.Get(() =>
     {
         ((CodeDataFactory)Services.Cdf).ConnectToRoot(this);
         return Services.Cdf;

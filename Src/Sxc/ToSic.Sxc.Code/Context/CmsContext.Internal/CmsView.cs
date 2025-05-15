@@ -37,7 +37,7 @@ internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IVi
     private IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string location = default)
         => new CmsViewFolder(this, block.App, AppAssetsHelpers.DetermineShared(location) ?? block.View.IsShared);
 
-    private ICodeDataFactory Cdf => field ??= Parent._CodeApiSvc.GetCdf();
+    private ICodeDataFactory Cdf => field ??= Parent.ExCtx.GetCdf();
 
     /// <summary>
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work. This is by design.

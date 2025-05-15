@@ -5,6 +5,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Context.Internal;
 
@@ -24,6 +25,11 @@ internal class CmsContext(
 {
     #region Internal context
 
+    /// <summary>
+    /// Provide the Execution Context to the parts
+    /// </summary>
+    internal new IExecutionContext ExCtx => base.ExCtx;
+
     // Note: Internal so it can be used for View<T, T>
     internal IBlock RealBlockOrNull => _realBlock.Get(() => ExCtx?.GetState<IBlock>());
     private readonly GetOnce<IBlock> _realBlock = new();
@@ -39,15 +45,20 @@ internal class CmsContext(
 
     public ICmsPlatform Platform { get; } = platform;
 
-    public ICmsSite Site => field ??= new CmsSite(this, SiteAppReader);
+    public ICmsSite Site => field
+        ??= new CmsSite(this, SiteAppReader);
 
-    public ICmsPage Page => field ??= new CmsPage(this, SiteAppReader.Metadata, pageLazy);
+    public ICmsPage Page => field
+        ??= new CmsPage(this, SiteAppReader.Metadata, pageLazy);
 
-    public ICmsCulture Culture => field ??= new CmsCulture(this);
+    public ICmsCulture Culture => field
+        ??= new CmsCulture(this);
 
-    public ICmsModule Module => field ??= new CmsModule(this, RealBlockOrNull.Context?.Module ?? new ModuleUnknown(null), RealBlockOrNull);
+    public ICmsModule Module => field
+        ??= new CmsModule(this, RealBlockOrNull.Context?.Module ?? new ModuleUnknown(null), RealBlockOrNull);
 
-    public ICmsUser User => field ??= CreateCurrent();
+    public ICmsUser User => field
+        ??= CreateCurrent();
 
     private ICmsUser CreateCurrent()
     {
@@ -56,7 +67,9 @@ internal class CmsContext(
         return new CmsUser(this, userModel, SiteAppReader.Metadata);
     }
 
-    public ICmsView View => field ??= new CmsView(this, RealBlockOrNull);
+    public ICmsView View => field
+        ??= new CmsView(this, RealBlockOrNull);
 
-    public ICmsBlock Block => field ??= new CmsBlock(RealBlockOrNull);
+    public ICmsBlock Block => field
+        ??= new CmsBlock(RealBlockOrNull);
 }

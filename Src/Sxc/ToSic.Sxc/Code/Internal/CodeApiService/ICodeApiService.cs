@@ -1,10 +1,4 @@
-﻿using ToSic.Eav.Code;
-using ToSic.Eav.Data.PiggyBack;
-using ToSic.Eav.DataSource;
-using ToSic.Sxc.Apps;
-using ToSic.Sxc.Context;
-using ToSic.Sxc.Data.Internal;
-using ToSic.Sxc.Sys.ExecutionContext;
+﻿using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Internal;
 
@@ -14,14 +8,4 @@ namespace ToSic.Sxc.Code.Internal;
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface ICodeApiService : IExecutionContext
-{
-    #region AsConverter (internal)
-
-    [PrivateApi("internal use only")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    ICodeDataFactory Cdf { get; }
-
-
-    #endregion
-}
+public interface ICodeApiService : IExecutionContext;

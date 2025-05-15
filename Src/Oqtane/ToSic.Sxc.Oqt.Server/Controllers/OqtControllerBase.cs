@@ -29,7 +29,8 @@ public abstract class OqtControllerBase : ControllerBase, IHasLog, IActionFilter
         Log = new Log($"Api.{logSuffix}", null, GetType().Name);
         _helper = new(this);
 
-        if (withBlockContext) CtxHlp = new(this, _helper);
+        if (withBlockContext)
+            CtxHlp = new(this, _helper);
     }
 
     #endregion

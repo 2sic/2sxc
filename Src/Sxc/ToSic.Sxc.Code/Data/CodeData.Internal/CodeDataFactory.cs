@@ -6,6 +6,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Internal.Wrapper;
@@ -32,6 +33,10 @@ public partial class CodeDataFactory(
         connect: [/* never: serviceProvider */codeDataServices, adamManager, contextOfAppLazy, dataBuilderLazy, codeDataWrapper, wrapJsonGenerator, codeInfoSvc, zoneMapper]),
         ICodeDataFactory
 {
+
+    // WIP finishing this
+    public ICodeApiService _CodeApiSvc => ExCtx as ICodeApiService;
+
     public CodeInfoService CodeInfo => codeInfoSvc.Value;
 
     public void SetCompatibilityLevel(int compatibilityLevel) => _priorityCompatibilityLevel = compatibilityLevel;

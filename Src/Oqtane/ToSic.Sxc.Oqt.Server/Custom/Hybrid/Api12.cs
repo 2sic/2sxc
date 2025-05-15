@@ -18,6 +18,7 @@ using ToSic.Sxc.Internal;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Custom;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.WebApi;
 
 // ReSharper disable once CheckNamespace
@@ -36,7 +37,7 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
 
     [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
-    internal ICodeDynamicApiHelper CodeApi => field ??= _CodeApiSvc.GetDynamicApi();
+    internal ICodeDynamicApiHelper CodeApi => field ??= ExCtxOrNull.GetDynamicApi();
 
     /// <summary>
     /// Our custom dynamic 2sxc app api controllers, depends on event OnActionExecuting to provide dependencies (without DI in constructor).
@@ -58,7 +59,7 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
 
     // ReSharper disable once InconsistentNaming
     [PrivateApi]
-    public ICodeApiService _CodeApiSvc => CtxHlp._CodeApiSvc;
+    public IExecutionContext ExCtxOrNull => CtxHlp.ExCtxOrNull;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
     public new TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();

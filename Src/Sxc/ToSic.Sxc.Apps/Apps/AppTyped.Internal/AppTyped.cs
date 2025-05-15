@@ -14,7 +14,6 @@ using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Services.DataServices;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
-using static ToSic.Sxc.Apps.Internal.Assets.AppAssetFolderMain;
 
 namespace ToSic.Sxc.Apps.Internal;
 
@@ -31,7 +30,7 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> 
     : ServiceWithContext(SxcLogName + ".AppTyp", errorIfNotConnected: true, connect: [globalPaths, queryManager]),
         IAppTyped
 {
-    protected App App => CodeApiSvc.GetApp() as App
+    protected App App => ExCtxOrNull?.GetApp() as App
                          ?? throw new($"Can't access {nameof(App)} - either null or can't convert");
 
     /// <inheritdoc />

@@ -25,7 +25,7 @@ internal class CmsView<TSettings, TResources>(CmsContext parent, IBlock block, b
 {
     private readonly IView _view = block.View;
 
-    private ICodeDataFactory Cdf => field ??= Parent._CodeApiSvc.GetCdf();
+    private ICodeDataFactory Cdf => field ??= Parent.ExCtx.GetCdf();
 
     public TSettings Settings => field ??= Cdf.AsCustom<TSettings>(Cdf.AsItem(_view.Settings, propsRequired: settingsPropsRequired));
 

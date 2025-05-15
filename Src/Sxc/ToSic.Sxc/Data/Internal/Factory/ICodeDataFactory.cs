@@ -8,7 +8,7 @@ using ToSic.Sxc.Code.Internal;
 
 namespace ToSic.Sxc.Data.Internal;
 
-public interface ICodeDataFactory: ICanGetService
+public interface ICodeDataFactory: ICanGetService, IHasLog
 {
     IMetadata Metadata(IMetadataOf mdOf);
 
@@ -43,9 +43,6 @@ public interface ICodeDataFactory: ICanGetService
     /// IMPORTANT: LOWER-CASE guaranteed.
     /// </remarks>
     List<string> SiteCultures { get; }
-
-    /// <inheritdoc />
-    ILog Log { get; }
 
     ICodeApiService _CodeApiSvc { get; }
     bool Debug { get; set; }

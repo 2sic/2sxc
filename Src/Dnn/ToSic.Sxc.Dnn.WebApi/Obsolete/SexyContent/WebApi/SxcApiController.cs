@@ -44,7 +44,7 @@ namespace ToSic.SexyContent.WebApi;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract partial class SxcApiController() :
     DnnSxcCustomControllerBase("OldApi"),
-    IDnnDynamicWebApi,
+    IDynamicCode, IHasDnn,
     ICreateInstance,
     IDynamicWebApi,
     IDynamicCodeBeforeV10,
@@ -59,7 +59,7 @@ public abstract partial class SxcApiController() :
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
 
     /// <inheritdoc cref="IHasDnn.Dnn"/>
-    public IDnnContext Dnn => (_CodeApiSvc as IHasDnn)?.Dnn;
+    public IDnnContext Dnn => (ExCtx as IHasDnn)?.Dnn;
 
     [Obsolete]
     [PrivateApi]

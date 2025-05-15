@@ -1,6 +1,5 @@
 ﻿using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
 
 // ReSharper disable once CheckNamespace
@@ -13,7 +12,7 @@ namespace Custom.Dnn;
 [PublicApi("This is the official base class for v12+")]
 [DnnLogExceptions]
 [DefaultToNewtonsoftForHttpJson]
-public abstract class Api12(string logSuffix) : Hybrid.Api12(logSuffix), IDnnDynamicWebApi, IHasDnn
+public abstract class Api12(string logSuffix) : Hybrid.Api12(logSuffix), IDynamicWebApi, ToSic.Sxc.Code.IDynamicCode, IHasDnn
 {
     protected Api12() : this("Dnn12") { }
 
