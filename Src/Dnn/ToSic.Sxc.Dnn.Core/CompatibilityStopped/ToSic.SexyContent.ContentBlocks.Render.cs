@@ -1,0 +1,18 @@
+﻿#if NETFRAMEWORK
+
+// ReSharper disable once CheckNamespace
+namespace ToSic.SexyContent.ContentBlocks
+{
+    [Obsolete]
+    public static class Render
+    {
+        [Obsolete]
+        public static string One(object context, object noParamOrder = default, object item = null, string field = null, Guid? newGuid = null)
+            => throw new(ToSic.Sxc.Blocks.Render.GenerateMessage("ToSic.SexyContent.ContentBlocks.One()"));
+
+        [Obsolete]
+        public static string All(object context, object noParamOrder = default, string field = null, string merge = null)
+            => throw new(ToSic.Sxc.Blocks.Render.GenerateMessage("ToSic.SexyContent.ContentBlocks.All()"));
+    }
+}
+#endif

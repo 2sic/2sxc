@@ -7,19 +7,16 @@ using ToSic.Sxc.Dnn.Code;
 using IApp = ToSic.Sxc.Apps.IApp;
 using ILog = ToSic.Lib.Logging.ILog;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Dnn;
 
 /// <summary>
 /// This is a factory to create CmsBlocks, Apps etc. and related objects from DNN.
 /// </summary>
 [PublicApi]
-[Obsolete(FinallyDecommissionedInV20)]
+[Obsolete]
 public static class Factory
 {
-    internal const string FinallyDecommissionedInV20 = "These APIs have been obsolete since v13 and announced for Removal in v15. " +
-                                                       "They were now removed in v20. " +
-                                                       "For guidance, see https://go.2sxc.org/brc-13-dnn-factory.";
-
     internal static string GenerateMessage([CallerMemberName] string cName = default)
         => $"The old {nameof(Factory)}.{cName}() API has been deprecated since v13 and announced for removal in v15. They were removed in v20. " +
            $"Please use Dependency Injection and the IRenderService or IDynamicCodeService instead. " +
@@ -31,7 +28,7 @@ public static class Factory
     /// <param name="pageId">The DNN tab id (page id)</param>
     /// <param name="modId">The DNN Module id</param>
     /// <returns>An initialized CMS Block, ready to use/render</returns>
-    [Obsolete(FinallyDecommissionedInV20)]
+    [Obsolete]
     public static IBlockBuilder CmsBlock(int pageId, int modId)
         => throw new NotSupportedException(GenerateMessage());
 
@@ -42,7 +39,7 @@ public static class Factory
     /// <param name="modId">The DNN Module id</param>
     /// <param name="parentLog">The parent log, optional</param>
     /// <returns>An initialized CMS Block, ready to use/render</returns>
-    [Obsolete(FinallyDecommissionedInV20)]
+    [Obsolete]
     public static IBlockBuilder CmsBlock(int pageId, int modId, ILog parentLog)
         => throw new NotSupportedException(GenerateMessage());
 
@@ -51,7 +48,7 @@ public static class Factory
     /// </summary>
     /// <param name="moduleInfo">A DNN ModuleInfo object</param>
     /// <returns>An initialized CMS Block, ready to use/render</returns>
-    [Obsolete(FinallyDecommissionedInV20)]
+    [Obsolete]
     public static IBlockBuilder CmsBlock(ModuleInfo moduleInfo)
         => throw new NotSupportedException(GenerateMessage());
 
@@ -61,7 +58,7 @@ public static class Factory
     /// <param name="module"></param>
     /// <param name="parentLog">optional logger to attach to</param>
     /// <returns>An initialized CMS Block, ready to use/render</returns>
-    [Obsolete(FinallyDecommissionedInV20)]
+    [Obsolete]
     public static IBlockBuilder CmsBlock(IModule module, ILog parentLog = null)
         => throw new NotSupportedException(GenerateMessage());
 
@@ -70,7 +67,7 @@ public static class Factory
     /// </summary>
     /// <param name="blockBuilder">CMS Block for which the helper is targeted. </param>
     /// <returns>A Code Helper based on <see cref="IDnnDynamicCode"/></returns>
-    [Obsolete(FinallyDecommissionedInV20)]
+    [Obsolete]
     public static IDnnDynamicCode DynamicCode(IBlockBuilder blockBuilder)
         => throw new NotSupportedException(GenerateMessage());
 
@@ -85,7 +82,7 @@ public static class Factory
     /// <param name="showDrafts">Show draft items - usually false for visitors, true for editors/admins.</param>
     /// <param name="parentLog">optional logger to attach to</param>
     /// <returns>An initialized App object which you can use to access App.Data</returns>
-    [Obsolete(FinallyDecommissionedInV20)]
+    [Obsolete]
     public static IApp App(int appId, bool unusedButKeepForApiStability = false, bool showDrafts = false, ILog parentLog = null)
         => throw new NotSupportedException(GenerateMessage());
 
@@ -101,7 +98,7 @@ public static class Factory
     /// <param name="showDrafts">Show draft items - usually false for visitors, true for editors/admins.</param>
     /// <param name="parentLog">optional logger to attach to</param>
     /// <returns>An initialized App object which you can use to access App.Data</returns>
-    [Obsolete(FinallyDecommissionedInV20)]
+    [Obsolete]
     public static IApp App(int zoneId, int appId, bool unusedButKeepForApiStability = false, bool showDrafts = false, ILog parentLog = null)
         => throw new NotSupportedException(GenerateMessage());
 
@@ -117,7 +114,7 @@ public static class Factory
     /// <param name="showDrafts">Show draft items - usually false for visitors, true for editors/admins.</param>
     /// <param name="parentLog">optional logger to attach to</param>
     /// <returns>An initialized App object which you can use to access App.Data</returns>
-    [Obsolete(FinallyDecommissionedInV20)]
+    [Obsolete]
     public static IApp App(int appId,
         PortalSettings ownerPortalSettings,
         bool unusedButKeepForApiStability = false,
