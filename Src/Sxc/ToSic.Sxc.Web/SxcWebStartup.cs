@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Data.Internal.Convert;
+using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Polymorphism.Internal;
@@ -49,6 +50,12 @@ public static class SxcWebStartup
         // Add possibly missing fallback services
         // This must always be at the end here so it doesn't accidentally replace something we actually need
         services.AddKoi();
+
+
+        // basic environment, pages, modules etc.
+        // Note that it's not really part of .Web, but we want it to be quite late so we don't need
+        // to move up dependencies which it has.
+        services.TryAddTransient<IPlatformAppInstaller, BasicPlatformAppInstaller>();
 
 
         return services;

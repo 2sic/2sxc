@@ -49,7 +49,6 @@ public static class SxcCoreStartup
     {
         // basic environment, pages, modules etc.
         services.TryAddTransient<IEnvironmentInstaller, BasicEnvironmentInstaller>();
-        services.TryAddTransient<IPlatformAppInstaller, BasicEnvironmentInstaller>();
 
         //// ADAM basics
         //// TODO: this doesn't warn yet, there should be an AdamFileSystemUnknown(WarnUseOfUnknown<AdamFileSystemUnknown> warn)

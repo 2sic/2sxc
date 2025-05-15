@@ -3,6 +3,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Caching;
+using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
@@ -11,7 +12,6 @@ using ToSic.Lib.Internal.Generics;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
-using ToSic.Sxc.Context;
 using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
@@ -22,9 +22,9 @@ internal class LightSpeed(
     LazySvc<IAppsCatalog> appsCatalog,
     LazySvc<IAppReaderFactory> appReadersLazy,
     Generator<IAppPathsMicroSvc> appPathsLazy,
-    LazySvc<ICmsContext> cmsContext,
+    LazySvc<ISite> site,
     LazySvc<OutputCacheManager> outputCacheManager
-) : ServiceBase(SxcLogName + ".Lights", connect: [features, appsCatalog, appReadersLazy, appPathsLazy, cmsContext, outputCacheManager]), IOutputCache
+) : ServiceBase(SxcLogName + ".Lights", connect: [features, appsCatalog, appReadersLazy, appPathsLazy, outputCacheManager]), IOutputCache
 {
     public IOutputCache Init(int moduleId, int pageId, IBlock block)
     {
@@ -211,7 +211,7 @@ internal class LightSpeed(
     );
     private readonly GetOnce<(bool CachingAllowed, string Extension)> _urlParams = new();
     
-    private string CurrentCulture => _currentCulture.Get(() => cmsContext.Value.Culture.CurrentCode);
+    private string CurrentCulture => _currentCulture.Get(() => site.Value.SafeCurrentCultureCode());
     private readonly GetOnce<string> _currentCulture = new();
 
 

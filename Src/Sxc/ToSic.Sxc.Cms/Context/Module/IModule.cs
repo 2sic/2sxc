@@ -8,12 +8,6 @@ namespace ToSic.Sxc.Context;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IModule
-#if NETFRAMEWORK
-#pragma warning disable 618
-        // in this case we must also inherit from IContainer - legacy of the signature for CustomizeSearch
-        : ToSic.Eav.Run.IContainer
-#pragma warning restore 618
-#endif
 {
     [PrivateApi("Workaround till we have DI to inject the current container")]
     [ShowApiWhenReleased(ShowApiMode.Never)]

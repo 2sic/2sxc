@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Data;
 using ToSic.Lib.DI;
@@ -119,6 +120,9 @@ public partial class ExecutionContext
 
     public TState GetState<TState>() where TState : class
     {
+        if (typeof(TState) == typeof(IUser))
+            return (TState)CmsContext.User;
+
         if (typeof(TState) == typeof(ICmsContext))
             return (TState)CmsContext;
 
