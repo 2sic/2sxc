@@ -157,8 +157,9 @@ public class RenderService: ServiceForDynamicCode,
     private IEditService GetEditService(IBlock blockOrNull)
     {
         // If we have a dyn-code, use that
-        if (_CodeApiSvc?.Edit != null)
-            return _CodeApiSvc.Edit;
+        var editSvc = _CodeApiSvc?.GetService<IEditService>(reuse: true);
+        if (editSvc != null)
+            return editSvc;
 
         // Otherwise create a new one - even though it's not clear if this would have any real effect
         var newEdit = Services.EditGenerator.New();

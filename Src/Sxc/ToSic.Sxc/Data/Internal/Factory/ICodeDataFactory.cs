@@ -67,8 +67,6 @@ public interface ICodeDataFactory: ICanGetService
 
     CodeInfoService CodeInfo { get; }
 
-    IFolder Folder(ICanBeEntity item, string name, IField field);
-
     /// <summary>
     /// Implement AsDynamic for DynamicCode - not to be used in internal APIs.
     /// Always assumes Strict is false
@@ -141,4 +139,6 @@ public interface ICodeDataFactory: ICanGetService
     IFile File(int id);
     IFolder Folder(Guid entityGuid, string fieldName, IField field = default);
     IFolder Folder(int id);
+    IFolder Folder(ICanBeEntity item, string name, IField field);
+
 }

@@ -14,7 +14,7 @@ internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService 
     internal ImgResizeLinker ImgLinker { get; } = imgLinker;
     internal IFeaturesService Features { get; } = features;
 
-    internal IEditService EditOrNull => _CodeApiSvc?.Edit;
+    internal IEditService EditOrNull => _CodeApiSvc?.GetService<IEditService>(reuse: true);
 
     internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => _CodeApiSvc?.GetService<IToolbarService>(reuse: true));
     private readonly GetOnce<IToolbarService> _toolbarSvc = new();

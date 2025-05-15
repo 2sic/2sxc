@@ -21,11 +21,11 @@ partial record ToolbarBuilder
     protected override string ToHtmlString()
     {
         // Get edit, but don't exit if null, as the Render (later on) will add comments if Edit is null
-        var edit = CodeApiSvc?.Edit;
+        var editSvc = CodeApiSvc?.GetService<IEditService>(reuse: true);
 
         // As the config can change before render, put `this` into a variable first
         var finalToolbar = this;
-        var (enabled, showNonAdmin) = CheckShowConditions();
+        var (enabled, showNonAdmin) = CheckShowConditions(editSvc);
 
         // If we show to everyone, then we must make sure that the toolbars API is loaded in JS
         // since in this case it may not be activated
@@ -42,13 +42,13 @@ partial record ToolbarBuilder
         if (ShouldSwitchToItemDemoMode())
             finalToolbar = CreateStandaloneItemDemoToolbar();       // Implement Demo-Mode with info-button only
 
-        return finalToolbar.Render(edit, enabled);
+        return finalToolbar.Render(editSvc, enabled);
     }
 
-    private (bool enabled, bool showNonAdmin) CheckShowConditions()
+    private (bool enabled, bool showNonAdmin) CheckShowConditions(IEditService editSvc)
     {
         // Get initial enabled from the Edit Service
-        var enabled = CodeApiSvc?.Edit?.Enabled == true;
+        var enabled = editSvc?.Enabled == true;
         var config = Configuration;
         if (config == null)
             return (enabled, false);

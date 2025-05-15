@@ -19,8 +19,8 @@ public interface ICodeApiServiceForDynamicCode12Wip: IHasLog, ICodeDynamicApiSer
     /// <inheritdoc cref="IDynamicCode.App" />
     IApp App { get; }
 
-    /// <inheritdoc cref="IDynamicCode.AsAdam" />
-    IFolder AsAdam(ICanBeEntity item, string fieldName);
+    ///// <inheritdoc cref="IDynamicCode.AsAdam" />
+    //IFolder AsAdam(ICanBeEntity item, string fieldName);
 
     /// <inheritdoc cref="IDynamicCode.Data" />
     IDataSource Data { get; }
@@ -59,11 +59,11 @@ public interface ICodeApiServiceForDynamicCode12Wip: IHasLog, ICodeDynamicApiSer
     /// <inheritdoc cref="IDynamicCode.CmsContext" />
     ICmsContext CmsContext { get; }
 
-    /// <inheritdoc cref="IDynamicCode.Edit" />
-    IEditService Edit { get; }
+    ///// <inheritdoc cref="IDynamicCode.Edit" />
+    //IEditService Edit { get; }
 
 
-    /// <inheritdoc cref="IDynamicCode.Link" />
-    ILinkService Link { get; }
+    ///// <inheritdoc cref="IDynamicCode.Link" />
+    //ILinkService Link { get; }
 
 }
