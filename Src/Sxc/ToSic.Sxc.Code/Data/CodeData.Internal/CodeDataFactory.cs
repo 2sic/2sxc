@@ -42,6 +42,8 @@ public partial class CodeDataFactory(
 
         // Handle Adam Manager - passed in as an object so that the Type doesn't have to exist at top level definition
         // but if we get it, we must really make sure it's the correct type
+        if (adamManagerPrepared is null)
+            return;
         if (adamManagerPrepared is AdamManager adamManagerTyped)
             AdamManager = adamManagerTyped;
         else
