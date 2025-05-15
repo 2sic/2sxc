@@ -12,49 +12,49 @@ namespace ToSic.SexyContent.Environment.Dnn7;
 /// This is a factory to create 2sxc-instance objects and related objects from
 /// non-2sxc environments.
 /// </summary>
-[Obsolete("use ToSic.Sxc.Dnn.Factory instead")]
+[Obsolete(Sxc.Dnn.Factory.FinallyDecommissionedInV20)]
 public static class Factory
 {
-    [Obsolete("use ToSic.Sxc.Dnn.Factory.CmsBlock(tabId, modId) instead. Note that tab/mod are reversed to this call.")]
+    [Obsolete(Sxc.Dnn.Factory.FinallyDecommissionedInV20)]
     public static IBlockBuilder SxcInstanceForModule(int modId, int pageId)
-        => Sxc.Dnn.Factory.CmsBlock(pageId, modId);
+        => throw new NotSupportedException(Sxc.Dnn.Factory.GenerateMessage());
 
-    [Obsolete("use ToSic.Sxc.Dnn.Factory.CmsBlock(...) instead")]
+    [Obsolete(Sxc.Dnn.Factory.FinallyDecommissionedInV20)]
     public static IBlockBuilder SxcInstanceForModule(ModuleInfo moduleInfo)
-        => Sxc.Dnn.Factory.CmsBlock(moduleInfo);
+        => throw new NotSupportedException(Sxc.Dnn.Factory.GenerateMessage());
 
-    [Obsolete("use ToSic.Sxc.Dnn.Factory.CmsBlock(...) instead")]
+    [Obsolete(Sxc.Dnn.Factory.FinallyDecommissionedInV20)]
     public static IBlockBuilder SxcInstanceForModule(IModule moduleInfo)
-        => Sxc.Dnn.Factory.CmsBlock(moduleInfo);
+        => throw new NotSupportedException(Sxc.Dnn.Factory.GenerateMessage());
 
 
-    [Obsolete("use ToSic.Sxc.Dnn.Factory.DynamicCode(...) instead")]
-    public static IDynamicCode CodeHelpers(IBlockBuilder blockBuilder) 
-        => Sxc.Dnn.Factory.DynamicCode(blockBuilder);
+    [Obsolete(Sxc.Dnn.Factory.FinallyDecommissionedInV20)]
+    public static IDynamicCode CodeHelpers(IBlockBuilder blockBuilder)
+        => throw new NotSupportedException(Sxc.Dnn.Factory.GenerateMessage());
 
     /// <summary>
     /// get a full app-object for accessing data of the app from outside
     /// </summary>
     /// <returns></returns>
-    [Obsolete("use ToSic.Sxc.Dnn.Factory.App(...) instead")]
+    [Obsolete(Sxc.Dnn.Factory.FinallyDecommissionedInV20)]
     public static IApp App(int appId, bool unusedButKeepForApiStability = false, bool showDrafts = false)
-        => Sxc.Dnn.Factory.App(appId, unusedButKeepForApiStability, showDrafts);
+        => throw new NotSupportedException(Sxc.Dnn.Factory.GenerateMessage());
 
     /// <summary>
     /// get a full app-object for accessing data of the app from outside
     /// </summary>
     /// <returns></returns>
-    [Obsolete("use ToSic.Sxc.Dnn.Factory.App(...) instead")]
-    public static IApp App(int zoneId, int appId, bool unusedButKeepForApiStability = false, bool showDrafts = false) 
-        => Sxc.Dnn.Factory.App(appId, unusedButKeepForApiStability, showDrafts);
+    [Obsolete(Sxc.Dnn.Factory.FinallyDecommissionedInV20)]
+    public static IApp App(int zoneId, int appId, bool unusedButKeepForApiStability = false, bool showDrafts = false)
+        => throw new NotSupportedException(Sxc.Dnn.Factory.GenerateMessage());
 
-    [Obsolete("use ToSic.Sxc.Dnn.Factory.App(...) instead")]
+    [Obsolete(Sxc.Dnn.Factory.FinallyDecommissionedInV20)]
     public static IApp App(int appId, PortalSettings ownerPortalSettings, bool unusedButKeepForApiStability = false, bool showDrafts = false)
-        => Sxc.Dnn.Factory.App(appId, ownerPortalSettings, unusedButKeepForApiStability, showDrafts);
+        => throw new NotSupportedException(Sxc.Dnn.Factory.GenerateMessage());
 
 
-    [Obsolete("use ToSic.Sxc.Dnn.Factory.App(...) instead")]
+    [Obsolete(Sxc.Dnn.Factory.FinallyDecommissionedInV20)]
     public static IApp App(int zoneId, int appId, PortalSettings ownerPortalSettings, bool unusedButKeepForApiStability = false, bool showDrafts = false)
-        => Sxc.Dnn.Factory.App(appId, ownerPortalSettings, unusedButKeepForApiStability, showDrafts);
+        => throw new NotSupportedException(Sxc.Dnn.Factory.GenerateMessage());
 
 }
