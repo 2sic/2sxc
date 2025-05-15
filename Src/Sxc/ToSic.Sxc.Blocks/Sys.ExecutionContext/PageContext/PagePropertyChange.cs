@@ -5,7 +5,7 @@ public record PagePropertyChange
 {
     public PageChangeModes ChangeMode { get; init; }
         
-    internal PageProperties Property { get; init; }
+    public PageProperties Property { get; init; }
 
     public string Value { get; init; }
 

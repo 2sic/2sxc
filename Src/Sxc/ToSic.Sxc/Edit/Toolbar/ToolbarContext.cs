@@ -1,7 +1,5 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Web.Internal.Url;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
@@ -31,14 +29,4 @@ internal class ToolbarContext: IAppIdentity
 
     [JsonPropertyName("custom")][JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string Custom { get; } = null;
-}
-
-[ShowApiWhenReleased(ShowApiMode.Never)]
-internal static class ToolbarContextExtensions
-{
-    public static string ToRuleString(this ToolbarContext tlbCtx) => tlbCtx == null 
-        ? null 
-        : tlbCtx.Custom.HasValue() 
-            ? tlbCtx.Custom 
-            : UrlParts.ConnectParameters($"{ToolbarContext.CtxZone}={tlbCtx.ZoneId}", $"{ToolbarContext.CtxApp}={tlbCtx.AppId}");
 }
