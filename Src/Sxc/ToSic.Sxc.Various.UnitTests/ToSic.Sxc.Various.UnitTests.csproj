@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../SharedImports/CsProj.Props/AllImportsForTestCode.props" />
+
+  <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\ToSic.Sxc.Code\ToSic.Sxc.Code.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Custom\ToSic.Sxc.Custom.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Services\ToSic.Sxc.Services.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Code\ToSic.Sxc.Code.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Core\ToSic.Sxc.Core.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Custom\ToSic.Sxc.Custom.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Various.SystemTests\ToSic.Sxc.Various.SystemTests.csproj" />
+  </ItemGroup>
+
+</Project>

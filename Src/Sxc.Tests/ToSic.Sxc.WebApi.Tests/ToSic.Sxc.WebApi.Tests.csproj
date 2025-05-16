@@ -1,31 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="../../SharedImports/CsProj.Props/AllImportsForTestCode.props" />
+
   <PropertyGroup>
-    <TargetFrameworks>net472;net9.0</TargetFrameworks>
     <RootNamespace>Tests.ToSic.ToSxc.WebApi</RootNamespace>
     <AssemblyName>2sxc.WebApi.Tests</AssemblyName>
-    <IsTestProject>true</IsTestProject>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
-    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
-    <PackageReference Include="MSTest.TestAdapter" Version="3.4.3" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.4.3" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.4.3" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.4.3" />
-    <FrameworkReference Include="Microsoft.NETCore.App" />
-  </ItemGroup>
-
   <ItemGroup>
-    <Compile Include="..\..\Sxc\ToSic.Sxc.Core\Properties\SxcSharedAssemblyInfo.cs" Link="Properties\SxcSharedAssemblyInfo.cs" />
+    <Folder Include="AdamTests\" />
   </ItemGroup>
 
 </Project>

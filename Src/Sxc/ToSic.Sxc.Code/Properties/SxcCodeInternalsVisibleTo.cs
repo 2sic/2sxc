@@ -6,4 +6,4 @@
 [assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.Core")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.Razor")]
 
-[assembly: InternalsVisibleTo("ToSic.Sxc.SystemTests")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Various.SystemTests")]

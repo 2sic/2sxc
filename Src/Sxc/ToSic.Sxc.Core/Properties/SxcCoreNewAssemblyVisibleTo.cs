@@ -11,8 +11,8 @@
 
 [assembly: InternalsVisibleTo("ToSic.Sxc.Core.TestHelpers")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Tests")]
-[assembly: InternalsVisibleTo("ToSic.Sxc.UnitTests")]
-[assembly: InternalsVisibleTo("ToSic.Sxc.SystemTests")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Various.UnitTests")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Various.SystemTests")]
 
 [assembly: InternalsVisibleTo("ToSic.Sxc.Code")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Code.HotBuild")]

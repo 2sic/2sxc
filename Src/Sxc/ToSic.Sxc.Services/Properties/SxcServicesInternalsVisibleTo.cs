@@ -9,5 +9,5 @@
 
 [assembly: InternalsVisibleTo("ToSic.Sxc.Oqtane.Server")]
 
-[assembly: InternalsVisibleTo("ToSic.Sxc.UnitTests")]
-[assembly: InternalsVisibleTo("ToSic.Sxc.SystemTests")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Various.UnitTests")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Various.SystemTests")]

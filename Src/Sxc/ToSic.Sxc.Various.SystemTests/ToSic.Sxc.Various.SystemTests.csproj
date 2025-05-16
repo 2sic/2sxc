@@ -23,17 +23,19 @@
   <!-- Import common files which change how the project compiles; AssemblyInfo from 2sxc; rest form Lib.Imports -->
   <ItemGroup>
     <!--<Compile Include="..\Sxc\ToSic.Sxc\Properties\SxcSharedAssemblyInfo.cs" Link="Properties\SxcSharedAssemblyInfo.cs" />-->
-    <Compile Include="..\..\..\eav-server\ToSic.Lib.Imports\System.Runtime.CompilerServices.cs" Link="Properties\System.Runtime.CompilerServices.cs" />
-    <Compile Include="..\..\..\eav-server\ToSic.Lib.Imports\HideInternalApisOnReleaseOnly.cs" Link="Properties\HideInternalApisOnReleaseOnly.cs" />
+    <Compile Include="..\..\..\..\eav-server\ToSic.Lib.Imports\System.Runtime.CompilerServices.cs" Link="Properties\System.Runtime.CompilerServices.cs" />
+    <Compile Include="..\..\..\..\eav-server\ToSic.Lib.Imports\HideInternalApisOnReleaseOnly.cs" Link="Properties\HideInternalApisOnReleaseOnly.cs" />
   </ItemGroup>
 
+  <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+
+  <!--<ItemGroup Condition="'$(TargetFramework)' == 'net472'">
     <Reference Include="System.Web" />
     <Reference Include="ToSic.Razor">
       <HintPath>..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.dll</HintPath>
     </Reference>
-  </ItemGroup>
+  </ItemGroup>-->
 
   <!--<ItemGroup Condition="'$(TargetFramework)' == 'net472'">
     <Reference Include="System.Runtime.Caching" />
@@ -52,28 +54,28 @@
   </ItemGroup>-->
 
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+  <!--<ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
     <Reference Include="ToSic.Razor">
       <HintPath>..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
     </Reference>
-  </ItemGroup>
+  </ItemGroup>-->
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\eav-server\ToSic.Eav.DataSource.TestHelpers\ToSic.Eav.DataSource.TestHelpers.csproj" />
-    <ProjectReference Include="..\..\..\eav-server\ToSic.Eav.Testing.FullDbFixtures\ToSic.Eav.Testing.FullDbFixtures.csproj" />
-    <ProjectReference Include="..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj" />
-    <ProjectReference Include="..\Sxc\ToSic.Sxc.Adam\ToSic.Sxc.Adam.csproj" />
-    <ProjectReference Include="..\Sxc\ToSic.Sxc.Apps\ToSic.Sxc.Apps.csproj" />
-    <ProjectReference Include="..\Sxc\ToSic.Sxc.Blocks\ToSic.Sxc.Blocks.csproj" />
-    <ProjectReference Include="..\Sxc\ToSic.Sxc.Cms\ToSic.Sxc.Cms.csproj" />
-    <ProjectReference Include="..\Sxc\ToSic.Sxc.Code\ToSic.Sxc.Code.csproj" />
-    <ProjectReference Include="..\Sxc\ToSic.Sxc.Core\ToSic.Sxc.Core.csproj" />
-    <ProjectReference Include="..\Sxc\ToSic.Sxc.Edit\ToSic.Sxc.Edit.csproj" />
-    <ProjectReference Include="..\Sxc\ToSic.Sxc.LightSpeed\ToSic.Sxc.LightSpeed.csproj" />
-    <ProjectReference Include="..\Sxc\ToSic.Sxc.Render\ToSic.Sxc.Render.csproj" />
-    <ProjectReference Include="..\Sxc\ToSic.Sxc.Services\ToSic.Sxc.Services.csproj" />
-    <ProjectReference Include="..\Sxc\ToSic.Sxc.Web\ToSic.Sxc.Web.csproj" />
-    <ProjectReference Include="..\ToSic.Sxc.Core.TestHelpers\ToSic.Sxc.Core.TestHelpers.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSource.TestHelpers\ToSic.Eav.DataSource.TestHelpers.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Testing.FullDbFixtures\ToSic.Eav.Testing.FullDbFixtures.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Adam\ToSic.Sxc.Adam.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Apps\ToSic.Sxc.Apps.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Blocks\ToSic.Sxc.Blocks.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Cms\ToSic.Sxc.Cms.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Code\ToSic.Sxc.Code.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Core\ToSic.Sxc.Core.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Edit\ToSic.Sxc.Edit.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.LightSpeed\ToSic.Sxc.LightSpeed.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Render\ToSic.Sxc.Render.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Services\ToSic.Sxc.Services.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Web\ToSic.Sxc.Web.csproj" />
+    <ProjectReference Include="..\..\ToSic.Sxc.Core.TestHelpers\ToSic.Sxc.Core.TestHelpers.csproj" />
   </ItemGroup>
 
 

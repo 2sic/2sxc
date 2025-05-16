@@ -3,4 +3,4 @@
 [assembly: InternalsVisibleTo("ToSic.Sxc.WebApi")]
 
 // Tests
-[assembly: InternalsVisibleTo("ToSic.Sxc.SystemTests")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Various.SystemTests")]

@@ -4,4 +4,4 @@
 
 
 // Unit tests
-[assembly: InternalsVisibleTo("ToSic.Sxc.SystemTests")]
+[assembly: InternalsVisibleTo("ToSic.Sxc.Various.SystemTests")]
