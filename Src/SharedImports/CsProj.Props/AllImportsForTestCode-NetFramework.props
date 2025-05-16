@@ -1,8 +1,15 @@
 <Project>
 
+  <!--
+    *** This is critical for the Tests to run ***
+    Otherwise the unit tests don't know that they should use dependency injection - not sure why though.
+    -->
+  <PropertyGroup>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+  </PropertyGroup>
+
   <PropertyGroup>
     <IsTestProject>true</IsTestProject>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <IsPackable>false</IsPackable>
     <Nullable>enable</Nullable>
   </PropertyGroup>
