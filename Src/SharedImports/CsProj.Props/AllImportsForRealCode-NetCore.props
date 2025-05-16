@@ -1,17 +1,6 @@
 <Project>
-
-  <PropertyGroup>
-    <IsTestProject>true</IsTestProject>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <IsPackable>false</IsPackable>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Using Include="Xunit" />
-  </ItemGroup>
-
-  <Import Project="./TargetFrameworkAndCSharp.props" />
+  <!-- Set Target Framework and C# version -->
+  <Import Project="./TargetFrameworkAndCSharp-NetCore.props" />
 
   <!-- Set Default Namespace to ToSic.Sxc-->
   <Import Project="./DefaultNamespace ToSic.Sxc.props" />
@@ -24,8 +13,5 @@
 
   <!-- Include C# files which contain the Assembly Info and some classes so that C# latest is supported (such as init-properties) -->
   <Import Project="./IncludeCode/Compiler Features and API Hiding.props" />
-
-  <!-- Include most xUnit packages and more -->
-  <Import Project="./Tests/xUnit Test Framework.props" />
 
 </Project>

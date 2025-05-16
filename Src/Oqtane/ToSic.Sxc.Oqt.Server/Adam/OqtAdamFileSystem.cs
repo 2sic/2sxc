@@ -2,8 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Oqtane.Models;
 using Oqtane.Repository;
-using System;
-using System.IO;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Sxc.Adam;

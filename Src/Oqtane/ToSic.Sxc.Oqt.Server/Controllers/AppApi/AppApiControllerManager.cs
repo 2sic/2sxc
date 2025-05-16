@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Routing;
-using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
 using ToSic.Eav;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
@@ -13,7 +11,6 @@ using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Oqt.Server.Code.Internal;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Polymorphism.Internal;
-using File = System.IO.File;
 using Log = ToSic.Lib.Logging.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;

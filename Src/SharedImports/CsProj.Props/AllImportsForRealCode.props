@@ -14,9 +14,4 @@
   <!-- Include C# files which contain the Assembly Info and some classes so that C# latest is supported (such as init-properties) -->
   <Import Project="./IncludeCode/Compiler Features and API Hiding.props" />
 
-  <!--WIP-->
-  <ItemGroup>
-    <Compile Include="..\..\Sxc\ToSic.Sxc.Core\Properties\SxcSharedAssemblyInfo.cs" Link="Properties\SxcSharedAssemblyInfo.cs" />
-  </ItemGroup>
-
 </Project>
