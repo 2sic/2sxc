@@ -1,31 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net9.0;net472</TargetFrameworks>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <LangVersion>preview</LangVersion>
-    <RootNamespace>ToSic.Sxc</RootNamespace>
-  </PropertyGroup>
+  <Import Project="../../SharedImports/CsProj.Props/AllImportsForTestCode.props" />
+
+  <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps.TestsHelpers\ToSic.Eav.Apps.TestHelpers.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Core\ToSic.Sxc.Core.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Data\ToSic.Sxc.Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="ToSic.Razor">
-      <HintPath Condition="'$(TargetFramework)' == 'net472'">..\..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.dll</HintPath>
-      <HintPath Condition="'$(TargetFramework)' == 'net9.0'">..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
-    <!--<Reference Include="System.Runtime.Caching" />-->
-    <!--<Reference Include="System.Net.Http" />-->
-    <!--<Reference Include="System.Net.Http.WebRequest" />-->
-    <Reference Include="System.Web" />
   </ItemGroup>
 
   </Project>
