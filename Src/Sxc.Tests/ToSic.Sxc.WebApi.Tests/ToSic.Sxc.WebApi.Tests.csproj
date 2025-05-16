@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\SxcSharedAssemblyInfo.cs" Link="Properties\SxcSharedAssemblyInfo.cs" />
+    <Compile Include="..\..\Sxc\ToSic.Sxc.Core\Properties\SxcSharedAssemblyInfo.cs" Link="Properties\SxcSharedAssemblyInfo.cs" />
   </ItemGroup>
 
 </Project>
