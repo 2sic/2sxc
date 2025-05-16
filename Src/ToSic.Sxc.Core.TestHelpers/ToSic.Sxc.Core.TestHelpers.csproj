@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\eav-server\ToSic.Eav.Apps.TestsHelpers\ToSic.Eav.Apps.TestHelpers.csproj" />
-    <ProjectReference Include="..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
   </ItemGroup>
 
   <ItemGroup>

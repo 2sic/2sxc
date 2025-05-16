@@ -78,7 +78,7 @@ public class OqtStartup : IServerStartup
             .AddSxcCodeHotBuild()
             .AddSxcEngines()
             .AddSxcImages()
-            .AddSxcCore()                   // Core 2sxc services
+            // Core 2sxc services
             .AddSxcApps()
             .AddSxcEdit()
             .AddSxcData()

@@ -33,10 +33,6 @@
     <Compile Include="..\..\..\..\eav-server\ToSic.Lib.Imports\HideInternalApisOnReleaseOnly.cs" Link="Properties\HideInternalApisOnReleaseOnly.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ToSic.Sxc\ToSic.Sxc.csproj" />
-  </ItemGroup>
-
 
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
@@ -44,11 +40,11 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />-->
     <Reference Include="System.Web" />
-    <!--<Reference Include="System.Web.Http">
-      <HintPath>..\..\..\Dependencies\System.Web\System.Web.Http.dll</HintPath>
+    <Reference Include="System.Web.Http">
+      <!--<HintPath>..\..\..\Dependencies\System.Web\System.Web.Http.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
-    </Reference>-->
+      <Private>False</Private>-->
+    </Reference>
     <Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.dll</HintPath>
     </Reference>
@@ -63,9 +59,16 @@
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />-->
 
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj" />
   </ItemGroup>
 
 </Project>

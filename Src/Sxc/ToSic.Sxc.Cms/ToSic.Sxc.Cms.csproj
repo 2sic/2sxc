@@ -36,7 +36,6 @@
   <ItemGroup>
     <ProjectReference Include="..\ToSic.Sxc.Adam\ToSic.Sxc.Adam.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Data\ToSic.Sxc.Data.csproj" />
-    <ProjectReference Include="..\ToSic.Sxc\ToSic.Sxc.csproj" />
   </ItemGroup>
 
 

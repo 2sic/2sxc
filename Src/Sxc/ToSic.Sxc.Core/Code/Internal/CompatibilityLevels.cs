@@ -7,7 +7,7 @@ public class CompatibilityLevels
 
     /// <summary>
     /// This enforces certain features to go away or appear, like
-    /// - Off: DynamiEntity.Render
+    /// - Off: DynamicEntity.Render
     /// </summary>
     public const int CompatibilityLevel10 = 10;
 
@@ -19,5 +19,5 @@ public class CompatibilityLevels
     public const int MaxLevelForEntityDotToolbar = CompatibilityLevel9Old;
     public const int MaxLevelForEntityDotRender = CompatibilityLevel9Old;
 
-    public const int MaxLevelForStaticRender = CompatibilityLevel10;
+    //public const int MaxLevelForStaticRender = CompatibilityLevel10;
 }

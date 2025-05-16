@@ -31,7 +31,6 @@ public class StartupSxcCoreOnly
             .AddFixtureHelpers()
             .AddDataSourceTestHelpers()
             // 2sxc core
-            .AddSxcCore()
             .AddSxcApps()
             .AddSxcEdit()
             .AddSxcData()
@@ -45,7 +44,6 @@ public class StartupSxcCoreOnly
             .AddSxcWeb()
             .AddSxcCode()
             .AddSxcLightSpeed()
-            .AddSxcCore()
             .AddLibCore()
             .AddEavDataPersistence()
             .AddEavDataBuild()

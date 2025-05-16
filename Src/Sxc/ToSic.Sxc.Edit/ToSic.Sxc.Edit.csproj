@@ -38,7 +38,6 @@
     <ProjectReference Include="..\ToSic.Sxc.Cms\ToSic.Sxc.Cms.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Core\ToSic.Sxc.Core.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Data\ToSic.Sxc.Data.csproj" />
-    <ProjectReference Include="..\ToSic.Sxc\ToSic.Sxc.csproj" />
   </ItemGroup>
 
 

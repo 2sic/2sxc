@@ -164,7 +164,6 @@
     <ProjectReference Include="..\ToSic.Sxc.Dnn.WebApi\ToSic.Sxc.Dnn.WebApi.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Dnn.Core\ToSic.Sxc.Dnn.Core.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Dnn.Razor\ToSic.Sxc.Dnn.Razor.csproj" />
-    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj" />
   </ItemGroup>
   <ItemGroup>

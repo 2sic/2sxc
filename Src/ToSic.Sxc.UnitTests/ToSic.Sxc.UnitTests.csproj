@@ -44,7 +44,6 @@
     <ProjectReference Include="..\Sxc\ToSic.Sxc.Code\ToSic.Sxc.Code.csproj" />
     <ProjectReference Include="..\Sxc\ToSic.Sxc.Custom\ToSic.Sxc.Custom.csproj" />
     <ProjectReference Include="..\Sxc\ToSic.Sxc.Services\ToSic.Sxc.Services.csproj" />
-    <ProjectReference Include="..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
   </ItemGroup>
 
 

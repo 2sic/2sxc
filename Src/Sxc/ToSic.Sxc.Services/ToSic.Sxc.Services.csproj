@@ -49,7 +49,6 @@
     <ProjectReference Include="..\ToSic.Sxc.Edit\ToSic.Sxc.Edit.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Images\ToSic.Sxc.Images.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Render\ToSic.Sxc.Render.csproj" />
-    <ProjectReference Include="..\ToSic.Sxc\ToSic.Sxc.csproj" />
   </ItemGroup>
 
   <!-- Include Connect.Koi -->

@@ -178,9 +178,5 @@
       <Project>{a94de6d7-d1e6-4be2-b5b5-dc4a6a61cd80}</Project>
       <Name>ToSic.Sxc.Dnn.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj">
-      <Project>{5D87EB0C-BF67-4814-A0FF-D96256C9B852}</Project>
-      <Name>ToSic.Sxc</Name>
-    </ProjectReference>
   </ItemGroup>
 </Project>

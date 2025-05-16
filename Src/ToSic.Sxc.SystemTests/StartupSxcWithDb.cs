@@ -31,7 +31,6 @@ public class StartupSxcWithDb
             .AddFixtureHelpers()
             .AddDataSourceTestHelpers()
             // 2sxc core
-            .AddSxcCore()
             .AddSxcApps()
             .AddSxcEdit()
             .AddSxcData()
