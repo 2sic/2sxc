@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="./Properties/ToSic.Sxc.Shared.props" />
 
   <PropertyGroup>
     <TargetFrameworks>net472;net9.0;</TargetFrameworks>
@@ -10,15 +11,7 @@
     <NoWarn>7035;CS1591</NoWarn>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
     <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
-    <!-- Don't generate assembly properties from this XML which should come from the core file, like version - these lines must be in sync in all ToSic.Eav.*.csproj files -->
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <LangVersion>preview</LangVersion>
-    <!-- end: Don't generate... -->
   </PropertyGroup>
 
   <!--<PropertyGroup>
