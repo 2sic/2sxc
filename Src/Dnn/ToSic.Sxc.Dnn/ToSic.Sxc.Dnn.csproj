@@ -1,66 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-NetFramework.props" />
+
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="BuildScripts\LoadBuildConfig.Targets" />
+
+
+  <Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />
+
+  <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
+
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D4250011-B9BE-4326-9736-4F0122C79802}</ProjectGuid>
-    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ToSic.Sxc.Dnn</RootNamespace>
     <AssemblyName>ToSic.Sxc.Dnn</AssemblyName>
-    <OldToolsVersion>4.0</OldToolsVersion>
-    <TargetFramework>net472</TargetFramework>
+    <!--For reasons unknown, this is relevant, even though we import the specs with the correct moniker-->
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetFrameworkProfile />
-    <LangVersion>preview</LangVersion>
 
     <UseIISExpress>false</UseIISExpress>
-    <IISExpressSSLPort />
+    <!--<IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
-    <!-- Don't generate assembly properties from this XML which should come from the core file, like version - these lines must be in sync in all ToSic.Eav.*.csproj files -->
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <!-- end: Don't generate... -->
+    <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>-->
     <OutputPath>bin\</OutputPath>
   </PropertyGroup>
+
+  <!--not sure if we must specify the docs file!-->
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <!-- generate xml docs -->
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DocumentationFile>bin\ToSic.Sxc.Dnn.xml</DocumentationFile>
-    <NoWarn>1701;1702;CS1570;CS1572;CS1573;CS1574;CS1587;CS1591;CS1710;CS1711</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <NoWarn>1591</NoWarn>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-   </PropertyGroup>
+
   <PropertyGroup>
     <NoWarn>$(NoWarn);MSB3277;</NoWarn>
     <!-- ignore warning that Dnn was loaded 2x - ATM necessary for MS build? @STV -->
@@ -68,9 +42,6 @@
     <!-- ignore warning that it's using a dangerous version of Dnn (v9.6.1) @2dm -->
     <NoWarn>NU1902</NoWarn>
   </PropertyGroup>
-
-  <!-- Import common files which change how the project compiles; AssemblyInfo from 2sxc; rest form Lib.Imports -->
-  <Import Project="../../SharedImports/CsProj.Props/IncludeCode/Compiler Features and API Hiding.props" />
 
   <ItemGroup>
     <PackageReference Include="DotNetNuke.Core" Version="9.6.1">
@@ -126,10 +97,6 @@
       <HintPath>..\..\..\Dependencies\Imageflow\Dnn\ToSic.Imageflow.Dnn.dll</HintPath>
       <Private>False</Private>
       <!-- this is important, otherwise it will be copied to the bin folder -->
-    </Reference>
-    <Reference Include="ToSic.Razor">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net40\ToSic.Razor.dll</HintPath>
     </Reference>
     <Reference Include="ToSic.Razor.Dnn">
       <SpecificVersion>False</SpecificVersion>

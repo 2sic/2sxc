@@ -2,13 +2,14 @@
 
   <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-NetCore.props" />
 
+  <Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />
+
   <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
 
   <PropertyGroup>
     <AssemblyName>ToSic.Sxc.Oqtane.Shared</AssemblyName>
   </PropertyGroup>
 
-  <Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />
 
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" /><!-- from Oqtane.Shared.csproj -->

@@ -1,0 +1,37 @@
+<Project>
+  <!-- Set Target Framework and C# version -->
+  <Import Project="./TargetFrameworkAndCSharp-NetFramework.props" />
+
+  <!-- Set Default Namespace to ToSic.Sxc-->
+  <Import Project="./DefaultNamespace ToSic.Sxc.props" />
+
+  <!-- Lots of rules to disable generating Assembly Info (since we provide it through an object) -->
+  <Import Project="./GenerateAssemblyDisable.props" />
+
+  <!-- Disable some common warnings we don't care about-->
+  <Import Project="./ConfigurationsAndWarnings.props" />
+
+  <!-- Include C# files which contain the Assembly Info and some classes so that C# latest is supported (such as init-properties) -->
+  <Import Project="./IncludeCode/Compiler Features and API Hiding.props" />
+
+
+  <!-- This section was in all DNN Projects, not sure if useful, but better centralize -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+
+</Project>
