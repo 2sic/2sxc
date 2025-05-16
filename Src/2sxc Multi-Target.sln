@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.TokenEngine.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Dnn.Core", "Dnn\ToSic.Sxc.Dnn.Core\ToSic.Sxc.Dnn.Core.csproj", "{A94DE6D7-D1E6-4BE2-B5B5-DC4A6A61CD80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.WebApi.Tests", "Sxc.Tests\ToSic.Sxc.WebApi.Tests\ToSic.Sxc.WebApi.Tests.csproj", "{000D1ACB-7247-42CF-A86F-987A0AF68BA1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.WebApi.Tests", "Sxc\ToSic.Sxc.WebApi.Tests\ToSic.Sxc.WebApi.Tests.csproj", "{000D1ACB-7247-42CF-A86F-987A0AF68BA1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Eav.DataSources", "..\..\eav-server\ToSic.Eav.DataSources\ToSic.Eav.DataSources.csproj", "{93149D23-E6CC-43AF-97D0-32D89D29D714}"
 EndProject
@@ -95,7 +95,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.BuildTasks", "Bui
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Code.Generate", "Sxc\ToSic.Sxc.Code.Generate\ToSic.Sxc.Code.Generate.csproj", "{FB557EF7-8120-4B05-B250-7FA49916BBB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Core.Configuration.Tests", "Sxc.Tests\ToSic.Sxc.Configuration.Tests\ToSic.Sxc.Core.Configuration.Tests.csproj", "{FA7585D8-CF3A-4027-BAA8-88CB08F273BB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Core.Configuration.Tests", "Sxc\ToSic.Sxc.Configuration.Tests\ToSic.Sxc.Core.Configuration.Tests.csproj", "{FA7585D8-CF3A-4027-BAA8-88CB08F273BB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Core.TestsBasic", "..\..\eav-server\ToSic.Eav.Core.TestsBasic\ToSic.Eav.Core.TestsBasic.csproj", "{B02907A6-64C8-4804-B65E-E0F1E1E1BE68}"
 EndProject
