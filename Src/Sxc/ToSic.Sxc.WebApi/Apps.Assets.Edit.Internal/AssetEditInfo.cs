@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace ToSic.Sxc.Apps.Internal.Assets;
+﻿namespace ToSic.Sxc.Apps.Internal.Assets;
 
 /// <summary>
 /// Information class needed by the edit-ui, to provide optimal syntax helpers etc.

@@ -9,4 +9,9 @@
 
   <Import Project="./IncludeCode/Compiler Features and API Hiding.props" />
 
+  <!--WIP-->
+  <ItemGroup>
+    <Compile Include="..\..\Sxc\ToSic.Sxc.Core\Properties\SxcSharedAssemblyInfo.cs" Link="Properties\SxcSharedAssemblyInfo.cs" />
+  </ItemGroup>
+
 </Project>

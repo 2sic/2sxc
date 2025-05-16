@@ -1,5 +1,4 @@
-﻿using System.IO;
-using ToSic.Eav.Apps.Integration;
+﻿using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.ImportExport.Internal;
 using ToSic.Eav.ImportExport.Internal.ImportHelpers;
 using ToSic.Eav.ImportExport.Internal.Zip;

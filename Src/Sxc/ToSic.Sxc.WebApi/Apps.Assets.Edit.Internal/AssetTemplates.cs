@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Services;
-
-namespace ToSic.Sxc.Apps.Internal.Assets;
+﻿namespace ToSic.Sxc.Apps.Internal.Assets;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

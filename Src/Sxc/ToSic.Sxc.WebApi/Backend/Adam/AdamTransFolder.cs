@@ -1,5 +1,4 @@
-﻿using System.IO;
-using ToSic.Eav.WebApi.Errors;
+﻿using ToSic.Eav.WebApi.Errors;
 
 namespace ToSic.Sxc.Backend.Adam;
 

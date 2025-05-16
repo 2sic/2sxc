@@ -1,5 +1,4 @@
-﻿using System.IO;
-using ToSic.Eav.Internal.Features;
+﻿using ToSic.Eav.Internal.Features;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks.Internal;

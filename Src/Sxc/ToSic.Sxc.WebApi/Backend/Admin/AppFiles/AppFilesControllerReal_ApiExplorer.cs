@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 using ToSic.Eav;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.WebApi.ApiExplorer;

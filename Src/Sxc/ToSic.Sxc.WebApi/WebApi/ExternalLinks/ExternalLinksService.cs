@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav;
 using ToSic.Eav.Apps.Internal.Specs;
 using ToSic.Eav.Security.Fingerprint;
-using ToSic.Sxc.Integration.Installation;
 
 namespace ToSic.Sxc.WebApi.ExternalLinks;
 

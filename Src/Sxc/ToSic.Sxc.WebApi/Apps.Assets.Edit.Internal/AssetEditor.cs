@@ -1,12 +1,6 @@
-﻿using System.IO;
-using System.Text.RegularExpressions;
-using ToSic.Eav.Apps;
+﻿using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Internal.Specs;
-using ToSic.Eav.Apps.Internal.Work;
-using ToSic.Eav.Context;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks.Internal;
 

@@ -1,37 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode.props" />
+
   <PropertyGroup>
-    <TargetFrameworks>net472;net9.0;</TargetFrameworks>
-    <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.Sxc.Code.Generate</AssemblyName>
-    <Deterministic>true</Deterministic>
-    <FileAlignment>512</FileAlignment>
-    <NoWarn>7035;CS1591</NoWarn>
-    <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
-    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
-    <!-- Don't generate assembly properties from this XML which should come from the core file, like version - these lines must be in sync in all ToSic.Eav.*.csproj files -->
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <LangVersion>preview</LangVersion>
-    <!-- end: Don't generate... -->
   </PropertyGroup>
 
+  <!-- TODO: Unclear what this is for, Tonci must have introduced it, not sure if it's relevant -->
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <!-- generate xml docs -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>1701;1702;CS1570;CS1572;CS1573;CS1574;CS1587;CS1591;CS1710;CS1711</NoWarn>
   </PropertyGroup>
-
-  <!-- Import common files which change how the project compiles; AssemblyInfo from 2sxc; rest form Lib.Imports -->
-  <ItemGroup>
-    <Compile Include="..\..\Sxc\ToSic.Sxc.Core\Properties\SxcSharedAssemblyInfo.cs" Link="Properties\SxcSharedAssemblyInfo.cs" />
-    <Compile Include="..\..\..\..\eav-server\ToSic.Lib.Imports\System.Runtime.CompilerServices.cs" Link="Properties\System.Runtime.CompilerServices.cs" />
-    <Compile Include="..\..\..\..\eav-server\ToSic.Lib.Imports\HideInternalApisOnReleaseOnly.cs" Link="Properties\HideInternalApisOnReleaseOnly.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ToSic.Sxc.Data\ToSic.Sxc.Data.csproj" />

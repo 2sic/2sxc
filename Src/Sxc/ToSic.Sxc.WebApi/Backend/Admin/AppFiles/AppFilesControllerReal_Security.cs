@@ -1,6 +1,4 @@
-﻿using System.IO;
-using JetBrains.Annotations;
-using ToSic.Sxc.Apps.Internal.Assets;
+﻿using ToSic.Sxc.Apps.Internal.Assets;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
@@ -21,7 +19,6 @@ partial class AppFilesControllerReal
     }
         
 
-    [AssertionMethod]
     private string EnsurePathMayBeAccessed(string p, string appPath, bool allowFullAccess)
     {
         if (appPath == null) throw new ArgumentNullException(nameof(appPath));

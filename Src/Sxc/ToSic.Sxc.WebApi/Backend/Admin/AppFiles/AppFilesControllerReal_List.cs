@@ -1,5 +1,4 @@
-﻿using System.IO;
-using ToSic.Eav.Helpers;
+﻿using ToSic.Eav.Helpers;
 using ToSic.Eav.WebApi.Assets;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
