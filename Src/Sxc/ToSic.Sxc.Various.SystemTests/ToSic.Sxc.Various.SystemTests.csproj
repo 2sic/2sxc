@@ -75,7 +75,7 @@
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Render\ToSic.Sxc.Render.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Services\ToSic.Sxc.Services.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Web\ToSic.Sxc.Web.csproj" />
-    <ProjectReference Include="..\..\ToSic.Sxc.Core.TestHelpers\ToSic.Sxc.Core.TestHelpers.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Core.TestHelpers\ToSic.Sxc.Core.TestHelpers.csproj" />
   </ItemGroup>
 
 
