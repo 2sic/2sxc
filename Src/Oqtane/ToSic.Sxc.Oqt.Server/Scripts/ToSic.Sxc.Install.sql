@@ -10,13 +10,6 @@
 -- Set session language to english to ensure DateTime format is correct (all following insert statements in this script expect that)
 SET LANGUAGE English
 
--- Check for custom Object Qualifier - break installation if it's configured (2sxc does not support object qualifier)
-IF '{objectQualifier}' <> ''
-BEGIN
-    RAISERROR(N'Your SQL installation is non-standard using a Custom Object Qualifier. 2sic uses the standard Microsoft Entity Framework which doesn''t work well with this feature - installation aborted.', 16, 1)
-	 RETURN
-END
-
 -- Start of install procedure which replaces all install scripts and code updates until and including version 19.99.00 -------------------------------------------------
 
 /****** Object:  Table [dbo].[TsDynDataApp]    Script Date: 15.5.2025. 13:42:07 ******/
