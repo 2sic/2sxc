@@ -75,7 +75,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicEav01", "Integration\B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SxcEdit01", "Integration\SxcEdit01\SxcEdit01.csproj", "{67672FFA-702D-423F-906E-5E6A6D6B9EFD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Oqt.Server.Tests", "Oqtane.Tests\ToSic.Sxc.Oqt.Server.Tests\ToSic.Sxc.Oqt.Server.Tests.csproj", "{4BCB31EB-A3F8-41A0-B8E9-FFF06CFDBBF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Oqt.Server.Tests", "Oqtane\ToSic.Sxc.Oqt.Server.Tests\ToSic.Sxc.Oqt.Server.Tests.csproj", "{4BCB31EB-A3F8-41A0-B8E9-FFF06CFDBBF0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WIP 2sxc Core Tests", "WIP 2sxc Core Tests", "{E392C073-28AD-4164-B71B-B1BB4A163159}"
 EndProject
@@ -125,9 +125,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Apps.Tests", "..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.ImportExport.Tests", "..\..\eav-server\ToSic.Eav.ImportExport.Tests\ToSic.Eav.ImportExport.Tests.csproj", "{DBD36AC0-D874-25CC-4618-2A848D5E6584}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Dnn.SystemTests", "Dnn.Tests\ToSic.Sxc.Dnn.SystemTests\ToSic.Sxc.Dnn.SystemTests.csproj", "{5CC076B6-F193-4954-8287-0B3DD547BB8C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Dnn.SystemTests", "Dnn\ToSic.Sxc.Dnn.SystemTests\ToSic.Sxc.Dnn.SystemTests.csproj", "{5CC076B6-F193-4954-8287-0B3DD547BB8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Oqt.Shared.Tests", "Oqtane.Tests\ToSic.Sxc.Oqt.Shared.Tests\ToSic.Sxc.Oqt.Shared.Tests.csproj", "{BE3193C4-61CC-479B-8B0E-604F22B7AFBC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Oqt.Shared.Tests", "Oqtane\ToSic.Sxc.Oqt.Shared.Tests\ToSic.Sxc.Oqt.Shared.Tests.csproj", "{BE3193C4-61CC-479B-8B0E-604F22B7AFBC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sys.Utils", "..\..\eav-server\ToSic.Sys.Utils\ToSic.Sys.Utils.csproj", "{00E352CC-021D-4D44-8B64-D2574CABD949}"
 EndProject

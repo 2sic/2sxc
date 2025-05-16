@@ -2,11 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <LangVersion>preview</LangVersion>
-    <RootNamespace>ToSic.Sxc.Oqtane.Shared</RootNamespace>
+    <RootNamespace>ToSic.Sxc.Oqt</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Oqtane\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Oqt.Server\ToSic.Sxc.Oqt.Server.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

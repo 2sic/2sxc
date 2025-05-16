@@ -28,7 +28,7 @@
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Testing.FullDbFixtures\ToSic.Eav.Testing.FullDbFixtures.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj" />
-    <ProjectReference Include="..\..\Dnn\ToSic.Sxc.Dnn\ToSic.Sxc.Dnn.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Dnn\ToSic.Sxc.Dnn.csproj" />
   </ItemGroup>
 
   <ItemGroup>
