@@ -5,26 +5,12 @@
   <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
 
   <PropertyGroup>
-    <!--<TargetFramework>net9.0</TargetFramework>
-    <LangVersion>preview</LangVersion>-->
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <AssemblyName>ToSic.Sxc.Oqtane.Server</AssemblyName>
     <!--2dm I think we need this to include DLLs-->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     <AnalysisLevel>none</AnalysisLevel>
-    <!--<Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
-    <Deterministic>true</Deterministic>
-    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>-->
-    <!--<RestoreSources>$(RestoreSources);../../packages/;../../../../oqtane/oqtane-imageflow/InstallPackages/</RestoreSources>-->
-    <!-- Don't generate assembly properties from this XML which should come from the core file, like version - these lines must be in sync in all ToSic.Eav.*.csproj files -->
-    <!--<GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>-->
-    <!-- end: Don't generate... -->
 
     <!-- 2dm - this seems necessary to ensure that compiler DLLs are included in the output -->
     <!-- See: https://github.com/toddams/RazorLight/issues/294 and https://stackoverflow.com/questions/40426665/what-is-the-use-of-preservecompilationcontext-under-build-option-in-project-json -->
@@ -39,9 +25,6 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>1701;1702;CS1570;CS1572;CS1573;CS1574;CS1587;CS1591;CS1710;CS1711</NoWarn>
   </PropertyGroup>
-
-  <!-- Import common files which change how the project compiles; AssemblyInfo from 2sxc; rest form Lib.Imports -->
-  <!--<Import Project="../../SharedImports/CsProj.Props/IncludeCode/Compiler Features and API Hiding.props" />-->
 
   <ItemGroup>
     <Compile Remove="Apps\**" />
@@ -146,9 +129,6 @@
     <Reference Include="Connect.Koi">
       <HintPath>..\..\..\Dependencies\Koi\net6.0\Connect.Koi.dll</HintPath>
     </Reference>
-    <!--<Reference Include="ToSic.Razor">
-      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
-    </Reference>-->
   </ItemGroup>
 
   <ItemGroup>
