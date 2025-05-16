@@ -1,0 +1,12 @@
+<Project>
+  <PropertyGroup>
+    <!-- Not sure what this is?  -->
+    <NoWarn>7035</NoWarn>
+
+    <!-- Disable warnings on production build about public APIs not having XDocs -->
+    <NoWarn>CS1591</NoWarn>
+
+    <Configurations>Debug;Release;Testing;</Configurations>
+
+  </PropertyGroup>
+</Project>

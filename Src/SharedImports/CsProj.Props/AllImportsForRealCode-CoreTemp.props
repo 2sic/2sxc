@@ -1,0 +1,12 @@
+<Project>
+  <Import Project="./TargetFrameworkAndCSharp.props" />
+
+  <Import Project="./DefaultNamespace ToSic.Sxc.props" />
+
+  <Import Project="./GenerateAssemblyDisable.props" />
+
+  <Import Project="./ConfigurationsAndWarnings.props" />
+
+  <Import Project="./IncludeCode/Compiler Features and API Hiding.props" />
+
+</Project>

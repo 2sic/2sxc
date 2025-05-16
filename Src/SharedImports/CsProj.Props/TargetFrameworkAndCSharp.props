@@ -1,0 +1,19 @@
+<Project>
+  <PropertyGroup>
+    <!-- Dual Compile for DNN and Oqtane -->
+    <TargetFrameworks>net472;net9.0;</TargetFrameworks>
+
+    <!-- C# Latest -->
+    <LangVersion>preview</LangVersion>
+
+    <!-- Don't try to generate web.config redirects -->
+    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
+
+    <!-- Build in a way so the DLLs remain identical on every build without code changes (so no build number) -->
+    <Deterministic>true</Deterministic>
+
+    <!-- Enable Implicit usings (which ones depend on the exact project type) -->
+    <ImplicitUsings>enable</ImplicitUsings>
+    
+  </PropertyGroup>
+</Project>

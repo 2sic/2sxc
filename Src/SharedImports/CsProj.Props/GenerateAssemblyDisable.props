@@ -1,10 +1,4 @@
 <Project>
-
-  <!--<PropertyGroup>
-    <TargetFrameworks>net472;net9.0;</TargetFrameworks>
-    <LangVersion>preview</LangVersion>
-  </PropertyGroup>-->
-
   <!-- Don't generate assembly properties from this XML which should come from the core file, like version - these lines must be in sync in all ToSic.Eav.*.csproj files -->
   <PropertyGroup>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
