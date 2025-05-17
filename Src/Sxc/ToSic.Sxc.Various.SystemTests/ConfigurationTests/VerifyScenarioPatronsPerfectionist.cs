@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ToSic.Eav.Context;
+using ToSic.Testing.Shared.Platforms;
 
 namespace ToSic.Sxc.ConfigurationTests;
 
-public class VerifyScenarioPatronsPerfectionist(VerifyPatronsHelper patronsHelper) : IClassFixture<DoFixtureStartup<ScenarioFullPatrons>>
+public class VerifyScenarioPatronsPerfectionist(VerifyPatronsHelper patronsHelper)
+    : IClassFixture<DoFixtureStartup<ScenarioFullPatrons>>
 {
     // Start the test with a platform-info that has a patron
     public class Startup : StartupSxcWithDbPatronPerfectionist

@@ -35,7 +35,7 @@ public static class StartupWebApi
         services.TryAddTransient<ExternalLinksService>();
 
 
-        services.TryAddScoped<ILinkPaths, LinkPaths>();
+        //services.TryAddScoped<ILinkPaths, LinkPaths>(); // moved to core...
         // Removed v19.03.03 2025-03-11 by 2dm https://github.com/2sic/2sxc/issues/3598
         //services.TryAddTransient<XmlImportWithFiles, XmlImportFull>();
         //services.TryAddTransient<EngineBase.MyServices>();

@@ -91,6 +91,7 @@ public class OqtStartup : IServerStartup
             .AddSxcLightSpeed()             // LightSpeed services
             .AddSxcCodeGen()                // Code generation services
             .AddSxcCoreNew()
+            .AddSxcCoreFallbackServices()
             .AddEavEverything()             // Core EAV services
             .AddEavWebApiTypedAfterEav()
             .AddOqtAppWebApi()              // Oqtane App WebAPI stuff

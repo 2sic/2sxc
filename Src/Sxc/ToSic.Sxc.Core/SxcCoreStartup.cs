@@ -16,6 +16,8 @@ public static class SxcCoreStartup
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcCoreNew(this IServiceCollection services)
     {
+        services.TryAddScoped<ILinkPaths, LinkPaths>();
+
         // Configuration Provider WIP
         services.TryAddTransient<SxcImportExportEnvironmentBase.MyServices>();
 
@@ -30,7 +32,6 @@ public static class SxcCoreStartup
 
         // 12.06.01 moved here from WebApi, but it should probably be in Dnn as it's probably just used there
         services.TryAddTransient<IServerPaths, ServerPaths>();
-
 
         return services;
     }

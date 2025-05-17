@@ -13,7 +13,7 @@ public partial class SxcFeatures
         Ui = false,
         Description = "If enabled, ContentSecurityPolicy headers will be set. Note that APIs will always work, but not result in http headers if this is disabled. ",
         Security = FeaturesCatalogRules.Security0Improved,
-        LicenseRules = BuiltInFeatures.ForPatronsSentinelDisabled
+        LicenseRules = SxcLicenseRules.ForPatronsSentinelDisabled
     };
 
     public static readonly Feature ContentSecurityPolicyTestUrl = new()
@@ -25,7 +25,7 @@ public partial class SxcFeatures
         Ui = false,
         Description = "If enabled, you can add csp=true to any url to temporarily enable a policy and see if it works. Requires the CSP system to be enabled.",
         Security = FeaturesCatalogRules.Security0Improved,
-        LicenseRules = BuiltInFeatures.ForPatronsSentinelDisabled
+        LicenseRules = SxcLicenseRules.ForPatronsSentinelDisabled
     };
     public static readonly Feature ContentSecurityPolicyEnforceTemp = new() {
         NameId = "ContentSecurityPolicyEnforceTemp",
@@ -35,7 +35,7 @@ public partial class SxcFeatures
         Ui = false,
         Description = "Enable CSP on all pages. This is a temporary setting, till we have more configuration in normal Settings.",
         Security = FeaturesCatalogRules.Security0Improved,
-        LicenseRules = BuiltInFeatures.ForPatronsSentinelDisabled
+        LicenseRules = SxcLicenseRules.ForPatronsSentinelDisabled
     };
 
     public static readonly Feature CdnSourcePublic = new()
@@ -47,7 +47,7 @@ public partial class SxcFeatures
         Ui = false,
         Description = "Allow reconfigure of the CDN source for public Web Resources.",
         Security = FeaturesCatalogRules.Security0Improved,
-        LicenseRules = BuiltInFeatures.ForPatronsSentinelEnabled
+        LicenseRules = SxcLicenseRules.ForPatronsSentinelEnabled
     };
     public static readonly Feature CdnSourceEdit = new() {
         NameId = nameof(CdnSourceEdit),
@@ -57,7 +57,7 @@ public partial class SxcFeatures
         Ui = false,
         Description = "Allow reconfigure of the CDN source for Web Resources used in the Edit UI.",
         Security = FeaturesCatalogRules.Security0Improved,
-        LicenseRules = BuiltInFeatures.ForPatronsSentinelEnabled
+        LicenseRules = SxcLicenseRules.ForPatronsSentinelEnabled
     };
 
     // Note = not in use ATM
@@ -69,7 +69,7 @@ public partial class SxcFeatures
         Ui = false,
         Description = "Allow reconfigure of the CDN source for Web Resources used in the Admin UI.",
         Security = FeaturesCatalogRules.Security0Improved,
-        LicenseRules = BuiltInFeatures.ForPatronsSentinelEnabled
+        LicenseRules = SxcLicenseRules.ForPatronsSentinelEnabled
     };
 
     // Note = not in use ATM
@@ -81,7 +81,7 @@ public partial class SxcFeatures
         Ui = false,
         Description = "Allow reconfigure of the CDN source for Web Resources used in the Developers UIs.",
         Security = FeaturesCatalogRules.Security0Improved,
-        LicenseRules = BuiltInFeatures.ForPatronsSentinelEnabled
+        LicenseRules = SxcLicenseRules.ForPatronsSentinelEnabled
     };
 
 
@@ -93,7 +93,7 @@ public partial class SxcFeatures
         Ui = false,
         Description = "Encrypt data submitted using forms, so it's unreadable in CDNs.",
         Security = FeaturesCatalogRules.Security0Improved,
-        LicenseRules = BuiltInFeatures.ForPatronsSentinelEnabled,
+        LicenseRules = SxcLicenseRules.ForPatronsSentinelEnabled,
 
         ScopedToModule = true,
     };

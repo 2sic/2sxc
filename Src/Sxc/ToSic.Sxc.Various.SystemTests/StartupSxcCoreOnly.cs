@@ -30,6 +30,10 @@ public class StartupSxcCoreOnly
         services
             .AddFixtureHelpers()
             .AddDataSourceTestHelpers()
+            // First add the "Fallbacks" since these don't have Dnn/Oqtane specific implementations
+            // Without this, some of the link tests will fail
+            .AddSxcCoreFallbackServices()
+
             // 2sxc core
             .AddSxcApps()
             .AddSxcEdit()
@@ -44,6 +48,7 @@ public class StartupSxcCoreOnly
             .AddSxcWeb()
             .AddSxcCode()
             .AddSxcLightSpeed()
+            
             .AddLibCore()
             .AddEavDataPersistence()
             .AddEavDataBuild()
