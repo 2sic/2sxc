@@ -10,7 +10,7 @@ namespace ToSic.Sxc.ServicesTests.ImageServiceTests;
 /// </summary>
 [Startup(typeof(StartupSxcWithDbPatronPerfectionist))]
 public class ImageServiceTagsPatronPerfectionist(IImageService imgSvc, ITestOutputHelper output)
-    : ImageServiceTagsBase(imgSvc, output), IClassFixture<DoFixtureStartup<ScenarioFullPatrons>>
+    : ImageServiceTagsBase(imgSvc, output), IClassFixture<DoFixtureStartup<ScenarioFullPatronsWithDb>>
 {
     protected override bool TestModeImg => false;
 

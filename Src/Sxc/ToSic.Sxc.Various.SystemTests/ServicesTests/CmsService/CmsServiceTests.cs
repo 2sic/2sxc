@@ -8,7 +8,7 @@ using ToSic.Sxc.Services.Internal;
 namespace ToSic.Sxc.ServicesTests.CmsService;
 
 public class CmsServiceTests(ICodeDataFactory cdf, ICmsService cmsService, DataForCmsServiceTests dataForCmsTests, ContentTypeFactory contentTypeFactory)
-    : IClassFixture<DoFixtureStartup<ScenarioFullPatrons>>
+    : IClassFixture<DoFixtureStartup<ScenarioFullPatronsWithDb>>
 {
 #if NETCOREAPP
     [field: System.Diagnostics.CodeAnalysis.AllowNull, System.Diagnostics.CodeAnalysis.MaybeNull]

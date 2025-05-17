@@ -17,7 +17,7 @@ public class VerifyScenarioNoPatronsPerfectionist(VerifyPatronsHelper patronsHel
 
     // Our current test only has 3 auto-enabled packages, so the service should report so many active licenses
     [Fact] public void VerifyPackageOk() =>
-        patronsHelper.VerifyPackageOk(3 /* auto-enabled only */);
+        patronsHelper.VerifyEnabledLicenses(3 /* auto-enabled only */);
 
     [Fact] public void VerifyPatronPerfectionistsActive() =>
         patronsHelper.VerifyPatronPerfectionistsActive(false);

@@ -5,7 +5,7 @@ using ToSic.Eav.Testing.Scenarios;
 namespace ToSic.Sxc.ToSic.Eav.Configuration.Features_Compatibility;
 
 // ReSharper disable once InconsistentNaming
-public class IFeaturesTests(IFeaturesService Features) : IClassFixture<DoFixtureStartup<ScenarioFullPatrons>>
+public class IFeaturesTests(IFeaturesService Features) : IClassFixture<DoFixtureStartup<ScenarioFullPatronsWithDb>>
 {
     [Fact]
     public void PasteClipboardActive()

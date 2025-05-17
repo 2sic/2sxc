@@ -6,11 +6,13 @@ namespace ToSic.Sxc.ConfigurationTests;
 
 public class VerifyPatronsHelper(ILicenseService licenses, IEavFeaturesService features)
 {
-    public void VerifyPackageOk(int expected)
-    {
-        var result = licenses.Enabled;
-        Equal(expected, result.Count);//, $"{expected} license package should be enabled. If the number changes, this test may need update.");
-    }
+    /// <summary>
+    /// A specific amount of licenses should be enabled.
+    /// If the number changes, this test may need update.
+    /// </summary>
+    /// <param name="expected"></param>
+    public void VerifyEnabledLicenses(int expected)
+        => Equal(expected, licenses.Enabled.Count);
 
 
     public void VerifyPatronPerfectionistsActive(bool expected)
