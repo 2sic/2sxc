@@ -1,7 +1,7 @@
 ﻿namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IAdamTransGetItems: IAdamTransactionBase
+public interface IAdamPrefetchHelper : IAdamTransactionBase
 {
     /// <summary>
     /// Get a DTO list of items in a field
@@ -9,5 +9,5 @@ public interface IAdamTransGetItems: IAdamTransactionBase
     /// <param name="subFolderName">Optional sub folder, when browsing a sub-folder</param>
     /// <param name="autoCreate">Auto-create the folder requested - default is true</param>
     /// <returns></returns>
-    IList<AdamItemDto> ItemsInField(string subFolderName, bool autoCreate = true);
+    IList<AdamItemDto> GetAdamItemsForPrefetch(string subFolderName, bool autoCreate = true);
 }

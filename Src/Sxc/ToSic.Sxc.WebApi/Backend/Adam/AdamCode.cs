@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Backend.Adam;
 [PrivateApi("Used by DynamicApiController and Hybrid.Api12_DynCode")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamCode(
-    Generator<AdamTransUpload<int, int>> adamUploadGenerator,
+    Generator<AdamWorkUpload<int, int>> adamUploadGenerator,
     LazySvc<IEavFeaturesService> featuresLazy)
     : ServiceWithContext("AdamCode", connect: [adamUploadGenerator, featuresLazy])
 {

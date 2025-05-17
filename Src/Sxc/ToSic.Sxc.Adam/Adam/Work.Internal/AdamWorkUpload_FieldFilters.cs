@@ -4,7 +4,7 @@ using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Backend.Adam;
 
-partial class AdamTransUpload<TFolderId, TFileId>
+partial class AdamWorkUpload<TFolderId, TFileId>
 {
     #region More Checks
 

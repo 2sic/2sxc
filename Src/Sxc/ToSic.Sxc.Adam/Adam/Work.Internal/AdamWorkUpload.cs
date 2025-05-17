@@ -6,19 +6,25 @@ using ToSic.Sxc.Adam.Internal;
 namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public partial class AdamTransUpload<TFolderId, TFileId>: AdamTransactionBase<AdamTransUpload<TFolderId, TFileId>, TFolderId, TFileId>
+public partial class AdamWorkUpload<TFolderId, TFileId>
+    : AdamWorkBase<AdamWorkUpload<TFolderId, TFileId>, TFolderId, TFileId>
 {
-    public AdamItemDtoMaker<TFolderId, TFileId> DtoMaker { get; }
+    //public AdamItemDtoMaker<TFolderId, TFileId> DtoMaker { get; }
 
-    public AdamTransUpload(MyServices services) : base(services, "Adm.TrnUpl")
+    public AdamWorkUpload(MyServices services) : base(services, "Adm.TrnUpl")
     {
-        DtoMaker = Services.AdamDtoMaker.New().Init(AdamContext);
+        //DtoMaker = Services.AdamDtoMaker.New().Init(AdamContext);
     }
 
-    public AdamItemDto UploadOne(Stream stream, string subFolder, string fileName)
+    //public AdamItemDto UploadOne(Stream stream, string subFolder, string fileName)
+    //{
+    //    var file = UploadOne(stream, fileName, subFolder, false);
+    //    return DtoMaker.Create(file);
+    //}
+    public File<TFolderId, TFileId> UploadOneNew(Stream stream, string subFolder, string fileName)
     {
         var file = UploadOne(stream, fileName, subFolder, false);
-        return DtoMaker.Create(file);
+        return file;
     }
 
     public File<TFolderId, TFileId> UploadOne(Stream stream, string originalFileName, string subFolder, bool skipFieldAndContentTypePermissionCheck)

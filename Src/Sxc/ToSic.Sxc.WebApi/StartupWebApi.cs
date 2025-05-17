@@ -127,26 +127,13 @@ public static class StartupWebApi
     public static IServiceCollection AddAdamWebApi<TFolder, TFile>(this IServiceCollection services)
     {
         // Adam Controllers etc.
-        services.TryAddTransient(typeof(AdamTransactionBase<,,>.MyServices));
-        //services.TryAddTransient<AdamSecurityChecksBase.MyServices>();
-        //services.TryAddTransient(typeof(AdamManager<,>));
-        //services.TryAddTransient(typeof(AdamContext<,>));
-        //services.TryAddTransient<AdamContext.MyServices>();
         services.TryAddTransient(typeof(HyperlinkBackend<,>));
-        services.TryAddTransient(typeof(AdamTransGetItems<,>));
-        services.TryAddTransient(typeof(AdamTransDelete<,>));
-        services.TryAddTransient(typeof(AdamTransFolder<,>));
-        services.TryAddTransient(typeof(AdamTransUpload<,>));
-        services.TryAddTransient(typeof(AdamTransRename<,>));
         services.TryAddTransient(typeof(AdamItemDtoMaker<,>));
         services.TryAddTransient(typeof(AdamItemDtoMaker<,>.MyServices));
 
-        // Storage
-        services.TryAddTransient(typeof(AdamStorageOfSite<,>));
-        services.TryAddTransient(typeof(AdamStorageOfField<,>));
-
-        // Typed Adam
-        services.TryAddTransient<IAdamTransGetItems, AdamTransGetItems<TFolder, TFile>>();
+        // Prefetch helper so it can be used in the Edit CMS Load
+        services.TryAddTransient(typeof(AdamPrefetchHelper<,>));
+        services.TryAddTransient<IAdamPrefetchHelper, AdamPrefetchHelper<TFolder, TFile>>();
 
         return services;
     }

@@ -1,9 +1,9 @@
 ﻿namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamTransRename<TFolderId, TFileId>(
-    AdamTransactionBase<AdamTransRename<TFolderId, TFileId>, TFolderId, TFileId>.MyServices services)
-    : AdamTransactionBase<AdamTransRename<TFolderId, TFileId>, TFolderId, TFileId>(services, "Adm.TrnRen")
+public class AdamWorkRename<TFolderId, TFileId>(
+    AdamWorkBase<AdamWorkRename<TFolderId, TFileId>, TFolderId, TFileId>.MyServices services)
+    : AdamWorkBase<AdamWorkRename<TFolderId, TFileId>, TFolderId, TFileId>(services, "Adm.TrnRen")
 {
     public bool Rename(string parentSubfolder, bool isFolder, TFolderId folderId, TFileId fileId, string newName)
     {

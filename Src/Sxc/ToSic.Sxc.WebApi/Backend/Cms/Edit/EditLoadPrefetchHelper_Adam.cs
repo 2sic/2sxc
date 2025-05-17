@@ -26,11 +26,13 @@ partial class EditLoadPrefetchHelper
             .ToDictionary(
                 b => b.Key.ToString(),
                 b =>
-                    b.SelectMany(selector: bundle => bundle.Keys.Select(key => new
-                        {
-                            Key = key,
-                            Dic = GetAdamListOfItems(appId, bundle.Set, key),
-                        }))
+                    b.SelectMany(selector: bundle => bundle.Keys
+                            .Select(key => new
+                            {
+                                Key = key,
+                                Dic = GetAdamListOfItems(appId, bundle.Set, key),
+                            })
+                        )
                         // skip empty bits to avoid UI from relying on these nodes to always exist
                         .Where(r => r.Dic.Any())
                         // Step 2: Check which ones have a link reference
@@ -44,7 +46,7 @@ partial class EditLoadPrefetchHelper
     {
         var adamListMaker = adamTransGetItems.New();
         adamListMaker.Init(appId, set.ContentTypeName, set.Guid, key, false);
-        var list = adamListMaker.ItemsInField(string.Empty, false) as IEnumerable<AdamItemDto>;
+        var list = adamListMaker.GetAdamItemsForPrefetch(string.Empty, false) as IEnumerable<AdamItemDto>;
         return list;
     });
 }

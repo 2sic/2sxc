@@ -1,9 +1,9 @@
 ﻿namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamTransDelete<TFolderId, TFileId>(
-    AdamTransactionBase<AdamTransDelete<TFolderId, TFileId>, TFolderId, TFileId>.MyServices services)
-    : AdamTransactionBase<AdamTransDelete<TFolderId, TFileId>, TFolderId, TFileId>(services, "Adm.TrnDel")
+public class AdamWorkDelete<TFolderId, TFileId>(
+    AdamWorkBase<AdamWorkDelete<TFolderId, TFileId>, TFolderId, TFileId>.MyServices services)
+    : AdamWorkBase<AdamWorkDelete<TFolderId, TFileId>, TFolderId, TFileId>(services, "Adm.TrnDel")
 {
     public bool Delete(string parentSubfolder, bool isFolder, TFolderId id, TFileId fileId)
     {

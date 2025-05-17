@@ -1,15 +1,16 @@
 ﻿using ToSic.Eav.WebApi.Errors;
+using ToSic.Sxc.Adam.Work.Internal;
 
 namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamTransFolder<TFolderId, TFileId>(
-    AdamTransactionBase<AdamTransFolder<TFolderId, TFileId>, TFolderId, TFileId>.MyServices services)
-    : AdamTransactionBase<AdamTransFolder<TFolderId, TFileId>, TFolderId, TFileId>(services, "Adm.TrnFld")
+public class AdamWorkFolderGet<TFolderId, TFileId>(
+    AdamWorkBase<AdamWorkFolderGet<TFolderId, TFileId>, TFolderId, TFileId>.MyServices services)
+    : AdamWorkBase<AdamWorkFolderGet<TFolderId, TFileId>, TFolderId, TFileId>(services, "Adm.TrnFld")
 {
-    public IList<AdamItemDto> Folder(string parentSubfolder, string newFolder)
+    public AdamFolderFileSet<TFolderId, TFileId> Folder(string parentSubfolder, string newFolder)
     {
-        var logCall = Log.Fn<IList<AdamItemDto>>($"get folders for subfld:{parentSubfolder}, new:{newFolder}");
+        var logCall = Log.Fn<AdamFolderFileSet<TFolderId, TFileId>>($"get folders for subfld:{parentSubfolder}, new:{newFolder}");
         if (AdamContext.Security.UserIsRestricted && !AdamContext.Security.FieldPermissionOk(GrantSets.ReadSomething))
             return null;
 
@@ -31,6 +32,6 @@ public class AdamTransFolder<TFolderId, TFileId>(
         // now access the subfolder, creating it if missing (which is what we want
         AdamContext.AdamRoot.Folder(newFolderPath, true);
 
-        return logCall.ReturnAsOk(ItemsInField(parentSubfolder));
+        return logCall.ReturnAsOk(ItemsInFieldNew(parentSubfolder));
     }
 }

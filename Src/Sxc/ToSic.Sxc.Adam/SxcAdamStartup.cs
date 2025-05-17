@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc;
@@ -12,7 +13,6 @@ public static class SxcAdamStartup
     public static IServiceCollection AddSxcAdam(this IServiceCollection services)
     {
         // Adam stuff
-        //services.TryAddTransient<AdamSecurityChecksBase, AdamSecurityChecksBasic>(); // todo: remove
         services.TryAddTransient<IAdamSecurityCheckService, AdamSecurityChecksBasic>();
         services.TryAddTransient<AdamSecurityChecksBase.MyServices>();
         services.TryAddTransient<IAdamPaths, AdamPathsBase>();
@@ -27,9 +27,28 @@ public static class SxcAdamStartup
         // WIP v14
         services.TryAddTransient<IAdamService, AdamService>();
 
+        services.AddSxcAdamWork();
+
         //// Add possibly missing fallback services
         //// This must always be at the end here so it doesn't accidentally replace something we actually need
         services.AddSxcAdamFallbackServices();
+
+        return services;
+    }
+
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    public static IServiceCollection AddSxcAdamWork(this IServiceCollection services)
+    {
+        services.TryAddTransient(typeof(AdamWorkBase<,,>.MyServices));
+
+        services.TryAddTransient(typeof(AdamWorkFolderGet<,>));
+        services.TryAddTransient(typeof(AdamWorkDelete<,>));
+        services.TryAddTransient(typeof(AdamWorkUpload<,>));
+        services.TryAddTransient(typeof(AdamWorkRename<,>));
+
+        // Storage
+        services.TryAddTransient(typeof(AdamStorageOfSite<,>));
+        services.TryAddTransient(typeof(AdamStorageOfField<,>));
 
         return services;
     }

@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Backend.Cms;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class EditLoadPrefetchHelper(
     Generator<HyperlinkBackend<int, int>> hyperlinkBackend,
-    Generator<IAdamTransGetItems> adamTransGetItems,
+    Generator<IAdamPrefetchHelper> adamTransGetItems,
     EntityPickerApi entityPickerBackend)
     : ServiceBase(SxcLogName + ".Prefetch", connect: [adamTransGetItems, hyperlinkBackend, entityPickerBackend])
 {
