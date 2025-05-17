@@ -39,7 +39,7 @@ public partial class DataService(
     }
     private IAppIdentity _appIdentity;
         
-    public IDataService New(NoParamOrder noParamOrder = default, IAppIdentity appIdentity = default, int zoneId = default, int appId = default)
+    public IDataService SpawnNew(NoParamOrder noParamOrder = default, IAppIdentity appIdentity = default, int zoneId = default, int appId = default)
     {
         // Make sure we have an AppIdentity if possible - or reuse the existing, though it could be null
         if (appIdentity == default)

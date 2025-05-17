@@ -22,10 +22,11 @@ internal class GetQueryMs: ServiceBase
         this.LinkLog(parentLog);
     }
 
-    public IDataSource GetQuery(string name = default,
+    public IDataSource GetQuery(
+        string? name = default,
         NoParamOrder noParamOrder = default,
-        IDataSourceLinkable attach = default,
-        object parameters = default)
+        IDataSourceLinkable? attach = default,
+        object? parameters = default)
     {
         var l = Log.Fn<IDataSource>($"{name}, {nameof(parameters)}: {(parameters == null ? "null" : "not null")}");
 
@@ -33,9 +34,10 @@ internal class GetQueryMs: ServiceBase
         // If no in-source was provided, make sure that we create one from the current app
         var fullOptions = _optionsMs.SafeOptions(parameters, null, true /*, options: options*/);
 
-        var query = _queryManager.Value.GetQuery(fullOptions.AppIdentityOrReader, name, fullOptions.LookUp, 3);
+        var query = _queryManager.Value.GetQuery(fullOptions.AppIdentityOrReader, name, fullOptions.LookUp!, 3);
 
-        if (query == null) return l.ReturnNull("query was null");
+        if (query == null)
+            return l.ReturnNull("query was null");
 
         if (parameters == null) return l.Return(query, "query, no parameters");
 

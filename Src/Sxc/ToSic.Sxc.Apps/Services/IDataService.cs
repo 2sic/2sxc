@@ -28,7 +28,7 @@ public interface IDataService
     /// <returns></returns>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    IDataService New(NoParamOrder noParamOrder = default,
+    IDataService SpawnNew(NoParamOrder noParamOrder = default,
         IAppIdentity appIdentity = default,
         int zoneId = default,
         int appId = default);
