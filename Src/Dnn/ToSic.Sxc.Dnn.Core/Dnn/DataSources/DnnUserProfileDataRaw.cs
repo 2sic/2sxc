@@ -147,7 +147,7 @@ public class DnnUserProfile : CustomDataSourceAdvanced
             results.Add(dnnUserProfile);
         }
         l.A($"results: {results.Count}");
-        var userProfileDataFactory = DataFactory.New(options: DnnUserProfileDataRaw.Options with { TypeName = ContentType?.NullIfNoValue() });
+        var userProfileDataFactory = DataFactory.SpawnNew(options: DnnUserProfileDataRaw.Options with { TypeName = ContentType?.NullIfNoValue() });
         return l.Return(userProfileDataFactory.Create(results), "ok");
     }
 

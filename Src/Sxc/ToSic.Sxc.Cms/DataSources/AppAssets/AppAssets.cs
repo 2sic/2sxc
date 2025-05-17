@@ -155,7 +155,7 @@ public class AppAssets: CustomDataSourceAdvanced
             return l.Return(([], []), "null/empty");
 
         // Convert Folders to Entities
-        var folderFactory = DataFactory.New(options: FolderModelRaw.Options with
+        var folderFactory = DataFactory.SpawnNew(options: FolderModelRaw.Options with
         {
             AppId = AppId,
             IdSeed = -100001,
@@ -164,7 +164,7 @@ public class AppAssets: CustomDataSourceAdvanced
         var folders = folderFactory.Create(rawFolders);
 
         // Convert Files to Entities
-        var fileFactory = DataFactory.New(options: FileModelRaw.Options with
+        var fileFactory = DataFactory.SpawnNew(options: FileModelRaw.Options with
         {
             AppId = AppId,
             IdSeed = -1,

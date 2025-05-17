@@ -113,7 +113,7 @@ public class UserRoles : CustomDataSourceAdvanced
         if (excludeRolesPredicate != null)
             roles = roles!.Where(excludeRolesPredicate).ToList();
 
-        var rolesFactory = DataFactory.New(options: UserRoleModel.Options);
+        var rolesFactory = DataFactory.SpawnNew(options: UserRoleModel.Options);
 
         var result = rolesFactory.Create(roles);
 

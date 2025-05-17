@@ -152,7 +152,7 @@ public class Pages: CustomDataSourceAdvanced
             return l.Return([], "null/empty");
 
         // Convert to Entity-Stream
-        var pageFactory = DataFactory.New(options: PageModelRaw.Option);
+        var pageFactory = DataFactory.SpawnNew(options: PageModelRaw.Option);
 
         var pages = pageFactory.Create(pagesFromSystem);
 

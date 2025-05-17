@@ -100,7 +100,7 @@ public class AdamFiles : CustomDataSourceAdvanced
             filter: Filter);
         var find = _provider.GetInternal();
 
-        var adamFactory = DataFactory.New(options: AdamItemDataRaw.Options with { AppId = AppId });
+        var adamFactory = DataFactory.SpawnNew(options: AdamItemDataRaw.Options with { AppId = AppId });
 
         var entities = adamFactory.Create(source.SelectMany(o => find(o)));
 

@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Services;
+﻿using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.CmsService.Internal;
 using Xunit.Abstractions;
 using ExecutionContext = ToSic.Sxc.Code.Internal.ExecutionContext;
@@ -11,12 +10,14 @@ public class HtmlImgToPictureHelperTests(ExecutionContext executionContext, /*ne
     /// <summary>
     /// Swap the image service to one which doesn't know about the app (so it won't get settings etc.)
     /// </summary>
-    private void InitCodeApiSvc() => executionContext.ReplaceServiceInCache(imageSvc);
+    private void InitCodeApiSvc()
+        => executionContext.ReplaceServiceInCache(imageSvc);
 
     /// <summary>
     /// Must get service through executionContext, because the class is internal & it needs to have a parent CodeApiService for sub-dependencies
     /// </summary>
-    private HtmlImgToPictureHelper GetHtmlImgToPictureHelper() => executionContext.GetService<HtmlImgToPictureHelper>();
+    private HtmlImgToPictureHelper GetHtmlImgToPictureHelper()
+        => executionContext.GetService<HtmlImgToPictureHelper>();
 
     // needs a lot more tests, such as with / without paths, etc.
     [Theory, MemberData(nameof(DataForImgConversionTest.ImageConversions), MemberType = typeof(DataForImgConversionTest))]

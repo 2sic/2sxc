@@ -8,7 +8,8 @@ namespace ToSic.Sxc.Services.CmsService.Internal;
 internal class HtmlImgToPictureHelper(CmsServiceImageExtractor imageExtractor)
     : ServiceWithContext("Cms.StrWys", connect: [imageExtractor])
 {
-    internal IImageService ImageService => field ??= ExCtx.GetService<IImageService>(reuse: true);
+    internal IImageService ImageService => field
+        ??= ExCtx.GetService<IImageService>(reuse: true);
 
 
     public IResponsivePicture ConvertImgToPicture(string originalImgTag, IFolder folder, object defaultImageSettings)
