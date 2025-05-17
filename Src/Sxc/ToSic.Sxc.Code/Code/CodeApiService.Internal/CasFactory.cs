@@ -30,18 +30,18 @@ public class ExecutionContextFactory(IServiceProvider serviceProvider)
         // New v14 case - the Razor component implements IDynamicData<model, Kit>
         // which specifies what kit version to use.
         // Try to respect that or null if error or not such interface
-        var codeApiSvc = parentClassOrNull == null
+        var executionContext = parentClassOrNull == null
             ? null
             : TryBuildCodeApiServiceForDynamic(parentClassOrNull.GetType());
 
         // Default case / old case - just a non-generic DnnDynamicCodeRoot
-        codeApiSvc ??= serviceProvider.Build<ExecutionContext>(Log);
+        executionContext ??= serviceProvider.Build<ExecutionContext>(Log);
 
-        codeApiSvc
+        executionContext
             .InitDynCodeRoot(blockOrNull, parentLog)
             .SetCompatibility(compatibility);
 
-        return l.ReturnAsOk(codeApiSvc);
+        return l.ReturnAsOk(executionContext);
     }
 
     /// <summary>

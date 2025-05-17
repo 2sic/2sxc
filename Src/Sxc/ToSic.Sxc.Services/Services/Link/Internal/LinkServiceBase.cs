@@ -132,7 +132,7 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
         // Anybody that wants a srcset must use the new IImageService for that
         var imageUrl = imgLinker.Image(url: expandedUrl, settings: settings, field: field, factor: factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
             scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: strParams,
-            codeApiSvc: ExCtxOrNull);
+            executionContext: ExCtxOrNull);
 
         return imageUrl;
     }

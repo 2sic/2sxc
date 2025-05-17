@@ -10,7 +10,7 @@ using ToSic.Sxc.Sys.ExecutionContext;
 namespace ToSic.Sxc.Services.CmsService.Internal;
 
 internal class CmsServiceContainerHelper(
-    IExecutionContext codeApiSvc,
+    IExecutionContext executionContext,
     IField entityField,
     object container,
     string classes,
@@ -20,7 +20,7 @@ internal class CmsServiceContainerHelper(
 {
     private string Classes { get; set; } = classes;
 
-    private ServiceKit14 ServiceKit => field ??= IHasKitExtensions.GetKit<ServiceKit14>(codeApiSvc);
+    private ServiceKit14 ServiceKit => field ??= IHasKitExtensions.GetKit<ServiceKit14>(executionContext);
 
     public IHtmlTag Wrap(CmsProcessed result, bool defaultToolbar)
     {

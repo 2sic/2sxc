@@ -40,7 +40,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         object aspectRatio = null,
         string parameters = null,
         AdvancedSettings advanced = default,
-        IExecutionContext codeApiSvc = default
+        IExecutionContext executionContext = default
     )
     {
         var l = (Debug ? Log : null).Fn<ResizeSettings>();
@@ -72,7 +72,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
             ), $"Is {nameof(ResizeSettings)}, will clone/init");
 
         // Check if the settings is the expected type or null/other type
-        var settingsOrNull = TryToCastSettings(settings, codeApiSvc);
+        var settingsOrNull = TryToCastSettings(settings, executionContext);
         l.A($"Has Settings: {settingsOrNull != null}; type: {settings?.GetType().FullName}");
 
         var formatValue = ResizeParams.FormatOrNull(KeepBestString(format, settingsOrNull?.Get(FormatField)));

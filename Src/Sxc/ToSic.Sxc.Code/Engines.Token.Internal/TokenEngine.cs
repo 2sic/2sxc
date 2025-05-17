@@ -78,7 +78,7 @@ public class TokenEngine(
         | RegexOptions.IgnorePatternWhitespace);
     #endregion
 
-    private IExecutionContext _codeApiSvc;
+    private IExecutionContext _executionContext;
     private ICodeDynamicApiHelper _dynamicApiSvc;
 
     private TokenReplace _tokenReplace;
@@ -87,9 +87,9 @@ public class TokenEngine(
     public override void Init(IBlock block)
     {
         base.Init(block);
-        _codeApiSvc = codeRootFactory.Value
+        _executionContext = codeRootFactory.Value
             .New(null, Block, Log, CompatibilityLevels.CompatibilityLevel9Old);
-        _dynamicApiSvc = _codeApiSvc.GetDynamicApi();
+        _dynamicApiSvc = _executionContext.GetDynamicApi();
         InitTokenReplace();
     }
 
@@ -105,7 +105,7 @@ public class TokenEngine(
 
         _tokenReplace = new(lookUpEngine);
     }
-    private ICodeDataFactory Cdf => field ??= _codeApiSvc.GetCdf();
+    private ICodeDataFactory Cdf => field ??= _executionContext.GetCdf();
 
     private CultureInfo CultureInfo => field ??= CultureHelpers.SafeCultureInfo(Cdf.Dimensions);
 

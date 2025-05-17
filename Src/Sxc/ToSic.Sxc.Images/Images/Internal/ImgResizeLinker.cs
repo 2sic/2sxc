@@ -47,7 +47,7 @@ public class ImgResizeLinker(
         string format = default,
         object aspectRatio = default,
         string parameters = default,
-        IExecutionContext codeApiSvc = default
+        IExecutionContext executionContext = default
     )
     {
         var l = (Debug ? Log : null).Fn<string>($"{nameof(url)}:{url}");
@@ -62,7 +62,7 @@ public class ImgResizeLinker(
         resizeSettings = ResizeParamMerger.BuildResizeSettings(
             settings, factor: factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
             scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
-            parameters: parameters, codeApiSvc: codeApiSvc);
+            parameters: parameters, executionContext: executionContext);
 
         var result = ImageOnly(url, resizeSettings, field).Url;
         return l.Return(result, "built:" + result);
