@@ -43,10 +43,10 @@ public class AppStackBackend(
 
 
 
-    public List<PropertyDumpItem> GetStackDump(IAppReader appState, string partName, string[] languages, IEntity viewSettingsMixin)
+    public List<PropertyDumpItem> GetStackDump(IAppReader appReader, string partName, string[] languages, IEntity viewSettingsMixin)
     {
         // Build Sources List
-        var settings = dataStackService.Init(appState).GetStack(partName, viewSettingsMixin);
+        var settings = dataStackService.Init(appReader).GetStack(partName, viewSettingsMixin);
 
         // Dump results
         var results = settings._Dump(new(null, languages, true, Log), null);

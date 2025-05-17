@@ -48,8 +48,8 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
         _root = root.TrimPrefixSlash().Backslash();
         _filter = filter;
 
-        var appState = Services.AppReaders.Get(new AppIdentity(specs.ZoneId, specs.AppId));
-        _appPaths = Services.AppPathMicroSvc.Get(appState);
+        var appReader = Services.AppReaders.Get(new AppIdentity(specs.ZoneId, specs.AppId));
+        _appPaths = Services.AppPathMicroSvc.Get(appReader);
         
         _fileManager = Services.FileManagerGenerator.New().SetFolder(specs.AppId, _appPaths.PhysicalPath, _root);
         return l.Return(this);

@@ -48,10 +48,10 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
 
     #endregion
 
-    public IUiContextBuilder InitApp(IAppReader appState)
+    public IUiContextBuilder InitApp(IAppReader? appReaderOrNull)
     {
-        AppSpecsOrNull = appState?.Specs;
-        _appReaderOrNull = appState;
+        AppSpecsOrNull = appReaderOrNull?.Specs;
+        _appReaderOrNull = appReaderOrNull;
         return this;
     }
 

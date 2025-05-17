@@ -52,8 +52,8 @@ public class FileSaver(ISite site, IAppReaderFactory appReadFac, IAppPathsMicroS
 
     private string GetAppFullPath(int appId)
     {
-        var appState = appReadFac.Get(appId);
-        return appPaths.Get(appState, site).PhysicalPath;
+        var appReader = appReadFac.Get(appId);
+        return appPaths.Get(appReader, site).PhysicalPath;
     }
 
     private string GetAppCodeDataPhysicalPath(string mask, IFileGeneratorSpecs specs)

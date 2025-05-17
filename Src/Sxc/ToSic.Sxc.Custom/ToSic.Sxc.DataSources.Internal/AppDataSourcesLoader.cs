@@ -98,12 +98,12 @@ internal class AppDataSourcesLoader(
         var l = Log.Fn<HotBuildSpec>($"{appId}:'{appId}'", timer: true);
 
         // Prepare / Get App State
-        var appState = appReaders.Get(appId).Specs;
+        var appSpecs = appReaders.Get(appId).Specs;
 
         // Figure out the current edition
         var edition = FigureEdition().TrimLastSlash();
 
-        var spec = new HotBuildSpec(appState?.AppId ?? Eav.Constants.AppIdEmpty, edition: edition, appState?.Name);
+        var spec = new HotBuildSpec(appSpecs?.AppId ?? Eav.Constants.AppIdEmpty, edition: edition, appSpecs?.Name);
 
         return l.ReturnAsOk(spec);
     }

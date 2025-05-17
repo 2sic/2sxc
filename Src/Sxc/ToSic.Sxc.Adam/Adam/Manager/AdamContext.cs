@@ -119,9 +119,9 @@ public abstract class AdamContext(AdamContext.MyServices services, string logNam
     /// <summary>
     /// try to find attribute definition - for later extra security checks
     /// </summary>
-    private static IContentTypeAttribute AttributeDefinition(IAppReadContentTypes appState, string contentType, string fieldName)
+    private static IContentTypeAttribute AttributeDefinition(IAppReadContentTypes appReadContentTypes, string contentType, string fieldName)
     {
-        var type = appState.GetContentType(contentType);
+        var type = appReadContentTypes.GetContentType(contentType);
         return type[fieldName];
     }
 

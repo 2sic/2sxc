@@ -8,8 +8,8 @@ namespace ToSic.Sxc.Engines;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class EngineAppRequirements(IRequirementsService requirements) : EngineRequirementsBase("Eng.AppReq", connect: [requirements])
 {
-    internal bool RequirementsMet(IAppReader appState) 
-        => !RequirementsStatus(appState).SafeAny();
+    internal bool RequirementsMet(IAppReader appReader) 
+        => !RequirementsStatus(appReader).SafeAny();
 
     private List<RequirementStatus> RequirementsStatus(IAppReader appReader)
         => appReader.GetPiggyBackExpiring("AppRequirementsStatus",
@@ -20,18 +20,18 @@ public class EngineAppRequirements(IRequirementsService requirements) : EngineRe
                 .ToList()
             ).Value;
 
-    internal RenderEngineResult GetMessageForRequirements(IAppReader appState)
+    internal RenderEngineResult GetMessageForRequirements(IAppReader appReader)
     {
         var l = Log.Fn<RenderEngineResult>();
 
         // 1. Preflight
         // 1.1. make sure we have an App-State
-        if (appState == null) return l.ReturnNull("no appState");
+        if (appReader == null) return l.ReturnNull("no appState");
 
-         if (RequirementsMet(appState))
+         if (RequirementsMet(appReader))
             return l.ReturnNull("all seems ok");
 
-        var result = BuildRenderEngineResult(RequirementsStatus(appState));
+        var result = BuildRenderEngineResult(RequirementsStatus(appReader));
 
         return l.Return(result, "error");
     }

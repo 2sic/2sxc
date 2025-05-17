@@ -156,12 +156,12 @@ internal class AppApiControllerManager : IHasLog
 
         // Prepare / Get App State, while possibly also initializing the App...
         var ctxResolver = _webApiContextBuilder.PrepareContextResolverForApiRequest();
-        var appState = ctxResolver.SetAppOrGetBlock(appFolder)?.AppReader;
+        var appReader = ctxResolver.SetAppOrGetBlock(appFolder)?.AppReader;
 
         // Figure out the current edition
         var edition = FigureEdition(ctxResolver).TrimLastSlash();
 
-        var spec = new HotBuildSpec(appState?.AppId ?? Eav.Constants.AppIdEmpty, edition: edition, appState?.Specs.Name);
+        var spec = new HotBuildSpec(appReader?.AppId ?? Eav.Constants.AppIdEmpty, edition: edition, appReader?.Specs.Name);
 
         return l.ReturnAsOk(spec);
     }
