@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TFileId>.MyServices services)
-    : ServiceWithOptionsBaseLightWip<AdamItemDtoMakerOptions>("Adm"), IAdamItemDtoMaker
+    : ServiceWithSetup<AdamItemDtoMakerOptions>("Adm"), IAdamItemDtoMaker
 {
     #region Constructor / DI
 

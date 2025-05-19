@@ -22,7 +22,7 @@ public abstract class AdamWorkBase<TFolderId, TFileId>(AdamWorkBase<TFolderId, T
         public ISxcAppContextResolver CtxResolver { get; } = ctxResolver;
     }
 
-    public void SetOptions(AdamWorkOptions options)
+    public void Setup(AdamWorkOptions options)
     {
         var o = options;
         var context = options.AppId > 0
