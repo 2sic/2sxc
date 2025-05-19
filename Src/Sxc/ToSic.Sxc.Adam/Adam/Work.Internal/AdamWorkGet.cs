@@ -1,7 +1,4 @@
-﻿using ToSic.Sxc.Adam;
-using ToSic.Sxc.Adam.Work.Internal;
-
-namespace ToSic.Sxc.Backend.Adam;
+﻿namespace ToSic.Sxc.Adam.Work.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamWorkGet<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.MyServices services)

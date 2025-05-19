@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Backend.Adam;
+using ToSic.Sxc.Adam.Work.Internal;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc;

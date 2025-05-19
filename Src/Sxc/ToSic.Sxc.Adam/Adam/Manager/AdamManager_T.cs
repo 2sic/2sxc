@@ -12,16 +12,11 @@ public class AdamManager<TFolderId, TFileId>: AdamManager
     private readonly LazySvc<IAdamFileSystem<TFolderId, TFileId>> _adamFsLazy;
 
     #region Constructor / DI
-    public AdamManager(
-        MyServices services,
-        LazySvc<IAdamFileSystem<TFolderId, TFileId>> adamFsLazy,
-        Generator<AdamStorageOfField<TFolderId, TFileId>> fieldStorageGenerator)
-        : base(services, "Adm.MngrTT")
+    public AdamManager(MyServices services, LazySvc<IAdamFileSystem<TFolderId, TFileId>> adamFsLazy, Generator<AdamStorageOfField<TFolderId, TFileId>> fieldStorageGenerator)
+        : base(services, "Adm.MngrTT", connect: [adamFsLazy, fieldStorageGenerator])
     {
-        ConnectLogs([
-            _adamFsLazy = adamFsLazy.SetInit(f => f.Init(this)),
-            _fieldStorageGenerator = fieldStorageGenerator
-        ]);
+        _adamFsLazy = adamFsLazy.SetInit(f => f.Init(this));
+        _fieldStorageGenerator = fieldStorageGenerator;
     }
 
     public override AdamManager Init(IContextOfApp ctx, ICodeDataFactory cdf, int compatibility)

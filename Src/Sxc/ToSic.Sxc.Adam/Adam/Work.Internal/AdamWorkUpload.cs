@@ -1,8 +1,6 @@
 ﻿using ToSic.Eav.WebApi.Errors;
-using ToSic.Sxc.Adam;
-using ToSic.Sxc.Adam.Internal;
 
-namespace ToSic.Sxc.Backend.Adam;
+namespace ToSic.Sxc.Adam.Work.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class AdamWorkUpload<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.MyServices services)

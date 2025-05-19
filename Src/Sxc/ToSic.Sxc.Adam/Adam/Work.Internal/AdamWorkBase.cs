@@ -4,10 +4,9 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Adam.Work.Internal;
 using ToSic.Sxc.Context.Internal;
 
-namespace ToSic.Sxc.Backend.Adam;
+namespace ToSic.Sxc.Adam.Work.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AdamWorkBase<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.MyServices services, string logName)
@@ -34,7 +33,8 @@ public abstract class AdamWorkBase<TFolderId, TFileId>(AdamWorkBase<TFolderId, T
     }
 
 
-    protected AdamContext<TFolderId, TFileId> AdamContextTyped => field ??= Services.AdamContext.Value;
+    protected AdamContext<TFolderId, TFileId> AdamContextTyped => field
+        ??= Services.AdamContext.Value;
 
     public AdamContext AdamContext => Services.AdamContext.Value;
 

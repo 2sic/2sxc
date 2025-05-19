@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.WebApi.Errors;
 
-namespace ToSic.Sxc.Backend.Adam;
+namespace ToSic.Sxc.Adam.Work.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamWorkFolderCreate<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.MyServices services)

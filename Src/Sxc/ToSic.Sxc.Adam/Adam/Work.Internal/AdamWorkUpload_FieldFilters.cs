@@ -1,8 +1,7 @@
-﻿using System.IO;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using ToSic.Eav.Plumbing;
 
-namespace ToSic.Sxc.Backend.Adam;
+namespace ToSic.Sxc.Adam.Work.Internal;
 
 partial class AdamWorkUpload<TFolderId, TFileId>
 {

@@ -8,8 +8,5 @@ namespace ToSic.Sxc.Adam.Work.Internal;
 /// </summary>
 public interface IAdamWork: IServiceWithSetup<AdamWorkOptions>
 {
-    //public void SetupInternal(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot);
-
-    //public void SetupInternal(AdamWorkOptions options);
     AdamContext AdamContext { get; }
 }

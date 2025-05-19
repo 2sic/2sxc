@@ -32,7 +32,8 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
 
     #region Constructor for inheritance
 
-    protected AdamManager(MyServices services, string logName) : base(services, logName ?? "Adm.Managr")
+    protected AdamManager(MyServices services, string logName, object[]? connect = null)
+        : base(services, logName ?? "Adm.Managr", connect: connect)
     {
         // Note: Services are already connected in base class
         Services.Cdf.SetInit(obj => obj.SetFallbacks(AppContext?.Site, CompatibilityLevel, this));
