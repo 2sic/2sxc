@@ -10,6 +10,7 @@ namespace ToSic.Sxc.Oqt.Content;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ModuleInfo : IModule
 {
+    private const string Content = "Content";
     /*
      * History
      * These version numbers shouldn't be exactly like the normal ones, so we use a "-" instead of "." so it won't be replaced on search/replace
@@ -42,8 +43,9 @@ public class ModuleInfo : IModule
     /// Merge versions for use in Oqtane version list
     /// </summary>
     /// <returns></returns>
-    internal static string GetSqlAndLatestVersions()
+    internal static string GetSqlAndLatestVersions(string name)
     {
+        if (name != Content) return "";
         var versionsWithDot = SqlScriptVersions
             .Select(v => v.Replace('-', '.'))
             .ToList();
@@ -63,13 +65,13 @@ public class ModuleInfo : IModule
         Url = "https://2sxc.org",
         Contact = "@iJungleboy",
         License = "MIT",
-        Dependencies = "ToSic.Sxc.Oqtane.Shared,ToSic.Lib.Core",
+        Dependencies = "ToSic.Sxc.Oqtane.Shared,ToSic.Sys.Core",
         // PermissionNames = "",
         ServerManagerType = "ToSic.Sxc.Oqt.Server.Installation.SxcManager, ToSic.Sxc.Oqtane.Server",
         // ControlTypeRoutes = "",
         // This must contain all versions with a SQL script and current/latest version
         // list versions with sql scripts in \ToSic.Sxc.Oqt.Server\Scripts\
-        ReleaseVersions = GetSqlAndLatestVersions(),
+        ReleaseVersions = GetSqlAndLatestVersions(name),
         // DefaultAction = "",
         // SettingsType = "",
         PackageName = OqtConstants.PackageName, // "ToSic.Sxc.Oqtane"
@@ -78,5 +80,5 @@ public class ModuleInfo : IModule
 
     };
 
-    public ModuleDefinition ModuleDefinition => BuildModuleDefinition("Content", "Text/Image layouts using structured content");
+    public ModuleDefinition ModuleDefinition => BuildModuleDefinition(Content, "Text/Image layouts using structured content");
 }
