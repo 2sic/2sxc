@@ -65,7 +65,8 @@ public class HyperlinkBackend<TFolderId, TFileId>(
 
             // Note: kind of temporary solution, will fail if TFileId isn't int!
             var file = ((IAdamFileSystem<int, int>)adamContext.AdamManager.AdamFs).GetFile(parts.Id);
-            var dtoMaker = adamDtoMaker.New().Init(AdamContext);
+            var dtoMaker = adamDtoMaker.New()
+                .SpawnNew(new() { AdamContext = AdamContext });
             // if everything worked till now, it's ok to return the result
             var adam = dtoMaker.Create(file as File<TFolderId, TFileId>);
             return new() {Adam = adam, Value = adam.Url};

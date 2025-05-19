@@ -2,8 +2,8 @@
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamWorkDelete<TFolderId, TFileId>(
-    AdamWorkBase<AdamWorkDelete<TFolderId, TFileId>, TFolderId, TFileId>.MyServices services)
-    : AdamWorkBase<AdamWorkDelete<TFolderId, TFileId>, TFolderId, TFileId>(services, "Adm.TrnDel")
+    AdamWorkBase<TFolderId, TFileId>.MyServices services)
+    : AdamWorkBase<TFolderId, TFileId>(services, "Adm.TrnDel")
 {
     public bool Delete(string parentSubfolder, bool isFolder, TFolderId id, TFileId fileId)
     {

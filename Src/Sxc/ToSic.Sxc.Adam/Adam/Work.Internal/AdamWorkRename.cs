@@ -2,8 +2,8 @@
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamWorkRename<TFolderId, TFileId>(
-    AdamWorkBase<AdamWorkRename<TFolderId, TFileId>, TFolderId, TFileId>.MyServices services)
-    : AdamWorkBase<AdamWorkRename<TFolderId, TFileId>, TFolderId, TFileId>(services, "Adm.TrnRen")
+    AdamWorkBase<TFolderId, TFileId>.MyServices services)
+    : AdamWorkBase<TFolderId, TFileId>(services, "Adm.TrnRen")
 {
     public bool Rename(string parentSubfolder, bool isFolder, TFolderId folderId, TFileId fileId, string newName)
     {

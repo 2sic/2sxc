@@ -4,9 +4,8 @@ using ToSic.Sxc.Adam.Work.Internal;
 namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamWorkFolderGet<TFolderId, TFileId>(
-    AdamWorkBase<AdamWorkFolderGet<TFolderId, TFileId>, TFolderId, TFileId>.MyServices services)
-    : AdamWorkBase<AdamWorkFolderGet<TFolderId, TFileId>, TFolderId, TFileId>(services, "Adm.TrnFld")
+public class AdamWorkFolderGet<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.MyServices services)
+    : AdamWorkBase<TFolderId, TFileId>(services, "Adm.TrnFld")
 {
     public AdamFolderFileSet<TFolderId, TFileId> Folder(string parentSubfolder, string newFolder)
     {
@@ -32,6 +31,6 @@ public class AdamWorkFolderGet<TFolderId, TFileId>(
         // now access the subfolder, creating it if missing (which is what we want
         AdamContext.AdamRoot.Folder(newFolderPath, true);
 
-        return logCall.ReturnAsOk(ItemsInFieldNew(parentSubfolder));
+        return logCall.ReturnAsOk(ItemsInField(parentSubfolder));
     }
 }

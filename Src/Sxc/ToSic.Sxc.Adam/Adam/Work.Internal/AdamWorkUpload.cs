@@ -1,26 +1,13 @@
-﻿using System.IO;
-using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Errors;
+﻿using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Adam.Internal;
 
 namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public partial class AdamWorkUpload<TFolderId, TFileId>
-    : AdamWorkBase<AdamWorkUpload<TFolderId, TFileId>, TFolderId, TFileId>
+public partial class AdamWorkUpload<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.MyServices services)
+    : AdamWorkBase<TFolderId, TFileId>(services, "Adm.TrnUpl")
 {
-    //public AdamItemDtoMaker<TFolderId, TFileId> DtoMaker { get; }
 
-    public AdamWorkUpload(MyServices services) : base(services, "Adm.TrnUpl")
-    {
-        //DtoMaker = Services.AdamDtoMaker.New().Init(AdamContext);
-    }
-
-    //public AdamItemDto UploadOne(Stream stream, string subFolder, string fileName)
-    //{
-    //    var file = UploadOne(stream, fileName, subFolder, false);
-    //    return DtoMaker.Create(file);
-    //}
     public File<TFolderId, TFileId> UploadOneNew(Stream stream, string subFolder, string fileName)
     {
         var file = UploadOne(stream, fileName, subFolder, false);

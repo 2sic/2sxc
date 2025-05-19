@@ -1,8 +1,5 @@
 ﻿using ToSic.Eav.Metadata;
-using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Dto.Metadata;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Adam.Work.Internal;
@@ -22,18 +19,8 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
         public Generator<AdamItemDtoMaker<TFolderId, TFileId>> SelfGenerator { get; } = selfGenerator;
     }
 
-    public AdamItemDtoMaker<TFolderId, TFileId> Init(AdamContext adamContext)
-    {
-        AdamContext = adamContext;
-        return this;
-    }
-
     private readonly IAdamSecurityCheckService _security = services.Security;
-    public AdamContext AdamContext
-    {
-        get => field ??= Options.AdamContext;
-        private set;
-    }
+    public AdamContext AdamContext => field ??= Options.AdamContext;
 
     #endregion
 

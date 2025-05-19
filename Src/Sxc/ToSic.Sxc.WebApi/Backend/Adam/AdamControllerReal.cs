@@ -30,9 +30,9 @@ public class AdamControllerReal<TIdentifier>(
             var (fileName, stream) = uploadInfo.GetStream();
             var uploader = adamUpload.Value.Setup(appId, contentType, guid, field, usePortalRoot);
             var file = uploader.UploadOneNew(stream, subFolder, fileName);
-            //dtoMaker.Init(uploader.AdamContext);
+
             var dtoMake = dtoMaker.SpawnNew(new() { AdamContext = uploader.AdamContext, });
-            return dtoMake.Create(file); // uploader.UploadOne(stream, subFolder, fileName);
+            return dtoMake.Create(file);
         }
         catch (HttpExceptionAbstraction he)
         {
@@ -51,10 +51,11 @@ public class AdamControllerReal<TIdentifier>(
         var l = Log.Fn<IEnumerable<AdamItemDto>>($"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
         var results = adamItems.Value
             .Setup(appId, contentType, guid, field, usePortalRoot)
-            .ItemsInFieldNew(subfolder);
+            .ItemsInField(subfolder);
 
-        dtoMaker.Init(adamItems.Value.AdamContext);
-        var dto = dtoMaker.Convert(results);
+        var dto = dtoMaker
+            .SpawnNew(new() { AdamContext = adamItems.Value.AdamContext })
+            .Convert(results);
 
         return l.ReturnAsOk(dto);
     }
@@ -65,8 +66,9 @@ public class AdamControllerReal<TIdentifier>(
             .Setup(appId, contentType, guid, field, usePortalRoot)
             .Folder(subfolder, newFolder);
 
-        dtoMaker.Init(adamItems.Value.AdamContext);
-        var dto = dtoMaker.Convert(folder);
+        var dto = dtoMaker
+            .SpawnNew(new() { AdamContext = adamItems.Value.AdamContext })
+            .Convert(folder);
         return dto;
     }
 

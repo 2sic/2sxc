@@ -39,7 +39,7 @@ public static class SxcAdamStartup
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcAdamWork(this IServiceCollection services)
     {
-        services.TryAddTransient(typeof(AdamWorkBase<,,>.MyServices));
+        services.TryAddTransient(typeof(AdamWorkBase<,>.MyServices));
 
         services.TryAddTransient(typeof(AdamWorkFolderGet<,>));
         services.TryAddTransient(typeof(AdamWorkDelete<,>));
