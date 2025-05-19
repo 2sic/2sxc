@@ -14,33 +14,38 @@ internal class AdamService(): ServiceWithContext("Svc.AdamSv"), IAdamService
         ??= ExCtxOrNull?.GetServiceForData<AdamManager>();
 
     /// <inheritdoc />
-    public IFile File(int id)
+    public IFile? File(int id)
         => AdamManagerWithContext?.File(id);
 
     /// <inheritdoc />
-    public IFile File(string id)
+    public IFile? File(string id)
     {
         var fileId = LinkParts.CheckIdStringForId(id);
-        return fileId == null ? null : File(fileId.Value);
+        return fileId == null
+            ? null
+            : File(fileId.Value);
     }
 
 
     /// <inheritdoc />
-    public IFile File(IField field)
+    public IFile? File(IField field)
     {
-        if (field?.Raw is not string id || id.IsEmpty())
+        if (field?.Raw is not string id)
             return null;
+        // Get file - can be null if invalid id, empty string or not found
         var file = File(id);
+        if (file == null)
+            return null;
         file.Field = field;
         return file;
     }
 
     /// <inheritdoc />
-    public IFolder Folder(int id)
+    public IFolder? Folder(int id)
         => AdamManagerWithContext?.Folder(id);
 
     /// <inheritdoc />
-    public IFolder Folder(IField field)
+    public IFolder? Folder(IField field)
         => AdamManagerWithContext?.Folder(field.Parent.Entity.EntityGuid, field.Name);
 
     //private ICodeDataFactory CdfOrNull => _cdf.Get(() => _CodeApiSvc?.Cdf);

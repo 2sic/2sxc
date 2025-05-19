@@ -19,21 +19,21 @@ public interface IAdamService
     /// </summary>
     /// <param name="id">File ID</param>
     /// <returns>The file object or null if not found or something else went wrong.</returns>
-    IFile File(int id);
+    IFile? File(int id);
 
     /// <summary>
     /// Retrieve a file using the string-key such as "file:72"
     /// </summary>
     /// <param name="id">File ID String</param>
     /// <returns>The file object or null if not found or something else went wrong.</returns>
-    IFile File(string id);
+    IFile? File(string id);
 
     /// <summary>
     /// Retrieve a file referenced in the field
     /// </summary>
     /// <param name="field"></param>
     /// <returns>The file object or null if not found or something else went wrong.</returns>
-    IFile File(IField field);
+    IFile? File(IField field);
 
 
     /// <summary>
@@ -41,12 +41,12 @@ public interface IAdamService
     /// </summary>
     /// <param name="id">Folder ID</param>
     /// <returns>An Adam object for navigating the assets</returns>
-    IFolder Folder(int id);
+    IFolder? Folder(int id);
 
     /// <summary>
     /// Provides an Adam Folder for this item and field
     /// </summary>
     /// <param name="field">The Field information object for which to get the folder</param>
     /// <returns>An Adam object for navigating the assets</returns>
-    IFolder Folder(IField field);
+    IFolder? Folder(IField field);
 }
