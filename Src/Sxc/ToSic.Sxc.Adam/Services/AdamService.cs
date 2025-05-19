@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Adam;
+﻿using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
@@ -27,7 +28,7 @@ internal class AdamService(): ServiceWithContext("Svc.AdamSv"), IAdamService
     /// <inheritdoc />
     public IFile File(IField field)
     {
-        if (field?.Raw is not string id)
+        if (field?.Raw is not string id || id.IsEmpty())
             return null;
         var file = File(id);
         file.Field = field;
