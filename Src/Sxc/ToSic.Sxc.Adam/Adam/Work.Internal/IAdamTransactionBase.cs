@@ -1,7 +1,9 @@
-﻿namespace ToSic.Sxc.Backend.Adam;
+﻿using ToSic.Sxc.Adam.Work.Internal;
+
+namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IAdamTransactionBase
+public interface IAdamTransactionBase : IAdamWork
 {
-    void Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot);
+    //void SetupInternal(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot);
 }

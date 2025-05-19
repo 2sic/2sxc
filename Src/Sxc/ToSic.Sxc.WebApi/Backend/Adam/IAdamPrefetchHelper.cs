@@ -1,7 +1,9 @@
-﻿namespace ToSic.Sxc.Backend.Adam;
+﻿using ToSic.Sxc.Adam.Work.Internal;
+
+namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IAdamPrefetchHelper : IAdamTransactionBase
+public interface IAdamPrefetchHelper : IAdamWork
 {
     /// <summary>
     /// Get a DTO list of items in a field

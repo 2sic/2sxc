@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Backend.Cms;
+﻿using ToSic.Sxc.Adam.Work.Internal;
+
+namespace ToSic.Sxc.Backend.Cms;
 
 partial class EditLoadPrefetchHelper
 {
@@ -7,19 +9,21 @@ partial class EditLoadPrefetchHelper
         // Step 1: try to find hyperlink fields
         var bundlesHavingLinks = BundleWithLinkFields(editData, true);
 
-        var bundlesWithAllKeys = bundlesHavingLinks.Select(set =>
-        {
-            var keys = new List<string>();
-            var hKeys = set.HyperlinkFields?.Select(h => h.Key);
-            if (hKeys != null) keys.AddRange(hKeys);
-            var sKeys = set.StringFields?.Select(s => s.Key);
-            if (sKeys != null) keys.AddRange(sKeys);
-            return new
+        var bundlesWithAllKeys = bundlesHavingLinks
+            .Select(set =>
             {
-                Set = set,
-                Keys = keys
-            };
-        });
+                var keys = new List<string>();
+                var hKeys = set.HyperlinkFields?.Select(h => h.Key);
+                if (hKeys != null) keys.AddRange(hKeys);
+                var sKeys = set.StringFields?.Select(s => s.Key);
+                if (sKeys != null) keys.AddRange(sKeys);
+                return new
+                {
+                    Set = set,
+                    Keys = keys
+                };
+            })
+            .ToList();
 
         var links = bundlesWithAllKeys
             .GroupBy(b => b.Set.Guid)
@@ -42,11 +46,12 @@ partial class EditLoadPrefetchHelper
         return links;
     });
 
-    private IEnumerable</*AdamItemDto*/object> GetAdamListOfItems(int appId, BundleWithLinkField set, string key) => Log.Func(() =>
+    private IEnumerable</*AdamItemDto*/object> GetAdamListOfItems(int appId, BundleWithLinkField set, string key)
     {
+        var l = Log.Fn<IEnumerable<object>>();
         var adamListMaker = adamTransGetItems.New();
-        adamListMaker.Init(appId, set.ContentTypeName, set.Guid, key, false);
+        adamListMaker.Setup(appId, set.ContentTypeName, set.Guid, key, false);
         var list = adamListMaker.GetAdamItemsForPrefetch(string.Empty, false) as IEnumerable<AdamItemDto>;
-        return list;
-    });
+        return l.Return(list);
+    }
 }

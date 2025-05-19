@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Sxc.Adam.Work.Internal;
 
 namespace ToSic.Sxc.Backend.Adam;
 
@@ -27,7 +28,7 @@ public class AdamControllerReal<TIdentifier>(
                 return l.Return(new("No file was uploaded."), "Error, no files");
 
             var (fileName, stream) = uploadInfo.GetStream();
-            var uploader = adamUpload.Value.Init(appId, contentType, guid, field, usePortalRoot);
+            var uploader = adamUpload.Value.Setup(appId, contentType, guid, field, usePortalRoot);
             var file = uploader.UploadOneNew(stream, subFolder, fileName);
             //dtoMaker.Init(uploader.AdamContext);
             var dtoMake = dtoMaker.SpawnNew(new() { AdamContext = uploader.AdamContext, });
@@ -49,7 +50,7 @@ public class AdamControllerReal<TIdentifier>(
     {
         var l = Log.Fn<IEnumerable<AdamItemDto>>($"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
         var results = adamItems.Value
-            .Init(appId, contentType, guid, field, usePortalRoot)
+            .Setup(appId, contentType, guid, field, usePortalRoot)
             .ItemsInFieldNew(subfolder);
 
         dtoMaker.Init(adamItems.Value.AdamContext);
@@ -61,7 +62,7 @@ public class AdamControllerReal<TIdentifier>(
     public IEnumerable</*AdamItemDto*/object> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
     {
         var folder = adamFolders.Value
-            .Init(appId, contentType, guid, field, usePortalRoot)
+            .Setup(appId, contentType, guid, field, usePortalRoot)
             .Folder(subfolder, newFolder);
 
         dtoMaker.Init(adamItems.Value.AdamContext);
@@ -71,12 +72,12 @@ public class AdamControllerReal<TIdentifier>(
 
     public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, TIdentifier id, bool usePortalRoot)
         => adamDelete.Value
-            .Init(appId, contentType, guid, field, usePortalRoot)
+            .Setup(appId, contentType, guid, field, usePortalRoot)
             .Delete(subfolder, isFolder, id, id);
 
     public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, TIdentifier id, string newName, bool usePortalRoot)
         => adamRename.Value
-            .Init(appId, contentType, guid, field, usePortalRoot)
+            .Setup(appId, contentType, guid, field, usePortalRoot)
             .Rename(subfolder, isFolder, id, id, newName);
 
 }

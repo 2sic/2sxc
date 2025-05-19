@@ -10,10 +10,10 @@ namespace ToSic.Sxc.Adam.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamContext<TFolderId, TFileId>(
     LazySvc<AdamManager<TFolderId, TFileId>> adamManagerLazy,
-    Generator<AdamStorageOfSite<TFolderId, TFileId>> siteStoreGenerator,
-    Generator<AdamStorageOfField<TFolderId, TFileId>> fieldStoreGenerator,
+    Generator<AdamStorageOfSite<TFolderId, TFileId>> siteStorageGen,
+    Generator<AdamStorageOfField<TFolderId, TFileId>> fieldStorageGen,
     AdamContext.MyServices services)
-    : AdamContext(services, "Adm.CtxTT", connect: [adamManagerLazy, siteStoreGenerator, fieldStoreGenerator])
+    : AdamContext(services, "Adm.CtxTT", connect: [adamManagerLazy, siteStorageGen, fieldStorageGen])
 {
     public AdamManager<TFolderId, TFileId> AdamManager => adamManagerLazy.Value;
 
@@ -26,8 +26,8 @@ public class AdamContext<TFolderId, TFileId>(
         var logCall = Log.Fn<AdamContext>($"..., usePortalRoot: {usePortalRoot}");
         AdamManager.Init(context, cdf, CompatibilityLevels.CompatibilityLevel10);
         AdamRoot = usePortalRoot
-            ? siteStoreGenerator.New() as AdamStorage<TFolderId, TFileId>
-            : fieldStoreGenerator.New().InitItemAndField(entityGuid, fieldName);
+            ? siteStorageGen.New()
+            : fieldStorageGen.New().InitItemAndField(entityGuid, fieldName);
         AdamRoot.Init(AdamManager);
 
         base.Init(context, contentType, fieldName, entityGuid, usePortalRoot, cdf);

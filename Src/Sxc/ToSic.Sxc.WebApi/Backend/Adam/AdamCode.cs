@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Internal.Features;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.Work.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -40,7 +41,7 @@ public class AdamCode(
                     ?? ExCtx?.GetApp()?.AppId
                     ?? throw new("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
         return adamUploadGenerator.New()
-            .Init(appId, contentType, guid.Value, field, false)
+            .Setup(appId, contentType, guid.Value, field, false)
             .UploadOne(stream, fileName, subFolder, true);
     }
 }
