@@ -9,8 +9,6 @@ using ToSic.Sxc.Context.Internal;
 
 namespace ToSic.Sxc.Backend.Adam;
 
-public record AdamWorkOptions(int AppId, string ContentType, Guid ItemGuid, string Field, bool UsePortalRoot);
-
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AdamWorkBase<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.MyServices services, string logName)
     : ServiceBase<AdamWorkBase<TFolderId, TFileId>.MyServices>(services, logName), IAdamWork
@@ -34,6 +32,16 @@ public abstract class AdamWorkBase<TFolderId, TFileId>(AdamWorkBase<TFolderId, T
         l.Done();
     }
 
+    void IAdamWork.SetupInternal(AdamWorkOptions options)
+    {
+        var o = options;
+        var context = options.AppId > 0
+            ? Services.CtxResolver.GetExistingAppOrSet(options.AppId)
+            : Services.CtxResolver.AppNameRouteBlock(null);
+        var l = Log.Fn($"app: {context.AppReader.Show()}, type: {o.ContentType}, itemGuid: {o.ItemGuid}, field: {o.Field}, portalRoot: {o.UsePortalRoot}");
+        AdamContext.Init(context, o.ContentType, o.Field, o.ItemGuid, o.UsePortalRoot, cdf: null);
+        l.Done();
+    }
     public AdamContext<TFolderId, TFileId> AdamContext => Services.AdamContext.Value;
 
     #endregion

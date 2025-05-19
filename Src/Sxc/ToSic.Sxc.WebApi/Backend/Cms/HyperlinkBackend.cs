@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Security.Internal;
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Adam.Work.Internal;
 using ToSic.Sxc.Backend.Adam;
 
 namespace ToSic.Sxc.Backend.Cms;
@@ -9,9 +10,9 @@ public class HyperlinkBackend<TFolderId, TFileId>(
     LazySvc<AdamContext<TFolderId, TFileId>> adamState,
     ISxcContextResolver ctxResolver,
     Generator<MultiPermissionsApp> appPermissions,
-    Generator<AdamItemDtoMaker<TFolderId, TFileId>> adamDtoMaker,
+    Generator<AdamItemDtoMaker<TFolderId, TFileId>, AdamItemDtoMakerOptions> adamDtoMaker,
     IValueConverter valueConverter)
-    : ServiceBase("Bck.HypLnk", connect: [adamState, appPermissions, ctxResolver, valueConverter])
+    : ServiceBase("Bck.HypLnk", connect: [adamState, appPermissions, ctxResolver, adamDtoMaker, valueConverter])
 {
     private AdamContext<TFolderId, TFileId> AdamContext => adamState.Value;
 
@@ -65,8 +66,7 @@ public class HyperlinkBackend<TFolderId, TFileId>(
 
             // Note: kind of temporary solution, will fail if TFileId isn't int!
             var file = ((IAdamFileSystem<int, int>)adamContext.AdamManager.AdamFs).GetFile(parts.Id);
-            var dtoMaker = adamDtoMaker.New()
-                .SpawnNew(new() { AdamContext = AdamContext });
+            var dtoMaker = adamDtoMaker.New(new() { AdamContext = AdamContext });
             // if everything worked till now, it's ok to return the result
             var adam = dtoMaker.Create(file as File<TFolderId, TFileId>);
             return new() {Adam = adam, Value = adam.Url};

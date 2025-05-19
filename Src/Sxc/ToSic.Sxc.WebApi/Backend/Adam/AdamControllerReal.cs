@@ -11,7 +11,7 @@ public class AdamControllerReal<TIdentifier>(
     LazySvc<AdamWorkFolderGet<TIdentifier, TIdentifier>> adamFolders,
     LazySvc<AdamWorkDelete<TIdentifier, TIdentifier>> adamDelete,
     LazySvc<AdamWorkRename<TIdentifier, TIdentifier>> adamRename,
-    AdamItemDtoMaker<TIdentifier, TIdentifier> dtoMaker)
+    Generator<AdamItemDtoMaker<TIdentifier, TIdentifier>, AdamItemDtoMakerOptions> dtoMaker)
     : ServiceBase("Api.Adam", connect: [adamUpload, adamItems, adamFolders, adamDelete, adamRename])
 {
     public AdamItemDto Upload(HttpUploadedFile uploadInfo, int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false)
@@ -31,7 +31,7 @@ public class AdamControllerReal<TIdentifier>(
             var uploader = adamUpload.Value.Setup(appId, contentType, guid, field, usePortalRoot);
             var file = uploader.UploadOneNew(stream, subFolder, fileName);
 
-            var dtoMake = dtoMaker.SpawnNew(new() { AdamContext = uploader.AdamContext, });
+            var dtoMake = dtoMaker.New(new() { AdamContext = uploader.AdamContext, });
             return dtoMake.Create(file);
         }
         catch (HttpExceptionAbstraction he)
@@ -54,7 +54,7 @@ public class AdamControllerReal<TIdentifier>(
             .ItemsInField(subfolder);
 
         var dto = dtoMaker
-            .SpawnNew(new() { AdamContext = adamItems.Value.AdamContext })
+            .New(new() { AdamContext = adamItems.Value.AdamContext })
             .Convert(results);
 
         return l.ReturnAsOk(dto);
@@ -67,7 +67,7 @@ public class AdamControllerReal<TIdentifier>(
             .Folder(subfolder, newFolder);
 
         var dto = dtoMaker
-            .SpawnNew(new() { AdamContext = adamItems.Value.AdamContext })
+            .New(new() { AdamContext = adamItems.Value.AdamContext })
             .Convert(folder);
         return dto;
     }

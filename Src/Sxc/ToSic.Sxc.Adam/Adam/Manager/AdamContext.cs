@@ -75,7 +75,8 @@ public abstract class AdamContext(AdamContext.MyServices services, string logNam
 
         }
 
-        if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(fieldName)) return callLog.Return(this);
+        if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(fieldName))
+            return callLog.Return(this);
 
         Attribute = AttributeDefinition(context.AppReader, contentType, fieldName);
         if (!Security.FileTypeIsOkForThisField(out var exp))

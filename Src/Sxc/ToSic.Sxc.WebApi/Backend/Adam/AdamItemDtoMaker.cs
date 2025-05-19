@@ -9,14 +9,13 @@ namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TFileId>.MyServices services)
-    : ServiceWithOptionsBase<AdamItemDtoMaker<TFolderId, TFileId>, AdamItemDtoMakerOptions>("Adm", services.SelfGenerator)
+    : ServiceWithOptionsBaseLightWip<AdamItemDtoMakerOptions>("Adm")
 {
     #region Constructor / DI
 
-    public class MyServices(IAdamSecurityCheckService security, Generator<AdamItemDtoMaker<TFolderId, TFileId>> selfGenerator)
+    public class MyServices(IAdamSecurityCheckService security)
     {
         public IAdamSecurityCheckService Security { get; } = security;
-        public Generator<AdamItemDtoMaker<TFolderId, TFileId>> SelfGenerator { get; } = selfGenerator;
     }
 
     private readonly IAdamSecurityCheckService _security = services.Security;
