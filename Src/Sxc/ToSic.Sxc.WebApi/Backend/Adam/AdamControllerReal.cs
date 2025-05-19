@@ -64,9 +64,7 @@ public class AdamControllerReal<TIdentifier>(
             Field = field,
             UsePortalRoot = usePortalRoot,
         });
-        var results = adamGet
-            //.Setup(appId, contentType, guid, field, usePortalRoot)
-            .ItemsInField(subfolder);
+        var results = adamGet.ItemsInField(subfolder);
 
         var dto = dtoMaker
             .New(new() { AdamContext = adamGet.AdamContext })
@@ -84,8 +82,7 @@ public class AdamControllerReal<TIdentifier>(
                 ItemGuid = guid,
                 Field = field,
                 UsePortalRoot = usePortalRoot,
-            })//.Value
-            //.Setup(appId, contentType, guid, field, usePortalRoot)
+            })
             .Create(subfolder, newFolder);
 
         var adamGet = adamWorkGet.New(new()
@@ -96,9 +93,7 @@ public class AdamControllerReal<TIdentifier>(
             Field = field,
             UsePortalRoot = usePortalRoot,
         });
-        var folder = adamGet
-            //.Setup(appId, contentType, guid, field, usePortalRoot)
-            .ItemsInField(subfolder);
+        var folder = adamGet.ItemsInField(subfolder);
 
         var dto = dtoMaker
             .New(new() { AdamContext = adamGet.AdamContext })
@@ -114,8 +109,7 @@ public class AdamControllerReal<TIdentifier>(
                 ItemGuid = guid,
                 Field = field,
                 UsePortalRoot = usePortalRoot,
-        })
-            //.Setup(appId, contentType, guid, field, usePortalRoot)
+            })
             .Delete(subfolder, isFolder, id, id);
 
     public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, TIdentifier id, string newName, bool usePortalRoot)
@@ -127,7 +121,6 @@ public class AdamControllerReal<TIdentifier>(
                 Field = field,
                 UsePortalRoot = usePortalRoot,
             })
-            //.Setup(appId, contentType, guid, field, usePortalRoot)
             .Rename(subfolder, isFolder, id, id, newName);
 
 }

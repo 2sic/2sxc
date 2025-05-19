@@ -16,9 +16,7 @@ namespace ToSic.Sxc.Backend.Adam;
 /// </summary>
 [PrivateApi("Used by DynamicApiController and Hybrid.Api12_DynCode")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamCode(
-    Generator<AdamWorkUpload<int, int>, AdamWorkOptions> adamUploadGenerator,
-    LazySvc<IEavFeaturesService> featuresLazy)
+public class AdamCode(Generator<AdamWorkUpload<int, int>, AdamWorkOptions> adamUploadGenerator, LazySvc<IEavFeaturesService> featuresLazy)
     : ServiceWithContext("AdamCode", connect: [adamUploadGenerator, featuresLazy])
 {
     public IFile SaveInAdam(NoParamOrder noParamOrder = default,
@@ -29,26 +27,29 @@ public class AdamCode(
         string field = null,
         string subFolder = "")
     {
+        var l = Log.Fn<IFile>();
+
         if (stream == null || fileName == null || contentType == null || guid == null || field == null)
-            throw new();
+            throw new ArgumentException($"all these arguments must be available: {nameof(stream)}, {nameof(field)}, {nameof(contentType)}, {nameof(guid)}, {nameof(field)}");
 
         var feats = new[] { SaveInAdamApi.Guid, PublicUploadFiles.Guid };
 
         if (!featuresLazy.Value.IsEnabled(feats, "can't save in ADAM", out var exp))
-            throw exp;
+            throw l.Ex(exp);
 
         var appId = ExCtx?.GetState<IBlock>()?.AppId
                     ?? ExCtx?.GetApp()?.AppId
-                    ?? throw new("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
-        return adamUploadGenerator.New(new AdamWorkOptions()
+                    ?? throw l.Ex(new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known."));
+        var adamUploader = adamUploadGenerator.New(new()
             {
                 AppId = appId,
                 ContentType = contentType,
                 ItemGuid = guid.Value,
                 Field = field,
                 UsePortalRoot = false,
-            })
-            //.Setup(appId, contentType, guid.Value, field, false)
-            .UploadOne(stream, fileName, subFolder, true);
+            });
+
+        var upload = adamUploader.UploadOne(stream, fileName, subFolder, true);
+        return upload;
     }
 }
