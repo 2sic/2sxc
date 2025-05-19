@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.WebApi.Errors;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 
 namespace ToSic.Sxc.Backend.Adam;
@@ -8,13 +9,13 @@ public partial class AdamWorkUpload<TFolderId, TFileId>(AdamWorkBase<TFolderId, 
     : AdamWorkBase<TFolderId, TFileId>(services, "Adm.TrnUpl")
 {
 
-    public File<TFolderId, TFileId> UploadOneNew(Stream stream, string subFolder, string fileName)
+    public IFile UploadOneNew(Stream stream, string subFolder, string fileName)
     {
         var file = UploadOne(stream, fileName, subFolder, false);
         return file;
     }
 
-    public File<TFolderId, TFileId> UploadOne(Stream stream, string originalFileName, string subFolder, bool skipFieldAndContentTypePermissionCheck)
+    public IFile UploadOne(Stream stream, string originalFileName, string subFolder, bool skipFieldAndContentTypePermissionCheck)
     {
         Log.A($"upload one subfold:{subFolder}, file: {originalFileName}");
 

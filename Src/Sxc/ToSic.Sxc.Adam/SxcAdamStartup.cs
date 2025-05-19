@@ -27,7 +27,7 @@ public static class SxcAdamStartup
         // WIP v14
         services.TryAddTransient<IAdamService, AdamService>();
 
-        services.AddSxcAdamWork();
+        //services.AddSxcAdamWork();
 
         //// Add possibly missing fallback services
         //// This must always be at the end here so it doesn't accidentally replace something we actually need
@@ -37,10 +37,12 @@ public static class SxcAdamStartup
     }
 
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public static IServiceCollection AddSxcAdamWork(this IServiceCollection services)
+    public static IServiceCollection AddSxcAdamWork<TFolder, TFile>(this IServiceCollection services)
     {
+        // Helper Services
         services.TryAddTransient(typeof(AdamWorkBase<,>.MyServices));
 
+        // Generic Services, untyped; used when other services request helpers
         services.TryAddTransient(typeof(AdamWorkGet<,>));
         services.TryAddTransient(typeof(AdamWorkFolderCreate<,>));
         services.TryAddTransient(typeof(AdamWorkDelete<,>));
@@ -51,8 +53,8 @@ public static class SxcAdamStartup
         services.TryAddTransient(typeof(AdamStorageOfSite<,>));
         services.TryAddTransient(typeof(AdamStorageOfField<,>));
 
-        // Int implementations (default); platform must specify others if using another key type
-        services.TryAddTransient<IAdamWorkGet, AdamWorkGet<int,int>>();
+        // Typed implementations, as specified by the caller; usually `int`
+        services.TryAddTransient<IAdamWorkGet, AdamWorkGet<TFolder, TFile>>();
 
         return services;
     }

@@ -39,6 +39,7 @@ public class StartupSxcCoreOnly
             .AddSxcEdit()
             .AddSxcData()
             .AddSxcAdam()
+            .AddSxcAdamWork<int, int>()
             .AddSxcBlocks()
             .AddSxcRender()
             .AddSxcCoreNew()

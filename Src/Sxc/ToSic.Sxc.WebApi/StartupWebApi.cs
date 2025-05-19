@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Internal.Insights;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.ImportExport;
-using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Backend.Admin;
@@ -21,7 +20,6 @@ using ToSic.Sxc.Backend.Sys;
 using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Backend.Views;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.WebApi.ExternalLinks;
 
 namespace ToSic.Sxc.Backend;
@@ -132,11 +130,10 @@ public static class StartupWebApi
         services.TryAddTransient(typeof(AdamItemDtoMaker<,>.MyServices));
 
         // Default `int` implementation, the platform must specify a different type before this if it needs another identity type
-        services.TryAddTransient<IAdamItemDtoMaker, AdamItemDtoMaker<int, int>>();
+        services.TryAddTransient<IAdamItemDtoMaker, AdamItemDtoMaker<TFolder, TFile>>();
 
         // Prefetch helper so it can be used in the Edit CMS Load
-        services.TryAddTransient(typeof(AdamPrefetchHelper<,>));
-        services.TryAddTransient<IAdamPrefetchHelper, AdamPrefetchHelper<TFolder, TFile>>();
+        services.TryAddTransient<IAdamPrefetchHelper, AdamPrefetchHelper>();
 
         return services;
     }

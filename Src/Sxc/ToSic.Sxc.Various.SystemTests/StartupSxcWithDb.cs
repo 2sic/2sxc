@@ -34,6 +34,7 @@ public class StartupSxcWithDb
             .AddSxcEdit()
             .AddSxcData()
             .AddSxcAdam()
+            .AddSxcAdamWork<int, int>()
             .AddSxcBlocks()
             .AddSxcRender()
             .AddSxcCms()

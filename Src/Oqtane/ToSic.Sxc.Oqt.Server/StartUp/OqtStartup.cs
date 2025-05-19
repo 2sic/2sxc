@@ -83,6 +83,7 @@ public class OqtStartup : IServerStartup
             .AddSxcEdit()
             .AddSxcData()
             .AddSxcAdam()
+            .AddSxcAdamWork<int, int>()
             .AddSxcBlocks()
             .AddSxcRender()
             .AddSxcCms()

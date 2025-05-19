@@ -3,17 +3,15 @@ using ToSic.Eav.Apps.Assets.Internal;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Adam.Work.Internal;
 using ToSic.Sxc.Context.Internal;
-using ToSic.Sys.Services;
 
 namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AdamWorkBase<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.MyServices services, string logName)
-    : ServiceBase<AdamWorkBase<TFolderId, TFileId>.MyServices>(services, logName), IAdamWork, IHasOptions<AdamWorkOptions>, IServiceWithOptionsToSetup<AdamWorkOptions>
+    : ServiceBase<AdamWorkBase<TFolderId, TFileId>.MyServices>(services, logName), IAdamWork
 {
     #region MyServices / Init
 
@@ -24,17 +22,7 @@ public abstract class AdamWorkBase<TFolderId, TFileId>(AdamWorkBase<TFolderId, T
         public ISxcAppContextResolver CtxResolver { get; } = ctxResolver;
     }
 
-    void IAdamWork.SetupInternal(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot)
-    {
-        var context = appId > 0
-            ? Services.CtxResolver.GetExistingAppOrSet(appId)
-            : Services.CtxResolver.AppNameRouteBlock(null);
-        var l = Log.Fn($"app: {context.AppReader.Show()}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
-        AdamContext.Init(context, contentType, field, itemGuid, usePortalRoot, cdf: null);
-        l.Done();
-    }
-
-    void IAdamWork.SetupInternal(AdamWorkOptions options)
+    public void SetOptions(AdamWorkOptions options)
     {
         var o = options;
         var context = options.AppId > 0
@@ -44,6 +32,7 @@ public abstract class AdamWorkBase<TFolderId, TFileId>(AdamWorkBase<TFolderId, T
         AdamContext.Init(context, o.ContentType, o.Field, o.ItemGuid, o.UsePortalRoot, cdf: null);
         l.Done();
     }
+
 
     protected AdamContext<TFolderId, TFileId> AdamContextTyped => field ??= Services.AdamContext.Value;
 
@@ -72,9 +61,4 @@ public abstract class AdamWorkBase<TFolderId, TFileId>(AdamWorkBase<TFolderId, T
             throw HttpException.BadRequest(errPrefix + " - not found in folder");
     }
 
-    public AdamWorkOptions Options { get; }
-    public void SetOptions(AdamWorkOptions options)
-    {
-        ((IAdamWork)this).SetupInternal(options);
-    }
 }

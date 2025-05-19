@@ -7,14 +7,14 @@ public class AdamWorkRename<TFolderId, TFileId>(
 {
     public bool Rename(string parentSubfolder, bool isFolder, TFolderId folderId, TFileId fileId, string newName)
     {
-        Log.A("");
+        var l = Log.Fn<bool>();
 
         if (!AdamContext.Security.UserIsPermittedOnField(GrantSets.WriteSomething, out var exp))
-            throw exp;
+            throw l.Ex(exp);
 
         // check that if the user should only see drafts, he doesn't see items of published data
         if (!AdamContext.Security.UserIsNotRestrictedOrItemIsDraft(AdamContext.ItemGuid, out var permissionException))
-            throw permissionException;
+            throw l.Ex(permissionException);
 
         // try to see if we can get into the subfolder - will throw error if missing
         var parent = AdamContextTyped.AdamRoot.Folder(parentSubfolder, false);
@@ -37,7 +37,6 @@ public class AdamWorkRename<TFolderId, TFileId>(
             fs.Rename(target, newName);
         }
 
-        Log.A("rename complete");
-        return true;
+        return l.ReturnTrue("rename complete");
     }
 }

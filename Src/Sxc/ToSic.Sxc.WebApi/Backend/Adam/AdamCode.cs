@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Backend.Adam;
 [PrivateApi("Used by DynamicApiController and Hybrid.Api12_DynCode")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamCode(
-    Generator<AdamWorkUpload<int, int>> adamUploadGenerator,
+    Generator<AdamWorkUpload<int, int>, AdamWorkOptions> adamUploadGenerator,
     LazySvc<IEavFeaturesService> featuresLazy)
     : ServiceWithContext("AdamCode", connect: [adamUploadGenerator, featuresLazy])
 {
@@ -40,8 +40,15 @@ public class AdamCode(
         var appId = ExCtx?.GetState<IBlock>()?.AppId
                     ?? ExCtx?.GetApp()?.AppId
                     ?? throw new("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
-        return adamUploadGenerator.New()
-            .Setup(appId, contentType, guid.Value, field, false)
+        return adamUploadGenerator.New(new AdamWorkOptions()
+            {
+                AppId = appId,
+                ContentType = contentType,
+                ItemGuid = guid.Value,
+                Field = field,
+                UsePortalRoot = false,
+            })
+            //.Setup(appId, contentType, guid.Value, field, false)
             .UploadOne(stream, fileName, subFolder, true);
     }
 }
