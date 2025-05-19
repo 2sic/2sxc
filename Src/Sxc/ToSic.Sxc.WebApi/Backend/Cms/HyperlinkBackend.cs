@@ -10,7 +10,7 @@ public class HyperlinkBackend<TFolderId, TFileId>(
     LazySvc<AdamContext<TFolderId, TFileId>> adamState,
     ISxcContextResolver ctxResolver,
     Generator<MultiPermissionsApp> appPermissions,
-    Generator<AdamItemDtoMaker<TFolderId, TFileId>, AdamItemDtoMakerOptions> adamDtoMaker,
+    Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> adamDtoMaker,
     IValueConverter valueConverter)
     : ServiceBase("Bck.HypLnk", connect: [adamState, appPermissions, ctxResolver, adamDtoMaker, valueConverter])
 {

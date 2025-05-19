@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.WebApi;
+using ToSic.Sxc.Adam.Work.Internal;
 using ToSic.Sxc.Backend.Adam;
 
 namespace ToSic.Sxc.Backend.Cms;
@@ -6,7 +7,7 @@ namespace ToSic.Sxc.Backend.Cms;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class EditLoadPrefetchHelper(
     Generator<HyperlinkBackend<int, int>> hyperlinkBackend,
-    Generator<IAdamPrefetchHelper> adamTransGetItems,
+    Generator<IAdamPrefetchHelper, AdamWorkOptions> adamTransGetItems,
     EntityPickerApi entityPickerBackend)
     : ServiceBase(SxcLogName + ".Prefetch", connect: [adamTransGetItems, hyperlinkBackend, entityPickerBackend])
 {

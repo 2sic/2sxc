@@ -1,24 +1,23 @@
 ﻿using ToSic.Eav.WebApi.Errors;
-using ToSic.Sxc.Adam.Work.Internal;
 
 namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamWorkFolderGet<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.MyServices services)
+public class AdamWorkFolderCreate<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.MyServices services)
     : AdamWorkBase<TFolderId, TFileId>(services, "Adm.TrnFld")
 {
-    public AdamFolderFileSet<TFolderId, TFileId> Folder(string parentSubfolder, string newFolder)
+    public bool Create(string parentSubfolder, string newFolder)
     {
-        var logCall = Log.Fn<AdamFolderFileSet<TFolderId, TFileId>>($"get folders for subfld:{parentSubfolder}, new:{newFolder}");
+        var l = Log.Fn<bool>($"get folders for subfolder:{parentSubfolder}, new:{newFolder}");
         if (AdamContext.Security.UserIsRestricted && !AdamContext.Security.FieldPermissionOk(GrantSets.ReadSomething))
-            return null;
+            return l.ReturnFalse();
 
         // get root and at the same time auto-create the core folder in case it's missing (important)
-        var folder = AdamContext.AdamRoot.Folder();
+        var folder = AdamContextTyped.AdamRoot.Folder();
 
         // try to see if we can get into the subfolder - will throw error if missing
         if (!string.IsNullOrEmpty(parentSubfolder))
-            folder = AdamContext.AdamRoot.Folder(parentSubfolder, false);
+            folder = AdamContextTyped.AdamRoot.Folder(parentSubfolder, false);
 
         // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
         if (AdamContext.UseSiteRoot && !AdamContext.Security.CanEditFolder(folder))
@@ -29,8 +28,8 @@ public class AdamWorkFolderGet<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFile
             : Path.Combine(parentSubfolder, newFolder).Replace("\\", "/");
 
         // now access the subfolder, creating it if missing (which is what we want
-        AdamContext.AdamRoot.Folder(newFolderPath, true);
+        AdamContextTyped.AdamRoot.Folder(newFolderPath, true);
 
-        return logCall.ReturnAsOk(ItemsInField(parentSubfolder));
+        return l.ReturnTrue();
     }
 }

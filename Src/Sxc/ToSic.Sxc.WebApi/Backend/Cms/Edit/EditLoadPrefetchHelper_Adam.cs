@@ -1,11 +1,11 @@
-﻿using ToSic.Sxc.Adam.Work.Internal;
-
-namespace ToSic.Sxc.Backend.Cms;
+﻿namespace ToSic.Sxc.Backend.Cms;
 
 partial class EditLoadPrefetchHelper
 {
-    private Dictionary<string, Dictionary<string, IEnumerable< /*AdamItemDto*/object>>> PrefetchAdam(int appId, EditDto editData) => Log.Func(() =>
+    private Dictionary<string, Dictionary<string, IEnumerable< /*AdamItemDto*/object>>> PrefetchAdam(int appId, EditDto editData)
     {
+        var l = Log.Fn<Dictionary<string, Dictionary<string, IEnumerable<object>>>>();
+
         // Step 1: try to find hyperlink fields
         var bundlesHavingLinks = BundleWithLinkFields(editData, true);
 
@@ -29,29 +29,36 @@ partial class EditLoadPrefetchHelper
             .GroupBy(b => b.Set.Guid)
             .ToDictionary(
                 b => b.Key.ToString(),
-                b =>
-                    b.SelectMany(selector: bundle => bundle.Keys
-                            .Select(key => new
-                            {
-                                Key = key,
-                                Dic = GetAdamListOfItems(appId, bundle.Set, key),
-                            })
-                        )
-                        // skip empty bits to avoid UI from relying on these nodes to always exist
-                        .Where(r => r.Dic.Any())
-                        // Step 2: Check which ones have a link reference
-                        .ToDictionary(r => r.Key, r => r.Dic)
+                b => b
+                    .SelectMany(selector: bundle => bundle.Keys
+                        .Select(key => new
+                        {
+                            Key = key,
+                            Dic = GetAdamListOfItems(appId, bundle.Set, key) as IEnumerable<object>,
+                        })
+                    )
+                    // skip empty bits to avoid UI from relying on these nodes to always exist
+                    .Where(r => r.Dic.Any())
+                    // Step 2: Check which ones have a link reference
+                    .ToDictionary(r => r.Key, r => r.Dic)
             );
 
-        return links;
-    });
+        return l.Return(links);
+    }
 
-    private IEnumerable</*AdamItemDto*/object> GetAdamListOfItems(int appId, BundleWithLinkField set, string key)
+    private IEnumerable<AdamItemDto> GetAdamListOfItems(int appId, BundleWithLinkField set, string key)
     {
-        var l = Log.Fn<IEnumerable<object>>();
-        var adamListMaker = adamTransGetItems.New();
-        adamListMaker.Setup(appId, set.ContentTypeName, set.Guid, key, false);
-        var list = adamListMaker.GetAdamItemsForPrefetch(string.Empty, false) as IEnumerable<AdamItemDto>;
+        var l = Log.Fn<IEnumerable<AdamItemDto>>();
+        var adamListMaker = adamTransGetItems.New(new()
+        {
+            AppId = appId,
+            ContentType = set.ContentTypeName,
+            ItemGuid = set.Guid,
+            Field = key,
+            UsePortalRoot = false,
+        });
+        //adamListMaker.Setup(appId, set.ContentTypeName, set.Guid, key, false);
+        var list = adamListMaker.GetAdamItemsForPrefetch(string.Empty, false);
         return l.Return(list);
     }
 }

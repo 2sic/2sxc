@@ -41,7 +41,8 @@ public static class SxcAdamStartup
     {
         services.TryAddTransient(typeof(AdamWorkBase<,>.MyServices));
 
-        services.TryAddTransient(typeof(AdamWorkFolderGet<,>));
+        services.TryAddTransient(typeof(AdamWorkGet<,>));
+        services.TryAddTransient(typeof(AdamWorkFolderCreate<,>));
         services.TryAddTransient(typeof(AdamWorkDelete<,>));
         services.TryAddTransient(typeof(AdamWorkUpload<,>));
         services.TryAddTransient(typeof(AdamWorkRename<,>));
@@ -49,6 +50,9 @@ public static class SxcAdamStartup
         // Storage
         services.TryAddTransient(typeof(AdamStorageOfSite<,>));
         services.TryAddTransient(typeof(AdamStorageOfField<,>));
+
+        // Int implementations (default); platform must specify others if using another key type
+        services.TryAddTransient<IAdamWorkGet, AdamWorkGet<int,int>>();
 
         return services;
     }

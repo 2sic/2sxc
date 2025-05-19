@@ -16,9 +16,9 @@ public class AdamWorkDelete<TFolderId, TFileId>(
             throw permissionException;
 
         // try to see if we can get into the subfolder - will throw error if missing
-        var parent = AdamContext.AdamRoot.Folder(parentSubfolder, false);
+        var parent = AdamContextTyped.AdamRoot.Folder(parentSubfolder, false);
 
-        var fs = AdamContext.AdamManager.AdamFs;
+        var fs = AdamContextTyped.AdamManager.AdamFs;
         if (isFolder)
         {
             var target = fs.GetFolder(id);

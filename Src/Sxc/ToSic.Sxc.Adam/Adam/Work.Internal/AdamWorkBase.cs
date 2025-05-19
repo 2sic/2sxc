@@ -3,15 +3,17 @@ using ToSic.Eav.Apps.Assets.Internal;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Adam.Work.Internal;
 using ToSic.Sxc.Context.Internal;
+using ToSic.Sys.Services;
 
 namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AdamWorkBase<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.MyServices services, string logName)
-    : ServiceBase<AdamWorkBase<TFolderId, TFileId>.MyServices>(services, logName), IAdamWork
+    : ServiceBase<AdamWorkBase<TFolderId, TFileId>.MyServices>(services, logName), IAdamWork, IHasOptions<AdamWorkOptions>, IServiceWithOptionsToSetup<AdamWorkOptions>
 {
     #region MyServices / Init
 
@@ -42,7 +44,10 @@ public abstract class AdamWorkBase<TFolderId, TFileId>(AdamWorkBase<TFolderId, T
         AdamContext.Init(context, o.ContentType, o.Field, o.ItemGuid, o.UsePortalRoot, cdf: null);
         l.Done();
     }
-    public AdamContext<TFolderId, TFileId> AdamContext => Services.AdamContext.Value;
+
+    protected AdamContext<TFolderId, TFileId> AdamContextTyped => field ??= Services.AdamContext.Value;
+
+    public AdamContext AdamContext => Services.AdamContext.Value;
 
     #endregion
 
@@ -67,49 +72,9 @@ public abstract class AdamWorkBase<TFolderId, TFileId>(AdamWorkBase<TFolderId, T
             throw HttpException.BadRequest(errPrefix + " - not found in folder");
     }
 
-
-    public AdamFolderFileSet<TFolderId, TFileId> ItemsInField(string subFolderName, bool autoCreate = false)
+    public AdamWorkOptions Options { get; }
+    public void SetOptions(AdamWorkOptions options)
     {
-        var l = Log.Fn<AdamFolderFileSet<TFolderId, TFileId>>($"Subfolder: {subFolderName}; AutoCreate: {autoCreate}");
-
-        l.A("starting permissions checks");
-        if (AdamContext.Security.UserIsRestricted && !AdamContext.Security.FieldPermissionOk(GrantSets.ReadSomething))
-            return l.ReturnNull("user is restricted, and doesn't have permissions on field - return null");
-
-        // check that if the user should only see drafts, he doesn't see items of published data
-        if (!AdamContext.Security.UserIsNotRestrictedOrItemIsDraft(AdamContext.ItemGuid, out _))
-            return l.ReturnNull("user is restricted (no read-published rights) and item is published - return null");
-
-        l.A("first permission checks passed");
-
-        // get root and at the same time auto-create the core folder in case it's missing (important)
-        var root = AdamContext.AdamRoot.Folder(autoCreate);
-
-        // if no root exists then quit now
-        if (!autoCreate && root == null)
-            return l.Return(new(null, [], []), "no folder");
-
-        // try to see if we can get into the subfolder - will throw error if missing
-        var currentFolder = AdamContext.AdamRoot.Folder(subFolderName, false);
-
-        // ensure that it's super user, or the folder is really part of this item
-        if (!AdamContext.Security.SuperUserOrAccessingItemFolder(currentFolder.Path, out var ex))
-        {
-            l.A("user is not super-user and folder doesn't seem to be an ADAM folder of this item - will throw");
-            l.Ex(ex);
-            throw ex;
-        }
-
-        var adamFolders = currentFolder.Folders
-            .Cast<Sxc.Adam.Internal.Folder<TFolderId, TFileId>>()
-            .Where(s => !EqualityComparer<TFolderId>.Default.Equals(s.SysId, currentFolder.SysId))
-            .ToList();
-
-        // Get/Cast Files
-        var adamFiles = currentFolder.Files
-            .Cast<Sxc.Adam.Internal.File<TFolderId, TFileId>>()
-            .ToList();
-
-        return l.Return(new(currentFolder, adamFolders, adamFiles), $"ok - fld⋮{adamFolders.Count}, files⋮{adamFiles.Count}");
+        ((IAdamWork)this).SetupInternal(options);
     }
 }

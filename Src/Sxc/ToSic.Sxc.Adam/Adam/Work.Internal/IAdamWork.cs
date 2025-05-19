@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Backend.Adam;
+﻿using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Backend.Adam;
 
 namespace ToSic.Sxc.Adam.Work.Internal;
 
@@ -7,7 +8,8 @@ namespace ToSic.Sxc.Adam.Work.Internal;
 /// </summary>
 public interface IAdamWork
 {
-    internal void SetupInternal(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot);
+    public void SetupInternal(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot);
 
-    internal void SetupInternal(AdamWorkOptions options);
+    public void SetupInternal(AdamWorkOptions options);
+    AdamContext AdamContext { get; }
 }

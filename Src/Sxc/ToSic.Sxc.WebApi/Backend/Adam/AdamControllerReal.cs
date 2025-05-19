@@ -7,12 +7,12 @@ namespace ToSic.Sxc.Backend.Adam;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamControllerReal<TIdentifier>(
     LazySvc<AdamWorkUpload<TIdentifier, TIdentifier>> adamUpload,
-    LazySvc<AdamPrefetchHelper<TIdentifier, TIdentifier>> adamItems,
-    LazySvc<AdamWorkFolderGet<TIdentifier, TIdentifier>> adamFolders,
+    LazySvc<IAdamWorkGet> adamGet,
+    LazySvc<AdamWorkFolderCreate<TIdentifier, TIdentifier>> adamFolders,
     LazySvc<AdamWorkDelete<TIdentifier, TIdentifier>> adamDelete,
     LazySvc<AdamWorkRename<TIdentifier, TIdentifier>> adamRename,
-    Generator<AdamItemDtoMaker<TIdentifier, TIdentifier>, AdamItemDtoMakerOptions> dtoMaker)
-    : ServiceBase("Api.Adam", connect: [adamUpload, adamItems, adamFolders, adamDelete, adamRename])
+    Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> dtoMaker)
+    : ServiceBase("Api.Adam", connect: [adamUpload, adamGet, adamFolders, adamDelete, adamRename])
 {
     public AdamItemDto Upload(HttpUploadedFile uploadInfo, int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false)
     {
@@ -49,12 +49,12 @@ public class AdamControllerReal<TIdentifier>(
     public IEnumerable</*AdamItemDto*/object> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
     {
         var l = Log.Fn<IEnumerable<AdamItemDto>>($"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
-        var results = adamItems.Value
+        var results = adamGet.Value
             .Setup(appId, contentType, guid, field, usePortalRoot)
             .ItemsInField(subfolder);
 
         var dto = dtoMaker
-            .New(new() { AdamContext = adamItems.Value.AdamContext })
+            .New(new() { AdamContext = adamGet.Value.AdamContext })
             .Convert(results);
 
         return l.ReturnAsOk(dto);
@@ -62,12 +62,16 @@ public class AdamControllerReal<TIdentifier>(
 
     public IEnumerable</*AdamItemDto*/object> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
     {
-        var folder = adamFolders.Value
+        adamFolders.Value
             .Setup(appId, contentType, guid, field, usePortalRoot)
-            .Folder(subfolder, newFolder);
+            .Create(subfolder, newFolder);
+
+        var folder = adamGet.Value
+            .Setup(appId, contentType, guid, field, usePortalRoot)
+            .ItemsInField(subfolder);
 
         var dto = dtoMaker
-            .New(new() { AdamContext = adamItems.Value.AdamContext })
+            .New(new() { AdamContext = adamGet.Value.AdamContext })
             .Convert(folder);
         return dto;
     }

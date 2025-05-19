@@ -131,6 +131,9 @@ public static class StartupWebApi
         services.TryAddTransient(typeof(AdamItemDtoMaker<,>));
         services.TryAddTransient(typeof(AdamItemDtoMaker<,>.MyServices));
 
+        // Default `int` implementation, the platform must specify a different type before this if it needs another identity type
+        services.TryAddTransient<IAdamItemDtoMaker, AdamItemDtoMaker<int, int>>();
+
         // Prefetch helper so it can be used in the Edit CMS Load
         services.TryAddTransient(typeof(AdamPrefetchHelper<,>));
         services.TryAddTransient<IAdamPrefetchHelper, AdamPrefetchHelper<TFolder, TFile>>();

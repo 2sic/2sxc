@@ -32,13 +32,13 @@ public partial class AdamWorkUpload<TFolderId, TFileId>(AdamWorkBase<TFolderId, 
                 throw permissionException;
         }
 
-        var folder = AdamContext.AdamRoot.Folder(autoCreate: true);
+        var folder = AdamContextTyped.AdamRoot.Folder(autoCreate: true);
 
         if (!string.IsNullOrEmpty(subFolder))
-            folder = AdamContext.AdamRoot.Folder(subFolder, true);
+            folder = AdamContextTyped.AdamRoot.Folder(subFolder, true);
 
         // start with a security check...
-        var fs = AdamContext.AdamManager.AdamFs;
+        var fs = AdamContextTyped.AdamManager.AdamFs;
         var parentFolder = fs.GetFolder(folder.SysId);
 
         // validate that dnn user have write permissions for folder in case dnn file system is used (usePortalRoot)
