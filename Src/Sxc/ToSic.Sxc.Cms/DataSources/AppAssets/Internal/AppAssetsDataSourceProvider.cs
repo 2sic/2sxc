@@ -1,5 +1,4 @@
-﻿using System.IO;
-using ToSic.Eav.Apps;
+﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.ImportExport.Internal;
@@ -66,7 +65,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
     /// </summary>
     /// <returns></returns>
     public (List<FolderModelRaw> Folders, List<FileModelRaw> Files) GetAll()
-        => Log.Func(l => (Folders, Files));
+        => Log.Quick(() => (Folders, Files));
 
     public List<FileModelRaw> Files => _files.Get(GetFiles);
     //    .GetM(Log, _ =>

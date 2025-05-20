@@ -11,8 +11,8 @@ public partial class EditLoadPrefetchHelper(
     EntityPickerApi entityPickerBackend)
     : ServiceBase(SxcLogName + ".Prefetch", connect: [adamTransGetItems, hyperlinkBackend, entityPickerBackend])
 {
-    public EditPrefetchDto TryToPrefectAdditionalData(int appId, EditDto editData) => Log.Func(() =>
-        new EditPrefetchDto
+    public EditPrefetchDto TryToPrefectAdditionalData(int appId, EditDto editData)
+        => Log.Quick(() => new EditPrefetchDto
         {
             Links = PrefetchLinks(appId, editData),
             Entities = PrefetchEntities(appId, editData),

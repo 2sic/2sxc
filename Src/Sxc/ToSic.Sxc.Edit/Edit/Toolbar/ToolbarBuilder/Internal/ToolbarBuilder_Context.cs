@@ -29,25 +29,30 @@ partial record ToolbarBuilder : IToolbarBuilderInternal
            ?? Rules.FirstOrDefault(r => r.Context != null)?.Context;
 
 
-    private ToolbarContext GenerateContext(object target, string context) => Log.Func($"{nameof(context)}:{context}", () =>
+    private ToolbarContext GenerateContext(object target, string context)
     {
+        var l = Log.Fn<ToolbarContext>($"{nameof(context)}:{context}");
         // Check if context had already been prepared
-        if (context.ContainsInsensitive("context:")) return (new(context), "contains context:");
+        if (context.ContainsInsensitive("context:"))
+            return l.Return(new(context), "contains context:");
 
-        if (target == null) return (null, "no target");
-        if (context.EqualsInsensitive(false.ToString())) return (null, "context=false");
+        if (target == null)
+            return l.ReturnNull("no target");
+        if (context.EqualsInsensitive(false.ToString()))
+            return l.ReturnNull("context=false");
         var appsCatalog = Services.AppsCatalog.Value;
-        if (appsCatalog == null) return (null, "no AppStates");
+        if (appsCatalog == null)
+            return l.ReturnNull("no AppStates");
 
         // Try to find the context
         var appId = FindContextAppId(target);
 
         // If nothing found
         if (appId is 0 or NoAppId or Eav.Constants.TransientAppId or < 1)
-            return (null, "no app identified");
+            return l.ReturnNull("no app identified");
 
         var identity = appsCatalog.AppIdentity(appId);
-        if (identity == null) return (null, "app not found");
+        if (identity == null) return l.ReturnNull("app not found");
 
         // If we're not forcing the context "true" then check cases where it's not needed
         if (!context.EqualsInsensitive(true.ToString()))
@@ -57,12 +62,12 @@ partial record ToolbarBuilder : IToolbarBuilderInternal
                 // ensure we're not in a global context where the current-context is already special
                 var globalAppId = appsCatalog.GetPrimaryAppOfAppId(appId, Log);
                 if (globalAppId != identity.AppId)
-                    return (null, $"same app and not Global, context not forced: {identity.Show()}");
+                    return l.ReturnNull($"same app and not Global, context not forced: {identity.Show()}");
             }
 
         var result = new ToolbarContext(identity);
-        return (result, "ok");
-    });
+        return l.Return(result, "ok");
+    }
 
     private int FindContextAppId(object target)
     {

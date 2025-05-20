@@ -49,12 +49,13 @@ public class AdvancedSettings : IHasPiggyBack
     }
 
     [PrivateApi]
-    public static AdvancedSettings FromJson(object value, ILog log = null) => log.Func(l =>
+    public static AdvancedSettings FromJson(object value, ILog log = null)
     {
+        var l = log.Fn<AdvancedSettings>();
         try
         {
             if (value is string advString && !string.IsNullOrWhiteSpace(advString))
-                return (
+                return l.Return(
                     JsonSerializer.Deserialize<AdvancedSettings>(advString,
                         JsonOptions.UnsafeJsonWithoutEncodingHtml), "create");
         }
@@ -64,8 +65,8 @@ public class AdvancedSettings : IHasPiggyBack
             l.Ex(ex);
         }
 
-        return (new(), "new");
-    });
+        return l.Return(new(), "new");
+    }
 
     [PrivateApi]
     public ReadOnlyCollection<Recipe> AllSubRecipes => field ??= GetAllRecipesRecursive(Recipe?.Recipes).AsReadOnly();

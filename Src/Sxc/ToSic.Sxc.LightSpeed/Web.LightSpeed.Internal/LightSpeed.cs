@@ -215,7 +215,9 @@ internal class LightSpeed(
     private readonly GetOnce<string> _currentCulture = new();
 
 
-    private string CacheKey => _key.Get(() => Log.Func(() => OutputCacheManager.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, UrlParams.Extension, CurrentCulture)));
+    private string CacheKey => _key.Get(() => Log.Quick(()
+        => OutputCacheManager.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, UrlParams.Extension, CurrentCulture)
+    ));
     private readonly GetOnce<string> _key = new();
 
     private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? null : _block.Context.User.Id);

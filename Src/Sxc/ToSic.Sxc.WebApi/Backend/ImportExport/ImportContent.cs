@@ -39,8 +39,9 @@ public class ImportContent(
 
     protected readonly AppCachePurger AppCachePurger = appCachePurger;
 
-    public ImportResultDto Import(int zoneId, int appId, string fileName, Stream stream, string defaultLanguage) => Log.Func(l =>
+    public ImportResultDto Import(int zoneId, int appId, string fileName, Stream stream, string defaultLanguage)
     {
+        var l = Log.Fn<ImportResultDto>();
         var result = new ImportResultDto();
 
         var allowSystemChanges = userLazy.Value.IsSystemAdmin;
@@ -69,19 +70,18 @@ public class ImportContent(
             result.Success = xmlImport.ImportXml(zoneId, appId, parentAppId: null /* not sure if we never have a parent here */, xmlDocument);
             result.Messages.AddRange(xmlImport.Messages);
         }
-        return result;
-    });
+        return l.Return(result);
+    }
 
 
-    public ImportResultDto ImportJsonFiles(int zoneId, int appId, List<FileUploadDto> files,
-        string defaultLanguage
-    ) => Log.Func($"{zoneId}, {appId}, {defaultLanguage}", l =>
+    public ImportResultDto ImportJsonFiles(int zoneId, int appId, List<FileUploadDto> files, string defaultLanguage)
     {
+        var l = Log.Fn<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
         try
         {
             // 0. Verify it's json etc.
             if (files.Any(file => !Json.IsValidJson(file.Contents)))
-                throw new ArgumentException("a file is not json");
+                throw l.Ex(new ArgumentException("a file is not json"));
 
             // 1. Create content types
             var serializer = jsonSerializerGenerator.New().SetApp(appReaders.Get(new AppIdentity(zoneId, appId)));
@@ -106,7 +106,7 @@ public class ImportContent(
                     if (isEnabled)
                         types.AddRange(serializer.GetContentTypesFromBundles(package.Value).Select(set => set.ContentType));
                     else
-                        throw new NotSupportedException("Bundle packages import feature is not enabled.");
+                        throw l.Ex(new NotSupportedException("Bundle packages import feature is not enabled."));
                 }
 
                 // single json
@@ -115,7 +115,7 @@ public class ImportContent(
             }
 
             if (types.Any(t => t == null))
-                throw new NullReferenceException("One ContentType is null, something is wrong");
+                throw l.Ex(new NullReferenceException("One ContentType is null, something is wrong"));
 
             // 1.3 Import the type
             var import = importerLazy.Value.Init(zoneId, appId, true, true);
@@ -129,7 +129,7 @@ public class ImportContent(
 
             // are there any entities from bundles for import?
             if (packages.All(p => p.Value.Bundles?.Any(b => b.Entities.SafeAny()) != true))
-                return (new(true), "ok (types only)");
+                return l.Return(new(true), "ok (types only)");
 
             // 2. Create Entities
 
@@ -166,13 +166,13 @@ public class ImportContent(
                 workEntSave.New(appState).Import(entities);
 
             // 3. possibly show messages / issues
-            return (new(true), "ok (with entities)");
+            return l.Return(new(true), "ok (with entities)");
         }
         catch (Exception ex)
         {
             l.Ex(ex);
             envLogger.LogException(ex);
-            return (new ImportResultDto(false, ex.Message, Message.MessageTypes.Error), "error");
+            return l.Return(new ImportResultDto(false, ex.Message, Message.MessageTypes.Error), "error");
         }
-    });
+    }
 }

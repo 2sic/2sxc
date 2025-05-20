@@ -9,17 +9,19 @@ public class BlockEditorSelector(
     LazySvc<BlockEditorForEntity> blkEdtForEnt)
     : ServiceBase($"{SxcLogName}.BlEdSl", connect: [blkEdtForMod, blkEdtForEnt])
 {
-    public BlockEditorBase GetEditor(IBlock block) => Log.Func(() =>
+    public BlockEditorBase GetEditor(IBlock block)
     {
+        var l = Log.Fn<BlockEditorBase>();
         var editor = GetEditorInternal(block);
         editor.Init(block);
-        return editor;
-    });
-
-    private BlockEditorBase GetEditorInternal(IBlock block)
-    {
-        if (block is BlockOfModule) return blkEdtForMod.Value;
-        if (block is BlockOfEntity) return blkEdtForEnt.Value;
-        throw new("Can't find BlockEditor - the base block type in unknown");
+        return l.Return(editor);
     }
+
+    private BlockEditorBase GetEditorInternal(IBlock block) =>
+        block switch
+        {
+            BlockOfModule => blkEdtForMod.Value,
+            BlockOfEntity => blkEdtForEnt.Value,
+            _ => throw new("Can't find BlockEditor - the base block type in unknown")
+        };
 }

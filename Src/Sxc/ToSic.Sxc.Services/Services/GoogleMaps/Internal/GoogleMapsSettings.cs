@@ -21,18 +21,20 @@ public class GoogleMapsSettings(IJsonService jsonService)
     public MapsCoordinates DefaultCoordinates => _defCoords.Get(GetMapsCoordinates);
     private readonly GetOnce<MapsCoordinates> _defCoords = new();
 
-    private MapsCoordinates GetMapsCoordinates() => Log.Func(() =>
+    private MapsCoordinates GetMapsCoordinates()
     {
+        var l = Log.Fn<MapsCoordinates>();
         var json = Get(nameof(DefaultCoordinates), "");
-        if (!json.HasValue()) return (MapsCoordinates.Defaults, "no json");
+        if (!json.HasValue())
+            return l.Return(MapsCoordinates.Defaults, "no json");
         try
         {
-            return (jsonService.To<MapsCoordinates>(json), "from json");
+            return l.Return(jsonService.To<MapsCoordinates>(json), "from json");
         }
         catch
         {
-            return (MapsCoordinates.Defaults, "error");
+            return l.Return(MapsCoordinates.Defaults, "error");
         }
-    });
+    }
 
 }

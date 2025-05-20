@@ -8,15 +8,18 @@ namespace ToSic.Sxc.Cms.Internal.Publishing;
 public abstract class PagePublishingGetSettingsBase(string logPrefix)
     : ServiceBase(logPrefix + ".PubRes"), IPagePublishingGetSettings
 {
-    private PublishingMode Requirements(int instanceId) => Log.Func($"{instanceId}", () =>
+    private PublishingMode Requirements(int instanceId)
     {
-        if (instanceId < 0) return (PublishingMode.DraftOptional, "no instance");
-        if (Cache.ContainsKey(instanceId)) return (Cache[instanceId], "in cache");
+        var l = Log.Fn<PublishingMode>($"{instanceId}");
+        if (instanceId < 0)
+            return l.Return(PublishingMode.DraftOptional, "no instance");
+        if (Cache.TryGetValue(instanceId, out var value))
+            return l.Return(value, "in cache");
 
         var decision = LookupRequirements(instanceId);
         Cache.TryAdd(instanceId, decision);
-        return (decision, $"decision:{decision}");
-    });
+        return l.Return(decision, $"decision:{decision}");
+    }
     protected static readonly ConcurrentDictionary<int, PublishingMode> Cache = new();
 
     /// <summary>

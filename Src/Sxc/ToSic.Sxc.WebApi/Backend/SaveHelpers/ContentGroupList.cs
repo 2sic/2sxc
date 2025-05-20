@@ -118,34 +118,38 @@ public class ContentGroupList(
         return id;
     }
 
-    private int? FindPresentationItem(IReadOnlyDictionary<Guid, int> postSaveIds,
-        IGrouping<string, BundleWithHeader<IEntity>> bundle) => Log.Func(() =>
+    private int? FindPresentationItem(IReadOnlyDictionary<Guid, int> postSaveIds, IGrouping<string, BundleWithHeader<IEntity>> bundle)
     {
+        var l = Log.Fn<int?>();
         int? presentationId = null;
         var presItem =
             bundle.FirstOrDefault(e => string.Equals(e.Header.Field, ViewParts.Presentation, OrdinalIgnoreCase))
             ?? bundle.FirstOrDefault(e =>
                 string.Equals(e.Header.Field, ViewParts.ListPresentation, OrdinalIgnoreCase));
 
-        if (presItem == null) return (null, "no presentation");
+        if (presItem == null)
+            return l.ReturnNull("no presentation");
         // use null if it shouldn't have one
-        if (presItem.Header.IsEmpty) return (null, "header is empty");
+        if (presItem.Header.IsEmpty)
+            return l.ReturnNull("header is empty");
 
         if (postSaveIds.TryGetValue(presItem.Entity.EntityGuid, out var id))
             presentationId = id;
 
-        return (presentationId, "found");
-    });
+        return l.Return(presentationId, "found");
+    }
 
-    internal ContentGroupList ConvertGroup(List<ItemIdentifier> identifiers) => Log.Func(() =>
+    internal ContentGroupList ConvertGroup(List<ItemIdentifier> identifiers)
     {
+        var l = Log.Fn<ContentGroupList>();
         foreach (var identifier in identifiers.Where(identifier => identifier != null))
             identifier.IsContentBlockMode = DetectContentBlockMode(identifier);
-        return this;
-    });
+        return l.Return(this);
+    }
 
-    internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers) => Log.Func(() =>
+    internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers)
     {
+        var l = Log.Fn<List<ItemIdentifier>>();
         var newItems = new List<ItemIdentifier>();
         var appBlocks = blocks.New(AppCtx);
         foreach (var identifier in identifiers)
@@ -185,8 +189,8 @@ public class ContentGroupList(
             newItems.Add(identifier);
         }
 
-        return newItems;
-    });
+        return l.Return(newItems, $"{newItems.Count}");
+    }
 
 
     /// <summary>

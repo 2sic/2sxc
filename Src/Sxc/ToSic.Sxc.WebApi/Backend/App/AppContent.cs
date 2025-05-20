@@ -178,17 +178,18 @@ public class AppContent(
         return l.ReturnTrue($"new ParentRelationship p:{parentGuid},f:{field},i:{index}");
     }
 
-    private Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive) => Log.Func($"count: {newContentItemCaseInsensitive.Count}", () =>
+    private Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive)
     {
+        var l = Log.Fn<Target>($"count: {newContentItemCaseInsensitive.Count}");
         if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyMetadataFor))
-            return (null, $"'{Attributes.JsonKeyMetadataFor}' key is missing");
+            return l.ReturnNull($"'{Attributes.JsonKeyMetadataFor}' key is missing");
 
         var objectOrNull = newContentItemCaseInsensitive[Attributes.JsonKeyMetadataFor];
         if (objectOrNull == null) 
-            return (null, $"'{Attributes.JsonKeyMetadataFor}' value is null");
+            return l.ReturnNull($"'{Attributes.JsonKeyMetadataFor}' value is null");
 
         if (objectOrNull is not JsonObject metadataFor)
-            return (null, $"'{Attributes.JsonKeyMetadataFor}' value is not JsonObject");
+            return l.ReturnNull($"'{Attributes.JsonKeyMetadataFor}' value is not JsonObject");
 
         var metaData = new Target(GetTargetType(metadataFor[Attributes.TargetNiceName]?.AsValue()), null,
             
@@ -196,22 +197,19 @@ public class AppContent(
             keyNumber: (int?)metadataFor[Attributes.NumberNiceName],
             keyString: (string)metadataFor[Attributes.StringNiceName]
         );
-        return (metaData, $"new metadata g:{metaData.KeyGuid},n:{metaData.KeyNumber},s:{metaData.KeyString}");
+        return l.Return(metaData, $"new metadata g:{metaData.KeyGuid},n:{metaData.KeyNumber},s:{metaData.KeyString}");
 
-    });
-
-    private static int GetTargetType(JsonValue target)
-    {
-        switch (target.GetValue<JsonElement>().ValueKind)
-        {
-            case JsonValueKind.Number:
-                return (int)target;
-            case JsonValueKind.String when Enum.TryParse<TargetTypes>((string)target, out var targetTypes):
-                return (int)targetTypes;
-            default:
-                throw new ArgumentOutOfRangeException(Attributes.TargetNiceName, "Value is not 'int' or TargetTypes 'string'.");
-        }
     }
+
+    private static int GetTargetType(JsonValue target) =>
+        target.GetValue<JsonElement>().ValueKind switch
+        {
+            JsonValueKind.Number => (int)target,
+            JsonValueKind.String when Enum.TryParse<TargetTypes>((string)target, out var targetTypes) =>
+                (int)targetTypes,
+            _ => throw new ArgumentOutOfRangeException(Attributes.TargetNiceName,
+                "Value is not 'int' or TargetTypes 'string'.")
+        };
 
     private SimpleDataEditService DataController(IAppIdentity app) => _dataController ??= dataControllerLazy.Value.Init(app.ZoneId, app.AppId);
     private SimpleDataEditService _dataController;

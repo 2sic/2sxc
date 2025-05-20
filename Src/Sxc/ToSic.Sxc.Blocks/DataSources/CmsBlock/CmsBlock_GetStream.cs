@@ -15,14 +15,14 @@ public sealed partial class CmsBlock
         IReadOnlyList<IEntity> presList, 
         IEntity pDemoItem, 
         bool isListHeader
-    ) => Log.Func($"content⋮{items.Count}, demo#{cDemoItem?.EntityId}, present⋮{presList?.Count}, presDemo#{pDemoItem?.EntityId}, header:{isListHeader}", l =>
+    )
     {
-            
+        var l = Log.Fn<IImmutableList<IEntity>>($"content⋮{items.Count}, demo#{cDemoItem?.EntityId}, present⋮{presList?.Count}, presDemo#{pDemoItem?.EntityId}, header:{isListHeader}");
         try
         {
             // if no template is defined, return empty list
             if (view == null)
-                return ([], "no template definition - empty list");
+                return l.Return([], "no template definition - empty list");
 
             // Create copy of list (not in cache) because it will get modified
             var contentEntities = items.ToList();
@@ -81,19 +81,20 @@ public sealed partial class CmsBlock
             }
             catch (Exception ex)
             {
-                throw new("problems looping items - had to stop on id " + i + "; current entity is " + entityId + "; prev is " + prevIdForErrorReporting, ex);
+                throw l.Ex(new Exception($"problems looping items - had to stop on id {i}; current entity is {entityId}; prev is {prevIdForErrorReporting}", ex));
             }
 
-            return (entitiesToDeliver.ToImmutableList(), $"stream:{(isListHeader ? "list" : "content")} - items⋮{entitiesToDeliver.Count}");
+            return l.Return(entitiesToDeliver.ToImmutableList(), $"stream:{(isListHeader ? "list" : "content")} - items⋮{entitiesToDeliver.Count}");
         }
         catch (Exception ex)
         {
             throw new("Error loading items of a module - probably the module-id is incorrect - happens a lot with test-values on visual queries.", ex);
         }
-    });
+    }
 
-    private ImmutableList<IEntity> GetInOrAutoCreate() => Log.Func(l =>
+    private ImmutableList<IEntity> GetInOrAutoCreate()
     {
+        var l = Log.Fn<ImmutableList<IEntity>>();
         // Check if in not connected, in which case we must find it yourself
         if (!In.ContainsKey(StreamDefaultName))
         {
@@ -106,8 +107,8 @@ public sealed partial class CmsBlock
             Attach(publishing);
         }
 
-        return (In[StreamDefaultName].List.ToImmutableList(), "ok");
-    });
+        return l.Return(In[StreamDefaultName].List.ToImmutableList(), "ok");
+    }
 
     private static IEntity GetPresentationEntity(IReadOnlyCollection<IEntity> originals, IReadOnlyList<IEntity> presItems, int itemIndex, int entityId)
     {
