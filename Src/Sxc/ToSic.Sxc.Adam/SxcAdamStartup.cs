@@ -50,8 +50,8 @@ public static class SxcAdamStartup
         services.TryAddTransient(typeof(AdamWorkRename<,>));
 
         // Storage
-        services.TryAddTransient(typeof(AdamStorageOfSite<,>));
-        services.TryAddTransient(typeof(AdamStorageOfField<,>));
+        services.TryAddTransient(typeof(AdamStorageOfSite));
+        services.TryAddTransient(typeof(AdamStorageOfField));
 
         // Typed implementations, as specified by the caller; usually `int`
         services.TryAddTransient<IAdamWorkGet, AdamWorkGet<TFolder, TFile>>();

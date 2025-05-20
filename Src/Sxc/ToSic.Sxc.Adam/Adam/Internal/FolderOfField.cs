@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Adam.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class FolderOfField<TFolderId, TFileId> : Folder<TFolderId, TFileId>
 {
-    public FolderOfField(AdamManager<TFolderId, TFileId> adamManager, AdamStorageOfField<TFolderId, TFileId> adamStorageOfField) : base(adamManager)
+    public FolderOfField(AdamManager<TFolderId, TFileId> adamManager, AdamStorageOfField adamStorageOfField) : base(adamManager)
     {
         // WIP - maybe still provide some basic info?
         //Url = adamStorageOfField.Manager.AdamFs.GetUrl(adamStorageOfField.Root);

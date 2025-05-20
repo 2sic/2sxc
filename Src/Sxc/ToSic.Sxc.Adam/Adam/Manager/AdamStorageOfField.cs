@@ -8,12 +8,12 @@ namespace ToSic.Sxc.Adam.Internal;
 /// each entity+field combination has its own container for assets
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamStorageOfField<TFolderId, TFileId>: AdamStorage<TFolderId, TFileId>
+public class AdamStorageOfField(): AdamStorage("Adm.OfFld")
 {
     private Guid _entityGuid;
     private string _fieldName;
 
-    public AdamStorageOfField<TFolderId, TFileId> InitItemAndField(Guid entityGuid, string fieldName)
+    public AdamStorageOfField InitItemAndField(Guid entityGuid, string fieldName)
     {
         _entityGuid = entityGuid;
         _fieldName = fieldName;

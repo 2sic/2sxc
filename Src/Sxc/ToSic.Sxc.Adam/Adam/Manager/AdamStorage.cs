@@ -1,10 +1,15 @@
-﻿using ToSic.Lib.Services;
+﻿using ToSic.Lib.Helpers;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Adam.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class AdamStorage(string logName) : ServiceBase(logName)
+public abstract class AdamStorage(string logName = default) : ServiceBase(logName ?? "Adm.Base")
 {
+    public void Init(AdamManager manager) => Manager = manager;
+
+    protected AdamManager Manager { get; private set; }
+
     /// <summary>
     /// Root of this container
     /// </summary>
@@ -18,5 +23,24 @@ public abstract class AdamStorage(string logName) : ServiceBase(logName)
     /// <returns></returns>
     protected abstract string GeneratePath(string subFolder);
 
-        
+    /// <summary>
+    /// Get the folder specified in App.Settings (BasePath) combined with the module's ID
+    /// </summary>
+    /// <remarks>
+    /// Will create the folder if it does not exist
+    /// </remarks>
+    public IFolder Folder(string subFolder, bool autoCreate)
+    {
+        var l = Log.Fn<IFolder>($"{nameof(Folder)}(\"{subFolder}\", {autoCreate})");
+        var fld = Manager.Folder(GeneratePath(subFolder), autoCreate);
+        return l.ReturnAsOk(fld);
+    }
+
+
+    /// <summary>
+    /// Get a (root) folder object for this container
+    /// </summary>
+    /// <returns></returns>
+    public IFolder RootFolder(bool autoCreate = false) => _folder.Get(() => Folder("", autoCreate));
+    private readonly GetOnce<IFolder> _folder = new();
 }

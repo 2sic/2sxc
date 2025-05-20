@@ -10,15 +10,15 @@ namespace ToSic.Sxc.Adam.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamContext<TFolderId, TFileId>(
     LazySvc<AdamManager<TFolderId, TFileId>> adamManagerLazy,
-    Generator<AdamStorageOfSite<TFolderId, TFileId>> siteStorageGen,
-    Generator<AdamStorageOfField<TFolderId, TFileId>> fieldStorageGen,
+    Generator<AdamStorageOfSite> siteStorageGen,
+    Generator<AdamStorageOfField> fieldStorageGen,
     AdamContext.MyServices services)
     : AdamContext(services, "Adm.CtxTT", connect: [adamManagerLazy, siteStorageGen, fieldStorageGen])
 {
     public AdamManager<TFolderId, TFileId> AdamManager => adamManagerLazy.Value;
     public override AdamManager AdamManagerSimple => AdamManager;
 
-    public AdamStorage<TFolderId, TFileId> AdamRoot;
+    public AdamStorage AdamRoot;
 
     // TODO: @2dm #AdamTyped
     public override AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ICodeDataFactory cdf)

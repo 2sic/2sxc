@@ -8,11 +8,11 @@ namespace ToSic.Sxc.Adam.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamManager<TFolderId, TFileId>: AdamManager
 {
-    private readonly Generator<AdamStorageOfField<TFolderId, TFileId>> _fieldStorageGenerator;
+    private readonly Generator<AdamStorageOfField> _fieldStorageGenerator;
     private readonly LazySvc<IAdamFileSystem> _adamFsLazy;
 
     #region Constructor / DI
-    public AdamManager(MyServices services, LazySvc<IAdamFileSystem> adamFsLazy, Generator<AdamStorageOfField<TFolderId, TFileId>> fieldStorageGenerator)
+    public AdamManager(MyServices services, LazySvc<IAdamFileSystem> adamFsLazy, Generator<AdamStorageOfField> fieldStorageGenerator)
         : base(services, "Adm.MngrTT", connect: [adamFsLazy, fieldStorageGenerator])
     {
         _adamFsLazy = adamFsLazy.SetInit(f => f.Init(this));
