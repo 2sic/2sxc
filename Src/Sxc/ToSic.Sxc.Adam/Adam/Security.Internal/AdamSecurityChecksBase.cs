@@ -22,7 +22,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices s
 
     public IAdamSecurityCheckService Init(AdamContext adamContext, bool usePortalRoot)
     {
-        var callLog = Log.Fn<IAdamSecurityCheckService>();
+        var l = Log.Fn<IAdamSecurityCheckService>();
         AdamContext = adamContext;
 
         var firstChecker = AdamContext.Permissions.PermissionCheckers.First().Value;
@@ -36,7 +36,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices s
 
         Log.A($"adminSome:{userMayAdminSomeFiles}, restricted:{UserIsRestricted}");
 
-        return callLog.Return(this);
+        return l.Return(this);
     }
 
     internal AdamContext AdamContext;

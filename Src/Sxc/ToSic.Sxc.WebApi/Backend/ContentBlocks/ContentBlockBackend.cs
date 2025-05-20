@@ -106,7 +106,7 @@ public class ContentBlockBackend(
 
     private IRenderResult RenderToResult(int templateId, string lang, string edition)
     {
-        var callLog = Log.Fn<IRenderResult>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
+        var l = Log.Fn<IRenderResult>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
 
         // if a preview templateId was specified, swap to that
         if (templateId > 0)
@@ -118,7 +118,7 @@ public class ContentBlockBackend(
 
         var builder = blockBuilderGenerator.New().Setup(Block);
         var result = builder.Run(true, specs: new());
-        return callLog.ReturnAsOk(result);
+        return l.ReturnAsOk(result);
     }
 
 }

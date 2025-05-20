@@ -91,7 +91,7 @@ public class ViewsExportImport(
 
     public ImportResultDto ImportView(int zoneId, int appId, List<FileUploadDto> files, string defaultLanguage)
     {
-        var callLog = Log.Fn<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
+        var l = Log.Fn<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
 
         try
         {
@@ -126,12 +126,12 @@ public class ViewsExportImport(
             foreach (var asset in assets) assetMan.Create(GetRealPath(appPaths, asset), asset);
 
             // 3. possibly show messages / issues
-            return callLog.ReturnAsOk(new(true));
+            return l.ReturnAsOk(new(true));
         }
         catch (Exception ex)
         {
             envLogger.LogException(ex);
-            return callLog.Return(new(false, ex.Message, Message.MessageTypes.Error), "error");
+            return l.Return(new(false, ex.Message, Message.MessageTypes.Error), "error");
         }
     }
 

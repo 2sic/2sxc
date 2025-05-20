@@ -86,7 +86,7 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
 
     public override File<int, int> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
     {
-        var callLog = Log.Fn<File<int, int>>($"..., ..., {fileName}, {ensureUniqueName}");
+        var l = Log.Fn<File<int, int>>($"..., ..., {fileName}, {ensureUniqueName}");
         if (ensureUniqueName)
             fileName = FindUniqueFileName(parent, fileName);
         var fullContentPath = _serverPaths.FullContentPath(parent.Path);
@@ -109,7 +109,7 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
             ImageWidth = 0
         };
         var oqtFile = OqtFileRepository.AddFile(oqtFileData);
-        return callLog.ReturnAsOk(GetFile(oqtFile.FileId));
+        return l.ReturnAsOk(GetFile(oqtFile.FileId));
     }
 
     /// <summary>
@@ -195,14 +195,14 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
 
     public override List<Folder<int, int>> GetFolders(IFolder folder)
     {
-        var callLog = Log.Fn<List<Folder<int, int>>>();
+        var l = Log.Fn<List<Folder<int, int>>>();
         var fldObj = GetOqtFolder(folder.AsOqt().SysId);
         if (fldObj == null) return [];
 
         var firstList = GetSubFoldersRecursive(fldObj);
         var folders = firstList?.Select(OqtToAdam).ToList()
                       ?? [];
-        return callLog.Return(folders, $"{folders.Count}");
+        return l.Return(folders, $"{folders.Count}");
     }
 
     private List<Folder> GetSubFoldersRecursive(Folder parentFolder, List<Folder> allFolders = null, List<Folder> subFolders = null)
@@ -228,7 +228,7 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
 
     public override List<File<int, int>> GetFiles(IFolder folder)
     {
-        var callLog = Log.Fn<List<File<int, int>>>();
+        var l = Log.Fn<List<File<int, int>>>();
         var fldObj = OqtFolderRepository.GetFolder(folder.AsOqt().SysId);
         // sometimes the folder doesn't exist for whatever reason
         if (fldObj == null) return [];
@@ -237,7 +237,7 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
         var firstList = OqtFileRepository.GetFiles(fldObj.FolderId);
         var files = firstList?.Select(OqtToAdam).ToList()
                     ?? [];
-        return callLog.Return(files, $"{files.Count}");
+        return l.Return(files, $"{files.Count}");
     }
 
     #endregion

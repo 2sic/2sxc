@@ -23,13 +23,13 @@ public class AdamStorageOfField<TFolderId, TFileId>: AdamStorage<TFolderId, TFil
 
     protected override string GeneratePath(string subFolder)
     {
-        var callLog = Log.Fn<string>(subFolder);
+        var l = Log.Fn<string>(subFolder);
         var result = AdamConstants.ItemFolderMask
             .Replace("[AdamRoot]", Manager.Path)
-            .Replace("[Guid22]", Mapper.GuidCompress(_entityGuid))
+            .Replace("[Guid22]", _entityGuid.GuidCompress())
             .Replace("[FieldName]", _fieldName)
             .Replace("[SubFolder]", subFolder) // often blank, so it will just be removed
             .Replace("//", "/");
-        return callLog.ReturnAndLog(result);
+        return l.ReturnAndLog(result);
     }
 }

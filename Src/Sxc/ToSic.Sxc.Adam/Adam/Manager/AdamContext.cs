@@ -46,7 +46,7 @@ public abstract class AdamContext(AdamContext.MyServices services, string logNam
     /// </summary>
     public virtual AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ICodeDataFactory cdf)
     {
-        var callLog = Log.Fn<AdamContext>($"app: {context.AppReader.Show()}, field:{fieldName}, guid:{entityGuid}");
+        var l = Log.Fn<AdamContext>($"app: {context.AppReader.Show()}, field:{fieldName}, guid:{entityGuid}");
         Context = context;
 
         Permissions = Services.TypesPermissions.New()
@@ -65,7 +65,7 @@ public abstract class AdamContext(AdamContext.MyServices services, string logNam
         if (Security.MustThrowIfAccessingRootButNotAllowed(usePortalRoot, out var exception))
             throw exception;
 
-        Log.A("check if feature enabled");
+        l.A("check if feature enabled");
         var sysFeatures = Services.FeaturesSvc.Value;
         if (Security.UserIsRestricted && !sysFeatures.IsEnabled(FeaturesForRestrictedUsers))
         {
@@ -76,12 +76,12 @@ public abstract class AdamContext(AdamContext.MyServices services, string logNam
         }
 
         if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(fieldName))
-            return callLog.Return(this);
+            return l.Return(this);
 
         Attribute = AttributeDefinition(context.AppReader, contentType, fieldName);
         if (!Security.FileTypeIsOkForThisField(out var exp))
             throw exp;
-        return callLog.Return(this);
+        return l.Return(this);
     }
 
     #endregion

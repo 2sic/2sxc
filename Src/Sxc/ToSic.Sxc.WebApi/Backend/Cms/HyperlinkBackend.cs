@@ -7,16 +7,13 @@ namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class HyperlinkBackend<TFolderId, TFileId>(
-    LazySvc<AdamContext<TFolderId, TFileId>> adamState,
+    LazySvc<AdamContext<TFolderId, TFileId>> adamCtxLazy,
     ISxcContextResolver ctxResolver,
     Generator<MultiPermissionsApp> appPermissions,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> adamDtoMaker,
     IValueConverter valueConverter)
-    : ServiceBase("Bck.HypLnk", connect: [adamState, appPermissions, ctxResolver, adamDtoMaker, valueConverter])
+    : ServiceBase("Bck.HypLnk", connect: [adamCtxLazy, appPermissions, ctxResolver, adamDtoMaker, valueConverter])
 {
-    private AdamContext<TFolderId, TFileId> AdamContext => adamState.Value;
-
-
     public LinkInfoDto LookupHyperlink(int appId, string hyperlink, string contentType, Guid guid, string field)
     {
         try
@@ -50,11 +47,11 @@ public class HyperlinkBackend<TFolderId, TFileId>(
 
             // file-check, more abilities to allow
             // this will already do a ensure-or-throw inside it if outside of adam
-            var adamContext = adamState.Value;
-            adamContext.Init(context, contentType, field, guid, isOutsideOfAdam, cdf: null);
-            if (!adamContext.Security.SuperUserOrAccessingItemFolder(resolved, out var exp))
+            var adamCtx = adamCtxLazy.Value;
+            adamCtx.Init(context, contentType, field, guid, isOutsideOfAdam, cdf: null);
+            if (!adamCtx.Security.SuperUserOrAccessingItemFolder(resolved, out var exp))
                 throw exp;
-            if (!adamContext.Security.UserIsPermittedOnField(GrantSets.ReadSomething, out exp))
+            if (!adamCtx.Security.UserIsPermittedOnField(GrantSets.ReadSomething, out exp))
                 throw exp;
                 
             // now try to find the item, use this to get the id
@@ -65,8 +62,8 @@ public class HyperlinkBackend<TFolderId, TFileId>(
                 return new() { Value = hyperlink };
 
             // Note: kind of temporary solution, will fail if TFileId isn't int!
-            var file = ((IAdamFileSystem<int, int>)adamContext.AdamManager.AdamFs).GetFile(parts.Id);
-            var dtoMaker = adamDtoMaker.New(new() { AdamContext = AdamContext });
+            var file = ((IAdamFileSystem<int, int>)adamCtx.AdamManager.AdamFs).GetFile(parts.Id);
+            var dtoMaker = adamDtoMaker.New(new() { AdamContext = adamCtx });
             // if everything worked till now, it's ok to return the result
             var adam = dtoMaker.Create(file as File<TFolderId, TFileId>);
             return new() {Adam = adam, Value = adam.Url};

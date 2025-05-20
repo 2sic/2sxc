@@ -61,7 +61,7 @@ internal class ToolbarService(Generator<IToolbarBuilder> toolbarGenerator)
         string context,
         object target)
     {
-        var callLog = Log.Fn<IToolbarBuilder>($"{nameof(toolbarTemplate)}:{toolbarTemplate}");
+        var l = Log.Fn<IToolbarBuilder>($"{nameof(toolbarTemplate)}:{toolbarTemplate}");
         
         // The following lines must be just as this, because it's a functional object, where each call may return a new copy
         var tlb = (ToolbarBuilder)toolbarGenerator.New();
@@ -76,7 +76,7 @@ internal class ToolbarService(Generator<IToolbarBuilder> toolbarGenerator)
         if (context.HasValue())
             tlb = tlb.AddInternal([new ToolbarRuleGeneric($"context?{context}")]);
 
-        return callLog.Return(tlb);
+        return l.Return(tlb);
     }
 
 

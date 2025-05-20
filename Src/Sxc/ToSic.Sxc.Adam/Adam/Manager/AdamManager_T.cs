@@ -52,7 +52,7 @@ public class AdamManager<TFolderId, TFileId>: AdamManager
 
     internal Folder<TFolderId, TFileId> Folder(string path, bool autoCreate)
     {
-        var callLog = Log.Fn<Folder<TFolderId, TFileId>>($"{path}, {autoCreate}");
+        var l = Log.Fn<Folder<TFolderId, TFileId>>($"{path}, {autoCreate}");
             
         // create all folders to ensure they exist. Must do one-by-one because the environment must have it in the catalog
         var pathParts = path.Split('/');
@@ -66,11 +66,11 @@ public class AdamManager<TFolderId, TFileId>: AdamManager
             else
             {
                 Log.A($"subfolder {pathToCheck} not found");
-                return callLog.ReturnNull("not found");
+                return l.ReturnNull("not found");
             }
         }
 
-        return callLog.ReturnAsOk(Folder(path));
+        return l.ReturnAsOk(Folder(path));
     }
 
     #region Type specific results which the base class already offers the interface to

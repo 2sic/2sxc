@@ -18,9 +18,9 @@ public abstract class AdamStorage<TFolderId, TFileId>() : AdamStorage("Adm.Base"
     /// </remarks>
     public Folder<TFolderId, TFileId> Folder(string subFolder, bool autoCreate)
     {
-        var callLog = Log.Fn<Folder<TFolderId, TFileId>>($"{nameof(Folder)}(\"{subFolder}\", {autoCreate})");
+        var l = Log.Fn<Folder<TFolderId, TFileId>>($"{nameof(Folder)}(\"{subFolder}\", {autoCreate})");
         var fld = Manager.Folder(GeneratePath(subFolder), autoCreate);
-        return callLog.ReturnAsOk(fld);
+        return l.ReturnAsOk(fld);
     }
 
 

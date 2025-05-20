@@ -22,7 +22,7 @@ public partial class AdamFileSystemBasic
     /// <inheritdoc />
     public override File<string, string> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
     {
-        var callLog = Log.Fn<File<string, string>>($"..., ..., {fileName}, {ensureUniqueName}");
+        var l = Log.Fn<File<string, string>>($"..., ..., {fileName}, {ensureUniqueName}");
         if (ensureUniqueName) fileName = FsHelpers.FindUniqueFileName(_adamPaths.PhysicalPath(parent.Path), fileName);
         var fullContentPath = _adamPaths.PhysicalPath(parent.Path);
         Directory.CreateDirectory(fullContentPath);
@@ -31,7 +31,7 @@ public partial class AdamFileSystemBasic
         body.CopyTo(stream);
         var fileInfo = GetFile(filePath);
 
-        return callLog.ReturnAsOk(fileInfo);
+        return l.ReturnAsOk(fileInfo);
     }
         
 }

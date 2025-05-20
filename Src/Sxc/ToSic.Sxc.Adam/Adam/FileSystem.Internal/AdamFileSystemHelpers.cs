@@ -40,19 +40,19 @@ public class AdamFileSystemHelpers(IAdamPaths adamPaths) : ServiceBase("Sxc.AdmF
 
     public bool TryToRenameFile(string originalWithPath, string newName)
     {
-        var callLog = Log.Fn<bool>($"{newName}");
+        var l = Log.Fn<bool>($"{newName}");
 
         if (!File.Exists(originalWithPath))
-            return callLog.ReturnFalse($"Can't rename because source file does not exist {originalWithPath}");
+            return l.ReturnFalse($"Can't rename because source file does not exist {originalWithPath}");
 
         AdamPathsBase.ThrowIfPathContainsDotDot(newName);
         var path = FindParentPath(originalWithPath);
         var newFilePath = Path.Combine(path, newName);
         if (File.Exists(newFilePath))
-            return callLog.ReturnFalse($"Can't rename because file with new name exists {newFilePath}");
+            return l.ReturnFalse($"Can't rename because file with new name exists {newFilePath}");
 
         File.Move(originalWithPath, newFilePath);
-        return callLog.ReturnTrue($"File renamed");
+        return l.ReturnTrue($"File renamed");
     }
 
 
