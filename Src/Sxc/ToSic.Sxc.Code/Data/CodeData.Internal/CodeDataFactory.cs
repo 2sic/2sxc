@@ -11,7 +11,6 @@ using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Internal.Wrapper;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services.Internal;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Data.Internal;
 
@@ -32,10 +31,6 @@ public partial class CodeDataFactory(
         connect: [/* never: serviceProvider */codeDataServices, adamManager, contextOfAppLazy, dataBuilderLazy, codeDataWrapper, wrapJsonGenerator, codeInfoSvc, zoneMapper]),
         ICodeDataFactory
 {
-
-    // WIP finishing this
-    public IExecutionContext ExecutionContextWipMustBeRemovedFromTheCdf => ExCtx;
-
     public CodeInfoService CodeInfo => codeInfoSvc.Value;
 
     public void SetCompatibilityLevel(int compatibilityLevel) => _priorityCompatibilityLevel = compatibilityLevel;

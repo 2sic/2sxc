@@ -7,7 +7,6 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Data.Internal;
 
@@ -34,7 +33,6 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
 
     ITyped AsTyped(object data, bool required = false, bool? propsRequired = default, string detailsMessage = default);
     IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder, bool? required = false, bool? propsRequired = default);
-    //AdamManager AdamManager { get; }
     int CompatibilityLevel { get; }
     CodeDataServices Services { get; }
 
@@ -47,7 +45,6 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// </remarks>
     List<string> SiteCultures { get; }
 
-    IExecutionContext ExecutionContextWipMustBeRemovedFromTheCdf { get; }
     bool Debug { get; set; }
 
     /// <summary>
@@ -182,4 +179,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
         object toolbar = default,
         object recipe = default
     );
+
+    IEntity GetDraft(IEntity entity);
+    IEntity GetPublished(IEntity entity);
 }

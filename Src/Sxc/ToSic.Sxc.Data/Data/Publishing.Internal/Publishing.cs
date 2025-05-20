@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Lib.Helpers;
+﻿using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data.Internal;
 
@@ -10,8 +9,6 @@ namespace ToSic.Sxc.Data;
 internal class Publishing(ITypedItem currentItem, ICodeDataFactory cdf)
     : HelperBase(cdf.Log, "Pub"), IPublishing
 {
-    private IAppReader AppReader => field ??= cdf.ExecutionContextWipMustBeRemovedFromTheCdf.GetState<IAppReader>();
-
     // Always supported on IEntity
     public bool IsSupported => true;
 
@@ -32,7 +29,7 @@ internal class Publishing(ITypedItem currentItem, ICodeDataFactory cdf)
     public ITypedItem GetPublished() => _published.Get(() =>
     {
         if (IsPublished) return currentItem;
-        var pubEntity = AppReader.GetPublished(currentItem.Entity);
+        var pubEntity = cdf.GetPublished(currentItem.Entity);
         return cdf.AsItem(pubEntity, true);
     });
     private readonly GetOnce<ITypedItem> _published = new();
@@ -51,7 +48,7 @@ internal class Publishing(ITypedItem currentItem, ICodeDataFactory cdf)
     private IEntity UnpublishedEntity => _unPubEntity.Get(() =>
     {
         if (!IsPublished) return currentItem.Entity;
-        var draftEntity = AppReader.GetDraft(currentItem.Entity);
+        var draftEntity = cdf.GetDraft(currentItem.Entity);
         return draftEntity;
     });
     private readonly GetOnce<IEntity> _unPubEntity = new();

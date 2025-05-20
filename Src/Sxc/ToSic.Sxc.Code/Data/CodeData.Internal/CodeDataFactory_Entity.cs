@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data.Internal.Decorators;
+﻿using ToSic.Eav.Apps;
+using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Data.Internal.Typed;
 
 namespace ToSic.Sxc.Data.Internal;
@@ -34,4 +35,13 @@ partial class CodeDataFactory
         return new ListTypedItems<TTypedItem>(new List<TTypedItem>(), fakeEntity);
     }
 
+
+    #region Publishing
+    private IAppReader AppReader => field ??= ExCtx.GetState<IAppReader>();
+
+    public IEntity? GetDraft(IEntity entity) => AppReader.GetDraft(entity);
+
+    public IEntity? GetPublished(IEntity entity) => AppReader.GetPublished(entity);
+
+    #endregion
 }
