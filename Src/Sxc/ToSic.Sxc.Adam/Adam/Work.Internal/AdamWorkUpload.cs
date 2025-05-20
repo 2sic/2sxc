@@ -32,7 +32,7 @@ public partial class AdamWorkUpload<TFolderId, TFileId>(AdamWorkBase<TFolderId, 
         }
 
         // Access parent to be sure it's created
-        var folder = AdamContextTyped.AdamRoot.Folder(autoCreate: true);
+        var folder = AdamContextTyped.AdamRoot.RootFolder(autoCreate: true);
 
         if (!string.IsNullOrEmpty(subFolder))
             folder = AdamContextTyped.AdamRoot.Folder(subFolder, true);

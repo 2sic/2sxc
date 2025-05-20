@@ -58,7 +58,7 @@ public abstract class AdamFileSystemBasic<TFolder, TFile>: ServiceBase, IAdamFil
     public abstract List<Folder<TFolder, TFile>> GetFolders(IFolder folder);
     public abstract void Rename(IFolder folder, string newName);
     public abstract void Delete(IFolder folder);
-    public abstract Folder<TFolder, TFile> Get(string path);
+    public abstract IFolder Get(string path);
     public string GetUrl(string folderPath) => _adamPaths.Url(folderPath.ForwardSlash());
 
 }

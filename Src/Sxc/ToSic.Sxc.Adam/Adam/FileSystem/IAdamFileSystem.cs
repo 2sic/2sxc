@@ -53,4 +53,6 @@ public interface IAdamFileSystem: IHasLog
     #endregion
 
     //Folder<TFolderId, TFileId> Get(string path);
+    IFolder Get(string path);
+
 }

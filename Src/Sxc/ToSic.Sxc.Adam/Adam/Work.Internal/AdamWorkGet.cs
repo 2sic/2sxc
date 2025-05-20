@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Adam.Work.Internal;
+﻿using ToSic.Eav.Apps.Assets.Internal;
+
+namespace ToSic.Sxc.Adam.Work.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamWorkGet<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.MyServices services)
@@ -19,7 +21,7 @@ public class AdamWorkGet<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.My
         l.A("first permission checks passed");
 
         // get root and at the same time auto-create the core folder in case it's missing (important)
-        var root = AdamContextTyped.AdamRoot.Folder(autoCreate);
+        var root = AdamContextTyped.AdamRoot.RootFolder(autoCreate);
 
         // if no root exists then quit now
         if (!autoCreate && root == null)
@@ -37,7 +39,7 @@ public class AdamWorkGet<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.My
 
         var adamFolders = currentFolder.Folders
             .Cast<Sxc.Adam.Internal.Folder<TFolderId, TFileId>>()
-            .Where(s => !EqualityComparer<TFolderId>.Default.Equals(s.SysId, currentFolder.SysId))
+            .Where(s => !EqualityComparer<TFolderId>.Default.Equals(s.SysId, ((IAssetSysId<TFolderId>)currentFolder).SysId))
             .Cast<IFolder>()
             .ToList();
 

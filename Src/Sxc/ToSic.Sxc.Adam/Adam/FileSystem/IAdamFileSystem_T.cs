@@ -15,12 +15,12 @@ public interface IAdamFileSystem<TFolderId, TFileId>: IAdamFileSystem
 
     //File<TFolderId, TFileId> GetFile(TFileId fileId);
 
-    /// <summary>
-    /// NEW WIP
-    /// </summary>
-    /// <param name="fileId"></param>
-    /// <returns></returns>
-    IFile GetFile(AdamAssetIdentifier fileId);
+    ///// <summary>
+    ///// NEW WIP
+    ///// </summary>
+    ///// <param name="fileId"></param>
+    ///// <returns></returns>
+    //IFile GetFile(AdamAssetIdentifier fileId);
 
     List<File<TFolderId, TFileId>> GetFiles(IFolder folder);
 
@@ -38,7 +38,7 @@ public interface IAdamFileSystem<TFolderId, TFileId>: IAdamFileSystem
     //bool FolderExists(string path);
 
     //Folder<TFolderId, TFileId> GetFolder(TFolderId folderId);
-    IFolder GetFolder(AdamAssetIdentifier folderId);
+    //IFolder GetFolder(AdamAssetIdentifier folderId);
 
     List<Folder<TFolderId, TFileId>> GetFolders(IFolder folder);
 
@@ -48,5 +48,5 @@ public interface IAdamFileSystem<TFolderId, TFileId>: IAdamFileSystem
 
     #endregion
 
-    Folder<TFolderId, TFileId> Get(string path);
+    //Folder<TFolderId, TFileId> Get(string path);
 }

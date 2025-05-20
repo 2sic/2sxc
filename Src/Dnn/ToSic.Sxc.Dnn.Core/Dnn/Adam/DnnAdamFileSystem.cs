@@ -156,7 +156,7 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem<
     }
 
 
-    public Folder<int, int> Get(string path)
+    public IFolder Get(string path)
     {
         var l = Log.Fn<Folder<int, int>>($"path:{path}");
         return l.ReturnAsOk(DnnToAdam(_dnnFolders.GetFolder(AdamManager.Site.Id, path)));

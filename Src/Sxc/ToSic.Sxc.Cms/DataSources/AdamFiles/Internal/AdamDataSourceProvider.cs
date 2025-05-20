@@ -69,7 +69,7 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
             .Init(_context, entity.Type.Name, string.Empty, entity.EntityGuid, false, cdf: null);
 
         // get root and at the same time auto-create the core folder in case it's missing (important)
-        var root = Services.AdamContext.Value.AdamRoot.Folder(false);
+        var root = Services.AdamContext.Value.AdamRoot.RootFolder(false);
 
         // if no root exists then quit now
         if (root == null)

@@ -40,6 +40,6 @@ public partial class AdamFileSystemBasic
     public override void Delete(IFolder folder) => throw new NotSupportedException();
 
     /// <inheritdoc />
-    public override Folder<string, string> Get(string path) => ToAdamFolder(path);
+    public override IFolder Get(string path) => ToAdamFolder(path);
 
 }

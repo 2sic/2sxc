@@ -13,7 +13,7 @@ public class AdamWorkFolderCreate<TFolderId, TFileId>(AdamWorkBase<TFolderId, TF
             return l.ReturnFalse();
 
         // get root and at the same time auto-create the core folder in case it's missing (important)
-        var folder = AdamContextTyped.AdamRoot.Folder();
+        var folder = AdamContextTyped.AdamRoot.RootFolder();
 
         // try to see if we can get into the subfolder - will throw error if missing
         if (!string.IsNullOrEmpty(parentSubfolder))

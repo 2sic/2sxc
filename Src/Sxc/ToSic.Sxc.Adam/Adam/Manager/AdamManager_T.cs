@@ -48,11 +48,12 @@ public class AdamManager<TFolderId, TFileId>: AdamManager
     /// <param name="path"></param>
     internal void Add(string path) => AdamFs.AddFolder(path);
 
-    internal Folder<TFolderId, TFileId> Folder(string path) => AdamFs.Get(path);
+    internal /*Folder<TFolderId, TFileId>*/ IFolder Folder(string path)
+        => AdamFs.Get(path);
 
-    internal Folder<TFolderId, TFileId> Folder(string path, bool autoCreate)
+    internal /*Folder<TFolderId, TFileId>*/ IFolder Folder(string path, bool autoCreate)
     {
-        var l = Log.Fn<Folder<TFolderId, TFileId>>($"{path}, {autoCreate}");
+        var l = Log.Fn<IFolder>($"{path}, {autoCreate}");
             
         // create all folders to ensure they exist. Must do one-by-one because the environment must have it in the catalog
         var pathParts = path.Split('/');

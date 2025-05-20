@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Adam.Internal;
+﻿using ToSic.Eav.Apps.Assets.Internal;
+
+namespace ToSic.Sxc.Adam.Internal;
 
 /// <summary>
 /// The ADAM Navigator creates a folder object for an entity/field combination
@@ -20,7 +22,7 @@ public class FolderOfField<TFolderId, TFileId> : Folder<TFolderId, TFileId>
 
         Path = f.Path;
         Modified = f.Modified;
-        SysId = f.SysId;
+        SysId = ((IAssetSysId<TFolderId>)f).SysId;
         Created = f.Created;
         Modified = f.Modified;
 
