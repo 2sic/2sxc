@@ -3,8 +3,8 @@
 namespace ToSic.Sxc.Adam.Work.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamWorkRename<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.MyServices services)
-    : AdamWorkBase<TFolderId, TFileId>(services, "Adm.TrnRen")
+public class AdamWorkRename(AdamWorkBase.MyServices services)
+    : AdamWorkBase(services, "Adm.TrnRen")
 {
     public bool Rename(string parentSubfolder, bool isFolder, AdamAssetIdentifier folderId, AdamAssetIdentifier fileId, string newName)
     {

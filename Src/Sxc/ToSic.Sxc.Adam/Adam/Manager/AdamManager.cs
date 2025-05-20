@@ -23,14 +23,14 @@ public class AdamManager: ServiceBase<AdamManager.MyServices>, ICompatibilityLev
     #region MyServices
 
     public class MyServices(LazySvc<ICodeDataFactory> cdf, AdamConfiguration adamConfiguration,
-        LazySvc<IAdamFileSystem> adamFsLazy, Generator<AdamStorageOfField> fieldStorageGenerator, AdamFactory adamFactory)
+        LazySvc<IAdamFileSystem> adamFsLazy, Generator<AdamStorageOfField> fieldStorageGenerator, AdamGenericHelper adamGenericHelper)
         : MyServicesBase(connect: [cdf, adamConfiguration, adamFsLazy, fieldStorageGenerator])
     {
         public LazySvc<ICodeDataFactory> Cdf { get; } = cdf;
         public AdamConfiguration AdamConfiguration { get; } = adamConfiguration;
         public LazySvc<IAdamFileSystem> AdamFsLazy { get; } = adamFsLazy;
         public Generator<AdamStorageOfField> FieldStorageGenerator { get; } = fieldStorageGenerator;
-        public AdamFactory AdamFactory { get; } = adamFactory;
+        public AdamGenericHelper AdamGenericHelper { get; } = adamGenericHelper;
     }
 
     #endregion
@@ -123,7 +123,7 @@ public class AdamManager: ServiceBase<AdamManager.MyServices>, ICompatibilityLev
     {
         var folderStorage = Services.FieldStorageGenerator.New().InitItemAndField(entityGuid, fieldName);
         folderStorage.Init(this);
-        var folder = Services.AdamFactory.FolderOfField(this, folderStorage, field);
+        var folder = Services.AdamGenericHelper.FolderOfField(this, folderStorage, field);
         return folder;
     }
     #endregion

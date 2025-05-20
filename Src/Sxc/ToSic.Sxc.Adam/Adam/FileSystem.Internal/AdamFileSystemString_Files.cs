@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace ToSic.Sxc.Adam.Internal;
+﻿namespace ToSic.Sxc.Adam.Internal;
 
 public partial class AdamFileSystemString
 {

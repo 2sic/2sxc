@@ -3,8 +3,8 @@
 namespace ToSic.Sxc.Adam.Work.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamWorkFolderCreate<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.MyServices services)
-    : AdamWorkBase<TFolderId, TFileId>(services, "Adm.TrnFld")
+public class AdamWorkFolderCreate(AdamWorkBase.MyServices services)
+    : AdamWorkBase(services, "Adm.TrnFld")
 {
     public bool Create(string parentSubfolder, string newFolder)
     {

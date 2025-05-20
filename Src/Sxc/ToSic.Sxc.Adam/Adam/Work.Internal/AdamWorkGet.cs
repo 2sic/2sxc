@@ -1,10 +1,8 @@
-﻿using ToSic.Eav.Apps.Assets.Internal;
-
-namespace ToSic.Sxc.Adam.Work.Internal;
+﻿namespace ToSic.Sxc.Adam.Work.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamWorkGet<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.MyServices services)
-    : AdamWorkBase<TFolderId, TFileId>(services, "Adm.TrnFld"), IAdamWorkGet
+public class AdamWorkGet(AdamWorkBase.MyServices services)
+    : AdamWorkBase(services, "Adm.TrnFld")
 {
     public AdamFolderFileSet ItemsInField(string subFolderName, bool autoCreate = false)
     {
@@ -38,9 +36,10 @@ public class AdamWorkGet<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.My
         }
 
         var adamFolders = currentFolder.Folders
-            .Cast<Sxc.Adam.Internal.Folder<TFolderId, TFileId>>()
-            .Where(s => !EqualityComparer<TFolderId>.Default.Equals(s.SysId, ((IAssetSysId<TFolderId>)currentFolder).SysId))
-            .Cast<IFolder>()
+            //.Cast<Sxc.Adam.Internal.Folder<TFolderId, TFileId>>()
+            //.Where(s => !EqualityComparer<TFolderId>.Default.Equals(s.SysId, ((IAssetSysId<TFolderId>)currentFolder).SysId))
+            //.Cast<IFolder>()
+            .Where(s => !Services.AdamGenericHelper.FoldersHaveSameId(s, currentFolder))
             .ToList();
 
         // Get/Cast Files

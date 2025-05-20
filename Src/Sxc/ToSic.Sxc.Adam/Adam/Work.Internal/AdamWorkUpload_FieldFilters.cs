@@ -3,7 +3,7 @@ using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Adam.Work.Internal;
 
-partial class AdamWorkUpload<TFolderId, TFileId>
+partial class AdamWorkUpload
 {
     #region More Checks
 

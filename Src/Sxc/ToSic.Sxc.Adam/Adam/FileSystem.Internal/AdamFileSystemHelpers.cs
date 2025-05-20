@@ -1,5 +1,4 @@
-﻿using System.IO;
-using ToSic.Eav.Apps.Internal;
+﻿using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Services;
 

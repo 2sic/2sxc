@@ -41,22 +41,21 @@ public static class SxcAdamStartup
     public static IServiceCollection AddSxcAdamWork<TFolder, TFile>(this IServiceCollection services)
     {
         // Helper Services
-        services.TryAddTransient(typeof(AdamWorkBase<,>.MyServices));
+        services.TryAddTransient<AdamWorkBase.MyServices>();
 
         // Generic Services, untyped; used when other services request helpers
-        services.TryAddTransient(typeof(AdamWorkGet<,>));
-        services.TryAddTransient(typeof(AdamWorkFolderCreate<,>));
-        services.TryAddTransient(typeof(AdamWorkDelete<,>));
-        services.TryAddTransient(typeof(AdamWorkUpload<,>));
-        services.TryAddTransient(typeof(AdamWorkRename<,>));
+        services.TryAddTransient<AdamWorkGet>();
+        services.TryAddTransient<AdamWorkFolderCreate>();
+        services.TryAddTransient<AdamWorkDelete>();
+        services.TryAddTransient<AdamWorkUpload>();
+        services.TryAddTransient<AdamWorkRename>();
 
         // Storage
-        services.TryAddTransient(typeof(AdamStorageOfSite));
-        services.TryAddTransient(typeof(AdamStorageOfField));
+        services.TryAddTransient<AdamStorageOfSite>();
+        services.TryAddTransient<AdamStorageOfField>();
 
         // Typed implementations, as specified by the caller; usually `int`
-        services.TryAddTransient<IAdamWorkGet, AdamWorkGet<TFolder, TFile>>();
-        services.TryAddTransient<AdamFactory, AdamFactory<TFolder, TFile>>();
+        services.TryAddTransient<AdamGenericHelper, AdamGenericHelper<TFolder, TFile>>();
 
         return services;
     }

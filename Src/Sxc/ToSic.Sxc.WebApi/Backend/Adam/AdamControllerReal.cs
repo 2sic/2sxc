@@ -7,11 +7,11 @@ namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamControllerReal<TIdentifier>(
-    Generator<AdamWorkUpload<TIdentifier, TIdentifier>, AdamWorkOptions> adamUpload,
-    Generator<IAdamWorkGet, AdamWorkOptions> adamWorkGet,
-    Generator<AdamWorkFolderCreate<TIdentifier, TIdentifier>, AdamWorkOptions> adamFolders,
-    Generator<AdamWorkDelete<TIdentifier, TIdentifier>, AdamWorkOptions> adamDelete,
-    Generator<AdamWorkRename<TIdentifier, TIdentifier>, AdamWorkOptions> adamRename,
+    Generator<AdamWorkUpload, AdamWorkOptions> adamUpload,
+    Generator<AdamWorkGet, AdamWorkOptions> adamWorkGet,
+    Generator<AdamWorkFolderCreate, AdamWorkOptions> adamFolders,
+    Generator<AdamWorkDelete, AdamWorkOptions> adamDelete,
+    Generator<AdamWorkRename, AdamWorkOptions> adamRename,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> dtoMaker)
     : ServiceBase("Api.Adam", connect: [adamUpload, adamWorkGet, adamFolders, adamDelete, adamRename])
 {

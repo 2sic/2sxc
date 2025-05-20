@@ -3,8 +3,8 @@
 namespace ToSic.Sxc.Adam.Work.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public partial class AdamWorkUpload<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.MyServices services)
-    : AdamWorkBase<TFolderId, TFileId>(services, "Adm.TrnUpl")
+public partial class AdamWorkUpload(AdamWorkBase.MyServices services)
+    : AdamWorkBase(services, "Adm.TrnUpl")
 {
 
     public IFile UploadOneNew(Stream stream, string subFolder, string fileName)
