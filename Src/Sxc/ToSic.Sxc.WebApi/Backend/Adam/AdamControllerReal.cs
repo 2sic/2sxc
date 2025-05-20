@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Adam.Work.Internal;
 
 namespace ToSic.Sxc.Backend.Adam;
@@ -103,14 +104,14 @@ public class AdamControllerReal<TIdentifier>(
 
     public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, TIdentifier id, bool usePortalRoot)
         => adamDelete.New(new()
-            {
-                AppId = appId,
-                ContentType = contentType,
-                ItemGuid = guid,
-                Field = field,
-                UsePortalRoot = usePortalRoot,
-            })
-            .Delete(subfolder, isFolder, id, id);
+        {
+            AppId = appId,
+            ContentType = contentType,
+            ItemGuid = guid,
+            Field = field,
+            UsePortalRoot = usePortalRoot,
+        })
+            .Delete(subfolder, isFolder, AdamAssetIdentifier.Create(id),  AdamAssetIdentifier.Create(id));
 
     public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, TIdentifier id, string newName, bool usePortalRoot)
         => adamRename.New(new()

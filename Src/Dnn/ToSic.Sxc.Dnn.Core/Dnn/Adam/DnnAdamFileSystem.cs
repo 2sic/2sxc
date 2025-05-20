@@ -42,6 +42,9 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem<
         return DnnToAdam(file);
     }
 
+    public IFile GetFile(AdamAssetIdentifier fileId)
+        => GetFile(((AdamAssetIdentifier<int>)fileId).SysId);
+
     public void Rename(IFile file, string newName)
     {
         var l = Log.Fn($"{nameof(file)}:{file.Id}, {nameof(newName)}: {newName}");
@@ -167,7 +170,12 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem<
         return l.Return(folders, $"{folders.Count}");
     }
 
-    public Folder<int, int> GetFolder(int folderId) => DnnToAdam(GetDnnFolder(folderId));
+    public Folder<int, int> GetFolder(int folderId)
+        => DnnToAdam(GetDnnFolder(folderId));
+
+    public IFolder GetFolder(AdamAssetIdentifier folderId)
+        => GetFolder(((AdamAssetIdentifier<int>)folderId).SysId);
+
 
     #endregion
 

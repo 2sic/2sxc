@@ -48,7 +48,7 @@ public abstract class AdamWorkBase<TFolderId, TFileId>(AdamWorkBase<TFolderId, T
     /// <param name="target"></param>
     /// <param name="errPrefix"></param>
     //[AssertionMethod]
-    protected void VerifySecurityAndStructure(Eav.Apps.Assets.Internal.Folder<TFolderId, TFileId> parentFolder, IAssetWithParentSysId<TFolderId> target, string errPrefix)
+    protected void VerifySecurityAndStructure(IFolder parentFolder, ToSic.Eav.Apps.Assets.IAsset target, string errPrefix)
     {
         // In case the primary file system is used (usePortalRoot) then also check higher permissions
         if (AdamContext.UseSiteRoot && !AdamContext.Security.CanEditFolder(target)) 
@@ -57,7 +57,8 @@ public abstract class AdamWorkBase<TFolderId, TFileId>(AdamWorkBase<TFolderId, T
         if (!AdamContext.Security.SuperUserOrAccessingItemFolder(target.Path, out var exp))
             throw exp;
 
-        if(!EqualityComparer<TFolderId>.Default.Equals(target.ParentSysId, parentFolder.SysId))
+        if(!EqualityComparer<TFolderId>.Default.Equals(((IAssetWithParentSysId<TFolderId>)target).ParentSysId,
+               ((IAssetSysId<TFolderId>)parentFolder).SysId))
             throw HttpException.BadRequest(errPrefix + " - not found in folder");
     }
 

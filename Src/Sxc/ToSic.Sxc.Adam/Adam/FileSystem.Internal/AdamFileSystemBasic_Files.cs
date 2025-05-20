@@ -11,6 +11,9 @@ public partial class AdamFileSystemBasic
         return ToAdamFile(dir);
     }
 
+    public override IFile GetFile(AdamAssetIdentifier fileId)
+        => GetFile(((AdamAssetIdentifier<string>)fileId).SysId);
+
     /// <inheritdoc />
     public override List<File<string, string>> GetFiles(IFolder folder)
     {

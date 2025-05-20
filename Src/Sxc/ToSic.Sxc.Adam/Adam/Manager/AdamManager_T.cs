@@ -33,7 +33,7 @@ public class AdamManager<TFolderId, TFileId>: AdamManager
     /// <summary>
     /// Root folder object of the app assets
     /// </summary>
-    public Folder<TFolderId, TFileId> RootFolder => Folder(Path, true);
+    public IFolder RootFolder => Folder(Path, true);
 
     /// <summary>
     /// Verify that a path exists

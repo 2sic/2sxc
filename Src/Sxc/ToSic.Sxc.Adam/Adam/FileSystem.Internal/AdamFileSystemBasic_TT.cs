@@ -35,7 +35,8 @@ public abstract class AdamFileSystemBasic<TFolder, TFile>: ServiceBase, IAdamFil
 
 
     /// <inheritdoc />
-    public virtual void Rename(IFile file, string newName) => Log.Do(() => FsHelpers.TryToRenameFile(_adamPaths.PhysicalPath(file.Path), newName));
+    public virtual void Rename(IFile file, string newName)
+        => Log.Do(() => FsHelpers.TryToRenameFile(_adamPaths.PhysicalPath(file.Path), newName));
 
     /// <inheritdoc />
     public virtual void Delete(IFile file) => Log.Do(() => File.Delete(_adamPaths.PhysicalPath(file.Path)));
@@ -43,12 +44,17 @@ public abstract class AdamFileSystemBasic<TFolder, TFile>: ServiceBase, IAdamFil
 
     public int MaxUploadKb() => AdamConstants.MaxUploadKbDefault;
     public abstract File<TFolder, TFile> GetFile(TFile fileId);
+
+    public abstract IFile GetFile(AdamAssetIdentifier fileId);
+
     public abstract List<File<TFolder, TFile>> GetFiles(IFolder folder);
 
     public abstract File<TFolder, TFile> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName);
     public abstract void AddFolder(string path);
     public abstract bool FolderExists(string path);
     public abstract Folder<TFolder, TFile> GetFolder(TFolder folderId);
+    public abstract IFolder GetFolder(AdamAssetIdentifier folderId);
+
     public abstract List<Folder<TFolder, TFile>> GetFolders(IFolder folder);
     public abstract void Rename(IFolder folder, string newName);
     public abstract void Delete(IFolder folder);

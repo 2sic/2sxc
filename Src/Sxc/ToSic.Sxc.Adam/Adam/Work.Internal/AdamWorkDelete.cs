@@ -1,10 +1,12 @@
-﻿namespace ToSic.Sxc.Adam.Work.Internal;
+﻿using ToSic.Sxc.Adam.Internal;
+
+namespace ToSic.Sxc.Adam.Work.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamWorkDelete<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.MyServices services)
     : AdamWorkBase<TFolderId, TFileId>(services, "Adm.TrnDel")
 {
-    public bool Delete(string parentSubfolder, bool isFolder, TFolderId id, TFileId fileId)
+    public bool Delete(string parentSubfolder, bool isFolder, AdamAssetIdentifier folderId, AdamAssetIdentifier fileId)
     {
         var l = Log.Fn<bool>();
         if (!AdamContext.Security.UserIsPermittedOnField(GrantSets.DeleteSomething, out var exp))
@@ -20,7 +22,7 @@ public class AdamWorkDelete<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>
         var fs = AdamContextTyped.AdamManager.AdamFs;
         if (isFolder)
         {
-            var target = fs.GetFolder(id);
+            var target = fs.GetFolder(folderId);
             VerifySecurityAndStructure(parent, target, "can't delete folder");
             fs.Delete(target);
         }
