@@ -16,12 +16,12 @@ public class AdamContext<TFolderId, TFileId>(
     : AdamContext(services, "Adm.CtxTT", connect: [adamManagerLazy, siteStorageGen, fieldStorageGen])
 {
     public AdamManager<TFolderId, TFileId> AdamManager => adamManagerLazy.Value;
+    public override AdamManager AdamManagerSimple => AdamManager;
 
     public AdamStorage<TFolderId, TFileId> AdamRoot;
 
     // TODO: @2dm #AdamTyped
-    public override AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid,
-        bool usePortalRoot, ICodeDataFactory cdf)
+    public override AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ICodeDataFactory cdf)
     {
         var logCall = Log.Fn<AdamContext>($"..., usePortalRoot: {usePortalRoot}");
         AdamManager.Init(context, cdf, CompatibilityLevels.CompatibilityLevel10);
@@ -30,7 +30,7 @@ public class AdamContext<TFolderId, TFileId>(
             : fieldStorageGen.New().InitItemAndField(entityGuid, fieldName);
         AdamRoot.Init(AdamManager);
 
-        base.Init(context, contentType, fieldName, entityGuid, usePortalRoot, cdf);
+        InitBase(context, contentType, fieldName, entityGuid, usePortalRoot, cdf);
             
         return logCall.Return(this);
     }

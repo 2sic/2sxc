@@ -2,27 +2,24 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.Specs;
-using static ToSic.Eav.Apps.Internal.AdamConstants;
 
 namespace ToSic.Sxc.Adam.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamConfiguration(IAppReaderFactory appReaders)
 {
-    public string AdamAppRootFolder
-    {
-        get
-        {
-            if (_adamAppRootFolder != null)
-                return _adamAppRootFolder;
-
-            var found = appReaders.GetSystemPreset().List.FirstOrDefaultOfType(TypeName)?.Get<string>(ConfigFieldRootFolder);
-
-            return _adamAppRootFolder = found ?? AdamFolderMask;
-        }
-    }
-
+    public string AdamAppRootFolder => _adamAppRootFolder ??= GenerateAdamAppRootFolder();
     private static string _adamAppRootFolder;
+
+    private string GenerateAdamAppRootFolder()
+    {
+        var found = appReaders.GetSystemPreset()
+            .List
+            .FirstOrDefaultOfType(AdamConstants.TypeName)?
+            .Get<string>(AdamConstants.ConfigFieldRootFolder);
+
+        return found ?? AdamConstants.AdamFolderMask;
+    }
 
     internal string PathForApp(IAppSpecs app)
     {

@@ -9,15 +9,14 @@ public class FolderOfField<TFolderId, TFileId> : Folder<TFolderId, TFileId>
 {
     public FolderOfField(AdamManager<TFolderId, TFileId> adamManager, AdamStorageOfField<TFolderId, TFileId> adamStorageOfField) : base(adamManager)
     {
+        // WIP - maybe still provide some basic info?
+        //Url = adamStorageOfField.Manager.AdamFs.GetUrl(adamStorageOfField.Root);
         if (!AdamManager.Exists(adamStorageOfField.Root))
-        {
-            // WIP - maybe still provide some basic info?
-            //Url = adamStorageOfField.Manager.AdamFs.GetUrl(adamStorageOfField.Root);
             return;
-        }
 
         var f = AdamManager.Folder(adamStorageOfField.Root);
-        if (f == null) return;
+        if (f == null)
+            return;
 
         Path = f.Path;
         Modified = f.Modified;

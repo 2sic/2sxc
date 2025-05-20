@@ -37,14 +37,18 @@ public abstract class AdamContext(AdamContext.MyServices services, string logNam
     public IAdamSecurityCheckService Security;
     public MultiPermissionsTypes Permissions;
 
+    public abstract AdamManager AdamManagerSimple { get; }
+
     #endregion
         
     #region Init
-        
+
     /// <summary>
     /// Initializes the object and performs all the initial security checks
     /// </summary>
-    public virtual AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ICodeDataFactory cdf)
+    public abstract AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ICodeDataFactory cdf);
+
+    protected AdamContext InitBase(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ICodeDataFactory cdf)
     {
         var l = Log.Fn<AdamContext>($"app: {context.AppReader.Show()}, field:{fieldName}, guid:{entityGuid}");
         Context = context;

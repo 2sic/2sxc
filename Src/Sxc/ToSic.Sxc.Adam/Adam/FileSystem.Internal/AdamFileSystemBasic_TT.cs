@@ -1,5 +1,4 @@
-﻿using System.IO;
-using ToSic.Eav.Apps.Internal;
+﻿using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Services;
 
@@ -10,10 +9,10 @@ public abstract class AdamFileSystemBasic<TFolder, TFile>: ServiceBase, IAdamFil
 {
     #region Setup
 
-    protected AdamFileSystemBasic(IAdamPaths adamPaths, string logPrefix) : base($"{logPrefix}.FilSys")
+    protected AdamFileSystemBasic(IAdamPaths adamPaths, string logPrefix) : base($"{logPrefix}.FilSys", connect: [adamPaths])
     {
+        _adamPaths = adamPaths;
         ConnectLogs([
-            _adamPaths = adamPaths,
             FsHelpers = new(adamPaths)
         ]);
     }

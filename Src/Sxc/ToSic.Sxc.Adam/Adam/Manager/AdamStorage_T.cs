@@ -7,7 +7,7 @@ public abstract class AdamStorage<TFolderId, TFileId>() : AdamStorage("Adm.Base"
 {
     public void Init(AdamManager<TFolderId, TFileId> manager) => Manager = manager;
 
-    public AdamManager<TFolderId, TFileId> Manager { get; private set; }
+    protected AdamManager<TFolderId, TFileId> Manager { get; private set; }
 
 
     /// <summary>

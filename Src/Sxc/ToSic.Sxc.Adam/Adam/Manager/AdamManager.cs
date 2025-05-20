@@ -47,8 +47,8 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
     {
         var l = Log.Fn<AdamManager>();
         AppContext = ctx;
-        Site = AppContext.Site;
-        AppWorkCtx = new AppWorkCtx(AppContext.AppReader);
+        Site = ctx.Site;
+        AppWorkCtx = new AppWorkCtx(ctx.AppReader);
         CompatibilityLevel = compatibility;
         _cdf = cdf;
         return l.Return(this, "ready");
