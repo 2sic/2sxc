@@ -43,14 +43,18 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
 
     #region Files
 
-    public override File<int, int> GetFile(int fileId)
-    {
-        var file = OqtFileRepository.GetFile(fileId);
-        return OqtToAdam(file);
-    }
+    //public override File<int, int> GetFile(int fileId)
+    //{
+    //    var file = OqtFileRepository.GetFile(fileId);
+    //    return OqtToAdam(file);
+    //}
 
     public override IFile GetFile(AdamAssetIdentifier fileId)
-        => GetFile(((AdamAssetIdentifier<int>)fileId).SysId);
+    {
+        var id = ((AdamAssetIdentifier<int>)fileId).SysId;
+        var file = OqtFileRepository.GetFile(id);
+        return OqtToAdam(file);
+    }
 
     public override void Rename(IFile file, string newName)
     {
@@ -87,9 +91,9 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
         l.Done();
     }
 
-    public override File<int, int> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
+    public override IFile Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
     {
-        var l = Log.Fn<File<int, int>>($"..., ..., {fileName}, {ensureUniqueName}");
+        var l = Log.Fn<IFile>($"..., ..., {fileName}, {ensureUniqueName}");
         if (ensureUniqueName)
             fileName = FindUniqueFileName(parent, fileName);
         var fullContentPath = _serverPaths.FullContentPath(parent.Path);
@@ -112,7 +116,8 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
             ImageWidth = 0
         };
         var oqtFile = OqtFileRepository.AddFile(oqtFileData);
-        return l.ReturnAsOk(GetFile(oqtFile.FileId));
+        var file = GetFile(AdamAssetIdentifier.Create(oqtFile.FileId));
+        return l.ReturnAsOk(file);
     }
 
     /// <summary>

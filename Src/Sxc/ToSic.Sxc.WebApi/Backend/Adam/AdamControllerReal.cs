@@ -122,6 +122,6 @@ public class AdamControllerReal<TIdentifier>(
                 Field = field,
                 UsePortalRoot = usePortalRoot,
             })
-            .Rename(subfolder, isFolder, id, id, newName);
+            .Rename(subfolder, isFolder, AdamAssetIdentifier.Create(id), AdamAssetIdentifier.Create(id), newName);
 
 }

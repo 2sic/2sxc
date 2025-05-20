@@ -62,10 +62,10 @@ public class HyperlinkBackend<TFolderId, TFileId>(
                 return new() { Value = hyperlink };
 
             // Note: kind of temporary solution, will fail if TFileId isn't int!
-            var file = ((IAdamFileSystem<int, int>)adamCtx.AdamManager.AdamFs).GetFile(parts.Id);
+            var file = adamCtx.AdamManager.AdamFs.GetFile(AdamAssetIdentifier.Create(parts.Id));
             var dtoMaker = adamDtoMaker.New(new() { AdamContext = adamCtx });
             // if everything worked till now, it's ok to return the result
-            var adam = dtoMaker.Create(file as File<TFolderId, TFileId>);
+            var adam = dtoMaker.Create(file);
             return new() {Adam = adam, Value = adam.Url};
         }
         catch

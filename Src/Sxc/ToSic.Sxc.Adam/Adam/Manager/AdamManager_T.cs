@@ -91,13 +91,13 @@ public class AdamManager<TFolderId, TFileId>: AdamManager
     // Note: Signature isn't great yet, as it's int, but theoretically it could be another type.
     public override IFile File(int id) =>
         id is TFileId fileId 
-            ? AdamFs.GetFile(fileId) 
+            ? AdamFs.GetFile(AdamAssetIdentifier.Create(id)) 
             : null;
 
     // Note: Signature isn't great yet, as it's int, but theoretically it could be another type.
     public override IFolder Folder(int id) =>
         id is TFolderId fileId 
-            ? AdamFs.GetFolder(fileId) 
+            ? AdamFs.GetFolder(AdamAssetIdentifier.Create(id)) 
             : null;
 
     #endregion

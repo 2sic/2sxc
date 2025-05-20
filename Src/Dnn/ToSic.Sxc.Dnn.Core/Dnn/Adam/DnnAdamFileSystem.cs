@@ -36,14 +36,18 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem<
     #region Files
     private readonly IFileManager _dnnFiles = FileManager.Instance;
 
-    public File<int, int> GetFile(int fileId)
-    {
-        var file = _dnnFiles.GetFile(fileId);
-        return DnnToAdam(file);
-    }
+    //public File<int, int> GetFile(int fileId)
+    //{
+    //    var file = _dnnFiles.GetFile(fileId);
+    //    return DnnToAdam(file);
+    //}
 
     public IFile GetFile(AdamAssetIdentifier fileId)
-        => GetFile(((AdamAssetIdentifier<int>)fileId).SysId);
+    {
+        var id = ((AdamAssetIdentifier<int>)fileId).SysId;
+        var file = _dnnFiles.GetFile(id);
+        return DnnToAdam(file);
+    }
 
     public void Rename(IFile file, string newName)
     {
@@ -61,13 +65,14 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem<
         l.Done();
     }
 
-    public File<int, int> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
+    public IFile Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
     {
-        var l = Log.Fn<File<int, int>>($"..., {fileName}, {ensureUniqueName}");
+        var l = Log.Fn<IFile>($"..., {fileName}, {ensureUniqueName}");
         if (ensureUniqueName) fileName = FindUniqueFileName(parent, fileName);
         var dnnFolder = _dnnFolders.GetFolder(parent.AsDnn().SysId);
         var dnnFile = _dnnFiles.AddFile(dnnFolder, Path.GetFileName(fileName), body);
-        return l.ReturnAsOk(GetFile(dnnFile.FileId));
+        var file = GetFile(AdamAssetIdentifier.Create(dnnFile.FileId));
+        return l.ReturnAsOk(file);
     }
 
     /// <summary>

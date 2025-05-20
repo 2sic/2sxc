@@ -43,13 +43,13 @@ public abstract class AdamFileSystemBasic<TFolder, TFile>: ServiceBase, IAdamFil
 
 
     public int MaxUploadKb() => AdamConstants.MaxUploadKbDefault;
-    public abstract File<TFolder, TFile> GetFile(TFile fileId);
+    //public abstract File<TFolder, TFile> GetFile(TFile fileId);
 
     public abstract IFile GetFile(AdamAssetIdentifier fileId);
 
     public abstract List<File<TFolder, TFile>> GetFiles(IFolder folder);
 
-    public abstract File<TFolder, TFile> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName);
+    public abstract IFile Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName);
     public abstract void AddFolder(string path);
     public abstract bool FolderExists(string path);
     public abstract Folder<TFolder, TFile> GetFolder(TFolder folderId);

@@ -24,7 +24,8 @@ public interface IAdamFileSystem: IHasLog
 
     void Delete(IFile file);
 
-    //File<TFolderId, TFileId> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName);
+    IFile Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName);
+
 
     #endregion
 

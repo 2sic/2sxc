@@ -13,7 +13,7 @@ public interface IAdamFileSystem<TFolderId, TFileId>: IAdamFileSystem
 
     #region Files
 
-    File<TFolderId, TFileId> GetFile(TFileId fileId);
+    //File<TFolderId, TFileId> GetFile(TFileId fileId);
 
     /// <summary>
     /// NEW WIP
@@ -28,7 +28,7 @@ public interface IAdamFileSystem<TFolderId, TFileId>: IAdamFileSystem
 
     //void Delete(IFile file);
 
-    File<TFolderId, TFileId> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName);
+    //IFile Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName);
 
     #endregion
 
