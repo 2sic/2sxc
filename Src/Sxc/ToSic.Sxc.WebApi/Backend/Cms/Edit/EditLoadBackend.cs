@@ -27,7 +27,7 @@ public partial class EditLoadBackend(
     EntityBuilder entityBuilder,
     IUiContextBuilder contextBuilder,
     ISxcContextResolver ctxResolver,
-    ITargetTypes mdTargetTypes,
+    ITargetTypeService mdTargetTypes,
     IAppReaderFactory appReaders,
     IUiData uiData,
     GenWorkPlus<WorkInputTypes> inputTypes,
