@@ -220,13 +220,13 @@ internal class GetAndConvertHelper(
         => AsChildrenOf(entities, field, parentEntity, SubDataFactory.SubDynEntityOrNull);
 
     private List<ITypedItem> AsChildrenItems(IEnumerable<IEntity> entities, string field, IEntity parentEntity)
-        => AsChildrenOf(entities, field, parentEntity,e => new TypedItemOfEntity(null, e, Cdf, PropsRequired) as ITypedItem);
+        => AsChildrenOf(entities, field, parentEntity, ITypedItem (e) => new TypedItemOfEntity(null, e, Cdf, PropsRequired));
 
     private static List<T> AsChildrenOf<T>(IEnumerable<IEntity> entities, string field, IEntity parentEntity, Func<IEntity, T> convert)
         where T : class, ICanBeEntity
     {
         var list = entities
-            .Select((e, i) => EntityInBlockDecorator.Wrap(entity: e, field: field, index: i, parent: parentEntity) as IEntity)
+            .Select(IEntity (e, i) => EntityInBlockDecorator.Wrap(entity: e, field: field, index: i, parent: parentEntity))
             .Select(convert)
             .ToList();
         return new ListTypedItems<T>(list, null);

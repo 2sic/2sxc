@@ -109,7 +109,9 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
     {
         var l = log.Fn<ICanGetByName>($"{strName}; code root: {exCtxOrNull != null}", enabled: debug);
         var settings = exCtxOrNull?.GetState<ITypedStack>(ExecutionContextStateNames.AllSettings);
-        var result = settings?.Get($"Settings.Images.{strName}") as ICanGetByName;
+        var imageSettings = settings?.Get($"Settings.Images.{strName}");
+        // imageSettings is a ListTypedItems<ITyped> because it's a child-list of entities
+        var result = (imageSettings as IEnumerable<ITyped>)?.FirstOrDefault();
         return l.Return(result, $"found: {result != null}");
     }
 
