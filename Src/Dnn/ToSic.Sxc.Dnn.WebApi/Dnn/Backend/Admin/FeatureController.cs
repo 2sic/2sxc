@@ -30,5 +30,5 @@ public class FeatureController() : DnnSxcControllerRoot(RealController.LogSuffix
     /// </remarks>
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public bool SaveNew([FromBody] List<FeatureManagementChange> changes) => Real.SaveNew(changes);
+    public bool SaveNew([FromBody] List<FeatureStateChange> changes) => Real.SaveNew(changes);
 }

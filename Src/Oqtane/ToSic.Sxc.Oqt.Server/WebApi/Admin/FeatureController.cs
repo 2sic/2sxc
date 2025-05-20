@@ -34,6 +34,6 @@ public class FeatureController() : OqtStatefulControllerBase(RealController.LogS
     /// </remarks>
     [HttpPost]
     [Authorize(Roles = RoleNames.Host)]
-    public bool SaveNew([FromBody] List<FeatureManagementChange> changes) => Real.SaveNew(changes);
+    public bool SaveNew([FromBody] List<FeatureStateChange> changes) => Real.SaveNew(changes);
 
 }
