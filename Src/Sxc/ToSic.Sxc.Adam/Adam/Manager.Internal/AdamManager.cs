@@ -41,7 +41,6 @@ public class AdamManager(AdamManager.MyServices services)
     {
         var l = Log.Fn<AdamManager>();
         AppContext = appCtx;
-        Services.CdfIfNotProvided.SetInit(obj => obj.SetFallbacks(AppContext?.Site, compatibility, this));
         Cdf = cdf
               ?? Services.CdfIfNotProvided
                   .SetInit(obj => obj.SetFallbacks(AppContext?.Site, compatibility, this))
