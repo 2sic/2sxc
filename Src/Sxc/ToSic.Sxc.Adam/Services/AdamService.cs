@@ -15,7 +15,7 @@ internal class AdamService(): ServiceWithContext("Svc.AdamSv"), IAdamService
 
     /// <inheritdoc />
     public IFile? File(int id)
-        => AdamManagerWithContext?.File(id);
+        => AdamManagerWithContext?.AdamFs.GetFile(AdamAssetIdentifier.Create(id));
 
     /// <inheritdoc />
     public IFile? File(string id)
@@ -42,44 +42,10 @@ internal class AdamService(): ServiceWithContext("Svc.AdamSv"), IAdamService
 
     /// <inheritdoc />
     public IFolder? Folder(int id)
-        => AdamManagerWithContext?.Folder(id);
+        => AdamManagerWithContext?.AdamFs.GetFolder(AdamAssetIdentifier.Create(id));
 
     /// <inheritdoc />
     public IFolder? Folder(IField field)
-        => AdamManagerWithContext?.Folder(field.Parent.Entity.EntityGuid, field.Name);
+        => AdamManagerWithContext?.FolderOfField(field.Parent.Entity.EntityGuid, field.Name);
 
-    //private ICodeDataFactory CdfOrNull => _cdf.Get(() => _CodeApiSvc?.Cdf);
-    //private readonly GetOnce<ICodeDataFactory> _cdf = new();
-    ///// <inheritdoc />
-    //public IFile File(int id)
-    //    => CdfOrNull?.File(id);
-
-    ///// <inheritdoc />
-    //public IFile File(string id)
-    //{
-    //    var fileId = LinkParts.CheckIdStringForId(id);
-    //    return fileId == null
-    //        ? null
-    //        : File(fileId.Value);
-    //}
-
-
-    ///// <inheritdoc />
-    //public IFile File(IField field)
-    //{
-    //    var file = field?.Raw is string id
-    //        ? File(id)
-    //        : null;
-    //    if (file != null)
-    //        file.Field = field;
-    //    return file;
-    //}
-
-    ///// <inheritdoc />
-    //public IFolder Folder(int id)
-    //    => CdfOrNull?.Folder(id);
-
-    ///// <inheritdoc />
-    //public IFolder Folder(IField field)
-    //    => CdfOrNull.Folder(field.Parent, field.Name, field);
 }

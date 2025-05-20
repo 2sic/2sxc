@@ -3,6 +3,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Adam.Manager;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
@@ -17,26 +18,31 @@ namespace ToSic.Sxc.Adam.Internal;
 /// It's abstract, because there will be a typed implementation inheriting this
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompatibilityLevel
+public class AdamManager: ServiceBase<AdamManager.MyServices>, ICompatibilityLevel
 {
     #region MyServices
 
-    public class MyServices(LazySvc<ICodeDataFactory> cdf, AdamConfiguration adamConfiguration)
-        : MyServicesBase(connect: [cdf, adamConfiguration])
+    public class MyServices(LazySvc<ICodeDataFactory> cdf, AdamConfiguration adamConfiguration,
+        LazySvc<IAdamFileSystem> adamFsLazy, Generator<AdamStorageOfField> fieldStorageGenerator, AdamFactory adamFactory)
+        : MyServicesBase(connect: [cdf, adamConfiguration, adamFsLazy, fieldStorageGenerator])
     {
         public LazySvc<ICodeDataFactory> Cdf { get; } = cdf;
         public AdamConfiguration AdamConfiguration { get; } = adamConfiguration;
+        public LazySvc<IAdamFileSystem> AdamFsLazy { get; } = adamFsLazy;
+        public Generator<AdamStorageOfField> FieldStorageGenerator { get; } = fieldStorageGenerator;
+        public AdamFactory AdamFactory { get; } = adamFactory;
     }
 
     #endregion
 
-    #region Constructor for inheritance
+    #region Constructor and Services Setup
 
-    protected AdamManager(MyServices services, string logName, object[]? connect = null)
-        : base(services, logName ?? "Adm.Managr", connect: connect)
+    public AdamManager(MyServices services) : base(services, "Adm.Managr")
     {
         // Note: Services are already connected in base class
         Services.Cdf.SetInit(obj => obj.SetFallbacks(AppContext?.Site, CompatibilityLevel, this));
+
+        Services.AdamFsLazy.SetInit(f => f.Init(this));
     }
 
     #endregion
@@ -53,7 +59,8 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
         Cdf = cdf;
         return l.Return(this, "ready");
     }
-    public IAdamFileSystem AdamFs { get; protected set; }
+
+    public IAdamFileSystem AdamFs => field ??= Services.AdamFsLazy.Value;
 
     public IAppWorkCtx AppWorkCtx { get; private set; }
 
@@ -85,10 +92,10 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
     /// </summary>
     public IFolder RootFolder => Folder(Path, true);
 
-    internal /*Folder<TFolderId, TFileId>*/ IFolder Folder(string path)
+    internal IFolder Folder(string path)
         => AdamFs.Get(path);
 
-    internal /*Folder<TFolderId, TFileId>*/ IFolder Folder(string path, bool autoCreate)
+    internal IFolder Folder(string path, bool autoCreate)
     {
         var l = Log.Fn<IFolder>($"{path}, {autoCreate}");
 
@@ -112,18 +119,13 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
         return l.ReturnAsOk(Folder(path));
     }
 
-
-    #endregion
-
-    #region Properties the base class already provides, but must be implemented at inheritance
-
-    public abstract IFolder Folder(Guid entityGuid, string fieldName, IField field = default);
-
-
-    public abstract IFile File(int id);
-
-    public abstract IFolder Folder(int id);
-
+    public IFolder FolderOfField(Guid entityGuid, string fieldName, IField field = default)
+    {
+        var folderStorage = Services.FieldStorageGenerator.New().InitItemAndField(entityGuid, fieldName);
+        folderStorage.Init(this);
+        var folder = Services.AdamFactory.FolderOfField(this, folderStorage, field);
+        return folder;
+    }
     #endregion
 
     #region Metadata Maker

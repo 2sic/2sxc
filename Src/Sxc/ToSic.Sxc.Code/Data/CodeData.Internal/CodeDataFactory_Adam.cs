@@ -52,9 +52,7 @@ partial class CodeDataFactory
     #region ADAM / Folder
 
     public IFile File(int id)
-        => AdamManager.File(id);
-    //public IFile File(Field fel)
-    //    => AdamManager.File(id);
+        => AdamManager.AdamFs.GetFile(AdamAssetIdentifier.Create(id));
 
     private ExecutionContext ExCtxReal => ExCtxOrNull as ExecutionContext;
     private ServiceKit16 ServiceKit16 => field ??= ExCtxReal.GetKit<ServiceKit16>();
@@ -64,13 +62,13 @@ partial class CodeDataFactory
         => ServiceKit16.Adam.File(field);
 
     public IFolder Folder(int id)
-        => AdamManager.Folder(id);
+        => AdamManager.AdamFs.GetFolder(AdamAssetIdentifier.Create(id));
 
     public IFolder Folder(ICanBeEntity item, string name, IField field)
-        => AdamManager.Folder(item.Entity.EntityGuid, name, field);
+        => AdamManager.FolderOfField(item.Entity.EntityGuid, name, field);
 
     public IFolder Folder(Guid entityGuid, string fieldName, IField field = default)
-        => AdamManager.Folder(entityGuid, fieldName, field);
+        => AdamManager.FolderOfField(entityGuid, fieldName, field);
 
     private ICmsService CmsSvc => field ??= ExCtxReal.GetService<ICmsService>(reuse: true);
 

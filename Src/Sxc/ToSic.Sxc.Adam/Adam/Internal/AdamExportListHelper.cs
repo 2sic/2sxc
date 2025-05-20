@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Adam.Internal;
 /// provides a list of all files / folders in ADAM for export
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class Export<TFolderId, TFileId>(AdamManager<TFolderId, TFileId> adm)
+public class AdamExportListHelper<TFolderId, TFileId>(AdamManager adm)
 {
     private readonly Folder<TFolderId, TFileId> _root = adm.RootFolder.ToLocal<TFolderId, TFileId>();
     // todo #adamid - should use TFile/TFolder
@@ -36,7 +36,7 @@ public class Export<TFolderId, TFileId>(AdamManager<TFolderId, TFileId> adm)
         }
             
     } 
-    private void AddFolder(/*Folder<TFolderId, TFileId>*/IFolder folder)
+    private void AddFolder(IFolder folder)
     {
         _folderIds.Add(((IAssetSysId<TFolderId>)folder).SysId);  // track of the folder
         AddFilesInFolder(folder);   // keep track of the files

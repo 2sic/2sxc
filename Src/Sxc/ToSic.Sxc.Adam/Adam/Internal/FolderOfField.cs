@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Assets.Internal;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Adam.Internal;
 
@@ -9,8 +10,10 @@ namespace ToSic.Sxc.Adam.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class FolderOfField<TFolderId, TFileId> : Folder<TFolderId, TFileId>
 {
-    public FolderOfField(AdamManager<TFolderId, TFileId> adamManager, AdamStorageOfField adamStorageOfField) : base(adamManager)
+    public FolderOfField(AdamManager adamManager, AdamStorageOfField adamStorageOfField, IField field) : base(adamManager)
     {
+        Field = field;
+
         // WIP - maybe still provide some basic info?
         //Url = adamStorageOfField.Manager.AdamFs.GetUrl(adamStorageOfField.Root);
         if (!AdamFs.FolderExists(adamStorageOfField.Root))

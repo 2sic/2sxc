@@ -9,13 +9,13 @@ namespace ToSic.Sxc.Adam.Internal;
 /// <inheritdoc />
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamContext<TFolderId, TFileId>(
-    LazySvc<AdamManager<TFolderId, TFileId>> adamManagerLazy,
+    LazySvc<AdamManager> adamManagerLazy,
     Generator<AdamStorageOfSite> siteStorageGen,
     Generator<AdamStorageOfField> fieldStorageGen,
     AdamContext.MyServices services)
     : AdamContext(services, "Adm.CtxTT", connect: [adamManagerLazy, siteStorageGen, fieldStorageGen])
 {
-    public AdamManager<TFolderId, TFileId> AdamManager => adamManagerLazy.Value;
+    public AdamManager AdamManager => adamManagerLazy.Value;
     public override AdamManager AdamManagerSimple => AdamManager;
 
     public AdamStorage AdamRoot;

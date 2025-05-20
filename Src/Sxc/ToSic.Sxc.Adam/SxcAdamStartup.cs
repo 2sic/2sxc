@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Adam.Manager;
 using ToSic.Sxc.Adam.Work.Internal;
 using ToSic.Sxc.Services;
 
@@ -18,7 +19,7 @@ public static class SxcAdamStartup
         services.TryAddTransient<IAdamPaths, AdamPathsBase>();
         services.TryAddTransient<AdamConfiguration>();
 
-        services.TryAddTransient(typeof(AdamManager<,>));
+        services.TryAddTransient<AdamManager>();
         services.TryAddTransient(typeof(AdamContext<,>));
         services.TryAddTransient<AdamContext.MyServices>();
 
@@ -55,6 +56,7 @@ public static class SxcAdamStartup
 
         // Typed implementations, as specified by the caller; usually `int`
         services.TryAddTransient<IAdamWorkGet, AdamWorkGet<TFolder, TFile>>();
+        services.TryAddTransient<AdamFactory, AdamFactory<TFolder, TFile>>();
 
         return services;
     }

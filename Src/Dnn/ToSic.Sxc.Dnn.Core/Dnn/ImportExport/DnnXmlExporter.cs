@@ -11,7 +11,7 @@ using FileManager = DotNetNuke.Services.FileSystem.FileManager;
 namespace ToSic.Sxc.Dnn.ImportExport;
 
 internal class DnnXmlExporter(
-    AdamManager<int, int> adamManager,
+    AdamManager adamManager,
     ISxcContextResolver ctxResolver,
     XmlSerializer xmlSerializer,
     IAppsCatalog appsCat)
@@ -20,12 +20,10 @@ internal class DnnXmlExporter(
     #region Constructor / DI
 
     private readonly IFileManager _dnnFiles = FileManager.Instance;
-    internal AdamManager<int, int> AdamManager { get; } = adamManager;
-
 
     protected override void PostContextInit(IContextOfApp appContext)
     {
-        AdamManager.Init(ctx: appContext, cdf: null, compatibility: CompatibilityLevels.CompatibilityLevel10);
+        adamManager.Init(ctx: appContext, cdf: null, compatibility: CompatibilityLevels.CompatibilityLevel10);
     }
 
     #endregion
@@ -33,11 +31,12 @@ internal class DnnXmlExporter(
     public override void AddFilesToExportQueue()
     {
         // Add Adam Files To Export Queue
-        var adamIds = AdamManager.Export.AppFiles;
+        var exportList = new AdamExportListHelper<int, int>(adamManager);
+        var adamIds = exportList.AppFiles;
         adamIds.ForEach(AddFileAndFolderToQueue);
 
         // also add folders in adam - because empty folders may also have metadata assigned
-        var adamFolders = AdamManager.Export.AppFolders;
+        var adamFolders = exportList.AppFolders;
         adamFolders.ForEach(ReferencedFolderIds.Add);
     }
 
