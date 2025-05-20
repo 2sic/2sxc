@@ -14,10 +14,10 @@ public abstract class AdamWorkBase<TFolderId, TFileId>(AdamWorkBase<TFolderId, T
 {
     #region MyServices / Init
 
-    public class MyServices(LazySvc<AdamContext<TFolderId, TFileId>> adamContext, ISxcAppContextResolver ctxResolver)
+    public class MyServices(LazySvc<AdamContext> adamContext, ISxcAppContextResolver ctxResolver)
         : MyServicesBase(connect: [adamContext, ctxResolver])
     {
-        public LazySvc<AdamContext<TFolderId, TFileId>> AdamContext { get; } = adamContext;
+        public LazySvc<AdamContext> AdamContext { get; } = adamContext;
         public ISxcAppContextResolver CtxResolver { get; } = ctxResolver;
     }
 
@@ -32,11 +32,7 @@ public abstract class AdamWorkBase<TFolderId, TFileId>(AdamWorkBase<TFolderId, T
         l.Done();
     }
 
-
-    protected AdamContext<TFolderId, TFileId> AdamContextTyped => field
-        ??= Services.AdamContext.Value;
-
-    public AdamContext AdamContext => Services.AdamContext.Value;
+    public AdamContext AdamContext => field ??= Services.AdamContext.Value;
 
     #endregion
 

@@ -20,7 +20,7 @@ public static class SxcAdamStartup
         services.TryAddTransient<AdamConfiguration>();
 
         services.TryAddTransient<AdamManager>();
-        services.TryAddTransient(typeof(AdamContext<,>));
+        services.TryAddTransient<AdamContext>();
         services.TryAddTransient<AdamContext.MyServices>();
 
         services.AddTransient<AdamManager.MyServices>();

@@ -21,14 +21,14 @@ public class AdamWorkGet<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>.My
         l.A("first permission checks passed");
 
         // get root and at the same time auto-create the core folder in case it's missing (important)
-        var root = AdamContextTyped.AdamRoot.RootFolder(autoCreate);
+        var root = AdamContext.AdamRoot.RootFolder(autoCreate);
 
         // if no root exists then quit now
         if (!autoCreate && root == null)
             return l.Return(new(null, [], []), "no folder");
 
         // try to see if we can get into the subfolder - will throw error if missing
-        var currentFolder = AdamContextTyped.AdamRoot.Folder(subFolderName, false);
+        var currentFolder = AdamContext.AdamRoot.Folder(subFolderName, false);
 
         // ensure that it's superuser, or the folder is really part of this item
         if (!AdamContext.Security.SuperUserOrAccessingItemFolder(currentFolder.Path, out var ex))

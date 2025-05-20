@@ -125,7 +125,7 @@ public static class StartupWebApi
     public static IServiceCollection AddAdamWebApi<TFolder, TFile>(this IServiceCollection services)
     {
         // Adam Controllers etc.
-        services.TryAddTransient(typeof(HyperlinkBackend<,>));
+        services.TryAddTransient(typeof(HyperlinkBackend));
         services.TryAddTransient(typeof(AdamItemDtoMaker<,>));
         services.TryAddTransient(typeof(AdamItemDtoMaker<,>.MyServices));
 

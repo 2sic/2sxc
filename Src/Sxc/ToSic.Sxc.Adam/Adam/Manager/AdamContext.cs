@@ -7,6 +7,7 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Internal;
 using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Adam.Internal;
@@ -18,18 +19,24 @@ namespace ToSic.Sxc.Adam.Internal;
 /// It's abstract, because there will be a typed implementation inheriting this
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class AdamContext(AdamContext.MyServices services, string logName, object[] connect)
-    : ServiceBase<AdamContext.MyServices>(services, logName ?? "Adm.Ctx", connect: connect)
+public class AdamContext(AdamContext.MyServices services)
+    : ServiceBase<AdamContext.MyServices>(services, "Adm.Ctx")
 {
     #region Constructor and DI
 
     public class MyServices(
         Generator<MultiPermissionsTypes> typesPermissions,
         Generator<IAdamSecurityCheckService> adamSecurityGenerator,
-        LazySvc<IEavFeaturesService> featuresSvc)
-        : MyServicesBase(connect: [typesPermissions, adamSecurityGenerator, featuresSvc])
+        LazySvc<IEavFeaturesService> featuresSvc,
+        LazySvc<AdamManager> adamManagerLazy,
+        Generator<AdamStorageOfSite> siteStorageGen,
+        Generator<AdamStorageOfField> fieldStorageGen)
+        : MyServicesBase(connect: [typesPermissions, adamSecurityGenerator, featuresSvc, adamManagerLazy, siteStorageGen, fieldStorageGen])
     {
         public LazySvc<IEavFeaturesService> FeaturesSvc { get; } = featuresSvc;
+        public LazySvc<AdamManager> AdamManagerLazy { get; } = adamManagerLazy;
+        public Generator<AdamStorageOfSite> SiteStorageGen { get; } = siteStorageGen;
+        public Generator<AdamStorageOfField> FieldStorageGen { get; } = fieldStorageGen;
         public Generator<IAdamSecurityCheckService> AdamSecurityGenerator { get; } = adamSecurityGenerator;
         public Generator<MultiPermissionsTypes> TypesPermissions { get; } = typesPermissions;
     }
@@ -37,16 +44,33 @@ public abstract class AdamContext(AdamContext.MyServices services, string logNam
     public IAdamSecurityCheckService Security;
     public MultiPermissionsTypes Permissions;
 
-    public abstract AdamManager AdamManagerSimple { get; }
+    public AdamManager AdamManager => Services.AdamManagerLazy.Value;
+
+    public AdamStorage AdamRoot { get; protected set; }
+
+    public IAppWorkCtx AppWorkCtx => AdamManager.AppWorkCtx;
 
     #endregion
-        
+
     #region Init
 
     /// <summary>
     /// Initializes the object and performs all the initial security checks
     /// </summary>
-    public abstract AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ICodeDataFactory cdf);
+    public AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ICodeDataFactory cdf)
+    {
+        var logCall = Log.Fn<AdamContext>($"..., usePortalRoot: {usePortalRoot}");
+        AdamManager.Init(context, cdf, CompatibilityLevels.CompatibilityLevel10);
+        AdamRoot = usePortalRoot
+            ? Services.SiteStorageGen.New()
+            : Services.FieldStorageGen.New().InitItemAndField(entityGuid, fieldName);
+        AdamRoot.Init(AdamManager);
+
+        InitBase(context, contentType, fieldName, entityGuid, usePortalRoot, cdf);
+
+        return logCall.Return(this);
+
+    }
 
     protected AdamContext InitBase(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ICodeDataFactory cdf)
     {
@@ -89,10 +113,6 @@ public abstract class AdamContext(AdamContext.MyServices services, string logNam
     }
 
     #endregion
-
-
-    // Temp
-    public abstract IAppWorkCtx AppWorkCtx { get; }
 
     /// <summary>
     /// Determines if the files come from the root (shared files).

@@ -18,10 +18,10 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
 {
     private IContextOfApp _context;
 
-    public class MyServices(LazySvc<AdamContext<TFolderId, TFileId>> adamContext, ISxcAppContextResolver ctxResolver)
+    public class MyServices(LazySvc<AdamContext> adamContext, ISxcAppContextResolver ctxResolver)
         : MyServicesBase(connect: [adamContext, ctxResolver])
     {
-        public LazySvc<AdamContext<TFolderId, TFileId>> AdamContext { get; } = adamContext;
+        public LazySvc<AdamContext> AdamContext { get; } = adamContext;
         public ISxcAppContextResolver CtxResolver { get; } = ctxResolver;
     }
 

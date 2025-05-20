@@ -6,8 +6,8 @@ using ToSic.Sxc.Backend.Adam;
 namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class HyperlinkBackend<TFolderId, TFileId>(
-    LazySvc<AdamContext<TFolderId, TFileId>> adamCtxLazy,
+public class HyperlinkBackend(
+    LazySvc<AdamContext> adamCtxLazy,
     ISxcContextResolver ctxResolver,
     Generator<MultiPermissionsApp> appPermissions,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> adamDtoMaker,

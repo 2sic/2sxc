@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Backend.Cms;
 public class EditControllerReal(
     LazySvc<EditLoadBackend> loadBackend,
     LazySvc<EditSaveBackend> saveBackendLazy,
-    LazySvc<HyperlinkBackend<int, int>> linkBackendLazy,
+    LazySvc<HyperlinkBackend> linkBackendLazy,
     LazySvc<AppViewPickerBackend> appViewPickerBackendLazy)
     : ServiceBase("Api.EditRl", connect: [loadBackend, saveBackendLazy, linkBackendLazy, appViewPickerBackendLazy]),
         IEditController

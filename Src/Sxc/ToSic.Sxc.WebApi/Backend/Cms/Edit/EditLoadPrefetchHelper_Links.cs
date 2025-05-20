@@ -55,7 +55,7 @@ partial class EditLoadPrefetchHelper
             return new() { Value = "error" };
         }
     }
-    private readonly GetOnce<HyperlinkBackend<int, int>> _hyperlinkBackend = new();
+    private readonly GetOnce<HyperlinkBackend> _hyperlinkBackend = new();
 
 
     private static List<BundleWithLinkField> BundleWithLinkFields(EditDto editData, bool includeStringFields = false)

@@ -18,9 +18,9 @@ public class AdamWorkRename<TFolderId, TFileId>(AdamWorkBase<TFolderId, TFileId>
             throw l.Ex(permissionException);
 
         // try to see if we can get into the subfolder - will throw error if missing
-        var parent = AdamContextTyped.AdamRoot.Folder(parentSubfolder, false);
+        var parent = AdamContext.AdamRoot.Folder(parentSubfolder, false);
 
-        var fs = AdamContextTyped.AdamManager.AdamFs;
+        var fs = AdamContext.AdamManager.AdamFs;
         if (isFolder)
         {
             var target = fs.GetFolder(folderId);
