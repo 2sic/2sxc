@@ -42,7 +42,7 @@ public class Folder<TFolderId, TFileId>(AdamManager<TFolderId, TFileId> adamMana
     public IEnumerable<IFolder> Folders => _folders.Get(() =>
     {
         var folders = AdamManager.AdamFs.GetFolders(this);
-        folders?.ForEach(f => f.Field = Field);
+        folders?.ForEach(f => ((Folder<TFolderId, TFileId>)f).Field = Field);
         return folders;
     });
     private readonly GetOnce<IEnumerable<IFolder>> _folders = new();
@@ -52,7 +52,7 @@ public class Folder<TFolderId, TFileId>(AdamManager<TFolderId, TFileId> adamMana
     public IEnumerable<IFile> Files => _files.Get(() =>
     {
         var files = AdamManager.AdamFs.GetFiles(this);
-        files?.ForEach(f => f.Field = Field);
+        files?.ForEach(f => ((File<TFolderId, TFileId>)f).Field = Field);
         return files;
     });
     private readonly GetOnce<IEnumerable<IFile>> _files = new();

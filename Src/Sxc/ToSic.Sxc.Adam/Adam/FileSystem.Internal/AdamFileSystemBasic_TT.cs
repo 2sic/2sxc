@@ -47,7 +47,7 @@ public abstract class AdamFileSystemBasic<TFolder, TFile>: ServiceBase, IAdamFil
 
     public abstract IFile GetFile(AdamAssetIdentifier fileId);
 
-    public abstract List<File<TFolder, TFile>> GetFiles(IFolder folder);
+    public abstract List<IFile> GetFiles(IFolder folder);
 
     public abstract IFile Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName);
     public abstract void AddFolder(string path);
@@ -55,7 +55,7 @@ public abstract class AdamFileSystemBasic<TFolder, TFile>: ServiceBase, IAdamFil
     //public abstract Folder<TFolder, TFile> GetFolder(TFolder folderId);
     public abstract IFolder GetFolder(AdamAssetIdentifier folderId);
 
-    public abstract List<Folder<TFolder, TFile>> GetFolders(IFolder folder);
+    public abstract List<IFolder> GetFolders(IFolder folder);
     public abstract void Rename(IFolder folder, string newName);
     public abstract void Delete(IFolder folder);
     public abstract IFolder Get(string path);

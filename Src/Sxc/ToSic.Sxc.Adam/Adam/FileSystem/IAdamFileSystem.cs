@@ -26,6 +26,7 @@ public interface IAdamFileSystem: IHasLog
     IFile GetFile(AdamAssetIdentifier fileId);
 
     //List<File<TFolderId, TFileId>> GetFiles(IFolder folder);
+    List<IFile> GetFiles(IFolder folder);
 
     void Rename(IFile file, string newName);
 
@@ -45,6 +46,8 @@ public interface IAdamFileSystem: IHasLog
     IFolder GetFolder(AdamAssetIdentifier folderId);
 
     //List<Folder<TFolderId, TFileId>> GetFolders(IFolder folder);
+    List<IFolder> GetFolders(IFolder folder);
+
 
     void Rename(IFolder folder, string newName);
 

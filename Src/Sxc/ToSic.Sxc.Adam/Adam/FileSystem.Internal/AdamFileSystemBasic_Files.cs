@@ -19,7 +19,7 @@ public partial class AdamFileSystemBasic
     }
 
     /// <inheritdoc />
-    public override List<File<string, string>> GetFiles(IFolder folder)
+    public override List<IFile> GetFiles(IFolder folder)
     {
         var dir = Directory.GetFiles(FsHelpers.EnsurePhysicalPath(folder.Path));
         return dir.Select(ToAdamFile).ToList();

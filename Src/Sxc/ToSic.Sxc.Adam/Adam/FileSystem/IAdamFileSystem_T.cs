@@ -22,7 +22,7 @@ public interface IAdamFileSystem<TFolderId, TFileId>: IAdamFileSystem
     ///// <returns></returns>
     //IFile GetFile(AdamAssetIdentifier fileId);
 
-    List<File<TFolderId, TFileId>> GetFiles(IFolder folder);
+    //List<File<TFolderId, TFileId>> GetFiles(IFolder folder);
 
     //void Rename(IFile file, string newName);
 
@@ -40,7 +40,7 @@ public interface IAdamFileSystem<TFolderId, TFileId>: IAdamFileSystem
     //Folder<TFolderId, TFileId> GetFolder(TFolderId folderId);
     //IFolder GetFolder(AdamAssetIdentifier folderId);
 
-    List<Folder<TFolderId, TFileId>> GetFolders(IFolder folder);
+    //List<Folder<TFolderId, TFileId>> GetFolders(IFolder folder);
 
     //void Rename(IFolder folder, string newName);
 

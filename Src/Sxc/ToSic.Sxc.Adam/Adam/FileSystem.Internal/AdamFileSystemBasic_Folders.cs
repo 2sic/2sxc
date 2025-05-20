@@ -26,7 +26,7 @@ public partial class AdamFileSystemBasic
         => ToAdamFolder(FsHelpers.EnsurePhysicalPath(((AdamAssetId<string>)folderId).SysId));
 
     /// <inheritdoc />
-    public override List<Folder<string, string>> GetFolders(IFolder folder)
+    public override List<IFolder> GetFolders(IFolder folder)
     {
         var dir = Directory.GetDirectories(FsHelpers.EnsurePhysicalPath(folder.Path));
         return dir.Select(ToAdamFolder).ToList();

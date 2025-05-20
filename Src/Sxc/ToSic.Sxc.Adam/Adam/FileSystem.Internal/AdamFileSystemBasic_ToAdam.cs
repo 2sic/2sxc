@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Adam.Internal;
 public partial class AdamFileSystemBasic
 {
 
-    private File<string, string> ToAdamFile(string path)
+    private /*File<string, string>*/IFile ToAdamFile(string path)
     {
         var physicalPath = _adamPaths.PhysicalPath(path);
         var f = new FileInfo(physicalPath);
@@ -15,7 +15,7 @@ public partial class AdamFileSystemBasic
         // todo: unclear if we need both, but we need the url for the compare-if-same-path
         var relativePath = _adamPaths.RelativeFromAdam(path);
         var relativeUrl = relativePath.ForwardSlash();
-        return new(AdamManager)
+        return new File<string, string>(AdamManager)
         {
             FullName = f.Name,
             Extension = f.Extension.TrimStart('.'),
@@ -33,13 +33,13 @@ public partial class AdamFileSystemBasic
         };
     }
 
-    private Folder<string, string> ToAdamFolder(string path)
+    private /*Folder<string, string>*/ IFolder ToAdamFolder(string path)
     {
         var physicalPath = _adamPaths.PhysicalPath(path);
         var f = new DirectoryInfo(physicalPath);
 
         var relativePath = _adamPaths.RelativeFromAdam(path);
-        return new(AdamManager)
+        return new Folder<string, string>(AdamManager)
         {
             Path = relativePath,
             SysId = relativePath,

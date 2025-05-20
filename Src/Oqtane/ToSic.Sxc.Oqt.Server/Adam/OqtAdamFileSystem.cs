@@ -199,12 +199,12 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
 
     public override void Delete(IFolder folder) => Log.Do(() => OqtFolderRepository.DeleteFolder(folder.AsOqt().SysId));
 
-    public override Folder<int, int> Get(string path) => OqtToAdam(GetOqtFolderByName(path));
+    public override IFolder Get(string path) => OqtToAdam(GetOqtFolderByName(path));
 
 
-    public override List<Folder<int, int>> GetFolders(IFolder folder)
+    public override List<IFolder> GetFolders(IFolder folder)
     {
-        var l = Log.Fn<List<Folder<int, int>>>();
+        var l = Log.Fn<List<IFolder>>();
         var fldObj = GetOqtFolder(folder.AsOqt().SysId);
         if (fldObj == null) return [];
 
@@ -239,9 +239,9 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
     private Folder GetOqtFolder(int folderId) => OqtFolderRepository.GetFolder(folderId);
 
 
-    public override List<File<int, int>> GetFiles(IFolder folder)
+    public override List<IFile> GetFiles(IFolder folder)
     {
-        var l = Log.Fn<List<File<int, int>>>();
+        var l = Log.Fn<List<IFile>>();
         var fldObj = OqtFolderRepository.GetFolder(folder.AsOqt().SysId);
         // sometimes the folder doesn't exist for whatever reason
         if (fldObj == null) return [];
@@ -259,8 +259,8 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
 
     //public string GetUrl(string folderPath) => _adamPaths.Url(folderPath.ForwardSlash());
 
-    private Folder<int, int> OqtToAdam(Folder f)
-        => new(AdamManager)
+    private IFolder OqtToAdam(Folder f) =>
+        new Folder<int, int>(AdamManager)
         {
             Path = ((OqtAdamPaths)_adamPaths).Path(f.Path),
             SysId = f.FolderId,
@@ -276,8 +276,8 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
 
 
 
-    private File<int, int> OqtToAdam(File f)
-         => new(AdamManager)
+    private IFile OqtToAdam(File f) =>
+        new File<int, int>(AdamManager)
          {
              FullName = f.Name,
              Extension = f.Extension,

@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Adam.Internal;
+﻿using ToSic.Eav.Apps.Assets.Internal;
+
+namespace ToSic.Sxc.Adam.Internal;
 
 /// <summary>
 /// Export helper
@@ -34,9 +36,9 @@ public class Export<TFolderId, TFileId>(AdamManager<TFolderId, TFileId> adm)
         }
             
     } 
-    private void AddFolder(Folder<TFolderId, TFileId> folder)
+    private void AddFolder(/*Folder<TFolderId, TFileId>*/IFolder folder)
     {
-        _folderIds.Add(folder.SysId);  // track of the folder
+        _folderIds.Add(((IAssetSysId<TFolderId>)folder).SysId);  // track of the folder
         AddFilesInFolder(folder);   // keep track of the files
 
         foreach (var f in _envFs.GetFolders(folder))   // then add subfolders
@@ -44,5 +46,5 @@ public class Export<TFolderId, TFileId>(AdamManager<TFolderId, TFileId> adm)
     }
 
     private void AddFilesInFolder(IFolder folder) 
-        => _envFs.GetFiles(folder).ForEach(f => _fileIds.Add(f.SysId));
+        => _envFs.GetFiles(folder).ForEach(f => _fileIds.Add(((IAssetSysId<TFileId>)f).SysId));
 }
