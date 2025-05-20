@@ -1,27 +1,22 @@
-﻿using System.IO;
+﻿namespace ToSic.Sxc.Adam.Internal;
 
-namespace ToSic.Sxc.Adam.Internal;
-
-public partial class AdamFileSystemBasic
+public partial class AdamFileSystemString
 {
     /// <inheritdoc />
     public override void AddFolder(string path)
     {
-        path = _adamPaths.PhysicalPath(path);
+        path = AdamPaths.PhysicalPath(path);
         Directory.CreateDirectory(path);
     }
 
     /// <inheritdoc />
     public override bool FolderExists(string path)
     {
-        var serverPath = _adamPaths.PhysicalPath(path);
+        var serverPath = AdamPaths.PhysicalPath(path);
         return Directory.Exists(serverPath);
     }
 
     /// <inheritdoc />
-    //public override Folder<string, string> GetFolder(string folderId)
-    //    => ToAdamFolder(FsHelpers.EnsurePhysicalPath(folderId));
-
     public override IFolder GetFolder(AdamAssetIdentifier folderId)
         => ToAdamFolder(FsHelpers.EnsurePhysicalPath(((AdamAssetId<string>)folderId).SysId));
 

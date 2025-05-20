@@ -22,7 +22,8 @@ public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets
 
     /// <inheritdoc />
     [JsonIgnore]
-    public IMetadata Metadata => field ??= AdamManager.Create(CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations);
+    public IMetadata Metadata => field
+        ??= AdamManager.CreateMetadata(CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations);
 
     /// <summary>
     /// Attach metadata recommendations
@@ -32,9 +33,11 @@ public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets
     {
         if (mdOf?.Target == null || Type != Classification.Image)
             return;
-        mdOf.Target.Recommendations = AdamManager?.Cdf ?.GetService<IImageMetadataRecommendationsService>()
-            .GetImageRecommendations()
-            ?? [];
+        mdOf.Target.Recommendations = AdamManager
+                                          ?.Cdf
+                                          ?.GetService<IImageMetadataRecommendationsService>()
+                                          .GetImageRecommendations()
+                                      ?? [];
     }
 
     IMetadataOf IHasMetadata.Metadata => (Metadata as IHasMetadata)?.Metadata;

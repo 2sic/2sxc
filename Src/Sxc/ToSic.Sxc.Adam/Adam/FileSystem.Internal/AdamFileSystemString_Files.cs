@@ -2,15 +2,8 @@
 
 namespace ToSic.Sxc.Adam.Internal;
 
-public partial class AdamFileSystemBasic
+public partial class AdamFileSystemString
 {
-    /// <inheritdoc />
-    //public override File<string, string> GetFile(string fileId)
-    //{
-    //    var dir = FsHelpers.EnsurePhysicalPath(fileId);
-    //    return ToAdamFile(dir);
-    //}
-
     public override IFile GetFile(AdamAssetIdentifier fileId)
     {
         var id = ((AdamAssetId<string>)fileId).SysId;
@@ -31,8 +24,8 @@ public partial class AdamFileSystemBasic
     {
         var l = Log.Fn<IFile>($"..., ..., {fileName}, {ensureUniqueName}");
         if (ensureUniqueName)
-            fileName = FsHelpers.FindUniqueFileName(_adamPaths.PhysicalPath(parent.Path), fileName);
-        var fullContentPath = _adamPaths.PhysicalPath(parent.Path);
+            fileName = FsHelpers.FindUniqueFileName(AdamPaths.PhysicalPath(parent.Path), fileName);
+        var fullContentPath = AdamPaths.PhysicalPath(parent.Path);
         Directory.CreateDirectory(fullContentPath);
         var filePath = Path.Combine(fullContentPath, fileName);
         using var stream = new FileStream(filePath, FileMode.Create);

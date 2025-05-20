@@ -74,7 +74,7 @@ public static class SxcAdamStartup
     {
         // ADAM basics
         // TODO: this doesn't warn yet, there should be an AdamFileSystemUnknown(WarnUseOfUnknown<AdamFileSystemUnknown> warn)
-        services.TryAddTransient<IAdamFileSystem<string, string>, AdamFileSystemBasic>();
+        services.TryAddTransient<IAdamFileSystem, AdamFileSystemString>();
 
         return services;
     }

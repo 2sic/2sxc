@@ -5,30 +5,31 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Adam.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class AdamFileSystemBasic<TFolder, TFile>: ServiceBase, IAdamFileSystem<TFolder, TFile>
+public abstract class AdamFileSystemBase : ServiceBase, IAdamFileSystem
 {
     #region Setup
 
-    protected AdamFileSystemBasic(IAdamPaths adamPaths, string logPrefix) : base($"{logPrefix}.FilSys", connect: [adamPaths])
+    protected AdamFileSystemBase(IAdamPaths adamPaths, string logPrefix, object[]? connect = default)
+        : base($"{logPrefix}.FilSys", connect: [adamPaths, ..connect ?? []])
     {
-        _adamPaths = adamPaths;
+        AdamPaths = adamPaths;
         ConnectLogs([
             FsHelpers = new(adamPaths)
         ]);
     }
 
     protected readonly AdamFileSystemHelpers FsHelpers;
-    protected readonly IAdamPaths _adamPaths;
+    protected readonly IAdamPaths AdamPaths;
 
-    public void Init(AdamManager<TFolder, TFile> adamManager)
+    public void Init(AdamManager adamManager)
     {
         var l = Log.Fn();
         AdamManager = adamManager;
-        _adamPaths.Init(adamManager);
+        AdamPaths.Init(adamManager);
         l.Done();
     }
 
-    protected AdamManager<TFolder, TFile> AdamManager;
+    protected AdamManager AdamManager;
 
     #endregion
 
@@ -36,10 +37,10 @@ public abstract class AdamFileSystemBasic<TFolder, TFile>: ServiceBase, IAdamFil
 
     /// <inheritdoc />
     public virtual void Rename(IFile file, string newName)
-        => Log.Do(() => FsHelpers.TryToRenameFile(_adamPaths.PhysicalPath(file.Path), newName));
+        => Log.Do(() => FsHelpers.TryToRenameFile(AdamPaths.PhysicalPath(file.Path), newName));
 
     /// <inheritdoc />
-    public virtual void Delete(IFile file) => Log.Do(() => File.Delete(_adamPaths.PhysicalPath(file.Path)));
+    public virtual void Delete(IFile file) => Log.Do(() => File.Delete(AdamPaths.PhysicalPath(file.Path)));
 
 
     public int MaxUploadKb() => AdamConstants.MaxUploadKbDefault;
@@ -59,6 +60,6 @@ public abstract class AdamFileSystemBasic<TFolder, TFile>: ServiceBase, IAdamFil
     public abstract void Rename(IFolder folder, string newName);
     public abstract void Delete(IFolder folder);
     public abstract IFolder Get(string path);
-    public string GetUrl(string folderPath) => _adamPaths.Url(folderPath.ForwardSlash());
+    public string GetUrl(string folderPath) => AdamPaths.Url(folderPath.ForwardSlash());
 
 }

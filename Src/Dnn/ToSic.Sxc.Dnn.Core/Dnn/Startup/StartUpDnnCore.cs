@@ -79,7 +79,7 @@ internal static class StartUpDnnCore
 
 
         // ADAM
-        services.TryAddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();
+        services.TryAddTransient<IAdamFileSystem, DnnAdamFileSystem>();
         services.TryAddTransient<AdamManager, AdamManager<int, int>>();
 
         services.TryAddTransient<ILookUpEngineResolver, DnnLookUpEngineResolver>();

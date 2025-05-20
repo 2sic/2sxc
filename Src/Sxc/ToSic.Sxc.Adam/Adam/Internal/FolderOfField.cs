@@ -13,7 +13,7 @@ public class FolderOfField<TFolderId, TFileId> : Folder<TFolderId, TFileId>
     {
         // WIP - maybe still provide some basic info?
         //Url = adamStorageOfField.Manager.AdamFs.GetUrl(adamStorageOfField.Root);
-        if (!AdamManager.Exists(adamStorageOfField.Root))
+        if (!AdamFs.FolderExists(adamStorageOfField.Root))
             return;
 
         var f = AdamManager.Folder(adamStorageOfField.Root);

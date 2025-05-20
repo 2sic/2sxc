@@ -7,6 +7,7 @@
 public interface IAdamFileSystem: IHasLog
 {
     //void Init(AdamManager<TFolderId, TFileId> adamManager);
+    void Init(AdamManager adamManager);
 
     #region FileSystem Settings
 
@@ -39,7 +40,17 @@ public interface IAdamFileSystem: IHasLog
 
     #region Folders
 
+    /// <summary>
+    /// Create a path (folder)
+    /// </summary>
+    /// <param name="path"></param>
     void AddFolder(string path);
+
+    /// <summary>
+    /// Verify that a path exists
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
     bool FolderExists(string path);
 
     //Folder<TFolderId, TFileId> GetFolder(TFolderId folderId);

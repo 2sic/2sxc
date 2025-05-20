@@ -13,41 +13,18 @@ using File = Oqtane.Models.File;
 
 namespace ToSic.Sxc.Oqt.Server.Adam;
 
-internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSystem<int, int>
+internal class OqtAdamFileSystem(
+    IFileRepository oqtFileRepository,
+    IFolderRepository oqtFolderRepository,
+    IServerPaths serverPaths,
+    IAdamPaths adamPaths)
+    : AdamFileSystemBase(adamPaths, OqtConstants.OqtLogPrefix, [serverPaths, oqtFileRepository, oqtFolderRepository]),
+        IAdamFileSystem
 {
-    private readonly IServerPaths _serverPaths;
-    public IFileRepository OqtFileRepository { get; }
-    public IFolderRepository OqtFolderRepository { get; }
-
-    #region Constructor / DI / Init
-
-    public OqtAdamFileSystem(IFileRepository oqtFileRepository, IFolderRepository oqtFolderRepository, IServerPaths serverPaths, IAdamPaths adamPaths)
-        : base(adamPaths, OqtConstants.OqtLogPrefix)
-    {
-        ConnectLogs([
-            _serverPaths = serverPaths,
-            OqtFileRepository = oqtFileRepository,
-            OqtFolderRepository = oqtFolderRepository
-        ]);
-    }
-
-    #endregion
-
-    #region FileSystem Settings
-
-    //public int MaxUploadKb()
-    //    => (ConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection)
-    //       ?.MaxRequestLength ?? 1;
-
-    #endregion
+    public IFileRepository OqtFileRepository { get; } = oqtFileRepository;
+    public IFolderRepository OqtFolderRepository { get; } = oqtFolderRepository;
 
     #region Files
-
-    //public override File<int, int> GetFile(int fileId)
-    //{
-    //    var file = OqtFileRepository.GetFile(fileId);
-    //    return OqtToAdam(file);
-    //}
 
     public override IFile GetFile(AdamAssetIdentifier fileId)
     {
@@ -61,7 +38,7 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
         var l = Log.Fn();
         try
         {
-            var path = _serverPaths.FullContentPath(file.Path);
+            var path = serverPaths.FullContentPath(file.Path);
 
             var currentFilePath = Path.Combine(path, file.FullName);
             if (!FsHelpers.TryToRenameFile(currentFilePath, newName))
@@ -96,7 +73,7 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
         var l = Log.Fn<IFile>($"..., ..., {fileName}, {ensureUniqueName}");
         if (ensureUniqueName)
             fileName = FindUniqueFileName(parent, fileName);
-        var fullContentPath = _serverPaths.FullContentPath(parent.Path);
+        var fullContentPath = serverPaths.FullContentPath(parent.Path);
         Directory.CreateDirectory(fullContentPath);
         var filePath = Path.Combine(fullContentPath, fileName);
         using (var stream = new FileStream(filePath, FileMode.Create))
@@ -132,7 +109,7 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
         var l = Log.Fn<string>($"..., {fileName}");
 
         var oqtFolder = OqtFolderRepository.GetFolder(parentFolder.AsOqt().SysId);
-        var serverPath = Path.Combine(_serverPaths.FullContentPath(AdamManager.Site.ContentPath), oqtFolder.Path);
+        var serverPath = Path.Combine(serverPaths.FullContentPath(AdamManager.Site.ContentPath), oqtFolder.Path);
 
         return l.Return(FsHelpers.FindUniqueFileName(serverPath, fileName));
     }
@@ -262,7 +239,7 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
     private IFolder OqtToAdam(Folder f) =>
         new Folder<int, int>(AdamManager)
         {
-            Path = ((OqtAdamPaths)_adamPaths).Path(f.Path),
+            Path = ((OqtAdamPaths)AdamPaths).Path(f.Path),
             SysId = f.FolderId,
 
             ParentSysId = f.ParentId ?? WipConstants.ParentFolderNotFound,
@@ -271,7 +248,7 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
             Created = f.CreatedOn,
             Modified = f.ModifiedOn,
             Url = GetUrl(f.Path), // _adamPaths.Url(f.Path.ForwardSlash()),
-            PhysicalPath = _adamPaths.PhysicalPath(f.Path),
+            PhysicalPath = AdamPaths.PhysicalPath(f.Path),
         };
 
 
@@ -286,13 +263,13 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
              Folder = f.Folder.Name,
              ParentSysId = f.FolderId,
 
-             Path = ((OqtAdamPaths)_adamPaths).Path(f.Folder.Path),
+             Path = ((OqtAdamPaths)AdamPaths).Path(f.Folder.Path),
 
              Created = f.CreatedOn,
              Modified = f.ModifiedOn,
              Name = Path.GetFileNameWithoutExtension(f.Name),
-             Url = _adamPaths.Url(Path.Combine(f.Folder.Path, f.Name).ForwardSlash()),
-             PhysicalPath = _adamPaths.PhysicalPath(Path.Combine(f.Folder.Path, f.Name)),
+             Url = AdamPaths.Url(Path.Combine(f.Folder.Path, f.Name).ForwardSlash()),
+             PhysicalPath = AdamPaths.PhysicalPath(Path.Combine(f.Folder.Path, f.Name)),
          };
 
 

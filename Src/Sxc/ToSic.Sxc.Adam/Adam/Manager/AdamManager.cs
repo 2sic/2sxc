@@ -50,18 +50,23 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
         Site = ctx.Site;
         AppWorkCtx = new AppWorkCtx(ctx.AppReader);
         CompatibilityLevel = compatibility;
-        _cdf = cdf;
+        Cdf = cdf;
         return l.Return(this, "ready");
     }
-        
+    public IAdamFileSystem AdamFs { get; protected set; }
+
     public IAppWorkCtx AppWorkCtx { get; private set; }
 
     public IContextOfApp AppContext { get; private set; }
 
     public ISite Site { get; private set; }
 
-    internal ICodeDataFactory Cdf => _cdf ??= Services.Cdf.Value;
-    private ICodeDataFactory _cdf;
+    internal ICodeDataFactory Cdf
+    {
+        get => field ??= Services.Cdf.Value;
+        private set;
+    }
+
     #endregion
 
     /// <summary>
@@ -73,6 +78,42 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
     [PrivateApi]
     public int CompatibilityLevel { get; set; }
 
+    #region Folder Stuff
+
+    /// <summary>
+    /// Root folder object of the app assets
+    /// </summary>
+    public IFolder RootFolder => Folder(Path, true);
+
+    internal /*Folder<TFolderId, TFileId>*/ IFolder Folder(string path)
+        => AdamFs.Get(path);
+
+    internal /*Folder<TFolderId, TFileId>*/ IFolder Folder(string path, bool autoCreate)
+    {
+        var l = Log.Fn<IFolder>($"{path}, {autoCreate}");
+
+        // create all folders to ensure they exist. Must do one-by-one because the environment must have it in the catalog
+        var pathParts = path.Split('/');
+        var pathToCheck = "";
+        foreach (var part in pathParts.Where(p => !string.IsNullOrEmpty(p)))
+        {
+            pathToCheck += part + "/";
+            if (AdamFs.FolderExists(pathToCheck))
+                continue;
+            if (autoCreate)
+                AdamFs.AddFolder(pathToCheck);
+            else
+            {
+                Log.A($"subfolder {pathToCheck} not found");
+                return l.ReturnNull("not found");
+            }
+        }
+
+        return l.ReturnAsOk(Folder(path));
+    }
+
+
+    #endregion
 
     #region Properties the base class already provides, but must be implemented at inheritance
 
@@ -90,7 +131,7 @@ public abstract class AdamManager: ServiceBase<AdamManager.MyServices>, ICompati
     /// <summary>
     /// Get the first metadata entity of an item - or return a fake one instead
     /// </summary>
-    internal IMetadata Create(string key, string title, Action<IMetadataOf> mdInit = null)
+    internal IMetadata CreateMetadata(string key, string title, Action<IMetadataOf> mdInit = null)
     {
         var mdOf = AppWorkCtx.AppReader.Metadata.GetMetadataOf(TargetTypes.CmsItem, key, title: title);
         mdInit?.Invoke(mdOf);

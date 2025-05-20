@@ -14,7 +14,7 @@ public class Export<TFolderId, TFileId>(AdamManager<TFolderId, TFileId> adm)
     private readonly List<TFileId> _fileIds = [];
     private readonly List<TFolderId> _folderIds = [];
 
-    private readonly IAdamFileSystem<TFolderId, TFileId> _envFs = adm.AdamFs;
+    private readonly IAdamFileSystem _envFs = adm.AdamFs;
 
     public List<TFileId> AppFiles
     {

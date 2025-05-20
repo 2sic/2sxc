@@ -9,10 +9,10 @@ namespace ToSic.Sxc.Adam.Internal;
 public class AdamManager<TFolderId, TFileId>: AdamManager
 {
     private readonly Generator<AdamStorageOfField<TFolderId, TFileId>> _fieldStorageGenerator;
-    private readonly LazySvc<IAdamFileSystem<TFolderId, TFileId>> _adamFsLazy;
+    private readonly LazySvc<IAdamFileSystem> _adamFsLazy;
 
     #region Constructor / DI
-    public AdamManager(MyServices services, LazySvc<IAdamFileSystem<TFolderId, TFileId>> adamFsLazy, Generator<AdamStorageOfField<TFolderId, TFileId>> fieldStorageGenerator)
+    public AdamManager(MyServices services, LazySvc<IAdamFileSystem> adamFsLazy, Generator<AdamStorageOfField<TFolderId, TFileId>> fieldStorageGenerator)
         : base(services, "Adm.MngrTT", connect: [adamFsLazy, fieldStorageGenerator])
     {
         _adamFsLazy = adamFsLazy.SetInit(f => f.Init(this));
@@ -26,53 +26,52 @@ public class AdamManager<TFolderId, TFileId>: AdamManager
         return this;
     }
 
-    public IAdamFileSystem<TFolderId, TFileId> AdamFs { get; protected set; }
 
     #endregion
 
-    /// <summary>
-    /// Root folder object of the app assets
-    /// </summary>
-    public IFolder RootFolder => Folder(Path, true);
+    ///// <summary>
+    ///// Root folder object of the app assets
+    ///// </summary>
+    //public IFolder RootFolder => Folder(Path, true);
 
-    /// <summary>
-    /// Verify that a path exists
-    /// </summary>
-    /// <param name="path"></param>
-    /// <returns></returns>
-    internal bool Exists(string path) => AdamFs.FolderExists(path);
+    ///// <summary>
+    ///// Verify that a path exists
+    ///// </summary>
+    ///// <param name="path"></param>
+    ///// <returns></returns>
+    //internal bool Exists(string path) => AdamFs.FolderExists(path);
 
-    /// <summary>
-    /// Create a path (folder)
-    /// </summary>
-    /// <param name="path"></param>
-    internal void Add(string path) => AdamFs.AddFolder(path);
+    ///// <summary>
+    ///// Create a path (folder)
+    ///// </summary>
+    ///// <param name="path"></param>
+    //internal void Add(string path) => AdamFs.AddFolder(path);
 
-    internal /*Folder<TFolderId, TFileId>*/ IFolder Folder(string path)
-        => AdamFs.Get(path);
+    //internal /*Folder<TFolderId, TFileId>*/ IFolder Folder(string path)
+    //    => AdamFs.Get(path);
 
-    internal /*Folder<TFolderId, TFileId>*/ IFolder Folder(string path, bool autoCreate)
-    {
-        var l = Log.Fn<IFolder>($"{path}, {autoCreate}");
+    //internal /*Folder<TFolderId, TFileId>*/ IFolder Folder(string path, bool autoCreate)
+    //{
+    //    var l = Log.Fn<IFolder>($"{path}, {autoCreate}");
             
-        // create all folders to ensure they exist. Must do one-by-one because the environment must have it in the catalog
-        var pathParts = path.Split('/');
-        var pathToCheck = "";
-        foreach (var part in pathParts.Where(p => !string.IsNullOrEmpty(p)))
-        {
-            pathToCheck += part + "/";
-            if (Exists(pathToCheck)) continue;
-            if (autoCreate)
-                Add(pathToCheck);
-            else
-            {
-                Log.A($"subfolder {pathToCheck} not found");
-                return l.ReturnNull("not found");
-            }
-        }
+    //    // create all folders to ensure they exist. Must do one-by-one because the environment must have it in the catalog
+    //    var pathParts = path.Split('/');
+    //    var pathToCheck = "";
+    //    foreach (var part in pathParts.Where(p => !string.IsNullOrEmpty(p)))
+    //    {
+    //        pathToCheck += part + "/";
+    //        if (Exists(pathToCheck)) continue;
+    //        if (autoCreate)
+    //            Add(pathToCheck);
+    //        else
+    //        {
+    //            Log.A($"subfolder {pathToCheck} not found");
+    //            return l.ReturnNull("not found");
+    //        }
+    //    }
 
-        return l.ReturnAsOk(Folder(path));
-    }
+    //    return l.ReturnAsOk(Folder(path));
+    //}
 
     #region Type specific results which the base class already offers the interface to
 

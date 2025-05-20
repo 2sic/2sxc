@@ -1,19 +1,18 @@
-﻿using System.IO;
-using ToSic.Eav.Helpers;
+﻿using ToSic.Eav.Helpers;
 
 namespace ToSic.Sxc.Adam.Internal;
 
-public partial class AdamFileSystemBasic
+public partial class AdamFileSystemString
 {
 
-    private /*File<string, string>*/IFile ToAdamFile(string path)
+    private IFile ToAdamFile(string path)
     {
-        var physicalPath = _adamPaths.PhysicalPath(path);
+        var physicalPath = AdamPaths.PhysicalPath(path);
         var f = new FileInfo(physicalPath);
         var directoryName = f.Directory.Name;
 
         // todo: unclear if we need both, but we need the url for the compare-if-same-path
-        var relativePath = _adamPaths.RelativeFromAdam(path);
+        var relativePath = AdamPaths.RelativeFromAdam(path);
         var relativeUrl = relativePath.ForwardSlash();
         return new File<string, string>(AdamManager)
         {
@@ -28,17 +27,17 @@ public partial class AdamFileSystemBasic
             Created = f.CreationTime,
             Modified = f.LastWriteTime,
             Name = Path.GetFileNameWithoutExtension(f.Name),
-            Url = _adamPaths.Url(relativeUrl),
+            Url = AdamPaths.Url(relativeUrl),
             PhysicalPath = physicalPath,
         };
     }
 
-    private /*Folder<string, string>*/ IFolder ToAdamFolder(string path)
+    private IFolder ToAdamFolder(string path)
     {
-        var physicalPath = _adamPaths.PhysicalPath(path);
+        var physicalPath = AdamPaths.PhysicalPath(path);
         var f = new DirectoryInfo(physicalPath);
 
-        var relativePath = _adamPaths.RelativeFromAdam(path);
+        var relativePath = AdamPaths.RelativeFromAdam(path);
         return new Folder<string, string>(AdamManager)
         {
             Path = relativePath,
@@ -48,7 +47,7 @@ public partial class AdamFileSystemBasic
             Created = f.CreationTime,
             Modified = f.LastWriteTime,
 
-            Url = _adamPaths.Url(relativePath),
+            Url = AdamPaths.Url(relativePath),
             PhysicalPath = physicalPath,
         };
     }

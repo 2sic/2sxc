@@ -6,5 +6,5 @@
 /// It's primarily meant for standalone implementations or as a template for other integrations. 
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public partial class AdamFileSystemBasic(IAdamPaths adamPaths)
-    : AdamFileSystemBasic<string, string>(adamPaths, LogScopes.Base), IAdamFileSystem<string, string>;
+public partial class AdamFileSystemString(IAdamPaths adamPaths)
+    : AdamFileSystemBase(adamPaths, LogScopes.Base, []), IAdamFileSystem;

@@ -31,7 +31,7 @@ internal static partial class OqtRegisterServices
     {
         // ADAM stuff
         services.TryAddTransient<IAdamPaths, OqtAdamPaths>();
-        services.TryAddTransient<IAdamFileSystem<int, int>, OqtAdamFileSystem>();
+        services.TryAddTransient<IAdamFileSystem, OqtAdamFileSystem>();
         services.TryAddTransient<AdamManager, AdamManager<int, int>>();
         return services;
     }

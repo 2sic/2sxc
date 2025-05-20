@@ -10,18 +10,18 @@ using ToSic.Sxc.Adam.Internal;
 
 namespace ToSic.Sxc.Dnn.Adam;
 
-internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem<int, int>
+internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem
 {
     #region Constructor / DI / Init
 
-    public void Init(AdamManager<int, int> adamManager)
+    public void Init(AdamManager adamManager)
     {
         var l = Log.Fn();
         AdamManager = adamManager;
         l.Done();
     }
 
-    protected AdamManager<int, int> AdamManager;
+    protected AdamManager AdamManager;
 
     #endregion
 
