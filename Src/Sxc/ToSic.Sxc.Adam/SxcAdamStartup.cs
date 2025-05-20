@@ -1,7 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Adam.Manager;
+using ToSic.Sxc.Adam.FileSystem.Internal;
+using ToSic.Sxc.Adam.Manager.Internal;
+using ToSic.Sxc.Adam.Paths.Internal;
+using ToSic.Sxc.Adam.Security.Internal;
+using ToSic.Sxc.Adam.Storage.Internal;
 using ToSic.Sxc.Adam.Work.Internal;
 using ToSic.Sxc.Services;
 

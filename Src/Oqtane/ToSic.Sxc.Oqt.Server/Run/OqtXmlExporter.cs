@@ -7,6 +7,7 @@ using ToSic.Eav.Helpers;
 using ToSic.Eav.ImportExport.Internal;
 using ToSic.Eav.ImportExport.Internal.Xml;
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Shared;

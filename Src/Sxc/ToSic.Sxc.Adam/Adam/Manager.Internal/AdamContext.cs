@@ -6,11 +6,12 @@ using ToSic.Eav.Security.Internal;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Adam.Security.Internal;
+using ToSic.Sxc.Adam.Storage.Internal;
 using ToSic.Sxc.Internal;
 using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 
-namespace ToSic.Sxc.Adam.Internal;
+namespace ToSic.Sxc.Adam.Manager.Internal;
 
 /// <summary>
 /// The security context of ADAM operations - containing site, app, field, entity-guid etc.

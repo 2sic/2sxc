@@ -1,4 +1,5 @@
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Adam.Paths.Internal;
 
 namespace ToSic.Sxc.Tests.Adam;
 

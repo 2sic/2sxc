@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Metadata;
+using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Images.Internal;

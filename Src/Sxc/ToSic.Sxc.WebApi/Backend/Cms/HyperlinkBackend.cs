@@ -1,5 +1,7 @@
 ﻿using ToSic.Eav.Security.Internal;
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Adam.Manager.Internal;
+using ToSic.Sxc.Adam.Security.Internal;
 using ToSic.Sxc.Adam.Work.Internal;
 using ToSic.Sxc.Backend.Adam;
 
@@ -43,7 +45,7 @@ public class HyperlinkBackend(
             if (guid == default || string.IsNullOrEmpty(field) || string.IsNullOrEmpty(contentType))
                 return new() { Value = hyperlink };
 
-            var isOutsideOfAdam = !Security.PathIsInItemAdam(guid, field, resolved);
+            var isOutsideOfAdam = !AdamSecurity.PathIsInItemAdam(guid, field, resolved);
 
             // file-check, more abilities to allow
             // this will already do a ensure-or-throw inside it if outside of adam

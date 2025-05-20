@@ -5,6 +5,7 @@ using ToSic.Lib.Code.InfoSystem;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
@@ -47,7 +48,7 @@ public partial class CodeDataFactory(
         if (adamManagerPrepared is AdamManager adamManagerTyped)
             AdamManager = adamManagerTyped;
         else
-            throw new($"The {nameof(adamManager)} must be of type {nameof(Adam.Internal.AdamManager)}");
+            throw new($"The {nameof(adamManager)} must be of type {nameof(Adam.Manager.Internal.AdamManager)}");
     }
     private ISite _siteOrNull;
 

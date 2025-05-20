@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Internal.Environment;
 
-namespace ToSic.Sxc.Adam.Internal;
+namespace ToSic.Sxc.Adam.Paths.Internal;
 
 /// <summary>
 /// Basic AdamPaths resolver, assumes that files are in wwwroot/adam for now.

@@ -7,6 +7,7 @@ using ToSic.Eav.Helpers;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Internal.Features;
 using ToSic.Lib.DI;
+using ToSic.Sxc.Adam.Security.Internal;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using static ToSic.Eav.Internal.Features.BuiltInFeatures;
@@ -160,7 +161,7 @@ internal class OqtValueConverter : ValueConverterBase
             if (!_featuresLazy.Value.IsEnabled(AdamRestrictLookupToEntity.Guid)) return result;
 
             // check if it's in this item. We won't check the field, just the item, so the field is ""
-            return !Sxc.Adam.Internal.Security.PathIsInItemAdam(itemGuid, "", pathInAdam)
+            return !AdamSecurity.PathIsInItemAdam(itemGuid, "", pathInAdam)
                 ? null
                 : result;
         }

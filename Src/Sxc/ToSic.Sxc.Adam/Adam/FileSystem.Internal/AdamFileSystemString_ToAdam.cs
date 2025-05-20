@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Helpers;
+using ToSic.Sxc.Adam.Internal;
 
-namespace ToSic.Sxc.Adam.Internal;
+namespace ToSic.Sxc.Adam.FileSystem.Internal;
 
 public partial class AdamFileSystemString
 {

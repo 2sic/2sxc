@@ -1,6 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc.Adam.FileSystem.Internal;
+using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Adam.Internal;

@@ -4,8 +4,9 @@ using ToSic.Eav.Security.Internal;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Adam.Manager.Internal;
 
-namespace ToSic.Sxc.Adam.Internal;
+namespace ToSic.Sxc.Adam.Security.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices services, string logPrefix)
@@ -146,7 +147,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices s
 
     private static bool DestinationIsInItem(Guid guid, string field, string path, out HttpExceptionAbstraction preparedException)
     {
-        var inAdam = Security.PathIsInItemAdam(guid, field, path);
+        var inAdam = AdamSecurity.PathIsInItemAdam(guid, field, path);
         preparedException = inAdam
             ? null
             : HttpException.PermissionDenied("Can't access a resource which is not part of this item.");

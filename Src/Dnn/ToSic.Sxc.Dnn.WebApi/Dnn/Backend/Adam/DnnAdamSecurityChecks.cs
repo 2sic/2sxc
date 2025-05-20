@@ -1,8 +1,7 @@
-﻿using System.IO;
-using DotNetNuke.Entities.Host;
+﻿using DotNetNuke.Entities.Host;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
-using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Adam.Security.Internal;
 using IAsset = ToSic.Eav.Apps.Assets.IAsset;
 using IFile = ToSic.Eav.Apps.Assets.IFile;
 using IFolder = ToSic.Eav.Apps.Assets.IFolder;

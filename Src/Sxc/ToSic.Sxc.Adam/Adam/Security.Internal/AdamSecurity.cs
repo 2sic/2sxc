@@ -1,9 +1,9 @@
 ﻿using ToSic.Eav.Identity;
 
-namespace ToSic.Sxc.Adam.Internal;
+namespace ToSic.Sxc.Adam.Security.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class Security
+public class AdamSecurity
 {
     public static bool PathIsInItemAdam(Guid guid, string field, string path)
     {

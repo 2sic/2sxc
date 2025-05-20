@@ -2,8 +2,7 @@
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Adam.Manager;
+using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sxc.Context.Internal;
 
 namespace ToSic.Sxc.Adam.Work.Internal;

@@ -2,6 +2,8 @@
 using ToSic.Eav.WebApi.Dto.Metadata;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Adam.Manager.Internal;
+using ToSic.Sxc.Adam.Security.Internal;
 using ToSic.Sxc.Adam.Work.Internal;
 using ToSic.Sxc.Data;
 

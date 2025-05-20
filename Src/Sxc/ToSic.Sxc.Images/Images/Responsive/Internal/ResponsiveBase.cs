@@ -5,6 +5,7 @@ using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Adam.Security.Internal;
 using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
@@ -221,7 +222,7 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
             return l.ReturnNull("no metadata");
 
         // Determine if this is an "own" adam file, because only field-owned files should allow config
-        var isInSameEntity = Security.PathIsInItemAdam(Target.FieldOrNull.Parent.Guid, "", Src);
+        var isInSameEntity = AdamSecurity.PathIsInItemAdam(Target.FieldOrNull.Parent.Guid, "", Src);
 
         // Construct the toolbar; in edge cases the toolbar service could be missing
         var imgTlb = ImgService.ToolbarOrNull?.Empty().Settings(

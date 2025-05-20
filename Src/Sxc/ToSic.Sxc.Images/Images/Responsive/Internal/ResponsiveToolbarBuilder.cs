@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Adam.Security.Internal;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Edit.Toolbar.Internal;
 
@@ -28,7 +29,7 @@ internal class ResponsiveToolbarBuilder() : ServiceBase($"{SxcLogName}.ImgTlb")
             return l.ReturnNull("no metadata");
 
         // Determine if this is an "own" adam file, because only field-owned files should allow config
-        var isInSameEntity = Security.PathIsInItemAdam(target.FieldOrNull.Parent.Guid, "", src);
+        var isInSameEntity = AdamSecurity.PathIsInItemAdam(target.FieldOrNull.Parent.Guid, "", src);
 
         // Construct the toolbar; in edge cases the toolbar service could be missing
         var imgTlb = imgService.ToolbarOrNull?.Empty().Settings(

@@ -4,6 +4,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sxc.Context.Internal;
 
 namespace ToSic.Sxc.DataSources.Internal;

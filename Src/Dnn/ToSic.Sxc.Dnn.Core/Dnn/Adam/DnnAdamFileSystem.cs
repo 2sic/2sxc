@@ -6,7 +6,9 @@ using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Adam.FileSystem.Internal;
 using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Adam.Manager.Internal;
 
 namespace ToSic.Sxc.Dnn.Adam;
 

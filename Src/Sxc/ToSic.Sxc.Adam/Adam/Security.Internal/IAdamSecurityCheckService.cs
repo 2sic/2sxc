@@ -1,7 +1,8 @@
 ﻿using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Sxc.Adam.Manager.Internal;
 
-namespace ToSic.Sxc.Adam.Internal;
+namespace ToSic.Sxc.Adam.Security.Internal;
 
 public interface IAdamSecurityCheckService
 {

@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Adam.Internal;
+﻿using ToSic.Sxc.Adam.Paths.Internal;
+
+namespace ToSic.Sxc.Adam.FileSystem.Internal;
 
 /// <summary>
 /// Basic implementation of the ADAM file system.

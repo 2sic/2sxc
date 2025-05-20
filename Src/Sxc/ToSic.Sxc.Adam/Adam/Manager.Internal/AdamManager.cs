@@ -3,11 +3,13 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Adam.Manager;
+using ToSic.Sxc.Adam.FileSystem.Internal;
+using ToSic.Sxc.Adam.Paths.Internal;
+using ToSic.Sxc.Adam.Storage.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 
-namespace ToSic.Sxc.Adam.Internal;
+namespace ToSic.Sxc.Adam.Manager.Internal;
 
 /// <summary>
 /// The Manager of ADAM
