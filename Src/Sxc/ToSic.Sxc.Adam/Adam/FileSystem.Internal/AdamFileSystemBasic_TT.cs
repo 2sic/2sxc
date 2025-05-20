@@ -52,7 +52,7 @@ public abstract class AdamFileSystemBasic<TFolder, TFile>: ServiceBase, IAdamFil
     public abstract IFile Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName);
     public abstract void AddFolder(string path);
     public abstract bool FolderExists(string path);
-    public abstract Folder<TFolder, TFile> GetFolder(TFolder folderId);
+    //public abstract Folder<TFolder, TFile> GetFolder(TFolder folderId);
     public abstract IFolder GetFolder(AdamAssetIdentifier folderId);
 
     public abstract List<Folder<TFolder, TFile>> GetFolders(IFolder folder);

@@ -18,6 +18,13 @@ public interface IAdamFileSystem: IHasLog
 
     //File<TFolderId, TFileId> GetFile(TFileId fileId);
 
+    /// <summary>
+    /// NEW WIP
+    /// </summary>
+    /// <param name="fileId"></param>
+    /// <returns></returns>
+    IFile GetFile(AdamAssetIdentifier fileId);
+
     //List<File<TFolderId, TFileId>> GetFiles(IFolder folder);
 
     void Rename(IFile file, string newName);
@@ -35,6 +42,7 @@ public interface IAdamFileSystem: IHasLog
     bool FolderExists(string path);
 
     //Folder<TFolderId, TFileId> GetFolder(TFolderId folderId);
+    IFolder GetFolder(AdamAssetIdentifier folderId);
 
     //List<Folder<TFolderId, TFileId>> GetFolders(IFolder folder);
 

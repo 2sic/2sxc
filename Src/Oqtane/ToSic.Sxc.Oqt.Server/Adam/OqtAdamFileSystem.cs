@@ -51,7 +51,7 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
 
     public override IFile GetFile(AdamAssetIdentifier fileId)
     {
-        var id = ((AdamAssetIdentifier<int>)fileId).SysId;
+        var id = ((AdamAssetId<int>)fileId).SysId;
         var file = OqtFileRepository.GetFile(id);
         return OqtToAdam(file);
     }
@@ -201,8 +201,6 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
 
     public override Folder<int, int> Get(string path) => OqtToAdam(GetOqtFolderByName(path));
 
-    public override IFolder GetFolder(AdamAssetIdentifier folderId)
-        => GetFolder(((AdamAssetIdentifier<int>)folderId).SysId);
 
     public override List<Folder<int, int>> GetFolders(IFolder folder)
     {
@@ -228,8 +226,11 @@ internal class OqtAdamFileSystem : AdamFileSystemBasic<int, int>, IAdamFileSyste
         return subFolders;
     }
 
-    public override Folder<int, int> GetFolder(int folderId)
-        => OqtToAdam(GetOqtFolder(folderId));
+    //public override Folder<int, int> GetFolder(int folderId)
+    //    => OqtToAdam(GetOqtFolder(folderId));
+
+    public override IFolder GetFolder(AdamAssetIdentifier folderId)
+        => OqtToAdam(GetOqtFolder(((AdamAssetId<int>)folderId).SysId));
 
     #endregion
 

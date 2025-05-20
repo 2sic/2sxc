@@ -13,7 +13,7 @@ public partial class AdamFileSystemBasic
 
     public override IFile GetFile(AdamAssetIdentifier fileId)
     {
-        var id = ((AdamAssetIdentifier<string>)fileId).SysId;
+        var id = ((AdamAssetId<string>)fileId).SysId;
         var dir = FsHelpers.EnsurePhysicalPath(id);
         return ToAdamFile(dir);
     }

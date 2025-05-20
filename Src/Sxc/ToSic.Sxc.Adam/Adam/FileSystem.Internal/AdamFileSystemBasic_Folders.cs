@@ -19,11 +19,11 @@ public partial class AdamFileSystemBasic
     }
 
     /// <inheritdoc />
-    public override Folder<string, string> GetFolder(string folderId)
-        => ToAdamFolder(FsHelpers.EnsurePhysicalPath(folderId));
+    //public override Folder<string, string> GetFolder(string folderId)
+    //    => ToAdamFolder(FsHelpers.EnsurePhysicalPath(folderId));
 
     public override IFolder GetFolder(AdamAssetIdentifier folderId)
-        => GetFolder(((AdamAssetIdentifier<string>)folderId).SysId);
+        => ToAdamFolder(FsHelpers.EnsurePhysicalPath(((AdamAssetId<string>)folderId).SysId));
 
     /// <inheritdoc />
     public override List<Folder<string, string>> GetFolders(IFolder folder)

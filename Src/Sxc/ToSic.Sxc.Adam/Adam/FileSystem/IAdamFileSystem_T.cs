@@ -37,7 +37,7 @@ public interface IAdamFileSystem<TFolderId, TFileId>: IAdamFileSystem
     //void AddFolder(string path);
     //bool FolderExists(string path);
 
-    Folder<TFolderId, TFileId> GetFolder(TFolderId folderId);
+    //Folder<TFolderId, TFileId> GetFolder(TFolderId folderId);
     IFolder GetFolder(AdamAssetIdentifier folderId);
 
     List<Folder<TFolderId, TFileId>> GetFolders(IFolder folder);

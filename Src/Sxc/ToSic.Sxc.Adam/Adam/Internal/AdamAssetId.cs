@@ -6,11 +6,11 @@
 /// </summary>
 public record AdamAssetIdentifier
 {
-    public static AdamAssetIdentifier<T> Create<T>(T sysId) => new() { SysId = sysId };
+    public static AdamAssetId<T> Create<T>(T sysId) => new() { SysId = sysId };
 }
 
 
-public record AdamAssetIdentifier<TFileId> : AdamAssetIdentifier
+public record AdamAssetId<TFileId> : AdamAssetIdentifier
 {
     public TFileId SysId { get; init; }
 }
