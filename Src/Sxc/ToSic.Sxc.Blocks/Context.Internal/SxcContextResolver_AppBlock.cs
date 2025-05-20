@@ -50,13 +50,15 @@ partial class SxcContextResolver
     }
 
 
-    public IContextOfApp SetAppOrGetBlock(string nameOrPath) => SetAppOrNull(nameOrPath) ?? BlockContextRequired();
+    public IContextOfApp SetAppOrGetBlock(string nameOrPath)
+        => SetAppOrNull(nameOrPath) ?? BlockContextRequired();
 
 
     public IContextOfApp AppNameRouteBlock(string nameOrPath)
     {
         var ctx = SetAppOrNull(nameOrPath);
-        if (ctx != null) return ctx;
+        if (ctx != null)
+            return ctx;
 
         var identity = appIdResolverLazy.Value.GetAppIdFromRoute();
         if (identity != null)

@@ -4,7 +4,6 @@ using ToSic.Eav.Metadata;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam.Manager;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 
@@ -18,7 +17,8 @@ namespace ToSic.Sxc.Adam.Internal;
 /// It's abstract, because there will be a typed implementation inheriting this
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamManager: ServiceBase<AdamManager.MyServices>, ICompatibilityLevel
+public class AdamManager(AdamManager.MyServices services)
+    : ServiceBase<AdamManager.MyServices>(services, "Adm.Managr")
 {
     #region MyServices
 
@@ -26,7 +26,7 @@ public class AdamManager: ServiceBase<AdamManager.MyServices>, ICompatibilityLev
         LazySvc<IAdamFileSystem> adamFsLazy, Generator<AdamStorageOfField> fieldStorageGenerator, AdamGenericHelper adamGenericHelper)
         : MyServicesBase(connect: [cdf, adamConfiguration, adamFsLazy, fieldStorageGenerator])
     {
-        public LazySvc<ICodeDataFactory> Cdf { get; } = cdf;
+        public LazySvc<ICodeDataFactory> CdfIfNotProvided { get; } = cdf;
         public AdamConfiguration AdamConfiguration { get; } = adamConfiguration;
         public LazySvc<IAdamFileSystem> AdamFsLazy { get; } = adamFsLazy;
         public Generator<AdamStorageOfField> FieldStorageGenerator { get; } = fieldStorageGenerator;
@@ -35,44 +35,29 @@ public class AdamManager: ServiceBase<AdamManager.MyServices>, ICompatibilityLev
 
     #endregion
 
-    #region Constructor and Services Setup
-
-    public AdamManager(MyServices services) : base(services, "Adm.Managr")
-    {
-        // Note: Services are already connected in base class
-        Services.Cdf.SetInit(obj => obj.SetFallbacks(AppContext?.Site, CompatibilityLevel, this));
-
-        Services.AdamFsLazy.SetInit(f => f.Init(this));
-    }
-
-    #endregion
-
     #region Init
 
-    public virtual AdamManager Init(IContextOfApp ctx, ICodeDataFactory cdf, int compatibility)
+    public AdamManager Init(IContextOfApp appCtx, int compatibility, ICodeDataFactory cdf = default)
     {
         var l = Log.Fn<AdamManager>();
-        AppContext = ctx;
-        Site = ctx.Site;
-        AppWorkCtx = new AppWorkCtx(ctx.AppReader);
-        CompatibilityLevel = compatibility;
-        Cdf = cdf;
+        AppContext = appCtx;
+        Services.CdfIfNotProvided.SetInit(obj => obj.SetFallbacks(AppContext?.Site, compatibility, this));
+        Cdf = cdf
+              ?? Services.CdfIfNotProvided
+                  .SetInit(obj => obj.SetFallbacks(AppContext?.Site, compatibility, this))
+                  .Value;
         return l.Return(this, "ready");
     }
 
-    public IAdamFileSystem AdamFs => field ??= Services.AdamFsLazy.Value;
+    public IAdamFileSystem AdamFs => field ??= Services.AdamFsLazy.SetInit(f => f.Init(this)).Value;
 
-    public IAppWorkCtx AppWorkCtx { get; private set; }
+    public IAppWorkCtx AppWorkCtx => field ??= new AppWorkCtx(AppContext.AppReader);
 
-    public IContextOfApp AppContext { get; private set; }
+    private IContextOfApp AppContext { get; set; }
 
-    public ISite Site { get; private set; }
+    public ISite Site => field ??= AppContext.Site;
 
-    internal ICodeDataFactory Cdf
-    {
-        get => field ??= Services.Cdf.Value;
-        private set;
-    }
+    internal ICodeDataFactory Cdf { get; private set; }
 
     #endregion
 
@@ -80,10 +65,6 @@ public class AdamManager: ServiceBase<AdamManager.MyServices>, ICompatibilityLev
     /// Path to the app assets
     /// </summary>
     public string Path => field ??= Services.AdamConfiguration.PathForApp(AppContext.AppReader.Specs);
-
-
-    [PrivateApi]
-    public int CompatibilityLevel { get; set; }
 
     #region Folder Stuff
 

@@ -34,7 +34,7 @@ internal class OqtXmlExporter(
 
     protected override void PostContextInit(IContextOfApp appContext)
     {
-        adamManager.Init(appContext, cdf: null, CompatibilityLevels.CompatibilityLevel10);
+        adamManager.Init(appContext, CompatibilityLevels.CompatibilityLevel10);
     }
 
 

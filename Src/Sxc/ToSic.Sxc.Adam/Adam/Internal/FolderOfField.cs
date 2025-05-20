@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Adam.Internal;
 /// This is the root folder where all files for this field are stored
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class FolderOfField<TFolderId, TFileId> : Folder<TFolderId, TFileId>
+internal class FolderOfField<TFolderId, TFileId> : Folder<TFolderId, TFileId>
 {
     public FolderOfField(AdamManager adamManager, AdamStorageOfField adamStorageOfField, IField field) : base(adamManager)
     {

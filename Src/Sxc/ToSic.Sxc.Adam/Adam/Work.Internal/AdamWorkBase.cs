@@ -29,7 +29,7 @@ public abstract class AdamWorkBase(AdamWorkBase.MyServices services, string logN
             ? Services.CtxResolver.GetExistingAppOrSet(options.AppId)
             : Services.CtxResolver.AppNameRouteBlock(null);
         var l = Log.Fn($"app: {context.AppReader.Show()}, type: {o.ContentType}, itemGuid: {o.ItemGuid}, field: {o.Field}, portalRoot: {o.UsePortalRoot}");
-        AdamContext.Init(context, o.ContentType, o.Field, o.ItemGuid, o.UsePortalRoot, cdf: null);
+        AdamContext.Init(context, o.ContentType, o.Field, o.ItemGuid, o.UsePortalRoot);
         l.Done();
     }
 

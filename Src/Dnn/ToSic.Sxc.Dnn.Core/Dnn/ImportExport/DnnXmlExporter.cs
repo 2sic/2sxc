@@ -23,7 +23,7 @@ internal class DnnXmlExporter(
 
     protected override void PostContextInit(IContextOfApp appContext)
     {
-        adamManager.Init(ctx: appContext, cdf: null, compatibility: CompatibilityLevels.CompatibilityLevel10);
+        adamManager.Init(appCtx: appContext, compatibility: CompatibilityLevels.CompatibilityLevel10);
     }
 
     #endregion

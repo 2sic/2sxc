@@ -6,7 +6,6 @@
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IAdamFileSystem: IHasLog
 {
-    //void Init(AdamManager<TFolderId, TFileId> adamManager);
     void Init(AdamManager adamManager);
 
     #region FileSystem Settings
@@ -17,8 +16,6 @@ public interface IAdamFileSystem: IHasLog
 
     #region Files
 
-    //File<TFolderId, TFileId> GetFile(TFileId fileId);
-
     /// <summary>
     /// NEW WIP
     /// </summary>
@@ -26,7 +23,6 @@ public interface IAdamFileSystem: IHasLog
     /// <returns></returns>
     IFile GetFile(AdamAssetIdentifier fileId);
 
-    //List<File<TFolderId, TFileId>> GetFiles(IFolder folder);
     List<IFile> GetFiles(IFolder folder);
 
     void Rename(IFile file, string newName);
@@ -53,10 +49,8 @@ public interface IAdamFileSystem: IHasLog
     /// <returns></returns>
     bool FolderExists(string path);
 
-    //Folder<TFolderId, TFileId> GetFolder(TFolderId folderId);
     IFolder GetFolder(AdamAssetIdentifier folderId);
 
-    //List<Folder<TFolderId, TFileId>> GetFolders(IFolder folder);
     List<IFolder> GetFolders(IFolder folder);
 
 
@@ -66,7 +60,6 @@ public interface IAdamFileSystem: IHasLog
 
     #endregion
 
-    //Folder<TFolderId, TFileId> Get(string path);
     IFolder Get(string path);
 
 }

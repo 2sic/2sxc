@@ -13,7 +13,8 @@ using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 namespace ToSic.Sxc.Adam.Internal;
 
 /// <summary>
-/// The context of ADAM operations - containing site, app, field, entity-guid etc.
+/// The security context of ADAM operations - containing site, app, field, entity-guid etc.
+/// Will check if operations are allowed at setup, and throw errors otherwise.
 /// </summary>
 /// <remarks>
 /// It's abstract, because there will be a typed implementation inheriting this
@@ -57,24 +58,15 @@ public class AdamContext(AdamContext.MyServices services)
     /// <summary>
     /// Initializes the object and performs all the initial security checks
     /// </summary>
-    public AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ICodeDataFactory cdf)
+    public AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot)
     {
-        var logCall = Log.Fn<AdamContext>($"..., usePortalRoot: {usePortalRoot}");
-        AdamManager.Init(context, cdf, CompatibilityLevels.CompatibilityLevel10);
+        var l = Log.Fn<AdamContext>($"app: {context.AppReader.Show()}, field:{fieldName}, guid:{entityGuid}, usePortalRoot: {usePortalRoot}");
+        AdamManager.Init(context, CompatibilityLevels.CompatibilityLevel10);
         AdamRoot = usePortalRoot
             ? Services.SiteStorageGen.New()
             : Services.FieldStorageGen.New().InitItemAndField(entityGuid, fieldName);
         AdamRoot.Init(AdamManager);
 
-        InitBase(context, contentType, fieldName, entityGuid, usePortalRoot, cdf);
-
-        return logCall.Return(this);
-
-    }
-
-    protected AdamContext InitBase(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ICodeDataFactory cdf)
-    {
-        var l = Log.Fn<AdamContext>($"app: {context.AppReader.Show()}, field:{fieldName}, guid:{entityGuid}");
         Context = context;
 
         Permissions = Services.TypesPermissions.New()

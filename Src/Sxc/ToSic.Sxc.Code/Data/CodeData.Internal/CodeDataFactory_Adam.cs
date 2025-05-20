@@ -47,7 +47,7 @@ partial class CodeDataFactory
             contextOfApp.ResetApp(app);
         }
 
-        return adamManager.Value.Init(contextOfApp, this, CompatibilityLevel);
+        return adamManager.Value.Init(contextOfApp, CompatibilityLevel, this);
     }
     #region ADAM / Folder
 

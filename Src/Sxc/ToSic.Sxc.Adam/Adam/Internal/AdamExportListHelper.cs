@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Adam.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamExportListHelper<TFolderId, TFileId>(AdamManager adm)
 {
-    private readonly Folder<TFolderId, TFileId> _root = adm.RootFolder.ToLocal<TFolderId, TFileId>();
+    private readonly IFolder _root = adm.RootFolder;
     // todo #adamid - should use TFile/TFolder
     private readonly List<TFileId> _fileIds = [];
     private readonly List<TFolderId> _folderIds = [];
