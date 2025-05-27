@@ -47,7 +47,7 @@ internal class SecureDataService(AesCryptographyService aes)
         try
         {
             // will return null if it fails
-            var decrypted = Aes.DecryptFromBase64(toDecrypt, new(true) { InitializationVector64 = iv });
+            var decrypted = Aes.DecryptFromBase64(toDecrypt, new() { InitializationVector64 = iv });
             return decrypted == null 
                 ? l.Return(new SecureData<string>(value, false), $"{nameof(decrypted)} null/empty")
                 : l.Return(new SecureData<string>(decrypted, true), "decrypted");

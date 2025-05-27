@@ -14,7 +14,7 @@ public class AesCryptographyServiceTests
 #pragma warning restore CS0219
         var r = new Rfc2898Generator();
         var aes = new AesCryptographyService(r);
-        var ret = aes.DecryptFromBase64(v, new(true) { InitializationVector64 = "HUyYDwdMhsuiaxZo3TG4Zg==" } );
+        var ret = aes.DecryptFromBase64(v, new() { InitializationVector64 = "HUyYDwdMhsuiaxZo3TG4Zg==" } );
         Equal("AIzaSyAKEFBVw7SddUQR0YnAuTam5wpXvDomzts", ret);
     }
 }
