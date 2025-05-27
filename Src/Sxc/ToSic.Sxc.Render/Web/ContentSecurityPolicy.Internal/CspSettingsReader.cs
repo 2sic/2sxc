@@ -2,6 +2,7 @@
 using ToSic.Lib.GetByName;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
+using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 

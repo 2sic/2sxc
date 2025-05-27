@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.WebApi.Errors;
+using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Adam.Work.Internal;
 

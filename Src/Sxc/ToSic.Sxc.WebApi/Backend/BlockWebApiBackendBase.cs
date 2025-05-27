@@ -2,6 +2,7 @@
 using ToSic.Eav.Security.Internal;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Backend;
 

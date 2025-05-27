@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Security.Internal;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Backend.Usage;
 

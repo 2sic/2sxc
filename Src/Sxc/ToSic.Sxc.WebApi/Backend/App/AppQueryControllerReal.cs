@@ -8,6 +8,7 @@ using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.LookUp.Engines;
 using ToSic.Sxc.Data.Internal.Convert;
+using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Backend.App;
 

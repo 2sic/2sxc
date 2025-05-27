@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Polymorphism.Internal;
+using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Web.Internal.JsContext;
 

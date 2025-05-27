@@ -6,6 +6,7 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.SaveHelpers;
 using ToSic.Sxc.Backend.SaveHelpers;
+using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.Cms;

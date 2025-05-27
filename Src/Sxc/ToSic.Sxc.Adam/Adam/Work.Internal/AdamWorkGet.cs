@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Adam.Work.Internal;
+﻿using ToSic.Sys.Security.Permissions;
+
+namespace ToSic.Sxc.Adam.Work.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamWorkGet(AdamWorkBase.MyServices services)

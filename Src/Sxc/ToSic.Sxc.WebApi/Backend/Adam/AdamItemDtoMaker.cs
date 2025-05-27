@@ -6,6 +6,7 @@ using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sxc.Adam.Security.Internal;
 using ToSic.Sxc.Adam.Work.Internal;
 using ToSic.Sxc.Data;
+using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Backend.Adam;
 

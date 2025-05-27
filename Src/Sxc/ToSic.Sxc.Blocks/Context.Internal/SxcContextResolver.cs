@@ -5,6 +5,7 @@ using ToSic.Lib.DI;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal.DotNet;
+using ToSic.Sys.Users.Permissions;
 
 namespace ToSic.Sxc.Context.Internal;
 

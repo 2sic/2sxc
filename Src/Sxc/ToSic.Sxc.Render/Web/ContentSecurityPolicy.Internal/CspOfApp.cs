@@ -6,6 +6,7 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 

@@ -6,6 +6,7 @@ using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Services;
 using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Cms.Users.Internal;
+using ToSic.Sys.Users;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform

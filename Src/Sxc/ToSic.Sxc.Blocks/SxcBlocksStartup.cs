@@ -12,6 +12,7 @@ using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Integration.Modules;
 using ToSic.Sxc.LookUp.Internal;
+using ToSic.Sys.Users.Permissions;
 
 namespace ToSic.Sxc;
 

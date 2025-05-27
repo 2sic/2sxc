@@ -7,6 +7,7 @@ using ToSic.Eav.Context;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.Internal;
+using ToSic.Sys.Users.Permissions;
 using static ToSic.Sxc.Dnn.DnnSxcSettings;
 
 namespace ToSic.Sxc.Dnn.Run;

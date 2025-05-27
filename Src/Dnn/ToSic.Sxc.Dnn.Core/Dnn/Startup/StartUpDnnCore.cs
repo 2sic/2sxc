@@ -38,6 +38,8 @@ using ToSic.Sxc.Integration.Modules;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal.DotNet;
 using ToSic.Sxc.Web.Internal.JsContext;
+using ToSic.Sys.Security.Permissions;
+using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Dnn.Startup;
 

@@ -7,6 +7,7 @@ using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.Internal.Url;
+using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.ContentBlocks;

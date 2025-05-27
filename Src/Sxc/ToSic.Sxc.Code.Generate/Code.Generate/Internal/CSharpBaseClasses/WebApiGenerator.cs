@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
+using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Code.Generate.Internal.CSharpBaseClasses;
 

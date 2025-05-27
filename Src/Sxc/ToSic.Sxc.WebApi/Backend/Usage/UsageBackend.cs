@@ -3,6 +3,7 @@ using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Backend.Usage;
 
