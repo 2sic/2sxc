@@ -1,9 +1,9 @@
 ﻿#if NETFRAMEWORK
 using ToSic.Eav.Apps;
-using ToSic.Lib.Code.InfoSystem;
 using ToSic.Lib.DI;
 using ToSic.Sxc.DataSources.Internal.Compatibility;
-using static ToSic.Lib.Code.Infos.CodeInfoObsolete;
+using ToSic.Sys.Code.InfoSystem;
+using static ToSic.Sys.Code.Infos.CodeInfoObsolete;
 
 namespace ToSic.Sxc.DataSources;
 

@@ -1,6 +1,6 @@
-﻿using ToSic.Lib.Code.InfoSystem;
-using ToSic.Sxc.Dnn.Services;
-using static ToSic.Lib.Code.Infos.CodeInfoObsolete;
+﻿using ToSic.Sxc.Dnn.Services;
+using ToSic.Sys.Code.InfoSystem;
+using static ToSic.Sys.Code.Infos.CodeInfoObsolete;
 
 
 // ReSharper disable once CheckNamespace

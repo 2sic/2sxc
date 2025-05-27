@@ -1,6 +1,6 @@
-﻿using ToSic.Lib.Code.Infos;
-using ToSic.Sxc.Blocks.Internal;
-using CodeInfoService = ToSic.Lib.Code.InfoSystem.CodeInfoService;
+﻿using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sys.Code.Infos;
+using CodeInfoService = ToSic.Sys.Code.InfoSystem.CodeInfoService;
 
 namespace ToSic.Sxc.Compatibility;
 

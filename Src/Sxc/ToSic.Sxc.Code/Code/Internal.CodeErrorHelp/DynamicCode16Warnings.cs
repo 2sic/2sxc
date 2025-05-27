@@ -1,5 +1,5 @@
-﻿using ToSic.Lib.Code.Infos;
-using static ToSic.Lib.Code.Infos.CodeInfoWarning;
+﻿using ToSic.Sys.Code.Infos;
+using static ToSic.Sys.Code.Infos.CodeInfoWarning;
 
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 

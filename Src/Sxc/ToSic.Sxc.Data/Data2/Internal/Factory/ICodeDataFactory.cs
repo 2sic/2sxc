@@ -2,11 +2,11 @@
 using ToSic.Eav.Context;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Metadata;
-using ToSic.Lib.Code.InfoSystem;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
+using ToSic.Sys.Code.InfoSystem;
 
 namespace ToSic.Sxc.Data.Internal;
 

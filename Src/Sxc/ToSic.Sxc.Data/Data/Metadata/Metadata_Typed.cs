@@ -7,7 +7,7 @@ using ToSic.Sxc.Cms.Data;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
-using static ToSic.Lib.Code.Infos.CodeInfoObsolete;
+using static ToSic.Sys.Code.Infos.CodeInfoObsolete;
 using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Internal.Metadata;

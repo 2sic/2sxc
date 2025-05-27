@@ -7,7 +7,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Data.Internal;
-using CodeInfoService = ToSic.Lib.Code.InfoSystem.CodeInfoService;
+using CodeInfoService = ToSic.Sys.Code.InfoSystem.CodeInfoService;
 
 namespace ToSic.Sxc.Apps;
 
