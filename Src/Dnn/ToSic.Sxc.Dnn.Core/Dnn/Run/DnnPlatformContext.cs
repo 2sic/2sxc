@@ -1,7 +1,7 @@
 ﻿using DotNetNuke.Application;
-using ToSic.Eav.Context;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
+using ToSic.Sys.Capabilities.Platform;
 
 namespace ToSic.Sxc.Dnn.Run;
 

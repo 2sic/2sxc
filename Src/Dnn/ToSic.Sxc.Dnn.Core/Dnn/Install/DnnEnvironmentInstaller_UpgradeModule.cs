@@ -2,7 +2,6 @@
 using DotNetNuke.Entities.Controllers;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.IO;
 using ToSic.Eav;
 using ToSic.Eav.Internal.Configuration;
 using Exception = System.Exception;

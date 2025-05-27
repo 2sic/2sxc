@@ -1,5 +1,4 @@
-﻿using System.IO;
-using DotNetNuke.Entities.Portals;
+﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Persistence.Logging;

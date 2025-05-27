@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Web.Compilation;
+﻿using System.Web.Compilation;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;

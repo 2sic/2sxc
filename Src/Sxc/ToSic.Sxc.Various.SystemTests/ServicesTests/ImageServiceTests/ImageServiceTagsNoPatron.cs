@@ -3,6 +3,7 @@ using ToSic.Eav.Internal.Licenses;
 using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Capabilities.Licenses;
+using ToSic.Sys.Capabilities.Platform;
 using ToSic.Testing.Shared.Platforms;
 using Xunit.Abstractions;
 

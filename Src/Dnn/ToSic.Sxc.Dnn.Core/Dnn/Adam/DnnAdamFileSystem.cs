@@ -1,6 +1,5 @@
 ﻿using System.Configuration;
 using System.Data.SqlClient;
-using System.IO;
 using System.Web.Configuration;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Apps.Internal;

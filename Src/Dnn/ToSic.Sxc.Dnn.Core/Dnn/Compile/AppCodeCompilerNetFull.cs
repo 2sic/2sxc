@@ -1,6 +1,5 @@
 ﻿using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using System.CodeDom.Compiler;
-using System.IO;
 using System.Reflection;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Sxc.Code.Internal.HotBuild;

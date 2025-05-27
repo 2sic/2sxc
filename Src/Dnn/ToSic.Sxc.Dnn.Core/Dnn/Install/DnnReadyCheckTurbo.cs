@@ -1,6 +1,5 @@
 ﻿using DotNetNuke.Entities.Modules;
 using System.Collections.Concurrent;
-using System.IO;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Blocks.Internal;

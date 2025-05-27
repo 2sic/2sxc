@@ -1,5 +1,4 @@
-﻿using System.IO;
-using DotNetNuke.Common;
+﻿using DotNetNuke.Common;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Context;
 

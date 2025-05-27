@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace ToSic.Sxc.Dnn.Install;
+﻿namespace ToSic.Sxc.Dnn.Install;
 
 internal class Helpers
 {

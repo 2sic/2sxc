@@ -54,8 +54,11 @@ public class StartupDnn : IServiceRouteMapper
         var transientSp = DnnStaticDi.GetGlobalScopedServiceProvider();
 
         // now we should be able to instantiate registration of DB
-        transientSp.Build<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
+        var connectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
+        transientSp.Build<IDbConfiguration>().ConnectionString = connectionString;
         var globalConfig = transientSp.Build<IGlobalConfiguration>();
+
+        globalConfig.ConnectionString(connectionString);
 
         globalConfig.GlobalFolder(HostingEnvironment.MapPath(DnnConstants.SysFolderRootVirtual));
         globalConfig.AssetsVirtualUrl(DnnConstants.SysFolderRootVirtual + "assets/");

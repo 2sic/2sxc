@@ -1,6 +1,5 @@
 ﻿#if NETFRAMEWORK
 using ToSic.Eav.DataSource;
-using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.DataSources.Internal.Compatibility;
 using ToSic.Eav.Data;

@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace ToSic.Sxc.Dnn.Compile;
+﻿namespace ToSic.Sxc.Dnn.Compile;
 
 [PrivateApi]
 internal class RoslynCompilerCapability

@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Text;
+﻿using System.Text;
 using System.Web.Hosting;
 using ToSic.Lib.Services;
 using static System.IO.Directory;

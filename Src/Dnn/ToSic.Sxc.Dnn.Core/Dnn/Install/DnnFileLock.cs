@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Web.Hosting;
+﻿using System.Web.Hosting;
 
 namespace ToSic.Sxc.Dnn.Install;
 

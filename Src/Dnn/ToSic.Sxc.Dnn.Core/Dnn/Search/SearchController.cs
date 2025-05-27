@@ -1,7 +1,6 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
 using System.Collections.Immutable;
-using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
 using ToSic.Eav.Apps;
@@ -10,7 +9,6 @@ using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.LookUp;
 using ToSic.Lib.LookUp.Engines;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;

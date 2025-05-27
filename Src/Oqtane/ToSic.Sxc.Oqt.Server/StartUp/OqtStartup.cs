@@ -119,6 +119,7 @@ public class OqtStartup : IServerStartup
         serviceProvider.Build<IDbConfiguration>().ConnectionString = Configuration.GetConnectionString("DefaultConnection");
 
         var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
+        globalConfig.ConnectionString(Configuration.GetConnectionString("DefaultConnection"));
         globalConfig.GlobalFolder(Path.Combine(env.ContentRootPath, "wwwroot\\Modules", OqtConstants.PackageName));
         globalConfig.AppDataTemplateFolder(Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.AppDataProtectedFolder, Eav.Constants.NewAppFolder));
         globalConfig.NewAppsTemplateFolder(Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.AppDataProtectedFolder, Eav.Constants.NewAppsFolder));

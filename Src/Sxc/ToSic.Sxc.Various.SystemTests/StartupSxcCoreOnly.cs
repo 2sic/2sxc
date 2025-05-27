@@ -55,5 +55,6 @@ public class StartupSxcCoreOnly
             .AddEavDataBuild()
             .AddEavCore()
             .AddEavCoreFallbackServices()
-            .AddLibFeatSys();
+            .AddSysCapabilities()
+            .AddSysCapabilitiesFallback();
 }
