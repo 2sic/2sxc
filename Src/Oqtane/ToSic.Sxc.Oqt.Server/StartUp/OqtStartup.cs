@@ -116,8 +116,6 @@ public class OqtStartup : IServerStartup
 
         var serviceProvider = app.ApplicationServices;
 
-        serviceProvider.Build<IDbConfiguration>().ConnectionString = Configuration.GetConnectionString("DefaultConnection");
-
         var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
         globalConfig.ConnectionString(Configuration.GetConnectionString("DefaultConnection"));
         globalConfig.GlobalFolder(Path.Combine(env.ContentRootPath, "wwwroot\\Modules", OqtConstants.PackageName));

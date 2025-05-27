@@ -55,7 +55,7 @@ public class StartupDnn : IServiceRouteMapper
 
         // now we should be able to instantiate registration of DB
         var connectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
-        transientSp.Build<IDbConfiguration>().ConnectionString = connectionString;
+        
         var globalConfig = transientSp.Build<IGlobalConfiguration>();
 
         globalConfig.ConnectionString(connectionString);
