@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
 using Oqtane.Shared;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;

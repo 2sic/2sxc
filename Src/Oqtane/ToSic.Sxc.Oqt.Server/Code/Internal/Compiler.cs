@@ -2,8 +2,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Text;
-using System;
-using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using ToSic.Lib.DI;

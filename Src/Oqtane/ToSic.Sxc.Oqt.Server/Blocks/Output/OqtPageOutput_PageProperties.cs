@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Sxc.Oqt.Shared.Models;
+﻿using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Web.Internal.PageService;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output;

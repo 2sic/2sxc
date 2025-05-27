@@ -12,7 +12,6 @@ using Oqtane.Infrastructure;
 using Oqtane.Shared;
 using Oqtane.UI;
 using OqtaneSSR.Extensions;
-using System.IO;
 using ToSic.Eav.Integration;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Internal.Loaders;

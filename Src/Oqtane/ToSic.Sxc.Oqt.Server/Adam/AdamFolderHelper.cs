@@ -1,5 +1,4 @@
-﻿using Oqtane.Extensions;
-using Oqtane.Models;
+﻿using Oqtane.Models;
 using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Server.Integration;
 

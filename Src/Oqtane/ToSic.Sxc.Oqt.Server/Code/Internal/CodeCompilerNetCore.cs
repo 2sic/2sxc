@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using ToSic.Eav.Internal.Environment;
+﻿using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sys.Utils;

@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Threading.Tasks;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Web.Internal.Url;
 

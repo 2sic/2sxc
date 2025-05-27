@@ -1,10 +1,7 @@
-﻿using System;
-using System.IO;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.LookUp;
 using ToSic.Eav.WebApi;
 using ToSic.Lib.Coding;
 using ToSic.Lib.LookUp.Engines;

@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Internal.Features;
-using ToSic.Sys.Capabilities.SysFeatures;
+﻿using ToSic.Sys.Capabilities.SysFeatures;
 using static ToSic.Eav.Internal.Features.SysFeatureSuggestions;
 // ReSharper disable UnusedMember.Global
 

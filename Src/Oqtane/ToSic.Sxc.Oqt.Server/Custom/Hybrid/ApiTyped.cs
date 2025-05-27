@@ -1,7 +1,5 @@
-﻿using System;
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Data;
 using ToSic.Eav.WebApi;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
@@ -11,7 +9,6 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.Oqt.Server.Custom;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
 using ToSic.Sxc.Adam;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.DataSource;

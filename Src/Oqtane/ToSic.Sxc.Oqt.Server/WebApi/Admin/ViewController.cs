@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using System;
 using ToSic.Lib.DI;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;

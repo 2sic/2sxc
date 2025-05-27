@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using Imazen.Common.Storage;
+﻿using Imazen.Common.Storage;
 
 namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 #pragma warning disable S3881 // "IDisposable" should be implemented correctly

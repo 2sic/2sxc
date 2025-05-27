@@ -1,5 +1,4 @@
-﻿using System;
-using static ToSic.Sxc.Oqt.Server.WebApi.OqtWebApiConstants;
+﻿using static ToSic.Sxc.Oqt.Server.WebApi.OqtWebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
 

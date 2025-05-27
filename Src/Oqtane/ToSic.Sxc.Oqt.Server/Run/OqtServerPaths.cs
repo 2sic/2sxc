@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Oqtane.Repository;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.DI;

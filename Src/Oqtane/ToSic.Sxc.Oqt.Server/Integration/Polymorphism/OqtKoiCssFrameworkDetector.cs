@@ -1,5 +1,4 @@
-﻿using System;
-using Connect.Koi.Detectors;
+﻿using Connect.Koi.Detectors;
 
 namespace ToSic.Sxc.Oqt.Server.Polymorphism;
 

@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using System.Threading.Tasks;
 using ToSic.Eav.WebApi.Errors;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
