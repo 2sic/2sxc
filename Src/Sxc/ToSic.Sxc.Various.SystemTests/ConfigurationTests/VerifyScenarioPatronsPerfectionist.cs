@@ -2,7 +2,6 @@
 using ToSic.Eav.Context;
 using ToSic.Eav.Integration;
 using ToSic.Eav.StartUp;
-using ToSic.Lib.Internal.FeatSys;
 using ToSic.Testing.Shared.Platforms;
 
 namespace ToSic.Sxc.ConfigurationTests;

@@ -2,6 +2,7 @@
 using ToSic.Eav.StartUp;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Configuration.Internal;
+using ToSic.Sys.Capabilities.Features;
 
 namespace ToSic.Sxc.Startup;
 

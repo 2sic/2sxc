@@ -2,6 +2,7 @@
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Testing.Scenarios;
 using ToSic.Sxc.Dnn.StartUp;
+using ToSic.Sys.Capabilities.Features;
 using BuiltInFeatures = ToSic.Eav.Internal.Features.BuiltInFeatures;
 
 #pragma warning disable 618

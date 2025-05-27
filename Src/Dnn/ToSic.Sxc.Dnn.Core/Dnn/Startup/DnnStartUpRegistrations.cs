@@ -2,6 +2,7 @@
 using ToSic.Eav.StartUp;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Dnn.Features;
+using ToSic.Sys.Capabilities.Features;
 
 namespace ToSic.Sxc.Dnn.StartUp;
 

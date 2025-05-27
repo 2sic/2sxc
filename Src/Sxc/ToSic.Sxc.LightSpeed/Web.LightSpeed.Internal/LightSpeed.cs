@@ -12,6 +12,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Utils;
 using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 

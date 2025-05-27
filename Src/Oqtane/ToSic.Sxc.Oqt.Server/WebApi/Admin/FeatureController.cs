@@ -6,6 +6,7 @@ using ToSic.Eav.WebApi.Admin.Features;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Eav.WebApi.Sys.Licenses;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sys.Capabilities.Features;
 using RealController = ToSic.Eav.WebApi.Admin.Features.FeatureControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;

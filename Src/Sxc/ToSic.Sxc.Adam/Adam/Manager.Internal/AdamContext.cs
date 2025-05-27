@@ -9,6 +9,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Adam.Security.Internal;
 using ToSic.Sxc.Adam.Storage.Internal;
 using ToSic.Sxc.Internal;
+using ToSic.Sys.Capabilities.Features;
 using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Adam.Manager.Internal;

@@ -6,6 +6,7 @@ using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.WebApi;
+using ToSic.Sys.Capabilities.Features;
 using static ToSic.Eav.Internal.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Backend.Adam;

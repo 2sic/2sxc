@@ -12,6 +12,7 @@ using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Serialization.Internal;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Validation;
+using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Users;
 using ToSic.Sys.Utils;
 

@@ -7,6 +7,7 @@ using ToSic.Lib.DI;
 using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Capabilities.Features;
 
 namespace ToSic.Sxc.Services.Cache;
 

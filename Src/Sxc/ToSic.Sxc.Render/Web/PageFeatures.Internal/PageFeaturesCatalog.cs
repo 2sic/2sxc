@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Internal.Catalogs;
+﻿using ToSic.Sys.Startup;
 using static ToSic.Sxc.Web.Internal.PageFeatures.SxcPageFeatures;
 
 namespace ToSic.Sxc.Web.Internal.PageFeatures;

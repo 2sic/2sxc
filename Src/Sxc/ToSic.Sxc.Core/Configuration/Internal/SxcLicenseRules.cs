@@ -1,5 +1,7 @@
 ﻿using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Internal.Licenses;
+using ToSic.Sys.Capabilities.Features;
+using ToSic.Sys.Capabilities.Licenses;
 
 namespace ToSic.Sxc.Configuration.Internal;
 internal class SxcLicenseRules

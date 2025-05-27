@@ -10,6 +10,7 @@ using ToSic.Lib.DI;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Images.Internal;
+using ToSic.Sys.Capabilities.Features;
 
 namespace ToSic.Sxc.Dnn.StartUp;
 

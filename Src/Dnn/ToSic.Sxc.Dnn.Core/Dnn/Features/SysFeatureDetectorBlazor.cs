@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Internal.Features;
+using ToSic.Sys.Capabilities.SysFeatures;
 using static ToSic.Eav.Internal.Features.SysFeatureSuggestions;
 
 namespace ToSic.Sxc.Dnn.Features;

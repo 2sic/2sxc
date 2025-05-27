@@ -10,6 +10,7 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Internal.Url;
+using ToSic.Sys.Capabilities.Features;
 using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 using static ToSic.Sxc.Images.Internal.ImageConstants;
 using static ToSic.Sxc.Images.Internal.ImageDecorator;
