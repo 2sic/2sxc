@@ -3,7 +3,6 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Cms.Users.Internal;
-using ToSic.Testing.Shared;
 
 namespace ToSic.Sxc.DataSources;
 
@@ -14,7 +13,7 @@ namespace ToSic.Sxc.DataSources;
 // since that code would never be used in production.
 // So for now, most of the tests are disabled
 //
-// In future, we should find a way to system-test DNN DBs with real data, to make sure the filters work
+// In the future, we should find a way to system-test DNN DBs with real data, to make sure the filters work
 
 public class UsersDataSourceTests(DataBuilder dataBuilder, DataSourcesTstBuilder DsSvc) : IClassFixture<DoFixtureStartup<ScenarioBasic>>
 {
@@ -213,7 +212,7 @@ public class UsersDataSourceTests(DataBuilder dataBuilder, DataSourcesTstBuilder
         Equal(expected, usersDataSource.List.ToList().Count);
     }
 
-    private Users GenerateUsersDataSource(object options = default)
+    private Users GenerateUsersDataSource(object? options = default)
         => DsSvc.CreateDataSourceNew<Users>(new DataSourceOptionConverter()
             .Create(new DataSourceOptions
             {

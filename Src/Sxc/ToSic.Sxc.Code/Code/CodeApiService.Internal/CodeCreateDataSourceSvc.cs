@@ -5,6 +5,7 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.Services;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
+using ToSic.Lib.LookUp.Engines;
 
 namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 

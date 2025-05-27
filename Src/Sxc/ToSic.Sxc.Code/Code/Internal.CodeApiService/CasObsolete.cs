@@ -1,6 +1,7 @@
 ﻿#if NETFRAMEWORK
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.LookUp.Engines;
 using ToSic.SexyContent;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;

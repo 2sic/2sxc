@@ -1,6 +1,9 @@
 ﻿using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Context;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.LookUp;
+using ToSic.Lib.LookUp.Engines;
+using ToSic.Lib.LookUp.Sources;
 using ToSic.Sxc.LookUp.Internal;
 using ToSic.Sxc.Web.Internal.DotNet;
 using static ToSic.Sxc.LookUp.LookUpConstants;

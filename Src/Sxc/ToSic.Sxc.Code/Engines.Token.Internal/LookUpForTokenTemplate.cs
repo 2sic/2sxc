@@ -2,6 +2,8 @@
 using System.Text.RegularExpressions;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.LookUp;
+using ToSic.Lib.LookUp.Sources;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data;
 
