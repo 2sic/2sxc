@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Eav.LookUp;
-using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Oqt.Server.Context;
+using LookUpConstants = ToSic.Sxc.LookUp.LookUpConstants;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps;
 

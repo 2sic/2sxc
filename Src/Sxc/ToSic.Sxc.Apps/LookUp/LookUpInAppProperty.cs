@@ -50,7 +50,7 @@ public class LookUpInAppProperty(string name, IApp app) : LookUpBase(name, "Look
 
         var subToken = CheckAndGetSubToken(key);
 
-        if (!subToken.HasSubtoken) return string.Empty;
+        if (!subToken.HasSubToken) return string.Empty;
 
         var subProvider = subToken.Source switch
         {
