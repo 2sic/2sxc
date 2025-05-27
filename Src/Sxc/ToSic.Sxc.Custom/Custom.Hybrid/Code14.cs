@@ -10,6 +10,7 @@ using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 
 // ReSharper disable once CheckNamespace
@@ -38,7 +39,7 @@ public abstract class Code14()
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => CodeHlp.CodeLog;
 
-    /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;

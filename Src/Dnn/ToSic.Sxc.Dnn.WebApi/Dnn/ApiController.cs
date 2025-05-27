@@ -17,6 +17,7 @@ using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn;
 
@@ -58,7 +59,7 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
     /// <inheritdoc cref="IDynamicCode.Data" />
     public IDataSource Data => CodeApi.Data;
 
-    /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
 
     /// <inheritdoc cref="IHasDnn.Dnn"/>

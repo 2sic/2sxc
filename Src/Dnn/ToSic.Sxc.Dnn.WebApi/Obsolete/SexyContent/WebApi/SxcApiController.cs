@@ -25,6 +25,7 @@ using IFolder = ToSic.Sxc.Adam.IFolder;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable InheritdocInvalidUsage
 
@@ -56,7 +57,7 @@ public abstract partial class SxcApiController() :
 {
     internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
-    /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
 
     /// <inheritdoc cref="IHasDnn.Dnn"/>

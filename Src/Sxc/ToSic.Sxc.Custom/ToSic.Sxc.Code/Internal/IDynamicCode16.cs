@@ -3,6 +3,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Internal;
 
@@ -16,7 +17,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
 {
     #region Stuff basically inherited from v12/14
 
-    /// <inheritdoc cref="Eav.Code.ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     TService GetService<TService>() where TService : class;
 
     /// <inheritdoc cref="IDynamicCode.Link"/>

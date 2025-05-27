@@ -9,6 +9,7 @@ using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.DataSources.Internal.Compatibility;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn;
 
@@ -94,7 +95,7 @@ public abstract partial class RazorComponent : RazorComponentBase,
     /// <inheritdoc cref="IDynamicCode.Edit" />
     public IEditService Edit => CodeApi.Edit;
 
-    /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel10;

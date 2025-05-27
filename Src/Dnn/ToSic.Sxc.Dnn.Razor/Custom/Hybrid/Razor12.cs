@@ -4,6 +4,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Dnn.Razor;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.Help;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -45,7 +46,7 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
     /// <inheritdoc cref="IDynamicCode.Edit" />
     public IEditService Edit => CodeApi.Edit;
 
-    /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;

@@ -43,7 +43,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public new ICodeLog Log => CodeHlp.CodeLog;
 
-    /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class
         => CodeApi().GetService<TService>();
 

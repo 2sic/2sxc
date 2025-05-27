@@ -3,6 +3,7 @@ using ToSic.Lib.LookUp.Engines;
 using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Dnn.Razor;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.Help;
 
 // ReSharper disable once CheckNamespace
@@ -31,7 +32,7 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
 
-    /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
 

@@ -6,6 +6,7 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Sys.ExecutionContext;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Code;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // inherit from old namespace to ensure compatibility
 {
-    /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     TService GetService<TService>() where TService : class;
 
     /// <summary>

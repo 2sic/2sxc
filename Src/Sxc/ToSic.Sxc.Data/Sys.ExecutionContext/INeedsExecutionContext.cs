@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Sys.ExecutionContext;
-
-namespace ToSic.Sxc.Services.Internal;
+﻿namespace ToSic.Sxc.Sys.ExecutionContext;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

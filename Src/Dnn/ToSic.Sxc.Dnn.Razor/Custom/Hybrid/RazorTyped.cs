@@ -7,6 +7,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Razor.Internal;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.Help;
 using static System.StringComparer;
 
@@ -44,7 +45,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
 
-    /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
     [PrivateApi("WIP 17.06,x")]

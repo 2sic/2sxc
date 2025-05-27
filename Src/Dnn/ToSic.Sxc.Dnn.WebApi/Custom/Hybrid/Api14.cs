@@ -15,6 +15,7 @@ using ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
 using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
@@ -49,7 +50,7 @@ public abstract partial class Api14(string logSuffix) : DnnSxcCustomControllerBa
 
     #endregion
 
-    /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
 
 
