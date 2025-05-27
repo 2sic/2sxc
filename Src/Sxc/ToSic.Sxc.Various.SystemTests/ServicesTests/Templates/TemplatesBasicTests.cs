@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using ToSic.Sxc.Services;
 using Xunit.Abstractions;
+#pragma warning disable xUnit1026
 
 namespace ToSic.Sxc.ServicesTests.Templates;
 

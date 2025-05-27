@@ -1,5 +1,6 @@
 ﻿using ToSic.Sxc.Services.Cache;
 using static ToSic.Sxc.Services.Cache.CacheServiceConstants;
+#pragma warning disable xUnit1026
 
 namespace ToSic.Sxc.ServicesTests.CacheTests;
 

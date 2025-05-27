@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Sxc.Services;
 using static ToSic.Sxc.Services.UniqueKeysServices;
+#pragma warning disable xUnit1026
 
 namespace ToSic.Sxc.Tests.ContextTests;
 

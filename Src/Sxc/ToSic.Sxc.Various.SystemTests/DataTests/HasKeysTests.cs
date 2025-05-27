@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Data.Internal.Typed;
+#pragma warning disable xUnit1026
 
 namespace ToSic.Sxc.DataTests;
 
@@ -70,17 +71,17 @@ public class HasKeysTests
 
     [Theory]
     [MemberData(nameof(SimpleData))]
-    public void IsFilled_SimpleData_BlankIsDefault(object value, string testName = default) 
+    public void IsFilled_SimpleData_BlankIsDefault(object value, string? testName = default) 
         => True(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: null));//, testName ?? value + " blankIs: null");
 
     [Theory]
     [MemberData(nameof(SimpleData))]
-    public void IsFilled_SimpleData_BlankFalse(object value, string testName = default) 
+    public void IsFilled_SimpleData_BlankFalse(object value, string? testName = default) 
         => True(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: false));//, testName ?? value + " blankIs: false");
 
     [Theory]
     [MemberData(nameof(SimpleData))]
-    public void IsFilled_SimpleData_BlankTrue(object value, string testName = default) 
+    public void IsFilled_SimpleData_BlankTrue(object value, string? testName = default) 
         => True(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: true));//, testName ?? value + " blankIs: true");
         
 
@@ -88,7 +89,6 @@ public class HasKeysTests
     public void ContainsDataObject()
     {
         var value = new object();
-        var testName = "object";
         True(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: null));//, testName ?? value + " blankIs: null");
         True(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: false));//, testName ?? value + " blankIs: false");
         True(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: true));//, testName ?? value + " blankIs: true");
@@ -98,7 +98,6 @@ public class HasKeysTests
     public void ContainsDataListEmpty()
     {
         var value = new List<string>();
-        var testName = "object";
         False(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: null));//, testName ?? value + " blankIs: null");
         False(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: false));//, testName ?? value + " blankIs: false");
         False(HasKeysHelper.IsNotEmpty(value, blankIsEmpty: true));//, testName ?? value + " blankIs: true");

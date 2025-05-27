@@ -2,6 +2,7 @@
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Services;
 using static ToSic.Sxc.Services.SecureDataService;
+#pragma warning disable xUnit1026
 
 namespace ToSic.Sxc.ServicesTests.SecureData;
 

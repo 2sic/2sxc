@@ -2,6 +2,7 @@
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using Xunit.Abstractions;
+#pragma warning disable xUnit1026
 
 namespace ToSic.Sxc.ServicesTests.ImageServiceTests;
 
