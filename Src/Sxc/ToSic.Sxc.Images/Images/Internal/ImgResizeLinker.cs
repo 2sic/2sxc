@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Images.Internal;
 [PrivateApi("Internal stuff")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ImgResizeLinker(
-    LazySvc<IEavFeaturesService> features,
+    LazySvc<ISysFeaturesService> features,
     LazySvc<ICss> koi,
     LazySvc<ISite> siteLazy,
     ResizeDimensionGenerator dimGen)

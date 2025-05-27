@@ -36,7 +36,7 @@ public class ExportApp(
     ISite site,
     IUser user,
     Generator<ImpExpHelpers> impExpHelpers,
-    IEavFeaturesService features,
+    ISysFeaturesService features,
     IAppPathsMicroSvc appPathSvc)
     : ServiceBase("Bck.Export",
         connect:
@@ -96,7 +96,7 @@ public class ExportApp(
         return l.ReturnTrue();
     }
 
-    internal static void SyncWithSiteFilesVerifyFeaturesOrThrow(IEavFeaturesService features, bool withSiteFiles)
+    internal static void SyncWithSiteFilesVerifyFeaturesOrThrow(ISysFeaturesService features, bool withSiteFiles)
     {
         if (!withSiteFiles) return;
         features.ThrowIfNotEnabled("Requires features enabled to sync with site files ",

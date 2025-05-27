@@ -25,7 +25,7 @@ internal class DnnValueConverter : ValueConverterBase
 
     #region DI Constructor
 
-    public DnnValueConverter(ISite site, LazySvc<IEavFeaturesService> featuresLazy, LazySvc<PageScopedService<ISite>> siteFromPageLazy, LazySvc<INavigationManager> navigationManager) : base(
+    public DnnValueConverter(ISite site, LazySvc<ISysFeaturesService> featuresLazy, LazySvc<PageScopedService<ISite>> siteFromPageLazy, LazySvc<INavigationManager> navigationManager) : base(
         $"{DnnConstants.LogName}.ValCnv")
     {
         ConnectLogs([
@@ -37,7 +37,7 @@ internal class DnnValueConverter : ValueConverterBase
     }
 
     private readonly ISite _site;
-    private readonly LazySvc<IEavFeaturesService> _featuresLazy;
+    private readonly LazySvc<ISysFeaturesService> _featuresLazy;
     private readonly LazySvc<PageScopedService<ISite>> _siteFromPageLazy;
     private readonly LazySvc<INavigationManager> _navigationManager;
     private int PageSiteId => _siteFromPageLazy.Value.Value.Id; // PortalId from page di scope

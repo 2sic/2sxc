@@ -6,7 +6,7 @@ using ToSic.Sys.Capabilities.Licenses;
 
 namespace ToSic.Sxc.ConfigurationTests;
 
-public class VerifyPatronsHelper(ILicenseService licenses, IEavFeaturesService features)
+public class VerifyPatronsHelper(ILicenseService licenses, ISysFeaturesService features)
 {
     /// <summary>
     /// A specific amount of licenses should be enabled.

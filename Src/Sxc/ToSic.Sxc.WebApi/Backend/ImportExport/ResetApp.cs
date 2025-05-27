@@ -24,7 +24,7 @@ public class ResetApp(
     IUser user,
     IImportExportEnvironment env,
     ZipImport zipImport,
-    IEavFeaturesService features,
+    ISysFeaturesService features,
     IAppPathsMicroSvc appPathSvc)
     : ServiceBase("Bck.Export",
         connect:

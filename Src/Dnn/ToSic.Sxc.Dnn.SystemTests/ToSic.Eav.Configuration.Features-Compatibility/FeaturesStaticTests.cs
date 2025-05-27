@@ -12,7 +12,7 @@ namespace ToSic.Sxc.ToSic.Eav.Configuration.Features_Compatibility;
 // ReSharper disable once InconsistentNaming
 public class FeaturesStaticTests : IClassFixture<DoFixtureStartup<ScenarioFullPatronsWithDb>>
 {
-    public FeaturesStaticTests(IEavFeaturesService featuresSvc)
+    public FeaturesStaticTests(ISysFeaturesService featuresSvc)
     {
         new StartupDnn().SetupOldStaticFeaturesForCompatibility(featuresSvc);
     }

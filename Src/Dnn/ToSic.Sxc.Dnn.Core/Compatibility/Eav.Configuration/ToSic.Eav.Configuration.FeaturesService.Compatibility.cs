@@ -10,9 +10,9 @@ namespace ToSic.Eav.Configuration;
 /// </summary>
 internal class FeaturesServiceCompatibility: IFeaturesService
 {
-    private readonly IEavFeaturesService _featsInternal;
+    private readonly ISysFeaturesService _featsInternal;
 
-    public FeaturesServiceCompatibility(IEavFeaturesService featsInternal)
+    public FeaturesServiceCompatibility(ISysFeaturesService featsInternal)
     {
         _featsInternal = featsInternal;
     }

@@ -29,7 +29,7 @@ public class ImportContent(
     IAppReaderFactory appReaders,
     LazySvc<IUser> userLazy,
     AppCachePurger appCachePurger,
-    LazySvc<IEavFeaturesService> features,
+    LazySvc<ISysFeaturesService> features,
     GenWorkDb<WorkEntitySave> workEntSave)
     : ServiceBase("Bck.Export",
         connect:

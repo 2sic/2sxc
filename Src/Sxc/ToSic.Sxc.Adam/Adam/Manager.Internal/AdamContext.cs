@@ -30,13 +30,13 @@ public class AdamContext(AdamContext.MyServices services)
     public class MyServices(
         Generator<MultiPermissionsTypes> typesPermissions,
         Generator<IAdamSecurityCheckService> adamSecurityGenerator,
-        LazySvc<IEavFeaturesService> featuresSvc,
+        LazySvc<ISysFeaturesService> featuresSvc,
         LazySvc<AdamManager> adamManagerLazy,
         Generator<AdamStorageOfSite> siteStorageGen,
         Generator<AdamStorageOfField> fieldStorageGen)
         : MyServicesBase(connect: [typesPermissions, adamSecurityGenerator, featuresSvc, adamManagerLazy, siteStorageGen, fieldStorageGen])
     {
-        public LazySvc<IEavFeaturesService> FeaturesSvc { get; } = featuresSvc;
+        public LazySvc<ISysFeaturesService> FeaturesSvc { get; } = featuresSvc;
         public LazySvc<AdamManager> AdamManagerLazy { get; } = adamManagerLazy;
         public Generator<AdamStorageOfSite> SiteStorageGen { get; } = siteStorageGen;
         public Generator<AdamStorageOfField> FieldStorageGen { get; } = fieldStorageGen;

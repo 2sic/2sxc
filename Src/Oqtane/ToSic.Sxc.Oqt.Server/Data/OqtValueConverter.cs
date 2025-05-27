@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.Data;
 [PrivateApi]
 internal class OqtValueConverter : ValueConverterBase
 {
-    private readonly LazySvc<IEavFeaturesService> _featuresLazy;
+    private readonly LazySvc<ISysFeaturesService> _featuresLazy;
     public LazySvc<IFileRepository> FileRepository { get; }
     public LazySvc<IFolderRepository> FolderRepository { get; }
     public LazySvc<ITenantResolver> TenantResolver { get; }
@@ -35,7 +35,7 @@ internal class OqtValueConverter : ValueConverterBase
         LazySvc<IPageRepository> pageRepository,
         LazySvc<IServerPaths> serverPaths,
         LazySvc<AliasResolver> aliasResolverLazy,
-        LazySvc<IEavFeaturesService> featuresLazy) : base("Oqt.ValCn")
+        LazySvc<ISysFeaturesService> featuresLazy) : base("Oqt.ValCn")
     {
         ConnectLogs([
             _featuresLazy = featuresLazy,

@@ -69,7 +69,7 @@ public class StartupDnn : IServiceRouteMapper
         // Place a copy of the features service on the old static variable
         // Note: not perfect, it doesn't update on changes
         // But since we don't want to encourage this old mechanism, it's ok
-        var featuresSvc = transientSp.Build<IEavFeaturesService>();
+        var featuresSvc = transientSp.Build<ISysFeaturesService>();
         SetupOldStaticFeaturesForCompatibility(featuresSvc);
 
         // Optional registration of query string rewrite functionality implementation for dnn imageflow module
@@ -86,7 +86,7 @@ public class StartupDnn : IServiceRouteMapper
     /// After the SysLoader got the features, we must attach it to an old API which had was public
     /// This was used in Mobius etc. to see if features are activated
     /// </summary>
-    public void SetupOldStaticFeaturesForCompatibility(IEavFeaturesService featuresSvc)
+    public void SetupOldStaticFeaturesForCompatibility(ISysFeaturesService featuresSvc)
     {
 #pragma warning disable CS0618
         Eav.Configuration.Features.FeaturesFromDi = featuresSvc;

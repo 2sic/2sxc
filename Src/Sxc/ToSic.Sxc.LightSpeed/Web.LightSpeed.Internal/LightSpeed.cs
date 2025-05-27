@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class LightSpeed(
-    IEavFeaturesService features,
+    ISysFeaturesService features,
     LazySvc<IAppsCatalog> appsCatalog,
     LazySvc<IAppReaderFactory> appReadersLazy,
     Generator<IAppPathsMicroSvc> appPathsLazy,

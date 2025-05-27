@@ -29,7 +29,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     /// DI Constructor, will get the current portal settings
     /// #TodoDI not ideal yet, as PortalSettings.current is still retrieved from global
     /// </summary>
-    public DnnSite(LazySvc<IZoneMapper> zoneMapperLazy, LazySvc<ILinkPaths> linkPathsLazy, LazySvc<IEavFeaturesService> featuresSvc): base(DnnConstants.LogName)
+    public DnnSite(LazySvc<IZoneMapper> zoneMapperLazy, LazySvc<ILinkPaths> linkPathsLazy, LazySvc<ISysFeaturesService> featuresSvc): base(DnnConstants.LogName)
     {
         ConnectLogs([
             _featuresSvc = featuresSvc,
@@ -40,7 +40,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     }
     private readonly LazySvc<IZoneMapper> _zoneMapperLazy;
     private readonly LazySvc<ILinkPaths> _linkPathsLazy;
-    private readonly LazySvc<IEavFeaturesService> _featuresSvc;
+    private readonly LazySvc<ISysFeaturesService> _featuresSvc;
     private ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
     /// <inheritdoc />

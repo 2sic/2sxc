@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Backend.Adam;
 /// </summary>
 [PrivateApi("Used by DynamicApiController and Hybrid.Api12_DynCode")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamCode(Generator<AdamWorkUpload, AdamWorkOptions> adamUploadGenerator, LazySvc<IEavFeaturesService> featuresLazy)
+public class AdamCode(Generator<AdamWorkUpload, AdamWorkOptions> adamUploadGenerator, LazySvc<ISysFeaturesService> featuresLazy)
     : ServiceWithContext("AdamCode", connect: [adamUploadGenerator, featuresLazy])
 {
     public IFile SaveInAdam(NoParamOrder noParamOrder = default,

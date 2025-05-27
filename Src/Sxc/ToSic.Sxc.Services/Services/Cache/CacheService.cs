@@ -37,7 +37,7 @@ internal class CacheService(
     MemoryCacheService cache,
     LazySvc<IAppReaderFactory> appReaders,
     Generator<IAppPathsMicroSvc> appPathsLazy,
-    IEavFeaturesService features
+    ISysFeaturesService features
     ) : ServiceWithContext($"{SxcLogName}.CchSvc", connect: [cache, appReaders]), ICacheService
 {
     /// <summary>

@@ -22,7 +22,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
 
     public class MyServices(
         IContextOfSite siteCtx,
-        LazySvc<IEavFeaturesService> features,
+        LazySvc<ISysFeaturesService> features,
         LazySvc<IUiData> uiDataLazy,
         LazySvc<LanguagesBackend> languagesBackend,
         IAppPathsMicroSvc appPaths,
@@ -34,7 +34,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
         public IAppPathsMicroSvc AppPaths { get; } = appPaths;
         public IContextOfSite SiteCtx { get; } = siteCtx;
         public LazySvc<LanguagesBackend> LanguagesBackend { get; } = languagesBackend;
-        public LazySvc<IEavFeaturesService> Features { get; } = features;
+        public LazySvc<ISysFeaturesService> Features { get; } = features;
         public LazySvc<IUiData> UiDataLazy { get; } = uiDataLazy;
         public IAppsCatalog AppsCatalog { get; } = appsCatalog;
     }
