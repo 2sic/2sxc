@@ -4,6 +4,7 @@ using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Services;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Images.Internal;
 

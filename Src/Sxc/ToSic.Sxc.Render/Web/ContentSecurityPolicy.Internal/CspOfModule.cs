@@ -7,6 +7,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Utils;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;

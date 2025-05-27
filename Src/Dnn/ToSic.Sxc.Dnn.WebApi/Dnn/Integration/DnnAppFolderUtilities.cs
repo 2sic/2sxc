@@ -2,7 +2,6 @@
 using System.Net;
 using System.Web.Http.Routing;
 using ToSic.Eav.Context;
-using ToSic.Eav.Helpers;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;

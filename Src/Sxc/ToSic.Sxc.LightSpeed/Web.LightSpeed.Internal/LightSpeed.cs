@@ -8,10 +8,10 @@ using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Internal.Generics;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sys.Utils;
 using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 
 namespace ToSic.Sxc.Web.Internal.LightSpeed;

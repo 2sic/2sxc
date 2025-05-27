@@ -1,8 +1,8 @@
 ﻿using System.Text;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Internal.Generics;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Code.Generate.Internal;
 

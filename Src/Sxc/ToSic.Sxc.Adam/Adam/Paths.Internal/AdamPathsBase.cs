@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Helpers;
-using ToSic.Eav.Internal.Environment;
+﻿using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam.Manager.Internal;
 

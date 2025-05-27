@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using ToSic.Eav.Plumbing;
+using ToSic.Sys.Utils;
 using static ToSic.Sxc.Services.Cache.CacheServiceConstants;
 
 namespace ToSic.Sxc.Services.Cache;

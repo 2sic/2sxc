@@ -7,7 +7,6 @@ using DotNetNuke.Common.Extensions;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Framework;
 using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Helpers;
 using ToSic.Eav.Integration.Environment;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
@@ -15,6 +14,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web.Internal.EditUi;
 using ToSic.Sxc.Web.Internal.JsContext;
+using ToSic.Sys.Utils;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.Dnn.dist;

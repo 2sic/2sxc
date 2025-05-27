@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Plumbing;
 using ToSic.Lib.Code.Help;
-using ToSic.Lib.Internal.Generics;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 

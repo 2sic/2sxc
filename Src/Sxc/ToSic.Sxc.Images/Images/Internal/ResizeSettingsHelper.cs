@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Plumbing;
-using ToSic.Lib.Internal.Generics;
+using ToSic.Sys.Utils;
 using static ToSic.Sxc.Internal.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images.Internal;
