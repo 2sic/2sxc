@@ -4,6 +4,7 @@ using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.MetadataDecorators;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Internal.Environment;
+using ToSic.Lib.Caching.PiggyBack;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using static ToSic.Eav.Apps.Internal.AppConstants;

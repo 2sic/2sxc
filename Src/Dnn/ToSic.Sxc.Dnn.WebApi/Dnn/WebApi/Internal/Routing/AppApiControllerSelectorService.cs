@@ -9,6 +9,7 @@ using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Routing;
+using ToSic.Lib.Caching;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;

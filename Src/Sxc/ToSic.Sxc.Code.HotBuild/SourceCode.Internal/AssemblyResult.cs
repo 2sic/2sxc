@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Caching;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;

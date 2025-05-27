@@ -1,5 +1,7 @@
 ﻿using ToSic.Eav.Caching;
 using ToSic.Eav.DataSource;
+using ToSic.Lib.Caching;
+using ToSic.Lib.Caching.Keys;
 
 namespace Custom.DataSource;
 
