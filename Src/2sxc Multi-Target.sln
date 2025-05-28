@@ -215,6 +215,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "L2.7 WebApi", "L2.7 WebApi"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Work", "..\..\eav-server\ToSic.Eav.Work\ToSic.Eav.Work.csproj", "{857450DA-7712-16A6-71DD-79817FFD356D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sys.Utils.Tests", "..\..\eav-server\ToSic.Sys.Utils.Tests\ToSic.Sys.Utils.Tests.csproj", "{C87ACAFD-732A-FBC3-36FA-7038145AE3CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -632,6 +634,12 @@ Global
 		{857450DA-7712-16A6-71DD-79817FFD356D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{857450DA-7712-16A6-71DD-79817FFD356D}.Testing|Any CPU.ActiveCfg = Testing|Any CPU
 		{857450DA-7712-16A6-71DD-79817FFD356D}.Testing|Any CPU.Build.0 = Testing|Any CPU
+		{C87ACAFD-732A-FBC3-36FA-7038145AE3CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C87ACAFD-732A-FBC3-36FA-7038145AE3CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C87ACAFD-732A-FBC3-36FA-7038145AE3CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C87ACAFD-732A-FBC3-36FA-7038145AE3CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C87ACAFD-732A-FBC3-36FA-7038145AE3CD}.Testing|Any CPU.ActiveCfg = Testing|Any CPU
+		{C87ACAFD-732A-FBC3-36FA-7038145AE3CD}.Testing|Any CPU.Build.0 = Testing|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -737,6 +745,7 @@ Global
 		{DBAD0308-A4CB-4257-BC48-09C5C9CD389E} = {32E45183-6A02-41A2-A4D5-6CB58A6D39A9}
 		{55799BAC-652D-4A04-96AC-FCD790A38260} = {46C0FCB4-4589-42CA-8553-9647B1E58BED}
 		{857450DA-7712-16A6-71DD-79817FFD356D} = {55799BAC-652D-4A04-96AC-FCD790A38260}
+		{C87ACAFD-732A-FBC3-36FA-7038145AE3CD} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
