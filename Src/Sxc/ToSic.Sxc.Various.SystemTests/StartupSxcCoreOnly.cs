@@ -1,11 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Data.Build;
-using ToSic.Eav.Data.Startup;
+using ToSic.Eav.Integration;
 using ToSic.Eav.StartUp;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Startup;
 using ToSic.Sys;
 
 #pragma warning disable CA1822
@@ -53,7 +52,7 @@ public class StartupSxcCoreOnly
             .AddSxcAppsFallbackServices()
             
             .AddLibCore()
-            .AddEavDataPersistence()
+            .AddEavPersistence()
             .AddEavDataBuild()
             .AddEavCore()
             .AddEavCoreFallbackServices()
