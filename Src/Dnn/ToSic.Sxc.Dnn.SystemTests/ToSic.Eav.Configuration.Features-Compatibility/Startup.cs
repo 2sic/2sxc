@@ -37,13 +37,11 @@ public class Startup
             // Apps
             .AddEavWork()
             .AddEavApps()
-            .AddAppFallbackServices()
 
             // SQL Server
             .AddRepositoryAndEfc()
             // Import/Export as well as File Based Json loading
             .AddEavImportExport()
-            .AddEavImportExportFallback()
             .AddEavPersistence()
             // DataSources
             .AddDataSources()
@@ -51,6 +49,10 @@ public class Startup
             //.AddEavDataPersistence()
             .AddEavDataBuild()
             .AddEavCore()
+
+            // Fallbacks for services which were not implemented - must come last
+            .AddAppFallbackServices()
+            .AddEavImportExportFallback()
             .AddEavCoreFallbackServices()
             // Library
             .AddLibCore();
