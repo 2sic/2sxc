@@ -46,8 +46,6 @@ public class StartupSxcWithDb
             .AddSxcLightSpeed()
             .AddSxcAppsFallbackServices()
 
-            .AddEavEverything()
-            
-            .AddSysCapabilitiesFallback();
+            .AddEavEverything();
 
 }

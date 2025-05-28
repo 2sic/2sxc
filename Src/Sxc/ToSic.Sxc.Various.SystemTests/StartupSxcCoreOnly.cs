@@ -48,7 +48,7 @@ public class StartupSxcCoreOnly
             .AddSxcWeb()
             .AddSxcCode()
             .AddSxcLightSpeed()
-            
+
             .AddEavPersistence()
             .AddEavDataBuild()
 
@@ -56,6 +56,6 @@ public class StartupSxcCoreOnly
             .AddEavCoreLibAndSys()
 
             .AddSxcAppsFallbackServices()
-            .AddEavCoreLibAndSysFallbackServices()
-            .AddSysCapabilitiesFallback();
+            .AddEavDataBuildFallbacks()
+            .AddEavCoreLibAndSysFallbackServices();
 }

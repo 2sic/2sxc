@@ -56,5 +56,6 @@ public class Startup
             // Fallbacks for services which were not implemented - must come last
             .AddAppFallbackServices()
             .AddEavImportExportFallback()
+            .AddEavDataBuildFallbacks()
             .AddEavCoreLibAndSysFallbackServices();
 }
