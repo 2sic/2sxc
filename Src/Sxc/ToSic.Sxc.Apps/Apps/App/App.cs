@@ -3,7 +3,6 @@ using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.Internal.Environment;
-using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Data.Internal;

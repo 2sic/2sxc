@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.Internal.Environment;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;

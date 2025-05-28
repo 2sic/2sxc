@@ -3,8 +3,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.ImportExport.Internal.Zip;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Apps.Internal.Work;
 

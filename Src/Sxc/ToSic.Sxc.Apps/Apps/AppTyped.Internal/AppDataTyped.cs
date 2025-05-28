@@ -2,7 +2,6 @@
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal.Caching;
 using ToSic.Eav.DataSources.Internal;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Apps.Internal;

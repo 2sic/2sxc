@@ -4,7 +4,6 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.Internal.Assets;
