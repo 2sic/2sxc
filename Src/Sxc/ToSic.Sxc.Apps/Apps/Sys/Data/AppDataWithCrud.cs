@@ -14,7 +14,7 @@ namespace ToSic.Eav.DataSources.Internal;
 /// </summary>
 [PrivateApi("May have been visible before v17, but probably not really, name was also different. Published through the IAppData interface.")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppDataWithCrud : Eav.DataSources.App, IAppData
+internal class AppDataWithCrud : Eav.DataSources.App, IAppData
 {
     private readonly LazySvc<IDataSourceCacheService> _dsCacheSvc;
 

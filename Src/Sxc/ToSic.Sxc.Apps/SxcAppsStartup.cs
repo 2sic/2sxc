@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Apps.Internal.Api01;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
@@ -35,7 +36,8 @@ public static class SxcAppsStartup
         services.TryAddTransient<WorkApps>();
         services.TryAddTransient<WorkAppsRemove>();
 
-        //services.AddSxcAppsFallbackServices();
+        // Simple DataController - registration was missing
+        services.TryAddTransient<SimpleDataEditService>();
 
         return services;
     }
