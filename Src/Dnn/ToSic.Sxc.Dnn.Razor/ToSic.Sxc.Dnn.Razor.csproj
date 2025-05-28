@@ -60,7 +60,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj"/>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSources\ToSic.Eav.DataSources.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj" />
@@ -68,6 +68,6 @@
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Custom\ToSic.Sxc.Custom.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Engines\ToSic.Sxc.Engines.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Render\ToSic.Sxc.Render.csproj" />
-    <ProjectReference Include="..\ToSic.Sxc.Dnn.Core\ToSic.Sxc.Dnn.Core.csproj"/>
+    <ProjectReference Include="..\ToSic.Sxc.Dnn.Core\ToSic.Sxc.Dnn.Core.csproj" />
   </ItemGroup>
 </Project>
