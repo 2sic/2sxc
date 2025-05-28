@@ -9,6 +9,7 @@ using ToSic.Eav.Repository.Efc;
 using ToSic.Eav.StartUp;
 using ToSic.Lib;
 using ToSic.Sxc.Compatibility;
+using ToSic.Sys;
 using ToSic.Sys.Capabilities.Platform;
 using ToSic.Testing.Shared.Platforms;
 
@@ -48,12 +49,12 @@ public class Startup
             // EAV Core
             //.AddEavDataPersistence()
             .AddEavDataBuild()
-            .AddEavCore()
+
+            // EAV Core and Downstream
+            .AddEavCoreLibAndSys()
 
             // Fallbacks for services which were not implemented - must come last
             .AddAppFallbackServices()
             .AddEavImportExportFallback()
-            .AddEavCoreFallbackServices()
-            // Library
-            .AddLibCore();
+            .AddEavCoreLibAndSysFallbackServices();
 }

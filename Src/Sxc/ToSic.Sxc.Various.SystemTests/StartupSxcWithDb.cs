@@ -45,8 +45,9 @@ public class StartupSxcWithDb
             .AddSxcWeb()
             .AddSxcLightSpeed()
             .AddSxcAppsFallbackServices()
+
             .AddEavEverything()
-            .AddSysCapabilities()
+            
             .AddSysCapabilitiesFallback();
 
 }

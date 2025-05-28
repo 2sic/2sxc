@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.Api01;
 using ToSic.Eav.Internal.Environment;
+using ToSic.Eav.Internal.Requirements;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
