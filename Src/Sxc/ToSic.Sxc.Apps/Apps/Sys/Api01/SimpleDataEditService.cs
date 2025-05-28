@@ -27,7 +27,7 @@ namespace ToSic.Eav.Apps.Internal.Api01;
 /// Used for DI - must always call Init to use
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal partial class SimpleDataEditService(
+public partial class SimpleDataEditService(
     DataBuilder builder,
     IZoneMapper zoneMapper,
     IContextOfSite ctx,
