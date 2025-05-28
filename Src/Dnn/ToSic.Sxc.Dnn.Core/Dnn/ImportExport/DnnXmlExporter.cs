@@ -6,6 +6,7 @@ using ToSic.Eav.ImportExport.Internal.Xml;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.ExportImport.Sys;
 using ToSic.Sxc.Internal;
 using FileManager = DotNetNuke.Services.FileSystem.FileManager;
 
@@ -16,7 +17,7 @@ internal class DnnXmlExporter(
     ISxcContextResolver ctxResolver,
     XmlSerializer xmlSerializer,
     IAppsCatalog appsCat)
-    : XmlExporter(xmlSerializer, appsCat, ctxResolver, DnnConstants.LogName, connect: [adamManager])
+    : SxcXmlExporter(xmlSerializer, appsCat, ctxResolver, DnnConstants.LogName, connect: [adamManager])
 {
     #region Constructor / DI
 

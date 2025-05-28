@@ -8,6 +8,7 @@ using ToSic.Eav.ImportExport.Internal.Xml;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.ExportImport.Sys;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Internal;
@@ -25,7 +26,7 @@ internal class OqtXmlExporter(
     LazySvc<ITenantResolver> oqtTenantResolverLazy,
     IAppsCatalog appsCatalog,
     LazySvc<OqtAssetsFileHelper> fileHelper)
-    : XmlExporter(xmlSerializer, appsCatalog, ctxResolver, OqtConstants.OqtLogPrefix,
+    : SxcXmlExporter(xmlSerializer, appsCatalog, ctxResolver, OqtConstants.OqtLogPrefix,
         connect:
         [
             hostingEnvironment, fileRepositoryLazy, folderRepositoryLazy, oqtTenantResolverLazy, fileHelper, adamManager
