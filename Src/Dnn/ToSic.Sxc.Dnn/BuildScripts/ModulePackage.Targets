@@ -93,10 +93,6 @@
 
     <ItemGroup>
       <!-- Global / Shared 2sxc and EAV DLLs-->
-      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.*.dll" Exclude="ToSic.Sxc.Dnn.Enterprise.dll"/>
-      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.*.pdb" Exclude="ToSic.Sxc.Dnn.Enterprise.pdb"/>
-      <AssemblyInclude Include="$(OutDir)\ToSic.Sys*.dll" />
-      <AssemblyHelper Include="$(OutDir)\ToSic.Sys*.pdb" />
       <!--<AssemblyInclude Include="$(OutDir)\ToSic.Sxc.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Core.dll" />
@@ -135,17 +131,17 @@
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Web.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.WebApi.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.WebApi.pdb" />-->
-      <AssemblyInclude Include="$(OutDir)\ToSic.Eav*.dll" />
-      <AssemblyHelper Include="$(OutDir)\ToSic.Eav*.pdb" />
-      <AssemblyInclude Include="$(OutDir)\ToSic.Lib*.dll" />
-      <AssemblyHelper Include="$(OutDir)\ToSic.Lib*.pdb" />
-
-      <!-- DNN specific DLLs -->
-      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Dnn*.dll" />
-      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Dnn*.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.*.dll" Exclude="ToSic.Sxc.Dnn.Enterprise.dll"/>
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.*.pdb" Exclude="ToSic.Sxc.Dnn.Enterprise.pdb"/>
+      <AssemblyInclude Include="$(OutDir)\ToSic.Eav.*.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Eav.*.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Lib.*.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Lib.*.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sys.*.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sys.*.pdb" />
 
       <!-- XML documentation -->
-      <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.xml" />
+      <!--<AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.xml" />-->
       <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.Dnn.xml" />
 
       <!-- 2sxc 13+ netstandard2.0/framework 4.7.2 assemblies -->

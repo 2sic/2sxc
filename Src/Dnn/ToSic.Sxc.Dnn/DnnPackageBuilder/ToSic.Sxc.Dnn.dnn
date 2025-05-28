@@ -148,39 +148,6 @@
           <assemblies>
             <basePath>bin</basePath>
             <assembly>
-              <name>ToSic.Eav.Apps.dll</name>
-            </assembly>
-            <assembly>
-              <name>ToSic.Eav.Core.dll</name>
-            </assembly>
-            <assembly>
-              <name>ToSic.Eav.Data.Build.dll</name>
-            </assembly>
-            <assembly>
-              <name>ToSic.Eav.Data.Persistence.dll</name>
-            </assembly>
-            <assembly>
-              <name>ToSic.Eav.DataSources.dll</name>
-            </assembly>
-            <assembly>
-              <name>ToSic.Eav.dll</name>
-            </assembly>
-            <assembly>
-              <name>ToSic.Eav.ImportExport.dll</name>
-            </assembly>
-            <assembly>
-              <name>ToSic.Eav.Persistence.Efc.dll</name>
-            </assembly>
-            <assembly>
-              <name>ToSic.Eav.Repository.Efc.dll</name>
-            </assembly>
-            <assembly>
-              <name>ToSic.Eav.WebApi.dll</name>
-            </assembly>
-            <assembly>
-              <name>ToSic.Lib.LookUp.dll</name>
-            </assembly>
-            <assembly>
               <name>ToSic.Sxc.Adam.dll</name>
             </assembly>
             <assembly>
@@ -209,9 +176,6 @@
             </assembly>
             <assembly>
               <name>ToSic.Sxc.Data.dll</name>
-            </assembly>
-            <assembly>
-              <name>ToSic.Sxc.dll</name>
             </assembly>
             <assembly>
               <name>ToSic.Sxc.Dnn.Core.dll</name>
@@ -248,6 +212,39 @@
             </assembly>
             <assembly>
               <name>ToSic.Sxc.WebApi.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.Apps.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.Core.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.Data.Build.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.DataSources.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.ImportExport.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.Persistence.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.Persistence.Efc.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.Repository.Efc.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.WebApi.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.Work.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Lib.LookUp.dll</name>
             </assembly>
             <assembly>
               <name>ToSic.Sys.Caching.dll</name>
@@ -743,12 +740,20 @@
           </files>
         </component>
         
-        <!-- 2025-05-15, clean renamed 2sxc dnn assemblies-->
+        <!-- 2025-05-28, clean renamed 2sxc dnn assemblies-->
         <component type="Cleanup" version="19.99.00">
           <files>
             <file>
               <path>bin</path>
-              <name>ToSic.Lib.Core.dll </name>
+              <name>ToSic.Sxc.dll</name>
+            </file>
+            <file>
+              <path>bin</path>
+              <name>ToSic.Eav.dll</name>
+            </file>
+            <file>
+              <path>bin</path>
+              <name>ToSic.Lib.Core.dll</name>
             </file>
           </files>
         </component>

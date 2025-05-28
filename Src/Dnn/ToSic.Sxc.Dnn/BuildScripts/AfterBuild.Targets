@@ -27,13 +27,13 @@
     <!-- XML documentation is generated in Release only -->
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
       <!-- itmes included only in Release configuration -->
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.xml" />
+      <!--<DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.xml" />-->
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Dnn.xml" />
     </ItemGroup>
     
     <ItemGroup>
       <!-- Global / Shared 2sxc and EAV DLLs-->
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Core.dll" />
+      <!--<DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Core.dll" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Core.pdb" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Adam.dll" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Adam.pdb" />
@@ -68,17 +68,15 @@
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Web.dll" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Web.pdb" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.WebApi.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.WebApi.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Eav*.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Eav*.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Lib*.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Lib*.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sys*.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sys*.pdb" />
-
-      <!-- DNN specific DLLs -->
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Dnn*.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Dnn*.pdb" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.WebApi.pdb" />-->
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.*.dll" Exclude="ToSic.Sxc.Dnn.Enterprise.dll"/>
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.*.pdb" Exclude="ToSic.Sxc.Dnn.Enterprise.pdb"/>
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Eav.*.dll" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Eav.*.pdb" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Lib.*.dll" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Lib.*.pdb" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sys.*.dll" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sys.*.pdb" />
 
       <!-- 2sxc 13+ netstandard2.0/framework 4.7.2 assemblies -->
       <SxcDependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Bcl.AsyncInterfaces.dll" />
