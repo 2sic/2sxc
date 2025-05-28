@@ -28,7 +28,7 @@ public static class DnnDi
 
     public static IServiceCollection RegisterServices(IServiceCollection services)
     {
-        var bl = BootLog.Log.Fn("Dnn: Registering Services", timer: true);
+        var l = BootLog.Log.Fn("Dnn: Registering Services", timer: true);
 
         if (_alreadyRegistered)
             return OriginalServiceCollection;
@@ -37,6 +37,7 @@ public static class DnnDi
         // This is because the old Dnn wasn't DI aware
         services ??= new ServiceCollection();
 
+        l.A("Will start with DNN parts");
         services
             .AddDnnPlugins()
             .AddObsoleteServicesAndKits()
@@ -45,13 +46,22 @@ public static class DnnDi
             .AddDnnDataSources()
             .AddDnnWebApi()
             .AddDnnRazor()
-            .AddDnnCompatibility()
+            .AddDnnCompatibility();
+
+        l.A("Will start with ADAM and 2sxc parts");
+        services
             .AddAdamWebApi<int, int>()
-            .AddSxcWebApi()
+            .AddSxcWebApi();
+
+        l.A("Will start with 2sxc Code / Engines etc.");
+        services
             .AddSxcCustom()
             .AddSxcCode()
             .AddSxcCodeHotBuild()
-            .AddSxcEngines()
+            .AddSxcEngines();
+
+        l.A("Will start with 2sxc Core");
+        services
             .AddSxcImages()
             .AddSxcApps()
             .AddSxcEdit()
@@ -65,18 +75,24 @@ public static class DnnDi
             .AddSxcWeb()
             .AddSxcLightSpeed()
             .AddSxcCodeGen() // Code generation services
-            .AddSxcCoreNew()
+            .AddSxcCoreNew();
+
+        l.A("Will start with 2sxc Fallbacks and RazorBlade parts");
+        services
             .AddSxcAppsFallbackServices()
             .AddSxcCoreFallbackServices()
-            .AddEavEverything()
-            .AddEavWebApiTypedAfterEav()
             .AddRazorBlade();
+
+        l.A("Will start with EAV and WebApi Typed parts");
+        services
+            .AddEavEverything()
+            .AddEavWebApiTypedAfterEav();
 
         // Remember this for later, when we must start the Static Dependency Injection
         OriginalServiceCollection = services;
 
         _alreadyRegistered = true;
-        bl.Done();
+        l.Done();
         return services;
     }
 
