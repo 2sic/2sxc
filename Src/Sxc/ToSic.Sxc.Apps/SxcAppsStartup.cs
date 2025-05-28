@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
@@ -12,6 +13,11 @@ public static class SxcAppsStartup
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcApps(this IServiceCollection services)
     {
+        // App Dependencies
+        services.TryAddTransient<EavApp.MyServices>();
+
+
+
         services.TryAddTransient<App>();
 
         services.TryAddTransient<IAppTyped, AppTyped>();
@@ -29,10 +35,17 @@ public static class SxcAppsStartup
         services.TryAddTransient<WorkApps>();
         services.TryAddTransient<WorkAppsRemove>();
 
+        //services.AddSxcAppsFallbackServices();
 
         return services;
     }
 
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    public static IServiceCollection AddSxcAppsFallbackServices(this IServiceCollection services)
+    {
+        services.TryAddTransient<IAppDataConfigProvider, AppDataConfigProviderUnknown>();
 
-        
+        return services;
+    }
+
 }

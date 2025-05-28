@@ -35,6 +35,7 @@ public class Startup
 
             .AddFixtureHelpers()
             // Apps
+            .AddEavWork()
             .AddEavApps()
             .AddAppFallbackServices()
 

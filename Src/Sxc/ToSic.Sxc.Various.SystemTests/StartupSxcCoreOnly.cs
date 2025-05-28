@@ -49,6 +49,8 @@ public class StartupSxcCoreOnly
             .AddSxcWeb()
             .AddSxcCode()
             .AddSxcLightSpeed()
+
+            .AddSxcAppsFallbackServices()
             
             .AddLibCore()
             .AddEavDataPersistence()
