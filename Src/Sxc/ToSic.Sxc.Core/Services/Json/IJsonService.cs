@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Services;
 ///
 /// </remarks>
 [PublicApi]
-public interface IJsonService : IJsonServiceInternal
+public interface IJsonService
 {
     /// <summary>
     /// Convert an object to JSON.

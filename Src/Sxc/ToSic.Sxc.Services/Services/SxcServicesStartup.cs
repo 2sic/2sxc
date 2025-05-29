@@ -25,7 +25,6 @@ public static class SxcServicesStartup
 
         // WIP 12.05 - json converter
         services.TryAddTransient<IJsonService, JsonService>();
-        services.TryAddTransient<IJsonServiceInternal, JsonService>();
         services.TryAddTransient<ConvertValueService>();
         services.TryAddTransient<ConvertForCodeService>();
         services.TryAddTransient<IConvertService, ConvertService>();
