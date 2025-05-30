@@ -18,13 +18,13 @@ namespace ToSic.Sxc.DataSources.Internal;
 public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices services)
     : ServiceBase<AppAssetsDataSourceProvider.MyServices>(services, $"{SxcLogName}.AppFls")
 {
-    public class MyServices(IAppReaderFactory appReaders, IAppPathsMicroSvc appPathMicroSvc, Generator<FileManager> fileManagerGenerator)
+    public class MyServices(IAppReaderFactory appReaders, IAppPathsMicroSvc appPathMicroSvc, Generator<AppFileManager> fileManagerGenerator)
         : MyServicesBase(connect: [appReaders, appPathMicroSvc, fileManagerGenerator])
     {
         /// <summary>
         /// Note that we will use Generators for safety, because in rare cases the dependencies could be re-used to create a sub-data-source
         /// </summary>
-        internal Generator<FileManager> FileManagerGenerator { get; } = fileManagerGenerator;
+        internal Generator<AppFileManager> FileManagerGenerator { get; } = fileManagerGenerator;
 
         internal IAppPathsMicroSvc AppPathMicroSvc { get; } = appPathMicroSvc;
 
@@ -49,13 +49,13 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
         var appReader = Services.AppReaders.Get(new AppIdentity(specs.ZoneId, specs.AppId));
         _appPaths = Services.AppPathMicroSvc.Get(appReader);
         
-        _fileManager = Services.FileManagerGenerator.New().SetFolder(specs.AppId, _appPaths.PhysicalPath, _root);
+        _appFileManager = Services.FileManagerGenerator.New().SetFolder(specs.AppId, _appPaths.PhysicalPath, _root);
         return l.Return(this);
     }
 
     private string _root;
     private string _filter;
-    private FileManager _fileManager;
+    private AppFileManager _appFileManager;
     private IAppPaths _appPaths;
 
     /// <summary>
@@ -104,7 +104,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
         var l = Log.Fn<List<FileModelRaw>>();
         var pathsFromRoot = PreparePaths(_appPaths, "");
 
-        var files = _fileManager.GetAllTransferableFiles(_filter)
+        var files = _appFileManager.GetAllTransferableFiles(_filter)
             .Select(p => new FileInfo(p))
             .Select(f =>
             {
@@ -161,7 +161,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
         var l = Log.Fn<List<FolderModelRaw>>();
         var pathsFromRoot = PreparePaths(_appPaths, "");
 
-        var folders = _fileManager.GetAllTransferableFolders(/*filter*/)
+        var folders = _appFileManager.GetAllTransferableFolders(/*filter*/)
             .Select(p => new DirectoryInfo(p))
             .Select(d => ToFolderData(d, pathsFromRoot))
             .ToList();

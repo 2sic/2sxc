@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.StartUp;
+using ToSic.Lib.Boot;
 using ToSic.Sxc.Integration;
 using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.Integration.Paths;
@@ -23,7 +24,7 @@ public static class SxcCoreStartup
 
         // Sxc StartUp Routines - MUST be AddTransient, not TryAddTransient so many start-ups can be registered
         // Add StartUp Registration of FeaturesCatalog
-        services.AddTransient<IStartUpRegistrations, SxcStartUpFeaturesRegistrations>();
+        services.AddTransient<IBootProcess, SxcBootFeaturesRegistrations>();
 
         // v13 Provide page scoped services
         // This is important, as most services are module scoped, but very few are actually scoped one level higher

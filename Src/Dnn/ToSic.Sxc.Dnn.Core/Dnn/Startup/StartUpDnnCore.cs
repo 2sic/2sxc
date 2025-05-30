@@ -7,6 +7,7 @@ using ToSic.Eav.Integration;
 using ToSic.Eav.Integration.Environment;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.StartUp;
+using ToSic.Lib.Boot;
 using ToSic.Lib.LookUp.Engines;
 using ToSic.Sxc.Adam.FileSystem.Internal;
 using ToSic.Sxc.Blocks.Internal;
@@ -123,7 +124,7 @@ internal static class StartUpDnnCore
         services.TryAddTransient<IModuleAndBlockBuilder, DnnModuleAndBlockBuilder>();
 
         // v13.12
-        services.AddTransient<IStartUpRegistrations, DnnStartUpRegistrations>();   // must be Add, not TryAdd
+        services.AddTransient<IBootProcess, DnnBootFeaturesRegistration>();   // must be Add, not TryAdd
 
         // v14
         services.TryAddTransient<IDynamicCodeService, DnnDynamicCodeService>();

@@ -16,6 +16,7 @@ using ToSic.Eav.Integration;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Internal.Loaders;
 using ToSic.Eav.WebApi;
+using ToSic.Lib.Boot;
 using ToSic.Lib.DI;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Backend;
@@ -138,8 +139,8 @@ public class OqtStartup : IServerStartup
         // because it has dependency on ToSic_Eav_* sql tables, before this tables are actually created by oqtane 2.3.x,
         // but after next restart of oqtane application all is ok, and all 2sxc global types are loaded as expected
 
-        var sxcSysLoader = serviceProvider.Build<SystemLoader>();
-        sxcSysLoader.StartUp();
+        var bootCoordinator = serviceProvider.Build<BootCoordinator>();
+        bootCoordinator.StartUp();
 
         // Clean the App_Data/2sxc.bin folder
         serviceProvider.Build<Util>().CleanTempAssemblyFolder();

@@ -71,10 +71,10 @@ public class ExportApp(
             TemplatesCount = appViews.GetAll().Count(),
             HasRazorTemplates = appViews.GetRazor().Any(),
             HasTokenTemplates = appViews.GetToken().Any(),
-            FilesCount = zipExport.FileManager.AllFiles().Count() // PortalFilesCount
-                         + (appHasCustomParent ? 0 : zipExport.FileManagerGlobal.AllFiles().Count()), // GlobalFilesCount
-            TransferableFilesCount = zipExport.FileManager.GetAllTransferableFiles().Count() // TransferablePortalFilesCount
-                                     + (appHasCustomParent ? 0 : zipExport.FileManagerGlobal.GetAllTransferableFiles().Count()), // TransferableGlobalFilesCount
+            FilesCount = zipExport.AppFileManager.AllFiles().Count() // PortalFilesCount
+                         + (appHasCustomParent ? 0 : zipExport.AppFileManagerGlobal.AllFiles().Count()), // GlobalFilesCount
+            TransferableFilesCount = zipExport.AppFileManager.GetAllTransferableFiles().Count() // TransferablePortalFilesCount
+                                     + (appHasCustomParent ? 0 : zipExport.AppFileManagerGlobal.GetAllTransferableFiles().Count()), // TransferableGlobalFilesCount
         });
     }
 

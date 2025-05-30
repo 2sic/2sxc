@@ -6,6 +6,7 @@ using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Internal.Loaders;
 using ToSic.Eav.StartUp;
+using ToSic.Lib.Boot;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Dnn.Integration;
@@ -66,7 +67,7 @@ public class StartupDnn : IServiceRouteMapper
         globalConfig.TempAssemblyFolder(HostingEnvironment.MapPath($"~/{Eav.Constants.AppDataProtectedFolder}/{Eav.Constants.TempAssemblyFolder}/")); // ".../App_Data/2sxc.bin"
         globalConfig.CryptoFolder(HostingEnvironment.MapPath($"~/{Eav.Constants.AppDataProtectedFolder}/{Eav.Constants.CryptoFolder}/"));
 
-        var sxcSysLoader = transientSp.Build<SystemLoader>();
+        var sxcSysLoader = transientSp.Build<BootCoordinator>();
         sxcSysLoader.StartUp();
 
         // Place a copy of the features service on the old static variable
