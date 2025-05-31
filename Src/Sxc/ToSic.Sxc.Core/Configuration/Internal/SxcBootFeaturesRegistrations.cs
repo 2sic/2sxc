@@ -1,5 +1,5 @@
-﻿using ToSic.Lib.Boot;
-using ToSic.Sxc.Configuration.Internal;
+﻿using ToSic.Sxc.Configuration.Internal;
+using ToSic.Sys.Boot;
 using ToSic.Sys.Capabilities.Features;
 
 namespace ToSic.Sxc.Startup;

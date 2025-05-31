@@ -1,5 +1,5 @@
-﻿using ToSic.Lib.Boot;
-using ToSic.Sxc.Dnn.Features;
+﻿using ToSic.Sxc.Dnn.Features;
+using ToSic.Sys.Boot;
 using ToSic.Sys.Capabilities.Features;
 
 namespace ToSic.Sxc.Dnn.StartUp;
