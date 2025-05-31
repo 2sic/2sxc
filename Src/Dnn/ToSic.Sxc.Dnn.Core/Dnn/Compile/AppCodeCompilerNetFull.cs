@@ -4,6 +4,7 @@ using System.Reflection;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Dnn.Compile;
+using ToSic.Sys.Configuration;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Code;

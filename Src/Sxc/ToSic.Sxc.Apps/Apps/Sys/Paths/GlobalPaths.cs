@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Internal.Configuration;
+﻿using ToSic.Eav.Sys.Configuration;
+using ToSic.Sys.Configuration;
 using static System.IO.Path;
 
 namespace ToSic.Eav.Internal.Environment;

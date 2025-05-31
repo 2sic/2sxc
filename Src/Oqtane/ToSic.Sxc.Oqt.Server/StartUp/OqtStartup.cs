@@ -14,7 +14,7 @@ using Oqtane.UI;
 using OqtaneSSR.Extensions;
 using ToSic.Eav.Integration;
 using ToSic.Eav.Internal.Configuration;
-using ToSic.Eav.Internal.Loaders;
+using ToSic.Eav.Sys.Configuration;
 using ToSic.Eav.WebApi;
 using ToSic.Lib.Boot;
 using ToSic.Lib.DI;
@@ -34,6 +34,7 @@ using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Razor;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Startup;
+using ToSic.Sys.Configuration;
 using static ToSic.Sxc.Oqt.Server.StartUp.OqtStartupHelper;
 using static ToSic.Sxc.Oqt.Server.WebApi.OqtWebApiConstants;
 

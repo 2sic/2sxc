@@ -2,6 +2,7 @@
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Integration.Installation;
+using ToSic.Sys.Configuration;
 
 namespace ToSic.Sxc.Dnn.Install;
 
