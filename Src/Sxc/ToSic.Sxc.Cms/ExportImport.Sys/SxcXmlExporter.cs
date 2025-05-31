@@ -11,14 +11,14 @@ namespace ToSic.Sxc.ExportImport.Sys;
 /// </summary>
 /// <param name="xmlSerializer"></param>
 /// <param name="appsCatalog"></param>
-/// <param name="contextResolver"></param>
+/// <param name="currentContextService"></param>
 /// <param name="logPrefix"></param>
 /// <param name="connect"></param>
-public abstract class SxcXmlExporter(XmlSerializer xmlSerializer, IAppsCatalog appsCatalog, IContextResolver contextResolver, string logPrefix, object[] connect = default)
-    : XmlExporter(xmlSerializer, appsCatalog, logPrefix, connect: [..connect ?? [], contextResolver])
+public abstract class SxcXmlExporter(XmlSerializer xmlSerializer, IAppsCatalog appsCatalog, ICurrentContextService currentContextService, string logPrefix, object[] connect = default)
+    : XmlExporter(xmlSerializer, appsCatalog, logPrefix, connect: [..connect ?? [], currentContextService])
 {
 
-    protected IContextResolver ContextResolver { get; } = contextResolver;
+    protected ICurrentContextService CurrentContextService { get; } = currentContextService;
 
     /// <summary>
     /// Not that the overload of this must take care of creating the EavAppContext and calling the Constructor
@@ -26,8 +26,8 @@ public abstract class SxcXmlExporter(XmlSerializer xmlSerializer, IAppsCatalog a
     /// <returns></returns>
     public override XmlExporter Init(AppExportSpecs specs, IAppReader appRuntime, bool appExport, string[] attrSetIds, string[] entityIds)
     {
-        ContextResolver.SetApp(new AppIdentity(specs.ZoneId, specs.AppId));
-        var ctxOfApp = ContextResolver.AppRequired();
+        CurrentContextService.SetApp(new AppIdentity(specs.ZoneId, specs.AppId));
+        var ctxOfApp = CurrentContextService.AppRequired();
         PostContextInit(ctxOfApp);
         Constructor(specs, appRuntime, ctxOfApp.AppReader.Specs.NameId, appExport, attrSetIds, entityIds, ctxOfApp.Site.DefaultCultureCode);
 

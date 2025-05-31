@@ -10,7 +10,7 @@ using ToSic.Sys.Users.Permissions;
 namespace ToSic.Sxc.Context.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal partial class SxcContextResolver(
+internal partial class SxcCurrentContextService(
     LazySvc<AppIdResolver> appIdResolverLazy,
     Generator<IContextOfSite> siteCtxGenerator,
     Generator<IContextOfApp> appCtxGenerator,
@@ -19,7 +19,7 @@ internal partial class SxcContextResolver(
     LazySvc<IHttp> http)
     : ContextResolverBase(siteCtxGenerator, appCtxGenerator, "Sxc.CtxRes",
         connect: [appIdResolverLazy, siteCtxGenerator, appCtxGenerator, featuresService, http, appReaderFactory]),
-        ISxcContextResolver
+        ISxcCurrentContextService
 {
     private const string CookieTemplate = "app-{0}-data-preview";
     private const string CookieLive = "live";

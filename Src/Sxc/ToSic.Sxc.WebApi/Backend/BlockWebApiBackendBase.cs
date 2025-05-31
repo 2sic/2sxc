@@ -10,21 +10,21 @@ namespace ToSic.Sxc.Backend;
 public abstract class BlockWebApiBackendBase(
     Generator<MultiPermissionsApp> multiPermissionsApp,
     AppWorkContextService appWorkCtxService,
-    ISxcContextResolver ctxResolver,
+    ISxcCurrentContextService ctxService,
     string logName,
     object[] connect = default)
-    : ServiceBase(logName, connect: [..connect ?? [], multiPermissionsApp, ctxResolver, appWorkCtxService])
+    : ServiceBase(logName, connect: [..connect ?? [], multiPermissionsApp, ctxService, appWorkCtxService])
 {
     public AppWorkContextService AppWorkCtxService { get; } = appWorkCtxService;
-    public ISxcContextResolver CtxResolver { get; } = ctxResolver;
+    public ISxcCurrentContextService CtxService { get; } = ctxService;
 
     protected IContextOfApp ContextOfBlock =>
-        _contextOfAppOrBlock ??= CtxResolver.BlockContextRequired();
+        _contextOfAppOrBlock ??= CtxService.BlockContextRequired();
     private IContextOfApp _contextOfAppOrBlock;
 
     #region Block-Context Requiring properties
 
-    public IBlock Block => _block ??= CtxResolver.BlockRequired();
+    public IBlock Block => _block ??= CtxService.BlockRequired();
     private IBlock _block;
 
     protected IAppWorkCtx AppWorkCtx => _appWorkCtx ??= AppWorkCtxService.Context(Block.Context.AppReader);

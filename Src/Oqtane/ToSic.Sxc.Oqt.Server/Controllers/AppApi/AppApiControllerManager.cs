@@ -169,11 +169,11 @@ internal class AppApiControllerManager : IHasLog
     /// Figure out the current edition for HotBuildSpec.
     /// </summary>
     /// <returns></returns>
-    private string FigureEdition(ISxcContextResolver ctxResolver)
+    private string FigureEdition(ISxcCurrentContextService ctxService)
     {
         var l = Log.Fn<string>(timer: true);
 
-        var block = ctxResolver.BlockOrNull();
+        var block = ctxService.BlockOrNull();
         var edition = block.NullOrGetWith(_polymorphism.UseViewEditionOrGet);
 
         return l.Return(edition);

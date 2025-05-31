@@ -13,9 +13,9 @@ public class ContentGroupControllerReal(
     GenWorkDb<WorkFieldList> workFieldList,
     GenWorkPlus<WorkBlocks> appBlocks,
     LazySvc<IPagePublishing> publishing,
-    ISxcContextResolver ctxResolver,
+    ISxcCurrentContextService ctxService,
     LazySvc<ListControllerReal> listController)
-    : ServiceBase("Api.CntGrpRl", connect: [workFieldList, appBlocks, ctxResolver, publishing, listController]),
+    : ServiceBase("Api.CntGrpRl", connect: [workFieldList, appBlocks, ctxService, publishing, listController]),
         IContentGroupController
 {
     #region Constructor / di
@@ -23,10 +23,10 @@ public class ContentGroupControllerReal(
     public const string LogSuffix = "CntGrp";
 
 
-    public ISxcContextResolver CtxResolver { get; } = ctxResolver;
+    public ISxcCurrentContextService CtxService { get; } = ctxService;
 
 
-    private IContextOfBlock Context => _context ??= CtxResolver.BlockContextRequired();
+    private IContextOfBlock Context => _context ??= CtxService.BlockContextRequired();
     private IContextOfBlock _context;
 
     private IAppWorkCtxPlus AppCtx => _appCtx.Get(() => appBlocks.CtxSvc.ContextPlus(Context.AppReader));

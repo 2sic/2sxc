@@ -12,7 +12,7 @@ using ToSic.Sxc.WebApi.ExternalLinks;
 namespace ToSic.Sxc.Dnn.WebApi.Context;
 
 internal sealed class DnnUiContextBuilder(
-    ISxcContextResolver ctxResolver,
+    ISxcCurrentContextService ctxService,
     ExternalLinksService externalLinksService,
     UiContextBuilderBase.MyServices deps)
     : UiContextBuilderBase(deps)
@@ -21,7 +21,7 @@ internal sealed class DnnUiContextBuilder(
 
     private readonly PortalSettings _portal = PortalSettings.Current;
 
-    private ModuleInfo Module => (ctxResolver.BlockContextOrNull()?.Module as IWrapper<ModuleInfo>)?.GetContents();
+    private ModuleInfo Module => (ctxService.BlockContextOrNull()?.Module as IWrapper<ModuleInfo>)?.GetContents();
 
     #endregion
 

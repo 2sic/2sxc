@@ -47,14 +47,14 @@ public static class SxcBlocksStartup
         // Context stuff, which is explicitly scoped
         services.TryAddTransient<IContextOfApp, ContextOfApp>();
         services.TryAddTransient<ContextOfApp.MyServices>();
-        services.TryAddScoped<ISxcContextResolver, SxcContextResolver>();
+        services.TryAddScoped<ISxcCurrentContextService, SxcCurrentContextService>();
         // must be the same instance, so it must get the original, scoped SxcContextResolver
-        services.TryAddTransient<ISxcAppContextResolver>(sp => sp.GetRequiredService<ISxcContextResolver>());
+        services.TryAddTransient<ISxcAppCurrentContextService>(sp => sp.GetRequiredService<ISxcCurrentContextService>());
 
 
         // New v15.04 WIP
-        services.TryAddScoped<IContextResolver>(x => x.GetRequiredService<ISxcContextResolver>());
-        services.TryAddScoped<IContextResolverUserPermissions>(x => x.GetRequiredService<ISxcContextResolver>());
+        services.TryAddScoped<ICurrentContextService>(x => x.GetRequiredService<ISxcCurrentContextService>());
+        services.TryAddScoped<ICurrentContextUserPermissionsService>(x => x.GetRequiredService<ISxcCurrentContextService>());
         services.TryAddScoped<AppIdResolver>();
 
         // Integration stuff - must be implemented by each platform

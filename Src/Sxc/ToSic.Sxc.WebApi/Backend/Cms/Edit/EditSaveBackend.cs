@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Backend.Cms;
 public class EditSaveBackend(
     SxcPagePublishing pagePublishing,
     GenWorkPlus<WorkEntities> workEntities,
-    ISxcContextResolver ctxResolver,
+    ISxcCurrentContextService ctxService,
     JsonSerializer jsonSerializer,
     SaveSecurity saveSecurity,
     SaveEntities saveBackendHelper,
@@ -23,7 +23,7 @@ public class EditSaveBackend(
     : ServiceBase("Cms.SaveBk",
         connect:
         [
-            pagePublishing, workEntities, ctxResolver, jsonSerializer, saveSecurity, saveBackendHelper, dataBuilder
+            pagePublishing, workEntities, ctxService, jsonSerializer, saveSecurity, saveBackendHelper, dataBuilder
         ])
 {
     #region DI Constructor and Init
@@ -33,7 +33,7 @@ public class EditSaveBackend(
         _appId = appId;
         // The context should be from the block if there is one, because it affects saving/publishing
         // Basically it can result in things being saved draft or titles being updated
-        _context = ctxResolver.GetExistingAppOrSet(appId);
+        _context = ctxService.GetExistingAppOrSet(appId);
         pagePublishing.Init(_context);
         return this;
     }
@@ -129,7 +129,7 @@ public class EditSaveBackend(
         l.A("items to save generated, all data tests passed");
 
         var result = pagePublishing.SaveInPagePublishing(
-            ctxResolver.BlockOrNull(),
+            ctxService.BlockOrNull(),
             _appId,
             items,
             partOfPage,

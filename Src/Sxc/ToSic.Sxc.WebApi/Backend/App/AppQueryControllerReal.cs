@@ -18,13 +18,13 @@ namespace ToSic.Sxc.Backend.App;
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppQueryControllerReal(
-    ISxcContextResolver ctxResolver,
+    ISxcCurrentContextService ctxService,
     IConvertToEavLight dataConverter,
     Generator<AppPermissionCheck> appPermissionCheck,
     LazySvc<QueryManager> queryManager,
     LazySvc<ILookUpEngineResolver> lookupResolver)
     : ServiceBase("Sxc.ApiApQ",
-        connect: [lookupResolver, ctxResolver, dataConverter, appPermissionCheck, queryManager]), IAppQueryController
+        connect: [lookupResolver, ctxService, dataConverter, appPermissionCheck, queryManager]), IAppQueryController
 {
     public const string LogSuffix = "AppQry";
 
@@ -39,10 +39,10 @@ public class AppQueryControllerReal(
     public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(string name, QueryParameters more, int? appId, string stream = null, bool includeGuid = false)
     {
         var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
-        var appCtx = appId != null ? ctxResolver.GetExistingAppOrSet(appId.Value) : ctxResolver.BlockContextRequired();
+        var appCtx = appId != null ? ctxService.GetExistingAppOrSet(appId.Value) : ctxService.BlockContextRequired();
 
         // If the appId wasn't specified or == to the Block-AppId, then also include block info to enable more data-sources like CmsBlock
-        var maybeBlock = appId == null || appId == appCtx.AppReader.AppId ? ctxResolver.BlockOrNull() : null;
+        var maybeBlock = appId == null || appId == appCtx.AppReader.AppId ? ctxService.BlockOrNull() : null;
 
         // If no app available from context, check if an app-id was supplied in url
         // Note that it may only be an app from the current portal
@@ -69,9 +69,9 @@ public class AppQueryControllerReal(
         if (string.IsNullOrEmpty(name))
             throw l.Ex(HttpException.MissingParam(nameof(name)));
 
-        var appCtx = ctxResolver.SetAppOrGetBlock(appPath);
+        var appCtx = ctxService.SetAppOrGetBlock(appPath);
 
-        var blockLookupOrNull = ctxResolver.BlockOrNull()?.Data?.Configuration?.LookUpEngine;
+        var blockLookupOrNull = ctxService.BlockOrNull()?.Data?.Configuration?.LookUpEngine;
 
         // now just run the default query check and serializer
         var result = BuildQueryAndRun(appCtx.AppReader, name, stream, false, appCtx, more, blockLookupOrNull);

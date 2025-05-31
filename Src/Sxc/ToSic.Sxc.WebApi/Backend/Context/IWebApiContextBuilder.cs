@@ -7,5 +7,5 @@
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IWebApiContextBuilder
 {
-    ISxcContextResolver PrepareContextResolverForApiRequest();
+    ISxcCurrentContextService PrepareContextResolverForApiRequest();
 }

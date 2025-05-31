@@ -18,13 +18,13 @@ public class ContentBlockBackend(
     Generator<MultiPermissionsApp> multiPermissionsApp,
     IPagePublishing publishing,
     GenWorkDb<WorkBlocksMod> workBlocksMod,
-    ISxcContextResolver ctxResolver,
+    ISxcCurrentContextService ctxService,
     LazySvc<IBlockResourceExtractor> optimizerLazy,
     LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
     AppWorkContextService appWorkCtxService,
     Generator<BlockOfEntity> entityBlockGenerator,
     Generator<IBlockBuilder> blockBuilderGenerator)
-    : BlockWebApiBackendBase(multiPermissionsApp, appWorkCtxService, ctxResolver, "Bck.FldLst",
+    : BlockWebApiBackendBase(multiPermissionsApp, appWorkCtxService, ctxService, "Bck.FldLst",
         connect: [optimizerLazy, workBlocksMod, workViews, publishing, entityBlockGenerator, blockEditorSelectorLazy, blockBuilderGenerator])
 {
 

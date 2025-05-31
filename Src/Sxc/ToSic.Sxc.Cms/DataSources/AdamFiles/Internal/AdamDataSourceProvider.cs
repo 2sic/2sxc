@@ -18,11 +18,11 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
 {
     private IContextOfApp _context;
 
-    public class MyServices(LazySvc<AdamContext> adamContext, ISxcAppContextResolver ctxResolver)
-        : MyServicesBase(connect: [adamContext, ctxResolver])
+    public class MyServices(LazySvc<AdamContext> adamContext, ISxcAppCurrentContextService ctxService)
+        : MyServicesBase(connect: [adamContext, ctxService])
     {
         public LazySvc<AdamContext> AdamContext { get; } = adamContext;
-        public ISxcAppContextResolver CtxResolver { get; } = ctxResolver;
+        public ISxcAppCurrentContextService CtxService { get; } = ctxService;
     }
 
     protected AdamDataSourceProvider(MyServices services) : base(services, $"{SxcLogName}.AdamDs")
@@ -40,8 +40,8 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
     {
         var l = Log.Fn<AdamDataSourceProvider<TFolderId, TFileId>>($"a:{appId}; entityIds:{entityIds}, entityGuids:{entityGuids}, fields:{fields}, filter:{filter}");
         _context = appId > 0
-            ? Services.CtxResolver.GetExistingAppOrSet(appId)
-            : Services.CtxResolver.AppNameRouteBlock(null);
+            ? Services.CtxService.GetExistingAppOrSet(appId)
+            : Services.CtxService.AppNameRouteBlock(null);
         _entityIds = entityIds;
         _entityGuids = entityGuids;
         _fields = fields;

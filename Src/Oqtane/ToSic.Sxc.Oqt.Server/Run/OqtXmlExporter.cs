@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.Run;
 
 internal class OqtXmlExporter(
     AdamManager adamManager,
-    ISxcContextResolver ctxResolver,
+    ISxcCurrentContextService ctxService,
     XmlSerializer xmlSerializer,
     IWebHostEnvironment hostingEnvironment,
     LazySvc<IFileRepository> fileRepositoryLazy,
@@ -26,7 +26,7 @@ internal class OqtXmlExporter(
     LazySvc<ITenantResolver> oqtTenantResolverLazy,
     IAppsCatalog appsCatalog,
     LazySvc<OqtAssetsFileHelper> fileHelper)
-    : SxcXmlExporter(xmlSerializer, appsCatalog, ctxResolver, OqtConstants.OqtLogPrefix,
+    : SxcXmlExporter(xmlSerializer, appsCatalog, ctxService, OqtConstants.OqtLogPrefix,
         connect:
         [
             hostingEnvironment, fileRepositoryLazy, folderRepositoryLazy, oqtTenantResolverLazy, fileHelper, adamManager

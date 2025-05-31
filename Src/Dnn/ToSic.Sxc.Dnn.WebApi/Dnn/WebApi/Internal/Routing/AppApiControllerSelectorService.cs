@@ -40,7 +40,7 @@ internal partial class AppApiControllerSelectorService(
     LazySvc<CodeErrorHelpService> codeErrorSvc,
     LazySvc<AssemblyCacheManager> assemblyCacheManager,
     LazySvc<AppCodeLoader> appCodeLoader,
-    LazySvc<ISxcContextResolver> sxcContextResolver,
+    LazySvc<ISxcCurrentContextService> sxcContextResolver,
     MemoryCacheService memoryCacheService,
     LazySvc<IAppJsonService> appJson)
     : ServiceBase("Dnn.ApiSSv", connect: [folderUtilities, site, roslynLazy, getBlockLazy, analyzerLazy, codeErrorSvc, assemblyCacheManager, appCodeLoader, sxcContextResolver, memoryCacheService, appJson])

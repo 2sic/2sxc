@@ -42,8 +42,8 @@ internal class DynamicApiCodeHelpers: CodeHelper
         if (_blockContextInitialized)
             return;
         _blockContextInitialized = true;
-        SharedContextResolver = SysHlp.GetService<ISxcContextResolver>();
-        SharedContextResolver.AttachBlock(SysHlp.GetBlockAndContext(request));
+        SharedCurrentContextService = SysHlp.GetService<ISxcCurrentContextService>();
+        SharedCurrentContextService.AttachBlock(SysHlp.GetBlockAndContext(request));
     }
 
     private bool _blockContextInitialized;
@@ -100,12 +100,12 @@ internal class DynamicApiCodeHelpers: CodeHelper
         try
         {
             var routeAppPath = services.AppFolderUtilities.Setup(request).GetAppFolder(false);
-            var appReader = SharedContextResolver.SetAppOrNull(routeAppPath)?.AppReader;
+            var appReader = SharedCurrentContextService.SetAppOrNull(routeAppPath)?.AppReader;
 
             if (appReader == default)
                 return l.ReturnNull("no app detected");
             
-            var siteCtx = SharedContextResolver.Site();
+            var siteCtx = SharedCurrentContextService.Site();
             // Look up if page publishing is enabled - if module context is not available, always false
             l.A($"AppId: {appReader.AppId}");
             var app = services.AppOverrideLazy.Value;
@@ -121,7 +121,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
 
     #endregion
 
-    public ISxcContextResolver SharedContextResolver;
+    public ISxcCurrentContextService SharedCurrentContextService;
 
     #region Adam
 

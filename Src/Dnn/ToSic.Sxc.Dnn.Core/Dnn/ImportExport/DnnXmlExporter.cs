@@ -14,10 +14,10 @@ namespace ToSic.Sxc.Dnn.ImportExport;
 
 internal class DnnXmlExporter(
     AdamManager adamManager,
-    ISxcContextResolver ctxResolver,
+    ISxcCurrentContextService ctxService,
     XmlSerializer xmlSerializer,
     IAppsCatalog appsCat)
-    : SxcXmlExporter(xmlSerializer, appsCat, ctxResolver, DnnConstants.LogName, connect: [adamManager])
+    : SxcXmlExporter(xmlSerializer, appsCat, ctxService, DnnConstants.LogName, connect: [adamManager])
 {
     #region Constructor / DI
 

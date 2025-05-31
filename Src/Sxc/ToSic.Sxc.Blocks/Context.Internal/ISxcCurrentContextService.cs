@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Context.Internal;
 /// Note that it's important to always make this **Scoped**, not transient, as there is some re-use after initialization
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface ISxcContextResolver: IContextResolver, ISxcAppContextResolver
+public interface ISxcCurrentContextService: ICurrentContextService, ISxcAppCurrentContextService
 {
     /// <summary>
     /// Return the block or throw an error

@@ -29,10 +29,12 @@ internal class ContextOfBlock(
     {
         get
         {
-            if (base.AppIdentity != null) return base.AppIdentity;
+            if (base.AppIdentity != null)
+                return base.AppIdentity;
             var l = Log.Fn<IAppIdentity>();
             var identifier = Module?.BlockIdentifier;
-            if (identifier == null) return l.ReturnNull("no mod-block-id");
+            if (identifier == null)
+                return l.ReturnNull("no mod-block-id");
             AppIdentity = identifier;
             return l.Return(base.AppIdentity);
         }
@@ -52,6 +54,7 @@ internal class ContextOfBlock(
     public BlockPublishingSettings Publishing => field ??= publishingResolver.Value.Value.SettingsOfModule(Module?.Id ?? -1);
 
     /// <inheritdoc />
-    public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(Page, Module, publishingResolver, PageServiceShared, AppServices)
-        .LinkLog(parentLog);
+    public override IContextOfSite Clone(ILog parentLog)
+        => new ContextOfBlock(Page, Module, publishingResolver, PageServiceShared, AppServices)
+            .LinkLog(parentLog);
 }

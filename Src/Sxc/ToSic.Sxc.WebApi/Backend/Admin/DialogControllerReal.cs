@@ -7,10 +7,10 @@ namespace ToSic.Sxc.Backend.Admin;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class DialogControllerReal(
-    ISxcContextResolver ctxResolver,
+    ISxcCurrentContextService ctxService,
     IUiContextBuilder uiContextBuilder,
     Generator<MultiPermissionsApp> appPermissions)
-    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [ctxResolver, uiContextBuilder, appPermissions]),
+    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [ctxService, uiContextBuilder, appPermissions]),
         IDialogController
 {
     public const string LogSuffix = "Dialog";
@@ -21,7 +21,7 @@ public class DialogControllerReal(
         // reset app-id if we get a info-token like -100
         if (appId < 0) appId = Eav.Constants.AppIdEmpty;
 
-        var appContext = appId != Eav.Constants.AppIdEmpty ? ctxResolver.GetExistingAppOrSet(appId) : null;
+        var appContext = appId != Eav.Constants.AppIdEmpty ? ctxService.GetExistingAppOrSet(appId) : null;
 
         // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions
         if (appContext != null)

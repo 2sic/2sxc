@@ -11,11 +11,11 @@ namespace ToSic.Sxc.Backend.Cms;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class HyperlinkBackend(
     LazySvc<AdamContext> adamCtxLazy,
-    ISxcContextResolver ctxResolver,
+    ISxcCurrentContextService ctxService,
     Generator<MultiPermissionsApp> appPermissions,
     Generator<IAdamItemDtoMaker, AdamItemDtoMakerOptions> adamDtoMaker,
     IValueConverter valueConverter)
-    : ServiceBase("Bck.HypLnk", connect: [adamCtxLazy, appPermissions, ctxResolver, adamDtoMaker, valueConverter])
+    : ServiceBase("Bck.HypLnk", connect: [adamCtxLazy, appPermissions, ctxService, adamDtoMaker, valueConverter])
 {
     public LinkInfoDto LookupHyperlink(int appId, string hyperlink, string contentType, Guid guid, string field)
     {
@@ -25,7 +25,7 @@ public class HyperlinkBackend(
             if (string.IsNullOrEmpty(hyperlink))
                 return new() { Value = hyperlink };
 
-            var context = ctxResolver.GetExistingAppOrSet(appId);
+            var context = ctxService.GetExistingAppOrSet(appId);
             // different security checks depending on the link-type
             var lookupPage = hyperlink.Trim().StartsWith(ValueConverterBase.PrefixPage, StringComparison.OrdinalIgnoreCase);
 

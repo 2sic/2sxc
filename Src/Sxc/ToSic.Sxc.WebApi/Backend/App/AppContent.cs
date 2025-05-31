@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Backend.App;
 public class AppContent(
     EntityApi api,
     LazySvc<IConvertToEavLight> entToDicLazy,
-    ISxcContextResolver ctxResolver,
+    ISxcCurrentContextService ctxService,
     Generator<MultiPermissionsTypes> typesPermissions,
     Generator<MultiPermissionsItems> itemsPermissions,
     GenWorkDb<WorkFieldList> workFieldList,
@@ -30,7 +30,7 @@ public class AppContent(
     : ServiceBase("Sxc.ApiApC",
         connect:
         [
-            workFieldList, api, entToDicLazy, ctxResolver, typesPermissions, itemsPermissions, dataControllerLazy
+            workFieldList, api, entToDicLazy, ctxService, typesPermissions, itemsPermissions, dataControllerLazy
         ])
 {
     #region Constructor / DI
@@ -38,7 +38,7 @@ public class AppContent(
     public AppContent Init(string appName)
     {
         // if app-path specified, use that app, otherwise use from context
-        Context = ctxResolver.AppNameRouteBlock(appName);
+        Context = ctxService.AppNameRouteBlock(appName);
         return this;
     }
     protected IContextOfApp Context;

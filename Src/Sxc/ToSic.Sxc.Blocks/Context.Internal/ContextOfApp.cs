@@ -79,7 +79,7 @@ public class ContextOfApp: ContextOfSite, IContextOfApp
 
     #region User Permissions / May Edit
 
-    EffectivePermissions IContextOfUserPermissions.Permissions => field ??= new(isSiteAdmin: UserMayAdmin, isContentAdmin: UserMayEdit || User.IsContentAdmin);
+    EffectivePermissions ICurrentContextUserPermissions.Permissions => field ??= new(isSiteAdmin: UserMayAdmin, isContentAdmin: UserMayEdit || User.IsContentAdmin);
 
     private bool UserMayEdit => _userMayEditGet.Get(GetUserMayEdit);
     private readonly GetOnce<bool> _userMayEditGet = new();

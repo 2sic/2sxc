@@ -10,13 +10,13 @@ namespace ToSic.Sxc.Backend.InPage;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppViewPickerBackend(
     Generator<MultiPermissionsApp> multiPermissionsApp,
-    ISxcContextResolver ctxResolver,
+    ISxcCurrentContextService ctxService,
     LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
     GenWorkPlus<WorkViews> workViews,
     GenWorkPlus<WorkBlockViewsGet> workBlockViews,
     AppWorkContextService appWorkCtxService,
     GenWorkDb<WorkEntityPublish> publisher)
-    : BlockWebApiBackendBase(multiPermissionsApp, appWorkCtxService, ctxResolver, "Bck.ViwApp",
+    : BlockWebApiBackendBase(multiPermissionsApp, appWorkCtxService, ctxService, "Bck.ViwApp",
         connect: [workViews, publisher, blockEditorSelectorLazy])
 {
     public void SetAppId(int? appId) => blockEditorSelectorLazy.Value.GetEditor(Block).SetAppId(appId);

@@ -62,16 +62,16 @@ public class EntityPicker : DataSourceBase
     [PrivateApi]
     public EntityPicker(
         GenWorkPlus<WorkEntities> workEntities,
-        IContextResolver ctxResolver,
+        ICurrentContextService ctxService,
         Generator<MultiPermissionsApp> appPermissions,
         Generator<MultiPermissionsTypes> typePermissions,
         IUser user,
         IAppReaderFactory appReaders,
         MyServices services
-    ) : base(services, "Api.EntPck", connect: [workEntities, appPermissions, typePermissions, ctxResolver, appReaders])
+    ) : base(services, "Api.EntPck", connect: [workEntities, appPermissions, typePermissions, ctxService, appReaders])
     {
         _workEntities = workEntities;
-        _ctxResolver = ctxResolver;
+        _ctxService = ctxService;
         _appPermissions = appPermissions;
         _typePermissions = typePermissions;
         _user = user;
@@ -80,7 +80,7 @@ public class EntityPicker : DataSourceBase
     }
 
     private readonly GenWorkPlus<WorkEntities> _workEntities;
-    private readonly IContextResolver _ctxResolver;
+    private readonly ICurrentContextService _ctxService;
     private readonly IUser _user;
     private readonly IAppReaderFactory _appReaders;
     private readonly Generator<MultiPermissionsApp> _appPermissions;
@@ -127,7 +127,7 @@ public class EntityPicker : DataSourceBase
 
         // Get the context - must be pre-set by the caller
 
-        var context = _ctxResolver.AppOrNull();
+        var context = _ctxService.AppOrNull();
         if (context == null)
         {
             l.E("No App context");

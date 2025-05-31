@@ -448,7 +448,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
             return GetSxcAppRelativePathWithEditionFallback(relativePath);
         
         var sp = _httpContextAccessor.HttpContext.RequestServices;
-        var ctxResolver = sp.GetService<ISxcContextResolver>();
+        var ctxResolver = sp.GetService<ISxcCurrentContextService>();
 
         var block = ctxResolver?.BlockOrNull();
         if (block == null)

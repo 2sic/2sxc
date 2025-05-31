@@ -4,7 +4,7 @@ using ToSic.Sxc.Configuration.Internal;
 
 namespace ToSic.Sxc.Context.Internal;
 
-partial class SxcContextResolver
+partial class SxcCurrentContextService
 {
     public IContextOfApp GetExistingAppOrSet(int appId)
     {

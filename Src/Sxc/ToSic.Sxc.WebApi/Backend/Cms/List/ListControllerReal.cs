@@ -13,15 +13,15 @@ public partial class ListControllerReal(
     Generator<MultiPermissionsApp> multiPermissionsApp,
     GenWorkPlus<WorkEntities> workEntities,
     GenWorkDb<WorkFieldList> workFieldList,
-    ISxcContextResolver ctxResolver,
+    ISxcCurrentContextService ctxService,
     AppWorkContextService appWorkCtxService,
     Generator<IPagePublishing> publishing)
-    : BlockWebApiBackendBase(multiPermissionsApp, appWorkCtxService, ctxResolver, "Api.LstRl",
+    : BlockWebApiBackendBase(multiPermissionsApp, appWorkCtxService, ctxService, "Api.LstRl",
         connect: [workFieldList, workEntities, publishing]), IListController
 {
     public const string LogSuffix = "Lst";
 
-    private IContextOfBlock Context => _context ??= CtxResolver.BlockContextRequired();
+    private IContextOfBlock Context => _context ??= CtxService.BlockContextRequired();
     private IContextOfBlock _context;
 
 
@@ -65,7 +65,7 @@ public partial class ListControllerReal(
     private IEntity FindOrThrow(Guid? parent)
     {
         var target = parent == null
-            ? CtxResolver.BlockRequired().Configuration.Entity
+            ? CtxService.BlockRequired().Configuration.Entity
             : ContextOfBlock.AppReader.List.One(parent.Value);
 
         return target == null

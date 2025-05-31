@@ -6,15 +6,15 @@ namespace ToSic.Sxc.Backend.Usage;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class EntityBackend(
-    ISxcContextResolver ctxResolver,
+    ISxcCurrentContextService ctxService,
     Generator<MultiPermissionsApp> appPermissions)
-    : ServiceBase("Bck.Entity", connect: [ctxResolver, appPermissions])
+    : ServiceBase("Bck.Entity", connect: [ctxService, appPermissions])
 {
     // New feature in 11.03 - Usage Statistics
 
     public dynamic Usage(int appId, Guid guid)
     {
-        var context = ctxResolver.GetExistingAppOrSet(appId);
+        var context = ctxService.GetExistingAppOrSet(appId);
         var permCheck = appPermissions.New().Init(context, context.AppReader);
         if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
             throw HttpException.PermissionDenied(error);

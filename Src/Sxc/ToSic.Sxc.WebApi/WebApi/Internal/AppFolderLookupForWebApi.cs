@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Apps.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppFolderLookupForWebApi(ISxcContextResolver ctxResolver) : ServiceBase("AppFld")
+public class AppFolderLookupForWebApi(ISxcCurrentContextService ctxService) : ServiceBase("AppFld")
 {
     /// <summary>
     /// This is necessary for special calls where the _ctxResolve may not yet be complete...
@@ -13,13 +13,13 @@ public class AppFolderLookupForWebApi(ISxcContextResolver ctxResolver) : Service
     /// <returns></returns>
     public AppFolderLookupForWebApi Init(IBlock block)
     {
-        ctxResolver.AttachBlock(block);
+        ctxService.AttachBlock(block);
         return this;
     }
 
     public string GetAppFolder()
     {
-        var ctx = ctxResolver.AppNameRouteBlock("");
+        var ctx = ctxService.AppNameRouteBlock("");
         return ctx.AppReader.Specs.Folder;
     }
 }

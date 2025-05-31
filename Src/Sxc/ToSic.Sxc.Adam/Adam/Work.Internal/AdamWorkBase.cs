@@ -13,11 +13,11 @@ public abstract class AdamWorkBase(AdamWorkBase.MyServices services, string logN
 {
     #region MyServices / Init
 
-    public class MyServices(LazySvc<AdamContext> adamContext, ISxcAppContextResolver ctxResolver, AdamGenericHelper adamGenericHelper)
-        : MyServicesBase(connect: [adamContext, ctxResolver, adamGenericHelper])
+    public class MyServices(LazySvc<AdamContext> adamContext, ISxcAppCurrentContextService ctxService, AdamGenericHelper adamGenericHelper)
+        : MyServicesBase(connect: [adamContext, ctxService, adamGenericHelper])
     {
         public LazySvc<AdamContext> AdamContext { get; } = adamContext;
-        public ISxcAppContextResolver CtxResolver { get; } = ctxResolver;
+        public ISxcAppCurrentContextService CtxService { get; } = ctxService;
         public AdamGenericHelper AdamGenericHelper { get; } = adamGenericHelper;
     }
 
@@ -25,8 +25,8 @@ public abstract class AdamWorkBase(AdamWorkBase.MyServices services, string logN
     {
         var o = options;
         var context = options.AppId > 0
-            ? Services.CtxResolver.GetExistingAppOrSet(options.AppId)
-            : Services.CtxResolver.AppNameRouteBlock(null);
+            ? Services.CtxService.GetExistingAppOrSet(options.AppId)
+            : Services.CtxService.AppNameRouteBlock(null);
         var l = Log.Fn($"app: {context.AppReader.Show()}, type: {o.ContentType}, itemGuid: {o.ItemGuid}, field: {o.Field}, portalRoot: {o.UsePortalRoot}");
         AdamContext.Init(context, o.ContentType, o.Field, o.ItemGuid, o.UsePortalRoot);
         l.Done();

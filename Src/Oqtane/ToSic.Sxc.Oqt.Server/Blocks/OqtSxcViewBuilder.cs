@@ -24,15 +24,15 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         Output.OqtPageOutput pageOutput,
         IContextOfBlock contextOfBlockEmpty,
         BlockOfModule blockModuleEmpty,
-        ISxcContextResolver contextResolverForLookUps,
+        ISxcCurrentContextService currentContextServiceForLookUps,
         ILogStore logStore,
         GlobalTypesCheck globalTypesCheck,
         IOutputCache outputCache,
-        Generator<IBlockBuilder> blockBuilderGenerator) : base($"{OqtConstants.OqtLogPrefix}.Buildr", connect: [pageOutput, contextOfBlockEmpty, blockModuleEmpty, contextResolverForLookUps, globalTypesCheck, outputCache, pageOutput, blockBuilderGenerator])
+        Generator<IBlockBuilder> blockBuilderGenerator) : base($"{OqtConstants.OqtLogPrefix}.Buildr", connect: [pageOutput, contextOfBlockEmpty, blockModuleEmpty, currentContextServiceForLookUps, globalTypesCheck, outputCache, pageOutput, blockBuilderGenerator])
     {
         _contextOfBlockEmpty = contextOfBlockEmpty;
         _blockModuleEmpty = blockModuleEmpty;
-        _contextResolverForLookUps = contextResolverForLookUps;
+        _currentContextServiceForLookUps = currentContextServiceForLookUps;
         _globalTypesCheck = globalTypesCheck;
         OutputCache = outputCache;
         PageOutput = pageOutput;
@@ -43,7 +43,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     public Output.OqtPageOutput PageOutput { get; }
     private readonly IContextOfBlock _contextOfBlockEmpty;
     private readonly BlockOfModule _blockModuleEmpty;
-    private readonly ISxcContextResolver _contextResolverForLookUps;
+    private readonly ISxcCurrentContextService _currentContextServiceForLookUps;
     private readonly GlobalTypesCheck _globalTypesCheck;
     private readonly Generator<IBlockBuilder> _blockBuilderGenerator;
 
@@ -134,7 +134,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
         // Special for Oqtane - normally the IContextResolver is only used in WebAPIs
         // But the ModuleLookUp and PageLookUp also rely on this, so the IContextResolver must know about this for now
         // In future, we should find a better way for this, so that IContextResolver is really only used on WebApis
-        _contextResolverForLookUps.AttachBlock(block);
+        _currentContextServiceForLookUps.AttachBlock(block);
         return block;
     }));
     private readonly GetOnce<IBlock> _blockGetOnce = new();

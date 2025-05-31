@@ -28,7 +28,7 @@ public partial class EditLoadBackend(
     ContentGroupList contentGroupList,
     EntityBuilder entityBuilder,
     IUiContextBuilder contextBuilder,
-    ISxcContextResolver ctxResolver,
+    ISxcCurrentContextService ctxService,
     ITargetTypeService mdTargetTypes,
     IAppReaderFactory appReaders,
     IUiData uiData,
@@ -40,7 +40,7 @@ public partial class EditLoadBackend(
     : ServiceBase("Cms.LoadBk",
         connect:
         [
-            workCtxSvc, inputTypes, api, contentGroupList, entityBuilder, contextBuilder, ctxResolver,
+            workCtxSvc, inputTypes, api, contentGroupList, entityBuilder, contextBuilder, ctxService,
             mdTargetTypes, appReaders, uiData, jsonSerializerGenerator, typesPermissions, prefetch, loadSettings
         ])
 {
@@ -50,7 +50,7 @@ public partial class EditLoadBackend(
     {
         var l = Log.Fn<EditDto>($"load many a#{appId}, items⋮{items.Count}");
         // Security check
-        var context = ctxResolver.GetExistingAppOrSet(appId);
+        var context = ctxService.GetExistingAppOrSet(appId);
         
         // do early permission check - but at this time it may be that we don't have the types yet
         // because they may be group/id combinations, without type information which we'll look up afterward

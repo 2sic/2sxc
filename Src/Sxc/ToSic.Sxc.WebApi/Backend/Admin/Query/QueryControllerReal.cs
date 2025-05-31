@@ -12,9 +12,9 @@ namespace ToSic.Sxc.Backend.Admin.Query;
 public class QueryControllerReal(
     QueryControllerBase<QueryControllerReal>.MyServices services,
     GenWorkPlus<WorkViews> workViews,
-    ISxcContextResolver contextResolver,
+    ISxcCurrentContextService currentContextService,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)
-    : QueryControllerBase<QueryControllerReal>(services, "Api." + LogSuffix, connect: [workViews, contextResolver, tokenEngineWithContext])
+    : QueryControllerBase<QueryControllerReal>(services, "Api." + LogSuffix, connect: [workViews, currentContextService, tokenEngineWithContext])
 {
     public const string LogSuffix = "Query";
     public const string LogGroup = EavWebApiConstants.HistoryNameWebApi + "-query";
@@ -54,7 +54,7 @@ public class QueryControllerReal(
 
     private ILookUpEngine LookUpEngineWithBlockRequired()
     {
-        var block = contextResolver.BlockRequired();
+        var block = currentContextService.BlockRequired();
         var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = block };
         var lookUps = tokenEngineWithContext.New().GetDataConfiguration(block.App as EavApp, specs).Configuration;
         return lookUps;

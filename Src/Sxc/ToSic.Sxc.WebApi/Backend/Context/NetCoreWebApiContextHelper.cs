@@ -39,13 +39,13 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
         if (_blockContextInitialized) return;
         _blockContextInitialized = true;
         var getBlock = _helper.GetService<IWebApiContextBuilder>();
-        CtxResolver = getBlock.PrepareContextResolverForApiRequest();
-        BlockOptional = CtxResolver.BlockOrNull();
+        CtxService = getBlock.PrepareContextResolverForApiRequest();
+        BlockOptional = CtxService.BlockOrNull();
     }
 
     private bool _blockContextInitialized;
 
-    private ISxcContextResolver CtxResolver { get; set; }
+    private ISxcCurrentContextService CtxService { get; set; }
     internal IBlock BlockOptional { get; private set; }
 
     public void OnActionExecutingEnd(ActionExecutingContext context)
@@ -88,13 +88,13 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
             if (routeAppPathObj == null) return "";
             var routeAppPath = routeAppPathObj.ToString();
 
-            var appId = CtxResolver.SetAppOrNull(routeAppPath)?.AppReader.AppId ?? Eav.Constants.NullId;
+            var appId = CtxService.SetAppOrNull(routeAppPath)?.AppReader.AppId ?? Eav.Constants.NullId;
 
             if (appId != Eav.Constants.NullId)
             {
                 // Look up if page publishing is enabled - if module context is not available, always false
                 base.Log.A($"AppId: {appId}");
-                var app = LoadAppOnly(appId, CtxResolver.Site().Site);
+                var app = LoadAppOnly(appId, CtxService.Site().Site);
                 ((IExCtxAttachApp)ExCtx).AttachApp(app);
                 found = true;
             }

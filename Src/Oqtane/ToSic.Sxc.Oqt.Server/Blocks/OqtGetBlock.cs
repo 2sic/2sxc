@@ -16,22 +16,22 @@ namespace ToSic.Sxc.Oqt.Server.Blocks;
 internal class OqtGetBlock(
     LazySvc<IModuleRepository> modRepoLazy,
     RequestHelper requestHelper,
-    ISxcContextResolver contextResolverToInit,
+    ISxcCurrentContextService currentContextServiceToInit,
     Generator<IContextOfBlock> cntOfBlkGen,
     Generator<BlockOfModule> blkFromModGen,
     Generator<BlockOfEntity> blkFromEntGen)
     : ServiceBase("Sxc.GetBlk",
-            connect: [modRepoLazy, requestHelper, contextResolverToInit, cntOfBlkGen, blkFromModGen, blkFromEntGen]),
+            connect: [modRepoLazy, requestHelper, currentContextServiceToInit, cntOfBlkGen, blkFromModGen, blkFromEntGen]),
         IWebApiContextBuilder
 {
-    public ISxcContextResolver PrepareContextResolverForApiRequest()
+    public ISxcCurrentContextService PrepareContextResolverForApiRequest()
     {
-        if (_alreadyTriedToLoad) return contextResolverToInit;
+        if (_alreadyTriedToLoad) return currentContextServiceToInit;
         _alreadyTriedToLoad = true;
 
         var block = InitializeBlock();
-        contextResolverToInit.AttachBlock(block);
-        return contextResolverToInit;
+        currentContextServiceToInit.AttachBlock(block);
+        return currentContextServiceToInit;
     }
     private bool _alreadyTriedToLoad;
 

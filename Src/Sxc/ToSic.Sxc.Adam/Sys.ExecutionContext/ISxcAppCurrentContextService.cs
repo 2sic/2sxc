@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Context.Internal;
 /// This is the reduced version, which can only provide context for the App!
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface ISxcAppContextResolver: IContextResolver
+public interface ISxcAppCurrentContextService: ICurrentContextService
 {
     /// <summary>
     /// Return the block if known, or an app context if not
