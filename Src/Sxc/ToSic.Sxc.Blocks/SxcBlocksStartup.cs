@@ -42,9 +42,12 @@ public static class SxcBlocksStartup
 
         // Context stuff in general
         services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
-        
+
+
 
         // Context stuff, which is explicitly scoped
+        services.TryAddTransient<IContextOfApp, ContextOfApp>();
+        services.TryAddTransient<ContextOfApp.MyServices>();
         services.TryAddScoped<ISxcContextResolver, SxcContextResolver>();
         // must be the same instance, so it must get the original, scoped SxcContextResolver
         services.TryAddTransient<ISxcAppContextResolver>(sp => sp.GetRequiredService<ISxcContextResolver>());
