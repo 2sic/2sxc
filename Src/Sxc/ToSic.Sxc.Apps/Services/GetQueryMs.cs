@@ -1,7 +1,5 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal.Query;
-using ToSic.Eav.Plumbing;
-using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.DataServices;
 

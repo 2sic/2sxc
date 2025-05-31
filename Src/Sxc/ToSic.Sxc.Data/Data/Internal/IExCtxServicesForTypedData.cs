@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Services.Internal;
-
-namespace ToSic.Sxc.Services;
+﻿namespace ToSic.Sxc.Services;
 
 /// <summary>
 /// Special interface for handing a partial service kit to TypedData helpers.

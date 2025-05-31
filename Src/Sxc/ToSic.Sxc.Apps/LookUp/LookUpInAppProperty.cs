@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.LookUp;
-using ToSic.Eav.LookUp.Sources;
+﻿using ToSic.Eav.LookUp.Sources;
 using ToSic.Lib.LookUp;
 using ToSic.Lib.LookUp.Sources;
 using ToSic.Sxc.Apps;

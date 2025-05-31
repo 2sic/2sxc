@@ -1,7 +1,4 @@
-﻿using ToSic.Eav.Plumbing;
-using ToSic.Sys.Utils;
-
-namespace ToSic.Sxc.Data.Internal.Factory;
+﻿namespace ToSic.Sxc.Data.Internal.Factory;
 
 internal class ClassAttributeLookup<TValue>
 {

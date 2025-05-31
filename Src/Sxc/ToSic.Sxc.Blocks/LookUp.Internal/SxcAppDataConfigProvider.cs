@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Context;
-using ToSic.Eav.LookUp;
 using ToSic.Eav.LookUp.Sources;
 using ToSic.Lib.DI;
 using ToSic.Lib.LookUp;

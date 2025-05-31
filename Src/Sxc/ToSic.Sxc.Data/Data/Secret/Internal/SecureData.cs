@@ -1,7 +1,4 @@
-﻿using ToSic.Eav.Plumbing;
-using ToSic.Sys.Utils;
-
-namespace ToSic.Sxc.Data.Internal;
+﻿namespace ToSic.Sxc.Data.Internal;
 
 [PrivateApi("hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

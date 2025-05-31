@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Internal.Features;
-using ToSic.Eav.SysData;
-using ToSic.Sys.Capabilities.Features;
+﻿using ToSic.Sys.Capabilities.Features;
 
 namespace ToSic.Sxc.Configuration.Internal;
 

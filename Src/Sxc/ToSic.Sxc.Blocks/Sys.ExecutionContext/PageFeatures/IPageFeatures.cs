@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Blocks.Internal;
-
-namespace ToSic.Sxc.Web.Internal.PageFeatures;
+﻿namespace ToSic.Sxc.Web.Internal.PageFeatures;
 
 /// <summary>
 /// Part of the <see cref="ToSic.Sxc.Services.IPageService"/> to activate features on the page.

@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.SysData;
-using ToSic.Sys.Requirements;
+﻿using ToSic.Sys.Requirements;
 
 namespace ToSic.Sxc.Web.Internal.PageFeatures;
 
