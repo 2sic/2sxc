@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Internal.Features;
-using ToSic.Eav.Internal.Requirements;
+using ToSic.Metadata.Requirements.Sys;
 using ToSic.Sxc.Engines;
 using ToSic.Sys.Requirements;
 
