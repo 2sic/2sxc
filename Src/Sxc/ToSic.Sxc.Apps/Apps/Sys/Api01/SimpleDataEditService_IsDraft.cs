@@ -13,7 +13,7 @@ partial class SimpleDataEditService
     /// <param name="writePublishAllowed"></param>
     /// <param name="log"></param>
     /// <returns></returns>
-    internal static EntitySavePublishing GetPublishSpecs(object publishedState, bool? defaultPublished, bool writePublishAllowed, ILog log)
+    public static EntitySavePublishing GetPublishSpecs(object publishedState, bool? defaultPublished, bool writePublishAllowed, ILog log)
     {
         var l = log.Fn<EntitySavePublishing>($"{nameof(publishedState)}: {publishedState}; {nameof(defaultPublished)}: {defaultPublished}; {nameof(writePublishAllowed)}: {writePublishAllowed}");
         // If it already has a published original
