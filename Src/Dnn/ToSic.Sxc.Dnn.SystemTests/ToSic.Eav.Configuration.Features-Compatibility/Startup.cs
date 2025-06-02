@@ -38,6 +38,7 @@ public class Startup
             // Apps
             .AddEavWork()
             .AddEavApps()
+            .AddEavAppsPersistence()
 
             // SQL Server
             .AddRepositoryAndEfc()
