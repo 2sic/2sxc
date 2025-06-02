@@ -37,8 +37,9 @@ public class Startup
             .AddFixtureHelpers()
             // Apps
             .AddEavWork()
-            .AddEavApps()
+            .AddEavContext()
             .AddEavAppsPersistence()
+            .AddEavApps()
 
             // SQL Server
             .AddRepositoryAndEfc()
