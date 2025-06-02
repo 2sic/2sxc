@@ -1,5 +1,6 @@
 ﻿using System.Web.Compilation;
 using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
 
@@ -10,7 +11,7 @@ internal class CodeCompilerNetFull(
     IServiceProvider serviceProvider,
     IRoslynBuildManager roslynBuildManager,
     LazySvc<SourceAnalyzer> sourceAnalyzer,
-    LazySvc<IAppJsonService> appJson)
+    LazySvc<IAppJsonConfigurationService> appJson)
     : CodeCompiler(serviceProvider, connect: [roslynBuildManager, sourceAnalyzer, appJson])
 {
     public override AssemblyResult GetAssembly(string relativePath, string className, HotBuildSpec spec)

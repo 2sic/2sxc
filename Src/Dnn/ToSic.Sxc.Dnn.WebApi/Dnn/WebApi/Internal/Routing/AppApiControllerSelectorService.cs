@@ -6,6 +6,7 @@ using System.Web.Hosting;
 using System.Web.Http.Controllers;
 using ToSic.Eav;
 using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Routing;
@@ -42,7 +43,7 @@ internal partial class AppApiControllerSelectorService(
     LazySvc<AppCodeLoader> appCodeLoader,
     LazySvc<ISxcCurrentContextService> sxcContextResolver,
     MemoryCacheService memoryCacheService,
-    LazySvc<IAppJsonService> appJson)
+    LazySvc<IAppJsonConfigurationService> appJson)
     : ServiceBase("Dnn.ApiSSv", connect: [folderUtilities, site, roslynLazy, getBlockLazy, analyzerLazy, codeErrorSvc, assemblyCacheManager, appCodeLoader, sxcContextResolver, memoryCacheService, appJson])
 {
     #region Setup / Init

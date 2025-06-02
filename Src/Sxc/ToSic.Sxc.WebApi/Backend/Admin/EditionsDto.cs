@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Apps.Internal.Specs;
+using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Sxc.Code.Generate;
 
 namespace ToSic.Sxc.Backend.Admin;
@@ -35,7 +36,7 @@ public class GeneratorDto(IFileGenerator generator)
 
 public static class EditionsJsonExtension
 {
-    public static EditionsDto ToEditionsDto(this AppJson appJson, List<GeneratorDto> generators)
+    public static EditionsDto ToEditionsDto(this AppJsonConfiguration appJson, List<GeneratorDto> generators)
         => new()
         {
             Ok = true,

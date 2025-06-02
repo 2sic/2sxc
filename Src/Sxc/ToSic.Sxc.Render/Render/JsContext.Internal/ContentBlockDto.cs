@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
@@ -86,7 +87,7 @@ public class ContentBlockDto : EntityDto
     [JsonPropertyName("renderLightspeed")]
     public bool RenderLightspeed { get; }
 
-    public ContentBlockDto(IBlock block, RenderStatistics statistics, IAppJsonService appJson)
+    public ContentBlockDto(IBlock block, RenderStatistics statistics, IAppJsonConfigurationService appJson)
     {
         IsCreated = block.ContentGroupExists;
         IsContent = block.IsContentApp;

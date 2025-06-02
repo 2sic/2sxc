@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Data.Shared;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
@@ -14,7 +15,7 @@ using ToSic.Sys.Code.InfoSystem;
 namespace ToSic.Sxc.Web.Internal.JsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class JsContextAll(JsContextLanguage jsLangCtxSvc, IJsApiService jsApiService, CodeInfosInScope codeWarnings, IAppJsonService appJson, LazySvc<IFeaturesService> featuresSvc)
+public class JsContextAll(JsContextLanguage jsLangCtxSvc, IJsApiService jsApiService, CodeInfosInScope codeWarnings, IAppJsonConfigurationService appJson, LazySvc<IFeaturesService> featuresSvc)
     : ServiceBase("Sxc.CliInf", connect: [jsLangCtxSvc, jsApiService, codeWarnings])
 {
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

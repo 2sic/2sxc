@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Apps.Sys.AppJson;
 
 namespace ToSic.Sxc.Dnn.Compile.Internal;
 
@@ -13,6 +14,6 @@ public static class AppJsonExtensions
     /// <param name="appJsonService"></param>
     /// <param name="appId"></param>
     /// <returns></returns>
-    public static bool DnnCompilerAlwaysUseRoslyn(this IAppJsonService appJsonService, int appId) 
+    public static bool DnnCompilerAlwaysUseRoslyn(this IAppJsonConfigurationService appJsonService, int appId) 
         => appJsonService.GetAppJson(appId)?.DotNet?.Compiler?.Equals("roslyn", StringComparison.OrdinalIgnoreCase) == true;
 }

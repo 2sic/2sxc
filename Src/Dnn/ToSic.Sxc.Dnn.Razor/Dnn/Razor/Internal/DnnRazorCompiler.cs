@@ -4,6 +4,7 @@ using System.Runtime.ExceptionServices;
 using System.Web;
 using System.Web.Compilation;
 using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Caching.PiggyBack;
@@ -41,7 +42,7 @@ internal class DnnRazorCompiler(
     LazySvc<CodeErrorHelpService> errorHelp,
     LazySvc<SourceAnalyzer> sourceAnalyzer,
     LazySvc<IRoslynBuildManager> roslynBuildManager,
-    LazySvc<IAppJsonService> appJson)
+    LazySvc<IAppJsonConfigurationService> appJson)
     : ServiceBase<EngineBase.MyServices>(helpers, "Dnn.RzComp", connect: [exCtxFactory, errorHelp, sourceAnalyzer, roslynBuildManager, appJson])
 {
     protected HotBuildSpec HotBuildSpecs;

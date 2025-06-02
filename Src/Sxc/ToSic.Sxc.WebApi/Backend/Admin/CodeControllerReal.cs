@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code.Generate;
 using ToSic.Sxc.Code.Generate.Internal;
@@ -8,7 +9,7 @@ using ToSic.Sxc.Code.Internal.Documentation;
 namespace ToSic.Sxc.Backend.Admin;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGenerator>> generators, LazySvc<IAppJsonService> appJsonService) 
+public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGenerator>> generators, LazySvc<IAppJsonConfigurationService> appJsonService) 
     : ServiceBase("Api.CodeRl", connect: [appJsonService])
 {
     public const string LogSuffix = "Code";

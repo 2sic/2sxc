@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Hosting;
 using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.ApiExplorer;
@@ -48,7 +49,7 @@ public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSu
             throw new($"Error: can't find controller file: {controllerVirtualPath}");
 
         Assembly assembly;
-        var appJson = SysHlp.GetService<IAppJsonService>();
+        var appJson = SysHlp.GetService<IAppJsonConfigurationService>();
         var block = SysHlp.GetService<DnnGetBlock>().GetCmsBlock(Request);
         var codeFileInfo = SysHlp.GetService<SourceAnalyzer>().TypeOfVirtualPath(controllerVirtualPath);
         if ((block != null && appJson.DnnCompilerAlwaysUseRoslyn(block.AppId)) || codeFileInfo.AppCode || FileInAppCode(path))
