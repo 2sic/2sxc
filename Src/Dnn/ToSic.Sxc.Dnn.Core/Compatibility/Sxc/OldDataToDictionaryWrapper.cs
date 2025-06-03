@@ -41,8 +41,9 @@ public class OldDataToDictionaryWrapper
     public IEnumerable<IDictionary<string, object>> Prepare(IEnumerable<IEntity> entities)
         => _converter.Convert(entities);
 
-    public IEnumerable<IDictionary<string, object>> Prepare(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities)
-        => _converter.Convert(entities as IEnumerable<IEntity>);
+    // Removed in v20
+    //public IEnumerable<IDictionary<string, object>> Prepare(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities)
+    //    => _converter.Convert(entities as IEnumerable<IEntity>);
 
     public IDictionary<string, object> Prepare(IEntity entity)
         => _converter.Convert(entity);

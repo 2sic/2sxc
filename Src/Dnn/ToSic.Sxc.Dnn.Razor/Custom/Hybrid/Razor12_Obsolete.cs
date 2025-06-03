@@ -9,33 +9,33 @@
  // which would result in errors on AsDynamic(some-object) even though it should just work
  partial class Razor12
  {
-     // Obsolete stuff - not supported any more in RazorPage10 - maybe re-activate to show helpful error messages
+    // Obsolete stuff - not supported any more in RazorPage10 - maybe re-activate to show helpful error messages
 
-     #region Shared Code Block between RazorComponent_Obsolete and ApiController_Obsolete
+    #region Shared Code Block between RazorComponent_Obsolete and ApiController_Obsolete
 
-     #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
+    #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10 - Removed in v20
 
-     [PrivateApi]
-     [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
-     public dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity)
-         => ExAsDynamicInterfacesIEntity();
+    //[PrivateApi]
+    //[Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
+    //public dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity)
+    //    => ExAsDynamicInterfacesIEntity();
 
 
-     [PrivateApi]
-     [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
-     public dynamic AsDynamic(KeyValuePair<int, ToSic.Eav.Interfaces.IEntity> entityKeyValuePair)
-         => AsDynamicKvpInterfacesIEntity();
+    //[PrivateApi]
+    //[Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
+    //public dynamic AsDynamic(KeyValuePair<int, ToSic.Eav.Interfaces.IEntity> entityKeyValuePair)
+    //    => AsDynamicKvpInterfacesIEntity();
 
-     [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
-     [PrivateApi]
-     public IEnumerable<dynamic> AsDynamic(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities)
-         => AsDynamicIEnumInterfacesIEntity();
+    //[Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
+    //[PrivateApi]
+    //public IEnumerable<dynamic> AsDynamic(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities)
+    //    => AsDynamicIEnumInterfacesIEntity();
 
-     #endregion
+    #endregion
 
-     #region AsDynamic<int, IEntity>
+    #region AsDynamic<int, IEntity>
 
-     [PrivateApi]
+    [PrivateApi]
      [Obsolete("throws error with fix-instructions. Use AsDynamic(IEnumerable<IEntity>...)")]
      public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => ExAsDynamicKvp();
 

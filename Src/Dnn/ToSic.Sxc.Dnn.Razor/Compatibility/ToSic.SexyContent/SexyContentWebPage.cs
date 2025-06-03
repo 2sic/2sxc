@@ -166,19 +166,19 @@ public abstract class SexyContentWebPage :
     #endregion
 
 
-    #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
-    [PrivateApi]
-    [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-    public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => CodeApi.Cdf.CodeAsDyn(entity as IEntity);
+    #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10 - Removed in v20
+    //[PrivateApi]
+    //[Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
+    //public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => CodeApi.Cdf.CodeAsDyn(entity as IEntity);
 
 
-    [PrivateApi]
-    [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-    public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => CodeApi.Cdf.CodeAsDyn(entityKeyValuePair.Value as IEntity);
+    //[PrivateApi]
+    //[Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
+    //public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => CodeApi.Cdf.CodeAsDyn(entityKeyValuePair.Value as IEntity);
 
-    [PrivateApi]
-    [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-    public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => CodeApi.Cdf.CodeAsDynList(entities.Cast<IEntity>());
+    //[PrivateApi]
+    //[Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
+    //public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => CodeApi.Cdf.CodeAsDynList(entities.Cast<IEntity>());
     #endregion
 
 

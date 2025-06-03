@@ -145,7 +145,7 @@ internal class SaveDataValidator(EditDto package, ILog parentLog = null) : Valid
     }
 
 
-    private void CompareTypes(int count, IEntityLight originalEntity, IEntityLight newEntity)
+    private void CompareTypes(int count, IEntity originalEntity, IEntity newEntity)
     {
         var l = Log.Fn($"ids:{newEntity.Type.NameId}/{originalEntity.Type.NameId}");
         if (originalEntity.Type.NameId != newEntity.Type.NameId)
@@ -153,7 +153,7 @@ internal class SaveDataValidator(EditDto package, ILog parentLog = null) : Valid
         l.Done();
     }
 
-    private void CompareIdentities(int count, IEntityLight originalEntity, IEntityLight newEntity)
+    private void CompareIdentities(int count, IEntity originalEntity, IEntity newEntity)
     {
         var l = Log.Fn($"ids:{newEntity.EntityId}/{originalEntity.EntityId}");
         if (originalEntity.EntityId != newEntity.EntityId)
