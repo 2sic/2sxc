@@ -87,7 +87,8 @@ internal partial class LookUpForTokenTemplate(
     {
         // dynamic valueObject;
         var propertyMatch = Regex.Match(strPropertyName, "([a-z]+):([a-z]+)", RegexOptions.IgnoreCase);
-        if (!propertyMatch.Success) return "";
+        if (!propertyMatch.Success)
+            return "";
 
         var subSource = propertyMatch.Groups[1].Value;
         var subProp = propertyMatch.Groups[2].Value;
@@ -97,9 +98,10 @@ internal partial class LookUpForTokenTemplate(
             ? dynEntity.Presentation as IDynamicEntity
             : dynEntity.Get(subSource) as IDynamicEntity;
 
-        if (subEntity == null) return "";
+        if (subEntity == null)
+            return "";
 
-        var subLookup = new LookUpForTokenTemplate(null, subEntity, cultureInfo);
+        var subLookup = new LookUpForTokenTemplate("NoName", subEntity, cultureInfo);
 
         return subLookup.GetProperty(subProp, "") ?? "";
     }
