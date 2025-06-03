@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps.Internal.Ui;
 using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.Context;
+using ToSic.Eav.Data.ContentTypes.Sys;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource.Internal.Query;
@@ -129,7 +130,7 @@ public class WorkViews(
             .OrderBy(ct => ct.Name)
             .Select(ct =>
             {
-                var details = ct.Metadata.DetailsOrNull;
+                var details = ct.DetailsOrNull();
                 var thumbnail = valConverter.ToValue(details?.Icon);
                 if (AppIconHelpers.HasAppPathToken(thumbnail))
                     thumbnail = AppIconHelpers.AppPathTokenReplace(thumbnail, appPath, appPathShared);
