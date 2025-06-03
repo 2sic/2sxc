@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Nodes;
 using ToSic.Eav.Data.Debug;
+using ToSic.Eav.Data.PropertyDump.Sys;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Data;
 using ToSic.Sxc.Data.Internal.Typed;
@@ -88,10 +89,10 @@ internal class PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item)
 
     #region Debug / Dump
 
-    public List<PropertyDumpItem> _DumpNameWipDroppingMostCases(PropReqSpecs specs, string path)
+    public List<PropertyDumpItem> _DumpProperties(PropReqSpecs specs, string path, IPropertyDumpService dumpService)
         => item == null || !item.Any()
             ? []
-            : new PreWrapJsonDumperHelper().Dump(this, Wrapper, item, specs, path);
+            : new PreWrapJsonDumperHelper().Dump(this, Wrapper, item, specs, path, dumpService);
 
     #endregion
 }

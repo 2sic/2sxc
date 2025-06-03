@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Nodes;
 using ToSic.Eav.Data.Debug;
+using ToSic.Eav.Data.PropertyDump.Sys;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Sxc.Data.Internal.Wrapper;
 
@@ -8,7 +9,8 @@ internal class PreWrapJsonDumperHelper
 {
     private const string DumpSourceName = "Dynamic";
 
-    public List<PropertyDumpItem> Dump(PreWrapJsonObject parent, CodeJsonWrapper wrapper, JsonObject item, PropReqSpecs specs, string path)
+    public List<PropertyDumpItem> Dump(PreWrapJsonObject parent, CodeJsonWrapper wrapper, JsonObject item,
+        PropReqSpecs specs, string path, IPropertyDumpService dumpService)
     {
         if (item == null || !item.Any())
             return [];
@@ -36,7 +38,7 @@ internal class PreWrapJsonDumperHelper
             {
                 var jacket = wrapper.CreateDynJacketObject(p.Value.AsObject());
                 return ((IHasPropLookup)jacket).PropertyLookup is IPropertyDumpCustom dumper
-                    ? dumper._DumpNameWipDroppingMostCases(specs, path + PropertyDumpItem.Separator + p.Key)
+                    ? dumper._DumpProperties(specs, path + PropertyDumpItem.Separator + p.Key, dumpService)
                     : [];
             })
             .Where(p => p is not null);

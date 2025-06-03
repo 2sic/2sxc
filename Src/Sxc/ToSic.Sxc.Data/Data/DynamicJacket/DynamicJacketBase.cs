@@ -13,17 +13,11 @@ namespace ToSic.Sxc.Data;
 /// </summary>
 [PrivateApi("was Internal-API till v17 - just use the objects from AsDynamic, don't use this directly")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal abstract class DynamicJacketBase: DynamicObject, IReadOnlyList<object>, ISxcDynamicObject, ICanGetByName, IHasPropLookup, IHasJsonSource
+internal abstract class DynamicJacketBase(CodeJsonWrapper wrapper): DynamicObject, IReadOnlyList<object>, ISxcDynamicObject, ICanGetByName, IHasPropLookup, IHasJsonSource
 {
     #region Constructor / Setup
 
-    internal DynamicJacketBase(CodeJsonWrapper wrapper)
-    {
-        Wrapper = wrapper;
-    }
-
-    [PrivateApi]
-    internal CodeJsonWrapper Wrapper { get; }
+    [PrivateApi] internal CodeJsonWrapper Wrapper { get; } = wrapper;
 
     [PrivateApi]
     internal abstract IPreWrap PreWrap { get; }

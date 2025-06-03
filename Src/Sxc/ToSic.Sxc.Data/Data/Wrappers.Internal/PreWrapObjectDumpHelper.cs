@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using ToSic.Eav.Data.Debug;
+using ToSic.Eav.Data.PropertyDump.Sys;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Sxc.Data.Internal.Wrapper;
 
@@ -10,7 +11,7 @@ internal class PreWrapObjectDumpHelper
 
 
     public List<PropertyDumpItem> _Dump(PreWrapObject preWrap, Dictionary<string, PropertyInfo> propDic,
-        ICodeDataPoCoWrapperService wrapperSvc, PropReqSpecs specs, string path)
+        ICodeDataPoCoWrapperService wrapperSvc, PropReqSpecs specs, string path, IPropertyDumpService dumpService)
     {
         if (string.IsNullOrEmpty(path))
             path = DumpSourceName;
@@ -51,7 +52,7 @@ internal class PreWrapObjectDumpHelper
             .Where(p => p.CanDump is not null)
             .ToList();
         var deeperLookups = deeperProperties
-            .SelectMany(p => (p.CanDump as IPropertyDumpCustom)?._DumpNameWipDroppingMostCases(specs, path + PropertyDumpItem.Separator + p.Field) ?? []);
+            .SelectMany(p => (p.CanDump as IPropertyDumpCustom)?._DumpProperties(specs, path + PropertyDumpItem.Separator + p.Field, dumpService) ?? []);
 
         var final = resultDynChildren
             .Where(r => deeperProperties.All(dp => dp.Field != r.Field))
