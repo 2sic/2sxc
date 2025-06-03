@@ -22,7 +22,7 @@ public class ViewsBackend(
         var l = Log.Fn<IEnumerable<ViewDetailsDto>>($"get all a#{appId}");
 
         var appViews = workViews.New(appId);
-        var contentTypes = appViews.AppWorkCtx.AppReader.ContentTypes.OfScope(Scopes.Default).ToList();
+        var contentTypes = appViews.AppWorkCtx.AppReader.ContentTypes.OfScope(ScopeConstants.Default).ToList();
 
         var viewList = appViews.GetAll().ToList();
         Log.A($"attribute list count:{contentTypes.Count}, template count:{viewList.Count}");

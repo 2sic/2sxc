@@ -32,7 +32,7 @@ public abstract class SxcImportExportEnvironmentBase: EavImportExportEnvironment
 
     #endregion
 
-    public override string FallbackContentTypeScope => Scopes.Default;
+    public override string FallbackContentTypeScope => ScopeConstants.Default;
 
     public override string TemplatesRoot(int zoneId, int appId) 
         => AppPaths(zoneId, appId).PhysicalPath;

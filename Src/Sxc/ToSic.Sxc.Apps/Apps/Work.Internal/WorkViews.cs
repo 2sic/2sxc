@@ -125,7 +125,7 @@ public class WorkViews(
         var valConverter = valConverterLazy.Value;
 
         var result = AppWorkCtx.AppReader.ContentTypes
-            .OfScope(Scopes.Default) 
+            .OfScope(ScopeConstants.Default) 
             .Where(ct => templates.Any(t => t.ContentType == ct.NameId)) // must exist in at least 1 template
             .OrderBy(ct => ct.Name)
             .Select(ct =>

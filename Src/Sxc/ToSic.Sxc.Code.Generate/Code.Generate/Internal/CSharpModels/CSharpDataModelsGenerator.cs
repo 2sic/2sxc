@@ -34,12 +34,12 @@ public class CSharpDataModelsGenerator(IUser user, IAppReaderFactory appReadFac)
 
         // Prepare Content Types and add to Specs, so the generators know what is available
         // Generate classes for all types in scope Default
-        var types = appContentTypes.ContentTypes.OfScope(Scopes.Default).ToList();
+        var types = appContentTypes.ContentTypes.OfScope(ScopeConstants.Default).ToList();
         appContentTypes.GetContentType(AppLoadConstants.TypeAppResources).DoIfNotNull(types.Add);
         appContentTypes.GetContentType(AppLoadConstants.TypeAppSettings).DoIfNotNull(types.Add);
 
         var appConfigTypes = appContentTypes.ContentTypes
-            .OfScope(Scopes.SystemConfiguration)
+            .OfScope(ScopeConstants.SystemConfiguration)
             .Where(ct => !ct.HasAncestor())
             .ToList();
 

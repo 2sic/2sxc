@@ -125,7 +125,7 @@ internal class CSharpDataModelGenerator(CSharpDataModelsGenerator dmg, IContentT
     public string MainClassComment(string firstPropertyName)
     {
         var scope = type.Scope;
-        var scopeIsSpecial = scope != Scopes.Default;
+        var scopeIsSpecial = scope != ScopeConstants.Default;
         var remarks = scopeIsSpecial ? $"This Content-Type is NOT in the default scope, so you may not see it in the Admin UI. It's in the scope {scope}." : null;
         return dmg.CodeGenHelper.CodeComment(Specs.TabsClass,
                    $"""
