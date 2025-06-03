@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Apps.Internal.Assets;
+﻿using ToSic.Eav.Apps.Sys;
+
+namespace ToSic.Sxc.Apps.Internal.Assets;
 
 /// <summary>
 /// Information class needed by the edit-ui, to provide optimal syntax helpers etc.
@@ -38,7 +40,7 @@ public class AssetEditInfo
     {
         AppId = appId;
         FileName = fileName;
-        HasApp = appName != Eav.Constants.ContentAppName;
+        HasApp = appName != KnownAppsConstants.ContentAppName;
         IsShared = global;
     }
 

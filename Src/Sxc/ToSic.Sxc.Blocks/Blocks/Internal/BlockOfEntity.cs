@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Cms.Internal;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Context.Internal;
@@ -60,7 +61,7 @@ public sealed class BlockOfEntity(BlockServices services, LazySvc<AppFinder> app
     private IBlockIdentifier LoadBlockDefinition(int zoneId, IEntity blockDefinition, ILog log)
     {
         var appNameId = blockDefinition.Get(BlockBuildingConstants.CbPropertyApp, fallback: "");
-        IsContentApp = appNameId == Eav.Constants.DefaultAppGuid;
+        IsContentApp = appNameId == KnownAppsConstants.DefaultAppGuid;
         var temp = blockDefinition.Get(BlockBuildingConstants.CbPropertyContentGroup, fallback: "");
         Guid.TryParse(temp, out var contentGroupGuid);
 

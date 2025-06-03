@@ -2,6 +2,7 @@
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Internal.Work;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
@@ -35,7 +36,7 @@ internal class OqtModuleUpdater(
 
         // ToDo: Should throw exception if a real BlockConfiguration exists
 
-        if (appId is Eav.Constants.AppIdEmpty or null)
+        if (appId is KnownAppsConstants.AppIdEmpty or null)
             UpdateInstanceSetting(instance.Id, ModuleSettingNames.AppName, null, Log);
         else
         {

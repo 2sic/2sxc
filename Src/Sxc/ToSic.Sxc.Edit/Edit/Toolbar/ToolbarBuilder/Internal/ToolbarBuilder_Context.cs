@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Catalog;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Metadata;
 
 using ToSic.Sys.Utils;
@@ -49,7 +50,7 @@ partial record ToolbarBuilder : IToolbarBuilderInternal
         var appId = FindContextAppId(target);
 
         // If nothing found
-        if (appId is 0 or NoAppId or Eav.Constants.TransientAppId or < 1)
+        if (appId is 0 or NoAppId or KnownAppsConstants.TransientAppId or < 1)
             return l.ReturnNull("no app identified");
 
         var identity = appsCatalog.AppIdentity(appId);

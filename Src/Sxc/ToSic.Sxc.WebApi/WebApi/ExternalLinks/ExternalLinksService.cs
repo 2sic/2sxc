@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav;
 using ToSic.Eav.Apps.Internal.Specs;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Sys.Capabilities.Fingerprints;
 using ToSic.Sys.Capabilities.Platform;
 
@@ -21,7 +22,7 @@ public class ExternalLinksService(SystemFingerprint fingerprint, IPlatformInfo p
         var destinationPart = "";
         if (destination == ExternalSxcDestinations.AutoConfigure)
             destinationPart =
-                $"&destination=autoconfigure{(isContentApp ? Eav.Constants.ContentAppAutoConfigureId : Eav.Constants.AppAutoConfigureId)}";
+                $"&destination=autoconfigure{(isContentApp ? KnownAppsConstants.ContentAppAutoConfigureId : KnownAppsConstants.AppAutoConfigureId)}";
         else if (destination == ExternalSxcDestinations.Features) 
             destinationPart = "&destination=features";
 

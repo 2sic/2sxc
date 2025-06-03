@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.MetadataDecorators;
 using ToSic.Eav.Apps.State;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Apps.Internal.Work;
@@ -44,8 +45,8 @@ public class AppsBackend(
         return new ()
         {
             Id = appReader.AppId,
-            IsApp = specs.NameId != Eav.Constants.DefaultAppGuid &&
-                    specs.NameId != Eav.Constants.PrimaryAppGuid, // #SiteApp v13
+            IsApp = specs.NameId != KnownAppsConstants.DefaultAppGuid &&
+                    specs.NameId != KnownAppsConstants.PrimaryAppGuid, // #SiteApp v13
             Guid = specs.NameId,
             Name = specs.Name,
             Folder = specs.Folder,

@@ -3,6 +3,7 @@ using Oqtane.Repository;
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
@@ -110,7 +111,7 @@ internal class OqtModule: Module<Module>
             return l.Return((_appsCatalog.DefaultAppIdentity(zoneId).AppId, "Content"), "Content");
 
         if (!_settings.TryGetValue(ModuleSettingNames.AppName, out var setting)) 
-            return l.Return((Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty), Eav.Constants.AppNameIdEmpty);
+            return l.Return((KnownAppsConstants.AppIdEmpty, KnownAppsConstants.AppNameIdEmpty), KnownAppsConstants.AppNameIdEmpty);
 
         var guid = setting ?? "";
         var appId = _appFinderLazy.Value.FindAppId(zoneId, guid);

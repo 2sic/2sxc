@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Metadata;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Metadata;
 using ToSic.Sys.Security.Permissions;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -40,8 +41,8 @@ partial class EavApp: IHasPermissions, IAppWithInternal
         l.A($"HasResources: {AppResources != null}, HasSettings: {AppSettings != null}, HasConfiguration: {appSpecs.Configuration?.Entity != null}");
 
         // resolve some values for easier access
-        Name = appSpecs.Name ?? Constants.ErrorAppName;
-        Folder = appSpecs.Folder ?? Constants.ErrorAppName;
+        Name = appSpecs.Name ?? KnownAppsConstants.ErrorAppName;
+        Folder = appSpecs.Folder ?? KnownAppsConstants.ErrorAppName;
 
         l.Done($"Name: {Name}, Folder: {Folder}");
     }

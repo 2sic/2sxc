@@ -3,6 +3,7 @@ using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Internal.MetadataDecorators;
 using ToSic.Eav.Apps.Internal.Ui;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Sxc.Apps.Internal.Assets;
@@ -22,10 +23,10 @@ public class WorkApps(IAppStateCacheService appStates, IAppReaderFactory appRead
                 .Where(reader =>
                 {
                     var name = reader.Specs.Name;
-                    return name != Eav.Constants.ContentAppName
-                           && name != Eav.Constants.ErrorAppName // "Error" it is a name of empty Content app (before content templates are installed)
-                           && name != Eav.Constants.PrimaryAppName
-                           && name != Eav.Constants.PrimaryAppGuid;
+                    return name != KnownAppsConstants.ContentAppName
+                           && name != KnownAppsConstants.ErrorAppName // "Error" it is a name of empty Content app (before content templates are installed)
+                           && name != KnownAppsConstants.PrimaryAppName
+                           && name != KnownAppsConstants.PrimaryAppGuid;
                 }) // #SiteApp v13
                 .Where(reader => !reader.Specs.Configuration.IsHidden)
                 .Select(reader =>

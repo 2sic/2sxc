@@ -1,10 +1,9 @@
-﻿using ToSic.Eav;
+﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Metadata;
-
 using ToSic.Eav.Security.Internal;
 using ToSic.Eav.Serialization.Internal;
 using ToSic.Eav.WebApi;
@@ -127,7 +126,7 @@ public partial class EditLoadBackend(
             .SelectMany(t => t.Entities)
             .ToList();
 
-        var isSystemType = usedTypes.Any(t => t.AppId == Constants.PresetAppId);
+        var isSystemType = usedTypes.Any(t => t.AppId == KnownAppsConstants.PresetAppId);
         l.A($"isSystemType: {isSystemType}");
 
         #endregion

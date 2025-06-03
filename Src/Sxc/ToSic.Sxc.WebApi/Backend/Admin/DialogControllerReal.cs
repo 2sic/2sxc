@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Security.Internal;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Errors;
@@ -19,9 +20,9 @@ public class DialogControllerReal(
     public DialogContextStandaloneDto Settings(int appId)
     {            
         // reset app-id if we get a info-token like -100
-        if (appId < 0) appId = Eav.Constants.AppIdEmpty;
+        if (appId < 0) appId = KnownAppsConstants.AppIdEmpty;
 
-        var appContext = appId != Eav.Constants.AppIdEmpty ? ctxService.GetExistingAppOrSet(appId) : null;
+        var appContext = appId != KnownAppsConstants.AppIdEmpty ? ctxService.GetExistingAppOrSet(appId) : null;
 
         // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions
         if (appContext != null)

@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Internal;
 using ToSic.Lib.DI;
@@ -68,7 +69,7 @@ internal partial class SxcCurrentContextService(
             return null;
         var zoneId = Site().Site.ZoneId;
         var appId = appIdResolverLazy.Value.GetAppIdFromPath(zoneId, nameOrPath, false);
-        return appId <= Eav.Constants.AppIdEmpty
+        return appId <= KnownAppsConstants.AppIdEmpty
             ? null
             : SetApp(new AppIdentity(zoneId, appId));
     }

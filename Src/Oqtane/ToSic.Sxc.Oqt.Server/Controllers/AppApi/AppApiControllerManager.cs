@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Routing;
 using System.Reflection;
 using ToSic.Eav;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Code.Internal.HotBuild;
@@ -160,7 +161,7 @@ internal class AppApiControllerManager : IHasLog
         // Figure out the current edition
         var edition = FigureEdition(ctxResolver).TrimLastSlash();
 
-        var spec = new HotBuildSpec(appReader?.AppId ?? Eav.Constants.AppIdEmpty, edition: edition, appReader?.Specs.Name);
+        var spec = new HotBuildSpec(appReader?.AppId ?? KnownAppsConstants.AppIdEmpty, edition: edition, appReader?.Specs.Name);
 
         return l.ReturnAsOk(spec);
     }

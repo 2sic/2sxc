@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Reflection;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Routing;
@@ -54,7 +55,7 @@ public class ApiExplorerController() : OqtStatefulControllerBase(RealController.
         var blockOrNull = CtxHlp.BlockOptional;
         var edition = blockOrNull.NullOrGetWith(b => GetService<PolymorphConfigReader>().UseViewEditionOrGet(b));
 
-        var spec = new HotBuildSpec(blockOrNull?.AppId ?? Eav.Constants.AppIdEmpty, edition: edition, appName: blockOrNull?.App?.Name); 
+        var spec = new HotBuildSpec(blockOrNull?.AppId ?? KnownAppsConstants.AppIdEmpty, edition: edition, appName: blockOrNull?.App?.Name); 
         
         //if (block != null)
         //    spec = new HotBuildSpec(spec.AppId,

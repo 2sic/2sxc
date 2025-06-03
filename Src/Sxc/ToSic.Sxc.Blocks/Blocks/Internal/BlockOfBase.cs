@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Services;
@@ -49,7 +50,7 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
                 DataIsMissing = true;
                 return l.ReturnTrue("stop: app & data are missing");
             // If no app yet, stop now with BlockBuilder created
-            case Eav.Constants.AppIdEmpty:
+            case KnownAppsConstants.AppIdEmpty:
                 return l.ReturnTrue($"stop a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
         }
 

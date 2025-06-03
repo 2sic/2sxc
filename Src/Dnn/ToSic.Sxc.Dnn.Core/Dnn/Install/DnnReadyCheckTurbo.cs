@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Entities.Modules;
 using System.Collections.Concurrent;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Blocks.Internal;
@@ -68,7 +69,7 @@ internal class DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitial
     {
         var l = Log.Fn($"module {module.ModuleId} on page {module.TabId}");
         var sxcFolder = new DirectoryInfo(block.Context.Site.AppsRootPhysicalFull);
-        var contentFolder = new DirectoryInfo(Path.Combine(sxcFolder.FullName, Eav.Constants.ContentAppFolder));
+        var contentFolder = new DirectoryInfo(Path.Combine(sxcFolder.FullName, KnownAppsConstants.ContentAppFolder));
         var webConfigTemplate = new FileInfo(Path.Combine(sxcFolder.FullName, SpecialFiles.WebConfigFileName));
         if (!(sxcFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
         {

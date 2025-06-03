@@ -2,6 +2,7 @@
 using DotNetNuke.Services.Localization;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Internal.Work;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Integration;
@@ -34,7 +35,7 @@ internal class DnnModuleUpdater(
         // note: this is the correct zone, even if the module is shared from another portal, because the Site is prepared correctly
         var zoneId = site.ZoneId;
 
-        if (appId is Eav.Constants.AppIdEmpty or null)
+        if (appId is KnownAppsConstants.AppIdEmpty or null)
             UpdateInstanceSettingForAllLanguages(instance.Id, ModuleSettingNames.AppName, null, Log);
         else
         {

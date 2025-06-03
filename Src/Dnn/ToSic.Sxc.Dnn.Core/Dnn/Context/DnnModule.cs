@@ -2,6 +2,7 @@
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Cms.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
@@ -114,6 +115,6 @@ public class DnnModule: Module<ModuleInfo>
         }
 
         Log.A($"{msg} not found = null");
-        return l.Return((Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty), "not found");
+        return l.Return((KnownAppsConstants.AppIdEmpty, KnownAppsConstants.AppNameIdEmpty), "not found");
     }
 }

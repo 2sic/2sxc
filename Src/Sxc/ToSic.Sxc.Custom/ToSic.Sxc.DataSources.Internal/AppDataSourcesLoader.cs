@@ -2,6 +2,7 @@
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataSource;
@@ -104,7 +105,7 @@ internal class AppDataSourcesLoader(
         // Figure out the current edition
         var edition = FigureEdition().TrimLastSlash();
 
-        var spec = new HotBuildSpec(appSpecs?.AppId ?? Eav.Constants.AppIdEmpty, edition: edition, appSpecs?.Name);
+        var spec = new HotBuildSpec(appSpecs?.AppId ?? KnownAppsConstants.AppIdEmpty, edition: edition, appSpecs?.Name);
 
         return l.ReturnAsOk(spec);
     }

@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Internal.Work;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.ImportExport.Internal.Zip;
 
 namespace ToSic.Sxc.Apps.Internal.Work;
@@ -21,7 +22,7 @@ public class WorkAppsRemove(
         if (appId == appsCatalog.DefaultAppIdentity(zoneId).AppId && fullDelete)
             throw new("The default app of a zone cannot be removed.");
 
-        if (appId == Eav.Constants.MetaDataAppId)
+        if (appId == KnownAppsConstants.MetaDataAppId)
             throw new("The special old global app cannot be removed.");
 
         // todo: maybe verify the app is of this portal; I assume delete will fail anyhow otherwise
