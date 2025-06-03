@@ -231,6 +231,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Work.Tests", "..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Apps.Tests", "Sxc\ToSic.Sxc.Apps.Tests\ToSic.Sxc.Apps.Tests.csproj", "{BD2E35A4-6337-415E-A42F-C60BA90E3A04}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Insights", "..\..\eav-server\ToSic.Eav.Insights\ToSic.Eav.Insights.csproj", "{39C9141D-152F-4F73-AA4B-B7EBA876CA3B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -687,6 +689,12 @@ Global
 		{BD2E35A4-6337-415E-A42F-C60BA90E3A04}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BD2E35A4-6337-415E-A42F-C60BA90E3A04}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
 		{BD2E35A4-6337-415E-A42F-C60BA90E3A04}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{39C9141D-152F-4F73-AA4B-B7EBA876CA3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39C9141D-152F-4F73-AA4B-B7EBA876CA3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39C9141D-152F-4F73-AA4B-B7EBA876CA3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39C9141D-152F-4F73-AA4B-B7EBA876CA3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39C9141D-152F-4F73-AA4B-B7EBA876CA3B}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{39C9141D-152F-4F73-AA4B-B7EBA876CA3B}.Testing|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -800,6 +808,7 @@ Global
 		{4974EA0B-2303-4BA4-B57E-EE69FA3F0089} = {CC8DE3B4-BE02-45B9-BB26-30B4654DC5E2}
 		{13865038-0CDD-4EDA-8573-45A14F71E50C} = {55799BAC-652D-4A04-96AC-FCD790A38260}
 		{BD2E35A4-6337-415E-A42F-C60BA90E3A04} = {8032CCCC-682E-45C3-8E4B-E2D91B63FEE5}
+		{39C9141D-152F-4F73-AA4B-B7EBA876CA3B} = {55799BAC-652D-4A04-96AC-FCD790A38260}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
