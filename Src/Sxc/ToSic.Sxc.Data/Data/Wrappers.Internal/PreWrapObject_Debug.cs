@@ -11,20 +11,24 @@ partial class PreWrapObject
     [PrivateApi]
     public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
     {
-        if (_innerObject == null) return [];
+        if (_innerObject == null)
+            return [];
 
-        if (string.IsNullOrEmpty(path)) path = DumpSourceName;
+        if (string.IsNullOrEmpty(path))
+            path = DumpSourceName;
 
         var allProperties = PropDic.ToList<KeyValuePair<string, PropertyInfo>>();
 
         var simpleProps = allProperties;
-        var resultDynChildren = simpleProps.Select(p => new
+        var resultDynChildren = simpleProps
+            .Select(p => new
             {
                 Field = p.Key,
                 Pdi = new PropertyDumpItem
                 {
                     Path = path + PropertyDumpItem.Separator + p.Key,
-                    Property = FindPropertyInternal(specs.ForOtherField(p.Key), new PropertyLookupPath().Add("DynReadObject", p.Key)),
+                    Property = FindPropertyInternal(specs.ForOtherField(p.Key),
+                        new PropertyLookupPath().Add("DynReadObject", p.Key)),
                     SourceName = DumpSourceName
                 }
             })
@@ -35,7 +39,8 @@ partial class PreWrapObject
             {
                 var result = r.Pdi.Property.Result;
                 return result != null && result is not string && !result.GetType().IsValueType;
-            }).Select(p =>
+            })
+            .Select(p =>
             {
                 var maybeDump = _wrapperSvc.ChildNonJsonWrapIfPossible(data: p.Pdi.Property.Result, wrapNonAnon: false,
                     WrapperSettings.Dyn(children: true, realObjectsToo: true));
@@ -47,8 +52,8 @@ partial class PreWrapObject
             })
             .Where(p => p.CanDump is not null)
             .ToList();
-        var deeperLookups = deeperProperties.SelectMany(p =>
-            p.CanDump._Dump(specs, path + PropertyDumpItem.Separator + p.Field));
+        var deeperLookups = deeperProperties
+            .SelectMany(p => p.CanDump._Dump(specs, path + PropertyDumpItem.Separator + p.Field));
 
         var final = resultDynChildren
             .Where(r => deeperProperties.All(dp => dp.Field != r.Field))
@@ -57,7 +62,9 @@ partial class PreWrapObject
 
         final.AddRange(deeperLookups);
 
-        return final.OrderBy(p => p.Path).ToList();
+        return final
+            .OrderBy(p => p.Path)
+            .ToList();
     }
 
 }

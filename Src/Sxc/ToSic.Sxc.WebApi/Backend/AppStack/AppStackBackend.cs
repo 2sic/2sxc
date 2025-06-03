@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Data.Debug;
+using ToSic.Eav.Data.PropertyDump.Sys;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.DataSources.Sys.Internal;
 using ToSic.Sxc.Blocks.Internal;
@@ -12,8 +13,9 @@ public class AppStackBackend(
     AppDataStackService dataStackService,
     IZoneCultureResolver zoneCulture,
     IAppReaderFactory appReaders,
-    Generator<QueryDefinitionBuilder> qDefBuilder)
-    : ServiceBase("Sxc.ApiApQ", connect: [dataStackService, zoneCulture, appReaders])
+    Generator<QueryDefinitionBuilder> qDefBuilder,
+    IPropertyDumpService dumperService)
+    : ServiceBase("Sxc.ApiApQ", connect: [dataStackService, zoneCulture, appReaders, dumperService])
 {
     public List<AppStackDataRaw> GetAll(int appId, string part, string key, Guid? viewGuid)
     {
@@ -50,6 +52,8 @@ public class AppStackBackend(
 
         // Dump results
         var results = settings._Dump(new(null, languages, true, Log), null);
+
+        var results2 = dumperService.Dump(settings, new(null, languages, true, Log), null);
         return results;
     }
 

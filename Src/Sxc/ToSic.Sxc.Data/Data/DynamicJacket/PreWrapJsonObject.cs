@@ -91,14 +91,18 @@ internal class PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item)
 
     public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
     {
-        if (item == null || !item.Any()) return [];
+        if (item == null || !item.Any())
+            return [];
 
-        if (string.IsNullOrEmpty(path)) path = DumpSourceName;
+        if (string.IsNullOrEmpty(path))
+            path = DumpSourceName;
 
         var allProperties = item.ToList();
 
-        var simpleProps = allProperties.Where(p => p.Value is not JsonObject);
-        var resultDynChildren = simpleProps.Select(p => new PropertyDumpItem
+        var simpleProps = allProperties
+            .Where(p => p.Value is not JsonObject);
+        var resultDynChildren = simpleProps
+            .Select(p => new PropertyDumpItem
             {
                 Path = path + PropertyDumpItem.Separator + p.Key,
                 Property = FindPropertyInternal(specs.ForOtherField(p.Key),
@@ -120,7 +124,9 @@ internal class PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item)
 
         // TODO: JArrays
 
-        return resultDynChildren.OrderBy(p => p.Path).ToList();
+        return resultDynChildren
+            .OrderBy(p => p.Path)
+            .ToList();
     }
 
 

@@ -52,11 +52,14 @@ public class WrapObjectDynamic: DynamicObject, IWrapper<object>, IPropertyLookup
         => PreWrap.FindPropertyInternal(specs, path);
 
 
-    object IHasJsonSource.JsonSource() => ((IWrapper<object>)PreWrap).GetContents();
+    object IHasJsonSource.JsonSource()
+        => ((IWrapper<object>)PreWrap).GetContents();
 
-    public dynamic Get(string name) => PreWrap.TryGetWrap(name, true).Result;
+    public dynamic Get(string name)
+        => PreWrap.TryGetWrap(name, true).Result;
 
     [PrivateApi]
-    public List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) => PreWrap._Dump(specs, path);
+    public List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
+        => PreWrap._Dump(specs, path);
 
 }
