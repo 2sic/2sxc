@@ -2,7 +2,7 @@
 
 [Flags]
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public enum SecureDataAuthorities
 {
     /// <summary>

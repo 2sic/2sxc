@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Internal;
 /// like AsTag() will fail, saying that RawHtmlString doesn't have that
 /// So for now :( it must remain public.
 /// </remarks>
-[System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsExecutionContext
 {
 
