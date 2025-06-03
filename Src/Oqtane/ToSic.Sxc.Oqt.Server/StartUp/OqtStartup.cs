@@ -96,6 +96,7 @@ public class OqtStartup : IServerStartup
             .AddSxcAppsFallbackServices()
             .AddSxcCoreFallbackServices()
             .AddEavEverything()             // Core EAV services
+            .AddEavEverythingFallbacks()
             .AddEavWebApiTypedAfterEav()
             .AddOqtAppWebApi()              // Oqtane App WebAPI stuff
             .AddRazorBlade();               // RazorBlade helpers for Razor in the edition used by Oqtane

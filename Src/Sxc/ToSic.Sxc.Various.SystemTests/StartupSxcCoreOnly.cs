@@ -57,5 +57,6 @@ public class StartupSxcCoreOnly
 
             .AddSxcAppsFallbackServices()
             .AddEavDataBuildFallbacks()
+            .AddEavDataFallbacks()
             .AddEavCoreLibAndSysFallbackServices();
 }

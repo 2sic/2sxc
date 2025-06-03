@@ -1,15 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Integration;
-using ToSic.Eav.Context;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Integration;
 using ToSic.Eav.Repository.Efc;
 using ToSic.Eav.StartUp;
-using ToSic.Lib;
 using ToSic.Sxc.Compatibility;
-using ToSic.Sys;
 using ToSic.Sys.Capabilities.Platform;
 using ToSic.Testing.Shared.Platforms;
 
@@ -56,10 +52,5 @@ public class Startup
             .AddEavCoreLibAndSys()
 
             // Fallbacks for services which were not implemented - must come last
-            .AddContextFallbackServices()
-            .AddAppPersistenceFallbackServices()
-            .AddAppFallbackServices()
-            .AddEavImportExportFallback()
-            .AddEavDataBuildFallbacks()
-            .AddEavCoreLibAndSysFallbackServices();
+            .AddEavEverythingFallbacks();
 }
