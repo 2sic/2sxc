@@ -48,7 +48,7 @@ internal class DnnModuleUpdater(
             var appIdentity = new AppIdentity(zoneId, appId.Value);
 
             var templateGuid = workViews.New(appIdentity).GetAll()
-                .OrderByDescending(v => v.Metadata.HasType(Decorators.IsDefaultDecorator)) // first sort by IsDefaultDecorator DESC
+                .OrderByDescending(v => v.Metadata.HasType(KnownDecorators.IsDefaultDecorator)) // first sort by IsDefaultDecorator DESC
                 .ThenBy(v => v.Name) // than by Name ASC
                 .FirstOrDefault(t => !t.IsHidden)?.Guid;
 

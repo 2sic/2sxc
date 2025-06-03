@@ -47,7 +47,7 @@ public class WorkBlockViewsGet(GenWorkPlus<WorkViews> workViews, LazySvc<AppIcon
                 ContentTypeStaticName = t.ContentType,
                 IsHidden = t.IsHidden,
                 Thumbnail = thumbnailHelper.IconPathOrNull(block?.App, t, PathTypes.Link),
-                IsDefault = t.Metadata.HasType(Decorators.IsDefaultDecorator),
+                IsDefault = t.Metadata.HasType(KnownDecorators.IsDefaultDecorator),
             })
             .ToList();
         return result;

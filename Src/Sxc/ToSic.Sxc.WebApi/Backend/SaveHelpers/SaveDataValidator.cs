@@ -109,7 +109,7 @@ internal class SaveDataValidator(EditDto package, ILog parentLog = null) : Valid
         }
 
         // New #2595 allow saving empty metadata decorator entities
-        if (newEntity.Attributes.Count == 0 && !newEntity.Type.Metadata.HasType(Decorators.SaveEmptyDecoratorId))
+        if (newEntity.Attributes.Count == 0 && !newEntity.Type.Metadata.HasType(KnownDecorators.SaveEmptyDecoratorId))
             Add($"entity {count} doesn't have attributes (or they are invalid)");
 
         BuildExceptionIfHasIssues(out var preparedException2, "EntityIsOk() done");

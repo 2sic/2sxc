@@ -13,7 +13,7 @@ static class CmsContextPartHelpers
     {
         if (md == null)
             return null;
-        md.Target.Recommendations = recommendations ?? [Decorators.NoteDecoratorName];
+        md.Target.Recommendations = recommendations ?? [KnownDecorators.NoteDecoratorName];
         return md;
     }
 
