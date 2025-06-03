@@ -41,6 +41,37 @@ public class HelpForRazor12
         // Use Dnn
         DnnObjectNotInHybrid,
 
+        // New v20 - detect use of using ToSic.Eav.Interfaces
+        new CodeHelp(name: "", detect: "")
+        {
+            Name = "Using-ToSic.Eav.Interfaces",
+            Detect = @"error CS0234: The type or namespace name 'Interfaces' does not exist in the namespace 'ToSic.Eav' (are you missing an assembly reference?)",
+            DetectRegex = false,
+            UiMessage = "You are probably using the old namespace ToSic.Eav.Interfaces, which is not supported since v20. Replace \"ToSic.Eav.Interfaces\" with \"ToSic.Eav.Data\" in your code.",
+        },
+        new CodeHelp(name: "", detect: "")
+        {
+            Name = "Using-ToSic.SexyContent.Interfaces",
+            Detect = @"error CS0234: The type or namespace name 'Interfaces' does not exist in the namespace 'ToSic.SexyContent' (are you missing an assembly reference?)",
+            DetectRegex = false,
+            UiMessage = "You are probably using the old namespace ToSic.SexyContent.Interfaces, which is not supported since v20. Please remove/replace according to upgrade guide TODO!.",
+        },
+
+        // New v20 - detect usage of `IEntity` without the namespace 
+        new CodeHelp(
+            name: "IEntity-Without-Namespace",
+            detect: ""
+            //detect: @"error CS0246: The type or namespace name 'IEntity' could not be found (are you missing a using directive or an assembly reference?)",
+            //detectRegex: false,
+            //uiMessage: "You are probably using IEntity in your code, but missing the @using ToSic.Eav.Data"
+            )
+        {
+            Name = "IEntity-Without-Namespace",
+            Detect = @"error CS0246: The type or namespace name 'IEntity' could not be found (are you missing a using directive or an assembly reference?)",
+            DetectRegex = false,
+            UiMessage = "You are probably using IEntity in your code, but missing the @using ToSic.Eav.Data",
+        },
+
         // .CreateSource(string) - Obsolete
         new CodeHelp(name: "CreateSource-String-Obsolete",
             detect:
