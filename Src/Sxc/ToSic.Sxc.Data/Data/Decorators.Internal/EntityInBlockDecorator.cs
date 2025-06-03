@@ -15,7 +15,7 @@ public class EntityInBlockDecorator: EntityInListDecorator
         IsDemoItem = isDemoItem;
     }
 
-    public static EntityDecorator12<EntityInBlockDecorator> Wrap(
+    public static EntityWithDecorator<EntityInBlockDecorator> Wrap(
         IEntity entity,
         string field,
         int index = DefIndex,
