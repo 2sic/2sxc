@@ -25,7 +25,8 @@ internal class PropLookupStack(IPropertyStack stack, Func<bool> getDebug) : IPro
         return l.Return(r, $"{(r == null ? "null" : "ok")} using {(hasPath ? "Path" : "Property")}");
     }
 
-    public List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) =>
-        Stack?._Dump(specs, path) ?? [];
+    // #DropUseOfDumpProperties
+    //public List<PropertyDumpItem> _DumpNameWipDroppingMostCases(PropReqSpecs specs, string path) =>
+    //    Stack?._DumpNameWipDroppingMostCases(specs, path) ?? [];
 
 }

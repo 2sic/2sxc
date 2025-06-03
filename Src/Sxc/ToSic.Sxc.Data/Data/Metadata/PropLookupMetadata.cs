@@ -29,9 +29,10 @@ internal class PropLookupMetadata(IHasMetadata parent, Func<bool> getDebug) : IP
         // safeWrap.Return(Upstream.FindPropertyInternal(specs, path), "base...");
     }
 
-    // Note: This kind of doesn't really work
-    // but the Metadata isn't expected to dump properly
-    // May need some tweaking to just iterate through all, if really needed
-    public List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
-        => Parent?.Metadata?.FirstOrDefault()?._Dump(specs, path) ?? [];
+    // #DropUseOfDumpProperties
+    //// Note: This kind of doesn't really work
+    //// but the Metadata isn't expected to dump properly
+    //// May need some tweaking to just iterate through all, if really needed
+    //public List<PropertyDumpItem> _DumpNameWipDroppingMostCases(PropReqSpecs specs, string path)
+    //    => Parent?.Metadata?.FirstOrDefault()?._DumpNameWipDroppingMostCases(specs, path) ?? [];
 }

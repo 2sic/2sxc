@@ -9,7 +9,8 @@ namespace ToSic.Sxc.Data;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item)
-    : PreWrapJsonBase(wrapper, item), IWrapper<JsonObject>
+    : PreWrapJsonBase(wrapper, item), IWrapper<JsonObject>,
+        IPropertyDumpCustom
 {
     public JsonObject GetContents() => item;
 
@@ -87,48 +88,10 @@ internal class PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item)
 
     #region Debug / Dump
 
-    private const string DumpSourceName = "Dynamic";
-
-    public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
-    {
-        if (item == null || !item.Any())
-            return [];
-
-        if (string.IsNullOrEmpty(path))
-            path = DumpSourceName;
-
-        var allProperties = item.ToList();
-
-        var simpleProps = allProperties
-            .Where(p => p.Value is not JsonObject);
-        var resultDynChildren = simpleProps
-            .Select(p => new PropertyDumpItem
-            {
-                Path = path + PropertyDumpItem.Separator + p.Key,
-                Property = FindPropertyInternal(specs.ForOtherField(p.Key),
-                    new PropertyLookupPath().Add("DynJacket", p.Key)),
-                SourceName = DumpSourceName
-            })
-            .ToList();
-
-        var objectProps = allProperties
-            .Where(p => p.Value is JsonObject)
-            .SelectMany(p =>
-            {
-                var jacket = Wrapper.CreateDynJacketObject(p.Value.AsObject());
-                return ((IHasPropLookup)jacket).PropertyLookup._Dump(specs, path + PropertyDumpItem.Separator + p.Key);
-            })
-            .Where(p => p is not null);
-
-        resultDynChildren.AddRange(objectProps);
-
-        // TODO: JArrays
-
-        return resultDynChildren
-            .OrderBy(p => p.Path)
-            .ToList();
-    }
-
+    public List<PropertyDumpItem> _DumpNameWipDroppingMostCases(PropReqSpecs specs, string path)
+        => item == null || !item.Any()
+            ? []
+            : new PreWrapJsonDumperHelper().Dump(this, Wrapper, item, specs, path);
 
     #endregion
 }

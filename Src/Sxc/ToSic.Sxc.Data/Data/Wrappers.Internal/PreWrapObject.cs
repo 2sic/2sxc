@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Data.Internal.Wrapper;
 /// </remarks>
 [JsonConverter(typeof(DynamicJsonConverter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal partial class PreWrapObject: PreWrapBase, /*IWrapper<object>,*/ IPropertyLookup, IHasJsonSource, IPreWrap
+internal partial class PreWrapObject: PreWrapBase, IPropertyLookup, IHasJsonSource, IPreWrap
 {
     #region Constructor / Setup
 
@@ -41,20 +41,21 @@ internal partial class PreWrapObject: PreWrapBase, /*IWrapper<object>,*/ IProper
     [PrivateApi]
     internal PreWrapObject(object data, WrapperSettings settings, ICodeDataPoCoWrapperService wrapperSvc): base(data)
     {
-        _wrapperSvc = wrapperSvc;
+        WrapperSvc = wrapperSvc;
         _innerObject = data;
         Settings = settings;
-        PropDic = CreateDictionary(data);
+        PropDic = CreatePropertyInfoDictionary(data);
     }
 
-    private readonly ICodeDataPoCoWrapperService _wrapperSvc;
+    private ICodeDataPoCoWrapperService WrapperSvc { get; }
     private readonly object _innerObject;
     public override WrapperSettings Settings { get; }
 
-    private static Dictionary<string, PropertyInfo> CreateDictionary(object original)
+    internal static Dictionary<string, PropertyInfo> CreatePropertyInfoDictionary(object original)
     {
         var dic = new Dictionary<string, PropertyInfo>(StringComparer.InvariantCultureIgnoreCase);
-        if (original is null) return dic;
+        if (original is null)
+            return dic;
         var itemType = original.GetType();
         foreach (var propertyInfo in itemType.GetProperties())
             dic[propertyInfo.Name] = propertyInfo;
@@ -109,7 +110,7 @@ internal partial class PreWrapObject: PreWrapBase, /*IWrapper<object>,*/ IProper
         // Probably re-wrap for further dynamic navigation!
         return new(true, result,
             Settings.WrapChildren && wrapDefault
-                ? _wrapperSvc.ChildNonJsonWrapIfPossible(result, Settings.WrapRealObjects, Settings)
+                ? WrapperSvc.ChildNonJsonWrapIfPossible(result, Settings.WrapRealObjects, Settings)
                 : result);
 
     }

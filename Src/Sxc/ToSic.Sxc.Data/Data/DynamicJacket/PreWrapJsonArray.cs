@@ -59,8 +59,9 @@ internal class PreWrapJsonArray(CodeJsonWrapper wrapper, JsonArray jsonArray)
 
     }
 
-    public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
-        => [new() { Path = $"Not supported on {nameof(DynamicJacketList)}" }];
+    // #DropUseOfDumpProperties
+    //public override List<PropertyDumpItem> _DumpNameWipDroppingMostCases(PropReqSpecs specs, string path)
+    //    => [new() { Path = $"Not supported on {nameof(DynamicJacketList)}" }];
 
 
 }
