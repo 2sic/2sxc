@@ -1,5 +1,5 @@
 ﻿using ToSic.Sys.Capabilities.SysFeatures;
-using static ToSic.Eav.Internal.Features.SysFeatureSuggestions;
+using static ToSic.Sys.Capabilities.SysFeatures.SysFeatureSuggestions;
 using static ToSic.Sxc.Dnn.Compile.RoslynCompilerCapability;
 
 namespace ToSic.Sxc.Dnn.Features;

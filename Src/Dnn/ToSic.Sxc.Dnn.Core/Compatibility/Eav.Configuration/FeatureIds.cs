@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Internal.Features;
+using ToSic.Sys.Capabilities.Features;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Eav.Configuration;

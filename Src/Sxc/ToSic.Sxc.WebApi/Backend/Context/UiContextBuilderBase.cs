@@ -10,7 +10,7 @@ using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Languages;
 using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sys.Capabilities.Features;
-using static ToSic.Eav.Internal.Features.BuiltInFeatures;
+using static ToSic.Sys.Capabilities.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Backend.Context;
 

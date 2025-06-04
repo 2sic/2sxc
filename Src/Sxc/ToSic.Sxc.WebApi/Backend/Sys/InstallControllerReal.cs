@@ -9,6 +9,7 @@ using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Integration.Installation;
+using ToSic.Sys.Capabilities.Features;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 #if NETFRAMEWORK

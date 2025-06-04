@@ -1,5 +1,5 @@
 ﻿using ToSic.Sys.Requirements;
-using static ToSic.Eav.Internal.Features.BuiltInFeatures;
+using static ToSic.Sys.Capabilities.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Web.Internal.PageFeatures;
 

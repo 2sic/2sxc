@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Configuration;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Testing.Scenarios;
+using ToSic.Sys.Capabilities.Features;
 
 namespace ToSic.Sxc.ToSic.Eav.Configuration.Features_Compatibility;
 

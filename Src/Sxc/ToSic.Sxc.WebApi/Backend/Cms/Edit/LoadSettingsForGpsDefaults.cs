@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Internal.Features;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sys.Capabilities.Features;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Backend.Cms;
