@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Internal.Features;
-using ToSic.Sxc.Configuration.Internal;
+﻿using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Capabilities.Licenses;
 

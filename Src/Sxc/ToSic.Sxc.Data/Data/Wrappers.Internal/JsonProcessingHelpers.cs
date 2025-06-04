@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
-using static ToSic.Eav.Serialization.JsonOptions;
+using static ToSic.Eav.Serialization.Sys.Json.JsonOptions;
 using static ToSic.Sxc.Data.Internal.Wrapper.WrapperConstants;
 
 namespace ToSic.Sxc.Data.Internal.Wrapper;

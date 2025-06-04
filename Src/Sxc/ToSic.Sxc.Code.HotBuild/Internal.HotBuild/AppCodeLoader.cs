@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Caching;
-using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Sys;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;

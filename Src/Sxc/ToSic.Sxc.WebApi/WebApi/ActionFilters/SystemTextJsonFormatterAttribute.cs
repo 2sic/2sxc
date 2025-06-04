@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using ToSic.Eav.WebApi.Serialization;
-using JsonOptions = ToSic.Eav.Serialization.JsonOptions;
+using JsonOptions = ToSic.Eav.Serialization.Sys.Json.JsonOptions;
 
 
 namespace ToSic.Sxc.WebApi.ActionFilters;

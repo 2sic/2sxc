@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
 using ToSic.Eav.Serialization;
+using ToSic.Eav.Serialization.Sys.Json;
 
 namespace ToSic.Sxc.WebApi.ActionFilters;
 

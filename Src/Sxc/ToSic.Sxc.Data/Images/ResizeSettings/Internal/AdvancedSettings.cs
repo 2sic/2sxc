@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Serialization;
+using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Sys.Caching.PiggyBack;
 
 namespace ToSic.Sxc.Images;

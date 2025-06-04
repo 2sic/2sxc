@@ -6,7 +6,6 @@ using ToSic.Lib.Helpers;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Integration;
-using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Web.Internal.Url;

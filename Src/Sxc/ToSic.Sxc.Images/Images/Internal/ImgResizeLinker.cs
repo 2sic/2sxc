@@ -2,7 +2,6 @@
 using System.Collections.Specialized;
 using Connect.Koi;
 using ToSic.Eav.Context;
-using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;

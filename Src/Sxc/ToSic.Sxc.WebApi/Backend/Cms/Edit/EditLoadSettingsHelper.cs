@@ -2,8 +2,7 @@
 using ToSic.Eav.Data.ContentTypes.Sys;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
-
-using ToSic.Eav.Serialization.Internal;
+using ToSic.Eav.Serialization.Sys;
 using ToSic.Sys.Utils;
 using static System.StringComparer;
 

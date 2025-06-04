@@ -3,7 +3,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal.Wrapper;
-using static ToSic.Eav.Serialization.JsonOptions;
+using static ToSic.Eav.Serialization.Sys.Json.JsonOptions;
 
 namespace ToSic.Sxc.Services;
 
