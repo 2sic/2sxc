@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Newtonsoft.Json;
-using ToSic.Eav.WebApi.ApiExplorer;
-using ToSic.Eav.WebApi.Context;
+using ToSic.Eav.WebApi.Sys.ApiExplorer;
+using ToSic.Eav.WebApi.Sys.Context;
 using ToSic.Sxc.Adam.Security.Internal;
 using ToSic.Sxc.Dnn.Backend;
 using ToSic.Sxc.Dnn.Backend.Admin;

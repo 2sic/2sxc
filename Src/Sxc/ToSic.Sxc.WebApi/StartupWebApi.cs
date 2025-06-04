@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Sys.Insights;
-using ToSic.Eav.WebApi.Context;
-using ToSic.Eav.WebApi.ImportExport;
+using ToSic.Eav.WebApi.Sys.Admin;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Backend.Admin;
@@ -86,7 +86,7 @@ public static class StartupWebApi
         // New v13 - try to reduce Dnn/Oqtane code to the max, by creating ControllerReal objects which do everything
         services.TryAddTransient(typeof(AdamControllerReal<>));
         services.TryAddTransient<AppFilesControllerReal>();
-        services.TryAddTransient<Eav.WebApi.Admin.IAppExplorerControllerDependency, AppFilesControllerReal>();
+        services.TryAddTransient<IAppExplorerControllerDependency, AppFilesControllerReal>();
         services.TryAddTransient<QueryControllerReal>();
         services.TryAddTransient<AppControllerReal>();
         services.TryAddTransient<AppPartsControllerReal>();

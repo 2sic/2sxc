@@ -1,7 +1,7 @@
-﻿using ToSic.Eav.WebApi.Admin.Features;
+﻿using ToSic.Eav.WebApi.Sys.Admin.Features;
 using ToSic.Eav.WebApi.Sys.Licenses;
 using ToSic.Sys.Capabilities.Features;
-using RealController = ToSic.Eav.WebApi.Admin.Features.FeatureControllerReal;
+using RealController = ToSic.Eav.WebApi.Sys.Admin.Features.FeatureControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 

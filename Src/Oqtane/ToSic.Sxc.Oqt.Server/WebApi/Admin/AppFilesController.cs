@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Assets;
-using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Backend.Admin.AppFiles;
 using ToSic.Sxc.Oqt.Server.Controllers;

@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
-using ToSic.Eav.WebApi.Errors;
+using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.Backend;

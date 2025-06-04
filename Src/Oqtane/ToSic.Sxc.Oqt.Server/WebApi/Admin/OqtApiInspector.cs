@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Reflection;
-using ToSic.Eav.WebApi.ApiExplorer;
+using ToSic.Eav.WebApi.Sys.ApiExplorer;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Oqt.Shared;
 

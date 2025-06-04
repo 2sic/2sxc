@@ -2,9 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Lib.DI;
-using ToSic.Eav.WebApi.Context;
-using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.Views;
 using ToSic.Sxc.Oqt.Server.Controllers;

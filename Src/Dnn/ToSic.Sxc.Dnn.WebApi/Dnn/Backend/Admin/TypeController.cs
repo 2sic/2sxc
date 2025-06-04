@@ -1,6 +1,6 @@
 ﻿using System.Web;
-using ToSic.Eav.WebApi.Admin;
-using ToSic.Eav.WebApi.Dto;
+using ToSic.Eav.WebApi.Sys.Admin;
+using ToSic.Eav.WebApi.Sys.Dto;
 using ToSic.Sxc.Backend.Admin;
 using RealController = ToSic.Sxc.Backend.Admin.TypeControllerReal;
 

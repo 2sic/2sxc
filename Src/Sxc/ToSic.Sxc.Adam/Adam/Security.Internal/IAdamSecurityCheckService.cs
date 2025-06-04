@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.WebApi.Errors;
+﻿using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sys.Security.Permissions;
 

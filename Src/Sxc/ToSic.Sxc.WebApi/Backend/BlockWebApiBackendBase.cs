@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.Permissions;
-using ToSic.Eav.WebApi.Errors;
+using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sys.Security.Permissions;
 
@@ -17,9 +17,7 @@ public abstract class BlockWebApiBackendBase(
     public AppWorkContextService AppWorkCtxService { get; } = appWorkCtxService;
     public ISxcCurrentContextService CtxService { get; } = ctxService;
 
-    protected IContextOfApp ContextOfBlock =>
-        _contextOfAppOrBlock ??= CtxService.BlockContextRequired();
-    private IContextOfApp _contextOfAppOrBlock;
+    protected IContextOfApp ContextOfBlock => field ??= CtxService.BlockContextRequired();
 
     #region Block-Context Requiring properties
 

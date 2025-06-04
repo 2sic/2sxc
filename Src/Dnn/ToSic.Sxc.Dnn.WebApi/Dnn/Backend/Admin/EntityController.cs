@@ -1,8 +1,8 @@
 ﻿using ToSic.Eav.ImportExport.Sys.Options;
-using ToSic.Eav.WebApi.Admin;
-using ToSic.Eav.WebApi.Dto;
+using ToSic.Eav.WebApi.Sys.Admin;
+using ToSic.Eav.WebApi.Sys.Dto;
 using Guid = System.Guid;
-using RealController = ToSic.Eav.WebApi.Admin.EntityControllerReal;
+using RealController = ToSic.Eav.WebApi.Sys.Admin.EntityControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 

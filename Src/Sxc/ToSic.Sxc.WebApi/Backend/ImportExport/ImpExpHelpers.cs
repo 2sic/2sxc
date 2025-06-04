@@ -1,4 +1,5 @@
-﻿using ToSic.Sys.Users;
+﻿using ToSic.Eav.WebApi.Sys.Helpers.Http;
+using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Backend.ImportExport;
 
@@ -15,7 +16,7 @@ public class ImpExpHelpers(IAppReaderFactory appReadFac) : ServiceBase("Sxc.ImEx
         if (!user.IsSystemAdmin && zoneId != contextZoneId)
         {
             l.ReturnNull("error");
-            throw Eav.WebApi.Errors.HttpException.PermissionDenied("Tried to access app from another zone. Requires SuperUser permissions.");
+            throw HttpException.PermissionDenied("Tried to access app from another zone. Requires SuperUser permissions.");
         }
 
         var app = appReadFac.Get(new AppIdentity(zoneId, appId));

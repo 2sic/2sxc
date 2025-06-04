@@ -1,8 +1,8 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using System.Web;
-using ToSic.Eav.WebApi.Context;
-using ToSic.Eav.WebApi.Dto;
+using ToSic.Eav.WebApi.Sys.Context;
+using ToSic.Eav.WebApi.Sys.Dto;
 using ToSic.Lib.Data;
 using ToSic.Lib.Wrappers;
 using ToSic.Sxc.Backend.Context;

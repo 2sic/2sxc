@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.WebApi;
-using ToSic.Eav.WebApi.Admin.Query;
+using ToSic.Eav.WebApi.Sys;
+using ToSic.Eav.WebApi.Sys.Admin.Query;
 using ToSic.Lib.LookUp.Engines;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.LookUp.Internal;

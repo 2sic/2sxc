@@ -1,7 +1,5 @@
 ﻿using Oqtane.Shared;
 using ToSic.Eav.Context;
-using ToSic.Eav.WebApi.Context;
-using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Integration.Paths;

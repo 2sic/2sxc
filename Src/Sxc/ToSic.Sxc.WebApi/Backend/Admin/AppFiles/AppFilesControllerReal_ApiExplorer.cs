@@ -1,12 +1,12 @@
 ﻿using System.Reflection;
 using ToSic.Eav.Sys;
-using ToSic.Eav.WebApi.ApiExplorer;
+using ToSic.Eav.WebApi.Sys.ApiExplorer;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
-partial class AppFilesControllerReal : Eav.WebApi.Admin.IAppExplorerControllerDependency
+partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControllerDependency
 {
 
     /// <summary>

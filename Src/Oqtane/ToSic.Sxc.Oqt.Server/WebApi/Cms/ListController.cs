@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Cms;
-using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.Cms.ListControllerReal;
 

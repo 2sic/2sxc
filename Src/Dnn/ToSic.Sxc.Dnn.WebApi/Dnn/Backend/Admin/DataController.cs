@@ -1,5 +1,5 @@
 ﻿using System.Web;
-using ToSic.Eav.WebApi.Dto;
+using ToSic.Eav.WebApi.Sys.Dto;
 using ToSic.Sxc.Backend.Admin;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;

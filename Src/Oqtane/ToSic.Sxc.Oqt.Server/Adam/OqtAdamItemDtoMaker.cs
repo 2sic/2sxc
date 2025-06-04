@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.WebApi.Dto;
-using ToSic.Sxc.Adam;
+﻿using ToSic.Sxc.Adam;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Oqt.Shared;
 

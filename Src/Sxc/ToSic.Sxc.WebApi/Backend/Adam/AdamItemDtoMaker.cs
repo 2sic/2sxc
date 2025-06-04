@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Metadata;
-using ToSic.Eav.WebApi.Dto.Metadata;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Adam.Manager.Internal;

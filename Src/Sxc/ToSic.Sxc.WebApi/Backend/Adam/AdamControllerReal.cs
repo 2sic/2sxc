@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.WebApi.Adam;
-using ToSic.Eav.WebApi.Errors;
+﻿using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Adam.Work.Internal;
 

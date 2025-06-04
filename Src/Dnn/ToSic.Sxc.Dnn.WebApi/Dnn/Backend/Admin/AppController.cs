@@ -2,9 +2,9 @@
 using ToSic.Eav.DataSources.Sys.Internal;
 
 using ToSic.Eav.ImportExport.Sys;
-using ToSic.Eav.WebApi.Admin;
-using ToSic.Eav.WebApi.Dto;
-using AppDto = ToSic.Eav.WebApi.Dto.AppDto;
+using ToSic.Eav.WebApi.Sys.Admin;
+using ToSic.Eav.WebApi.Sys.Dto;
+using AppDto = ToSic.Eav.WebApi.Sys.Dto.AppDto;
 using RealController = ToSic.Sxc.Backend.Admin.AppControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;

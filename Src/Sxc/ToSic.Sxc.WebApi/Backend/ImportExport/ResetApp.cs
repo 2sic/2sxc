@@ -6,6 +6,7 @@ using ToSic.Eav.ImportExport.Sys.Zip;
 using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Eav.Security;
 using ToSic.Eav.Sys;
+using ToSic.Eav.WebApi.Sys.Security;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Users;

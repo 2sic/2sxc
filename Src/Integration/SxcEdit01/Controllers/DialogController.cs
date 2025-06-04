@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.WebApi.Admin;
 
 namespace IntegrationSamples.SxcEdit01.Controllers

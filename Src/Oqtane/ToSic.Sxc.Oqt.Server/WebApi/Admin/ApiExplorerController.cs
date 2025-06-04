@@ -4,8 +4,7 @@ using Oqtane.Shared;
 using System.Reflection;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Environment.Sys.ServerPaths;
-using ToSic.Eav.WebApi.ApiExplorer;
-using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.WebApi.Sys.ApiExplorer;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Code.Internal.HotBuild;
@@ -17,7 +16,7 @@ using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.WebApi;
 using ToSic.Sys.Utils;
-using RealController = ToSic.Eav.WebApi.ApiExplorer.ApiExplorerControllerReal;
+using RealController = ToSic.Eav.WebApi.Sys.ApiExplorer.ApiExplorerControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 

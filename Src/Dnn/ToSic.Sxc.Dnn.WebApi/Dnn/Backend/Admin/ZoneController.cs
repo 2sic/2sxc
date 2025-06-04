@@ -1,7 +1,7 @@
-﻿using ToSic.Eav.WebApi.Admin;
-using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Zone;
-using RealController = ToSic.Eav.WebApi.Admin.ZoneControllerReal;
+﻿using ToSic.Eav.WebApi.Sys.Admin;
+using ToSic.Eav.WebApi.Sys.Dto;
+using ToSic.Eav.WebApi.Sys.Zone;
+using RealController = ToSic.Eav.WebApi.Sys.Admin.ZoneControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 

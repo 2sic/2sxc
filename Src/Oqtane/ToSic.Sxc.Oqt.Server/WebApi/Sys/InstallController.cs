@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Routing;
-using ToSic.Eav.WebApi.Sys;
+using ToSic.Eav.WebApi.Sys.Install;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
 using RealController = ToSic.Sxc.Backend.Sys.InstallControllerReal;

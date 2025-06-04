@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.WebApi.Admin.App;
-using ToSic.Eav.WebApi.Admin.Query;
-using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.WebApi.Sys.Admin.App;
+using ToSic.Eav.WebApi.Sys.Admin.Query;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.App.AppQueryControllerReal;
 

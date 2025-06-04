@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ToSic.Eav.Persistence.Versions;
-using ToSic.Eav.WebApi.Cms;
-using ToSic.Eav.WebApi.Formats;
-using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Backend.Cms;
 
 namespace IntegrationSamples.SxcEdit01.Controllers

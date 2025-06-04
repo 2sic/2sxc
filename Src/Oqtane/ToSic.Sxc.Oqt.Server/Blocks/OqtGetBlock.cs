@@ -1,5 +1,5 @@
 ﻿using Oqtane.Repository;
-using ToSic.Eav.WebApi.Infrastructure;
+using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Backend.Context;

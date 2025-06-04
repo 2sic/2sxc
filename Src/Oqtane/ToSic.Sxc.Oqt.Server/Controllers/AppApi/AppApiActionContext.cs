@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
-using ToSic.Eav.WebApi.Errors;
+using ToSic.Eav.WebApi.Sys.Helpers.Http;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 

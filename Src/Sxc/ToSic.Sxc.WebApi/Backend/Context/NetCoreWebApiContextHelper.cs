@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.WebApi.Infrastructure;
+using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Blocks.Internal;

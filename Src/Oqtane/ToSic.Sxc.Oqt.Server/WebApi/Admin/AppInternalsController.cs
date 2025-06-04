@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Admin;
-using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using RealController = ToSic.Eav.WebApi.Admin.AppInternalsControllerReal;
+using RealController = ToSic.Eav.WebApi.Sys.Admin.AppInternalsControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 

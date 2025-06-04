@@ -5,8 +5,7 @@ using System.Web.Hosting;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Context;
-
-using ToSic.Eav.WebApi.ApiExplorer;
+using ToSic.Eav.WebApi.Sys.ApiExplorer;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
@@ -14,7 +13,7 @@ using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Compile.Internal;
 using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Polymorphism.Internal;
-using RealController = ToSic.Eav.WebApi.ApiExplorer.ApiExplorerControllerReal;
+using RealController = ToSic.Eav.WebApi.Sys.ApiExplorer.ApiExplorerControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
