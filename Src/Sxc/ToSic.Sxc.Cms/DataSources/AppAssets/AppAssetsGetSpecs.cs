@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.DataSource;
-using ToSic.Eav.Work;
+using ToSic.Sys.Work;
 
 namespace ToSic.Sxc.DataSources;
 

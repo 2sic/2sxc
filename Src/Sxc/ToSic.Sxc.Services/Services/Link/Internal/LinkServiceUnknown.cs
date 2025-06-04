@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Internal.Unknown;
-using ToSic.Lib.DI;
+﻿using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Integration.Paths;
 

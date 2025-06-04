@@ -13,6 +13,7 @@ using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sys.Caching;
+using ToSic.Sys.Locking;
 using CodeCompiler = ToSic.Sxc.Code.Internal.HotBuild.CodeCompiler;
 
 namespace ToSic.Sxc.Dnn.Razor.Internal
