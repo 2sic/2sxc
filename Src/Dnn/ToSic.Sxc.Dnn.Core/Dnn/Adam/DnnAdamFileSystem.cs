@@ -2,7 +2,6 @@
 using System.Data.SqlClient;
 using System.Web.Configuration;
 using DotNetNuke.Services.FileSystem;
-using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Build.Utilities;
 using System;
-using Microsoft.Build.Framework;
 
 namespace ToSic.Sxc.BuildTasks
 {

@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.Apps.Sys.AppJson;
+﻿using ToSic.Eav.Apps.Sys.AppJson;
 
 namespace ToSic.Sxc.Dnn.Compile.Internal;
 

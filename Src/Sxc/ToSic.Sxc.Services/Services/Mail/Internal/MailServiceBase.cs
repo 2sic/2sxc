@@ -1,12 +1,9 @@
-﻿using System.IO;
-using System.Net.Mail;
+﻿using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Assets;
-using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
 using MailMessage = System.Net.Mail.MailMessage;

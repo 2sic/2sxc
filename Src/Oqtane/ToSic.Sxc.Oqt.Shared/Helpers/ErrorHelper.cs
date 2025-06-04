@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ToSic.Sxc.Oqt.Shared.Helpers;
+﻿namespace ToSic.Sxc.Oqt.Shared.Helpers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ErrorHelper

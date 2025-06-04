@@ -1,8 +1,6 @@
 ﻿using Connect.Koi;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Services.Internal;
 
 namespace ToSic.Sxc.Services;
 

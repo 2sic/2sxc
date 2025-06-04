@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using ToSic.Sxc.Backend.Cms;
-using ToSic.Sxc.WebApi.Cms;
 
 namespace IntegrationSamples.SxcEdit01.Controllers
 {

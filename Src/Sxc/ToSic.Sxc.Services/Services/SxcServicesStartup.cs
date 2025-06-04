@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Apps.Internal;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.CmsService.Internal;

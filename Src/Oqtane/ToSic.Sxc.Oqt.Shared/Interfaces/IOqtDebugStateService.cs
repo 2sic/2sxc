@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace ToSic.Sxc.Oqt.Shared.Interfaces;
+﻿namespace ToSic.Sxc.Oqt.Shared.Interfaces;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IOqtDebugStateService

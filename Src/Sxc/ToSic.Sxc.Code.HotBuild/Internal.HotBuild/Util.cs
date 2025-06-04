@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using ToSic.Sys.Configuration;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;

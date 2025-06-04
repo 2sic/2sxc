@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.WebApi.Sys;
-using ToSic.Eav.WebApi.Sys.Install;
+﻿using ToSic.Eav.WebApi.Sys.Install;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
 using RealController = ToSic.Sxc.Backend.Sys.InstallControllerReal;

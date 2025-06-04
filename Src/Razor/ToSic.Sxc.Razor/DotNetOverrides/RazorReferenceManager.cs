@@ -4,11 +4,7 @@
 // based on: https://github.dev/dotnet/aspnetcore/tree/v8.0.5
 // src/Mvc/Mvc.Razor.RuntimeCompilation/src/RazorReferenceManager.cs
 
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection.PortableExecutable;
-using System.Threading;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.CodeAnalysis;

@@ -1,5 +1,4 @@
 ﻿using Microsoft.JSInterop;
-using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Client;

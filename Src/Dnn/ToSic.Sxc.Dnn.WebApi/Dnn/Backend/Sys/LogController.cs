@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.WebApi.Sys;
-using ToSic.Eav.WebApi.Sys.Logs;
+﻿using ToSic.Eav.WebApi.Sys.Logs;
 using ToSic.Sxc.Dnn.Run;
 using RealController = ToSic.Eav.WebApi.Sys.Logs.LogControllerReal;
 

@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Web.Http.Routing;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Sys.Routing;

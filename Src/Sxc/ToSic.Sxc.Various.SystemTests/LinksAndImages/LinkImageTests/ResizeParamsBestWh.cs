@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Data;
-using ToSic.Lib.Data;
-using ToSic.Sxc.Images;
+﻿using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sys.GetByName;
 

@@ -3,8 +3,6 @@ using DotNetNuke.Services.Search.Entities;
 using System.Collections.Immutable;
 using System.Text.RegularExpressions;
 using System.Web;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Context;
@@ -26,7 +24,6 @@ using ToSic.Sxc.Engines;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.Search;
-using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 using static System.StringComparer;
 

@@ -1,8 +1,6 @@
-﻿using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Hosting;
-using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Sys.ApiExplorer;

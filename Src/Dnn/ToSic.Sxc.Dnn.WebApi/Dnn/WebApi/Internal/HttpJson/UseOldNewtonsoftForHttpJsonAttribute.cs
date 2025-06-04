@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Net.Http.Formatting;
+﻿using System.Net.Http.Formatting;
 using System.Web.Http.Controllers;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;

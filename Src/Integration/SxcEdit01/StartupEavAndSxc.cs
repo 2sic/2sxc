@@ -3,10 +3,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Text.Json;
 using ToSic.Eav.Context;
-using ToSic.Eav.Serialization;
-using ToSic.Sxc.Adam;
 
 namespace IntegrationSamples.SxcEdit01
 {

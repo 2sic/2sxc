@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Oqt.Shared.Models;
 

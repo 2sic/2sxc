@@ -1,5 +1,4 @@
-﻿using System.IO;
-using ToSic.Lib.Coding;
+﻿using ToSic.Lib.Coding;
 using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;

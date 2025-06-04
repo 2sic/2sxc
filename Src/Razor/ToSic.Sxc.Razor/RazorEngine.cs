@@ -1,8 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Razor;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;

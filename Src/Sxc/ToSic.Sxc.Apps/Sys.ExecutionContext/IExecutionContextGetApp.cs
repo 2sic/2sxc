@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Apps;
-using IApp = ToSic.Sxc.Apps.IApp;
+﻿using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 public static class IExecutionContextGetApp

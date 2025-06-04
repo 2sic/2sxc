@@ -1,7 +1,4 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Sys.AppStack;
-using ToSic.Eav.Context;
-
+﻿using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Context;
@@ -9,7 +6,6 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
-using ToSic.Sys.Utils;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;

@@ -4,10 +4,7 @@
 // based on: https://github.dev/dotnet/aspnetcore/tree/v8.0.5
 // src/Mvc/Mvc.Razor.RuntimeCompilation/src/CompilationFailedExceptionFactory.cs
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.CodeAnalysis;

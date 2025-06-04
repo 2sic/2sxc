@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Web.Http.Controllers;
-using ToSic.Eav.Apps;
+﻿using System.Web.Http.Controllers;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;

@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps.Internal.Ui;
 using ToSic.Eav.Internal.Environment;
-using ToSic.Eav.Metadata;
 using ToSic.Eav.Metadata.Sys;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps.Internal;

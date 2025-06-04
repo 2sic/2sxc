@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Eav.WebApi.Sys.Helpers.Http;
-using ToSic.Sxc.WebApi.Adam;
 
 // #todo: security checks on APIs still completely missing
 

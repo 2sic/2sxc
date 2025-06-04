@@ -1,5 +1,4 @@
 ﻿using System.Configuration;
-using System.IO;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Blocks.Internal;

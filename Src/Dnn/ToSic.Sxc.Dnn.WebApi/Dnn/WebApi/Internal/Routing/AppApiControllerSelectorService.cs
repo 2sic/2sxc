@@ -1,11 +1,8 @@
-﻿using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http.Controllers;
-using ToSic.Eav;
-using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Context;
 using ToSic.Eav.Sys;
@@ -23,7 +20,6 @@ using ToSic.Sxc.Dnn.Compile.Internal;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sys.Caching;
-using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal;
 

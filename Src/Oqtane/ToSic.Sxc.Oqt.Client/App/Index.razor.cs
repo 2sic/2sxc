@@ -2,12 +2,7 @@
 using Microsoft.JSInterop;
 using Oqtane.Models;
 using Oqtane.Shared;
-using Oqtane.UI;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Interfaces;

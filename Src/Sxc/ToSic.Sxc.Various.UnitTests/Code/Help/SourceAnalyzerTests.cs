@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Sxc.Code.Internal.SourceCode;
+﻿using ToSic.Sxc.Code.Internal.SourceCode;
 
 namespace ToSic.Sxc.Tests.Code.Help;
 

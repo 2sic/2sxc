@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using DotNetNuke.Entities.Modules;
+﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.WebApi.Sys.Context;
 using ToSic.Sxc.Blocks.Internal;

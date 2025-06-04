@@ -1,7 +1,4 @@
 ﻿using Microsoft.CodeAnalysis;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal.HotBuild;

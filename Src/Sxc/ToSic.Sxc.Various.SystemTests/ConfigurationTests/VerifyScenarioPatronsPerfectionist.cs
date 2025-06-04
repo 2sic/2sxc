@@ -1,7 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Context;
-using ToSic.Eav.Integration;
-using ToSic.Testing.Shared.Platforms;
 
 namespace ToSic.Sxc.ConfigurationTests;
 

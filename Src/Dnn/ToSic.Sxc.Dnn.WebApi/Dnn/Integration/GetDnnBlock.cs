@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-using ToSic.Lib.DI;
+﻿using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;

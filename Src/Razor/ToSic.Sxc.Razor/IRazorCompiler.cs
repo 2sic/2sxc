@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
-using System;
-using System.Threading.Tasks;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Internal.HotBuild;
 

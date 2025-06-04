@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Sxc.Context;
+﻿using ToSic.Sxc.Context;
 using static ToSic.Sxc.Tests.ContextTests.ParametersTestData;
 using static ToSic.Sxc.Tests.LinksAndImages.ParametersTestExtensions;
 #pragma warning disable xUnit1026

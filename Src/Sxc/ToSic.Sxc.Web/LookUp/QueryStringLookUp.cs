@@ -1,5 +1,4 @@
 ﻿using System.Collections.Specialized;
-using ToSic.Eav.LookUp;
 using ToSic.Lib.DI;
 using ToSic.Lib.LookUp.Sources;
 using ToSic.Sxc.Web.Internal.DotNet;

@@ -1,8 +1,6 @@
 using Oqtane.Modules;
 using Oqtane.Services;
 using Oqtane.Shared;
-using System.Net.Http;
-using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
 

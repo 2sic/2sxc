@@ -1,7 +1,6 @@
 ﻿
 using ToSic.Eav.Data.Entities.Sys.Lists;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Adam.Security.Internal;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Edit.Toolbar.Internal;

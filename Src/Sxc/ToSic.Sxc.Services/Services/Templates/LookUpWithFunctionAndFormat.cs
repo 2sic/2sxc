@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.LookUp;
-using ToSic.Lib.LookUp.Sources;
+﻿using ToSic.Lib.LookUp.Sources;
 
 namespace ToSic.Sxc.Services.Templates;
 

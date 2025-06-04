@@ -1,5 +1,4 @@
-﻿using System.IO;
-using ToSic.Sxc.Images.Internal;
+﻿using ToSic.Sxc.Images.Internal;
 using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
 
 namespace ToSic.Sxc.Images;

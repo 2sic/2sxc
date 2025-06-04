@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ToSic.Sxc.Oqt.Shared.Models;
+﻿namespace ToSic.Sxc.Oqt.Shared.Models;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class OqtViewResultsDto
