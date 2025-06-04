@@ -87,6 +87,33 @@ public class HelpForRazor12
             UiMessage = "Your code seems to use an old interface IEntityLight. Best just use 'ToSic.Eav.Data.IEntity' or see if the conversion is even necessary",
         },
 
+        // New v20 - detect usage of `GetBestValue(name, languages, bool)` which does not exist anymore
+        new CodeHelp
+        {
+            Name = "Detect use of old GetBestValue - without the parameter name",
+            // Full error is something like: "error CS1501: No overload for method 'GetBestValue' takes 3 arguments at System.Web.Compilation.AssemblyBuilder.Compile()"
+            Detect = @"error CS1501: No overload for method 'GetBestValue' takes 3 arguments",
+            UiMessage = "Your code seems to use an old 'GetBestValue() overload to get with/without converting to links. This has been inactive for a long time and is removed in v20. Please see guide TODO!",
+        },
+
+        // New v20 - detect usage of `GetBestValue(name, languages, resolveHyperlinks: bool)` which does not exist anymore
+        new CodeHelp
+        {
+            Name = "Detect use of old GetBestValue - with the parameter name",
+            // Full error is something like: "error CS1739: The best overload for 'GetBestValue' does not have a parameter named 'resolveHyperlinks' at System.Web.Compilation.AssemblyBuilder.Compile()"
+            Detect = @"error CS1739: The best overload for 'GetBestValue' does not have a parameter named 'resolveHyperlinks'",
+            UiMessage = "Your code seems to use an old 'GetBestValue() overload to get with/without converting to links. This has been inactive for a long time and is removed in v20. Please see guide TODO!",
+        },
+
+        // New v20 - detect usage of `PrimaryValue(name, languages, resolveHyperlinks: bool)` which does not exist anymore
+        new CodeHelp
+        {
+            Name = "Detect use of old PrimaryValue / PrimaryValue<T>",
+            // Full error is something like: "error CS1061: 'IEntity' does not contain a definition for 'PrimaryValue' and no accessible extension method 'PrimaryValue' accepting a first argument of type 'IEntity' could be found (are you missing a using directive or an assembly reference?) at System.Web.Compilation.AssemblyBuilder.Compile()"
+            Detect = @"error CS1061: 'IEntity' does not contain a definition for 'PrimaryValue'",
+            UiMessage = "Your code seems to use an old 'PrimaryValue() method to get values. This has is removed in v20. Please use 'Get(...)' instead.",
+        },
+
     #endregion
 
 
