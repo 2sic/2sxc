@@ -3,7 +3,6 @@ using DotNetNuke.Entities.Controllers;
 using System.Configuration;
 using System.Data.SqlClient;
 using ToSic.Eav;
-using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Sys;
 using ToSic.Sys.Configuration;
 using Exception = System.Exception;

@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Sys.AppJson;
-using ToSic.Eav.Internal.Configuration;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Integration.Installation;
 using ToSic.Sys.Configuration;
