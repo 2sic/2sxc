@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Eav.Metadata;
+﻿using ToSic.Eav.Metadata;
 using ToSic.Lib.Data;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
@@ -14,6 +13,7 @@ using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 using static ToSic.Lib.Wrappers.WrapperEquality;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Data.Entities.Sys.Wrappers;
+using ToSic.Eav.Data.PropertyStack.Sys;
 using ToSic.Eav.Data.Sys;
 using ToSic.Lib.Wrappers;
 using ToSic.Sxc.Cms.Data;

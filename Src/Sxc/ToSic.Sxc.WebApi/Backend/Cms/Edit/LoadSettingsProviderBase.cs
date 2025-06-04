@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Backend.Cms;
+﻿using ToSic.Eav.Data.PropertyStack.Sys;
+
+namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class LoadSettingsProviderBase(string logName) : ServiceBase(logName)

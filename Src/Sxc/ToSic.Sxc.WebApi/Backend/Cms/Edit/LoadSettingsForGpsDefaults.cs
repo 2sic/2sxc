@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.PropertyLookup;
+﻿using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Internal.Features;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sys.Capabilities.Features;
