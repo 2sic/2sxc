@@ -5,7 +5,6 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Integration;
 using ToSic.Eav.Repository.Efc;
-using ToSic.Eav.StartUp;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sys.Capabilities.Platform;
 using ToSic.Testing.Shared.Platforms;
@@ -45,6 +44,7 @@ public class Startup
             .AddEavPersistence()
             // DataSources
             .AddDataSources()
+            .AddDataSourceSystem()
             // EAV Core
             //.AddEavDataPersistence()
             .AddEavDataBuild()
