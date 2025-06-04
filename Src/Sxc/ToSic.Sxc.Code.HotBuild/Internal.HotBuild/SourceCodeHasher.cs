@@ -3,10 +3,10 @@ using System.Reflection;
 using System.Security.Cryptography;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
-using ToSic.Lib.Caching;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
+using ToSic.Sys.Caching;
 using ToSic.Sys.Capabilities.Platform;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild

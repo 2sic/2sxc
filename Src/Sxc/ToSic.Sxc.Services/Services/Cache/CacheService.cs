@@ -2,11 +2,11 @@
 using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Internal.Features;
-using ToSic.Lib.Caching;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Caching;
 using ToSic.Sys.Capabilities.Features;
 
 namespace ToSic.Sxc.Services.Cache;

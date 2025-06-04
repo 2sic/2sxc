@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Oqtane.Repository;
 using System.Text;
-using ToSic.Lib.Caching;
 using ToSic.Sxc.Oqt.Server.Blocks.Output;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Web.Internal.EditUi;
 using ToSic.Sxc.Web.Internal.JsContext;
+using ToSic.Sys.Caching;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers;
 
