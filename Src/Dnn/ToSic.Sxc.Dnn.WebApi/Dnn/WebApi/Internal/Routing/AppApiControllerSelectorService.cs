@@ -7,7 +7,6 @@ using System.Web.Http.Controllers;
 using ToSic.Eav;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Sys.AppJson;
-using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Routing;

@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Caching;
-using ToSic.Lib.DI;
+﻿using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sys.Caching;
 using ToSic.Sys.Capabilities.Features;

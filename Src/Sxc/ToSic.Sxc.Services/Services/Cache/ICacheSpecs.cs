@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Caching;
-using ToSic.Sxc.Context;
+﻿using ToSic.Sxc.Context;
 using ToSic.Sys.Caching.Policies;
 
 namespace ToSic.Sxc.Services.Cache;

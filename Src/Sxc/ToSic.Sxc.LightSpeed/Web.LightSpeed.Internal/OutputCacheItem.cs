@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Caching;
-using ToSic.Lib.Memory;
+﻿using ToSic.Lib.Memory;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sys.Caching;
 
