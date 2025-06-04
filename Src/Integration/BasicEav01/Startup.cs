@@ -10,7 +10,6 @@ using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Run;
-using ToSic.Eav.StartUp;
 
 namespace IntegrationSamples.BasicEav01
 {

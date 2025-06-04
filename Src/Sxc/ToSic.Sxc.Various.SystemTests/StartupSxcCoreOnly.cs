@@ -2,7 +2,6 @@
 using ToSic.Eav;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Integration;
-using ToSic.Eav.StartUp;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
