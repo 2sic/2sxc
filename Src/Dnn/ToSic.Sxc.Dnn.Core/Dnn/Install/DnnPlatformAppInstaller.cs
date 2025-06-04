@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Internal.Work;
+using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Context;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal.Work;

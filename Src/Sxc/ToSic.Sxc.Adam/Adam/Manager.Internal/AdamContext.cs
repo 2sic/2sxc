@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Permissions;
+using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;

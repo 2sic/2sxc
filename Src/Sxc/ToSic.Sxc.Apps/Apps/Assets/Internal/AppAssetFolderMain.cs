@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Apps;
-
-namespace ToSic.Sxc.Apps.Internal.Assets;
+﻿namespace ToSic.Sxc.Apps.Internal.Assets;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class AppAssetFolderMain(IAppPaths appPaths, string folder, bool shared) : AppAssetFolder

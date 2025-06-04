@@ -1,4 +1,4 @@
-﻿using ToSic.Metadata.Requirements.Sys;
+﻿using ToSic.Eav.Metadata.Requirements.Sys;
 using ToSic.Sxc.Engines;
 using ToSic.Sys.Capabilities.SysFeatures;
 using ToSic.Sys.Requirements;

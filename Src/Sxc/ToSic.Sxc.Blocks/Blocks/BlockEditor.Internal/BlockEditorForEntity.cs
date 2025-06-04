@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Internal.Work;
 
 namespace ToSic.Sxc.Blocks.Internal;
 

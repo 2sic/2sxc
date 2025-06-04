@@ -1,8 +1,8 @@
 ﻿using Oqtane.Repository;
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Internal.Work;
 using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;

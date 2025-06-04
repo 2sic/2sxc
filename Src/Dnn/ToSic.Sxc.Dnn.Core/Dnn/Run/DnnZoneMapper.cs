@@ -1,11 +1,10 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Internal.Work;
+using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys;
 using ToSic.Eav.Context.Sys.ZoneMapper;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sys.Locking;
 

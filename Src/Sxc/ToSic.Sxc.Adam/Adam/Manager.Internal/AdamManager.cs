@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Internal.Work;
+﻿using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.DI;

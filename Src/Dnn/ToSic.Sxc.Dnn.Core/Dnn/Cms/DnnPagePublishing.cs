@@ -2,7 +2,7 @@
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
-using ToSic.Eav.Apps.Internal.Work;
+using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;

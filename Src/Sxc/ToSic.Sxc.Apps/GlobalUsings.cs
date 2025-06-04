@@ -2,7 +2,10 @@
 
 global using System;
 global using System.Collections.Generic;
+global using ToSic.Eav.Apps;
+global using ToSic.Eav.Apps.Sys.Work;
 global using ToSic.Eav.Data;
+global using ToSic.Eav.DataSource;
 global using ToSic.Lib.Coding;
 global using ToSic.Lib.DI;
 global using ToSic.Lib.Documentation;

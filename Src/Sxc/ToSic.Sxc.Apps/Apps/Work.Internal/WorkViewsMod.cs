@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Apps.Internal.Work;
-
-namespace ToSic.Sxc.Apps.Internal.Work;
+﻿namespace ToSic.Sxc.Apps.Internal.Work;
 
 // Note: Unclear if this worker makes any sense, or should just be dropped.
 // ATM it only has delete-entity without real view-specific logic

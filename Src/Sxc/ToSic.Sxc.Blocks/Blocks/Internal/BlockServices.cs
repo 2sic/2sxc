@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps.Internal.Work;
-using ToSic.Lib.DI;
+﻿using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Internal.Work;

@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.DataSource;
-using ToSic.Lib.Helpers;
+﻿using ToSic.Lib.Helpers;
 using ToSic.Lib.LookUp.Engines;
 
 namespace ToSic.Sxc.Services.DataServices;
