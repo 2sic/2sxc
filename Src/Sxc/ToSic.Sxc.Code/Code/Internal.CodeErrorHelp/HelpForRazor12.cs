@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-using ToSic.Razor.Html5;
-using ToSic.Sys.Code.Help;
+﻿using ToSic.Sys.Code.Help;
 using static ToSic.Sxc.Code.Internal.CodeErrorHelp.CodeHelpBuilder;
 
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
@@ -77,7 +75,16 @@ public class HelpForRazor12
             Name = "Detect Convert to IEntityLight",
             // Full error is something like "Unable to cast object of type 'ToSic.Eav.Data.Entity' to type 'ToSic.Eav.Data.IEntityLight'."
             Detect = @"to type 'ToSic.Eav.Data.IEntityLight'",
-            UiMessage = "Your code seems to use an old interface IEntityLight. Best just use ToSic.Eav.Data.IEntity.",
+            UiMessage = "Your code seems to use an old interface IEntityLight. Best just use 'ToSic.Eav.Data.IEntity' or see if the conversion is even necessary.",
+        },
+
+        // New v20 - detect usage of `IEntityLight` which should not exist in any DLLs any more
+        new CodeHelp
+        {
+            Name = "Detect missing IEntityLight",
+            // Full error is something like: "error CS0246: The type or namespace name 'IEntityLight' could not be found (are you missing a using directive or an assembly reference?)"
+            Detect = @"error CS0246: The type or namespace name 'IEntityLight' could not be found",
+            UiMessage = "Your code seems to use an old interface IEntityLight. Best just use 'ToSic.Eav.Data.IEntity' or see if the conversion is even necessary",
         },
 
     #endregion
