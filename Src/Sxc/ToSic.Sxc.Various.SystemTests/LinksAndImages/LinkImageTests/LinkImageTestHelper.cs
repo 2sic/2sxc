@@ -7,6 +7,7 @@ using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.LinksAndImages.LinkHelperTests;
 using ToSic.Sxc.Services;
+using ToSic.Sys.GetByName;
 
 namespace ToSic.Sxc.LinksAndImages.LinkImageTests;
 
