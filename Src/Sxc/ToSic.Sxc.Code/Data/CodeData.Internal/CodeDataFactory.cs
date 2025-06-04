@@ -3,7 +3,6 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.Integration;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;

@@ -1,5 +1,4 @@
-﻿using System.IO;
-using ToSic.Razor.Blade;
+﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Internal.Assets;
 

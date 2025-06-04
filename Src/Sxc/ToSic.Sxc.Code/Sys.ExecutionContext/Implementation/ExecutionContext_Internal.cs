@@ -1,9 +1,7 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Context;
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Data;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;
@@ -12,7 +10,6 @@ using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
 using IApp = ToSic.Sxc.Apps.IApp;

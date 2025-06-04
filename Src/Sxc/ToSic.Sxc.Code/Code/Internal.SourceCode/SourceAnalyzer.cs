@@ -1,9 +1,7 @@
-﻿using System.IO;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using ToSic.Eav.Internal.Environment;
 
 using ToSic.Lib.Services;
-using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Code.Internal.SourceCode;
 
