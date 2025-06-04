@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Data.ValueConverter.Sys;
-using ToSic.Eav.Security.Internal;
+﻿using ToSic.Eav.Apps.Sys.Permissions;
+using ToSic.Eav.Data.ValueConverter.Sys;
 using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sxc.Adam.Security.Internal;

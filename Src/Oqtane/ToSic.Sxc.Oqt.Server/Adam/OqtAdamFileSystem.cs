@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Oqtane.Models;
 using Oqtane.Repository;
-using ToSic.Eav.Internal.Environment;
+using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.FileSystem.Internal;
 using ToSic.Sxc.Adam.Internal;

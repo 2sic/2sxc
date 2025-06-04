@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Security.Internal;
+﻿using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Backend.InPage;

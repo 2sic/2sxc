@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Data.Entities.Sys.Lists;
-using ToSic.Eav.Security.Internal;
+﻿using ToSic.Eav.Apps.Sys.Permissions;
+using ToSic.Eav.Data.Entities.Sys.Lists;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sys.Security.Permissions;
 

@@ -1,7 +1,7 @@
 ﻿using System.Net;
+using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource.Internal.Query;
-using ToSic.Eav.Security.Internal;
 using ToSic.Eav.WebApi.Admin.App;
 using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Eav.WebApi.Errors;

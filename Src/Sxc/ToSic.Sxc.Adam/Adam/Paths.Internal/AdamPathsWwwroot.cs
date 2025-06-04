@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Internal.Environment;
+﻿using ToSic.Eav.Environment.Sys.ServerPaths;
+using ToSic.Eav.Internal.Environment;
 
 namespace ToSic.Sxc.Adam.Paths.Internal;
 

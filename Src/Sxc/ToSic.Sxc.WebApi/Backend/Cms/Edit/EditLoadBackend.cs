@@ -1,10 +1,10 @@
 ﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Metadata.Sys;
 using ToSic.Eav.Metadata.Targets;
-using ToSic.Eav.Security.Internal;
 using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Cms;

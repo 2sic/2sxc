@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Oqtane.Models;
 using Oqtane.Repository;
-using ToSic.Eav.Internal.Environment;
+using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Sxc.Integration;
 using ToSic.Sxc.Oqt.Server.Adam;

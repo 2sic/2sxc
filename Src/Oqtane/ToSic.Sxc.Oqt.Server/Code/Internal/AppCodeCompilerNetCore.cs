@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Internal.Environment;
+﻿using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sys.Configuration;

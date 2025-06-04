@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Context;
-using ToSic.Eav.Security.Internal;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;

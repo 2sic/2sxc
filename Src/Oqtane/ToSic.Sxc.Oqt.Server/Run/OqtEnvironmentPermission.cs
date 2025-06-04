@@ -2,7 +2,7 @@
 using Oqtane.Security;
 using Oqtane.Shared;
 using System.Security.Claims;
-using ToSic.Eav.Integration.Security;
+using ToSic.Eav.Environment.Sys.Permissions;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;

@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using Oqtane.Infrastructure;
 using Oqtane.Repository;
-using ToSic.Eav.Cms.Internal.Languages;
+using ToSic.Eav.Context.Sys;
 using ToSic.Eav.Data.Dimensions.Sys;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;

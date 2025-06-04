@@ -1,7 +1,7 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
-using ToSic.Eav.Integration.Security;
+using ToSic.Eav.Environment.Sys.Permissions;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Context.Internal;
 

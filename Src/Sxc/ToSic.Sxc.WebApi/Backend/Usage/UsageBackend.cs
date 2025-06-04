@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Security.Internal;
+﻿using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Apps.Internal.Work;
@@ -32,7 +32,7 @@ public class UsageBackend(
 
         var blocks = appBlocks.New(appWorkCtxPlus).AllWithView();
 
-        Log.A($"Found {blocks.Count} content blocks");
+        l.A($"Found {blocks.Count} content blocks");
 
         var result = finalBuilder(views, blocks);
 

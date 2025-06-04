@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Reflection;
 using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.Internal.Environment;
+using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Lib.DI;

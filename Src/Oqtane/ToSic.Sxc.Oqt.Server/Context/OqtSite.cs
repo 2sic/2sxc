@@ -1,10 +1,10 @@
 ﻿using Oqtane.Models;
 using Oqtane.Repository;
-using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
-using ToSic.Eav.Integration;
-using ToSic.Eav.Internal.Environment;
+using ToSic.Eav.Context.Sys.Site;
+using ToSic.Eav.Context.Sys.ZoneMapper;
+using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Oqt.Server.Plumbing;
