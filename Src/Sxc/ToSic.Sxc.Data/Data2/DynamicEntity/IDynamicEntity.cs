@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data.Internal;
+﻿using ToSic.Eav.Data.Entities.Sys.Wrappers;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Internal.Docs;
 using IEntity = ToSic.Eav.Data.IEntity;
 

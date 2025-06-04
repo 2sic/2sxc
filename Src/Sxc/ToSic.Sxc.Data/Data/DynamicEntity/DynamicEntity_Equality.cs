@@ -2,6 +2,8 @@
 // These things ensure that various standalone wrappers are still regarded as equals
 // If the underlying entity is the same
 
+using ToSic.Eav.Data.Entities.Sys.Wrappers;
+
 namespace ToSic.Sxc.Data;
 
 public partial class DynamicEntity: IEquatable<IEntityWrapper>

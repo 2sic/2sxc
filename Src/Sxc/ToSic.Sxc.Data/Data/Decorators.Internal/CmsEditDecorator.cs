@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Data.Internal.Decorators;
+﻿using ToSic.Eav.Data.EntityDecorators.Sys;
+
+namespace ToSic.Sxc.Data.Internal.Decorators;
 
 /// <summary>
 /// Decorator for demo entities and similar, to disable editing so that the demo data isn't accidentally changed.

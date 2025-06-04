@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Data.Internal.Decorators;
+﻿using ToSic.Eav.Data.EntityDecorators.Sys;
+
+namespace ToSic.Sxc.Data.Internal.Decorators;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

@@ -13,6 +13,7 @@ using ToSic.Sxc.Services.Tweaks;
 using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 using static ToSic.Eav.Data.Shared.WrapperEquality;
 using System.Text.Json.Serialization;
+using ToSic.Eav.Data.Entities.Sys.Wrappers;
 using ToSic.Sxc.Cms.Data;
 
 namespace ToSic.Sxc.Data.Internal.Typed;
