@@ -133,8 +133,9 @@
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.WebApi.pdb" />-->
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.*.dll" Exclude="ToSic.Sxc.Dnn.Enterprise.dll"/>
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.*.pdb" Exclude="ToSic.Sxc.Dnn.Enterprise.pdb"/>
-      <AssemblyInclude Include="$(OutDir)\ToSic.Eav.dll" />
-      <AssemblyHelper Include="$(OutDir)\ToSic.Eav.pdb" />
+      <!-- 2025-06-04 2dm v20 doesn't have the ToSic.Eav.dll any more -->
+      <!--<AssemblyInclude Include="$(OutDir)\ToSic.Eav.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Eav.pdb" />-->
       <AssemblyInclude Include="$(OutDir)\ToSic.Eav.*.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Eav.*.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Lib.*.dll" />

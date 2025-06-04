@@ -71,8 +71,9 @@
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.WebApi.pdb" />-->
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.*.dll" Exclude="ToSic.Sxc.Dnn.Enterprise.dll"/>
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.*.pdb" Exclude="ToSic.Sxc.Dnn.Enterprise.pdb"/>
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Eav.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Eav.pdb" />
+      <!-- 2025-06-04 2dm v20 doesn't have the ToSic.Eav.dll any more -->
+      <!--<DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Eav.dll" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Eav.pdb" />-->
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Eav.*.dll" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Eav.*.pdb" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Lib.*.dll" />
