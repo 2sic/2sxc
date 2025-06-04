@@ -4,6 +4,7 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Persistence.Logging;
+using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Eav.WebApi.Sys;
@@ -31,7 +32,7 @@ public class InstallControllerReal(
     LazySvc<IFeaturesService> featureService,
     LazySvc<AppsBackend> appsBackend,
     LazySvc<AppDataStackService> appSettingsStack)
-    : ServiceBase($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl",
+    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
         connect:
         [
             context, envInstallerLazy, platformAppInstaller, impFromRemoteLazy, responseMaker, featureService,

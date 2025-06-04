@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Internal.Ui;
+using ToSic.Eav.Sys;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Backend.ContentBlocks;
 using ToSic.Sxc.Backend.InPage;
@@ -12,7 +13,7 @@ public class BlockControllerReal(
     LazySvc<ContentBlockBackend> blockBackend,
     LazySvc<AppViewPickerBackend> viewsBackend,
     LazySvc<WorkApps> workApps)
-    : ServiceBase($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl", connect: [context, blockBackend, viewsBackend, workApps]),
+    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [context, blockBackend, viewsBackend, workApps]),
         IBlockController
 {
     public const string LogSuffix = "Block";

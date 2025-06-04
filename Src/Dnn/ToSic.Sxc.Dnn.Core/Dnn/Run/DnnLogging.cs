@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Web.Http;
 using DotNetNuke.Services.Log.EventLog;
+using ToSic.Eav.Sys;
 
 namespace ToSic.Sxc.Dnn.Run;
 
@@ -57,10 +58,10 @@ internal static class DnnLogging
         {
             if (dnn != null)
             {
-                logInfo.LogUserName = dnn.User?.DisplayName ?? Eav.Constants.NullNameId;
+                logInfo.LogUserName = dnn.User?.DisplayName ?? EavConstants.NullNameId;
                 logInfo.LogUserID = dnn.User?.UserID ?? -1;
                 logInfo.LogPortalID = dnn.Portal.PortalId;
-                logInfo.AddProperty("Module Id", dnn.Module?.ModuleID.ToString() ?? Eav.Constants.NullNameId);
+                logInfo.AddProperty("Module Id", dnn.Module?.ModuleID.ToString() ?? EavConstants.NullNameId);
             }
         }
         catch { /* ignore */ }

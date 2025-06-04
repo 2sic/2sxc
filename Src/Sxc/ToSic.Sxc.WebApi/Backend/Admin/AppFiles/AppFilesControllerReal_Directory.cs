@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav;
 using ToSic.Eav.ImportExport.Internal;
+using ToSic.Eav.Sys;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
@@ -13,7 +14,7 @@ partial class AppFilesControllerReal
         try
         {
             if (!IsApiControllerFilesSearch(searchPattern)
-                || (Constants.Api.Equals(dir.Name, StringComparison.OrdinalIgnoreCase) // controller files in "api" folder
+                || (EavConstants.Api.Equals(dir.Name, StringComparison.OrdinalIgnoreCase) // controller files in "api" folder
                     || FolderConstants.AppCode.Equals(dir.Name, StringComparison.OrdinalIgnoreCase) // controller files directly in "AppCode" folder
                     || dir.FullName.ToLower().Contains(_appCodeFolder) // controller files in any "AppCode" subfolder
                     )
@@ -68,5 +69,5 @@ partial class AppFilesControllerReal
 
     // detect special case when searching for api controller files
     private static bool IsApiControllerFilesSearch(string searchPattern) 
-        => searchPattern.Equals($"*{Constants.ApiControllerSuffix}.cs", StringComparison.OrdinalIgnoreCase);
+        => searchPattern.Equals($"*{EavConstants.ApiControllerSuffix}.cs", StringComparison.OrdinalIgnoreCase);
 }

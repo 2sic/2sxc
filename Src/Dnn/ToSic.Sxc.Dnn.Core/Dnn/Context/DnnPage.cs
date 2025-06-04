@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
+using ToSic.Eav.Sys;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Web.Internal.DotNet;
 
@@ -18,7 +19,7 @@ internal class DnnPage: Page
 
     internal string InitPageIdAndUrl(TabInfo activeTab, int? pageId)
     {
-        Init(pageId ?? activeTab?.TabID ?? Eav.Constants.NullId);
+        Init(pageId ?? activeTab?.TabID ?? EavConstants.NullId);
 
         // the FullUrl will throw an error in DNN search scenarios
         try

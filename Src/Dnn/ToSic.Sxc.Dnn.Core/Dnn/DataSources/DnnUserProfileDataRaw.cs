@@ -10,6 +10,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Integration;
+using ToSic.Eav.Sys;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Dnn.Run;
 
@@ -106,7 +107,7 @@ public class DnnUserProfile : CustomDataSourceAdvanced
         var l = Log.Fn<IImmutableList<IEntity>>();
         Configuration.Parse();
 
-        var realTenant = _services.Site.Id != Eav.Constants.NullId
+        var realTenant = _services.Site.Id != EavConstants.NullId
             ? _services.Site
             : _services.ZoneMapper.SiteOfApp(AppId);
         l.A($"realTenant {realTenant.Id}");

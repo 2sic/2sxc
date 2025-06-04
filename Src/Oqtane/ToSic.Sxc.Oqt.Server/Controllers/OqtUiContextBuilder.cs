@@ -38,7 +38,7 @@ internal class OqtUiContextBuilder(
     protected override WebResourceDto GetPage() =>
         new()
         {
-            Id = (ctx as IContextOfBlock)?.Page.Id ?? Eav.Constants.NullId,
+            Id = (ctx as IContextOfBlock)?.Page.Id ?? Eav.Sys.EavConstants.NullId,
         };
 
     protected override ContextAppDto GetApp(Ctx flags)

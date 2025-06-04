@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav;
+using ToSic.Eav.Sys;
 
 namespace ToSic.Sxc.Apps.Internal.Assets;
 
@@ -72,7 +73,7 @@ public class " + CsApiTemplateControllerName + @" : Custom.Hybrid.Api14
 }
 ",
             Description = "c# WebApi controller hybrid template",
-            Suffix = Constants.ApiControllerSuffix,
+            Suffix = EavConstants.ApiControllerSuffix,
         };
 
 

@@ -7,6 +7,7 @@ using DotNetNuke.Services.Localization;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Integration;
 using ToSic.Eav.Internal.Features;
+using ToSic.Eav.Sys;
 using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Web.Internal.Url;
 using ToSic.Sys.Capabilities.Features;
@@ -216,7 +217,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
 
     // ReSharper disable once InheritdocInvalidUsage
     /// <inheritdoc />
-    public override int Id => UnwrappedSite?.PortalId ?? Eav.Constants.NullId;
+    public override int Id => UnwrappedSite?.PortalId ?? EavConstants.NullId;
 
     /// <inheritdoc />
     public override string Name => UnwrappedSite.PortalName;
@@ -270,7 +271,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
         get { 
             if(_zoneId != null) return _zoneId.Value;
             // check if id is negative; 0 is a valid tenant id
-            if (Id < 0) return (_zoneId = Eav.Constants.NullId).Value;
+            if (Id < 0) return (_zoneId = EavConstants.NullId).Value;
             _zoneId = _zoneMapperLazy.Value.GetZoneId(Id);
             return _zoneId.Value;
         }

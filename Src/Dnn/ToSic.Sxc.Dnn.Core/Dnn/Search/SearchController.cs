@@ -9,6 +9,7 @@ using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.Sys;
 using ToSic.Lib.LookUp.Engines;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
@@ -74,7 +75,7 @@ internal class SearchController(
 
         // New Context because Portal-Settings.Current is null
         var appId = module.BlockIdentifier.AppId;
-        if (appId == AppConstants.AppIdNotFound || appId == Eav.Constants.NullId)
+        if (appId == AppConstants.AppIdNotFound || appId == EavConstants.NullId)
             return l.ReturnAsOk("no app id");
 
         // Ensure cache builds up with correct primary language

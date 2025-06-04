@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Cms.Users.Internal;
+﻿using ToSic.Eav.Sys;
+using ToSic.Sxc.Cms.Users.Internal;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Cms.Users;
@@ -17,7 +18,7 @@ public class UserConstants
     public static readonly UserModel UnknownUser = new()
     {
         Id = -2,
-        Name = Eav.Constants.NullNameId,
+        Name = EavConstants.NullNameId,
         Roles = [],
     };
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Sys;
 using ToSic.Sxc.Data.Internal.Stack;
 
 namespace ToSic.Sxc.Data.Internal;
@@ -18,7 +19,7 @@ partial class CodeDataFactory
 
     private TStackType AsStack<TStackType>(string name, object[] parts, bool strictTypes, Func<string, List<KeyValuePair<string, IPropertyLookup>>, TStackType> generate)
     {
-        name ??= Eav.Constants.NullNameId;
+        name ??= EavConstants.NullNameId;
         var l = Log.Fn<TStackType>($"'{name}', {parts?.Length}");
 
         // Error if nothing

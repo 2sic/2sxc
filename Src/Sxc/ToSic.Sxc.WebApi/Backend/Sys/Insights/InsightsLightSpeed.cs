@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav;
 using ToSic.Eav.Apps.Internal.Insights;
-
+using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.Insights;
 using ToSic.Sxc.Web.Internal.LightSpeed;
 using ToSic.Sys.Utils;
@@ -35,7 +35,7 @@ internal class InsightsLightSpeed(LightSpeedStats lightSpeedStats, IAppReaderFac
                     SpecialField.Right(cacheItem.Key),
                     appSpecs.Name,
                     SpecialField.Right(cacheItem.Value),
-                    SpecialField.Right(sizeStats.TryGetValue(cacheItem.Key, out var size) ? ByteToKByte(size) : Constants.NullNameId),
+                    SpecialField.Right(sizeStats.TryGetValue(cacheItem.Key, out var size) ? ByteToKByte(size) : EavConstants.NullNameId),
                     appSpecs.NameId
                 );
                 totalItems += cacheItem.Value;

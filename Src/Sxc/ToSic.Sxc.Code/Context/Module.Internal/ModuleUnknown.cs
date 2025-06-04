@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Cms.Internal;
+using ToSic.Eav.Sys;
 using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Context.Internal;
@@ -15,9 +16,9 @@ internal class ModuleUnknown: IModule, IIsUnknown
         return this;
     }
 
-    public int Id => Eav.Constants.NullId;
+    public int Id => EavConstants.NullId;
     public bool IsContent => true;
 
     public IBlockIdentifier BlockIdentifier =>
-        new BlockIdentifier(Eav.Constants.NullId, Eav.Constants.NullId, Eav.Constants.NullNameId, Guid.Empty, Guid.Empty);
+        new BlockIdentifier(EavConstants.NullId, EavConstants.NullId, EavConstants.NullNameId, Guid.Empty, Guid.Empty);
 }

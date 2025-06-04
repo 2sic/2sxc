@@ -1,4 +1,5 @@
-﻿using ToSic.Lib.DI;
+﻿using ToSic.Eav.Sys;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Web.Internal.DotNet;
 using ToSic.Sxc.Web.Parameters;
 
@@ -16,10 +17,10 @@ public class Page(LazySvc<IHttp> httpLazy) : IPage
         return this;
     }
 
-    public int Id { get; private set; } = Eav.Constants.NullId;
+    public int Id { get; private set; } = EavConstants.NullId;
 
     public virtual IParameters Parameters => field ??= new Parameters { Nvc = OriginalParameters.GetOverrideParams(httpLazy.Value?.QueryStringParams) };
 
 
-    public string Url { get; set; } = Eav.Constants.UrlNotInitialized;
+    public string Url { get; set; } = EavConstants.UrlNotInitialized;
 }

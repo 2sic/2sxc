@@ -3,6 +3,7 @@ using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.Sys;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Context.Internal;
@@ -46,7 +47,7 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
         {
             // If specifically no app found, end initialization here
             // Means we have no data, and no BlockBuilder
-            case AppConstants.AppIdNotFound or Eav.Constants.NullId:
+            case AppConstants.AppIdNotFound or EavConstants.NullId:
                 DataIsMissing = true;
                 return l.ReturnTrue("stop: app & data are missing");
             // If no app yet, stop now with BlockBuilder created

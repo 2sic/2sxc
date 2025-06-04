@@ -42,11 +42,11 @@ internal class OqtGetBlock(
 
         // WebAPI calls can contain the original parameters that made the page, so that views can respect that
         var moduleId = TryGetId(ContextConstants.ModuleIdKey);
-        if (moduleId == Eav.Constants.NullId)
+        if (moduleId == Eav.Sys.EavConstants.NullId)
             return l.ReturnNull("missing block because ModuleId not found in request");
 
         var pageId = TryGetId(ContextConstants.PageIdKey);
-        if (pageId == Eav.Constants.NullId)
+        if (pageId == Eav.Sys.EavConstants.NullId)
             return l.ReturnNull("missing block because PageId not found in request");
 
         var module = modRepoLazy.Value.GetModule(moduleId);
@@ -67,6 +67,6 @@ internal class OqtGetBlock(
     {
         var l = Log.Fn<int>(key);
         var id = requestHelper.TryGetId(key);
-        return l.Return(id, id == Eav.Constants.NullId ? "not found" : $"found {id}");
+        return l.Return(id, id == Eav.Sys.EavConstants.NullId ? "not found" : $"found {id}");
     }
 }

@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.SysData;
+﻿using ToSic.Eav.Sys;
+using ToSic.Eav.SysData;
 using ToSic.Lib.Services;
 using ToSic.Sys.Capabilities.SysFeatures;
 using ToSic.Sys.Code.Help;
@@ -39,7 +40,7 @@ public abstract class EngineRequirementsBase(string logName, object[] connect = 
             "</ol>" +
             "<p>" +
             "<br>" +
-            $"To install features follow these instructions ➡️ <a href='{Eav.Constants.GoUrlSysFeats}' target='_blank'>{Eav.Constants.GoUrlSysFeats}</a>." +
+            $"To install features follow these instructions ➡️ <a href='{EavConstants.GoUrlSysFeats}' target='_blank'>{EavConstants.GoUrlSysFeats}</a>." +
             "</p>",
             EngineMessages.Warning);
 

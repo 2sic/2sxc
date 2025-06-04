@@ -1,4 +1,5 @@
-﻿using ToSic.Lib.DI;
+﻿using ToSic.Eav.Sys;
+using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using static System.StringComparison;
 
@@ -64,7 +65,7 @@ public abstract class CodeCompiler(IServiceProvider serviceProvider, object[] co
         var l = Log.Fn<(Type Type, string ErrorMessages)>($"{nameof(relativePath)}: '{relativePath}'; {nameof(className)} '{className}'; {nameof(throwOnError)}: {throwOnError}; {spec}");
 
         // if no name provided, use the name which is the same as the file name
-        className ??= Path.GetFileNameWithoutExtension(relativePath) ?? Eav.Constants.NullNameId;
+        className ??= Path.GetFileNameWithoutExtension(relativePath) ?? EavConstants.NullNameId;
 
         var assResult = GetAssembly(relativePath, className, spec);
         var assembly = assResult.Assembly;

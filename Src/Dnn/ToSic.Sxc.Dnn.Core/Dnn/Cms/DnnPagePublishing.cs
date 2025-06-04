@@ -8,6 +8,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.EntityDecorators.Sys;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.Sys;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Context.Internal;
@@ -30,8 +31,8 @@ internal partial class DnnPagePublishing(
     {
         var possibleContextOfBlock = context as IContextOfBlock;
         var enabled = possibleContextOfBlock?.Publishing.ForceDraft ?? false;
-        var instanceId = possibleContextOfBlock?.Module.Id ?? Eav.Constants.IdNotInitialized;
-        var userId = (context.User as DnnUser)?.GetContents().UserID ?? Eav.Constants.IdNotInitialized;
+        var instanceId = possibleContextOfBlock?.Module.Id ?? EavConstants.IdNotInitialized;
+        var userId = (context.User as DnnUser)?.GetContents().UserID ?? EavConstants.IdNotInitialized;
         Log.A($"DoInsidePublishing(module:{instanceId}, user:{userId}, enabled:{enabled})");
 
         if (enabled)

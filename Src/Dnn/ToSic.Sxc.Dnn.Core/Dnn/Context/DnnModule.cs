@@ -4,6 +4,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Cms.Internal;
+using ToSic.Eav.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Internal;
@@ -60,7 +61,7 @@ public class DnnModule: Module<ModuleInfo>
 
 
     /// <inheritdoc />
-    public override int Id => UnwrappedModule?.ModuleID ?? Eav.Constants.NullId;
+    public override int Id => UnwrappedModule?.ModuleID ?? EavConstants.NullId;
 
 
     /// <inheritdoc />

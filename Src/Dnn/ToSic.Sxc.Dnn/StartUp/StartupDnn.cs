@@ -4,6 +4,7 @@ using System.Web.Hosting;
 using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.StartUp;
+using ToSic.Eav.Sys;
 using ToSic.Eav.Sys.Configuration;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Code.Internal.HotBuild;
@@ -65,8 +66,8 @@ public class StartupDnn : IServiceRouteMapper
         globalConfig.GlobalFolder(HostingEnvironment.MapPath(DnnConstants.SysFolderRootVirtual));
         globalConfig.AssetsVirtualUrl(DnnConstants.SysFolderRootVirtual + "assets/");
         globalConfig.SharedAppsFolder("~/Portals/_default/" + AppConstants.AppsRootFolder + "/");
-        globalConfig.TempAssemblyFolder(HostingEnvironment.MapPath($"~/{Eav.FolderConstants.AppDataProtectedFolder}/{Eav.FolderConstants.TempAssemblyFolder}/")); // ".../App_Data/2sxc.bin"
-        globalConfig.CryptoFolder(HostingEnvironment.MapPath($"~/{Eav.FolderConstants.AppDataProtectedFolder}/{Eav.FolderConstants.CryptoFolder}/")!);
+        globalConfig.TempAssemblyFolder(HostingEnvironment.MapPath($"~/{FolderConstants.AppDataProtectedFolder}/{FolderConstants.TempAssemblyFolder}/")); // ".../App_Data/2sxc.bin"
+        globalConfig.CryptoFolder(HostingEnvironment.MapPath($"~/{FolderConstants.AppDataProtectedFolder}/{FolderConstants.CryptoFolder}/")!);
 
         var sxcSysLoader = transientSp.Build<BootCoordinator>();
         sxcSysLoader.StartUp();

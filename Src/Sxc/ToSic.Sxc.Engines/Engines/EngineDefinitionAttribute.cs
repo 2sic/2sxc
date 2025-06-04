@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Engines;
+﻿using ToSic.Eav.Sys;
+
+namespace ToSic.Sxc.Engines;
 
 /// <summary>
 /// Attribute to mark all IEngine implementations
@@ -9,7 +11,7 @@ public class EngineDefinitionAttribute: Attribute
 {
     public EngineDefinitionAttribute() { }
 
-    public string Name { get; set; } = Eav.Constants.NullNameId;
+    public string Name { get; set; } = EavConstants.NullNameId;
 
 
 }

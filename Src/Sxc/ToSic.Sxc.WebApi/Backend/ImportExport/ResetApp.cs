@@ -6,6 +6,7 @@ using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Internal.Features;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Security;
+using ToSic.Eav.Sys;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Users;
@@ -59,12 +60,12 @@ public class ResetApp(
         //    return result;
         //}
 
-        var appDataFolder = Path.Combine(appPaths.PhysicalPath, Eav.FolderConstants.AppDataProtectedFolder);
-        var filePath = Path.Combine(appDataFolder, Eav.FolderConstants.AppDataFile);
+        var appDataFolder = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppDataProtectedFolder);
+        var filePath = Path.Combine(appDataFolder, FolderConstants.AppDataFile);
         if (!File.Exists(filePath))
         {
             result.Success = false;
-            result.Messages.Add(new($"Can't find the {Eav.FolderConstants.AppDataFile} in the folder", Message.MessageTypes.Error));
+            result.Messages.Add(new($"Can't find the {FolderConstants.AppDataFile} in the folder", Message.MessageTypes.Error));
             return result;
         }
 
@@ -74,10 +75,10 @@ public class ResetApp(
         // 3. Optional reset SiteFiles
         if (withSiteFiles)
         {
-            var sourcePath = Path.Combine(appPaths.PhysicalPath, Eav.FolderConstants.AppDataProtectedFolder);
+            var sourcePath = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppDataProtectedFolder);
 
             // Copy app global template files persisted in /App_Data/2sexyGlobal/ back to app [globalTemplatesRoot]
-            var globalTemplatesStateFolder = Path.Combine(appDataFolder, Eav.FolderConstants.ZipFolderForGlobalAppStuff);
+            var globalTemplatesStateFolder = Path.Combine(appDataFolder, FolderConstants.ZipFolderForGlobalAppStuff);
             if (Directory.Exists(globalTemplatesStateFolder))
             {
                 zipImport.Init(zoneId, appId, allowCode: true);
@@ -86,7 +87,7 @@ public class ResetApp(
             }
 
             // Copy portal files persisted in /App_Data/SiteFiles/ back to site
-            env.TransferFilesToSite(Path.Combine(sourcePath, Eav.FolderConstants.ZipFolderForSiteFiles), string.Empty);
+            env.TransferFilesToSite(Path.Combine(sourcePath, FolderConstants.ZipFolderForSiteFiles), string.Empty);
         }
 
         // 4. Now import the App.xml

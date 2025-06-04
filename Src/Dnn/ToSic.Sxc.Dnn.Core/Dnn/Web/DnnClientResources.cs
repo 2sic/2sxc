@@ -5,6 +5,7 @@ using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;
 using System.Web.UI;
 using ToSic.Eav;
+using ToSic.Eav.Sys;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Dnn.Features;

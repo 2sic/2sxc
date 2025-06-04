@@ -2,6 +2,7 @@
 using ToSic.Eav.DataSources.Sys.Internal;
 using ToSic.Eav.ImportExport.Internal;
 using ToSic.Eav.Internal.Configuration;
+using ToSic.Eav.Sys;
 using ToSic.Eav.Sys.Configuration;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.ImportExport;
@@ -39,7 +40,7 @@ public class AppControllerReal(
     LazySvc<AppStackBackend> appStackBackendLazy,
     LazySvc<IJsonService> json,
     IGlobalConfiguration globalConfiguration)
-    : ServiceBase($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl",
+    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
         connect:
         [
             appsBackendLazy, workAppsRemove, exportAppLazy, importAppLazy, appBuilderLazy, resetAppLazy,

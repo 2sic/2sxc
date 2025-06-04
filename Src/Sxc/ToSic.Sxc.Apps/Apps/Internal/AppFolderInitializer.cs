@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Internal.Environment;
+using ToSic.Eav.Sys;
 using ToSic.Eav.Sys.Configuration;
 using ToSic.Sxc.Internal;
 using ToSic.Sys.Configuration;
@@ -47,14 +48,14 @@ public class AppFolderInitializer(IServerPaths serverPaths, IGlobalConfiguration
         contentFolder.Create();
 
         var appDataProtectedFolder =
-            new DirectoryInfo(Path.Combine(contentFolder.FullName, Eav.FolderConstants.AppDataProtectedFolder));
+            new DirectoryInfo(Path.Combine(contentFolder.FullName, FolderConstants.AppDataProtectedFolder));
         appDataProtectedFolder.Create();
 
         var appJsonTemplateFilePath =
-            Path.Combine(globalConfiguration.AppDataTemplateFolder(), Eav.FolderConstants.AppJson);
-        if (File.Exists(appJsonTemplateFilePath) && !appDataProtectedFolder.GetFiles(Eav.FolderConstants.AppJson).Any())
+            Path.Combine(globalConfiguration.AppDataTemplateFolder(), FolderConstants.AppJson);
+        if (File.Exists(appJsonTemplateFilePath) && !appDataProtectedFolder.GetFiles(FolderConstants.AppJson).Any())
             File.Copy(appJsonTemplateFilePath,
-                Path.Combine(appDataProtectedFolder.FullName, Eav.FolderConstants.AppJson));
+                Path.Combine(appDataProtectedFolder.FullName, FolderConstants.AppJson));
         l.Done("ok");
     }
 

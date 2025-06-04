@@ -2,6 +2,7 @@
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.Integration;
 using ToSic.Eav.Services;
+using ToSic.Eav.Sys;
 
 // NOTE 2023-01-11 refactoring - was previously ToSic.Eav.Apps.App - renamed to ToSic.Eav.Apps.Internal.EavApp
 // Could be a breaking change
@@ -71,8 +72,8 @@ public abstract partial class EavApp(EavApp.MyServices services, string logName 
         if (Site == null) throw new("no site/portal received");
             
         // in case the DI gave a bad tenant, try to look up
-        if (Site.Id == Constants.NullId
-            && appIdentity.AppId != Constants.NullId
+        if (Site.Id == EavConstants.NullId
+            && appIdentity.AppId != EavConstants.NullId
             && appIdentity.AppId != AppConstants.AppIdNotFound)
             Site = Services.ZoneMapper.SiteOfApp(appIdentity.AppId);
 

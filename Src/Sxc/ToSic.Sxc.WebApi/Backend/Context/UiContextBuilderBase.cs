@@ -5,6 +5,7 @@ using ToSic.Eav.Apps.Internal.Specs;
 using ToSic.Eav.Apps.State;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Eav.Internal.Features;
+using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Languages;
@@ -125,7 +126,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
     protected virtual WebResourceDto GetPage() =>
         new()
         {
-            Id = Eav.Constants.NullId,
+            Id = EavConstants.NullId,
         };
 
     protected virtual ContextEnableDto GetEnable(CtxEnable ctx)
@@ -145,7 +146,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
         return dto;
     }
 
-    protected virtual string GetGettingStartedUrl() => Eav.Constants.UrlNotInitialized;
+    protected virtual string GetGettingStartedUrl() => EavConstants.UrlNotInitialized;
 
     protected virtual ContextAppDto GetApp(Ctx flags)
     {

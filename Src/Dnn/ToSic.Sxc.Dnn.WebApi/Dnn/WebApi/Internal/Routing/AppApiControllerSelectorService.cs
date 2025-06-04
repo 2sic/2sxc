@@ -9,6 +9,7 @@ using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
+using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
@@ -71,7 +72,7 @@ internal partial class AppApiControllerSelectorService(
 
         var routeData = request.GetRouteData();
 
-        var controllerTypeName = routeData.Values[VarNames.Controller] + Constants.ApiControllerSuffix;
+        var controllerTypeName = routeData.Values[VarNames.Controller] + EavConstants.ApiControllerSuffix;
         l.A($"Controller: {controllerTypeName}");
 
         // Now Handle the 2sxc app-api queries

@@ -86,7 +86,7 @@ public class Pages(
         dto.Id = page.PageId;
         dto.Url = page.Url;
         dto.Name = page.Name;
-        dto.CultureCode = Eav.Constants.NullNameId;
+        dto.CultureCode = Eav.Sys.EavConstants.NullNameId;
         dto.Visible = !page.IsDeleted;
         dto.Title = page.Title;
         dto.Portal = new(page.SiteId);

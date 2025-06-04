@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using ToSic.Eav;
+using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sys.Utils;
@@ -19,7 +20,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Admin.IAppExplorerControllerDe
     {
         var l = Log.Fn<List<AllApiFileDto>>($"list all in AppCode a#{appId}");
 
-        const string mask = $"*{Constants.ApiControllerSuffix}.cs";
+        const string mask = $"*{EavConstants.ApiControllerSuffix}.cs";
 
         var appPath = ResolveAppPath(appId, global: false);
         var app = _appReaders.Get(appId).Specs;
@@ -126,7 +127,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Admin.IAppExplorerControllerDe
             $"{nameof(OptionalCheckForControllerTypeInAppCodeAssembly)}({nameof(controllerTypeName)}:'{controllerTypeName}', has appCode assembly:{appCodeAssembly != null})");
 
         // check if it is controller type
-        if (controllerTypeName.EndsWith(Constants.ApiControllerSuffix, StringComparison.OrdinalIgnoreCase))
+        if (controllerTypeName.EndsWith(EavConstants.ApiControllerSuffix, StringComparison.OrdinalIgnoreCase))
             return l.ReturnTrue($"'{controllerTypeName}' is not controller type");
 
         return l.ReturnAndLog(appCodeAssembly.FindControllerTypeByName(controllerTypeName) != null);
