@@ -1,7 +1,7 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
-using ToSic.Eav.Persistence.Logging;
+using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Sxc.Integration;
 
 namespace ToSic.Sxc.Dnn.ImportExport;

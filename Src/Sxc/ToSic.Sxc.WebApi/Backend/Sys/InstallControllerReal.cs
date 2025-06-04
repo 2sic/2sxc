@@ -2,7 +2,7 @@
 using ToSic.Eav.Apps.Services;
 using ToSic.Eav.Data.PropertyStack.Sys;
 using ToSic.Eav.Data.Sys;
-using ToSic.Eav.Persistence.Logging;
+using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Eav.WebApi.Infrastructure;

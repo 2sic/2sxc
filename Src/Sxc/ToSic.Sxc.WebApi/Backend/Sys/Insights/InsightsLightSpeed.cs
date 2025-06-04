@@ -1,5 +1,4 @@
-﻿using ToSic.Eav;
-using ToSic.Eav.Apps.Internal.Insights;
+﻿using ToSic.Eav.Apps.Internal.Insights;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.Insights;
 using ToSic.Sxc.Web.Internal.LightSpeed;

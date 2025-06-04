@@ -2,7 +2,7 @@
 using Oqtane.Models;
 using Oqtane.Repository;
 using ToSic.Eav.Internal.Environment;
-using ToSic.Eav.Persistence.Logging;
+using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Sxc.Integration;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Context;

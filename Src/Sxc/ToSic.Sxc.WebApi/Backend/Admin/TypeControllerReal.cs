@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Data.Ancestors.Sys;
 using ToSic.Eav.Data.ContentTypes.Sys;
-using ToSic.Eav.Persistence.Logging;
+using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;

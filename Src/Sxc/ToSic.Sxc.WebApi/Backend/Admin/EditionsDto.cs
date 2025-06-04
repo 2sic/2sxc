@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using ToSic.Eav.Apps.Internal.Specs;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Sxc.Code.Generate;
 
