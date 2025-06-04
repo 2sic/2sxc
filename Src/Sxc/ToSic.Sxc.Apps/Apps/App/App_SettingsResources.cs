@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.ImportExport.Sys;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
@@ -21,7 +22,7 @@ public partial class App
 
     internal void SetupAsConverter(ICodeDataFactory cdf) => cdfLazy.Inject(cdf);
 
-    /// <inheritdoc cref="Eav.ImportExport.Internal.Settings" />
+    /// <inheritdoc cref="Eav.ImportExport.Sys.Settings" />
     public dynamic Settings => AppSettings == null ? null : _settings.Get(() => MakeDynProperty(AppSettings, propsRequired: false));
     private readonly GetOnce<dynamic> _settings = new();
 

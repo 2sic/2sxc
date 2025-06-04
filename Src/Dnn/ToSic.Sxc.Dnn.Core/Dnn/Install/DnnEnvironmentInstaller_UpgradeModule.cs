@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using ToSic.Eav;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Sys;
-using ToSic.Eav.Sys.Configuration;
+using ToSic.Sys.Configuration;
 using Exception = System.Exception;
 
 namespace ToSic.Sxc.Dnn.Install;

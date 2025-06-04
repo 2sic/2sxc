@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Configuration.Sys.Loaders;
 using ToSic.Eav.Internal.Loaders;
-using ToSic.Eav.Sys.Capabilities.Features;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Data.Internal.Dynamic;
 using ToSic.Sxc.Data.Internal.Wrapper;
@@ -8,6 +7,7 @@ using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.LinksAndImages.LinkHelperTests;
 using ToSic.Sxc.Services;
+using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.GetByName;
 
 namespace ToSic.Sxc.LinksAndImages.LinkImageTests;

@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.ImportExport.Json;
+using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Metadata.Sys;
 using ToSic.Eav.Metadata.Targets;
@@ -16,7 +17,7 @@ using ToSic.Sxc.Backend.SaveHelpers;
 using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Utils;
-using JsonSerializer = ToSic.Eav.ImportExport.Json.JsonSerializer;
+using JsonSerializer = ToSic.Eav.ImportExport.Json.Sys.JsonSerializer;
 
 
 namespace ToSic.Sxc.Backend.Cms;
