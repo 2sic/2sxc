@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Eav.Core", "..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj", "{82F94588-269B-4CDD-98D1-D5CB14C39090}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Eav.Apps", "..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj", "{FA1B4495-6B85-400F-A5E3-0E292CCBFAE2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Sxc.Dnn.WebApi", "Dnn\ToSic.Sxc.Dnn.WebApi\ToSic.Sxc.Dnn.WebApi.csproj", "{8398FE44-7164-48CB-96CF-74BA9C270BD2}"
@@ -246,12 +244,6 @@ Global
 		Testing|Any CPU = Testing|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{82F94588-269B-4CDD-98D1-D5CB14C39090}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{82F94588-269B-4CDD-98D1-D5CB14C39090}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{82F94588-269B-4CDD-98D1-D5CB14C39090}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{82F94588-269B-4CDD-98D1-D5CB14C39090}.Release|Any CPU.Build.0 = Release|Any CPU
-		{82F94588-269B-4CDD-98D1-D5CB14C39090}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
-		{82F94588-269B-4CDD-98D1-D5CB14C39090}.Testing|Any CPU.Build.0 = Debug|Any CPU
 		{FA1B4495-6B85-400F-A5E3-0E292CCBFAE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FA1B4495-6B85-400F-A5E3-0E292CCBFAE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA1B4495-6B85-400F-A5E3-0E292CCBFAE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -724,7 +716,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{82F94588-269B-4CDD-98D1-D5CB14C39090} = {2DBCC960-1C0B-494F-9E21-8707A1D344C3}
 		{FA1B4495-6B85-400F-A5E3-0E292CCBFAE2} = {CC8DE3B4-BE02-45B9-BB26-30B4654DC5E2}
 		{8398FE44-7164-48CB-96CF-74BA9C270BD2} = {82831295-FA89-4F5A-9420-DB6E15A8AD99}
 		{78A558AF-F274-4E3C-95FE-8DE9226E0EBC} = {82831295-FA89-4F5A-9420-DB6E15A8AD99}
@@ -838,7 +829,7 @@ Global
 		{13515640-4870-4679-A7D1-185884ED26AF} = {2DBCC960-1C0B-494F-9E21-8707A1D344C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 	EndGlobalSection
 EndGlobal
