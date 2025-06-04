@@ -1,14 +1,14 @@
 <Project>
   <PropertyGroup>
     <!-- Not sure what this is?  -->
-    <NoWarn>7035</NoWarn>
+    <NoWarn>$(NoWarn);7035</NoWarn>
 
     <!-- Disable warnings on production build about public APIs not having XDocs -->
-    <NoWarn>CS1591</NoWarn>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
 
     <!-- This is a warning that duplicate imports exist - which is because we're importing the DLL specs in each project
     so projects further down think it's already there-->
-    <NoWarn>CS0436</NoWarn>
+    <NoWarn>$(NoWarn);CS0436</NoWarn>
 
     <Configurations>Debug;Release;Testing;</Configurations>
 
