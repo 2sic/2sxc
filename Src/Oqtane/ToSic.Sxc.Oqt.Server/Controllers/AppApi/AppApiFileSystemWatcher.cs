@@ -79,18 +79,22 @@ internal class AppApiFileSystemWatcher : IDisposable, IHasLog
 
     private AppApiCacheItem FlagForRemove(string path)
     {
-        if (!CompiledAppApiControllers.TryGetValue(path, out var appApiCacheItem)) return null;
-        if (!appApiCacheItem.FlagForRemove) appApiCacheItem.FlagForRemove = true;
+        if (!CompiledAppApiControllers.TryGetValue(path, out var appApiCacheItem))
+            return null;
+        if (!appApiCacheItem.FlagForRemove)
+            appApiCacheItem.FlagForRemove = true;
         return appApiCacheItem;
     }
 
     private AppApiCacheItem CheckAppCode(string path)
     {
-        if (!path.Contains(Constants.AppCode, StringComparison.InvariantCultureIgnoreCase)) return null;
+        if (!path.Contains(FolderConstants.AppCode, StringComparison.InvariantCultureIgnoreCase))
+            return null;
         AppApiCacheItem appApiCacheItem = null;
         foreach (var controller in CompiledAppApiControllers)
         {
-            if (!controller.Value.IsAppCode || !path.StartsWith(controller.Value.AppCodePath, StringComparison.InvariantCultureIgnoreCase)) continue;
+            if (!controller.Value.IsAppCode || !path.StartsWith(controller.Value.AppCodePath, StringComparison.InvariantCultureIgnoreCase))
+                continue;
             appApiCacheItem = FlagForRemove(controller.Key);
         }
         return appApiCacheItem;

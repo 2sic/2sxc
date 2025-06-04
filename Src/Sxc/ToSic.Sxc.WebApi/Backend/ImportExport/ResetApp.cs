@@ -59,12 +59,12 @@ public class ResetApp(
         //    return result;
         //}
 
-        var appDataFolder = Path.Combine(appPaths.PhysicalPath, Eav.Constants.AppDataProtectedFolder);
-        var filePath = Path.Combine(appDataFolder, Eav.Constants.AppDataFile);
+        var appDataFolder = Path.Combine(appPaths.PhysicalPath, Eav.FolderConstants.AppDataProtectedFolder);
+        var filePath = Path.Combine(appDataFolder, Eav.FolderConstants.AppDataFile);
         if (!File.Exists(filePath))
         {
             result.Success = false;
-            result.Messages.Add(new($"Can't find the {Eav.Constants.AppDataFile} in the folder", Message.MessageTypes.Error));
+            result.Messages.Add(new($"Can't find the {Eav.FolderConstants.AppDataFile} in the folder", Message.MessageTypes.Error));
             return result;
         }
 
@@ -74,10 +74,10 @@ public class ResetApp(
         // 3. Optional reset SiteFiles
         if (withSiteFiles)
         {
-            var sourcePath = Path.Combine(appPaths.PhysicalPath, Eav.Constants.AppDataProtectedFolder);
+            var sourcePath = Path.Combine(appPaths.PhysicalPath, Eav.FolderConstants.AppDataProtectedFolder);
 
             // Copy app global template files persisted in /App_Data/2sexyGlobal/ back to app [globalTemplatesRoot]
-            var globalTemplatesStateFolder = Path.Combine(appDataFolder, Eav.Constants.ZipFolderForGlobalAppStuff);
+            var globalTemplatesStateFolder = Path.Combine(appDataFolder, Eav.FolderConstants.ZipFolderForGlobalAppStuff);
             if (Directory.Exists(globalTemplatesStateFolder))
             {
                 zipImport.Init(zoneId, appId, allowCode: true);
@@ -86,7 +86,7 @@ public class ResetApp(
             }
 
             // Copy portal files persisted in /App_Data/SiteFiles/ back to site
-            env.TransferFilesToSite(Path.Combine(sourcePath, Eav.Constants.ZipFolderForSiteFiles), string.Empty);
+            env.TransferFilesToSite(Path.Combine(sourcePath, Eav.FolderConstants.ZipFolderForSiteFiles), string.Empty);
         }
 
         // 4. Now import the App.xml

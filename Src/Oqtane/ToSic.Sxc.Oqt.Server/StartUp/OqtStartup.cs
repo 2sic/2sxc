@@ -9,9 +9,9 @@ using Microsoft.Net.Http.Headers;
 using Oqtane.Components;
 using Oqtane.Extensions;
 using Oqtane.Infrastructure;
-using Oqtane.Shared;
 using Oqtane.UI;
 using OqtaneSSR.Extensions;
+using ToSic.Eav;
 using ToSic.Eav.Integration;
 using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Sys.Configuration;
@@ -37,6 +37,7 @@ using ToSic.Sys.Boot;
 using ToSic.Sys.Configuration;
 using static ToSic.Sxc.Oqt.Server.StartUp.OqtStartupHelper;
 using static ToSic.Sxc.Oqt.Server.WebApi.OqtWebApiConstants;
+using Constants = Oqtane.Shared.Constants;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
 
@@ -123,15 +124,15 @@ public class OqtStartup : IServerStartup
         var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
         globalConfig.ConnectionString(Configuration.GetConnectionString("DefaultConnection"));
         globalConfig.GlobalFolder(Path.Combine(env.ContentRootPath, "wwwroot\\Modules", OqtConstants.PackageName));
-        globalConfig.AppDataTemplateFolder(Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.AppDataProtectedFolder, Eav.Constants.NewAppFolder));
-        globalConfig.NewAppsTemplateFolder(Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.AppDataProtectedFolder, Eav.Constants.NewAppsFolder));
-        globalConfig.DataFolder(Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.AppDataProtectedFolder, Eav.Constants.FolderSystem));
-        globalConfig.TemporaryFolder(Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.TemporaryFolder));
-        globalConfig.InstructionsFolder(Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.InstructionsFolder));
+        globalConfig.AppDataTemplateFolder(Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", FolderConstants.AppDataProtectedFolder, FolderConstants.NewAppFolder));
+        globalConfig.NewAppsTemplateFolder(Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", FolderConstants.AppDataProtectedFolder, FolderConstants.NewAppsFolder));
+        globalConfig.DataFolder(Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", FolderConstants.AppDataProtectedFolder, FolderConstants.FolderSystem));
+        globalConfig.TemporaryFolder(Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", FolderConstants.TemporaryFolder));
+        globalConfig.InstructionsFolder(Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", FolderConstants.InstructionsFolder));
         globalConfig.AssetsVirtualUrl($"~/Modules/{OqtConstants.PackageName}/assets/");
         globalConfig.SharedAppsFolder($"/{OqtConstants.AppRoot}/{OqtConstants.SharedAppFolder}/"); // "/2sxc/Shared"
-        globalConfig.TempAssemblyFolder(Path.Combine(env.ContentRootPath, Eav.Constants.AppDataProtectedFolder, Eav.Constants.TempAssemblyFolder)); // ".../App_Data/2sxc.bin"
-        globalConfig.CryptoFolder(Path.Combine(env.ContentRootPath, Eav.Constants.AppDataProtectedFolder, Eav.Constants.CryptoFolder));
+        globalConfig.TempAssemblyFolder(Path.Combine(env.ContentRootPath, FolderConstants.AppDataProtectedFolder, FolderConstants.TempAssemblyFolder)); // ".../App_Data/2sxc.bin"
+        globalConfig.CryptoFolder(Path.Combine(env.ContentRootPath, FolderConstants.AppDataProtectedFolder, FolderConstants.CryptoFolder));
 
         // ensure we have an instance
         var assemblyResolver = serviceProvider.Build<AssemblyResolver>();

@@ -32,9 +32,9 @@ partial class AppFilesControllerReal : Eav.WebApi.Admin.IAppExplorerControllerDe
             var edition = editionDto.Name;
             l.A($"collect ApiController files in AppCode for edition:'{edition}'");
 
-            if (!Directory.Exists(Path.Combine(appPath, edition, Constants.AppCode)))
+            if (!Directory.Exists(Path.Combine(appPath, edition, FolderConstants.AppCode)))
             {
-                l.A($"edition:'{edition}' folder or '{Constants.AppCode}' subfolder do not exist in app");
+                l.A($"edition:'{edition}' folder or '{FolderConstants.AppCode}' subfolder do not exist in app");
                 continue;
             }
 
@@ -81,7 +81,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Admin.IAppExplorerControllerDe
             return l.Return([], "nothing to do, AppCode assembly is missing");
 
         // 2. Check for AppCode directory
-        var fullPath = Path.Combine(appPath, edition, Constants.AppCode);
+        var fullPath = Path.Combine(appPath, edition, FolderConstants.AppCode);
         // if the edition directory doesn't exist, optional fallback to root edition AppCode
         if (!Directory.Exists(fullPath))
         {
@@ -92,7 +92,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Admin.IAppExplorerControllerDe
                 return l.Return([], "nothing to do, root edition AppCode folder do not exits");
 
             // fallback to root edition AppCode
-            fullPath = Path.Combine(appPath, Constants.AppCode);
+            fullPath = Path.Combine(appPath, FolderConstants.AppCode);
             l.A($"fallback to root edition AppCode:'{fullPath}'");
 
             // if the root edition directory doesn't exist, then nothing to do

@@ -64,8 +64,8 @@ public class StartupDnn : IServiceRouteMapper
         globalConfig.GlobalFolder(HostingEnvironment.MapPath(DnnConstants.SysFolderRootVirtual));
         globalConfig.AssetsVirtualUrl(DnnConstants.SysFolderRootVirtual + "assets/");
         globalConfig.SharedAppsFolder("~/Portals/_default/" + AppConstants.AppsRootFolder + "/");
-        globalConfig.TempAssemblyFolder(HostingEnvironment.MapPath($"~/{Eav.Constants.AppDataProtectedFolder}/{Eav.Constants.TempAssemblyFolder}/")); // ".../App_Data/2sxc.bin"
-        globalConfig.CryptoFolder(HostingEnvironment.MapPath($"~/{Eav.Constants.AppDataProtectedFolder}/{Eav.Constants.CryptoFolder}/"));
+        globalConfig.TempAssemblyFolder(HostingEnvironment.MapPath($"~/{Eav.FolderConstants.AppDataProtectedFolder}/{Eav.FolderConstants.TempAssemblyFolder}/")); // ".../App_Data/2sxc.bin"
+        globalConfig.CryptoFolder(HostingEnvironment.MapPath($"~/{Eav.FolderConstants.AppDataProtectedFolder}/{Eav.FolderConstants.CryptoFolder}/"));
 
         var sxcSysLoader = transientSp.Build<BootCoordinator>();
         sxcSysLoader.StartUp();

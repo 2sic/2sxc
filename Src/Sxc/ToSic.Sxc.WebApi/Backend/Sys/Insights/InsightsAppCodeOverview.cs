@@ -7,7 +7,7 @@ using ToSic.Eav.WebApi.Sys.Insights;
 namespace ToSic.Sxc.Backend.Sys;
 
 internal class InsightsAppCodeOverview(IAppReaderFactory appReaders, IAppStateCacheService appStates, IAppsCatalog appsCatalog)
-    : InsightsProvider(Link, helpCategory: Constants.AppCode, connect: [appsCatalog])
+    : InsightsProvider(Link, helpCategory: FolderConstants.AppCode, connect: [appsCatalog])
 {
     public static string Link => "AppCodeOverview";
 

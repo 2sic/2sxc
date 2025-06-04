@@ -181,7 +181,7 @@ internal class AppApiControllerManager : IHasLog
     }
 
     private string GetAppCodePathFromWatcherFolders(IDictionary<string, bool> watcherFolders)
-        => watcherFolders.FirstOrDefault(x => x.Key.EndsWith(Constants.AppCode)).Key;
+        => watcherFolders.FirstOrDefault(x => x.Key.EndsWith(FolderConstants.AppCode)).Key;
 
     private bool AddController(Assembly assembly, string dllName = null)
     {
