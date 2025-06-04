@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.Internal;
+﻿using ToSic.Eav.Data.ContentTypes.Sys;
 using ToSic.Eav.Data.Raw;
 
 namespace ToSic.Sxc.Cms.Assets.Internal;

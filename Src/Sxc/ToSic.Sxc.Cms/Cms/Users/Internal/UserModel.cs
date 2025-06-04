@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Data.Build;
-using ToSic.Eav.Data.Internal;
+using ToSic.Eav.Data.ContentTypes.Sys;
 using ToSic.Eav.Data.Raw;
 using ToSic.Lib.Data;
 

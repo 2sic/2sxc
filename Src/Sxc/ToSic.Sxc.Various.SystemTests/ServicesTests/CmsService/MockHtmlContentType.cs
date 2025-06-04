@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.Internal;
+﻿using ToSic.Eav.Data.ContentTypes.Sys;
 
 namespace ToSic.Sxc.ServicesTests.CmsService;
 

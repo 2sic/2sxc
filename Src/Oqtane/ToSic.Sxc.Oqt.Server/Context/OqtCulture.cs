@@ -2,6 +2,7 @@
 using Oqtane.Infrastructure;
 using Oqtane.Repository;
 using ToSic.Eav.Cms.Internal.Languages;
+using ToSic.Eav.Data.Dimensions.Sys;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Oqt.Shared;
@@ -29,9 +30,9 @@ internal class OqtCulture(
 
     public string CurrentCultureCode => MapTwoLetterCulture(CultureInfo.CurrentCulture.Name).ToLowerInvariant();
 
-    public List<ISiteLanguageState> GetSupportedCultures(int siteId, List<Eav.Data.DimensionDefinition>  availableEavLanguages)
+    public List<ISiteLanguageState> GetSupportedCultures(int siteId, List<DimensionDefinition>  availableEavLanguages)
     {
-        var cultures = new List<string>(new[] { DefaultCultureCode });
+        var cultures = new List<string>([DefaultCultureCode]);
         cultures.AddRange(languageRepository.Value.GetLanguages(siteId).Select(language => MapTwoLetterCulture(language.Code)));
 
         // List of localizations enabled in Oqtane site.
