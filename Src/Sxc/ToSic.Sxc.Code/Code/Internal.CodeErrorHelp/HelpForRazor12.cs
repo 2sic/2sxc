@@ -116,6 +116,16 @@ public class HelpForRazor12
 
     #endregion
 
+        // Added in v20, but for everything - detect calls to APIs without using parameter names
+        new CodeHelp
+        {
+            Name = "Detect missing parameter names",
+            // Full error is something like: "error CS1503: Argument 2: cannot convert from 'string' to 'ToSic.Lib.Coding.NoParamOrder' at System.Web.Compilation.AssemblyBuilder.Compile()"
+            // It seems that the ' may be escaped, so we're really trying to just detect the bare minimum
+            Detect = @"ToSic.Lib.Coding.NoParamOrder",
+            UiMessage = "Your code seems to call an API which expects named parameters, and you didn't name them. See help.",
+            LinkCode = "https://go.2sxc.org/named-params",
+        },
 
         // .CreateSource(string) - Obsolete
         new CodeHelp
