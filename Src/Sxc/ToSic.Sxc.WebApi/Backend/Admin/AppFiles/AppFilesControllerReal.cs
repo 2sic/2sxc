@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps.Integration;
-using ToSic.Eav.Apps.Sys.Paths;
+﻿using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Code.Internal.HotBuild;

@@ -1,6 +1,6 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
-using ToSic.Eav.Integration.Environment;
+using ToSic.Eav.ImportExport.Integration;
 using ToSic.Sxc.Dnn.Search;
 
 namespace ToSic.Sxc.Dnn;

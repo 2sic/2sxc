@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Sys;
 using ToSic.Lib.DI;

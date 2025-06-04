@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Integration;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
 using ToSic.Lib.Logging;

@@ -7,7 +7,7 @@ using DotNetNuke.Common.Extensions;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Framework;
 using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Integration.Environment;
+using ToSic.Eav.ImportExport.Integration;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Dnn.Web;
