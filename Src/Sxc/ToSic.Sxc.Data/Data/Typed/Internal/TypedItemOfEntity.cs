@@ -11,9 +11,10 @@ using ToSic.Sxc.Data.Internal.Dynamic;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
 using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
-using static ToSic.Eav.Data.Shared.WrapperEquality;
+using static ToSic.Lib.Wrappers.WrapperEquality;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Data.Entities.Sys.Wrappers;
+using ToSic.Lib.Wrappers;
 using ToSic.Sxc.Cms.Data;
 
 namespace ToSic.Sxc.Data.Internal.Typed;

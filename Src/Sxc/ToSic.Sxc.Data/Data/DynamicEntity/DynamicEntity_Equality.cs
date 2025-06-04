@@ -3,6 +3,7 @@
 // If the underlying entity is the same
 
 using ToSic.Eav.Data.Entities.Sys.Wrappers;
+using ToSic.Lib.Wrappers;
 
 namespace ToSic.Sxc.Data;
 

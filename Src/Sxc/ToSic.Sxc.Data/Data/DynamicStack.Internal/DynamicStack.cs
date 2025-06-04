@@ -2,6 +2,7 @@
 using System.Dynamic;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Data;
+using ToSic.Lib.Wrappers;
 using ToSic.Sxc.Data.Internal.Dynamic;
 
 namespace ToSic.Sxc.Data.Internal.Stack;
