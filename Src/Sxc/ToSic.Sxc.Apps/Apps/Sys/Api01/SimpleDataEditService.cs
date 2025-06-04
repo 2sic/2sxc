@@ -130,24 +130,24 @@ public partial class SimpleDataEditService(
         // also ensure its case-insensitive...
         values = values.ToInvIgnoreCaseCopy();
 
-        if (!values.ContainsKey(Attributes.EntityFieldGuid))
+        if (!values.ContainsKey(AttributeNames.EntityFieldGuid))
         {
             l.A("Add new generated guid, as none was provided.");
-            values.Add(Attributes.EntityFieldGuid, Guid.NewGuid());
+            values.Add(AttributeNames.EntityFieldGuid, Guid.NewGuid());
         }
 
         // Get owner form value dictionary (and remove it from attributes) because we need to provided it in entity constructor.
         string owner = null;
-        if (values.ContainsKey(Attributes.EntityFieldOwner))
+        if (values.ContainsKey(AttributeNames.EntityFieldOwner))
         {
             l.A("Get owner, when is provided.");
-            owner = values[Attributes.EntityFieldOwner].ToString();
-            values.Remove(Attributes.EntityFieldOwner);
+            owner = values[AttributeNames.EntityFieldOwner].ToString();
+            values.Remove(AttributeNames.EntityFieldOwner);
         }
 
         // Find Guid from fields - a bit unclear why it's guaranteed to be here, probably was force-added before...
         // A clearer implementation would be better
-        var eGuid = Guid.Parse(values[Attributes.EntityFieldGuid].ToString());
+        var eGuid = Guid.Parse(values[AttributeNames.EntityFieldGuid].ToString());
 
         // Figure out publishing before converting to IAttribute
         var publishing = DetectPublishingOrError(type, values, existingIsPublished);

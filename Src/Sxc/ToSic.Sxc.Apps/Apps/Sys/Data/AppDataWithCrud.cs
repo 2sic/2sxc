@@ -54,8 +54,8 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
     private static void ProvideOwnerInValues(IDictionary<string, object> values, string userIdentityToken)
     {
         // userIdentityToken is not simple 'userName' string, but 2sxc user IdentityToken structure (like 'dnn:user=N')
-        if (values.ContainsKey(Attributes.EntityFieldOwner)) return;
-        values.Add(Attributes.EntityFieldOwner, userIdentityToken);
+        if (values.ContainsKey(AttributeNames.EntityFieldOwner)) return;
+        values.Add(AttributeNames.EntityFieldOwner, userIdentityToken);
     }
 
     /// <inheritdoc />

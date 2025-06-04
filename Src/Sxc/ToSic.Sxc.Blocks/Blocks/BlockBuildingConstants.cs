@@ -5,7 +5,7 @@ public class BlockBuildingConstants
 {
     public const string InputTypeForContentBlocksField = "entity-content-blocks";
     internal const string CbPropertyApp = "App";
-    internal const string CbPropertyTitle = Attributes.TitleNiceName;
+    internal const string CbPropertyTitle = AttributeNames.TitleNiceName;
     internal const string CbPropertyContentGroup = "ContentGroup";
 
     #region Error Messages

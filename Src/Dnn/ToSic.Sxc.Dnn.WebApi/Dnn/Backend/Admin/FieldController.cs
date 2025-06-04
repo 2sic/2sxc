@@ -39,7 +39,7 @@ public class FieldController() : DnnSxcControllerBase(RealController.LogSuffix),
 
     /// <inheritdoc />
     [HttpGet]
-    public Dictionary<string, string> ReservedNames() => Attributes.ReservedNames;
+    public Dictionary<string, string> ReservedNames() => AttributeNames.ReservedNames;
         
     /// <summary>
     /// Used to be GET ContentType/AddField

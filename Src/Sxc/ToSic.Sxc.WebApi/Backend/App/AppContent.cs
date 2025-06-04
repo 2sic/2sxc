@@ -121,8 +121,8 @@ public class AppContent(
             .ToInvariant();
 
         // add owner
-        if (!cleanedNewItem.ContainsKey(Attributes.EntityFieldOwner))
-            cleanedNewItem.Add(Attributes.EntityFieldOwner, Context.User.IdentityToken);
+        if (!cleanedNewItem.ContainsKey(AttributeNames.EntityFieldOwner))
+            cleanedNewItem.Add(AttributeNames.EntityFieldOwner, Context.User.IdentityToken);
 
         var dataController = DataController(AppReader);
         if (id == null)
@@ -182,21 +182,21 @@ public class AppContent(
     private Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive)
     {
         var l = Log.Fn<Target>($"count: {newContentItemCaseInsensitive.Count}");
-        if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyMetadataFor))
-            return l.ReturnNull($"'{Attributes.JsonKeyMetadataFor}' key is missing");
+        if (!newContentItemCaseInsensitive.Keys.Contains(AttributeNames.JsonKeyMetadataFor))
+            return l.ReturnNull($"'{AttributeNames.JsonKeyMetadataFor}' key is missing");
 
-        var objectOrNull = newContentItemCaseInsensitive[Attributes.JsonKeyMetadataFor];
+        var objectOrNull = newContentItemCaseInsensitive[AttributeNames.JsonKeyMetadataFor];
         if (objectOrNull == null) 
-            return l.ReturnNull($"'{Attributes.JsonKeyMetadataFor}' value is null");
+            return l.ReturnNull($"'{AttributeNames.JsonKeyMetadataFor}' value is null");
 
         if (objectOrNull is not JsonObject metadataFor)
-            return l.ReturnNull($"'{Attributes.JsonKeyMetadataFor}' value is not JsonObject");
+            return l.ReturnNull($"'{AttributeNames.JsonKeyMetadataFor}' value is not JsonObject");
 
-        var metaData = new Target(GetTargetType(metadataFor[Attributes.TargetNiceName]?.AsValue()), null,
+        var metaData = new Target(GetTargetType(metadataFor[AttributeNames.TargetNiceName]?.AsValue()), null,
             
-            keyGuid: (Guid?)metadataFor[Attributes.GuidNiceName],
-            keyNumber: (int?)metadataFor[Attributes.NumberNiceName],
-            keyString: (string)metadataFor[Attributes.StringNiceName]
+            keyGuid: (Guid?)metadataFor[AttributeNames.GuidNiceName],
+            keyNumber: (int?)metadataFor[AttributeNames.NumberNiceName],
+            keyString: (string)metadataFor[AttributeNames.StringNiceName]
         );
         return l.Return(metaData, $"new metadata g:{metaData.KeyGuid},n:{metaData.KeyNumber},s:{metaData.KeyString}");
 
@@ -208,7 +208,7 @@ public class AppContent(
             JsonValueKind.Number => (int)target,
             JsonValueKind.String when Enum.TryParse<TargetTypes>((string)target, out var targetTypes) =>
                 (int)targetTypes,
-            _ => throw new ArgumentOutOfRangeException(Attributes.TargetNiceName,
+            _ => throw new ArgumentOutOfRangeException(AttributeNames.TargetNiceName,
                 "Value is not 'int' or TargetTypes 'string'.")
         };
 

@@ -218,7 +218,7 @@ public class DnnUserProfileDataRaw : IRawEntity
     [PrivateApi]
     public IDictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>(Properties)
     {
-        { Eav.Data.Attributes.TitleNiceName, Name },
+        { Eav.Data.AttributeNames.TitleNiceName, Name },
         { nameof(Name), Name },
     };
 
