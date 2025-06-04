@@ -1,5 +1,7 @@
 ﻿using System.Web.Hosting;
+using System.Xml.Linq;
 using ToSic.Lib;
+using ToSic.Razor.Html5;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Internal.Wrapper;
@@ -75,9 +77,12 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
     {
         // ReSharper disable once ConvertTypeCheckToNullCheck
         if (Page is not IHasDnn)
-            throw new ExceptionWithHelp(new CodeHelp(name: "create-instance-cshtml-only-in-old-code",
-                detect: null,
-                uiMessage: "CreateInstance(*.cshtml) is not supported in Hybrid Razor. Use .cs files instead."));
+            throw new ExceptionWithHelp(new CodeHelp
+            {
+                Name = "create-instance-cshtml-only-in-old-code",
+                Detect = null,
+                UiMessage = "CreateInstance(*.cshtml) is not supported in Hybrid Razor. Use .cs files instead."
+            });
         var pageAsCode = WebPageBase.CreateInstanceFromVirtualPath(path);
         var pageAsRcb = pageAsCode as RazorComponentBase;
         pageAsRcb?.RzrHlp.ConfigurePage(Page, pageAsRcb.VirtualPath);

@@ -67,8 +67,13 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
 
         // Throw Exception if Template does not exist
         if (!File.Exists(Services.ServerPaths.FullAppPath(templatePath)))
-            throw new RenderingException(new(name: "Template File Not Found", detect: "",
-                linkCode: "err-template-not-found", uiMessage: $"The template file '{templatePath}' does not exist."));
+            throw new RenderingException(new()
+            {
+                Name = "Template File Not Found",
+                Detect = "",
+                LinkCode = "err-template-not-found",
+                UiMessage = $"The template file '{templatePath}' does not exist.",
+            });
 
         // check common errors
         Services.EngineCheckTemplate.CheckExpectedTemplateErrors(view, appState);

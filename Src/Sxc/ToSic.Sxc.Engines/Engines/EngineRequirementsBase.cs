@@ -12,8 +12,12 @@ public abstract class EngineRequirementsBase(string logName, object[] connect = 
     protected static RenderEngineResult BuildRenderEngineResult(List<RequirementStatus> reqStatus)
     {
         var exList2 = reqStatus
-            .Select(r => new RenderingException(
-                new(ErrHelpRequirementsNotMet, name: r.Aspect.Name, uiMessage: $"Requirement <em>{r.Aspect.Name}</em> is missing ({r.Aspect.NameId})", linkCode: "sysfeats")))
+            .Select(r => new RenderingException(ErrHelpRequirementsNotMet with
+                {
+                    Name = r.Aspect.Name,
+                    UiMessage = $"Requirement <em>{r.Aspect.Name}</em> is missing ({r.Aspect.NameId})",
+                    LinkCode = "sysfeats",
+                }))
             .Cast<Exception>()
             .ToList();
 
@@ -50,9 +54,11 @@ public abstract class EngineRequirementsBase(string logName, object[] connect = 
         return result;
     }
 
-    private static readonly CodeHelp ErrHelpRequirementsNotMet = new(
-        name: "Requirement Not Met",
-        detect: "",
-        linkCode: "err-view-config-missing",
-        uiMessage: "Important Requirements not Met");
+    private static readonly CodeHelp ErrHelpRequirementsNotMet = new()
+    {
+        Name = "Requirement Not Met",
+        Detect = "",
+        LinkCode = "err-view-config-missing",
+        UiMessage = "Important Requirements not Met"
+    };
 }

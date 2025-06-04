@@ -78,7 +78,12 @@ public static class TypedHelpers
             catch { /* ignore */ }
         }
 
-        var html = $@"<div>
+        var help = new CodeHelp
+        {
+            Name = "get-help",
+            Detect = name,
+            UiMessage = null,
+            DetailsHtml = $@"<div>
 <em>You tried to use {cName}(""{name}"") which failed. Here is more info about the object:</em>
 <br>
 Content-Type: <strong>{typeName ?? unknown}</strong>
@@ -95,8 +100,8 @@ Item Id: <strong>{id ?? unknown}</strong>
     {string.Join("</li><li>", keys)}
     </li>
 </ol>")}
-</div>";
-        var help = new CodeHelp("get-help", name, uiMessage: null, detailsHtml: html);
+</div>",
+        };
         return ErrStrict(name, help, cName);
     }
 

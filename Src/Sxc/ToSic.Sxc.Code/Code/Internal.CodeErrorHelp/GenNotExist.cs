@@ -1,4 +1,5 @@
 ﻿
+using ToSic.Razor.Html5;
 using ToSic.Sys.Code.Help;
 using ToSic.Sys.Utils;
 
@@ -23,21 +24,23 @@ internal class GenNotExist(string name, (string Code, string Comment)[] alt)
     public virtual CodeHelp Generate()
     {
         var recHtml = HtmlRecommendations();
-        return new(name: $"Object-{Name}-DoesNotExist",
-            detect: $"error CS0103: The name '{Name}' does not exist in the current context",
-            linkCode: LinkCode,
-            uiMessage: $@"
+        return new()
+        {
+            Name = $"Object-{Name}-DoesNotExist",
+            Detect = $"error CS0103: The name '{Name}' does not exist in the current context",
+            LinkCode = LinkCode,
+            UiMessage = $@"
 You are calling the '{Name}' object which {MsgNotSupportedIn}. {Comments}
 You should probably use '{Alt[0].Code}' {Alt[0].Comment}
 ",
-            detailsHtml: $@"
+            DetailsHtml = $@"
 You are probably calling <code>{Name}</code>.
 {(Comments.HasValue() ? $"<br><em>{Comments}</em><br>" : "")}
 The property <code>{Name}</code> {MsgNotSupportedIn}. 
 Probably better: 
 {recHtml}
 "
-        );
+        };
     }
 
     /// <summary>

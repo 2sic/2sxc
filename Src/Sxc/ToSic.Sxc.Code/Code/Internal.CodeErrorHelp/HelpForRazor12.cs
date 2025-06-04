@@ -1,4 +1,6 @@
-﻿using ToSic.Sys.Code.Help;
+﻿using System.Xml.Linq;
+using ToSic.Razor.Html5;
+using ToSic.Sys.Code.Help;
 using static ToSic.Sxc.Code.Internal.CodeErrorHelp.CodeHelpBuilder;
 
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
@@ -25,10 +27,14 @@ public class HelpForRazor12
         // Access .List
         BuildVariations(
             HelpNotExists12("List", "AsDynamic(Data)"),
-            h => new(h, detect: "does not contain a definition for 'List'"),
-            h => new(h,
-                detect:
-                @"error CS0305: Using the generic type 'System.Collections.Generic.List<T>' requires 1 type arguments")
+            h => h with
+            {
+                Detect = "does not contain a definition for 'List'",
+            },
+            h => h with 
+            {
+                Detect = @"error CS0305: Using the generic type 'System.Collections.Generic.List<T>' requires 1 type arguments",
+            }
         ),
 
         // Access .ListContent
@@ -41,54 +47,60 @@ public class HelpForRazor12
         // Use Dnn
         DnnObjectNotInHybrid,
 
+    #region New v20 warnings
+
         // New v20 - detect use of using ToSic.Eav.Interfaces
-        new CodeHelp(name: "", detect: "")
+        new CodeHelp
         {
             Name = "Using-ToSic.Eav.Interfaces",
             Detect = @"error CS0234: The type or namespace name 'Interfaces' does not exist in the namespace 'ToSic.Eav' (are you missing an assembly reference?)",
-            DetectRegex = false,
             UiMessage = "You are probably using the old namespace ToSic.Eav.Interfaces, which is not supported since v20. Replace \"ToSic.Eav.Interfaces\" with \"ToSic.Eav.Data\" in your code.",
         },
-        new CodeHelp(name: "", detect: "")
+        new CodeHelp
         {
             Name = "Using-ToSic.SexyContent.Interfaces",
             Detect = @"error CS0234: The type or namespace name 'Interfaces' does not exist in the namespace 'ToSic.SexyContent' (are you missing an assembly reference?)",
-            DetectRegex = false,
             UiMessage = "You are probably using the old namespace ToSic.SexyContent.Interfaces, which is not supported since v20. Please remove/replace according to upgrade guide TODO!.",
         },
 
         // New v20 - detect usage of `IEntity` without the namespace 
-        new CodeHelp(
-            name: "IEntity-Without-Namespace",
-            detect: ""
-            //detect: @"error CS0246: The type or namespace name 'IEntity' could not be found (are you missing a using directive or an assembly reference?)",
-            //detectRegex: false,
-            //uiMessage: "You are probably using IEntity in your code, but missing the @using ToSic.Eav.Data"
-            )
+        new CodeHelp
         {
             Name = "IEntity-Without-Namespace",
             Detect = @"error CS0246: The type or namespace name 'IEntity' could not be found (are you missing a using directive or an assembly reference?)",
-            DetectRegex = false,
             UiMessage = "You are probably using IEntity in your code, but missing the @using ToSic.Eav.Data",
         },
 
+        // New v20 - detect usage of `IEntityLight` - but not clear why it could think it exists, since it shouldn't - but in my tests it tried...
+        new CodeHelp
+        {
+            Name = "Detect Convert to IEntityLight",
+            // Full error is something like "Unable to cast object of type 'ToSic.Eav.Data.Entity' to type 'ToSic.Eav.Data.IEntityLight'."
+            Detect = @"to type 'ToSic.Eav.Data.IEntityLight'",
+            UiMessage = "Your code seems to use an old interface IEntityLight. Best just use ToSic.Eav.Data.IEntity.",
+        },
+
+    #endregion
+
+
         // .CreateSource(string) - Obsolete
-        new CodeHelp(name: "CreateSource-String-Obsolete",
-            detect:
-            @"error CS0411: The type arguments for method .*\.CreateSource.*cannot be inferred from the usage",
-            detectRegex: true,
-            linkCode:
-            "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.Services.IDataService.html#ToSic_Sxc_Services_IDataService_GetSource_",
-            uiMessage: $@"
+        new CodeHelp
+        {
+            Name = "CreateSource-String-Obsolete",
+            Detect = @"error CS0411: The type arguments for method .*\.CreateSource.*cannot be inferred from the usage",
+            DetectRegex = true,
+            LinkCode = "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.Services.IDataService.html#ToSic_Sxc_Services_IDataService_GetSource_",
+            UiMessage = $@"
 You are probably calling CreateSource(stringNameOfSource, ...) which {IsNotSupportedIn12Plus}. 
 ",
-            detailsHtml: $@"
+            DetailsHtml = $@"
 You are probably calling <code>CreateSource(stringNameOfSource, ...)</code> which {IsNotSupportedIn12Plus}. Use: 
 <ol>
     <li>Kit.Data.GetSource&lt;TypeName&gt;(...)</li>
     <li>Kit.Data.GetSource(appDataSourceName, ...)</li>
 </ol>
-")
+"
+        }
 
         // Not handled - can't because the AsDynamic accepts IEntity which works in Razor14
         // dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity)
@@ -110,18 +122,21 @@ You are probably calling <code>CreateSource(stringNameOfSource, ...)</code> whic
 
     #region Help which is used in various places
 
-    internal static CodeHelp DnnObjectNotInHybrid = new(name: "Object-Dnn-Not-In-Hybrid",
-        detect: @"error CS0118: 'Dnn' is a 'namespace' but is used like a 'variable'",
-        uiMessage: $@"
+    internal static CodeHelp DnnObjectNotInHybrid = new()
+    {
+        Name = "Object-Dnn-Not-In-Hybrid",
+        Detect = @"error CS0118: 'Dnn' is a 'namespace' but is used like a 'variable'",
+        UiMessage = $@"
 You are probably trying to use the 'Dnn' object which is not supported in 'Custom.Hybrid.Razor' templates. 
 ",
-        detailsHtml: $@"
+        DetailsHtml = $@"
 You are probably trying to use the <code>Dnn</code> object which is not supported in <code>Custom.Hybrid.Razor</code> templates. Use: 
 <ol>
     <li>Other APIs such as <code>CmsContext</code> to get page/module etc. information</li>
     <li>If really necessary (not recommended) use the standard Dnn APIs to get the necessary objects.</li>
 </ol>
-");
+"
+    };
     #endregion
 
 

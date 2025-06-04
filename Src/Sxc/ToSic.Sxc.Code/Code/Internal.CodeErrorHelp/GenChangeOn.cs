@@ -1,4 +1,5 @@
 ﻿
+using ToSic.Razor.Html5;
 using ToSic.Sys.Code.Help;
 using ToSic.Sys.Utils;
 
@@ -9,10 +10,8 @@ internal class GenChangeOn(string fullNamespace, string name, (string Code, stri
     : GenNotExist(name, alt)
 {
 
-    public GenChangeOn(string fullNamespace, string name, string alt) : this(fullNamespace, name, [(alt, null as string)
-    ])
-    {
-    }
+    public GenChangeOn(string fullNamespace, string name, string alt) : this(fullNamespace, name, [(alt, null)])
+    { }
 
     public readonly string FullNameSpace = fullNamespace;
     public string MsgWhichWasCommon;
@@ -24,20 +23,22 @@ internal class GenChangeOn(string fullNamespace, string name, (string Code, stri
 
     public override CodeHelp Generate()
     {
-        return new(name: $"{FullNameSpace}-{Name}-DoesNotExist",
-            detect: DetectTypeDoesNotContain(FullNameSpace, Name),
-            linkCode: LinkCode,
-            uiMessage: $@"
+        return new()
+        {
+            Name = $"{FullNameSpace}-{Name}-DoesNotExist",
+            Detect = DetectTypeDoesNotContain(FullNameSpace, Name),
+            LinkCode = LinkCode,
+            UiMessage = $@"
 You are calling the '{Name}' property {MsgWhichWasCommon}, but not available on {NotOn} (RazorTyped). {Comments}
 You should probably use '{Alt[0].Code}' {Alt[0].Comment}
 ",
-            detailsHtml: $@"
+            DetailsHtml = $@"
 You are probably calling <code>.{Name}</code>.
 {(Comments.HasValue() ? $"<br><em>{Comments}</em><br>" : "")}
 The property <code>.{Name}</code> is replaced with: 
 {HtmlRecommendations()}
 "
-        );
+        };
 
     }
 

@@ -29,11 +29,21 @@ public class EngineCheckTemplate(LazySvc<AppPermissionCheck> appPermCheckLazy)
             throw new RenderingException(ErrHelpTypeMissing);
     }
 
-    private static readonly CodeHelp ErrHelpConfigMissing = new(name: "Template Config missing", detect: "",
-        linkCode: "err-view-config-missing", uiMessage: "Template Configuration Missing");
+    private static readonly CodeHelp ErrHelpConfigMissing = new()
+    {
+        Name = "Template Config Missing",
+        Detect = "",
+        LinkCode = "err-view-config-missing",
+        UiMessage = "Template Configuration Missing",
+    };
 
-    private static readonly CodeHelp ErrHelpTypeMissing = new(name: "Content Type Missing", detect: "", linkCode: "err-view-type-missing",
-        uiMessage: "The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
+    private static readonly CodeHelp ErrHelpTypeMissing = new()
+    {
+        Name = "Content Type Missing",
+        Detect = "",
+        LinkCode = "err-view-type-missing",
+        UiMessage = "The contents of this module cannot be displayed because I couldn't find the assigned content-type.",
+    };
 
 
 
@@ -54,7 +64,11 @@ public class EngineCheckTemplate(LazySvc<AppPermissionCheck> appPermCheckLazy)
                 $"{ErrorHelpNotAuthorized.UiMessage} See {ErrorHelpNotAuthorized.LinkCode}"));
     }
 
-    private static readonly CodeHelp ErrorHelpNotAuthorized = new(name: "Not authorized", detect: "",
-        linkCode: "http://2sxc.org/help?tag=view-permissions",
-        uiMessage: "This view is not accessible for the current user. To give access, change permissions in the view settings.");
+    private static readonly CodeHelp ErrorHelpNotAuthorized = new()
+    {
+        Name = "Not Authorized",
+        Detect = "",
+        LinkCode = "https://2sxc.org/help?tag=view-permissions",
+        UiMessage = "This view is not accessible for the current user. To give access, change permissions in the view settings.",
+    };
 }
