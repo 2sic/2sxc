@@ -5,6 +5,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
+using ToSic.Eav.Data.Sys;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
@@ -218,7 +219,7 @@ public class DnnUserProfileDataRaw : IRawEntity
     [PrivateApi]
     public IDictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>(Properties)
     {
-        { Eav.Data.AttributeNames.TitleNiceName, Name },
+        { AttributeNames.TitleNiceName, Name },
         { nameof(Name), Name },
     };
 
