@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Internal.Insights;
+﻿using ToSic.Eav.Sys.Insights;
 using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Backend.Sys;

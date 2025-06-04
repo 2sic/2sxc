@@ -1,4 +1,4 @@
-﻿using RealController = ToSic.Eav.WebApi.Sys.Insights.InsightsControllerReal;
+﻿using RealController = ToSic.Eav.Sys.Insights.InsightsControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Sys;
 

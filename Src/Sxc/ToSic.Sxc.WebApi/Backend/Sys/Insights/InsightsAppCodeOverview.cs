@@ -1,7 +1,7 @@
-﻿using ToSic.Eav.Apps.Internal.Insights;
-using ToSic.Eav.Apps.Sys.State;
+﻿using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Sys;
-using ToSic.Eav.WebApi.Sys.Insights;
+using ToSic.Eav.Sys.Insights;
+using ToSic.Eav.Sys.Insights.HtmlHelpers;
 
 namespace ToSic.Sxc.Backend.Sys;
 

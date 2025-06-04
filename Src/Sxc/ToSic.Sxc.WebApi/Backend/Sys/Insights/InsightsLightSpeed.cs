@@ -1,6 +1,6 @@
-﻿using ToSic.Eav.Apps.Internal.Insights;
-using ToSic.Eav.Sys;
-using ToSic.Eav.WebApi.Sys.Insights;
+﻿using ToSic.Eav.Sys;
+using ToSic.Eav.Sys.Insights;
+using ToSic.Eav.Sys.Insights.HtmlHelpers;
 using ToSic.Sxc.Web.Internal.LightSpeed;
 using ToSic.Sys.Utils;
 using static ToSic.Razor.Blade.Tag;
