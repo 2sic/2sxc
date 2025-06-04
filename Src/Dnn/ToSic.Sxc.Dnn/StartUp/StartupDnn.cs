@@ -12,6 +12,7 @@ using ToSic.Sxc.Images.Internal;
 using ToSic.Sys.Boot;
 using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Configuration;
+using ToSic.Sys.Security.Encryption;
 
 namespace ToSic.Sxc.Dnn.StartUp;
 
@@ -65,7 +66,7 @@ public class StartupDnn : IServiceRouteMapper
         globalConfig.AssetsVirtualUrl(DnnConstants.SysFolderRootVirtual + "assets/");
         globalConfig.SharedAppsFolder("~/Portals/_default/" + AppConstants.AppsRootFolder + "/");
         globalConfig.TempAssemblyFolder(HostingEnvironment.MapPath($"~/{Eav.FolderConstants.AppDataProtectedFolder}/{Eav.FolderConstants.TempAssemblyFolder}/")); // ".../App_Data/2sxc.bin"
-        globalConfig.CryptoFolder(HostingEnvironment.MapPath($"~/{Eav.FolderConstants.AppDataProtectedFolder}/{Eav.FolderConstants.CryptoFolder}/"));
+        globalConfig.CryptoFolder(HostingEnvironment.MapPath($"~/{Eav.FolderConstants.AppDataProtectedFolder}/{Eav.FolderConstants.CryptoFolder}/")!);
 
         var sxcSysLoader = transientSp.Build<BootCoordinator>();
         sxcSysLoader.StartUp();

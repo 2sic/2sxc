@@ -4,10 +4,10 @@ using DotNetNuke.Framework;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Helpers;
-using ToSic.Eav.Security.Encryption;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Web.Internal.JsContext;
+using ToSic.Sys.Security.Encryption;
 
 namespace ToSic.Sxc.Dnn.Web;
 

@@ -3,7 +3,6 @@ using ToSic.Eav.Metadata;
 using ToSic.Razor.Blade;
 using IEntity = ToSic.Eav.Data.IEntity;
 using System.Dynamic;
-using ToSic.Lib.GetByName;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Data.Internal.Dynamic;

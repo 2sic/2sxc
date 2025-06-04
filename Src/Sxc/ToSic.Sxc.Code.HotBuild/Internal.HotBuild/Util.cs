@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Text.RegularExpressions;
-using ToSic.Eav.Internal.Configuration;
 using ToSic.Eav.Sys.Configuration;
 using ToSic.Sys.Configuration;
 

@@ -8,7 +8,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using ToSic.Eav.Security.Encryption;
+using ToSic.Sys.Security.Encryption;
 using JsonOptions = ToSic.Eav.Serialization.JsonOptions;
 
 namespace ToSic.Sxc.WebApi;

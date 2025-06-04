@@ -9,8 +9,8 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dependencies;
 using System.Web.Http.Filters;
-using ToSic.Eav.Security.Encryption;
 using ToSic.Eav.Serialization;
+using ToSic.Sys.Security.Encryption;
 
 namespace ToSic.Sxc.WebApi;
 

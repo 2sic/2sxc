@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Dynamic;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Lib.GetByName;
 using ToSic.Sxc.Data.Internal.Convert;
 using ToSic.Sxc.Data.Internal.Wrapper;
 

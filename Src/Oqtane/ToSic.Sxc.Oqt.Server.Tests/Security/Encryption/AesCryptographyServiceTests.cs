@@ -1,5 +1,5 @@
 ﻿
-using ToSic.Eav.Security.Encryption;
+using ToSic.Sys.Security.Encryption;
 
 namespace ToSic.Sxc.Oqt.Security.Encryption;
 

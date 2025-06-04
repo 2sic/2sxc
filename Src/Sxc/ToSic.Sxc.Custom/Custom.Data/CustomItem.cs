@@ -1,6 +1,5 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Lib.GetByName;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
@@ -11,6 +10,7 @@ using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Models;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
+using ToSic.Sys.GetByName;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Data;

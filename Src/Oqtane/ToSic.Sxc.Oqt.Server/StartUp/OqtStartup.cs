@@ -35,6 +35,7 @@ using ToSic.Sxc.Services;
 using ToSic.Sxc.Startup;
 using ToSic.Sys.Boot;
 using ToSic.Sys.Configuration;
+using ToSic.Sys.Security.Encryption;
 using static ToSic.Sxc.Oqt.Server.StartUp.OqtStartupHelper;
 using static ToSic.Sxc.Oqt.Server.WebApi.OqtWebApiConstants;
 using Constants = Oqtane.Shared.Constants;

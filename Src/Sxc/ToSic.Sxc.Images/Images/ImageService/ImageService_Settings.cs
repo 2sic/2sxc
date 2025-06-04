@@ -1,6 +1,4 @@
-﻿
-using ToSic.Lib.GetByName;
-using ToSic.Sys.Utils;
+﻿using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Images;
 
