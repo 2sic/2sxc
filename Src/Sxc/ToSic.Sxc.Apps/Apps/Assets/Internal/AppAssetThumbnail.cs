@@ -4,7 +4,7 @@ using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.Helpers;
 using ToSic.Sys.Caching.PiggyBack;
-using static ToSic.Eav.Apps.Internal.AppConstants;
+using static ToSic.Eav.Apps.Sys.AppConstants;
 
 namespace ToSic.Sxc.Apps.Internal.Assets;
 

@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Catalog;
 using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.Catalog;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Metadata.Sys;
 using ToSic.Sys.Utils;

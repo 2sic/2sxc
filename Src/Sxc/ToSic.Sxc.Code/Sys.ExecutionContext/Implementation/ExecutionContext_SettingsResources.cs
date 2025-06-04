@@ -1,8 +1,8 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Services;
+using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
-using static ToSic.Eav.Apps.AppStackConstants;
+using static ToSic.Eav.Apps.Sys.AppStack.AppStackConstants;
 using SettingsSources = System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, ToSic.Eav.Data.Sys.IPropertyLookup>>;
 
 namespace ToSic.Sxc.Code.Internal;

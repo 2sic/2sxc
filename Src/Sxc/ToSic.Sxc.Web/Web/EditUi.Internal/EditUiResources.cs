@@ -1,11 +1,11 @@
-﻿using ToSic.Eav.Apps.Services;
+﻿using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Eav.Integration;
 
 using ToSic.Lib.Services;
 using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Utils;
-using static ToSic.Eav.Apps.AppStackConstants;
+using static ToSic.Eav.Apps.Sys.AppStack.AppStackConstants;
 using static ToSic.Sxc.Web.WebResources.WebResourceConstants;
 
 namespace ToSic.Sxc.Web.Internal.EditUi;

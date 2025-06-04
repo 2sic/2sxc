@@ -3,7 +3,7 @@ using ToSic.Eav.Data.ValueConverter.Sys;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Sxc.Blocks.Internal;
 using static System.StringComparison;
-using static ToSic.Eav.Apps.Internal.AppConstants;
+using static ToSic.Eav.Apps.Sys.AppConstants;
 
 namespace ToSic.Sxc.Apps.Internal;
 

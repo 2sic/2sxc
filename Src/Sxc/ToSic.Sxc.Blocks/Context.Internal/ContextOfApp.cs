@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Services;
+using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Eav.Cms.Internal.Languages;
 using ToSic.Eav.Data.PropertyStack.Sys;
 using ToSic.Eav.Security;
@@ -9,7 +10,7 @@ using ToSic.Lib.Services;
 using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Users.Permissions;
-using static ToSic.Eav.Apps.AppStackConstants;
+using static ToSic.Eav.Apps.Sys.AppStack.AppStackConstants;
 
 
 namespace ToSic.Eav.Context.Internal;
