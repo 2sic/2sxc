@@ -34,7 +34,7 @@ public class InstallController()
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken] // Now with RVT as it's post now. Previously not, because this was a GET and could not include the RVT
-    public HttpResponseMessage RemotePackage(string packageUrl)
+    public HttpResponseMessage RemotePackage(string packageUrl, string? newName = null)
     {
         SysHlp.PreventServerTimeout300();
         // Make sure the Scoped ResponseMaker has this controller context
