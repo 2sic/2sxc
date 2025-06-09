@@ -148,7 +148,8 @@ public class ImportContent(
                 foreach (var package in packages)
                 {
                     l.A($"import entities from package: {package.Key}");
-                    if (package.Value.Bundles.SafeNone()) continue;
+                    if (package.Value.Bundles.SafeNone())
+                        continue;
                     // bundle json
                     var entitiesFromBundles = serializer.GetEntitiesFromBundles(package.Value, relationships.Source);
                     l.A($"entities from bundles: {entitiesFromBundles.Count}");

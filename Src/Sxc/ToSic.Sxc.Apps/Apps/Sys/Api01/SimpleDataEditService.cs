@@ -262,7 +262,7 @@ public partial class SimpleDataEditService(
 
 
     private IDictionary<string, IAttribute> BuildNewEntityValues(
-        IContentType contentType, IImmutableDictionary<string, IAttribute> attributes, string valuesLanguage)
+        IContentType contentType, IReadOnlyDictionary<string, IAttribute> attributes, string valuesLanguage)
     {
         var l = Log.Fn<IDictionary<string, IAttribute>>($"..., ..., attributes: {attributes?.Count}, {valuesLanguage}");
         if (attributes.SafeNone())

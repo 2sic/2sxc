@@ -270,6 +270,7 @@ Global
 		{D4250011-B9BE-4326-9736-4F0122C79802}.Testing|Any CPU.Build.0 = Debug|Any CPU
 		{6735DC37-2849-45DB-BA76-C5663B6FFB1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6735DC37-2849-45DB-BA76-C5663B6FFB1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6735DC37-2849-45DB-BA76-C5663B6FFB1F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6735DC37-2849-45DB-BA76-C5663B6FFB1F}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
 		{A94DE6D7-D1E6-4BE2-B5B5-DC4A6A61CD80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A94DE6D7-D1E6-4BE2-B5B5-DC4A6A61CD80}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -421,6 +422,7 @@ Global
 		{E221C1FB-CA6B-4B80-81BE-130F73D878AB}.Testing|Any CPU.Build.0 = Debug|Any CPU
 		{233738E3-515C-4EAD-BA80-D649BEF43255}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{233738E3-515C-4EAD-BA80-D649BEF43255}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{233738E3-515C-4EAD-BA80-D649BEF43255}.Release|Any CPU.Build.0 = Release|Any CPU
 		{233738E3-515C-4EAD-BA80-D649BEF43255}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
 		{233738E3-515C-4EAD-BA80-D649BEF43255}.Testing|Any CPU.Build.0 = Debug|Any CPU
 		{F62B6E09-D2AD-2612-3005-0B117312B8FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -829,7 +831,7 @@ Global
 		{F036E03A-2A87-FC19-74E3-CCB015E2D619} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
 		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
 	EndGlobalSection
 EndGlobal
