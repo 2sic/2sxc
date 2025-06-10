@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.DI;
-using ToSic.Lib.Services;
+﻿using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Blocks.Internal;
 

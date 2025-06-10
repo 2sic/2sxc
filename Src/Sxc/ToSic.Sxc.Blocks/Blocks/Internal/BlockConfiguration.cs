@@ -2,7 +2,6 @@
 using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Data.EntityBased.Sys;
 using ToSic.Eav.DataSource.Internal.Query;
-using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Blocks.Internal;
 

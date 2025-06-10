@@ -5,7 +5,6 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks.Internal;
 #if NETFRAMEWORK
 using ToSic.Eav.Apps;
-using ToSic.Lib.DI;
 using CodeInfoService = ToSic.Sys.Code.InfoSystem.CodeInfoService;
 #endif
 

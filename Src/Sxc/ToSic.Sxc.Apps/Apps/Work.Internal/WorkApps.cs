@@ -6,7 +6,6 @@ using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Sxc.Apps.Internal.Assets;
-using ToSic.Sys.Performance;
 
 namespace ToSic.Sxc.Apps.Internal.Work;
 

@@ -1,6 +1,5 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
-using System.Collections.Immutable;
 using System.Text.RegularExpressions;
 using System.Web;
 using ToSic.Eav.Apps.Sys;
@@ -25,7 +24,6 @@ using ToSic.Sxc.Internal;
 using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Sys.ExecutionContext;
-using ToSic.Sys.Performance;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Dnn.Search;

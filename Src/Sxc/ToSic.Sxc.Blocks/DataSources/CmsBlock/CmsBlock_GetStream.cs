@@ -3,7 +3,6 @@ using ToSic.Eav.Data.Entities.Sys.Lists;
 using ToSic.Eav.DataSource;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
-using ToSic.Sys.Performance;
 using static ToSic.Eav.DataSource.DataSourceConstants;
 
 namespace ToSic.Sxc.DataSources;

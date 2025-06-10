@@ -4,9 +4,7 @@ using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Eav.Data.Entities.Sys.Lists;
 using ToSic.Eav.DataSource.Internal.Query;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sys.Performance;
 
 namespace ToSic.Sxc.Apps.Internal.Work;
 

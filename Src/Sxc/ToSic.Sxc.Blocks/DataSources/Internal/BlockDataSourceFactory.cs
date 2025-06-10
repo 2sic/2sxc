@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.Services;
-using ToSic.Lib.DI;
 using ToSic.Lib.LookUp.Engines;
 using ToSic.Sxc.Blocks.Internal;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
