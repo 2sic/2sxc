@@ -25,6 +25,7 @@ using ToSic.Sxc.Internal;
 using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Performance;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Dnn.Search;
@@ -234,12 +235,11 @@ internal class SearchController(
         var searchInfoDictionary = new Dictionary<string, List<ISearchItem>>();
         foreach (var stream in streamsToIndex)
         {
-            var entities = stream.Value.List.ToImmutableList();
+            var entities = stream.Value.List.ToListOpt();
             var searchInfoList = searchInfoDictionary[stream.Key] = [];
 
-            searchInfoList.AddRange(entities.Select(entity =>
-            {
-                var searchInfo = new SearchItem
+            var additions = entities
+                .Select(entity => new SearchItem
                 {
                     Entity = entity,
                     Url = "",
@@ -255,10 +255,10 @@ internal class SearchController(
                     IsActive = true,
                     TabId = dnnModule.TabID,
                     PortalId = dnnModule.PortalID
-                };
+                })
+                .ToListOpt();
 
-                return searchInfo;
-            }));
+            searchInfoList.AddRange(additions);
         }
 
         return l.Return(searchInfoDictionary, $"{searchInfoDictionary.Count}");

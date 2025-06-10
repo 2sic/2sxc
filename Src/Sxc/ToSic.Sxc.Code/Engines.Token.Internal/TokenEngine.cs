@@ -14,6 +14,7 @@ using ToSic.Sxc.Internal;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.LookUp.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Performance;
 using ToSic.Sys.Utils.Culture;
 
 // ReSharper disable once CheckNamespace
@@ -157,7 +158,7 @@ public class TokenEngine(
         if (!DataSource.Out.ContainsKey(streamName))
             throw new ArgumentException("Was not able to implement REPEAT because I could not find Data:" + streamName + ". Please check spelling the pipeline delivering data to this template.");
 
-        var dataItems = DataSource[streamName].List.ToImmutableList();
+        var dataItems = DataSource[streamName].List.ToImmutableOpt();
         var itemsCount = dataItems.Count;
         for (var i = 0; i < itemsCount; i++)
         {

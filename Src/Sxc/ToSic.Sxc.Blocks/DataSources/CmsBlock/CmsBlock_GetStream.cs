@@ -3,6 +3,7 @@ using ToSic.Eav.Data.Entities.Sys.Lists;
 using ToSic.Eav.DataSource;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
+using ToSic.Sys.Performance;
 using static ToSic.Eav.DataSource.DataSourceConstants;
 
 namespace ToSic.Sxc.DataSources;
@@ -85,7 +86,7 @@ public sealed partial class CmsBlock
                 throw l.Ex(new Exception($"problems looping items - had to stop on id {i}; current entity is {entityId}; prev is {prevIdForErrorReporting}", ex));
             }
 
-            return l.Return(entitiesToDeliver.ToImmutableList(), $"stream:{(isListHeader ? "list" : "content")} - items⋮{entitiesToDeliver.Count}");
+            return l.Return(entitiesToDeliver.ToImmutableOpt(), $"stream:{(isListHeader ? "list" : "content")} - items⋮{entitiesToDeliver.Count}");
         }
         catch (Exception ex)
         {
@@ -93,9 +94,9 @@ public sealed partial class CmsBlock
         }
     }
 
-    private ImmutableList<IEntity> GetInOrAutoCreate()
+    private IImmutableList<IEntity> GetInOrAutoCreate()
     {
-        var l = Log.Fn<ImmutableList<IEntity>>();
+        var l = Log.Fn<IImmutableList<IEntity>>();
         // Check if in not connected, in which case we must find it yourself
         if (!In.ContainsKey(StreamDefaultName))
         {
@@ -108,7 +109,7 @@ public sealed partial class CmsBlock
             Attach(publishing);
         }
 
-        return l.Return(In[StreamDefaultName].List.ToImmutableList(), "ok");
+        return l.Return(In[StreamDefaultName].List.ToImmutableOpt(), "ok");
     }
 
     private static IEntity GetPresentationEntity(IReadOnlyCollection<IEntity> originals, IReadOnlyList<IEntity> presItems, int itemIndex, int entityId)

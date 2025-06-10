@@ -6,6 +6,7 @@ using ToSic.Eav.Data.Entities.Sys.Lists;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sys.Performance;
 
 namespace ToSic.Sxc.Apps.Internal.Work;
 
@@ -15,7 +16,8 @@ public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDef
 {
     public const string BlockTypeName = "2SexyContent-ContentGroup";
 
-    private IImmutableList<IEntity> GetContentGroups() => workEntities.New(AppWorkCtx).Get(BlockTypeName).ToImmutableList();
+    private IImmutableList<IEntity> GetContentGroups()
+        => workEntities.New(AppWorkCtx).Get(BlockTypeName).ToImmutableOpt();
 
     public List<BlockConfiguration> AllWithView()
     {
