@@ -3,6 +3,7 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Services;
+using ToSic.Sys.Performance;
 
 namespace ToSic.Sxc.Blocks.Internal.Render;
 
@@ -59,7 +60,7 @@ public class SimpleRenderer(Generator<BlockOfEntity> blkFrmEntGen, Generator<IBl
     {
         var l = Log.Fn<string>();
         var innerBuilder = new StringBuilder();
-        var children = parent.Entity.Children(fieldName);
+        var children = parent.Entity.Children(fieldName).ToListOpt();
         foreach (var child in children)
             innerBuilder.Append(Render(block, child));
 

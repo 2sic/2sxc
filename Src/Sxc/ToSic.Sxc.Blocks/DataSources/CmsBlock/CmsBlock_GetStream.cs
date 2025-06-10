@@ -11,9 +11,9 @@ public sealed partial class CmsBlock
 {
     private IImmutableList<IEntity> GetStream(
         IView view,
-        IReadOnlyCollection<IEntity> items, 
+        IList<IEntity> items, 
         IEntity cDemoItem, 
-        IReadOnlyList<IEntity> presList, 
+        IList<IEntity> presList, 
         IEntity pDemoItem, 
         bool isListHeader
     )
@@ -111,7 +111,7 @@ public sealed partial class CmsBlock
         return l.Return(In[StreamDefaultName].List.ToImmutableOpt(), "ok");
     }
 
-    private static IEntity GetPresentationEntity(IReadOnlyCollection<IEntity> originals, IReadOnlyList<IEntity> presItems, int itemIndex, int entityId)
+    private static IEntity GetPresentationEntity(IImmutableList<IEntity> originals, IList<IEntity> presItems, int itemIndex, int entityId)
     {
         try
         {

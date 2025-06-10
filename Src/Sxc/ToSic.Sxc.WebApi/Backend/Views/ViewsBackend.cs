@@ -57,7 +57,7 @@ public class ViewsBackend(
                     Guid = view.Guid,
                     List = view.UseForList,
                     HasQuery = view.QueryRaw != null,
-                    Used = view.Entity.Parents().Count,
+                    Used = view.Entity.Parents().Count(),
                     IsShared = view.IsShared,
                     EditInfo = new(view.Entity),
                     Metadata = ser?.SubConverter.CreateListOfSubEntities(view.Metadata, SubEntitySerialization.NeverSerializeChildren()),

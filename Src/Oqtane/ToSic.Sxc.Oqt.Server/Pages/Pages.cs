@@ -45,7 +45,7 @@ public class Pages(
     }
 
 
-    public ViewDto ViewDtoBuilder(IView view, List<BlockConfiguration> blocks, List<Oqtane.Models.PageModule> pageModules, ViewDto dto = null)
+    public ViewDto ViewDtoBuilder(IView view, ICollection<BlockConfiguration> blocks, List<Oqtane.Models.PageModule> pageModules, ViewDto dto = null)
     {
         dto ??= new();
         dto.Id = view.Entity.EntityId;

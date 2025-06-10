@@ -106,7 +106,8 @@ public class ContentGroupControllerReal(
                 Title = c?.GetBestTitle() ?? "",
                 Type = c?.Type.NameId,
                 TypeWip = c?.Type.NameId == null ? null : new JsonType(c)
-            }).ToList();
+            })
+            .ToList();
 
         return list;
     }

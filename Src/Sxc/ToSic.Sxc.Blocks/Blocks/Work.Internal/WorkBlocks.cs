@@ -17,7 +17,7 @@ public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDef
     private IImmutableList<IEntity> GetContentGroups()
         => workEntities.New(AppWorkCtx).Get(BlockTypeName).ToImmutableOpt();
 
-    public List<BlockConfiguration> AllWithView()
+    public ICollection<BlockConfiguration> AllWithView()
     {
         var appIdentity = AppWorkCtx.PureIdentity();
         return GetContentGroups()
@@ -32,7 +32,7 @@ public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDef
             })
             .Where(b => b != null)
             .Select(s => new BlockConfiguration(s.Entity, appIdentity, null, qDefBuilder, cultureResolver.CurrentCultureCode, Log))
-            .ToList();
+            .ToListOpt();
     }
 
     /// <summary>

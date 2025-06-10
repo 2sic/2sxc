@@ -81,12 +81,12 @@ public class ViewControllerReal(
         }
         return usageBackend.Value.ViewUsage(appId, guid, FinalBuilder);
     }
-    public ViewControllerReal UsagePreparations(Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
+    public ViewControllerReal UsagePreparations(Func<ICollection<IView>, ICollection<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
     {
         FinalBuilder = finalBuilder;
         return this;
     }
-    private Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> FinalBuilder { get; set; }
+    private Func<ICollection<IView>, ICollection<BlockConfiguration>, IEnumerable<ViewDto>> FinalBuilder { get; set; }
 
     /// <summary>
     /// Helper method to get SiteId for ControllerReal proxy class.

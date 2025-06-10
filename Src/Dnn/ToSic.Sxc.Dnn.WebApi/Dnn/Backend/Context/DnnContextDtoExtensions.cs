@@ -43,7 +43,7 @@ internal static class DnnContextDtoExtensions
         return dto;
     }
 
-    internal static ViewDto Init(this ViewDto dto, IView view, List<BlockConfiguration> blocks, List<ModuleWithContent> modules)
+    internal static ViewDto Init(this ViewDto dto, IView view, ICollection<BlockConfiguration> blocks, List<ModuleWithContent> modules)
     {
         dto.Id = view.Entity.EntityId;
         dto.Guid = view.Entity.EntityGuid;

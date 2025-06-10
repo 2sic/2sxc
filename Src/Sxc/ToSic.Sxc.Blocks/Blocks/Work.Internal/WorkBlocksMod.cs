@@ -80,7 +80,9 @@ public class WorkBlocksMod(
         var cbEnt = AppWorkCtx.AppReader.List.One(parentId);
         var blockList = cbEnt.Children(field);
 
-        var intList = blockList.Select(b => b.EntityId).ToList();
+        var intList = blockList
+            .Select(b => b.EntityId)
+            .ToListOpt();
         // add only if it's not already in the list (could happen if http requests are run again)
         if (!intList.Contains(entityId))
         {
