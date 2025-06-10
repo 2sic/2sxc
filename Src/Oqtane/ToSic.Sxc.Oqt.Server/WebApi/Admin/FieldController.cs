@@ -40,7 +40,7 @@ public class FieldController() : OqtStatefulControllerBase(RealController.LogSuf
     /// Used to be GET ContentType/InputTypes
     /// </summary>
     [HttpGet]
-    public List<InputTypeInfo> InputTypes(int appId) => Real.InputTypes(appId);
+    public ICollection<InputTypeInfo> InputTypes(int appId) => Real.InputTypes(appId);
 
     /// <inheritdoc />
     [HttpGet]
