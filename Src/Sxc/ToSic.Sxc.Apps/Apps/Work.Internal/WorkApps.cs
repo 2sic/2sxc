@@ -6,6 +6,7 @@ using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Sxc.Apps.Internal.Assets;
+using ToSic.Sys.Performance;
 
 namespace ToSic.Sxc.Apps.Internal.Work;
 
@@ -74,13 +75,13 @@ public class WorkApps(IAppStateCacheService appStates, IAppReaderFactory appRead
     /// Returns all Apps for the current zone
     /// </summary>
     /// <returns></returns>
-    public List<IAppReader> GetInheritableApps(ISite site)
+    public ICollection<IAppReader> GetInheritableApps(ISite site)
     {
         // Get existing apps, as we should not list inheritable apps which are already inherited
         var siteApps = appsCatalog.Apps(site.ZoneId)
             // TODO: #AppStates we could only get the specs here...
             .Select(a => appReaders.Get(a.Key).Specs.Folder)
-            .ToList();
+            .ToListOpt();
 
         var zones = appsCatalog.Zones;
         var result = zones
@@ -110,9 +111,9 @@ public class WorkApps(IAppStateCacheService appStates, IAppReaderFactory appRead
                     })
                     //.Select(a => _appGenerator.New().PreInit(site).Init(a, buildConfig) as IApp)
                     .OrderBy(a => a.Specs.Name)
-                    .ToList();
+                    .ToListOpt();
             })
-            .ToList();
+            .ToListOpt();
         return result;
     }
 

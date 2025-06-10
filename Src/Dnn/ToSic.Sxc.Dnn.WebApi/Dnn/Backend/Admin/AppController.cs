@@ -24,14 +24,16 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public List<AppDto> List(int zoneId) => Real.List(zoneId);
+    public ICollection<AppDto> List(int zoneId)
+        => Real.List(zoneId);
 
     /// <inheritdoc />
     [HttpGet]
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public List<AppDto> InheritableApps() => Real.InheritableApps();
+    public ICollection<AppDto> InheritableApps()
+        => Real.InheritableApps();
 
     /// <inheritdoc />
     [HttpDelete]
@@ -52,7 +54,7 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public List<SiteLanguageDto> Languages(int appId) => Real.Languages(appId);
+    public ICollection<SiteLanguageDto> Languages(int appId) => Real.Languages(appId);
 
     /// <inheritdoc />
     [HttpGet]

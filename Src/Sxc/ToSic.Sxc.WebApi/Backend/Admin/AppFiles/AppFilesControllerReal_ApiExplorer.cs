@@ -8,14 +8,13 @@ namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
 partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControllerDependency
 {
-
     /// <summary>
     /// Get all api controller files from AppCode for all editions
     /// </summary>
     /// <param name="appId"></param>
     /// <returns>used by ApiExplorerControllerReal.AppApiFiles</returns>
     [PrivateApi]
-    public List<AllApiFileDto> AllApiFilesInAppCodeForAllEditions(int appId)
+    public ICollection<AllApiFileDto> AllApiFilesInAppCodeForAllEditions(int appId)
     {
         var l = Log.Fn<List<AllApiFileDto>>($"list all in AppCode a#{appId}");
 
@@ -64,16 +63,17 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
                         EndpointPath = ApiExplorerControllerReal.AppCodeEndpointPath(edition, Path.GetFileNameWithoutExtension(f)),
                         IsCompiled = true,
                         Edition = edition
-                    }));
+                    })
+            );
         }
 
         return l.Return(appCodeApiControllerFiles, $"ok, count:{appCodeApiControllerFiles.Count}");
     }
 
-    private List<string> ApiControllerFilesInAppCode(string mask, string appPath, string edition,
+    private ICollection<string> ApiControllerFilesInAppCode(string mask, string appPath, string edition,
         Assembly appCodeAssembly)
     {
-        var l = Log.Fn<List<string>>(
+        var l = Log.Fn<ICollection<string>>(
             $"list ApiController files, {nameof(mask)}:'{mask}', {nameof(appPath)}:'{appPath}', {nameof(edition)}:'{edition}', has appCode assembly:{appCodeAssembly != null}");
 
         // 1. Check for AppCode assembly
@@ -115,7 +115,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
             .Select(p => EnsurePathMayBeAccessed(p, appPath, _user.IsSystemAdmin)) // do another security check
             .Select(x => x.Replace(appPath + "\\", "")) // truncate / remove internal server root path
             .Select(x => x.ForwardSlash()) // tip the slashes to web-convention (old template entries used "\")
-            .ToList();
+            .ToListOpt();
 
         return l.Return(apiControllerFilesInAppCode, $"ok, count:{apiControllerFilesInAppCode.Count}");
     }

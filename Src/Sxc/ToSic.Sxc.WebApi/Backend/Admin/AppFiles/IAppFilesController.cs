@@ -4,7 +4,7 @@ namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
 public interface IAppFilesController
 {
-    List<string> All(int appId, bool global, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false);
+    ICollection<string> All(int appId, bool global, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false);
 
     /// <summary>
     /// Get details and source code

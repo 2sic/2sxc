@@ -10,9 +10,9 @@ namespace ToSic.Sxc.Backend.Admin;
 public class EditionsDto: RichResult
 {
     public bool IsConfigured { get; set; }
-    public List<EditionDto> Editions { get; set; } = [];
+    public ICollection<EditionDto> Editions { get; set; } = [];
 
-    public List<GeneratorDto> Generators { get; set; } = [];
+    public ICollection<GeneratorDto> Generators { get; set; } = [];
 }
 
 public class EditionDto
@@ -35,7 +35,7 @@ public class GeneratorDto(IFileGenerator generator)
 
 public static class EditionsJsonExtension
 {
-    public static EditionsDto ToEditionsDto(this AppJsonConfiguration appJson, List<GeneratorDto> generators)
+    public static EditionsDto ToEditionsDto(this AppJsonConfiguration appJson, ICollection<GeneratorDto> generators)
         => new()
         {
             Ok = true,
@@ -47,7 +47,7 @@ public static class EditionsJsonExtension
                     Description = e.Value.Description,
                     IsDefault = e.Value.IsDefault
                 })
-                .ToList(),
+                .ToListOpt(),
             Generators = generators
         };
 }

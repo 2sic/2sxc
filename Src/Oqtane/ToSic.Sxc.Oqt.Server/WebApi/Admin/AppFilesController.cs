@@ -26,7 +26,7 @@ public class AppFilesController() : OqtStatefulControllerBase(RealController.Log
 
 
     [HttpGet]
-    public List<string> All(
+    public ICollection<string> All(
         [FromQuery] int appId,
         [FromQuery] bool global,
         [FromQuery] string path = null,

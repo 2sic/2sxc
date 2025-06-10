@@ -18,7 +18,8 @@ public class AppFilesController() : DnnSxcControllerBase(RealController.LogSuffi
     private RealController Real => SysHlp.GetService<RealController>();
 
     [HttpGet]
-    public List<string> All(int appId, bool global, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false) 
+    public ICollection<string> All(int appId, bool global, string path = null, string mask = "*.*",
+        bool withSubfolders = false, bool returnFolders = false) 
         => Real.All(appId, global, path, mask, withSubfolders, returnFolders);
 
     [HttpGet]

@@ -61,8 +61,9 @@ public class AppContent(
         var permCheck = ThrowIfNotAllowedInType(contentType, GrantSets.ReadSomething, AppReader);
 
         var includeDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
-        var result = api.GetEntities(AppReader, contentType, includeDrafts, oDataSelect)
-            ?.ToList();
+        var result = api
+            .GetEntities(AppReader, contentType, includeDrafts, oDataSelect)
+            ?.ToListOpt();
         return l.Return(result, "found: " + result?.Count);
     }
 

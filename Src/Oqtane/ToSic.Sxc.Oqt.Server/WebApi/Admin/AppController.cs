@@ -28,19 +28,22 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     [HttpGet]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public List<AppDto> List(int zoneId) => Real.List(zoneId);
+    public ICollection<AppDto> List(int zoneId)
+        => Real.List(zoneId);
 
     /// <inheritdoc />
     [HttpGet]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Host)]
-    public List<AppDto> InheritableApps() => Real.InheritableApps();
+    public ICollection<AppDto> InheritableApps()
+        => Real.InheritableApps();
 
     /// <inheritdoc />
     [HttpDelete]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public void App(int zoneId, int appId, bool fullDelete = true) => Real.App(zoneId, appId, fullDelete);
+    public void App(int zoneId, int appId, bool fullDelete = true)
+        => Real.App(zoneId, appId, fullDelete);
 
     /// <inheritdoc />
     [HttpPost]
@@ -52,19 +55,22 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     [HttpGet]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public List<SiteLanguageDto> Languages(int appId) => Real.Languages(appId);
+    public ICollection<SiteLanguageDto> Languages(int appId)
+        => Real.Languages(appId);
 
     /// <inheritdoc />
     [HttpGet]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public AppExportInfoDto Statistics(int zoneId, int appId) => Real.Statistics(zoneId, appId);
+    public AppExportInfoDto Statistics(int zoneId, int appId)
+        => Real.Statistics(zoneId, appId);
 
     /// <inheritdoc />
     [HttpGet]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool FlushCache(int zoneId, int appId) => Real.FlushCache(zoneId, appId);
+    public bool FlushCache(int zoneId, int appId)
+        => Real.FlushCache(zoneId, appId);
 
     /// <inheritdoc />
     [HttpGet]

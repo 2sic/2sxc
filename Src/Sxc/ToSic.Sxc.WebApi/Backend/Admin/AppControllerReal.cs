@@ -50,9 +50,11 @@ public class AppControllerReal(
     private const string TemplatesJson = "templates.json";
 
 
-    public List<AppDto> List(int zoneId) => appsBackendLazy.Value.Apps();
+    public ICollection<AppDto> List(int zoneId)
+        => appsBackendLazy.Value.Apps();
 
-    public List<AppDto> InheritableApps() => appsBackendLazy.Value.GetInheritableApps();
+    public ICollection<AppDto> InheritableApps()
+        => appsBackendLazy.Value.GetInheritableApps();
 
     public void App(int zoneId, int appId, bool fullDelete = true)
         => workAppsRemove.Value.RemoveAppInSiteAndEav(zoneId, appId, fullDelete);

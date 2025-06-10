@@ -67,7 +67,7 @@ public class InstallControllerReal(
                 guid = a.Guid,
                 version = a.Version,
             })
-            .ToList();
+            .ToListOpt();
 
         // Get list of allow/forbid rules for the App installer
         var settingsSources = appSettingsStack.Value
@@ -79,7 +79,7 @@ public class InstallControllerReal(
         var ruleEntities = rules.Result as IEnumerable<IEntity>;    // note: Result is null if nothing found...
         var rulesFinal = ruleEntities?
             .Select(e => new SiteSetupAutoInstallAppsRule(e).GetRuleDto())
-            .ToList();
+            .ToListOpt();
 
         if (!featureService.Value.IsEnabled(BuiltInFeatures.AppAutoInstallerConfigurable.NameId))
         {

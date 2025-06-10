@@ -4,16 +4,20 @@ namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
 partial class AppFilesControllerReal
 {
-    public List<string> All(int appId, bool global = false, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
+    public ICollection<string> All(int appId, bool global, string path = null, string mask = "*.*",
+        bool withSubfolders = false, bool returnFolders = false)
     {
-        var l = Log.Fn<List<string>>($"list a#{appId}, {nameof(global)}:{global}, {nameof(path)}:'{path}', {nameof(mask)}:'{mask}', withSub:{withSubfolders}, {nameof(returnFolders)}:{returnFolders}");
+        var l = Log.Fn<ICollection<string>>(
+            $"list a#{appId}, {nameof(global)}:{global}, {nameof(path)}:'{path}', {nameof(mask)}:'{mask}', withSub:{withSubfolders}, {nameof(returnFolders)}:{returnFolders}"
+        );
 
         // set global access security if ok...
         if (global && !_user.IsSystemAdmin)
             throw l.Ex(new NotSupportedException("only host user may access global files"));
 
         // make sure the folder-param is not null if it's missing
-        if (string.IsNullOrEmpty(path)) path = "";
+        if (string.IsNullOrEmpty(path))
+            path = "";
         var appPath = ResolveAppPath(appId, global);
         var fullPath = Path.Combine(appPath, path);
         l.A($"fullPath:'{fullPath}'");
@@ -45,7 +49,7 @@ partial class AppFilesControllerReal
             .Select(p => EnsurePathMayBeAccessed(p, appPath, _user.IsSystemAdmin))  // do another security check
             .Select(x => x.Replace(appPath + "\\", ""))           // truncate / remove internal server root path
             .Select(x => x.ForwardSlash()) // tip the slashes to web-convention (old template entries used "\")
-            .ToList();
+            .ToListOpt();
 
         return l.Return(all, $"ok, count:{all.Count}");
     }
