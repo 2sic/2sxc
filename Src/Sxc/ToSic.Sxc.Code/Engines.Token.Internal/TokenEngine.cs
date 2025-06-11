@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Internal;
@@ -157,7 +156,7 @@ public class TokenEngine(
         if (!DataSource.Out.ContainsKey(streamName))
             throw new ArgumentException("Was not able to implement REPEAT because I could not find Data:" + streamName + ". Please check spelling the pipeline delivering data to this template.");
 
-        var dataItems = DataSource[streamName].List.ToImmutableList();
+        var dataItems = DataSource[streamName].List.ToImmutableOpt();
         var itemsCount = dataItems.Count;
         for (var i = 0; i < itemsCount; i++)
         {

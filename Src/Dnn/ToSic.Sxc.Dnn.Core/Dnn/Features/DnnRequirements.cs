@@ -11,7 +11,7 @@ public class DnnRequirements(IRequirementsService requirements) : EngineRequirem
     internal bool RequirementsMet() 
         => !RequirementsStatus().SafeAny();
 
-    private List<RequirementStatus> RequirementsStatus()
+    private ICollection<RequirementStatus> RequirementsStatus()
         => requirements.UnfulfilledRequirements([SysFeatureSuggestions.CSharp08]);
 
     internal RenderEngineResult GetMessageForRequirements()

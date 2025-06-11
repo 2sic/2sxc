@@ -20,6 +20,10 @@ public static class SxcCodeGenerateStartup
         services.AddTransient<IFileGenerator, WebApiGenerator>(); // with interface and no try, so all can be listed in DI
         services.TryAddTransient<FileSaver>();
 
+        // v20 Code Generators
+        services.TryAddTransient<CSharpCustomModelsGenerator>();  // direct registration
+        services.AddTransient<IFileGenerator, CSharpCustomModelsGenerator>(); // with interface and no try, so all can be listed in DI
+
         return services;
     }
 }

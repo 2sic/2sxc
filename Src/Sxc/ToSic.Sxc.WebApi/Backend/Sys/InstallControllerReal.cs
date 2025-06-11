@@ -67,7 +67,7 @@ public class InstallControllerReal(
                 guid = a.Guid,
                 version = a.Version,
             })
-            .ToList();
+            .ToListOpt();
 
         // Get list of allow/forbid rules for the App installer
         var settingsSources = appSettingsStack.Value
@@ -79,7 +79,7 @@ public class InstallControllerReal(
         var ruleEntities = rules.Result as IEnumerable<IEntity>;    // note: Result is null if nothing found...
         var rulesFinal = ruleEntities?
             .Select(e => new SiteSetupAutoInstallAppsRule(e).GetRuleDto())
-            .ToList();
+            .ToListOpt();
 
         if (!featureService.Value.IsEnabled(BuiltInFeatures.AppAutoInstallerConfigurable.NameId))
         {
@@ -100,20 +100,21 @@ public class InstallControllerReal(
     /// </summary>
     /// <param name="packageUrl"></param>
     /// <param name="container"></param>
+    /// <param name="newName"></param>
     /// <returns></returns>
-    public THttpResponseType RemotePackage(string packageUrl, IModule container)
+    public THttpResponseType RemotePackage(string packageUrl, IModule container, string newName = null)
     {
         var l = Log.Fn<THttpResponseType>();
 
         var isApp = !container.IsContent;
 
-        Log.A("install package:" + packageUrl);
+        Log.A($"install package:'{packageUrl}', {nameof(newName)}:'{newName}'");
 
         var block = container.BlockIdentifier;
         var (success, messages) = impFromRemoteLazy.Value
-            .InstallPackage(block.ZoneId, block.AppId, isApp, packageUrl);
+            .InstallPackage(block.ZoneId, block.AppId, isApp, packageUrl, newName);
 
-        Log.A("install completed with success:" + success);
+        Log.A($"install completed with success:{success}");
 
         return success 
             ? l.ReturnAsOk(responseMaker.Ok()) 

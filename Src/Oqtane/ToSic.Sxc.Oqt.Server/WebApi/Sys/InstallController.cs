@@ -47,11 +47,11 @@ public class InstallController()
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [Authorize(Roles = RoleNames.Admin)]
     [ValidateAntiForgeryToken]
-    public IActionResult RemotePackage(string packageUrl)
+    public IActionResult RemotePackage(string packageUrl, string newName = null)
     {
         HotReloadEnabledCheck.Check(); // Ensure that Hot Reload is not enabled or try to disable it.
         // Make sure the Scoped ResponseMaker has this controller context
         CtxHlp.SetupResponseMaker();
-        return Real.RemotePackage(packageUrl, CtxHlp.BlockOptional?.Context.Module);
+        return Real.RemotePackage(packageUrl, CtxHlp.BlockOptional?.Context.Module, newName);
     }
 }

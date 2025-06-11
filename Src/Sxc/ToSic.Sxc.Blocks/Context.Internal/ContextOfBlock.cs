@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Web.Internal.PageService;
 

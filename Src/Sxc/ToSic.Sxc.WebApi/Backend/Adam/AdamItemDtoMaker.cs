@@ -40,10 +40,14 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
             list.Insert(0, currentFolderDto);
         }
 
-        var folders = set.Folders.Select(Create).ToList();
+        var folders = set.Folders
+            .Select(Create)
+            .ToListOpt();
         list.AddRange(folders);
 
-        var files = set.Files.Select(Create).ToList();
+        var files = set.Files
+            .Select(Create)
+            .ToListOpt();
         list.AddRange(files);
         return list;
     }

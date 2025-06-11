@@ -4,7 +4,6 @@ using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Eav.Data.Entities.Sys.Lists;
 using ToSic.Eav.DataSource.Internal.Query;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.Apps.Internal.Work;
@@ -15,9 +14,10 @@ public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDef
 {
     public const string BlockTypeName = "2SexyContent-ContentGroup";
 
-    private IImmutableList<IEntity> GetContentGroups() => workEntities.New(AppWorkCtx).Get(BlockTypeName).ToImmutableList();
+    private IImmutableList<IEntity> GetContentGroups()
+        => workEntities.New(AppWorkCtx).Get(BlockTypeName).ToImmutableOpt();
 
-    public List<BlockConfiguration> AllWithView()
+    public ICollection<BlockConfiguration> AllWithView()
     {
         var appIdentity = AppWorkCtx.PureIdentity();
         return GetContentGroups()
@@ -32,7 +32,7 @@ public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDef
             })
             .Where(b => b != null)
             .Select(s => new BlockConfiguration(s.Entity, appIdentity, null, qDefBuilder, cultureResolver.CurrentCultureCode, Log))
-            .ToList();
+            .ToListOpt();
     }
 
     /// <summary>

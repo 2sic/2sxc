@@ -1,8 +1,4 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.Data.Ancestors.Sys;
-using ToSic.Eav.Data.ContentTypes.Sys;
-using ToSic.Eav.Data.Sys;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Code.Generate.Internal;
@@ -12,77 +8,21 @@ namespace ToSic.Sxc.Code.Generate.Internal;
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CSharpDataModelsGenerator(IUser user, IAppReaderFactory appReadFac)
-    : CSharpGeneratorBase(user, appReadFac, SxcLogName + ".DMoGen"), IFileGenerator
+internal class CSharpDataModelsGenerator(IUser user, IAppReaderFactory appReadFac)
+    : CSharpModelsGeneratorBase(user, appReadFac, SxcLogName + ".DMoGen") // IFileGenerator is inherited from base
 {
-    internal CSharpCodeSpecs Specs { get; private set; } = new();
-
-    internal CSharpGeneratorHelper CodeGenHelper { get; private set; }
-
     #region Information for the interface
 
+    public override string Description => "Generates C# Data Classes for the AppCode/Data folder";
 
-    public string Description => "Generates C# Data Classes for the AppCode/Data folder";
+    public override string DescriptionHtml => $"The {Name} will generate <code>[TypeName].Generated.cs</code> files in the <code>AppCode/Data</code> folder.";
 
-    public string DescriptionHtml => $"The {Name} will generate <code>[TypeName].Generated.cs</code> files in the <code>AppCode/Data</code> folder.";
-
-    public string OutputType => "DataModel";
+    protected override string GeneratedSetName => "C# Data Classes";
 
     #endregion
 
-    private void Setup(IFileGeneratorSpecs parameters)
-    {
-        Specs = BuildSpecs(parameters);
-        var appContentTypes = Specs.AppContentTypes;
+    protected internal override CSharpCodeSpecs BuildDerivedSpecs(IFileGeneratorSpecs parameters) => BuildSpecs(parameters);
 
-        // Prepare Content Types and add to Specs, so the generators know what is available
-        // Generate classes for all types in scope Default
-        var types = appContentTypes.ContentTypes.OfScope(ScopeConstants.Default).ToList();
-        appContentTypes.GetContentType(AppLoadConstants.TypeAppResources).DoIfNotNull(types.Add);
-        appContentTypes.GetContentType(AppLoadConstants.TypeAppSettings).DoIfNotNull(types.Add);
-
-        var appConfigTypes = appContentTypes.ContentTypes
-            .OfScope(ScopeConstants.SystemConfiguration)
-            .Where(ct => !ct.HasAncestor())
-            .ToList();
-
-        // Fix Bug introduced in v19.03.01 or so
-        // In that UI it accidentally created new content-types called AppResources or AppSettings
-        // In the SystemConfiguration scope. These must really be ignored.
-        // In addition, to avoid any other naming conflicts, we'll just skip all the names that were already used.
-        var typeNames = types
-            .Select(t => t.Name)
-            .ToList();
-        appConfigTypes = appConfigTypes
-            .Where(ct => !typeNames.Contains(ct.Name))
-            .ToList();
-
-        types.AddRange(appConfigTypes);
-
-        Specs.ExportedContentContentTypes = types;
-
-        CodeGenHelper = new(Specs, Log);
-    }
-
-
-
-    public IGeneratedFileSet[] Generate(IFileGeneratorSpecs specs)
-    {
-        Setup(specs);
-
-        var classFiles = Specs.ExportedContentContentTypes
-                .Select(t => new CSharpDataModelGenerator(this, t, t.Name?.Replace("-", "")).PrepareFile())
-                .ToList();
-
-        var result = new GeneratedFileSet
-        {
-            Name = "C# Data Classes",
-            Description = Description,
-            Generator = $"{Name} v{Version}",
-            Path = GenerateConstants.PathToAppCode,
-            Files = classFiles.Cast<IGeneratedFile>().ToList()
-        };
-        return [result];
-    }
-
+    protected override IGeneratedFile CreateFileGenerator(IContentType type, string className) 
+        => new CSharpDataModelGenerator(this, type, className).PrepareFile();
 }

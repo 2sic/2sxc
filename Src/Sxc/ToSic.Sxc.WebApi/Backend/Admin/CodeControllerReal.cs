@@ -109,7 +109,9 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
         var l = Log.Fn<EditionsDto>($"{nameof(appId)}:{appId}");
 
         // get generators
-        var fileGenerators = generators.Value.Select(g => new GeneratorDto(g)).ToList();
+        var fileGenerators = generators.Value
+            .Select(g => new GeneratorDto(g))
+            .ToListOpt();
 
         var appJson = appJsonService.Value.GetAppJson(appId);
         if (appJson?.Editions?.Count > 0)

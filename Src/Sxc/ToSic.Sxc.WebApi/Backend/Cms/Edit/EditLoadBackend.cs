@@ -133,9 +133,8 @@ public partial class EditLoadBackend(
         #region Input Types on ContentTypes and general definitions
 
         // Fix not-supported input-type names; map to correct name
-        result.ContentTypes
-            .ForEach(jt => jt.Attributes
-                .ForEach(at => at.InputType = Compatibility.Internal.InputTypes.MapInputTypeV10(at.InputType)));
+        foreach (var at in result.ContentTypes.SelectMany(jt => jt.Attributes))
+            at.InputType = Compatibility.Internal.InputTypes.MapInputTypeV10(at.InputType);
 
         // load input-field configurations
         result.InputTypes = GetNecessaryInputTypes(result.ContentTypes, appWorkCtx);

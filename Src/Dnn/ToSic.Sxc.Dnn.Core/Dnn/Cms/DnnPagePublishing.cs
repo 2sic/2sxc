@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using DotNetNuke.Common.Utilities;
+﻿using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.Apps.Sys.Work;
@@ -14,7 +13,6 @@ using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
-
 using IEntity = ToSic.Eav.Data.IEntity;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
@@ -135,7 +133,7 @@ internal partial class DnnPagePublishing(
 
     private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, IDataSource data, string key)
     {
-        var cont = data.GetStream(key, nullIfNotFound: true)?.List.ToImmutableList(); //  data.Out.ContainsKey(key) ? data[key]?.List?.ToImmutableList() : null;
+        var cont = data.GetStream(key, nullIfNotFound: true)?.List.ToImmutableOpt();
         Log.A($"TryToAddStream(..., ..., key:{key}), found:{cont != null} add⋮{cont?.Count ?? 0}" );
         if (cont != null) list = list.Concat(cont);
         return list;

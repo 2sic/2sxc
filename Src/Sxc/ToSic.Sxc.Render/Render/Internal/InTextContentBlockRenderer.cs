@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Services;
+using ToSic.Sys.Performance;
 
 namespace ToSic.Sxc.Blocks.Internal.Render;
 
@@ -30,7 +31,7 @@ public class InTextContentBlockRenderer(SimpleRenderer simpleRenderer)
         l.A($"Found {matches.Count} inner content placeholders");
 
         //var items = parent.Children(field);
-        var items = parent.Children(field);
+        var items = parent.Children(field).ToListOpt();
 
         foreach (Match curMatch in matches)
             l.Do(message: $"Match at text pos: {curMatch.Index}", action: () =>

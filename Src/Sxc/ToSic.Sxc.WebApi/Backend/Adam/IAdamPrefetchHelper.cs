@@ -11,5 +11,5 @@ public interface IAdamPrefetchHelper : /*IAdamWork,*/ IServiceWithSetup<AdamWork
     /// <param name="subFolderName">Optional sub folder, when browsing a sub-folder</param>
     /// <param name="autoCreate">Auto-create the folder requested - default is true</param>
     /// <returns></returns>
-    IList<AdamItemDto> GetAdamItemsForPrefetch(string subFolderName, bool autoCreate = true);
+    ICollection<AdamItemDto> GetAdamItemsForPrefetch(string subFolderName, bool autoCreate = true);
 }

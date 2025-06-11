@@ -2,7 +2,6 @@
 using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Data.EntityBased.Sys;
 using ToSic.Eav.DataSource.Internal.Query;
-using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Blocks.Internal;
 
@@ -55,7 +54,8 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
     {
         get
         {
-            if (field != null) return field;
+            if (field != null)
+                return field;
 
             // if we're previewing another template, look that up
             var viewEntity = PreviewViewEntity
@@ -75,23 +75,26 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
     /// <summary>
     /// Content is a bit special, it must always return a list with at least one null-item
     /// </summary>
-    public List<IEntity> Content
+    public IList<IEntity> Content
     {
         get
         {
-            if (Entity == null) return [null];
-            var list = Entity.Children(ViewParts.Content);
-            return list.Count > 0 ? list : [null];
+            if (Entity == null)
+                return [null];
+            var list = Entity.Children(ViewParts.Content).ToListOpt();
+            return list.Count > 0
+                ? list
+                : [null];
         }
     }
 
-    public List<IEntity> Presentation => Entity?.Children(ViewParts.Presentation) ?? [];
+    public IList<IEntity> Presentation => field ??= Entity?.Children(ViewParts.Presentation).ToListOpt() ?? [];
 
-    public List<IEntity> Header => Entity?.Children(ViewParts.FieldHeader) ?? [];
+    public IList<IEntity> Header => Entity?.Children(ViewParts.FieldHeader).ToListOpt() ?? [];
 
-    public List<IEntity> HeaderPresentation => Entity?.Children(ViewParts.ListPresentation) ?? [];
+    public IList<IEntity> HeaderPresentation => Entity?.Children(ViewParts.ListPresentation).ToListOpt() ?? [];
 
-    public List<IEntity> this[string type] =>
+    public IList<IEntity> this[string type] =>
         type.ToLowerInvariant() switch
         {
             ViewParts.ContentLower => Content,

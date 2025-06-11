@@ -84,13 +84,18 @@ partial class ListControllerReal
     {
         var l = Log.Fn<(List<IEntity>, string)>($"guid:{guid},part:{part}");
         var parent = Context.AppReader.GetDraftOrPublished(guid);
-        if (parent == null) throw l.Done(new Exception($"No item found for {guid}"));
-        if (!parent.Attributes.ContainsKey(part)) throw l.Done(new Exception($"Could not find field {part} in item {guid}"));
-        var itemList = parent.Children(part).Select(Context.AppReader.GetDraftOrKeep).ToList();
+        if (parent == null)
+            throw l.Done(new Exception($"No item found for {guid}"));
+        if (!parent.Attributes.ContainsKey(part))
+            throw l.Done(new Exception($"Could not find field {part} in item {guid}"));
+        var itemList = parent.Children(part)
+            .Select(Context.AppReader.GetDraftOrKeep)
+            .ToList();
 
         // find attribute-type-name
         var attribute = parent.Type[part];
-        if (attribute == null) throw l.Done(new Exception($"Attribute definition for '{part}' not found on the item {guid}"));
+        if (attribute == null)
+            throw l.Done(new Exception($"Attribute definition for '{part}' not found on the item {guid}"));
         var typeNameForField = attribute.EntityFieldItemTypePrimary();
         return l.ReturnAsOk((itemList, typeNameForField));
     }

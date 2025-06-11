@@ -84,7 +84,8 @@ public class ContentGroupList(
 
                 // handle edge case on app with empty list, when index=1, but it should be index=0 (indexNullAddToEnd=true have the same effect)
                 // fix https://github.com/2sic/2sxc/issues/2943 
-                if (!parent.Children(fieldPair.First()).Any() && !targetIsContentBlock) indexNullAddToEnd = true;
+                if (!parent.Children(fieldPair.First()).Any() && !targetIsContentBlock)
+                    indexNullAddToEnd = true;
                     
                 fieldList.FieldListAdd(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft, indexNullAddToEnd, targetIsContentBlock);
             }

@@ -1,6 +1,5 @@
 ﻿#if NETFRAMEWORK
 using ToSic.Eav.Apps;
-using ToSic.Lib.DI;
 using ToSic.Sxc.DataSources.Internal.Compatibility;
 using ToSic.Sys.Code.InfoSystem;
 using static ToSic.Sys.Code.Infos.CodeInfoObsolete;

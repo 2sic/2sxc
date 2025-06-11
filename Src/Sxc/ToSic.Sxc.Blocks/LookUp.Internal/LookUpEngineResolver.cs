@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.DI;
-using ToSic.Lib.LookUp;
+﻿using ToSic.Lib.LookUp;
 
 namespace ToSic.Sxc.LookUp.Internal;
 

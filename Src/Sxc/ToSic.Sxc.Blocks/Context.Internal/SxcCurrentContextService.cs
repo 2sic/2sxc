@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Internal;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal.DotNet;

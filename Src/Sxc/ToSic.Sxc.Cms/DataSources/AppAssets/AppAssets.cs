@@ -126,7 +126,7 @@ public class AppAssets: CustomDataSourceAdvanced
         return new(OrdinalIgnoreCase)
         {
             { DataSourceConstants.StreamDefaultName, () => files },
-            { StreamAll, () => folders.Concat(files).ToImmutableList() },
+            { StreamAll, () => folders.Concat(files).ToImmutableOpt() },
             { StreamFolders, () => folders },
             { StreamFiles, () => files }
         };

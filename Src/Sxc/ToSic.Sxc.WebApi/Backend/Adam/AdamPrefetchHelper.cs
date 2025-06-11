@@ -11,11 +11,12 @@ public class AdamPrefetchHelper(Generator<AdamWorkGet, AdamWorkOptions> adamGet,
     : ServiceWithSetup<AdamWorkOptions>("Adm.TrnItm"),
         IAdamPrefetchHelper
 {
-    public IList<AdamItemDto> GetAdamItemsForPrefetch(string subFolderName, bool autoCreate = true)
+    public ICollection<AdamItemDto> GetAdamItemsForPrefetch(string subFolderName, bool autoCreate = true)
     {
         var adamGetReady = adamGet.New(Options);
         var items = adamGetReady.ItemsInField(subFolderName, autoCreate);
         var maker = dtoMaker.New(new() { AdamContext = adamGetReady.AdamContext, });
-        return maker.Convert(items).ToList();
+        return maker.Convert(items)
+            .ToListOpt();
     }
 }

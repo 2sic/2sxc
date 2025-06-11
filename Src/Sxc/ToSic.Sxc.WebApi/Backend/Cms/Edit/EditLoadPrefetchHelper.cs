@@ -20,9 +20,9 @@ public partial class EditLoadPrefetchHelper(
         });
 
 
-    private List<EntityForPickerDto> PrefetchEntities(int appId, EditDto editData)
+    private ICollection<EntityForPickerDto> PrefetchEntities(int appId, EditDto editData)
     {
-        var l = Log.Fn<List<EntityForPickerDto>>();
+        var l = Log.Fn<ICollection<EntityForPickerDto>>();
         try
         {
             // Step 1: try to find entity fields
@@ -34,18 +34,22 @@ public partial class EditLoadPrefetchHelper(
                     b.Entity.Guid,
                     b.Entity.Attributes.Entity
                 })
-                .ToList();
+                .ToListOpt();
 
-            var entities = bundlesHavingEntities.SelectMany(set
-                    => set.Entity.SelectMany(e
-                        => e.Value?.SelectMany(entityAttrib => entityAttrib.Value)))
+            var entities = bundlesHavingEntities
+                .SelectMany(set => set.Entity
+                    .SelectMany(e => e.Value
+                        ?.SelectMany(entityAttrib => entityAttrib.Value)
+                    )
+                )
                 .Where(guid => guid != null)
                 .Select(guid => guid.ToString())
                 // Step 2: Check which ones have a link reference
-                .ToArray();
+                .ToListOpt();
 
             // stop here if nothing found, otherwise the backend will return all entities
-            if (!entities.Any()) return l.Return([], "none found");
+            if (!entities.Any())
+                return l.Return([], "none found");
 
             var items = entityPickerBackend.GetForEntityPicker(appId, entities, null, allowFromAllScopes: true);
             return l.Return(items, $"{items.Count}");

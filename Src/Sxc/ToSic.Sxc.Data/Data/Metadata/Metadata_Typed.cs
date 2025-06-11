@@ -7,6 +7,7 @@ using ToSic.Sxc.Cms.Data;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
+using ToSic.Sys.Performance;
 using static ToSic.Sys.Code.Infos.CodeInfoObsolete;
 using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
 
@@ -137,16 +138,21 @@ internal partial class Metadata: ITypedItem
 
         // Exit if no metadata items available to get parents from
         var mdEntities = _metadata.ToList();
-        if (!mdEntities.Any()) return new List<ITypedItem>(0);
+        if (!mdEntities.Any())
+            return [];
 
         // Get children from first metadata item which matches the criteria
         var parents = mdEntities
             .Select(e => e.Parents(type: type, field: field)?.ToList())
             .FirstOrDefault(l => l.SafeAny());
-        if (parents == null) return new List<ITypedItem>(0);
+        if (parents == null)
+            return [];
 
-        var list = Cdf.EntitiesToItems(parents).ToList();
-        return list.Any() ? list : [];
+        var list = Cdf.EntitiesToItems(parents)
+            .ToListOpt();
+        return list.Any()
+            ? list
+            : [];
     }
 
     IPublishing ITypedItem.Publishing => _publishing.Get(() => new Publishing(this, Cdf));

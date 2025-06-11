@@ -3,6 +3,7 @@ using ToSic.Eav.Data.ValueConverter.Sys;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Data.Internal.Typed;
+using ToSic.Sys.Performance;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Data.Internal.Dynamic;
@@ -206,7 +207,7 @@ internal class GetAndConvertHelper(
 
     public List<ITypedItem> ParentsItems(IEntity entity, string type, string field)
         => entity.Parents(type, field)
-            .Select(e => new TypedItemOfEntity(null, e, Cdf, PropsRequired) as ITypedItem)
+            .Select(ITypedItem (e) => new TypedItemOfEntity(null, e, Cdf, PropsRequired))
             .ToList();
 
 

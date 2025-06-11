@@ -14,7 +14,7 @@ public class UsageBackend(
     ISxcCurrentContextService ctxService)
     : ServiceBase("Bck.Usage", connect: [appPermissions, ctxService, workViews, appBlocks])
 {
-    public IEnumerable<ViewDto> ViewUsage(int appId, Guid guid, Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
+    public IEnumerable<ViewDto> ViewUsage(int appId, Guid guid, Func<ICollection<IView>, ICollection<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
     {
         var l = Log.Fn<IEnumerable<ViewDto>>($"{appId}, {guid}");
         var context = ctxService.GetExistingAppOrSet(appId);

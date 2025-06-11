@@ -21,7 +21,7 @@ internal class LoadSettingsForPickerSources() : LoadSettingsProviderBase($"{SxcL
             .SelectMany(ct => ct.Attributes
                 .Where(a => PickerNames.Contains(a.InputType()))
             )
-            .ToList();
+            .ToListOpt();
 
         if (pickerAttributes.Count == 0) return l.Return([], "no picker fields");
 
@@ -35,14 +35,15 @@ internal class LoadSettingsForPickerSources() : LoadSettingsProviderBase($"{SxcL
                     .SelectMany(e => e.Children(nameof(IUiPicker.DataSources)));
 
                 // Flatten and remember the attribute for debugging
-                return dsEntities.Select(ds => new
-                {
-                    Attribute = a,
-                    DataSource = ds
-                });
+                return dsEntities
+                    .Select(ds => new
+                    {
+                        Attribute = a,
+                        DataSource = ds
+                    });
             })
             .Where(ps => ps?.DataSource != null)
-            .ToList();
+            .ToListOpt();
 
         // Find all the NameIds which the DataSource says it can create
         var createTypes = pickerSources
@@ -53,7 +54,7 @@ internal class LoadSettingsForPickerSources() : LoadSettingsProviderBase($"{SxcL
                 // TODO!!! NEW-LINES seem to be saved wrong!
                 .Replace("\\n", "\n")
                 .LinesToArrayWithoutEmpty())
-            .ToList();
+            .ToListOpt();
 
         // Look up the types in the app-state
         var typesToEnableCreate = createTypes
@@ -65,11 +66,14 @@ internal class LoadSettingsForPickerSources() : LoadSettingsProviderBase($"{SxcL
                 Type = parameters.ContextOfApp.AppReader.GetContentType(nameId)
             })
             .Where(t => t.Type != null)
+            .ToListOpt();
+
+        if (typesToEnableCreate.Count == 0)
+            return l.Return([], "no types to enable create");
+
+        var typesOnly = typesToEnableCreate
+            .Select(t => t.Type)
             .ToList();
-
-        if (typesToEnableCreate.Count == 0) return l.Return([], "no types to enable create");
-
-        var typesOnly = typesToEnableCreate.Select(t => t.Type).ToList();
         return l.Return(typesOnly, $"{typesOnly.Count}");
     }
 }

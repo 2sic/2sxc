@@ -1,6 +1,5 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
-using System.Collections.Immutable;
 using System.Text.RegularExpressions;
 using System.Web;
 using ToSic.Eav.Apps.Sys;
@@ -234,12 +233,11 @@ internal class SearchController(
         var searchInfoDictionary = new Dictionary<string, List<ISearchItem>>();
         foreach (var stream in streamsToIndex)
         {
-            var entities = stream.Value.List.ToImmutableList();
+            var entities = stream.Value.List.ToListOpt();
             var searchInfoList = searchInfoDictionary[stream.Key] = [];
 
-            searchInfoList.AddRange(entities.Select(entity =>
-            {
-                var searchInfo = new SearchItem
+            var additions = entities
+                .Select(entity => new SearchItem
                 {
                     Entity = entity,
                     Url = "",
@@ -255,10 +253,10 @@ internal class SearchController(
                     IsActive = true,
                     TabId = dnnModule.TabID,
                     PortalId = dnnModule.PortalID
-                };
+                })
+                .ToListOpt();
 
-                return searchInfo;
-            }));
+            searchInfoList.AddRange(additions);
         }
 
         return l.Return(searchInfoDictionary, $"{searchInfoDictionary.Count}");

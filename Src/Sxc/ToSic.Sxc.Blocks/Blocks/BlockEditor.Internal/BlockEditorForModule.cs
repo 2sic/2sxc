@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.DI;
-using ToSic.Sxc.Integration.Modules;
+﻿using ToSic.Sxc.Integration.Modules;
 
 namespace ToSic.Sxc.Blocks.Internal;
 

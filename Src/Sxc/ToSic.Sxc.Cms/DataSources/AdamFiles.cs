@@ -80,11 +80,11 @@ public class AdamFiles : CustomDataSourceAdvanced
 
     private IImmutableList<IEntity> GetFolders() => GetInternal()
         .Where(e => e.Get<bool>("IsFolder"))
-        .ToImmutableList();
+        .ToImmutableOpt();
 
     private IImmutableList<IEntity> GetFiles() => GetInternal()
         .Where(e => !e.Get<bool>("IsFolder"))
-        .ToImmutableList();
+        .ToImmutableOpt();
 
     private IImmutableList<IEntity> GetInternal() => _getInternal.Get(() =>
     {

@@ -19,16 +19,16 @@ public class AppsBackend(
     LazySvc<GlobalPaths> globalPaths)
     : ServiceBase("Bck.Apps", connect: [workApps, codeStats, context, appPathsGen, globalPaths])
 {
-    public List<AppDto> Apps()
+    public ICollection<AppDto> Apps()
     {
         var list = workApps.GetApps(context.Site);
-        return list.Select(CreateAppDto).ToList();
+        return list.Select(CreateAppDto).ToListOpt();
     }
 
-    public List<AppDto> GetInheritableApps()
+    public ICollection<AppDto> GetInheritableApps()
     {
         var list = workApps.GetInheritableApps(context.Site);
-        return list.Select(CreateAppDto).ToList();
+        return list.Select(CreateAppDto).ToListOpt();
     }
 
     private AppDto CreateAppDto(IAppReader appReader)
