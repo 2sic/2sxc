@@ -1,3 +1,4 @@
-DesktopModules\ToSIC_SexyContent\dist\
-DesktopModules\ToSIC_SexyContent\.data\
-DesktopModules\ToSIC_SexyContent\App_Data\system\
+DesktopModules\ToSIC_SexyContent\
+DesktopModules\ToSic.Sxc\dist\
+DesktopModules\ToSic.Sxc\.data\
+DesktopModules\ToSic.Sxc\App_Data\system\

@@ -19,7 +19,7 @@
     <Message Text="DnnRoot='%(DnnRoot.Identity)'" Importance="High"/>
     <PropertyGroup>
       <CurrentDnnRoot>%(DnnRoot.Identity)</CurrentDnnRoot>
-      <BuildTarget>$(CurrentDnnRoot)DesktopModules/ToSic_SexyContent</BuildTarget>
+      <BuildTarget>$(CurrentDnnRoot)DesktopModules/ToSic.Sxc</BuildTarget>
     </PropertyGroup>
     <!-- Echo Statements -->
     <Message Text="BuildTarget='$(BuildTarget)'" Importance="High"/>
@@ -33,47 +33,8 @@
     
     <ItemGroup>
       <!-- Global / Shared 2sxc and EAV DLLs-->
-      <!--<DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Core.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Core.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Adam.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Adam.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Apps.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Apps.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Blocks.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Blocks.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Cms.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Cms.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Code.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Code.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Code.Generate.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Code.Generate.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Code.HotBuild.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Code.HotBuild.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Custom.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Custom.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Data.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Data.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Edit.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Edit.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Engines.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Engines.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Images.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Images.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.LightSpeed.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.LightSpeed.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Render.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Render.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Services.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Services.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Web.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Web.pdb" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.WebApi.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.WebApi.pdb" />-->
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.*.dll" Exclude="ToSic.Sxc.Dnn.Enterprise.dll"/>
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.*.pdb" Exclude="ToSic.Sxc.Dnn.Enterprise.pdb"/>
-      <!-- 2025-06-04 2dm v20 doesn't have the ToSic.Eav.dll any more -->
-      <!--<DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Eav.dll" />
-      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Eav.pdb" />-->
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Eav.*.dll" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Eav.*.pdb" />
       <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Lib.*.dll" />
@@ -165,7 +126,7 @@
     It has been commented out to prevent unexpected behavior for frontend (JavaScript) developers, particularly the issue of the latest JavaScript assets in the DNN development environment 
     being overwritten with older JavaScript assets from'2sxc-sources\_latest'.
     
-    Backend developers are advised to manually copy all JavaScript assets from '2sxc-sources\_latest' to the DNN development environment at '2sxc-dnn\Website\DesktopModules\ToSIC_SexyContent'. 
+    Backend developers are advised to manually copy all JavaScript assets from '2sxc-sources\_latest' to the DNN development environment at '2sxc-dnn\Website\DesktopModules\ToSic.Sxc'. 
     This ensures the latest version of JavaScript assets are used, as this step no longer occurs automatically with each update of the 2sxc version in DNN dev env. 
     Another option is to run npm scripts in 'eav-ui', as is the practice among frontend (JavaScript) developers.
     -->

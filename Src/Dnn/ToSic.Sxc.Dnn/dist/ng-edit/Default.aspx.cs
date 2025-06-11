@@ -9,7 +9,7 @@ public class Default : CachedPageBase
     {
         Response.AppendHeader("test-dev", "2sxc");
 
-        Response.Write(PageOutputCached("~/DesktopModules/ToSIC_SexyContent/dist/ng-edit/index-raw.html",
+        Response.Write(PageOutputCached("~/DesktopModules/ToSic.Sxc/dist/ng-edit/index-raw.html",
             EditUiResourceSettings.EditUi));
 
         // HACK: opening editui will change user language in cookie, so disable that

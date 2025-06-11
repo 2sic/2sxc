@@ -8,6 +8,6 @@ public class Default : CachedPageBase
     {
         Response.AppendHeader("test-dev", "2sxc");
 
-        Response.Write(PageOutputCached("~/DesktopModules/ToSIC_SexyContent/dist/quick-dialog/index-raw.html", EditUiResourceSettings.QuickDialog));
+        Response.Write(PageOutputCached("~/DesktopModules/ToSic.Sxc/dist/quick-dialog/index-raw.html", EditUiResourceSettings.QuickDialog));
     }
 }

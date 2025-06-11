@@ -141,7 +141,7 @@ public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to pre
     }
 
     /// <summary>
-    /// portalId and pageId context is lost on DesktopModules/ToSIC_SexyContent/dist/...aspx
+    /// portalId and pageId context is lost on DesktopModules/ToSic.Sxc/dist/...aspx
     /// and DNN Framework can not resolve site root, so we need to handle it by ourselves
     /// </summary>
     /// <param name="pageId"></param>
