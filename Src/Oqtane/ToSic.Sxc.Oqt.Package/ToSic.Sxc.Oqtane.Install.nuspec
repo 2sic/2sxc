@@ -19,7 +19,7 @@
     <releaseNotes>https://github.com/2sic/2sxc/releases</releaseNotes>
     <summary>2sxc - CMS &amp; App-Engine for Oqtane</summary>
     <dependencies>
-      <dependency id="Oqtane.Framework" version="6.0.1" />
+      <dependency id="Oqtane.Framework" version="6.1.3" />
       <dependency id="ToSic.Imageflow.Oqtane" version="1.12.0" />
     </dependencies>
   </metadata>
@@ -34,9 +34,7 @@
     <file src="..\..\Dnn\ToSic.Sxc.Dnn\ImportExport\**\*.*" target="content\2sxc\system\ImportExport" />
     <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc.Oqtane\**\*.*" exclude="**\*.map;" target="wwwroot\Modules\ToSic.Sxc.Oqtane" />
     <!-- XML documentation -->
-    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\$targetframework$\ToSic.Sxc.xml" target="lib\$targetframework$" />
-    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\$targetframework$\ToSic.Sxc.Oqtane.*.xml" exclude="**\ToSic.Sxc.Oqtane.Package.xml" target="lib\$targetframework$" />
-    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\$targetframework$\ToSic.Sxc.Razor.xml" target="lib\$targetframework$" />
+    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\$targetframework$\ToSic.*.xml" exclude="**\ToSic.Sxc.Oqtane.Package.xml" target="lib\$targetframework$" />
     <!-- 3rd party dependencies -->
 
     <!-- ToSic.Sxc.Dnn.Main PackageReference -->
