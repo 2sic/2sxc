@@ -90,7 +90,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object dynOrNull, IEntity ent
 
     IEnumerable<IDecorator<IEntity>> IHasDecorators<IEntity>.Decorators => (Entity as IEntityWrapper)?.Decorators ?? [];
 
-    IEntity IMultiWrapper<IEntity>.RootContentsForEqualityCheck => (Entity as IEntityWrapper)?.RootContentsForEqualityCheck ?? Entity;
+    IEntity? IMultiWrapper<IEntity>.RootContentsForEqualityCheck => (Entity as IEntityWrapper)?.RootContentsForEqualityCheck ?? Entity;
 
     #endregion
 

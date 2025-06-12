@@ -19,7 +19,7 @@ partial class ModelFromItem : IMultiWrapper<IEntity>, IEquatable<ITypedItem>
     public override int GetHashCode()
         => MultiWrapperEquality.GetWrappedHashCode(this);
 
-    IEntity IMultiWrapper<IEntity>.RootContentsForEqualityCheck
+    IEntity? IMultiWrapper<IEntity>.RootContentsForEqualityCheck
         => (_item as IMultiWrapper<IEntity>)?.RootContentsForEqualityCheck;
 
     /// <summary>

@@ -20,7 +20,7 @@ partial class CustomItem: IMultiWrapper<IEntity>
     public override int GetHashCode()
         => MultiWrapperEquality.GetWrappedHashCode(this);
 
-    IEntity IMultiWrapper<IEntity>.RootContentsForEqualityCheck
+    IEntity? IMultiWrapper<IEntity>.RootContentsForEqualityCheck
         => (_item as IMultiWrapper<IEntity>)?.RootContentsForEqualityCheck;
 
     /// <summary>
