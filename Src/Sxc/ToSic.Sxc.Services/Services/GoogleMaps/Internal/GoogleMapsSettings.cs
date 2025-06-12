@@ -7,8 +7,7 @@ namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class GoogleMapsSettings(IJsonService jsonService)
-    : EntityBasedService<GoogleMapsSettings>($"{SxcLogName}.GMapSt")
+public class GoogleMapsSettings(IJsonService jsonService) : EntityBasedService($"{SxcLogName}.GMapSt")
 {
     public static string TypeIdentifier = "f5764f60-2621-4a5d-9391-100fbe664640";
 
