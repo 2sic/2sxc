@@ -147,6 +147,14 @@ public class HelpForRazor12
                     "Your code seems to use an old 'GetBestValue() overload to get with/without converting to links. This has been inactive for a long time and is removed in v20. Please see guide TODO!",
             },
 
+            new CodeHelp
+            {
+                Name = "Detect use of Get<T> without using",
+                // Full error is something like: "error CS0308: The non-generic method 'IEntity.Get(string)' cannot be used with type arguments"
+                Detect = @"error CS0308: The non-generic method 'IEntity.Get(string)' cannot be used with type arguments",
+                UiMessage = "Your code seems to use a generic 'Get...(...). This is an extension method as of v20. Make sure you add '@using ToSic.Eav.Data' to your razor file.",
+            },
+
             #endregion
 
             // Added in v20, but for everything - detect calls to APIs without using parameter names
