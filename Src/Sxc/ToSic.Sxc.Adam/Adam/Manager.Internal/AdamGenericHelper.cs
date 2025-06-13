@@ -26,7 +26,7 @@ public abstract class AdamGenericHelper
 public class AdamGenericHelper<TFolderId, TFileId> : AdamGenericHelper
 {
     public override IFolder FolderOfField(AdamManager adamManager, AdamStorageOfField storage, IField field)
-        => new FolderOfField<TFolderId, TFileId>(adamManager, storage, field);
+        => FolderOfField<TFolderId, TFileId>.Create(adamManager, storage, field);
 
     public override bool AssetIsChildOfFolder(IFolder parentFolder, ToSic.Eav.Apps.Assets.IAsset target)
     {

@@ -12,29 +12,42 @@ namespace ToSic.Sxc.Adam.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class FolderOfField<TFolderId, TFileId> : Folder<TFolderId, TFileId>
 {
-    public FolderOfField(AdamManager adamManager, AdamStorageOfField adamStorageOfField, IField field) : base(adamManager)
+    private FolderOfField(AdamManager adamManager, IField field) : base(adamManager)
     {
         Field = field;
+    }
 
+    public static FolderOfField<TFolderId, TFileId> Create(AdamManager adamManager, AdamStorageOfField adamStorageOfField, IField field)
+    {
         // WIP - maybe still provide some basic info?
         //Url = adamStorageOfField.Manager.AdamFs.GetUrl(adamStorageOfField.Root);
-        if (!AdamFs.FolderExists(adamStorageOfField.Root))
-            return;
-
-        var f = AdamManager.Folder(adamStorageOfField.Root);
+        var quickInit = !adamManager.AdamFs.FolderExists(adamStorageOfField.Root);
+        var f = quickInit ? null : adamManager.Folder(adamStorageOfField.Root);
         if (f == null)
-            return;
+            quickInit = true;
 
-        Path = f.Path;
-        Modified = f.Modified;
-        SysId = ((IAssetSysId<TFolderId>)f).SysId;
-        Created = f.Created;
-        Modified = f.Modified;
+        if (quickInit)
+            return new(adamManager, field)
+            {
+                ParentSysId = default,
+                SysId = default,
+                Created = default,
+                Modified = default,
+                Path = null!,
+                Name = null!,
+                PhysicalPath = null!,
+            };
 
-        // IAdamItem interface properties
-        Name = f.Name;
-        Url = f.Url;
-
-        PhysicalPath = f.PhysicalPath;
+        return new(adamManager, field)
+        {
+            ParentSysId = default,
+            SysId = ((IAssetSysId<TFolderId>)f).SysId,
+            Created = f.Created,
+            Modified = f.Modified,
+            Path = f.Path,
+            Name = f.Name,
+            PhysicalPath = f.PhysicalPath,
+            Url = f.Url,
+        };
     }
 }
