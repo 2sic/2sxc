@@ -62,6 +62,7 @@ internal class HelpForCommonProblems
     public static List<CodeHelp> HelpForRuntimeProblems =
     [
         ..HelpForInvalidCast,
+        ..HelpForRazor12.IssuesRazor12AlsoForRuntime,
         MethodOnObjectNotFound
     ];
 }
