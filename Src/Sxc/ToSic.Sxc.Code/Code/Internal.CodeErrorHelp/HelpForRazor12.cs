@@ -112,8 +112,7 @@ public class HelpForRazor12
                 Name = "Detect Convert to IEntityLight",
                 // Full error is something like "Unable to cast object of type 'ToSic.Eav.Data.Entity' to type 'ToSic.Eav.Data.IEntityLight'."
                 Detect = @"to type 'ToSic.Eav.Data.IEntityLight'",
-                UiMessage =
-                    "Your code seems to use an old interface IEntityLight. Best just use 'ToSic.Eav.Data.IEntity' or see if the conversion is even necessary.",
+                UiMessage = "Your code seems to use an old interface IEntityLight. Best just use 'ToSic.Eav.Data.IEntity' or see if the conversion is even necessary.",
             },
 
             // New v20 - detect usage of `IEntityLight` which should not exist in any DLLs any more
@@ -132,8 +131,7 @@ public class HelpForRazor12
                 Name = "Detect use of old GetBestValue - without the parameter name",
                 // Full error is something like: "error CS1501: No overload for method 'GetBestValue' takes 3 arguments at System.Web.Compilation.AssemblyBuilder.Compile()"
                 Detect = @"error CS1501: No overload for method 'GetBestValue' takes 3 arguments",
-                UiMessage =
-                    "Your code seems to use an old 'GetBestValue() overload to get with/without converting to links. This has been inactive for a long time and is removed in v20. Please see guide TODO!",
+                UiMessage = "Your code seems to use an old 'GetBestValue() overload to get with/without converting to links. This has been inactive for a long time and is removed in v20. Please see guide TODO!",
             },
 
             // New v20 - detect usage of `GetBestValue(name, languages, resolveHyperlinks: bool)` which does not exist anymore
@@ -141,10 +139,8 @@ public class HelpForRazor12
             {
                 Name = "Detect use of old GetBestValue - with the parameter name",
                 // Full error is something like: "error CS1739: The best overload for 'GetBestValue' does not have a parameter named 'resolveHyperlinks' at System.Web.Compilation.AssemblyBuilder.Compile()"
-                Detect =
-                    @"error CS1739: The best overload for 'GetBestValue' does not have a parameter named 'resolveHyperlinks'",
-                UiMessage =
-                    "Your code seems to use an old 'GetBestValue() overload to get with/without converting to links. This has been inactive for a long time and is removed in v20. Please see guide TODO!",
+                Detect = @"error CS1739: The best overload for 'GetBestValue' does not have a parameter named 'resolveHyperlinks'",
+                UiMessage = "Your code seems to use an old 'GetBestValue() overload to get with/without converting to links. This has been inactive for a long time and is removed in v20. Please see guide TODO!",
             },
 
             new CodeHelp
