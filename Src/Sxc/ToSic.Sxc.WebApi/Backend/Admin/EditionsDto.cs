@@ -18,7 +18,8 @@ public class EditionsDto: RichResult
 public class EditionDto
 {
     public string Name { get; set; }
-    public string Description { get; set; }
+    public string? Description { get; set; }
+
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public bool IsDefault { get; set; }
 }
