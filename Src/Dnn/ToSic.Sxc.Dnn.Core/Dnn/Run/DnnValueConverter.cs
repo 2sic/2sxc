@@ -42,10 +42,12 @@ internal class DnnValueConverter : ValueConverterBase
     #endregion
 
     /// <inheritdoc />
-    public override string ToReference(string value) => TryToResolveOneLinkToInternalDnnCode(value);
+    public override string ToReference(string value)
+        => TryToResolveOneLinkToInternalDnnCode(value);
 
     /// <inheritdoc />
-    public override string ToValue(string reference, Guid itemGuid = default) => TryToResolveCodeToLink(itemGuid, reference);
+    public override string? ToValue(string? reference, Guid itemGuid = default)
+        => TryToResolveCodeToLink(itemGuid, reference);
 
     /// <summary>
     /// Will take a link like http:\\... to a file or page and try to return a DNN-style info like
