@@ -21,22 +21,18 @@ public abstract class BlockWebApiBackendBase(
 
     #region Block-Context Requiring properties
 
-    public IBlock Block => _block ??= CtxService.BlockRequired();
-    private IBlock _block;
+    public IBlock Block => field ??= CtxService.BlockRequired();
 
-    protected IAppWorkCtx AppWorkCtx => _appWorkCtx ??= AppWorkCtxService.Context(Block.Context.AppReader);
-    private IAppWorkCtx _appWorkCtx;
-    protected IAppWorkCtxPlus AppWorkCtxPlus => _appWorkCtxPlus ??= AppWorkCtxService.ToCtxPlus(AppWorkCtx);
-    private IAppWorkCtxPlus _appWorkCtxPlus;
-    protected IAppWorkCtxWithDb AppWorkCtxDb => _appWorkCtxDb ??= AppWorkCtxService.CtxWithDb(AppWorkCtx.AppReader);
-    private IAppWorkCtxWithDb _appWorkCtxDb;
+    protected IAppWorkCtx AppWorkCtx => field ??= AppWorkCtxService.Context(Block.Context.AppReaderRequired);
+    protected IAppWorkCtxPlus AppWorkCtxPlus => field ??= AppWorkCtxService.ToCtxPlus(AppWorkCtx);
+    protected IAppWorkCtxWithDb AppWorkCtxDb => field ??= AppWorkCtxService.CtxWithDb(AppWorkCtx.AppReader);
 
     #endregion
 
 
     protected void ThrowIfNotAllowedInApp(List<Grants> requiredGrants, IAppIdentity alternateApp = null)
     {
-        var permCheck = multiPermissionsApp.New().Init(ContextOfBlock, alternateApp ?? ContextOfBlock.AppReader);
+        var permCheck = multiPermissionsApp.New().Init(ContextOfBlock, alternateApp ?? ContextOfBlock.AppReaderRequired);
         if (!permCheck.EnsureAll(requiredGrants, out var error))
             throw HttpException.PermissionDenied(error);
     }

@@ -57,10 +57,10 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
 
         // Do various pre-checks and path variations
         var view = block.View;
-        var appState = block.Context.AppReader;
+        var appReader = block.Context.AppReaderRequired;
         var appPathRootInInstallation = block.App.PathSwitch(view.IsShared, PathTypes.PhysRelative);
         var (polymorphPathOrNull, edition) = Services.EnginePolymorphism
-            .PolymorphTryToSwitchPath(appPathRootInInstallation, view, appState);
+            .PolymorphTryToSwitchPath(appPathRootInInstallation, view, appReader);
 
         var templatePath = polymorphPathOrNull
                            ?? Path.Combine(appPathRootInInstallation, view.Path).ToAbsolutePathForwardSlash();
@@ -76,7 +76,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
             });
 
         // check common errors
-        Services.EngineCheckTemplate.CheckExpectedTemplateErrors(view, appState);
+        Services.EngineCheckTemplate.CheckExpectedTemplateErrors(view, appReader);
 
         // check access permissions - before initializing or running data-code in the template
         Services.EngineCheckTemplate.ThrowIfViewPermissionsDenyAccess(view, block.Context);
@@ -122,7 +122,8 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
         var l = Log.Fn<RenderEngineResult>();
 
         // Check App Requirements (new 16.08)
-        var appReqProblems = Services.EngineAppRequirements.GetMessageForRequirements(Block.Context.AppReader);
+        var appReqProblems = Services.EngineAppRequirements
+            .GetMessageForRequirements(Block.Context.AppReaderRequired);
         if (appReqProblems != null)
             return l.Return(appReqProblems, "error");
 

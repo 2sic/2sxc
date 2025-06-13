@@ -112,7 +112,7 @@ internal partial class DnnPagePublishing(
                 l.A(Log.Try(() => $"will publish id⋮{ids.Count} ids:[{ string.Join(",", ids.Select(i => i.ToString()).ToArray()) }]"));
 
                 if (ids.Any())
-                    entPublish.New(cb.Context.AppReader).Publish(ids.ToArray());
+                    entPublish.New(cb.Context.AppReaderRequired).Publish(ids.ToArray());
                 else
                     l.A("no ids found, won\'t publish items");
             }

@@ -52,7 +52,7 @@ public class EngineCheckTemplate(LazySvc<AppPermissionCheck> appPermCheckLazy)
         // do security check IF security exists
         // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
         var templatePermissions = appPermCheckLazy.Value
-            .ForItem(appContext, appContext.AppReader, view.Entity);
+            .ForItem(appContext, appContext.AppReaderRequired, view.Entity);
 
         // Views only use permissions to prevent access, so only check if there are any configured permissions
         if (appContext.User.IsSiteAdmin || !templatePermissions.HasPermissions)

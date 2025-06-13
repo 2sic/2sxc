@@ -44,9 +44,8 @@ public class AppContent(
     }
     protected IContextOfApp Context;
 
-    protected IAppReader AppReader => Context?.AppReader ??
-                                   throw new(
-                                       "Can't access AppState before Context is ready. Did you forget to call Init(...)?");
+    protected IAppReader AppReader => Context?.AppReaderRequired ??
+                                   throw new("Can't access AppState before Context is ready. Did you forget to call Init(...)?");
 
     #endregion
 
@@ -284,6 +283,8 @@ public class AppContent(
 
     protected MultiPermissionsItems ThrowIfNotAllowedInItem(IEntity itm, List<Grants> requiredGrants, IAppIdentity appIdentity)
     {
+        if (itm == null)
+            throw new ArgumentNullException(nameof(itm), @"Item must not be null to check it's security.");
         var permCheck = itemsPermissions.New().Init(Context, appIdentity, itm);
         if (!permCheck.EnsureAll(requiredGrants, out var error))
             throw HttpException.PermissionDenied(error);

@@ -20,6 +20,6 @@ public class AppFolderLookupForWebApi(ISxcCurrentContextService ctxService) : Se
     public string GetAppFolder()
     {
         var ctx = ctxService.AppNameRouteBlock("");
-        return ctx.AppReader.Specs.Folder;
+        return ctx.AppReaderRequired.Specs.Folder;
     }
 }

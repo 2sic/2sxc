@@ -97,7 +97,7 @@ public class EditLoadSettingsHelper(
             .ToList();
 
         // Setup Type Serializer - same as EditLoadBackend
-        var serializerForTypes = jsonSerializerGenerator.New().SetApp(parameters.ContextOfApp.AppReader);
+        var serializerForTypes = jsonSerializerGenerator.New().SetApp(parameters.ContextOfApp.AppReaderRequired);
         var serSettings = new JsonSerializationSettings
         {
             CtIncludeInherited = true,

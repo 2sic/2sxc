@@ -21,14 +21,13 @@ public partial class ListControllerReal(
 {
     public const string LogSuffix = "Lst";
 
-    private IContextOfBlock Context => _context ??= CtxService.BlockContextRequired();
-    private IContextOfBlock _context;
+    private IContextOfBlock Context => field ??= CtxService.BlockContextRequired();
 
 
     public void Move(Guid? parent, string fields, int index, int toIndex) 
     {
         var l = Log.Fn($"parent:{parent}, fields:{fields}, index:{index}, toIndex:{toIndex}");
-        var fList = workFieldList.New(Context.AppReader);
+        var fList = workFieldList.New(Context.AppReaderRequired);
         ModifyList(FindOrThrow(parent), fields,
             (entity, fieldList, versioning) => fList.FieldListMove(entity, fieldList, index, toIndex, versioning));
         l.Done();
@@ -38,7 +37,7 @@ public partial class ListControllerReal(
     public void Delete(Guid? parent, string fields, int index) 
     {
         var l = Log.Fn($"parent:{parent}, fields:{fields}, index:{index}");
-        var fList = workFieldList.New(Context.AppReader);
+        var fList = workFieldList.New(Context.AppReaderRequired);
         ModifyList(FindOrThrow(parent), fields,
             (entity, fieldList, versioning) => fList.FieldListRemove(entity, fieldList, index, versioning));
         l.Done();
@@ -66,10 +65,10 @@ public partial class ListControllerReal(
     {
         var target = parent == null
             ? CtxService.BlockRequired().Configuration.Entity
-            : ContextOfBlock.AppReader.List.One(parent.Value);
+            : ContextOfBlock.AppReaderRequired.List.One(parent.Value);
 
         return target == null
             ? throw new($"Can't find parent {parent}")
-            : ContextOfBlock.AppReader.GetDraftOrKeep(target);
+            : ContextOfBlock.AppReaderRequired.GetDraftOrKeep(target);
     }
 }

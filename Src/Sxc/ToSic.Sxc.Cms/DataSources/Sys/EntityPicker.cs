@@ -170,7 +170,8 @@ public class EntityPicker : DataSourceBase
             {
                 var lType = l.Fn($"Adding all of '{type.Name}'");
 
-                var permCheckType = _typePermissions.New().Init(context, context.AppReader, type.Name);
+                var permCheckType = _typePermissions.New()
+                    .Init(context, context.AppReaderRequired, type.Name);
 
                 if (permCheckType.EnsureAll(GrantSets.ReadSomething, out _))
                 {

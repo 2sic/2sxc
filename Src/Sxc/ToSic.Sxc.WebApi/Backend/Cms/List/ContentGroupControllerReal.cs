@@ -26,10 +26,9 @@ public class ContentGroupControllerReal(
     public ISxcCurrentContextService CtxService { get; } = ctxService;
 
 
-    private IContextOfBlock Context => _context ??= CtxService.BlockContextRequired();
-    private IContextOfBlock _context;
+    private IContextOfBlock Context => field ??= CtxService.BlockContextRequired();
 
-    private IAppWorkCtxPlus AppCtx => _appCtx.Get(() => appBlocks.CtxSvc.ContextPlus(Context.AppReader));
+    private IAppWorkCtxPlus AppCtx => _appCtx.Get(() => appBlocks.CtxSvc.ContextPlus(Context.AppReaderRequired));
     private readonly GetOnce<IAppWorkCtxPlus> _appCtx = new();
     #endregion
 
@@ -40,7 +39,8 @@ public class ContentGroupControllerReal(
         var cg = appBlocks.New(AppCtx).GetBlockConfig(guid);
 
         // new in v11 - this call might be run on a non-content-block, in which case we return null
-        if (cg.Entity == null) return null;
+        if (cg.Entity == null)
+            return null;
         if (cg.Entity.Type.Name != WorkBlocks.BlockTypeName) return null;
 
         var header = cg.Header.FirstOrDefault();
@@ -94,10 +94,10 @@ public class ContentGroupControllerReal(
     public List<EntityInListDto> ItemList(Guid guid, string part)
     {
         Log.A($"item list for:{guid}");
-        var cg = Context.AppReader.GetDraftOrPublished(guid);
+        var cg = Context.AppReaderRequired.GetDraftOrPublished(guid);
         var itemList = cg.Children(part);
         var list = itemList
-            .Select(Context.AppReader.GetDraftOrKeep)
+            .Select(Context.AppReaderRequired.GetDraftOrKeep)
             .Select((c, index) => new EntityInListDto
             {
                 Index = index,
@@ -121,10 +121,13 @@ public class ContentGroupControllerReal(
 
         publishing.Value.DoInsidePublishing(Context, args =>
         {
-            var entity = Context.AppReader.GetDraftOrPublished(guid);
-            var sequence = list.Select(i => i.Index).ToArray();
+            var entity = Context.AppReaderRequired.GetDraftOrPublished(guid);
+            var sequence = list
+                .Select(i => i.Index)
+                .ToArray();
             var fields = part == ViewParts.ContentLower ? ViewParts.ContentPair : [part];
-            workFieldList.New(Context.AppReader).FieldListReorder(entity, fields, sequence, Context.Publishing.ForceDraft);
+            workFieldList.New(Context.AppReaderRequired)
+                .FieldListReorder(entity, fields, sequence, Context.Publishing.ForceDraft);
         });
 
         return true;

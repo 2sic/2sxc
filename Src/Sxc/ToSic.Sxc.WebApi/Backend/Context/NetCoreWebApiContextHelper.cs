@@ -89,7 +89,7 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
             if (routeAppPathObj == null) return "";
             var routeAppPath = routeAppPathObj.ToString();
 
-            var appId = CtxService.SetAppOrNull(routeAppPath)?.AppReader.AppId ?? Eav.Sys.EavConstants.NullId;
+            var appId = CtxService.SetAppOrNull(routeAppPath)?.AppReaderRequired.AppId ?? Eav.Sys.EavConstants.NullId;
 
             if (appId != Eav.Sys.EavConstants.NullId)
             {

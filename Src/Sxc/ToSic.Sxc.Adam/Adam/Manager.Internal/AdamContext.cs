@@ -62,7 +62,7 @@ public class AdamContext(AdamContext.MyServices services)
     /// </summary>
     public AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot)
     {
-        var l = Log.Fn<AdamContext>($"app: {context.AppReader.Show()}, field:{fieldName}, guid:{entityGuid}, usePortalRoot: {usePortalRoot}");
+        var l = Log.Fn<AdamContext>($"app: {context.AppReaderRequired.Show()}, field:{fieldName}, guid:{entityGuid}, usePortalRoot: {usePortalRoot}");
         AdamManager.Init(context, CompatibilityLevels.CompatibilityLevel10);
         AdamRoot = usePortalRoot
             ? Services.SiteStorageGen.New()
@@ -72,7 +72,7 @@ public class AdamContext(AdamContext.MyServices services)
         Context = context;
 
         Permissions = Services.TypesPermissions.New()
-            .Init(context, context.AppReader, contentType);
+            .Init(context, context.AppReaderRequired, contentType);
 
         // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
         UseSiteRoot = usePortalRoot;
@@ -100,7 +100,7 @@ public class AdamContext(AdamContext.MyServices services)
         if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(fieldName))
             return l.Return(this);
 
-        Attribute = AttributeDefinition(context.AppReader, contentType, fieldName);
+        Attribute = AttributeDefinition(context.AppReaderRequired, contentType, fieldName);
         if (!Security.FileTypeIsOkForThisField(out var exp))
             throw exp;
         return l.Return(this);

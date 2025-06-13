@@ -26,9 +26,10 @@ public class EngineAppRequirements(IRequirementsService requirements) : EngineRe
 
         // 1. Preflight
         // 1.1. make sure we have an App-State
-        if (appReader == null) return l.ReturnNull("no appState");
+        if (appReader == null)
+            return l.ReturnNull("no appState");
 
-         if (RequirementsMet(appReader))
+        if (RequirementsMet(appReader))
             return l.ReturnNull("all seems ok");
 
         var result = BuildRenderEngineResult(RequirementsStatus(appReader));

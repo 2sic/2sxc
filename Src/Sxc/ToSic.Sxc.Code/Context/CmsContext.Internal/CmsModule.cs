@@ -11,7 +11,7 @@ internal class CmsModule(CmsContext parent, IModule module, IBlock block)
     public ICmsBlock Block => field ??= new CmsBlock(block.RootBlock);
 
     protected override IMetadataOf GetMetadataOf() 
-        => block.Context.AppReader.Metadata.GetMetadataOf(TargetTypes.Module, Id, title: "Module " + Id)
+        => block.Context.AppReaderRequired.Metadata.GetMetadataOf(TargetTypes.Module, Id, title: "Module " + Id)
             .AddRecommendations();
 
 }

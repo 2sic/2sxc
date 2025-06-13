@@ -52,7 +52,7 @@ public class AdamManager(AdamManager.MyServices services)
 
     public IAdamFileSystem AdamFs => field ??= Services.AdamFsLazy.SetInit(f => f.Init(this)).Value;
 
-    public IAppWorkCtx AppWorkCtx => field ??= new AppWorkCtx(AppContext.AppReader);
+    public IAppWorkCtx AppWorkCtx => field ??= new AppWorkCtx(AppContext.AppReaderRequired);
 
     private IContextOfApp AppContext { get; set; }
 
@@ -65,7 +65,7 @@ public class AdamManager(AdamManager.MyServices services)
     /// <summary>
     /// Path to the app assets
     /// </summary>
-    public string Path => field ??= Services.AdamConfiguration.PathForApp(AppContext.AppReader.Specs);
+    public string Path => field ??= Services.AdamConfiguration.PathForApp(AppContext.AppReaderRequired.Specs);
 
     #region Folder Stuff
 

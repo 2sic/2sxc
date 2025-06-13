@@ -41,7 +41,7 @@ public class AppQueryControllerReal(
         var appCtx = appId != null ? ctxService.GetExistingAppOrSet(appId.Value) : ctxService.BlockContextRequired();
 
         // If the appId wasn't specified or == to the Block-AppId, then also include block info to enable more data-sources like CmsBlock
-        var maybeBlock = appId == null || appId == appCtx.AppReader.AppId ? ctxService.BlockOrNull() : null;
+        var maybeBlock = appId == null || appId == appCtx.AppReaderRequired.AppId ? ctxService.BlockOrNull() : null;
 
         // If no app available from context, check if an app-id was supplied in url
         // Note that it may only be an app from the current portal
@@ -50,7 +50,7 @@ public class AppQueryControllerReal(
 
         var blockLookupOrNull = maybeBlock?.Data?.Configuration?.LookUpEngine;
 
-        var result = BuildQueryAndRun(appCtx.AppReader, name, stream, includeGuid, appCtx, more, blockLookupOrNull);
+        var result = BuildQueryAndRun(appCtx.AppReaderRequired, name, stream, includeGuid, appCtx, more, blockLookupOrNull);
         return l.Return(result);
     }
 
@@ -73,7 +73,7 @@ public class AppQueryControllerReal(
         var blockLookupOrNull = ctxService.BlockOrNull()?.Data?.Configuration?.LookUpEngine;
 
         // now just run the default query check and serializer
-        var result = BuildQueryAndRun(appCtx.AppReader, name, stream, false, appCtx, more, blockLookupOrNull);
+        var result = BuildQueryAndRun(appCtx.AppReaderRequired, name, stream, false, appCtx, more, blockLookupOrNull);
         return l.Return(result);
     }
 

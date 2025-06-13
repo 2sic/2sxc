@@ -23,12 +23,14 @@ public class PolymorphConfigReader(LazySvc<ServiceSwitcher<IPolymorphismResolver
     /// or to use this same PolymorphConfigReader to figure out the edition.
     /// Since the reader should only be created if necessary, it's handed in as a function.
     /// </summary>
-    public string UseViewEditionOrGet(IBlock block) => UseViewEditionOrGet(block?.View, block?.Context.AppReader);
+    public string UseViewEditionOrGet(IBlock block)
+        => UseViewEditionOrGet(block?.View, block?.Context.AppReaderRequired);
 
     public string UseViewEditionOrGet(IView view, IAppReader appReader)
     {
         var viewEdition = view?.Edition.NullIfNoValue();
-        if (viewEdition != null) return viewEdition;
+        if (viewEdition != null)
+            return viewEdition;
 
         _appId = appReader.AppId;
         Init(appReader.List);

@@ -43,15 +43,16 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     private ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
     /// <inheritdoc />
-    public override ISite Init(int siteId, ILog parentLog) => TryInitPortal(new(siteId), parentLog);
+    public override ISite Init(int siteId, ILog? parentLogOrNull)
+        => TryInitPortal(new(siteId), parentLogOrNull);
 
     #endregion
 
     #region Swap new Portal Settings into this object
 
-    internal DnnSite TryInitPortal(PortalSettings settings, ILog extLogOrNull = default)
+    internal DnnSite TryInitPortal(PortalSettings settings, ILog parentLogOrNull = default)
     {
-        AttachToExternalLog(extLogOrNull);
+        AttachToExternalLog(parentLogOrNull);
 
         var l = Log.Fn<DnnSite>();
         UnwrappedSite = KeepBestPortalSettings(settings);

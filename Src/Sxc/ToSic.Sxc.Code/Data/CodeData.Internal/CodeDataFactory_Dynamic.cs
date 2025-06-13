@@ -100,6 +100,9 @@ partial class CodeDataFactory: ICodeDataFactoryDeepWip
 
     #endregion
 
-    public IAppReader AppReaderOrNull => BlockOrNull?.Context?.AppReader;
+    // 2026-05-13 2dm - not sure if AppReaderRequired is correct, but I assume that if we do have a context,
+    // then it must have an AppReader, so we can use it.
+    public IAppReader AppReaderOrNull => BlockOrNull?.Context?.AppReaderRequired;
+
     int ICodeDataFactoryDeepWip.AppIdOrZero => BlockOrNull?.AppId ?? 0;
 }

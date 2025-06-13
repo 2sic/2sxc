@@ -135,7 +135,7 @@ public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices s
     public bool FieldPermissionOk(List<Grants> requiredGrant)
     {
         var fieldPermissions = Services.AppPermissionChecks.New()
-            .ForAttribute(AdamContext.Permissions.Context, AdamContext.Context.AppReader, AdamContext.Attribute);
+            .ForAttribute(AdamContext.Permissions.Context, AdamContext.Context.AppReaderRequired, AdamContext.Attribute);
 
         return fieldPermissions.UserMay(requiredGrant).Allowed;
     }

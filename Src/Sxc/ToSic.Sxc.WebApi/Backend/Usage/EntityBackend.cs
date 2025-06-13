@@ -16,11 +16,11 @@ public class EntityBackend(
     public dynamic Usage(int appId, Guid guid)
     {
         var context = ctxService.GetExistingAppOrSet(appId);
-        var permCheck = appPermissions.New().Init(context, context.AppReader);
+        var permCheck = appPermissions.New().Init(context, context.AppReaderRequired);
         if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
             throw HttpException.PermissionDenied(error);
 
-        var item = context.AppReader.List.One(guid);
+        var item = context.AppReaderRequired.List.One(guid);
         // Note: this isn't proper yet, it's all relationships in the app, not just of this entity
         //var relationships = item.Relationships.AllRelationships;
 

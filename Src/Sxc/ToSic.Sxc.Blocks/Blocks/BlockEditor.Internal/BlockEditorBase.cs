@@ -58,7 +58,9 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.MySe
         if (BlockConfiguration.Exists || forceCreateContentGroup)
         {
             var existedBeforeSettingTemplate = BlockConfiguration.Exists;
-            var contentGroupGuid = Services.WorkBlocksMod.New(Block.Context.AppReader).UpdateOrCreateContentGroup(BlockConfiguration, templateId);
+            var contentGroupGuid = Services.WorkBlocksMod
+                .New(Block.Context.AppReaderRequired)
+                .UpdateOrCreateContentGroup(BlockConfiguration, templateId);
 
             if (!existedBeforeSettingTemplate) EnsureLinkToContentGroup(contentGroupGuid);
 
@@ -66,7 +68,7 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.MySe
         }
 
         // only set preview / content-group-reference - but must use the guid
-        var templateGuid = Block.App.Data.List.One(templateId).EntityGuid;
+        var templateGuid = Block.App.Data.List.One(templateId)!.EntityGuid;
         SavePreviewTemplateId(templateGuid);
         return l.Return(null, "only set preview, return null");
     }
@@ -84,7 +86,7 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.MySe
         var hasPresentation = presEntity != null;
 
         // make sure we really have the draft item an not the live one
-        var appReader = Block.Context.AppReader;
+        var appReader = Block.Context.AppReaderRequired;
         var publisher = Services.Publisher.New(appReader: appReader);
         var contDraft = contEntity.IsPublished ? appReader.GetDraft(contEntity) : contEntity;
         publisher.Publish(contDraft.RepositoryId);

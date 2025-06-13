@@ -57,7 +57,7 @@ internal sealed class OqtSite: Site<Site>
         return this;
     }
 
-    public override ISite Init(int siteId, ILog parentLog)
+    public override ISite Init(int siteId, ILog? parentLogOrNull)
     {
         UnwrappedSite = _siteRepository.Value.GetSite(siteId);
         return this;

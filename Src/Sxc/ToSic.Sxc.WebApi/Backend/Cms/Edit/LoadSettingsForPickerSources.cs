@@ -63,7 +63,7 @@ internal class LoadSettingsForPickerSources() : LoadSettingsProviderBase($"{SxcL
             .Select(nameId => new
             {
                 NameId = nameId,
-                Type = parameters.ContextOfApp.AppReader.GetContentType(nameId)
+                Type = parameters.ContextOfApp.AppReaderRequired.GetContentType(nameId)
             })
             .Where(t => t.Type != null)
             .ToListOpt();

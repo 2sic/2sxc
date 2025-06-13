@@ -106,9 +106,9 @@ public partial class BlockBuilder
                     var blockId = Block.Configuration?.BlockIdentifierOrNull;
                     var msg = "Data is missing. ";
 
-                    msg += (Block.Context.AppReader?.IsHealthy == false)
+                    msg += (Block.Context.AppReaderOrNull?.IsHealthy == false)
                         ? "The app is unhealthy, indicating that data wasn't properly loaded from SQL. "
-                          + "This is the message: '" + Block.Context.AppReader.HealthMessage + "'. "
+                          + "This is the message: '" + Block.Context.AppReaderRequired.HealthMessage + "'. "
                           + "Please check the insights to see in more detail what happened."
                         : "This is common when a site is copied " +
                           "but the content / apps have not been imported yet" +
@@ -126,10 +126,10 @@ public partial class BlockBuilder
 
             #region App is unhealthy
 
-            if (Block.Context.AppReader?.IsHealthy == false)
+            if (Block.Context.AppReaderOrNull?.IsHealthy == false)
             {
-                Log.A("app is unhealthy, show health message");
-                exceptions.Add(new(AppIsUnhealthy + Block.Context.AppReader.HealthMessage));
+                l.A("app is unhealthy, show health message");
+                exceptions.Add(new(AppIsUnhealthy + Block.Context.AppReaderRequired.HealthMessage));
                 body = RenderingHelper.DesignErrorMessage(exceptions, true, AppIsUnhealthy + Render.RenderingHelper.DefaultVisitorError)
                        + $"{body}";
                 err = true;
