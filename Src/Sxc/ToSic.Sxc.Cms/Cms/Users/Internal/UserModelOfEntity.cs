@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Cms.Users.Internal;
 internal class UserModelOfEntity : ModelFromEntity, IUserModel
 {
 
-    public string Email => _entity.Get<string>(nameof(Email));
+    public string Email => GetThis<string>(null);
 
     public int Id => _entity.EntityId;
 
@@ -16,25 +16,25 @@ internal class UserModelOfEntity : ModelFromEntity, IUserModel
 
     public DateTime Modified => _entity.Modified;
 
-    public bool IsAnonymous => _entity.Get<bool>(nameof(IsAnonymous));
+    public bool IsAnonymous => GetThis(false);
 
-    public bool IsSiteAdmin => _entity.Get<bool>(nameof(IsSiteAdmin));
+    public bool IsSiteAdmin => GetThis(false);
 
-    public bool IsContentAdmin => _entity.Get<bool>(nameof(IsContentAdmin));
+    public bool IsContentAdmin => GetThis(false);
 
-    public bool IsContentEditor => _entity.Get<bool>(nameof(IsContentEditor));
+    public bool IsContentEditor => GetThis(false);
 
-    public string NameId => _entity.Get<string>(nameof(NameId));
+    public string NameId => GetThis<string>(null);
 
-    public bool IsSystemAdmin => _entity.Get<bool>(nameof(IsSystemAdmin));
+    public bool IsSystemAdmin => GetThis(false);
 
-    public bool IsSiteDeveloper => _entity.Get<bool>(nameof(IsSiteDeveloper));
+    public bool IsSiteDeveloper => GetThis(false);
 
     //IMetadata ICmsUser.Metadata => null;
 
-    public string Name => _entity.Get<string>(nameof(Name));
+    public string Name => GetThis<string>(null);
 
-    public string Username => _entity.Get<string>(nameof(Username));
+    public string Username => GetThis<string>(null);
 
     //IMetadataOf IHasMetadata.Metadata => null;
 

@@ -6,13 +6,13 @@ public class SiteModelOfEntity: ModelFromEntity, ISiteModel
 {
     public int Id => _entity.EntityId;
     public Guid Guid => _entity.EntityGuid;
-    public DateTime Created => _entity.Get<DateTime>(nameof(Created));
-    public DateTime Modified => _entity.Get<DateTime>(nameof(Modified));
-    public string Name => _entity.Get<string>(nameof(Name));
-    public string Url => _entity.Get<string>(nameof(Url));
-    public string Languages => _entity.Get<string>(nameof(Languages));
-    public string DefaultLanguage => _entity.Get<string>(nameof(DefaultLanguage));
-    public int ZoneId => _entity.Get<int>(nameof(ZoneId));
-    public int ContentAppId => _entity.Get<int>(nameof(ContentAppId));
-    public int PrimaryAppId => _entity.Get<int>(nameof(PrimaryAppId));
+    public DateTime Created => _entity.Created;
+    public DateTime Modified => _entity.Modified;
+    public string Name => GetThis<string>(null);
+    public string Url => GetThis<string>(null);
+    public string Languages => GetThis<string>(null);
+    public string DefaultLanguage => GetThis<string>(null);
+    public int ZoneId => GetThis(0);
+    public int ContentAppId => GetThis(0);
+    public int PrimaryAppId => GetThis(0);
 }

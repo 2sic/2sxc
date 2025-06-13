@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data.Internal;
+﻿using System.Runtime.CompilerServices;
+using ToSic.Sxc.Data.Internal;
 
 namespace ToSic.Sxc.Data.Models;
 
@@ -105,6 +106,24 @@ public abstract partial class ModelFromEntity: ICanWrap<IEntity>, ICanBeEntity /
     protected IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = false)
         where T : class, ICanWrapData
         => DataModelHelpers.AsList<T>(_modelFactory, source, protector, nullIfNull);
+
+    #endregion
+
+    #region GetThis
+
+
+    /// <summary>
+    /// Get a value from the underlying entity, whose name matches the property requesting this.
+    /// So if your C# property is called `Birthday` it will also get the field `Birthday` in the entity.
+    /// </summary>
+    /// <typeparam name="T">Optional type, usually auto-detected because of the `fallback` value</typeparam>
+    /// <param name="fallback">Value to provide if nothing was found - required</param>
+    /// <param name="propertyName">The property name - will be auto-filled by the compiler</param>
+    /// <returns>The typed value</returns>
+    //[return: NotNullIfNotNull(nameof(fallback))]
+    protected T? GetThis<T>(T? fallback, [CallerMemberName] string? propertyName = default)
+        => _entity.Get<T>(propertyName!, fallback: fallback);
+
 
     #endregion
 
