@@ -6,13 +6,50 @@ GO
 SET XACT_ABORT ON
 GO
 
+DECLARE @upgradeVersion NVARCHAR(20) = '16.07.01', @installedVersion NVARCHAR(20);
+SELECT @installedVersion = ISNULL(
+    (SELECT [Version] FROM Packages WHERE [Name] = N'2SexyContent'),
+    '99.99.99'
+)
+
+-- skip further execution if installedVersion > upgradeVersion
+IF (
+    TRY_CAST(PARSENAME(@installedVersion, 3) AS INT) >  TRY_CAST(PARSENAME(@upgradeVersion, 3) AS INT) OR
+    (
+        TRY_CAST(PARSENAME(@installedVersion, 3) AS INT) = TRY_CAST(PARSENAME(@upgradeVersion, 3) AS INT) AND
+        (
+            TRY_CAST(PARSENAME(@installedVersion, 2) AS INT) >  TRY_CAST(PARSENAME(@upgradeVersion, 2) AS INT) OR
+            (
+                TRY_CAST(PARSENAME(@installedVersion, 2) AS INT) = TRY_CAST(PARSENAME(@upgradeVersion, 2) AS INT) AND
+                TRY_CAST(PARSENAME(@installedVersion, 1) AS INT) > TRY_CAST(PARSENAME(@upgradeVersion, 1) AS INT)
+            )
+        )
+    )
+)
+RETURN;
+
+-- if the installed version is older than the upgrade version, then we can continue with the upgrade
+PRINT N'Upgrading 2sxc from version ' + @installedVersion + ' to ' + @upgradeVersion;
+
+-- check for minimum required version of 2sxc package
+DECLARE @RequiredVersion int, @RequiredVersionIsInstalled int;
+SET @RequiredVersion = 15;
+SELECT @RequiredVersionIsInstalled = CASE WHEN EXISTS(
+    SELECT 1 FROM Packages
+    WHERE [Name] = N'2SexyContent' AND CONVERT(int, PARSENAME([Version], 3)) >= @RequiredVersion
+) THEN 1 ELSE 0 END
+IF (@RequiredVersionIsInstalled = 0)
+BEGIN
+    RAISERROR(N'2sxc 15 or newer must be installed for the app module to install.', 16, 1);
+    RETURN;
+END
+
 -- add [Guid], [SysSettings] columns to 'ToSIC_EAV_Attributes'
 IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'Guid' AND Object_ID = OBJECT_ID('ToSIC_EAV_Attributes'))
 BEGIN
     ALTER TABLE [dbo].[ToSIC_EAV_Attributes] ADD [Guid] uniqueidentifier NULL,
     [SysSettings] nvarchar(MAX) NULL;
 END
-GO
 
 -- add [SysSettings] column to 'ToSIC_EAV_AttributeSets'
 IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'SysSettings' AND Object_ID = OBJECT_ID('ToSIC_EAV_AttributeSets'))

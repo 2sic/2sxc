@@ -1,6 +1,7 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="19.99.00">
+    
+    <package name="2sxc" type="Module" version="19.99.00">
       <friendlyName> Content</friendlyName>
       <description>2sxc is a DNN Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -18,52 +19,20 @@
         <dependency type="CoreVersion">09.11.00</dependency>
       </dependencies>
       <components>
+
         <component type="Script">
           <scripts>
             <basePath>DesktopModules\ToSic.Sxc</basePath>
+            <!-- The following script is actually Install.SqlDataProvider for clean install v20.00.00 DB, but adjusted for 2sxc Package rename -->
             <script type="Install">
               <path>SqlDataProvider</path>
-              <name>Install.SqlDataProvider</name>
-              <version>19.99.00</version>
+              <name>00.00.01.SqlDataProvider</name>
+              <version>00.00.01</version>
             </script>
+            <!-- The following script makes sure that the app module is only installed if 2sxc installed/upgraded correctly to v15 -->
             <script type="Install">
               <path>SqlDataProvider</path>
-              <name>00.99.00.SqlDataProvider</name>
-              <version>00.99.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>09.03.00.SqlDataProvider</name>
-              <version>09.03.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>09.07.00.SqlDataProvider</name>
-              <version>09.07.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>12.00.00.SqlDataProvider</name>
-              <version>12.00.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>13.00.00.SqlDataProvider</name>
-              <version>13.00.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>13.01.00.SqlDataProvider</name>
-              <version>13.01.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>13.04.00.SqlDataProvider</name>
-              <version>13.04.00</version>
-            </script>
-            <script type="Install">
-              <path>SqlDataProvider</path>
-              <name>15.00.00.SqlDataProvider</name>
+              <name>Require.SqlDataProvider</name>
               <version>15.00.00</version>
             </script>
             <script type="Install">
@@ -93,17 +62,19 @@
             </script>
           </scripts>
         </component>
+        
         <!--
           Always flush the dist folder before installing new stuff - must always run before the module is installed!
           That means the node has to be in the xml-file before the Module nodes
         -->
         <component type="Cleanup" version="15.00.00" fileName="cleanup\flush.txt">
         </component>
+        
         <component type="Module">
           <desktopModule>
             <moduleName>2sxc</moduleName>
             <foldername>ToSic.Sxc</foldername>
-            <businessControllerClass>ToSic.SexyContent.DnnBusinessController</businessControllerClass>
+            <businessControllerClass>ToSic.Sxc.DnnBusinessController</businessControllerClass>
             <supportedFeatures>
               <supportedFeature type="Searchable" />
               <supportedFeature type="Upgradeable" />
@@ -111,7 +82,7 @@
             <shareable>Supported</shareable>
             <moduleDefinitions>
               <moduleDefinition>
-                <definitionName>2Sexy Content</definitionName>
+                <definitionName>2sxc</definitionName>
                 <friendlyName>Content</friendlyName>
                 <defaultCacheTime>0</defaultCacheTime>
                 <moduleControls>
@@ -137,13 +108,14 @@
             </processorType>
             <processorCommand>UpgradeModule</processorCommand>
             <attributes>
-              <businessControllerClass>ToSic.SexyContent.DnnBusinessController</businessControllerClass>
+              <businessControllerClass>ToSic.Sxc.DnnBusinessController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
               <!-- This must contain all versions which have upgrade-code. By convention, we also add the main entry versions, even if no upgrade code exists for them -->
-              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,10.00.00,11.00.00,12.00.00,13.00.00,13.01.00,13.04.00,14.00.00,15.00.00,15.02.00,16.00.00,16.07.01,17.00.00,18.00.00,18.03.00,19.00.00,19.99.00</upgradeVersionsList>
+              <upgradeVersionsList>01.00.00,15.00.00,15.02.00,16.00.00,16.07.01,17.00.00,18.00.00,18.03.00,19.00.00,19.99.00</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>
+        
         <component type="Assembly">
           <assemblies>
             <basePath>bin</basePath>
@@ -540,7 +512,7 @@
           <files>
             <basePath></basePath>
             <file>
-              <name>bin/ToSic.SexyContent.Razor.pdb</name>
+              <name>bin/ToSic.Sxc.Razor.pdb</name>
             </file>
           </files>
         </component>-->
@@ -562,225 +534,16 @@
             </resourceFile>
           </resourceFiles>
         </component>
-
-        <component type="Cleanup" version="05.00.00">
-          <files>
-            <file>
-              <path>bin</path>
-              <name>ToSic.EAV.Library.dll</name>
-            </file>
-          </files>
-        </component>
-        <component type="Cleanup" version="05.00.01">
-          <files>
-            <file>
-              <path>bin</path>
-              <name>ToSIC.Modules.SexyContent.dll</name>
-            </file>
-            <file>
-              <path>bin</path>
-              <name>ToSIC.Modules.SexyContent.Razor.dll</name>
-            </file>
-          </files>
-        </component>
-        <component type="Cleanup" version="05.05.01">
-          <files>
-            <file>
-              <path>DesktopModules\ToSic.Sxc\App_LocalResources</path>
-              <name>ContentTypeAndDemoSelector.ascx.de-DE.resx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc\App_LocalResources</path>
-              <name>ContentTypeAndDemoSelector.ascx.resx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc\App_LocalResources</path>
-              <name>EAVManagement.ascx.de-DE.resx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc\App_LocalResources</path>
-              <name>EAVManagement.ascx.resx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc\App_LocalResources</path>
-              <name>EditTemplate.ascx.de-DE.resx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc\App_LocalResources</path>
-              <name>EditTemplate.ascx.resx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc\App_LocalResources</path>
-              <name>Export.ascx.de-DE.resx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc\App_LocalResources</path>
-              <name>Export.ascx.resx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc\App_LocalResources</path>
-              <name>Import.ascx.de-DE.resx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc\App_LocalResources</path>
-              <name>Import.ascx.resx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc\App_LocalResources</path>
-              <name>ManageTemplates.ascx.de-DE.resx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc\App_LocalResources</path>
-              <name>ManageTemplates.ascx.resx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc\App_LocalResources</path>
-              <name>NewOrEditItem.ascx.de-DE.resx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc\App_LocalResources</path>
-              <name>NewOrEditItem.ascx.resx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc\SexyContent\EAV\Controls</path>
-              <name>EditItem.ascx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc\SexyContent\EAV\Controls</path>
-              <name>NewItem.ascx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc\SexyContent\EAV\FieldTemplates</path>
-              <name>File_Edit.ascx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc</path>
-              <name>01.00.00.SqlDataProvider</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc</path>
-              <name>01.00.01.SqlDataProvider</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc</path>
-              <name>02.00.00.SqlDataProvider</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc</path>
-              <name>03.00.00.SqlDataProvider</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc</path>
-              <name>03.03.00.SqlDataProvider</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc</path>
-              <name>03.04.03.SqlDataProvider</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc</path>
-              <name>ContentTypeAndDemoSelector.ascx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc</path>
-              <name>EAVManagement.ascx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc</path>
-              <name>EditTemplate.ascx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc</path>
-              <name>Export.ascx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc</path>
-              <name>Import.ascx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc</path>
-              <name>ManageTemplates.ascx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc</path>
-              <name>NewOrEditItem.ascx</name>
-            </file>
-            <file>
-              <path>DesktopModules\ToSic.Sxc</path>
-              <name>Uninstall.SqlDataProvider</name>
-            </file>
-          </files>
-        </component>
-
-        <component type="Cleanup" version="08.01.02">
-          <files>
-            <file>
-              <path>DesktopModules\ToSic.Sxc</path>
-              <name>module.css</name>
-            </file>
-          </files>
-        </component>
-        <component type="Cleanup" version="08.02.02">
-          <files>
-            <file>
-              <path>bin</path>
-              <name>ImageResizer.Plugins.TinyCache.dll</name>
-            </file>
-            <file>
-              <path>bin</path>
-              <name>ImageResizer.Plugins.TinyCache.pdb</name>
-            </file>
-            <file>
-              <path>bin</path>
-              <name>protobuf-net.dll</name>
-            </file>
-          </files>
-        </component>
-
-        <!-- 2021-12-01, clean renamed 2sxc dnn assemblies-->
-        <component type="Cleanup" version="13.00.00">
-          <files>
-            <file>
-              <path>bin</path>
-              <name>ToSic.SexyContent.dll</name>
-            </file>
-            <file>
-              <path>bin</path>
-              <name>ToSic.SexyContent.Razor.dll</name>
-            </file>
-            <file>
-              <path>bin</path>
-              <name>ToSic.SexyContent.WebApi.dll</name>
-            </file>
-          </files>
-        </component>
         
-        <!-- 2025-06-11, clean renamed 2sxc dnn assemblies-->
-        <component type="Cleanup" version="19.99.00">
-          <files>
-            <file>
-              <path>bin</path>
-              <name>ToSic.Eav.dll</name>
-            </file>
-            <file>
-              <path>bin</path>
-              <name>ToSic.Eav.Core.dll</name>
-            </file>
-            <file>
-              <path>bin</path>
-              <name>ToSic.Lib.Core.dll</name>
-            </file>
-            <file>
-              <path>bin</path>
-              <name>ToSic.Sxc.dll</name>
-            </file>
-          </files>
+        <!-- 2025-06-12, clean renamed 2sxc dnn assemblies-->
+        <component type="Cleanup" version="19.99.00" fileName="cleanup\flush20.txt">
         </component>
 
       </components>
     </package>
 
-    <package name="2SexyContent-App" type="Module" version="19.99.00">
+    
+    <package name="2sxc-app" type="Module" version="19.99.00">
       <friendlyName> App</friendlyName>
       <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>
@@ -793,14 +556,16 @@
       <license src="License.txt" />
       <releaseNotes src="ReleaseNotes.txt" />
       <azureCompatible>true</azureCompatible>
+      
       <components>
+        
         <component type="Script">
           <scripts>
             <basePath>DesktopModules\ToSic.Sxc</basePath>
-            <!-- The following script makes sure that the app module is only installed if 2sxc installed/upgraded correctly to v9 -->
+            <!-- The following script makes sure that the app module is only installed if 2sxc installed/upgraded correctly to v15 -->
             <script type="Install">
               <path>SqlDataProvider</path>
-              <name>require-2sxc-9.SqlDataProvider</name>
+              <name>Require.SqlDataProvider</name>
               <version>99.99.99</version>
             </script>
           </scripts>
@@ -810,7 +575,7 @@
           <desktopModule>
             <moduleName>2sxc-app</moduleName>
             <foldername>ToSic.Sxc</foldername>
-            <businessControllerClass>ToSic.SexyContent.DnnBusinessController</businessControllerClass>
+            <businessControllerClass>ToSic.Sxc.DnnBusinessController</businessControllerClass>
             <supportedFeatures>
               <supportedFeature type="Searchable" />
               <supportedFeature type="Upgradeable" />
@@ -818,7 +583,7 @@
             <shareable>Supported</shareable>
             <moduleDefinitions>
               <moduleDefinition>
-                <definitionName>2Sexy Content App</definitionName>
+                <definitionName>2sxc-app</definitionName>
                 <friendlyName>App</friendlyName>
                 <defaultCacheTime>0</defaultCacheTime>
                 <moduleControls>
@@ -885,9 +650,22 @@
             </uninstall>
           </config>
         </component>
+
+        <component type="Script">
+          <scripts>
+            <basePath>DesktopModules\ToSic.Sxc</basePath>
+            <!-- The following script makes sure that the app module is only installed if 2sxc installed/upgraded correctly to v15 -->
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>Migrate.SqlDataProvider</name>
+              <version>99.99.99</version>
+            </script>
+          </scripts>
+        </component>
       </components>
     </package>
 
+    
     <!-- the Imageflow - should be based on the one from https://github.com/2sic/dnn-imageflow -->
     <!-- note that the version number needs the last digits, because otherwise the user will always be informed that it's already installed -->
     <package name="ToSic.Imageflow.Dnn" type="Library" version="01.12.00.01">
@@ -1355,7 +1133,6 @@
     <!-- Keep the 4th version number part as it is needed to prevent "repair install" message that DNN
       shows when upgrading 2sxc: https://github.com/2sic/2sxc/issues/1555
       -->
-
 	  <package name="ToSic.RazorBlade" type="Library" version="04.04.01.01">
 		  <friendlyName>2sic RazorBlade</friendlyName>
 		  <description>2sic RazorBlade</description>
@@ -1396,8 +1173,7 @@
 			  </component>
 		  </components>
 	  </package>
-
-
+  
 
     <!-- old Connect.Razor Blade package - keep for compatibility, so old stuff doesn't break-->
     <package name="Connect.Razor" type="Library" version="02.00.00.01">

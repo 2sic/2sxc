@@ -1,13 +1,4 @@
 ﻿-- Remove Tables
--- DROP TABLE IF EXISTS [dbo].[ToSIC_SexyContent_ContentGroupItems]
--- GO
-
--- DROP TABLE IF EXISTS [dbo].[ToSIC_SexyContent_Templates]
--- GO
-
--- DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_Attachments]
--- GO
-
 DROP TABLE IF EXISTS [dbo].[TsDynDataRelationship]
 GO
 

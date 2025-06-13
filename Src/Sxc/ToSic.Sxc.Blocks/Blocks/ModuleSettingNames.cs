@@ -19,7 +19,7 @@ public class ModuleSettingNames
     /// </summary>
     public static readonly string AppName
 #if NETFRAMEWORK
-        = "ToSIC_SexyContent_AppName";
+        = "TsDynDataApp";
 #else
         = "EavApp";
 #endif
@@ -31,7 +31,7 @@ public class ModuleSettingNames
 
     public static readonly string ContentGroup
 #if NETFRAMEWORK
-        = "ToSIC_SexyContent_ContentGroupGuid";
+        = "TsDynDataContentGroup";
 #else
         = "EavContentGroup";
 #endif
@@ -43,7 +43,7 @@ public class ModuleSettingNames
     /// </summary>
     public static readonly string PreviewView
 #if NETFRAMEWORK
-        = "ToSIC_SexyContent_PreviewTemplateId";
+        = "TsDynDataPreview";
 #else
         = "EavPreview";
 #endif

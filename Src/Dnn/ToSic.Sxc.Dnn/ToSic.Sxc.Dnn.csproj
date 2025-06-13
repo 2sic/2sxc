@@ -133,24 +133,17 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="ClientScripts\readme.md" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\Migrate.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\ToSic.Sxc.Dnn.dnn">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="DnnPackageBuilder\readme.md" />
     <Content Include="BuildScripts\readme.md" />
     <Content Include="koi\Resources.zip" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\00.99.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\09.03.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\09.07.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\12.00.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\13.00.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\13.01.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\13.04.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\15.00.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\16.07.01.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\18.03.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\19.00.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\require-2sxc-9.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\Require.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="web.config" />
     <None Include="web.Debug.config">
