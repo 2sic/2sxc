@@ -40,7 +40,9 @@ public sealed partial class CmsBlock : DataSourceBase
         Fallback = $"[{BlockInstanceConstants.InstanceLookupName}:{BlockInstanceConstants.ModuleIdKey}]")]
     public int? ModuleId
     {
-        get => field ?? (int.TryParse(Configuration.GetThis(), out var listId) ? listId : new int?());
+        get => field ?? (int.TryParse(Configuration.GetThis(), out var listId)
+            ? listId
+            : new int?());
         set;
     }
 
