@@ -93,7 +93,7 @@ internal class OqtImportExportEnvironment(
         return l.Return(messages);
     }
 
-    public override Version TenantVersion => typeof(OqtImportExportEnvironment).Assembly.GetName().Version;
+    public override Version TenantVersion => typeof(OqtImportExportEnvironment).Assembly.GetName().Version!;
 
     public override void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap
     ) => Log.Do($"files: {filesAndPaths.Count}, map size: {fileIdMap.Count}", l =>
