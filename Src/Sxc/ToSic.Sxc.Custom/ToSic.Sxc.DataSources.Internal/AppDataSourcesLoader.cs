@@ -37,11 +37,11 @@ internal class AppDataSourcesLoader(
 {
     private const string DataSourcesFolder = "DataSources";
 
-    public (List<DataSourceInfo> data, TimeSpan slidingExpiration, IList<string> folderPaths, IEnumerable<string> cacheKeys) CompileDynamicDataSources(int appId)
+    public AppLocalDataSources CompileDynamicDataSources(int appId)
     {
         logStore.Add(EavLogs.LogStoreAppDataSourcesLoader, Log);
         // Initial message for insights-overview
-        var l = Log.Fn<(List<DataSourceInfo> data, TimeSpan slidingExpiration, IList<string> folderPaths, IEnumerable<string> cacheKeys)>($"{nameof(appId)}: {appId}", timer: true);
+        var l = Log.Fn<AppLocalDataSources>($"{nameof(appId)}: {appId}", timer: true);
         
         try
         {
@@ -67,27 +67,33 @@ internal class AppDataSourcesLoader(
             // If the directory doesn't exist, return an empty list with a 3 minute policy
             // just so we don't keep trying to do this on every query
             if (!data.Any() && !physicalPathExists)
-                return l.Return((
-                            data: [],
-                            slidingExpiration: new(0, 5, 0),
-                            folderPaths: null,
-                            cacheKeys: null), 
+                return l.Return(new(
+                            Data: [],
+                            SlidingExpiration: new(0, 5, 0),
+                            FolderPaths: [],
+                            CacheKeys: []), 
                             "error, directory do not exist");
 
-            return l.ReturnAsOk((
-                        data: data,
-                        slidingExpiration: new TimeSpan(1, 0, 0),
-                        folderPaths: physicalPathExists ? [physicalPath] : null,
-                        cacheKeys: (data.Any() && !string.IsNullOrEmpty(cacheKey)) ? [cacheKey] : null // cache dependency on existing cache item with AppCode assembly
-                        ));
+            return l.ReturnAsOk(new(
+                        Data: data,
+                        SlidingExpiration: new TimeSpan(1, 0, 0),
+                        FolderPaths: physicalPathExists
+                            ? [physicalPath]
+                            : [],
+                        CacheKeys: (data.Any() && !string.IsNullOrEmpty(cacheKey))
+                            ? [cacheKey]
+                            : [] // cache dependency on existing cache item with AppCode assembly
+                        )
+                );
         }
         catch
         {
-            return l.ReturnAsError((
-                        data: [],
-                        slidingExpiration: new(0, 5, 0),
-                        folderPaths: null,
-                        cacheKeys: null));
+            return l.ReturnAsError(new(
+                    Data: [],
+                    SlidingExpiration: new(0, 5, 0),
+                    FolderPaths: [],
+                    CacheKeys: [])
+            );
         }
     }
 

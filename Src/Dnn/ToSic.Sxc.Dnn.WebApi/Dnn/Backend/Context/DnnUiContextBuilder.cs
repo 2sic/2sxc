@@ -73,7 +73,8 @@ internal sealed class DnnUiContextBuilder(
     /// <returns></returns>
     protected override string GetGettingStartedUrl()
     {
-        if (AppSpecsOrNull is not { } app) return "";
+        if (AppSpecsOrNull is not { } app)
+            return "";
 
         var gsUrl = externalLinksService.LinkToDestination(
             ExternalSxcDestinations.GettingStarted,

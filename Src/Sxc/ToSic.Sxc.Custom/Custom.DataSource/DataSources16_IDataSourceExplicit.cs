@@ -17,7 +17,8 @@ public abstract partial class DataSource16
 
     string IDataSource.Name => GetType().Name;
     string IDataSource.Label => _inner.Label;
-    void IDataSource.AddDebugInfo(Guid? guid, string label) => _inner.AddDebugInfo(guid, label);
+    void IDataSource.AddDebugInfo(Guid? guid, string? label)
+        => _inner.AddDebugInfo(guid, label);
 
     #endregion
 
