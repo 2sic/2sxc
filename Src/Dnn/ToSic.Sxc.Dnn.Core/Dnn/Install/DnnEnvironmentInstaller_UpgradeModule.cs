@@ -50,7 +50,9 @@ partial class DnnEnvironmentInstaller
             switch (version)
             {
                 case "01.00.00":
-                    MigrateUpgradeFolder(version, OldSysFolderRootFullPath(version));
+                    MigrateUpgradeFolder(version);
+                    AddObsoleteFile(version);
+                    AddObsolete2SxcJs(version);
                     break;
 
                 // All versions before v15 should trigger this
@@ -66,9 +68,7 @@ partial class DnnEnvironmentInstaller
                     break;
 
                 case "19.99.00":
-                    AddObsoleteFile(version, _oldSysFolderRootFullPath);
-                    MigrateSystemCustomFolder(version, _oldSysFolderRootFullPath);
-                    MigrateUpgradeFolder(version, _oldSysFolderRootFullPath);
+                    MigrateSystemCustomFolder(version);
                     break;
 
                 case "21.00.00":
@@ -120,8 +120,8 @@ partial class DnnEnvironmentInstaller
     private bool OldFolderExists() => _isUpgrade ??= Directory.Exists(HostingEnvironment.MapPath(DnnConstants.OldSysFolderRootVirtual).TrimLastSlash());
     private bool? _isUpgrade;
 
-    private string OldSysFolderRootFullPath(string version) => _oldSysFolderRootFullPath ??= GetOldSysFolderAndRenameIt(version);
-    private string _oldSysFolderRootFullPath;
+    private string OldSysFolderRootFullPath(string version) => _oldSysFolderRootFullPath ??= GetOldSysFolder(version);
+    private static string _oldSysFolderRootFullPath;
 
     private void DataTimelineCleaningDataAndChangeSchemaForCJson(string version)
     {
@@ -202,43 +202,35 @@ partial class DnnEnvironmentInstaller
         }
     }
 
-    private string GetOldSysFolderAndRenameIt(string version)
+    private string GetOldSysFolder(string version)
     {
         var oldSysFolderRootFullPath = HostingEnvironment.MapPath(DnnConstants.OldSysFolderRootVirtual).TrimLastSlash();
         try
         {
-            var obsoleteFolderName = oldSysFolderRootFullPath + "_OBSOLETE";
-            _installLogger.LogStep(version, $"{nameof(GetOldSysFolderAndRenameIt)} - Attempting to rename from '{oldSysFolderRootFullPath}' to '{obsoleteFolderName}'.");
-            if (Directory.Exists(oldSysFolderRootFullPath) && !Directory.Exists(obsoleteFolderName))
+            if (Directory.Exists(oldSysFolderRootFullPath))
             {
-                Directory.Move(oldSysFolderRootFullPath, obsoleteFolderName);
-                _installLogger.LogStep(version, $"{nameof(GetOldSysFolderAndRenameIt)} - Old system folder moved to OBSOLETE.");
-                return obsoleteFolderName;
+                _installLogger.LogStep(version, $"{nameof(GetOldSysFolder)} - Old system folder.");
+                return oldSysFolderRootFullPath;
             }
-            if (Directory.Exists(obsoleteFolderName))
-            {
-                _installLogger.LogStep(version, $"{nameof(GetOldSysFolderAndRenameIt)} - Old system folder already moved to OBSOLETE.");
-                return obsoleteFolderName;
-            }
-            _installLogger.LogStep(version, $"{nameof(GetOldSysFolderAndRenameIt)} - Old system folder does not exist, nothing to rename.");
+            _installLogger.LogStep(version, $"{nameof(GetOldSysFolder)} - Old system folder does not exist.");
         }
         catch (Exception e)
         {
-            _installLogger.LogStep(version, $"{nameof(GetOldSysFolderAndRenameIt)} - Error during migration - {e.Message}\n" +
+            _installLogger.LogStep(version, $"{nameof(GetOldSysFolder)} - Error during migration - {e.Message}\n" +
                 $"{e.Source}\n" +
                 $"{e.InnerException?.Message}");
         }
         return oldSysFolderRootFullPath;
     }
 
-    private void AddObsoleteFile(string version, string oldSysFolderRootFullPath)
+    private void AddObsoleteFile(string version)
     {
         var obsoleteFilename = "OBSOLETE.txt";
 
         try
         {
             // add OBSOLETE.txt with appropriate text - remove folder in v21
-            var obsoleteFilePath = Path.Combine(oldSysFolderRootFullPath, obsoleteFilename);
+            var obsoleteFilePath = Path.Combine(OldSysFolderRootFullPath(version), obsoleteFilename);
             if (!File.Exists(obsoleteFilePath))
             {
                 var obsoleteText = $"This folder is OBSOLETE as of 2sxc v20.\n" +
@@ -258,12 +250,47 @@ partial class DnnEnvironmentInstaller
         }
     }
 
-    private void MigrateSystemCustomFolder(string version, string oldSysFolderRootFullPath)
+    private void AddObsolete2SxcJs(string version)
+    {
+        var obsoleteFilename = @"js\2sxc.api.min.js";
+
+        try
+        {
+            // add 2sxc.api.min.js appropriate text - remove folder in v21
+            var obsoleteFilePath = Path.Combine(OldSysFolderRootFullPath(version), obsoleteFilename);
+            if (File.Exists(obsoleteFilePath))
+            {
+                var obsoleteText =
+                    $@"// IMPORTANT: This file is obsolete and will be deleted in a future 2sxc release.
+// You are using '2sxc.api.min.js' from the old, obsolete folder:
+//   'DesktopModules/ToSIC_SexyContent/js/2sxc.api.min.js'
+// Please update your code to use the new path:
+//   'DesktopModules/ToSic.Sxc/js/2sxc.api.min.js'
+// For more info, see: https://docs.2sxc.org/abyss/releases/history/v20/breaking.html
+// This notice was created on {DateTime.Now:yyyy-MM-dd HH:mm:ss}.
+
+(function() {{
+    alert('''2sxc.api.min.js'' is obsolete and will be removed soon.\n\nUpdate your code to use:\n''DesktopModules/ToSic.Sxc/js/2sxc.api.min.js''');
+}})();
+";
+                File.WriteAllText(obsoleteFilePath, obsoleteText); // overwrite existing content
+
+                _installLogger.LogStep(version, $"{nameof(AddObsolete2SxcJs)} - '{obsoleteFilename}' overwrite existing content with text:\n{obsoleteText}");
+            }
+            else
+                _installLogger.LogStep(version, $"{nameof(AddObsolete2SxcJs)} - '{obsoleteFilename}' not exists, nothing to do.");
+        }
+        catch (Exception e)
+        {
+            _installLogger.LogStep(version, $"{nameof(AddObsolete2SxcJs)} - Error during migration - {e.Message}.");
+        }
+    }
+    private void MigrateSystemCustomFolder(string version)
     {
         try
         {
             var oldSystemCustomFolder = Path.Combine(
-                oldSysFolderRootFullPath,
+                OldSysFolderRootFullPath(version),
                 FolderConstants.AppDataProtectedFolder,
                 FolderConstants.FolderSystemCustom
             );
@@ -284,13 +311,13 @@ partial class DnnEnvironmentInstaller
         }
     }
 
-    private void MigrateUpgradeFolder(string version, string oldSysFolderRootFullPath)
+    private void MigrateUpgradeFolder(string version)
     {
         try
         {
             const string upgrade = "Upgrade";
             var oldUpgradeFolder = Path.Combine(
-                oldSysFolderRootFullPath,
+                OldSysFolderRootFullPath(version),
                 upgrade
                 );
 
