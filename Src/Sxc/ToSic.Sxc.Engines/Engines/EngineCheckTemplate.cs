@@ -25,7 +25,7 @@ public class EngineCheckTemplate(LazySvc<AppPermissionCheck> appPermCheckLazy)
         if (appState == null)
             throw new RenderingException(ErrHelpConfigMissing, "AppState is null");
 
-        if (view.ContentType != "" && appState.GetContentType(view.ContentType) == null)
+        if (view.ContentType != "" && appState.TryGetContentType(view.ContentType) == null)
             throw new RenderingException(ErrHelpTypeMissing);
     }
 

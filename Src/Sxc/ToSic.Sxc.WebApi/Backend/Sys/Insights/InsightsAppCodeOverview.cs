@@ -17,12 +17,14 @@ internal class InsightsAppCodeOverview(IAppReaderFactory appReaders, IAppStateCa
                + InsightsHtmlTable.HeadFields(["Zone ↕", "App ↕", "Name", "Is Loaded", "Build App Code"])
                + "<tbody>";
 
-        var zones = appsCatalog.Zones.OrderBy(z => z.Key);
+        var zones = appsCatalog.Zones
+            .OrderBy(z => z.Key);
 
 
         foreach (var zone in zones)
         {
-            var apps = zone.Value.Apps
+            var apps = zone.Value
+                .Apps
                 .Select(a =>
                 {
                     var appIdentity = new AppIdentity(zone.Value.ZoneId, a.Key);

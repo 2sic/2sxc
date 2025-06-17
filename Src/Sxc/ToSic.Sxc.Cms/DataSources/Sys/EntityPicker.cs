@@ -233,7 +233,7 @@ public class EntityPicker : DataSourceBase
             var appReader = _appReaders.Get(this.PureIdentity());
 
             var types = typeNames
-                .Select(appReader.GetContentType)
+                .Select(appReader.TryGetContentType)
                 .Where(t => t != null)
                 .ToList();
 

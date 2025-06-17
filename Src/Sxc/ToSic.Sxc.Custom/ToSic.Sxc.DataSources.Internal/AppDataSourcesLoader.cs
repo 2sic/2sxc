@@ -107,7 +107,7 @@ internal class AppDataSourcesLoader(
         // Figure out the current edition
         var edition = FigureEdition().TrimLastSlash();
 
-        var spec = new HotBuildSpec(appSpecs?.AppId ?? KnownAppsConstants.AppIdEmpty, edition: edition, appSpecs?.Name);
+        var spec = new HotBuildSpec(appSpecs.AppId, edition: edition, appSpecs?.Name);
 
         return l.ReturnAsOk(spec);
     }
@@ -272,7 +272,7 @@ internal class AppDataSourcesLoader(
                 if (vq.ConfigurationType == null)
                 {
                     var autoConfigTypeName = $"{typeName}Configuration";
-                    var autoConfigType = appState.GetContentType(autoConfigTypeName);
+                    var autoConfigType = appState.TryGetContentType(autoConfigTypeName);
                     vq.ConfigurationType = autoConfigType?.NameId;
                     l2.A($"Type name '{typeName}' had no config in definition, checked '{autoConfigTypeName}', found: {autoConfigType != null}");
                 }

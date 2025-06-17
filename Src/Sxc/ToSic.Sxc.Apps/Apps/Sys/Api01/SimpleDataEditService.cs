@@ -97,8 +97,6 @@ public partial class SimpleDataEditService(
 
         // ensure the type really exists
         var type = _ctxWithDb.AppReader.GetContentType(contentTypeName);
-        if (type == null)
-            throw l.Done(new ArgumentException("Error: Content type '" + contentTypeName + "' does not exist."));
 
         l.A($"Type {contentTypeName} found. Will build entities to save...");
 

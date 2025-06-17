@@ -21,7 +21,7 @@ public class ToolbarButtonDecoratorHelper(IAppReaderFactory appReaders) : Servic
 
         var appReader = appReaders.Get(appIdentity);
 
-        var type = appReader?.GetContentType(typeName);
+        var type = appReader?.TryGetContentType(typeName);
         if (type == null)
             return null;
 

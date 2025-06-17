@@ -35,9 +35,11 @@ internal abstract class CSharpModelsGeneratorBase(IUser user, IAppReaderFactory 
 
         // Prepare Content Types and add to Specs, so the generators know what is available
         // Generate classes for all types in scope Default
-        var types = appContentTypes.ContentTypes.OfScope(ScopeConstants.Default).ToList();
-        appContentTypes.GetContentType(AppLoadConstants.TypeAppResources).DoIfNotNull(types.Add);
-        appContentTypes.GetContentType(AppLoadConstants.TypeAppSettings).DoIfNotNull(types.Add);
+        var types = appContentTypes.ContentTypes
+            .OfScope(ScopeConstants.Default)
+            .ToList();
+        appContentTypes.TryGetContentType(AppLoadConstants.TypeAppResources).DoIfNotNull(types.Add);
+        appContentTypes.TryGetContentType(AppLoadConstants.TypeAppSettings).DoIfNotNull(types.Add);
 
         var appConfigTypes = appContentTypes.ContentTypes
             .OfScope(ScopeConstants.SystemConfiguration)

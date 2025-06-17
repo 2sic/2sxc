@@ -103,10 +103,9 @@ public class WorkApps(IAppStateCacheService appStates, IAppReaderFactory appRead
                     })
                     .Where(reader =>
                     {
-                        if (reader == null) return false;
-                        // if (!appStateWithCacheInfo.IsCached(aId)) return false;
-                        //var appState = _appStates.GetReader(aId);
-                        return reader?.IsShared() == true && !siteApps.Any(sa => sa.Equals(reader.Specs.Folder, StringComparison.InvariantCultureIgnoreCase));
+                        if (reader == null)
+                            return false;
+                        return reader.IsShared() && !siteApps.Any(sa => sa.Equals(reader.Specs.Folder, StringComparison.InvariantCultureIgnoreCase));
                     })
                     //.Select(a => _appGenerator.New().PreInit(site).Init(a, buildConfig) as IApp)
                     .OrderBy(a => a.Specs.Name)

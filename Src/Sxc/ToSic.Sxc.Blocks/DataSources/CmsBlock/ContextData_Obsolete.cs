@@ -19,7 +19,8 @@ partial class ContextData: IBlockDataSource
     {
         get
         {
-            if (field != null) return field;
+            if (field != null)
+                return field;
             // on first access report problem
             _codeChanges.Value.Warn(CaV8To17("Data.Cache", "https://go.2sxc.org/brc-13-datasource-cache"));
             return field = new(_appReaders.Get(this));

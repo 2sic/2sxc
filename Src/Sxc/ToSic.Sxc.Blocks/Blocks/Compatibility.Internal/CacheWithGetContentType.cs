@@ -14,7 +14,7 @@ public class CacheWithGetContentType
         _app = app;
     }
 
-    public IContentType GetContentType(string typeName) => _app.GetContentType(typeName);
+    public IContentType GetContentType(string typeName) => _app.TryGetContentType(typeName);
 }
 
 #endif

@@ -18,7 +18,7 @@ internal class AppDataTyped(
         => AppReader.ContentTypes;
 
     IContentType IAppDataTyped.GetContentType(string name)
-        => AppReader.GetContentType(name);
+        => AppReader.TryGetContentType(name);
 
     #endregion
 
