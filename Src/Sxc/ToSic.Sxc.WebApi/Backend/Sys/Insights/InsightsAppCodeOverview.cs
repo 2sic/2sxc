@@ -6,7 +6,7 @@ using ToSic.Eav.Sys.Insights.HtmlHelpers;
 namespace ToSic.Sxc.Backend.Sys;
 
 internal class InsightsAppCodeOverview(IAppReaderFactory appReaders, IAppStateCacheService appStates, IAppsCatalog appsCatalog)
-    : InsightsProvider(Link, helpCategory: FolderConstants.AppCode, connect: [appsCatalog])
+    : InsightsProvider(new() { Name = Link, HelpCategory = FolderConstants.AppCode }, connect: [appReaders, appStates, appsCatalog])
 {
     public static string Link => "AppCodeOverview";
 
@@ -14,7 +14,7 @@ internal class InsightsAppCodeOverview(IAppReaderFactory appReaders, IAppStateCa
     {
         var msg = "";
         msg += "<table id='table'>"
-               + InsightsHtmlTable.HeadFields("Zone ↕", "App ↕", "Name", "Is Loaded", "Build App Code")
+               + InsightsHtmlTable.HeadFields(["Zone ↕", "App ↕", "Name", "Is Loaded", "Build App Code"])
                + "<tbody>";
 
         var zones = appsCatalog.Zones.OrderBy(z => z.Key);
@@ -44,7 +44,7 @@ internal class InsightsAppCodeOverview(IAppReaderFactory appReaders, IAppStateCa
 
             msg = apps.Aggregate(msg, (current, app)
                 => current
-                   + InsightsHtmlTable.RowFields(
+                   + InsightsHtmlTable.RowFields([
                        zone.Key.ToString(),
                        app.Id.ToString(),
                        app.Name,
@@ -52,7 +52,8 @@ internal class InsightsAppCodeOverview(IAppReaderFactory appReaders, IAppStateCa
                        AppStateExtensions.AppGuidIsAPreset(app.Guid)
                            ? ""
                            : Linker.LinkTo(view: InsightsAppCodeBuild.Link, label: "Build",
-                               appId: app.Id))
+                               appId: app.Id)
+                   ])
             );
         }
         msg += "</tbody>"
