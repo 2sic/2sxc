@@ -69,6 +69,6 @@ public class ViewController() : DnnSxcControllerBase(RealController.LogSuffix), 
         var allMods = new DnnPages(Log).AllModulesWithContent(PortalSettings.PortalId);
         Log.A($"Found {allMods.Count} modules");
 
-        return views.Select(vwb => new ViewDto().Init(vwb, blocks, allMods));
+        return views.Select(vwb => vwb.Init(blocks, allMods));
     }).Usage(appId, guid);
 }
