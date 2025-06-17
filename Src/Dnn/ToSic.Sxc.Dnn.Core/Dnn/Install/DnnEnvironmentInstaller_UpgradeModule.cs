@@ -67,7 +67,7 @@ partial class DnnEnvironmentInstaller
                     DataTimelineCleaningDataAndChangeSchemaForCJson(version);
                     break;
 
-                case "19.99.00":
+                case "20.00.00":
                     MigrateSystemCustomFolder(version);
                     break;
 

@@ -42,13 +42,13 @@ internal class DnnSxcSettings
             // new installer of 2sxc v20 doesn't upgrade versions before v15, so removed all those versions
             "15.00.00",
             "15.02.00",
-            "19.99.00",
+            "20.00.00",
             EavSystemInfo.VersionString,
         ];
 
         // this is the last version which must run server-side change-code
         // it's not sql-code, as the SqlDataProvider files are imported by DNN, not by our code
-        internal const string LastVersionWithServerChanges = "19.99.00";
-        internal const string LastVersionWithDnnDbChanges = "19.99.00"; // just fyi, not used anywhere
+        internal const string LastVersionWithServerChanges = "20.00.00";
+        internal const string LastVersionWithDnnDbChanges = "20.00.00"; // just fyi, not used anywhere
     }
 }
