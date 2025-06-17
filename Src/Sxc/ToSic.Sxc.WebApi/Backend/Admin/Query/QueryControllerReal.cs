@@ -3,6 +3,7 @@ using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Sys.Admin.Query;
 using ToSic.Lib.LookUp.Engines;
 using ToSic.Sxc.Apps.Internal.Work;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.LookUp.Internal;
 
 namespace ToSic.Sxc.Backend.Admin.Query;
@@ -55,7 +56,9 @@ public class QueryControllerReal(
     {
         var block = currentContextService.BlockRequired();
         var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = block };
-        var lookUps = tokenEngineWithContext.New().GetDataConfiguration(block.App as EavApp, specs).Configuration;
+        var lookUps = tokenEngineWithContext.New()
+            .GetDataConfiguration(block.App as SxcAppBase, specs)
+            .Configuration;
         return lookUps;
     }
 

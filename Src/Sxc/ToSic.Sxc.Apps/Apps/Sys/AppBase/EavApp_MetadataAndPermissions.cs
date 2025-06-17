@@ -3,9 +3,9 @@ using ToSic.Eav.Metadata;
 using ToSic.Sys.Security.Permissions;
 using IEntity = ToSic.Eav.Data.IEntity;
 
-namespace ToSic.Eav.Apps.Internal;
+namespace ToSic.Sxc.Apps.Sys;
 
-partial class EavApp: IHasPermissions, IAppWithInternal
+partial class SxcAppBase: IHasPermissions, IAppWithInternal
 {
     #region Metadata and Permission Accessors
 

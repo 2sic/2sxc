@@ -8,6 +8,7 @@ using ToSic.Lib.LookUp.Engines;
 using ToSic.Lib.LookUp.Sources;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.DataSources;
@@ -23,7 +24,7 @@ namespace ToSic.Sxc.LookUp.Internal;
 public class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngineLazy, LazySvc<IHttp> httpLazy)
     : ServiceBase("Sxc.CnfPrv", connect: [getEngineLazy, httpLazy]), IAppDataConfigProvider
 {
-    public IAppDataConfiguration GetDataConfiguration(EavApp app, AppDataConfigSpecs specs)
+    public IAppDataConfiguration GetDataConfiguration(SxcAppBase app, AppDataConfigSpecs specs)
     {
         var block = (specs as SxcAppDataConfigSpecs)?.BlockForLookupOrNull;
         var lookup = GetLookupEngineForContext(block?.Context, app as IApp, block);

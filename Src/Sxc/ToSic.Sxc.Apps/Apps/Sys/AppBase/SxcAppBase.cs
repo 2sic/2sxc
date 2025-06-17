@@ -1,25 +1,27 @@
-﻿using ToSic.Eav.Apps.Sys;
+﻿using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.Services;
 using ToSic.Eav.Sys;
 
-// NOTE 2023-01-11 refactoring - was previously ToSic.Eav.Apps.App - renamed to ToSic.Eav.Apps.Internal.EavApp
-// Could be a breaking change
-
-namespace ToSic.Eav.Apps.Internal;
+namespace ToSic.Sxc.Apps.Sys;
 
 /// <summary>
 /// A <em>single-use</em> app-object providing quick simple api to access
 /// name, folder, data, metadata etc.
 /// </summary>
+/// <remarks>
+/// * was `ToSic.Eav.Apps.App` till ca. 2023-01-11 ca. v16.09
+/// * then was `ToSic.Eav.Apps.Internal.EavApp` v20
+/// </remarks>
 /// <param name="services">All the dependencies of this app, managed by this app</param>
 /// <param name="logName">must be null by default, because of DI</param>
 [PrivateApi("Hide implementation - was PublicApi_Stable_ForUseInYourCode till 16.09")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract partial class EavApp(EavApp.MyServices services, string logName = default, object[] connect = default)
-    : AppBase<EavApp.MyServices>(services, logName ?? "Eav.App", connect: connect), IApp
+public abstract partial class SxcAppBase(SxcAppBase.MyServices services, string logName = default, object[] connect = default)
+    : AppBase<SxcAppBase.MyServices>(services, logName ?? "Eav.App", connect: connect), Eav.Apps.IApp
 {
     // ReSharper disable once InconsistentNaming
     private readonly MyServices services = services;
@@ -62,9 +64,9 @@ public abstract partial class EavApp(EavApp.MyServices services, string logName 
     [PrivateApi]
     public string AppGuid => NameId;
 
-    public EavApp Init(ISite site, IAppIdentityPure appIdentity, AppDataConfigSpecs dataSpecs)
+    public SxcAppBase Init(ISite site, IAppIdentityPure appIdentity, AppDataConfigSpecs dataSpecs)
     {
-        var l = Log.Fn<EavApp>();
+        var l = Log.Fn<SxcAppBase>();
 
         // 2024-03-18 moved here...
         if (site != null) Site = site;

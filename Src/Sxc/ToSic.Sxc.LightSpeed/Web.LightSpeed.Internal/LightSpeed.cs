@@ -7,6 +7,7 @@ using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sys.Caching;
@@ -180,7 +181,7 @@ internal class LightSpeed(
     /// <returns>list of paths to monitor</returns>
     private IList<string> AppPaths(List<IAppReader> dependentApps)
     {
-        if ((_block as BlockOfModule)?.App is not EavApp app)
+        if ((_block as BlockOfModule)?.App is not SxcAppBase app)
             return null;
         if (dependentApps.SafeNone())
             return null;

@@ -2,9 +2,9 @@
 using ToSic.Eav.Context;
 using ToSic.Sys.Caching.PiggyBack;
 
-namespace ToSic.Eav.Apps.Internal;
+namespace ToSic.Sxc.Apps.Sys;
 
-partial class EavApp
+partial class SxcAppBase
 {
     /// <inheritdoc />
     [PrivateApi]

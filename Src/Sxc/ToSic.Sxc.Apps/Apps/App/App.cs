@@ -3,6 +3,7 @@ using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps.Internal.Assets;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Data.Internal;
 using CodeInfoService = ToSic.Sys.Code.InfoSystem.CodeInfoService;
 
@@ -16,13 +17,13 @@ namespace ToSic.Sxc.Apps;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
 public partial class App(
-    EavApp.MyServices services,
+    SxcAppBase.MyServices services,
     LazySvc<GlobalPaths> globalPaths,
     LazySvc<ICodeDataFactory> cdfLazy,
     LazySvc<CodeInfoService> codeChanges,
     IAppPathsMicroSvc pathFactoryTemp)
     // Note: If this is ever changed to not inherit from the EavApp, make sure you correct/update the LightSpeed code as well as it checks for this base class
-    : EavApp(services, "App.SxcApp", connect: [globalPaths, cdfLazy, codeChanges, pathFactoryTemp]), IApp
+    : SxcAppBase(services, "App.SxcApp", connect: [globalPaths, cdfLazy, codeChanges, pathFactoryTemp]), IApp
 {
     #region Special objects
 

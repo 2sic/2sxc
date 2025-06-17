@@ -1,10 +1,11 @@
-﻿using ToSic.Eav.DataSources.Internal;
+﻿using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.DataSources.Internal;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.LookUp.Engines;
 
-namespace ToSic.Eav.Apps.Internal;
+namespace ToSic.Sxc.Apps.Sys;
 
-partial class EavApp
+partial class SxcAppBase
 {
     [PrivateApi]
     public ILookUpEngine ConfigurationProvider => _configurationProvider.Get(() => AppDataConfig.Configuration);

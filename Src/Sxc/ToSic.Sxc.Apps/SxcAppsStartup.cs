@@ -6,6 +6,7 @@ using ToSic.Eav.Internal.Environment;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
+using ToSic.Sxc.Apps.Sys;
 
 namespace ToSic.Sxc;
 
@@ -16,7 +17,7 @@ public static class SxcAppsStartup
     public static IServiceCollection AddSxcApps(this IServiceCollection services)
     {
         // App Dependencies
-        services.TryAddTransient<EavApp.MyServices>();
+        services.TryAddTransient<SxcAppBase.MyServices>();
 
         // Configuration objects
         services.TryAddTransient<GlobalPaths>();
