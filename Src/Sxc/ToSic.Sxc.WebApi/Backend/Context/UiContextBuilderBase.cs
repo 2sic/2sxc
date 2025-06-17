@@ -69,7 +69,8 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
         if (flags.HasFlag(Ctx.Site)) ctx.Site = GetSite(flags);
         if (flags.HasFlag(Ctx.System)) ctx.System = GetSystem(flags);
         if (flags.HasFlag(Ctx.User)) ctx.User = GetUser(flags);
-        if (flags.HasFlag(Ctx.Features) || flags.HasFlag(Ctx.FeaturesForSystemTypes)) ctx.Features = GetFeatures(flags);
+        if (flags.HasFlag(Ctx.Features) || flags.HasFlag(Ctx.FeaturesForSystemTypes))
+            ctx.Features = GetFeatures(flags);
         return ctx;
     }
 
@@ -95,7 +96,8 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
             Url = "/"
         };
         // Stop now if we don't need advanced infos
-        if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
+        if (!flags.HasFlag(Ctx.AppAdvanced))
+            return result;
 
         // Otherwise also add the global app id
         result.PrimaryApp = result.DefaultApp = new(1, 1);
@@ -160,15 +162,18 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
         };
 
         // Stop now if we don't need edit or advanced
-        if (!flags.HasFlag(Ctx.AppEdit) && !flags.HasFlag(Ctx.AppAdvanced)) return result;
+        if (!flags.HasFlag(Ctx.AppEdit) && !flags.HasFlag(Ctx.AppAdvanced))
+            return result;
 
         result.IsGlobalApp = AppSpecsOrNull.IsGlobalSettingsApp();
         result.IsSiteApp = AppSpecsOrNull.IsSiteSettingsApp();
         // only check content if not global, as that has the same id
-        if (!result.IsGlobalApp) result.IsContentApp = AppSpecsOrNull.IsContentApp();
+        if (!result.IsGlobalApp)
+            result.IsContentApp = AppSpecsOrNull.IsContentApp();
 
         // Stop now if we don't need advanced infos
-        if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
+        if (!flags.HasFlag(Ctx.AppAdvanced))
+            return result;
 
         result.GettingStartedUrl = GetGettingStartedUrl();
         result.Identifier = AppSpecsOrNull.NameId;
@@ -191,17 +196,19 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
 
     protected virtual ContextUserDto GetUser(Ctx flags)
     {
-        var userDto = new ContextUserDto();
         var user = Services.SiteCtx.User;
-        userDto.Email = user.Email;
-        userDto.Id = user.Id;
-        userDto.Guid = user.Guid;
-        userDto.IsSystemAdmin = user.IsSystemAdmin;
-        userDto.IsAnonymous = user.IsAnonymous;
-        userDto.IsSiteAdmin = user.IsSiteAdmin;
-        userDto.IsContentAdmin = user.IsContentAdmin;
-        userDto.Name = user.Name;
-        userDto.Username = user.Username;
+        var userDto = new ContextUserDto
+        {
+            Email = user.Email,
+            Id = user.Id,
+            Guid = user.Guid,
+            IsSystemAdmin = user.IsSystemAdmin,
+            IsAnonymous = user.IsAnonymous,
+            IsSiteAdmin = user.IsSiteAdmin,
+            IsContentAdmin = user.IsContentAdmin,
+            Name = user.Name,
+            Username = user.Username,
+        };
         return userDto;
     }
 

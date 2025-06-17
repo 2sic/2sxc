@@ -72,26 +72,32 @@ public partial class EditLoadBackend(
         // load items - similar
         var showDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
         var appWorkCtx = workCtxSvc.ContextPlus(appId, showDrafts: showDrafts);
-        var result = new EditDto();
         var entityApi = api.Init(appId, showDrafts);
         var list = entityApi.GetEntitiesForEditing(items);
         var jsonSerializer = jsonSerializerGenerator.New().SetApp(appReader);
-        result.Items = list
-            .Select(e => new BundleWithHeader<JsonEntity>
-            {
-                Header = e.Header,
-                Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, appReader, appWorkCtx)
-            })
-            .ToList();
+
+        var result = new EditDto
+        {
+            Items = list
+                .Select(e => new BundleWithHeader<JsonEntity>
+                {
+                    Header = e.Header,
+                    Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, appReader, appWorkCtx)
+                })
+                .ToList(),
+        };
 
         // set published if some data already exists
         if (list.Any())
         {
             var entity = list.First().Entity;
-            result.IsPublished = entity?.IsPublished ?? true; // Entity could be null (new), then true
-            // only set draft-should-branch if this draft already has a published item
-            if (!result.IsPublished)
-                result.DraftShouldBranch = (entity == null ? null : appReader.GetPublished(entity)) != null;
+            var isPublished = entity?.IsPublished ?? true; // Entity could be null (new), then true
+            result = result with
+            {
+                IsPublished = isPublished,
+                // only set draft-should-branch if this draft already has a published item
+                DraftShouldBranch = !isPublished && (appReader.GetPublished(entity)) != null
+            };
         }
 
         // since we're retrieving data - make sure we're allowed to
@@ -116,14 +122,17 @@ public partial class EditLoadBackend(
             .Select(t => serializerForTypes.ToPackage(t, serSettings))
             .ToList();
 
-        result.ContentTypes = jsonTypes
-            .Select(t => t.ContentType)
-            .ToList();
+        result = result with
+        {
+            ContentTypes = jsonTypes
+                .Select(t => t.ContentType)
+                .ToList(),
 
-        // Also add global Entities like Formulas which would not be included otherwise
-        result.ContentTypeItems = jsonTypes
-            .SelectMany(t => t.Entities)
-            .ToList();
+            // Also add global Entities like Formulas which would not be included otherwise
+            ContentTypeItems = jsonTypes
+                .SelectMany(t => t.Entities)
+                .ToList(),
+        };
 
         var isSystemType = usedTypes.Any(t => t.AppId == KnownAppsConstants.PresetAppId);
         l.A($"isSystemType: {isSystemType}");
@@ -137,16 +146,24 @@ public partial class EditLoadBackend(
             at.InputType = Compatibility.Internal.InputTypes.MapInputTypeV10(at.InputType);
 
         // load input-field configurations
-        result.InputTypes = GetNecessaryInputTypes(result.ContentTypes, appWorkCtx);
+        result = result with
+        {
+            InputTypes = GetNecessaryInputTypes(result.ContentTypes, appWorkCtx),
+        };
 
         #endregion
 
         // Attach context, but only the minimum needed for the UI
-        result.Context = contextBuilder.InitApp(context.AppReaderRequired)
-            .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features | (isSystemType ? Ctx.FeaturesForSystemTypes : Ctx.Features), CtxEnable.EditUi);
+        result = result with
+        {
+            Context = contextBuilder.InitApp(context.AppReaderRequired)
+                .Get(
+                    Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features |
+                    (isSystemType ? Ctx.FeaturesForSystemTypes : Ctx.Features), CtxEnable.EditUi),
 
-        // Load settings for the front-end
-        result.Settings = loadSettings.GetSettings(context, usedTypes, result.ContentTypes, appWorkCtx);
+            // Load settings for the front-end
+            Settings = loadSettings.GetSettings(context, usedTypes, result.ContentTypes, appWorkCtx),
+        };
 
         // Prefetch additional data
         try
@@ -167,13 +184,19 @@ public partial class EditLoadBackend(
             .ToList();
 
         if (inheritedFields.Any())
-            result.RequiredFeatures = new()
+            result = result with
             {
-                { BuiltInFeatures.ContentTypeFieldsReuseDefinitions.NameId, inheritedFields.Select(f => $"Used in fields: {f.Type.Name}.{f.Name}").ToArray() },
+                RequiredFeatures = new()
+                {
+                    {
+                        BuiltInFeatures.ContentTypeFieldsReuseDefinitions.NameId,
+                        inheritedFields.Select(f => $"Used in fields: {f.Type.Name}.{f.Name}").ToArray()
+                    },
+                }
             };
 
         // done
-        var finalMsg = $"items:{result.Items.Count}, types:{result.ContentTypes.Count}, inputs:{result.InputTypes.Count}, feats:{result.Context.Features.Count}";
+        var finalMsg = $"items:{result.Items.Count}, types:{result.ContentTypes.Count}, inputs:{result.InputTypes.Count}, feats:{result.Context.Features?.Count}";
         return l.Return(result, finalMsg);
     }
         
@@ -191,7 +214,9 @@ public partial class EditLoadBackend(
             // try to find metadata for this
             var mdFor = header.For;
             // #TargetTypeIdInsteadOfTarget
-            var type = mdFor.TargetType != 0 ? mdFor.TargetType : mdTargetTypes.GetId(mdFor.Target);
+            var type = mdFor.TargetType != 0
+                ? mdFor.TargetType
+                : mdTargetTypes.GetId(mdFor.Target!);
             var mds = mdFor.Guid != null
                 ? appMdSource.GetMetadata(type, mdFor.Guid.Value, header.ContentTypeName)
                 : mdFor.Number != null

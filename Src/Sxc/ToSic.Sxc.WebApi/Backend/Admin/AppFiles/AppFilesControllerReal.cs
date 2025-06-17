@@ -169,7 +169,6 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
     public TemplatePreviewDto Preview(int appId, string path, string templateKey, bool b)
     {
         var l = Log.Fn<TemplatePreviewDto>($"create a#{appId}, path:{path}, global:{b}, key:{templateKey}");
-        var templatePreviewDto = new TemplatePreviewDto();
 
         try
         {
@@ -188,21 +187,19 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
 
             // check if file already exists
             if (assetEditor.SanitizeFileNameAndCheckIfAssetAlreadyExists())
-                templatePreviewDto.Error = "Asset already exists.";
+                return l.Return(new() { Error = "Asset already exists." }, "GetPreview");
 
             // get and prepare template content
-            templatePreviewDto.Preview = GetTemplateContent(assetFromTemplateDto);
+            var templatePreviewDto = new TemplatePreviewDto
+            {
+                Preview = GetTemplateContent(assetFromTemplateDto)
+            };
+            return l.Return(templatePreviewDto);
         }
         catch (Exception e)
         {
-            templatePreviewDto.Error = e.Message;
-        }
-        finally
-        {
-            // TODO: validate with 2DM that next have sense
-            templatePreviewDto.IsValid = string.IsNullOrEmpty(templatePreviewDto.Error);
+            return l.Return(new() { Error = e.Message }, "GetPreview");
         }
 
-        return l.Return(templatePreviewDto, "GetPreview");
     }
 }

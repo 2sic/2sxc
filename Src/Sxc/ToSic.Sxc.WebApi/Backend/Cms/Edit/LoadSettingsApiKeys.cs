@@ -35,7 +35,7 @@ internal class LoadSettingsApiKeys(LazySvc<ISecureDataService> secureDataService
                 };
             })
             .Where(v => v?.Value != null)
-            .ToDictionary(k => k.Key, k => k.Value as object);
+            .ToDictionary(k => k.Key, object (k) => k.Value);
 
         return l.Return(result);
     }
