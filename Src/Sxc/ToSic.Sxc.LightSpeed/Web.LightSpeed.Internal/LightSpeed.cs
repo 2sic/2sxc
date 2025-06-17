@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.AppReader.Sys;
-using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneCulture;
@@ -48,7 +47,7 @@ internal class LightSpeed(
     private int _moduleId;
     private int _pageId;
     private IBlock _block;
-    private IAppReader AppReader => field ??= _block?.Context?.AppReaderRequired;
+    private IAppReader AppReader => field ??= _block?.Context?.AppReaderOrNull;
 
     public bool Save(IRenderResult data) => AddToLightSpeed(data);
 
@@ -273,6 +272,10 @@ internal class LightSpeed(
     private bool GetIsEnabled()
     {
         var l = Log.Fn<bool>();
+
+        //// No real app yet, probably module was just added
+        //if (_block.App == null)
+        //    return false;
 
         // This is called from outside, so we need to catch all exceptions as it should never break in production
         try

@@ -55,7 +55,8 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     [HttpGet]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => Real.Get(appId, contentTypeId, scope);
+    public ContentTypeDto Get(int appId, string contentTypeId, string scope = null)
+        => Real.Get(appId, contentTypeId, scope);
 
 
     /// <summary>
