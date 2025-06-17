@@ -122,7 +122,7 @@ public class ImportContent(
             var import = importerLazy.Value.Init(zoneId, appId, true, true);
             if (types.Any())
             {
-                import.ImportIntoDb(types, null);
+                import.ImportIntoDb(types, []);
 
                 l.A($"Purging {zoneId}/{appId}");
                 AppCachePurger.Purge(zoneId, appId);
