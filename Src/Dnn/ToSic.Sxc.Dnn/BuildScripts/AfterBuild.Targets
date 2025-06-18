@@ -19,7 +19,7 @@
     <Message Text="DnnRoot='%(DnnRoot.Identity)'" Importance="High"/>
     <PropertyGroup>
       <CurrentDnnRoot>%(DnnRoot.Identity)</CurrentDnnRoot>
-      <BuildTarget>$(CurrentDnnRoot)DesktopModules/ToSic.Sxc</BuildTarget>
+      <BuildTarget>$(CurrentDnnRoot)DesktopModules\ToSic.Sxc</BuildTarget>
     </PropertyGroup>
     <!-- Echo Statements -->
     <Message Text="BuildTarget='$(BuildTarget)'" Importance="High"/>
@@ -85,9 +85,9 @@
 
     </ItemGroup>
 
-    <Copy SourceFiles="@(DnnBinInclude)" DestinationFolder="$(CurrentDnnRoot)/bin" />
-    <CopyNewerFileVersion SourceFiles="@(DependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)/bin" />
-    <CopyNewerFileVersion SourceFiles="@(SxcDependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)/bin/2sxc" />
+    <Copy SourceFiles="@(DnnBinInclude)" DestinationFolder="$(CurrentDnnRoot)bin" />
+    <CopyNewerFileVersion SourceFiles="@(DependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)bin" />
+    <CopyNewerFileVersion SourceFiles="@(SxcDependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)bin\2sxc" />
 
     <!-- Copy Imageflow and dependecies -->
     <!-- include Imageflow folder -->
