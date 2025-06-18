@@ -97,7 +97,7 @@
       <ImageflowDependeciesInclude Include="$(ProjectDir)\Extensions\Imageflow\bin\**\*.dll" Exclude="ToSic.*.dll"/>
       <ImageflowAssemblyInclude Include="$(ProjectDir)\Extensions\Imageflow\bin\**\imageflow.dll.pending" />
     </ItemGroup>
-    <Copy SourceFiles="@(ImageflowAssemblyInclude)" DestinationFolder="$(CurrentDnnRoot)bin" />
+    <CopyNewerFileVersion SourceFiles="@(ImageflowAssemblyInclude)" DestinationFolder="$(CurrentDnnRoot)bin" />
     <CopyNewerFileVersion SourceFiles="@(ImageflowDependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)bin" />
     
     <!-- Imageflow.dll Handling -->
