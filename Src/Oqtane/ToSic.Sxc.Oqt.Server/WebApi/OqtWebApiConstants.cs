@@ -47,27 +47,27 @@ internal static class OqtWebApiConstants
         //WebApiStateRoot + "/app/{appFolder}/{edition}/api/{controller}/{action}"
     ];
 
-    // Regex patterns to match endpoint mappings
-    // This regular expression is for matching URL paths to 2sxc app custom endpoints.
-    // For example, URL like this: "/subportal/language/app/custom-2sxc-app-name/edition-name/api/MyCtr/Method".
-    // The given regular expression, `(.*/)?app/([\w-]+)(/([\w-]+))?/api/(.+)`, can be broken down as follows:
-    // 1. `(.*/)?` : Optional 'alias' and/or 'language' (path ending with /)
-    //               This captures zero or one occurrence of any characters (except a new line), ending with a forward slash('/').
-    //               This part is optional because of the '?' after the group, which means it could match strings like "subportal/" or
-    //               "subportal/language/" etc. and also an empty string.
-    // 2. `app/` : This simply matches the exact string 'app/'.
-    // 3. `([\w -]+)` : 'custom 2sxc app name'
-    //                  This captures zero or more word characters (letters, numbers, underscores) or hyphens.
-    //                  This part could match strings like "example-app", "blog6", "app3", etc., but not an empty string.
-    // 4. `(/([\w -]+))?` : Optional one path segement with 2sxc app '/edition name',
-    //                      This is an optional part, meaning it could match an empty string.
-    //                      If present, it must start with a forward slash('/') followed by one or more word characters(letters, numbers, underscores) or hyphens.
-    //                      This part could match strings like "/live", "/bd5", etc., but not a single '/'.
-    // 5. `/api/` : This simply matches the exact string '/api/'.
-    // 6. `(.+)` : API endpoint path 'controller/action'
-    //             This captures one or more of any characters (except a new line).
-    //             This part must be present and could match strings like "get-data", "123", "user/data", etc.
-    public static readonly Regex SxcEndpointPathRegex = new(@"(.*/)?app/([\w-]+)(/([\w-]+))?/api/(.+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    //// Regex patterns to match endpoint mappings
+    //// This regular expression is for matching URL paths to 2sxc app custom endpoints.
+    //// For example, URL like this: "/subportal/language/app/custom-2sxc-app-name/edition-name/api/MyCtr/Method".
+    //// The given regular expression, `(.*/)?app/([\w-]+)(/([\w-]+))?/api/(.+)`, can be broken down as follows:
+    //// 1. `(.*/)?` : Optional 'alias' and/or 'language' (path ending with /)
+    ////               This captures zero or one occurrence of any characters (except a new line), ending with a forward slash('/').
+    ////               This part is optional because of the '?' after the group, which means it could match strings like "subportal/" or
+    ////               "subportal/language/" etc. and also an empty string.
+    //// 2. `app/` : This simply matches the exact string 'app/'.
+    //// 3. `([\w -]+)` : 'custom 2sxc app name'
+    ////                  This captures zero or more word characters (letters, numbers, underscores) or hyphens.
+    ////                  This part could match strings like "example-app", "blog6", "app3", etc., but not an empty string.
+    //// 4. `(/([\w -]+))?` : Optional one path segement with 2sxc app '/edition name',
+    ////                      This is an optional part, meaning it could match an empty string.
+    ////                      If present, it must start with a forward slash('/') followed by one or more word characters(letters, numbers, underscores) or hyphens.
+    ////                      This part could match strings like "/live", "/bd5", etc., but not a single '/'.
+    //// 5. `/api/` : This simply matches the exact string '/api/'.
+    //// 6. `(.+)` : API endpoint path 'controller/action'
+    ////             This captures one or more of any characters (except a new line).
+    ////             This part must be present and could match strings like "get-data", "123", "user/data", etc.
+    //public static readonly Regex SxcEndpointPathRegex = new(@"(.*/)?app/([\w-]+)(/([\w-]+))?/api/(.+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     // Regex patterns to match endpoint mappings
     //public static readonly string[] SxcEndpointPathRegexPatterns = new[]

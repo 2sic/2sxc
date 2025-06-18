@@ -28,9 +28,7 @@
 
     <!-- XML documentation -->
     <ItemGroup Condition="'$(Configuration)'=='Release'">
-      <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.xml" />
-      <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.Oqtane.*.xml" Exclude="**\ToSic.Sxc.Oqtane.Package.xml" />
-      <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.Razor.xml" />
+      <AssemblyDocumentation Include="$(OutDir)\ToSic.*.xml" Exclude="**\ToSic.Sxc.Oqtane.Package.xml" />
     </ItemGroup>
     <!-- Run the modification task for each documentation file -->
     <ModifyXmlDocumentation XmlDocumentationPath="%(AssemblyDocumentation.Identity)" Condition="'$(Configuration)'=='Release'"/>

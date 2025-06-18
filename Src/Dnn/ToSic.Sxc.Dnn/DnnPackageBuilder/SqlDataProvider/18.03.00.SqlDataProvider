@@ -6,23 +6,57 @@ GO
 SET XACT_ABORT ON
 GO
 
+DECLARE @upgradeVersion NVARCHAR(20) = '18.03.00', @installedVersion NVARCHAR(20);
+SELECT @installedVersion = ISNULL(
+    (SELECT [Version] FROM Packages WHERE [Name] = N'2SexyContent'),
+    '99.99.99'
+)
+
+-- skip further execution if installedVersion > upgradeVersion
+IF (
+    TRY_CAST(PARSENAME(@installedVersion, 3) AS INT) >  TRY_CAST(PARSENAME(@upgradeVersion, 3) AS INT) OR
+    (
+        TRY_CAST(PARSENAME(@installedVersion, 3) AS INT) = TRY_CAST(PARSENAME(@upgradeVersion, 3) AS INT) AND
+        (
+            TRY_CAST(PARSENAME(@installedVersion, 2) AS INT) >  TRY_CAST(PARSENAME(@upgradeVersion, 2) AS INT) OR
+            (
+                TRY_CAST(PARSENAME(@installedVersion, 2) AS INT) = TRY_CAST(PARSENAME(@upgradeVersion, 2) AS INT) AND
+                TRY_CAST(PARSENAME(@installedVersion, 1) AS INT) > TRY_CAST(PARSENAME(@upgradeVersion, 1) AS INT)
+            )
+        )
+    )
+)
+RETURN;
+
+-- if the installed version is older than the upgrade version, then we can continue with the upgrade
+PRINT N'Upgrading 2sxc from version ' + @installedVersion + ' to ' + @upgradeVersion;
+
+-- check for minimum required version of 2sxc package
+DECLARE @RequiredVersion int, @RequiredVersionIsInstalled int;
+SET @RequiredVersion = 15;
+SELECT @RequiredVersionIsInstalled = CASE WHEN EXISTS(
+    SELECT 1 FROM Packages
+    WHERE [Name] = N'2SexyContent' AND CONVERT(int, PARSENAME([Version], 3)) >= @RequiredVersion
+) THEN 1 ELSE 0 END
+IF (@RequiredVersionIsInstalled = 0)
+BEGIN
+    RAISERROR(N'2sxc 15 or newer must be installed for the app module to install.', 16, 1);
+    RETURN;
+END
+
 -- Remove AttributeGroups SQL table and related:
 -- Drop the foreign key constraint before dropping the column.
 ALTER TABLE [dbo].[ToSIC_EAV_AttributesInSets] 
 DROP CONSTRAINT IF EXISTS [FK_ToSIC_EAV_AttributesInSets_ToSIC_EAV_AttributeGroups];
-GO
 
 -- Now it's safe to drop the column.
 ALTER TABLE [dbo].[ToSIC_EAV_AttributesInSets] 
 DROP COLUMN IF EXISTS [AttributeGroupID];
-GO
 
 -- Drop the foreign key constraint in another table before dropping the table.
 ALTER TABLE [dbo].[ToSIC_EAV_AttributeGroups] 
 DROP CONSTRAINT IF EXISTS [FK_ToSIC_EAV_AttributeGroups_ToSIC_EAV_AttributeSets];
-GO
 
 -- Now it's safe to drop the table.
 DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_AttributeGroups];
 GO
-

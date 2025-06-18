@@ -2,8 +2,8 @@
     if (sxc || window['2sxc-loading']) return;
     window['2sxc-loading'] = true;
     var scripts = [
-        '/DesktopModules/ToSIC_SexyContent/js/2sxc.api.min.js',
-        '/DesktopModules/ToSIC_SexyContent/dist/inpage/inpage.min.js',
+        '/DesktopModules/ToSic.Sxc/js/2sxc.api.min.js',
+        '/DesktopModules/ToSic.Sxc/dist/inpage/inpage.min.js',
     ];
     console.debug('lazy loading 2sxc');
     var head = document.getElementsByTagName('head')[0];

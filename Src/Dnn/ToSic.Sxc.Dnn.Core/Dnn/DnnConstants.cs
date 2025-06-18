@@ -4,10 +4,11 @@ public class DnnConstants
 {
     public const string LogName = "Dnn";
 
-    public const string ModuleNameContent = "2Sexy Content";
-    public const string ModuleNameApp = "2Sexy Content App";
+    public const string ModuleNameContent = "2sxc";
+    public const string ModuleNameApp = "2sxc-app";
 
-    public const string SysFolderRootVirtual = "~/desktopmodules/tosic_sexycontent/";
+    public const string SysFolderRootVirtual = "~/desktopmodules/tosic.sxc/"; // This is the new folder where 2sxc v20+ is installed in DNN
+    public const string OldSysFolderRootVirtual = "~/desktopmodules/tosic_sexycontent/"; // This is the old folder where 2sxc before v20 was installed in DNN
 
     internal const string LogDirectory = SysFolderRootVirtual + "Upgrade/Log/";
 

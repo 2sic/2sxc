@@ -10,7 +10,7 @@
 -- Set session language to english to ensure DateTime format is correct (all following insert statements in this script expect that)
 SET LANGUAGE English
 
--- Start of install procedure which replaces all install scripts and code updates until and including version 19.99.00 -------------------------------------------------
+-- Start of install procedure which replaces all install scripts and code updates until and including version 20.00.00 -------------------------------------------------
 
 /****** Object:  Table [dbo].[TsDynDataApp]    Script Date: 15.5.2025. 13:42:07 ******/
 SET ANSI_NULLS ON
