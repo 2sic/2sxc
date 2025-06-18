@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
 
-  <Target Name="PostBuild" AfterTargets="Build" Condition="'$(DnnTargets)' != ''">
+  <Target Name="PostBuild" AfterTargets="Build" Condition="'$(DnnTargets)' != '' and '$(Configuration)' == 'Debug'">
+    <Message Text="Configuration='$(Configuration)'" Importance="High"/>
     <Message Text="DnnTargets='$(DnnTargets)'" Importance="High"/>
 
     <!--Split the paths in DnnTargets into individual items-->
