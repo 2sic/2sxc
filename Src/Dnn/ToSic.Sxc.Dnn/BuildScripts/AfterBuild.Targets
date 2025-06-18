@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
 
-  <Target Name="PostBuild" AfterTargets="Build" Condition="'$(DnnTargets)' != ''">
+  <Target Name="PostBuild" AfterTargets="Build" Condition="'$(DnnTargets)' != '' and '$(Configuration)' == 'Debug'">
+    <Message Text="Configuration='$(Configuration)'" Importance="High"/>
     <Message Text="DnnTargets='$(DnnTargets)'" Importance="High"/>
 
     <!--Split the paths in DnnTargets into individual items-->
@@ -15,11 +16,12 @@
     <Message Text="DnnRoot='$(DnnRootIdentityValue)'" Importance="High"/>
   </Target>
 
-  <Target Name="PostBuildForEachItem" AfterTargets="PostBuild" DependsOnTargets="PostBuild" Outputs="%(DnnRoot.Identity)" Condition="'$(DnnTargets)' != ''">
+  <Target Name="PostBuildForEachItem" AfterTargets="PostBuild" DependsOnTargets="PostBuild" Outputs="%(DnnRoot.Identity)" Condition="'$(DnnTargets)' != '' and '$(Configuration)' == 'Debug'">
+    <Message Text="Configuration='$(Configuration)'" Importance="High"/>
     <Message Text="DnnRoot='%(DnnRoot.Identity)'" Importance="High"/>
     <PropertyGroup>
       <CurrentDnnRoot>%(DnnRoot.Identity)</CurrentDnnRoot>
-      <BuildTarget>$(CurrentDnnRoot)DesktopModules/ToSic.Sxc</BuildTarget>
+      <BuildTarget>$(CurrentDnnRoot)DesktopModules\ToSic.Sxc</BuildTarget>
     </PropertyGroup>
     <!-- Echo Statements -->
     <Message Text="BuildTarget='$(BuildTarget)'" Importance="High"/>
@@ -85,9 +87,9 @@
 
     </ItemGroup>
 
-    <Copy SourceFiles="@(DnnBinInclude)" DestinationFolder="$(CurrentDnnRoot)/bin" />
-    <CopyNewerFileVersion SourceFiles="@(DependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)/bin" />
-    <CopyNewerFileVersion SourceFiles="@(SxcDependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)/bin/2sxc" />
+    <Copy SourceFiles="@(DnnBinInclude)" DestinationFolder="$(CurrentDnnRoot)bin" />
+    <CopyNewerFileVersion SourceFiles="@(DependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)bin" />
+    <CopyNewerFileVersion SourceFiles="@(SxcDependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)bin\2sxc" />
 
     <!-- Copy Imageflow and dependecies -->
     <!-- include Imageflow folder -->
@@ -97,7 +99,7 @@
       <ImageflowDependeciesInclude Include="$(ProjectDir)\Extensions\Imageflow\bin\**\*.dll" Exclude="ToSic.*.dll"/>
       <ImageflowAssemblyInclude Include="$(ProjectDir)\Extensions\Imageflow\bin\**\imageflow.dll.pending" />
     </ItemGroup>
-    <Copy SourceFiles="@(ImageflowAssemblyInclude)" DestinationFolder="$(CurrentDnnRoot)bin" />
+    <CopyNewerFileVersion SourceFiles="@(ImageflowAssemblyInclude)" DestinationFolder="$(CurrentDnnRoot)bin" />
     <CopyNewerFileVersion SourceFiles="@(ImageflowDependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)bin" />
     
     <!-- Imageflow.dll Handling -->
