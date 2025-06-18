@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Data.Internal.Convert;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class DynamicJsonConverter: JsonConverter<object>
 {
-    public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) 
+    public override object? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) 
         => JsonSerializer.Deserialize(ref reader, typeToConvert, options);
 
     public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)

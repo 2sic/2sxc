@@ -8,9 +8,10 @@ namespace ToSic.Sxc.Web.Internal.Url;
 /// </summary>
 internal class UrlValueCamelCase : UrlValueProcess
 {
-    public override NameObjectSet Process(NameObjectSet set)
+    public override NameObjectSet? Process(NameObjectSet? set)
     {
-        if (set == null || !set.Name.HasValue()) return set;
+        if (set == null || !set.Name.HasValue())
+            return set;
         var firstCharLower = char.ToLowerInvariant(set.Name[0]);
         if (firstCharLower == set.Name[0]) return set;
         var newName = firstCharLower + set.Name.Substring(1);

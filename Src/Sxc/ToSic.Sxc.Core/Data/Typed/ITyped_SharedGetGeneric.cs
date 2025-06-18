@@ -9,15 +9,15 @@ public partial interface ITyped : IHasKeys, ICanGetByName
     new bool ContainsKey(string name);
 
     /// <inheritdoc cref="IHasKeys.IsEmpty"/>
-    new bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default);
+    new bool IsEmpty(string name, NoParamOrder noParamOrder = default, string? language = default);
     // ^^^ new is just so it's in the docs
 
     /// <inheritdoc cref="IHasKeys.IsNotEmpty"/>
-    new bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default);
+    new bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string? language = default);
     // ^^^ new is just so it's in the docs
 
     /// <inheritdoc cref="IHasKeys.Keys"/>
-    new IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default);
+    new IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default);
 
 
     /// <summary>
@@ -38,7 +38,7 @@ public partial interface ITyped : IHasKeys, ICanGetByName
     object Get(string name,
         NoParamOrder noParamOrder = default,
         bool? required = default,
-        string language = default
+        string? language = default
         );
 
     /// <summary>
@@ -68,7 +68,7 @@ public partial interface ITyped : IHasKeys, ICanGetByName
     /// </remarks>
     TValue Get<TValue>(string name,
         NoParamOrder noParamOrder = default,
-        TValue fallback = default,
+        TValue? fallback = default,
         bool? required = default,
-        string language = default);
+        string? language = default);
 }

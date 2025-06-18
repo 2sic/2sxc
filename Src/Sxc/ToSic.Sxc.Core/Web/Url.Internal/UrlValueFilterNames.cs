@@ -25,8 +25,11 @@ internal class UrlValueFilterNames: UrlValueProcess
     internal Dictionary<string, bool> PropSerializeMap = new(StringComparer.InvariantCultureIgnoreCase);
 
 
-    public override NameObjectSet Process(NameObjectSet set)
+    public override NameObjectSet? Process(NameObjectSet? set)
     {
+        if (set?.Name == null)
+            return null;
+
         return PropSerializeMap.TryGetValue(set.Name, out var reallyUse)
             ? new(set, keep: reallyUse) 
             : new NameObjectSet(set, keep: PropSerializeDefault); 

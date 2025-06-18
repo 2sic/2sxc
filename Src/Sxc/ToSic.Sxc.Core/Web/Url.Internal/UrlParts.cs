@@ -22,7 +22,7 @@ public class UrlParts
     public string Protocol = string.Empty;
     public string Domain = string.Empty;
 
-    public UrlParts(string url)
+    public UrlParts(string? url)
     {
         url = (url ?? "").Trim();
         Url = url;
@@ -112,7 +112,7 @@ public class UrlParts
     public bool IsRelative => Path.StartsWith(".") && !IsAbsolute && !string.IsNullOrEmpty(Domain);
 
 
-    public string ToLink(string format = null, bool suffix = true)
+    public string ToLink(string? format = null, bool suffix = true)
     {
         var endPart = Path + (suffix ? Suffix() : "");
         if (format == "/") return endPart;
@@ -145,9 +145,10 @@ public class UrlParts
         if (!string.IsNullOrEmpty(Fragment)) urlStringBuilder.Append($"{FragmentSeparator}{Fragment}");
     }
 
-    public static string ConnectParameters(params string[] parameters)
+    public static string ConnectParameters(params string?[]? parameters)
     {
-        if (parameters == null || parameters.Length == 0) return "";
+        if (parameters == null || parameters.Length == 0)
+            return "";
         var realParams = parameters.Where(p => !string.IsNullOrWhiteSpace(p)).ToArray();
         return string.Join(ValuePairSeparator.ToString(), realParams);
     }

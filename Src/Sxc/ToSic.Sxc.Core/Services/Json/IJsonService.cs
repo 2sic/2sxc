@@ -52,7 +52,7 @@ public interface IJsonService
     /// <typeparam name="T"></typeparam>
     /// <param name="json"></param>
     /// <returns></returns>
-    new T To<T>(string json);
+    T To<T>(string json);
 
     /// <summary>
     /// Convert a json to an anonymous object.
@@ -78,17 +78,17 @@ public interface IJsonService
     /// </param>
     /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertiesRequired), default `true`</param>
     /// <returns>A dynamic object representing the original json.
-    /// If it can't be parsed, it will parse the fallback, which by default is an empty empty dynamic object.
+    /// If it can't be parsed, it will parse the fallback, which by default is an empty dynamic object.
     /// If you provide null for the fallback, then you will get null back.
     /// </returns>
     /// <remarks>
     /// New in 16.02
     /// </remarks>
     [PublicApi]
-    ITyped ToTyped(string json, NoParamOrder noParamOrder = default, string fallback = default, bool? propsRequired = default);
+    ITyped ToTyped(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default);
 
     /// <summary>
-    /// Creates a list of <see cref="ITyped"/> wrappers around an json string containing an array of objects.
+    /// Creates a list of <see cref="ITyped"/> wrappers around a json string containing an array of objects.
     ///
     /// > [!IMPORTANT]
     /// > This only works on json strings which return an object.
@@ -103,12 +103,12 @@ public interface IJsonService
     /// </param>
     /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertiesRequired), default `true`</param>
     /// <returns>A dynamic object representing the original json.
-    /// If it can't be parsed, it will parse the fallback, which by default is an empty empty dynamic object.
+    /// If it can't be parsed, it will parse the fallback, which by default is an empty dynamic object.
     /// If you provide null for the fallback, then you will get null back.
     /// </returns>
     /// <remarks>
     /// New in 16.04
     /// </remarks>
-    IEnumerable<ITyped> ToTypedList(string json, NoParamOrder noParamOrder = default, string fallback = default,
+    IEnumerable<ITyped> ToTypedList(string json, NoParamOrder noParamOrder = default, string? fallback = default,
         bool? propsRequired = default);
 }

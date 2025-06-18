@@ -9,10 +9,11 @@ namespace ToSic.Sxc.Edit.Toolbar;
 internal class FilterValueProcessor : UrlValueProcess
 {
 
-    public override NameObjectSet Process(NameObjectSet set)
+    public override NameObjectSet? Process(NameObjectSet? set)
     {
         // Basic cases where we don't change anything
-        if (set?.Value == null || set.Value is string || set.Value.IsNumeric()) return set;
+        if (set?.Value == null || set.Value is string || set.Value.IsNumeric())
+            return set;
 
         // If the value is an entity / dynamic-entity, return it as an id
         if (set.Value is ICanBeEntity entity)

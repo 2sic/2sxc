@@ -23,7 +23,7 @@ public partial interface IPageService
         NoParamOrder noParamOrder = default,
         bool optimize = true,
         int priority = 0,
-        string position = null,
+        string? position = null,
         bool whitelist = true);
 
     /// <summary>

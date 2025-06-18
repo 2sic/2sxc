@@ -29,7 +29,7 @@ public partial interface IPageService
     /// </summary>
     /// <param name="url">the optional url for the base tag - if null, will try to default to the real url for the current page</param>
     /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.SetBase(...)`</returns>
-    string SetBase(string url = null);
+    string SetBase(string? url = null);
 
     /// <summary>
     /// Set the Page Title. Behavior:
@@ -39,7 +39,7 @@ public partial interface IPageService
     /// * You can add a placeholder to the page-title and tell SetTitle what it is. `SetTitle('My New Title', '2sxc.org') = `Blog - My New Title`
     /// </summary>
     /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.SetTitle(...)`</returns>
-    string SetTitle(string value, string placeholder = null);
+    string SetTitle(string value, string? placeholder = null);
 
     /// <summary>
     /// Set the Page Description.
@@ -49,7 +49,7 @@ public partial interface IPageService
     /// See also the details with placeholder or `[original]` as explained on <see cref="SetTitle"/>
     /// </summary>
     /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.SetDescription(...)`</returns>
-    string SetDescription(string value, string placeholder = null);
+    string SetDescription(string value, string? placeholder = null);
 
     /// <summary>
     /// Set the Page Keywords. 
@@ -59,7 +59,7 @@ public partial interface IPageService
     /// See also the details with placeholder or `[original]` as explained on <see cref="SetTitle"/>
     /// </summary>
     /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.SetKeywords(...)`</returns>
-    string SetKeywords(string value, string placeholder = null);
+    string SetKeywords(string value, string? placeholder = null);
 
     /// <summary>
     /// Set the page status code if possible (it will work in DNN, but probably not in Oqtane)
@@ -67,7 +67,7 @@ public partial interface IPageService
     /// <param name="statusCode">An HTTP status code like 404</param>
     /// <param name="message">Message / Description text (optional) which would be included in the header</param>
     /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.SetHttpStatus(...)`</returns>
-    string SetHttpStatus(int statusCode, string message = null);
+    string SetHttpStatus(int statusCode, string? message = null);
 
 
     /// <summary>
@@ -135,7 +135,7 @@ public partial interface IPageService
         NoParamOrder noParamOrder = default,
         string rel = "",
         int size = 0,
-        string type = null);
+        string? type = null);
 
     /// <summary>
     /// Add a set of icons to the page
@@ -149,9 +149,9 @@ public partial interface IPageService
     string AddIconSet(
         string path,
         NoParamOrder noParamOrder = default,
-        object favicon = null,
-        IEnumerable<string> rels = null,
-        IEnumerable<int> sizes = null);
+        object? favicon = null,
+        IEnumerable<string>? rels = null,
+        IEnumerable<int>? sizes = null);
 
     #endregion
 

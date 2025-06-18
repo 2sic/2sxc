@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Web.Internal.Url;
 /// </summary>
 internal abstract class UrlValueProcess
 {
-    public abstract NameObjectSet Process(NameObjectSet set);
+    public abstract NameObjectSet? Process(NameObjectSet? set);
 
     // Base64 marker for rule encoding
     public static string Base64Prefix = "base64:";

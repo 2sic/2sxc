@@ -29,7 +29,7 @@ public interface IHasKeys
     /// </param>
     /// <returns></returns>
     /// <remarks>Added in 16.03</remarks>
-    IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default);
+    IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default);
 
     #region IsEmpty / IsNotEmpty
 
@@ -64,7 +64,7 @@ public interface IHasKeys
     ///// `true` means that empty and whitespace strings return `true`,
     ///// `false` means every whitespace incl. empty strings return `false`.
     ///// </param>
-    bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default);
+    bool IsEmpty(string name, NoParamOrder noParamOrder = default, string? language = default);
 
     /// <summary>
     /// Check if this typed object has a property of this specified name, and has real data.
@@ -97,7 +97,7 @@ public interface IHasKeys
     ///// `true` means that empty and whitespace strings return `true`,
     ///// `false` means every whitespace incl. empty strings return `false`.
     ///// </param>
-    bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default);
+    bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string? language = default);
 
     #endregion
 }

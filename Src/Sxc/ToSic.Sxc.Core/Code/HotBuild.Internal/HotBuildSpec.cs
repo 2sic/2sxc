@@ -3,11 +3,11 @@
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class HotBuildSpec(int appId, string edition, string appName)
+public class HotBuildSpec(int appId, string? edition, string appName)
 {
     public int AppId => appId;
 
-    public string Edition => edition;
+    public string? Edition => edition;
 
     public string EditionToLog => $"/{Edition}"; // for logging
 
@@ -20,7 +20,7 @@ public class HotBuildSpec(int appId, string edition, string appName)
     /// Override ToString for better debugging
     /// </summary>
     public override string ToString() => _toString ??= $"{nameof(HotBuildSpec)} - {nameof(AppId)}: {appId} {(appName.HasValue() ? $"({appName})" : "")}; {nameof(Edition)}: '{EditionToLog}'";
-    private string _toString;
+    private string? _toString;
 
     /// <summary>
     /// Create a dictionary of the specs for logging
@@ -39,7 +39,7 @@ public class HotBuildSpec(int appId, string edition, string appName)
     /// should not use optional parameters like: addSharedSuffixToAssemblyName or appName
     /// </remarks>
     public string CacheKey() => _cacheKey ??= $"{nameof(HotBuildSpec)}.{nameof(AppId)}:{AppId}.{nameof(Edition)}:{Edition}";
-    private string _cacheKey;
+    private string? _cacheKey;
 
     /// <summary>
     /// Use when fallback from edition to root app
@@ -63,7 +63,7 @@ public class HotBuildSpec(int appId, string edition, string appName)
 }
 
 
-public class HotBuildSpecWithSharedSuffix(int appId, string edition, string appName, bool addSharedSuffixToAssemblyName) : HotBuildSpec(appId, edition, appName)
+public class HotBuildSpecWithSharedSuffix(int appId, string? edition, string appName, bool addSharedSuffixToAssemblyName) : HotBuildSpec(appId, edition, appName)
 {
     /// <summary>
     /// "addSharedSuffixToAssemblyName" is optional parameter used just as info for AppCode assembly naming in very special case,
@@ -80,7 +80,7 @@ public class HotBuildSpecWithSharedSuffix(int appId, string edition, string appN
     /// Override ToString for better debugging
     /// </summary>
     public override string ToString() => _toString ??= $"{base.ToString()}; {nameof(SharedSuffix)}: '{SharedSuffix}'";
-    private string _toString;
+    private string? _toString;
 
     /// <summary>
     /// Create a dictionary of the specs for logging

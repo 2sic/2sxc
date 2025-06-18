@@ -34,7 +34,7 @@ public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     /// <remarks>
     /// Added v15.04
     /// </remarks>
-    string Get(string name);
+    new string Get(string name);
 
     /// <summary>
     /// Get a parameter and convert to the needed type - or return the default.
@@ -65,7 +65,7 @@ public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     /// Added v15.04
     /// </remarks>
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default);
+    TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue? fallback = default);
 
     #endregion
 
@@ -237,7 +237,7 @@ public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     /// </remarks>
     /// <param name="fields">CSV of names to prioritize, in the specified order</param>
     /// <returns></returns>
-    IParameters Prioritize(string fields = default);
+    IParameters Prioritize(string? fields = default);
 
     /// <summary>
     /// Flush all parameters and start anew.

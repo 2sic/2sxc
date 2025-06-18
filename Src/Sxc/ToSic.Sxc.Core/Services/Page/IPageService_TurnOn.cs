@@ -39,12 +39,12 @@ public partial interface IPageService
     /// </remarks>
     string TurnOn(object runOrSpecs,
         NoParamOrder noParamOrder = default,
-        object require = default,
-        object data = default,
-        IEnumerable<object> args = default,
+        object? require = default,
+        object? data = default,
+        IEnumerable<object>? args = default,
         bool condition = true,
         bool? noDuplicates = default,
-        string addContext = default
+        string? addContext = default
     );
 
     #endregion

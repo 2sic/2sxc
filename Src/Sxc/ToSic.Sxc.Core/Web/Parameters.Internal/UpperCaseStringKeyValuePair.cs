@@ -8,8 +8,8 @@
 internal class UpperCaseStringKeyValuePair
 {
     // ReSharper disable UnusedAutoPropertyAccessor.Local
-    public string Key { get; set; }
-    public string Value { get; set; }
+    public string? Key { get; set; }
+    public string? Value { get; set; }
     // ReSharper restore UnusedAutoPropertyAccessor.Local
 
 }

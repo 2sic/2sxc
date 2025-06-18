@@ -8,15 +8,15 @@ public class ObjectToUrl
 {
     public ObjectToUrl() { }
 
-    internal ObjectToUrl(string prefix = null, IEnumerable<UrlValueProcess> preProcessors = null): this()
+    internal ObjectToUrl(string? prefix = null, IEnumerable<UrlValueProcess>? preProcessors = null): this()
     {
         Prefix = prefix;
         _preProcessors = preProcessors;
     }
 
-    private readonly IEnumerable<UrlValueProcess> _preProcessors;
+    private readonly IEnumerable<UrlValueProcess>? _preProcessors;
 
-    private string Prefix { get; }
+    private string? Prefix { get; }
 
     public string ArrayBoxStart { get; set; } = "";
     public string ArrayBoxEnd { get; set; } = "";
@@ -27,9 +27,9 @@ public class ObjectToUrl
     public string KeyValueSeparator { get; set; } = "=";
 
 
-    public string Serialize(object data) => Serialize(data, Prefix);
+    public string? Serialize(object? data) => Serialize(data, Prefix);
 
-    public string SerializeChild(object child, string prefix) =>
+    public string? SerializeChild(object child, string prefix) =>
         SerializeWithChild(null, child, prefix);
 
     /// <summary>
@@ -39,10 +39,11 @@ public class ObjectToUrl
     /// <param name="child"></param>
     /// <param name="childPrefix">Prefix to use for the child - it is not the same as the Prefix of the main object! as that applies to all data, not child-data</param>
     /// <returns></returns>
-    public string SerializeWithChild(object main, object child, string childPrefix = null)
+    public string? SerializeWithChild(object? main, object? child, string? childPrefix = null)
     {
         var asString = Serialize(main);
-        if (child == null) return asString;
+        if (child == null)
+            return asString;
         childPrefix ??= ""; // null catch
         var prefillAddOn = "";
         if (child is string strPrefill)
@@ -58,17 +59,23 @@ public class ObjectToUrl
         return UrlParts.ConnectParameters(asString, prefillAddOn);
     }
 
-    private UrlValuePair ValueSerialize(NameObjectSet set)
+    private UrlValuePair? ValueSerialize(NameObjectSet? set)
     {
+        if (set == null)
+            return null;
+
         if (_preProcessors.SafeAny())
             foreach (var pP in _preProcessors)
             {
                 set = pP.Process(set);
-                if (!set.Keep) return null;
+                if (set?.Keep != true)
+                    return null;
             }
 
-        if (set.Value == null) return null;
-        if (set.Value is string strValue) return new(set.FullName, strValue);
+        if (set.Value == null)
+            return null;
+        if (set.Value is string strValue)
+            return new(set.FullName, strValue);
 
         var valueType = set.Value.GetType();
 
@@ -91,30 +98,32 @@ public class ObjectToUrl
 
         return valueType.IsSimpleType()
             // Simple type - just serialize, except for bool, which should be lower-cased
-            ? new(set.FullName,
-                set.Value is bool ? set.Value.ToString().ToLowerInvariant() : set.Value.ToString())
+            ? new(set.FullName, set.Value is bool bln
+                ? bln ? "true" : "false"
+                : set.Value.ToString()
+                )
             // Complex object, recursive serialize with current name as prefix
             : new UrlValuePair(null, Serialize(set.Value, set.FullName + DepthSeparator), true);
     }
 
-    private string Serialize(object data, string prefix)
+    private string? Serialize(object? data, string? prefix)
     {
         // Case #1: Null, return that
-        if (data == null) return null;
+        if (data == null)
+            return null;
 
         // Case #2: Already a string, return that
-        if (data is string str) return str;
+        if (data is string str)
+            return str;
 
         // Case #3: It's an object or an array of objects (but not a string)
-        IEnumerable objectList = data is IEnumerable dataAsEnum
-            ? dataAsEnum
-            : new[] { data };
+        var objectList = data as IEnumerable ?? new[] { data };
 
         // Get all properties on the object
         var properties = objectList
             .Cast<object>()
-            .SelectMany(d => PropsOfOne(d, prefix) ?? [])
-            .Where(d => d != null)
+            .SelectMany(d => PropsOfOne(d, prefix)!)
+            .Where(d => d != null!)
             .ToList();
 
         // Concat all key/value pairs into a string separated by ampersand
@@ -124,10 +133,11 @@ public class ObjectToUrl
 
     // https://ole.michelsen.dk/blog/serialize-object-into-a-query-string-with-reflection/
     // https://stackoverflow.com/questions/6848296/how-do-i-serialize-an-object-into-query-string-format
-    private List<UrlValuePair> PropsOfOne(object data, string prefix)
+    private List<UrlValuePair>? PropsOfOne(object? data, string? prefix)
     {
         // Case #1: Null, return that
-        if (data == null) return null;
+        if (data == null)
+            return null;
 
         // Case #2: Already a string, return that
         if (data is string str)
@@ -149,6 +159,7 @@ public class ObjectToUrl
                 return ValueSerialize(preSerialize);
             })
             .Where(x => x?.Value != null)
+            .Cast<UrlValuePair>()
             .ToList();
 
         // Concat all key/value pairs into a string separated by ampersand
@@ -157,21 +168,24 @@ public class ObjectToUrl
     }
 
     // https://stackoverflow.com/questions/2729614/c-sharp-reflection-how-can-i-tell-if-object-o-is-of-type-keyvaluepair-and-then
-    private NameObjectSet PropOfKvp(object value)
+    private NameObjectSet? PropOfKvp(object? value)
     {
-        if (value == null) return null;
+        if (value == null)
+            return null;
         var valueType = value.GetType();
-        if (!valueType.IsGenericType) return null;
+        if (!valueType.IsGenericType)
+            return null;
             
         var baseType = valueType.GetGenericTypeDefinition();
-        if (baseType != typeof(KeyValuePair<,>)) return null;
+        if (baseType != typeof(KeyValuePair<,>))
+            return null;
             
         //var argTypes = baseType.GetGenericArguments();
         // now process the values
         if (valueType.GetProperty("Key")?.GetValue(value, null) is not string kvpKey)
             return null;
 
-        return valueType.GetProperty("Value")?.GetValue(value, null) is not object kvpValue 
+        return valueType.GetProperty("Value")?.GetValue(value, null) is not { } kvpValue 
             ? null 
             : new NameObjectSet(name: kvpKey, value: kvpValue);
     }

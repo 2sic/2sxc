@@ -10,7 +10,7 @@
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class DocsAttribute: Attribute
 {
-    public string[] Messages { get; set; }
+    public required string[] Messages { get; set; }
 
     public string[] GetMessages(string fullName)
     {
@@ -27,5 +27,5 @@ public class DocsAttribute: Attribute
 
     public bool AllProperties = true;
 
-    public string HelpLink { get; set; }
+    public string? HelpLink { get; set; }
 }

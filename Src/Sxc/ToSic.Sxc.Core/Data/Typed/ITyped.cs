@@ -55,7 +55,7 @@ public partial interface ITyped
     /// This is the same as using `Kit.Scrub.All(...)` or `.Only(...). For more detailed scrubbing, use the `Kit.Scrub`
     /// </param>
     /// <returns>Value as `string`</returns>
-    string String(string name, NoParamOrder noParamOrder = default, string fallback = default, bool? required = default, object scrubHtml = default);
+    string String(string name, NoParamOrder noParamOrder = default, string? fallback = default, bool? required = default, object? scrubHtml = default);
 
     #region Numbers
 
@@ -132,7 +132,7 @@ public partial interface ITyped
     /// <param name="fallback">_optional_ fallback if conversion fails</param>
     /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>A url converted if possible. If the field contains anything else such as `hello` then it will not be modified.</returns>
-    string Url(string name, NoParamOrder noParamOrder = default, string fallback = default, bool? required = default);
+    string Url(string name, NoParamOrder noParamOrder = default, string? fallback = default, bool? required = default);
 
     #region Debugging
 

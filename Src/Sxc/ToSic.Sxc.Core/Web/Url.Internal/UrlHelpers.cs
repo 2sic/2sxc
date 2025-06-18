@@ -14,9 +14,9 @@ public static class UrlHelpers
     /// <remarks>
     /// See https://stackoverflow.com/questions/68624/how-to-parse-a-query-string-into-a-namevaluecollection-in-net
     /// </remarks>
-    public static NameValueCollection ParseQueryString(string query)
+    public static NameValueCollection ParseQueryString(string? query)
     {
-        // Note that this NameValueCollection is different than the one from HttpUtility
+        // Note that this NameValueCollection is different from the one from HttpUtility
         // but because that one is internal, we cannot create one directly
         var nvc = new NameValueCollection();
         query = query?.Trim() ?? "";
@@ -46,7 +46,7 @@ public static class UrlHelpers
     /// <param name="nvc"></param>
     /// <param name="prioritize"></param>
     /// <returns></returns>
-    public static NameValueCollection Sort(this NameValueCollection nvc, string prioritize = default)
+    public static NameValueCollection Sort(this NameValueCollection nvc, string? prioritize = default)
     {
         // Figure Out best key order, respecting the custom prioritization
         var customKeys = prioritize.CsvToArrayWithoutEmpty().ToList();
@@ -86,12 +86,12 @@ public static class UrlHelpers
 
     private class KeyValuePairTemp
     {
-        public string Key;
-        public string Value;
+        public required string Key;
+        public required string? Value;
     }
 
     internal static string NvcToString(NameValueCollection nvc, string keyValueSeparator, string pairSeparator,
-        string terminator, string empty, bool repeatKeyForEachValue, string valueSeparator)
+        string terminator, string empty, bool repeatKeyForEachValue, string? valueSeparator)
     {
         // Note 2dm: reworked this entire logic 2022-04-07, all tests passed, believe it's ok, but there is a minimal risk
         var allPairs = nvc.AllKeys
@@ -101,7 +101,9 @@ public static class UrlHelpers
                 var noValues = values == null || values.Length == 0;
                 if (!noValues)
                 {
-                    values = values.Where(v => !string.IsNullOrEmpty(v)).ToArray();
+                    values = values!
+                        .Where(v => !string.IsNullOrEmpty(v))
+                        .ToArray();
                     noValues = values.Length == 0;
                 }
 
@@ -110,15 +112,19 @@ public static class UrlHelpers
                     return noValues
                         ? []
                         // If no key, treat the values as standalone keys
-                        : values.Select(v => new KeyValuePairTemp { Key = v, Value = null }).ToArray();
+                        : values!
+                            .Select(v => new KeyValuePairTemp { Key = v, Value = null })
+                            .ToArray();
 
                 // Key not null, no values
-                if (noValues) return [new() { Key = key, Value = null }];
+                if (noValues)
+                    return [new() { Key = key, Value = null }];
 
                 // Key null, values - two options - give as array or single item
                 return repeatKeyForEachValue 
-                    ? values.Select(v => new KeyValuePairTemp { Key = key, Value = v.ToString() }) 
-                    : [new() { Key = key, Value = string.Join(valueSeparator, values) }];
+                    ? values!
+                        .Select(v => new KeyValuePairTemp { Key = key, Value = v.ToString() }) 
+                    : [new() { Key = key, Value = string.Join(valueSeparator, values!) }];
             })
             .Select(set => set.Key + (string.IsNullOrEmpty(set.Value) ? "" : keyValueSeparator + set.Value))
             //.SelectMany(set =>
@@ -163,7 +169,7 @@ public static class UrlHelpers
             .ToList()
             .ForEach(k =>
             {
-                var values = source.GetValues(k) ?? [null]; // catch null-values
+                string?[] values = source.GetValues(k) ?? [null!]; // catch null-values
 
                 foreach (var v in values)
                 {
@@ -181,12 +187,14 @@ public static class UrlHelpers
         => $"{url}{(url.IndexOf('?') > 0 ? '&' : '?')}{name}={value}";
 
 
-    public static string AddQueryString(string url, string newParams) => AddQueryString(url, ParseQueryString(newParams));
+    public static string AddQueryString(string url, string newParams)
+        => AddQueryString(url, ParseQueryString(newParams));
 
-    public static string AddQueryString(string url, NameValueCollection newParams)
+    public static string AddQueryString(string url, NameValueCollection? newParams)
     {
         // check do we have any work to do
-        if (newParams == null || newParams.Count == 0) return url;
+        if (newParams == null || newParams.Count == 0)
+            return url;
 
         // 1. Get only the query string parts
         var parts = new UrlParts(url);

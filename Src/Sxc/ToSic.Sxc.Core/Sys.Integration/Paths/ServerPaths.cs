@@ -44,20 +44,21 @@ internal class ServerPaths: ServerPathsBase
 #else
     // ReSharper disable once ConvertToPrimaryConstructor
     public ServerPaths(LazySvc<IValueConverter> valueConverterLazy)
-        {
-            _valueConverterLazy = valueConverterLazy;
-        }
-        private readonly LazySvc<IValueConverter> _valueConverterLazy;
+    {
+        _valueConverterLazy = valueConverterLazy;
+    }
+    private readonly LazySvc<IValueConverter> _valueConverterLazy;
 
-        protected string MapContentPath(string virtualPath) => HostingEnvironment.MapPath(virtualPath);
+    protected string MapContentPath(string virtualPath) => HostingEnvironment.MapPath(virtualPath);
 
-        protected override string FullPathOfReference(int id)
-        {
-            var fileRef = "file:" + id;
-            var resolved = _valueConverterLazy.Value.ToValue(fileRef);
-            if (string.IsNullOrWhiteSpace(resolved)) return null;
-            return FullContentPath(resolved);
-        }
+    protected override string? FullPathOfReference(int id)
+    {
+        var fileRef = "file:" + id;
+        var resolved = _valueConverterLazy.Value.ToValue(fileRef);
+        if (string.IsNullOrWhiteSpace(resolved))
+            return null;
+        return FullContentPath(resolved);
+    }
 #endif
 
 
