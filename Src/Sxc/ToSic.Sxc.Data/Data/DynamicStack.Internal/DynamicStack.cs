@@ -36,9 +36,11 @@ public class DynamicStack: DynamicObject,
     public IPropertyLookup PropertyLookup { get; }
 
     [PrivateApi]
+    [field: AllowNull, MaybeNull]
     internal GetAndConvertHelper GetHelper => field ??= new(this, Cdf, Strict, childrenShouldBeDynamic: true, canDebug: this);
 
     [PrivateApi]
+    [field: AllowNull, MaybeNull]
     internal SubDataFactory SubDataFactory => field ??= new(Cdf, Strict, canDebug: this);
 
     /// <inheritdoc />
@@ -58,7 +60,7 @@ public class DynamicStack: DynamicObject,
 
     /// <inheritdoc />
     [PrivateApi("was public till v16.02, but since I'm not sure if it is really used, we decided to hide it again since it's probably not an important API")]
-    public dynamic GetSource(string name)
+    public dynamic? GetSource(string name)
     {
         var source = _stack.GetSource(name)
                      // If not found, create a fake one
@@ -77,18 +79,21 @@ public class DynamicStack: DynamicObject,
         return l.Return(newDynStack);
     }
 
-    private IDynamicEntity SourceToDynamicEntity(IPropertyLookup source)
+    private IDynamicEntity? SourceToDynamicEntity(IPropertyLookup? source)
     {
-        if (source == null) return null;
-        if (source is IDynamicEntity dynEnt) return dynEnt;
-        if (source is ICanBeEntity canBe) return SubDataFactory.SubDynEntityOrNull(canBe.Entity);
+        if (source == null)
+            return null;
+        if (source is IDynamicEntity dynEnt)
+            return dynEnt;
+        if (source is ICanBeEntity canBe)
+            return SubDataFactory.SubDynEntityOrNull(canBe.Entity);
         //if (source is IEntity ent) return SubDataFactory.SubDynEntityOrNull(ent);
         return null;
     }
 
 
     [PrivateApi("not implemented")]
-    public override bool TrySetMember(SetMemberBinder binder, object value)
+    public override bool TrySetMember(SetMemberBinder binder, object? value)
         => throw new NotSupportedException($"Setting a value on {nameof(IDynamicStack)} is not supported");
 
     #region Get / Get<T>
@@ -96,23 +101,24 @@ public class DynamicStack: DynamicObject,
     public dynamic Get(string name) => GetHelper.Get(name);
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public dynamic Get(string name, NoParamOrder noParamOrder = default, string language = null, bool convertLinks = true, bool? debug = null)
+    public dynamic Get(string name, NoParamOrder noParamOrder = default, string? language = null, bool convertLinks = true, bool? debug = null)
         => GetHelper.Get(name, noParamOrder, language, convertLinks, debug);
 
     public TValue Get<TValue>(string name)
         => GetHelper.Get<TValue>(name);
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default)
+    public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue? fallback = default)
         => GetHelper.Get(name, noParamOrder, fallback);
 
     #endregion
 
     #region IEnumerable<IDynamicEntity>
 
+    [field: AllowNull, MaybeNull]
     private List<IDynamicEntity> List => field ??= _stack.Sources
-        .Select(src => SourceToDynamicEntity(src.Value))
-        .Where(e => e != null)
+        .Select(src => SourceToDynamicEntity(src.Value)!)
+        .Where(e => e != null!)
         .ToList();
 
     public IEnumerator<IDynamicEntity> GetEnumerator() => List.GetEnumerator();

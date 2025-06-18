@@ -45,7 +45,7 @@ internal abstract class DynamicJacketBase<T>: DynamicJacketBase, IReadOnlyList<o
     /// If the object is just output, it should show the underlying json string
     /// </summary>
     /// <returns>the inner json string</returns>
-    public override string ToString() => UnwrappedContents.ToString();
+    public override string? ToString() => UnwrappedContents?.ToString();
 
     ///// <summary>
     ///// Not yet implemented accessor - must be implemented by the inheriting class.

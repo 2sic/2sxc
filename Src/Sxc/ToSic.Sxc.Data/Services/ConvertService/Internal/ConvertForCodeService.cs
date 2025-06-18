@@ -8,9 +8,10 @@ namespace ToSic.Sxc.Services.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ConvertForCodeService(ConvertValueService cnvSvc) : ServiceBase("Sxc.CnvSrv", connect: [cnvSvc])
 {
-    public string ForCode(object value, NoParamOrder noParamOrder = default, string fallback = default)
+    public string? ForCode(object? value, NoParamOrder noParamOrder = default, string? fallback = default)
     {
-        if (value == null) return fallback;
+        if (value == null)
+            return fallback;
 
         // Pre-check special case of date-time which needs ISO encoding without time zone
         if (value.GetType().UnboxIfNullable() == typeof(DateTime))
@@ -20,7 +21,8 @@ public class ConvertForCodeService(ConvertValueService cnvSvc) : ServiceBase("Sx
         }
 
         var result = cnvSvc.To(value, fallback: fallback);
-        if (result is null) return null;
+        if (result is null)
+            return null;
 
         // If the original value was a boolean, we will do case changing as js expects "true" or "false" and not "True" or "False"
         if (value.GetType().UnboxIfNullable() == typeof(bool)) result = result.ToLowerInvariant();

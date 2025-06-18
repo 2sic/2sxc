@@ -24,7 +24,7 @@ partial interface ITypedItem
     /// It can also be null if there is no underlying entity. 
     /// </returns>
     /// <remarks>This returns a string which is usually what's expected. In previous versions (before v15) 2sxc it returned an object.</remarks>
-    string Title { get; }
+    string? Title { get; }
 
     /// <summary>
     /// The Content-Type of the current entity.

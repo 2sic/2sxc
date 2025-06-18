@@ -15,5 +15,5 @@ public class SecureData<T>(T result, bool isSecure) : ISecureData<T>
     public bool IsSecuredBy(string authorityName) 
         => IsSecured && "preset".EqualsInsensitive(authorityName);
 
-    public override string ToString() => Value.ToString();
+    public override string? ToString() => Value?.ToString();
 }

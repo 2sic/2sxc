@@ -31,13 +31,13 @@ public interface ITweakButton
     /// * `format` added in v17
     /// </remarks>
     ITweakButton Note(
-        string note = default,
+        string? note = default,
         NoParamOrder noParamOrder = default,
-        string type = default,
-        string background = default,
+        string? type = default,
+        string? background = default,
         int delay = default,
         int linger = default,
-        string format = default
+        string? format = default
     );
 
     /// <summary>
@@ -57,10 +57,10 @@ public interface ITweakButton
     /// <param name="foreground">Foreground color - will only take effect if the `color` was not set.</param>
     /// <returns></returns>
     ITweakButton Color(
-        string color = default,
+        string? color = default,
         NoParamOrder noParamOrder = default,
-        string background = default,
-        string foreground = default
+        string? background = default,
+        string? foreground = default
     );
 
     /// <summary>

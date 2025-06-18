@@ -42,7 +42,7 @@ partial record Parameters: ITyped
         => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
     [PrivateApi]
-    string ITyped.String(string name, NoParamOrder noParamOrder, string fallback, bool? required, object scrubHtml)
+    string? ITyped.String(string name, NoParamOrder noParamOrder, string fallback, bool? required, object scrubHtml)
     {
         var value = GetV(name, noParamOrder: noParamOrder, fallback: fallback);
         if (scrubHtml != default)
@@ -71,14 +71,14 @@ partial record Parameters: ITyped
         => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
     [PrivateApi]
-    string ITyped.Url(string name, NoParamOrder noParamOrder, string fallback, bool? required)
+    string? ITyped.Url(string name, NoParamOrder noParamOrder, string fallback, bool? required)
     {
         var url = GetV(name, noParamOrder: noParamOrder, fallback);
         return Tags.SafeUrl(url).ToString();
     }
 
     [PrivateApi]
-    IRawHtmlString ITyped.Attribute(string name, NoParamOrder noParamOrder, string fallback, bool? required)
+    IRawHtmlString? ITyped.Attribute(string name, NoParamOrder noParamOrder, string fallback, bool? required)
     {
         // Note: we won't do special date processing, since all values in the Parameters are strings
         var value = GetV(name, noParamOrder: noParamOrder, fallback: fallback);

@@ -39,10 +39,12 @@ public class ImageDecorator(IEntity entity, string[] languageCodes)
     #endregion
 
 
-    public static ImageDecorator GetOrNull(IHasMetadata source, string[] dimensions)
+    public static ImageDecorator? GetOrNull(IHasMetadata? source, string[] dimensions)
     {
         var decItem = source?.Metadata?.FirstOrDefaultOfType(TypeNameId);
-        return decItem != null ? new ImageDecorator(decItem, dimensions) : null;
+        return decItem != null
+            ? new ImageDecorator(decItem, dimensions)
+            : null;
     }
 
     #region Cropping
@@ -67,7 +69,7 @@ public class ImageDecorator(IEntity entity, string[] languageCodes)
     /// <summary>
     /// Detailed description of an image
     /// </summary>
-    public string DescriptionExtended => GetThis<string>(null);
+    public string? DescriptionExtended => GetThis<string>(null);
 
     #endregion
 
@@ -88,7 +90,7 @@ public class ImageDecorator(IEntity entity, string[] languageCodes)
     #endregion
 
 
-    internal (string Param, string Value) GetAnchorOrNull()
+    internal (string? Param, string? Value) GetAnchorOrNull()
     {
         var b = CropBehavior;
         if (b != ToCrop)
@@ -108,13 +110,14 @@ public class ImageDecorator(IEntity entity, string[] languageCodes)
     #region Private Gets
 
 
-    private string ResolveCompass(string code)
+    private string? ResolveCompass(string code)
     {
-        if (string.IsNullOrEmpty(code) || code.Length != 2) return null;
+        if (string.IsNullOrEmpty(code) || code.Length != 2)
+            return null;
         return GetRow(code[0]) + GetCol(code[1]);
     }
 
-    private static string GetRow(char code)
+    private static string? GetRow(char code)
     {
         switch (code)
         {
@@ -124,7 +127,7 @@ public class ImageDecorator(IEntity entity, string[] languageCodes)
             default: return null;
         }
     }
-    private static string GetCol(char code)
+    private static string? GetCol(char code)
     {
         switch (code)
         {

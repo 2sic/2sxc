@@ -66,7 +66,7 @@ public partial interface ITyped : IHasKeys, ICanGetByName
     /// * Added in v15
     /// * parameter `languages` added in 17.10
     /// </remarks>
-    TValue Get<TValue>(string name,
+    TValue? Get<TValue>(string name,
         NoParamOrder noParamOrder = default,
         TValue? fallback = default,
         bool? required = default,

@@ -66,19 +66,19 @@ public interface IImageService: ICanDebug
     /// * Tweak added in v18.03
     /// </remarks>
     IResizeSettings Settings(
-        object settings = default,
+        object? settings = default,
         NoParamOrder noParamOrder = default,
-        Func<ITweakResize, ITweakResize> tweak = default,
-        object factor = default,
-        object width = default,
-        object height = default,
-        object quality = default,
-        string resizeMode = default,
-        string scaleMode = default,
-        string format = default,
-        object aspectRatio = default,
-        string parameters = default,
-        object recipe = default
+        Func<ITweakResize, ITweakResize>? tweak = default,
+        object? factor = default,
+        object? width = default,
+        object? height = default,
+        object? quality = default,
+        string? resizeMode = default,
+        string? scaleMode = default,
+        string? format = default,
+        object? aspectRatio = default,
+        string? parameters = default,
+        object? recipe = default
     );
 
     Recipe Recipe(string variants);
@@ -86,16 +86,16 @@ public interface IImageService: ICanDebug
     Recipe Recipe(
         Recipe recipe,
         NoParamOrder noParamOrder = default,
-        string name = default,
+        string? name = default,
         int width = default,
-        string variants = default,
-        IDictionary<string, object> attributes = default,
-        IEnumerable<Recipe> recipes = default,
+        string? variants = default,
+        IDictionary<string, object>? attributes = default,
+        IEnumerable<Recipe>? recipes = default,
         bool? setWidth = default,
         bool? setHeight = default,
-        string forTag = default,
-        string forFactor = default,
-        string forCss = default
+        string? forTag = default,
+        string? forFactor = default,
+        string? forCss = default
     );
 
     // 2022-03-19 2dm - not ready yet
@@ -185,20 +185,20 @@ public interface IImageService: ICanDebug
     /// * `tweak` added in 18.03
     /// </remarks>
     IResponsivePicture Picture(
-        object link = null,
-        object settings = default,
+        object? link = null,
+        object? settings = default,
         NoParamOrder noParamOrder = default,
-        Func<ITweakMedia, ITweakMedia> tweak = default,
-        object factor = default,
-        object width = default,
-        string imgAlt = default,
-        string imgAltFallback = default,
-        string imgClass = default,
-        object imgAttributes = default,
-        string pictureClass = default,
-        object pictureAttributes = default,
-        object toolbar = default,
-        object recipe = default
+        Func<ITweakMedia, ITweakMedia>? tweak = default,
+        object? factor = default,
+        object? width = default,
+        string? imgAlt = default,
+        string? imgAltFallback = default,
+        string? imgClass = default,
+        object? imgAttributes = default,
+        string? pictureClass = default,
+        object? pictureAttributes = default,
+        object? toolbar = default,
+        object? recipe = default
     );
 
     /// <summary>
@@ -254,18 +254,18 @@ public interface IImageService: ICanDebug
     /// * `tweak` added in 18.03
     /// </remarks>
     IResponsiveImage Img(
-        object link = null,
-        object settings = default,
+        object? link = null,
+        object? settings = default,
         NoParamOrder noParamOrder = default,
-        Func<ITweakMedia, ITweakMedia> tweak = default,
-        object factor = default,
-        object width = default,
-        string imgAlt = default,
-        string imgAltFallback = default,
-        string imgClass = default,
-        object imgAttributes = default,
-        object toolbar = default,
-        object recipe = default
+        Func<ITweakMedia, ITweakMedia>? tweak = default,
+        object? factor = default,
+        object? width = default,
+        string? imgAlt = default,
+        string? imgAltFallback = default,
+        string? imgClass = default,
+        object? imgAttributes = default,
+        object? toolbar = default,
+        object? recipe = default
     );
         
 

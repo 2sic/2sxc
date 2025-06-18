@@ -57,7 +57,7 @@ partial class CodeDataFactory
     private ServiceKit16 ServiceKit16 => field ??= ExCtxReal.GetKit<ServiceKit16>();
 
     // TODO: MUST FINISH THIS, NOT WORKING YET
-    public IFile File(IField field)
+    public IFile? File(IField field)
         => ServiceKit16.Adam.File(field);
 
     public IFolder Folder(int id)

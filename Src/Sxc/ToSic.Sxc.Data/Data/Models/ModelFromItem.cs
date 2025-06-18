@@ -55,7 +55,8 @@ public abstract partial class ModelFromItem : ICanWrap<ITypedItem>, ICanBeItem, 
         _item = source;
         _modelFactory = modelFactory;
     }
-    private IModelFactory _modelFactory;
+
+    private IModelFactory _modelFactory = null!;
 
     /// <summary>
     /// The actual item which is being wrapped, in rare cases where you must access it from outside.
@@ -71,7 +72,7 @@ public abstract partial class ModelFromItem : ICanWrap<ITypedItem>, ICanBeItem, 
     [ShowApiWhenReleased(ShowApiMode.Never)]
     IEntity ICanBeEntity.Entity => _item.Entity;
 
-    object ICanBeItem.TryGetBlock() => _item.TryGetBlock();
+    object? ICanBeItem.TryGetBlock() => _item.TryGetBlock();
 
     //IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= ((IHasPropLookup)((ICanBeItem)this).Item).PropertyLookup;
     //private IPropertyLookup _propLookup;
@@ -88,14 +89,14 @@ public abstract partial class ModelFromItem : ICanWrap<ITypedItem>, ICanBeItem, 
     /// </remarks>
 #pragma warning disable IDE1006
     // ReSharper disable once InconsistentNaming
-    protected internal ITypedItem _item { get; private set; }
+    protected internal ITypedItem _item { get; private set; } = null!;
 #pragma warning restore IDE1006
 
     /// <summary>
     /// Override ToString to give more information about the current object
     /// </summary>
     public override string ToString() 
-        => $"{nameof(ModelFromItem)} Data Model {GetType().FullName} " + (_item == null ? "without backing data (null)" : $"for id:{_item.Id} ({_item})");
+        => $"{nameof(ModelFromItem)} Data Model {GetType().FullName} " + (_item == null! ? "without backing data (null)" : $"for id:{_item.Id} ({_item})");
 
 
     #region As...

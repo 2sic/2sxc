@@ -18,32 +18,32 @@ internal partial class TypedStack: ITypedItem
 
     IEntity ICanBeEntity.Entity => throw new NotImplementedException(NotImplementedError);
 
-    object ICanBeItem.TryGetBlock() => Cdf?.BlockAsObjectOrNull;
+    object? ICanBeItem.TryGetBlock() => Cdf?.BlockAsObjectOrNull;
 
     ITypedItem ICanBeItem.Item => this;
 
-    bool IEquatable<ITypedItem>.Equals(ITypedItem other) => ReferenceEquals(this, other);
+    bool IEquatable<ITypedItem>.Equals(ITypedItem? other) => ReferenceEquals(this, other);
 
     bool ITypedItem.IsDemoItem => false;
 
-    IHtmlTag ITypedItem.Html(string name, NoParamOrder noParamOrder, object container, bool? toolbar,
-        object imageSettings, bool? required, bool debug, Func<ITweakInput<string>, ITweakInput<string>> tweak)
+    IHtmlTag ITypedItem.Html(string name, NoParamOrder noParamOrder, object? container, bool? toolbar,
+        object? imageSettings, bool? required, bool debug, Func<ITweakInput<string>, ITweakInput<string>>? tweak)
         => TypedItemHelpers.Html(Cdf, this, name, noParamOrder, container, toolbar, imageSettings, required, debug, tweak);
 
-    IResponsivePicture ITypedItem.Picture(string name, NoParamOrder noParamOrder,
-        Func<ITweakMedia, ITweakMedia> tweak,
-        object settings,
-        object factor, object width, string imgAlt, string imgAltFallback,
-        string imgClass, object imgAttributes, string pictureClass,
-        object pictureAttributes, object toolbar, object recipe
+    IResponsivePicture? ITypedItem.Picture(string name, NoParamOrder noParamOrder,
+        Func<ITweakMedia, ITweakMedia>? tweak,
+        object? settings,
+        object? factor, object? width, string? imgAlt, string? imgAltFallback,
+        string? imgClass, object? imgAttributes, string? pictureClass,
+        object? pictureAttributes, object? toolbar, object? recipe
     ) => TypedItemHelpers.Picture(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, tweak: tweak, settings: settings,
         factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback,
         imgClass: imgClass, imgAttributes: imgAttributes, pictureClass: pictureClass,
         pictureAttributes: pictureAttributes,
         toolbar: toolbar, recipe: recipe);
 
-    IResponsiveImage ITypedItem.Img(string name, NoParamOrder noParamOrder, Func<ITweakMedia, ITweakMedia> tweak, object settings, object factor,
-        object width, string imgAlt, string imgAltFallback, string imgClass, object imgAttributes, object toolbar, object recipe
+    IResponsiveImage? ITypedItem.Img(string name, NoParamOrder noParamOrder, Func<ITweakMedia, ITweakMedia>? tweak, object? settings, object? factor,
+        object? width, string? imgAlt, string? imgAltFallback, string? imgClass, object? imgAttributes, object? toolbar, object? recipe
     ) => TypedItemHelpers.Img(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, tweak: tweak, settings: settings,
         factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback,
         imgClass: imgClass, imgAttributes: imgAttributes,
@@ -70,7 +70,7 @@ internal partial class TypedStack: ITypedItem
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    private ITypedItem FindSubItemHavingField(string name)
+    private ITypedItem? FindSubItemHavingField(string name)
     {
         // Try to find the object which has that field with a valid value etc.
         var logOrNull = _helper.LogOrNull.SubLogOrNull("Stk.Field", Debug);
@@ -88,7 +88,7 @@ internal partial class TypedStack: ITypedItem
         return sourceItem;
     }
 
-    IFolder ITypedItem.Folder(string name, NoParamOrder noParamOrder, bool? required)
+    IFolder? ITypedItem.Folder(string name, NoParamOrder noParamOrder, bool? required)
     {
         // Try to find the object which has that field with a valid value etc.
         var sourceItem = FindSubItemHavingField(name);
@@ -98,7 +98,7 @@ internal partial class TypedStack: ITypedItem
                    : null);
     }
 
-    IFile ITypedItem.File(string name, NoParamOrder noParamOrder, bool? required)
+    IFile? ITypedItem.File(string name, NoParamOrder noParamOrder, bool? required)
     {
         // Try to find the object which has that field with a valid value etc.
         var sourceItem = FindSubItemHavingField(name);
@@ -116,12 +116,12 @@ internal partial class TypedStack: ITypedItem
     //IEnumerable<ITypedItem> ITypedItem.Children(string field, NoParamOrder noParamOrder, string type, bool? required)
     //    => (this as ITypedStack).Children(field, noParamOrder, type, required);
 
-    T ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required)
+    T ITypedItem.Child<T>(string? name, NoParamOrder protector, bool? required)
         => Cdf.AsCustom<T>(
             source: ((ITypedItem)this).Child(name, required: required), protector: protector, mock: false
         );
 
-    IEnumerable<T> ITypedItem.Children<T>(string field, NoParamOrder protector, string type, bool? required)
+    IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required)
         => Cdf.AsCustomList<T>(
             source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required),
             protector: protector,
@@ -130,16 +130,16 @@ internal partial class TypedStack: ITypedItem
 
     #region Not implemented: Parents, Publishing, Dyn, Presentation, Metadata
 
-    ITypedItem ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string type, string field)
+    ITypedItem? ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string? type, string? field)
         => throw new NotImplementedException(ParentNotImplemented);
 
-    IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string type, string field)
+    IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string? type, string? field)
         => throw new NotImplementedException(ParentNotImplemented);
 
-    T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string type, string field)
+    T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field)
         => throw new NotImplementedException(ParentNotImplemented);
 
-    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string type, string field)
+    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field)
         => throw new NotImplementedException(ParentNotImplemented);
 
     bool ITypedItem.IsPublished => throw new NotImplementedException(NotImplementedError);
@@ -150,7 +150,7 @@ internal partial class TypedStack: ITypedItem
     dynamic ITypedItem.Dyn => throw new NotImplementedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(TypedStack)} by design");
 
     [JsonIgnore] // prevent serialization as it's not a normal property
-    ITypedItem ITypedItem.Presentation => throw new NotImplementedException(NotImplementedError);
+    ITypedItem? ITypedItem.Presentation => throw new NotImplementedException(NotImplementedError);
 
     [JsonIgnore] // prevent serialization as it's not a normal property
     IMetadata ITypedItem.Metadata => throw new NotImplementedException(NotImplementedError);

@@ -45,12 +45,12 @@ partial interface ITypedItem
     IHtmlTag Html(
         string name,
         NoParamOrder noParamOrder = default,
-        object container = default,
+        object? container = default,
         bool? toolbar = default,
-        object imageSettings = default,
+        object? imageSettings = default,
         bool? required = default,
         bool debug = default,
-        Func<ITweakInput<string>, ITweakInput<string>> tweak = default
+        Func<ITweakInput<string>, ITweakInput<string>>? tweak = default
     );
 
 
@@ -113,21 +113,21 @@ partial interface ITypedItem
     /// * `imgAttributes`, `picClass` and `picAttributes` added in 16.07
     /// * `tweak` added in 18.03
     /// </remarks>
-    IResponsivePicture Picture(
+    IResponsivePicture? Picture(
         string name,
         NoParamOrder noParamOrder = default,
-        Func<ITweakMedia, ITweakMedia> tweak = default,
-        object settings = default,
-        object factor = default,
-        object width = default,
-        string imgAlt = default,
-        string imgAltFallback = default,
-        string imgClass = default,
-        object imgAttributes = default,
-        string pictureClass = default,
-        object pictureAttributes = default,
-        object toolbar = default,
-        object recipe = default
+        Func<ITweakMedia, ITweakMedia>? tweak = default,
+        object? settings = default,
+        object? factor = default,
+        object? width = default,
+        string? imgAlt = default,
+        string? imgAltFallback = default,
+        string? imgClass = default,
+        object? imgAttributes = default,
+        string? pictureClass = default,
+        object? pictureAttributes = default,
+        object? toolbar = default,
+        object? recipe = default
     );
 
     /// <summary>
@@ -186,19 +186,19 @@ partial interface ITypedItem
     /// * Added to ITypedItem in v17.04 (previously only Picture was available)
     /// * `tweak` added in 18.03
     /// </remarks>
-    IResponsiveImage Img(
+    IResponsiveImage? Img(
         string name,
         NoParamOrder noParamOrder = default,
-        Func<ITweakMedia, ITweakMedia> tweak = default,
-        object settings = default,
-        object factor = default,
-        object width = default,
-        string imgAlt = default,
-        string imgAltFallback = default,
-        string imgClass = default,
-        object imgAttributes = default,
-        object toolbar = default,
-        object recipe = default
+        Func<ITweakMedia, ITweakMedia>? tweak = default,
+        object? settings = default,
+        object? factor = default,
+        object? width = default,
+        string? imgAlt = default,
+        string? imgAltFallback = default,
+        string? imgClass = default,
+        object? imgAttributes = default,
+        object? toolbar = default,
+        object? recipe = default
     );
 
     /// <summary>

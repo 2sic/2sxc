@@ -22,12 +22,12 @@ public partial interface IToolbarBuilder
     /// <param name="operation">_optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation)</param>
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder Delete(
-        object target = null,
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = null,
-        object parameters = null,
-        string operation = null
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = null,
+        object? parameters = null,
+        string? operation = null
     );
 
     /// <summary>
@@ -43,13 +43,13 @@ public partial interface IToolbarBuilder
     /// <param name="operation">_optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation)</param>
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder Edit(
-        object target = null,
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = default,
-        object parameters = default, 
-        object prefill = default,
-        string operation = default
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = default,
+        object? parameters = default, 
+        object? prefill = default,
+        string? operation = default
     );
 
     /// <summary>
@@ -69,13 +69,13 @@ public partial interface IToolbarBuilder
     /// <param name="operation">_optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation)</param>
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder New(
-        object target = null,
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = null,
-        object parameters = null,
-        object prefill = null,
-        string operation = null
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = null,
+        object? parameters = null,
+        object? prefill = null,
+        string? operation = null
     );
 
     /// <summary>
@@ -96,13 +96,13 @@ public partial interface IToolbarBuilder
     /// <param name="operation">_optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation)</param>
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder Data(
-        object target = null, // entity-like or content-type name
+        object? target = null, // entity-like or content-type name
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object filter = null,
-        object ui = null,
-        object parameters = null,
-        string operation = null
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? filter = null,
+        object? ui = null,
+        object? parameters = null,
+        string? operation = null
     );
 
 
@@ -136,14 +136,14 @@ public partial interface IToolbarBuilder
     /// </remarks>
     IToolbarBuilder Metadata(
         object target,
-        string contentTypes = null,
+        string? contentTypes = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = null,
-        object parameters = null,
-        object prefill = null,
-        string operation = null,
-        string context = null
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = null,
+        object? parameters = null,
+        object? prefill = null,
+        string? operation = null,
+        string? context = null
     );
 
     /// <summary>
@@ -160,12 +160,12 @@ public partial interface IToolbarBuilder
     /// <param name="operation">_optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation)</param>
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder Publish(
-        object target = null,
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = null,
-        object parameters = null,
-        string operation = null
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = null,
+        object? parameters = null,
+        string? operation = null
     );
 
 
@@ -191,15 +191,15 @@ public partial interface IToolbarBuilder
     /// Added in v14.02
     /// </remarks>
     IToolbarBuilder Copy(
-        object target = null,
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        string contentType = null,
-        object ui = null,
-        object parameters = null,
-        object prefill = null,
-        string operation = null,
-        string context = null
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        string? contentType = null,
+        object? ui = null,
+        object? parameters = null,
+        object? prefill = null,
+        string? operation = null,
+        string? context = null
     );
 
         

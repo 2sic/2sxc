@@ -6,20 +6,25 @@ namespace ToSic.Sxc.Internal.Plumbing;
 internal static partial class ParseObject
 {
 
-    internal static double? DoubleOrNull(object value)
+    internal static double? DoubleOrNull(object? value)
     {
-        if (value is null) return null;
-        if (value is float floatVal) return floatVal;
-        if (value is double dVal) return dVal;
+        if (value is null)
+            return null;
+        if (value is float floatVal)
+            return floatVal;
+        if (value is double dVal)
+            return dVal;
 
         var strValue = RealStringOrNull(value);
-        if (strValue == null) return null;
+        if (strValue == null)
+            return null;
         strValue = strValue.Replace(",", ".");
-        if (!double.TryParse(strValue, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var doubleValue)) return null;
+        if (!double.TryParse(strValue, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var doubleValue))
+            return null;
         return doubleValue;
     }
 
-    internal static double? DoubleOrNullWithCalculation(object value)
+    internal static double? DoubleOrNullWithCalculation(object? value)
     {
         // First, check if it's a string like "4:2" or "16/9"
         if (value is string strValue && !string.IsNullOrWhiteSpace(strValue))

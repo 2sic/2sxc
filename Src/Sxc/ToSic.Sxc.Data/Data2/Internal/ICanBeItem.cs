@@ -19,7 +19,7 @@ public interface ICanBeItem: ICanBeEntity
     /// <returns></returns>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    object TryGetBlock();
+    object? TryGetBlock();
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]

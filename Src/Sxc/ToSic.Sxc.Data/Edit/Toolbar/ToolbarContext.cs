@@ -18,7 +18,8 @@ internal class ToolbarContext: IAppIdentity
         AppId = appId;
     }
 
-    internal ToolbarContext(string custom) => Custom = custom;
+    internal ToolbarContext(string custom)
+        => Custom = custom;
 
 
     [JsonPropertyName("zoneId")]
@@ -28,5 +29,5 @@ internal class ToolbarContext: IAppIdentity
     public int AppId { get; } = NotInitialized;
 
     [JsonPropertyName("custom")][JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string Custom { get; } = null;
+    public string? Custom { get; }
 }

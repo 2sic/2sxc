@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Sxc.Data.Internal.Typed;
 using ToSic.Sxc.Data.Models;
@@ -13,7 +14,7 @@ partial class CodeDataFactory: IModelFactory
     /// If the object is an entity-like thing, that will be converted.
     /// If it's a list of entity-like things, the first one will be converted.
     /// </summary>
-    public TCustom AsCustom<TCustom>(object source, NoParamOrder protector = default, bool mock = false)
+    public TCustom AsCustom<TCustom>(object? source, NoParamOrder protector = default, bool mock = false)
         where TCustom : class, ICanWrapData
         => source switch
         {
@@ -80,11 +81,12 @@ partial class CodeDataFactory: IModelFactory
         );
     }
 
+    // [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
     /// <summary>
     /// Create list of custom-typed ITypedItems
     /// </summary>
-    public IEnumerable<TCustom> AsCustomList<TCustom>(object source, NoParamOrder protector, bool nullIfNull)
+    public IEnumerable<TCustom> AsCustomList<TCustom>(object? source, NoParamOrder protector, bool nullIfNull)
         where TCustom : class, ICanWrapData
     {
         return source switch

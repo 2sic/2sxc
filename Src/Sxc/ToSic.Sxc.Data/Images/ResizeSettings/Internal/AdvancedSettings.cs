@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Images;
 public class AdvancedSettings : IHasPiggyBack
 {
     [JsonConstructor]
-    public AdvancedSettings(Recipe recipe = default)
+    public AdvancedSettings(Recipe? recipe = default)
     {
         Recipe = recipe;
 
@@ -24,17 +24,19 @@ public class AdvancedSettings : IHasPiggyBack
     /// <remarks>
     /// System.Text.Json requires that the case-insensitive property name and type match the parameter in the constructor.
     /// </remarks>
-    public Recipe Recipe { get; }
+    public Recipe? Recipe { get; }
 
     [PrivateApi]
-    public static AdvancedSettings Parse(object value) => InnerParse(value);
+    public static AdvancedSettings? Parse(object value) => InnerParse(value);
 
-    private static AdvancedSettings InnerParse(object value)
+    private static AdvancedSettings? InnerParse(object? value)
     {
-        if (value == null) return null;
+        if (value == null)
+            return null;
 
         // It's already what's expected
-        if (value is AdvancedSettings mrsValue) return mrsValue;
+        if (value is AdvancedSettings mrsValue)
+            return mrsValue;
 
         // Parse any string which would be a typical MRS - convert to single rule
         if (value is string strValue && !string.IsNullOrWhiteSpace(strValue))
@@ -48,7 +50,7 @@ public class AdvancedSettings : IHasPiggyBack
     }
 
     [PrivateApi]
-    public static AdvancedSettings FromJson(object value, ILog log = null)
+    public static AdvancedSettings FromJson(object value, ILog? log = null)
     {
         var l = log.Fn<AdvancedSettings>();
         try
@@ -56,7 +58,7 @@ public class AdvancedSettings : IHasPiggyBack
             if (value is string advString && !string.IsNullOrWhiteSpace(advString))
                 return l.Return(
                     JsonSerializer.Deserialize<AdvancedSettings>(advString,
-                        JsonOptions.UnsafeJsonWithoutEncodingHtml), "create");
+                        JsonOptions.UnsafeJsonWithoutEncodingHtml)!, "create");
         }
         catch (Exception ex)
         {
@@ -68,12 +70,14 @@ public class AdvancedSettings : IHasPiggyBack
     }
 
     [PrivateApi]
+    [field: AllowNull, MaybeNull]
     public ReadOnlyCollection<Recipe> AllSubRecipes => field ??= GetAllRecipesRecursive(Recipe?.Recipes).AsReadOnly();
 
-    private static List<Recipe> GetAllRecipesRecursive(IEnumerable<Recipe> recipes)
+    private static List<Recipe> GetAllRecipesRecursive(IEnumerable<Recipe>? recipes)
     {
         var list = new List<Recipe>();
-        if (recipes.SafeNone()) return list;
+        if (recipes.SafeNone())
+            return list;
 
         foreach (var r in recipes)
         {
@@ -90,5 +94,6 @@ public class AdvancedSettings : IHasPiggyBack
     /// </summary>
     [PrivateApi("internal use only")]
     [JsonIgnore]
+    [field: AllowNull, MaybeNull]
     public PiggyBack PiggyBack => field ??= new();
 }

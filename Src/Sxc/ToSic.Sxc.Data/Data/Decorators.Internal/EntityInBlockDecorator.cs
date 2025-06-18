@@ -10,7 +10,7 @@ public class EntityInBlockDecorator: EntityInListDecorator
         int index = DefIndex,
         IEntity presentation = DefPresentation, 
         bool isDemoItem = DefDemo,
-        IEntity parent = default)
+        IEntity? parent = default)
         :base(field, index, parent: parent)
     {
         Presentation = presentation;
@@ -23,7 +23,7 @@ public class EntityInBlockDecorator: EntityInListDecorator
         int index = DefIndex,
         IEntity presentation = DefPresentation,
         bool isDemoItem = DefDemo, 
-        IEntity parent = default) =>
+        IEntity? parent = default) =>
         new(entity, new(field, index, presentation, isDemoItem, parent: parent));
 
     protected const IEntity DefPresentation = null;

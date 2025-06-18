@@ -12,35 +12,35 @@ internal class TypedItemHelpers
         ITypedItem item,
         string name,
         NoParamOrder noParamOrder,
-        object container,
+        object? container,
         bool? toolbar,
-        object imageSettings,
+        object? imageSettings,
         bool? required,
         bool debug,
-        Func<ITweakInput<string>, ITweakInput<string>> tweak = default
+        Func<ITweakInput<string>, ITweakInput<string>>? tweak = default
     )
     {
         var field = item.Field(name, required: required);
         return cdf.Html(field, container: container, classes: null, imageSettings: imageSettings, debug: debug, toolbar: toolbar, tweak: tweak);
     }
 
-    public static IResponsivePicture Picture(
+    public static IResponsivePicture? Picture(
         ICodeDataFactory cdf,
         ITypedItem item,
         string name,
         NoParamOrder noParamOrder,
-        Func<ITweakMedia, ITweakMedia> tweak,
-        object settings,
-        object factor,
-        object width,
-        string imgAlt,
-        string imgAltFallback,
-        string imgClass,
-        object imgAttributes,
-        string pictureClass,
-        object pictureAttributes,
-        object toolbar,
-        object recipe
+        Func<ITweakMedia, ITweakMedia>? tweak,
+        object? settings,
+        object? factor,
+        object? width,
+        string? imgAlt,
+        string? imgAltFallback,
+        string? imgClass,
+        object? imgAttributes,
+        string? pictureClass,
+        object? pictureAttributes,
+        object? toolbar,
+        object? recipe
     )
     {
         var field = item.Field(name, required: true);
@@ -52,21 +52,21 @@ internal class TypedItemHelpers
                 toolbar: toolbar, recipe: recipe);
     }
 
-    public static IResponsiveImage Img(
+    public static IResponsiveImage? Img(
         ICodeDataFactory cdf,
         ITypedItem item,
         string name,
         NoParamOrder noParamOrder,
-        Func<ITweakMedia, ITweakMedia> tweak,
-        object settings,
-        object factor,
-        object width,
-        string imgAlt,
-        string imgAltFallback,
-        string imgClass,
-        object imgAttributes,
-        object toolbar,
-        object recipe
+        Func<ITweakMedia, ITweakMedia>? tweak,
+        object? settings,
+        object? factor,
+        object? width,
+        string? imgAlt,
+        string? imgAltFallback,
+        string? imgClass,
+        object? imgAttributes,
+        object? toolbar,
+        object? recipe
     )
     {
         var field = item.Field(name, required: true);
@@ -79,9 +79,10 @@ internal class TypedItemHelpers
     }
 
 
-    public static string MaybeScrub(string value, object scrubHtml, Func<IScrub> scrubSvc)
+    public static string? MaybeScrub(string? value, object? scrubHtml, Func<IScrub> scrubSvc)
     {
-        if (value == null) return null;
+        if (value == null)
+            return null;
         return scrubHtml switch
         {
             string scrubStr => scrubStr.HasValue()

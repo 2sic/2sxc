@@ -7,16 +7,16 @@ partial interface ITypedItem
     #region parents / children
 
     /// <inheritdoc cref="ITypedRelationshipsDocs.Child"/>
-    ITypedItem Child(string name, NoParamOrder noParamOrder = default, bool? required = default);
+    ITypedItem? Child(string name, NoParamOrder noParamOrder = default, bool? required = default);
 
     /// <inheritdoc cref="ITypedRelationshipsDocs.Children"/>
-    IEnumerable<ITypedItem> Children(string field = default, NoParamOrder noParamOrder = default, string type = default, bool? required = default);
+    IEnumerable<ITypedItem> Children(string? field = default, NoParamOrder noParamOrder = default, string? type = default, bool? required = default);
 
     /// <inheritdoc cref="ITypedRelationshipsDocs.Parent"/>
-    ITypedItem Parent(NoParamOrder noParamOrder = default, bool? current = default, string type = default, string field = default);
+    ITypedItem? Parent(NoParamOrder noParamOrder = default, bool? current = default, string? type = default, string? field = default);
 
     /// <inheritdoc cref="ITypedRelationshipsDocs.Parents"/>
-    IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder = default, string type = default, string field = default);
+    IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder = default, string? type = default, string? field = default);
 
     #endregion
 
@@ -51,8 +51,8 @@ partial interface ITypedItem
     /// <remarks>
     /// New v17.05
     /// </remarks>
-    public IEnumerable<T> Children<T>(string field = default, NoParamOrder protector = default,
-        string type = default, bool? required = default)
+    public IEnumerable<T> Children<T>(string? field = default, NoParamOrder protector = default,
+        string? type = default, bool? required = default)
         where T : class, ICanWrapData, new();
 
     /// <summary>
@@ -68,8 +68,8 @@ partial interface ITypedItem
     /// <remarks>
     /// New v17.06
     /// </remarks>
-    public T Parent<T>(NoParamOrder protector = default, bool? current = default, string type = default,
-        string field = default)
+    public T Parent<T>(NoParamOrder protector = default, bool? current = default, string? type = default,
+        string? field = default)
         where T : class, ICanWrapData, new();
 
     /// <summary>
@@ -89,7 +89,7 @@ partial interface ITypedItem
     /// New v17.06
     /// </remarks>
     public IEnumerable<T> Parents<T>(NoParamOrder protector = default,
-        string type = default, string field = default)
+        string? type = default, string? field = default)
         where T : class, ICanWrapData, new();
 
     #endregion

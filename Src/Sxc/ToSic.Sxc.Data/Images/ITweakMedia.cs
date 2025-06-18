@@ -21,7 +21,7 @@ public interface ITweakMedia
     /// Configure the Resize Settings.
     /// </summary>
     /// <param name="tweak">Tweak API to customize further settings</param>
-    ITweakMedia Resize(Func<ITweakResize, ITweakResize> tweak = default);
+    ITweakMedia Resize(Func<ITweakResize, ITweakResize>? tweak = default);
 
     /// <summary>
     /// Configure the Resize Settings.
@@ -35,13 +35,13 @@ public interface ITweakMedia
     public ITweakMedia Resize(
         string name,
         NoParamOrder noParamOrder = default,
-        Func<ITweakResize, ITweakResize> tweak = default
+        Func<ITweakResize, ITweakResize>? tweak = default
     );
 
     ITweakMedia Resize(
         IResizeSettings settings,
         NoParamOrder noParamOrder = default,
-        Func<ITweakResize, ITweakResize> tweak = default
+        Func<ITweakResize, ITweakResize>? tweak = default
     );
     // Note: Recipe is missing
 

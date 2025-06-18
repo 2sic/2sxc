@@ -8,14 +8,14 @@ internal class PropLookupStack(IPropertyStack stack, Func<bool> getDebug) : IPro
 {
     public IPropertyStack Stack { get; } = stack;
 
-    public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
+    public PropReqResult? FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
     {
         specs = specs.SubLog("Sxc.DynStk", getDebug());
         path = path.KeepOrNew().Add("DynStack", specs.Field);
 
-        var l = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), nameof(PropLookupStack));
+        var l = specs.LogOrNull.Fn<PropReqResult?>(specs.Dump(), nameof(PropLookupStack));
         if (!specs.Field.HasValue())
-            return l.Return(null, "no key");
+            return l.ReturnNull("no key");
 
         var hasPath = specs.Field.Contains(PropertyStack.PathSeparator.ToString());
         var r = hasPath

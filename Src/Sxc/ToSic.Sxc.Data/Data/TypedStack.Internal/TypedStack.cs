@@ -45,14 +45,14 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
     public bool ContainsKey(string name)
         => throw new NotImplementedException($"Not yet implemented on {nameof(ITypedStack)}");
 
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string? language = default)
         => _itemHelper.IsEmpty(name, noParamOrder, isBlank: default, language: language);
 
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string? language = default)
         => _itemHelper.IsNotEmpty(name, noParamOrder, isBlank: default, language: language);
 
     // TODO: Keys()
-    public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default)
+    public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default)
     {
         //var keys = _stack.Sources;
         throw new NotImplementedException();
@@ -63,16 +63,16 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
     #region ITyped
 
     [PrivateApi]
-    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string language)
+    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string? language)
         => _itemHelper.Get(name: name, noParamOrder: noParamOrder, required: required, language: language);
 
     [PrivateApi]
-    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string language)
+    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string? language)
         => _itemHelper.GetT(name, noParamOrder, fallback: fallback, required: required, language: language);
 
 
     [PrivateApi]
-    IRawHtmlString ITyped.Attribute(string name, NoParamOrder noParamOrder, string fallback, bool? required)
+    IRawHtmlString? ITyped.Attribute(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
         => _itemHelper.Attribute(name, noParamOrder, fallback, required);
 
 
@@ -81,7 +81,7 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
         => _itemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    string ITyped.String(string name, NoParamOrder noParamOrder, string fallback, bool? required, object scrubHtml)
+    string? ITyped.String(string name, NoParamOrder noParamOrder, string fallback, bool? required, object? scrubHtml)
         => _itemHelper.String(name, noParamOrder, fallback, required, scrubHtml);
 
     [PrivateApi]
@@ -109,7 +109,7 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
         => _itemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    string ITyped.Url(string name, NoParamOrder noParamOrder, string fallback, bool? required)
+    string? ITyped.Url(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
         => _itemHelper.Url(name, noParamOrder, fallback, required);
 
     [PrivateApi]
@@ -126,15 +126,15 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
         var findResult = _helper.TryGet(name);
         return IsErrStrict(findResult.Found, required, _helper.PropsRequired)
             ? throw ErrStrict(name)
-            : Cdf.AsItem(findResult.Result);
+            : Cdf.AsItem(findResult.Result!);
     }
 
-    IEnumerable<ITypedItem> /*ITypedStack*/ITypedItem.Children(string field, NoParamOrder noParamOrder, string type, bool? required)
+    IEnumerable<ITypedItem> /*ITypedStack*/ITypedItem.Children(string? field, NoParamOrder noParamOrder, string? type, bool? required)
     {
         var findResult = _helper.TryGet(field);
         return IsErrStrict(findResult.Found, required, _helper.PropsRequired)
             ? throw ErrStrict(field)
-            : Cdf.AsItems(findResult.Result)
+            : Cdf.AsItems(findResult.Result!)
                 // Apply type filter - even if a bit "late"
                 .Where(i => i.Entity.Type.Is(type))
                 .ToList();

@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Data.Internal.Dynamic;
 public class WrapObjectDynamic: DynamicObject, IWrapper<object>, IPropertyLookup, IHasJsonSource, ICanGetByName
 {
     [PrivateApi]
-    public object GetContents() => ((IWrapper<object>)PreWrap).GetContents();
+    public object GetContents() => ((IWrapper<object>)PreWrap).GetContents()!;
 
     [PrivateApi]
     internal readonly PreWrapObject PreWrap;
@@ -34,13 +34,13 @@ public class WrapObjectDynamic: DynamicObject, IWrapper<object>, IPropertyLookup
     }
     protected readonly ICodeDataPoCoWrapperService WrapperSvc;
 
-    public override bool TryGetMember(GetMemberBinder binder, out object result)
+    public override bool TryGetMember(GetMemberBinder binder, out object? result)
     {
         result = PreWrap.TryGetWrap(binder.Name, true).Result;
         return true;
     }
 
-    public override bool TrySetMember(SetMemberBinder binder, object value) 
+    public override bool TrySetMember(SetMemberBinder binder, object? value) 
         => throw new NotSupportedException($"Setting a value on {nameof(WrapObjectDynamic)} is not supported");
 
 
@@ -53,7 +53,7 @@ public class WrapObjectDynamic: DynamicObject, IWrapper<object>, IPropertyLookup
     object IHasJsonSource.JsonSource()
         => ((IWrapper<object>)PreWrap).GetContents();
 
-    public dynamic Get(string name)
+    public dynamic? Get(string name)
         => PreWrap.TryGetWrap(name, true).Result;
 
     // #DropUseOfDumpProperties

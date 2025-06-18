@@ -43,18 +43,18 @@ public class Recipe: ICanDump
     /// <param name="attributes">List of attributes to set on the `img` tag</param>
     /// <param name="recipes">List of additional recipes which will all inherit values from this master after creation</param>
     public Recipe(
-        Recipe original,
+        Recipe? original,
         // IMPORTANT: the names of these parameters may never change, as they match the names in the JSON
-        string name = default,
-        string forTag = default,
-        string forFactor = default,
-        string forCss = default,
+        string? name = default,
+        string? forTag = default,
+        string? forFactor = default,
+        string? forCss = default,
         int width = default,
         bool? setWidth = default,
         bool? setHeight = default,
-        string variants = default,
-        IDictionary<string, object> attributes = null,
-        IEnumerable<Recipe> recipes = default
+        string? variants = default,
+        IDictionary<string, object>? attributes = null,
+        IEnumerable<Recipe>? recipes = default
     )
     {
         Name = name;
@@ -88,16 +88,16 @@ public class Recipe: ICanDump
     [JsonConstructor]   // This is important for deserialization from json
     public Recipe(
         // IMPORTANT: the names of these parameters may never change, as they match the names in the JSON
-        string name = default,
-        string forTag = default,
-        string forFactor = default,
-        string forCss = default,
+        string? name = default,
+        string? forTag = default,
+        string? forFactor = default,
+        string? forCss = default,
         int width = default,
         bool? setWidth = default,
         bool? setHeight = default,
-        string variants = default,
-        IDictionary<string, object> attributes = null,
-        IEnumerable<Recipe> recipes = default
+        string? variants = default,
+        IDictionary<string, object>? attributes = null,
+        IEnumerable<Recipe>? recipes = default
     ) : this(original: null, name: name, forTag: forTag, forFactor: forFactor, forCss: forCss, width: width, setWidth: setWidth, setHeight: setHeight, variants: variants, attributes: attributes, recipes: recipes)
     { }
 
@@ -105,25 +105,25 @@ public class Recipe: ICanDump
     /// <summary>
     /// Just an identifier - no technical use
     /// </summary>
-    public string Name { get; private set; }
+    public string? Name { get; private set; }
 
     /// <summary>
     /// TODO: DOC
     /// - `img`, `source`
     /// </summary>
-    public string ForTag { get; private set; }
+    public string? ForTag { get; private set; }
 
     /// <summary>
     /// Determines which factors this recipe should be applied to.
     /// Null means any factor.
     /// </summary>
-    public string ForFactor { get; private set; }
+    public string? ForFactor { get; private set; }
 
 
     /// <summary>
     /// WIP, not implemented yet
     /// </summary>
-    public string ForCss { get; set; }
+    public string? ForCss { get; set; }
 
 
     /// <summary>
@@ -161,11 +161,13 @@ public class Recipe: ICanDump
     ///
     /// _Important: According to the HTML standard you can mix pixel-sizes and multipliers, but not resolutions with any of the other types._
     /// </summary>
-    public string Variants { get; private set; }
+    public string? Variants { get; private set; }
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public string Sizes => Attributes?.TryGetValue(SpecialPropertySizes, out var strSizes) == true ? strSizes.ToString() : null;
+    public string? Sizes => Attributes?.TryGetValue(SpecialPropertySizes, out var strSizes) == true
+        ? strSizes.ToString()
+        : null;
 
 
     /// <summary>
@@ -187,7 +189,7 @@ public class Recipe: ICanDump
 
 
     [PrivateApi("Important for using these settings, but not relevant outside of this")]
-    internal RecipeVariant[] VariantsParsed { get; private set; }
+    internal RecipeVariant[]? VariantsParsed { get; private set; }
 
     [PrivateApi]
     internal Recipe InitAfterLoad()
@@ -202,7 +204,7 @@ public class Recipe: ICanDump
 
 
     [PrivateApi]
-    internal virtual Recipe InitAfterLoad(Recipe parent)
+    internal virtual Recipe InitAfterLoad(Recipe? parent)
     {
         ForFactor ??= parent?.ForFactor;
         FactorParsed = ParseObject.DoubleOrNullWithCalculation(ForFactor) ?? parent?.FactorParsed ?? 0;
@@ -217,7 +219,8 @@ public class Recipe: ICanDump
         ForCss ??= parent?.ForCss;
         VariantsParsed = hasVariants ? RecipeVariantsParser.ParseSet(Variants) : parent?.VariantsParsed;
 
-        foreach (var s in Recipes) s?.InitAfterLoad(this);
+        foreach (var s in Recipes)
+            s?.InitAfterLoad(this);
 
         return this;
     }

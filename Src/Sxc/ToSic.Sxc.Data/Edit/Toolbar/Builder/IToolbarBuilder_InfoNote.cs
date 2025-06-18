@@ -16,8 +16,8 @@ public partial interface IToolbarBuilder
     /// </remarks>
     IToolbarBuilder Info(
         NoParamOrder noParamOrder = default,
-        string link = default,
-        string target = default,
-        Func<ITweakButton, ITweakButton> tweak = default
+        string? link = default,
+        string? target = default,
+        Func<ITweakButton, ITweakButton>? tweak = default
     );
 }

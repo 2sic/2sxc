@@ -129,8 +129,8 @@ public partial record Parameters : IParameters
 
     private string PriorityFields { get; init; }
 
-    public override string ToString() => _toString ??= ToString(sort: true);
-    private string _toString;
+    public override string? ToString() => _toString ??= ToString(sort: true);
+    private string? _toString;
 
     /// <inheritdoc/>
     public string ToString(NoParamOrder protector = default, bool sort = false)

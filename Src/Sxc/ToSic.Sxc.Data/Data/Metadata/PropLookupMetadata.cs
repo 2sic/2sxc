@@ -7,7 +7,7 @@ internal class PropLookupMetadata(IHasMetadata parent, Func<bool> getDebug) : IP
 {
     public IHasMetadata Parent { get; } = parent;
 
-    public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
+    public PropReqResult? FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
     {
         specs = specs.SubLog("Sxc.DynEnt", getDebug());
         var safeWrap = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), "DynEntity");

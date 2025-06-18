@@ -50,6 +50,6 @@ public interface ISecureData<out TValue>
     /// This object explicitly has a ToString, so you can use the result in string concatenation like `"key:" + secureResult`
     /// </summary>
     /// <returns></returns>
-    string ToString();
+    string? ToString();
 
 }

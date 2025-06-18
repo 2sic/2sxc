@@ -18,7 +18,7 @@ internal class PreWrapJsonArray(CodeJsonWrapper wrapper, JsonArray jsonArray)
 
     #region Keys
 
-    public override IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default)
+    public override IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default)
         => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, UnwrappedContents?.Select((p, i) => i.ToString()));
 
     public override bool ContainsKey(string name)
@@ -31,7 +31,7 @@ internal class PreWrapJsonArray(CodeJsonWrapper wrapper, JsonArray jsonArray)
 
     #endregion
 
-    public override TryGetResult TryGetWrap(string name, bool wrapDefault = true)
+    public override TryGetResult TryGetWrap(string? name, bool wrapDefault = true)
     {
         if (UnwrappedContents == null || !UnwrappedContents.Any())
             return new(false, null, null);

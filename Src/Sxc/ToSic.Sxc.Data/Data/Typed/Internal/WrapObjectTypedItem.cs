@@ -31,46 +31,46 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     }
 
     private ICodeDataFactory Cdf => _cdf.Value;
-    private ILazyLike<ICodeDataFactory> _cdf;
-    private ICodeDataPoCoWrapperService Wrapper { get; set; }
+    private ILazyLike<ICodeDataFactory> _cdf = null!;
+    private ICodeDataPoCoWrapperService Wrapper { get; set; } = null!;
 
 
     [PrivateApi]
     [JsonIgnore]
     dynamic ITypedItem.Dyn => throw new NotSupportedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(ITypedStack)} by design");
 
-    public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default,
-        bool? required = default, string language = default)
+    public TValue? Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue? fallback = default,
+        bool? required = default, string? language = default)
         => PreWrap.TryGetTyped(name, noParamOrder, fallback, required: required);
 
     bool ITypedItem.IsDemoItem => PreWrap.TryGetTyped(nameof(ITypedItem.IsDemoItem), noParamOrder: default, fallback: false, required: false);
 
-    IHtmlTag ITypedItem.Html(string name, NoParamOrder noParamOrder, object container, bool? toolbar,
-        object imageSettings, bool? required, bool debug, Func<ITweakInput<string>, ITweakInput<string>> tweak
+    IHtmlTag ITypedItem.Html(string name, NoParamOrder noParamOrder, object? container, bool? toolbar,
+        object? imageSettings, bool? required, bool debug, Func<ITweakInput<string>, ITweakInput<string>>? tweak
     ) => TypedItemHelpers.Html(Cdf, this, name: name, noParamOrder: noParamOrder, container: container,
         toolbar: toolbar, imageSettings: imageSettings, required: required, debug: debug, tweak: tweak);
 
-    IResponsivePicture ITypedItem.Picture(string name, NoParamOrder noParamOrder, Func<ITweakMedia, ITweakMedia> tweak, object settings,
-        object factor, object width, string imgAlt, string imgAltFallback,
-        string imgClass, object imgAttributes, string pictureClass,
-        object pictureAttributes, object toolbar, object recipe
+    IResponsivePicture? ITypedItem.Picture(string name, NoParamOrder noParamOrder, Func<ITweakMedia, ITweakMedia>? tweak, object? settings,
+        object? factor, object? width, string? imgAlt, string? imgAltFallback,
+        string? imgClass, object? imgAttributes, string? pictureClass,
+        object? pictureAttributes, object? toolbar, object? recipe
     ) => TypedItemHelpers.Picture(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder,
         tweak: tweak, settings: settings, factor: factor, width: width, imgAlt: imgAlt,
         imgAltFallback: imgAltFallback, imgClass: imgClass, imgAttributes: imgAttributes, pictureClass: pictureClass, pictureAttributes: pictureAttributes, toolbar: toolbar, recipe: recipe);
 
-    IResponsiveImage ITypedItem.Img(
+    IResponsiveImage? ITypedItem.Img(
         string name,
         NoParamOrder noParamOrder,
-        Func<ITweakMedia, ITweakMedia> tweak,
-        object settings,
-        object factor,
-        object width,
-        string imgAlt,
-        string imgAltFallback,
-        string imgClass,
-        object imgAttributes,
-        object toolbar,
-        object recipe
+        Func<ITweakMedia, ITweakMedia>? tweak,
+        object? settings,
+        object? factor,
+        object? width,
+        string? imgAlt,
+        string? imgAltFallback,
+        string? imgClass,
+        object? imgAttributes,
+        object? toolbar,
+        object? recipe
     ) => TypedItemHelpers.Img(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, tweak: tweak, settings: settings,
         factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback,
         imgClass: imgClass, imgAttributes: imgAttributes,
@@ -81,8 +81,8 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     public Guid Guid => PreWrap.TryGetTyped(nameof(Guid), noParamOrder: default, fallback: Guid.Empty, required: false);
 
-    public string Title => _title.Get(() => PreWrap.TryGetTyped<string>(nameof(ITypedItem.Title), noParamOrder: default, fallback: null, required: false));
-    private readonly GetOnce<string> _title = new();
+    public string? Title => _title.Get(() => PreWrap.TryGetTyped<string>(nameof(ITypedItem.Title), noParamOrder: default, fallback: null, required: false));
+    private readonly GetOnce<string?> _title = new();
 
     #region Properties which return null or empty
 
@@ -91,9 +91,10 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     #region Relationships - Child, Children, Parents, Presentation
 
-    public ITypedItem Child(string name, NoParamOrder noParamOrder, bool? required) => CreateItemFromProperty(name);
+    public ITypedItem? Child(string name, NoParamOrder noParamOrder, bool? required)
+        => CreateItemFromProperty(name);
 
-    public IEnumerable<ITypedItem> Children(string field, NoParamOrder noParamOrder, string type, bool? required)
+    public IEnumerable<ITypedItem> Children(string? field, NoParamOrder noParamOrder, string? type, bool? required)
     {
         var blank = Enumerable.Empty<ITypedItem>();
         var r = PreWrap.TryGetWrap(field);
@@ -101,54 +102,61 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
         if (r.Raw is not IEnumerable re)
         {
             var rawWrapped = Wrapper.TypedItemFromObject(r.Raw, PreWrap.Settings);
-            return rawWrapped == null ? null : new[] { rawWrapped };
+            return [rawWrapped];
         }
 
         var list = re.Cast<object>()
             .Where(o => o != null && !o.GetType().IsValueType)
             .ToList();
             
-        var items = list.Select(l => Wrapper.TypedItemFromObject(l, PreWrap.Settings));
+        var items = list
+            .Select(l => Wrapper.TypedItemFromObject(l, PreWrap.Settings));
 
         if (type.HasValue())
-            items = items.Where(i => i.String(nameof(ITypedItem.Type), required: false).EqualsInsensitive(type)).ToList();
+            items = items
+                .Where(i => i.String(nameof(ITypedItem.Type), required: false).EqualsInsensitive(type))
+                .ToList();
             
         return items;
     }
 
-    public ITypedItem Parent(NoParamOrder noParamOrder = default, bool? current = default, string type = default, string field = default) => 
-        throw new NotSupportedException($"You can't access the {nameof(Parent)}() here");
+    public ITypedItem Parent(NoParamOrder noParamOrder = default, bool? current = default, string? type = default, string? field = default)
+        => throw new NotSupportedException($"You can't access the {nameof(Parent)}() here");
 
 
     /// <summary>
     /// The parents are "fake" so they behave just like children... but under the node "Parents".
     /// If "field" is specified, then it will assume another child-level under the node parents
     /// </summary>
-    public IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder, string type, string field)
+    public IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder, string? type, string? field)
     {
         var blank = Enumerable.Empty<ITypedItem>();
-        var typed = this as ITypedItem;
-        var items = typed.Children(nameof(ITypedItem.Parents), type: type)?.ToList();
+        ITypedItem typed = this;
+        var items = typed.Children(nameof(ITypedItem.Parents), type: type).ToList();
 
-        if (items == null || !items.Any() && !field.HasValue())
+        if (!items.SafeAny() && !field.HasValue())
             return items ?? blank;
 
         if (field.HasValue())
-            items = items.Where(i => i.String("Field", required: false).EqualsInsensitive(field)).ToList();
+            items = items
+                .Where(i => i.String("Field", required: false).EqualsInsensitive(field))
+                .ToList();
         return items;
     }
 
     bool ITypedItem.IsPublished => true;
 
-    IPublishing ITypedItem.Publishing => _publishing.Get(() => new PublishingUnsupported(this));
+    IPublishing ITypedItem.Publishing => _publishing.Get(() => new PublishingUnsupported(this))!;
     private readonly GetOnce<IPublishing> _publishing = new();
 
     [JsonIgnore]
-    public ITypedItem Presentation => _presentation.Get(() => CreateItemFromProperty(nameof(Presentation)));
-    private readonly GetOnce<ITypedItem> _presentation = new();
+    public ITypedItem? Presentation => _presentation.Get(() => CreateItemFromProperty(nameof(Presentation)));
+    private readonly GetOnce<ITypedItem?> _presentation = new();
 
-    private ITypedItem CreateItemFromProperty(string name)
+    private ITypedItem? CreateItemFromProperty(string? name)
     {
+        if (name == null)
+            return null;
         var result = PreWrap.TryGetWrap(name);
         if (!result.Found || result.Raw == null || result.Raw.GetType().IsValueType)
             return null;
@@ -170,7 +178,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
             : Cdf.Folder(Guid, name, Field(name: name, noParamOrder: default, required: required));
     }
 
-    public IFile File(string name, NoParamOrder noParamOrder, bool? required)
+    public IFile? File(string name, NoParamOrder noParamOrder, bool? required)
     {
         if (IsErrStrict(this, name, required, PreWrap.Settings.PropsRequired))
             throw ErrStrictForTyped(this, name);
@@ -193,19 +201,19 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
             source: (this as ITypedItem).Child(name, required: required), protector: protector, mock: false
         );
 
-    IEnumerable<T> ITypedItem.Children<T>(string field, NoParamOrder protector, string type, bool? required)
+    IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required)
         => Cdf.AsCustomList<T>(
             source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required),
             protector: protector,
             nullIfNull: false
         );
 
-    T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string type, string field)
+    T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field)
         => Cdf.AsCustom<T>(
             source: (this as ITypedItem).Parent(noParamOrder: protector, current: current, type: type ?? typeof(T).Name, field: field), protector: protector, mock: false
         );
 
-    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string type, string field)
+    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field)
         => Cdf.AsCustomList<T>(
             source: (this as ITypedItem).Parents(noParamOrder: protector, field: field, type: type ?? typeof(T).Name), protector: protector, nullIfNull: false
         );
@@ -215,9 +223,10 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     #region Not Supported Properties such as Entity, Type, Child, Folder, Presentation, Metadata
 
     [JsonIgnore] // prevent serialization as it's not a normal property
+    [field: AllowNull, MaybeNull]
     IMetadata ITypedItem.Metadata => field ??= BuildMetadata(PreWrap.TryGetWrap(nameof(ITypedItem.Metadata)).Raw);
 
-    private IMetadata BuildMetadata(object raw)
+    private IMetadata BuildMetadata(object? raw)
     {
         var objList = raw != null
             ? raw is IEnumerable rawEnum
@@ -255,14 +264,15 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     /// <summary>
     /// Override the URL, to also support checks for "file:72"
     /// </summary>
-    string ITyped.Url(string name, NoParamOrder noParamOrder, string fallback, bool? required)
+    string? ITyped.Url(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
     {
         var url = PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback, required: required);
-        if (url == null) return null;
+        if (url == null)
+            return null;
 
         // ReSharper disable once ConvertTypeCheckPatternToNullCheck
         if (ValueConverterBase.CouldBeReference(url))
-            url = Cdf.Services.ValueConverterOrNull?.ToValue(url, Guid.Empty) ?? url;
+            url = Cdf.Services.ValueConverter.ToValue(url, Guid.Empty) ?? url;
 
         return Tags.SafeUrl(url).ToString();
     }
@@ -276,14 +286,15 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     #endregion
 
 
-    object ICanBeItem.TryGetBlock() => Cdf?.BlockAsObjectOrNull;
+    object? ICanBeItem.TryGetBlock() => Cdf?.BlockAsObjectOrNull;
 
     public ITypedItem Item => this;
 
     /// <summary>
     /// Get by name should never throw an error, as it's used to get null if not found.
     /// </summary>
-    object ICanGetByName.Get(string name) => (this as ITypedItem).Get(name, required: false);
+    object ICanGetByName.Get(string name)
+        => (this as ITypedItem).Get(name, required: false);
 
     #region Equals
 
@@ -293,11 +304,13 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     /// </summary>
     [PrivateApi]
     // ReSharper disable once NonReadonlyMemberInGetHashCode
-    public override int GetHashCode() => WrapperEquality.GetWrappedHashCode(this.PreWrap);
+    public override int GetHashCode()
+        => WrapperEquality.GetWrappedHashCode(this.PreWrap);
 
-    public override bool Equals(object b)
+    public override bool Equals(object? b)
     {
-        if (b is null) return false;
+        if (b is null)
+            return false;
         if (ReferenceEquals(this, b)) return true;
         if (b.GetType() != GetType()) return false;
         if (b is not WrapObjectTypedItem bTyped) return false;
@@ -308,7 +321,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
         return WrapperEquality.EqualsWrapper(this.PreWrap, bTyped.PreWrap);
     }
 
-    bool IEquatable<ITypedItem>.Equals(ITypedItem other) => Equals(other);
+    bool IEquatable<ITypedItem>.Equals(ITypedItem? other) => Equals(other);
 
     #endregion
 }

@@ -24,27 +24,27 @@ internal partial class Metadata: ITypedItem
             (e, k) => e.Children(k)?.FirstOrDefault()
         );
 
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string? language = default)
         => ItemHelper.IsEmpty(name, noParamOrder, isBlank: default, language: language);
 
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string? language = default)
         => ItemHelper.IsNotEmpty(name, noParamOrder, isBlank: default, language: language);
 
     [PrivateApi]
-    public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default)
+    public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default)
         => FilterKeysIfPossible(noParamOrder, only, Entity?.Attributes.Keys);
 
     #endregion
 
     #region ITyped
 
-    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string language)
+    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string? language)
         => ItemHelper.Get(name: name, noParamOrder: noParamOrder, required: required, language: language);
 
-    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string language)
+    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string? language)
         => ItemHelper.GetT(name, noParamOrder, fallback: fallback, required: required, language: language);
 
-    IRawHtmlString ITyped.Attribute(string name, NoParamOrder noParamOrder, string fallback, bool? required)
+    IRawHtmlString? ITyped.Attribute(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
         => ItemHelper.Attribute(name, noParamOrder, fallback, required);
 
     [PrivateApi]
@@ -55,7 +55,7 @@ internal partial class Metadata: ITypedItem
     DateTime ITyped.DateTime(string name, NoParamOrder noParamOrder, DateTime fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    string ITyped.String(string name, NoParamOrder noParamOrder, string fallback, bool? required, object scrubHtml)
+    string? ITyped.String(string name, NoParamOrder noParamOrder, string fallback, bool? required, object scrubHtml)
         => ItemHelper.String(name, noParamOrder, fallback, required, scrubHtml);
 
     int ITyped.Int(string name, NoParamOrder noParamOrder, int fallback, bool? required)
@@ -76,10 +76,10 @@ internal partial class Metadata: ITypedItem
     double ITyped.Double(string name, NoParamOrder noParamOrder, double fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    string ITyped.Url(string name, NoParamOrder noParamOrder, string fallback, bool? required)
+    string? ITyped.Url(string name, NoParamOrder noParamOrder, string fallback, bool? required)
         => ItemHelper.Url(name, noParamOrder, fallback, required);
 
-    string ITyped.ToString() => "test / debug: " + ToString();
+    string? ITyped.ToString() => "test / debug: " + ToString();
 
     #endregion
 
@@ -87,10 +87,10 @@ internal partial class Metadata: ITypedItem
 
     /// <inheritdoc />
     [PrivateApi]
-    IFolder ITypedItem.Folder(string name, NoParamOrder noParamOrder, bool? required) 
+    IFolder? ITypedItem.Folder(string name, NoParamOrder noParamOrder, bool? required) 
         => TypedItem.Folder(name, noParamOrder, required);
 
-    IFile ITypedItem.File(string name, NoParamOrder noParamOrder, bool? required) 
+    IFile? ITypedItem.File(string name, NoParamOrder noParamOrder, bool? required) 
         => TypedItem.File(name, noParamOrder, required);
 
     #endregion
@@ -107,7 +107,7 @@ internal partial class Metadata: ITypedItem
     Guid ITypedItem.Guid => EntityGuid;
 
     [PrivateApi]
-    string ITypedItem.Title => EntityTitle;
+    string? ITypedItem.Title => EntityTitle;
 
     [PrivateApi]
     IContentType ITypedItem.Type => Entity?.Type;
@@ -120,19 +120,19 @@ internal partial class Metadata: ITypedItem
     /// <inheritdoc />
     [PrivateApi]
     [JsonIgnore]
-    ITypedItem ITypedItem.Presentation => throw new NotSupportedException($"You can't access the {nameof(Presentation)} of Metadata");
+    ITypedItem? ITypedItem.Presentation => throw new NotSupportedException($"You can't access the {nameof(Presentation)} of Metadata");
 
     /// <inheritdoc />
     [JsonIgnore] // prevent serialization as it's not a normal property
     IMetadata ITypedItem.Metadata => throw new NotSupportedException($"You can't access the Metadata of Metadata in ITypedItem");
 
     [PrivateApi]
-    ITypedItem ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string type, string field) =>
+    ITypedItem? ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string? type, string? field) =>
         throw new NotSupportedException($"You can't access the {nameof(ITypedItem.Parent)}() of Metadata as it usually does not make sense to do this");
 
     /// <inheritdoc />
     [PrivateApi]
-    IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string type, string field)
+    IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string? type, string? field)
     {
         // Protect & no Strict (as that's not really possible, since it's not a field)
 
@@ -181,7 +181,7 @@ internal partial class Metadata: ITypedItem
 
     /// <inheritdoc />
     [PrivateApi]
-    ITypedItem ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required) 
+    ITypedItem? ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required) 
         => (this as ITypedItem).Children(name, noParamOrder: noParamOrder, required:required).FirstOrDefault();
 
     #endregion
@@ -189,13 +189,13 @@ internal partial class Metadata: ITypedItem
     #region New Child<T> / Children<T> - disabled as ATM Kit is missing
 
     /// <inheritdoc />
-    T ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required)
+    T ITypedItem.Child<T>(string? name, NoParamOrder protector, bool? required)
         => Cdf.AsCustom<T>(
             source: (this as ITypedItem).Child(name, required: required), protector: protector, mock: false
         );
 
     /// <inheritdoc />
-    IEnumerable<T> ITypedItem.Children<T>(string field, NoParamOrder protector, string type, bool? required)
+    IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required)
         => Cdf.AsCustomList<T>(
             source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required),
             protector: protector,
@@ -203,13 +203,13 @@ internal partial class Metadata: ITypedItem
         );
 
     /// <inheritdoc />
-    T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string type, string field)
+    T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field)
         => Cdf.AsCustom<T>(
             source: (this as ITypedItem).Parent(noParamOrder: protector, current: current, type: type ?? typeof(T).Name, field: field), protector: protector, mock: false
         );
 
     /// <inheritdoc />
-    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string type, string field)
+    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field)
         => Cdf.AsCustomList<T>(
             source: (this as ITypedItem).Parents(noParamOrder: protector, field: field, type: type ?? typeof(T).Name),
             protector: protector,
@@ -226,50 +226,50 @@ internal partial class Metadata: ITypedItem
     IHtmlTag ITypedItem.Html(
         string name,
         NoParamOrder noParamOrder,
-        object container,
+        object? container,
         bool? toolbar,
-        object imageSettings,
+        object? imageSettings,
         bool? required,
         bool debug,
-        Func<ITweakInput<string>, ITweakInput<string>> tweak
+        Func<ITweakInput<string>, ITweakInput<string>>? tweak
     ) => TypedItemHelpers.Html(Cdf, this, name: name, noParamOrder: noParamOrder, container: container,
         toolbar: toolbar, imageSettings: imageSettings, required: required, debug: debug, tweak: tweak);
 
     /// <inheritdoc/>
-    IResponsivePicture ITypedItem.Picture(
+    IResponsivePicture? ITypedItem.Picture(
         string name,
         NoParamOrder noParamOrder,
-        Func<ITweakMedia, ITweakMedia> tweak,
-        object settings,
-        object factor,
-        object width,
-        string imgAlt,
-        string imgAltFallback,
-        string imgClass,
-        object imgAttributes,
-        string pictureClass,
-        object pictureAttributes,
-        object toolbar,
-        object recipe
+        Func<ITweakMedia, ITweakMedia>? tweak,
+        object? settings,
+        object? factor,
+        object? width,
+        string? imgAlt,
+        string? imgAltFallback,
+        string? imgClass,
+        object? imgAttributes,
+        string? pictureClass,
+        object? pictureAttributes,
+        object? toolbar,
+        object? recipe
     ) => TypedItemHelpers.Picture(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder,
         tweak: tweak,
         settings: settings,
         factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback, 
         imgClass: imgClass, imgAttributes: imgAttributes, pictureClass: pictureClass, pictureAttributes: pictureAttributes, toolbar: toolbar, recipe: recipe);
 
-    IResponsiveImage ITypedItem.Img(
+    IResponsiveImage? ITypedItem.Img(
         string name,
         NoParamOrder noParamOrder,
-        Func<ITweakMedia, ITweakMedia> tweak,
-        object settings,
-        object factor,
-        object width,
-        string imgAlt,
-        string imgAltFallback,
-        string imgClass,
-        object imgAttributes,
-        object toolbar,
-        object recipe
+        Func<ITweakMedia, ITweakMedia>? tweak,
+        object? settings,
+        object? factor,
+        object? width,
+        string? imgAlt,
+        string? imgAltFallback,
+        string? imgClass,
+        object? imgAttributes,
+        object? toolbar,
+        object? recipe
     ) => TypedItemHelpers.Img(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, tweak: tweak, settings: settings,
         factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback,
         imgClass: imgClass, imgAttributes: imgAttributes,

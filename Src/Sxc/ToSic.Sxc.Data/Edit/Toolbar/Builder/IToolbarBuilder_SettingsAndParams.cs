@@ -10,7 +10,7 @@ public partial interface IToolbarBuilder
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder More(
         NoParamOrder noParamOrder = default,
-        object ui = default
+        object? ui = default
     );
 
     /// <summary>
@@ -32,13 +32,13 @@ public partial interface IToolbarBuilder
     /// </remarks>
     IToolbarBuilder Settings(
         NoParamOrder noParamOrder = default,
-        string show = default,
-        string hover = default,
-        string follow = default,
-        string classes = default,
-        string autoAddMore = default,
-        object ui = default,
-        object parameters = default
+        string? show = default,
+        string? hover = default,
+        string? follow = default,
+        string? classes = default,
+        string? autoAddMore = default,
+        object? ui = default,
+        object? parameters = default
     );
 
     /// <summary>
@@ -58,13 +58,13 @@ public partial interface IToolbarBuilder
     /// <param name="context"></param>
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder Parameters(
-        object target = default,
+        object? target = default,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = default,
-        object parameters = default,
-        object prefill = default,
-        string context = default
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = default,
+        object? parameters = default,
+        object? prefill = default,
+        string? context = default
     );
 
         

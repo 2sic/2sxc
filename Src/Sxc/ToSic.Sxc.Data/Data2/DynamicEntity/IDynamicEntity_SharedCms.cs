@@ -39,9 +39,9 @@ public partial interface IDynamicEntity
     IHtmlTag Html(
         string name,
         NoParamOrder noParamOrder = default,
-        object container = default,
+        object? container = default,
         bool? toolbar = default,
-        object imageSettings = default,
+        object? imageSettings = default,
         bool debug = default
     );
 }

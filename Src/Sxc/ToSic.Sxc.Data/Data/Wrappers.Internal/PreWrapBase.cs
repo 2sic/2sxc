@@ -31,7 +31,7 @@ internal abstract class PreWrapBase(object data) : IWrapper<object>, IHasJsonSou
 
     #region Abstract: Keys
 
-    public abstract IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default);
+    public abstract IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default);
 
     public abstract bool ContainsKey(string name);
 
@@ -39,15 +39,15 @@ internal abstract class PreWrapBase(object data) : IWrapper<object>, IHasJsonSou
 
     #region TryGet and FindPropertyInternals
 
-    public object TryGetObject(string name, NoParamOrder noParamOrder, bool? required, [CallerMemberName] string cName = default)
+    public object TryGetObject(string name, NoParamOrder noParamOrder, bool? required, [CallerMemberName] string? cName = default)
     {
         var result = TryGetWrap(name, true);
         return IsErrStrict(result.Found, required, Settings.PropsRequired)
             ? throw ErrStrict(name, cName: cName)
-            : result.Result;
+            : result.Result!;
     }
 
-    public TValue TryGetTyped<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, [CallerMemberName] string cName = default)
+    public TValue? TryGetTyped<TValue>(string name, NoParamOrder noParamOrder, TValue? fallback, bool? required, [CallerMemberName] string? cName = default)
     {
         var result = TryGetWrap(name, false);
         return IsErrStrict(result.Found, required, Settings.PropsRequired)

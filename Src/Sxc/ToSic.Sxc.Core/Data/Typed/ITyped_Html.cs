@@ -18,5 +18,5 @@ public partial interface ITyped
     /// <param name="fallback">Value to use if the property specified by `name` doesn't exist</param>
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns></returns>
-    IRawHtmlString Attribute(string name, NoParamOrder noParamOrder = default, string? fallback = default, bool? required = default);
+    IRawHtmlString? Attribute(string name, NoParamOrder noParamOrder = default, string? fallback = default, bool? required = default);
 }

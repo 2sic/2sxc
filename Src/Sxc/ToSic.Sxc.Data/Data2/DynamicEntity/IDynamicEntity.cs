@@ -80,13 +80,13 @@ public partial interface IDynamicEntity:
     /// Get the draft item of this item if this is a content-item which is published, and has a draft.
     /// </summary>
     /// <returns>Returns a dynamic entity if there is a draft, or null if there is no draft.</returns>
-    new dynamic GetDraft();
+    dynamic? GetDraft();
 
     /// <summary>
     /// Get the published item of this item if this is a content-item which is draft, and has a published.
     /// </summary>
     /// <returns>Returns a dynamic entity if there is a draft, or null if there is no draft.</returns>
-    new dynamic GetPublished();
+    dynamic? GetPublished();
 
     // This property would also work on the normal dynamic interface, but we want them to appear in the documentation so we're adding them
     /// <summary>
@@ -109,7 +109,7 @@ public partial interface IDynamicEntity:
     /// <param name="field">Optional field filter - would only return items that point to the current item in a specific field name.</param>
     /// <returns>A list of all items pointing here (filtered), converted to DynamicEntity for convenience.</returns>
     /// <remarks>New in 9.42 - note also that the parameter-order is reversed to the Children()</remarks>
-    List<IDynamicEntity> Parents(string type = null, string field = null);
+    List<IDynamicEntity> Parents(string? type = null, string? field = null);
 
     /// <summary>
     /// A dynamic list of sub-items. Important for LINQ style querying or just
@@ -122,7 +122,7 @@ public partial interface IDynamicEntity:
     /// <param name="field">Optional field filter - would only return items that point to the current item in a specific field name.</param>
     /// <returns>A list of all items pointing here (filtered), converted to DynamicEntity for convenience.</returns>
     /// <remarks>New in 10.21.00 - note also that the parameter-order is reversed to the Parents()</remarks>
-    List<IDynamicEntity> Children(string field = null, string type = null);
+    List<IDynamicEntity> Children(string? field = null, string? type = null);
 
     #endregion 
 

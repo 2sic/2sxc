@@ -42,7 +42,7 @@ internal partial class Metadata(IMetadataOf metadata, ICodeDataFactory cdf)
 
     object IHasJsonSource.JsonSource() => throw new NotImplementedException();
 
-    bool IEquatable<ITypedItem>.Equals(ITypedItem other) => Equals(other);
+    bool IEquatable<ITypedItem>.Equals(ITypedItem? other) => Equals(other);
 
     #endregion
 

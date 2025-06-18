@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Data.Internal.Typed;
 
 [JsonConverter(typeof(DynamicJsonConverter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class TypedItemOfEntity(/*DynamicEntity*/ object dynOrNull, IEntity entity, ICodeDataFactory cdf, bool propsRequired)
+internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity entity, ICodeDataFactory cdf, bool propsRequired)
     : ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName, IWrapper<IEntity>,
         IEntityWrapper, IHasMetadata, IHasJsonSource
 {
@@ -63,9 +63,9 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object dynOrNull, IEntity ent
 
     [PrivateApi]
     IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= new(Entity, canDebug: this);
-    private PropLookupWithPathEntity _propLookup;
+    private PropLookupWithPathEntity? _propLookup;
 
-    [PrivateApi] object ICanBeItem.TryGetBlock() => Cdf?.BlockAsObjectOrNull;
+    [PrivateApi] object? ICanBeItem.TryGetBlock() => Cdf?.BlockAsObjectOrNull;
     [PrivateApi] ITypedItem ICanBeItem.Item => this;
 
     #endregion
@@ -84,9 +84,9 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object dynOrNull, IEntity ent
     /// Ensure that the equality check is done correctly.
     /// If two objects wrap the same item, they will be considered equal.
     /// </summary>
-    public override bool Equals(object b) => MultiWrapperEquality.EqualsObj(this, b);
+    public override bool Equals(object? b) => MultiWrapperEquality.EqualsObj(this, b);
 
-    bool IEquatable<ITypedItem>.Equals(ITypedItem other) => Equals(other);
+    bool IEquatable<ITypedItem>.Equals(ITypedItem? other) => Equals(other);
 
     IEnumerable<IDecorator<IEntity>> IHasDecorators<IEntity>.Decorators => (Entity as IEntityWrapper)?.Decorators ?? [];
 
@@ -103,14 +103,14 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object dynOrNull, IEntity ent
             (e, k) => e.Children(k)?.FirstOrDefault()
         );
 
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string? language = default)
         => ItemHelper.IsEmpty(name, noParamOrder, isBlank: default, language: language);
 
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string? language = default)
         => ItemHelper.IsNotEmpty(name, noParamOrder, isBlank: default, language: language);
 
     [PrivateApi]
-    public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default)
+    public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default)
         => FilterKeysIfPossible(noParamOrder, only, Entity?.Attributes.Keys);
 
     #endregion
@@ -118,28 +118,28 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object dynOrNull, IEntity ent
     #region ITyped
 
     [PrivateApi]
-    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string language)
+    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string? language)
         => ItemHelper.Get(name, noParamOrder, required, language: language);
 
     [PrivateApi]
-    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string language)
+    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string? language)
         => ItemHelper.GetT(name, noParamOrder, fallback: fallback, required: required, language: language);
 
     [PrivateApi]
-    IRawHtmlString ITyped.Attribute(string name, NoParamOrder noParamOrder, string fallback, bool? required)
+    IRawHtmlString? ITyped.Attribute(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
         => ItemHelper.Attribute(name, noParamOrder, fallback, required);
 
     [PrivateApi]
     [JsonIgnore]
     dynamic ITypedItem.Dyn => _dyn ??= dynOrNull ?? Cdf.AsDynamic(Entity, propsRequired: propsRequired);
-    private object _dyn;
+    private object? _dyn;
 
     [PrivateApi]
     DateTime ITyped.DateTime(string name, NoParamOrder noParamOrder, DateTime fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    string ITyped.String(string name, NoParamOrder noParamOrder, string fallback, bool? required, object scrubHtml)
+    string? ITyped.String(string name, NoParamOrder noParamOrder, string? fallback, bool? required, object? scrubHtml)
         => ItemHelper.String(name, noParamOrder, fallback, required, scrubHtml);
 
     [PrivateApi]
@@ -167,14 +167,14 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object dynOrNull, IEntity ent
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    string ITyped.Url(string name, NoParamOrder noParamOrder, string fallback, bool? required)
+    string? ITyped.Url(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
         => ItemHelper.Url(name, noParamOrder, fallback, required);
 
 
 
 
     [PrivateApi]
-    string ITyped.ToString() => "test / debug: " + ToString();
+    string? ITyped.ToString() => "test / debug: " + ToString();
 
     /// <summary>
     /// Get by name should never throw an error, as it's used to get null if not found.
@@ -192,7 +192,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object dynOrNull, IEntity ent
     Guid ITypedItem.Guid => Entity?.EntityGuid ?? Guid.Empty;
 
     [PrivateApi]
-    string ITypedItem.Title => Entity?.GetBestTitle(Cdf.Dimensions);
+    string? ITypedItem.Title => Entity?.GetBestTitle(Cdf.Dimensions);
 
     [PrivateApi]
     IContentType ITypedItem.Type => Entity?.Type;
@@ -206,7 +206,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object dynOrNull, IEntity ent
 
     /// <inheritdoc />
     [PrivateApi]
-    IFolder ITypedItem.Folder(string name, NoParamOrder noParamOrder, bool? required)
+    IFolder? ITypedItem.Folder(string name, NoParamOrder noParamOrder, bool? required)
     {
         return IsErrStrict(this, name, required, GetHelper.PropsRequired)
             ? throw ErrStrictForTyped(this, name)
@@ -214,7 +214,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object dynOrNull, IEntity ent
     }
     private readonly GetOnceNamed<IFolder> _adamCache = new();
 
-    IFile ITypedItem.File(string name, NoParamOrder noParamOrder, bool? required)
+    IFile? ITypedItem.File(string name, NoParamOrder noParamOrder, bool? required)
     {
         ITypedItem typedThis = this;
         // Case 1: The field contains a direct reference to a file
@@ -231,14 +231,14 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object dynOrNull, IEntity ent
     /// <inheritdoc />
     [PrivateApi]
     [JsonIgnore] // prevent serialization as it's not a normal property
-    ITypedItem ITypedItem.Presentation => (DynHelper.Presentation as ICanBeItem)?.Item;
+    ITypedItem? ITypedItem.Presentation => (DynHelper.Presentation as ICanBeItem)?.Item;
 
     /// <inheritdoc />
     [JsonIgnore] // prevent serialization as it's not a normal property
     IMetadata ITypedItem.Metadata => DynHelper.Metadata;
 
 
-    ITypedItem ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string type, string field)
+    ITypedItem? ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string? type, string? field)
     {
         if (current != true)
             return ((ITypedItem)this).Parents(type: type, field: field).FirstOrDefault();
@@ -252,7 +252,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object dynOrNull, IEntity ent
 
     /// <inheritdoc />
     [PrivateApi]
-    IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string type, string field)
+    IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string? type, string? field)
         => GetHelper.ParentsItems(entity: Entity, type: type, field: field);
 
     bool ITypedItem.IsPublished => Entity.IsPublished;
@@ -262,7 +262,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object dynOrNull, IEntity ent
 
     /// <inheritdoc />
     [PrivateApi]
-    IEnumerable<ITypedItem> ITypedItem.Children(string field, NoParamOrder noParamOrder, string type, bool? required)
+    IEnumerable<ITypedItem> ITypedItem.Children(string? field, NoParamOrder noParamOrder, string? type, bool? required)
     {
         if (IsErrStrict(this, field, required, GetHelper.PropsRequired))
             throw ErrStrictForTyped(this, field);
@@ -295,7 +295,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object dynOrNull, IEntity ent
 
     /// <inheritdoc />
     [PrivateApi]
-    ITypedItem ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required)
+    ITypedItem? ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required)
         => IsErrStrict(this, name, required, GetHelper.PropsRequired)
             ? throw ErrStrictForTyped(this, name)
             : ((ITypedItem)this).Children(name).FirstOrDefault();
@@ -310,49 +310,49 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object dynOrNull, IEntity ent
     IHtmlTag ITypedItem.Html(
         string name,
         NoParamOrder noParamOrder,
-        object container,
+        object? container,
         bool? toolbar,
-        object imageSettings,
+        object? imageSettings,
         bool? required,
         bool debug,
-        Func<ITweakInput<string>, ITweakInput<string>> tweak
+        Func<ITweakInput<string>, ITweakInput<string>>? tweak
     ) => TypedItemHelpers.Html(Cdf, this, name: name, noParamOrder: noParamOrder, container: container,
         toolbar: toolbar, imageSettings: imageSettings, required: required, debug: debug, tweak: tweak);
 
     /// <inheritdoc/>
-    IResponsivePicture ITypedItem.Picture(
+    IResponsivePicture? ITypedItem.Picture(
         string name,
         NoParamOrder noParamOrder,
-        Func<ITweakMedia, ITweakMedia> tweak,
-        object settings,
-        object factor,
-        object width,
-        string imgAlt,
-        string imgAltFallback,
-        string imgClass,
-        object imgAttributes,
-        string pictureClass,
-        object pictureAttributes,
-        object toolbar,
-        object recipe
+        Func<ITweakMedia, ITweakMedia>? tweak,
+        object? settings,
+        object? factor,
+        object? width,
+        string? imgAlt,
+        string? imgAltFallback,
+        string? imgClass,
+        object? imgAttributes,
+        string? pictureClass,
+        object? pictureAttributes,
+        object? toolbar,
+        object? recipe
     ) => TypedItemHelpers.Picture(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, tweak: tweak, settings: settings,
         factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback, 
         imgClass: imgClass, imgAttributes: imgAttributes, pictureClass: pictureClass, pictureAttributes: pictureAttributes, 
         toolbar: toolbar, recipe: recipe);
 
-    IResponsiveImage ITypedItem.Img(
+    IResponsiveImage? ITypedItem.Img(
         string name,
         NoParamOrder noParamOrder,
-        Func<ITweakMedia, ITweakMedia> tweak,
-        object settings,
-        object factor,
-        object width,
-        string imgAlt,
-        string imgAltFallback,
-        string imgClass,
-        object imgAttributes,
-        object toolbar,
-        object recipe
+        Func<ITweakMedia, ITweakMedia>? tweak,
+        object? settings,
+        object? factor,
+        object? width,
+        string? imgAlt,
+        string? imgAltFallback,
+        string? imgClass,
+        object? imgAttributes,
+        object? toolbar,
+        object? recipe
     ) => TypedItemHelpers.Img(cdf: Cdf, item: this, name: name, noParamOrder: noParamOrder, tweak: tweak, settings: settings,
         factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback,
         imgClass: imgClass, imgAttributes: imgAttributes,
@@ -367,13 +367,13 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object dynOrNull, IEntity ent
     #region New Child<T> / Children<T> - disabled as ATM Kit is missing
 
     /// <inheritdoc />
-    T ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required)
+    T ITypedItem.Child<T>(string? name, NoParamOrder protector, bool? required)
         => Cdf.AsCustom<T>(
             source: ((ITypedItem)this).Child(name, required: required), protector: protector, mock: false
         );
 
     /// <inheritdoc />
-    IEnumerable<T> ITypedItem.Children<T>(string field, NoParamOrder protector, string type, bool? required)
+    IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required)
         => Cdf.AsCustomList<T>(
             source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required),
             protector: protector,
@@ -381,13 +381,13 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object dynOrNull, IEntity ent
         );
 
     /// <inheritdoc />
-    T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string type, string field)
+    T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field)
         => Cdf.AsCustom<T>(
             source: ((ITypedItem)this).Parent(noParamOrder: protector, current: current, type: type ?? typeof(T).Name, field: field), protector: protector, mock: false
         );
 
     /// <inheritdoc />
-    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string type, string field)
+    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field)
         => Cdf.AsCustomList<T>(
             source: ((ITypedItem)this).Parents(noParamOrder: protector, field: field, type: type ?? typeof(T).Name), protector: protector, nullIfNull: false
         );

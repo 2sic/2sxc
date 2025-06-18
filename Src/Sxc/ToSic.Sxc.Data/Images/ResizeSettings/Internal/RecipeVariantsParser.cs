@@ -10,18 +10,20 @@ internal class RecipeVariantsParser
     public const char WidthSeparator = ':';
 
 
-    public static RecipeVariant[] ParseSet(string srcSet)
+    public static RecipeVariant[] ParseSet(string? srcSet)
     {
-        if (string.IsNullOrWhiteSpace(srcSet)) return [];
+        if (string.IsNullOrWhiteSpace(srcSet))
+            return [];
 
-        var partStrings = srcSet.Split(PartSeparator)
+        var partStrings = srcSet!
+            .Split(PartSeparator)
             .Select(s => s.Trim())
             .Select(ParsePart);
 
         return partStrings.ToArray();
     }
 
-    public static RecipeVariant ParsePart(string partString)
+    public static RecipeVariant ParsePart(string? partString)
     {
         var withMore = (partString ?? string.Empty)
             .Split(KeyValueSeparator)

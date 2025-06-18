@@ -17,7 +17,7 @@ public partial interface IToolbarBuilder
     /// <param name="target">_optional_ entity-like target, see [target guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Target)</param>
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder AsTag(
-        object target = null
+        object? target = null
     );
 
     /// <summary>
@@ -27,7 +27,7 @@ public partial interface IToolbarBuilder
     /// <param name="target">_optional_ entity-like target, see [target guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Target)</param>
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder AsAttributes(
-        object target = null
+        object? target = null
     );
 
 
@@ -39,7 +39,7 @@ public partial interface IToolbarBuilder
     [PrivateApi("wip")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     IToolbarBuilder AsJson(
-        object target = null
+        object? target = null
     );
         
 }

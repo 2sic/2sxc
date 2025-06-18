@@ -32,7 +32,7 @@ public partial interface ITypedItem: ITyped, ICanBeEntity, ICanBeItem, IEquatabl
     /// The presentation item or `null` if it doesn't exist.
     /// </summary>
     [JsonIgnore] // prevent serialization as it's not a normal property
-    ITypedItem Presentation { get; }
+    ITypedItem? Presentation { get; }
 
     /// <summary>
     /// Metadata of the current item, with special features.

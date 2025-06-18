@@ -18,14 +18,14 @@ public class HasKeysHelper
         return IsNotEmpty(value, blankIs);
     }
 
-    public static bool IsEmpty(object value, bool? blankIsEmpty)
+    public static bool IsEmpty(object? value, bool? blankIsEmpty)
     {
         // Since we'll reverse the final result, we must ensure that blankIs is pre-reversed as well
         blankIsEmpty = !(blankIsEmpty ?? true);
         return !IsNotEmpty(value, blankIsEmpty);
     }
 
-    public static bool IsNotEmpty(object value, bool? blankIsEmpty) =>
+    public static bool IsNotEmpty(object? value, bool? blankIsEmpty) =>
         value switch
         {
             null => false,

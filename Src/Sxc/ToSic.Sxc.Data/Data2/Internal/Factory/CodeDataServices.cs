@@ -19,7 +19,10 @@ public class CodeDataServices(
     /// <summary>
     /// The ValueConverter is used to parse links in the format like "file:72"
     /// </summary>
-    internal IValueConverter ValueConverterOrNull => valueConverterLazy.Value;
+    /// <remarks>
+    /// Before 2025-06-18 was called ValueConverterOrNull - but it's from a service so it should always be there...
+    /// </remarks>
+    internal IValueConverter ValueConverter => valueConverterLazy.Value;
 
     /// <summary>
     /// This is provided so that ITypedItems can use Scrub in the String APIs

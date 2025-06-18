@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Services.Internal;
 // #NoEditorBrowsableBecauseOfInheritance
 //[ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
-public abstract class ServiceWithContext(string logName, NoParamOrder protect = default, bool errorIfNotConnected = false, object[] connect = default)
+public abstract class ServiceWithContext(string logName, NoParamOrder protect = default, bool errorIfNotConnected = false, object[]? connect = default)
     : ServiceBase(logName, protect: protect, connect: connect), INeedsExecutionContext, ICanDebug
 {
     /// <summary>
@@ -29,10 +29,11 @@ public abstract class ServiceWithContext(string logName, NoParamOrder protect = 
     /// <param name="parentLog"></param>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public void ConnectToRoot(IExecutionContext exCtx, ILog parentLog)
+    public void ConnectToRoot(IExecutionContext? exCtx, ILog? parentLog)
     {
         // Avoid unnecessary reconnects
-        if (_alreadyConnected) return;
+        if (_alreadyConnected)
+            return;
         _alreadyConnected = true;
 
         // Remember the parent
@@ -47,12 +48,12 @@ public abstract class ServiceWithContext(string logName, NoParamOrder protect = 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
 
-    protected IExecutionContext ExCtx => ExCtxOrNull
+    protected IExecutionContext? ExCtx => ExCtxOrNull
                                          ?? (errorIfNotConnected
                                              ? throw new($"{nameof(ExCtxOrNull)} is null")
                                              : null);
 
-    protected IExecutionContext ExCtxOrNull { get; private set; }
+    protected IExecutionContext? ExCtxOrNull { get; private set; }
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]

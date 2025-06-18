@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Data.Internal.Typed;
 public class WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeService> forCodeConverter)
     : IWrapper<IPreWrap>, ITyped, IHasPropLookup, IHasJsonSource
 {
-    internal IPreWrap PreWrap { get; private set; }
+    internal IPreWrap PreWrap { get; private set; } = null!;
 
     internal WrapObjectTyped Setup(IPreWrap preWrap)
     {
@@ -36,8 +36,10 @@ public class WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeSer
         (e, k) =>
         {
             var child = e.PreWrap.TryGetWrap(k);
-            if (!child.Found || child.Result == null) return null;
-            if (child.Result is WrapObjectTyped typed) return typed;
+            if (!child.Found || child.Result == null)
+                return null;
+            if (child.Result is WrapObjectTyped typed)
+                return typed;
             // Note: arrays have never been supported, so the following won't work
             // Because the inner objects are not of the expected type.
             // We don't want to start supporting it now.
@@ -48,25 +50,25 @@ public class WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeSer
         }
     );
 
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default /* ignore */)
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string? language = default /* ignore */)
         => HasKeysHelper.IsEmpty(this, name, noParamOrder, default);
 
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default /* ignore */)
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string? language = default /* ignore */)
         => HasKeysHelper.IsNotEmpty(this, name, noParamOrder, default);
 
 
 
-    public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default)
+    public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default)
         => PreWrap.Keys(noParamOrder, only);
 
     #endregion
 
     #region ITyped Get
 
-    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string language /* ignore */)
+    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string? language /* ignore */)
         => PreWrap.TryGetObject(name, noParamOrder, required);
 
-    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string language /* note ignored */)
+    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string? language /* note ignored */)
         => PreWrap.TryGetTyped(name, noParamOrder, fallback, required: required);
 
     #endregion
@@ -79,7 +81,7 @@ public class WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeSer
     DateTime ITyped.DateTime(string name, NoParamOrder noParamOrder, DateTime fallback, bool? required)
         => PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    string ITyped.String(string name, NoParamOrder noParamOrder, string fallback, bool? required, object scrubHtml)
+    string? ITyped.String(string name, NoParamOrder noParamOrder, string? fallback, bool? required, object? scrubHtml)
     {
         var value = PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
         return TypedItemHelpers.MaybeScrub(value, scrubHtml, () => scrubSvc.Value);
@@ -104,17 +106,19 @@ public class WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeSer
 
     #region ITyped Specials: Attribute, Url
 
-    string ITyped.Url(string name, NoParamOrder noParamOrder, string fallback, bool? required)
+    string? ITyped.Url(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
     {
         var url = PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback, required: required);
         return Tags.SafeUrl(url).ToString();
     }
 
-    IRawHtmlString ITyped.Attribute(string name, NoParamOrder noParamOrder, string fallback, bool? required)
+    IRawHtmlString? ITyped.Attribute(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
     {
         var value = PreWrap.TryGetWrap(name, false).Result;
         var strValue = forCodeConverter.Value.ForCode(value, fallback: fallback);
-        return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
+        return strValue is null
+            ? null
+            : new RawHtmlString(WebUtility.HtmlEncode(strValue));
     }
 
     #endregion
@@ -129,9 +133,10 @@ public class WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeSer
     // ReSharper disable once NonReadonlyMemberInGetHashCode
     public override int GetHashCode() => WrapperEquality.GetWrappedHashCode(PreWrap);
 
-    public override bool Equals(object b)
+    public override bool Equals(object? b)
     {
-        if (b is null) return false;
+        if (b is null)
+            return false;
         if (ReferenceEquals(this, b)) return true;
         if (b.GetType() != GetType()) return false;
         return WrapperEquality.EqualsWrapper(PreWrap, ((WrapObjectTyped)b).PreWrap);
@@ -148,7 +153,7 @@ public class WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeSer
 
     #region ToString to support Json objects
 
-    public override string ToString() => PreWrap.GetContents().ToString();
+    public override string? ToString() => PreWrap.GetContents()?.ToString();
 
     #endregion
 

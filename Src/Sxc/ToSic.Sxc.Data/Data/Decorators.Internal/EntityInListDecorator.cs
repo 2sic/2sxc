@@ -7,7 +7,7 @@
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class EntityInListDecorator(string field, int index = 0, IEntity parent = default)
+public abstract class EntityInListDecorator(string field, int index = 0, IEntity? parent = default)
     : IDecorator<IEntity>
 {
     protected const int DefIndex = 0;

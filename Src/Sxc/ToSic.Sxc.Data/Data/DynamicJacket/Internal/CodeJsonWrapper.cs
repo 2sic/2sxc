@@ -25,12 +25,12 @@ public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)
     #endregion
 
 
-    internal DynamicJacketBase Json2Jacket(string json, NoParamOrder noParamOrder = default, string fallback = default)
+    internal DynamicJacketBase Json2Jacket(string json, NoParamOrder noParamOrder = default, string? fallback = default)
     {
         return IfJsonTryConvertToJacket(AsJsonNode(json, fallback)).Final;
     }
 
-    public ITyped JsonToTyped(string json, NoParamOrder noParamOrder = default, string fallback = default)
+    public ITyped JsonToTyped(string json, NoParamOrder noParamOrder = default, string? fallback = default)
     {
         if (!json.HasValue()) return null;
         ThrowIfNotExpected(json, false);
@@ -39,16 +39,17 @@ public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)
         return result.Final;
     }
 
-    public IEnumerable<ITyped> JsonToTypedList(string json, NoParamOrder noParamOrder = default, string fallback = default)
+    public IEnumerable<ITyped>? JsonToTypedList(string json, NoParamOrder noParamOrder = default, string? fallback = default)
     {
-        if (!json.HasValue()) return null;
+        if (!json.HasValue())
+            return null;
         ThrowIfNotExpected(json, true);
         var node = AsJsonNode(json, fallback);
-        var result = IfJsonTryConvertTo(node, obj => null, arr => JsonArrayToTypedList(arr, true));
+        var result = IfJsonTryConvertTo(node, _ => null, arr => JsonArrayToTypedList(arr, true));
         return result.Final;
     }
 
-    private IEnumerable<ITyped> JsonArrayToTypedList(JsonArray array, bool errorIfNotPossible)
+    private IEnumerable<ITyped>? JsonArrayToTypedList(JsonArray array, bool errorIfNotPossible)
     {
         if (!errorIfNotPossible && array.Any(jItem => jItem is not JsonObject))
             return null;
@@ -60,7 +61,7 @@ public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)
             .ToList();
     }
 
-    private void ThrowIfNotExpected(string json, bool expectArray, [CallerMemberName] string cName = default)
+    private void ThrowIfNotExpected(string json, bool expectArray, [CallerMemberName] string? cName = default)
     {
         var (isComplex, isArray) = AnalyzeJson(json);
         if (!isComplex)
@@ -99,10 +100,11 @@ public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)
     private WrapObjectTyped CreateTypedObject(JsonObject jsonObject) => 
         wrapTypeGenerator.New().Setup(new PreWrapJsonObject(this, jsonObject));
 
-    private (TResult Final, bool Ok, JsonValueKind ValueKind)
-        IfJsonTryConvertTo<TResult>(object original, Func<JsonObject, TResult> toObj, Func<JsonArray, TResult> toArr) where TResult : class
+    private (TResult? Final, bool Ok, JsonValueKind ValueKind)
+        IfJsonTryConvertTo<TResult>(object? original, Func<JsonObject, TResult?> toObj, Func<JsonArray, TResult> toArr)
+        where TResult : class
     {
-        var l = Log.Fn<(TResult Jacket, bool Ok, JsonValueKind ValueKind)>();
+        var l = Log.Fn<(TResult? Jacket, bool Ok, JsonValueKind ValueKind)>();
         if (original is not JsonNode jsonNode)
             return l.Return((null, false, JsonValueKind.Undefined), "not json node");
 
@@ -147,16 +149,18 @@ public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)
     /// <param name="original"></param>
     /// <returns></returns>
     [PrivateApi]
-    internal object IfJsonGetValueOrJacket(object original)
+    internal object? IfJsonGetValueOrJacket(object? original)
     {
-        if (original is not JsonNode jsonNode) return original;
+        if (original is not JsonNode jsonNode)
+            return original;
 
         if (!Settings.WrapToDynamic)
         {
             var wrapTyped = IfJsonTryConvertTo<object>(original,
                 CreateTypedObject,
                 jArr => JsonArrayToTypedList(jArr, errorIfNotPossible: false));
-            if (wrapTyped.Ok && wrapTyped.Final != null) return wrapTyped.Final;
+            if (wrapTyped is { Ok: true, Final: not null })
+                return wrapTyped.Final;
 
             // New case in Typed only, as it won't wrap arrays which are not complex object
             if (jsonNode is JsonArray jsonArray)
@@ -165,7 +169,8 @@ public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)
         else
         {
             var (wrapResult, wrapOk, _) = IfJsonTryConvertToJacket(original);
-            if (wrapOk) return wrapResult;
+            if (wrapOk)
+                return wrapResult;
         };
 
 

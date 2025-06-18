@@ -8,7 +8,7 @@
 /// <param name="original"></param>
 /// <param name="fieldInfo"></param>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class ListTypedItems<TTypedItem>(IEnumerable<TTypedItem> original, IEntity fieldInfo)
+internal class ListTypedItems<TTypedItem>(IEnumerable<TTypedItem> original, IEntity? fieldInfo)
     : List<TTypedItem>(original), ICanBeEntity
     where TTypedItem : class
 {

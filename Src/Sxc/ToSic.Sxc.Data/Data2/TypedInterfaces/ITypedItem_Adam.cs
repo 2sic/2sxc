@@ -13,7 +13,7 @@ partial interface ITypedItem
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>The Folder object</returns>
     /// <remarks>Added in 16.02</remarks>
-    IFolder Folder(string name,
+    IFolder? Folder(string name,
         NoParamOrder noParamOrder = default,
         bool? required = default);
 
@@ -31,7 +31,7 @@ partial interface ITypedItem
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <remarks>Added in 16.02</remarks>
     /// <returns></returns>
-    IFile File(string name,
+    IFile? File(string name,
         NoParamOrder noParamOrder = default,
         bool? required = default);
 }

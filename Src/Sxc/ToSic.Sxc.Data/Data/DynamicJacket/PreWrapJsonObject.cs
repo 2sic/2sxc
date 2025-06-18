@@ -19,7 +19,7 @@ internal class PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item)
 
     #region Keys
 
-    public override IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default) 
+    public override IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default) 
         => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, item.Select(p => p.Key));
 
     public override bool ContainsKey(string name)
@@ -53,7 +53,7 @@ internal class PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item)
 
     #region TryGet
 
-    public override TryGetResult TryGetWrap(string name, bool wrapDefault = true)
+    public override TryGetResult TryGetWrap(string? name, bool wrapDefault = true)
     {
         if (name.IsEmptyOrWs() || item == null || !item.Any())
             return new(false, null, null);
@@ -69,9 +69,11 @@ internal class PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item)
             var part = pathParts[i];
             var result = TryGetFromNode(part, node);
             // last one or not found - return a not-found
-            if (i == pathParts.Length -1 || !result.Found) return result;
+            if (i == pathParts.Length -1 || !result.Found)
+                return result;
             node = result.Raw as JsonObject;
-            if (node == null) return new(false, null, null);
+            if (node == null)
+                return new(false, null, null);
         }
         return new(false, null, null);
     }

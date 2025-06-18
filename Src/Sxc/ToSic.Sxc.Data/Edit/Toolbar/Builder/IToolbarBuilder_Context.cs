@@ -37,7 +37,7 @@ public partial interface IToolbarBuilder
     IToolbarBuilder DetectDemo(
         ICanBeEntity root,
         NoParamOrder noParamOrder = default,
-        string message = default);
+        string? message = default);
 
     /// <summary>
     /// Condition to apply if the toolbar would show, but maybe shouldn't.
@@ -87,8 +87,8 @@ public partial interface IToolbarBuilder
     IToolbarBuilder Audience(
         NoParamOrder protector = default,
         bool? everyone = default,
-        IEnumerable<string> roleNames = default,
-        IEnumerable<string> denyRoleNames = default);
+        IEnumerable<string>? roleNames = default,
+        IEnumerable<string>? denyRoleNames = default);
 
     /// <summary>
     /// Adds a button group to the toolbar.
@@ -102,6 +102,6 @@ public partial interface IToolbarBuilder
     /// <remarks>
     /// New in v14.08
     /// </remarks>
-    IToolbarBuilder Group(string name = null);
+    IToolbarBuilder Group(string? name = null);
 
 }

@@ -62,19 +62,23 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     private readonly bool _propsRequired;
 
     [PrivateApi]
-    IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= new(Entity, canDebug: this);
-    private PropLookupWithPathEntity _propLookup;
+    [field: AllowNull, MaybeNull]
+    IPropertyLookup IHasPropLookup.PropertyLookup => field ??= new PropLookupWithPathEntity(Entity, canDebug: this);
 
     [PrivateApi]
+    [field: AllowNull, MaybeNull]
     internal GetAndConvertHelper GetHelper => field ??= new(this, Cdf, _propsRequired, childrenShouldBeDynamic: true, canDebug: this);
 
     [PrivateApi]
+    [field: AllowNull, MaybeNull]
     internal SubDataFactory SubDataFactory => field ??= new(Cdf, _propsRequired, canDebug: this);
 
     [PrivateApi]
+    [field: AllowNull, MaybeNull]
     internal CodeDynHelper DynHelper => field ??= new(Entity, SubDataFactory);
 
     [PrivateApi]
+    [field: AllowNull, MaybeNull]
     internal ITypedItem TypedItem => field ??= new TypedItemOfEntity(this, Entity, Cdf, _propsRequired);
 
     /// <inheritdoc />
@@ -108,9 +112,9 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     public IHtmlTag Html(
         string name,
         NoParamOrder noParamOrder = default,
-        object container = default,
+        object? container = default,
         bool? toolbar = default,
-        object imageSettings = default,
+        object? imageSettings = default,
         bool debug = default
     ) => Cdf.CompatibilityLevel < CompatibilityLevels.CompatibilityLevel12
         // Only do compatibility check if used on DynamicEntity
@@ -154,11 +158,11 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     public dynamic Presentation => DynHelper.Presentation;
 
     /// <inheritdoc />
-    public List<IDynamicEntity> Parents(string type = null, string field = null)
+    public List<IDynamicEntity> Parents(string? type = null, string? field = null)
         => GetHelper.ParentsDyn(entity: Entity, type: type, field: field);
 
     /// <inheritdoc />
-    public List<IDynamicEntity> Children(string field = null, string type = null)
+    public List<IDynamicEntity> Children(string? field = null, string? type = null)
         => GetHelper.ChildrenDyn(Entity, field: field, type: type);
 
     #endregion
@@ -170,14 +174,14 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
 
     /// <inheritdoc />
 
-    public dynamic GetDraft() => SubDataFactory.SubDynEntityOrNull(Entity == null
+    public dynamic? GetDraft() => SubDataFactory.SubDynEntityOrNull(Entity == null
         ? null
         : (Cdf as ICodeDataFactoryDeepWip)?.AppReaderOrNull?.GetDraft(Entity)
     );
     //public dynamic GetDraft() => SubDataFactory.SubDynEntityOrNull(Entity == null ? null : (Cdf.BlockOrNull?.App as IAppWithInternal)?.AppReader?.GetDraft(Entity));
 
     /// <inheritdoc />
-    public dynamic GetPublished() => SubDataFactory.SubDynEntityOrNull(Entity == null
+    public dynamic? GetPublished() => SubDataFactory.SubDynEntityOrNull(Entity == null
         ? null
         : (Cdf as ICodeDataFactoryDeepWip)?.AppReaderOrNull?.GetPublished(Entity)
     );
@@ -190,14 +194,14 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     public dynamic Get(string name) => GetHelper.Get(name);
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public dynamic Get(string name, NoParamOrder noParamOrder = default, string language = null, bool convertLinks = true, bool? debug = null)
+    public dynamic Get(string name, NoParamOrder noParamOrder = default, string? language = null, bool convertLinks = true, bool? debug = null)
         => GetHelper.Get(name, noParamOrder, language, convertLinks, debug);
 
     public TValue Get<TValue>(string name)
         => GetHelper.Get<TValue>(name);
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default)
+    public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue? fallback = default)
         => GetHelper.Get(name, noParamOrder, fallback);
 
     #endregion
@@ -210,7 +214,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
 
     #endregion
 
-    [PrivateApi] object ICanBeItem.TryGetBlock() => Cdf?.BlockAsObjectOrNull;
+    [PrivateApi] object? ICanBeItem.TryGetBlock() => Cdf?.BlockAsObjectOrNull;
     [PrivateApi] ITypedItem ICanBeItem.Item => TypedItem;
 
 

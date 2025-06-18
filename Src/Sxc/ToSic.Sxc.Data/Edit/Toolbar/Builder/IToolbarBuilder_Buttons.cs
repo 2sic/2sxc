@@ -23,13 +23,13 @@ public partial interface IToolbarBuilder
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder Button(
         string name,
-        object target = null,
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = null,
-        object parameters = null,
-        string operation = null,
-        string context = null
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = null,
+        object? parameters = null,
+        string? operation = null,
+        string? context = null
     );
 
 }

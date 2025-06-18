@@ -91,7 +91,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     [ShowApiWhenReleased(ShowApiMode.Never)]
     IEntity ICanBeEntity.Entity => _item.Entity;
 
-    object ICanBeItem.TryGetBlock()
+    object? ICanBeItem.TryGetBlock()
         => _item.TryGetBlock();
 
     IPropertyLookup IHasPropLookup.PropertyLookup
@@ -115,7 +115,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     /// <summary>
     /// Override ToString to give more information about the current object
     /// </summary>
-    public override string ToString() 
+    public override string? ToString() 
         => $"{nameof(CustomItem)} Data Model {GetType().FullName} "
            + (_item == null ? "without backing data (null)" : $"for id:{Id} ({_item})");
 
@@ -148,7 +148,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
         => _item.Get(name: name, noParamOrder: noParamOrder, required: required, language: language);
 
     /// <inheritdoc />
-    public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default, bool? required = default, string language = default)
+    public TValue? Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default, bool? required = default, string language = default)
         => _item.Get(name: name, noParamOrder: noParamOrder, fallback: fallback, required: required, language: language);
 
     #endregion
@@ -164,9 +164,8 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
         _item.DateTime(name, noParamOrder, fallback, required);
 
     /// <inheritdoc />
-    public string String(string name, NoParamOrder noParamOrder = default, string fallback = default, bool? required = default,
-        object scrubHtml = default) =>
-        _item.String(name, noParamOrder, fallback, required, scrubHtml);
+    public string? String(string name, NoParamOrder noParamOrder = default, string fallback = default, bool? required = default, object scrubHtml = default)
+        => _item.String(name, noParamOrder, fallback, required, scrubHtml);
 
     /// <inheritdoc />
     public int Int(string name, NoParamOrder noParamOrder = default, int fallback = default, bool? required = default) => _item.Int(name, noParamOrder, fallback, required);
@@ -184,7 +183,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     public double Double(string name, NoParamOrder noParamOrder = default, double fallback = default, bool? required = default) => _item.Double(name, noParamOrder, fallback, required);
 
     /// <inheritdoc />
-    public string Url(string name, NoParamOrder noParamOrder = default, string fallback = default, bool? required = default) => _item.Url(name, noParamOrder, fallback, required);
+    public string? Url(string name, NoParamOrder noParamOrder = default, string fallback = default, bool? required = default) => _item.Url(name, noParamOrder, fallback, required);
 
     #endregion
 
@@ -196,7 +195,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     #region Advanced Get Methods: Attribute, Html, File, Folder etc.
 
     /// <inheritdoc />
-    public IRawHtmlString Attribute(string name, NoParamOrder noParamOrder = default, string fallback = default,
+    public IRawHtmlString? Attribute(string name, NoParamOrder noParamOrder = default, string fallback = default,
         bool? required = default) =>
         _item.Attribute(name, noParamOrder, fallback, required);
 
@@ -206,7 +205,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
         _item.Html(name, noParamOrder, container, toolbar, imageSettings, required, debug, tweak);
 
     /// <inheritdoc />
-    public IResponsivePicture Picture(string name, NoParamOrder noParamOrder = default,
+    public IResponsivePicture? Picture(string name, NoParamOrder noParamOrder = default,
         Func<ITweakMedia, ITweakMedia> tweak = default,
         object settings = default,
         object factor = default, object width = default, string imgAlt = default, string imgAltFallback = default,
@@ -215,16 +214,16 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
         _item.Picture(name, noParamOrder, tweak, settings, factor, width, imgAlt, imgAltFallback, imgClass, imgAttributes, pictureClass, pictureAttributes, toolbar, recipe);
 
     /// <inheritdoc />
-    public IResponsiveImage Img(string name, NoParamOrder noParamOrder = default, Func<ITweakMedia, ITweakMedia> tweak = default, object settings = default, object factor = default, object width = default,
+    public IResponsiveImage? Img(string name, NoParamOrder noParamOrder = default, Func<ITweakMedia, ITweakMedia> tweak = default, object settings = default, object factor = default, object width = default,
         string imgAlt = default, string imgAltFallback = default, string imgClass = default, object imgAttributes = default, object toolbar = default, object recipe = default) =>
         _item.Img(name, noParamOrder, tweak, settings, factor, width, imgAlt, imgAltFallback, imgClass, imgAttributes, toolbar, recipe);
 
     /// <inheritdoc />
-    public IFolder Folder(string name, NoParamOrder noParamOrder = default, bool? required = default)
+    public IFolder? Folder(string name, NoParamOrder noParamOrder = default, bool? required = default)
         => _item.Folder(name, noParamOrder, required);
 
     /// <inheritdoc />
-    public IFile File(string name, NoParamOrder noParamOrder = default, bool? required = default)
+    public IFile? File(string name, NoParamOrder noParamOrder = default, bool? required = default)
         => _item.File(name, noParamOrder, required);
 
     #endregion
@@ -232,7 +231,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     #region Children and Parents
 
     /// <inheritdoc />
-    public ITypedItem Child(string name, NoParamOrder noParamOrder = default, bool? required = default)
+    public ITypedItem? Child(string name, NoParamOrder noParamOrder = default, bool? required = default)
         => _item.Child(name, noParamOrder, required);
 
     /// <inheritdoc />
@@ -240,7 +239,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
         => _item.Children(field, noParamOrder, type, required);
 
     /// <inheritdoc />
-    public ITypedItem Parent(NoParamOrder noParamOrder = default, bool? current = default, string type = default, string field = default)
+    public ITypedItem? Parent(NoParamOrder noParamOrder = default, bool? current = default, string type = default, string field = default)
         => _item.Parent(noParamOrder, current, type, field);
 
     /// <inheritdoc />
@@ -268,7 +267,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
 
     /// <inheritdoc />
     [JsonIgnore] // prevent serialization as it's not a normal property
-    public ITypedItem Presentation => _item.Presentation;
+    public ITypedItem? Presentation => _item.Presentation;
 
     /// <inheritdoc />
     [JsonIgnore] // prevent serialization as it's not a normal property
@@ -291,7 +290,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
 
     /// <inheritdoc />
     [JsonIgnore] // prevent serialization as it maps to a property which could be different; better let the inheriting class define it
-    public string Title => _item.Title;
+    public string? Title => _item.Title;
 
     /// <inheritdoc />
     [JsonIgnore] // prevent serialization as it's not a normal property

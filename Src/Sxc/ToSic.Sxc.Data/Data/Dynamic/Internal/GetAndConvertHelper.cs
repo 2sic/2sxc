@@ -36,9 +36,10 @@ internal class GetAndConvertHelper(
 
     #region Get Implementations 1:1 - names must be identical with caller, so the exceptions have the right names
 
-    public object Get(string name) => GetInternal(name, lookupLink: true).Result;
+    public object? Get(string name) => GetInternal(name, lookupLink: true).Result;
 
-    public object Get(string name, NoParamOrder noParamOrder = default, string language = null, bool convertLinks = true, bool? debug = null)
+    // ReSharper disable once MethodOverloadWithOptionalParameter
+    public object Get(string name, NoParamOrder noParamOrder = default, string? language = null, bool convertLinks = true, bool? debug = null)
     {
         _debug = debug;
         var result = GetInternal(name, language, convertLinks).Result;
@@ -47,23 +48,24 @@ internal class GetAndConvertHelper(
         return result;
     }
 
-    public TValue Get<TValue>(string name)
+    public TValue? Get<TValue>(string name)
         => TryGet(name).Result.ConvertOrDefault<TValue>();
 
-    public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default)
+    // ReSharper disable once MethodOverloadWithOptionalParameter
+    public TValue? Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue? fallback = default)
         => TryGet(name).Result.ConvertOrFallback(fallback);
 
     #endregion
 
     #region Get Values
 
-    public TryGetResult TryGet(string field, string language)
+    public TryGetResult TryGet(string field, string? language)
         => GetInternal(field, language, lookupLink: false);
 
-    public TryGetResult TryGet(string field)
-        => GetInternal(field, null, lookupLink: false);
+    public TryGetResult TryGet(string? field)
+        => GetInternal(field, lookupLink: false);
 
-    public TryGetResult GetInternal(string field, string language = null, bool lookupLink = true)
+    public TryGetResult GetInternal(string? field, string? language = null, bool lookupLink = true)
     {
         var logOrNull = LogOrNull.SubLogOrNull("GnC.GetInt", Debug);
         var l = logOrNull.Fn<TryGetResult>($"Type: {Parent.GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookupLink)}:{lookupLink}");
@@ -150,7 +152,7 @@ internal class GetAndConvertHelper(
 
     private readonly Dictionary<string, TryGetResult> _rawValCache = new(InvariantCultureIgnoreCase);
 
-    private object ValueAutoConverted(PropReqResult original, bool lookupLink, string field, ILog logOrNull)
+    private object ValueAutoConverted(PropReqResult original, bool lookupLink, string field, ILog? logOrNull)
     {
         var l = logOrNull.Fn<object>($"..., {nameof(lookupLink)}: {lookupLink}, {nameof(field)}: {field}");
         var value = original.Result;
@@ -160,8 +162,8 @@ internal class GetAndConvertHelper(
                        && original.ValueType == ValueTypesWithState.Hyperlink
                        && ValueConverterBase.CouldBeReference(strResult))
         {
-            l.A($"Try to convert value - HasValueConverter: {Cdf.Services.ValueConverterOrNull != null}");
-            value = Cdf.Services.ValueConverterOrNull?.ToValue(strResult, parent?.EntityGuid ?? Guid.Empty) ?? value;
+            l.A($"Try to convert value"); // - HasValueConverter: {Cdf.Services.ValueConverterOrNull != null}");
+            value = Cdf.Services.ValueConverter.ToValue(strResult, parent?.EntityGuid ?? Guid.Empty) ?? value;
             return l.Return(value, "link-conversion");
         }
 
@@ -200,12 +202,12 @@ internal class GetAndConvertHelper(
 
     #region Parents / Children - ATM still dynamic
 
-    public List<IDynamicEntity> ParentsDyn(IEntity entity, string type, string field)
+    public List<IDynamicEntity> ParentsDyn(IEntity entity, string? type, string? field)
         => entity.Parents(type, field)
             .Select(SubDataFactory.SubDynEntityOrNull)
             .ToList();
 
-    public List<ITypedItem> ParentsItems(IEntity entity, string type, string field)
+    public List<ITypedItem> ParentsItems(IEntity entity, string? type, string? field)
         => entity.Parents(type, field)
             .Select(ITypedItem (e) => new TypedItemOfEntity(null, e, Cdf, PropsRequired))
             .ToList();

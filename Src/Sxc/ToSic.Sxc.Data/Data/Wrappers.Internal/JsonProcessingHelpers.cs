@@ -7,16 +7,19 @@ namespace ToSic.Sxc.Data.Internal.Wrapper;
 
 internal class JsonProcessingHelpers
 {
-    internal static JsonNode AsJsonNode(string json, string fallback = EmptyJson)
+    internal static JsonNode? AsJsonNode(string json, string? fallback = EmptyJson)
     {
-        JsonNode StandardParse(string jsonToParse) =>
+        JsonNode? StandardParse(string jsonToParse) =>
             JsonNode.Parse(jsonToParse, JsonNodeDefaultOptions, JsonDocumentDefaultOptions);
 
-        if (!json.HasValue()) return fallback == null ? null : StandardParse(fallback);
+        if (!json.HasValue())
+            return fallback == null
+                ? null
+                : StandardParse(fallback);
 
         try
         {
-            var (isComplex, isArray) = AnalyzeJson(json);
+            var (isComplex, _) = AnalyzeJson(json);
             if (isComplex)
             {
                 var node = StandardParse(json);
@@ -37,9 +40,10 @@ internal class JsonProcessingHelpers
     /// </summary>
     /// <param name="node"></param>
     /// <returns></returns>
-    public static (JsonNode Node, bool Repackaged) NeutralizeValueToObjectOrArray(JsonNode node)
+    public static (JsonNode? Node, bool Repackaged) NeutralizeValueToObjectOrArray(JsonNode node)
     {
-        if (node is not JsonValue jValue) return (node, false);
+        if (node is not JsonValue jValue)
+            return (node, false);
         var je = jValue.GetValue<JsonElement>();
         switch (je.ValueKind)
         {
@@ -64,7 +68,7 @@ internal class JsonProcessingHelpers
     }
 
 
-    public static object JsonValueGetContents(JsonNode jValue)
+    public static object? JsonValueGetContents(JsonNode jValue)
     {
         var je = jValue.GetValue<JsonElement>();
         switch (je.ValueKind)

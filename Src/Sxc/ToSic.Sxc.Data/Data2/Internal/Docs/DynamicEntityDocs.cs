@@ -32,7 +32,7 @@ internal abstract class DynamicEntityDocs
     public abstract dynamic Get(string name,
         // ReSharper disable once MethodOverloadWithOptionalParameter
         NoParamOrder noParamOrder = default,
-        string language = null,
+        string? language = null,
         bool convertLinks = true,
         bool? debug = null
     );
@@ -66,6 +66,6 @@ internal abstract class DynamicEntityDocs
     public abstract TValue Get<TValue>(string name,
         // ReSharper disable once MethodOverloadWithOptionalParameter
         NoParamOrder noParamOrder = default,
-        TValue fallback = default);
+        TValue? fallback = default);
 
 }

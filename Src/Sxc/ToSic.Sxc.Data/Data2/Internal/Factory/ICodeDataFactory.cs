@@ -19,7 +19,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// If the object is an entity-like thing, that will be converted.
     /// If it's a list of entity-like things, the first one will be converted.
     /// </summary>
-    TCustom AsCustom<TCustom>(object source, NoParamOrder protector = default, bool mock = false)
+    TCustom AsCustom<TCustom>(object? source, NoParamOrder protector = default, bool mock = false)
         where TCustom : class, ICanWrapData;
 
     TCustom AsCustomFrom<TCustom, TData>(TData item)
@@ -28,10 +28,10 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// <summary>
     /// Create list of custom-typed ITypedItems
     /// </summary>
-    IEnumerable<TCustom> AsCustomList<TCustom>(object source, NoParamOrder protector, bool nullIfNull)
+    IEnumerable<TCustom> AsCustomList<TCustom>(object? source, NoParamOrder protector, bool nullIfNull)
         where TCustom : class, ICanWrapData;
 
-    ITyped AsTyped(object data, bool required = false, bool? propsRequired = default, string detailsMessage = default);
+    ITyped AsTyped(object data, bool required = false, bool? propsRequired = default, string? detailsMessage = default);
     IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder, bool? required = false, bool? propsRequired = default);
     int CompatibilityLevel { get; }
     CodeDataServices Services { get; }
@@ -77,7 +77,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// Convert a list of Entities into a DynamicEntity.
     /// Only used in DynamicCodeRoot.
     /// </summary>
-    IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, bool propsRequired, NoParamOrder protector = default, IEntity parent = default, string field = default);
+    IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, bool propsRequired, NoParamOrder protector = default, IEntity? parent = default, string? field = default);
 
     /// <summary>
     /// Convert any object into a dynamic list.
@@ -92,7 +92,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     object AsDynamicFromObject(object dynObject, bool propsRequired = false);
 
     dynamic MergeDynamic(object[] entities);
-    ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? required = default, ITypedItem fallback = default, bool? propsRequired = default, bool? mock = default);
+    ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? required = default, ITypedItem? fallback = default, bool? propsRequired = default, bool? mock = default);
 
     /// <summary>
     /// Quick convert an entity to item - if not null, otherwise return null.
@@ -103,10 +103,10 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     ITypedItem AsItem(IEntity entity, bool propsRequired);
 
     IEnumerable<ITypedItem> EntitiesToItems(IEnumerable<IEntity> entities, bool propsRequired = false);
-    IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? required = default, IEnumerable<ITypedItem> fallback = default, bool? propsRequired = default);
+    IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? required = default, IEnumerable<ITypedItem>? fallback = default, bool? propsRequired = default);
     void SetCompatibilityLevel(int compatibilityLevel);
-    void SetFallbacks(ISite site, int? compatibility = default, /*AdamManager*/ object adamManagerPrepared = default);
-    object Json2Jacket(string json, string fallback = default);
+    void SetFallbacks(ISite site, int? compatibility = default, /*AdamManager*/ object? adamManagerPrepared = default);
+    object Json2Jacket(string json, string? fallback = default);
     ITypedStack AsStack(object[] parts);
 
     T AsStack<T>(object[] parts)
@@ -133,51 +133,51 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     IEnumerable<TTypedItem> CreateEmptyChildList<TTypedItem>(IEntity parent, string field) where TTypedItem : class, ITypedItem;
 
     IFile File(int id);
-    IFolder Folder(Guid entityGuid, string fieldName, IField field = default);
+    IFolder Folder(Guid entityGuid, string fieldName, IField? field = default);
     IFolder Folder(int id);
     IFolder Folder(ICanBeEntity item, string name, IField field);
 
-    IFile File(IField field);
+    IFile? File(IField field);
 
     IHtmlTag Html(object thing,
         NoParamOrder noParamOrder = default,
-        object container = default,
-        string classes = default,
+        object? container = default,
+        string? classes = default,
         bool debug = default,
-        object imageSettings = default,
+        object? imageSettings = default,
         bool? toolbar = default,
-        Func<ITweakInput<string>, ITweakInput<string>> tweak = default);
+        Func<ITweakInput<string>, ITweakInput<string>>? tweak = default);
 
     IResponsivePicture Picture(
-        object link = null,
-        object settings = default,
+        object? link = null,
+        object? settings = default,
         NoParamOrder noParamOrder = default,
-        Func<ITweakMedia, ITweakMedia> tweak = default,
-        object factor = default,
-        object width = default,
-        string imgAlt = default,
-        string imgAltFallback = default,
-        string imgClass = default,
-        object imgAttributes = default,
-        string pictureClass = default,
-        object pictureAttributes = default,
-        object toolbar = default,
-        object recipe = default
+        Func<ITweakMedia, ITweakMedia>? tweak = default,
+        object? factor = default,
+        object? width = default,
+        string? imgAlt = default,
+        string? imgAltFallback = default,
+        string? imgClass = default,
+        object? imgAttributes = default,
+        string? pictureClass = default,
+        object? pictureAttributes = default,
+        object? toolbar = default,
+        object? recipe = default
     );
 
     IResponsiveImage Img(
-        object link = null,
-        object settings = default,
+        object? link = null,
+        object? settings = default,
         NoParamOrder noParamOrder = default,
-        Func<ITweakMedia, ITweakMedia> tweak = default,
-        object factor = default,
-        object width = default,
-        string imgAlt = default,
-        string imgAltFallback = default,
-        string imgClass = default,
-        object imgAttributes = default,
-        object toolbar = default,
-        object recipe = default
+        Func<ITweakMedia, ITweakMedia>? tweak = default,
+        object? factor = default,
+        object? width = default,
+        string? imgAlt = default,
+        string? imgAltFallback = default,
+        string? imgClass = default,
+        object? imgAttributes = default,
+        object? toolbar = default,
+        object? recipe = default
     );
 
     IEntity GetDraft(IEntity entity);
