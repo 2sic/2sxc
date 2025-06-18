@@ -34,8 +34,6 @@
     <NoWarn>$(NoWarn);MSB3277;</NoWarn>
     <!-- ignore warning that Dnn was loaded 2x - ATM necessary for MS build? @STV -->
     <NoWarn>$(NoWarn);MSB4011</NoWarn>
-    <!-- ignore warning that it's using a dangerous version of Dnn (v9.6.1) @2dm -->
-    <NoWarn>$(NoWarn);NU1902</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

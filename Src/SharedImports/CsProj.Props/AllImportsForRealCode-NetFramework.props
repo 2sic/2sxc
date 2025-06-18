@@ -34,4 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- ignore warning that it's using a dangerous version of Dnn (v9.6.1 / v9.11.2) @2dm -->
+    <NoWarn>$(NoWarn);NU1902</NoWarn>
+  </PropertyGroup>
+
 </Project>
