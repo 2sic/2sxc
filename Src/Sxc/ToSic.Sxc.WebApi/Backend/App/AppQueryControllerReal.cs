@@ -35,7 +35,7 @@ public class AppQueryControllerReal(
         bool includeGuid = false)
         => QueryPost(name, null, appId, stream, includeGuid);
 
-    public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(string name, QueryParameters more, int? appId, string stream = null, bool includeGuid = false)
+    public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(string name, QueryParametersDtoFromClient more, int? appId, string stream = null, bool includeGuid = false)
     {
         var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
         var appCtx = appId != null ? ctxService.GetExistingAppOrSet(appId.Value) : ctxService.BlockContextRequired();
@@ -62,7 +62,7 @@ public class AppQueryControllerReal(
         => PublicQueryPost(appPath, name, null, stream);
 
 
-    public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(string appPath, string name, QueryParameters more, string stream) 
+    public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(string appPath, string name, QueryParametersDtoFromClient more, string stream) 
     {
         var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"path:{appPath}, name:{name}, stream: {stream}");
         if (string.IsNullOrEmpty(name))
@@ -87,7 +87,7 @@ public class AppQueryControllerReal(
         string stream,
         bool includeGuid,
         IContextOfApp context,
-        QueryParameters more,
+        QueryParametersDtoFromClient more,
         ILookUpEngine preparedLookup = null)
     {
         var modId = (context as IContextOfBlock)?.Module.Id ?? -1;

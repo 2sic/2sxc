@@ -23,7 +23,7 @@ public class AppQueryController() : DnnSxcControllerBase(RealController.LogSuffi
 
     [HttpPost]
     public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost([FromUri] string name,
-        [FromBody] QueryParameters more,
+        [FromBody] QueryParametersDtoFromClient more,
         [FromUri] int? appId = null,
         [FromUri] string stream = null,
         [FromUri] bool includeGuid = false
@@ -40,7 +40,7 @@ public class AppQueryController() : DnnSxcControllerBase(RealController.LogSuffi
     public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(
         [FromUri] string appPath,
         [FromUri] string name,
-        [FromBody] QueryParameters more,
+        [FromBody] QueryParametersDtoFromClient more,
         [FromUri] string stream = null
     ) => Real.PublicQueryPost(appPath, name, more, stream);
 }

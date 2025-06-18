@@ -35,7 +35,7 @@ public class AppQueryController() : OqtStatefulControllerBase(RealController.Log
     public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(
         [FromRoute] string appPath,
         [FromRoute] string name,
-        QueryParameters more,
+        QueryParametersDtoFromClient more,
         [FromRoute] string stream = null
     ) => Real.PublicQueryPost(appPath, name, more, stream);
 
@@ -52,7 +52,7 @@ public class AppQueryController() : OqtStatefulControllerBase(RealController.Log
     [HttpPost($"{AppParts.Auto}/{AppParts.Query}" + "/{name}/{stream?}")]
     public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(
         [FromRoute] string name,
-        QueryParameters more,
+        QueryParametersDtoFromClient more,
         [FromQuery] int? appId = null,
         [FromRoute] string stream = null,
         [FromQuery] bool includeGuid = false
