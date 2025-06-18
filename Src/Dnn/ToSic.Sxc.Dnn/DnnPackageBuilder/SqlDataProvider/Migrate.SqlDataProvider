@@ -21,7 +21,7 @@ END
 GO
 
  -- 2) PortalSettings: specific key rename
- UPDATE dbo.PortalSettings SET SettingName = 'TsDynDataZoneID'
+ UPDATE dbo.PortalSettings SET SettingName = 'TsDynDataZoneId'
  WHERE SettingName = 'ToSIC_SexyContent_ZoneID';
 
  -- 3) ModuleSettings: multiple specific key renames

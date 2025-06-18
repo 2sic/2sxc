@@ -16,7 +16,7 @@ internal class DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCre
     /// <summary>
     /// This is the name of the setting in the PortalSettings pointing to the zone of this portal
     /// </summary>
-    private const string PortalSettingZoneId = "TsDynDataZoneID";
+    private const string PortalSettingZoneId = "TsDynDataZoneId";
 
     /// <inheritdoc />
     /// <summary>
