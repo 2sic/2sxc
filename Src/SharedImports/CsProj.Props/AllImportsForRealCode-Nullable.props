@@ -1,0 +1,26 @@
+<Project>
+  <!-- Set Target Framework and C# version -->
+  <Import Project="./TargetFrameworkAndCSharp.props" />
+
+  <!-- Set Default Namespace to ToSic.Sxc-->
+  <Import Project="./DefaultNamespace ToSic.Sxc.props" />
+
+  <!-- Lots of rules to disable generating Assembly Info (since we provide it through an object) -->
+  <Import Project="./GenerateAssemblyDisable.props" />
+
+  <!-- Disable some common warnings we don't care about-->
+  <Import Project="./ConfigurationsAndWarnings.props" />
+
+  <!-- Include C# files which contain the Assembly Info and some classes so that C# latest is supported (such as init-properties) -->
+  <Import Project="./IncludeCode/Compiler Features and API Hiding.props" />
+
+  <!-- Nullable -->
+  <Import Project="./Nullable.props" />
+
+  <!--TEMPORARY WORKAROUND - the EAV projects fail to build with this, not sure why, sys should work-->
+  <!-- All Sys projects are nullable -->
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
