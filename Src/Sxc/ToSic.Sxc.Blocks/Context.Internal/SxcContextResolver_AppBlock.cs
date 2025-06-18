@@ -15,7 +15,7 @@ partial class SxcCurrentContextService
         // If there is no block context, then just use a "blank" app context
         // This way security checks can only verify the App but not any module permissions
         if (moduleCtx == null)
-            return SetApp(SiteAppIdentity());
+            return l.Return(SetApp(SiteAppIdentity()));
 
         // if there is a block context, make sure it's of the requested app (or no app was specified)
         // then return that
@@ -27,7 +27,7 @@ partial class SxcCurrentContextService
         // ATM I'm guessing that in some cases the Module doesn't yet have an app, and if this code is run, then ...OrNull is better.
         // For now 2025-06-13 2dm will try to use Required and see if it blows.
         if (appId == moduleCtx.AppReaderRequired.AppId)
-            return moduleCtx;
+            return l.Return(moduleCtx);
         
         // If the app in the request doesn't match the app in the context
         // Set the app in the context to the real one to be sure about security check
@@ -37,10 +37,10 @@ partial class SxcCurrentContextService
         if (!featuresService.Value.IsEnabled(SxcFeatures.PermissionPrioritizeModuleContext.NameId))
             // Get a simpler App-Context without the module context
             // so that module permissions will not allow editing of apps which are really in the current one.
-            return SetApp(SiteAppIdentity());
+            return l.Return(SetApp(SiteAppIdentity()));
 
         moduleCtx.ResetApp(SiteAppIdentity());
-        return moduleCtx;
+        return l.Return(moduleCtx);
 
         // Old implementation
         //AppIdentity SiteAppIdentity() => new(Site().Site.ZoneId, appId);
