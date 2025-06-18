@@ -1,7 +1,7 @@
-﻿using System.Configuration;
+﻿using DotNetNuke.Services.FileSystem;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Web.Configuration;
-using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
@@ -60,9 +60,12 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem
 
     public void Delete(IFile file)
     {
-        var l = Log.Fn($"file: {file.Id}");
+        var l = Log.Fn($"file: {file.Id}", timer: true);
         var dnnFile = _dnnFiles.GetFile(file.AsDnn().SysId);
-        _dnnFiles.DeleteFile(dnnFile);
+        // 2025-06 For unknown reasons this suddenly breaks; same DNN, some 2sxc code
+        // Says file is in use, but if we debug-step-through, it works; seems to be timing
+        Retry.RetryOnException(() => _dnnFiles.DeleteFile(dnnFile), l, repeat: 10, delay: 200, silent: false);
+
         l.Done();
     }
 
