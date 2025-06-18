@@ -13,7 +13,7 @@ public partial class SxcFeatures
         Ui = false,
         Description = "High-Performance OutputCache",
         Security = FeaturesCatalogRules.Security0Neutral,
-        LicenseRules = SxcLicenseRules.ForPatronsPerfectionist
+        LicenseRules = SxcLicenseRules.ForPatronsPerfectionist,
     };
 
     public static readonly Feature LightSpeedOutputCacheAppFileChanges = new()
@@ -25,7 +25,7 @@ public partial class SxcFeatures
         Ui = false,
         Description = "High-Performance OutputCache - Watch App files and flush cache if any App files change",
         Security = FeaturesCatalogRules.Security0Neutral,
-        LicenseRules = SxcLicenseRules.ForPatronsPerfectionist
+        LicenseRules = SxcLicenseRules.ForPatronsPerfectionist,
     };
 
     public static readonly Feature SmartDataCache = new()
@@ -37,7 +37,7 @@ public partial class SxcFeatures
         Ui = false,
         Description = "High-Performance Smart Data Cache",
         Security = FeaturesCatalogRules.Security0Neutral,
-        LicenseRules = SxcLicenseRules.ForPatronsPerfectionist
+        LicenseRules = BuiltInFeatures.ForPatronPerformanceAutoEnabled,
     };
 
 }
