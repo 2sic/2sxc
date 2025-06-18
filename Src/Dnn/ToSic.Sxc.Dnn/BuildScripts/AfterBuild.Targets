@@ -16,7 +16,8 @@
     <Message Text="DnnRoot='$(DnnRootIdentityValue)'" Importance="High"/>
   </Target>
 
-  <Target Name="PostBuildForEachItem" AfterTargets="PostBuild" DependsOnTargets="PostBuild" Outputs="%(DnnRoot.Identity)" Condition="'$(DnnTargets)' != ''">
+  <Target Name="PostBuildForEachItem" AfterTargets="PostBuild" DependsOnTargets="PostBuild" Outputs="%(DnnRoot.Identity)" Condition="'$(DnnTargets)' != '' and '$(Configuration)' == 'Debug'">
+    <Message Text="Configuration='$(Configuration)'" Importance="High"/>
     <Message Text="DnnRoot='%(DnnRoot.Identity)'" Importance="High"/>
     <PropertyGroup>
       <CurrentDnnRoot>%(DnnRoot.Identity)</CurrentDnnRoot>
