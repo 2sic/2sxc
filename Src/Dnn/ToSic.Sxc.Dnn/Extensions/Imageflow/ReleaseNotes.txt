@@ -1,5 +1,5 @@
 <h2>Imageflow Extension for DNN</h2>
-<p><strong>Version:</strong> 01.12.00</p>
+<p><strong>Version:</strong> 01.12.01</p>
 
 <h3>Changelog</h3>
 <ul>
