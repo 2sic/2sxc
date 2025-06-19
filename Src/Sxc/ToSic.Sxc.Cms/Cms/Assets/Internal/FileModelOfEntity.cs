@@ -20,21 +20,23 @@ internal class FileModelOfEntity: ModelFromEntity, IFileModelSync, IFileModel
     //public Guid Guid => ((ITypedItem)this).Guid;
 
 
-    public string Name => GetThis<string>(null);
+    public string? Name => GetThis<string>(null);
 
-    public string Extension => GetThis<string>(null);
+    public string? Extension => GetThis<string>(null);
 
-    public string FullName => GetThis<string>(null);
+    public string? FullName => GetThis<string>(null);
 
-    public string Path => GetThis<string>(null);
+    public string? Path => GetThis<string>(null);
 
-    public IFolderModel Folder => field ??= As<FolderModelOfEntity>(_entity.Children(field: nameof(Folder)).FirstOrDefault());
+    [field: AllowNull, MaybeNull]
+    public IFolderModel Folder => field ??= As<FolderModelOfEntity>(_entity.Children(field: nameof(Folder)).FirstOrDefault())!;
 
     public int Size => GetThis(0);
 
+    [field: AllowNull, MaybeNull]
     public ISizeInfo SizeInfo => field ??= new SizeInfo(Size);
 
-    public string Url => GetThis<string>(null);
+    public string? Url => GetThis<string>(null);
 
     public DateTime Created => _entity.Created;
 

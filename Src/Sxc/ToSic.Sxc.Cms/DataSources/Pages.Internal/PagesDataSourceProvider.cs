@@ -9,7 +9,7 @@ namespace ToSic.Sxc.DataSources.Internal;
 /// Must be overriden in each platform.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class PagesDataSourceProvider(string logName, object[] connect = default) : ServiceBase(logName, connect: connect)
+public abstract class PagesDataSourceProvider(string logName, object[]? connect = default) : ServiceBase(logName, connect: connect)
 {
     public const int NoParent = 0;
 

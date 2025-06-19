@@ -21,16 +21,16 @@ namespace ToSic.Sxc.Cms.Assets;
 public interface IFileModel: ICanWrapData
 {
     /// <inheritdoc cref="IFileModelSync.Name" />
-    string Name { get; }
+    string? Name { get; }
 
     /// <inheritdoc cref="IFileModelSync.Extension" />
-    string Extension { get; }
+    string? Extension { get; }
 
     /// <inheritdoc cref="IFileModelSync.FullName" />
-    string FullName { get; }
+    string? FullName { get; }
 
     /// <inheritdoc cref="IFileModelSync.Path" />
-    string Path { get; }
+    string? Path { get; }
 
     /// <summary>
     /// Reference to the folder this file is in.
@@ -44,7 +44,7 @@ public interface IFileModel: ICanWrapData
     ISizeInfo SizeInfo { get; }
 
     /// <inheritdoc cref="IFileModelSync.Url" />
-    string Url { get; }
+    string? Url { get; }
 
     /// <inheritdoc cref="IFileModelSync.Created" />
     DateTime Created { get; }

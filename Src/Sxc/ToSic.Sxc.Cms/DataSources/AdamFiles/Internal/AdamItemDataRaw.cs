@@ -22,27 +22,27 @@ public class AdamItemDataRaw: IRawEntity
     /// <summary>
     /// The file name
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// This contains the code like "file:2742"
     /// </summary>
-    public string ReferenceId { get; set; }
+    public string? ReferenceId { get; set; }
 
     /// <summary>
     /// Normal url to access the resource
     /// </summary>
-    public string Url { get; set; }
+    public string? Url { get; set; }
 
     /// <summary>
     /// The Adam type, such as "folder", "image" etc.
     /// </summary>
-    public string Type { get; set; }
+    public string? Type { get; set; }
 
     public bool IsFolder { get; set; }
 
     public int Size { get; set; }
-    public string Path { get; set; }
+    public string? Path { get; set; }
         
 
     public DateTime Created { get; set; }
@@ -53,14 +53,15 @@ public class AdamItemDataRaw: IRawEntity
     /// Data but without Id, Guid, Created, Modified
     /// </summary>
     [PrivateApi]
-    public virtual IDictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>
-    {
-        { nameof(Name), Name },
-        { nameof(ReferenceId), ReferenceId },
-        { nameof(Url), Url },
-        { nameof(Type), Type },
-        { nameof(IsFolder), IsFolder },
-        { nameof(Size), Size },
-        { nameof(Path), Path }
-    };
+    public virtual IDictionary<string, object?> Attributes(RawConvertOptions options)
+        => new Dictionary<string, object?>
+        {
+            { nameof(Name), Name },
+            { nameof(ReferenceId), ReferenceId },
+            { nameof(Url), Url },
+            { nameof(Type), Type },
+            { nameof(IsFolder), IsFolder },
+            { nameof(Size), Size },
+            { nameof(Path), Path }
+        };
 }

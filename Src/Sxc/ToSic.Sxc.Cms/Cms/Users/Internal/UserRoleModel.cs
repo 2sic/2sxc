@@ -32,8 +32,8 @@ public record UserRoleModel: IRawEntity, IRole, IUserRoleModel
         TitleField = nameof(Name),
     };
 
-    IDictionary<string, object> IRawEntity.Attributes(RawConvertOptions options)
-        => new Dictionary<string, object>
+    IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)
+        => new Dictionary<string, object?>
         {
             { nameof(Name), Name },
         };
@@ -46,6 +46,6 @@ public record UserRoleModel: IRawEntity, IRole, IUserRoleModel
     public DateTime Created { get; init; } = DateTime.Now;
     public DateTime Modified { get; init; } = DateTime.Now;
 
-    public string Name { get; init; }
+    public string Name { get; init; } = "unknown";
 
 }

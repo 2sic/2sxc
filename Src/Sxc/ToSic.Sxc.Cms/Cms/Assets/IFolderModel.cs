@@ -20,13 +20,13 @@ namespace ToSic.Sxc.Cms.Assets;
 public interface IFolderModel: ICanWrapData
 {
     /// <inheritdoc cref="IFolderModelSync.Name" />
-    string Name { get; }
+    string? Name { get; }
 
     /// <inheritdoc cref="IFolderModelSync.FullName" />
-    string FullName { get; }
+    string? FullName { get; }
 
     /// <inheritdoc cref="IFolderModelSync.Path" />
-    string Path { get; }
+    string? Path { get; }
 
     /// <summary>
     /// Reference to the parent folder.
@@ -45,7 +45,7 @@ public interface IFolderModel: ICanWrapData
     IEnumerable<IFileModel> Files { get; }
 
     /// <inheritdoc cref="IFileModelSync.Url" />
-    string Url { get; }
+    string? Url { get; }
 
     /// <inheritdoc cref="IFolderModelSync.Created" />
     DateTime Created { get; }

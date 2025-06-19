@@ -18,6 +18,6 @@ public interface ICurrentContextService: IHasLog, ICurrentContextUserPermissions
 
     IContextOfApp AppRequired();
 
-    IContextOfApp AppOrNull();
+    IContextOfApp? AppOrNull();
 
 }

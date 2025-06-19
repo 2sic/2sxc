@@ -35,7 +35,7 @@ public record FolderModelRaw: FileFolderBase, IFolderModelSync
 
     /// <inheritdoc cref="IFolderModelSync.Name"/>
     [ContentTypeAttributeSpecs(Description = "The folder name or blank when it's the root.")]
-    public override string Name { get; init; }
+    public override string? Name { get; init; }
 
     [ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Folders in this folder.")]
     public RawRelationship Folders => new(key: $"FolderIn:{Path}");
@@ -44,8 +44,8 @@ public record FolderModelRaw: FileFolderBase, IFolderModelSync
     public RawRelationship Files => new(key: $"FileIn:{Path}");
 
     [PrivateApi]
-    public override IDictionary<string, object> Attributes(RawConvertOptions options)
-        => new Dictionary<string, object>(base.Attributes(options))
+    public override IDictionary<string, object?> Attributes(RawConvertOptions options)
+        => new Dictionary<string, object?>(base.Attributes(options))
         {
             { nameof(Folders), Folders },
             { nameof(Files), Files },

@@ -53,7 +53,7 @@ public class UserRoles : CustomDataSourceAdvanced
     /// include roles based on roleId
     /// </summary>
     [Configuration]
-    public string RoleIds
+    public string? RoleIds
     {
         get => field ?? Configuration.GetThis();
         set;
@@ -64,7 +64,7 @@ public class UserRoles : CustomDataSourceAdvanced
     /// exclude roles based on roleId
     /// </summary>
     [Configuration]
-    public string ExcludeRoleIds
+    public string? ExcludeRoleIds
     {
         get => field ?? Configuration.GetThis();
         set;
@@ -104,12 +104,16 @@ public class UserRoles : CustomDataSourceAdvanced
         var includeRolesPredicate = KeepRolesCondition();
         l.A($"includeRoles: {includeRolesPredicate == null}");
         if (includeRolesPredicate != null)
-            roles = roles!.Where(includeRolesPredicate).ToList();
+            roles = roles
+                .Where(includeRolesPredicate)
+                .ToList();
 
         var excludeRolesPredicate = DropRolesCondition();
         l.A($"excludeRoles: {excludeRolesPredicate == null}");
         if (excludeRolesPredicate != null)
-            roles = roles!.Where(excludeRolesPredicate).ToList();
+            roles = roles
+                .Where(excludeRolesPredicate)
+                .ToList();
 
         var rolesFactory = DataFactory.SpawnNew(options: UserRoleModel.Options);
 
@@ -118,7 +122,7 @@ public class UserRoles : CustomDataSourceAdvanced
         return l.Return(result, $"found {result.Count} roles");
     }
 
-    private Func<UserRoleModel, bool> KeepRolesCondition()
+    private Func<UserRoleModel, bool>? KeepRolesCondition()
     {
         var includeRolesFilter = RolesCsvListToInt(RoleIds);
         return includeRolesFilter.Any()
@@ -126,7 +130,7 @@ public class UserRoles : CustomDataSourceAdvanced
             : null;
     }
 
-    private Func<UserRoleModel, bool> DropRolesCondition()
+    private Func<UserRoleModel, bool>? DropRolesCondition()
     {
         var excludeRolesFilter = RolesCsvListToInt(ExcludeRoleIds);
         return excludeRolesFilter.Any()
@@ -135,7 +139,7 @@ public class UserRoles : CustomDataSourceAdvanced
     }
 
     [PrivateApi]
-    internal static List<int> RolesCsvListToInt(string stringList)
+    internal static List<int> RolesCsvListToInt(string? stringList)
         => !stringList.HasValue()
             ? []
             : stringList.Split(Separator)

@@ -22,6 +22,7 @@ public partial record Parameters : IParameters
     /// This is the only place where the initial NVC is stored.
     /// </summary>
     [PrivateApi]
+    [field: AllowNull, MaybeNull]
     public NameValueCollection Nvc
     {
         get => field ??= [];
@@ -40,9 +41,10 @@ public partial record Parameters : IParameters
     /// <remarks>
     /// DO NOT use this method for checking if a key exists, as it will log the key as used.
     /// </remarks>
-    private bool TryGetAndLog(string name, out string value)
+    private bool TryGetAndLog(string name, out string? value)
     {
-        if (!OriginalsAsDic.TryGetValue(name, out value)) return false;
+        if (!OriginalsAsDic.TryGetValue(name, out value))
+            return false;
         UsedKeys.Add(name.ToLowerInvariant());
         return true;
     }
@@ -52,20 +54,22 @@ public partial record Parameters : IParameters
     /// </summary>
     internal HashSet<string> UsedKeys = [];
 
-    public string Get(string name)
+    public string? Get(string name)
         => TryGetAndLog(name, out var value) ? value : null;
 
-    public TValue Get<TValue>(string name)
+    public TValue? Get<TValue>(string name)
         => GetV<TValue>(name, noParamOrder: default, fallback: default);
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default) 
+    public TValue? Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue? fallback = default) 
         => GetV(name, noParamOrder, fallback);
 
-    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string language) 
+    TValue? ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue? fallback, bool? required, string? language)
+        where TValue : default
         => GetV(name, noParamOrder, fallback);
 
-    private TValue GetV<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required = default, [CallerMemberName] string cName = default)
+    // ReSharper disable once UnusedParameter.Local
+    private TValue? GetV<TValue>(string name, NoParamOrder noParamOrder, TValue? fallback, bool? required = default, [CallerMemberName] string? cName = default)
         => TryGetAndLog(name, out var value)
             ? value.ConvertOrFallback(fallback)
             : required ?? false
@@ -74,10 +78,12 @@ public partial record Parameters : IParameters
 
     #endregion
 
+    [field: AllowNull, MaybeNull]
     private IReadOnlyDictionary<string, string> OriginalsAsDic {
         get
         {
-            if (field != null) return field;
+            if (field != null)
+                return field;
 
             // var temp = initialNvc
 
@@ -87,14 +93,14 @@ public partial record Parameters : IParameters
                 // key is usually as string, but sometimes it's null
                 // we're not sure if DNN is breaking this, or if it should really be like this
                 if (key is string stringKey)
-                    newDic[stringKey] = Nvc[stringKey];
+                    newDic[stringKey] = Nvc[stringKey]!;
                 else
                 {
                     var nullValues = Nvc[null];
                     if (nullValues == null) continue;
                     foreach (var nullKey in nullValues.CsvToArrayWithoutEmpty())
                         if (!newDic.ContainsKey(nullKey))
-                            newDic[nullKey] = null;
+                            newDic[nullKey] = null!;
                 }
             }
             return field = newDic;
@@ -103,17 +109,21 @@ public partial record Parameters : IParameters
 
     #region Basic Dictionary Properties
 
-    public IEnumerator<KeyValuePair<string, string>> GetEnumerator() => OriginalsAsDic.GetEnumerator();
+    public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+        => OriginalsAsDic.GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator() => OriginalsAsDic.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator()
+        => OriginalsAsDic.GetEnumerator();
 
     public int Count => OriginalsAsDic.Count;
 
-    public bool ContainsKey(string key) => OriginalsAsDic.ContainsKey(key);
+    public bool ContainsKey(string key)
+        => OriginalsAsDic.ContainsKey(key);
 
-    public bool TryGetValue(string key, out string value) => TryGetAndLog(key, out value);
+    public bool TryGetValue(string key, out string value)
+        => TryGetAndLog(key, out value!);
 
-    public string this[string name] => Get(name);
+    public string this[string name] => Get(name)!;
 
     public IEnumerable<string> Keys => OriginalsAsDic.Keys;
 
@@ -121,15 +131,15 @@ public partial record Parameters : IParameters
 
     #endregion
 
-    public IParameters Prioritize(string fields = default) =>
-        new Parameters(this)
+    public IParameters Prioritize(string? fields = default)
+        => new Parameters(this)
         {
             PriorityFields = fields
         };
 
-    private string PriorityFields { get; init; }
+    private string? PriorityFields { get; init; }
 
-    public override string? ToString() => _toString ??= ToString(sort: true);
+    public override string ToString() => _toString ??= ToString(sort: true);
     private string? _toString;
 
     /// <inheritdoc/>
@@ -137,12 +147,12 @@ public partial record Parameters : IParameters
         => sort
             ? _sorted ??= Nvc.Sort(PriorityFields).NvcToString()
             : Nvc.NvcToString();
-    private string _sorted;
+    private string? _sorted;
 
 
     #region Toggle and Filter
 
-    private IParameters Toggle(string name, string value)
+    private IParameters Toggle(string name, string? value)
     {
         var oldValue = Get(name);
         return oldValue.EqualsInsensitive(value)
@@ -168,9 +178,10 @@ public partial record Parameters : IParameters
         //return Set(key, value);
     }
 
-    public IParameters Toggle(string name, object value) => Toggle(name, ValueToUrlValue(value));
+    public IParameters Toggle(string name, object value)
+        => Toggle(name, ValueToUrlValue(value));
 
-    public IParameters Filter(string names)
+    public IParameters Filter(string? names)
     {
         // Only exit early if null. If empty string, basically drop the list.
         if (names == null)
@@ -202,16 +213,16 @@ public partial record Parameters : IParameters
         return new Parameters { Nvc = copy };
     }
 
-    public IParameters Add(string key, string value)
+    public IParameters Add(string key, string? value)
     {
         var copy = new NameValueCollection(Nvc) { { key, value } };
         return new Parameters { Nvc = copy };
     }
 
-    public IParameters Set(string name, string value)
+    public IParameters Set(string name, string? value)
     {
         var copy = new NameValueCollection(Nvc);
-        copy.Set(name, value);
+        copy.Set(name, value!);
         return new Parameters { Nvc = copy };
     }
 
@@ -227,14 +238,17 @@ public partial record Parameters : IParameters
         return new Parameters { Nvc = copy };
     }
 
-    private IParameters Remove(string name, string value)
+    private IParameters Remove(string name, string? value)
     {
         var values = Nvc.GetValues(name);
-        if (values == null || values.Length == 0) return this;
+        if (values == null || values.Length == 0)
+            return this;
 
         var copy = new NameValueCollection(Nvc);
         copy.Remove(name);
-        var rest = values.Where(v => !v.EqualsInsensitive(value)).ToList();
+        var rest = values
+            .Where(v => !v.EqualsInsensitive(value))
+            .ToList();
         if (rest.Count == 0)
             return new Parameters { Nvc = copy };
 
@@ -243,28 +257,36 @@ public partial record Parameters : IParameters
         return new Parameters { Nvc = copy };
     }
 
-    public IParameters Remove(string name, object value) => Remove(name, ValueToUrlValue(value));
+    public IParameters Remove(string name, object value)
+        => Remove(name, ValueToUrlValue(value));
 
     #endregion
 
 
     #region New Object Add/Set
 
-    public IParameters Add(string key, object value) => Add(key, ValueToUrlValue(value));
+    public IParameters Add(string key, object value)
+        => Add(key, ValueToUrlValue(value));
 
-    public IParameters Set(string name, object value) => Set(name, ValueToUrlValue(value));
+    public IParameters Set(string name, object value)
+        => Set(name, ValueToUrlValue(value));
 
-    private string ValueToUrlValue(object value)
+    private string? ValueToUrlValue(object? value)
     {
-        if (value is null) return null;
-        if (value is string sVal) return sVal;
-        if (value is bool bVal) return bVal.ToString().ToLower();
-        if (value.IsNumeric()) return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
+        if (value is null)
+            return null;
+        if (value is string sVal)
+            return sVal;
+        if (value is bool bVal)
+            return bVal.ToString().ToLower();
+        if (value.IsNumeric())
+            return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
         if (value is DateTime dtmVal)
         {
             var result = DateTime.SpecifyKind(dtmVal, DateTimeKind.Utc).ToString("s", System.Globalization.CultureInfo.InvariantCulture);
             // if the time is zero, trim that
-            if (result.EndsWith("T00:00:00")) return result.Substring(0, result.IndexOf('T'));
+            if (result.EndsWith("T00:00:00"))
+                return result.Substring(0, result.IndexOf('T'));
             return result;
         }
         return value.ToString();
@@ -275,6 +297,7 @@ public partial record Parameters : IParameters
     /// <summary>
     /// Get by name should never throw an error, as it's used to get null if not found.
     /// </summary>
-    object ICanGetByName.Get(string name) => (this as ITyped).Get(name, required: false);
+    object? ICanGetByName.Get(string name)
+        => (this as ITyped).Get(name, required: false);
 
 }

@@ -34,10 +34,10 @@ public record FileModelRaw: FileFolderBase, IFileModelSync
 
     /// <inheritdoc cref="IFileModelSync.Name"/>
     [ContentTypeAttributeSpecs(Description = "The file name without extension, like my-image")]
-    public override string Name { get; init; }
+    public override string? Name { get; init; }
 
     /// <inheritdoc cref="IFileModelSync.Extension"/>
-    public string Extension { get; init; }
+    public string? Extension { get; init; }
 
     /// <inheritdoc cref="IFileModelSync.Size"/>
     public int Size { get; init; }
@@ -46,8 +46,8 @@ public record FileModelRaw: FileFolderBase, IFileModelSync
     /// Data but without ID, Guid, Created, Modified
     /// </summary>
     [PrivateApi]
-    public override IDictionary<string, object> Attributes(RawConvertOptions options)
-        => new Dictionary<string, object>(base.Attributes(options))
+    public override IDictionary<string, object?> Attributes(RawConvertOptions options)
+        => new Dictionary<string, object?>(base.Attributes(options))
         {
             { nameof(Extension), Extension },
             { nameof(Size), Size },

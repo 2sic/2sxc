@@ -34,7 +34,7 @@ public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     /// <remarks>
     /// Added v15.04
     /// </remarks>
-    new string Get(string name);
+    new string? Get(string name);
 
     /// <summary>
     /// Get a parameter and convert to the needed type - or return the default.
@@ -48,7 +48,7 @@ public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     /// <remarks>
     /// Added v15.04
     /// </remarks>
-    TValue Get<TValue>(string name);
+    TValue? Get<TValue>(string name);
 
     /// <summary>
     /// Get a parameter and convert to the needed type - or return the fallback.
@@ -65,7 +65,7 @@ public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     /// Added v15.04
     /// </remarks>
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue? fallback = default);
+    TValue? Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue? fallback = default);
 
     #endregion
 

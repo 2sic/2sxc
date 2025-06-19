@@ -43,25 +43,25 @@ public class AdamFiles : CustomDataSourceAdvanced
     /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
     /// </summary>
     [Configuration]
-    public string EntityIds => Configuration.GetThis();
+    public string? EntityIds => Configuration.GetThis();
 
     /// <summary>
     /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
     /// </summary>
     [Configuration]
-    public string EntityGuids => Configuration.GetThis();
+    public string? EntityGuids => Configuration.GetThis();
 
     /// <summary>
     /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
     /// </summary>
     [Configuration]
-    public string Fields => Configuration.GetThis();
+    public string? Fields => Configuration.GetThis();
 
     /// <summary>
     /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
     /// </summary>
     [Configuration(Fallback = "*.*")]
-    public string Filter => Configuration.GetThis();
+    public string? Filter => Configuration.GetThis();
 
     #endregion
 
@@ -105,7 +105,7 @@ public class AdamFiles : CustomDataSourceAdvanced
         var entities = adamFactory.Create(source.SelectMany(o => find(o)));
 
         return l.Return(entities, "ok");
-    });
+    })!;
     private readonly GetOnce<IImmutableList<IEntity>> _getInternal = new();
 
 }

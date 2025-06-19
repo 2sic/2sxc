@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Cms.Users.Internal;
 internal class UserModelOfEntity : ModelFromEntity, IUserModel
 {
 
-    public string Email => GetThis<string>(null);
+    public string? Email => GetThis<string>(null);
 
     public int Id => _entity.EntityId;
 
@@ -24,7 +24,7 @@ internal class UserModelOfEntity : ModelFromEntity, IUserModel
 
     public bool IsContentEditor => GetThis(false);
 
-    public string NameId => GetThis<string>(null);
+    public string? NameId => GetThis<string>(null);
 
     public bool IsSystemAdmin => GetThis(false);
 
@@ -32,12 +32,12 @@ internal class UserModelOfEntity : ModelFromEntity, IUserModel
 
     //IMetadata ICmsUser.Metadata => null;
 
-    public string Name => GetThis<string>(null);
+    public string? Name => GetThis<string>(null);
 
-    public string Username => GetThis<string>(null);
+    public string? Username => GetThis<string>(null);
 
     //IMetadataOf IHasMetadata.Metadata => null;
 
-    public IEnumerable<IUserRoleModel> Roles => AsList<UserRoleModelOfEntity>(_entity.Children(field: nameof(Roles)));
+    public IEnumerable<IUserRoleModel> Roles => AsList<UserRoleModelOfEntity>(_entity.Children(field: nameof(Roles)))!;
 
 }

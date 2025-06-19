@@ -14,23 +14,23 @@ partial record Parameters: ITyped
         => OriginalsAsDic.ContainsKey(name);
 
     [PrivateApi]
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string? language = default)
         => !OriginalsAsDic.TryGetValue(name, out var result) || HasKeysHelper.IsEmpty(result, default);
 
     [PrivateApi]
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string? language = default)
         => OriginalsAsDic.TryGetValue(name, out var result) && HasKeysHelper.IsNotEmpty(result, default);
 
     [PrivateApi]
-    IEnumerable<string> ITyped.Keys(NoParamOrder noParamOrder, IEnumerable<string> only)
+    IEnumerable<string> ITyped.Keys(NoParamOrder noParamOrder, IEnumerable<string>? only)
         => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, OriginalsAsDic?.Keys);
     [PrivateApi]
-    IEnumerable<string> IHasKeys.Keys(NoParamOrder noParamOrder, IEnumerable<string> only)
+    IEnumerable<string> IHasKeys.Keys(NoParamOrder noParamOrder, IEnumerable<string>? only)
         => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, OriginalsAsDic?.Keys);
 
 
     [PrivateApi]
-    object? ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string language /* ignore */)
+    object? ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string? language /* ignore */)
         => TryGetAndLog(name, out var value) ? value : null;
 
     [PrivateApi]
@@ -42,7 +42,7 @@ partial record Parameters: ITyped
         => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
     [PrivateApi]
-    string? ITyped.String(string name, NoParamOrder noParamOrder, string fallback, bool? required, object scrubHtml)
+    string? ITyped.String(string name, NoParamOrder noParamOrder, string? fallback, bool? required, object? scrubHtml)
     {
         var value = GetV(name, noParamOrder: noParamOrder, fallback: fallback);
         if (scrubHtml != default)
@@ -71,14 +71,14 @@ partial record Parameters: ITyped
         => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
     [PrivateApi]
-    string? ITyped.Url(string name, NoParamOrder noParamOrder, string fallback, bool? required)
+    string ITyped.Url(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
     {
         var url = GetV(name, noParamOrder: noParamOrder, fallback);
         return Tags.SafeUrl(url).ToString();
     }
 
     [PrivateApi]
-    IRawHtmlString? ITyped.Attribute(string name, NoParamOrder noParamOrder, string fallback, bool? required)
+    IRawHtmlString? ITyped.Attribute(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
     {
         // Note: we won't do special date processing, since all values in the Parameters are strings
         var value = GetV(name, noParamOrder: noParamOrder, fallback: fallback);

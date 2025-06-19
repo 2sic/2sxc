@@ -30,9 +30,9 @@ public record UserModel : IRawEntity, IHasIdentityNameId, IUserModel
         TitleField = nameof(Name)
     };
 
-    IDictionary<string, object> IRawEntity.Attributes(RawConvertOptions options)
+    IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)
     {
-        var data = new Dictionary<string, object>
+        var data = new Dictionary<string, object?>
         {
             { nameof(Name), Name },
             { nameof(NameId), NameId },
@@ -70,7 +70,9 @@ public record UserModel : IRawEntity, IHasIdentityNameId, IUserModel
     public DateTime Modified { get; init; } = DateTime.Now;
 
 
-    public string NameId { get; init; }
+#pragma warning disable CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
+    public string? NameId { get; init; }
+#pragma warning restore CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
 
     public bool IsSystemAdmin { get; init; }
     public bool IsSiteAdmin { get; init; }
@@ -85,10 +87,10 @@ public record UserModel : IRawEntity, IHasIdentityNameId, IUserModel
     ///// </summary>
     //string IUser.IdentityToken => null;
 
-    public string Username { get; init; }
-    public string Email { get; init; } // aka PreferredEmail
-    public string Name { get; init; } // aka DisplayName
+    public string? Username { get; init; }
+    public string? Email { get; init; } // aka PreferredEmail
+    public string? Name { get; init; } // aka DisplayName
 
-    public IEnumerable<IUserRoleModel> Roles { get; init; }
+    public IEnumerable<IUserRoleModel> Roles { get; init; } = [];
 
 }

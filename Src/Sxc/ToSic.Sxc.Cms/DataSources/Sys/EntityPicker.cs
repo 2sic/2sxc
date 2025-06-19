@@ -47,13 +47,13 @@ public class EntityPicker : DataSourceBase
     /// Can be many, comma separated
     /// </summary>
     [Configuration(Fallback = "[QueryString:TypeNames]")]
-    public string TypeNames => Configuration.GetThis();
+    public string? TypeNames => Configuration.GetThis();
 
     /// <summary>
     /// List of IDs to filter against - reducing the final set to just a few items
     /// </summary>
     [Configuration(Fallback = "[QueryString:ItemIds]")]
-    public string ItemIds => Configuration.GetThis();
+    public string? ItemIds => Configuration.GetThis();
 
     #endregion
 
@@ -118,7 +118,7 @@ public class EntityPicker : DataSourceBase
         }
 
         return outList.AsReadOnly();
-    });
+    })!;
 
     private readonly GetOnce<IReadOnlyDictionary<string, IDataStream>> _out = new();
 
@@ -161,7 +161,7 @@ public class EntityPicker : DataSourceBase
         try
         {
             var types = ContentTypes;
-            if (types == null)
+            if (types == null! /* paranoid */)
                 return l.ReturnAsError(Error.Create(title: "TypeList==null, something threw an error there."));
             if (!types.Any())
                 return l.Return(new List<IEntity>(), "no valid types found, empty list");
@@ -214,6 +214,7 @@ public class EntityPicker : DataSourceBase
     /// <summary>
     /// List of ContentTypes to filter by
     /// </summary>
+    [field: AllowNull, MaybeNull]
     private List<IContentType> ContentTypes => field ??= GetContentTypes();
     private List<IContentType> GetContentTypes()
     {
@@ -235,6 +236,7 @@ public class EntityPicker : DataSourceBase
             var types = typeNames
                 .Select(appReader.TryGetContentType)
                 .Where(t => t != null)
+                .Cast<IContentType>()
                 .ToList();
 
             return l.Return(types, $"found {types.Count}");
@@ -262,7 +264,7 @@ public class EntityPicker : DataSourceBase
         var result = new List<IEntity>();
         foreach (var id in untyped)
         {
-            IEntity found = null;
+            IEntity? found = null;
             // check if id is int or guid
             if (Guid.TryParse(id, out var guid))
                 found = list.One(guid);

@@ -53,10 +53,10 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
         return l.Return(this);
     }
 
-    private string _root;
-    private string _filter;
-    private AppFileManager _appFileManager;
-    private IAppPaths _appPaths;
+    private string? _root;
+    private string? _filter;
+    private AppFileManager _appFileManager = null!;
+    private IAppPaths _appPaths = null!;
 
     /// <summary>
     /// FYI: The filters are not actually implemented yet.
@@ -66,37 +66,8 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
     public (List<FolderModelRaw> Folders, List<FileModelRaw> Files) GetAll()
         => Log.Quick(() => (Folders, Files));
 
-    public List<FileModelRaw> Files => _files.Get(GetFiles);
-    //    .GetM(Log, _ =>
-    //{
-    //    var pathsFromRoot = PreparePaths(_appPaths, "");
+    public List<FileModelRaw> Files => _files.Get(GetFiles)!;
 
-    //    var files = _fileManager.GetAllTransferableFiles(_filter)
-    //        .Select(p => new FileInfo(p))
-    //        .Select(f =>
-    //        {
-    //            var fullNameFromAppRoot = FullNameWithoutAppFolder(f.FullName, pathsFromRoot);
-    //            var name = Path.GetFileNameWithoutExtension(f.FullName);
-    //            var path = fullNameFromAppRoot.TrimPrefixSlash();
-    //            return new FileModelRaw
-    //            {
-    //                Name = name,
-    //                Extension = f.Extension.TrimStart('.'), // Extension is without the dot
-    //                FullName = $"{name}{f.Extension}",
-    //                ParentFolderInternal = path.BeforeLast("/").SuffixSlash(),
-    //                Path = path,
-    //                // TODO convert characters for safe HTML
-    //                Url = $"{_appPaths.Path}{fullNameFromAppRoot}",
-
-    //                Size = (int)f.Length,
-    //                Created = f.CreationTime,
-    //                Modified = f.LastWriteTime
-    //            };
-    //        })
-    //        .ToList();
-
-    //    return (files, $"files:{files.Count}");
-    //});
     private readonly GetOnce<List<FileModelRaw>> _files = new();
 
     public List<FileModelRaw> GetFiles()
@@ -131,30 +102,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
         return l.Return(files, $"files:{files.Count}");
     }
 
-    public List<FolderModelRaw> Folders => _folders.Get(GetFolders);
-    //    .GetM(Log, l =>
-    //{
-    //    var pathsFromRoot = PreparePaths(_appPaths, "");
-
-    //    var folders = _fileManager.GetAllTransferableFolders(/*filter*/)
-    //        .Select(p => new DirectoryInfo(p))
-    //        .Select(d => ToFolderData(d, pathsFromRoot))
-    //        .ToList();
-
-    //    // if the root is just "/" then we need to add the root folder, otherwise not
-    //    var root = new DirectoryInfo(
-    //        $"{_appPaths.PhysicalPath}/{_root}"
-    //            .FlattenMultipleForwardSlashes()
-    //            .TrimLastSlash()
-    //    );
-    //    folders.Insert(0, ToFolderData(root, pathsFromRoot) with
-    //    {
-    //        Name = "",                  // Make name blank, since it's the root folder
-    //        ParentFolderInternal = "",  // reset the ParentFolder, otherwise the root thinks it's a subfolder of itself
-    //    });
-        
-    //    return (folders, $"found:{folders.Count}");
-    //});
+    public List<FolderModelRaw> Folders => _folders.Get(GetFolders)!;
 
     private List<FolderModelRaw> GetFolders()
     {
@@ -205,7 +153,7 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
     /// <summary>
     /// </summary>
     /// <returns></returns>
-    private static string FullNameWithoutAppFolder(string path, PreparedPaths paths)
+    private static string FullNameWithoutAppFolder(string? path, PreparedPaths paths)
     {
         if (path == null)
             return string.Empty;
@@ -220,9 +168,9 @@ public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices 
 
     private static PreparedPaths PreparePaths(IAppPaths appPaths, string root)
     {
-        var hasShared = appPaths.PhysicalPathShared != null;
+        var hasShared = appPaths.PhysicalPathShared != null! /* paranoid */;
         var appSharedPath = hasShared
-            ? Path.Combine(appPaths.PhysicalPathShared, root)
+            ? Path.Combine(appPaths.PhysicalPathShared!, root)
             : "";
         return new(Path.Combine(appPaths.PhysicalPath, root), hasShared, appSharedPath);
     }

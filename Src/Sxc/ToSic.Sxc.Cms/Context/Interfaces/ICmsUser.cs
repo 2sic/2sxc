@@ -37,7 +37,7 @@ public interface ICmsUser: IUserModel, IHasMetadata
     ///
     /// History: Added in v.14.09
     /// </remarks>
-    string Email { get; }
+    new string Email { get; }
 
     /// <summary>
     /// User Id as int. Works in DNN and Oqtane.
@@ -49,7 +49,7 @@ public interface ICmsUser: IUserModel, IHasMetadata
     /// </example>
     /// 
     /// <returns>The ID or 0 (zero) if anonymous</returns>
-    int Id { get; }
+    new int Id { get; }
 
     /// <summary>
     /// Information if the user is anonymous (not logged in)
@@ -61,7 +61,7 @@ public interface ICmsUser: IUserModel, IHasMetadata
     /// <remarks>
     /// History: Added in v14.08
     /// </remarks>
-    bool IsAnonymous { get; }
+    new bool IsAnonymous { get; }
 
     /// <summary>
     /// Information if the current user is Site Administrator.
@@ -80,7 +80,7 @@ public interface ICmsUser: IUserModel, IHasMetadata
     /// 
     /// History: Added in 2sxc 12
     /// </remarks>
-    bool IsSiteAdmin { get; }
+    new bool IsSiteAdmin { get; }
 
 
     /// <summary>
@@ -99,7 +99,7 @@ public interface ICmsUser: IUserModel, IHasMetadata
     /// 
     /// History: Added in 2sxc 14.09
     /// </remarks>
-    bool IsContentAdmin { get; }
+    new bool IsContentAdmin { get; }
 
     /// <summary>
     /// Information if the current user is System Administrator.
@@ -114,7 +114,7 @@ public interface ICmsUser: IUserModel, IHasMetadata
     /// 
     /// History: Added in 2sxc 12
     /// </remarks>
-    bool IsSystemAdmin { get; }
+    new bool IsSystemAdmin { get; }
 
 
     /// <summary>
@@ -133,7 +133,7 @@ public interface ICmsUser: IUserModel, IHasMetadata
     /// 
     /// History: Added in 2sxc 12
     /// </remarks>
-    bool IsSiteDeveloper { get; }
+    new bool IsSiteDeveloper { get; }
 
     /// <summary>
     /// Metadata of the current user
@@ -155,7 +155,7 @@ public interface ICmsUser: IUserModel, IHasMetadata
     /// History: Added in v.14.09
     /// </remarks>
     /// <returns>The name or an empty string if anonymous</returns>
-    string Name { get; }
+    new string Name { get; }
 
 
     /// <summary>
@@ -169,5 +169,5 @@ public interface ICmsUser: IUserModel, IHasMetadata
     /// History: Added in v.14.09
     /// </remarks>
     /// <returns>The username or an empty string if anonymous</returns>
-    string Username { get; }
+    new string Username { get; }
 }

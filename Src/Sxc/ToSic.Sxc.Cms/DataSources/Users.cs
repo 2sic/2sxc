@@ -38,7 +38,7 @@ namespace ToSic.Sxc.DataSources;
     Type = DataSourceType.Source,
     ConfigurationType = "ac11fae7-1916-4d2d-8583-09872e1e6966"
 )]
-public partial class Users : CustomDataSourceAdvanced
+public class Users : CustomDataSourceAdvanced
 {
     private readonly IDataSourceGenerator<UserRoles> _rolesGenerator;
     private readonly IUsersProvider _provider;
@@ -50,7 +50,7 @@ public partial class Users : CustomDataSourceAdvanced
     /// include users based on guid or id
     /// </summary>
     [Configuration]
-    public string UserIds
+    public string? UserIds
     {
         get => field ?? Configuration.GetThis();
         set;
@@ -61,7 +61,7 @@ public partial class Users : CustomDataSourceAdvanced
     /// exclude users based on guid or id
     /// </summary>
     [Configuration]
-    public string ExcludeUserIds
+    public string? ExcludeUserIds
     {
         get => field ?? Configuration.GetThis();
         set;
@@ -72,7 +72,7 @@ public partial class Users : CustomDataSourceAdvanced
     /// include users that have any of roles from filter
     /// </summary>
     [Configuration]
-    public string RoleIds
+    public string? RoleIds
     {
         get => field ?? Configuration.GetThis();
         set;
@@ -83,7 +83,7 @@ public partial class Users : CustomDataSourceAdvanced
     /// exclude users that have any of roles from filter
     /// </summary>
     [Configuration]
-    public string ExcludeRoleIds
+    public string? ExcludeRoleIds
     {
         get => field ?? Configuration.GetThis();
         set;
@@ -100,7 +100,7 @@ public partial class Users : CustomDataSourceAdvanced
     /// * Changed to be string in v15.03 (before bool) to allow more options such as `required`
     /// </remarks>
     [Configuration]
-    public string IncludeSystemAdmins
+    public string? IncludeSystemAdmins
     {
         get => field ?? Configuration.GetThis();
         set;
@@ -221,11 +221,13 @@ public partial class Users : CustomDataSourceAdvanced
             .ToList();
 
         // Get roles, use the current data source to provide aspects such as lookups etc.
-        var rolesDs = _rolesGenerator.New(attach: this, options: new DataSourceOptionConverter().Create(null, new
-        {
-            // Set filter parameter to only get roles we'll need
-            RoleIds = string.Join(",", roleIds),
-        }));
+        var rolesDs = _rolesGenerator.New(attach: this, options: new DataSourceOptionConverter()
+            .Create(null, new
+            {
+                // Set filter parameter to only get roles we'll need
+                RoleIds = string.Join(",", roleIds),
+            })
+        );
         
         return rolesDs.List.ToList();
     }

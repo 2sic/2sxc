@@ -60,14 +60,14 @@ public class AppAssets: CustomDataSourceAdvanced
     /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
     /// </summary>
     [Configuration(Fallback = "/")]
-    public string RootFolder => Configuration.GetThis();
+    public string RootFolder => Configuration.GetThis(fallback: "/");
 
     /// <summary>
     /// The file name filter, such as "*.jpg".
     /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
     /// </summary>
     [Configuration(Fallback = "*.*")]
-    public string FileFilter => Configuration.GetThis();
+    public string FileFilter => Configuration.GetThis(fallback: "*.*");
 
     // TODO: not implemented yet!
     [PrivateApi("TODO: NOT IMPLEMENTED YET")]
@@ -130,7 +130,7 @@ public class AppAssets: CustomDataSourceAdvanced
             { StreamFolders, () => folders },
             { StreamFiles, () => files }
         };
-    });
+    })!;
     private readonly GetOnce<Dictionary<string, Func<IImmutableList<IEntity>>>> _all = new();
 
     /// <summary>

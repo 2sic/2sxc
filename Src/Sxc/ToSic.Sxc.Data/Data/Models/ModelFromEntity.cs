@@ -95,7 +95,7 @@ public abstract partial class ModelFromEntity: ICanWrap<IEntity>, ICanBeEntity /
     #region As...
 
     /// <inheritdoc cref="DataModelHelpers.As{TCustom}"/>
-    protected T? As<T>(object item)
+    protected T? As<T>(object? item)
         where T : class, ICanWrapData
         => DataModelHelpers.As<T>(_modelFactory, item);
 

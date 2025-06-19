@@ -56,7 +56,7 @@ public interface IPageModel : ICanWrapData
     /// * In Dnn it's from `TabInfo.Title`
     /// * in Oqtane it's from `Page.Title`
     /// </summary>
-    string Title { get; }
+    string? Title { get; }
 
     /// <summary>
     /// The page name.
@@ -64,7 +64,7 @@ public interface IPageModel : ICanWrapData
     /// * In Dnn it's from `TabInfo.Name`
     /// * in Oqtane it's from `Page.Name`
     /// </summary>
-    string Name { get; }
+    string? Name { get; }
 
     /// <summary>
     /// Determines if this item is clickable in the menu.
@@ -128,7 +128,7 @@ public interface IPageModel : ICanWrapData
     /// <remarks>
     /// Added in v15.02
     /// </remarks>
-    string LinkTarget { get; }
+    string? LinkTarget { get; }
 
     /// <summary>
     /// The path with slashes to this page.
@@ -136,7 +136,7 @@ public interface IPageModel : ICanWrapData
     /// * In Dnn it's from `TabInfo.TabPath`
     /// * in Oqtane it's from `Page.Path`
     /// </summary>
-    string Path { get; }
+    string? Path { get; }
 
     /// <summary>
     /// The public url to this page (without any trailing slashes)
@@ -144,7 +144,7 @@ public interface IPageModel : ICanWrapData
     /// * In Dnn it's from `TabInf.FullUrl` (last slash removed)
     /// * in Oqtane it's a combination of protocol, site-alias and path
     /// </summary>
-    string Url { get; }
+    string? Url { get; }
 
     /// <summary>
     /// The page creation date/time.
@@ -174,5 +174,6 @@ public interface IPageModel : ICanWrapData
     /// </remarks>
     bool IsDeleted { get; }
 
-    IEnumerable<IPageModel> Children { get; }
+    // Not implemented, and not sure if we should, since it would potentially introduce a lot of prefetch data
+    //IEnumerable<IPageModel> Children { get; }
 }

@@ -10,8 +10,8 @@ public record AppAssetsGetSpecs: IWorkSpecs
     public int ZoneId { get; init; } = int.MinValue;
 
     [Configuration(Fallback = "/")]
-    public string RootFolder { get; init; } = null;
+    public string? RootFolder { get; init; } = null;
 
     [Configuration(Fallback = "*.*")]
-    public string FileFilter { get; init; } = null;
+    public string? FileFilter { get; init; } = null;
 }

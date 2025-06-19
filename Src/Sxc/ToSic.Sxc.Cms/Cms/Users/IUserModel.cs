@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Cms.Users;
 public interface IUserModel : ICanWrapData
 {
     /// <inheritdoc cref="IUser.Email"/>
-    string Email { get; }
+    string? Email { get; }
 
     /// <inheritdoc cref="IUser.Id"/>>
     int Id { get; }
@@ -65,7 +65,7 @@ public interface IUserModel : ICanWrapData
     bool IsContentEditor { get; }
 
     // TODO:
-    string NameId { get; }
+    string? NameId { get; }
 
     /// <summary>
     /// True if the user has super-user rights.
@@ -80,10 +80,10 @@ public interface IUserModel : ICanWrapData
     bool IsSiteDeveloper { get; }
 
     /// <inheritdoc cref="IUser.Name"/>
-    string Name { get; }
+    string? Name { get; }
 
     /// <inheritdoc cref="IUser.Username"/>
-    string Username { get; }
+    string? Username { get; }
 
     /// <summary>
     /// Roles of the user.

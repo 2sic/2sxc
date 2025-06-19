@@ -3,20 +3,31 @@ using ToSic.Sxc.Cms.Users.Internal;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
-public record UsersGetSpecsParsed(UsersGetSpecs specs)
+public record UsersGetSpecsParsed(UsersGetSpecs Specs)
 {
     #region Configuration
 
-    public IEnumerable<int> UserIdFilter => field ??= ParseCsvToIntList(specs.UserIds);
-    public IEnumerable<Guid> UserGuidFilter => field ??= ParseCsvToGuidList(specs.UserIds);
-    public IEnumerable<int> ExcludeUserIdsFilter => field ??= ParseCsvToIntList(specs.ExcludeUserIds);
-    public IEnumerable<Guid> ExcludeUserGuidsFilter => field ??= ParseCsvToGuidList(specs.ExcludeUserIds);
-    public IEnumerable<int> RolesFilter => field ??= ParseCsvToIntList(specs.RoleIds);
-    public IEnumerable<int> ExcludeRolesFilter => field ??= ParseCsvToIntList(specs.ExcludeRoleIds);
+    [field: AllowNull, MaybeNull]
+    public IEnumerable<int> UserIdFilter => field ??= ParseCsvToIntList(Specs.UserIds);
+
+    [field: AllowNull, MaybeNull]
+    public IEnumerable<Guid> UserGuidFilter => field ??= ParseCsvToGuidList(Specs.UserIds);
+
+    [field: AllowNull, MaybeNull]
+    public IEnumerable<int> ExcludeUserIdsFilter => field ??= ParseCsvToIntList(Specs.ExcludeUserIds);
+
+    [field: AllowNull, MaybeNull]
+    public IEnumerable<Guid> ExcludeUserGuidsFilter => field ??= ParseCsvToGuidList(Specs.ExcludeUserIds);
+
+    [field: AllowNull, MaybeNull]
+    public IEnumerable<int> RolesFilter => field ??= ParseCsvToIntList(Specs.RoleIds);
+
+    [field: AllowNull, MaybeNull]
+    public IEnumerable<int> ExcludeRolesFilter => field ??= ParseCsvToIntList(Specs.ExcludeRoleIds);
 
     #endregion
 
-    private static List<int> ParseCsvToIntList(string stringList)
+    private static List<int> ParseCsvToIntList(string? stringList)
         => !stringList.HasValue()
             ? []
             : stringList.Split(UserConstants.Separator)
@@ -24,7 +35,7 @@ public record UsersGetSpecsParsed(UsersGetSpecs specs)
                 .Where(u => u != -1)
                 .ToList();
 
-    private static List<Guid> ParseCsvToGuidList(string stringList)
+    private static List<Guid> ParseCsvToGuidList(string? stringList)
         => !stringList.HasValue()
             ? []
             : stringList.Split(UserConstants.Separator)

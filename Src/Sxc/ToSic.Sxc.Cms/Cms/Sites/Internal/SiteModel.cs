@@ -31,16 +31,17 @@ public record SiteModel: IRawEntity, ISiteModel
         TitleField = nameof(Name),
     };
 
-    IDictionary<string, object> IRawEntity.Attributes(RawConvertOptions options) => new Dictionary<string, object>
-    {
-        { nameof(Name), Name },
-        { nameof(Url), Url },
-        { nameof(Languages), Languages },
-        { nameof(DefaultLanguage), DefaultLanguage },
-        { nameof(ZoneId), ZoneId },
-        { nameof(ContentAppId), ContentAppId },
-        { nameof(PrimaryAppId), PrimaryAppId },
-    };
+    IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)
+        => new Dictionary<string, object?>
+        {
+            { nameof(Name), Name },
+            { nameof(Url), Url },
+            { nameof(Languages), Languages },
+            { nameof(DefaultLanguage), DefaultLanguage },
+            { nameof(ZoneId), ZoneId },
+            { nameof(ContentAppId), ContentAppId },
+            { nameof(PrimaryAppId), PrimaryAppId },
+        };
 
     #endregion
 
@@ -51,16 +52,16 @@ public record SiteModel: IRawEntity, ISiteModel
     public Guid Guid { get; init; }
 
     /// <inheritdoc />
-    public string Name { get; init; }
+    public string? Name { get; init; }
 
     /// <inheritdoc />
-    public string Url { get; init; }
+    public string? Url { get; init; }
 
     /// <inheritdoc />
-    public string Languages { get; init; }
+    public string? Languages { get; init; }
 
     /// <inheritdoc />
-    public string DefaultLanguage { get; init; }
+    public string? DefaultLanguage { get; init; }
 
     /// <inheritdoc cref="ISiteModel.Created" />
     public DateTime Created { get; init; }

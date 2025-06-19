@@ -59,7 +59,7 @@ public interface ISiteModel : ICanWrapData
     /// * In Dnn it's from `PageInfo.PortalName`
     /// * in Oqtane it's from `Site.Name`
     /// </summary>
-    string Name { get; }
+    string? Name { get; }
 
     /// <summary>
     /// The public url to this site (without any trailing slashes)
@@ -67,13 +67,13 @@ public interface ISiteModel : ICanWrapData
     /// * In Dnn it's from `PortalAliasInfo.FullUrl` (last slash removed)
     /// * in Oqtane it's a combination of protocol, site-alias and path
     /// </summary>
-    string Url { get; }
+    string? Url { get; }
 
     /// <summary>
     /// The site languages, comma separated.
     /// Can be empty ever if a <see cref="DefaultLanguage"/> is set, if the site itself is not multi-language.
     /// </summary>
-    string Languages { get; }
+    string? Languages { get; }
 
     /// <summary>
     /// The site Culture Code.
@@ -81,7 +81,7 @@ public interface ISiteModel : ICanWrapData
     /// * In Dnn it's from `PortalInfo.CultureCode`
     /// * in Oqtane it's from `Site.CultureCode`
     /// </summary>
-    string DefaultLanguage { get; }
+    string? DefaultLanguage { get; }
 
     /// <summary>
     /// The Zone ID, which is the ID of the 2sxc/EAV zone which applies to this site.

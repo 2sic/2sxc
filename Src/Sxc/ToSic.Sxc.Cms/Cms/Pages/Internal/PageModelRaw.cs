@@ -31,26 +31,27 @@ public record PageModelRaw: IRawEntity, IPageModel, IHasRelationshipKeys
         TitleField = nameof(Title)
     };
 
-    IDictionary<string, object> IRawEntity.Attributes(RawConvertOptions options) => new Dictionary<string, object>
-    {
-        // v14+
-        { nameof(Title), Title },
-        { nameof(Name), Name },
-        { nameof(ParentId), ParentId },
-        { nameof(IsNavigation), IsNavigation },
-        { nameof(Path), Path },
-        { nameof(Url), Url },
-        // New in v15.01
-        { nameof(IsClickable), IsClickable },
-        { nameof(Order), Order },
-        { nameof(IsDeleted), IsDeleted },
-        { nameof(Level), Level },
-        { nameof(HasChildren), HasChildren },
-        // New in v15.02
-        { nameof(LinkTarget), LinkTarget },
+    IDictionary<string, object?> IRawEntity.Attributes(RawConvertOptions options)
+        => new Dictionary<string, object?>
+        {
+            // v14+
+            { nameof(Title), Title },
+            { nameof(Name), Name },
+            { nameof(ParentId), ParentId },
+            { nameof(IsNavigation), IsNavigation },
+            { nameof(Path), Path },
+            { nameof(Url), Url },
+            // New in v15.01
+            { nameof(IsClickable), IsClickable },
+            { nameof(Order), Order },
+            { nameof(IsDeleted), IsDeleted },
+            { nameof(Level), Level },
+            { nameof(HasChildren), HasChildren },
+            // New in v15.02
+            { nameof(LinkTarget), LinkTarget },
 
-        { nameof(IPageModel.Children), ChildrenRaw }
-    };
+            { "Children", ChildrenRaw }
+        };
 
     private const string ParentPrefix = "ParentId:";
 
@@ -76,10 +77,10 @@ public record PageModelRaw: IRawEntity, IPageModel, IHasRelationshipKeys
     public Guid Guid { get; init; }
 
     /// <inheritdoc cref="IPageModel.Title"/>
-    public string Title { get; init; }
+    public string? Title { get; init; }
 
     /// <inheritdoc />
-    public string Name { get; init; }
+    public string? Name { get; init; }
 
     /// <inheritdoc />
     public bool IsClickable { get; init; }
@@ -98,14 +99,14 @@ public record PageModelRaw: IRawEntity, IPageModel, IHasRelationshipKeys
     public int Level { get; init; }
 
     /// <inheritdoc />
-    public string LinkTarget { get; init; }
+    public string? LinkTarget { get; init; }
 
 
     /// <inheritdoc />
-    public string Path { get; init; }
+    public string? Path { get; init; }
 
     /// <inheritdoc />
-    public string Url { get; init; }
+    public string? Url { get; init; }
 
     /// <inheritdoc cref="IPageModel.Created" />
     public DateTime Created { get; init; }
@@ -116,7 +117,8 @@ public record PageModelRaw: IRawEntity, IPageModel, IHasRelationshipKeys
     /// <inheritdoc />
     public bool IsDeleted { get; init; }
 
-    [ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Reference to the child pages.")]
-    public IEnumerable<IPageModel> Children { get; init; }
+    // Not implemented, and not sure if we should, since it would potentially introduce a lot of prefetch data
+    //[ContentTypeAttributeSpecs(Type = ValueTypes.Entity, Description = "Reference to the child pages.")]
+    //public IEnumerable<IPageModel> Children { get; init; }
     
 }

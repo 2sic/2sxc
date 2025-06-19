@@ -16,7 +16,7 @@ namespace ToSic.Sxc.DataSources.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSourceProvider<TFolderId, TFileId>.MyServices>
 {
-    private IContextOfApp _context;
+    private IContextOfApp _context = null!;
 
     public class MyServices(LazySvc<AdamContext> adamContext, ISxcAppCurrentContextService ctxService)
         : MyServicesBase(connect: [adamContext, ctxService])
@@ -26,16 +26,15 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
     }
 
     protected AdamDataSourceProvider(MyServices services) : base(services, $"{SxcLogName}.AdamDs")
-    {
-    }
+    { }
 
     public AdamDataSourceProvider<TFolderId, TFileId> Configure(
         NoParamOrder noParamOrder = default,
         int appId = default,
-        string entityIds = default,
-        string entityGuids = default,
-        string fields = default,
-        string filter = default
+        string? entityIds = default,
+        string? entityGuids = default,
+        string? fields = default,
+        string? filter = default
     )
     {
         var l = Log.Fn<AdamDataSourceProvider<TFolderId, TFileId>>($"a:{appId}; entityIds:{entityIds}, entityGuids:{entityGuids}, fields:{fields}, filter:{filter}");
@@ -49,10 +48,10 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
         return l.Return(this);
     }
 
-    private string _entityIds;
-    private string _entityGuids;
-    private string _fields;
-    private string _filter;
+    private string? _entityIds;
+    private string? _entityGuids;
+    private string? _fields;
+    private string? _filter;
 
 
     public Func<IEntity, IEnumerable<AdamItemDataRaw>> GetInternal()

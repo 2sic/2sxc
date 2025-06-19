@@ -15,7 +15,7 @@ namespace ToSic.Sxc.ExportImport.Sys;
 /// <param name="currentContextService"></param>
 /// <param name="logPrefix"></param>
 /// <param name="connect"></param>
-public abstract class SxcXmlExporter(XmlSerializer xmlSerializer, IAppsCatalog appsCatalog, ICurrentContextService currentContextService, string logPrefix, object[] connect = default)
+public abstract class SxcXmlExporter(XmlSerializer xmlSerializer, IAppsCatalog appsCatalog, ICurrentContextService currentContextService, string logPrefix, object[]? connect = default)
     : XmlExporter(xmlSerializer, appsCatalog, logPrefix, connect: [..connect ?? [], currentContextService])
 {
 
