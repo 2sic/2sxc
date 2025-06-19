@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps;
-
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
@@ -14,8 +13,7 @@ namespace ToSic.Sxc.Polymorphism.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class PolymorphConfigReader(LazySvc<ServiceSwitcher<IPolymorphismResolver>> resolvers, LazySvc<IHttp> http) : ServiceBase("Plm.Managr", connect: [resolvers ])
 {
-    public string Parameters;
-    public PolymorphismConfiguration Configuration;
+    public PolymorphismConfiguration Configuration = null!;
     private int _appId;
 
     /// <summary>
@@ -23,16 +21,18 @@ public class PolymorphConfigReader(LazySvc<ServiceSwitcher<IPolymorphismResolver
     /// or to use this same PolymorphConfigReader to figure out the edition.
     /// Since the reader should only be created if necessary, it's handed in as a function.
     /// </summary>
-    public string UseViewEditionOrGet(IBlock block)
+    public string? UseViewEditionOrGet(IBlock block)
         => UseViewEditionOrGet(block?.View, block?.Context.AppReaderRequired);
 
-    public string UseViewEditionOrGet(IView view, IAppReader appReader)
+    public string? UseViewEditionOrGet(IView? view, IAppReader? appReader)
     {
         var viewEdition = view?.Edition.NullIfNoValue();
         if (viewEdition != null)
             return viewEdition;
 
-        _appId = appReader.AppId;
+        // note: up until v20 2025-06-19 this always worked without null-checking the app-reader.
+        // so for now, we'll assume all paths always work, which is why we use appReader! here.
+        _appId = appReader!.AppId;
         Init(appReader.List);
         return Edition();
     }
@@ -43,13 +43,13 @@ public class PolymorphConfigReader(LazySvc<ServiceSwitcher<IPolymorphismResolver
         return this;
     }
 
-    public string Edition()
+    public string? Edition()
     {
         var l = Log.Fn<string>();
         try
         {
             var resolver = Configuration.Resolver;
-            if (string.IsNullOrEmpty(resolver)) 
+            if (resolver.IsEmpty()) 
                 return l.ReturnNull("no resolver");
 
             var rInfo = resolvers.Value.ByNameId(resolver, true);

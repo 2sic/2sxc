@@ -6,8 +6,8 @@ namespace ToSic.Sxc.Blocks.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class RenderSpecs
 {
-    public object Data { get; set; }
-    public bool UseLightspeed { get; set; }
-    public RenderEngineResult RenderEngineResult { get; set; } // errors from dnn requirements check (like c# 8.0)
-    public bool IncludeAllAssetsInOqtane { get; set; } // override default behavior in Oqtane
+    public object? Data { get; init; }
+    public bool UseLightspeed { get; init; }
+    public RenderEngineResult? RenderEngineResult { get; init; } // errors from dnn requirements check (like c# 8.0)
+    public bool IncludeAllAssetsInOqtane { get; init; } // override default behavior in Oqtane
 }

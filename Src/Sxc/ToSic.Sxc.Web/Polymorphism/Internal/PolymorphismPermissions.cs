@@ -15,7 +15,7 @@ public class PolymorphismPermissions(IUser user) : IPolymorphismResolver
     /// </summary>
     public const string ModeIsSuperUser = "IsSuperUser";
 
-    public string Edition(PolymorphismConfiguration config, string overrule, ILog log)
+    public string? Edition(PolymorphismConfiguration config, string? overrule, ILog log)
     {
         var l = log.Fn<string>();
         if (!string.Equals(config.Parameters, ModeIsSuperUser, InvariantCultureIgnoreCase))

@@ -26,7 +26,7 @@ internal class RazorEngine(
     : EngineBase(services, connect: [codeRootFactory, errorHelp, renderingHelper, razorRenderer]), IRazorEngine
 {
     /// <inheritdoc/>
-    protected override (string Contents, List<Exception> Exception) RenderEntryRazor(RenderSpecs specs)
+    protected override (string Contents, List<Exception>? Exception) RenderEntryRazor(RenderSpecs specs)
     {
         var l = Log.Fn<(string, List<Exception>)>();
         var task = RenderTask(specs);

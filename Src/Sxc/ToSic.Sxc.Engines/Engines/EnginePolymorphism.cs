@@ -10,10 +10,10 @@ namespace ToSic.Sxc.Engines;
 public class EnginePolymorphism(PolymorphConfigReader polymorphism, IServerPaths serverPaths)
     : ServiceBase("Sxc.EngPly", connect: [polymorphism, serverPaths])
 {
-    internal (string, string) PolymorphTryToSwitchPath(string root, IView view, IAppReader appReader)
+    internal (string? NewPath, string? Edition) PolymorphTryToSwitchPath(string root, IView view, IAppReader appReader)
     {
         var subPath = view.Path;
-        var l = Log.Fn<(string, string)>($"{root}, {subPath}");
+        var l = Log.Fn<(string? NewPath, string? Edition)>($"{root}, {subPath}");
         // Get initial path - here the file is already reliably stored
         view.EditionPath = subPath.ToAbsolutePathForwardSlash();
         subPath = view.EditionPath.TrimPrefixSlash();
@@ -21,9 +21,9 @@ public class EnginePolymorphism(PolymorphConfigReader polymorphism, IServerPaths
         // Figure out the current edition - if none, stop here
         // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
         var edition = polymorphism.UseViewEditionOrGet(view, appReader);
-        // view.Edition.NullIfNoValue() ?? _polymorphism.Init(appState.List).Edition();
+        
         if (edition == null)
-            return l.ReturnNull("no edition detected");
+            return l.Return((null, null), "no edition detected");
         l.A($"edition '{edition}' detected");
 
         // Case #1 where edition is between root and path
@@ -36,7 +36,7 @@ public class EnginePolymorphism(PolymorphConfigReader polymorphism, IServerPaths
         // like subPath ="bs5/View.cshtml" and there is a "bs4/View.cshtml"
         l.A("tried inserting path, will check if sub-path");
         var pathWithoutFirstFolder = subPath.After("/");
-        if (string.IsNullOrEmpty(pathWithoutFirstFolder))
+        if (pathWithoutFirstFolder.IsEmpty())
             return l.ReturnNull("view is not in subfolder, so no edition to replace, stopping now");
         newPath = PolymorphTestPathAndSetIfFound(view, root, edition, pathWithoutFirstFolder);
         if (newPath != null)
@@ -45,7 +45,7 @@ public class EnginePolymorphism(PolymorphConfigReader polymorphism, IServerPaths
         return l.ReturnNull($"edition {edition} not found");
     }
 
-    private string PolymorphTestPathAndSetIfFound(IView view, string root, string edition, string subPath)
+    private string? PolymorphTestPathAndSetIfFound(IView view, string root, string edition, string subPath)
     {
         var l = Log.Fn<string>($"root: {root}; edition: {edition}; subPath: {subPath}");
         var fullPathForTest = Path.Combine(root, edition, subPath).ToAbsolutePathForwardSlash();

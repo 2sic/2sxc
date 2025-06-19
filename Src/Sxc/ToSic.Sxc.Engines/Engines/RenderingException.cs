@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Engines;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class RenderingException: Exception, IExceptionWithHelp
 {
-    public RenderingException(CodeHelp help, string message = default) : base(message ?? help.UiMessage)
+    public RenderingException(CodeHelp help, string? message = default) : base(message ?? help.UiMessage)
     {
         Helps = [help];
     }

@@ -47,7 +47,7 @@ internal partial class DnnRazorEngine(EngineBase.MyServices helpers, DnnRazorCom
 
 
     [PrivateApi]
-    protected override (string, List<Exception>) RenderEntryRazor(RenderSpecs specs)
+    protected override (string, List<Exception>?) RenderEntryRazor(RenderSpecs specs)
     {
         var (writer, exceptions) = RenderImplementation(EntryRazorComponent, specs);
         return (writer.ToString(), exceptions);

@@ -4,11 +4,10 @@ using ToSic.Eav.Data.EntityBased.Sys;
 namespace ToSic.Sxc.Polymorphism.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class PolymorphismConfiguration(IEntity entity) : EntityBasedType(entity)
+public class PolymorphismConfiguration(IEntity? entity) : EntityBasedType(entity!)
 {
     public PolymorphismConfiguration(IEnumerable<IEntity> list): this(list?.FirstOrDefaultOfType(Name))
-    {
-    }
+    { }
 
     public const string StaticName = "3937fa17-ef2d-40a7-b089-64164eb10bab";
     public const string Name = "2sxcPolymorphismConfiguration";
@@ -17,6 +16,7 @@ public class PolymorphismConfiguration(IEntity entity) : EntityBasedType(entity)
 
     public string UsersWhoMaySwitchEditions => GetThisIfEntity("");
 
+    [field: AllowNull, MaybeNull]
     public List<int> UsersWhoMaySwitch => field ??= new Func<List<int>>(() => UsersWhoMaySwitchEditions
         .Split(',')
         .Select(s => s.Trim())
@@ -25,21 +25,22 @@ public class PolymorphismConfiguration(IEntity entity) : EntityBasedType(entity)
         .ToList()
     )();
 
-    public string Resolver => SplitMode().Resolver;
+    public string? Resolver => SplitMode().Resolver;
 
-    public string Parameters => SplitMode().Parameters;
+    public string? Parameters => SplitMode().Parameters;
 
-    private (string Resolver, string Parameters) SplitMode()
+    private (string? Resolver, string? Parameters) SplitMode()
     {
         if (_resolverAndParameters != default)
             return _resolverAndParameters;
 
         var rule = Mode;
-        if (string.IsNullOrEmpty(Mode)) return (null, null);
+        if (string.IsNullOrEmpty(Mode))
+            return (null, null);
         var parts = rule.Split('?');
         var resolver = parts[0];
         var parameters = parts.Length > 0 ? parts[1] : null;
         return _resolverAndParameters = (resolver, parameters);
     }
-    private (string Resolver, string Parameters) _resolverAndParameters;
+    private (string? Resolver, string? Parameters) _resolverAndParameters;
 }

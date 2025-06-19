@@ -7,7 +7,7 @@ using ToSic.Sys.Requirements;
 namespace ToSic.Sxc.Engines;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class EngineRequirementsBase(string logName, object[] connect = default) : ServiceBase(logName, connect: connect)
+public abstract class EngineRequirementsBase(string logName, object[]? connect = default) : ServiceBase(logName, connect: connect)
 {
     protected static RenderEngineResult BuildRenderEngineResult(ICollection<RequirementStatus> reqStatus)
     {

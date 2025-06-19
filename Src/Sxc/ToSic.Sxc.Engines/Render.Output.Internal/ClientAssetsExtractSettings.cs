@@ -6,11 +6,11 @@ public class ClientAssetsExtractSettings
     public ClientAssetsExtractSettings(
         bool extractAll = false,
         int cssPriority = default,
-        string cssLocation = default,
+        string? cssLocation = default,
         int jsPriority = default,
-        string jsLocation = default,
-        ClientAssetExtractSettingsForOneAssetType js = default,
-        ClientAssetExtractSettingsForOneAssetType css = default)
+        string? jsLocation = default,
+        ClientAssetExtractSettingsForOneAssetType? js = default,
+        ClientAssetExtractSettingsForOneAssetType? css = default)
     {
         var jsLoc = jsLocation ?? ClientAssetConstants.AddToBody;
         var cssLoc = cssLocation ?? ClientAssetConstants.AddToHead;

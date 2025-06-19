@@ -37,17 +37,19 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
 
     #region Constructor and DI
 
-    [PrivateApi] protected IView Template;
-    [PrivateApi] protected string TemplatePath;
-    [PrivateApi] protected string Edition;
-    [PrivateApi] protected IApp App;
-    [PrivateApi] protected IDataSource DataSource;
-    [PrivateApi] protected IBlock Block;
+    [PrivateApi] protected IView Template = null!;
+    [PrivateApi] protected string TemplatePath = null!;
+    [PrivateApi] protected string? Edition;
+    [PrivateApi] protected IApp App = null!;
+    [PrivateApi] protected IDataSource DataSource = null!;
+    [PrivateApi] protected IBlock Block = null!;
 
     /// <summary>
     /// Empty constructor, so it can be used in dependency injection
     /// </summary>
-    protected EngineBase(MyServices services, object[] connect = default) : base(services, $"{SxcLogName}.EngBas", connect: connect) { }
+    protected EngineBase(MyServices services, object[]? connect = default)
+        : base(services, $"{SxcLogName}.EngBas", connect: connect)
+    { }
 
     #endregion
 
@@ -56,9 +58,9 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
         var l = Log.Fn();
 
         // Do various pre-checks and path variations
-        var view = block.View;
+        var view = block.View!;
         var appReader = block.Context.AppReaderRequired;
-        var appPathRootInInstallation = block.App.PathSwitch(view.IsShared, PathTypes.PhysRelative);
+        var appPathRootInInstallation = block.App!.PathSwitch(view.IsShared, PathTypes.PhysRelative);
         var (polymorphPathOrNull, edition) = Services.EnginePolymorphism
             .PolymorphTryToSwitchPath(appPathRootInInstallation, view, appReader);
 
@@ -86,14 +88,14 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
         Template = view;
         Edition = edition;
         TemplatePath = templatePath;
-        App = Block.App;
+        App = Block.App!;
         DataSource = Block.Data;
 
         l.Done();
     }
 
     [PrivateApi]
-    protected abstract (string Contents, List<Exception> Exception) RenderEntryRazor(RenderSpecs specs);
+    protected abstract (string Contents, List<Exception>? Exception) RenderEntryRazor(RenderSpecs specs);
 
     /// <inheritdoc />
     public virtual RenderEngineResult Render(RenderSpecs specs)
@@ -117,7 +119,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
         return l.ReturnAsOk(result);
     }
 
-    private RenderEngineResult CheckExpectedNoRenderConditions()
+    private RenderEngineResult? CheckExpectedNoRenderConditions()
     {
         var l = Log.Fn<RenderEngineResult>();
 

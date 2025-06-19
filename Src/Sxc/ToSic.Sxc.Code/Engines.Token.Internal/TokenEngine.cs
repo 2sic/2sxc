@@ -112,7 +112,7 @@ public class TokenEngine(
 
 
     [PrivateApi]
-    protected override (string Contents, List<Exception> Exception) RenderEntryRazor(RenderSpecs specs)
+    protected override (string Contents, List<Exception>? Exception) RenderEntryRazor(RenderSpecs specs)
     {
         var templateSource = File.ReadAllText(Services.ServerPaths.FullAppPath(TemplatePath));
         // Convert old <repeat> elements to the new ones
@@ -129,7 +129,7 @@ public class TokenEngine(
                 match.Groups[RegexToken.Template].Value));
 
         // Render sections between the <repeat>s (but before replace the <repeat>s and 
-        // the templates contained with placeholders, so the templates in the <reapeat>s 
+        // the templates contained with placeholders, so the templates in the <repeat>s 
         // are not rendered twice)
         var template = RepeatRegex.Replace(templateSource, RepeatPlaceholder);
         var rendered = RenderSection(template, new Dictionary<string, ILookUp>());

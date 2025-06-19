@@ -20,7 +20,7 @@ public class EngineAppRequirements(IRequirementsService requirements) : EngineRe
                 .ToList()
             ).Value;
 
-    internal RenderEngineResult GetMessageForRequirements(IAppReader appReader)
+    internal RenderEngineResult? GetMessageForRequirements(IAppReader? appReader)
     {
         var l = Log.Fn<RenderEngineResult>();
 
