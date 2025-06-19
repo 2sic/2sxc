@@ -18,7 +18,7 @@ public interface IAppData: IDataSource, IMetadataGet
     /// <remarks>
     /// Changed in 2sxc 10.30 - now returns the id of the created items
     /// </remarks>
-    IEntity Create(string contentTypeName, Dictionary<string, object> values, string userName = null, ITarget target = null);
+    IEntity Create(string contentTypeName, Dictionary<string, object> values, string? userName = null, ITarget? target = null);
 
     /// <summary>
     /// Create a bunch of new entities in one single call (much faster, because cache doesn't need to repopulate in the mean time).
@@ -30,7 +30,7 @@ public interface IAppData: IDataSource, IMetadataGet
     /// You can't create items which are metadata with this, for that, please use the Create-one overload <br/>
     /// Changed in 2sxc 10.30 - now returns the id of the created items
     /// </remarks>
-    IEnumerable<IEntity> Create(string contentTypeName, IEnumerable<Dictionary<string, object>> multiValues, string userName = null);
+    IEnumerable<IEntity> Create(string contentTypeName, IEnumerable<Dictionary<string, object>> multiValues, string? userName = null);
 
     /// <summary>
     /// Update an existing item.
@@ -38,14 +38,14 @@ public interface IAppData: IDataSource, IMetadataGet
     /// <param name="entityId">The item ID</param>
     /// <param name="values">a dictionary of values to be updated</param>
     /// <param name="userName">the current user name - will be logged as the author of the change</param>
-    void Update(int entityId, Dictionary<string, object> values, string userName = null);
+    void Update(int entityId, Dictionary<string, object> values, string? userName = null);
 
     /// <summary>
     /// Delete an existing item
     /// </summary>
     /// <param name="entityId">The item ID</param>
     /// <param name="userName">the current user name - will be logged as the author of the change</param>
-    void Delete(int entityId, string userName = null);
+    void Delete(int entityId, string? userName = null);
 
     // 2024-01-09 2dm Removed for v17.01 - should have been removed a long time ago
     ///// <summary>
@@ -64,5 +64,5 @@ public interface IAppData: IDataSource, IMetadataGet
     /// <param name="key">The target identifier - a number, string or Guid</param>
     /// <param name="contentTypeName">Optional name of Content-Type, if you only want items of a specific type</param>
     /// <returns></returns>
-    IEnumerable<IEntity> GetCustomMetadata<TKey>(TKey key, string contentTypeName = null);
+    IEnumerable<IEntity> GetCustomMetadata<TKey>(TKey key, string? contentTypeName = null);
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
@@ -216,6 +217,7 @@ public class UsersDataSourceTests(DataBuilder dataBuilder, DataSourcesTstBuilder
         => DsSvc.CreateDataSourceNew<Users>(new DataSourceOptionConverter()
             .Create(new DataSourceOptions
             {
+                AppIdentityOrReader = new AppIdentity(0, 0),
                 LookUp = new LookUpTestData(dataBuilder).AppSetAndRes(),
             }, options));
 }

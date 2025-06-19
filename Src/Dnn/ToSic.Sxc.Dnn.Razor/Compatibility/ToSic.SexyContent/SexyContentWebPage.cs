@@ -19,7 +19,7 @@ using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Sys.ExecutionContext;
 using IApp = ToSic.Sxc.Apps.IApp;
-using IEntity = ToSic.Eav.Data.IEntity;
+
 
 // ReSharper disable InheritdocInvalidUsage
 

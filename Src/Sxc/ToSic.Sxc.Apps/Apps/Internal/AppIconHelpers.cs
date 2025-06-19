@@ -11,15 +11,17 @@ public class AppIconHelpers(LazySvc<IValueConverter> iconConverterLazy)
     : ServiceBase("Viw.Help", connect: [iconConverterLazy])
 {
 
-    public string IconPathOrNull(IAppPaths appPaths, IView view, PathTypes type)
+    public string? IconPathOrNull(IAppPaths appPaths, IView view, PathTypes type)
     {
-        var l = Log.Fn<string>();
+        var l = Log.Fn<string?>();
         // 1. Check if the file actually exists or is a file:... reference
         var iconFile = IconPath(appPaths, view, PathTypes.PhysFull);
         var assumeExists = ValueConverterBase.CouldBeReference(iconFile) || File.Exists(iconFile);
 
         // 2. Return as needed
-        var result = assumeExists ? IconPath(appPaths, view, type) : null;
+        var result = assumeExists
+            ? IconPath(appPaths, view, type)
+            : null;
         return l.Return(result, result ?? "not found");
     }
 
@@ -34,7 +36,8 @@ public class AppIconHelpers(LazySvc<IValueConverter> iconConverterLazy)
 
             // If not, we must assume it's file:## placeholder
             // URLs (Links) we can provide...
-            if (type == PathTypes.Link) return iconConverterLazy.Value.ToValue(view.Icon, view.Guid);
+            if (type == PathTypes.Link)
+                return iconConverterLazy.Value.ToValue(view.Icon, view.Guid);
 
             // ...but file:## can't convert to PhysFull; return it so the caller can check if it's a reference
             return view.Icon;
@@ -45,14 +48,14 @@ public class AppIconHelpers(LazySvc<IValueConverter> iconConverterLazy)
         return viewPath1.Substring(0, viewPath1.LastIndexOf(".", Ordinal)) + ".png";
     }
 
-    public static bool HasAppPathToken(string value)
+    public static bool HasAppPathToken(string? value)
     {
         value ??= "";
         return value.StartsWith(AppPathPlaceholder, InvariantCultureIgnoreCase)
                || value.StartsWith(AppPathSharedPlaceholder, InvariantCultureIgnoreCase);
     }
 
-    public static string AppPathTokenReplace(string value, string appPath, string appPathShared)
+    public static string AppPathTokenReplace(string? value, string appPath, string appPathShared)
     {
         value ??= "";
         if (value.StartsWith(AppPathPlaceholder, InvariantCultureIgnoreCase))

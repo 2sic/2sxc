@@ -4,13 +4,13 @@ using ToSic.Lib.LookUp.Engines;
 namespace ToSic.Sxc.Services.DataServices;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class DataSourceOptionsMs(IAppIdentity identity, Func<ILookUpEngine> getLookup)
+internal class DataSourceOptionsMs(IAppIdentity? identity, Func<ILookUpEngine> getLookup)
     : ServiceBase(SxcLogName + "DtOptH")
 {
-    private ILookUpEngine LookUpEngine => _lookupEngine.Get(() => getLookup?.Invoke());
-    private readonly GetOnce<ILookUpEngine> _lookupEngine = new();
+    private ILookUpEngine? LookUpEngine => _lookupEngine.Get(() => getLookup?.Invoke());
+    private readonly GetOnce<ILookUpEngine?> _lookupEngine = new();
 
-    public IDataSourceOptions SafeOptions(object parameters, object options, bool identityRequired = false)
+    public IDataSourceOptions SafeOptions(object? parameters, object? options, bool identityRequired = false)
     {
         var l = Log.Fn<IDataSourceOptions>($"{nameof(options)}: {options}, {nameof(identityRequired)}: {identityRequired}");
         // Ensure we have a valid AppIdentity

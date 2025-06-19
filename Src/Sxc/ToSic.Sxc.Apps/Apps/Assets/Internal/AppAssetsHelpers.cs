@@ -44,7 +44,7 @@ internal class AppAssetsHelpers
     /// <param name="location"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    internal static bool? DetermineShared(string location)
+    internal static bool? DetermineShared(string? location)
         => (location?.ToLowerInvariant() ?? LocationAuto) switch
         {
             LocationAuto => null,

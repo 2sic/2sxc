@@ -1,10 +1,13 @@
-﻿using ToSic.Eav.Apps.Internal;
+﻿using System.Diagnostics.CodeAnalysis;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.DataSource.Internal.Query;
+using ToSic.Eav.Metadata;
 using ToSic.Eav.Services;
 using ToSic.Eav.Sys;
+using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Apps.Sys;
 
@@ -20,8 +23,9 @@ namespace ToSic.Sxc.Apps.Sys;
 /// <param name="logName">must be null by default, because of DI</param>
 [PrivateApi("Hide implementation - was PublicApi_Stable_ForUseInYourCode till 16.09")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract partial class SxcAppBase(SxcAppBase.MyServices services, string logName = default, object[] connect = default)
-    : AppBase<SxcAppBase.MyServices>(services, logName ?? "Eav.App", connect: connect), Eav.Apps.IApp
+public abstract partial class SxcAppBase(SxcAppBase.MyServices services, string? logName = default, object[]? connect = default)
+    : AppBase<SxcAppBase.MyServices>(services, logName ?? "Eav.App", connect: connect),
+        IAppWithInternal
 {
     // ReSharper disable once InconsistentNaming
     private readonly MyServices services = services;
@@ -51,25 +55,66 @@ public abstract partial class SxcAppBase(SxcAppBase.MyServices services, string 
 
     #endregion
 
-    /// <inheritdoc />
-    public string Name { get; private set; }
-    /// <inheritdoc />
-    public string Folder { get; private set; }
+    #region AppReader and all derived properties of the AppReader
+
+    protected internal IAppReader AppReaderInt
+    {
+        get => field ?? throw new("AppReaderInt not set, did you call Init()?");
+        private set;
+    } = null!;
+
+    IAppReader IAppWithInternal.AppReader => AppReaderInt;
+
+
+    [field: AllowNull, MaybeNull]
+    private IAppSpecs AppSpecs => field ??= AppReaderInt.Specs;
 
     /// <inheritdoc />
-    public string NameId { get; private set; }
+    [field: AllowNull, MaybeNull]
+    public string Name => field ??= AppReaderInt.Specs.Name; // ?? KnownAppsConstants.ErrorAppName;
+
+    /// <inheritdoc />
+    [field: AllowNull, MaybeNull]
+    public string Folder => field ??= AppReaderInt.Specs.Folder; // ?? KnownAppsConstants.ErrorAppName;
+
+    /// <inheritdoc />
+    [field: AllowNull, MaybeNull]
+    public string NameId => field ??= AppReaderInt.Specs.NameId;
 
     /// <inheritdoc />
     [Obsolete]
     [PrivateApi]
     public string AppGuid => NameId;
 
+    #region Metadata and Permission Accessors
+
+    /// <inheritdoc />
+    public IMetadataOf Metadata => AppSpecs.Metadata;
+
+    /// <summary>
+    /// Permissions of this app
+    /// </summary>
+    public IEnumerable<IPermission> Permissions => Metadata.Permissions;
+
+    #endregion
+
+    #region Settings, Config, Metadata
+
+    public IEntity? AppSettings => AppSpecs.Settings.MetadataItem;
+    public IEntity? AppResources => AppSpecs.Resources.MetadataItem;
+
+    #endregion
+
+    #endregion
+
+
     public SxcAppBase Init(ISite site, IAppIdentityPure appIdentity, AppDataConfigSpecs dataSpecs)
     {
         var l = Log.Fn<SxcAppBase>();
 
         // 2024-03-18 moved here...
-        if (site != null) Site = site;
+        if (site != null)
+            Site = site;
 
         // Env / Tenant must be re-checked here
         if (Site == null) throw new("no site/portal received");
@@ -85,9 +130,8 @@ public abstract partial class SxcAppBase(SxcAppBase.MyServices services, string 
 
         // Look up name in cache
         AppReaderInt = services.AppReaders.Get(this);
-        NameId = AppReaderInt.Specs.NameId;
 
-        InitializeResourcesSettingsAndMetadata();
+        //InitializeResourcesSettingsAndMetadata();
 
         // for deferred initialization as needed
         _dataConfigSpecs = dataSpecs;

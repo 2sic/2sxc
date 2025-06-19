@@ -37,18 +37,20 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
     private LazySvc<SimpleDataEditService> DataController { get; }
 
     /// <inheritdoc />
-    public IEntity Create(string contentTypeName, Dictionary<string, object> values, string userName = default, ITarget target = default)
+    public IEntity Create(string contentTypeName, Dictionary<string, object> values, string? userName = default, ITarget? target = default)
     {
         var l = Log.Fn<IEntity>(contentTypeName);
         // Ensure case insensitive
         values = values.ToInvariant();
 
-        if (!string.IsNullOrEmpty(userName)) ProvideOwnerInValues(values, userName); // userName should be in 2sxc user IdentityToken format (like 'dnn:user=N')
+        if (!string.IsNullOrEmpty(userName))
+            ProvideOwnerInValues(values, userName!); // userName should be in 2sxc user IdentityToken format (like 'dnn:user=N')
         var ids = DataController.Value.Create(contentTypeName, new List<Dictionary<string, object>> { values }, target);
         var id = ids.FirstOrDefault();
         FlushDataSnapshot();
         // try to find it again (AppState.List contains also draft items)
-        var created = AppReader.List.One(id);
+        var created = AppReader.List.One(id)
+            ?? throw new ArgumentException($"Can't find the freshly created entity with ID {id}, something is wrong.");
         return l.Return(created, $"{created?.EntityId}/{created?.EntityGuid}");
     }
 
@@ -60,15 +62,18 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
     }
 
     /// <inheritdoc />
-    public IEnumerable<IEntity> Create(string contentTypeName, IEnumerable<Dictionary<string, object>> multiValues, string userName = default)
+    public IEnumerable<IEntity> Create(string contentTypeName, IEnumerable<Dictionary<string, object>> multiValues, string? userName = default)
     {
-        var l = Log.Fn<IEnumerable<IEntity>>($"app create many ({multiValues.Count()}) new entities of type:{contentTypeName}");
+        var valueList = multiValues.ToListOpt();
+        var l = Log.Fn<IEnumerable<IEntity>>($"app create many ({valueList.Count}) new entities of type:{contentTypeName}");
         // ensure case insensitive
-        multiValues = multiValues.Select(mv => mv.ToInvariant()).ToList();
+        multiValues = valueList
+            .Select(mv => mv.ToInvariant())
+            .ToList();
 
         if (!string.IsNullOrEmpty(userName))
             foreach (var values in multiValues)
-                ProvideOwnerInValues(values, userName); // userName should be in 2sxc user IdentityToken format (like 'dnn:user=N')
+                ProvideOwnerInValues(values, userName!); // userName should be in 2sxc user IdentityToken format (like 'dnn:user=N')
 
         var ids = DataController.Value.Create(contentTypeName, multiValues);
         FlushDataSnapshot();
@@ -77,7 +82,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
     }
 
     /// <inheritdoc />
-    public void Update(int entityId, Dictionary<string, object> values, string userName = default)
+    public void Update(int entityId, Dictionary<string, object> values, string? userName = default)
     {
         var l = Log.Fn($"app update i:{entityId}");
         // FYI: userName is not used (to change owner of updated entity).
@@ -88,7 +93,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
 
 
     /// <inheritdoc />
-    public void Delete(int entityId, string userName = default)
+    public void Delete(int entityId, string? userName = default)
     {
         var l = Log.Fn($"app delete i:{entityId}");
         // FYI: userName is not used (to change owner of deleted entity).
@@ -110,15 +115,15 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
     }
 
     /// <inheritdoc />
-    public IEnumerable<IEntity> GetMetadata<TKey>(int targetType, TKey key, string contentTypeName = null)
+    public IEnumerable<IEntity> GetMetadata<TKey>(int targetType, TKey key, string? contentTypeName = null)
         => AppReader.Metadata.GetMetadata(targetType, key, contentTypeName);
 
     /// <inheritdoc />
-    public IEnumerable<IEntity> GetMetadata<TKey>(TargetTypes targetType, TKey key, string contentTypeName = null)
+    public IEnumerable<IEntity> GetMetadata<TKey>(TargetTypes targetType, TKey key, string? contentTypeName = null)
         => AppReader.Metadata.GetMetadata(targetType, key, contentTypeName);
 
     /// <inheritdoc />
-    public IEnumerable<IEntity> GetCustomMetadata<TKey>(TKey key, string contentTypeName = null)
+    public IEnumerable<IEntity> GetCustomMetadata<TKey>(TKey key, string? contentTypeName = null)
         => AppReader.Metadata.GetMetadata(TargetTypes.Custom, key, contentTypeName);
 
 }

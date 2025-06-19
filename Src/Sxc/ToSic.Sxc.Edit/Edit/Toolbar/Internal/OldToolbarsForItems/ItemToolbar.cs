@@ -2,7 +2,7 @@
 using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Sxc.Web;
 using ToSic.Sys.Utils;
-using IEntity = ToSic.Eav.Data.IEntity;
+
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ToSic.Sxc.Edit.Toolbar;

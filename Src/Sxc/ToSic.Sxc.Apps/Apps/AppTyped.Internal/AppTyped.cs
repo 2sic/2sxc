@@ -1,11 +1,11 @@
-﻿using ToSic.Eav.Apps.AppReader.Sys;
+﻿using System.Diagnostics.CodeAnalysis;
+using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.DataServices;
@@ -24,10 +24,10 @@ namespace ToSic.Sxc.Apps.Internal;
 // - use that instead
 
 internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> queryManager)
-    : ServiceWithContext(SxcLogName + ".AppTyp", errorIfNotConnected: true, connect: [globalPaths, queryManager]),
+    : ServiceWithContext(SxcLogName + ".AppTyp", connect: [globalPaths, queryManager]),
         IAppTyped
 {
-    protected App App => ExCtxOrNull?.GetApp() as App
+    protected App App => ExCtx.GetApp() as App
                          ?? throw new($"Can't access {nameof(App)} - either null or can't convert");
 
     /// <inheritdoc />
@@ -39,15 +39,17 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> 
     /// <inheritdoc />
     public string Name => App.Name;
 
+    [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
 
     /// <inheritdoc />
+    [field: AllowNull, MaybeNull]
     public IAppDataTyped Data => field ??= App
         .BuildDataForTyped<AppDataTyped, AppDataTyped>()
         .Setup(Cdf);
 
     /// <inheritdoc />
-    public IDataSource GetQuery(string name = default, NoParamOrder noParamOrder = default, IDataSourceLinkable attach = default, object parameters = default)
+    public IDataSource? GetQuery(string? name = default, NoParamOrder noParamOrder = default, IDataSourceLinkable? attach = default, object? parameters = default)
     {
         var opts = new DataSourceOptionsMs(this, () => App.ConfigurationProvider);
         return new GetQueryMs(queryManager, opts, Log).GetQuery(name, noParamOrder, attach, parameters);
@@ -57,28 +59,29 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> 
     public IAppConfiguration Configuration => App.Configuration;
 
     /// <inheritdoc />
-    ITypedItem IAppTyped.Settings => _settings.Get(() => App.AppSettingsForTyped.NullOrGetWith(appS => MakeTyped(appS, propsRequired: true)));
-    private readonly GetOnce<ITypedItem> _settings = new();
+    ITypedItem? IAppTyped.Settings => _settings.Get(() => App.AppSettings.NullOrGetWith(appS => MakeTyped(appS, propsRequired: true)));
+    private readonly GetOnce<ITypedItem?> _settings = new();
 
     /// <inheritdoc />
-    ITypedItem IAppTyped.Resources => _resources.Get(() => App.AppResourcesForTyped.NullOrGetWith(appR => MakeTyped(appR, propsRequired: true)));
-    private readonly GetOnce<ITypedItem> _resources = new();
+    ITypedItem? IAppTyped.Resources => _resources.Get(() => App.AppResources.NullOrGetWith(appR => MakeTyped(appR, propsRequired: true)));
+    private readonly GetOnce<ITypedItem?> _resources = new();
 
     private ITypedItem MakeTyped(ICanBeEntity contents, bool propsRequired)
     {
         var wrapped = CmsEditDecorator.Wrap(contents.Entity, false);
-        return Cdf.AsItem(wrapped, propsRequired: propsRequired);
+        return Cdf.AsItem(wrapped, propsRequired: propsRequired)!;
     }
 
     /// <inheritdoc />
+    [field: AllowNull, MaybeNull]
     public IFolder Folder => field ??= (this as IAppTyped).FolderAdvanced();
 
     /// <inheritdoc />
-    public IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string location = default)
+    public IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string? location = default)
         => new AppAssetFolderMain(App.AppPathsForTyped, App.Folder, AppAssetsHelpers.DetermineShared(location) ?? App.AppReaderForTyped.IsShared());
 
     /// <inheritdoc />
-    public IFile Thumbnail => _thumbnailFile.Get(() => new AppAssetThumbnail(App.AppReaderForTyped, App.AppPathsForTyped, globalPaths));
+    public IFile Thumbnail => _thumbnailFile.Get(() => new AppAssetThumbnail(App.AppReaderForTyped, App.AppPathsForTyped, globalPaths))!;
     private readonly GetOnce<IFile> _thumbnailFile = new();
 
 

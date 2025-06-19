@@ -10,10 +10,10 @@ namespace ToSic.Sxc.Apps.Internal.Assets;
 internal class AppAssetThumbnail(IAppReader appReader, IAppPaths appPaths, LazySvc<GlobalPaths> globalPaths)
     : AppAssetFile
 {
-    public override string Url => _url.Get(() => GetUrl(appReader, appPaths, globalPaths));
-    private readonly GetOnce<string> _url = new();
+    public override string? Url => _url.Get(() => GetUrl(appReader, appPaths, globalPaths));
+    private readonly GetOnce<string?> _url = new();
 
-    public static string GetUrl(IAppReader appReader, IAppPaths appPaths, LazySvc<GlobalPaths> globalPaths)
+    public static string? GetUrl(IAppReader appReader, IAppPaths appPaths, LazySvc<GlobalPaths> globalPaths)
     {
         // Primary app - we only PiggyBack cache the icon in this case
         // Because otherwise the icon could get moved, and people would have a hard time seeing the effect

@@ -55,7 +55,7 @@ public partial class CodeDataFactory(
     private ISite _siteOrNull;
 
     private ISite SiteFromContextOrFallback => field 
-        ??= (ExCtx?.GetState<ICmsContext>() as CmsContext)?.CtxSite.Site
+        ??= (ExCtxOrNull?.GetState<ICmsContext>() as CmsContext)?.CtxSite.Site
             ?? _siteOrNull
             ?? throw new("Tried getting site from context or fallback, neither returned anything useful. ");
 
@@ -83,17 +83,17 @@ public partial class CodeDataFactory(
     // There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
     public string[] Dimensions => field ??=
         // note: can't use SiteFromContextOrFallback.SafeLanguagePriorityCodes() because it will error during testing
-        (ExCtx?.GetState<ICmsContext>() as CmsContext)?.CtxSite.Site.SafeLanguagePriorityCodes()
+        (ExCtxOrNull?.GetState<ICmsContext>() as CmsContext)?.CtxSite.Site.SafeLanguagePriorityCodes()
         ?? _siteOrNull.SafeLanguagePriorityCodes();
 
 
-    public IBlock BlockOrNull => ExCtx?.GetState<IBlock>();
+    public IBlock BlockOrNull => ExCtxOrNull?.GetState<IBlock>();
 
     public object BlockAsObjectOrNull => BlockOrNull;
 
     #endregion
 
-    public object Json2Jacket(string json, string fallback = default)
+    public object? Json2Jacket(string json, string fallback = default)
         => wrapJsonGenerator.New().Setup(WrapperSettings.Dyn(true, true))
             .Json2Jacket(json, fallback: fallback);
 

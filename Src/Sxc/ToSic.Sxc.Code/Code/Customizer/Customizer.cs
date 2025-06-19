@@ -79,7 +79,8 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
         where TCustomType : class, ICanWrapData, new()
     {
         // check if cache exists and was created with the sames specs
-        if (_myHeader is TCustomType typed) return typed;
+        if (_myHeader is TCustomType typed)
+            return typed;
 
         // Get and cache for reuse
         var header = (ExCtx.GetState<IDataSource>() as ContextData)?.MyHeaders.FirstOrDefault();

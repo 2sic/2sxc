@@ -34,13 +34,13 @@ public interface IView: IEntityBasedType
 
 
     [PrivateApi] string ContentType { get; }
-    [PrivateApi] IEntity ContentItem { get; }
+    [PrivateApi] IEntity? ContentItem { get; }
     [PrivateApi] string PresentationType { get; }
-    [PrivateApi] IEntity PresentationItem { get; }
+    [PrivateApi] IEntity? PresentationItem { get; }
     [PrivateApi] string HeaderType { get; }
-    [PrivateApi] IEntity HeaderItem { get; }
+    [PrivateApi] IEntity? HeaderItem { get; }
     [PrivateApi] string HeaderPresentationType { get; }
-    [PrivateApi] IEntity HeaderPresentationItem { get; }
+    [PrivateApi] IEntity? HeaderPresentationItem { get; }
 
     /// <summary>
     /// The underlying type name of the template, ATM they are unfortunately hard-coded as "C# Razor" and "Token"
@@ -71,13 +71,13 @@ public interface IView: IEntityBasedType
     /// The query which provides data to this view. 
     /// </summary>
     [PrivateApi]
-    IEntity QueryRaw { get; }
+    IEntity? QueryRaw { get; }
 
     /// <summary>
     /// The query attached to this view (if one was specified)
     /// </summary>
     /// <returns>A query object or null</returns>
-    QueryDefinition Query { get; }
+    QueryDefinition? Query { get; }
 
     /// <summary>
     /// An identifier which could occur in the url, causing the view to automatically switch to this one. 
@@ -94,14 +94,16 @@ public interface IView: IEntityBasedType
     /// Contains the polymorph edition name for this view, which changes
     /// what path is loaded.
     /// </summary>
-    [PrivateApi] string Edition { get; set; }
+    [PrivateApi] string? Edition { get; set; }
 
-    [PrivateApi] string EditionPath { get; set; }
+    [PrivateApi] string? EditionPath { get; set; }
 
 
-    [PrivateApi("WIP 12.02")] IEntity Resources { get; }
+    [PrivateApi("WIP 12.02")]
+    IEntity? Resources { get; }
 
-    [PrivateApi("WIP 12.02")] IEntity Settings { get; }
+    [PrivateApi("WIP 12.02")]
+    IEntity? Settings { get; }
 
     /// <summary>
     /// Determines if search indexing should be disabled - so this view will not provide search data.

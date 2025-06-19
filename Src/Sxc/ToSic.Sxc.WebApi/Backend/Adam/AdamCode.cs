@@ -37,8 +37,8 @@ public class AdamCode(Generator<AdamWorkUpload, AdamWorkOptions> adamUploadGener
         if (!featuresLazy.Value.IsEnabled(feats, "can't save in ADAM", out var exp))
             throw l.Ex(exp);
 
-        var appId = ExCtx?.GetState<IBlock>()?.AppId
-                    ?? ExCtx?.GetApp()?.AppId
+        var appId = ExCtx.GetState<IBlock>()?.AppId
+                    ?? ExCtx.GetApp()?.AppId
                     ?? throw l.Ex(new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known."));
         var adamUploader = adamUploadGenerator.New(new()
             {

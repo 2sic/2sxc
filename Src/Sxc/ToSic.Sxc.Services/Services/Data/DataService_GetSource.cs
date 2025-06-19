@@ -59,7 +59,7 @@ partial class DataService
 
         var ds = dataSources.Value.Create(dsInfo.Type, attach: attach, options: safeOptions);
 
-        // If it's the super user (often developing the DS) we should show errors instead of letting it just happen
+        // If it's the superuser (often developing the DS) we should show errors instead of letting it just happen
         if (!showErrors || !ds.IsError())
             return l.Return(ds);
 

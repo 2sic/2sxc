@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Data.EntityDecorators.Sys;
 using ToSic.Sxc.Data.Sys.Decorators;
-using IEntity = ToSic.Eav.Data.IEntity;
+
 // ReSharper disable InconsistentNaming
 
 namespace ToSic.Sxc.Edit.Toolbar;

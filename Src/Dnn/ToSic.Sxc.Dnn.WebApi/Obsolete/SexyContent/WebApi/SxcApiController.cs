@@ -16,7 +16,7 @@ using ToSic.Sxc.DataSources.Internal.Compatibility;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Services;
 using IApp = ToSic.Sxc.Apps.IApp;
-using IEntity = ToSic.Eav.Data.IEntity;
+
 using IFolder = ToSic.Sxc.Adam.IFolder;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Dnn.Code;

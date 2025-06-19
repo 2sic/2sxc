@@ -21,28 +21,19 @@ public interface IApp:
     /// Configuration object with information about the App.
     /// This contains things like app version, path etc.
     /// </summary>
-#if NETFRAMEWORK
-        new
-#endif
     IAppConfiguration Configuration { get; }
 
     /// <summary>
     /// All the app settings which are custom for each app. 
     /// </summary>
     /// <returns>An <see cref="IDynamicEntity"/> object</returns>
-#if NETFRAMEWORK
-        new
-#endif
-    dynamic Settings { get;  }
+    dynamic? Settings { get;  }
 
     /// <summary>
     /// All the app resources (usually used for multi-language labels etc.)
     /// </summary>
     /// <returns>An <see cref="IDynamicEntity"/> object</returns>
-#if NETFRAMEWORK
-        new
-#endif
-    dynamic Resources { get;  }
+    dynamic? Resources { get;  }
 
     #region Query
 
@@ -114,10 +105,7 @@ public interface IApp:
     /// The thumbnail path for the current app. 
     /// </summary>
     /// <returns>path + app-icon.png if there is an icon there. </returns>
-#if NETFRAMEWORK
-        new
-#endif
-    string Thumbnail { get; }
+    string? Thumbnail { get; }
 
 
 }

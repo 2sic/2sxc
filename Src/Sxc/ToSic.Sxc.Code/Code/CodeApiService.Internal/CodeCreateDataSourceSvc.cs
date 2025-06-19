@@ -41,6 +41,7 @@ public class CodeCreateDataSourceSvc(LazySvc<IDataSourcesService> dataSources, L
         });
         var typedOptions = new DataSourceOptionConverter().Create(new DataSourceOptions
         {
+            AppIdentityOrReader = AppIdentity,
             LookUp = LookUpEngine,
             Immutable = immutable,
         }, options);

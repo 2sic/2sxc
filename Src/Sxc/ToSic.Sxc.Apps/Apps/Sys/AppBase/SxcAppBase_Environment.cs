@@ -14,7 +14,8 @@ partial class SxcAppBase
     #region Paths
 
     [PrivateApi]
-    public string PhysicalPath => AppReaderInt.GetCache().GetPiggyBack(nameof(PhysicalPath), () => Path.Combine(Site.AppsRootPhysicalFull, Folder));
+    public string PhysicalPath
+        => AppReaderInt.GetCache().GetPiggyBack(nameof(PhysicalPath), () => Path.Combine(Site.AppsRootPhysicalFull, Folder));
 
     #endregion
 

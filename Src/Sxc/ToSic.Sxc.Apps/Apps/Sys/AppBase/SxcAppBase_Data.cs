@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Internal;
+﻿using System.Diagnostics.CodeAnalysis;
+using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.DataSources.Internal;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.LookUp.Engines;
@@ -8,7 +9,7 @@ namespace ToSic.Sxc.Apps.Sys;
 partial class SxcAppBase
 {
     [PrivateApi]
-    public ILookUpEngine ConfigurationProvider => _configurationProvider.Get(() => AppDataConfig.Configuration);
+    public ILookUpEngine ConfigurationProvider => _configurationProvider.Get(() => AppDataConfig.Configuration)!;
     private readonly GetOnce<ILookUpEngine> _configurationProvider = new();
 
     private IAppDataConfiguration AppDataConfig => _appDataConfigOnce.Get(() =>
@@ -21,19 +22,22 @@ partial class SxcAppBase
         Log.A($"init data drafts:{config.ShowDrafts}, hasConf:{config.Configuration != null}");
         return config;
 
-    });
+    })!;
     private readonly GetOnce<IAppDataConfiguration> _appDataConfigOnce = new();
-    private AppDataConfigSpecs _dataConfigSpecs;
+    private AppDataConfigSpecs? _dataConfigSpecs;
 
     #region Data
 
 
 
     /// <inheritdoc />
+    [field: AllowNull, MaybeNull]
     public IAppData Data => field ??= BuildData<AppDataWithCrud, IAppData>();
 
     [PrivateApi]
-    protected TResult BuildData<TDataSource, TResult>() where TDataSource : TResult where TResult : class, IDataSource
+    protected TResult BuildData<TDataSource, TResult>()
+        where TDataSource : TResult
+        where TResult : class, IDataSource
     {
         var l = Log.Fn<TResult>();
         if (ConfigurationProvider == null)

@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Services.Internal;
 // #NoEditorBrowsableBecauseOfInheritance
 //[ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
-public abstract class ServiceWithContext(string logName, NoParamOrder protect = default, bool errorIfNotConnected = false, object[]? connect = default)
+public abstract class ServiceWithContext(string logName, NoParamOrder protect = default, /*bool errorIfNotConnected = false,*/ object[]? connect = default)
     : ServiceBase(logName, protect: protect, connect: connect), INeedsExecutionContext, ICanDebug
 {
     /// <summary>
@@ -48,10 +48,8 @@ public abstract class ServiceWithContext(string logName, NoParamOrder protect = 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
 
-    protected IExecutionContext? ExCtx => ExCtxOrNull
-                                         ?? (errorIfNotConnected
-                                             ? throw new($"{nameof(ExCtxOrNull)} is null")
-                                             : null);
+    protected IExecutionContext ExCtx => ExCtxOrNull
+                                         ?? throw new($"{nameof(ExCtxOrNull)} is null - this is a bug, please report it.");
 
     protected IExecutionContext? ExCtxOrNull { get; private set; }
 

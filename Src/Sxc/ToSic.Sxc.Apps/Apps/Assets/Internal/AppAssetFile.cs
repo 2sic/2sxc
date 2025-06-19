@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Apps.Internal.Assets;
 internal abstract class AppAssetFile: IFile
 {
     protected const string NotImplemented = "not implemented";
-    public virtual string Url => NotImplemented;
+    public virtual string? Url => NotImplemented;
     public virtual string Type => NotImplemented;
 
     public virtual string Name => NotImplemented;
@@ -25,9 +25,9 @@ internal abstract class AppAssetFile: IFile
 
     bool IAsset.HasMetadata => false;
 
-    IMetadataOf IHasMetadata.Metadata => null;
+    IMetadataOf IHasMetadata.Metadata => null!;
 
-    ITypedMetadata IAsset.Metadata => null;
+    ITypedMetadata IAsset.Metadata => null!;
 
     #endregion
 
@@ -37,7 +37,7 @@ internal abstract class AppAssetFile: IFile
     public ISizeInfo SizeInfo => new SizeInfo(0);
     public int FolderId => -1;
 
-    public IField Field { get; set; }
+    public IField? Field { get; set; }
     public DateTime Created => DateTime.Now;
     public int Id => -1;
     public int ParentId => -1;

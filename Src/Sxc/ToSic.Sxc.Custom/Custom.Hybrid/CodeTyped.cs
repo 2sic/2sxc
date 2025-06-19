@@ -69,23 +69,20 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     private ICodeTypedApiHelper _codeApi;
 
     private IExecutionContext CodeRootOrError([CallerMemberName] string propName = default)
-    {
-        if (ExCtxOrNull != null)
-            return ExCtx;
-
-        throw new ExceptionWithHelp(new CodeHelp
-            {
-                Name = "get-kit-without-code-root",
-                Detect = "todo",
-                UiMessage = $"Can't access properties such as {propName}, because the Code-Context is not known. " +
-                            $"This is typical in code which is in the **AppCode** folder. " +
-                            $"Make sure the caller of the code uses GetService<{GetType().Name}>() to create the object - " +
-                            $"like 'var {GetType().Name}Svc = GetService<{GetType().Name}>()'.",
-            },
+        => ExCtxOrNull
+           ?? throw new ExceptionWithHelp(new CodeHelp
+               {
+                   Name = "get-kit-without-code-root",
+                   Detect = "todo",
+                   UiMessage =
+                       $"Can't access properties such as {propName}, because the Code-Context is not known. " +
+                       $"This is typical in code which is in the **AppCode** folder. " +
+                       $"Make sure the caller of the code uses GetService<{GetType().Name}>() to create the object - " +
+                       $"like 'var {GetType().Name}Svc = GetService<{GetType().Name}>()'.",
+               },
 #pragma warning disable CA2208
-            new ArgumentNullException(nameof(Kit)));
+               new ArgumentNullException(nameof(Kit)));
 #pragma warning restore CA2208
-    }
 
 
     #region Stuff added by Code12

@@ -58,7 +58,7 @@ partial class CodeDataFactory: IModelFactory
         }
     }
 
-    public TCustom GetOne<TCustom>(Func<IEntity> getItem, object id, bool skipTypeCheck)
+    public TCustom? GetOne<TCustom>(Func<IEntity?> getItem, object id, bool skipTypeCheck)
         where TCustom : class, ICanWrapData
     {
         var item = getItem();

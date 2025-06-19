@@ -40,7 +40,7 @@ public class WorkViews(
                 .Get(AppConstants.TemplateContentType)
                 .ToList()
         ).Value
-    );
+    )!;
     private readonly GetOnce<List<IEntity>> _viewDs = new();
 
     /// <summary>
@@ -55,7 +55,7 @@ public class WorkViews(
             .Select(e => ViewOfEntity(e, e.EntityId))
             .OrderBy(e => e.Name)];
 
-    private List<IView> _all;
+    private List<IView>? _all;
 
     public IEnumerable<IView> GetRazor() => GetAll().Where(t => t.IsRazor);
     public IEnumerable<IView> GetToken() => GetAll().Where(t => !t.IsRazor);
@@ -104,14 +104,16 @@ public class WorkViews(
     }
 
 
-    public IView Get(int templateId) => ViewOfEntity(ViewEntities.One(templateId), templateId, withServices: true);
+    public IView Get(int templateId)
+        => ViewOfEntity(ViewEntities.One(templateId), templateId, withServices: true);
 
-    public IView Get(Guid guid) => ViewOfEntity(ViewEntities.One(guid), guid, withServices: true);
+    public IView Get(Guid guid)
+        => ViewOfEntity(ViewEntities.One(guid), guid, withServices: true);
 
     public IView Recreate(IView originalWithoutServices) => 
            ViewOfEntity(originalWithoutServices.Entity, originalWithoutServices.Id, withServices: true);
 
-    private IView ViewOfEntity(IEntity templateEntity, object templateId, bool withServices = true, bool isReplacement = false)
+    private IView ViewOfEntity(IEntity? templateEntity, object templateId, bool withServices = true, bool isReplacement = false)
         => templateEntity == null
             ? throw new("The template with id '" + templateId + "' does not exist.")
             : new View(templateEntity, [cultureResolver.CurrentCultureCode], Log, withServices ? qDefBuilder : null, isReplaced: isReplacement);
@@ -140,7 +142,9 @@ public class WorkViews(
                     Name = ct.Name,
                     IsHidden = visible.All(t => t.ContentType != ct.NameId),   // must check if *any* template is visible, otherwise tell the UI that it's hidden
                     Thumbnail = thumbnail,
-                    Properties = dataToFormatLight.Convert(details?.Entity),
+                    Properties = details?.Entity == null
+                        ? null
+                        : dataToFormatLight.Convert(details.Entity),
                     IsDefault = ct.Metadata.HasType(KnownDecorators.IsDefaultDecorator),
                 };
             })

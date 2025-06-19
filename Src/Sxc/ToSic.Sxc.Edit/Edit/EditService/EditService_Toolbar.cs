@@ -1,7 +1,7 @@
 ﻿using ToSic.Razor.Markup;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Edit.Toolbar.Internal;
-using IEntity = ToSic.Eav.Data.IEntity;
+
 
 namespace ToSic.Sxc.Edit.EditService;
 

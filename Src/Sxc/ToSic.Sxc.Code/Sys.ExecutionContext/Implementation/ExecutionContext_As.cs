@@ -2,7 +2,7 @@
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services;
-using IEntity = ToSic.Eav.Data.IEntity;
+
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
 namespace ToSic.Sxc.Code.Internal;

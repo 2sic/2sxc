@@ -3,7 +3,7 @@ using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps.Internal.Assets;
 using static ToSic.Sxc.Blocks.Internal.ViewConstants;
-using IEntity = ToSic.Eav.Data.IEntity;
+
 
 namespace ToSic.Sxc.Blocks.Internal;
 
@@ -13,11 +13,12 @@ public class View(
     IEntity templateEntity,
     string[] languageCodes,
     ILog parentLog,
-    Generator<QueryDefinitionBuilder> qDefBuilder,
+    Generator<QueryDefinitionBuilder>? qDefBuilder,
     bool isReplaced = false)
     : EntityBasedWithLog(templateEntity, languageCodes, parentLog, "Sxc.View"), IView
 {
-    private IEntity GetBestRelationship(string key) => Entity.Children(key).FirstOrDefault();
+    private IEntity? GetBestRelationship(string key)
+        => Entity.Children(key).FirstOrDefault();
 
 
     public string Name => GetThis("unknown name");
@@ -30,25 +31,25 @@ public class View(
 
     public string ContentType => Get(FieldContentType, "");
 
-    public IEntity ContentItem => GetBestRelationship(FieldContentDemo);
+    public IEntity? ContentItem => GetBestRelationship(FieldContentDemo);
 
     public string PresentationType => Get(FieldPresentationType, "");
 
-    public IEntity PresentationItem => GetBestRelationship(FieldPresentationItem);
+    public IEntity? PresentationItem => GetBestRelationship(FieldPresentationItem);
 
     public string HeaderType => Get(FieldHeaderType, "");
 
-    public IEntity HeaderItem => GetBestRelationship(FieldHeaderItem);
+    public IEntity? HeaderItem => GetBestRelationship(FieldHeaderItem);
 
     public string HeaderPresentationType => Get(FieldHeaderPresentationType, "");
 
-    public IEntity HeaderPresentationItem => GetBestRelationship(FieldHeaderPresentationItem);
+    public IEntity? HeaderPresentationItem => GetBestRelationship(FieldHeaderPresentationItem);
 
     public string Type => GetThis("");
 
     [PrivateApi]
-    internal string GetTypeStaticName(string groupPart) =>
-        groupPart.ToLowerInvariant() switch
+    internal string GetTypeStaticName(string groupPart)
+        => groupPart.ToLowerInvariant() switch
         {
             ViewParts.ContentLower => ContentType,
             ViewParts.PresentationLower => PresentationType,
@@ -66,38 +67,38 @@ public class View(
     public bool PublishData => GetThis(false);
     public string StreamsToPublish => GetThis("");
 
-    public IEntity QueryRaw => QueryInfo.Entity;
+    public IEntity? QueryRaw => QueryInfo.QueryEntity;
 
-    public QueryDefinition Query => QueryInfo.Definition;
+    public QueryDefinition? Query => QueryInfo.Definition;
 
-    private (IEntity Entity, QueryDefinition Definition) QueryInfo => _queryInfo.Get(() =>
+    private (IEntity? QueryEntity, QueryDefinition? Definition) QueryInfo => _queryInfo.Get(() =>
     {
         var queryRaw = GetBestRelationship(FieldPipeline);
         var query = queryRaw != null
-            ? (qDefBuilder?.New().Create(queryRaw, Entity.AppId)
-               ?? throw new ArgumentException(
-                   @"Query Definition builder is null. View is probably from PiggyBack cache. To use it, you must first Recreate it with the WorkViews",
-                   nameof(qDefBuilder)))
+            ? (qDefBuilder ?? throw new ArgumentException(
+                @"Query Definition builder is null. View is probably from PiggyBack cache. To use it, you must first Recreate it with the WorkViews",
+                nameof(qDefBuilder))
+            ).New().Create(queryRaw, Entity.AppId)
             : null;
         return (queryRaw, query);
     });
 
-    private readonly GetOnce<(IEntity Entity, QueryDefinition Definition)> _queryInfo = new();
+    private readonly GetOnce<(IEntity? QueryEntity, QueryDefinition? Definition)> _queryInfo = new();
 
-    public string UrlIdentifier => Get(FieldNameInUrl, ""); // Entity.Value<string>(FieldNameInUrl);
+    public string UrlIdentifier => Get(FieldNameInUrl, "");
 
     /// <summary>
     /// Returns true if the current template uses Razor
     /// </summary>
     public bool IsRazor => Type == TypeRazorValue;
 
-    public string Edition { get; set; }
+    public string? Edition { get; set; }
 
-    public string EditionPath { get; set; }
+    public string? EditionPath { get; set; }
 
-    public IEntity Resources => GetBestRelationship(FieldResources);
+    public IEntity? Resources => GetBestRelationship(FieldResources);
 
-    public IEntity Settings => GetBestRelationship(FieldSettings);
+    public IEntity? Settings => GetBestRelationship(FieldSettings);
 
     /// <inheritdoc />
     public bool SearchIndexingDisabled => Get(FieldSearchDisabled, false);

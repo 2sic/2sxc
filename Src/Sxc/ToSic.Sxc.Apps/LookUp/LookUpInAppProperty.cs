@@ -15,21 +15,23 @@ public class LookUpInAppProperty(string name, IApp app) : LookUpBase(name, "Look
 {
     #region Internal stuff to be able to supply sub-properties
 
-    private ILookUp Settings
+    private ILookUp? Settings
     {
         get
         {
-            if (field != null || app.Settings == null) return field;
+            if (field != null || app.Settings == null)
+                return field;
             var dynEnt = app.Settings as IDynamicEntity;
             return field = new LookUpInEntity("appsettings", dynEnt?.Entity, dynEnt?.Cdf.Dimensions);
         }
     }
 
-    private ILookUp Resources
+    private ILookUp? Resources
     {
         get
         {
-            if (field != null || app.Resources == null) return field;
+            if (field != null || app.Resources == null)
+                return field;
             var dynEnt = app.Resources as IDynamicEntity;
             return field = new LookUpInEntity("appresources", dynEnt?.Entity, dynEnt?.Cdf.Dimensions);
         }
@@ -52,7 +54,8 @@ public class LookUpInAppProperty(string name, IApp app) : LookUpBase(name, "Look
 
         var subToken = CheckAndGetSubToken(key);
 
-        if (!subToken.HasSubToken) return string.Empty;
+        if (!subToken.HasSubToken)
+            return string.Empty;
 
         var subProvider = subToken.Source switch
         {
@@ -61,7 +64,7 @@ public class LookUpInAppProperty(string name, IApp app) : LookUpBase(name, "Look
             _ => null
         };
 
-        return subProvider?.Get(subToken.Rest, strFormat) ?? string.Empty;
+        return subProvider?.Get(subToken.Rest ?? string.Empty, strFormat) ?? string.Empty;
     }
 
 }

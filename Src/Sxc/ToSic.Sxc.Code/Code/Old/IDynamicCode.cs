@@ -6,7 +6,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
-using IEntity = ToSic.Eav.Data.IEntity;
+
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
 namespace ToSic.Sxc.Code;

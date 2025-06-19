@@ -29,11 +29,11 @@ public interface IAppTyped: IAppIdentity
     /// <param name="attach"></param>
     /// <param name="parameters"></param>
     /// <returns></returns>
-    IDataSource GetQuery(
-        string name = default,
+    IDataSource? GetQuery(
+        string? name = default,
         NoParamOrder noParamOrder = default,
-        IDataSourceLinkable attach = default,
-        object parameters = default
+        IDataSourceLinkable? attach = default,
+        object? parameters = default
     );
 
 
@@ -43,12 +43,12 @@ public interface IAppTyped: IAppIdentity
     /// <summary>
     /// All the app settings which are custom for each app. 
     /// </summary>
-    ITypedItem Settings { get;  }
+    ITypedItem? Settings { get;  }
 
     /// <summary>
     /// All the app resources (usually used for multi-language labels etc.)
     /// </summary>
-    ITypedItem Resources { get;  }
+    ITypedItem? Resources { get;  }
 
     #region Paths / Urls
 
@@ -65,7 +65,7 @@ public interface IAppTyped: IAppIdentity
     ///   We may add this some day in future.
     /// * Previously the `Folder` property returned containing the name. This is now on `.Folder().Name`.
     /// </remarks>
-    IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string location = default);
+    IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string? location = default);
 
     IFile Thumbnail { get; }
 

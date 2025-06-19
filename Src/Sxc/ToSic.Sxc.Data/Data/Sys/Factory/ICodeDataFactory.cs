@@ -118,7 +118,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     IEntity AsEntity(object thingToConvert);
     IEntity FakeEntity(int appId);
 
-    TCustom GetOne<TCustom>(Func<IEntity> getItem, object id, bool skipTypeCheck)
+    TCustom? GetOne<TCustom>(Func<IEntity?> getItem, object id, bool skipTypeCheck)
         where TCustom : class, ICanWrapData;
 
     IEntity PlaceHolderInBlock(int? appIdOrNull, IEntity? parent, string fieldName);

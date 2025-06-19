@@ -13,16 +13,16 @@ public interface IAppDataTyped: IDataSource
     #region CRUD
 
     /// <inheritdoc cref="ToSic.Eav.Apps.IAppData.Create(string, Dictionary{string, object}, string, ITarget)"/>
-    IEntity Create(string contentTypeName, Dictionary<string, object> values, string userName = null, ITarget target = null);
+    IEntity Create(string contentTypeName, Dictionary<string, object> values, string? userName = null, ITarget? target = null);
 
     /// <inheritdoc cref="ToSic.Eav.Apps.IAppData.Create(string, IEnumerable{Dictionary{string, object}}, string)"/>
-    IEnumerable<IEntity> Create(string contentTypeName, IEnumerable<Dictionary<string, object>> multiValues, string userName = null);
+    IEnumerable<IEntity> Create(string contentTypeName, IEnumerable<Dictionary<string, object>> multiValues, string? userName = null);
 
     /// <inheritdoc cref="ToSic.Eav.Apps.IAppData.Update"/>
-    void Update(int entityId, Dictionary<string, object> values, string userName = null);
+    void Update(int entityId, Dictionary<string, object> values, string? userName = null);
 
     /// <inheritdoc cref="ToSic.Eav.Apps.IAppData.Delete"/>
-    void Delete(int entityId, string userName = null);
+    void Delete(int entityId, string? userName = null);
 
     #endregion
 
@@ -40,7 +40,7 @@ public interface IAppDataTyped: IDataSource
     /// </summary>
     /// <param name="name">the name, either the normal name or the NameId which looks like a GUID</param>
     /// <remarks>Added v17</remarks>
-    IContentType GetContentType(string name);
+    IContentType? GetContentType(string name);
 
     #endregion
 
@@ -61,7 +61,7 @@ public interface IAppDataTyped: IDataSource
     /// <remarks>
     /// Released in v17.03.
     /// </remarks>
-    public IEnumerable<T> GetAll<T>(NoParamOrder protector = default, string typeName = default,
+    IEnumerable<T>? GetAll<T>(NoParamOrder protector = default, string? typeName = default,
         bool nullIfNotFound = default)
         where T : class, ICanWrapData;
 
@@ -76,7 +76,7 @@ public interface IAppDataTyped: IDataSource
     /// <remarks>
     /// Released in v17.03.
     /// </remarks>
-    T GetOne<T>(int id, NoParamOrder protector = default, bool skipTypeCheck = false)
+    T? GetOne<T>(int id, NoParamOrder protector = default, bool skipTypeCheck = false)
         where T : class, ICanWrapData;
 
 
@@ -91,7 +91,7 @@ public interface IAppDataTyped: IDataSource
     /// <remarks>
     /// Released in v17.03.
     /// </remarks>
-    public T GetOne<T>(Guid id, NoParamOrder protector = default, bool skipTypeCheck = false)
+    T? GetOne<T>(Guid id, NoParamOrder protector = default, bool skipTypeCheck = false)
         where T : class, ICanWrapData;
 
     #endregion

@@ -16,7 +16,7 @@ internal class AdamService(): ServiceWithContext("Svc.AdamSv"), IAdamService
     // so 2dm is changing to force non-null since it's the only plausible setup for now...
     [field: AllowNull, MaybeNull]
     private AdamManager AdamManagerWithContext => field
-        ??= ExCtx!.GetServiceForData<AdamManager>();
+        ??= ExCtx.GetServiceForData<AdamManager>();
 
     /// <inheritdoc />
     public IFile? File(int id)

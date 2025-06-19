@@ -35,6 +35,7 @@ public class CodeApiServiceObsolete(IExecutionContext dynCode)
             configuration ??= dataSources.LookUpEngine;
             var cnf2Wip = new DataSourceOptions
             {
+                AppIdentityOrReader = null, // #WipAppIdentityOrReader must become not null
                 LookUp = configuration,
             };
             if (links != null)

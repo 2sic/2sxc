@@ -28,7 +28,7 @@ public interface IDataService
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     IDataService SpawnNew(NoParamOrder noParamOrder = default,
-        IAppIdentity appIdentity = default,
+        IAppIdentity? appIdentity = default,
         int zoneId = default,
         int appId = default);
 
@@ -42,7 +42,7 @@ public interface IDataService
     /// <param name="options">Options how to build/construct the DataSource. </param>
     /// <returns></returns>
     [PublicApi]
-    IDataSource GetAppSource(NoParamOrder noParamOrder = default, object parameters = default, object options = default);
+    IDataSource GetAppSource(NoParamOrder noParamOrder = default, object? parameters = default, object? options = default);
 
     /// <summary>
     /// Create a DataSource object using it's type.
@@ -56,9 +56,9 @@ public interface IDataService
     /// <remarks>new v16.00</remarks>
     [PublicApi]
     T GetSource<T>(NoParamOrder noParamOrder = default,
-        IDataSourceLinkable attach = default,
-        object parameters = default,
-        object options = default
+        IDataSourceLinkable? attach = default,
+        object? parameters = default,
+        object? options = default
     ) where T : IDataSource;
 
     /// <summary>
@@ -75,10 +75,10 @@ public interface IDataService
     /// <remarks>new v16.00</remarks>
     [PublicApi]
     IDataSource GetSource(NoParamOrder noParamOrder = default,
-        string name = default,
-        IDataSourceLinkable attach = default,
-        object parameters = default,
-        object options = default,
+        string? name = default,
+        IDataSourceLinkable? attach = default,
+        object? parameters = default,
+        object? options = default,
         bool? debug = default
     );
 
@@ -93,10 +93,10 @@ public interface IDataService
     /// <remarks>New 16.01</remarks>
     [PublicApi]
     IDataSource GetQuery(
-        string name = default,
+        string? name = default,
         NoParamOrder noParamOrder = default,
-        IDataSourceLinkable attach = default,
-        object parameters = default
+        IDataSourceLinkable? attach = default,
+        object? parameters = default
     );
 
     #endregion

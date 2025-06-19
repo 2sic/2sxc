@@ -99,7 +99,7 @@ public class WorkApps(IAppStateCacheService appStates, IAppReaderFactory appRead
                         var appIdentity = new AppIdentityPure(zId, a.Key);
                         return appStates.IsCached(appIdentity)
                             ? appReaders.Get(appIdentity)
-                            : null;
+                            : null!; // will be filtered out later
                     })
                     .Where(reader =>
                     {
@@ -108,7 +108,7 @@ public class WorkApps(IAppStateCacheService appStates, IAppReaderFactory appRead
                         return reader.IsShared() && !siteApps.Any(sa => sa.Equals(reader.Specs.Folder, StringComparison.InvariantCultureIgnoreCase));
                     })
                     //.Select(a => _appGenerator.New().PreInit(site).Init(a, buildConfig) as IApp)
-                    .OrderBy(a => a.Specs.Name)
+                    .OrderBy(reader => reader!.Specs.Name)
                     .ToListOpt();
             })
             .ToListOpt();

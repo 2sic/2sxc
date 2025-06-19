@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps.Internal.Api01;
+﻿using System.Diagnostics.CodeAnalysis;
+using ToSic.Eav.Apps.Internal.Api01;
 using ToSic.Eav.Data.Entities.Sys.Lists;
 using ToSic.Eav.DataSource.Internal.Caching;
 using ToSic.Eav.DataSources.Internal;
@@ -18,7 +19,7 @@ internal class AppDataTyped(
     IEnumerable<IContentType> IAppDataTyped.GetContentTypes()
         => AppReader.ContentTypes;
 
-    IContentType IAppDataTyped.GetContentType(string name)
+    IContentType? IAppDataTyped.GetContentType(string name)
         => AppReader.TryGetContentType(name);
 
     #endregion
@@ -31,6 +32,7 @@ internal class AppDataTyped(
         return this;
     }
 
+    [field: AllowNull, MaybeNull]
     private ICodeDataFactory CdfConnected
     {
         get => field ?? throw new(nameof(CdfConnected) + " not set");
@@ -40,7 +42,7 @@ internal class AppDataTyped(
     #endregion
 
     /// <inheritdoc />
-    IEnumerable<T> IAppDataTyped.GetAll<T>(NoParamOrder protector, string typeName, bool nullIfNotFound)
+    IEnumerable<T>? IAppDataTyped.GetAll<T>(NoParamOrder protector, string? typeName, bool nullIfNotFound)
     {
         //var streamName = typeName ?? DataModelAnalyzer.GetStreamName<T>();
         //var errStreamName = streamName;
@@ -50,7 +52,7 @@ internal class AppDataTyped(
             : ([typeName], typeName);
 
         // Get the list - will be null if not found
-        IDataStream list = null;
+        IDataStream? list = null;
         foreach (var streamName2 in streamNames.List)
             list ??= GetStream(streamName2, nullIfNotFound: true);
         
@@ -74,10 +76,12 @@ internal class AppDataTyped(
     }
 
     /// <inheritdoc />
-    T IAppDataTyped.GetOne<T>(int id, NoParamOrder protector, bool skipTypeCheck)
+    T? IAppDataTyped.GetOne<T>(int id, NoParamOrder protector, bool skipTypeCheck)
+        where T : class
         => CdfConnected.GetOne<T>(() => List.One(id), id, skipTypeCheck);
 
     /// <inheritdoc />
-    T IAppDataTyped.GetOne<T>(Guid id, NoParamOrder protector, bool skipTypeCheck)
+    T? IAppDataTyped.GetOne<T>(Guid id, NoParamOrder protector, bool skipTypeCheck)
+        where T : class
         => CdfConnected.GetOne<T>(() => List.One(id), id, skipTypeCheck);
 }

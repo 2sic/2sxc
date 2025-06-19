@@ -21,7 +21,7 @@ public interface ISxcAppCurrentContextService: ICurrentContextService
 
     IContextOfApp SetAppOrGetBlock(string nameOrPath);
 
-    IContextOfApp SetAppOrNull(string nameOrPath);
+    IContextOfApp? SetAppOrNull(string? nameOrPath);
 
     IContextOfApp AppNameRouteBlock(string? nameOrPath);
 }

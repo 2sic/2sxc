@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Data.Entities.Sys.Sources;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Data.Entities.Sys.Sources;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
@@ -222,7 +223,10 @@ public class Users : CustomDataSourceAdvanced
 
         // Get roles, use the current data source to provide aspects such as lookups etc.
         var rolesDs = _rolesGenerator.New(attach: this, options: new DataSourceOptionConverter()
-            .Create(null, new
+            .Create(new DataSourceOptions()
+            {
+                AppIdentityOrReader = this.PureIdentity(),
+            }, new
             {
                 // Set filter parameter to only get roles we'll need
                 RoleIds = string.Join(",", roleIds),

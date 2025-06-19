@@ -18,7 +18,8 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
     protected ILinkPaths LinkPaths => linkPathsLazy.Value;
 
     [PrivateApi]
-    protected string AppFolder => field ??= ExCtx.GetApp().Folder;
+    protected string AppFolder => field
+        ??= ExCtx.GetApp().Folder;
 
 
     /// <inheritdoc />

@@ -24,9 +24,9 @@ internal abstract class AppAssetFolder: IFolder
 
     bool IAsset.HasMetadata => false;
 
-    IMetadataOf IHasMetadata.Metadata => null;
+    IMetadataOf IHasMetadata.Metadata => null!;
 
-    ITypedMetadata IAsset.Metadata => null;
+    ITypedMetadata IAsset.Metadata => null!;
 
     #endregion
 
@@ -39,7 +39,7 @@ internal abstract class AppAssetFolder: IFolder
 
     public string Type => Classification.Folder;
 
-    public IField Field { get; set; }
+    public IField? Field { get; set; }
 
     private const string FileFoldersNotSupported = "As of now you can't use the App folder to navigate files/folders";
 

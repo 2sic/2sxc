@@ -10,7 +10,8 @@ namespace ToSic.Sxc.Services.CmsService.Internal;
 internal class HtmlInnerContentHelper()
     : ServiceWithContext("Cms.StrWys", connect: [])
 {
-    private IRenderService RenderService => field ??= ExCtx.GetService<IRenderService>(reuse: true);
+    private IRenderService RenderService => field
+        ??= ExCtx.GetService<IRenderService>(reuse: true);
 
     public string ProcessInnerContent(string html, IContentType contentType, IContentTypeAttribute attribute, IField field)
     {
