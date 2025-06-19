@@ -16,7 +16,7 @@ public abstract partial class BlockResourceExtractor
         var scriptMatchesToRemove = new List<Match>();
 
         l.A($"Found {scriptMatches.Count} external scripts");
-        foreach (Match match in scriptMatches.Cast<Match>())
+        foreach (var match in scriptMatches.Cast<Match>())
         {
             var url = FixUrlWithSpaces(match.Groups[RegexUtil.SrcKey].Value);
 
@@ -39,13 +39,17 @@ public abstract partial class BlockResourceExtractor
             // skip if not matched and setting only wants matches
             var jsSettings = settings.Js;
             var (skip, posInPage, priority) = CheckOptimizationSettings(match.Value, jsSettings);
-            if (skip) continue;
+            if (skip)
+                continue;
 
             // get all Attributes
             var (attributes, cspCode) = GetHtmlAttributes(match.Value);
+            attributes ??= new Dictionary<string, string?>();
             var forCsp = cspCode == pageServiceShared.CspEphemeralMarker;
-            if (jsSettings.AutoDefer && !attributes.ContainsKey(AttributeDefer)) attributes[AttributeDefer] = null;
-            if (jsSettings.AutoAsync && !attributes.ContainsKey(AttributeAsync)) attributes[AttributeAsync] = null;
+            if (jsSettings.AutoDefer && !attributes.ContainsKey(AttributeDefer))
+                attributes[AttributeDefer] = null;
+            if (jsSettings.AutoAsync && !attributes.ContainsKey(AttributeAsync))
+                attributes[AttributeAsync] = null;
 
             // Register, then add to remove-queue
             Assets.Add(new()
@@ -55,7 +59,7 @@ public abstract partial class BlockResourceExtractor
                 PosInPage = posInPage,
                 Priority = priority,
                 Url = url,
-                HtmlAttributes = attributes,
+                HtmlAttributes = attributes!,
                 WhitelistInCsp = forCsp,
             });
             scriptMatchesToRemove.Add(match);

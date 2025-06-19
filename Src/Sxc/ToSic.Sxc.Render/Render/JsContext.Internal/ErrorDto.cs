@@ -10,18 +10,19 @@ namespace ToSic.Sxc.Web.Internal.JsContextEdit;
 public class ErrorDto
 {
     [JsonPropertyName("type")]
-    public string Type { get; }
+    public string? Type { get; }
 
     [JsonPropertyName("problems")]
     [JsonIgnore(Condition = WhenWritingDefault)]
-    public IEnumerable<ProblemReport> Problems { get; }
+    public IEnumerable<ProblemReport>? Problems { get; }
 
-    internal ErrorDto(IBlock block, string errorCode, List<Exception> exsOrNull, CodeInfosInScope codeWarnings)
+    internal ErrorDto(IBlock block, string? errorCode, List<Exception>? exsOrNull, CodeInfosInScope codeWarnings)
     {
         // New mechanism in 16.01
         Type = errorCode;
 
-        if (!block.Context.User.IsSiteAdmin) return;
+        if (!block.Context.User.IsSiteAdmin)
+            return;
 
         // New problems report in 16.02
         var problems = new List<ProblemReport>(block.Problems);

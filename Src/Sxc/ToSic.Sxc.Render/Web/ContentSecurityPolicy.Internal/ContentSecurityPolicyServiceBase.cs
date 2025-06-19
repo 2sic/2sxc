@@ -16,13 +16,13 @@ public class ContentSecurityPolicyServiceBase() : ServiceBase($"{SxcLogName}.Csp
 
     public virtual bool IsEnabled => false;
 
-    public void Add(string name, params string[] values)
+    public void Add(string name, params string?[]? values)
     {
         if (values == null || values.Length == 0)
             values = [null];
 
         // Split values, so that each value is standalone - in case future merging requires clean-up
-        var valuesSplit = values.SelectMany(v => v == null ? [null] : v.Split(' '));
+        var valuesSplit = values.SelectMany(IEnumerable<string?> (v) => v == null ? [null!] : v.Split(' '));
         foreach (var v in valuesSplit)
             Policy.Add(name, v);
     }

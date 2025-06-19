@@ -6,5 +6,5 @@ namespace ToSic.Sxc.Edit.Internal;
 
 public interface IEditServiceSetup
 {
-    internal IEditService SetBlock(IExecutionContext codeRoot, IBlock block);
+    internal IEditService SetBlock(IExecutionContext? exCtxOrNull, IBlock block);
 }

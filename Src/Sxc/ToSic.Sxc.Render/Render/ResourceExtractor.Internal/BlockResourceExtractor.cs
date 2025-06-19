@@ -32,7 +32,7 @@ public abstract partial class BlockResourceExtractor(IPageServiceShared pageServ
 
     protected virtual ClientAssetsExtractSettings Settings => _settings.Get(() => new(
         extractAll: false
-    ));
+    ))!;
     private readonly GetOnce<ClientAssetsExtractSettings> _settings = new();
 
     #endregion
@@ -40,9 +40,10 @@ public abstract partial class BlockResourceExtractor(IPageServiceShared pageServ
     /// <summary>
     /// List of extracted assets - this must be processed later by the caller
     /// </summary>
-    protected List<ClientAsset> Assets { get; set; }
+    protected List<ClientAsset> Assets { get; set; } = [];
 
-    public RenderEngineResult Process(string html) => Process(html, Settings);
+    public RenderEngineResult Process(string html)
+        => Process(html, Settings);
 
     /// <summary>
     /// Run the sequence to extract assets
@@ -71,16 +72,17 @@ public abstract partial class BlockResourceExtractor(IPageServiceShared pageServ
     /// </summary>
     /// <param name="htmlTag"></param>
     /// <returns></returns>
-    public static (IDictionary<string, string> Attributes, string CspCode) GetHtmlAttributes(string htmlTag)
+    public static (IDictionary<string, string?>? Attributes, string? CspCode) GetHtmlAttributes(string htmlTag)
     {
-        if (string.IsNullOrWhiteSpace(htmlTag)) return (null, null);
+        if (string.IsNullOrWhiteSpace(htmlTag))
+            return (null, null);
 
         var attributesMatch = RegexUtil.AttributesDetection.Value.Matches(htmlTag);
 
         if (attributesMatch.Count == 0)
             return (null, null);
 
-        var attributes = new Dictionary<string, string>(InvariantCultureIgnoreCase);
+        var attributes = new Dictionary<string, string?>(InvariantCultureIgnoreCase);
         foreach (Match attributeMatch in attributesMatch)
         {
             if (!attributeMatch.Success)
@@ -88,7 +90,7 @@ public abstract partial class BlockResourceExtractor(IPageServiceShared pageServ
             var key = attributeMatch.Groups["Key"]?.Value.ToLowerInvariant();
 
             // skip special attributes like "src", "id", "data-enableoptimizations"
-            if (string.IsNullOrEmpty(key) || SpecialHtmlAttributes.Contains(key, InvariantCultureIgnoreCase))
+            if (key.IsEmpty() || SpecialHtmlAttributes.Contains(key, InvariantCultureIgnoreCase))
                 continue;
 
             var value = attributeMatch.Groups["Value"]?.Value;

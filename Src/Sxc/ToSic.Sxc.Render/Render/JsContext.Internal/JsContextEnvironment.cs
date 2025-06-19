@@ -14,7 +14,7 @@ public class JsContextEnvironment(string systemRootUrl, IContextOfBlock ctx)
 
     // ReSharper disable once InconsistentNaming
 #pragma warning disable IDE1006
-    public IEnumerable<KeyValuePair<string, string>> parameters { get; } = ctx.Page.Parameters?.Where(p => p.Key != OriginalParameters.NameInUrlForOriginalParameters);
+    public IEnumerable<KeyValuePair<string, string>> parameters { get; } = ctx.Page.Parameters?.Where(p => p.Key != OriginalParameters.NameInUrlForOriginalParameters)!;
 #pragma warning restore IDE1006
 
     public int InstanceId { get; } = ctx.Module.Id;

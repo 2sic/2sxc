@@ -15,8 +15,8 @@ namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CspOfApp : ServiceWithContext
 {
-    public int AppId => appId ??= ExCtx.GetState<IBlock>()?.AppId ?? 0;
-    private int? appId;
+    public int AppId => _appId ??= ExCtx.GetState<IBlock>()?.AppId ?? 0;
+    private int? _appId;
 
     #region Constructor
 
@@ -48,16 +48,16 @@ public class CspOfApp : ServiceWithContext
 
     #region Read Settings
 
-    public string AppPolicies => _appPolicies.Get(GetAppPolicies);
-    private readonly GetOnce<string> _appPolicies = new();
+    public string? AppPolicies => _appPolicies.Get(GetAppPolicies);
+    private readonly GetOnce<string?> _appPolicies = new();
 
-    private string GetAppPolicies()
+    private string? GetAppPolicies()
     {
-        var cLog = Log.Fn<string>(AppId.ToString());
+        var l = Log.Fn<string?>(AppId.ToString());
 
         // Get Stack
         if (ExCtxOrNull?.GetState<IDynamicStack>(ExecutionContextStateNames.Settings) is not { } stack) 
-            return cLog.ReturnNull("no stack");
+            return l.ReturnNull("no stack");
 
         // Enable this for detailed debugging
         //stack.Debug = true;
@@ -69,7 +69,7 @@ public class CspOfApp : ServiceWithContext
         // CSP Settings Reader from Dynamic Entity for the App
         var cspReader = new CspSettingsReader(appSettings, _user, _moduleCsp.UrlIsDevMode, Log);
         var policies = cspReader.Policies;
-        return cLog.ReturnAndLog(policies);
+        return l.ReturnAndLog(policies);
     }
     #endregion
 

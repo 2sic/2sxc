@@ -23,7 +23,7 @@ public record OutputCacheSettings : IOutputCacheSettings
 
     public bool UrlParametersCaseSensitive { get; init; }
 
-    public string UrlParameterNames { get; init; }
+    public string? UrlParameterNames { get; init; }
 
     public bool UrlParametersOthersDisableCache { get; init; }
 }

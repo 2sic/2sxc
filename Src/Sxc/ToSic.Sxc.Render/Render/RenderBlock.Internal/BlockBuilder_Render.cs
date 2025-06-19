@@ -14,6 +14,7 @@ public partial class BlockBuilder
     public bool WrapInDiv { get; set; } = true;
 
     [PrivateApi]
+    [field: AllowNull, MaybeNull]
     public IRenderingHelper RenderingHelper => field ??= Services.RenderHelpGen.New().Init(Block);
 
     public IRenderResult Run(bool topLevel, RenderSpecs specs)
@@ -66,20 +67,20 @@ public partial class BlockBuilder
         Services.CodeInfos.AddContext(() => new SpecsForLogHistory().BuildSpecsForLogHistory(Block));
 
 
-        return l.Return(_cached);
+        return l.Return(_cached!);
     }
 
 
-    private IRenderResult _cached;
+    private IRenderResult? _cached;
 
-    private (string Html, bool IsError, List<Exception> exsOrNull) RenderInternal(RenderSpecs specs)
+    private (string? Html, bool IsError, List<Exception> exsOrNull) RenderInternal(RenderSpecs specs)
     {
-        var l = Log.Fn<(string, bool, List<Exception>)>(timer: true);
+        var l = Log.Fn<(string?, bool, List<Exception>)>(timer: true);
 
         // any errors from dnn requirements check (like missing c# 8.0)
         var oldExceptions = specs.RenderEngineResult?.ExceptionsOrNull;
         if (oldExceptions != null)
-            return l.Return((specs.RenderEngineResult.Html, true, oldExceptions), "dnn requirements (c# 8.0...) not met");
+            return l.Return((specs.RenderEngineResult!.Html, true, oldExceptions), "dnn requirements (c# 8.0...) not met");
 
         var exceptions = new List<Exception>();
         try
@@ -145,7 +146,7 @@ public partial class BlockBuilder
                     if (Block.View != null) // when a content block is still new, there is no definition yet
                     {
                         l.A("standard case, found template, will render");
-                        var engine = GetEngine();
+                        var engine = GetEngine() ?? throw new("Engine missing, probably no view configured.");
                         var renderEngineResult = engine.Render(specs);
                         body = renderEngineResult.Html;
                         if (renderEngineResult.ExceptionsOrNull != null)
@@ -212,7 +213,7 @@ public partial class BlockBuilder
 
             var stats = new RenderStatistics
             {
-                RenderMs = (int)l.Timer.ElapsedMilliseconds,
+                RenderMs = l == null ? -1 : (int)l.Timer.ElapsedMilliseconds,
                 UseLightSpeed = specs.UseLightspeed,
             };
 
@@ -243,7 +244,7 @@ public partial class BlockBuilder
     /// </summary>
     internal static bool InstallationOk;
 
-    private (string Html, bool Error) GenerateErrorMsgIfInstallationNotOk()
+    private (string? Html, bool Error) GenerateErrorMsgIfInstallationNotOk()
     {
         if (InstallationOk)
             return (null, false);
@@ -268,7 +269,7 @@ public partial class BlockBuilder
     protected bool AnyLicenseOk => _licenseOk.Get(() => Services.LicenseService.Value.HaveValidLicense);
     private readonly GetOnce<bool> _licenseOk = new();
 
-    private string GenerateWarningMsgIfLicenseNotOk()
+    private string? GenerateWarningMsgIfLicenseNotOk()
     {
         if (AnyLicenseOk)
             return null;
@@ -289,7 +290,7 @@ public partial class BlockBuilder
     /// In some cases, the engine is needed early on to be sure if we need to do some overrides, but execution should then be later on Render()
     /// </summary>
     /// <returns></returns>
-    public IEngine GetEngine()
+    public IEngine? GetEngine()
     {
         var l = Log.Fn<IEngine>(timer: true);
         if (_engine != null)
@@ -301,6 +302,6 @@ public partial class BlockBuilder
         _engine.Init(Block);
         return l.Return(_engine, "created");
     }
-    private IEngine _engine;
+    private IEngine? _engine;
 
 }

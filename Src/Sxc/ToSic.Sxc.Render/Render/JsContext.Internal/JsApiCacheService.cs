@@ -25,7 +25,7 @@ public class JsApiCacheService(IHttp http) : ServiceBase("JsApi", connect: [http
         Func<string> rvt,
         bool withPublicKey,
         Func<string> secureEndpointPublicKey,
-        string dialogQuery = null // these are any platform specific url query params to the dialog; can be null
+        string? dialogQuery = null // these are any platform specific url query params to the dialog; can be null
     )
     {
         // Minor hack: if with secure endpoint, use negative page-id for cache
@@ -47,11 +47,12 @@ public class JsApiCacheService(IHttp http) : ServiceBase("JsApi", connect: [http
             DialogQuery = dialogQuery,
             PublicKey = withPublicKey ? secureEndpointPublicKey.Invoke() : null,
         };
-        Cache.AddOrUpdate(cacheKey, jsApi, (key, value) => jsApi);
+        Cache.AddOrUpdate(cacheKey, jsApi, (_, _) => jsApi);
             
         return jsApi;
     }
 
+    [field: AllowNull, MaybeNull]
     private ConcurrentDictionary<int, JsApi> Cache => field ??= GetCache();
 
     private ConcurrentDictionary<int, JsApi> GetCache()

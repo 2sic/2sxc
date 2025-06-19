@@ -18,31 +18,31 @@ public class JsContextAll(JsContextLanguage jsLangCtxSvc, IJsApiService jsApiSer
     : ServiceBase("Sxc.CliInf", connect: [jsLangCtxSvc, jsApiService, codeWarnings])
 {
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public JsContextEnvironment Environment;
+    public JsContextEnvironment? Environment;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public JsContextUser User;
+    public JsContextUser? User;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public JsContextLanguage Language;
+    public JsContextLanguage? Language;
         
     [JsonPropertyName("contentBlockReference")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ContentBlockReferenceDto ContentBlockReference; // todo: still not sure if these should be separate...
+    public ContentBlockReferenceDto? ContentBlockReference; // todo: still not sure if these should be separate...
         
     [JsonPropertyName("contentBlock")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ContentBlockDto ContentBlock;
+    public ContentBlockDto? ContentBlock;
 
     [JsonPropertyName("error")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ErrorDto Error;
+    public ErrorDto? Error;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public UiDto Ui;
+    public UiDto? Ui;
 
     [JsonPropertyName("jsApi")]
-    public JsApi JsApi;
+    public JsApi? JsApi;
 
     public JsContextAll GetJsApiOnly(IBlock block)
     {
@@ -60,8 +60,8 @@ public class JsContextAll(JsContextLanguage jsLangCtxSvc, IJsApiService jsApiSer
         return l.Return(this);
     }
 
-    public JsContextAll GetJsContext(string systemRootUrl, IBlock block, string errorCode, List<Exception> exsOrNull,
-        RenderStatistics statistics)
+    public JsContextAll GetJsContext(string systemRootUrl, IBlock block, string? errorCode, List<Exception>? exsOrNull,
+        RenderStatistics? statistics)
     {
         var l = Log.Fn<JsContextAll>();
         var ctx = block.Context;
@@ -94,7 +94,8 @@ public class JsContextAll(JsContextLanguage jsLangCtxSvc, IJsApiService jsApiSer
         return l.Return(this);
     }
 
-    private List<IPageFeature> Features(IBlock block) => _pageFeatures ??= block.BlockFeatures(Log);
+    private List<IPageFeature> Features(IBlock block)
+        => _pageFeatures ??= block.BlockFeatures(Log);
 
-    private List<IPageFeature> _pageFeatures;
+    private List<IPageFeature>? _pageFeatures;
 }

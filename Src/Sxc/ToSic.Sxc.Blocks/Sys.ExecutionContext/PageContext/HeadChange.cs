@@ -12,5 +12,5 @@ public struct HeadChange
     /// <summary>
     /// This is part of the original property, which would be replaced.
     /// </summary>
-    public string ReplacementIdentifier { get; init; }
+    public string? ReplacementIdentifier { get; init; }
 }

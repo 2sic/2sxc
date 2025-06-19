@@ -19,9 +19,9 @@ internal partial class EditService(IJsonService jsonService)
         ((IEditServiceSetup)this).SetBlock(exCtx, exCtx.GetState<IBlock>());
     }
 
-    IEditService IEditServiceSetup.SetBlock(IExecutionContext exCtx, IBlock block)
+    IEditService IEditServiceSetup.SetBlock(IExecutionContext? exCtxOrNull, IBlock block)
     {
-        var user = exCtx?.GetState<ICmsContext>()?.User;
+        var user = exCtxOrNull?.GetState<ICmsContext>()?.User;
         Enabled = block?.Context.Permissions.IsContentAdmin ?? (user?.IsSiteAdmin ?? false);
         return this;
     }

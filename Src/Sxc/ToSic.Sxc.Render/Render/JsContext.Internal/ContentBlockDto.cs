@@ -22,13 +22,13 @@ public class ContentBlockDto : EntityDto
     /// The name to show in the layout button, new v17.07
     /// </summary>
     [JsonPropertyName("queryName")]
-    public string QueryName { get; }
+    public string? QueryName { get; }
 
     /// <summary>
     /// The name to show in the layout button, new v17.07
     /// </summary>
     [JsonPropertyName("queryInfo")]
-    public string QueryInfo { get; }
+    public string? QueryInfo { get; }
 
     public string ContentTypeName { get; }
     public string AppUrl { get; }
@@ -41,14 +41,14 @@ public class ContentBlockDto : EntityDto
     public bool SupportsAjax { get; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string Edition { get; }
+    public string? Edition { get; }
 
     [JsonPropertyName("editions")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string Editions { get; }
+    public string? Editions { get; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string TemplatePath { get; }
+    public string? TemplatePath { get; }
 
     [JsonPropertyName("templateIsShared")]
     public bool TemplateIsShared { get; }
@@ -57,7 +57,7 @@ public class ContentBlockDto : EntityDto
     /// The view name to show on the layout button, new v17
     /// </summary>
     [JsonPropertyName("viewName")]
-    public string ViewName { get; }
+    public string? ViewName { get; }
 
     /// <summary>
     /// Will be true if the view was replaced based on URL parameters.
@@ -85,7 +85,7 @@ public class ContentBlockDto : EntityDto
     [JsonPropertyName("renderLightspeed")]
     public bool RenderLightspeed { get; }
 
-    public ContentBlockDto(IBlock block, RenderStatistics statistics, IAppJsonConfigurationService appJson)
+    public ContentBlockDto(IBlock block, RenderStatistics? statistics, IAppJsonConfigurationService appJson)
     {
         IsCreated = block.ContentGroupExists;
         IsContent = block.IsContentApp;

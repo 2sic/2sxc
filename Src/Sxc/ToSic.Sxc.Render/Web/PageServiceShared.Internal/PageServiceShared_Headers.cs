@@ -15,9 +15,10 @@ partial class PageServiceShared
     }
 
 
-    public void Add(IHtmlTag tag, string identifier = null)
+    public void Add(IHtmlTag? tag, string? identifier = null)
     {
-        if (tag == null) return;
+        if (tag == null)
+            return;
         Headers.Add(new()
         {
             ChangeMode = GetMode(PageChangeModes.Append),

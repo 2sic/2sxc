@@ -14,7 +14,7 @@ public class InTextContentBlockRenderer(SimpleRenderer simpleRenderer)
     static readonly Regex InlineCbDetector = new("<hr[^>]+sxc[^>]+>", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
     static readonly Regex  GuidExtractor = new("guid=\\\"([^\\\"]*)\\\"", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
 
-    public string RenderMerge(IBlock block, IEntity parent, string field, string textTemplate, IEditService edit)
+    public string RenderMerge(IBlock block, IEntity parent, string? field, string textTemplate, IEditService edit)
     {
         var l = Log.Fn<string>($"{nameof(parent)}: {parent.EntityId}, {nameof(field)}: '{field}'");
         // do basic checking
@@ -31,7 +31,11 @@ public class InTextContentBlockRenderer(SimpleRenderer simpleRenderer)
         l.A($"Found {matches.Count} inner content placeholders");
 
         //var items = parent.Children(field);
-        var items = parent.Children(field).ToListOpt();
+        var items = parent
+            .Children(field)
+            .Where(child => child != null)
+            .Cast<IEntity>()
+            .ToListOpt();
 
         foreach (Match curMatch in matches)
             l.Do(message: $"Match at text pos: {curMatch.Index}", action: () =>

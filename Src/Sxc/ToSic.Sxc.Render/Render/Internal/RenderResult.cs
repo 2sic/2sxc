@@ -17,18 +17,18 @@ public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize
 {
     #region HybridHtmlString / HybridHtmlRecord
 
-    protected override string ToHtmlString() => Html;
+    protected override string ToHtmlString() => Html!;
 
     /// <summary>
     /// Return a string for the recommended way in ASP.net to render it, which just uses a &lt;%= theRenderResult %&gt;
     /// </summary>
     /// <returns></returns>
-    public override string ToString() => Html;
+    public override string ToString() => Html!;
 
     #endregion
 
     /// <inheritdoc />
-    public string Html { get; init; }
+    public string? Html { get; init; }
 
     /// <inheritdoc />
     public bool CanCache { get; init; }
@@ -37,25 +37,25 @@ public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize
     public bool IsError { get; init; }
 
     /// <inheritdoc />
-    public IList<IPageFeature> Features { get; init; }
+    public IList<IPageFeature>? Features { get; init; }
 
     /// <inheritdoc />
-    public IList<ClientAsset> Assets { get; init; }
+    public IList<ClientAsset>? Assets { get; init; }
 
     /// <inheritdoc />
-    public IList<PagePropertyChange> PageChanges { get; init; }
+    public IList<PagePropertyChange>? PageChanges { get; init; }
 
     /// <inheritdoc />
-    public IList<HeadChange> HeadChanges { get; init; }
+    public IList<HeadChange>? HeadChanges { get; init; }
 
     /// <inheritdoc />
-    public IList<IPageFeature> FeaturesFromSettings { get; init; }
+    public IList<IPageFeature>? FeaturesFromSettings { get; init; }
 
     /// <inheritdoc />
     public int? HttpStatusCode { get; init; }
 
     /// <inheritdoc />
-    public string HttpStatusMessage { get; init; }
+    public string? HttpStatusMessage { get; init; }
 
     /// <inheritdoc />
     public List<IDependentApp> DependentApps { get; } = [];
@@ -63,13 +63,13 @@ public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize
 
     public int ModuleId { get; init; }
 
-    public IList<HttpHeader> HttpHeaders { get; init; }
+    public IList<HttpHeader>? HttpHeaders { get; init; }
 
     public bool CspEnabled { get; init; } = false;
     public bool CspEnforced { get; init; } = false;
-    public IList<CspParameters> CspParameters { get; init; }
+    public IList<CspParameters>? CspParameters { get; init; }
 
-    public List<string> Errors { get; init; }
+    public List<string>? Errors { get; init; }
 
     /// <inheritdoc />
     public int AppId { get; init; }
@@ -79,7 +79,7 @@ public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize
     /// <summary>
     /// Cache information to report size etc. when needed
     /// </summary>
-    SizeEstimate ICanEstimateSize.EstimateSize(ILog log)
+    SizeEstimate ICanEstimateSize.EstimateSize(ILog? log)
     {
         var l = log.Fn<SizeEstimate>();
         var estimator = new MemorySizeEstimator(log);

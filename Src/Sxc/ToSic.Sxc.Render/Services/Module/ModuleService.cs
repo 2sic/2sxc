@@ -25,7 +25,7 @@ internal class ModuleService() : ServiceBase(SxcLogName + ".ModSvc"), IModuleSer
     private readonly Dictionary<int, ModuleTags> _moduleTags = new();
 
     /// <inheritdoc />
-    public void AddTag(IHtmlTag tag, int moduleId, string nameId = null, bool noDuplicates = false)
+    public void AddTag(IHtmlTag tag, int moduleId, string? nameId = null, bool noDuplicates = false)
     {
         if (tag is null)
             return;
@@ -73,11 +73,11 @@ internal class ModuleService() : ServiceBase(SxcLogName + ".ModSvc"), IModuleSer
 
     #region Output Caching
 
-    public void ConfigureOutputCache(int moduleId, OutputCacheSettings settings) =>
-        _moduleOutputCache[moduleId] = settings;
+    public void ConfigureOutputCache(int moduleId, OutputCacheSettings settings)
+        => _moduleOutputCache[moduleId] = settings;
 
-    public OutputCacheSettings GetOutputCache(int moduleId) =>
-        _moduleOutputCache.TryGetValue(moduleId, out var settings) ? settings : null;
+    public OutputCacheSettings? GetOutputCache(int moduleId)
+        => _moduleOutputCache.TryGetValue(moduleId, out var settings) ? settings : null;
 
     private readonly Dictionary<int, OutputCacheSettings> _moduleOutputCache = new();
 

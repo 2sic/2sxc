@@ -42,16 +42,13 @@ internal class RegexUtil
     public static readonly Lazy<Regex> ImagesDetection = new(() => new(ImagesWithDataCmsidFormula, RegexOptions.IgnoreCase));
     public static readonly Lazy<Regex> ScriptSrcDetection = new(() => new(ScriptSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline));
     // note: 2dm created this, because I wasn't sure if changing the original to ML would have side effects
-    public static Regex ScriptSrcDetectionMultiLine => ScriptSrcDetMl.Get(() => new(ScriptSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline));
-    private static readonly GetOnce<Regex> ScriptSrcDetMl = new();
+    public static Regex ScriptSrcDetectionMultiLine = new(ScriptSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
     public static readonly Lazy<Regex> ScriptContentDetection = new(() => new(ScriptContentFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline));
     public static readonly Lazy<Regex> StyleDetection = new(() => new(StyleSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline));
     // note: 2dm created this, because I wasn't sure if changing the original to ML would have side effects
-    public static Regex StyleDetectionMultiLine => StyleSrcDetMl.Get(() => new(StyleSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline));
-    private static readonly GetOnce<Regex> StyleSrcDetMl = new();
-    public static Regex IntegrityAttribute => IntegrAttr.Get(() => new(IntegrityAttributeFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline));
-    private static readonly GetOnce<Regex> IntegrAttr = new();
+    public static Regex StyleDetectionMultiLine = new(StyleSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+    public static Regex IntegrityAttribute = new(IntegrityAttributeFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline);
     public static readonly Lazy<Regex> StyleRelDetect = new(() => new(StyleRelFormula, RegexOptions.IgnoreCase));
     public static readonly Lazy<Regex> OptimizeDetection = new(() => new(ClientDependencyRegex, RegexOptions.IgnoreCase));
     public static readonly Lazy<Regex> IdDetection = new(() => new(IdFormula, RegexOptions.IgnoreCase));

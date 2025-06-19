@@ -42,5 +42,5 @@ public interface IBlockBuilder: IHasLog
     /// Get the engine which will render a block
     /// </summary>
     /// <returns></returns>
-    IEngine GetEngine();
+    IEngine? GetEngine();
 }

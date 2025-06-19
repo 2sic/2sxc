@@ -17,13 +17,14 @@ public class CspOfPage(Generator<CspParameterFinalizer> cspParameterFinalizer)
     public string HeaderName(bool isEnforced) => isEnforced ? CspConstants.CspHeaderNamePolicy : CspConstants.CspHeaderNameReport;
 
 
-    public string CspHttpHeader()
+    public string? CspHttpHeader()
     {
         try
         {
             var l = Log.Fn<string>();
             var relevant = CspParameters.Where(cs => cs != null).ToList();
-            if (!relevant.Any()) return l.ReturnNull("none relevant");
+            if (!relevant.Any())
+                return l.ReturnNull("none relevant");
             var mergedPolicy = relevant.First();
 
             var finalizer = cspParameterFinalizer.New();

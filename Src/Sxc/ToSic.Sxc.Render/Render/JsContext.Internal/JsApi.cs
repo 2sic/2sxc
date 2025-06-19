@@ -13,35 +13,35 @@ public class JsApi
     public const string ExtensionPlaceholder = "e.x.t";
 
     [JsonPropertyName("platform")]
-    public string Platform { get; set; }
+    public required string Platform { get; init; }
 
     [JsonPropertyName("page")]
-    public int Page { get; set; }
+    public required int Page { get; init; }
 
     [JsonPropertyName("root")]
-    public string Root { get; set; }
+    public required string Root { get; init; }
 
     [JsonPropertyName("api")]
-    public string Api { get; set; }
+    public required string Api { get; init; }
 
     [JsonPropertyName("appApi")]
-    public string AppApi { get; set; }
+    public required string AppApi { get; init; }
 
     [JsonPropertyName("uiRoot")]
-    public string UiRoot { get; set; }
+    public required string UiRoot { get; init; }
 
     [JsonPropertyName("rvtHeader")]
-    public string RvtHeader { get; set; }
+    public required string RvtHeader { get; init; }
 
     [JsonPropertyName("rvt")]
-    public string Rvt { get; set; }
+    public required string Rvt { get; init; }
 
     [JsonPropertyName("dialogQuery")]
-    public string DialogQuery { get; set; }
+    public required string? DialogQuery { get; init; }
 
     [JsonPropertyName("publicKey")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string PublicKey { get; set; }
+    public required string? PublicKey { get; init; }
 
     /// <summary>
     /// Debug information while we're developing the on-module info

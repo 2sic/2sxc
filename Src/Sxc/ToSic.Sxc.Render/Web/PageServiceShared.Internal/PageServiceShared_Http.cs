@@ -4,7 +4,7 @@ partial class PageServiceShared
 {
     public int? HttpStatusCode { get; set; } = null;
 
-    public string HttpStatusMessage { get; set; } = null;
+    public string? HttpStatusMessage { get; set; } = null;
 
 
     #region Headers WIP / BETA

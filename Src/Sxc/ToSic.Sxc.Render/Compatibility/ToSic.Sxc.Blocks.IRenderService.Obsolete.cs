@@ -26,12 +26,12 @@ public interface IRenderService
     //#pragma warning disable CS0108, CS0114
     [Obsolete("Old interface. Pls use ToSic.Sxc.Services.IRenderService instead.")]
     IRawHtmlString One(ICanBeItem parent, NoParamOrder noParamOrder = default,
-        ICanBeEntity item = null, object data = null, string field = null, Guid? newGuid = null);
+        ICanBeEntity? item = null, object? data = null, string? field = null, Guid? newGuid = null);
 
     [PrivateApi]
     [Obsolete("Old interface. Pls use ToSic.Sxc.Services.IRenderService instead.")]
     IRawHtmlString All(ICanBeItem parent, NoParamOrder noParamOrder = default,
-        string field = null, string apps = null, int max = 100, string merge = null);
+        string? field = null, string? apps = null, int max = 100, string? merge = null);
 //#pragma warning restore CS0108, CS0114
 }
 #endif

@@ -18,8 +18,8 @@ public partial class PageServiceShared(IPageFeatures pageFeatures, IFeaturesServ
     public IPageFeatures PageFeatures { get; } = pageFeatures;
     public CspOfModule Csp { get; } = csp;
 
-    public string CspEphemeralMarker => _cspEphemeralMarker.Get(() => new Random().Next(100000000, 999999999).ToString());
-    private readonly GetOnce<string> _cspEphemeralMarker = new();
+    [field: AllowNull, MaybeNull]
+    public string CspEphemeralMarker => field ??= new Random().Next(100000000, 999999999).ToString();
 
     /// <summary>
     /// How the changes given to this object should be processed.

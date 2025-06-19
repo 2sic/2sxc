@@ -19,9 +19,9 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
     /// <summary>
     /// Each App will register itself here to be added to the CSP list
     /// </summary>
-    private List<CspOfApp> AppCsps = [];
+    private List<CspOfApp> AppCsps { get; }= [];
 
-    internal bool RegisterAppCsp(CspOfApp appCsp)
+    internal bool RegisterAppCsp(CspOfApp? appCsp)
     {
         var cLog = Log.Fn<bool>("appId: not yet known, not yet attached");
         if (appCsp == null)
@@ -43,7 +43,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
     public bool UrlIsDevMode => _urlDevMode.Get(() => CspUrlParam.EqualsInsensitive(CspConstants.CspUrlDev));
     private readonly GetOnce<bool> _urlDevMode = new();
 
-    private string CspUrlParam => _cspUrlParam.Get(Log, () =>
+    private string? CspUrlParam => _cspUrlParam.Get(Log, () =>
     {
         if (!featuresService.IsEnabled(SxcFeatures.ContentSecurityPolicyTestUrl.NameId))
             return null;
@@ -53,7 +53,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
         pageParameters.TryGetValue(CspConstants.CspUrlParameter, out var cspParam);
         return cspParam;
     });
-    private readonly GetOnce<string> _cspUrlParam = new();
+    private readonly GetOnce<string?> _cspUrlParam = new();
 
     #endregion
 
@@ -67,7 +67,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
         var pageSettings = ExCtxOrNull?.GetState<IDynamicStack>(ExecutionContextStateNames.Settings)
             ?.GetStack(AppStackConstants.PartSiteSystem, AppStackConstants.PartGlobalSystem, AppStackConstants.PartPresetSystem);
         return new CspSettingsReader(pageSettings, user, UrlIsDevMode, Log);
-    });
+    })!;
     private readonly GetOnce<CspSettingsReader> _siteCspSettings = new();
 
     #endregion
@@ -114,7 +114,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
         var merged = $"{sitePolicies}\n{appPolicies}";
         Log.A($"Merged: {merged}");
         return new CspPolicyTextProcessor(Log).Parse(merged);
-    });
+    })!;
     private readonly GetOnce<List<KeyValuePair<string, string>>> _policies = new();
 
     private string GetAppPolicies()
@@ -166,7 +166,7 @@ public class CspOfModule(IUser user, IFeaturesService featuresService)
         if (!CspServices.Any())
             return l.Return([], "no services to add");
         var result = CspServices
-            .Select(c => c?.Policy)
+            .Select(c => c?.Policy!)
             .Where(c => c != null)
             .ToList();
         return l.ReturnAsOk(result);

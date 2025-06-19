@@ -5,7 +5,7 @@ using ToSic.Sys.Users;
 namespace ToSic.Sxc.Web.Internal.JsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class JsContextUser(IUser user, IEnumerable<IEntity> dataList)
+public class JsContextUser(IUser user, IEnumerable<IEntity>? dataList)
 {
     public bool CanDevelop { get; } = user.IsSystemAdmin;
 

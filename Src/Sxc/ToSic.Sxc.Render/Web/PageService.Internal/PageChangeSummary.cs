@@ -101,7 +101,7 @@ public class PageChangeSummary(
         {
             var autoOpt = settingFeature.AutoOptimize;
             var extracted = resourceExtractor.Value.Process(
-                settingFeature.Html,
+                settingFeature.Html ?? "",
                 new(
                     css: new(autoOpt, AddToBottom, CssDefaultPriority, false, false),
                     js: new(autoOpt, AddToBottom, JsDefaultPriority, autoOpt, autoOpt)
@@ -141,7 +141,7 @@ public class PageChangeSummary(
         return l.Return((newAssets, featsLeft), $"New: {newAssets.Count}; Rest: {featsLeft.Count}");
     }
 
-    private static CspParameters GetCspListFromAssets(IReadOnlyCollection<ClientAsset> assets)
+    private static CspParameters? GetCspListFromAssets(IReadOnlyCollection<ClientAsset>? assets)
     {
         if (assets == null || assets.Count == 0)
             return null;

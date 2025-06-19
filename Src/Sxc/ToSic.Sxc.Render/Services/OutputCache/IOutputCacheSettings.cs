@@ -13,6 +13,6 @@ internal interface IOutputCacheSettings
     int DurationSystemAdmin { get; }
     bool ByUrlParameters { get; }
     bool UrlParametersCaseSensitive { get; }
-    string UrlParameterNames { get; }
+    string? UrlParameterNames { get; }
     bool UrlParametersOthersDisableCache { get; }
 }

@@ -8,14 +8,15 @@ partial class OqtPageOutput
     {
         var l = Log.Fn<IEnumerable<OqtHeadChange>>();
 
-        var changes = RenderResult.HeadChanges;
+        var changes = RenderResult.HeadChanges ?? [];
 
-        var result = changes.Select(p => new OqtHeadChange
-        {
-            PropertyOperation = GetOp(p.ChangeMode),
-            Tag = p.Tag.ToString(),
-            ReplacementIdentifier = p.ReplacementIdentifier,
-        });
+        var result = changes
+            .Select(p => new OqtHeadChange
+            {
+                PropertyOperation = GetOp(p.ChangeMode),
+                Tag = p.Tag.ToString(),
+                ReplacementIdentifier = p.ReplacementIdentifier,
+            });
 
         var count = changes.Count;
 

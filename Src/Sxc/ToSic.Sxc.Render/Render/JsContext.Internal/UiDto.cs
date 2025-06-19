@@ -9,5 +9,5 @@ public class UiDto(bool autoToolbar)
     public bool AutoToolbar { get; } = autoToolbar;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string Edition { get; }
+    public string? Edition { get; }
 }

@@ -11,7 +11,8 @@ public class CspPolicyTextProcessor(ILog parentLog) : HelperBase(parentLog, $"{C
         var l = Log.Fn<List<KeyValuePair<string, string>>>();
 
         var result = new List<KeyValuePair<string,string>>();
-        if (string.IsNullOrEmpty(policyText)) return result;
+        if (policyText.IsEmpty())
+            return result;
         var lines = policyText.SplitNewLine()
             // Remove spaces in front and end, + trailing ';'
             .Select(line => line.Trim().TrimEnd(';'))

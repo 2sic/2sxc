@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Blocks.Internal;
 public class BlockResourceExtractorWithInline(IPageServiceShared pageServiceShared)
     : BlockResourceExtractor(pageServiceShared)
 {
-    protected override ClientAssetsExtractSettings Settings => _settings.Get(() => new(extractAll: true));
+    protected override ClientAssetsExtractSettings Settings => _settings.Get(() => new(extractAll: true))!;
     private readonly GetOnce<ClientAssetsExtractSettings> _settings = new();
 
     protected override (string Template, bool Include2sxcJs) ExtractFromHtml(string html, ClientAssetsExtractSettings settings)

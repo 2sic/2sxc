@@ -12,7 +12,7 @@ internal class ProblemSuggestions
     private const string Mobius5NameId = "ea777610-00e3-462f-8a3e-90a09a6e1109";
     private const string Blog6NameId = "72e406fd-500f-4632-82ca-942b22358b56";
 
-    public IEnumerable<ProblemReport> AddSuggestions(IBlock block, List<Exception> exsOrNull, string errorCode)
+    public IEnumerable<ProblemReport> AddSuggestions(IBlock block, List<Exception>? exsOrNull, string? errorCode)
     {
         var suggestions = new List<ProblemReport>();
 
@@ -36,7 +36,8 @@ internal class ProblemSuggestions
         }
 
 
-        if (errorCode == null || block?.App == null) return suggestions;
+        if (errorCode == null || block?.App == null)
+            return suggestions;
 
         // Special suggestion for Blog v6.0.0/1
         AddWarning1601(block.App, "Blog", Blog6NameId, new(6, 0, 0), suggestions, "app-blog-upgrade601");

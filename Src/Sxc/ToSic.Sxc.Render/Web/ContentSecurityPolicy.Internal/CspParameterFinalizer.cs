@@ -1,26 +1,29 @@
-﻿
-using ToSic.Lib.Services;
+﻿using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CspParameterFinalizer() : ServiceBase($"{CspConstants.LogPrefix}.ParFin")
 {
-    public CspParameters Finalize(CspParameters original)
+    [return: NotNullIfNotNull(nameof(original))]
+    public CspParameters? Finalize(CspParameters? original)
     {
-        var l = Log.Fn<CspParameters>();
+        var l = Log.Fn<CspParameters?>();
         // Empty, skip
-        if (original == null || !original.HasKeys()) return l.Return(original, "none");
+        if (original == null || !original.HasKeys())
+            return l.Return(original, "none");
         var merged = MergedWithAll(original);
         var deduped = DeduplicateValues(merged);
         return l.ReturnAsOk(deduped);
     }
 
-    public CspParameters MergedWithAll(CspParameters original)
+    [return: NotNullIfNotNull(nameof(original))]
+    public CspParameters? MergedWithAll(CspParameters? original)
     {
-        var l = Log.Fn<CspParameters>();
+        var l = Log.Fn<CspParameters?>();
         // Empty, skip
-        if (original == null || !original.HasKeys()) return l.Return(original, "none");
+        if (original == null || !original.HasKeys())
+            return l.Return(original, "none");
             
         // Create copy and remove the All from it
         var copy = new CspParameters(original);
@@ -46,11 +49,13 @@ public class CspParameterFinalizer() : ServiceBase($"{CspConstants.LogPrefix}.Pa
         return l.ReturnAsOk(copy);
     }
 
-    public CspParameters DeduplicateValues(CspParameters original)
+    [return: NotNullIfNotNull(nameof(original))]
+    public CspParameters? DeduplicateValues(CspParameters? original)
     {
-        var l = Log.Fn<CspParameters>();
+        var l = Log.Fn<CspParameters?>();
         // Empty, skip
-        if (original == null || !original.HasKeys()) return l.Return(original, "none");
+        if (original == null || !original.HasKeys())
+            return l.Return(original, "none");
         var copy = new CspParameters(original);
         var keys = copy.AllKeys;
         var dedupeCount = 0;

@@ -54,7 +54,7 @@ public partial class BlockBuilder(BlockBuilder.MyServices services)
 
 
     /// <inheritdoc />
-    public IBlock Block { get; private set; }
+    public IBlock Block { get; private set; } = null!;
 
 
     #endregion

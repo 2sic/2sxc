@@ -7,7 +7,8 @@ namespace ToSic.Sxc.Dnn;
 
 public class DnnEnvironmentLogger: IEnvironmentLogger
 {
-    public void LogException(Exception ex) => Exceptions.LogException(ex);
+    public void LogException(Exception ex)
+        => Exceptions.LogException(ex);
 
     #region Diagnostics stuff
 
