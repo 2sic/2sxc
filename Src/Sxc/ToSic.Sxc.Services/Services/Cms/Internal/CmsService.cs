@@ -2,7 +2,6 @@
 using ToSic.Lib.DI;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Services.Tweaks;
@@ -14,18 +13,19 @@ namespace ToSic.Sxc.Services.CmsService.Internal;
 internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
     : ServiceWithContext($"{SxcLogName}.CmsSrv", connect: [stringWysiwyg]), ICmsService
 {
+    [field: AllowNull, MaybeNull]
     private Generator<CmsServiceStringWysiwyg> StringWysiwygGen => field
-        ??= stringWysiwyg.SetInit(s => s.ConnectToRoot(ExCtxOrNull));
+        ??= stringWysiwyg.SetInit(s => s.ConnectToRoot(ExCtx));
 
     public IHtmlTag Html(
         object? thing,
         NoParamOrder noParamOrder = default,
-        object container = default,
-        string classes = default,
+        object? container = default,
+        string? classes = default,
         bool debug = default,
-        object imageSettings = default,
+        object? imageSettings = default,
         bool? toolbar = default,
-        Func<ITweakInput<string>, ITweakInput<string>> tweak = default
+        Func<ITweakInput<string>, ITweakInput<string>>? tweak = default
     )
     {
         var field = thing as IField;
@@ -65,12 +65,14 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
         // Fallback...
         return l.Return(cntHelper.Wrap(value, defaultToolbar: false), "nothing else hit, will treat as value");
     }
+
+    [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
 
 
-    private IHtmlTag HtmlString(IContentType contentType, IContentTypeAttribute attribute, IField field, string value, object imageSettings, CmsServiceContainerHelper cntHelper, bool debug)
+    private IHtmlTag HtmlString(IContentType contentType, IContentTypeAttribute attribute, IField field, string? value, object? imageSettings, CmsServiceContainerHelper cntHelper, bool debug)
     {
-        var l = Log.Fn<IHtmlTag>($"Attribute: {attribute?.Name}");
+        var l = Log.Fn<IHtmlTag>($"Attribute: {attribute.Name}");
         var inputType = attribute.InputType();
         if (debug) l.A($"Field type is: {ValueTypes.String}:{inputType}");
 
@@ -89,10 +91,11 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
             : l.Return(cntHelper.Wrap(value, defaultToolbar: true), "wysiwyg, not converted, w/toolbar");
     }
 
-    private static string ProcessTweaks(Func<ITweakInput<string>, ITweakInput<string>> tweak, string value, ILog log)
+    private static string? ProcessTweaks(Func<ITweakInput<string>, ITweakInput<string>>? tweak, string? value, ILog? log)
     {
-        var l = log.Fn<string>();
-        if (tweak == null) return l.Return(value, "no tweaks");
+        var l = log.Fn<string?>();
+        if (tweak == null)
+            return l.Return(value, "no tweaks");
 
         try
         {

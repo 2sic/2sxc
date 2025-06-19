@@ -10,6 +10,7 @@ namespace ToSic.Sxc.Services.CmsService.Internal;
 internal class HtmlInnerContentHelper()
     : ServiceWithContext("Cms.StrWys", connect: [])
 {
+    [field: AllowNull, MaybeNull]
     private IRenderService RenderService => field
         ??= ExCtx.GetService<IRenderService>(reuse: true);
 
@@ -36,7 +37,7 @@ internal class HtmlInnerContentHelper()
 
         html = RenderService
             .All(field.Parent, field: nextField.Name, merge: html)
-            .ToString();
+            .ToString() ?? "";
 
         return l.ReturnAsOk(html);
     }

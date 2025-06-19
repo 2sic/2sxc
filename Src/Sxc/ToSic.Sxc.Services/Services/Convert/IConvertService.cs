@@ -50,7 +50,7 @@ public interface IConvertService
     /// <typeparam name="T"></typeparam>
     /// <param name="value"></param>
     /// <returns></returns>
-    T To<T>(object value);
+    T? To<T>(object value);
 
     /// <summary>
     /// Convert any object safely to the desired type T.
@@ -67,9 +67,9 @@ public interface IConvertService
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails.</param>
     /// <returns></returns>
-    T To<T>(object value,
+    T? To<T>(object value,
         NoParamOrder noParamOrder = default,
-        T fallback = default);
+        T? fallback = default);
 
     /// <summary>
     /// Convert any object safely to bool.
@@ -159,7 +159,7 @@ public interface IConvertService
     /// Convert any object safely to string.
     /// This does the same as <see cref="To{T}(object)"/> but this is easier to type in Razor.
     /// </summary>
-    string ToString(object value);
+    string? ToString(object value);
 
     /// <summary>
     /// Convert any object safely to string - or if that fails, return the fallback value.
@@ -172,8 +172,8 @@ public interface IConvertService
     /// <param name="fallback">Fallback in case conversion fails or result is null</param>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallbackOnNull">Determine that nulls should also fallback, default is `true`</param>
-    string ToString(object value,
-        string fallback = default,
+    string? ToString(object value,
+        string? fallback = default,
         NoParamOrder noParamOrder = default,
         bool fallbackOnNull = true);
 
@@ -186,13 +186,13 @@ public interface IConvertService
     /// * numbers will have a . notation and never a comma (like in de-DE cultures)
     /// * dates will convert to ISO format without time zone
     /// </summary>
-    string ForCode(object value);
+    string? ForCode(object value);
 
     /// <summary>
     /// Same as <see cref="ForCode(object)"/>, but with fallback, in case the conversion fails.
     /// </summary>
     /// <returns></returns>
-    string ForCode(object value, string fallback = default);
+    string? ForCode(object value, string? fallback = default);
 
     /// <summary>
     /// Sub-Service to convert JSON

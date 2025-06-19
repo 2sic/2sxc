@@ -5,6 +5,7 @@ using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Web.Internal.HtmlParsing;
 using ToSic.Sxc.Web.Internal.PageFeatures;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.CmsService.Internal;
 
@@ -13,15 +14,20 @@ internal class CmsServiceStringWysiwyg()
 {
     #region Sub-Services which should come from the same Code context
 
+    [field: AllowNull, MaybeNull]
     private IPageService PageService => field ??= ExCtx.GetService<IPageService>(reuse: true);
+
+    [field: AllowNull, MaybeNull]
     private HtmlImgToPictureHelper HtmlImgToPictureHelper => field ??= ExCtx.GetService<HtmlImgToPictureHelper>();
+
+    [field: AllowNull, MaybeNull]
     private HtmlInnerContentHelper HtmlInnerContentHelper => field ??= ExCtx.GetService<HtmlInnerContentHelper>();
 
     #endregion
 
     #region Init
 
-    public CmsServiceStringWysiwyg Init(IField field, IContentType contentType, IContentTypeAttribute attribute, IFolder folder, bool debug, object imageSettings)
+    public CmsServiceStringWysiwyg Init(IField field, IContentType contentType, IContentTypeAttribute attribute, IFolder folder, bool debug, object? imageSettings)
     {
         var l = Log.Fn<CmsServiceStringWysiwyg>();
         Field = field;
@@ -34,15 +40,15 @@ internal class CmsServiceStringWysiwyg()
     }
 
     /// <summary>FYI: is never allowed to be null.</summary>
-    protected IField Field;
+    protected IField Field = null!;
     /// <summary>FYI: is never allowed to be null.</summary>
-    protected IContentType ContentType;
+    protected IContentType ContentType = null!;
     /// <summary>FYI: is never allowed to be null.</summary>
-    protected IContentTypeAttribute Attribute;
+    protected IContentTypeAttribute Attribute = null!;
     /// <summary>FYI: could be null.</summary>
-    protected object ImageSettings;
+    protected object? ImageSettings;
     /// <summary>FYI: is never allowed to be null.</summary>
-    protected IFolder Folder;
+    protected IFolder Folder = null!;
 
     #endregion
 
@@ -51,11 +57,11 @@ internal class CmsServiceStringWysiwyg()
     /// Note: very expressive name for logs
     /// </summary>
     /// <param name="value"></param>
-    internal CmsProcessed HtmlForStringAndWysiwyg(string value)
+    internal CmsProcessed HtmlForStringAndWysiwyg(string? value)
     {
         var l = Log.Fn<CmsProcessed>();
         var html = value ?? Field.Raw as string;
-        if (string.IsNullOrWhiteSpace(html))
+        if (html.IsEmptyOrWs())
             return l.Return(new(false, null, null), "no html, treat as unknown, return null to let parent do wrapping with original");
 
         // 1. We got HTML, so first we must ensure the feature is activated

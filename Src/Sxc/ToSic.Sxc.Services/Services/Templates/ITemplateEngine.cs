@@ -29,5 +29,5 @@ public interface ITemplateEngine
     string Parse(string template);
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    string Parse(string template, NoParamOrder protector = default, bool allowHtml = false, IEnumerable<ILookUp> sources = default);
+    string Parse(string template, NoParamOrder protector = default, bool allowHtml = false, IEnumerable<ILookUp>? sources = default);
 }

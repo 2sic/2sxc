@@ -21,10 +21,10 @@ internal class ConvertService(
     public bool OptimizeBoolean => true;
 
 
-    public T To<T>(object value)
+    public T? To<T>(object value)
         => value.ConvertOrDefault<T>(numeric: OptimizeNumbers, truthy: OptimizeBoolean);
 
-    public T To<T>(object value, NoParamOrder noParamOrder = default, T fallback = default)
+    public T? To<T>(object value, NoParamOrder noParamOrder = default, T? fallback = default)
         => cnvSvc.To(value, noParamOrder, fallback);
 
 
@@ -68,17 +68,17 @@ internal class ConvertService(
         => cnvSvc.To(value, fallback: fallback);
         
 
-    public string ToString(object value)
+    public string? ToString(object value)
         => cnvSvc.To<string>(value);
 
-    public string ToString(object value, string fallback = null, NoParamOrder noParamOrder = default, bool fallbackOnNull = true) 
+    public string? ToString(object value, string? fallback = null, NoParamOrder noParamOrder = default, bool fallbackOnNull = true) 
         => cnvSvc.ToString(value, noParamOrder, fallback, fallbackOnNull);
 
 
-    public string ForCode(object value)
+    public string? ForCode(object value)
         => code.Value.ForCode(value);
 
-    public string ForCode(object value, string fallback = default)
+    public string? ForCode(object value, string? fallback = default)
         => code.Value.ForCode(value, fallback: fallback);
         
 

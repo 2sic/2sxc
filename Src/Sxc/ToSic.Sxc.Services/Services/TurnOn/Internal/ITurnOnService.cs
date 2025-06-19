@@ -13,14 +13,14 @@ public interface ITurnOnService: IHasLog
 
     Attribute Attribute(object runOrSpecs,
         NoParamOrder noParamOrder = default,
-        object require = null,
-        object data = null);
+        object? require = null,
+        object? data = null);
 
     IHtmlTag Run(object runOrSpecs,
         NoParamOrder noParamOrder = default,
-        object require = null,
-        object data = null,
-        IEnumerable<object> args = default,
-        string addContext = default
+        object? require = null,
+        object? data = null,
+        IEnumerable<object>? args = default,
+        string? addContext = default
     );
 }

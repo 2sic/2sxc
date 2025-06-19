@@ -47,7 +47,7 @@ internal class CacheService(
     private bool IsEnabled => _isEnabled ??= features.IsEnabled(SxcFeatures.SmartDataCache);
     private bool? _isEnabled;
 
-    public ICacheSpecs CreateSpecs(string key, NoParamOrder protector = default, string regionName = default, bool? shared = default)
+    public ICacheSpecs CreateSpecs(string key, NoParamOrder protector = default, string? regionName = default, bool? shared = default)
     {
         var l = Log.Fn<ICacheSpecs>($"Key: {key} / Segment: {regionName}");
         var keySpecs = new CacheKeySpecs(shared == true ? CacheKeySpecs.NoApp : AppId, key, regionName);
@@ -74,23 +74,25 @@ internal class CacheService(
     //public bool Contains<T>(string key)
     //    => cache.TryGet<T>(new CacheKeySpecs(AppId, key).Key, out _);
 
-    public T Get<T>(ICacheSpecs specs, NoParamOrder protector = default, T fallback = default) 
+    public T? Get<T>(ICacheSpecs specs, NoParamOrder protector = default, T? fallback = default) 
         => IsEnabled ? cache.Get(specs.Key, fallback) : fallback;
 
-    public T GetOrSet<T>(ICacheSpecs specs, NoParamOrder protector = default, Func<T> generate = default)
+    public T? GetOrSet<T>(ICacheSpecs specs, NoParamOrder protector = default, Func<T>? generate = default)
     {
         if (!IsEnabled)
             return generate == null ? default : generate();
-        if (cache.TryGet(specs.Key, out T value)) return value;
+        if (cache.TryGet(specs.Key, out T? value))
+            return value;
         
-        if (generate == null) return default;
+        if (generate == null)
+            return default;
         var newValue = generate();
 
         cache.Set(specs.Key, newValue, specs.PolicyMaker);
         return newValue;
     }
 
-    public bool TryGet<T>(ICacheSpecs specs, out T value)
+    public bool TryGet<T>(ICacheSpecs specs, out T? value)
     {
         if (IsEnabled)
             return cache.TryGet(specs.Key, out value);
@@ -104,15 +106,16 @@ internal class CacheService(
     //public object Remove(string key)
     //    => cache.Remove(new CacheKeySpecs(AppId, key).Key);
 
-    public object Remove(ICacheSpecs specs) =>
-        IsEnabled ? cache.Remove(specs.Key) : null;
+    public object? Remove(ICacheSpecs specs)
+        => IsEnabled ? cache.Remove(specs.Key) : null;
 
     //public void Set<T>(string key, T value, NoParamOrder protector = default)
     //    => Set(ProcessSpecs(key), value);
 
     public void Set<T>(ICacheSpecs specs, T value, NoParamOrder protector = default)
     {
-        if (!IsEnabled) return;
+        if (!IsEnabled)
+            return;
         cache.Set(specs.Key, value, specs.PolicyMaker);
     }
 }

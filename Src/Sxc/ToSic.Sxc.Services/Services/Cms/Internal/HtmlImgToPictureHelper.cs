@@ -9,6 +9,7 @@ namespace ToSic.Sxc.Services.CmsService.Internal;
 internal class HtmlImgToPictureHelper(CmsServiceImageExtractor imageExtractor)
     : ServiceWithContext("Cms.StrWys", connect: [imageExtractor])
 {
+    [field: AllowNull, MaybeNull]
     internal IImageService ImageService => field
         ??= ExCtx.GetService<IImageService>(reuse: true);
 
@@ -24,7 +25,7 @@ internal class HtmlImgToPictureHelper(CmsServiceImageExtractor imageExtractor)
         var imgSettings = preparedImgParams?.ImgDecoratorOrNull?.ResizeSettings ?? defaultImageSettings;
 
         // In most cases use the preparedImgParams, but if it's null, use the src attribute
-        var target = (object)preparedImgParams ?? imgProps.Src;
+        var target = (object?)preparedImgParams ?? imgProps.Src;
 
         // use the IImageService to create Picture tags for it
         var picture = ImageService.Picture(link: target, settings: imgSettings, factor: imgProps.Factor, width: imgProps.Width,

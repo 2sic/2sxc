@@ -2,7 +2,6 @@
 
 using ToSic.Lib.Services;
 using ToSic.Sxc.Configuration.Internal;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal.HtmlParsing;
@@ -11,7 +10,7 @@ using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Web.WebResources;
 
-internal class WebResourceProcessor(IFeaturesService features, string cdnSource, ILog parentLog)
+internal class WebResourceProcessor(IFeaturesService features, string? cdnSource, ILog parentLog)
     : HelperBase(parentLog, "Sxc.WebRHl")
 {
     #region Constants
@@ -27,19 +26,21 @@ internal class WebResourceProcessor(IFeaturesService features, string cdnSource,
 
     #region Constructor
 
-    public string CdnSource { get; } = cdnSource;
+    public string? CdnSource { get; } = cdnSource;
 
     #endregion
 
-    public PageFeatureFromSettings Process(string key, DynamicEntity webRes)
+    public PageFeatureFromSettings? Process(string key, DynamicEntity webRes)
     {
         var l = Log.Fn<PageFeatureFromSettings>(key);
 
         // Check if it's enabled
-        if (webRes.Get(WebResEnabledField) as bool? == false) return l.ReturnNull("not enabled");
+        if (webRes.Get(WebResEnabledField) as bool? == false)
+            return l.ReturnNull("not enabled");
 
         // Check if we really have HTML to use
-        if (webRes.Get(WebResHtmlField) is not string html || html.IsEmpty()) return l.ReturnNull("no html");
+        if (webRes.Get(WebResHtmlField) is not string html || html.IsEmpty())
+            return l.ReturnNull("no html");
 
         // TODO: HANDLE AUTO-ENABLE-OPTIMIZATIONS
         var autoOptimize = webRes.Get(WebResAutoOptimizeField, fallback: false);

@@ -17,7 +17,7 @@ public interface IUsersProvider
     /// <param name="userId"></param>
     /// <param name="siteId"></param>
     /// <returns></returns>
-    public IUserModel GetUser(int userId, int siteId);
+    public IUserModel? GetUser(int userId, int siteId);
 
     /// <summary>
     /// The inner list retrieving the users.

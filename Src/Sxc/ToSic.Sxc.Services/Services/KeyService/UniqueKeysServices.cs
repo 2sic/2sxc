@@ -57,12 +57,15 @@ internal class UniqueKeysServices
             case Guid guid: return $"{PfxGuid}{Guid2UniqueKey(guid)}";
             case ICanBeEntity canBeEntity:
                 var entity = canBeEntity.Entity;
-                if (entity == null) return $"{PfxEntity}{Obj2HashKey(canBeEntity)}";
-                if (entity.EntityGuid != Guid.Empty) return $"{PfxEntity}{Guid2UniqueKey(entity.EntityGuid)}";
-                if (entity.EntityId > 0) return $"{PfxEntity}{entity.EntityId}";
+                if (entity == null! /* paranoid */)
+                    return $"{PfxEntity}{Obj2HashKey(canBeEntity)}";
+                if (entity.EntityGuid != Guid.Empty)
+                    return $"{PfxEntity}{Guid2UniqueKey(entity.EntityGuid)}";
+                if (entity.EntityId > 0)
+                    return $"{PfxEntity}{entity.EntityId}";
                 return Obj2HashKey(entity);
             case IAsset asset:
-                return $"{PfxUrl}{asset.Url.GetHashCode()}";
+                return $"{PfxUrl}{asset.Url?.GetHashCode()}";
         }
 
         // handle numbers etc.

@@ -19,7 +19,7 @@ partial class PageService
     {
         _overrideCdnSource = cdnSource;
     }
-    private string _overrideCdnSource;
+    private string? _overrideCdnSource;
 
     /// <inheritdoc />
     public string Activate(params string[] keys)
@@ -30,7 +30,8 @@ partial class PageService
         // 1. Try to add manual resources from WebResources
         // This must happen in the IPageService which is per-module
         // The PageServiceShared cannot do this, because it doesn't have the WebResources which vary by module
-        if (WebResources is not null) // important: DynamicEntity null-compare isn't quite right, **do not** use `!=`
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (WebResources is { } /* paranoid */) // important: DynamicEntity null-compare isn't quite right, **do not** use `!=`
             keys = AddResourcesFromSettings(keys);
 
         // 2. If any keys are left, they are probably preconfigured keys, so add them now
@@ -47,7 +48,7 @@ partial class PageService
     }
 
     /// <inheritdoc />
-    public string Activate(
+    public string? Activate(
         NoParamOrder noParamOrder = default,
         bool condition = true,
         params string[] features)
@@ -70,7 +71,7 @@ partial class PageService
     {
         var l = Log.Fn<string[]>();
         var keysToRemove = new List<string>();
-        var processor = new WebResourceProcessor(features.Value, _overrideCdnSource ?? CdnSource, Log);
+        var processor = new WebResourceProcessor(featuresSvc.Value, _overrideCdnSource ?? CdnSource, Log);
         foreach (var key in keys)
         {
             l.A($"Key: {key}");
@@ -94,12 +95,12 @@ partial class PageService
         return l.Return(keys);
     }
 
-    private string CdnSource => _cdnSource.Get(() => WebResources.Get<string>(CdnSourcePublicField));
-    private readonly GetOnce<string> _cdnSource = new();
+    private string? CdnSource => _cdnSource.Get(() => WebResources.Get<string>(CdnSourcePublicField));
+    private readonly GetOnce<string?> _cdnSource = new();
 
-    private DynamicEntity WebResources => _webResources.Get(() => Settings?.Get(WebResourcesNode) as DynamicEntity);
+    private DynamicEntity WebResources => _webResources.Get(() => (DynamicEntity)Settings.Get(WebResourcesNode)!)!;
     private readonly GetOnce<DynamicEntity> _webResources = new();
 
-    private DynamicStack Settings => _settings.Get(() => ExCtxOrNull?.GetState<IDynamicStack>(ExecutionContextStateNames.Settings) as DynamicStack);
+    private DynamicStack Settings => _settings.Get(() => (ExCtx.GetState<IDynamicStack>(ExecutionContextStateNames.Settings) as DynamicStack)!)!;
     private readonly GetOnce<DynamicStack> _settings = new();
 }

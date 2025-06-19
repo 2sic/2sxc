@@ -13,9 +13,9 @@ public partial class PageService(
     LazySvc<IHtmlTagsService> htmlTagsLazy,
     LazySvc<ITurnOnService> turnOn,
     LazySvc<IModuleService> moduleService,
-    LazySvc<IFeaturesService> features)
+    LazySvc<IFeaturesService> featuresSvc)
     : ServiceWithContext("2sxc.PgeSrv",
-            connect: [cspServiceLazy, htmlTagsLazy, moduleService, turnOn, pageServiceShared, features]),
+            connect: [cspServiceLazy, htmlTagsLazy, moduleService, turnOn, pageServiceShared, featuresSvc]),
         IPageService // Important: Write with namespace, because it's easy to confuse with IPageService it supports
 {
     public IPageServiceShared PageServiceShared { get; } = pageServiceShared;

@@ -7,14 +7,15 @@ internal class TweakConfigs
         List = [tweak];
     }
 
-    public TweakConfigs(TweakConfigs original, TweakConfig additional = default) : this (original?.List, additional)
+    public TweakConfigs(TweakConfigs? original, TweakConfig? additional = default) : this(original?.List, additional)
     {
     }
 
-    private TweakConfigs(IEnumerable<TweakConfig> tweaks, TweakConfig additional = default)
+    private TweakConfigs(IEnumerable<TweakConfig>? tweaks, TweakConfig? additional = default)
     {
         List = tweaks?.ToList() ?? [];
-        if (additional != default) List.Add(additional);
+        if (additional != default)
+            List.Add(additional);
     }
 
     public List<TweakConfig> List { get; }

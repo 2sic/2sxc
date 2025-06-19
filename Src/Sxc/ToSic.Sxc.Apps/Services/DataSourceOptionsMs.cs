@@ -4,7 +4,7 @@ using ToSic.Lib.LookUp.Engines;
 namespace ToSic.Sxc.Services.DataServices;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class DataSourceOptionsMs(IAppIdentity? identity, Func<ILookUpEngine> getLookup)
+internal class DataSourceOptionsMs(IAppIdentity? identity, Func<ILookUpEngine?>? getLookup)
     : ServiceBase(SxcLogName + "DtOptH")
 {
     private ILookUpEngine? LookUpEngine => _lookupEngine.Get(() => getLookup?.Invoke());
@@ -31,7 +31,7 @@ internal class DataSourceOptionsMs(IAppIdentity? identity, Func<ILookUpEngine> g
         }, options);
 
         // Check if parameters were supplied, if yes, they override any values in the existing options (16.01)
-        var values = new DataSourceOptionConverter().Values(parameters, false, true);
+        var values = new DataSourceOptionConverter().Values(original: parameters, throwIfNull: false, throwIfNoMatch: true);
         return values != null
             ? l.Return(opts with { Values = values }, "with values")
             : l.Return(opts, "without values");

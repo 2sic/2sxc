@@ -2,6 +2,7 @@
 using ToSic.Lib.Services;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Integration.Paths;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.Internal;
 
@@ -35,15 +36,16 @@ internal class LinkServiceUnknown(ImgResizeLinker imgLinker, LazySvc<ILinkPaths>
     internal static string CurrentPageUrl = NiceCurrentUrl;
     internal static string AnyPageUrl = NiceAnyPageUrl;
 
-    protected override string ToApi(string api, string parameters = null) => $"{api}{Parameters(parameters)}";
+    protected override string ToApi(string api, string? parameters = null) => $"{api}{Parameters(parameters)}";
 
-    protected override string ToPage(int? pageId, string parameters = null, string language = null) =>
+    protected override string ToPage(int? pageId, string? parameters = null, string? language = null) =>
         // Page or Api?
         pageId != null
             ? string.Format(AnyPageUrl, pageId) + Parameters(parameters)
             : $"{CurrentPageUrl}{Parameters(parameters)}";
 
-    private static string Parameters(string parameters) => string.IsNullOrEmpty(parameters) ? parameters : $"?{parameters}";
+    private static string? Parameters(string? parameters)
+        => parameters.IsEmpty() ? parameters : $"?{parameters}";
 
 
     public static void SwitchModeToUgly(bool uglyOn)

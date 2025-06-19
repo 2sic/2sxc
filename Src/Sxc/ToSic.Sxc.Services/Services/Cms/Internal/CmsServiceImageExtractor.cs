@@ -14,14 +14,14 @@ internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
     internal ImagePropertiesExtracted ExtractImageProperties(string imgTag, IFolder folder)
     {
         var l = Log.Fn<ImagePropertiesExtracted>($"old: '{imgTag}'");
-        string src = null;
-        string factor = null;
-        object width = default;
-        string imgAlt = null;
-        string imgClasses = null;
-        string picClasses = null;
-        var otherAttributes = new Dictionary<string, string>();
-        IFile file = null;
+        string? src = null;
+        string? factor = null;
+        object? width = default;
+        string? imgAlt = null;
+        string? imgClasses = null;
+        string? picClasses = null;
+        var otherAttributes = new Dictionary<string, string?>();
+        IFile? file = null;
 
         var files = folder.Files.ToList();
 
@@ -97,10 +97,10 @@ internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
     /// </summary>
     /// <param name="classes"></param>
     /// <returns></returns>
-    internal static bool UseLightbox(string classes)
+    internal static bool UseLightbox(string? classes)
         => classes?.Contains(WysiwygLightboxClass) ?? false;
 
-    internal static string GetImgServiceResizeFactor(string value)
+    internal static string? GetImgServiceResizeFactor(string value)
     {
         // check if we can find something like "wysiwyg-width#of#" - this is for resize ratios
         var widthMatch = RegexUtil.WysiwygWidthLazy.Value.Match(value);
@@ -125,13 +125,13 @@ internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
 
     internal class ImagePropertiesExtracted
     {
-        public IFile File { get; init; }
-        public string Src { get; init; }
-        public string Factor { get; init; }
-        public string ImgAlt { get; init; }
-        public string ImgClasses { get; init; }
-        public string PicClasses { get; init; }
-        public object Width { get; init; }
-        public Dictionary<string, string> OtherAttributes { get; init; }
+        public IFile? File { get; init; }
+        public string? Src { get; init; }
+        public string? Factor { get; init; }
+        public string? ImgAlt { get; init; }
+        public string? ImgClasses { get; init; }
+        public string? PicClasses { get; init; }
+        public object? Width { get; init; }
+        public required Dictionary<string, string?> OtherAttributes { get; init; }
     }
 }

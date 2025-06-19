@@ -8,7 +8,7 @@
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ILinkServiceIntegration
 {
-    string ToApi(string api, string parameters = default);
+    string ToApi(string api, string? parameters = default);
 
-    string ToPage(int? pageId, string parameters = default, string language = default);
+    string ToPage(int? pageId, string? parameters = default, string? language = default);
 }

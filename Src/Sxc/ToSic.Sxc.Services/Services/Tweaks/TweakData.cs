@@ -7,7 +7,7 @@
 [PrivateApi("WIP v17")]
 internal class TweakData<TValue>: ITweakData<TValue>
 {
-    internal TweakData(TValue initial, string name, string step, int stepIndex)
+    internal TweakData(TValue? initial, string? name, string step, int stepIndex)
     {
         Name = name;
         Step = step;
@@ -29,12 +29,12 @@ internal class TweakData<TValue>: ITweakData<TValue>
     /// <summary>
     /// Name of the value which will be modified, like `FirstName`
     /// </summary>
-    public string Name { get; }
+    public string? Name { get; }
 
     /// <summary>
     /// Step of the tweak, like a workflow step. like `before`
     /// </summary>
-    public string Step { get; }
+    public string? Step { get; }
 
     public int StepIndex { get; }
 
@@ -44,7 +44,7 @@ internal class TweakData<TValue>: ITweakData<TValue>
     //public TValue Initial { get; }
 
     /// <inheritdoc />
-    public TValue Value { get; }
+    public TValue? Value { get; }
 
     ///// <summary>
     ///// Get a new TweakValue with the value changed.

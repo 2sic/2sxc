@@ -6,14 +6,14 @@ namespace ToSic.Sxc.Web.Internal.PageService;
 partial class PageService
 {
     /// <inheritdoc />
-    public string TurnOn(object runOrSpecs,
+    public string? TurnOn(object runOrSpecs,
         NoParamOrder noParamOrder = default,
-        object require = default,
-        object data = default,
-        IEnumerable<object> args = default,
+        object? require = default,
+        object? data = default,
+        IEnumerable<object>? args = default,
         bool condition = true,
         bool? noDuplicates = default,
-        string addContext = default
+        string? addContext = default
     )
     {
         var l = Log.Fn<string?>($"{runOrSpecs}: {runOrSpecs}; {require}; {data}");

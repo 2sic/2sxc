@@ -22,7 +22,7 @@ public static class ToolbarServiceExtensions
     /// </remarks>
     public static void ActivateDemoMode(this IToolbarService toolbarService, 
         NoParamOrder noParamOrder = default,
-        string ui = null
+        string? ui = null
     )
     {
         if (toolbarService is not ToolbarService typed)

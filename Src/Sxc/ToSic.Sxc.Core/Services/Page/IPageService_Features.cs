@@ -11,7 +11,7 @@ public partial interface IPageService
     /// </summary>
     /// <param name="keys">One or more strings containing Page-Feature keys</param>
     /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.Activate(...)`</returns>
-    string Activate(params string[] keys);
+    string? Activate(params string[] keys);
 
     /// <summary>
     /// Activate a feature on this page, such as `turnOn`, `2sxc.JsCore` etc.
@@ -24,7 +24,7 @@ public partial interface IPageService
     /// <remarks>
     /// * This overload with `condition` added in v15.03
     /// </remarks>
-    string Activate(
+    string? Activate(
         NoParamOrder noParamOrder = default,
         bool condition = true,
         params string[] features);

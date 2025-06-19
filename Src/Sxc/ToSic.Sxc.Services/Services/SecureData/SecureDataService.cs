@@ -1,6 +1,5 @@
 ﻿using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Sys.Secret;
 using ToSic.Sys.Security.Encryption;
 using static System.StringComparison;
@@ -61,17 +60,17 @@ internal class SecureDataService(AesCryptographyService aes)
         }
     }
 
-    public string Create(string value)
+    public string? Create(string value)
     {
         var l = Log.Fn<string>(enabled: Debug);
         if (string.IsNullOrWhiteSpace(value))
-            return l.Return(null, "null/empty");
+            return l.ReturnNull("null/empty");
 
         try
         {
             // will return null if it fails
             var encrypt64 = Aes.EncryptToBase64(value);
-            if (encrypt64.Value == null)
+            if (encrypt64.Value == null! /* paranoid */)
                 return l.Return("", "empty encryption");
             var final = PrefixSecure + encrypt64.Value + ValueSeparator + PrefixIv + encrypt64.Iv;
             return l.Return(final, "encrypted");

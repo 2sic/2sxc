@@ -52,7 +52,7 @@ public interface IJsonService
     /// <typeparam name="T"></typeparam>
     /// <param name="json"></param>
     /// <returns></returns>
-    T To<T>(string json);
+    T? To<T>(string json);
 
     /// <summary>
     /// Convert a json to an anonymous object.
@@ -60,7 +60,7 @@ public interface IJsonService
     /// </summary>
     /// <param name="json"></param>
     /// <returns></returns>
-    object ToObject(string json);
+    object? ToObject(string json);
 
     /// <summary>
     /// Creates a <see cref="ITyped"/> object from a json string.
@@ -85,7 +85,7 @@ public interface IJsonService
     /// New in 16.02
     /// </remarks>
     [PublicApi]
-    ITyped ToTyped(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default);
+    ITyped? ToTyped(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default);
 
     /// <summary>
     /// Creates a list of <see cref="ITyped"/> wrappers around a json string containing an array of objects.
@@ -109,6 +109,6 @@ public interface IJsonService
     /// <remarks>
     /// New in 16.04
     /// </remarks>
-    IEnumerable<ITyped> ToTypedList(string json, NoParamOrder noParamOrder = default, string? fallback = default,
+    IEnumerable<ITyped>? ToTypedList(string json, NoParamOrder noParamOrder = default, string? fallback = default,
         bool? propsRequired = default);
 }

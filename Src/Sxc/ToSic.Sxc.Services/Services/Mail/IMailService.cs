@@ -51,16 +51,16 @@ public interface IMailService: INeedsExecutionContext
     /// <returns>The newly created `MailMessage` object</returns>
     MailMessage Create(
         NoParamOrder noParamOrder = default,
-        object from = null,
-        object to = null,
-        object cc = null,
-        object bcc = null,
-        object replyTo = null,
-        string subject = null,
-        string body = null,
+        object? from = null,
+        object? to = null,
+        object? cc = null,
+        object? bcc = null,
+        object? replyTo = null,
+        string? subject = null,
+        string? body = null,
         bool? isHtml = null,
-        Encoding encoding = null,
-        object attachments = null);
+        Encoding? encoding = null,
+        object? attachments = null);
 
     /// <summary>
     /// Send a .net `MailMessage` object using the settings configured in Dnn or Oqtane.
@@ -105,16 +105,16 @@ public interface IMailService: INeedsExecutionContext
     /// <returns>void</returns>
     void Send(
         NoParamOrder noParamOrder = default,
-        object from = null,
-        object to = null,
-        object cc = null,
-        object bcc = null,
-        object replyTo = null,
-        string subject = null,
-        string body = null,
+        object? from = null,
+        object? to = null,
+        object? cc = null,
+        object? bcc = null,
+        object? replyTo = null,
+        string? subject = null,
+        string? body = null,
         bool? isHtml = null,
-        Encoding encoding = null,
-        object attachments = null
+        Encoding? encoding = null,
+        object? attachments = null
     );
 
     // 2024-01-10 2dm internalized - doesn't seem in use, and also not clear why we would have this

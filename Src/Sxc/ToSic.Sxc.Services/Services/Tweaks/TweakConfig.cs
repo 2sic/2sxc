@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Services.Tweaks;
 
-internal class TweakConfig(string nameId, string step = default, string target = null)
+internal class TweakConfig(string nameId, string? step = default, string? target = null)
 {
     public const string StepDefault = "default";
     public const string TargetDefault = "value";

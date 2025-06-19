@@ -68,9 +68,9 @@ public class UserService(LazySvc<IContextOfSite> context, LazySvc<IUsersProvider
     /// </summary>
     /// <param name="identityToken"></param>
     /// <returns></returns>
-    private (IUserModel SpecialUser, int UserId) UserId(string identityToken) 
+    private (IUserModel? SpecialUser, int UserId) UserId(string identityToken) 
     {
-        var l = Log.Fn<(IUserModel, int)>($"token:{identityToken}");
+        var l = Log.Fn<(IUserModel?, int)>($"token:{identityToken}");
 
         var unknown = UserConstants.UnknownUser;
         var anon = UserConstants.AnonymousUser;

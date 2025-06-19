@@ -15,7 +15,7 @@ partial class PageServiceShared
     /// <summary>
     /// Add something to the queue for setting a page property
     /// </summary>
-    public string Queue(PageProperties property, string value, PageChangeModes change, string token)
+    public string Queue(PageProperties property, string? value, PageChangeModes change, string? token)
     {
         PropertyChanges.Add(new()
         {

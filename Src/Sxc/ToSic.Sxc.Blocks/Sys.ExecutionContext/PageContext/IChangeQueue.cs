@@ -23,7 +23,7 @@ public interface IChangeQueue
     /// <summary>
     /// Status message to set (if possible) to the page which loads this block
     /// </summary>
-    string HttpStatusMessage { get; set; }
+    string? HttpStatusMessage { get; set; }
 
-    public string Queue(PageProperties property, string value, PageChangeModes change, string token);
+    public string Queue(PageProperties property, string? value, PageChangeModes change, string? token);
 }

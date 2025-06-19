@@ -9,7 +9,7 @@ partial class PageService
     public string AddIcon(string path,
         NoParamOrder noParamOrder = default,
         string rel = "",
-        int size = 0, string type = null)
+        int size = 0, string? type = null)
     {
         AddToHead(new Icon(path, rel, size, type));
         return "";
@@ -18,7 +18,7 @@ partial class PageService
     /// <inheritdoc />
     public string AddIconSet(string path,
         NoParamOrder noParamOrder = default,
-        object favicon = null, IEnumerable<string> rels = null, IEnumerable<int> sizes = null)
+        object? favicon = null, IEnumerable<string>? rels = null, IEnumerable<int>? sizes = null)
     {
         foreach (var s in IconSet.GenerateIconSet(path, favicon, rels, sizes))
             AddToHead(s);

@@ -2,6 +2,7 @@
 using ToSic.Eav.DataSource.Internal.Errors;
 using ToSic.Sys.Exceptions;
 using ToSic.Sys.Users;
+using ToSic.Sys.Utils;
 using static ToSic.Eav.Data.Sys.DataConstants;
 
 
@@ -12,9 +13,9 @@ partial class DataService
     // IMPORTANT - this is different! from the _DynCodeRoot - as it should NOT auto attach!
     public T GetSource<T>(
         NoParamOrder noParamOrder = default,
-        IDataSourceLinkable attach = default,
-        object parameters = default,
-        object options = default) where T : IDataSource
+        IDataSourceLinkable? attach = default,
+        object? parameters = default,
+        object? options = default) where T : IDataSource
     {
         var l = Log.Fn<T>($"{nameof(attach)}: {attach}, {nameof(options)}: {options}");
 
@@ -27,10 +28,10 @@ partial class DataService
 
     public IDataSource GetSource(
         NoParamOrder noParamOrder = default,
-        string name = null,
-        IDataSourceLinkable attach = null,
-        object parameters = default,
-        object options = null,
+        string? name = null,
+        IDataSourceLinkable? attach = null,
+        object? parameters = default,
+        object? options = null,
         bool? debug = default
     )
     {
@@ -38,9 +39,9 @@ partial class DataService
 
         // Do this first, to ensure AppIdentity is really known/set
         var safeOptions = OptionsMs.SafeOptions(parameters, options: options);
-        var appId = safeOptions.AppIdentityOrReader.AppId;
+        var appId = safeOptions.AppIdentityOrReader!.AppId;
 
-        var dsInfo = catalog.Value.FindDataSourceInfo(name, appId);
+        var dsInfo = name.IsEmptyOrWs() ? null : catalog.Value.FindDataSourceInfo(name, appId);
         if (dsInfo == null)
             throw new ArgumentException($"Tried to create DataSource with name '{name}' but it was not found. " +
                                         "Either you a) mis-typed it, " +
@@ -72,7 +73,7 @@ partial class DataService
 
     }
 
-    private static Exception DevException(string name, string reason, string more = default)
+    private static Exception DevException(string? name, string reason, string? more = default)
     {
         var intro =  $"The DataSource {name} threw an error. Probably: '{reason}'. " +
                      "Normally this would be invisible and just return a first item with the error message, " +

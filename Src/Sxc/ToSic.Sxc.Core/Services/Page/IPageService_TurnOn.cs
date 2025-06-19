@@ -37,7 +37,7 @@ public partial interface IPageService
     /// * `noDuplicates` added in 16.05
     /// * `args` and `addContext` added in v18.0
     /// </remarks>
-    string TurnOn(object runOrSpecs,
+    string? TurnOn(object runOrSpecs,
         NoParamOrder noParamOrder = default,
         object? require = default,
         object? data = default,

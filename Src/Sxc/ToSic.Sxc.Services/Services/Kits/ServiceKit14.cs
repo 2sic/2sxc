@@ -1,5 +1,4 @@
 ﻿using Connect.Koi;
-using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Services;
@@ -18,8 +17,8 @@ public class ServiceKit14() : ServiceKit("Sxc.Kit14") // , IServiceKitForTypedDa
     /// <summary>
     /// The ADAM Service, used to retrieve files and maybe more. 
     /// </summary>
-    public IAdamService Adam => _adam.Get(GetKitService<IAdamService>);
-    private readonly GetOnce<IAdamService> _adam = new();
+    [field: AllowNull, MaybeNull]
+    public IAdamService Adam => field ??= GetKitService<IAdamService>();
 
     // 2025-05-11 2dm commented out, previous was internal / marked obsolete
     ///// <summary>
@@ -39,15 +38,15 @@ public class ServiceKit14() : ServiceKit("Sxc.Kit14") // , IServiceKitForTypedDa
     /// <summary>
     /// The Convert Service, used to convert any kind of data type to another data type
     /// </summary>
-    public IConvertService Convert => _convert.Get(GetKitService<IConvertService>);
-    private readonly GetOnce<IConvertService> _convert = new();
+    [field: AllowNull, MaybeNull]
+    public IConvertService Convert => field ??= GetKitService<IConvertService>();
 
     /// <summary>
     /// The Koi CSS Service, used to detect the current CSS framework and other features.
     /// See [ICss](xref:Connect.Koi.ICss)
     /// </summary>
-    public ICss Css => _css.Get(GetKitService<ICss>);
-    private readonly GetOnce<ICss> _css = new();
+    [field: AllowNull, MaybeNull]
+    public ICss Css => field ??= GetKitService<ICss>();
 
 
     /// <summary>
@@ -56,22 +55,22 @@ public class ServiceKit14() : ServiceKit("Sxc.Kit14") // , IServiceKitForTypedDa
     /// <remarks>
     /// * added in v15.06
     /// </remarks>
-    public IDataService Data => _data.Get(GetKitService<IDataService>);
-    private readonly GetOnce<IDataService> _data = new();
+    [field: AllowNull, MaybeNull]
+    public IDataService Data => field ??= GetKitService<IDataService>();
 
     /// <summary>
     /// The Edit service, same as the main Edit service
     /// </summary>
     // Important: must share the Edit from the _DynCodeRoot for scenarios where Enable was set manually
-    public IEditService Edit => _edit.Get(GetKitService<IEditService>);
-    private readonly GetOnce<IEditService> _edit = new();
+    [field: AllowNull, MaybeNull]
+    public IEditService Edit => field ??= GetKitService<IEditService>();
 
 
     /// <summary>
     /// The Features service, used to check if features are enabled
     /// </summary>
-    public IFeaturesService Feature => _features.Get(GetKitService<IFeaturesService>);
-    private readonly GetOnce<IFeaturesService> _features = new();
+    [field: AllowNull, MaybeNull]
+    public IFeaturesService Feature => field ??= GetKitService<IFeaturesService>();
 
     /// <summary>
     /// The Razor Blade 4 HtmlTags service, to fluidly create Tags.
@@ -86,32 +85,32 @@ public class ServiceKit14() : ServiceKit("Sxc.Kit14") // , IServiceKitForTypedDa
     /// > The older `Tag` helper created mutable objects where chaining always modified the original and returned it again.
     /// </summary>
     /// <remarks>Added in v15</remarks>
-    public IHtmlTagsService HtmlTags => _ht.Get(GetKitService<IHtmlTagsService>);
-    private readonly GetOnce<IHtmlTagsService> _ht = new();
+    [field: AllowNull, MaybeNull]
+    public IHtmlTagsService HtmlTags => field ??= GetKitService<IHtmlTagsService>();
 
     /// <summary>
     /// The Images service, used to create `img` and `picture` tags
     /// </summary>
-    public IImageService Image => _image.Get(GetKitService<IImageService>);
-    private readonly GetOnce<IImageService> _image = new();
+    [field: AllowNull, MaybeNull]
+    public IImageService Image => field ??= GetKitService<IImageService>();
 
 
     /// <summary>
     /// The JSON service, used to convert data to-and-from JSON
     /// </summary>
-    public IJsonService Json => _json.Get(GetKitService<IJsonService>);
-    private readonly GetOnce<IJsonService> _json = new();
+    [field: AllowNull, MaybeNull]
+    public IJsonService Json => field ??= GetKitService<IJsonService>();
 
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => _link.Get(GetKitService<ILinkService>);
-    private readonly GetOnce<ILinkService> _link = new();
+    [field: AllowNull, MaybeNull]
+    public ILinkService Link => field ??= GetKitService<ILinkService>();
 
     /// <summary>
     /// The System Log service, used to add log messages to the system (Dnn/Oqtane)
     /// </summary>
-    public ISystemLogService SystemLog => _sysLog.Get(GetKitService<ISystemLogService>);
-    private readonly GetOnce<ISystemLogService> _sysLog = new();
+    [field: AllowNull, MaybeNull]
+    public ISystemLogService SystemLog => field ??= GetKitService<ISystemLogService>();
 
     /// <summary>
     /// Note that this was used in Mobius / Events in a few releases, so we can't just change it.
@@ -125,40 +124,40 @@ public class ServiceKit14() : ServiceKit("Sxc.Kit14") // , IServiceKitForTypedDa
     /// <summary>
     /// The Mail service, used to send mails
     /// </summary>
-    public IMailService Mail => _mail.Get(GetKitService<IMailService>);
-    private readonly GetOnce<IMailService> _mail = new();
+    [field: AllowNull, MaybeNull]
+    public IMailService Mail => field ??= GetKitService<IMailService>();
 
 
     /// <summary>
     /// The Page service, used to set headers, activate features etc.
     /// </summary>
-    public IPageService Page => _page.Get(GetKitService<IPageService>);
-    private readonly GetOnce<IPageService> _page = new();
+    [field: AllowNull, MaybeNull]
+    public IPageService Page => field ??= GetKitService<IPageService>();
 
 
     /// <summary>
     /// The Render service, used to render one or more dynamic content within other content
     /// </summary>
-    public IRenderService Render => _render.Get(GetKitService<IRenderService>);
-    private readonly GetOnce<IRenderService> _render = new();
+    [field: AllowNull, MaybeNull]
+    public IRenderService Render => field ??= GetKitService<IRenderService>();
 
     /// <summary>
     /// The Secure Data service - mainly for reading / decrypting secrets. 
     /// </summary>
-    public ISecureDataService SecureData => _secureData.Get(GetKitService<ISecureDataService>);
-    private readonly GetOnce<ISecureDataService> _secureData = new();
+    [field: AllowNull, MaybeNull]
+    public ISecureDataService SecureData => field ??= GetKitService<ISecureDataService>();
 
     /// <summary>
     /// The Razor-Blade Scrub service, used to clean up HTML.
     /// See [](xref:ToSic.Razor.Blade.IScrub)
     /// </summary>
-    public IScrub Scrub => _scrub.Get(GetKitService<IScrub>);
-    private readonly GetOnce<IScrub> _scrub = new();
+    [field: AllowNull, MaybeNull]
+    public IScrub Scrub => field ??= GetKitService<IScrub>();
 
 
     /// <summary>
     /// The toolbar service, used to generate advanced toolbars
     /// </summary>
-    public IToolbarService Toolbar => _toolbar.Get(GetKitService<IToolbarService>);
-    private readonly GetOnce<IToolbarService> _toolbar = new();
+    [field: AllowNull, MaybeNull]
+    public IToolbarService Toolbar => field ??= GetKitService<IToolbarService>();
 }

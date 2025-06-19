@@ -14,11 +14,11 @@ internal class JsonService(Generator<CodeJsonWrapper> wrapJsonGenerator)
     : ServiceBase("Sxc.JsnSvc", connect: [wrapJsonGenerator]), IJsonService
 {
     /// <inheritdoc />
-    public T To<T>(string json) 
+    public T? To<T>(string json) 
         => JsonSerializer.Deserialize<T>(json, SafeJsonForHtmlAttributes);
 
     /// <inheritdoc />
-    public object ToObject(string json)
+    public object? ToObject(string json)
         => JsonSerializer.Deserialize<object>(json, SafeJsonForHtmlAttributes);
 
     /// <inheritdoc />
@@ -30,14 +30,14 @@ internal class JsonService(Generator<CodeJsonWrapper> wrapJsonGenerator)
         => JsonSerializer.Serialize(item, SafeJsonForHtmlAttributes);
 
     /// <inheritdoc />
-    public ITyped ToTyped(string json, NoParamOrder noParamOrder = default, string fallback = default, bool? propsRequired = default)
+    public ITyped? ToTyped(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default)
         => wrapJsonGenerator.New()
             .Setup(WrapperSettings.Typed(true, true, propsRequired: propsRequired ?? true))
             .JsonToTyped(json, noParamOrder, fallback);
 
 
     /// <inheritdoc />
-    public IEnumerable<ITyped> ToTypedList(string json, NoParamOrder noParamOrder = default, string fallback = default, bool? propsRequired = default)
+    public IEnumerable<ITyped>? ToTypedList(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default)
         => wrapJsonGenerator.New()
             .Setup(WrapperSettings.Typed(true, true, propsRequired: propsRequired ?? true))
             .JsonToTypedList(json, noParamOrder, fallback);

@@ -6,18 +6,20 @@ using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Internal.Url;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.Internal;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy, object[] connect = default)
+public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy, object[]? connect = default)
     : ServiceWithContext($"{SxcLogName}.LnkHlp", connect: [..connect ?? [], linkPathsLazy, imgLinker]), ILinkService
 {
     [PrivateApi]
     protected ILinkPaths LinkPaths => linkPathsLazy.Value;
 
     [PrivateApi]
+    [field: AllowNull, MaybeNull]
     protected string AppFolder => field
         ??= ExCtx.GetApp().Folder;
 
@@ -26,10 +28,10 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
     public string To(
         NoParamOrder noParamOrder = default,
         int? pageId = null,
-        string api = null,
-        object parameters = null,
-        string type = null,
-        string language = null
+        string? api = null,
+        object? parameters = null,
+        string? type = null,
+        string? language = null
     )
     {
         var l = (Debug ? Log : null).Fn<string>($"pid:{pageId},api:{api},t:{type},l:{language}");
@@ -53,12 +55,14 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
         return l.ReturnAsOk(Tags.SafeUrl(processed).ToString());
     }
 
-    private string ExpandUrlIfNecessary(string type, string url)
+    private string? ExpandUrlIfNecessary(string? type, string? url)
     {
-        if (url == null) return null;
+        if (url == null)
+            return null;
 
         // Short-Circuit to really not do anything if the type isn't specified
-        if (string.IsNullOrEmpty(type)) return url;
+        if (type.IsEmpty())
+            return url;
 
         var parts = new UrlParts(url);
         switch (type.ToLowerInvariant())
@@ -79,11 +83,11 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
     }
      
 
-    protected abstract string ToApi(string api, string parameters = null);
+    protected abstract string ToApi(string api, string? parameters = null);
 
-    protected abstract string ToPage(int? pageId, string parameters = null, string language = null);
+    protected abstract string ToPage(int? pageId, string? parameters = null, string? language = null);
 
-    protected static string ParametersToString(object parameters)
+    protected static string? ParametersToString(object? parameters)
         => parameters switch
         {
             null => null,
@@ -103,21 +107,21 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
     }
 
     /// <inheritdoc />
-    public string Image(
-        string url = default,
-        object settings = default,
-        object factor = default,
+    public string? Image(
+        string? url = default,
+        object? settings = default,
+        object? factor = default,
         NoParamOrder noParamOrder = default,
-        IField field = default,
-        object width = default,
-        object height = default,
-        object quality = default,
-        string resizeMode = default,
-        string scaleMode = default,
-        string format = default,
-        object aspectRatio = default,
-        string type = default,
-        object parameters = default
+        IField? field = default,
+        object? width = default,
+        object? height = default,
+        object? quality = default,
+        string? resizeMode = default,
+        string? scaleMode = default,
+        string? format = default,
+        object? aspectRatio = default,
+        string? type = default,
+        object? parameters = default
     )
     {
         // If params were given, ensure it can be used as string, as it could also be a params-object
@@ -151,7 +155,7 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
     /// <summary>
     /// Combine api with query string.
     /// </summary>
-    public static string CombineApiWithQueryString(string api, string queryString)
+    public static string CombineApiWithQueryString(string api, string? queryString)
     {
         queryString = queryString?.TrimStart(['?', '&']);
 

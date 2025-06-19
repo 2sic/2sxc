@@ -44,7 +44,7 @@ public interface ICacheService
     /// By default, each app has its own region, preventing key collisions between apps.
     /// </param>
     /// <returns></returns>
-    ICacheSpecs CreateSpecs(string key, NoParamOrder protector = default, string regionName = default, bool? shared = default);
+    ICacheSpecs CreateSpecs(string key, NoParamOrder protector = default, string? regionName = default, bool? shared = default);
 
     /// <summary>
     /// Check if the cache contains data for the given specs.
@@ -72,7 +72,7 @@ public interface ICacheService
     /// <param name="specs"></param>
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback"></param>
-    T Get<T>(ICacheSpecs specs, NoParamOrder protector = default, T fallback = default);
+    T? Get<T>(ICacheSpecs specs, NoParamOrder protector = default, T? fallback = default);
 
     ///// <summary>
     ///// Get data from the cache of the given type for the given key, with optional fallback.
@@ -102,7 +102,7 @@ public interface ICacheService
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="generate"></param>
     /// <returns></returns>
-    T GetOrSet<T>(ICacheSpecs specs, NoParamOrder protector = default, Func<T> generate = default);
+    T? GetOrSet<T>(ICacheSpecs specs, NoParamOrder protector = default, Func<T>? generate = default);
 
     /// <summary>
     /// Try to get data of the specified type from the cache for the given specs.
@@ -111,7 +111,7 @@ public interface ICacheService
     /// <param name="specs"></param>
     /// <param name="value"></param>
     /// <returns>`true` if found, `false` if not found</returns>
-    bool TryGet<T>(ICacheSpecs specs, out T value);
+    bool TryGet<T>(ICacheSpecs specs, out T? value);
 
     ///// <summary>
     ///// Try to get data of the specified type from the cache for the given key.
@@ -134,7 +134,7 @@ public interface ICacheService
     /// </summary>
     /// <param name="key"></param>
     /// <returns>The object if it was in the cache, otherwise null.</returns>
-    object Remove(ICacheSpecs key);
+    object? Remove(ICacheSpecs key);
 
     ///// <summary>
     ///// Set a value in the cache.

@@ -8,11 +8,11 @@ namespace ToSic.Sxc.Web.Internal.PageService;
 
 partial class PageService
 {
-    public Attribute CspWhitelistAttribute() => CspIsEnabled
+    public Attribute? CspWhitelistAttribute() => CspIsEnabled
         ? Tag.Attr(CspConstants.CspWhitelistAttribute, PageServiceShared.CspEphemeralMarker)
         : null;
 
-    public IRawHtmlString AssetAttributes(NoParamOrder noParamOrder = default, bool optimize = true, int priority = 0, string position = null, bool whitelist = true)
+    public IRawHtmlString AssetAttributes(NoParamOrder noParamOrder = default, bool optimize = true, int priority = 0, string? position = null, bool whitelist = true)
     {
         var attributes = new List<string>();
         if (optimize)

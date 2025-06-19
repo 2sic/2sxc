@@ -16,7 +16,7 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getEngineLazy) : S
 {
     #region Get Engine Default / Empty
 
-    public ITemplateEngine Default(NoParamOrder protector = default, IEnumerable<ILookUp> sources = default)
+    public ITemplateEngine Default(NoParamOrder protector = default, IEnumerable<ILookUp>? sources = default)
     {
         var sourcesList = sources?.ToList();
         var noSources = sourcesList == null || sourcesList.Count == 0;
@@ -25,7 +25,7 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getEngineLazy) : S
 
         // in some cases, like when testing, the _CodeApiSvc is not available
         // then it should still work, but of course not know about the app's sources
-        var original = ((Apps.App)ExCtxOrNull?.GetApp())?.ConfigurationProvider
+        var original = ((Apps.App?)ExCtxOrNull?.GetApp())?.ConfigurationProvider
             ?? getEngineLazy.Value.GetLookUpEngine(0);
         
         return noSources
@@ -33,28 +33,28 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getEngineLazy) : S
             : new TemplateEngineTokens(new LookUpEngine(original, Log, sources: sourcesList));
     }
 
-    private ITemplateEngine _default;
+    private ITemplateEngine? _default;
 
-    public ITemplateEngine Empty(NoParamOrder protector = default, IEnumerable<ILookUp> sources = null)
+    public ITemplateEngine Empty(NoParamOrder protector = default, IEnumerable<ILookUp>? sources = null)
     {
         var sourcesList = sources?.ToList();
         var noSources = sourcesList == null || sourcesList.Count == 0;
         if (_empty != null && noSources)
             return _empty;
 
-        var originalEngine = new LookUpEngine(Log, sources: sourcesList) as ILookUpEngine;
+        ILookUpEngine originalEngine = new LookUpEngine(Log, sources: sourcesList);
         
         return noSources
             ? _empty ??= new TemplateEngineTokens(originalEngine)
             : new TemplateEngineTokens(originalEngine);
     }
-    private ITemplateEngine _empty;
+    private ITemplateEngine? _empty;
 
     #endregion
 
     #region GetSource
 
-    public ILookUp GetSource(string name)
+    public ILookUp? GetSource(string name)
         => Default().GetSources(depth: 10).FirstOrDefault(s => s.Name.EqualsInsensitive(name));
 
 
@@ -62,10 +62,11 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getEngineLazy) : S
 
     #region Quick Parse
 
+    [field: AllowNull, MaybeNull]
     private ITemplateEngine Engine => field ??= Default();
 
 
-    string ITemplateService.Parse(string template, NoParamOrder protector, bool allowHtml, IEnumerable<ILookUp> sources)
+    string ITemplateService.Parse(string template, NoParamOrder protector, bool allowHtml, IEnumerable<ILookUp>? sources)
         => Engine.Parse(template, protector, allowHtml: allowHtml, sources: sources);
 
     #endregion
@@ -84,15 +85,17 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getEngineLazy) : S
     public ILookUp CreateSource(string name, Func<string, string, string> getter)
         => new LookUpWithFunctionAndFormat(NameOrErrorIfBad(name), getter);
 
+    [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
 
-    public ILookUp CreateSource(string name, ICanBeEntity item, NoParamOrder protector = default, string[] dimensions = default) 
+    public ILookUp CreateSource(string name, ICanBeEntity item, NoParamOrder protector = default, string[]? dimensions = default) 
         => new LookUpInEntity(name, item.Entity, dimensions: dimensions ?? Cdf.Dimensions);
 
-    public ILookUp MergeSources(string name, IEnumerable<ILookUp> sources)
+    public ILookUp MergeSources(string name, IEnumerable<ILookUp>? sources)
     {
-        var sourceList = sources?.ToList()
-                         ?? throw new ArgumentNullException(nameof(sources), @"Sources must not be null"); ;
+        var sourceList = sources
+                             ?.ToList()
+                         ?? throw new ArgumentNullException(nameof(sources), @"Sources must not be null");
 
         if (!sourceList.Any())
             throw new ArgumentException(@"Sources must not be empty", nameof(sources));
@@ -102,7 +105,7 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getEngineLazy) : S
 
     private string NameOrErrorIfBad(string name)
         => string.IsNullOrWhiteSpace(name)
-            ? throw new ArgumentException("Name must not be empty", nameof(name))
+            ? throw new ArgumentException(@"Name must not be empty", nameof(name))
             : name.ToLowerInvariant();
 
     #endregion

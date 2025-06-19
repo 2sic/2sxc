@@ -58,7 +58,7 @@ public interface IConvertService16
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails. If not specified, will use `default(T)`</param>
     /// <returns></returns>
-    T To<T>(object value, NoParamOrder noParamOrder = default, T fallback = default);
+    T? To<T>(object value, NoParamOrder noParamOrder = default, T? fallback = default);
 
     ///// <summary>
     ///// Convert any object safely to bool.
@@ -177,9 +177,9 @@ public interface IConvertService16
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">Fallback in case conversion fails or result is null. Defaults to `null`.</param>
     /// <param name="fallbackOnNull">Determine that nulls should also fallback, default is `true`</param>
-    string ToString(object value,
+    string? ToString(object value,
         NoParamOrder noParamOrder = default,
-        string fallback = default,
+        string? fallback = default,
         bool fallbackOnNull = true);
 
     ///// <summary>
@@ -208,7 +208,7 @@ public interface IConvertService16
     /// <param name="value">value to convert</param>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails. Defaults to `null`.</param>
-    string ForCode(object value, NoParamOrder noParamOrder = default, string fallback = default);
+    string? ForCode(object value, NoParamOrder noParamOrder = default, string? fallback = default);
 
     /// <summary>
     /// Sub-Service to convert JSON

@@ -6,6 +6,7 @@ using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
+using ToSic.Sys.Utils;
 using MailMessage = System.Net.Mail.MailMessage;
 
 namespace ToSic.Sxc.Services.Internal;
@@ -16,7 +17,7 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy)
 {
     private static readonly Regex HtmlDetectionRegex = new("<(.*\\s*)>", RegexOptions.Compiled);
 
-    [PrivateApi] protected IApp App;
+    [PrivateApi] protected IApp App = null!;
 
     /// <inheritdoc />
     public override void ConnectToRoot(IExecutionContext exCtx)
@@ -50,16 +51,16 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy)
     /// <inheritdoc />
     public MailMessage Create(
         NoParamOrder noParamOrder = default,
-        object from = null,
-        object to = null,
-        object cc = null,
-        object bcc = null,
-        object replyTo = null,
-        string subject = null,
-        string body = null,
+        object? from = null,
+        object? to = null,
+        object? cc = null,
+        object? bcc = null,
+        object? replyTo = null,
+        string? subject = null,
+        string? body = null,
         bool? isHtml = null,
-        Encoding encoding = null,
-        object attachments = null)
+        Encoding? encoding = null,
+        object? attachments = null)
     {
         var l = Log.Fn<MailMessage>(
             parameters: $"{nameof(from)}: {from}, {nameof(to)}: {to}, {nameof(cc)}: {cc}, {nameof(bcc)}: {bcc}, {nameof(replyTo)}: {replyTo}, " +
@@ -88,7 +89,7 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy)
     }
 
     [PrivateApi] 
-    public static bool AutoDetectHtml(string body)
+    public static bool AutoDetectHtml(string? body)
     {
         return !string.IsNullOrEmpty(body) && HtmlDetectionRegex.IsMatch(body);
     }
@@ -96,16 +97,16 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy)
     /// <inheritdoc />
     public void Send(
         NoParamOrder noParamOrder = default,
-        object from = null,
-        object to = null,
-        object cc = null,
-        object bcc = null,
-        object replyTo = null,
-        string subject = null,
-        string body = null,
+        object? from = null,
+        object? to = null,
+        object? cc = null,
+        object? bcc = null,
+        object? replyTo = null,
+        string? subject = null,
+        string? body = null,
         bool? isHtml = null,
-        Encoding encoding = null,
-        object attachments = null)
+        Encoding? encoding = null,
+        object? attachments = null)
     {
         var l = Log.Fn();
         // Note: don't log all the parameters here, because we'll do it again on the Create-call
@@ -140,7 +141,7 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy)
 
     // 2024-01-10 2dm internalized - doesn't seem in use, and also not clear why we would have this
     // was probably an experiment from STV during dev, but we shouldn't keep it in the interface
-    internal bool AddMailAddresses(string addressType, MailAddressCollection targetMails, object mailAddresses)
+    internal bool AddMailAddresses(string addressType, MailAddressCollection targetMails, object? mailAddresses)
     {
         var l = Log.Fn<bool>(); // return a bool just to make return-statements easier later on
 
@@ -176,12 +177,11 @@ public abstract class MailServiceBase(LazySvc<IUser> userLazy)
     }
 
     [PrivateApi]
-    public static string NormalizeEmailSeparators(string input)
-    {
-        return string.IsNullOrEmpty(input) ? null : input.Replace(";", ",");
-    }
+    [return: NotNullIfNotNull(nameof(input))]
+    public static string? NormalizeEmailSeparators(string? input)
+        => input.IsEmpty() ? null : input.Replace(";", ",");
 
-    public bool AddAttachments(AttachmentCollection targetAttachments, object attachments)
+    public bool AddAttachments(AttachmentCollection targetAttachments, object? attachments)
     {
         var l = Log.Fn<bool>(); // return a bool just to make return-statements easier later on
         switch (attachments)

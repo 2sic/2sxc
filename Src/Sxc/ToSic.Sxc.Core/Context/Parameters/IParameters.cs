@@ -194,7 +194,7 @@ public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     /// <param name="names">one or more names to keep, comma-separated.</param>
     /// <returns>A _new_ <see cref="IParameters"/>, the original is not modified.</returns>
     /// <remarks>Added in v17.01</remarks>
-    public IParameters Filter(string names);
+    public IParameters Filter(string? names);
 
     #endregion
 

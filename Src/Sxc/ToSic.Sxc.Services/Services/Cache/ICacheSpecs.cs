@@ -167,7 +167,7 @@ public interface ICacheSpecs
     /// <param name="names">Names of one or more parameters, comma-separated. If null, all parameters are used, if `""`, no parameters are used.</param>
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="caseSensitive">Determines if the value should be treated case-sensitive, default is `false`</param>
-    ICacheSpecs VaryByPageParameters(string names = default, NoParamOrder protector = default, bool caseSensitive = false);
+    ICacheSpecs VaryByPageParameters(string? names = default, NoParamOrder protector = default, bool caseSensitive = false);
 
     /// <summary>
     /// Vary the cache by a custom parameters list.
@@ -177,7 +177,7 @@ public interface ICacheSpecs
     /// <param name="names">Names of one or more parameters, comma-separated</param>
     /// <param name="caseSensitive">Determines if the value should be treated case-sensitive, default is `false`</param>
     /// <returns></returns>
-    ICacheSpecs VaryByParameters(IParameters parameters, NoParamOrder protector = default, string names = default, bool caseSensitive = false);
+    ICacheSpecs VaryByParameters(IParameters parameters, NoParamOrder protector = default, string? names = default, bool caseSensitive = false);
 
     #endregion
 

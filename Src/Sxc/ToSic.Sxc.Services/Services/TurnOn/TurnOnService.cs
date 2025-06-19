@@ -20,8 +20,8 @@ internal class TurnOnService(LazySvc<IHtmlTagsService> htmlTagsService)
     public Attribute Attribute(
         object runOrSpecs,
         NoParamOrder noParamOrder = default,
-        object require = default,
-        object data = default
+        object? require = default,
+        object? data = default
     )
     {
         var l = Log.Fn<Attribute>();
@@ -33,10 +33,10 @@ internal class TurnOnService(LazySvc<IHtmlTagsService> htmlTagsService)
     public IHtmlTag Run(
         object runOrSpecs,
         NoParamOrder noParamOrder = default,
-        object require = default,
-        object data = default,
-        IEnumerable<object> args = default,
-        string addContext = default
+        object? require = default,
+        object? data = default,
+        IEnumerable<object>? args = default,
+        string? addContext = default
     )
     {
         var l = Log.Fn<IHtmlTag>();
@@ -45,7 +45,7 @@ internal class TurnOnService(LazySvc<IHtmlTagsService> htmlTagsService)
         return l.ReturnAsOk(tag);
     }
 
-    internal static object PickOrBuildSpecs(object runOrSpecs, object require, object data, IEnumerable<object> args, string addContext)
+    internal static object PickOrBuildSpecs(object runOrSpecs, object? require, object? data, IEnumerable<object>? args, string? addContext)
         => runOrSpecs is not string run
             // if we already have a full configuration, just return it
             ? runOrSpecs

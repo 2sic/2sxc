@@ -31,7 +31,7 @@ internal class OqtUsersProvider(
 
     public string PlatformIdentityTokenPrefix => OqtConstants.UserTokenPrefix;
 
-    public IUserModel GetUser(int userId, int siteId)
+    public IUserModel? GetUser(int userId, int siteId)
     {
         var user = userManager.Value.GetUser(userId, SiteId);
         return user == null 

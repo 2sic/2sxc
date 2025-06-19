@@ -5,7 +5,7 @@ using static ToSic.Sxc.Services.Cache.CacheServiceConstants;
 
 namespace ToSic.Sxc.Services.Cache;
 
-internal record CacheKeySpecs(int AppId, string Main, string RegionName = default, Dictionary<string, string> VaryByDic = default)
+internal record CacheKeySpecs(int AppId, string Main, string? RegionName = default, Dictionary<string, string>? VaryByDic = default)
 {
     /// <summary>
     /// Special marker to say that the cache should not vary by appId

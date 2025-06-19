@@ -14,5 +14,5 @@ internal interface ITweakData<out TValue>
     /// <summary>
     /// Current value before tweaking.
     /// </summary>
-    TValue Value { get; }
+    TValue? Value { get; }
 }

@@ -109,17 +109,17 @@ internal record CacheSpecs : ICacheSpecs
     #region Vary-By Custom User, QueryString, etc.
 
     /// <inheritdoc />
-    public ICacheSpecs VaryByPageParameters(string names = default, NoParamOrder protector = default, bool caseSensitive = false)
+    public ICacheSpecs VaryByPageParameters(string? names = default, NoParamOrder protector = default, bool caseSensitive = false)
         => VaryByParamsInternal("PageParameters",
             ExCtx.GetState<ICmsContext>().Page.Parameters ?? new Parameters { Nvc = [] }, names,
             caseSensitive: caseSensitive
         );
 
     /// <inheritdoc />
-    public ICacheSpecs VaryByParameters(IParameters parameters, NoParamOrder protector = default, string names = default, bool caseSensitive = false)
+    public ICacheSpecs VaryByParameters(IParameters parameters, NoParamOrder protector = default, string? names = default, bool caseSensitive = false)
         => VaryByParamsInternal("Parameters", parameters, names, caseSensitive: caseSensitive);
 
-    private ICacheSpecs VaryByParamsInternal(string varyByName, IParameters parameters, string names, bool caseSensitive = false)
+    private ICacheSpecs VaryByParamsInternal(string varyByName, IParameters parameters, string? names, bool caseSensitive = false)
     {
         var all = parameters
             .Filter(names)

@@ -19,7 +19,7 @@ public class GoogleMapsSettings(IJsonService jsonService) : EntityBasedService($
 
     public string Icon => GetThis("");
 
-    public MapsCoordinates DefaultCoordinates => _defCoords.Get(GetMapsCoordinates);
+    public MapsCoordinates DefaultCoordinates => _defCoords.Get(GetMapsCoordinates)!;
     private readonly GetOnce<MapsCoordinates> _defCoords = new();
 
     private MapsCoordinates GetMapsCoordinates()
@@ -30,7 +30,9 @@ public class GoogleMapsSettings(IJsonService jsonService) : EntityBasedService($
             return l.Return(MapsCoordinates.Defaults, "no json");
         try
         {
-            return l.Return(jsonService.To<MapsCoordinates>(json), "from json");
+            var result = jsonService.To<MapsCoordinates>(json)
+                ?? MapsCoordinates.Defaults;
+            return l.Return(result, "from json");
         }
         catch
         {

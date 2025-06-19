@@ -31,15 +31,15 @@ public partial class DataService(
     }
 
     // TODO: MAKE PRIVATE AGAIN AFTER MOVING TO ToSic.Sxc.Custom
-    public IDataService Setup(IAppIdentity appIdentity, Func<ILookUpEngine> getLookup)
+    public IDataService Setup(IAppIdentity? appIdentity, Func<ILookUpEngine?>? getLookup)
     {
         _appIdentity = appIdentity ?? _appIdentity;
         _getLookup = getLookup ?? _getLookup;
         return this;
     }
-    private IAppIdentity _appIdentity;
+    private IAppIdentity? _appIdentity;
         
-    public IDataService SpawnNew(NoParamOrder noParamOrder = default, IAppIdentity appIdentity = default, int zoneId = default, int appId = default)
+    public IDataService SpawnNew(NoParamOrder noParamOrder = default, IAppIdentity? appIdentity = default, int zoneId = default, int appId = default)
     {
         // Make sure we have an AppIdentity if possible - or reuse the existing, though it could be null
         if (appIdentity == default)
@@ -65,13 +65,13 @@ public partial class DataService(
         return newDs;
     }
 
-    private DataSourceOptionsMs OptionsMs => _optionsHandler.Get(() => new(_appIdentity, _getLookup));
+    private DataSourceOptionsMs OptionsMs => _optionsHandler.Get(() => new(_appIdentity, _getLookup))!;
     private readonly GetOnce<DataSourceOptionsMs> _optionsHandler = new();
 
-    private Func<ILookUpEngine> _getLookup;
+    private Func<ILookUpEngine?>? _getLookup;
 
 
-    public IDataSource GetAppSource(NoParamOrder noParamOrder = default, object parameters = default, object options = default)
+    public IDataSource GetAppSource(NoParamOrder noParamOrder = default, object? parameters = default, object? options = default)
     {
         var l = Log.Fn<IDataSource>($"{nameof(options)}: {options}");
         var fullOptions = OptionsMs.SafeOptions(parameters, options: options, identityRequired: true);
@@ -82,13 +82,11 @@ public partial class DataService(
 
     #region GetQuery
 
-    public IDataSource GetQuery(string name = default,
+    public IDataSource? GetQuery(string? name = default,
         NoParamOrder noParamOrder = default,
-        IDataSourceLinkable attach = default,
-        object parameters = default)
-    {
-        return new GetQueryMs(queryManager, OptionsMs, Log).GetQuery(name, noParamOrder, attach, parameters);
-    }
+        IDataSourceLinkable? attach = default,
+        object? parameters = default)
+        => new GetQueryMs(queryManager, OptionsMs, Log).GetQuery(name, noParamOrder, attach, parameters);
 
     #endregion
 

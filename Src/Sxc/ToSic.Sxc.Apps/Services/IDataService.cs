@@ -92,7 +92,7 @@ public interface IDataService
     /// <returns></returns>
     /// <remarks>New 16.01</remarks>
     [PublicApi]
-    IDataSource GetQuery(
+    IDataSource? GetQuery(
         string? name = default,
         NoParamOrder noParamOrder = default,
         IDataSourceLinkable? attach = default,

@@ -1,5 +1,4 @@
 ﻿using ToSic.Lib.DI;
-using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -22,6 +21,7 @@ internal class ConvertService16(
 
     #region New v17 As conversions
 
+    [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
 
     /// <summary>
@@ -50,7 +50,7 @@ internal class ConvertService16(
 
     //public T To<T>(object value) => value.ConvertOrDefault<T>(numeric: OptimizeNumbers, truthy: OptimizeBoolean);
 
-    public T To<T>(object value, NoParamOrder noParamOrder = default, T fallback = default) => cnvSvc.To(value, noParamOrder, fallback);
+    public T? To<T>(object value, NoParamOrder noParamOrder = default, T? fallback = default) => cnvSvc.To(value, noParamOrder, fallback);
 
     //public int ToInt(object value) => _cnvSvc.To<int>(value);
     public int ToInt(object value, NoParamOrder noParamOrder = default, int fallback = 0) => cnvSvc.To(value, fallback: fallback);
@@ -72,11 +72,11 @@ internal class ConvertService16(
         
     //public string ToString(object value) => _cnvSvc.To<string>(value);
 
-    public string ToString(object value, NoParamOrder noParamOrder = default, string fallback = default, bool fallbackOnNull = true) 
+    public string? ToString(object value, NoParamOrder noParamOrder = default, string? fallback = default, bool fallbackOnNull = true) 
         => cnvSvc.ToString(value, noParamOrder, fallback, fallbackOnNull);
 
     //public string ForCode(object value) => _code.Value.ForCode(value);
-    public string ForCode(object value, NoParamOrder noParamOrder = default, string fallback = default) => code.Value.ForCode(value, noParamOrder, fallback);
+    public string? ForCode(object value, NoParamOrder noParamOrder = default, string? fallback = default) => code.Value.ForCode(value, noParamOrder, fallback);
         
 
     public IJsonService Json => json.Value;

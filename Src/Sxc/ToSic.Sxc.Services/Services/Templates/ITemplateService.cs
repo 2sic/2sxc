@@ -20,7 +20,7 @@ public interface ITemplateService
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="sources">optional _additional_ sources</param>
     /// <returns></returns>
-    ITemplateEngine Default(NoParamOrder protector = default, IEnumerable<ILookUp> sources = null);
+    ITemplateEngine Default(NoParamOrder protector = default, IEnumerable<ILookUp>? sources = null);
 
     /// <summary>
     /// Start with an empty engine.
@@ -29,7 +29,7 @@ public interface ITemplateService
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="sources">optional sources, but without them this engine won't do much</param>
     /// <returns></returns>
-    ITemplateEngine Empty(NoParamOrder protector = default, IEnumerable<ILookUp> sources = null);
+    ITemplateEngine Empty(NoParamOrder protector = default, IEnumerable<ILookUp>? sources = null);
 
     /// <summary>
     /// Get a built-in source by name.
@@ -38,7 +38,7 @@ public interface ITemplateService
     /// </summary>
     /// <param name="name"></param>
     /// <returns>The source if found, otherwise null</returns>
-    ILookUp GetSource(string name);
+    ILookUp? GetSource(string name);
 
     /// <summary>
     /// Create a source based on a dictionary.
@@ -66,7 +66,7 @@ public interface ITemplateService
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="dimensions">optional array of languages to use when looking for the value - if the data is multi-language. Default to current languages.</param>
     /// <returns></returns>
-    ILookUp CreateSource(string name, ICanBeEntity item, NoParamOrder protector = default, string[] dimensions = default);
+    ILookUp CreateSource(string name, ICanBeEntity item, NoParamOrder protector = default, string[]? dimensions = default);
 
     /// <summary>
     /// Create a source using a function, basically a very custom source. 
@@ -92,7 +92,7 @@ public interface ITemplateService
     /// <param name="protector"></param>
     /// <param name="sources"></param>
     /// <returns></returns>
-    string Parse(string template, NoParamOrder protector = default, bool allowHtml = false, IEnumerable<ILookUp> sources = default);
+    string Parse(string template, NoParamOrder protector = default, bool allowHtml = false, IEnumerable<ILookUp>? sources = default);
 
 
     /// <summary>

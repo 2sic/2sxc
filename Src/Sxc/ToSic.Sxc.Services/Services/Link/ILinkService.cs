@@ -61,10 +61,10 @@ public interface ILinkService: /*INeedsCodeApiService,*/ ICanDebug
     string To(
         NoParamOrder noParamOrder = default,
         int? pageId = null,
-        string api = null,
-        object parameters = null,
-        string type = null,
-        string language = null
+        string? api = null,
+        object? parameters = null,
+        string? type = null,
+        string? language = null
     );
         
     /// <summary>
@@ -146,21 +146,21 @@ public interface ILinkService: /*INeedsCodeApiService,*/ ICanDebug
     /////     - if no url was provided and there are magical query params (like in DNN), these would not be returned, but not dnn-internals like tabid or language
     ///// - `suffix` would return the entire suffix starting from the `?` _including_ the `?` or `#` - if nothing is there, empty string
     ///// </param>        [PrivateApi]
-    string Image(
-        string url = default,
-        object settings = default,
-        object factor = default,
+    string? Image(
+        string? url = default,
+        object? settings = default,
+        object? factor = default,
         NoParamOrder noParamOrder = default,
-        IField field = default,
-        object width = default,
-        object height = default,
-        object quality = default,
-        string resizeMode = default,
-        string scaleMode = default,
-        string format = default,
-        object aspectRatio = default,
-        string type = default,
-        object parameters = default
+        IField? field = default,
+        object? width = default,
+        object? height = default,
+        object? quality = default,
+        string? resizeMode = default,
+        string? scaleMode = default,
+        string? format = default,
+        object? aspectRatio = default,
+        string? type = default,
+        object? parameters = default
     );
 
 }
