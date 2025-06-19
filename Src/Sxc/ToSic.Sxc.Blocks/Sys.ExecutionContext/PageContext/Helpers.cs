@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Internal.Plumbing;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Web.Internal.PageService;
 
@@ -11,7 +12,7 @@ public class Helpers
         if (string.IsNullOrEmpty(original))
             return change.Value ?? original;
 
-        if (!string.IsNullOrEmpty(change.ReplacementIdentifier))
+        if (change.ReplacementIdentifier.HasValue())
         {
             var pos = original.IndexOf(change.ReplacementIdentifier, StringComparison.InvariantCultureIgnoreCase);
             if (pos >= 0)
@@ -51,7 +52,7 @@ public class Helpers
     public static PagePropertyChange InjectOriginalInValue(PagePropertyChange original, string originalValue)
     {
         // If it doesn't have the [Original] token, we're done
-        if (string.IsNullOrEmpty(original.Value) || original.Value.IndexOf(OriginalToken, StringComparison.OrdinalIgnoreCase) == -1)
+        if (string.IsNullOrEmpty(original.Value) || original.Value!.IndexOf(OriginalToken, StringComparison.OrdinalIgnoreCase) == -1)
             return original;
 
         var clone = original with

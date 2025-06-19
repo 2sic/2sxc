@@ -33,7 +33,7 @@ internal class AppIdResolver(IHttp http, AppFinder appFinder) : ServiceBase("Api
     /// It's a temporary solution, because normally we want the control flow to be more obvious
     /// </summary>
     /// <returns></returns>
-    internal IAppIdentity GetAppIdFromRoute()
+    internal IAppIdentity? GetAppIdFromRoute()
     {
         var allUrlKeyValues = http.QueryStringKeyValuePairs();
         var ok1 = int.TryParse(allUrlKeyValues.FirstOrDefault(
@@ -43,7 +43,8 @@ internal class AppIdResolver(IHttp http, AppFinder appFinder) : ServiceBase("Api
                 x => x.Key.Equals(ContextConstants.AppIdKey, StringComparison.InvariantCultureIgnoreCase)).Value, 
             out var appId);
 
-        if (!ok1 || !ok2) return null;
+        if (!ok1 || !ok2)
+            return null;
 
         Log.A($"Params in URL detected - will use appId:{appId}, zoneId:{zoneId}");
         return new AppIdentity(zoneId, appId);

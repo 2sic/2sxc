@@ -13,20 +13,20 @@ public sealed class BlockOfEntity(BlockServices services, LazySvc<AppFinder> app
     /// This is the entity that was used to configure the block
     /// We need it for later operations, like mentioning what index it was on in a list
     /// </summary>
-    public IEntity Entity { get; private set; }
+    public IEntity Entity { get; private set; } = null!;
         
     #region Init
 
     public BlockOfEntity Init(IBlock parent, IEntity blockEntity, int contentBlockId = -1)
     {
         var l = Log.Fn<BlockOfEntity>($"{nameof(contentBlockId)}:{contentBlockId}; {nameof(blockEntity)}:{blockEntity?.EntityId}", timer: true);
-        var ctx = parent.Context.Clone(Log) as IContextOfBlock;
+        var ctx = (IContextOfBlock)parent.Context.Clone(Log);
         Init(ctx, parent);
         blockEntity ??= GetBlockEntity(parent, contentBlockId);
 
         Entity = blockEntity;
 
-        var blockId = LoadBlockDefinition(parent.ZoneId, blockEntity, Log);
+        var blockId = LoadBlockDefinition(parent.ZoneId, blockEntity);
         Context.ResetApp(blockId);
 
         // Must override previous AppId, as that was of the container-block
@@ -49,7 +49,7 @@ public sealed class BlockOfEntity(BlockServices services, LazySvc<AppFinder> app
     /// <param name="contentBlockId">The block ID. Can sometimes be negative to mark inner-content-blocks</param>
     /// <returns></returns>
     private static IEntity GetBlockEntity(IBlock parent, int contentBlockId) 
-        => parent.App.Data.List.One(Math.Abs(contentBlockId));
+        => parent.App!.Data.List.One(Math.Abs(contentBlockId))!;
 
     #region ContentBlock Definition Entity
 
@@ -57,7 +57,7 @@ public sealed class BlockOfEntity(BlockServices services, LazySvc<AppFinder> app
     /// Get all the specs for this content-block from the entity
     /// </summary>
     /// <returns></returns>
-    private IBlockIdentifier LoadBlockDefinition(int zoneId, IEntity blockDefinition, ILog log)
+    private IBlockIdentifier LoadBlockDefinition(int zoneId, IEntity blockDefinition)
     {
         var appNameId = blockDefinition.Get(BlockBuildingConstants.CbPropertyApp, fallback: "");
         IsContentApp = appNameId == KnownAppsConstants.DefaultAppGuid;

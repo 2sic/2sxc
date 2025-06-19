@@ -19,7 +19,7 @@ public interface ISxcCurrentContextService: ICurrentContextService, ISxcAppCurre
     /// Return the block if known, or null if not
     /// </summary>
     /// <returns>The current block or null</returns>
-    IContextOfBlock BlockContextOrNull();
+    IContextOfBlock? BlockContextOrNull();
 
     ///// <summary>
     ///// Return the block if known, or an app context if not
@@ -36,7 +36,7 @@ public interface ISxcCurrentContextService: ICurrentContextService, ISxcAppCurre
 
     void AttachBlock(IBlock block);
 
-    IBlock BlockOrNull();
+    IBlock? BlockOrNull();
 
     IBlock BlockRequired();
 

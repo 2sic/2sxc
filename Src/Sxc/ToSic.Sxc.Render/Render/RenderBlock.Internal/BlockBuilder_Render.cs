@@ -113,7 +113,7 @@ public partial class BlockBuilder
                         : "This is common when a site is copied " +
                           "but the content / apps have not been imported yet" +
                           " - check 2sxc.org/help?tag=export-import - ";
-                    msg += $" Zone/App: {Block.ZoneId}/{Block.AppId}; App NameId: {blockId?.AppNameId}; ContentBlock GUID: {blockId?.Guid}";
+                    msg += $" Zone/App: {Block.ZoneId}/{Block.AppId}; App NameId: {blockId?.AppDebugNameId}; ContentBlock GUID: {blockId?.Guid}";
 
                     var ex = new Exception(msg);
                     exceptions.Add(ex);

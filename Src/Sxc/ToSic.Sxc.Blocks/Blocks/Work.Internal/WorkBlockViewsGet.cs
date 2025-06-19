@@ -12,6 +12,7 @@ namespace ToSic.Sxc.Blocks.Work.Internal;
 public class WorkBlockViewsGet(GenWorkPlus<WorkViews> workViews, LazySvc<AppIconHelpers> appIconHelpers)
     : WorkUnitBase<IAppWorkCtxPlus>("Cms.ViewRd", connect: [workViews, appIconHelpers])
 {
+    [field: AllowNull, MaybeNull]
     public List<IView> GetAll => field
         ??= workViews.New(AppWorkCtx)
             .GetAll()
@@ -44,7 +45,7 @@ public class WorkBlockViewsGet(GenWorkPlus<WorkViews> workViews, LazySvc<AppIcon
                 Name = t.Name,
                 ContentTypeStaticName = t.ContentType,
                 IsHidden = t.IsHidden,
-                Thumbnail = thumbnailHelper.IconPathOrNull(block?.App, t, PathTypes.Link),
+                Thumbnail = block?.App == null ? null : thumbnailHelper.IconPathOrNull(block.App, t, PathTypes.Link),
                 IsDefault = t.Metadata.HasType(KnownDecorators.IsDefaultDecorator),
             })
             .ToList();
@@ -67,13 +68,21 @@ public class WorkBlockViewsGet(GenWorkPlus<WorkViews> workViews, LazySvc<AppIcon
 
         // Compatibility check must verify each config on the view and compare with the current blockConfig
         compatibleTemplates = compatibleTemplates
-            .Where(t => blockConfig.Content.All(c => c == null) || blockConfig.Content.First(e => e != null).Type.NameId == t.ContentType)
-            .Where(t => blockConfig.Presentation.All(c => c == null) || blockConfig.Presentation.First(e => e != null).Type.NameId == t.PresentationType)
-            .Where(t => blockConfig.Header.All(c => c == null) || blockConfig.Header.First(e => e != null).Type.NameId == t.HeaderType)
-            .Where(t => blockConfig.HeaderPresentation.All(c => c == null) || blockConfig.HeaderPresentation.First(e => e != null).Type.NameId == t.HeaderPresentationType)
+            .Where(t => VerifyCompatible(blockConfig.Content, t.ContentType))
+            .Where(t => VerifyCompatible(blockConfig.Presentation, t.PresentationType))
+            .Where(t => VerifyCompatible(blockConfig.Header, t.HeaderType))
+            .Where(t => VerifyCompatible(blockConfig.HeaderPresentation, t.HeaderPresentationType))
             .ToList();
 
         return compatibleTemplates;
+
+        bool VerifyCompatible(IList<IEntity?> list, string expectedName)
+        {
+            var firstNonNull = list.FirstOrDefault(e => e != null);
+            if (firstNonNull == null)
+                return true; // all nulls, so compatible
+            return firstNonNull.Type.NameId == expectedName;
+        }
     }
 
 

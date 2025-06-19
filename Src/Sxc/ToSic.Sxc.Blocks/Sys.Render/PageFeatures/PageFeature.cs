@@ -22,7 +22,7 @@ public record PageFeature : IPageFeature
     /// </summary>
     public string Name { get; init; } = "";
 
-    public string Html { get; set; } // TODO: INIT!
+    public string? Html { get; set; } // TODO: INIT!
 
     /// <summary>
     /// Nice description of the feature.
@@ -34,6 +34,7 @@ public record PageFeature : IPageFeature
     /// </summary>
     public IEnumerable<string> Needs { get; init; } = [];
 
+    [field: AllowNull, MaybeNull]
     public Requirement Requirement => field ??= new(ConditionIsPageFeature, NameId);
 
     public List<Requirement> Requirements { get; init; } = [];
@@ -43,7 +44,7 @@ public record PageFeature : IPageFeature
     /// This is not a final solution, in future it should probably
     /// be more sophisticated, like contain a list of configuration objects to construct the url.
     /// </summary>
-    public string UrlInDist { get; init; }
+    public string? UrlInDist { get; init; }
 
     /// <summary>
     /// ToString for easier debugging

@@ -25,14 +25,14 @@ public class AppIconHelpers(LazySvc<IValueConverter> iconConverterLazy)
         return l.Return(result, result ?? "not found");
     }
 
-    private string IconPath(IAppPaths app, IView view, PathTypes type)
+    private string IconPath(IAppPaths appPaths, IView view, PathTypes type)
     {
         // See if we have an icon - but only if we need the link
         if (view.Icon.HasValue())
         {
             // If we have the App:Path in front, replace as expected, but never on global
             if (HasAppPathToken(view.Icon))
-                return AppPathTokenReplace(view.Icon, app.PathSwitch(false, type), app.PathSwitch(true, type));
+                return AppPathTokenReplace(view.Icon, appPaths.PathSwitch(false, type), appPaths.PathSwitch(true, type));
 
             // If not, we must assume it's file:## placeholder
             // URLs (Links) we can provide...
@@ -44,7 +44,7 @@ public class AppIconHelpers(LazySvc<IValueConverter> iconConverterLazy)
         }
 
         // Don't use the saved value, but return the expected path which would be the default by convention
-        var viewPath1 = app.ViewPath(view, type);
+        var viewPath1 = appPaths.ViewPath(view, type);
         return viewPath1.Substring(0, viewPath1.LastIndexOf(".", Ordinal)) + ".png";
     }
 

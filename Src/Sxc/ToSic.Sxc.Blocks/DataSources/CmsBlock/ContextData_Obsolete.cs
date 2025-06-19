@@ -15,6 +15,7 @@ partial class ContextData: IBlockDataSource
 #pragma warning disable 618
     [Obsolete("Old property on this data source, should really not be used at all. Must add warning in v13, and remove ca. v15")]
     [PrivateApi]
+    [field: AllowNull, MaybeNull]
     public CacheWithGetContentType Cache
     {
         get

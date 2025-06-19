@@ -2,7 +2,7 @@
 
 /// <inheritdoc />
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class BlockIdentifier(int zoneId, int appId, string appNameId, Guid guid, Guid viewOverride)
+public class BlockIdentifier(int zoneId, int appId, string? appDebugNameId, Guid guid, Guid viewOverride)
     : IBlockIdentifier
 {
     /// <inheritdoc />
@@ -11,7 +11,7 @@ public class BlockIdentifier(int zoneId, int appId, string appNameId, Guid guid,
     /// <inheritdoc />
     public int AppId { get; } = appId;
 
-    public string AppNameId { get; } = appNameId;
+    public string? AppDebugNameId { get; } = appDebugNameId;
 
     /// <inheritdoc />
     public Guid Guid { get; } = guid;

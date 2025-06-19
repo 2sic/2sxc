@@ -43,10 +43,12 @@ public class BlockEditorForEntity : BlockEditorBase
         => UpdateValue(BlockBuildingConstants.CbPropertyContentGroup, cgGuid.ToString()); // must pre-convert to string, as it's not a reference to an entity in the same app
 
 
-    internal override void UpdateTitle(IEntity titleItem)
+    internal override void UpdateTitle(IEntity? titleItem)
     {
-        if (titleItem?.GetBestTitle() == null) return;
-        UpdateValue(BlockBuildingConstants.CbPropertyTitle, titleItem.GetBestTitle());
+        var title = titleItem?.GetBestTitle();
+        if (title == null)
+            return;
+        UpdateValue(BlockBuildingConstants.CbPropertyTitle, title);
     }
 
     #endregion
@@ -58,7 +60,8 @@ public class BlockEditorForEntity : BlockEditorBase
 
     private void Update(Dictionary<string, object> newValues)
     {
-        var parentBlockAppState = ((IAppWithInternal)((BlockOfBase)Block).ParentBlock.App).AppReader;
+        var parentBlock = ((BlockOfBase)Block).ParentBlock!; // must exist on an entity-block
+        var parentBlockAppState = ((IAppWithInternal)parentBlock.App!).AppReader;
         _entityUpdate.New(parentBlockAppState)
             .UpdateParts(Math.Abs(Block.ContentBlockId), newValues, new());
     }

@@ -17,12 +17,12 @@ namespace ToSic.Eav.Context.Internal;
 public class ContextResolverBase(
     Generator<IContextOfSite> siteCtxGenerator,
     Generator<IContextOfApp> appCtxGenerator,
-    string logName = default,
-    object[] connect = default)
+    string? logName = default,
+    object[]? connect = default)
     : ServiceBase(logName ?? "Eav.CtxRes", connect: [..connect ?? [], siteCtxGenerator, appCtxGenerator])
 {
    
-    public IContextOfSite Site() => _site.Get(siteCtxGenerator.New);
+    public IContextOfSite Site() => _site.Get(siteCtxGenerator.New)!;
     private readonly GetOnce<IContextOfSite> _site = new();
 
 
@@ -37,10 +37,10 @@ public class ContextResolverBase(
     public IContextOfApp AppRequired()
         => AppContextFromAppOrBlock ?? throw new($"To call {nameof(AppRequired)} first call {nameof(SetApp)}");
 
-    public IContextOfApp AppOrNull() => AppContextFromAppOrBlock;
+    public IContextOfApp? AppOrNull() => AppContextFromAppOrBlock;
 
     /// <summary>
     /// This is set whenever an App Context or Block Context are set.
     /// </summary>
-    protected IContextOfApp AppContextFromAppOrBlock { get; set; }
+    protected IContextOfApp? AppContextFromAppOrBlock { get; set; }
 }

@@ -31,7 +31,7 @@ internal partial class SxcCurrentContextService(
     /// </summary>
     /// <returns></returns>
     public EffectivePermissions UserPermissions() => _ctxUserPerm ??= GetUserPermissions();
-    private EffectivePermissions _ctxUserPerm;
+    private EffectivePermissions? _ctxUserPerm;
 
     /// <summary>
     /// Figure out user permissions based on block-context, app-context or site-context.
@@ -48,8 +48,8 @@ internal partial class SxcCurrentContextService(
 
         // Check if an all-apps cookie is set
         return CookieExpectsLive("*") 
-            ? new(perms.IsSiteAdmin, perms.IsContentAdmin, perms.IsContentEditor, ShowDraftData: false) :
-            perms;
+            ? perms with { ShowDraftData = false }
+            : perms;
 
         // Check if a cookie is set to this specific app
         // 2024-06-03 ATM this doesn't work, because the initial access
@@ -67,7 +67,7 @@ internal partial class SxcCurrentContextService(
         if (string.IsNullOrWhiteSpace(nameOrPath))
             return null;
         var zoneId = Site().Site.ZoneId;
-        var appId = appIdResolverLazy.Value.GetAppIdFromPath(zoneId, nameOrPath, false);
+        var appId = appIdResolverLazy.Value.GetAppIdFromPath(zoneId, nameOrPath!, false);
         return appId <= KnownAppsConstants.AppIdEmpty
             ? null
             : SetApp(new AppIdentity(zoneId, appId));
@@ -80,9 +80,9 @@ internal partial class SxcCurrentContextService(
         _block = block;
         AppContextFromAppOrBlock = _block?.Context;
     }
-    private IBlock _block;
+    private IBlock? _block;
 
-    public IBlock BlockOrNull() => _block;
+    public IBlock? BlockOrNull() => _block;
 
     public IBlock BlockRequired() => BlockOrNull()
                                      ?? throw new("Block required but missing. It was not attached");
@@ -90,7 +90,7 @@ internal partial class SxcCurrentContextService(
     public IContextOfBlock BlockContextRequired() => BlockContextOrNull()
                                                      ?? throw new("Block context required but not known. It was not attached.");
 
-    public IContextOfBlock BlockContextOrNull() => _block?.Context;
+    public IContextOfBlock? BlockContextOrNull() => _block?.Context;
 
 
     #endregion

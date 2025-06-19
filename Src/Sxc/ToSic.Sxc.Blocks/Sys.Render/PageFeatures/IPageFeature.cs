@@ -24,7 +24,7 @@ public interface IPageFeature : IHasIdentityNameId, IHasRequirements
     /// </summary>
     string Description { get; }
 
-    string Html { get; }
+    string? Html { get; }
 
     /// <summary>
     /// List of other features required to run this feature.

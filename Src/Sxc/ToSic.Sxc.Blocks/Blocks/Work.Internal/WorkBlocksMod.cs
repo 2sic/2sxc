@@ -73,20 +73,24 @@ public class WorkBlocksMod(
         var l = Log.Fn<int>($"{nameof(parentId)}:{parentId}, {nameof(field)}:{field}, {nameof(index)}, {index}, {nameof(typeName)}:{typeName}");
 
         // create the new entity 
-        var entityId = workEntCreate.New(AppWorkCtx.AppReader).GetOrCreate(newGuid, typeName, values);
+        var entityId = workEntCreate.New(AppWorkCtx.AppReader)
+            .GetOrCreate(newGuid, typeName, values);
 
         #region attach to the current list of items
 
-        var cbEnt = AppWorkCtx.AppReader.List.One(parentId);
+        var cbEnt = AppWorkCtx.AppReader.List.One(parentId)
+            ?? throw new NullReferenceException($"Tried to use the just-created entity with id '{parentId}' but can't find it.");
         var blockList = cbEnt.Children(field);
 
         var intList = blockList
-            .Select(b => b.EntityId)
+            .Where(b => b != null)
+            .Select(b => b!.EntityId)
             .ToListOpt();
         // add only if it's not already in the list (could happen if http requests are run again)
         if (!intList.Contains(entityId))
         {
-            if (index > intList.Count) index = intList.Count;
+            if (index > intList.Count)
+                index = intList.Count;
             intList.Insert(index, entityId);
         }
         var updateDic = new Dictionary<string, object> { { field, intList } };

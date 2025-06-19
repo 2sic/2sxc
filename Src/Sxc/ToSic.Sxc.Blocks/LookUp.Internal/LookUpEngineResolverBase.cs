@@ -6,7 +6,7 @@ using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.LookUp.Internal;
 
-public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> builtInSources, string logName, NoParamOrder protect = default, object[] connect = default)
+public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> builtInSources, string logName, NoParamOrder protect = default, object[]? connect = default)
     : ServiceBase(logName, protect, connect), ILookUpEngineResolver
 {
     /// <summary>
@@ -54,7 +54,7 @@ public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> bui
         return engine;
     }
 
-    protected bool TryReuseFromCache(int moduleId, out LookUpEngine engine)
+    protected bool TryReuseFromCache(int moduleId, [NotNullWhen(true)] out LookUpEngine? engine)
     {
         if (!SourcesByModuleId.TryGetValue(moduleId, out var sources))
         {

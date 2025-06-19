@@ -10,11 +10,11 @@ namespace ToSic.Sxc.DataSources;
 public sealed partial class CmsBlock
 {
     private IImmutableList<IEntity> GetStream(
-        IView view,
-        IList<IEntity> items, 
-        IEntity cDemoItem, 
-        IList<IEntity> presList, 
-        IEntity pDemoItem, 
+        IView? view,
+        IList<IEntity?> items, 
+        IEntity? cDemoItem, 
+        IList<IEntity?> presList, 
+        IEntity? pDemoItem, 
         bool isListHeader
     )
     {
@@ -69,9 +69,15 @@ public sealed partial class CmsBlock
 
                     try
                     {
-                        var itm = originals.One(entityId);
+                        var itm = originals.One(entityId)!;
                         entitiesToDeliver.Add(EntityInBlockDecorator.Wrap(
-                            entity: itm, fieldName: null, index: isListHeader ? -1 : i, presentation: presentationEntity, isDemoItem: isDemoItem, parent: null));
+                            entity: itm,
+                            fieldName: null,
+                            index: isListHeader ? -1 : i,
+                            presentation: presentationEntity,
+                            isDemoItem: isDemoItem,
+                            parent: null
+                        ));
                     }
                     catch (Exception ex)
                     {
@@ -111,21 +117,23 @@ public sealed partial class CmsBlock
         return l.Return(In[StreamDefaultName].List.ToImmutableOpt(), "ok");
     }
 
-    private static IEntity GetPresentationEntity(IImmutableList<IEntity> originals, IList<IEntity> presItems, int itemIndex, int entityId)
+    private static IEntity? GetPresentationEntity(IImmutableList<IEntity> originals, IList<IEntity?>? presItems, int itemIndex, int entityId)
     {
         try
         {
-            if (presItems == null) return null;
+            if (presItems == null)
+                return null;
 
             // Try to find presentationList entity
             var presentationId =
                 presItems.Count - 1 >= itemIndex && presItems[itemIndex] != null &&
-                originals.Has(presItems[itemIndex].EntityId)
-                    ? presItems[itemIndex].EntityId
+                originals.Has(presItems[itemIndex]!.EntityId)
+                    ? presItems[itemIndex]!.EntityId
                     : new int?();
 
             // If there is no presentationList entity, take default entity
-            if (presentationId.HasValue) return originals.One(presentationId.Value);
+            if (presentationId.HasValue)
+                return originals.One(presentationId.Value);
 
             // 2021-10-12 2dm - believe this is an unnecessary loop to re-retrieve the demo item, will short-circuit
             return null;

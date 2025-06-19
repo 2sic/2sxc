@@ -2,6 +2,8 @@
 using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Data.EntityBased.Sys;
 using ToSic.Eav.DataSource.Internal.Query;
+// ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
 
 namespace ToSic.Sxc.Blocks.Internal;
 
@@ -11,14 +13,14 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
     public  int ZoneId { get; }
     public  int AppId { get; }
 
-    public IEntity PreviewViewEntity { get; }
+    public IEntity? PreviewViewEntity { get; }
 
-    public IBlockIdentifier BlockIdentifierOrNull;
+    public IBlockIdentifier? BlockIdentifierOrNull;
 
     private readonly Generator<QueryDefinitionBuilder> _qDefBuilder;
 
-    public BlockConfiguration(IEntity entity, IAppIdentity appIdentity, IEntity previewViewEntity, Generator<QueryDefinitionBuilder> qDefBuilder, string languageCode, ILog parentLog):
-        base(entity, languageCode, parentLog, "Blk.Config")
+    public BlockConfiguration(IEntity? entity, IAppIdentity appIdentity, IEntity? previewViewEntity, Generator<QueryDefinitionBuilder> qDefBuilder, string languageCode, ILog parentLog):
+        base(entity!, languageCode, parentLog, "Blk.Config")
     {
         Log.A("Entity is " + (entity == null ? "" : "not") + " null");
         _qDefBuilder = qDefBuilder;
@@ -38,19 +40,19 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
     /// Returns true if a content group entity for this group really exists
     /// Means for example, that the app can't be changed anymore
     /// </summary>
-    public bool Exists => Entity != null;
+    public bool Exists => Entity != null!;
 
     internal bool DataIsMissing = false;
-        
-        
+
+
     #region View stuff
-    
+
     /// <summary>
     /// The view as it is in the configuration.
     /// This can be different from the view which is actually used,
     /// as it could be replaced by a different view because of url-parameter.
     /// </summary>
-    public IView View
+    public IView? View
     {
         get
         {
@@ -75,11 +77,11 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
     /// <summary>
     /// Content is a bit special, it must always return a list with at least one null-item
     /// </summary>
-    public IList<IEntity> Content
+    public IList<IEntity?> Content
     {
         get
         {
-            if (Entity == null)
+            if (Entity == null!)
                 return [null];
             var list = Entity.Children(ViewParts.Content).ToListOpt();
             return list.Count > 0
@@ -88,11 +90,12 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
         }
     }
 
-    public IList<IEntity> Presentation => field ??= Entity?.Children(ViewParts.Presentation).ToListOpt() ?? [];
+    [field: AllowNull, MaybeNull]
+    public IList<IEntity?> Presentation => field ??= Entity?.Children(ViewParts.Presentation).ToListOpt() ?? [];
 
-    public IList<IEntity> Header => Entity?.Children(ViewParts.FieldHeader).ToListOpt() ?? [];
+    public IList<IEntity?> Header => Entity?.Children(ViewParts.FieldHeader).ToListOpt() ?? [];
 
-    public IList<IEntity> HeaderPresentation => Entity?.Children(ViewParts.ListPresentation).ToListOpt() ?? [];
+    public IList<IEntity?> HeaderPresentation => Entity?.Children(ViewParts.ListPresentation).ToListOpt() ?? [];
 
     public IList<IEntity> this[string type] =>
         type.ToLowerInvariant() switch

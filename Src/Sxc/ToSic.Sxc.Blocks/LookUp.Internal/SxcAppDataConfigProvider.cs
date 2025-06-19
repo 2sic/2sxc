@@ -34,7 +34,7 @@ public class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngineLa
 
     // note: not sure yet where the best place for this method is, so it's here for now
     // will probably move again some day
-    internal LookUpEngine GetLookupEngineForContext(IContextOfSite context, IApp appForLookup, IBlock blockForLookupOrNull)
+    internal LookUpEngine GetLookupEngineForContext(IContextOfSite? context, IApp? appForLookup, IBlock? blockForLookupOrNull)
     {
         var l = Log.Fn<LookUpEngine>($"module: {(context as ContextOfBlock)?.Module.Id}, app: {appForLookup?.AppId} ..., ...");
         var modId = (context as ContextOfBlock)?.Module.Id ?? 0;
@@ -45,9 +45,9 @@ public class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngineLa
         l.A($"Environment provided {existSources.Count} sources");
 
         // Create a new lookup engine and add the standard sources as inner-sources
-        //var provider = new LookUpEngine(envLookups, Log);
-
-        var newSources = new List<ILookUp> { new LookUpInAppProperty("app", appForLookup) };
+        var newSources = new List<ILookUp>();
+        if (appForLookup != null)
+            newSources.Add(new LookUpInAppProperty("app", appForLookup));
 
         // add module if it was not already added previously
         if (!existSources.HasSource(BlockInstanceConstants.InstanceLookupName))

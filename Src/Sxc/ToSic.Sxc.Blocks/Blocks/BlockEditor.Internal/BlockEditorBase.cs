@@ -44,10 +44,11 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.MySe
 
     #endregion
 
-    protected IBlock Block;
+    protected IBlock Block = null!;
 
     #region methods which are fairly stable / the same across content-block implementations
 
+    [field: AllowNull, MaybeNull]
     protected BlockConfiguration BlockConfiguration => field ??= Block.Configuration;
         
     public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
@@ -68,7 +69,7 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.MySe
         }
 
         // only set preview / content-group-reference - but must use the guid
-        var templateGuid = Block.App.Data.List.One(templateId)!.EntityGuid;
+        var templateGuid = Block.App!.Data.List.One(templateId)!.EntityGuid;
         SavePreviewTemplateId(templateGuid);
         return l.Return(null, "only set preview, return null");
     }
@@ -83,18 +84,25 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.MySe
             : ViewParts.ListPresentationLower;
         var presEntity = contentGroup[presKey][index];
 
-        var hasPresentation = presEntity != null;
 
         // make sure we really have the draft item an not the live one
         var appReader = Block.Context.AppReaderRequired;
         var publisher = Services.Publisher.New(appReader: appReader);
-        var contDraft = contEntity.IsPublished ? appReader.GetDraft(contEntity) : contEntity;
-        publisher.Publish(contDraft.RepositoryId);
+        var contDraft = contEntity.IsPublished
+            ? appReader.GetDraft(contEntity)
+            : contEntity;
 
-        if (hasPresentation)
+        if (contDraft != null)
+            publisher.Publish(contDraft.RepositoryId);
+
+        // if has presentation entity, publish that too
+        if (presEntity != null)
         {
-            var presDraft = presEntity.IsPublished ? appReader.GetDraft(presEntity) : presEntity;
-            publisher.Publish(presDraft.RepositoryId);
+            var presDraft = presEntity.IsPublished
+                ? appReader.GetDraft(presEntity)
+                : presEntity;
+            if (presDraft != null)
+                publisher.Publish(presDraft.RepositoryId);
         }
 
         return l.ReturnTrue();

@@ -9,13 +9,14 @@ public record RenderEngineResult
 
     public required bool ActivateJsApi { get; init; }
 
+    [field: AllowNull, MaybeNull]
     public List<ClientAsset> Assets
     {
         get => field ??= [];
         init;
     }
 
-    public string ErrorCode { get; init; }
+    public string? ErrorCode { get; init; }
 
-    public List<Exception> ExceptionsOrNull { get; init; }
+    public List<Exception>? ExceptionsOrNull { get; init; }
 }

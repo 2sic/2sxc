@@ -22,6 +22,7 @@ namespace ToSic.Sxc.DataSources;
 /// </remarks>
 [PrivateApi("used to be Internal... till 16.01, then changed to private to hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
+// ReSharper disable once PartialTypeWithSinglePart
 public partial class ContextData : PassThrough
 {
     #region Constructor and Init
@@ -49,20 +50,22 @@ public partial class ContextData : PassThrough
     #region New v16
 
     // TODO: MAKE class INTERNAL AGAIN AFTER MOVING TO ToSic.Sxc.Custom
-    public IEnumerable<IEntity> MyItems => _myContent.Get(() => _blockSource.GetStream(emptyIfNotFound: true).List);
+    public IEnumerable<IEntity> MyItems => _myContent.Get(() => _blockSource.GetStream(emptyIfNotFound: true)!.List)!;
     private readonly GetOnce<IEnumerable<IEntity>> _myContent = new();
 
     // TODO: MAKE class INTERNAL AGAIN AFTER MOVING TO ToSic.Sxc.Custom
-    public IEnumerable<IEntity> MyHeaders => _header.Get(() => _blockSource.GetStream(ViewParts.StreamHeader, emptyIfNotFound: true).List);
+    public IEnumerable<IEntity> MyHeaders => _header.Get(() => _blockSource.GetStream(ViewParts.StreamHeader, emptyIfNotFound: true)!.List)!;
     private readonly GetOnce<IEnumerable<IEntity>> _header = new();
         
     #endregion
 
 
-    internal void SetOut(Query querySource) => _querySource = querySource;
-    private Query _querySource;
-    internal void SetBlock(CmsBlock blockSource) => _blockSource = blockSource;
-    private CmsBlock _blockSource;
+    internal void SetOut(Query querySource)
+        => _querySource = querySource;
+    private Query? _querySource;
+    internal void SetBlock(CmsBlock blockSource)
+        => _blockSource = blockSource;
+    private CmsBlock _blockSource = null!;
 
     public override IReadOnlyDictionary<string, IDataStream> Out => _querySource?.Out ?? base.Out;
 

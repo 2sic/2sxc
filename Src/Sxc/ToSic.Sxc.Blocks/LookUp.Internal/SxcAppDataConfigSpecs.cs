@@ -5,5 +5,5 @@ namespace ToSic.Sxc.LookUp.Internal;
 
 public class SxcAppDataConfigSpecs: AppDataConfigSpecs
 {
-    public IBlock BlockForLookupOrNull { get; init; }
+    public IBlock? BlockForLookupOrNull { get; init; }
 }

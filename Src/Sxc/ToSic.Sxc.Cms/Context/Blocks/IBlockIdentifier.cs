@@ -11,7 +11,7 @@ public interface IBlockIdentifier: IAppIdentity
     /// <summary>
     /// The App NameId - only used in scenarios where the app isn't found, and we need the NameId to show an error
     /// </summary>
-    string AppNameId { get; }
+    public string? AppDebugNameId { get; }
 
     /// <summary>
     /// The block identifier

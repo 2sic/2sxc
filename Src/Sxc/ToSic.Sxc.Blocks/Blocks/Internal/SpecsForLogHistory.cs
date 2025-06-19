@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Blocks.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class SpecsForLogHistory
 {
-    public IDictionary<string, string> BuildSpecsForLogHistory(IBlock block, IApp app = default, string entry = default, bool addView = true)
+    public IDictionary<string, string> BuildSpecsForLogHistory(IBlock block, IApp? app = default, string? entry = default, bool addView = true)
     {
         try
         {
@@ -16,14 +16,14 @@ public class SpecsForLogHistory
             app ??= block?.App;
 
             // No context - neither blog nor App, exit
-            if (block == default && app == default)
-                return null;
-
             var specs = new Dictionary<string, string>(InvariantCultureIgnoreCase);
+            if (block == default && app == default)
+                return specs;
+
             if (entry != default)
                 specs.Add("Entry", entry);
 
-            string bestTitle = null;
+            string? bestTitle = null;
 
             if (block != null)
             {
@@ -33,22 +33,22 @@ public class SpecsForLogHistory
                 if (addView && view != null)
                 {
                     specs.Add("ViewId", view.Id.ToString());
-                    specs.Add("ViewEdition", view.Edition);
+                    specs.Add("ViewEdition", view.Edition ?? "");
                     specs.Add("ViewPath", view.Path);
                 }
 
                 var ctx = block.Context;
-                if (ctx != null)
+                if (ctx != null!)
                 {
                     var site = ctx.Site;
-                    if (site != null)
+                    if (site != null!)
                     {
                         specs.Add("SiteId", site.Id.ToString());
                         specs.Add("SiteUrl", site.Url);
                     }
 
                     var page = ctx.Page;
-                    if (page != null)
+                    if (page != null!)
                     {
                         var pageParams = page.Parameters.ToString();
                         var pageUrl = page.Url + (string.IsNullOrEmpty(pageParams) ? "" : "?" + pageParams);
@@ -61,14 +61,14 @@ public class SpecsForLogHistory
                     }
 
                     var module = ctx.Module;
-                    if (module != null)
+                    if (module != null!)
                     {
                         var mid = module.Id.ToString();
                         specs.Add("ModuleId", mid);
                     }
 
                     var usr = ctx.User;
-                    if (usr != null)
+                    if (usr != null!)
                     {
                         var uid = usr.Id.ToString();
                         specs.Add("UserId", uid);
@@ -93,7 +93,7 @@ public class SpecsForLogHistory
         catch
         {
             /* fail silently */
-            return null;
+            return new Dictionary<string, string>(InvariantCultureIgnoreCase);
         }
     }
 }

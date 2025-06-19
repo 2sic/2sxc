@@ -73,7 +73,7 @@ public sealed partial class CmsBlock : DataSourceBase
 
     public override IDataSourceLink Link => _link.Get(() => BreachExtensions.CreateEmptyLink(this)
         .AddStream(name: ViewParts.StreamHeader)
-        .AddStream(name: ViewParts.StreamHeaderOld));
+        .AddStream(name: ViewParts.StreamHeaderOld))!;
     private readonly GetOnce<IDataSourceLink> _link = new();
 
 
@@ -81,25 +81,35 @@ public sealed partial class CmsBlock : DataSourceBase
     {
         // First check if BlockConfiguration works - to give better error if not
         var blockSpecsAndErrors = ConfigAndViewOrErrors;
-        if (blockSpecsAndErrors.IsError)
-            return blockSpecsAndErrors.Errors;
+        if (blockSpecsAndErrors.IsError())
+            return blockSpecsAndErrors.ErrorsSafe();
 
         var parts = blockSpecsAndErrors.Result;
-        return GetStream(parts.View, parts.BlockConfiguration.Content, parts.View.ContentItem,
-            parts.BlockConfiguration.Presentation, parts.View.PresentationItem, false);
+        return GetStream(parts.View,
+            parts.BlockConfiguration.Content,
+            parts.View.ContentItem,
+            parts.BlockConfiguration.Presentation,
+            parts.View.PresentationItem,
+            false
+        );
     }
 
     private IImmutableList<IEntity> GetHeader()
     {
         // First check if BlockConfiguration works - to give better error if not
         var blockSpecsAndErrors = ConfigAndViewOrErrors;
-        if (blockSpecsAndErrors.IsError)
-            return blockSpecsAndErrors.Errors;
+        if (blockSpecsAndErrors.IsError())
+            return blockSpecsAndErrors.ErrorsSafe();
 
         var parts = blockSpecsAndErrors.Result;
 
 
-        return GetStream(parts.View, parts.BlockConfiguration.Header, parts.View.HeaderItem,
-            parts.BlockConfiguration.HeaderPresentation, parts.View.HeaderPresentationItem, true);
+        return GetStream(parts.View,
+            parts.BlockConfiguration.Header,
+            parts.View.HeaderItem,
+            parts.BlockConfiguration.HeaderPresentation,
+            parts.View.HeaderPresentationItem,
+            true
+        );
     }
 }

@@ -6,6 +6,7 @@ namespace ToSic.Sxc.Blocks.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ProblemReport
 {
+    // ReSharper disable InconsistentNaming
     public enum ErrorSeverity
     {
         none = 0,
@@ -19,6 +20,7 @@ public class ProblemReport
         view,
         app
     }
+    // ReSharper restore InconsistentNaming
 
     [JsonPropertyName("severity")]
     public ErrorSeverity Severity { get; set; }
@@ -28,11 +30,11 @@ public class ProblemReport
 
     [JsonPropertyName("code")]
     [JsonIgnore(Condition = WhenWritingDefault)]
-    public string Code { get; set; }
+    public string? Code { get; set; }
 
     [JsonPropertyName("message")]
-    public string Message { get; set; }
+    public string? Message { get; set; }
 
     [JsonPropertyName("link")]
-    public string Link { get; set; }
+    public string? Link { get; set; }
 }

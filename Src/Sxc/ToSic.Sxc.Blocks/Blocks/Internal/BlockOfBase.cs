@@ -13,7 +13,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 namespace ToSic.Sxc.Blocks.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class BlockOfBase(BlockServices services, string logName, object[] connect = default)
+public abstract class BlockOfBase(BlockServices services, string logName, object[]? connect = default)
     : ServiceBase<BlockServices>(services, logName, connect: connect ?? []), IBlock
 {
     #region Constructor and DI
@@ -25,7 +25,7 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
         AppId = appId.AppId;
     }
 
-    protected bool CompleteInit(IBlock parentBlockOrNull, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded)
+    protected bool CompleteInit(IBlock? parentBlockOrNull, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded)
     {
         var l = Log.Fn<bool>();
 
@@ -83,17 +83,18 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
 
     #endregion
 
-    public IBlock ParentBlock { get; private set; }
+    public IBlock? ParentBlock { get; private set; }
 
-    public IBlock RootBlock { get; private set; }
+    public IBlock RootBlock { get; private set; } = null!;
 
     public int ZoneId { get; protected set; }
 
     public int AppId { get; protected set; }
 
-    public IApp App { get; protected set; }
+    public IApp? App { get; protected set; }
 
-    public bool ContentGroupExists => Configuration?.Exists ?? false;
+    // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
+    public bool ContentGroupExists => Configuration?.Exists ?? false; // This check may happen before Configuration is accessed, so we need the null check
 
     public List<string> BlockFeatureKeys { get; } = [];
 
@@ -118,14 +119,14 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
     // 5. If nothing exists, ensure system knows nothing applied 
     // #. possible override: If specifically defined in some object calls (like web-api), use that (set when opening this object?)
     // #. possible override in url - and allowed by permissions (admin/host), use that
-    public IView View
+    public IView? View
     {
         get;
         // ReSharper disable once ExplicitCallerInfoArgument
         set => Log.Do(cName: $"set{nameof(value)}", action: () =>
         {
             field = value;
-            Data = null; // reset this if the view changed...
+            Data = null!; // reset this if the view changed...
         });
     }
 
@@ -133,9 +134,10 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
 
 
     /// <inheritdoc />
-    public IContextOfBlock Context { get; protected set; }
+    public IContextOfBlock Context { get; protected set; } = null!;
 
 
+    [field: AllowNull, MaybeNull]
     public IDataSource Data
     {
         get => field ??= GetData();
@@ -150,10 +152,10 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
         return l.Return(dataSource);
     }
 
-    public BlockConfiguration Configuration { get; protected set; }
+    public BlockConfiguration Configuration { get; protected set; } = null!;
         
-    /// <inheritdoc />
-    public object BlockBuilder { get; protected set; }
+    ///// <inheritdoc />
+    //public object BlockBuilder { get; protected set; }
 
     public bool IsContentApp { get; protected set; }
 
@@ -172,12 +174,12 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
             return;
 
         // Cast to current object type to access internal APIs
-        if ((/*Block.*/RootBlock/*.BlockBuilder*/ ?? this) is not BlockOfBase rootBuilder)
+        if (RootBlock is not BlockOfBase rootBuilder)
             return;
 
         // add dependent appId only once
-        if (rootBuilder.DependentApps.All(a => a.AppId != myAppId /*Block.AppId*/))
-            rootBuilder.DependentApps.Add(new DependentApp { AppId = myAppId /*Block.AppId*/ });
+        if (rootBuilder.DependentApps.All(a => a.AppId != myAppId))
+            rootBuilder.DependentApps.Add(new DependentApp { AppId = myAppId });
     }
 
 

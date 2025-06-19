@@ -30,8 +30,8 @@ public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDef
                     ? new { Entity = b, ViewGuid = templateGuid }
                     : null;
             })
-            .Where(b => b != null)
-            .Select(s => new BlockConfiguration(s.Entity, appIdentity, null, qDefBuilder, cultureResolver.CurrentCultureCode, Log))
+            .Where(p => p != null)
+            .Select(p => new BlockConfiguration(p!.Entity, appIdentity, null, qDefBuilder, cultureResolver.CurrentCultureCode, Log))
             .ToListOpt();
     }
 

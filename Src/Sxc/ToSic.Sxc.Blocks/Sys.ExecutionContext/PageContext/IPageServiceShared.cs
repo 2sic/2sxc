@@ -33,5 +33,5 @@ public interface IPageServiceShared: IChangeQueue
     /// <returns>The keys it just activated (after trim/filter for empty)</returns>
     IEnumerable<string> Activate(params string[] keys);
     //IList<PagePropertyChange> GetPropertyChangesAndFlush(ILog log);
-    void Add(IHtmlTag tag, string identifier = null);
+    void Add(IHtmlTag tag, string? identifier = null);
 }

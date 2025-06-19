@@ -2,8 +2,8 @@
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.Services;
 using ToSic.Lib.LookUp.Engines;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
-using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.DataSources.Internal;
 
@@ -12,7 +12,7 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
     : ServiceBase("Sxc.BDsFct", connect: [dataSourceFactory, queryLazy])
 {
 
-    internal IDataSource GetContextDataSource(IBlock block, ILookUpEngine configLookUp)
+    internal IDataSource GetContextDataSource(IBlock block, ILookUpEngine? configLookUp)
     {
         var l = Log.Fn<IDataSource>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.Permissions.IsContentAdmin}, view:{block.View?.Name}");
         var view = block.View;
@@ -35,7 +35,8 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
             : null;
         l.A($"use query upstream:{viewDataSourceUpstream != null}");
 
-        var contextDataSource = dsFactory.Create<ContextData>(attach: viewDataSourceUpstream, options: new DataSourceOptions
+        var contextDataSource = dsFactory.Create<ContextData>(attach: viewDataSourceUpstream,
+            options: new DataSourceOptions
             {
                 AppIdentityOrReader = block,
                 LookUp = configLookUp,
@@ -61,7 +62,7 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
             if (view.Query != null)
             {
                 l.A("Generate query");
-                var query = queryLazy.Value.Init(block.App.ZoneId, block.App.AppId, view.Query.Entity, configLookUp, contextDataSource);
+                var query = queryLazy.Value.Init(block.App!.ZoneId, block.App.AppId, view.Query.Entity, configLookUp, contextDataSource);
                 l.A("attaching");
                 contextDataSource.SetOut(query);
             }

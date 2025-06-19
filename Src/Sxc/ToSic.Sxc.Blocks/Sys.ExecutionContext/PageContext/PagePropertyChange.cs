@@ -7,10 +7,10 @@ public record PagePropertyChange
         
     public PageProperties Property { get; init; }
 
-    public string Value { get; init; }
+    public string? Value { get; init; }
 
     /// <summary>
     /// This is part of the original property, which would be replaced.
     /// </summary>
-    public string ReplacementIdentifier { get; init; }
+    public string? ReplacementIdentifier { get; init; }
 }

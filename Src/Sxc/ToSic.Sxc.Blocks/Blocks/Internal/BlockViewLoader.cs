@@ -10,10 +10,11 @@ namespace ToSic.Sxc.Blocks.Internal;
 /// </summary>
 internal class BlockViewLoader(ILog parentLog) : HelperBase(parentLog, "Blk.ViewLd")
 {
-    internal IView PickView(IBlock block, IView configView, IContextOfBlock context, WorkViews views)
+    internal IView? PickView(IBlock block, IView? configView, IContextOfBlock context, WorkViews views)
     {
         // #1 skip on ContentApp (not a feature there) or if not relevant or not yet initialized
-        if (block.IsContentApp || block.App == null) return configView;
+        if (block.IsContentApp || block.App == null)
+            return configView;
 
         // #2 Change Template if URL contains the part in the metadata "ViewNameInUrl"
         var viewFromUrlParam = TryGetViewBasedOnUrlParams(context, views);
@@ -21,7 +22,7 @@ internal class BlockViewLoader(ILog parentLog) : HelperBase(parentLog, "Blk.View
     }
 
 
-    private IView TryGetViewBasedOnUrlParams(IContextOfBlock context, WorkViews views)
+    private IView? TryGetViewBasedOnUrlParams(IContextOfBlock context, WorkViews views)
     {
         var l = Log.Fn<IView>("template override - check");
 

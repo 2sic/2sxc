@@ -7,6 +7,6 @@ public struct TemplateUiInfo
     public string Name;
     public string ContentTypeStaticName;
     public bool IsHidden;
-    public string Thumbnail;
+    public string? Thumbnail;
     public bool IsDefault; // new, v13
 }

@@ -23,13 +23,13 @@ internal class ContextOfBlock(
 
     #region Override AppIdentity based on module information
 
-    protected override IAppIdentity AppIdentity
+    protected override IAppIdentity? AppIdentity
     {
         get
         {
             if (base.AppIdentity != null)
                 return base.AppIdentity;
-            var l = Log.Fn<IAppIdentity>();
+            var l = Log.Fn<IAppIdentity?>();
             var identifier = Module?.BlockIdentifier;
             if (identifier == null)
                 return l.ReturnNull("no mod-block-id");
@@ -49,6 +49,7 @@ internal class ContextOfBlock(
     public IPageServiceShared PageServiceShared { get; } = pageServiceShared;
 
     /// <inheritdoc />
+    [field: AllowNull, MaybeNull]
     public BlockPublishingSettings Publishing => field ??= publishingResolver.Value.Value.SettingsOfModule(Module?.Id ?? -1);
 
     /// <inheritdoc />

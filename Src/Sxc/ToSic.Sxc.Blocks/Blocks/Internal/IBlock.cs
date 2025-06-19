@@ -38,7 +38,7 @@ public interface IBlock: IAppIdentity, IHasLog
     /// <summary>
     /// The view which will be used to render this block
     /// </summary>
-    IView View { get; set; }
+    IView? View { get; set; }
 
     [PrivateApi("unsure if this should be public, or only needed to initialize it?")]
     BlockConfiguration Configuration { get; }
@@ -46,7 +46,7 @@ public interface IBlock: IAppIdentity, IHasLog
     /// <summary>
     /// The app this block is running in
     /// </summary>
-    IApp App { get; }
+    IApp? App { get; }
 
     /// <summary>
     /// The DataSource which delivers data for this block (will be used by the <see cref="IEngine"/> together with the View)
@@ -84,7 +84,7 @@ public interface IBlock: IAppIdentity, IHasLog
     /// The root block of this block - can be the same as `this`.
     /// </summary>
     [PrivateApi]
-    public IBlock RootBlock { get; }
+    public IBlock? RootBlock { get; }
 
-    List<IPageFeature> BlockFeatures(ILog log = default);
+    List<IPageFeature> BlockFeatures(ILog? log = default);
 }
