@@ -2,10 +2,10 @@
 using System.Runtime.CompilerServices;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Data.Internal.Typed;
-using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
+using ToSic.Sxc.Data.Sys.Typed;
+using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
 
-namespace ToSic.Sxc.Data.Internal.Dynamic;
+namespace ToSic.Sxc.Data.Sys.Dynamic;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CodeItemHelper(GetAndConvertHelper helper, ITyped data)

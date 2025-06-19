@@ -1,6 +1,7 @@
 ﻿using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data.Internal;
-using ToSic.Sxc.Data.Internal.Decorators;
+using ToSic.Sxc.Data.Sys.Decorators;
+using ToSic.Sxc.Data.Sys.Factory;
 
 namespace ToSic.Sxc.Apps;
 

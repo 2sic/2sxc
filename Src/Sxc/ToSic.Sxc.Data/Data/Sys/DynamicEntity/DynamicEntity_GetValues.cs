@@ -1,7 +1,7 @@
 ﻿using System.Dynamic;
-using ToSic.Sxc.Data.Internal.Dynamic;
+using ToSic.Sxc.Data.Sys.Dynamic;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Sys;
 
 public partial class DynamicEntity
 {

@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Data.Internal;
+﻿namespace ToSic.Sxc.Data.Sys;
 
 /// <summary>
 /// This is just a helper interface.

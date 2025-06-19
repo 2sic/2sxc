@@ -1,5 +1,6 @@
 ﻿using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Internal.Typed;
+using ToSic.Sxc.Data.Sys.DynamicJacket;
+using ToSic.Sxc.Data.Sys.Typed;
 
 namespace ToSic.Sxc.DataTests.DynJson;
 

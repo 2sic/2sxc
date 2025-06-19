@@ -4,14 +4,14 @@ using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Data;
-using ToSic.Sxc.Data.Internal.Typed;
+using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
 using ToSic.Sys.Performance;
 using static ToSic.Sys.Code.Infos.CodeInfoObsolete;
-using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
+using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
 
-namespace ToSic.Sxc.Data.Internal.Metadata;
+namespace ToSic.Sxc.Data.Sys.Metadata;
 
 internal partial class Metadata: ITypedItem
 {
@@ -158,7 +158,7 @@ internal partial class Metadata: ITypedItem
             : [];
     }
 
-    IPublishing ITypedItem.Publishing => _publishing.Get(() => new Publishing(this, Cdf))!;
+    IPublishing ITypedItem.Publishing => _publishing.Get(() => new Publishing.Publishing(this, Cdf))!;
     private readonly GetOnce<IPublishing> _publishing = new();
 
     /// <inheritdoc />

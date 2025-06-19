@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Data.Internal.Typed;
-using ToSic.Sxc.Data.Internal.Wrapper;
+using ToSic.Sxc.Data.Sys.DynamicJacket;
+using ToSic.Sxc.Data.Sys.Typed;
+using ToSic.Sxc.Data.Sys.Wrappers;
 
 namespace ToSic.Sxc;
 

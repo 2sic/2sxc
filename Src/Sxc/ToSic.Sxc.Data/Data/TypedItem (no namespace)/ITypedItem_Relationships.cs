@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Data.Internal.Docs;
+﻿using ToSic.Sxc.Data.Sys.Docs;
 
 namespace ToSic.Sxc.Data;
 

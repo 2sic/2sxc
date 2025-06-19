@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data.PropertyStack.Sys;
 using ToSic.Eav.Data.Sys;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Sys.Stack;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class PropLookupStack(IPropertyStack stack, Func<bool> getDebug) : IPropertyLookup

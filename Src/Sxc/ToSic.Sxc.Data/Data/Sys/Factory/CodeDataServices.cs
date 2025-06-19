@@ -5,7 +5,7 @@ using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Services.Internal;
 
-namespace ToSic.Sxc.Data.Internal;
+namespace ToSic.Sxc.Data.Sys.Factory;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

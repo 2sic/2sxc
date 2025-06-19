@@ -1,5 +1,5 @@
 ﻿using Microsoft.CSharp.RuntimeBinder;
-using ToSic.Sxc.Data.Internal.Dynamic;
+using ToSic.Sxc.Data.Sys.Dynamic;
 
 namespace ToSic.Sxc.DataTests.DynWrappers;
 

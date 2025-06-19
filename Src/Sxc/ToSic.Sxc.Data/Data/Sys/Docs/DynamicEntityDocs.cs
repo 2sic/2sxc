@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Data.Internal.Docs;
+﻿namespace ToSic.Sxc.Data.Sys.Docs;
 
 /// <summary>
 /// This is minor cross-concerns aspect of Dynamic-Entity-like objects

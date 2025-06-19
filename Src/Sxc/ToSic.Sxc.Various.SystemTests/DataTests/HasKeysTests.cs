@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data.Internal.Typed;
+﻿using ToSic.Sxc.Data.Sys.Typed;
+
 #pragma warning disable xUnit1026
 
 namespace ToSic.Sxc.DataTests;

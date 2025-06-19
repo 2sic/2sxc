@@ -1,6 +1,7 @@
-﻿using ToSic.Sxc.Data.Internal.Decorators;
+﻿using ToSic.Sxc.Data.Sys.Decorators;
+using ToSic.Sxc.Data.Sys.Factory;
 
-namespace ToSic.Sxc.Data.Internal.Dynamic;
+namespace ToSic.Sxc.Data.Sys.Dynamic;
 
 /// <summary>
 /// This is a helper in charge of the list-behavior of a DynamicEntity

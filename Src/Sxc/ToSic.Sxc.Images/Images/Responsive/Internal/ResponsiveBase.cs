@@ -6,7 +6,7 @@ using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam.Security.Internal;
 using ToSic.Sxc.Configuration.Internal;
-using ToSic.Sxc.Data.Internal.Decorators;
+using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Edit.Toolbar.Internal;
 using ToSic.Sxc.Services;

@@ -1,7 +1,9 @@
 ﻿using System.Dynamic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
-using ToSic.Sxc.Data.Internal.Wrapper;
+using ToSic.Sxc.Data.Sys;
+using ToSic.Sxc.Data.Sys.Factory;
+using ToSic.Sxc.Data.Sys.Wrappers;
 
 namespace ToSic.Sxc.Data.Internal;
 

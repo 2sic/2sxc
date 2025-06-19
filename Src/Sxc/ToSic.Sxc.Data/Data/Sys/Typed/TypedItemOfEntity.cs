@@ -1,26 +1,27 @@
-﻿using ToSic.Eav.Metadata;
-using ToSic.Lib.Helpers;
-using ToSic.Razor.Blade;
-using ToSic.Razor.Markup;
-using ToSic.Sxc.Adam;
-using ToSic.Sxc.Data.Internal.Convert;
-using ToSic.Sxc.Data.Internal.Decorators;
-using ToSic.Sxc.Data.Internal.Dynamic;
-using ToSic.Sxc.Images;
-using ToSic.Sxc.Services.Tweaks;
-using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
-using static ToSic.Lib.Wrappers.WrapperEquality;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Data.Entities.Sys.Wrappers;
 using ToSic.Eav.Data.PropertyStack.Sys;
 using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Metadata;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Wrappers;
+using ToSic.Razor.Blade;
+using ToSic.Razor.Markup;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Data;
+using ToSic.Sxc.Data.Internal.Convert;
+using ToSic.Sxc.Data.Sys.Decorators;
+using ToSic.Sxc.Data.Sys.Dynamic;
+using ToSic.Sxc.Data.Sys.Factory;
+using ToSic.Sxc.Images;
+using ToSic.Sxc.Services.Tweaks;
+using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
+using static ToSic.Lib.Wrappers.WrapperEquality;
 
 // This is for paranoid Entity? checking
 // ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
 
-namespace ToSic.Sxc.Data.Internal.Typed;
+namespace ToSic.Sxc.Data.Sys.Typed;
 
 [JsonConverter(typeof(DynamicJsonConverter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -262,7 +263,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
 
     bool ITypedItem.IsPublished => Entity.IsPublished;
 
-    IPublishing ITypedItem.Publishing => _publishing.Get(() => new Publishing(this, Cdf))!;
+    IPublishing ITypedItem.Publishing => _publishing.Get(() => new Publishing.Publishing(this, Cdf))!;
     private readonly GetOnce<IPublishing> _publishing = new();
 
     /// <inheritdoc />

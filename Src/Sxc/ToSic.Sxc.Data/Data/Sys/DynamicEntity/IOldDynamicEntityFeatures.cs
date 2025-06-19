@@ -1,6 +1,7 @@
 ﻿using ToSic.Razor.Markup;
+using ToSic.Sxc.Data.Sys.Factory;
 
-namespace ToSic.Sxc.Data.Internal;
+namespace ToSic.Sxc.Data.Sys;
 
 
 public interface IOldDynamicEntityFeatures

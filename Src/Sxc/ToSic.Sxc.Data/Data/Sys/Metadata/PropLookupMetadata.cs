@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Metadata;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Sys.Metadata;
 
 internal class PropLookupMetadata(IHasMetadata parent, Func<bool> getDebug) : IPropertyLookup
 {

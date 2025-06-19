@@ -5,7 +5,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Data;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Internal.Typed;
+using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Sys.ExecutionContext;
 

@@ -2,9 +2,9 @@
 using System.Dynamic;
 using ToSic.Eav.Data.Sys;
 using ToSic.Sxc.Data.Internal.Convert;
-using ToSic.Sxc.Data.Internal.Wrapper;
+using ToSic.Sxc.Data.Sys.Wrappers;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Sys.DynamicJacket;
 
 /// <summary>
 /// Base class for DynamicJackets. You won't use this, just included in the docs. <br/>

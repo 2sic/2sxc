@@ -1,5 +1,5 @@
 ﻿using ToSic.Lib.Coding;
-using ToSic.Sxc.Data.Internal.Wrapper;
+using ToSic.Sxc.Data.Sys.Wrappers;
 using ApiController = ToSic.Sxc.Dnn.ApiController;
 
 // ReSharper disable once CheckNamespace

@@ -10,7 +10,7 @@ using ToSic.Eav.Sys;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.Data.Internal.Decorators;
+using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 using IEntity = ToSic.Eav.Data.IEntity;

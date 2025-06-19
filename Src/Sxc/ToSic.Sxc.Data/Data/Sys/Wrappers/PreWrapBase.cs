@@ -2,10 +2,10 @@
 using ToSic.Eav.Data.Sys;
 using ToSic.Lib.Wrappers;
 using ToSic.Sxc.Data.Internal.Convert;
-using ToSic.Sxc.Data.Internal.Typed;
-using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
+using ToSic.Sxc.Data.Sys.Typed;
+using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
 
-namespace ToSic.Sxc.Data.Internal.Wrapper;
+namespace ToSic.Sxc.Data.Sys.Wrappers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal abstract class PreWrapBase(object data) : IWrapper<object>, IHasJsonSource

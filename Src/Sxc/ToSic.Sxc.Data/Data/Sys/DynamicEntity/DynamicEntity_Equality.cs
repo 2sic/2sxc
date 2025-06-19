@@ -5,7 +5,7 @@
 using ToSic.Eav.Data.Entities.Sys.Wrappers;
 using ToSic.Lib.Wrappers;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Sys;
 
 public partial class DynamicEntity: IEquatable<IEntityWrapper>
 {

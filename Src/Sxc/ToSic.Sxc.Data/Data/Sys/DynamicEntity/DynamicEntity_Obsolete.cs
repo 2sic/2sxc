@@ -1,9 +1,8 @@
 ﻿#if NETFRAMEWORK
 
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Data.Internal;
 
-namespace ToSic.Sxc.Data
+namespace ToSic.Sxc.Data.Sys
 {
     public partial class DynamicEntity
     {

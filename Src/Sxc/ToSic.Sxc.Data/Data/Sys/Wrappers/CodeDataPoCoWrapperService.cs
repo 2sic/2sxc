@@ -2,10 +2,11 @@
 using ToSic.Eav.Data.Sys;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Data.Internal.Dynamic;
-using ToSic.Sxc.Data.Internal.Typed;
+using ToSic.Sxc.Data.Sys.Dynamic;
+using ToSic.Sxc.Data.Sys.Factory;
+using ToSic.Sxc.Data.Sys.Typed;
 
-namespace ToSic.Sxc.Data.Internal.Wrapper;
+namespace ToSic.Sxc.Data.Sys.Wrappers;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

@@ -1,19 +1,20 @@
-﻿using ToSic.Eav.Metadata;
-using ToSic.Razor.Blade;
-using System.Dynamic;
+﻿using System.Dynamic;
 using ToSic.Eav.Data.Entities.Sys.Wrappers;
 using ToSic.Eav.Data.Sys;
-using ToSic.Sxc.Data.Internal;
-using ToSic.Sxc.Data.Internal.Decorators;
-using ToSic.Sxc.Data.Internal.Dynamic;
-using ToSic.Sxc.Data.Internal.Typed;
+using ToSic.Eav.Metadata;
+using ToSic.Razor.Blade;
+using ToSic.Sxc.Data.Sys.Decorators;
+using ToSic.Sxc.Data.Sys.Dynamic;
+using ToSic.Sxc.Data.Sys.Factory;
+using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sxc.Internal;
+
 // ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 
 // This is so we can have a lot of paranoid Entity? null checks
 // ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Sys;
 
 /// <summary>
 /// A dynamic entity object - the main object you use when templating things in RazorComponent objects <br/>

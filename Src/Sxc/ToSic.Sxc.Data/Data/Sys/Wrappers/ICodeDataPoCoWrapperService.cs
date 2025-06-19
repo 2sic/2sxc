@@ -1,6 +1,7 @@
 ﻿using ToSic.Lib.DI;
+using ToSic.Sxc.Data.Sys.Factory;
 
-namespace ToSic.Sxc.Data.Internal.Wrapper;
+namespace ToSic.Sxc.Data.Sys.Wrappers;
 
 /// <summary>
 /// Service to create dynamic or typed objects from non Entity objects.

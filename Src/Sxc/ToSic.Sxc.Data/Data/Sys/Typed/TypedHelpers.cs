@@ -3,7 +3,7 @@ using ToSic.Eav.Data.PropertyStack.Sys;
 using ToSic.Sys.Code.Help;
 using ToSic.Sys.Exceptions;
 
-namespace ToSic.Sxc.Data.Internal.Typed;
+namespace ToSic.Sxc.Data.Sys.Typed;
 
 // TODO: MAKE INTERNAL AGAIN AFTER MOVING TO ToSic.Sxc.Custom
 

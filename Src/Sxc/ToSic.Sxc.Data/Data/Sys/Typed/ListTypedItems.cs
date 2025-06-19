@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Data.Internal.Typed;
+﻿namespace ToSic.Sxc.Data.Sys.Typed;
 
 /// <summary>
 /// Special helper for marking lists which are empty, but must know about the parent entity and field they belong to,

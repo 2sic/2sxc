@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Data.Internal.Typed;
+﻿using ToSic.Sxc.Data.Sys.Typed;
 
 namespace ToSic.Sxc.DataTests.DynWrappers;
 

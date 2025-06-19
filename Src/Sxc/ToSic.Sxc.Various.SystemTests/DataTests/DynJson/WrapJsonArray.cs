@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Text.Json.Nodes;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Internal.Wrapper;
+using ToSic.Sxc.Data.Sys.DynamicJacket;
+using ToSic.Sxc.Data.Sys.Wrappers;
 
 namespace ToSic.Sxc.DataTests.DynJson;
 

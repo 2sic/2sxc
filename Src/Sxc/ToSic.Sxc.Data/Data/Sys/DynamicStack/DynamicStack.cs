@@ -3,9 +3,11 @@ using System.Dynamic;
 using ToSic.Eav.Data.PropertyStack.Sys;
 using ToSic.Eav.Data.Sys;
 using ToSic.Lib.Wrappers;
-using ToSic.Sxc.Data.Internal.Dynamic;
+using ToSic.Sxc.Data.Sys.Dynamic;
+using ToSic.Sxc.Data.Sys.Factory;
+using ToSic.Sxc.Data.Sys.Stack;
 
-namespace ToSic.Sxc.Data.Internal.Stack;
+namespace ToSic.Sxc.Data.Sys.DynamicStack;
 
 // Must be pbulic so that `Resources.Get...` work
 [PrivateApi("Keep implementation hidden, only publish interface")]

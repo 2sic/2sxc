@@ -1,11 +1,12 @@
 ﻿using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.ValueConverter.Sys;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Data.Internal.Decorators;
-using ToSic.Sxc.Data.Internal.Typed;
+using ToSic.Sxc.Data.Sys.Decorators;
+using ToSic.Sxc.Data.Sys.Factory;
+using ToSic.Sxc.Data.Sys.Typed;
 using static System.StringComparer;
 
-namespace ToSic.Sxc.Data.Internal.Dynamic;
+namespace ToSic.Sxc.Data.Sys.Dynamic;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class GetAndConvertHelper(

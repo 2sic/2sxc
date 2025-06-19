@@ -1,7 +1,8 @@
 ﻿using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Internal.Stack;
+using ToSic.Sxc.Data.Sys;
+using ToSic.Sxc.Data.Sys.DynamicStack;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.WebResources;
 using static ToSic.Sxc.Web.WebResources.WebResourceConstants;

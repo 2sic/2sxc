@@ -3,10 +3,10 @@ using System.Text.Json.Serialization;
 using ToSic.Eav.Data.PropertyStack.Sys;
 using ToSic.Eav.Data.Sys;
 using ToSic.Sxc.Data.Internal.Convert;
-using ToSic.Sxc.Data.Internal.Typed;
-using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
+using ToSic.Sxc.Data.Sys.Typed;
+using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
 
-namespace ToSic.Sxc.Data.Internal.Wrapper;
+namespace ToSic.Sxc.Data.Sys.Wrappers;
 
 // WIP
 // Inspired by https://stackoverflow.com/questions/46948289/how-do-you-convert-any-c-sharp-object-to-an-expandoobject

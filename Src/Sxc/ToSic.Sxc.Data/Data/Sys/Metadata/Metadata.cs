@@ -2,9 +2,10 @@
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Data.Internal.Convert;
-using ToSic.Sxc.Data.Internal.Dynamic;
+using ToSic.Sxc.Data.Sys.Dynamic;
+using ToSic.Sxc.Data.Sys.Factory;
 
-namespace ToSic.Sxc.Data.Internal.Metadata;
+namespace ToSic.Sxc.Data.Sys.Metadata;
 
 
 [PrivateApi("Hide implementation")]

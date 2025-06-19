@@ -1,8 +1,9 @@
 ﻿using ToSic.Razor.Blade;
+using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
 
-namespace ToSic.Sxc.Data.Internal.Typed;
+namespace ToSic.Sxc.Data.Sys.Typed;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class TypedItemHelpers

@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Data.Internal;
+﻿namespace ToSic.Sxc.Data.Sys.Factory;
 
 /// <summary>
 /// This helps create sub-items for a specific context, obeying the rules of the context

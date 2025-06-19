@@ -1,8 +1,8 @@
 ﻿using System.Dynamic;
 using System.Text.Json.Nodes;
-using ToSic.Sxc.Data.Internal.Wrapper;
+using ToSic.Sxc.Data.Sys.Wrappers;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Sys.DynamicJacket;
 
 /// <summary>
 /// This is a DynamicJacket for JSON arrays. You can enumerate through it. 

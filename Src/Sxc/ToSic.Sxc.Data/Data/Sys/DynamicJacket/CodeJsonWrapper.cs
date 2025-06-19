@@ -3,10 +3,11 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Data.Internal.Typed;
-using static ToSic.Sxc.Data.Internal.Wrapper.JsonProcessingHelpers;
+using ToSic.Sxc.Data.Sys.Typed;
+using ToSic.Sxc.Data.Sys.Wrappers;
+using static ToSic.Sxc.Data.Sys.Wrappers.JsonProcessingHelpers;
 
-namespace ToSic.Sxc.Data.Internal.Wrapper;
+namespace ToSic.Sxc.Data.Sys.DynamicJacket;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)

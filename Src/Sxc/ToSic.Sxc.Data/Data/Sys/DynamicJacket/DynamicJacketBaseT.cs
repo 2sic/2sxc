@@ -1,8 +1,7 @@
 ﻿using System.Collections;
 using ToSic.Lib.Wrappers;
-using ToSic.Sxc.Data.Internal.Wrapper;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Sys.DynamicJacket;
 
 /// <summary>
 /// Base class for DynamicJackets. You won't use this, just included in the docs. <br/>

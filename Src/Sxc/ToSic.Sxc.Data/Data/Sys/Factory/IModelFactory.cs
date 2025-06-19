@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Data.Internal;
+﻿namespace ToSic.Sxc.Data.Sys.Factory;
 
 /// <summary>
 /// An object which can create custom models.

@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Data.Internal.Factory;
+﻿namespace ToSic.Sxc.Data.Sys.Factory;
 
 internal class ClassAttributeLookup<TValue>
 {

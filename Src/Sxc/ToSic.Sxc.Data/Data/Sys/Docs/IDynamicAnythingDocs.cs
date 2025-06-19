@@ -3,7 +3,7 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnassignedGetOnlyAutoProperty
 
-namespace ToSic.Sxc.Data.Internal.Docs;
+namespace ToSic.Sxc.Data.Sys.Docs;
 /* IMPORTANT: These are just fake properties for documentation - Keep in Sync between IDynamicEntity and IDynamicStack */
 
 [ShowApiWhenReleased(ShowApiMode.Never)]

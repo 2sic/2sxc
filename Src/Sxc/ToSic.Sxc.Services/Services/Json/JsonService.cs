@@ -2,7 +2,8 @@
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Internal.Wrapper;
+using ToSic.Sxc.Data.Sys.DynamicJacket;
+using ToSic.Sxc.Data.Sys.Wrappers;
 using static ToSic.Eav.Serialization.Sys.Json.JsonOptions;
 
 namespace ToSic.Sxc.Services;

@@ -1,6 +1,7 @@
 ﻿#if NETFRAMEWORK
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Data.Sys;
 
 namespace ToSic.Sxc.Blocks;
 // Important: There is a critical bug in Razor that methods which an interface inherits

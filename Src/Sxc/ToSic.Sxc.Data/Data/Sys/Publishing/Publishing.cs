@@ -1,8 +1,8 @@
 ﻿using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Data.Sys.Factory;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Sys.Publishing;
 
 // this can just be internal, it's only ever used as an interface
 [ShowApiWhenReleased(ShowApiMode.Never)]

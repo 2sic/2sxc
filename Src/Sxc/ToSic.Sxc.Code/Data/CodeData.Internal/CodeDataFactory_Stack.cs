@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Sys;
-using ToSic.Sxc.Data.Internal.Stack;
+using ToSic.Sxc.Data.Sys.DynamicStack;
+using ToSic.Sxc.Data.Sys.TypedStack;
 
 namespace ToSic.Sxc.Data.Internal;
 

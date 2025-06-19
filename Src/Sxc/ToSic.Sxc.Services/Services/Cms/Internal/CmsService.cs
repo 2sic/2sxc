@@ -3,10 +3,11 @@ using ToSic.Lib.DI;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Services.Tweaks;
 using ToSic.Sxc.Sys.ExecutionContext;
-using InputTypes = ToSic.Sxc.Compatibility.Internal.InputTypes;
+using InputTypes = ToSic.Sxc.Data.Sys.InputTypes;
 
 namespace ToSic.Sxc.Services.CmsService.Internal;
 

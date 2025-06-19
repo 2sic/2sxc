@@ -6,10 +6,10 @@ using ToSic.Lib.Wrappers;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data.Internal.Convert;
-using ToSic.Sxc.Data.Internal.Wrapper;
+using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Services.Internal;
 
-namespace ToSic.Sxc.Data.Internal.Typed;
+namespace ToSic.Sxc.Data.Sys.Typed;
 
 [PrivateApi]
 [JsonConverter(typeof(DynamicJsonConverter))]

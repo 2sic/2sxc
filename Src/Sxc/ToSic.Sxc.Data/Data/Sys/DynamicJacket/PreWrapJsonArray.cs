@@ -1,10 +1,8 @@
 ﻿using System.Text.Json.Nodes;
 using ToSic.Lib.Wrappers;
-using ToSic.Sxc.Data.Internal.Typed;
-using ToSic.Sxc.Data.Internal.Wrapper;
+using ToSic.Sxc.Data.Sys.Typed;
 
-
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Sys.DynamicJacket;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class PreWrapJsonArray(CodeJsonWrapper wrapper, JsonArray jsonArray)

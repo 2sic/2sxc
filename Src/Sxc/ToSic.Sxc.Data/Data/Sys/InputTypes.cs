@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Compatibility.Internal;
+﻿namespace ToSic.Sxc.Data.Sys;
 
 public class InputTypes
 {

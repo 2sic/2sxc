@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data.Sys;
-using ToSic.Sxc.Data.Internal.Wrapper;
+using ToSic.Sxc.Data.Sys.Wrappers;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Sys.DynamicJacket;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal abstract class PreWrapJsonBase(CodeJsonWrapper wrapper, object data)

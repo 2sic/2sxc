@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data.PropertyStack.Sys;
 using ToSic.Eav.Data.Sys;
 
-namespace ToSic.Sxc.Data.Internal;
+namespace ToSic.Sxc.Data.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class PropLookupWithPathEntity(IEntity entity, ICanDebug canDebug) :

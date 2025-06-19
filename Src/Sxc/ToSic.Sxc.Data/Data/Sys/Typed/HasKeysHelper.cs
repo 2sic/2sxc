@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using ToSic.Razor.Blade;
 
-namespace ToSic.Sxc.Data.Internal.Typed;
+namespace ToSic.Sxc.Data.Sys.Typed;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class HasKeysHelper

@@ -9,13 +9,14 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Data;
 using ToSic.Sxc.Data.Internal.Convert;
-using ToSic.Sxc.Data.Internal.Wrapper;
+using ToSic.Sxc.Data.Sys.Factory;
+using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Services.Tweaks;
-using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
+using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
 
-namespace ToSic.Sxc.Data.Internal.Typed;
+namespace ToSic.Sxc.Data.Sys.Typed;
 
 [JsonConverter(typeof(DynamicJsonConverter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -259,7 +260,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
 
     public IField Field(string name, NoParamOrder noParamOrder, bool? required) 
-        => new Field(this, name, Cdf);
+        => new Fields.Field(this, name, Cdf);
 
     /// <summary>
     /// Override the URL, to also support checks for "file:72"

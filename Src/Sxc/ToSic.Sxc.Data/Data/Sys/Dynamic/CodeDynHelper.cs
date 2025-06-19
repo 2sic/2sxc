@@ -1,10 +1,11 @@
 ﻿using System.Dynamic;
 using ToSic.Eav.Data.EntityDecorators.Sys;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Data.Internal.Decorators;
-using ToSic.Sxc.Data.Internal.Typed;
+using ToSic.Sxc.Data.Sys.Decorators;
+using ToSic.Sxc.Data.Sys.Factory;
+using ToSic.Sxc.Data.Sys.Typed;
 
-namespace ToSic.Sxc.Data.Internal.Dynamic;
+namespace ToSic.Sxc.Data.Sys.Dynamic;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CodeDynHelper(IEntity entity, SubDataFactory subDataFactory)

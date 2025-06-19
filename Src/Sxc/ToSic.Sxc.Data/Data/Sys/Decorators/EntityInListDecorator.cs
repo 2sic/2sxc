@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Data.Internal.Decorators;
+﻿namespace ToSic.Sxc.Data.Sys.Decorators;
 
 /// <summary>
 /// Important: for now it should be abstract, because we're not sure in which cases

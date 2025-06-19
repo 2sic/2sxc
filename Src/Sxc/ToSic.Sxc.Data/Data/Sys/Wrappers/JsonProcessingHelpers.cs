@@ -1,9 +1,9 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
 using static ToSic.Eav.Serialization.Sys.Json.JsonOptions;
-using static ToSic.Sxc.Data.Internal.Wrapper.WrapperConstants;
+using static ToSic.Sxc.Data.Sys.Wrappers.WrapperConstants;
 
-namespace ToSic.Sxc.Data.Internal.Wrapper;
+namespace ToSic.Sxc.Data.Sys.Wrappers;
 
 internal class JsonProcessingHelpers
 {

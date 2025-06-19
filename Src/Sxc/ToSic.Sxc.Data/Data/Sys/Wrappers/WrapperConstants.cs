@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Data.Internal.Wrapper;
+﻿namespace ToSic.Sxc.Data.Sys.Wrappers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class WrapperConstants

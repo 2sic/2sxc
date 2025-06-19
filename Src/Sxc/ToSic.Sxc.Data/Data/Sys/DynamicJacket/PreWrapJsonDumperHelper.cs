@@ -1,9 +1,8 @@
 ﻿using System.Text.Json.Nodes;
 using ToSic.Eav.Data.PropertyDump.Sys;
 using ToSic.Eav.Data.Sys;
-using ToSic.Sxc.Data.Internal.Wrapper;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Sys.DynamicJacket;
 internal class PreWrapJsonDumperHelper
 {
     private const string DumpSourceName = "Dynamic";

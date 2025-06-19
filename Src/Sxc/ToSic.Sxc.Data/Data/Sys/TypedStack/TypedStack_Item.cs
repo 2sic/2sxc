@@ -3,12 +3,12 @@ using ToSic.Eav.Data.Sys;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Data;
-using ToSic.Sxc.Data.Internal.Typed;
+using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
-using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
+using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
 
-namespace ToSic.Sxc.Data.Internal.Stack;
+namespace ToSic.Sxc.Data.Sys.TypedStack;
 
 internal partial class TypedStack: ITypedItem
 {

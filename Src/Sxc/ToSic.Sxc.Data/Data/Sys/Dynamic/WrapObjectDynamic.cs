@@ -3,9 +3,9 @@ using System.Text.Json.Serialization;
 using ToSic.Eav.Data.Sys;
 using ToSic.Lib.Wrappers;
 using ToSic.Sxc.Data.Internal.Convert;
-using ToSic.Sxc.Data.Internal.Wrapper;
+using ToSic.Sxc.Data.Sys.Wrappers;
 
-namespace ToSic.Sxc.Data.Internal.Dynamic;
+namespace ToSic.Sxc.Data.Sys.Dynamic;
 
 // WIP
 // Inspired by https://stackoverflow.com/questions/46948289/how-do-you-convert-any-c-sharp-object-to-an-expandoobject

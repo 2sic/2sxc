@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Data.PropertyStack.Sys;
 using ToSic.Razor.Blade;
-using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
+using ToSic.Sxc.Data.Sys.Fields;
+using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Internal;
 

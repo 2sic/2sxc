@@ -11,6 +11,7 @@ using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Backend.SaveHelpers;
+using ToSic.Sxc.Data.Sys;
 using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Utils;
@@ -143,7 +144,7 @@ public partial class EditLoadBackend(
 
         // Fix not-supported input-type names; map to correct name
         foreach (var at in result.ContentTypes.SelectMany(jt => jt.Attributes))
-            at.InputType = Compatibility.Internal.InputTypes.MapInputTypeV10(at.InputType);
+            at.InputType = InputTypes.MapInputTypeV10(at.InputType);
 
         // load input-field configurations
         result = result with

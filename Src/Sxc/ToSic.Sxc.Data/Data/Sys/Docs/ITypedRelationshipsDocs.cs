@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Data.Internal.Docs;
+﻿namespace ToSic.Sxc.Data.Sys.Docs;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

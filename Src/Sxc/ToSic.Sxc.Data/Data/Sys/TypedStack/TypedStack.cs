@@ -2,10 +2,12 @@
 using ToSic.Eav.Data.Sys;
 using ToSic.Lib.Wrappers;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Data.Internal.Dynamic;
-using static ToSic.Sxc.Data.Internal.Typed.TypedHelpers;
+using ToSic.Sxc.Data.Sys.Dynamic;
+using ToSic.Sxc.Data.Sys.Factory;
+using ToSic.Sxc.Data.Sys.Stack;
+using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
 
-namespace ToSic.Sxc.Data.Internal.Stack;
+namespace ToSic.Sxc.Data.Sys.TypedStack;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

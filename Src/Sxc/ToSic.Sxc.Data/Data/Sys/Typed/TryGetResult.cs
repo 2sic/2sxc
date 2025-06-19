@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Data.Internal.Typed;
+﻿namespace ToSic.Sxc.Data.Sys.Typed;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

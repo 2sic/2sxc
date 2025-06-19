@@ -1,9 +1,8 @@
 ﻿using System.Reflection;
 using ToSic.Eav.Data.PropertyDump.Sys;
 using ToSic.Eav.Data.Sys;
-using ToSic.Sxc.Data.Internal.Wrapper;
 
-namespace ToSic.Sxc.Data.Wrappers.Internal;
+namespace ToSic.Sxc.Data.Sys.Wrappers;
 internal class PreWrapObjectDumpHelper
 {
     public const string DumpSourceName = "DynamicRead";

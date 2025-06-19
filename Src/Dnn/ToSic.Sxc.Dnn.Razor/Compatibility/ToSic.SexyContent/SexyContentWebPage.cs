@@ -11,7 +11,7 @@ using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Compatibility.Internal;
 using ToSic.Sxc.Compatibility.RazorPermissions;
 using ToSic.Sxc.Compatibility.Sxc;
-using ToSic.Sxc.Data.Internal.Wrapper;
+using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.DataSources.Internal.Compatibility;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;

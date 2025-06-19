@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Data.Entities.Sys.Wrappers;
 using ToSic.Sxc.Data.Internal;
-using ToSic.Sxc.Data.Internal.Docs;
+using ToSic.Sxc.Data.Sys.Docs;
+using ToSic.Sxc.Data.Sys.Factory;
 
 #if !NETFRAMEWORK
 #pragma warning disable CS0108, CS0114

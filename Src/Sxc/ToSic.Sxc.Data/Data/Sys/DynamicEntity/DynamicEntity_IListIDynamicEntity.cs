@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace ToSic.Sxc.Data;
+namespace ToSic.Sxc.Data.Sys;
 
 public partial class DynamicEntity: IList<IDynamicEntity>
 {

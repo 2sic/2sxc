@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Data;
+﻿namespace ToSic.Sxc.Data.Sys;
 // Backward compatible enumeration interface for people casting as IList<dynamic>
 
 public partial class DynamicEntity: IList<object>

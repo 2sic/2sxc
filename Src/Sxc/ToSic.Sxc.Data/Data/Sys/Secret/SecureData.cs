@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Data.Internal;
+﻿namespace ToSic.Sxc.Data.Sys.Secret;
 
 [PrivateApi("hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

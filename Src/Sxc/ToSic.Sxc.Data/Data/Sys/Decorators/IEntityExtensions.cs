@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Data.EntityDecorators.Sys;
 
-namespace ToSic.Sxc.Data.Internal.Decorators;
+namespace ToSic.Sxc.Data.Sys.Decorators;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class IEntityExtensions
