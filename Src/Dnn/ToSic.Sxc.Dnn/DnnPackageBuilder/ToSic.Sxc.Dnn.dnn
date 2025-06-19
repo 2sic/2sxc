@@ -668,7 +668,7 @@
     
     <!-- the Imageflow - should be based on the one from https://github.com/2sic/dnn-imageflow -->
     <!-- note that the version number needs the last digits, because otherwise the user will always be informed that it's already installed -->
-    <package name="ToSic.Imageflow.Dnn" type="Library" version="01.12.00.01">
+    <package name="ToSic.Imageflow.Dnn" type="Library" version="01.12.01.01">
       <friendlyName>Imageflow</friendlyName>
 
       <description>
