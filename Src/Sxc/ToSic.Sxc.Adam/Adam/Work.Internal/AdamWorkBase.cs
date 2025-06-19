@@ -32,6 +32,7 @@ public abstract class AdamWorkBase(AdamWorkBase.MyServices services, string logN
         l.Done();
     }
 
+    [field: AllowNull, MaybeNull]
     public AdamContext AdamContext => field ??= Services.AdamContext.Value;
 
     #endregion
@@ -44,18 +45,18 @@ public abstract class AdamWorkBase(AdamWorkBase.MyServices services, string logN
     /// <param name="target"></param>
     /// <param name="errPrefix"></param>
     //[AssertionMethod]
-    protected void VerifySecurityAndStructure(IFolder parentFolder, ToSic.Eav.Apps.Assets.IAsset target, string errPrefix)
+    protected void VerifySecurityAndStructure(IFolder? parentFolder, ToSic.Eav.Apps.Assets.IAsset target, string errPrefix)
     {
         // In case the primary file system is used (usePortalRoot) then also check higher permissions
         if (AdamContext.UseSiteRoot && !AdamContext.Security.CanEditFolder(target)) 
             throw HttpException.PermissionDenied(errPrefix + " - permission denied");
 
-        if (!AdamContext.Security.SuperUserOrAccessingItemFolder(target.Path, out var exp))
+        if (AdamContext.Security.UserIsRestrictedAndAccessingItemOutsideOfFolder(target.Path, out var exp))
             throw exp;
 
         //if (!EqualityComparer<TFolderId>.Default.Equals(((IAssetWithParentSysId<TFolderId>)target).ParentSysId,
         //        ((IAssetSysId<TFolderId>)parentFolder).SysId))
-        if (!Services.AdamGenericHelper.AssetIsChildOfFolder(parentFolder, target))
+        if (parentFolder == null || !Services.AdamGenericHelper.AssetIsChildOfFolder(parentFolder, target))
             throw HttpException.BadRequest(errPrefix + " - not found in folder");
     }
 

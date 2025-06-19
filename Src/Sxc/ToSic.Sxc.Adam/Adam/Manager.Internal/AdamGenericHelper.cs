@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Adam.Manager.Internal;
 /// </summary>
 public abstract class AdamGenericHelper
 {
-    public abstract IFolder FolderOfField(AdamManager adamManager, AdamStorageOfField storage, IField field);
+    public abstract IFolder FolderOfField(AdamManager adamManager, AdamStorageOfField storage, IField? field);
 
     public abstract bool AssetIsChildOfFolder(IFolder parentFolder, ToSic.Eav.Apps.Assets.IAsset target);
 
@@ -25,7 +25,7 @@ public abstract class AdamGenericHelper
 /// <typeparam name="TFileId"></typeparam>
 public class AdamGenericHelper<TFolderId, TFileId> : AdamGenericHelper
 {
-    public override IFolder FolderOfField(AdamManager adamManager, AdamStorageOfField storage, IField field)
+    public override IFolder FolderOfField(AdamManager adamManager, AdamStorageOfField storage, IField? field)
         => FolderOfField<TFolderId, TFileId>.Create(adamManager, storage, field);
 
     public override bool AssetIsChildOfFolder(IFolder parentFolder, ToSic.Eav.Apps.Assets.IAsset target)

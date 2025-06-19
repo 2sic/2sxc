@@ -12,5 +12,5 @@ public record AdamAssetIdentifier
 
 public record AdamAssetId<TFileId> : AdamAssetIdentifier
 {
-    public TFileId SysId { get; init; }
+    public TFileId SysId { get; init; } = default!;
 }

@@ -4,6 +4,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam.FileSystem.Internal;
 using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sxc.Data;
+using ToSic.Sys.Performance;
 
 namespace ToSic.Sxc.Adam.Internal;
 
@@ -16,18 +17,19 @@ public class Folder<TFolderId, TFileId>(AdamManager adamManager)
 
     /// <inheritdoc />
     [JsonIgnore]
+    [field: AllowNull, MaybeNull]
     public ITypedMetadata Metadata => field ??= AdamManager.CreateMetadata(CmsMetadata.FolderPrefix + SysId, Name);
 
-    IMetadataOf IHasMetadata.Metadata => (Metadata as IHasMetadata)?.Metadata;
+    IMetadataOf IHasMetadata.Metadata => (Metadata as IHasMetadata).Metadata;
 
     /// <inheritdoc />
     [JsonIgnore]
-    public bool HasMetadata => (Metadata as IHasMetadata)?.Metadata.Any() ?? false;
+    public bool HasMetadata => (Metadata as IHasMetadata).Metadata.Any();
 
 
 
     /// <inheritdoc />
-    public string Url { get; set; }
+    public string? Url { get; set; }
 
     /// <inheritdoc />
     public string Type => Classification.Folder;
@@ -45,21 +47,25 @@ public class Folder<TFolderId, TFileId>(AdamManager adamManager)
     public IEnumerable<IFolder> Folders => _folders.Get(() =>
     {
         var folders = AdamFs.GetFolders(this);
-        folders?.ForEach(f => ((Folder<TFolderId, TFileId>)f).Field = Field);
+        foreach (var f in folders)
+            ((Folder<TFolderId, TFileId>)f).Field = Field;
         return folders;
-    });
+    })!;
     private readonly GetOnce<IEnumerable<IFolder>> _folders = new();
 
 
     /// <inheritdoc/>
     public IEnumerable<IFile> Files => _files.Get(() =>
     {
-        var files = AdamFs.GetFiles(this);
-        files?.ForEach(f => ((File<TFolderId, TFileId>)f).Field = Field);
+        var files = AdamFs
+            .GetFiles(this)
+            .ToListOpt();
+        foreach (var f in files)
+            ((File<TFolderId, TFileId>)f).Field = Field;
         return files;
-    });
+    })!;
     private readonly GetOnce<IEnumerable<IFile>> _files = new();
 
     [PrivateApi]
-    public IField Field { get; set; }
+    public IField? Field { get; set; }
 }

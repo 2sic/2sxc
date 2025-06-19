@@ -2,7 +2,6 @@
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Sys.Field;
 using ToSic.Sxc.Images.Internal;
 
@@ -24,6 +23,7 @@ public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets
 
     /// <inheritdoc />
     [JsonIgnore]
+    [field: AllowNull, MaybeNull]
     public ITypedMetadata Metadata => field
         ??= AdamManager.CreateMetadata(CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations);
 
@@ -42,7 +42,7 @@ public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets
                                       ?? [];
     }
 
-    IMetadataOf IHasMetadata.Metadata => (Metadata as IHasMetadata)?.Metadata;
+    IMetadataOf IHasMetadata.Metadata => (Metadata as IHasMetadata).Metadata;
 
     /// <inheritdoc />
     [JsonIgnore]
@@ -51,7 +51,7 @@ public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets
 
     #endregion
 
-    public string Url { get; set; }
+    public string? Url { get; set; }
 
     public string Type => Classification.TypeName(Extension);
 
@@ -65,5 +65,5 @@ public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets
 
 
     [PrivateApi]
-    public IField Field { get; set; }
+    public IField? Field { get; set; }
 }

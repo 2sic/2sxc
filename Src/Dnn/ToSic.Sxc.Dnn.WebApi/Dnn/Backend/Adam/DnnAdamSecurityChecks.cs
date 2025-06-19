@@ -26,7 +26,7 @@ internal class DnnAdamSecurityChecks(AdamSecurityChecksBase.MyServices services)
                && Host.AllowedExtensionWhitelist.IsAllowedExtension(extension.ToLowerInvariant());
     }
 
-    public override bool CanEditFolder(IAsset item)
+    public override bool CanEditFolder(IAsset? item)
     {
         var id = (item as IFolder)?.Id
                  ?? (item as IFile)?.ParentId

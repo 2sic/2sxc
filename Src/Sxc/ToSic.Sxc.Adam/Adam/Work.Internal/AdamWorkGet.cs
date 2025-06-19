@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Adam.Work.Internal;
 public class AdamWorkGet(AdamWorkBase.MyServices services)
     : AdamWorkBase(services, "Adm.TrnFld")
 {
-    public AdamFolderFileSet ItemsInField(string subFolderName, bool autoCreate = false)
+    public AdamFolderFileSet? ItemsInField(string subFolderName, bool autoCreate = false)
     {
         var l = Log.Fn<AdamFolderFileSet>($"Subfolder: {subFolderName}; AutoCreate: {autoCreate}");
 
@@ -15,7 +15,7 @@ public class AdamWorkGet(AdamWorkBase.MyServices services)
             return l.ReturnNull("user is restricted, and doesn't have permissions on field - return null");
 
         // check that if the user should only see drafts, he doesn't see items of published data
-        if (!AdamContext.Security.UserIsNotRestrictedOrItemIsDraft(AdamContext.ItemGuid, out _))
+        if (AdamContext.Security.UserIsRestrictedOrItemIsNotDraft(AdamContext.ItemGuid, out _))
             return l.ReturnNull("user is restricted (no read-published rights) and item is published - return null");
 
         l.A("first permission checks passed");
@@ -24,20 +24,20 @@ public class AdamWorkGet(AdamWorkBase.MyServices services)
         var root = AdamContext.AdamRoot.RootFolder(autoCreate);
 
         // if no root exists then quit now
-        if (!autoCreate && root == null)
-            return l.Return(new(null, [], []), "no folder");
+        if (!autoCreate && root == null! /* paranoid */)
+            return l.Return(new(null!, [], []), "silent error, no folder");
 
         // try to see if we can get into the subfolder - will throw error if missing
         var currentFolder = AdamContext.AdamRoot.Folder(subFolderName, false);
 
         // ensure that it's superuser, or the folder is really part of this item
-        if (!AdamContext.Security.SuperUserOrAccessingItemFolder(currentFolder.Path, out var ex))
+        if (AdamContext.Security.UserIsRestrictedAndAccessingItemOutsideOfFolder(currentFolder?.Path, out var ex))
         {
             l.A("user is not super-user and folder doesn't seem to be an ADAM folder of this item - will throw");
             throw l.Ex(ex);
         }
 
-        var adamFolders = currentFolder.Folders
+        var adamFolders = currentFolder!.Folders
             //.Cast<Sxc.Adam.Internal.Folder<TFolderId, TFileId>>()
             //.Where(s => !EqualityComparer<TFolderId>.Default.Equals(s.SysId, ((IAssetSysId<TFolderId>)currentFolder).SysId))
             //.Cast<IFolder>()

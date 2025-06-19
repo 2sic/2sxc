@@ -17,8 +17,11 @@ internal class AdamSecurityChecksBasic(AdamSecurityChecksBase.MyServices service
     /// <returns></returns>
     public override bool SiteAllowsExtension(string fileName) => true;
 
-    public override bool CanEditFolder(Eav.Apps.Assets.IAsset item)
-        => AdamContext.Context.Permissions.IsSiteAdmin
-        || AdamContext.Context.Permissions.IsContentAdmin
-        || AdamContext.Context.Permissions.IsContentEditor;
+    public override bool CanEditFolder(Eav.Apps.Assets.IAsset? item)
+    {
+        var permissions = AdamContext.Context.Permissions;
+        return permissions.IsSiteAdmin
+               || permissions.IsContentAdmin
+               || permissions.IsContentEditor;
+    }
 }

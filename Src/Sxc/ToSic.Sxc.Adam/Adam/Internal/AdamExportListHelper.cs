@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Adam.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamExportListHelper<TFolderId, TFileId>(AdamManager adm)
 {
-    private readonly IFolder _root = adm.RootFolder;
+    private readonly IFolder _root = adm.RootFolder ?? throw new ArgumentNullException(nameof(adm.RootFolder), @"needs a root folder to export from ADAM");
     // todo #adamid - should use TFile/TFolder
     private readonly List<TFileId> _fileIds = [];
     private readonly List<TFolderId> _folderIds = [];

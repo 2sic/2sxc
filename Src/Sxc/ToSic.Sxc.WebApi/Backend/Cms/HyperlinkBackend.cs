@@ -53,9 +53,9 @@ public class HyperlinkBackend(
             // this will already do a ensure-or-throw inside it if outside of adam
             var adamCtx = adamCtxLazy.Value;
             adamCtx.Init(context, contentType, field, guid, isOutsideOfAdam);
-            if (!adamCtx.Security.SuperUserOrAccessingItemFolder(resolved, out var exp))
+            if (adamCtx.Security.UserIsRestrictedAndAccessingItemOutsideOfFolder(resolved, out var exp))
                 throw exp;
-            if (!adamCtx.Security.UserIsPermittedOnField(GrantSets.ReadSomething, out exp))
+            if (adamCtx.Security.UserNotPermittedOnField(GrantSets.ReadSomething, out exp))
                 throw exp;
                 
             // now try to find the item, use this to get the id

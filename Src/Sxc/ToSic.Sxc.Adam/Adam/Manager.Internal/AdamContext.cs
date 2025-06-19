@@ -44,12 +44,12 @@ public class AdamContext(AdamContext.MyServices services)
         public Generator<MultiPermissionsTypes> TypesPermissions { get; } = typesPermissions;
     }
 
-    public IAdamSecurityCheckService Security;
-    public MultiPermissionsTypes Permissions;
+    public IAdamSecurityCheckService Security { get; private set; } = null!;
+    public MultiPermissionsTypes Permissions { get; private set; } = null!;
 
     public AdamManager AdamManager => Services.AdamManagerLazy.Value;
 
-    public AdamStorage AdamRoot { get; protected set; }
+    public AdamStorage AdamRoot { get; private set; } = null!;
 
     public IAppWorkCtx AppWorkCtx => AdamManager.AppWorkCtx;
 
@@ -78,7 +78,7 @@ public class AdamContext(AdamContext.MyServices services)
         UseSiteRoot = usePortalRoot;
         if (!usePortalRoot)
         {
-            ItemField = fieldName;
+            ItemFieldName = fieldName;
             ItemGuid = entityGuid;
         }
 
@@ -101,7 +101,7 @@ public class AdamContext(AdamContext.MyServices services)
             return l.Return(this);
 
         Attribute = AttributeDefinition(context.AppReaderRequired, contentType, fieldName);
-        if (!Security.FileTypeIsOkForThisField(out var exp))
+        if (Security.FieldDoesNotSupportFiles(out var exp))
             throw exp;
         return l.Return(this);
     }
@@ -117,16 +117,16 @@ public class AdamContext(AdamContext.MyServices services)
     /// <summary>
     /// The field this state is for. Will be null/empty if UsePortalRoot is true
     /// </summary>
-    public string ItemField;
+    public string? ItemFieldName;
 
     /// <summary>
     /// The item guid this state is for. Will be Empty if UsePortalRoot is true.
     /// </summary>
     public Guid ItemGuid;
 
-    internal IContentTypeAttribute Attribute;
+    internal IContentTypeAttribute? Attribute;
 
-    public IContextOfApp Context;
+    public IContextOfApp Context { get; private set; } = null!;
 
     public readonly Guid[] FeaturesForRestrictedUsers =
     [
@@ -138,7 +138,7 @@ public class AdamContext(AdamContext.MyServices services)
     /// <summary>
     /// try to find attribute definition - for later extra security checks
     /// </summary>
-    private static IContentTypeAttribute AttributeDefinition(IAppReadContentTypes appReadContentTypes, string contentType, string fieldName)
+    private static IContentTypeAttribute? AttributeDefinition(IAppReadContentTypes appReadContentTypes, string contentType, string fieldName)
     {
         var type = appReadContentTypes.GetContentType(contentType);
         return type[fieldName];

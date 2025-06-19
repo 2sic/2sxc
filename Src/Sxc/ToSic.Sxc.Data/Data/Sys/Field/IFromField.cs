@@ -5,5 +5,5 @@
 public interface IFromField
 {
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    IField Field { get; set; }
+    IField? Field { get; set; }
 }

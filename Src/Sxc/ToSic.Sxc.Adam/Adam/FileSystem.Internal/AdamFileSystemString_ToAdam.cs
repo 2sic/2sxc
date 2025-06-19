@@ -9,7 +9,7 @@ public partial class AdamFileSystemString
     {
         var physicalPath = AdamPaths.PhysicalPath(path);
         var f = new FileInfo(physicalPath);
-        var directoryName = f.Directory.Name;
+        var directoryName = f.Directory!.Name;
 
         // todo: unclear if we need both, but we need the url for the compare-if-same-path
         var relativePath = AdamPaths.RelativeFromAdam(path);

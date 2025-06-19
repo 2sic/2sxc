@@ -11,12 +11,16 @@ namespace ToSic.Sxc.Services;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class AdamService(): ServiceWithContext("Svc.AdamSv"), IAdamService
 {
+    // Note: before 2025-06-19 it was doing a lot of nullable checks and use the ExcCtxOrNull
+    // but since I believe the AdamService is only for Razor etc. it should really never be used this way
+    // so 2dm is changing to force non-null since it's the only plausible setup for now...
+    [field: AllowNull, MaybeNull]
     private AdamManager AdamManagerWithContext => field
-        ??= ExCtxOrNull?.GetServiceForData<AdamManager>();
+        ??= ExCtx!.GetServiceForData<AdamManager>();
 
     /// <inheritdoc />
     public IFile? File(int id)
-        => AdamManagerWithContext?.AdamFs.GetFile(AdamAssetIdentifier.Create(id));
+        => AdamManagerWithContext.AdamFs.GetFile(AdamAssetIdentifier.Create(id));
 
     /// <inheritdoc />
     public IFile? File(string id)
@@ -42,11 +46,11 @@ internal class AdamService(): ServiceWithContext("Svc.AdamSv"), IAdamService
     }
 
     /// <inheritdoc />
-    public IFolder? Folder(int id)
-        => AdamManagerWithContext?.AdamFs.GetFolder(AdamAssetIdentifier.Create(id));
+    public IFolder Folder(int id)
+        => AdamManagerWithContext.AdamFs.GetFolder(AdamAssetIdentifier.Create(id));
 
     /// <inheritdoc />
-    public IFolder? Folder(IField field)
-        => AdamManagerWithContext?.FolderOfField(field.Parent.Entity.EntityGuid, field.Name);
+    public IFolder Folder(IField field)
+        => AdamManagerWithContext.FolderOfField(field.Parent.Entity.EntityGuid, field.Name);
 
 }

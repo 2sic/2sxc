@@ -44,7 +44,7 @@ public interface IAsset: IHasMetadata, IFromField
     /// The url to this asset.
     /// `/Portals/0/2sxc/content/assets/docs/terms/file.pdf` for `C:\Inetpub\wwwroot\www.2sic.com\Portals\0\2sxc\content\assets\docs\terms\file.pdf`
     /// </returns>
-    string Url { get; }
+    string? Url { get; }
 
     /// <summary>
     /// The type of this asset (folder, file, etc.) - typically for adding icons or similar when listing assets.

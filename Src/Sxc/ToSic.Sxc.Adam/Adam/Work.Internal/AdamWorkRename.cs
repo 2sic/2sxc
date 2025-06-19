@@ -11,11 +11,11 @@ public class AdamWorkRename(AdamWorkBase.MyServices services)
     {
         var l = Log.Fn<bool>();
 
-        if (!AdamContext.Security.UserIsPermittedOnField(GrantSets.WriteSomething, out var exp))
+        if (AdamContext.Security.UserNotPermittedOnField(GrantSets.WriteSomething, out var exp))
             throw l.Ex(exp);
 
         // check that if the user should only see drafts, he doesn't see items of published data
-        if (!AdamContext.Security.UserIsNotRestrictedOrItemIsDraft(AdamContext.ItemGuid, out var permissionException))
+        if (AdamContext.Security.UserIsRestrictedOrItemIsNotDraft(AdamContext.ItemGuid, out var permissionException))
             throw l.Ex(permissionException);
 
         // try to see if we can get into the subfolder - will throw error if missing

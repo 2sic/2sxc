@@ -5,11 +5,11 @@ using ToSic.Sxc.Adam.Manager.Internal;
 namespace ToSic.Sxc.Adam.Storage.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class AdamStorage(string logName = default) : ServiceBase(logName ?? "Adm.Base")
+public abstract class AdamStorage(string? logName = default) : ServiceBase(logName ?? "Adm.Base")
 {
     public void Init(AdamManager manager) => Manager = manager;
 
-    protected AdamManager Manager { get; private set; }
+    protected AdamManager Manager { get; private set; } = null!;
 
     /// <summary>
     /// Root of this container
@@ -30,9 +30,9 @@ public abstract class AdamStorage(string logName = default) : ServiceBase(logNam
     /// <remarks>
     /// Will create the folder if it does not exist
     /// </remarks>
-    public IFolder Folder(string subFolder, bool autoCreate)
+    public IFolder? Folder(string subFolder, bool autoCreate)
     {
-        var l = Log.Fn<IFolder>($"{nameof(Folder)}(\"{subFolder}\", {autoCreate})");
+        var l = Log.Fn<IFolder?>($"{nameof(Folder)}(\"{subFolder}\", {autoCreate})");
         var fld = Manager.Folder(GeneratePath(subFolder), autoCreate);
         return l.ReturnAsOk(fld);
     }
@@ -42,6 +42,7 @@ public abstract class AdamStorage(string logName = default) : ServiceBase(logNam
     /// Get a (root) folder object for this container
     /// </summary>
     /// <returns></returns>
-    public IFolder RootFolder(bool autoCreate = false) => _folder.Get(() => Folder("", autoCreate));
-    private readonly GetOnce<IFolder> _folder = new();
+    public IFolder? RootFolder(bool autoCreate = false)
+        => _folder.Get(() => Folder("", autoCreate));
+    private readonly GetOnce<IFolder?> _folder = new();
 }

@@ -12,25 +12,27 @@ namespace ToSic.Sxc.Adam.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class FolderOfField<TFolderId, TFileId> : Folder<TFolderId, TFileId>
 {
-    private FolderOfField(AdamManager adamManager, IField field) : base(adamManager)
+    private FolderOfField(AdamManager adamManager, IField? field) : base(adamManager)
     {
         Field = field;
     }
 
-    public static FolderOfField<TFolderId, TFileId> Create(AdamManager adamManager, AdamStorageOfField adamStorageOfField, IField field)
+    public static FolderOfField<TFolderId, TFileId> Create(AdamManager adamManager, AdamStorageOfField adamStorageOfField, IField? field)
     {
         // WIP - maybe still provide some basic info?
         //Url = adamStorageOfField.Manager.AdamFs.GetUrl(adamStorageOfField.Root);
         var quickInit = !adamManager.AdamFs.FolderExists(adamStorageOfField.Root);
-        var f = quickInit ? null : adamManager.Folder(adamStorageOfField.Root);
+        var f = quickInit
+            ? null
+            : adamManager.Folder(adamStorageOfField.Root);
         if (f == null)
             quickInit = true;
 
         if (quickInit)
             return new(adamManager, field)
             {
-                ParentSysId = default,
-                SysId = default,
+                ParentSysId = default!,
+                SysId = default!,
                 Created = default,
                 Modified = default,
                 Path = null!,
@@ -40,8 +42,8 @@ internal class FolderOfField<TFolderId, TFileId> : Folder<TFolderId, TFileId>
 
         return new(adamManager, field)
         {
-            ParentSysId = default,
-            SysId = ((IAssetSysId<TFolderId>)f).SysId,
+            ParentSysId = default!,
+            SysId = ((IAssetSysId<TFolderId>)f!).SysId,
             Created = f.Created,
             Modified = f.Modified,
             Path = f.Path,

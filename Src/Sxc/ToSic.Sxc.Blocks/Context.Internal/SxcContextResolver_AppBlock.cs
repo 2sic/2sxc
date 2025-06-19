@@ -57,7 +57,7 @@ partial class SxcCurrentContextService
         => SetAppOrNull(nameOrPath) ?? BlockContextRequired();
 
 
-    public IContextOfApp AppNameRouteBlock(string nameOrPath)
+    public IContextOfApp AppNameRouteBlock(string? nameOrPath)
     {
         var ctx = SetAppOrNull(nameOrPath);
         if (ctx != null)

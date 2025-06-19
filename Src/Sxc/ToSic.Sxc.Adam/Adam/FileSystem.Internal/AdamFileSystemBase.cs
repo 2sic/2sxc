@@ -31,7 +31,7 @@ public abstract class AdamFileSystemBase : ServiceBase, IAdamFileSystem
         l.Done();
     }
 
-    protected AdamManager AdamManager;
+    protected AdamManager AdamManager = null!;
 
     #endregion
 

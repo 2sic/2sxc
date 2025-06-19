@@ -62,7 +62,7 @@ internal partial class SxcCurrentContextService(
         bool CookieExpectsLive(string app) => http?.Value.GetCookie(string.Format(CookieTemplate, app)) == CookieLive;
     }
 
-    public IContextOfApp SetAppOrNull(string nameOrPath)
+    public IContextOfApp? SetAppOrNull(string? nameOrPath)
     {
         if (string.IsNullOrWhiteSpace(nameOrPath))
             return null;

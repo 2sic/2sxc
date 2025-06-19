@@ -7,7 +7,6 @@ using ToSic.Sxc.Adam.FileSystem.Internal;
 using ToSic.Sxc.Adam.Paths.Internal;
 using ToSic.Sxc.Adam.Storage.Internal;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Sys.Factory;
 
 namespace ToSic.Sxc.Adam.Manager.Internal;
@@ -40,32 +39,36 @@ public class AdamManager(AdamManager.MyServices services)
 
     #region Init
 
-    public AdamManager Init(IContextOfApp appCtx, int compatibility, ICodeDataFactory cdf = default)
+    public AdamManager Init(IContextOfApp appCtx, int compatibility, ICodeDataFactory? cdf = default)
     {
         var l = Log.Fn<AdamManager>();
         AppContext = appCtx;
         Cdf = cdf
               ?? Services.CdfIfNotProvided
-                  .SetInit(obj => obj.SetFallbacks(AppContext?.Site, compatibility, this))
+                  .SetInit(obj => obj.SetFallbacks(appCtx.Site, compatibility, this))
                   .Value;
         return l.Return(this, "ready");
     }
 
+    [field: AllowNull, MaybeNull]
     public IAdamFileSystem AdamFs => field ??= Services.AdamFsLazy.SetInit(f => f.Init(this)).Value;
 
+    [field: AllowNull, MaybeNull]
     public IAppWorkCtx AppWorkCtx => field ??= new AppWorkCtx(AppContext.AppReaderRequired);
 
-    private IContextOfApp AppContext { get; set; }
+    private IContextOfApp AppContext { get; set; } = null!;
 
+    [field: AllowNull, MaybeNull]
     public ISite Site => field ??= AppContext.Site;
 
-    internal ICodeDataFactory Cdf { get; private set; }
+    internal ICodeDataFactory Cdf { get; private set; } = null!;
 
     #endregion
 
     /// <summary>
     /// Path to the app assets
     /// </summary>
+    [field: AllowNull, MaybeNull]
     public string Path => field ??= Services.AdamConfiguration.PathForApp(AppContext.AppReaderRequired.Specs);
 
     #region Folder Stuff
@@ -73,12 +76,12 @@ public class AdamManager(AdamManager.MyServices services)
     /// <summary>
     /// Root folder object of the app assets
     /// </summary>
-    public IFolder RootFolder => Folder(Path, true);
+    public IFolder? RootFolder => Folder(Path, true);
 
     internal IFolder Folder(string path)
         => AdamFs.Get(path);
 
-    internal IFolder Folder(string path, bool autoCreate)
+    internal IFolder? Folder(string path, bool autoCreate)
     {
         var l = Log.Fn<IFolder>($"{path}, {autoCreate}");
 
@@ -116,7 +119,7 @@ public class AdamManager(AdamManager.MyServices services)
     /// <summary>
     /// Get the first metadata entity of an item - or return a fake one instead
     /// </summary>
-    internal ITypedMetadata CreateMetadata(string key, string title, Action<IMetadataOf> mdInit = null)
+    internal ITypedMetadata CreateMetadata(string key, string title, Action<IMetadataOf>? mdInit = null)
     {
         var mdOf = AppWorkCtx.AppReader.Metadata.GetMetadataOf(TargetTypes.CmsItem, key, title: title);
         mdInit?.Invoke(mdOf);

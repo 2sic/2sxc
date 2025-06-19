@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Adam.Storage.Internal;
 public class AdamStorageOfField(): AdamStorage("Adm.OfFld")
 {
     private Guid _entityGuid;
-    private string _fieldName;
+    private string _fieldName = null!;
 
     public AdamStorageOfField InitItemAndField(Guid entityGuid, string fieldName)
     {

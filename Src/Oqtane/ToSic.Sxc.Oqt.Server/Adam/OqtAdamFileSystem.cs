@@ -223,7 +223,8 @@ internal class OqtAdamFileSystem(
         var l = Log.Fn<List<IFile>>();
         var fldObj = OqtFolderRepository.GetFolder(folder.AsOqt().SysId);
         // sometimes the folder doesn't exist for whatever reason
-        if (fldObj == null) return [];
+        if (fldObj == null)
+            return [];
 
         // try to find the files
         var firstList = OqtFileRepository.GetFiles(fldObj.FolderId);

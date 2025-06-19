@@ -8,8 +8,8 @@ namespace ToSic.Sxc.Adam.Paths.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamConfiguration(IAppReaderFactory appReaders)
 {
-    public string AdamAppRootFolder => _adamAppRootFolder ??= GenerateAdamAppRootFolder();
-    private static string _adamAppRootFolder;
+    [field: AllowNull, MaybeNull]
+    public string AdamAppRootFolder => field ??= GenerateAdamAppRootFolder();
 
     private string GenerateAdamAppRootFolder()
     {

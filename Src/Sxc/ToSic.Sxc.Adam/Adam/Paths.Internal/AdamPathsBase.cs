@@ -10,9 +10,7 @@ public class AdamPathsBase : ServiceBase, IAdamPaths
     #region DI Constructor & Init
 
     public AdamPathsBase(IServerPaths serverPaths) : this(serverPaths, LogScopes.Base)
-    {
-
-    }
+    { }
 
     protected AdamPathsBase(IServerPaths serverPaths, string logPrefix) : base($"{logPrefix}.AdmPth", connect: [serverPaths])
     {
@@ -25,7 +23,8 @@ public class AdamPathsBase : ServiceBase, IAdamPaths
         AdamManager = adamManager;
         return this;
     }
-    protected AdamManager AdamManager { get; private set; }
+
+    protected AdamManager AdamManager { get; private set; } = null!;
 
     #endregion
 

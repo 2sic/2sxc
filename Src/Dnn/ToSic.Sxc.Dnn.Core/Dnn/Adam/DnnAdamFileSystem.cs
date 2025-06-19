@@ -201,7 +201,8 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem
         var l = Log.Fn<List<IFile>>($"folder:{folder.Id}");
         var fldObj = _dnnFolders.GetFolder(folder.AsDnn().SysId);
         // sometimes the folder doesn't exist for whatever reason
-        if (fldObj == null) return l.Return([], "");
+        if (fldObj == null)
+            return l.Return([], "");
 
         // try to find the files
         var firstList = _dnnFolders.GetFiles(fldObj);
