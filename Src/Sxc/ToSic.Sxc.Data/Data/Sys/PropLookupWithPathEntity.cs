@@ -10,15 +10,15 @@ internal class PropLookupWithPathEntity(IEntity entity, ICanDebug canDebug) :
 {
     public IEntity Entity { get; } = entity;
 
-    public PropReqResult? FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
+    public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
     {
         specs = specs.SubLog("Sxc.PrpLkp", canDebug.Debug);
-        var l = specs.LogOrNull.Fn<PropReqResult?>(specs.Dump(), "DynEntity");
+        var l = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), "DynEntity");
         // check Entity is null (in cases where null-objects are asked for properties)
         if (Entity == null!)
-            return l.ReturnNull("no entity");
+            return l.Return(PropReqResult.Null(path), "no entity");
         if (!specs.Field.HasValue())
-            return l.ReturnNull("no path");
+            return l.Return(PropReqResult.Null(path), "no path");
 
         path = path.KeepOrNew().Add("DynEnt", specs.Field);
         var isPath = specs.Field.Contains(PropertyStack.PathSeparator.ToString());
