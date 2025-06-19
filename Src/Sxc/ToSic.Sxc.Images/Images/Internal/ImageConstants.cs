@@ -24,7 +24,7 @@ public class ImageConstants
 
     public const int FallbackHeightForSrcSet = 0;
 
-    internal static string FindKnownScaleOrNull(string scale)
+    internal static string? FindKnownScaleOrNull(string? scale)
     {
         // ReSharper disable RedundantCaseLabel
         // ReSharper disable StringLiteralTypo
@@ -49,18 +49,15 @@ public class ImageConstants
 
     // ----- ----- ----- Image Formats ----- ----- -----
 
-    internal static string FindKnownFormatOrNull(string format)
-    {
-        switch (format?.ToLowerInvariant())
+    internal static string? FindKnownFormatOrNull(string? format)
+        => format?.ToLowerInvariant() switch
         {
-            case Jpg:
-            case "jpeg": return Jpg;
-            case Png: return Png;
-            case Gif: return Gif;
-            case Webp: return Webp;
-            default: return null;
-        }
-    }
+            Jpg or "jpeg" => Jpg,
+            Png => Png,
+            Gif => Gif,
+            Webp => Webp,
+            _ => null
+        };
 
 
     public const string Jpg = "jpg";
@@ -81,11 +78,11 @@ public class ImageConstants
         var webPInfo = new ImageFormat(Webp, "image/webp", true);
         var dic = new Dictionary<string, ImageFormat>(StringComparer.InvariantCultureIgnoreCase)
         {
-            { Jpg, new ImageFormat(Jpg, "image/jpeg", true, new List<ImageFormat> { webPInfo }) },
-            { Gif, new ImageFormat(Gif, "image/gif", true) },
-            { Png, new ImageFormat(Png, "image/png", true, new List<ImageFormat> { webPInfo }) },
-            { Svg, new ImageFormat(Svg, "image/svg+xml", false) },
-            { Tif, new ImageFormat(Tif, "image/tiff", true) },
+            { Jpg, new(Jpg, "image/jpeg", true, new List<ImageFormat> { webPInfo }) },
+            { Gif, new(Gif, "image/gif", true) },
+            { Png, new(Png, "image/png", true, new List<ImageFormat> { webPInfo }) },
+            { Svg, new(Svg, "image/svg+xml", false) },
+            { Tif, new(Tif, "image/tiff", true) },
             { Webp, webPInfo }
         };
         dic["jpeg"] = dic[Jpg];

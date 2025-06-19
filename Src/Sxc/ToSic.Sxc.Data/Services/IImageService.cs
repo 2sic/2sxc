@@ -89,7 +89,7 @@ public interface IImageService: ICanDebug
         string? name = default,
         int width = default,
         string? variants = default,
-        IDictionary<string, object>? attributes = default,
+        IDictionary<string, object?>? attributes = default,
         IEnumerable<Recipe>? recipes = default,
         bool? setWidth = default,
         bool? setHeight = default,

@@ -8,13 +8,13 @@ using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Images.Internal;
 
-internal class ResponsiveToolbarBuilder() : ServiceBase($"{SxcLogName}.ImgTlb")
+internal class ResponsiveToolbarBuilder(ILog parentLog) : HelperBase(parentLog, $"{SxcLogName}.ImgTlb")
 {
     // note: it's a method but ATM always returns the cached toolbar
     // still implemented as a method, so we could add future parameters if necessary
-    public IToolbarBuilder Toolbar(ImageService imgService, ResponsiveSpecsOfTarget target, TweakMedia tweaker, ResizeSettings settings, string src)
+    public IToolbarBuilder? Toolbar(ImageService imgService, ResponsiveSpecsOfTarget target, TweakMedia tweaker, ResizeSettings? settings, string src)
     {
-        var l = Log.Fn<IToolbarBuilder>();
+        var l = Log.Fn<IToolbarBuilder?>();
         switch (tweaker.ToolbarObj)
         {
             case false: return l.ReturnNull("false");
@@ -43,9 +43,8 @@ internal class ResponsiveToolbarBuilder() : ServiceBase($"{SxcLogName}.ImgTlb")
         imgTlb = imgTlb?.Metadata(target.HasMdOrNull,
             tweak: t =>
             {
-                // Note: Using experimental feature which doesn't exist on the ITweakButton interface
-
                 // Add note only for the ImageDecorator Metadata, not for other buttons
+                // Note: Using experimental AddNamed feature which doesn't exist on the ITweakButton interface
                 var modified = (t as ITweakButtonInternal)?.AddNamed(ImageDecorator.TypeNameId, btn =>
                 {
                     // add label like "Image Settings and Cropping" - i18n
@@ -64,7 +63,7 @@ internal class ResponsiveToolbarBuilder() : ServiceBase($"{SxcLogName}.ImgTlb")
                     // if image is from elsewhere, show warning
                     btn = isInSameEntity ? btn : btn.FormParameters(ImageDecorator.ShowWarningGlobalFile, true);
                     return btn;
-                }); // fallback, in case conversion fails unexpectedly
+                });
 
                 // Add note for Copyright - if there is Metadata for that
                 target.HasMdOrNull.Metadata
@@ -73,10 +72,12 @@ internal class ResponsiveToolbarBuilder() : ServiceBase($"{SxcLogName}.ImgTlb")
                     .DoIfNotNull(cpEntity =>
                     {
                         var copyright = new CopyrightDecorator(cpEntity);
-                        modified = (modified as ITweakButtonInternal)?.AddNamed(CopyrightDecorator.TypeNameId, btn => btn
-                            .Tooltip("Copyright")
-                            .Note(copyright.CopyrightMessage.NullIfNoValue() ??
-                                  copyright.Copyrights.FirstOrDefault()?.GetBestTitle() ?? ""));
+                        modified = (modified as ITweakButtonInternal)
+                            ?.AddNamed(CopyrightDecorator.TypeNameId, btn => btn
+                                .Tooltip("Copyright")
+                                .Note(copyright.CopyrightMessage.NullIfNoValue() ??
+                                      copyright.Copyrights?.FirstOrDefault()?.GetBestTitle() ?? "")
+                            );
                     });
 
 

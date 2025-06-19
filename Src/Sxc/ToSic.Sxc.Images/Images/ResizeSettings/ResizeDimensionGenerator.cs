@@ -1,5 +1,4 @@
 ﻿using ToSic.Lib.Services;
-using ToSic.Sxc.Internal.Plumbing;
 using static ToSic.Sxc.Images.Internal.ImageConstants;
 using static ToSic.Sxc.Images.RecipeVariant;
 using static ToSic.Sxc.Internal.Plumbing.ParseObject;
@@ -32,7 +31,7 @@ public class ResizeDimensionGenerator() : ServiceBase("Img.ResDim")
     }
 
 
-    internal OneResize ResizeDimensions(ResizeSettings settings, Recipe recipe, RecipeVariant partDef = null)
+    internal OneResize ResizeDimensions(ResizeSettings settings, Recipe? recipe, RecipeVariant? partDef = null)
     {
         var factor = settings.FactorToUse;
         // if (DNearZero(factor)) factor = 1; // in this case we must still calculate, and should assume factor is exactly 1
@@ -60,15 +59,18 @@ public class ResizeDimensionGenerator() : ServiceBase("Img.ResDim")
         };
     }
 
-    private static int FigureOutBestWidth(ResizeSettings settings, Recipe recipe, RecipeVariant partDef, double factor)
+    private static int FigureOutBestWidth(ResizeSettings settings, Recipe? recipe, RecipeVariant? partDef, double factor)
     {
         // Priority 1: The value on the part definition. If it's non-zero, don't change the width by any other factor
         var width = partDef?.Width ?? 0;
-        if (width != 0) return width;
+        if (width != 0)
+            return width;
 
         // Priority #2: The value from the factor map/recipe, which was selected based on this factor. 
         // It must be adjusted by part definition, as we may be looping through various sizes
-        width = settings.UseFactorMap ? ParseObject.IntOrZeroAsNull(recipe?.Width) ?? 0 : 0;
+        width = settings.UseFactorMap
+            ? IntOrZeroAsNull(recipe?.Width) ?? 0
+            : 0;
         if (width != 0)
             return (int)(width * (partDef?.AdditionalFactor ?? 1));
 

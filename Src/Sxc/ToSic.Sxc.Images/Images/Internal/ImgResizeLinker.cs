@@ -34,24 +34,24 @@ public class ImgResizeLinker(
     /// <summary>
     /// Make sure this is in sync with the Link.Image
     /// </summary>
-    public string Image(
-        string url = default,
-        object settings = default,
-        object factor = default,
+    public string? Image(
+        string? url = default,
+        object? settings = default,
+        object? factor = default,
         NoParamOrder noParamOrder = default,
-        IField field = default,  // todo
-        object width = default,
-        object height = default,
-        object quality = default,
-        string resizeMode = default,
-        string scaleMode = default,
-        string format = default,
-        object aspectRatio = default,
-        string parameters = default,
-        IExecutionContext executionContext = default
+        IField? field = default,  // todo
+        object? width = default,
+        object? height = default,
+        object? quality = default,
+        string? resizeMode = default,
+        string? scaleMode = default,
+        string? format = default,
+        object? aspectRatio = default,
+        string? parameters = default,
+        IExecutionContext? executionContext = default
     )
     {
-        var l = (Debug ? Log : null).Fn<string>($"{nameof(url)}:{url}");
+        var l = (Debug ? Log : null).Fn<string?>($"{nameof(url)}:{url}");
 
         // Modern case - all settings have already been prepared, the other settings are ignored
         if (settings is ResizeSettings resizeSettings)
@@ -69,7 +69,7 @@ public class ImgResizeLinker(
         return l.Return(result, "built:" + result);
     }
         
-    internal OneResize ImageOnly(string url, ResizeSettings settings, IHasMetadata field)
+    internal OneResize ImageOnly(string? url, ResizeSettings settings, IHasMetadata? field)
     {
         var l = Log.Fn<OneResize>();
         var srcSetSettings = settings.Find(SrcSetType.Img, features.Value.IsEnabled(ImageServiceUseFactors), koi.Value.Framework);
@@ -77,49 +77,57 @@ public class ImgResizeLinker(
     }
         
 
-    internal string SrcSet(string url, ResizeSettings settings, SrcSetType srcSetType, IHasMetadata field = null)
+    internal string? SrcSet(string? url, ResizeSettings settings, SrcSetType srcSetType, IHasMetadata? field = null)
     {
-        var l = Log.Fn<string>();
+        var l = Log.Fn<string?>();
 
         var srcSetSettings = settings.Find(srcSetType, features.Value.IsEnabled(ImageServiceUseFactors), koi.Value.Framework);
 
         var srcSetParts = srcSetSettings?.VariantsParsed;
 
         // Basic case -no srcSet config. In this case the src-set can just contain the url.
-        if ((srcSetParts?.Length ?? 0) == 0)
+        if (srcSetParts == null || srcSetParts.Length == 0)
             return l.Return(ConstructUrl(url, settings, srcSetSettings, field).Url, "no srcset");
 
-        var results = srcSetParts.Select(ssPart =>
+        var results = srcSetParts
+            .Select(ssPart =>
         {
             if (ssPart.SizeType == SizeDefault)
                 return ConstructUrl(url, settings, srcSetSettings, null, ssPart);
 
-            var one = ConstructUrl(url, settings, srcSetSettings, field: field, partDef: ssPart);
+            var one = ConstructUrl(url, settings, srcSetSettings, fieldForMd: field, partDef: ssPart);
             // this must happen at the end
-            one.Suffix = ssPart.SrcSetSuffix(one.Width);
+            one = one with { Suffix = ssPart.SrcSetSuffix(one.Width) };
             return one;
         });
-        var result = string.Join(",\n", results.Select(r => r.UrlWithSuffix));
+        var result = string.Join(",\n", results.Select(r => r.UrlWithSuffix()));
 
         return l.Return(result, "srcset");
     }
 
 
 
-    private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, Recipe srcSetSettings, IHasMetadata field, RecipeVariant partDef = null)
+    private OneResize ConstructUrl(string? url, ResizeSettings resizeSettings, Recipe? srcSetSettings, IHasMetadata? fieldForMd, RecipeVariant? partDef = null)
     {
-        var one = DimGen.ResizeDimensions(resizeSettings, srcSetSettings, partDef);
-        one.Recipe = srcSetSettings;
+        var one = DimGen.ResizeDimensions(resizeSettings, srcSetSettings, partDef) with
+        {
+            Recipe = srcSetSettings,
+        };
+        
 
-        var imgDecorator = field == null ? null 
-            : _imgDecCache.GetOrAdd(field, f => GetOrNull(f, siteLazy.Value.SafeLanguagePriorityCodes()));
+        var imgDecorator = fieldForMd == null
+            ? null 
+            : _imgDecCache.GetOrAdd(fieldForMd, f => GetOrNull(f, siteLazy.Value.SafeLanguagePriorityCodes()));
 
         var resizeMode = resizeSettings.ResizeMode;
         if (imgDecorator?.CropBehavior == NoCrop)
         {
             resizeMode = ModeMax;
-            one.ShowAll = true;
-            one.Height = 0; // if we show all, the height may not match crop-height
+            one = one with
+            {
+                ShowAll = true,
+                Height = 0, // if we show all, the height may not match crop-height
+            };
         }
 
         var resizerNvc = new NameValueCollection();
@@ -141,15 +149,16 @@ public class ImgResizeLinker(
             url = UrlHelpers.AddQueryString(url, resizeSettings.Parameters);
 
         var result = Tags.SafeUrl(url).ToString();
-        one.Url = result;
+        one = one with { Url = result };
         return one;
     }
 
     // cache buffer settings which had already been looked up
-    private readonly ConcurrentDictionary<IHasMetadata, ImageDecorator> _imgDecCache = new();
+    private readonly ConcurrentDictionary<IHasMetadata, ImageDecorator?> _imgDecCache = new();
 
 
-    private bool ImgAddIfRelevant(NameValueCollection resizer, string key, object value, string irrelevant = "")
+    // ReSharper disable once UnusedMethodReturnValue.Local
+    private bool ImgAddIfRelevant(NameValueCollection resizer, string? key, object? value, string irrelevant = "")
     {
         var l = (Debug ? Log : null).Fn<bool>();
         if (key == null || value == null)
@@ -167,13 +176,16 @@ public class ImgResizeLinker(
     }
 
 
+    [field: AllowNull, MaybeNull]
     internal ResizeParamMerger ResizeParamMerger
     {
         get
         {
-            if (field != null) return field;
+            if (field != null)
+                return field;
             field = new(Log);
-            if (Debug) field.Debug = true;
+            if (Debug)
+                field.Debug = true;
             return field;
         }
     }

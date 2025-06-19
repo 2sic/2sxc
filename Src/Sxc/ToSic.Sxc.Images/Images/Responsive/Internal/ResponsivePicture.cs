@@ -18,6 +18,7 @@ public record ResponsivePicture: ResponsiveBase, IResponsivePicture
         : base(imgService, pageService, specs, parentLog, "Picture")
     { }
 
+    [field: AllowNull, MaybeNull]
     public Picture Picture => field ??= GeneratePicture();
 
     private Picture GeneratePicture()
@@ -39,16 +40,15 @@ public record ResponsivePicture: ResponsiveBase, IResponsivePicture
 
     protected override IHtmlTag GetOutermostTag() => Picture;
 
+    [field: AllowNull, MaybeNull]
     public TagList Sources => field ??= SourceTagsInternal(Target.Link.Url, Settings);
 
-    private TagList SourceTagsInternal(string url, IResizeSettings resizeSettings)
+    private TagList SourceTagsInternal(string? url, IResizeSettings resizeSettings)
     {
         var logOrNull = ImgService.Debug ? Log : null;
         var l = logOrNull.Fn<TagList>();
         // Check formats
         var defFormat = ImgService.GetFormat(url);
-        if (defFormat == null)
-            return l.Return(ToSic.Razor.Blade.Tag.TagList(), "no format");
 
         // Determine if we have many formats, otherwise just use the current one
         var formats = defFormat.ResizeFormats.Any()

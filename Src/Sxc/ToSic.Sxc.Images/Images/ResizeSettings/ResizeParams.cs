@@ -11,17 +11,17 @@ namespace ToSic.Sxc.Images;
 /// </summary>
 internal class ResizeParams(ILog parentLog) : HelperBase(parentLog, $"{SxcLogName}.ResPar")
 {
-    internal static double? AspectRatioOrNull(object aspectRatio) 
+    internal static double? AspectRatioOrNull(object? aspectRatio) 
         => DoubleOrNullWithCalculation(aspectRatio);
 
 
-    internal static double? FactorOrNull(object factor) 
+    internal static double? FactorOrNull(object? factor) 
         => DoubleOrNullWithCalculation(factor);
 
-    public static string FormatOrNull(object format)
+    public static string? FormatOrNull(object? format)
         => FindKnownFormatOrNull(RealStringOrNull(format));
 
-    internal static int? QualityOrNull(object quality)
+    internal static int? QualityOrNull(object? quality)
     {
         var qParamDouble = DoubleOrNull(quality);
         if (qParamDouble.HasValue)
@@ -34,17 +34,21 @@ internal class ResizeParams(ILog parentLog) : HelperBase(parentLog, $"{SxcLogNam
         return qParamInt;
     }
 
-    internal static NameValueCollection ParametersOrNull(string parameters)
+    internal static NameValueCollection? ParametersOrNull(string? parameters)
         => string.IsNullOrWhiteSpace(parameters)
             ? null
             : UrlHelpers.ParseQueryString(parameters);
 
 
-    public static string ResizeModeOrNull(string resizeMode) => resizeMode; // this one doesn't do any conversion atm
+    public static string? ResizeModeOrNull(string? resizeMode)
+        => resizeMode; // this one doesn't do any conversion atm
 
-    public static string ScaleModeOrNull(string scaleMode) => FindKnownScaleOrNull(scaleMode);
+    public static string? ScaleModeOrNull(string? scaleMode)
+        => FindKnownScaleOrNull(scaleMode);
 
-    internal static int? WidthOrNull(object width) => IntOrNull(width);
-    internal static int? HeightOrNull(object height) => IntOrNull(height);
+    internal static int? WidthOrNull(object? width)
+        => IntOrNull(width);
+    internal static int? HeightOrNull(object? height)
+        => IntOrNull(height);
 
 }

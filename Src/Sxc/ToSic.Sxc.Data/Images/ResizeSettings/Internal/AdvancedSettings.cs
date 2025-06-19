@@ -27,7 +27,8 @@ public class AdvancedSettings : IHasPiggyBack
     public Recipe? Recipe { get; }
 
     [PrivateApi]
-    public static AdvancedSettings? Parse(object value) => InnerParse(value);
+    public static AdvancedSettings? Parse(object? value)
+        => InnerParse(value);
 
     private static AdvancedSettings? InnerParse(object? value)
     {
@@ -50,7 +51,7 @@ public class AdvancedSettings : IHasPiggyBack
     }
 
     [PrivateApi]
-    public static AdvancedSettings FromJson(object value, ILog? log = null)
+    public static AdvancedSettings FromJson(object? value, ILog? log = null)
     {
         var l = log.Fn<AdvancedSettings>();
         try
@@ -71,7 +72,8 @@ public class AdvancedSettings : IHasPiggyBack
 
     [PrivateApi]
     [field: AllowNull, MaybeNull]
-    public ReadOnlyCollection<Recipe> AllSubRecipes => field ??= GetAllRecipesRecursive(Recipe?.Recipes).AsReadOnly();
+    public ReadOnlyCollection<Recipe> AllSubRecipes
+        => field ??= GetAllRecipesRecursive(Recipe?.Recipes).AsReadOnly();
 
     private static List<Recipe> GetAllRecipesRecursive(IEnumerable<Recipe>? recipes)
     {

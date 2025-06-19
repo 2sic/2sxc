@@ -23,7 +23,7 @@ public interface IResponsiveImage: IRawHtmlString
     /// 2. or from image metadata - see <see cref="Description"/>
     /// 3. or from the Razor code using the parameter `imgAltFallback` _new v15_
     /// </summary>
-    string Alt { get; }
+    string? Alt { get; }
 
     /// <summary>
     /// The Class of the image. Usually created from these sources
@@ -31,7 +31,7 @@ public interface IResponsiveImage: IRawHtmlString
     /// - Resize-Settings which may add classes
     /// - Rule which determines if the image should crop or not, which may add a class
     /// </summary>
-    string Class { get; }
+    string? Class { get; }
 
     /// <summary>
     /// Image description from the image Metadata.
@@ -43,13 +43,13 @@ public interface IResponsiveImage: IRawHtmlString
     /// * a string containing the added description
     /// </returns>
     /// <remarks>Added in v15</remarks>
-    string Description { get; }
+    string? Description { get; }
 
     /// <summary>
     /// Extended description, typically used in galleries.
     /// </summary>
     /// <remarks>Added in v16.04</remarks>
-    string DescriptionExtended { get; }
+    string? DescriptionExtended { get; }
 
     /// <summary>
     /// The `img` tag which would normally be added to the page automatically.
@@ -75,12 +75,12 @@ public interface IResponsiveImage: IRawHtmlString
     /// <summary>
     /// The image height, if it should be set at all. Will be null otherwise. 
     /// </summary>
-    string Height { get; }
+    string? Height { get; }
 
     /// <summary>
     /// The image width, if it should be set at all. Will be null otherwise. 
     /// </summary>
-    string Width { get; }
+    string? Width { get; }
 
     /// <summary>
     /// The SrcSet in case you need to use it in your own custom img-tag.
@@ -88,13 +88,13 @@ public interface IResponsiveImage: IRawHtmlString
     ///
     /// It will only be used for normal `img` tags, but not for `img` tags inside `picture` tags.
     /// </summary>
-    string SrcSet { get; }
+    string? SrcSet { get; }
 
     /// <summary>
     /// The sizes in case you need it in your custom img-tag.
     /// It will only be used for normal `img` tags, but not for `img` tags inside `picture` tags.
     /// </summary>
-    string Sizes { get; }
+    string? Sizes { get; }
 
     /// <summary>
     /// Get the toolbar to show it on another tag (typically a `figure` around the `picture`)
@@ -102,7 +102,7 @@ public interface IResponsiveImage: IRawHtmlString
     /// </summary>
     /// <remarks>Added in v16.04</remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP 16.04, may still change")]
-    IToolbarBuilder Toolbar();
+    IToolbarBuilder? Toolbar();
 
     /// <summary>
     /// The main url, used for main `src` property

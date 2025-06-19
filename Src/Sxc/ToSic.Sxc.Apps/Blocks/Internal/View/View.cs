@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Blocks.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class View(
     IEntity templateEntity,
-    string[] languageCodes,
+    string?[] languageCodes,
     ILog parentLog,
     Generator<QueryDefinitionBuilder>? qDefBuilder,
     bool isReplaced = false)

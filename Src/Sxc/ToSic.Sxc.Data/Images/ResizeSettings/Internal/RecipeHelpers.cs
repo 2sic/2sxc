@@ -4,14 +4,14 @@ namespace ToSic.Sxc.Images;
 
 public class RecipeHelpers
 {
-    internal static ReadOnlyDictionary<string, object> MergeDics(IDictionary<string, object>? parentOrNull, IDictionary<string, object>? myOrNull)
+    internal static ReadOnlyDictionary<string, object?> MergeDics(IDictionary<string, object?>? parentOrNull, IDictionary<string, object?>? myOrNull)
     {
         if (myOrNull == null)
-            return new(parentOrNull ?? new Dictionary<string, object>());
+            return new(parentOrNull ?? new Dictionary<string, object?>());
         if (parentOrNull == null || !parentOrNull.Any())
             return new(myOrNull);
 
-        var newMaster = new Dictionary<string, object>(parentOrNull);
+        var newMaster = new Dictionary<string, object?>(parentOrNull);
 
         foreach (var pair in myOrNull)
             if (pair.Value == null) newMaster.Remove(pair.Key);

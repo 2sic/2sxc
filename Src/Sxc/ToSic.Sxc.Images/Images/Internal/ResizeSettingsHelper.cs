@@ -7,25 +7,30 @@ namespace ToSic.Sxc.Images.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal static class ResizeSettingsExtensions
 {
-    internal static Recipe Find(this ResizeSettings resizeSettings, SrcSetType srcSetType, bool useFactors, string cssFramework)
+    internal static Recipe? Find(this ResizeSettings? resizeSettings, SrcSetType srcSetType, bool useFactors, string? cssFramework)
     {
-        var advanced = resizeSettings?.Advanced;
+        if (resizeSettings == null)
+            return null;
+        var advanced = resizeSettings.Advanced;
         var mainRecipe = advanced?.Recipe;
-        if (mainRecipe == null) return null;
-        var subRecipes = advanced.AllSubRecipes;
+        if (mainRecipe == null)
+            return null;
+        var subRecipes = advanced!.AllSubRecipes;
 
         // No sub-recipes - return main
         if (subRecipes.SafeNone()) return mainRecipe;
 
         // Prepare list of frameworks, targets and factors to use in the loops
-        var frameworks = cssFramework == null ? [(string)null] : new[] { cssFramework, null };
+        var frameworks = cssFramework == null
+            ? [null]
+            : new[] { cssFramework, null };
 
         var primaryTarget = srcSetType == SrcSetType.Img ? "img" : "source";
         var targetsToTest = new[] { primaryTarget, Recipe.RuleForDefault };
 
         var factor = resizeSettings.FactorToUse; // DNearZero(resizeSettings.Factor) ? 1 : resizeSettings.Factor;
         var factorsToTest = useFactors
-            ? [(double?)factor, null]
+            ? [factor, null]
             : new[] { (double?)null };
 
         // Get PiggyBack cache to rarely rerun LINQ
@@ -37,10 +42,14 @@ internal static class ResizeSettingsExtensions
             var cssKey = cssFw.AsKey();
             var cssRecipes = pgb.GetOrGenerate(cssKey, 
                 () => subRecipes.Where(r => r.ForCss == cssFw).ToList());
-            if (!cssRecipes.Any()) continue;
+            if (!cssRecipes.Any())
+                continue;
             foreach (var f in factorsToTest)
             {
-                var factorKey = cssKey + "-" + (f == null ? ((string)null).AsKey() : f.ToString().AsKey());
+                var factorKey = cssKey + "-" + (f == null
+                        ? ((string?)null).AsKey()
+                        : f.ToString().AsKey()
+                    );
                 var recList = pgb.GetOrGenerate(factorKey, 
                     () => cssRecipes.Where(m => f == null ? m.FactorParsed == 0 : DNearZero(m.FactorParsed - f.Value)).ToList());
                 foreach (var target in targetsToTest)

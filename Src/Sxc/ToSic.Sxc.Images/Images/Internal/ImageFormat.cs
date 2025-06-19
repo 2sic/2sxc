@@ -15,7 +15,7 @@ public class ImageFormat : IImageFormat
 
     public IList<IImageFormat> ResizeFormats { get; }
 
-    public ImageFormat(string format, string mimeType, bool canResize, IEnumerable<IImageFormat> better = null)
+    public ImageFormat(string format, string mimeType, bool canResize, IEnumerable<IImageFormat>? better = null)
     {
         Format = format;
         MimeType = mimeType;

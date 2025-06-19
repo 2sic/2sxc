@@ -33,7 +33,7 @@ public interface ITweakMedia
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">Tweak API to customize further settings</param>
     public ITweakMedia Resize(
-        string name,
+        string? name,
         NoParamOrder noParamOrder = default,
         Func<ITweakResize, ITweakResize>? tweak = default
     );

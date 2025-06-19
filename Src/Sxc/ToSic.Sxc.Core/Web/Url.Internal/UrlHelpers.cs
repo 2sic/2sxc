@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Web.Internal.Url;
@@ -187,10 +188,12 @@ public static class UrlHelpers
         => $"{url}{(url.IndexOf('?') > 0 ? '&' : '?')}{name}={value}";
 
 
-    public static string AddQueryString(string url, string newParams)
+    [return: NotNullIfNotNull(nameof(url))]
+    public static string? AddQueryString(string url, string newParams)
         => AddQueryString(url, ParseQueryString(newParams));
 
-    public static string AddQueryString(string url, NameValueCollection? newParams)
+    [return: NotNullIfNotNull(nameof(url))]
+    public static string? AddQueryString(string? url, NameValueCollection? newParams)
     {
         // check do we have any work to do
         if (newParams == null || newParams.Count == 0)

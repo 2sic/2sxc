@@ -12,7 +12,8 @@ public class ImageflowRewrite
     public static readonly string PngQuality = "png.quality";
     public static readonly string WebpQuality = "webp.quality";
 
-    public static NameValueCollection QueryStringRewrite(NameValueCollection queryString)
+    [return: NotNullIfNotNull(nameof(queryString))]
+    public static NameValueCollection? QueryStringRewrite(NameValueCollection? queryString)
     {
         // rewrite query string
         if (queryString != null && !string.IsNullOrEmpty(queryString[Quality]))
@@ -26,9 +27,10 @@ public class ImageflowRewrite
         return queryString;
     }
 
-    public static NameValueCollection AddKeyWhenMissing(NameValueCollection queryString, string key, string value)
+    public static NameValueCollection AddKeyWhenMissing(NameValueCollection queryString, string key, string? value)
     {
-        if (string.IsNullOrEmpty(queryString[key])) queryString.Add(key, value);
+        if (string.IsNullOrEmpty(queryString[key]))
+            queryString.Add(key, value);
         return queryString;
     }
 }

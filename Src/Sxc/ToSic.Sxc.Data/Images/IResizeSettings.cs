@@ -17,7 +17,7 @@ public interface IResizeSettings
     /// Name of the original settings it was based on - can be null/empty.
     /// </summary>
     /// <remarks>New v17.03</remarks>
-    string BasedOn { get; }
+    string? BasedOn { get; }
 
     /// <summary>
     /// Width to resize to.
@@ -42,19 +42,19 @@ public interface IResizeSettings
     /// Resize mode.
     /// If empty or "(none)" will not be used. 
     /// </summary>
-    string ResizeMode { get; }
+    string? ResizeMode { get; }
 
     /// <summary>
     /// Scale Mode.
     /// If empty or "(none)" will not be used. 
     /// </summary>
-    string ScaleMode { get; }
+    string? ScaleMode { get; }
 
     /// <summary>
     /// Target format like 'jpg' or 'png'.
     /// If empty will not be used. 
     /// </summary>
-    string Format { get; }
+    string? Format { get; }
 
     /// <summary>
     /// The resize factor by which the original value (width/height) is scaled
@@ -70,7 +70,7 @@ public interface IResizeSettings
     /// Additional url parameters in case the final link would need this.
     /// Rarely used, but can be used for resize parameters which are not standard. 
     /// </summary>
-    NameValueCollection Parameters { get; }
+    NameValueCollection? Parameters { get; }
 
     //[PrivateApi("WIP")] 
     //bool UseFactorMap { get; }

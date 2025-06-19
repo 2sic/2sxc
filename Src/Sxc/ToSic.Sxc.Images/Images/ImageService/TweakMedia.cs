@@ -6,21 +6,29 @@ using static System.StringComparer;
 
 namespace ToSic.Sxc.Images;
 
-internal record TweakMedia(ImageService ImageSvc, ResponsiveSpecsOfTarget TargetSpecs, ResizeSettings ResizeSettings, ImageDecoratorVirtual VDec, ImageSpecs Img, PictureSpecs Pic, object ToolbarObj): ITweakMedia
+internal record TweakMedia(
+    ImageService ImageSvc,
+    ResponsiveSpecsOfTarget TargetSpecs,
+    ResizeSettings ResizeSettings,
+    ImageDecoratorVirtual VDec,
+    ImageSpecs Img,
+    PictureSpecs Pic,
+    object? ToolbarObj)
+    : ITweakMedia
 {
     #region Resize Settings
 
     /// <inheritdoc />
-    public ITweakMedia Resize(Func<ITweakResize, ITweakResize> tweak = default)
+    public ITweakMedia Resize(Func<ITweakResize, ITweakResize>? tweak = default)
     {
         var updated = (tweak?.Invoke(new TweakResize(ResizeSettings)) as TweakResize)?.Settings ?? ResizeSettings;
         return this with { ResizeSettings = updated };
     }
 
     /// <inheritdoc />
-    public ITweakMedia Resize(string name, NoParamOrder noParamOrder = default, Func<ITweakResize, ITweakResize> tweak = default)
+    public ITweakMedia Resize(string? name, NoParamOrder noParamOrder = default, Func<ITweakResize, ITweakResize>? tweak = default)
     {
-        var settings = !string.IsNullOrEmpty(name) && ImageSvc != null // during tests, ImageSvc may be blank
+        var settings = name.HasValue() && ImageSvc != null // during tests, ImageSvc may be blank
             ? ImageSvc.ImgLinker.ResizeParamMerger.BuildResizeSettings(settings: ImageSvc.GetSettingsByName(name))
             : ResizeSettings;
         var updated = (tweak?.Invoke(new TweakResize(settings)) as TweakResize)?.Settings ?? settings;
@@ -28,7 +36,7 @@ internal record TweakMedia(ImageService ImageSvc, ResponsiveSpecsOfTarget Target
     }
 
     /// <inheritdoc />
-    public ITweakMedia Resize(IResizeSettings settings, NoParamOrder noParamOrder = default, Func<ITweakResize, ITweakResize> tweak = default)
+    public ITweakMedia Resize(IResizeSettings settings, NoParamOrder noParamOrder = default, Func<ITweakResize, ITweakResize>? tweak = default)
     {
         var retyped = settings as ResizeSettings ?? throw new ArgumentException(@"Can't properly convert to expected type", nameof(settings));
         var updated = (tweak?.Invoke(new TweakResize(retyped)) as TweakResize)?.Settings ?? retyped;
@@ -101,32 +109,41 @@ internal record TweakMedia(ImageService ImageSvc, ResponsiveSpecsOfTarget Target
 
     #endregion
 
-    internal static IDictionary<string, object> CreateAttribDic(object attributes, string name)
+    internal static IDictionary<string, object?>? CreateAttribDic(object? attributes, string name)
         => attributes switch
         {
             null => null,
-            IDictionary<string, object> ok => ok.ToInvariant(),
-            IDictionary<string, string> strDic => strDic.ToDictionary(pair => pair.Key, object (pair) => pair.Value, InvariantCultureIgnoreCase),
+            IDictionary<string, object?> ok => ok.ToInvariant(),
+            IDictionary<string, string> strDic => strDic.ToDictionary(
+                pair => pair.Key,
+                object? (pair) => pair.Value, InvariantCultureIgnoreCase
+            ),
             _ => attributes.IsAnonymous()
                 ? attributes.ToDicInvariantInsensitive()
                 : throw new ArgumentException($@"format of {name} unknown: {name.GetType().Name}", nameof(attributes))
         };
 }
 
+/// <summary>
+/// Fake image decorator so the code can run stable without having to check if this exists or not.
+/// </summary>
+/// <param name="LightboxIsEnabled"></param>
+/// <param name="LightboxGroup"></param>
+/// <param name="DescriptionExtended"></param>
 internal record ImageDecoratorVirtual(
     bool? LightboxIsEnabled = default,
-    string LightboxGroup = default,
-    string DescriptionExtended = default
+    string? LightboxGroup = default,
+    string? DescriptionExtended = default
 ) : IImageDecorator;
 
 internal record ImageSpecs(
-    string Class = default,
-    string Alt = default,
-    string AltFallback = default,
-    IDictionary<string, object> Attributes = default
+    string? Class = default,
+    string? Alt = default,
+    string? AltFallback = default,
+    IDictionary<string, object?>? Attributes = default
 );
 
 internal record PictureSpecs(
-    string Class = default,
-    IDictionary<string, object> Attributes = default
+    string? Class = default,
+    IDictionary<string, object?>? Attributes = default
 );

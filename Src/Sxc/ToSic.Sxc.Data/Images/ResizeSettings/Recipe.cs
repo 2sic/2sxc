@@ -53,7 +53,7 @@ public class Recipe: ICanDump
         bool? setWidth = default,
         bool? setHeight = default,
         string? variants = default,
-        IDictionary<string, object>? attributes = null,
+        IDictionary<string, object?>? attributes = null,
         IEnumerable<Recipe>? recipes = default
     )
     {
@@ -96,7 +96,7 @@ public class Recipe: ICanDump
         bool? setWidth = default,
         bool? setHeight = default,
         string? variants = default,
-        IDictionary<string, object>? attributes = null,
+        IDictionary<string, object?>? attributes = null,
         IEnumerable<Recipe>? recipes = default
     ) : this(original: null, name: name, forTag: forTag, forFactor: forFactor, forCss: forCss, width: width, setWidth: setWidth, setHeight: setHeight, variants: variants, attributes: attributes, recipes: recipes)
     { }
@@ -166,7 +166,7 @@ public class Recipe: ICanDump
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public string? Sizes => Attributes?.TryGetValue(SpecialPropertySizes, out var strSizes) == true
-        ? strSizes.ToString()
+        ? strSizes?.ToString()
         : null;
 
 
@@ -177,7 +177,7 @@ public class Recipe: ICanDump
     /// System.Text.Json requires that the case-insensitive property name and type match the parameter in the constructor.
     /// We are using string/object because a value could also be { "name": true, "other-name": 5 } in the json configuration
     /// </remarks>
-    public IDictionary<string, object> Attributes { get; private set; }
+    public IDictionary<string, object?> Attributes { get; private set; }
 
     /// <summary>
     /// wip TODO: DOC

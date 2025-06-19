@@ -7,7 +7,8 @@
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class HasLink: IHasLink
 {
-    internal HasLink(string url) => Url = url;
+    internal HasLink(string url)
+        => Url = url;
 
     public string Url { get; }
 }

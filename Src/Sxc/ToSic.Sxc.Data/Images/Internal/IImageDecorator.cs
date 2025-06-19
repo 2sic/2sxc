@@ -8,6 +8,6 @@
 public interface IImageDecorator
 {
     bool? LightboxIsEnabled { get; }
-    string LightboxGroup { get; }
+    string? LightboxGroup { get; }
     string? DescriptionExtended { get; }
 }

@@ -14,28 +14,28 @@ internal record ResizeSettings : IResizeSettings, IResizeSettingsInternal
     /// <summary>
     /// Name of the settings used initially
     /// </summary>
-    public string BasedOn { get; }
+    public string? BasedOn { get; }
 
     public int Width { get; init; } = IntIgnore;
     public int Height { get; init; } = IntIgnore;
     public int Quality { get; set; } = IntIgnore;
-    public string ResizeMode { get; set; }
-    public string ScaleMode { get; set; }
-    public string Format { get; init; }
+    public string? ResizeMode { get; set; }
+    public string? ScaleMode { get; set; }
+    public string? Format { get; init; }
     public double Factor { get; init; } = 1;
     public double AspectRatio { get; init; }
-    public NameValueCollection Parameters { get; set; }
+    public NameValueCollection? Parameters { get; set; }
 
 
     public bool UseFactorMap { get; set; } = true;
     public bool UseAspectRatio { get; set; } = true;
 
-    public AdvancedSettings Advanced { get; set; }
+    public AdvancedSettings? Advanced { get; set; }
 
     /// <summary>
     /// Constructor to create new
     /// </summary>
-    public ResizeSettings(int? width, int? height, int fallbackWidth, int fallbackHeight, double aspectRatio, double factor, string format, string basedOn)
+    public ResizeSettings(int? width, int? height, int fallbackWidth, int fallbackHeight, double aspectRatio, double factor, string? format, string? basedOn)
     {
         Width = width ?? fallbackWidth;
         Height = height ?? fallbackHeight;
@@ -61,11 +61,11 @@ internal record ResizeSettings : IResizeSettings, IResizeSettingsInternal
         double? aspectRatio = null,
         double? factor = null,
         int? quality = null,
-        string format = null,
-        string resizeMode = null,
-        string scaleMode = null,
-        NameValueCollection parameters = null,
-        AdvancedSettings advanced = null
+        string? format = null,
+        string? resizeMode = null,
+        string? scaleMode = null,
+        NameValueCollection? parameters = null,
+        AdvancedSettings? advanced = null
     )
     {
         if (original == null) throw new ArgumentNullException(nameof(original));
@@ -101,7 +101,7 @@ internal record ResizeSettings : IResizeSettings, IResizeSettingsInternal
     /// </summary>
     internal double FactorToUse => FactorUsed ? Factor : 1;
 
-    internal string ToHtmlInfo(ImageDecorator decoOrNull)
+    internal string ToHtmlInfo(ImageDecorator? decoOrNull)
     {
         const string notSet = "default/not set";
         const double floatTolerance = 0.01;

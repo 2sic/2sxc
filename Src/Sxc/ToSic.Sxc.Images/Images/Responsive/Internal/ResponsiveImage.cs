@@ -18,6 +18,7 @@ public record ResponsiveImage: ResponsiveBase
     /// <summary>
     /// Same as base / initial implementation, but add srcset if available
     /// </summary>
+    [field: AllowNull, MaybeNull]
     public override Img Img => field ??= GenerateImg();
 
     private Img GenerateImg()

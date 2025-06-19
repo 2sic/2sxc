@@ -27,19 +27,19 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
     public bool Debug = false;
 
     internal ResizeSettings BuildResizeSettings(
-        object settings = null,
+        object? settings = null,
         NoParamOrder noParamOrder = default,
-        object factor = null,
-        object width = null,
-        object height = null,
-        object quality = null,
-        string resizeMode = null,
-        string scaleMode = null,
-        string format = null,
-        object aspectRatio = null,
-        string parameters = null,
-        AdvancedSettings advanced = default,
-        IExecutionContext executionContext = default
+        object? factor = null,
+        object? width = null,
+        object? height = null,
+        object? quality = null,
+        string? resizeMode = null,
+        string? scaleMode = null,
+        string? format = null,
+        object? aspectRatio = null,
+        string? parameters = null,
+        AdvancedSettings? advanced = default,
+        IExecutionContext? executionContext = default
     )
     {
         var l = (Debug ? Log : null).Fn<ResizeSettings>();
@@ -92,8 +92,8 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         return l.Return(resizeParams, "");
     }
 
-    private ICanGetByName TryToCastSettings(object settings, IExecutionContext exCtxOrNull) =>
-        settings switch
+    private ICanGetByName? TryToCastSettings(object? settings, IExecutionContext? exCtxOrNull)
+        => settings switch
         {
             null => null,
             string name => GetImageSettingsByName(exCtxOrNull, name, Debug, Log),
@@ -104,9 +104,9 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
                 : null,
         };
 
-    internal static ICanGetByName GetImageSettingsByName(IExecutionContext exCtxOrNull, string strName, bool debug, ILog log)
+    internal static ICanGetByName? GetImageSettingsByName(IExecutionContext? exCtxOrNull, string strName, bool debug, ILog log)
     {
-        var l = log.Fn<ICanGetByName>($"{strName}; code root: {exCtxOrNull != null}", enabled: debug);
+        var l = log.Fn<ICanGetByName?>($"{strName}; code root: {exCtxOrNull != null}", enabled: debug);
         var settings = exCtxOrNull?.GetState<ITypedStack>(ExecutionContextStateNames.AllSettings);
         var imageSettings = settings?.Get($"Settings.Images.{strName}");
         // imageSettings is a ListTypedItems<ITyped> because it's a child-list of entities
@@ -116,7 +116,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
 
 
 
-    private AdvancedSettings GetMultiResizeSettings(ICanGetByName getSettings)
+    private AdvancedSettings? GetMultiResizeSettings(ICanGetByName? getSettings)
     {
         try
         {
@@ -130,10 +130,11 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
             return null;
         }
 
-        AdvancedSettings ParseAdvancedSettingsJson(object value) => AdvancedSettings.FromJson(value, Log);
+        AdvancedSettings ParseAdvancedSettingsJson(object? value)
+            => AdvancedSettings.FromJson(value, Log);
     }
 
-    internal ResizeSettings BuildCoreSettings(ResizeParams resP, object width, object height, object factor, object aspectRatio, string format, ICanGetByName settingsOrNull)
+    internal ResizeSettings BuildCoreSettings(ResizeParams resP, object? width, object? height, object? factor, object? aspectRatio, string? format, ICanGetByName? settingsOrNull)
     {
         var l = (Debug ? Log : null).Fn<ResizeSettings>();
 
@@ -143,8 +144,9 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
         IfDebugLogPair("Params", parameters);
 
         // Pre-Clean the values - all as strings
-        (dynamic W, dynamic H) set = (settingsOrNull?.Get(WidthField), settingsOrNull?.Get(HeightField));
-        if (settingsOrNull != null) IfDebugLogPair("Settings", set);
+        (object? W, object? H) set = (settingsOrNull?.Get(WidthField), settingsOrNull?.Get(HeightField));
+        if (settingsOrNull != null)
+            IfDebugLogPair("Settings", set);
 
         (int W, int H) safe = (IntOrZeroAsNull(set.W) ?? IntIgnore, IntOrZeroAsNull(set.H) ?? IntIgnore);
         IfDebugLogPair("Safe", safe);

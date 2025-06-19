@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Images.Internal;
+﻿using ToSic.Sys.Utils;
+
+namespace ToSic.Sxc.Images.Internal;
 
 internal class LightboxHelpers
 {
@@ -10,19 +12,24 @@ internal class LightboxHelpers
     /// <summary>
     /// Create the args-list for the lightbox initialization
     /// </summary>
-    /// <param name="hasGroup">Settings specify an image group</param>
     /// <param name="imageGroup">Name of the image group</param>
     /// <returns></returns>
-    internal static object[] CreateArgs(bool hasGroup, string imageGroup) =>
-    [
-        hasGroup ? $"[{AttributeGroup}=\"{imageGroup}\"]" : $"[{Attribute}=\"\"]",
-        new
-        {
-            groupAll = hasGroup,
-            Thumbs = new
+    internal static object[] CreateArgs(string? imageGroup)
+    {
+        var hasGroup = imageGroup.HasValue();
+        return
+        [
+            hasGroup
+                ? $"[{AttributeGroup}=\"{imageGroup}\"]"
+                : $"[{Attribute}=\"\"]",
+            new
             {
-                autoStart = false
+                groupAll = hasGroup,
+                Thumbs = new
+                {
+                    autoStart = false
+                }
             }
-        }
-    ];
+        ];
+    }
 }
