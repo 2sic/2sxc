@@ -25,17 +25,16 @@ public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)
     #endregion
 
 
-    internal DynamicJacketBase Json2Jacket(string json, NoParamOrder noParamOrder = default, string? fallback = default)
-    {
-        return IfJsonTryConvertToJacket(AsJsonNode(json, fallback)).Final;
-    }
+    internal DynamicJacketBase? Json2Jacket(string json, NoParamOrder noParamOrder = default, string? fallback = default)
+        => IfJsonTryConvertToJacket(AsJsonNode(json, fallback)).Final;
 
-    public ITyped JsonToTyped(string json, NoParamOrder noParamOrder = default, string? fallback = default)
+    public ITyped? JsonToTyped(string json, NoParamOrder noParamOrder = default, string? fallback = default)
     {
-        if (!json.HasValue()) return null;
+        if (!json.HasValue())
+            return null;
         ThrowIfNotExpected(json, false);
         var node = AsJsonNode(json, fallback);
-        var result = IfJsonTryConvertTo<ITyped>(node, CreateTypedObject, array => null);
+        var result = IfJsonTryConvertTo<ITyped>(node, CreateTypedObject, _ => null);
         return result.Final;
     }
 
@@ -45,7 +44,7 @@ public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)
             return null;
         ThrowIfNotExpected(json, true);
         var node = AsJsonNode(json, fallback);
-        var result = IfJsonTryConvertTo(node, _ => null, arr => JsonArrayToTypedList(arr, true));
+        var result = IfJsonTryConvertTo(node, _ => null, arr => JsonArrayToTypedList(arr, true)!);
         return result.Final;
     }
 
@@ -70,7 +69,8 @@ public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)
                 nameof(json));
 
         // If Array-state and expectations match, it's ok
-        if (isArray == expectArray) return;
+        if (isArray == expectArray)
+            return;
 
         // Throw if IsArray and it wasn't expected
         if (isArray)
@@ -84,8 +84,8 @@ public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)
 
 
 
-    private (DynamicJacketBase Final, bool Ok, JsonValueKind ValueKind) IfJsonTryConvertToJacket(object original) =>
-        IfJsonTryConvertTo<DynamicJacketBase>(original, CreateDynJacketObject, CreateDynJacketList);
+    private (DynamicJacketBase? Final, bool Ok, JsonValueKind ValueKind) IfJsonTryConvertToJacket(object? original)
+        => IfJsonTryConvertTo<DynamicJacketBase>(original, CreateDynJacketObject, CreateDynJacketList);
 
 
     internal DynamicJacket CreateDynJacketObject(JsonObject jsonObject) =>
@@ -101,7 +101,7 @@ public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)
         wrapTypeGenerator.New().Setup(new PreWrapJsonObject(this, jsonObject));
 
     private (TResult? Final, bool Ok, JsonValueKind ValueKind)
-        IfJsonTryConvertTo<TResult>(object? original, Func<JsonObject, TResult?> toObj, Func<JsonArray, TResult> toArr)
+        IfJsonTryConvertTo<TResult>(object? original, Func<JsonObject, TResult?> toObj, Func<JsonArray, TResult?> toArr)
         where TResult : class
     {
         var l = Log.Fn<(TResult? Jacket, bool Ok, JsonValueKind ValueKind)>();
@@ -171,7 +171,7 @@ public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)
             var (wrapResult, wrapOk, _) = IfJsonTryConvertToJacket(original);
             if (wrapOk)
                 return wrapResult;
-        };
+        }
 
 
 

@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Data.Internal.Typed;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class TypedItemHelpers
 {
-    public static IHtmlTag Html(
+    public static IHtmlTag? Html(
         ICodeDataFactory cdf,
         ITypedItem item,
         string name,
@@ -21,6 +21,8 @@ internal class TypedItemHelpers
     )
     {
         var field = item.Field(name, required: required);
+        if (field == null)
+            return null;
         return cdf.Html(field, container: container, classes: null, imageSettings: imageSettings, debug: debug, toolbar: toolbar, tweak: tweak);
     }
 
@@ -44,7 +46,7 @@ internal class TypedItemHelpers
     )
     {
         var field = item.Field(name, required: true);
-        if (field.Url.IsEmptyOrWs())
+        if (field == null || field.Url.IsEmptyOrWs())
             return null;
         return cdf.Picture(field, tweak: tweak, settings: settings, factor: factor, width: width,
                 imgAlt: imgAlt, imgAltFallback: imgAltFallback, 
@@ -70,7 +72,7 @@ internal class TypedItemHelpers
     )
     {
         var field = item.Field(name, required: true);
-        if (field.Url.IsEmptyOrWs())
+        if (field == null || field.Url.IsEmptyOrWs())
             return null;
         return cdf.Img(field, tweak: tweak, settings: settings, noParamOrder: noParamOrder, factor: factor, width: width,
                 imgAlt: imgAlt, imgAltFallback: imgAltFallback,

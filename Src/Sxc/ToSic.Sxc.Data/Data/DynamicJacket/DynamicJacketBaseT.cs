@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Data;
 /// <typeparam name="T">The underlying type, either a JObject or a JToken</typeparam>
 [PrivateApi("was Internal-API till v17 - just use the objects from AsDynamic, don't use this directly")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal abstract class DynamicJacketBase<T>: DynamicJacketBase, IReadOnlyList<object>, IWrapper<T>, ISxcDynamicObject, ICanGetByName
+internal abstract class DynamicJacketBase<T>: DynamicJacketBase, IReadOnlyList<object?>, IWrapper<T>, ISxcDynamicObject, ICanGetByName
 {
     [PrivateApi]
     protected T UnwrappedContents;

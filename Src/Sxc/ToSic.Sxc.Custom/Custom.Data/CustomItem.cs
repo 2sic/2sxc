@@ -144,7 +144,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     #region Basic Get
 
     /// <inheritdoc />
-    public object Get(string name, NoParamOrder noParamOrder = default, bool? required = default, string language = default)
+    public object? Get(string name, NoParamOrder noParamOrder = default, bool? required = default, string language = default)
         => _item.Get(name: name, noParamOrder: noParamOrder, required: required, language: language);
 
     /// <inheritdoc />
@@ -200,7 +200,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
         _item.Attribute(name, noParamOrder, fallback, required);
 
     /// <inheritdoc />
-    public IHtmlTag Html(string name, NoParamOrder noParamOrder = default, object container = default, bool? toolbar = default,
+    public IHtmlTag? Html(string name, NoParamOrder noParamOrder = default, object container = default, bool? toolbar = default,
         object imageSettings = default, bool? required = default, bool debug = default, Func<ITweakInput<string>, ITweakInput<string>> tweak = default) =>
         _item.Html(name, noParamOrder, container, toolbar, imageSettings, required, debug, tweak);
 
@@ -274,7 +274,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     public IMetadata Metadata => _item.Metadata;
 
     /// <inheritdoc />
-    public IField Field(string name, NoParamOrder noParamOrder = default, bool? required = default)
+    public IField? Field(string name, NoParamOrder noParamOrder = default, bool? required = default)
         => _item.Field(name, noParamOrder, required);
 
 

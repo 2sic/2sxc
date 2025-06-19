@@ -45,7 +45,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     bool ITypedItem.IsDemoItem => PreWrap.TryGetTyped(nameof(ITypedItem.IsDemoItem), noParamOrder: default, fallback: false, required: false);
 
-    IHtmlTag ITypedItem.Html(string name, NoParamOrder noParamOrder, object? container, bool? toolbar,
+    IHtmlTag? ITypedItem.Html(string name, NoParamOrder noParamOrder, object? container, bool? toolbar,
         object? imageSettings, bool? required, bool debug, Func<ITweakInput<string>, ITweakInput<string>>? tweak
     ) => TypedItemHelpers.Html(Cdf, this, name: name, noParamOrder: noParamOrder, container: container,
         toolbar: toolbar, imageSettings: imageSettings, required: required, debug: debug, tweak: tweak);
@@ -86,8 +86,8 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     #region Properties which return null or empty
 
-    public IEntity Entity => null;
-    public IContentType Type => null;
+    public IEntity Entity => null!;
+    public IContentType Type => null!;
 
     #region Relationships - Child, Children, Parents, Presentation
 
@@ -130,12 +130,12 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     /// </summary>
     public IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder, string? type, string? field)
     {
-        var blank = Enumerable.Empty<ITypedItem>();
         ITypedItem typed = this;
         var items = typed.Children(nameof(ITypedItem.Parents), type: type).ToList();
 
         if (!items.SafeAny() && !field.HasValue())
-            return items ?? blank;
+            // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+            return items ?? [];
 
         if (field.HasValue())
             items = items
@@ -173,14 +173,14 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     public IFolder Folder(string name, NoParamOrder noParamOrder, bool? required)
     {
-        return IsErrStrict(this, name, required, PreWrap.Settings.PropsRequired)
+        return IsErrStrictNameRequired(this, name, required, PreWrap.Settings.PropsRequired)
             ? throw ErrStrictForTyped(this, name)
             : Cdf.Folder(Guid, name, Field(name: name, noParamOrder: default, required: required));
     }
 
     public IFile? File(string name, NoParamOrder noParamOrder, bool? required)
     {
-        if (IsErrStrict(this, name, required, PreWrap.Settings.PropsRequired))
+        if (IsErrStrictNameRequired(this, name, required, PreWrap.Settings.PropsRequired))
             throw ErrStrictForTyped(this, name);
         var typed = this as ITypedItem;
         // Check if it's a direct string, or an object with a sub-property with a Value
@@ -272,6 +272,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
         // ReSharper disable once ConvertTypeCheckPatternToNullCheck
         if (ValueConverterBase.CouldBeReference(url))
+            // ReSharper disable once ConstantNullCoalescingCondition
             url = Cdf.Services.ValueConverter.ToValue(url, Guid.Empty) ?? url;
 
         return Tags.SafeUrl(url).ToString();
@@ -286,14 +287,14 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     #endregion
 
 
-    object? ICanBeItem.TryGetBlock() => Cdf?.BlockAsObjectOrNull;
+    object? ICanBeItem.TryGetBlock() => Cdf.BlockAsObjectOrNull;
 
     public ITypedItem Item => this;
 
     /// <summary>
     /// Get by name should never throw an error, as it's used to get null if not found.
     /// </summary>
-    object ICanGetByName.Get(string name)
+    object? ICanGetByName.Get(string name)
         => (this as ITypedItem).Get(name, required: false);
 
     #region Equals

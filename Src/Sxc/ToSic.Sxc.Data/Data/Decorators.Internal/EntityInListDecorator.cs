@@ -7,7 +7,7 @@
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class EntityInListDecorator(string field, int index = 0, IEntity? parent = default)
+public abstract class EntityInListDecorator(string? fieldName, int index = 0, IEntity? parent = default)
     : IDecorator<IEntity>
 {
     protected const int DefIndex = 0;
@@ -26,7 +26,7 @@ public abstract class EntityInListDecorator(string field, int index = 0, IEntity
     /// <remarks>
     /// Added in 2sxc 11.01
     /// </remarks>
-    public string Field { get; } = field;
+    public string? FieldName { get; } = fieldName;
 
     /// <summary>
     /// The parent item which has the list containing this item.
@@ -39,5 +39,8 @@ public abstract class EntityInListDecorator(string field, int index = 0, IEntity
     /// </remarks>
     public Guid? ParentGuid { get; private set; } = parent?.EntityGuid; // parentGuid;
 
-    public IEntity Parent { get; private set; } = parent;
+    /// <summary>
+    /// Parent is null in special cases where this is a fake item, like when the block is not initialized.
+    /// </summary>
+    public IEntity? Parent { get; private set; } = parent;
 }

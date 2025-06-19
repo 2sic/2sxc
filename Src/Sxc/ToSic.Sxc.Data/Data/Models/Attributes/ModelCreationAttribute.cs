@@ -23,5 +23,5 @@ public sealed class ModelCreationAttribute: Attribute
     /// It **must** match (implement or inherit) the type which is being decorated.
     /// Otherwise, it will throw an exception.
     /// </remarks>
-    public Type Use { get; init; }
+    public Type? Use { get; init; }
 }

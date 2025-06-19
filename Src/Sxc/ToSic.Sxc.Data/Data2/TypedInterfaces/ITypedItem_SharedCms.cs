@@ -42,7 +42,7 @@ partial interface ITypedItem
     /// * Added `tweak` in v17
     /// * Only works on Razor files inheriting from Hybrid14 or newer
     /// </remarks>
-    IHtmlTag Html(
+    IHtmlTag? Html(
         string name,
         NoParamOrder noParamOrder = default,
         object? container = default,

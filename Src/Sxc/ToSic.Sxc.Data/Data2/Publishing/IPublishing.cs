@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Data;
+﻿// ReSharper disable UnusedMemberInSuper.Global
+// ReSharper disable UnusedMember.Global
+namespace ToSic.Sxc.Data;
 
 /// <summary>
 /// Publishing Information for <see cref="ITypedItem"/>s.
@@ -40,20 +42,20 @@ public interface IPublishing
     /// If the initial item was already published, it will return that item.
     /// </summary>
     /// <returns>the published item or `null`</returns>
-    ITypedItem GetPublished();
+    ITypedItem? GetPublished();
 
     /// <summary>
     /// Get the unpublished version of this item.
     /// If the initial item was already unpublished, it will return that item.
     /// </summary>
     /// <returns>the unpublished item or `null`</returns>
-    ITypedItem GetUnpublished();
+    ITypedItem? GetUnpublished();
 
     /// <summary>
     /// Get the opposite version of this item.
     /// So if your initial item was published, it will try to get the unpublished, and vice versa.
     /// </summary>
     /// <returns>the other version of this item or `null`</returns>
-    ITypedItem GetOpposite();
+    ITypedItem? GetOpposite();
 
 }

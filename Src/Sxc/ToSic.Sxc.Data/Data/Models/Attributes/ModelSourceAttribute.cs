@@ -33,12 +33,12 @@ public sealed class ModelSourceAttribute: Attribute
     /// 
     /// History: WIP 19.01
     /// </remarks>
-    public string ContentTypes { get; init; }
+    public required string ContentTypes { get; init; }
 
     /// <summary>
     /// WIP, not officially supported yet.
     /// </summary>
-    public string Streams { get; init; }
+    public string? Streams { get; init; }
 
     // TODO: MAKE INTERNAL AGAIN AFTER MOVING TO ToSic.Sxc.Custom
     [PrivateApi]

@@ -30,7 +30,7 @@ internal class EntityEditInfo
                 // only set parent if not empty - as it's always a valid int and wouldn't be null
             {
                 parent = editDecorator.ParentGuid;
-                fields = editDecorator.Field;
+                fields = editDecorator.FieldName;
                 entityId = entity.EntityId;
                 contentType = entity.Type.Name;
             }

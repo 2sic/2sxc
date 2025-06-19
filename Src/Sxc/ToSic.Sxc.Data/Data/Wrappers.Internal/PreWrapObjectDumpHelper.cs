@@ -35,12 +35,12 @@ internal class PreWrapObjectDumpHelper
         var deeperProperties = resultDynChildren
             .Where(r =>
             {
-                var result = r.Pdi.Property.Result;
+                var result = r.Pdi.Property?.Result;
                 return result != null && result is not string && !result.GetType().IsValueType;
             })
             .Select(p =>
             {
-                var maybeDump = wrapperSvc.ChildNonJsonWrapIfPossible(data: p.Pdi.Property.Result, wrapNonAnon: false,
+                var maybeDump = wrapperSvc.ChildNonJsonWrapIfPossible(data: p.Pdi.Property!.Result, wrapNonAnon: false,
                     WrapperSettings.Dyn(children: true, realObjectsToo: true));
                 return new
                 {

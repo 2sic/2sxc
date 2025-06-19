@@ -2,7 +2,7 @@
 
 internal class ClassAttributeLookup<TValue>
 {
-    internal TValue Get<TCustom, TAttribute>(Func<TAttribute, TValue> func)
+    internal TValue Get<TCustom, TAttribute>(Func<TAttribute?, TValue> func)
         where TCustom : ICanWrapData
         where TAttribute : Attribute
     {

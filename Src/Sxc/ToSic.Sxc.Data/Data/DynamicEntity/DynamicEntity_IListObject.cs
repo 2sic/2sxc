@@ -21,7 +21,7 @@ public partial class DynamicEntity: IList<object>
 
     [PrivateApi("Hide as it won't work")]
     [Obsolete("Don't use this, it's not supported")]
-    int IList<object>.IndexOf(object item) => ListHelper.DynEntities.IndexOf(item as IDynamicEntity);
+    int IList<object>.IndexOf(object item) => -1; // not supported, so always return -1
 
     [PrivateApi("Hide as it won't work")]
     [Obsolete("Don't use this, it's not supported")]

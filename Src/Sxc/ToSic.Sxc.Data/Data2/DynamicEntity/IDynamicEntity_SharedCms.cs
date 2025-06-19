@@ -16,7 +16,7 @@ public partial interface IDynamicEntity
     bool IsDemoItem { get; }
 
     /// <summary>
-    /// Show a field in the expected / best possible way.
+    /// Show a field in the expected / the best possible way.
     /// As of now it's meant for WYSIWYG fields with Very-Rich Text.
     /// See [](xref:NetCode.DynamicData.DynamicEntityHtml)
     /// </summary>
@@ -25,7 +25,7 @@ public partial interface IDynamicEntity
     /// <param name="container">
     /// A wrapper tag for the result.
     /// It's either a RazorBlade tag such as `Kit.HtmlTag.Div()`, a string such as `span` or an empty string `` to indicate no container.
-    /// If not set it will default to to a div-tag.
+    /// If not set it will default to a div-tag.
     /// See [docs](xref:NetCode.DynamicData.DynamicEntityHtml)
     /// </param>
     /// <param name="toolbar">Override default toolbar behavior on this field. See [docs](xref:NetCode.DynamicData.DynamicEntityHtml)</param>
@@ -36,7 +36,7 @@ public partial interface IDynamicEntity
     /// * Added in 2sxc 16.01
     /// * Only works on Razor files inheriting from Hybrid14 or newer
     /// </remarks>
-    IHtmlTag Html(
+    IHtmlTag? Html(
         string name,
         NoParamOrder noParamOrder = default,
         object? container = default,

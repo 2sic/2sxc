@@ -6,12 +6,12 @@ namespace ToSic.Sxc.Data.Internal.Decorators;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class EntityInBlockDecorator: EntityInListDecorator
 {
-    private EntityInBlockDecorator(string field, 
+    private EntityInBlockDecorator(string? fieldName, 
         int index = DefIndex,
-        IEntity presentation = DefPresentation, 
+        IEntity? presentation = DefPresentation, 
         bool isDemoItem = DefDemo,
         IEntity? parent = default)
-        :base(field, index, parent: parent)
+        :base(fieldName, index, parent: parent)
     {
         Presentation = presentation;
         IsDemoItem = isDemoItem;
@@ -19,14 +19,14 @@ public class EntityInBlockDecorator: EntityInListDecorator
 
     public static EntityWithDecorator<EntityInBlockDecorator> Wrap(
         IEntity entity,
-        string field,
+        string? fieldName,
         int index = DefIndex,
-        IEntity presentation = DefPresentation,
+        IEntity? presentation = DefPresentation,
         bool isDemoItem = DefDemo, 
-        IEntity? parent = default) =>
-        new(entity, new(field, index, presentation, isDemoItem, parent: parent));
+        IEntity? parent = default)
+        => new(entity, new(fieldName, index, presentation, isDemoItem, parent: parent));
 
-    protected const IEntity DefPresentation = null;
+    protected const IEntity? DefPresentation = null;
     protected const bool DefDemo = false;
 
 
@@ -34,7 +34,7 @@ public class EntityInBlockDecorator: EntityInListDecorator
     /// Presentation entity of this content-item.
     /// Important to keep content and presentation linked together
     /// </summary>
-    public IEntity Presentation { get; set; }
+    public IEntity? Presentation { get; set; }
 
     /// <summary>
     /// Info if the item is a plain demo/fake item, or if it was added on purpose.

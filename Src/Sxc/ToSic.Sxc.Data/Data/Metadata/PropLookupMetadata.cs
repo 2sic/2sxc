@@ -10,20 +10,20 @@ internal class PropLookupMetadata(IHasMetadata parent, Func<bool> getDebug) : IP
     public PropReqResult? FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
     {
         specs = specs.SubLog("Sxc.DynEnt", getDebug());
-        var safeWrap = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), "DynEntity");
+        var l = specs.LogOrNull.Fn<PropReqResult?>(specs.Dump(), "DynEntity");
         // check Entity is null (in cases where null-objects are asked for properties)
         if (Parent?.Metadata == null)
-            return safeWrap.ReturnNull("no parent with metadata");
+            return l.ReturnNull("no parent with metadata");
         path = path.KeepOrNew().Add("DynEnt", specs.Field);
 
         // Note: most of the following lines are copied from Metadata
         var list = (Parent /*as IHasMetadata*/).Metadata;
         var found = list.FirstOrDefault(md => md.Attributes.ContainsKey(specs.Field));
         if (found == null)
-            return safeWrap.ReturnNull("no entity had attribute");
+            return l.ReturnNull("no entity had attribute");
         var propRequest = found.FindPropertyInternal(specs, path);
         return // propRequest?.Result != null
-            /*?*/ safeWrap.Return(propRequest, propRequest?.Result == null ? "found null" : "found value");
+            /*?*/ l.Return(propRequest, propRequest?.Result == null ? "found null" : "found value");
         //: safeWrap.Return(propRequest, "found null");
         // safeWrap.Return(Upstream.FindPropertyInternal(specs, path), "base...");
     }

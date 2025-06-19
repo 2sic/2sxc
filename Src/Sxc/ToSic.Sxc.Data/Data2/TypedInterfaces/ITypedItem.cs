@@ -51,7 +51,7 @@ public partial interface ITypedItem: ITyped, ICanBeEntity, ICanBeItem, IEquatabl
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns></returns>
-    IField Field(string name,
+    IField? Field(string name,
         NoParamOrder noParamOrder = default,
         bool? required = default);
 

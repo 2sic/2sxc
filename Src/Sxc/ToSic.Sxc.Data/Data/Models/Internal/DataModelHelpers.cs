@@ -9,7 +9,7 @@ internal class DataModelHelpers
     /// Typically, the type will be from your `AppCode.Data`.
     /// </summary>
     /// <returns></returns>
-    internal static TCustom As<TCustom>(IModelFactory modelFactory, object item)
+    internal static TCustom? As<TCustom>(IModelFactory modelFactory, object item)
         where TCustom : class, ICanWrapData
         => item switch
         {
@@ -29,11 +29,13 @@ internal class DataModelHelpers
     /// Typically, the type will be from your `AppCode.Data`.
     /// </summary>
     /// <returns></returns>
-    internal static IEnumerable<TCustom> AsList<TCustom>(IModelFactory modelFactory, object source, NoParamOrder protector = default, bool nullIfNull = false)
+    internal static IEnumerable<TCustom>? AsList<TCustom>(IModelFactory modelFactory, object source, NoParamOrder protector = default, bool nullIfNull = false)
         where TCustom : class, ICanWrapData
         => source switch
         {
-            null => nullIfNull ? null : [],
+            null => nullIfNull
+                ? null
+                : [],
             IEnumerable<ITypedItem> typedItems => typedItems
                 .Select(modelFactory.AsCustomFrom<TCustom, ITypedItem>)
                 .ToList(),

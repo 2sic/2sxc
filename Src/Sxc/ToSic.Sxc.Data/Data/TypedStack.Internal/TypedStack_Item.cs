@@ -18,7 +18,7 @@ internal partial class TypedStack: ITypedItem
 
     IEntity ICanBeEntity.Entity => throw new NotImplementedException(NotImplementedError);
 
-    object? ICanBeItem.TryGetBlock() => Cdf?.BlockAsObjectOrNull;
+    object? ICanBeItem.TryGetBlock() => Cdf.BlockAsObjectOrNull;
 
     ITypedItem ICanBeItem.Item => this;
 
@@ -26,7 +26,7 @@ internal partial class TypedStack: ITypedItem
 
     bool ITypedItem.IsDemoItem => false;
 
-    IHtmlTag ITypedItem.Html(string name, NoParamOrder noParamOrder, object? container, bool? toolbar,
+    IHtmlTag? ITypedItem.Html(string name, NoParamOrder noParamOrder, object? container, bool? toolbar,
         object? imageSettings, bool? required, bool debug, Func<ITweakInput<string>, ITweakInput<string>>? tweak)
         => TypedItemHelpers.Html(Cdf, this, name, noParamOrder, container, toolbar, imageSettings, required, debug, tweak);
 
@@ -55,7 +55,7 @@ internal partial class TypedStack: ITypedItem
 
     #region ADAM
 
-    IField ITypedItem.Field(string name, NoParamOrder noParamOrder, bool? required)
+    IField? ITypedItem.Field(string name, NoParamOrder noParamOrder, bool? required)
     {
         // Try to find the object which has that field with a valid value etc.
         var sourceItem = FindSubItemHavingField(name);
@@ -116,7 +116,7 @@ internal partial class TypedStack: ITypedItem
     //IEnumerable<ITypedItem> ITypedItem.Children(string field, NoParamOrder noParamOrder, string type, bool? required)
     //    => (this as ITypedStack).Children(field, noParamOrder, type, required);
 
-    T ITypedItem.Child<T>(string? name, NoParamOrder protector, bool? required)
+    T ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required)
         => Cdf.AsCustom<T>(
             source: ((ITypedItem)this).Child(name, required: required), protector: protector, mock: false
         );
@@ -130,7 +130,7 @@ internal partial class TypedStack: ITypedItem
 
     #region Not implemented: Parents, Publishing, Dyn, Presentation, Metadata
 
-    ITypedItem? ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string? type, string? field)
+    ITypedItem ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string? type, string? field)
         => throw new NotImplementedException(ParentNotImplemented);
 
     IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string? type, string? field)
@@ -150,7 +150,7 @@ internal partial class TypedStack: ITypedItem
     dynamic ITypedItem.Dyn => throw new NotImplementedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(TypedStack)} by design");
 
     [JsonIgnore] // prevent serialization as it's not a normal property
-    ITypedItem? ITypedItem.Presentation => throw new NotImplementedException(NotImplementedError);
+    ITypedItem ITypedItem.Presentation => throw new NotImplementedException(NotImplementedError);
 
     [JsonIgnore] // prevent serialization as it's not a normal property
     IMetadata ITypedItem.Metadata => throw new NotImplementedException(NotImplementedError);

@@ -50,11 +50,11 @@ public class DataModelAnalyzer
     public static (List<string> List, string Flat) GetStreamNameList<TCustom>() where TCustom : ICanWrapData
         => StreamNames.Get<TCustom, ModelSourceAttribute>(attribute => UseSpecifiedNameOrDeriveFromType<TCustom>(attribute?.Streams));
 
-    private static (List<string> List, string Flat) UseSpecifiedNameOrDeriveFromType<TCustom>(string names)
+    private static (List<string> List, string Flat) UseSpecifiedNameOrDeriveFromType<TCustom>(string? names)
         where TCustom : ICanWrapData
     {
         var list = !string.IsNullOrWhiteSpace(names)
-            ? names.Split(',').Select(n => n.Trim()).ToList()
+            ? names!.Split(',').Select(n => n.Trim()).ToList()
             : CreateListOfNameVariants(typeof(TCustom).Name, typeof(TCustom).IsInterface);
         return (list, string.Join(",", list));
     }

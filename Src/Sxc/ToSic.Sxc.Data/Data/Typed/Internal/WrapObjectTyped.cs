@@ -65,10 +65,11 @@ public class WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeSer
 
     #region ITyped Get
 
-    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string? language /* ignore */)
+    object? ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string? language /* ignore */)
         => PreWrap.TryGetObject(name, noParamOrder, required);
 
-    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string? language /* note ignored */)
+    TValue? ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue? fallback, bool? required, string? language /* note ignored */)
+        where TValue : default
         => PreWrap.TryGetTyped(name, noParamOrder, fallback, required: required);
 
     #endregion
@@ -160,6 +161,6 @@ public class WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeSer
     /// <summary>
     /// Get by name should never throw an error, as it's used to get null if not found.
     /// </summary>
-    object ICanGetByName.Get(string name) => (this as ITyped).Get(name, required: false);
+    object? ICanGetByName.Get(string name) => (this as ITyped).Get(name, required: false);
 
 }

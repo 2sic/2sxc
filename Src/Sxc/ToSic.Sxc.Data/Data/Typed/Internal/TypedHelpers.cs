@@ -53,7 +53,14 @@ public static class TypedHelpers
         => !found && (required ?? requiredDefault);
 
 
-    public static bool IsErrStrict(ITyped parent, string? name, bool? required, bool requiredDefault)
+    public static bool IsErrStrictNameOptional(ITyped parent, string? name, bool? required, bool requiredDefault)
+    {
+        if (name == null)
+            return false; // name is optional, so no error
+        return !parent.ContainsKey(name) && (required ?? requiredDefault);
+    }
+
+    public static bool IsErrStrictNameRequired(ITyped parent, string? name, bool? required, bool requiredDefault)
         => name == null || !parent.ContainsKey(name) && (required ?? requiredDefault);
 
     private const int MaxKeysToUseList = 20;

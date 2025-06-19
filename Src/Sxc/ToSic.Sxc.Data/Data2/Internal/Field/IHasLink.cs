@@ -4,5 +4,5 @@
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IHasLink
 {
-    string Url { get; }
+    string? Url { get; }
 }

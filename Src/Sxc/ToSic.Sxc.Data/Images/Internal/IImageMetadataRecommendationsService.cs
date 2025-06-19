@@ -7,7 +7,7 @@ public interface IImageMetadataRecommendationsService
     /// <summary>
     /// Optionally add image-metadata recommendations
     /// </summary>
-    void SetImageRecommendations(IMetadataOf mdOf, string path);
+    void SetImageRecommendations(IMetadataOf? mdOf, string? path);
 
     string[] GetImageRecommendations();
 }

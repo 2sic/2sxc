@@ -30,7 +30,7 @@ partial record Parameters: ITyped
 
 
     [PrivateApi]
-    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string language /* ignore */)
+    object? ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string language /* ignore */)
         => TryGetAndLog(name, out var value) ? value : null;
 
     [PrivateApi]

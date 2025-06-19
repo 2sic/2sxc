@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Data;
 /// </summary>
 [PrivateApi("was Internal-API till v17 - just use the objects from AsDynamic, don't use this directly")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class DynamicJacketList : DynamicJacketBase<JsonArray>, IReadOnlyList<object>
+internal class DynamicJacketList : DynamicJacketBase<JsonArray>, IReadOnlyList<object?>
 {
     /// <inheritdoc />
     internal DynamicJacketList(CodeJsonWrapper wrapper, PreWrapJsonArray preWrap) : base(wrapper, preWrap.GetContents())
@@ -35,11 +35,11 @@ internal class DynamicJacketList : DynamicJacketBase<JsonArray>, IReadOnlyList<o
 
 
     [PrivateApi]
-    public override IEnumerator<object> GetEnumerator() 
+    public override IEnumerator<object?> GetEnumerator() 
         => UnwrappedContents.Select(o => Wrapper.IfJsonGetValueOrJacket(o)).GetEnumerator();
 
     [PrivateApi]
-    public override bool TryGetMember(GetMemberBinder binder, out object result)
+    public override bool TryGetMember(GetMemberBinder binder, out object? result)
     {
         result = null;
         return true;
@@ -51,5 +51,5 @@ internal class DynamicJacketList : DynamicJacketBase<JsonArray>, IReadOnlyList<o
     /// </summary>
     /// <param name="index">array index</param>
     /// <returns>the item or an error if not found</returns>
-    public override object this[int index] => Wrapper.IfJsonGetValueOrJacket(UnwrappedContents[index]);
+    public override object? this[int index] => Wrapper.IfJsonGetValueOrJacket(UnwrappedContents[index]);
 }

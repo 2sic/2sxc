@@ -71,7 +71,7 @@ public sealed partial class CmsBlock
                     {
                         var itm = originals.One(entityId);
                         entitiesToDeliver.Add(EntityInBlockDecorator.Wrap(
-                            entity: itm, field: null, index: isListHeader ? -1 : i, presentation: presentationEntity, isDemoItem: isDemoItem, parent: null));
+                            entity: itm, fieldName: null, index: isListHeader ? -1 : i, presentation: presentationEntity, isDemoItem: isDemoItem, parent: null));
                     }
                     catch (Exception ex)
                     {

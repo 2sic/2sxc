@@ -38,10 +38,11 @@ internal partial class Metadata: ITypedItem
 
     #region ITyped
 
-    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string? language)
+    object? ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string? language)
         => ItemHelper.Get(name: name, noParamOrder: noParamOrder, required: required, language: language);
 
-    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string? language)
+    TValue? ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue? fallback, bool? required, string? language)
+        where TValue : default
         => ItemHelper.GetT(name, noParamOrder, fallback: fallback, required: required, language: language);
 
     IRawHtmlString? ITyped.Attribute(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
@@ -55,7 +56,7 @@ internal partial class Metadata: ITypedItem
     DateTime ITyped.DateTime(string name, NoParamOrder noParamOrder, DateTime fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    string? ITyped.String(string name, NoParamOrder noParamOrder, string fallback, bool? required, object scrubHtml)
+    string? ITyped.String(string name, NoParamOrder noParamOrder, string? fallback, bool? required, object? scrubHtml)
         => ItemHelper.String(name, noParamOrder, fallback, required, scrubHtml);
 
     int ITyped.Int(string name, NoParamOrder noParamOrder, int fallback, bool? required)
@@ -76,7 +77,7 @@ internal partial class Metadata: ITypedItem
     double ITyped.Double(string name, NoParamOrder noParamOrder, double fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    string? ITyped.Url(string name, NoParamOrder noParamOrder, string fallback, bool? required)
+    string? ITyped.Url(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
         => ItemHelper.Url(name, noParamOrder, fallback, required);
 
     string? ITyped.ToString() => "test / debug: " + ToString();
@@ -110,7 +111,7 @@ internal partial class Metadata: ITypedItem
     string? ITypedItem.Title => EntityTitle;
 
     [PrivateApi]
-    IContentType ITypedItem.Type => Entity?.Type;
+    IContentType ITypedItem.Type => Entity?.Type!;
 
     #endregion
 
@@ -120,15 +121,17 @@ internal partial class Metadata: ITypedItem
     /// <inheritdoc />
     [PrivateApi]
     [JsonIgnore]
-    ITypedItem? ITypedItem.Presentation => throw new NotSupportedException($"You can't access the {nameof(Presentation)} of Metadata");
+    ITypedItem ITypedItem.Presentation
+        => throw new NotSupportedException($"You can't access the {nameof(Presentation)} of Metadata");
 
     /// <inheritdoc />
     [JsonIgnore] // prevent serialization as it's not a normal property
-    IMetadata ITypedItem.Metadata => throw new NotSupportedException($"You can't access the Metadata of Metadata in ITypedItem");
+    IMetadata ITypedItem.Metadata
+        => throw new NotSupportedException($"You can't access the Metadata of Metadata in ITypedItem");
 
     [PrivateApi]
-    ITypedItem? ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string? type, string? field) =>
-        throw new NotSupportedException($"You can't access the {nameof(ITypedItem.Parent)}() of Metadata as it usually does not make sense to do this");
+    ITypedItem ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string? type, string? field)
+        => throw new NotSupportedException($"You can't access the {nameof(ITypedItem.Parent)}() of Metadata as it usually does not make sense to do this");
 
     /// <inheritdoc />
     [PrivateApi]
@@ -143,7 +146,7 @@ internal partial class Metadata: ITypedItem
 
         // Get children from first metadata item which matches the criteria
         var parents = mdEntities
-            .Select(e => e.Parents(type: type, field: field)?.ToList())
+            .Select(e => e.Parents(type: type, field: field).ToList())
             .FirstOrDefault(l => l.SafeAny());
         if (parents == null)
             return [];
@@ -155,28 +158,37 @@ internal partial class Metadata: ITypedItem
             : [];
     }
 
-    IPublishing ITypedItem.Publishing => _publishing.Get(() => new Publishing(this, Cdf));
+    IPublishing ITypedItem.Publishing => _publishing.Get(() => new Publishing(this, Cdf))!;
     private readonly GetOnce<IPublishing> _publishing = new();
 
     /// <inheritdoc />
     [PrivateApi]
-    IEnumerable<ITypedItem> ITypedItem.Children(string field, NoParamOrder noParamOrder, string type, bool? required)
+    IEnumerable<ITypedItem> ITypedItem.Children(string? field, NoParamOrder noParamOrder, string? type, bool? required)
     {
         // Protect & Strict
-        if (IsErrStrict(this, field, required, GetHelper.PropsRequired))
+        if (IsErrStrictNameOptional(this, field, required, GetHelper.PropsRequired))
             throw ErrStrict(field);
 
         // Exit if no metadata items available to get children from
         var mdEntities = _metadata.ToList();
-        if (!mdEntities.Any()) return [];
+        if (!mdEntities.Any())
+            return [];
 
         // Get children from first metadata item which matches the criteria
         var children = mdEntities
-            .Select(e => e.Children(field: field, type: type)?.ToList())
+            .Select(e => e.Children(field: field, type: type).ToList())
             .FirstOrDefault(l => l.SafeAny());
-        if (children == null) return [];
+        if (children == null)
+            return [];
 
-        return Cdf.EntitiesToItems(children).ToList();
+        // WIP - sometimes children can contain null items, but Razor won't expect this.
+        // in future, we may add an option to preserve them, for now filter them out
+        var filtered = children
+            .Where(c => c != null)
+            .Cast<IEntity>()
+            .ToList();
+
+        return Cdf.EntitiesToItems(filtered).ToList();
     }
 
     /// <inheritdoc />
@@ -189,7 +201,7 @@ internal partial class Metadata: ITypedItem
     #region New Child<T> / Children<T> - disabled as ATM Kit is missing
 
     /// <inheritdoc />
-    T ITypedItem.Child<T>(string? name, NoParamOrder protector, bool? required)
+    T ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required)
         => Cdf.AsCustom<T>(
             source: (this as ITypedItem).Child(name, required: required), protector: protector, mock: false
         );
@@ -221,9 +233,10 @@ internal partial class Metadata: ITypedItem
     #region Fields, Html, Picture
 
     [PrivateApi]
-    IField ITypedItem.Field(string name, NoParamOrder noParamOrder, bool? required) => Cdf.Field(this, name, GetHelper.PropsRequired, noParamOrder, required);
+    IField? ITypedItem.Field(string name, NoParamOrder noParamOrder, bool? required)
+        => Cdf.Field(this, name, GetHelper.PropsRequired, noParamOrder, required);
 
-    IHtmlTag ITypedItem.Html(
+    IHtmlTag? ITypedItem.Html(
         string name,
         NoParamOrder noParamOrder,
         object? container,

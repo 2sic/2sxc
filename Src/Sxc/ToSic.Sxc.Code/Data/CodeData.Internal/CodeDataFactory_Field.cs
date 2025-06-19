@@ -6,8 +6,15 @@ namespace ToSic.Sxc.Data.Internal;
 
 partial class CodeDataFactory
 {
-    public IField Field(ITypedItem parent, string name, bool propsRequired, NoParamOrder noParamOrder = default, bool? required = default)
+    public IField? Field(ITypedItem parent, string? name, bool propsRequired, NoParamOrder noParamOrder = default, bool? required = default)
     {
+        if (string.IsNullOrEmpty(name))
+        {
+            if (required == false)
+                return null; // name is optional, so no error
+            throw new ArgumentNullException(nameof(name), @"Field name must not be null or empty.");
+        }
+
         // TODO: make sure that if we use a path, the field is from the correct parent
         var dot = PropertyStack.PathSeparator.ToString();
         if (name.Contains(dot))
@@ -23,7 +30,7 @@ partial class CodeDataFactory
             // throw new NotImplementedException("Path support on this method is not yet supported. Ask iJungleboy");
         }
 
-        return IsErrStrict(parent, name, required, propsRequired)
+        return IsErrStrictNameRequired(parent, name, required, propsRequired)
             ? throw ErrStrictForTyped(parent, name)
             : new Field(parent, name, this);
     }

@@ -33,7 +33,7 @@ public class ContentBlockReferenceDto
     /// </summary>
     [JsonPropertyName("parentField")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string ParentField { get; }
+    public string? ParentField { get; }
         
     /// <summary>
     /// Index / sort-order, where this is in the list of content-blocks
@@ -59,9 +59,10 @@ public class ContentBlockReferenceDto
         // try to get more information about the block
         // if it's an inner-content having a configuration entity
         var decorator = (contentBlock as ICanBeEntity)?.Entity.GetDecorator<EntityInListDecorator>();
-        if (decorator == null) return;
+        if (decorator == null)
+            return;
         ParentGuid = decorator.ParentGuid;
-        ParentField = decorator.Field;
+        ParentField = decorator.FieldName;
         ParentIndex = decorator.SortOrder;
     }
 }

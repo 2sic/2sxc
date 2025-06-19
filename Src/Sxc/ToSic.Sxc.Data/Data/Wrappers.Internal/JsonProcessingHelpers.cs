@@ -68,24 +68,26 @@ internal class JsonProcessingHelpers
     }
 
 
-    public static object? JsonValueGetContents(JsonNode jValue)
+    public static object? JsonValueGetContents(JsonNode? jValue)
     {
+        if (jValue == null)
+            return null;
+
         var je = jValue.GetValue<JsonElement>();
-        switch (je.ValueKind)
+        return je.ValueKind switch
         {
-            case JsonValueKind.True: return true;
-            case JsonValueKind.False: return false;
-            case JsonValueKind.Number when je.TryGetInt32(out var intValue): return intValue;
-            case JsonValueKind.Number when je.TryGetInt64(out var longValue): return longValue;
-            case JsonValueKind.Number: return je.GetDouble();
-            case JsonValueKind.String when je.TryGetDateTime(out var dateTime): return dateTime;
-            case JsonValueKind.String: return je.GetString();
-            case JsonValueKind.Null:
-            case JsonValueKind.Undefined: return null;
+            JsonValueKind.True => true,
+            JsonValueKind.False => false,
+            JsonValueKind.Number when je.TryGetInt32(out var intValue) => intValue,
+            JsonValueKind.Number when je.TryGetInt64(out var longValue) => longValue,
+            JsonValueKind.Number => je.GetDouble(),
+            JsonValueKind.String when je.TryGetDateTime(out var dateTime) => dateTime,
+            JsonValueKind.String => je.GetString(),
+            JsonValueKind.Null or JsonValueKind.Undefined => null,
             //case JsonValueKind.Object: return new DynamicJacket(JsonObject.Create(je));
             //case JsonValueKind.Array: return new DynamicJacketList(JsonArray.Create(je));
-            default: return jValue.AsValue();
-        }
+            _ => jValue.AsValue()
+        };
     }
 
     //private (object Final, bool Ok, JsonValueKind ValueKind) IfJsonTryConvertToExpected(object original) =>

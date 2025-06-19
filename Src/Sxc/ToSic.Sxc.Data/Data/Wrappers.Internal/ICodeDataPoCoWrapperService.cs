@@ -21,5 +21,5 @@ public interface ICodeDataPoCoWrapperService
 
     public /*DynamicFromDictionary<TKey, TValue>*/object FromDictionary<TKey, TValue>(IDictionary<TKey, TValue> original);
 
-    internal object? ChildNonJsonWrapIfPossible(object data, bool wrapNonAnon, WrapperSettings settings);
+    internal object? ChildNonJsonWrapIfPossible(object? data, bool wrapNonAnon, WrapperSettings settings);
 }

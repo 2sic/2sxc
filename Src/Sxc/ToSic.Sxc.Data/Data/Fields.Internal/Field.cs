@@ -16,43 +16,45 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
 
     /// <inheritdoc />
     [PrivateApi("Was public till 16.03, but don't think it should be surfaced...")]
-    public object Raw
+    public object? Raw
     {
-        get => _raw.Get(() => Parent.Get(Name, required: false))!;
+        get => _raw.Get(() => Parent.Get(Name, required: false));
         // WIP 2023-10-28 2dm Experimental Setter #FieldSetExperimental
         // Reason is for special edge cases like in School-Sys where we must process
         // the string before using it for Cms.Html(...)
         set => _raw.Reset(value);
     }
-    private readonly GetOnce<object> _raw = new();
+    private readonly GetOnce<object?> _raw = new();
 
 
     /// <inheritdoc />
     [PrivateApi("Was public till 16.03, but don't think it should be surfaced...")]
-    public object Value
+    public object? Value
     {
         get => _value.Get(() => Url ?? Raw)!;
         // WIP 2023-10-28 2dm Experimental Setter #FieldSetExperimental
         set => _value.Reset(value);
     }
-    private readonly GetOnce<object> _value = new();
+    private readonly GetOnce<object?> _value = new();
 
     /// <inheritdoc />
-    public string Url
+    public string? Url
     {
         get => _url.Get(() => Parent.Url(Name))!;
         // WIP 2023-10-28 2dm Experimental Setter #FieldSetExperimental
         set => _url.Reset(value);
     }
-    private readonly GetOnce<string> _url = new();
+    private readonly GetOnce<string?> _url = new();
 
-    /// <summary>
-    /// The Dynamic metadata - probably used somewhere...?
-    /// 2023-08-14 v16.03 removed by 2dm as never used; KISS
-    /// ...but reactivated for some reason I don't know...
-    /// </summary>
-    public IMetadata Metadata => _dynMeta.Get(() => cdf.Metadata(MetadataOfValue))!;
-    private readonly GetOnce<IMetadata> _dynMeta = new();
+    // 2025-06-19 2dm disabled again as we must find out why it was re-enabled and document
+    // Keep this comments till EOY 2025 in case we need to re-activate it again.
+    ///// <summary>
+    ///// The Dynamic metadata - probably used somewhere...?
+    ///// 2023-08-14 v16.03 removed by 2dm as never used; KISS
+    ///// ...but reactivated for some reason I don't know...
+    ///// </summary>
+    //public IMetadata Metadata => _dynMeta.Get(() => cdf.Metadata(MetadataOfValue))!;
+    //private readonly GetOnce<IMetadata> _dynMeta = new();
 
 
     private IMetadataOf? MetadataOfValue => _itemMd.Get(() =>
@@ -68,7 +70,7 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
             return null;
 
         var mdOf = appReader.Metadata.GetMetadataOf(TargetTypes.CmsItem, rawString, title: "");
-        cdf?.GetService<IImageMetadataRecommendationsService>()
+        cdf.GetService<IImageMetadataRecommendationsService>()
             .SetImageRecommendations(mdOf, Url); // needs the url so it can check if we use image recommendations
         return mdOf;
     });
@@ -79,5 +81,5 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
         _imgDec.Get(() => ImageDecorator.GetOrNull(this, cdf.Dimensions));
     private readonly GetOnce<ImageDecorator?> _imgDec = new();
 
-    IMetadataOf IHasMetadata.Metadata => MetadataOfValue;
+    IMetadataOf IHasMetadata.Metadata => MetadataOfValue!;
 }

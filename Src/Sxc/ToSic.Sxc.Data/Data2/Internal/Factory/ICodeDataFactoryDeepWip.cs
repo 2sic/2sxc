@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Data.Internal;
 /// </summary>
 public interface ICodeDataFactoryDeepWip
 {
-    IAppReader AppReaderOrNull { get; }
+    IAppReader? AppReaderOrNull { get; }
 
     int AppIdOrZero { get; }
 }

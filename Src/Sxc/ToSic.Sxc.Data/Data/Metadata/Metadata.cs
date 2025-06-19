@@ -13,9 +13,10 @@ internal partial class Metadata(IMetadataOf metadata, ICodeDataFactory cdf)
         IMetadata, IHasPropLookup, IHasJsonSource
 {
     IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= new(this, () => Debug);
-    private PropLookupMetadata _propLookup;
+    private PropLookupMetadata? _propLookup;
 
     [PrivateApi]
+    [field: AllowNull, MaybeNull]
     private CodeItemHelper ItemHelper => field ??= new(GetHelper, this);
 
     [PrivateApi("Hide this")]

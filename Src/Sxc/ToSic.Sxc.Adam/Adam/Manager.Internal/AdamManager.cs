@@ -101,7 +101,7 @@ public class AdamManager(AdamManager.MyServices services)
         return l.ReturnAsOk(Folder(path));
     }
 
-    public IFolder FolderOfField(Guid entityGuid, string fieldName, IField field = default)
+    public IFolder FolderOfField(Guid entityGuid, string fieldName, IField? field = default)
     {
         var folderStorage = Services.FieldStorageGenerator.New().InitItemAndField(entityGuid, fieldName);
         folderStorage.Init(this);

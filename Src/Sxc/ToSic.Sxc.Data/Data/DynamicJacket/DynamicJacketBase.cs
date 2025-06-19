@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Data;
 /// </summary>
 [PrivateApi("was Internal-API till v17 - just use the objects from AsDynamic, don't use this directly")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal abstract class DynamicJacketBase(CodeJsonWrapper wrapper): DynamicObject, IReadOnlyList<object>, ISxcDynamicObject, ICanGetByName, IHasPropLookup, IHasJsonSource
+internal abstract class DynamicJacketBase(CodeJsonWrapper wrapper): DynamicObject, IReadOnlyList<object?>, ISxcDynamicObject, ICanGetByName, IHasPropLookup, IHasJsonSource
 {
     #region Constructor / Setup
 
@@ -41,7 +41,7 @@ internal abstract class DynamicJacketBase(CodeJsonWrapper wrapper): DynamicObjec
     /// </summary>
     /// <returns></returns>
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    public abstract IEnumerator<object> GetEnumerator();
+    public abstract IEnumerator<object?> GetEnumerator();
 
 
     /// <inheritdoc />
@@ -49,7 +49,7 @@ internal abstract class DynamicJacketBase(CodeJsonWrapper wrapper): DynamicObjec
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     /// <inheritdoc />
-    public dynamic Get(string name) => PreWrap.TryGetWrap(name).Result;
+    public dynamic? Get(string name) => PreWrap.TryGetWrap(name).Result;
 
     /// <summary>
     /// Count array items or object properties
@@ -61,7 +61,9 @@ internal abstract class DynamicJacketBase(CodeJsonWrapper wrapper): DynamicObjec
     /// </summary>
     /// <param name="index"></param>
     /// <returns>a <see cref="System.NotImplementedException"/></returns>
-    public abstract object this[int index] { get; }
+#pragma warning disable CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
+    public abstract object? this[int index] { get; }
+#pragma warning restore CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
 
     /// <summary>
     /// Fake property binder - just ensure that simple properties don't cause errors. <br/>
@@ -72,6 +74,6 @@ internal abstract class DynamicJacketBase(CodeJsonWrapper wrapper): DynamicObjec
     /// <param name="result">always null, unless overriden</param>
     /// <returns>always returns true, to avoid errors</returns>
     [PrivateApi]
-    public abstract override bool TryGetMember(GetMemberBinder binder, out object result);
+    public abstract override bool TryGetMember(GetMemberBinder binder, out object? result);
         
 }

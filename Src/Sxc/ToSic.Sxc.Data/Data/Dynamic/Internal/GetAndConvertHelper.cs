@@ -3,7 +3,6 @@ using ToSic.Eav.Data.ValueConverter.Sys;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data.Internal.Decorators;
 using ToSic.Sxc.Data.Internal.Typed;
-using ToSic.Sys.Performance;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Data.Internal.Dynamic;
@@ -27,10 +26,11 @@ internal class GetAndConvertHelper(
     public bool Debug => _debug ?? canDebug.Debug;
     private bool? _debug;
 
+    [field: AllowNull, MaybeNull]
     internal SubDataFactory SubDataFactory => field ??= new(Cdf, PropsRequired, canDebug);
 
-    public ILog LogOrNull => _logOrNull.Get(() => Cdf?.Log?.SubLogOrNull("Sxc.GetCnv", Debug));
-    private readonly GetOnce<ILog> _logOrNull = new();
+    public ILog? LogOrNull => _logOrNull.Get(() => Cdf.Log.SubLogOrNull("Sxc.GetCnv", Debug));
+    private readonly GetOnce<ILog?> _logOrNull = new();
 
     #endregion
 
@@ -39,7 +39,7 @@ internal class GetAndConvertHelper(
     public object? Get(string name) => GetInternal(name, lookupLink: true).Result;
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public object Get(string name, NoParamOrder noParamOrder = default, string? language = null, bool convertLinks = true, bool? debug = null)
+    public object? Get(string name, NoParamOrder noParamOrder = default, string? language = null, bool convertLinks = true, bool? debug = null)
     {
         _debug = debug;
         var result = GetInternal(name, language, convertLinks).Result;
@@ -121,10 +121,10 @@ internal class GetAndConvertHelper(
     /// <param name="possibleDims"></param>
     /// <param name="defaultDims"></param>
     /// <returns></returns>
-    internal static string[] GetFinalLanguagesList(string language, List<string> possibleDims, string[] defaultDims)
+    internal static string?[] GetFinalLanguagesList(string language, List<string> possibleDims, string[] defaultDims)
     {
         // if nothing specified, use default
-        if (language == null)
+        if (language == null! /* paranoid */)
             return defaultDims;
 
         var languages = language.ToLowerInvariant()
@@ -138,7 +138,8 @@ internal class GetAndConvertHelper(
         var final = languages
             .Select(l =>
             {
-                if (l == "") return null;
+                if (l == "")
+                    return null;
                 // note: availableDims usually has a null-entry at the end
                 // note: both l and availableDims are lowerInvariant
                 var found = possibleDims.FirstOrDefault(ad => ad?.StartsWith(l) == true);
@@ -152,9 +153,9 @@ internal class GetAndConvertHelper(
 
     private readonly Dictionary<string, TryGetResult> _rawValCache = new(InvariantCultureIgnoreCase);
 
-    private object ValueAutoConverted(PropReqResult original, bool lookupLink, string field, ILog? logOrNull)
+    private object? ValueAutoConverted(PropReqResult original, bool lookupLink, string field, ILog? logOrNull)
     {
-        var l = logOrNull.Fn<object>($"..., {nameof(lookupLink)}: {lookupLink}, {nameof(field)}: {field}");
+        var l = logOrNull.Fn<object?>($"..., {nameof(lookupLink)}: {lookupLink}, {nameof(field)}: {field}");
         var value = original.Result;
         var parent = original.Source as IEntity;
         // New mechanism to not use resolve-hyperlink
@@ -162,7 +163,8 @@ internal class GetAndConvertHelper(
                        && original.ValueType == ValueTypesWithState.Hyperlink
                        && ValueConverterBase.CouldBeReference(strResult))
         {
-            l.A($"Try to convert value"); // - HasValueConverter: {Cdf.Services.ValueConverterOrNull != null}");
+            l.A("Try to convert value");
+            // ReSharper disable once ConstantNullCoalescingCondition - paranoid
             value = Cdf.Services.ValueConverter.ToValue(strResult, parent?.EntityGuid ?? Guid.Empty) ?? value;
             return l.Return(value, "link-conversion");
         }
@@ -174,8 +176,9 @@ internal class GetAndConvertHelper(
             if (childrenShouldBeDynamic)
             {
                 l.A($"Convert entity list as DynamicEntity"); // {nameof(DynamicEntity)}");
-                var dynEnt = cdf.AsDynamicFromEntities(children.ToArray(), parent: parent, field: field, propsRequired: PropsRequired);
-                if (Debug) dynEnt.Debug = true;
+                var dynEnt = Cdf.AsDynamicFromEntities(children.ToArray(), parent: parent, field: field, propsRequired: PropsRequired);
+                if (Debug)
+                    dynEnt.Debug = true;
                 return l.Return(dynEnt, "ent-list, now dyn");
             }
             l.A($"Convert entity list as {nameof(ITypedItem)}");
@@ -202,7 +205,7 @@ internal class GetAndConvertHelper(
 
     #region Parents / Children - ATM still dynamic
 
-    public List<IDynamicEntity> ParentsDyn(IEntity entity, string? type, string? field)
+    public List<IDynamicEntity?> ParentsDyn(IEntity entity, string? type, string? field)
         => entity.Parents(type, field)
             .Select(SubDataFactory.SubDynEntityOrNull)
             .ToList();
@@ -213,23 +216,27 @@ internal class GetAndConvertHelper(
             .ToList();
 
 
-    public List<IDynamicEntity> ChildrenDyn(IEntity entity, string field, string type)
+    public List<IDynamicEntity?> ChildrenDyn(IEntity entity, string? field, string? type)
         => AsChildrenDyn(entity.Children(field, type), field, parentEntity: entity);
 
-    public List<ITypedItem> ChildrenItems(IEntity entity, string field, string type)
+    public List<ITypedItem> ChildrenItems(IEntity entity, string field, string? type)
         => AsChildrenItems(entity.Children(field, type), field, parentEntity: entity);
 
-    private List<IDynamicEntity> AsChildrenDyn(IEnumerable<IEntity> entities, string field, IEntity parentEntity)
+    private List<IDynamicEntity?> AsChildrenDyn(IEnumerable<IEntity?> entities, string? field, IEntity? parentEntity)
         => AsChildrenOf(entities, field, parentEntity, SubDataFactory.SubDynEntityOrNull);
 
-    private List<ITypedItem> AsChildrenItems(IEnumerable<IEntity> entities, string field, IEntity parentEntity)
+    private List<ITypedItem> AsChildrenItems(IEnumerable<IEntity?> entities, string field, IEntity? parentEntity)
         => AsChildrenOf(entities, field, parentEntity, ITypedItem (e) => new TypedItemOfEntity(null, e, Cdf, PropsRequired));
 
-    private static List<T> AsChildrenOf<T>(IEnumerable<IEntity> entities, string field, IEntity parentEntity, Func<IEntity, T> convert)
-        where T : class, ICanBeEntity
+    private static List<T> AsChildrenOf<T>(IEnumerable<IEntity?> entities, string? fieldNameForWrapperInfo, IEntity? parentEntity, Func<IEntity, T> convert)
+        where T : class?, ICanBeEntity?
     {
         var list = entities
-            .Select(IEntity (e, i) => EntityInBlockDecorator.Wrap(entity: e, field: field, index: i, parent: parentEntity))
+            // filter out nulls, as the razor code will usually not be able to handle them
+            // in future, we should maybe add a trigger to optionally allow nulls,
+            // in which case the result should then also be null
+            .Where(e => e != null)
+            .Select(IEntity (e, i) => EntityInBlockDecorator.Wrap(entity: e!, fieldName: fieldNameForWrapperInfo, index: i, parent: parentEntity))
             .Select(convert)
             .ToList();
         return new ListTypedItems<T>(list, null);

@@ -7,7 +7,7 @@ namespace ToSic.Sxc.DataTests.DynWrappers;
 public class WrapDicBasic(ICodeDataPoCoWrapperService wrapper)
 {
     private /*DynamicFromDictionary<TKey, TValue>*/ object ToDyn<TKey, TValue>(Dictionary<TKey, TValue> dic)
-        => wrapper.FromDictionary(dic);
+        => wrapper.FromDictionary(dic ?? []);
 
     [Fact]
     public void BasicUseDictionary()

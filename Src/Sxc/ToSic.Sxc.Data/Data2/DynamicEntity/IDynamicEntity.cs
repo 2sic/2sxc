@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Data.Entities.Sys.Wrappers;
 using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Internal.Docs;
-using IEntity = ToSic.Eav.Data.IEntity;
 
 #if !NETFRAMEWORK
 #pragma warning disable CS0108, CS0114
@@ -29,27 +28,10 @@ namespace ToSic.Sxc.Data;
 /// </remarks>
 [PublicApi]
 public partial interface IDynamicEntity:
-// #TryToDropOldIDynamicEntity: 2025-05-14 2dm v20 try to remove this for now
-//#if NETFRAMEWORK
-//        SexyContent.Interfaces.IDynamicEntity,
-//#endif
     IEntityWrapper, 
-    /*IDynamicEntityBase,*/ 
     ISxcDynamicObject, 
     ICanDebug
-//, ITypedItem // New 16.02, still experimental, must be sure we don't have naming conflicts
 {
-    // 2023-08-13 2dm removed, as it's already in IEntityWrapper
-    ///// <summary>
-    ///// The underlying entity which provides all the data for the DynamicEntity
-    ///// </summary>
-    ///// <returns>
-    ///// An Entity object.
-    ///// </returns>
-    //[PrivateApi("This should not be used publicly, use AsTyped instead. It's necessary so that code can find the Entity without ambiguity")]
-    //new IEntity Entity { get; }
-
-
     /// <summary>
     /// Get a Field-object of a property of this entity, to use with services like the <see cref="Services.IImageService"/> which also need more information like the metadata.
     /// </summary>
@@ -58,10 +40,7 @@ public partial interface IDynamicEntity:
     /// <remarks>
     /// History: Added in v13.10
     /// </remarks>
-    IField Field(string name);
-
-
-
+    IField? Field(string name);
 
     /// <summary>
     /// The type name of the current entity. This provides the nice name like "Person" and not the technical internal StaticName
@@ -71,8 +50,6 @@ public partial interface IDynamicEntity:
     /// * Changed type name to `IMetadata` from `IDynamicMetadata` in 16.02; same type, different type name
     /// </remarks>
     IMetadata Metadata { get; }
-
-
 
     #region Publishing / Draft Information
 
@@ -109,7 +86,7 @@ public partial interface IDynamicEntity:
     /// <param name="field">Optional field filter - would only return items that point to the current item in a specific field name.</param>
     /// <returns>A list of all items pointing here (filtered), converted to DynamicEntity for convenience.</returns>
     /// <remarks>New in 9.42 - note also that the parameter-order is reversed to the Children()</remarks>
-    List<IDynamicEntity> Parents(string? type = null, string? field = null);
+    List<IDynamicEntity?> Parents(string? type = null, string? field = null);
 
     /// <summary>
     /// A dynamic list of sub-items. Important for LINQ style querying or just
@@ -122,7 +99,7 @@ public partial interface IDynamicEntity:
     /// <param name="field">Optional field filter - would only return items that point to the current item in a specific field name.</param>
     /// <returns>A list of all items pointing here (filtered), converted to DynamicEntity for convenience.</returns>
     /// <remarks>New in 10.21.00 - note also that the parameter-order is reversed to the Parents()</remarks>
-    List<IDynamicEntity> Children(string? field = null, string? type = null);
+    List<IDynamicEntity?> Children(string? field = null, string? type = null);
 
     #endregion 
 
@@ -138,7 +115,7 @@ public partial interface IDynamicEntity:
     /// <returns>
     /// An <see cref="IDynamicEntity"/> with the presentation item (or the demo-presentation), otherwise null.
     /// </returns>
-    dynamic Presentation { get; }
+    dynamic? Presentation { get; }
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -149,6 +126,6 @@ public partial interface IDynamicEntity:
     /* IMPORTANT: These are just fake properties for documentation - Keep in Sync between IDynamicEntity and IDynamicStack */
 
     /// <inheritdoc cref="IDynamicAnythingDocs.AnyProperty"/>
-    public dynamic AnyProperty { get; }
+    public dynamic? AnyProperty { get; }
 
 }

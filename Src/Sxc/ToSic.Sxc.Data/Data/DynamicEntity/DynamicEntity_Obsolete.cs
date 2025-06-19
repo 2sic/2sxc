@@ -15,10 +15,6 @@ namespace ToSic.Sxc.Data
         [Obsolete]
         [PrivateApi("probably we won't continue recommending to use this, but first we must provide an alternative")]
         public IRawHtmlString Render() => Cdf.GetService<IOldDynamicEntityFeatures>().Render(Cdf, this);
-
-        [PrivateApi("shouldn't be used, but it may be published by accident, so shouldn't be removed. ")]
-        [Obsolete("please use Get instead")]
-        public object GetEntityValue(string name) => GetHelper.TryGet(name).Result;
     }
 }
 

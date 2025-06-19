@@ -17,7 +17,7 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
         ??= stringWysiwyg.SetInit(s => s.ConnectToRoot(ExCtxOrNull));
 
     public IHtmlTag Html(
-        object thing,
+        object? thing,
         NoParamOrder noParamOrder = default,
         object container = default,
         string classes = default,

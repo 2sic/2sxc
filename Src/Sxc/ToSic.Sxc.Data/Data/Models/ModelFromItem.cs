@@ -102,12 +102,12 @@ public abstract partial class ModelFromItem : ICanWrap<ITypedItem>, ICanBeItem, 
     #region As...
 
     /// <inheritdoc cref="DataModelHelpers.As{TCustom}"/>
-    protected T As<T>(object item)
+    protected T? As<T>(object item)
         where T : class, ICanWrapData
         => DataModelHelpers.As<T>(_modelFactory, item);
 
     /// <inheritdoc cref="DataModelHelpers.AsList{T}"/>
-    protected IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = false)
+    protected IEnumerable<T>? AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = false)
         where T : class, ICanWrapData
         => DataModelHelpers.AsList<T>(_modelFactory, source, protector, nullIfNull);
 

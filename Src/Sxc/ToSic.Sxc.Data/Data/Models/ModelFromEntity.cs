@@ -56,7 +56,8 @@ public abstract partial class ModelFromEntity: ICanWrap<IEntity>, ICanBeEntity /
         _entity = source;
         _modelFactory = modelFactory;
     }
-    private IModelFactory _modelFactory;
+
+    private IModelFactory _modelFactory = null!;
 
     /// <summary>
     /// This is necessary so the object can be used in places where an IEntity is expected,
@@ -67,11 +68,6 @@ public abstract partial class ModelFromEntity: ICanWrap<IEntity>, ICanBeEntity /
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     IEntity ICanBeEntity.Entity => _entity;
-
-    //IBlock ICanBeItem.TryGetBlockContext() => Item.TryGetBlockContext();
-
-    //IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= ((IHasPropLookup)((ICanBeItem)this).Item).PropertyLookup;
-    //private IPropertyLookup _propLookup;
 
     #endregion
 
@@ -85,25 +81,25 @@ public abstract partial class ModelFromEntity: ICanWrap<IEntity>, ICanBeEntity /
     /// </remarks>
 #pragma warning disable IDE1006
     // ReSharper disable once InconsistentNaming
-    protected internal IEntity _entity { get; private set; }
+    protected internal IEntity _entity { get; private set; } = null!;
 #pragma warning restore IDE1006
 
     /// <summary>
     /// Override ToString to give more information about the current object
     /// </summary>
     public override string ToString() 
-        => $"{nameof(ModelFromEntity)} Data Model {GetType().FullName} " + (_entity == null ? "without backing data (null)" : $"for id:{_entity.EntityId} ({_entity})");
+        => $"{nameof(ModelFromEntity)} Data Model {GetType().FullName} " + (_entity == null! ? "without backing data (null)" : $"for id:{_entity.EntityId} ({_entity})");
 
 
     #region As...
 
     /// <inheritdoc cref="DataModelHelpers.As{TCustom}"/>
-    protected T As<T>(object item)
+    protected T? As<T>(object item)
         where T : class, ICanWrapData
         => DataModelHelpers.As<T>(_modelFactory, item);
 
     /// <inheritdoc cref="DataModelHelpers.AsList{T}"/>
-    protected IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = false)
+    protected IEnumerable<T>? AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = false)
         where T : class, ICanWrapData
         => DataModelHelpers.AsList<T>(_modelFactory, source, protector, nullIfNull);
 
@@ -118,7 +114,7 @@ public abstract partial class ModelFromEntity: ICanWrap<IEntity>, ICanBeEntity /
     /// </summary>
     /// <typeparam name="T">Optional type, usually auto-detected because of the `fallback` value</typeparam>
     /// <param name="fallback">Value to provide if nothing was found - required</param>
-    /// <param name="propertyName">The property name - will be auto-filled by the compiler</param>
+    /// <param name="propertyName">The property name - will be autofill by the compiler</param>
     /// <returns>The typed value</returns>
     //[return: NotNullIfNotNull(nameof(fallback))]
     protected T? GetThis<T>(T? fallback, [CallerMemberName] string? propertyName = default)

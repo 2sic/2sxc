@@ -11,7 +11,7 @@ internal class PreWrapJsonDumperHelper
     public List<PropertyDumpItem> Dump(PreWrapJsonObject parent, CodeJsonWrapper wrapper, JsonObject item,
         PropReqSpecs specs, string path, IPropertyDumpService dumpService)
     {
-        if (item == null || !item.Any())
+        if (!item.Any())
             return [];
 
         if (string.IsNullOrEmpty(path))
@@ -35,7 +35,7 @@ internal class PreWrapJsonDumperHelper
             .Where(p => p.Value is JsonObject)
             .SelectMany(p =>
             {
-                var jacket = wrapper.CreateDynJacketObject(p.Value.AsObject());
+                var jacket = wrapper.CreateDynJacketObject(p.Value!.AsObject());
                 return ((IHasPropLookup)jacket).PropertyLookup is IPropertyDumpCustom dumper
                     ? dumper._DumpProperties(specs, path + PropertyDumpItem.Separator + p.Key, dumpService)
                     : [];

@@ -35,7 +35,7 @@ public partial interface ITyped : IHasKeys, ICanGetByName
     /// <remarks>
     /// * parameter `languages` added in 17.10
     /// </remarks>
-    object Get(string name,
+    object? Get(string name,
         NoParamOrder noParamOrder = default,
         bool? required = default,
         string? language = default

@@ -10,7 +10,10 @@
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ListTypedItems<TTypedItem>(IEnumerable<TTypedItem> original, IEntity? fieldInfo)
     : List<TTypedItem>(original), ICanBeEntity
-    where TTypedItem : class
+    where TTypedItem : class?
 {
-    public IEntity Entity { get; } = fieldInfo ?? (original?.FirstOrDefault() as ICanBeEntity)?.Entity;
+    [field: AllowNull, MaybeNull]
+#pragma warning disable CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
+    public IEntity? Entity => field ??= fieldInfo ?? (this.FirstOrDefault() as ICanBeEntity)?.Entity;
+#pragma warning restore CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
 }

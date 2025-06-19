@@ -17,20 +17,18 @@ namespace ToSic.Sxc.Data.Internal.Dynamic;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class DynamicFromDictionary<TKey, TVal>: DynamicObject, IWrapper<IDictionary<TKey, TVal>>, IHasKeys
 {
-    protected readonly IDictionary<TKey, TVal>? UnwrappedDictionary;
+    protected readonly IDictionary<TKey, TVal> UnwrappedDictionary;
     private readonly ICodeDataPoCoWrapperService _wrapperSvc;
 
     [PrivateApi]
     public IDictionary<TKey, TVal> GetContents() => UnwrappedDictionary;
     private readonly Dictionary<string, object> _ignoreCaseLookup = new(StringComparer.InvariantCultureIgnoreCase);
 
-    public DynamicFromDictionary(IDictionary<TKey, TVal>? dictionary, ICodeDataPoCoWrapperService wrapperSvc)
+    public DynamicFromDictionary(IDictionary<TKey, TVal> dictionary, ICodeDataPoCoWrapperService wrapperSvc)
     {
         UnwrappedDictionary = dictionary;
         _wrapperSvc = wrapperSvc;
-        if (dictionary == null)
-            return;
-
+        
         foreach (var de in dictionary) 
             _ignoreCaseLookup[de.Key!.ToString()!] = de.Value!;
     }

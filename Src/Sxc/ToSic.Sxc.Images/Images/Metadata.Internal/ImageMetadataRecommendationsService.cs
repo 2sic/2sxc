@@ -18,7 +18,7 @@ class ImageMetadataRecommendationsService(IFeaturesService featuresSvc) : Servic
     /// <summary>
     /// Optionally add image-metadata recommendations
     /// </summary>
-    public void SetImageRecommendations(IMetadataOf mdOf, string path)
+    public void SetImageRecommendations(IMetadataOf? mdOf, string? path)
     {
         if (mdOf?.Target == null || !path.HasValue())
             return;

@@ -49,10 +49,10 @@ internal partial class PreWrapObject: PreWrapBase, IPropertyLookup, IHasJsonSour
     }
 
     private ICodeDataPoCoWrapperService WrapperSvc { get; }
-    private readonly object _innerObject;
+    private readonly object? _innerObject;
     public override WrapperSettings Settings { get; }
 
-    internal static Dictionary<string, PropertyInfo> CreatePropertyInfoDictionary(object original)
+    internal static Dictionary<string, PropertyInfo> CreatePropertyInfoDictionary(object? original)
     {
         var dic = new Dictionary<string, PropertyInfo>(StringComparer.InvariantCultureIgnoreCase);
         if (original is null)
@@ -118,5 +118,5 @@ internal partial class PreWrapObject: PreWrapBase, IPropertyLookup, IHasJsonSour
 
 
 
-    public override object JsonSource() => _innerObject;
+    public override object JsonSource() => _innerObject!;
 }

@@ -51,7 +51,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// Temporary workaround to allow forwarding the Block object without having to know the interface of it.
     /// WIP to get dynamic data to keep the context of where it's from, without the API having to be typed.
     /// </summary>
-    object BlockAsObjectOrNull { get; }
+    object? BlockAsObjectOrNull { get; }
 
     /// <summary>
     /// List of dimensions for value lookup, incl. priorities etc. and null-trailing.
@@ -100,7 +100,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// <param name="entity"></param>
     /// <param name="propsRequired"></param>
     /// <returns></returns>
-    ITypedItem AsItem(IEntity entity, bool propsRequired);
+    ITypedItem? AsItem(IEntity? entity, bool propsRequired);
 
     IEnumerable<ITypedItem> EntitiesToItems(IEnumerable<IEntity> entities, bool propsRequired = false);
     IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? required = default, IEnumerable<ITypedItem>? fallback = default, bool? propsRequired = default);
@@ -114,14 +114,14 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
 
     IDynamicStack AsDynStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources);
     ITypedStack AsTypedStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources);
-    IField Field(ITypedItem parent, string name, bool propsRequired, NoParamOrder noParamOrder = default, bool? required = default);
+    IField? Field(ITypedItem parent, string? name, bool propsRequired, NoParamOrder noParamOrder = default, bool? required = default);
     IEntity AsEntity(object thingToConvert);
     IEntity FakeEntity(int appId);
 
     TCustom GetOne<TCustom>(Func<IEntity> getItem, object id, bool skipTypeCheck)
         where TCustom : class, ICanWrapData;
 
-    IEntity PlaceHolderInBlock(int? appIdOrNull, IEntity parent, string field);
+    IEntity PlaceHolderInBlock(int? appIdOrNull, IEntity? parent, string fieldName);
 
     /// <summary>
     /// Creates an empty list of a specific type, with hidden information to remember what field this is etc.
@@ -135,7 +135,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     IFile File(int id);
     IFolder Folder(Guid entityGuid, string fieldName, IField? field = default);
     IFolder Folder(int id);
-    IFolder Folder(ICanBeEntity item, string name, IField field);
+    IFolder Folder(ICanBeEntity item, string name, IField? field);
 
     IFile? File(IField field);
 
@@ -180,6 +180,6 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
         object? recipe = default
     );
 
-    IEntity GetDraft(IEntity entity);
-    IEntity GetPublished(IEntity entity);
+    IEntity? GetDraft(IEntity entity);
+    IEntity? GetPublished(IEntity entity);
 }

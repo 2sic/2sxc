@@ -12,7 +12,7 @@ internal class PublishingUnsupported(ITypedItem item) : IPublishing
 
     public ITypedItem GetPublished() => item;
 
-    public ITypedItem GetUnpublished() => null;
+    public ITypedItem? GetUnpublished() => null;
 
-    public ITypedItem GetOpposite() => null;
+    public ITypedItem? GetOpposite() => null;
 }

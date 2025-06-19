@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Data.Internal.Stack;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPropLookup, ICanDebug, ICanGetByName
+internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPropLookup
 {
     public TypedStack(string name, ICodeDataFactory cdf, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources)
     {
@@ -34,7 +34,7 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
 
     #region GetByName - to allow this to be used for image settings etc.
 
-    object ICanGetByName.Get(string name) => (this as ITyped).Get(name, required: false);
+    object? ICanGetByName.Get(string name) => (this as ITyped).Get(name, required: false);
 
     #endregion
 
@@ -63,11 +63,12 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
     #region ITyped
 
     [PrivateApi]
-    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string? language)
+    object? ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string? language)
         => _itemHelper.Get(name: name, noParamOrder: noParamOrder, required: required, language: language);
 
     [PrivateApi]
-    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string? language)
+    TValue? ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue? fallback, bool? required, string? language)
+        where TValue : default
         => _itemHelper.GetT(name, noParamOrder, fallback: fallback, required: required, language: language);
 
 
@@ -81,7 +82,7 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
         => _itemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
     [PrivateApi]
-    string? ITyped.String(string name, NoParamOrder noParamOrder, string fallback, bool? required, object? scrubHtml)
+    string? ITyped.String(string name, NoParamOrder noParamOrder, string? fallback, bool? required, object? scrubHtml)
         => _itemHelper.String(name, noParamOrder, fallback, required, scrubHtml);
 
     [PrivateApi]

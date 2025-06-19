@@ -17,6 +17,9 @@ using ToSic.Eav.Data.Sys;
 using ToSic.Lib.Wrappers;
 using ToSic.Sxc.Cms.Data;
 
+// This is for paranoid Entity? checking
+// ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
+
 namespace ToSic.Sxc.Data.Internal.Typed;
 
 [JsonConverter(typeof(DynamicJsonConverter))]
@@ -118,11 +121,12 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
     #region ITyped
 
     [PrivateApi]
-    object ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string? language)
+    object? ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string? language)
         => ItemHelper.Get(name, noParamOrder, required, language: language);
 
     [PrivateApi]
-    TValue ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string? language)
+    TValue? ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue? fallback, bool? required, string? language)
+        where TValue : default
         => ItemHelper.GetT(name, noParamOrder, fallback: fallback, required: required, language: language);
 
     [PrivateApi]
@@ -179,7 +183,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
     /// <summary>
     /// Get by name should never throw an error, as it's used to get null if not found.
     /// </summary>
-    object ICanGetByName.Get(string name) => (this as ITyped).Get(name, required: false);
+    object? ICanGetByName.Get(string name) => (this as ITyped).Get(name, required: false);
 
     #endregion
 
@@ -195,7 +199,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
     string? ITypedItem.Title => Entity?.GetBestTitle(Cdf.Dimensions);
 
     [PrivateApi]
-    IContentType ITypedItem.Type => Entity?.Type;
+    IContentType ITypedItem.Type => Entity?.Type!;
 
     public bool IsDemoItem => _isDemoItem ??= Entity.IsDemoItemSafe();
     private bool? _isDemoItem;
@@ -207,11 +211,10 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
     /// <inheritdoc />
     [PrivateApi]
     IFolder? ITypedItem.Folder(string name, NoParamOrder noParamOrder, bool? required)
-    {
-        return IsErrStrict(this, name, required, GetHelper.PropsRequired)
+        => IsErrStrictNameRequired(this, name, required, GetHelper.PropsRequired)
             ? throw ErrStrictForTyped(this, name)
             : _adamCache.Get(name, () => Cdf.Folder(Entity, name, ((ITypedItem)this).Field(name, required: false)));
-    }
+
     private readonly GetOnceNamed<IFolder> _adamCache = new();
 
     IFile? ITypedItem.File(string name, NoParamOrder noParamOrder, bool? required)
@@ -219,9 +222,11 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
         ITypedItem typedThis = this;
         // Case 1: The field contains a direct reference to a file
         var field = typedThis.Field(name, required: required);
+        if (field == null)
+            return null; // if the field is not found, return null
         var file = Cdf.File(field);
         // Case 2: No direct reference, just get the first file in the folder of this field
-        return file ?? typedThis.Folder(name).Files.FirstOrDefault();
+        return file ?? typedThis.Folder(name)?.Files.FirstOrDefault();
     }
 
     #endregion
@@ -257,19 +262,19 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
 
     bool ITypedItem.IsPublished => Entity.IsPublished;
 
-    IPublishing ITypedItem.Publishing => _publishing.Get(() => new Publishing(this, Cdf));
+    IPublishing ITypedItem.Publishing => _publishing.Get(() => new Publishing(this, Cdf))!;
     private readonly GetOnce<IPublishing> _publishing = new();
 
     /// <inheritdoc />
     [PrivateApi]
     IEnumerable<ITypedItem> ITypedItem.Children(string? field, NoParamOrder noParamOrder, string? type, bool? required)
     {
-        if (IsErrStrict(this, field, required, GetHelper.PropsRequired))
+        if (IsErrStrictNameOptional(this, field, required, GetHelper.PropsRequired))
             throw ErrStrictForTyped(this, field);
 
         // Ability to get child/children using path
         var dot = PropertyStack.PathSeparator.ToString();
-        if (field.Contains(dot))
+        if (field!.Contains(dot))
         {
             var first = field.Before(dot);
             var rest = Text.After(field, dot);
@@ -296,7 +301,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
     /// <inheritdoc />
     [PrivateApi]
     ITypedItem? ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required)
-        => IsErrStrict(this, name, required, GetHelper.PropsRequired)
+        => IsErrStrictNameRequired(this, name, required, GetHelper.PropsRequired)
             ? throw ErrStrictForTyped(this, name)
             : ((ITypedItem)this).Children(name).FirstOrDefault();
 
@@ -305,9 +310,10 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
     #region Fields, Html, Picture
 
     [PrivateApi]
-    IField ITypedItem.Field(string name, NoParamOrder noParamOrder, bool? required) => Cdf.Field(this, name, propsRequired, noParamOrder, required);
+    IField? ITypedItem.Field(string name, NoParamOrder noParamOrder, bool? required)
+        => Cdf.Field(this, name, propsRequired, noParamOrder, required);
 
-    IHtmlTag ITypedItem.Html(
+    IHtmlTag? ITypedItem.Html(
         string name,
         NoParamOrder noParamOrder,
         object? container,
@@ -367,7 +373,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
     #region New Child<T> / Children<T> - disabled as ATM Kit is missing
 
     /// <inheritdoc />
-    T ITypedItem.Child<T>(string? name, NoParamOrder protector, bool? required)
+    T ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required)
         => Cdf.AsCustom<T>(
             source: ((ITypedItem)this).Child(name, required: required), protector: protector, mock: false
         );

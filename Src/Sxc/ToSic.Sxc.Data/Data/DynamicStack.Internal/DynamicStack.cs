@@ -50,7 +50,7 @@ public class DynamicStack: DynamicObject,
 
 
 
-    public override bool TryGetMember(GetMemberBinder binder, out object result) 
+    public override bool TryGetMember(GetMemberBinder binder, out object? result) 
         => CodeDynHelper.TryGetMemberAndRespectStrict(GetHelper, binder, out result);
 
 
@@ -83,6 +83,7 @@ public class DynamicStack: DynamicObject,
     {
         if (source == null)
             return null;
+        // ReSharper disable once SuspiciousTypeConversion.Global
         if (source is IDynamicEntity dynEnt)
             return dynEnt;
         if (source is ICanBeEntity canBe)
@@ -98,17 +99,17 @@ public class DynamicStack: DynamicObject,
 
     #region Get / Get<T>
 
-    public dynamic Get(string name) => GetHelper.Get(name);
+    public dynamic? Get(string name) => GetHelper.Get(name);
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public dynamic Get(string name, NoParamOrder noParamOrder = default, string? language = null, bool convertLinks = true, bool? debug = null)
+    public dynamic? Get(string name, NoParamOrder noParamOrder = default, string? language = null, bool convertLinks = true, bool? debug = null)
         => GetHelper.Get(name, noParamOrder, language, convertLinks, debug);
 
-    public TValue Get<TValue>(string name)
+    public TValue? Get<TValue>(string name)
         => GetHelper.Get<TValue>(name);
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public TValue Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue? fallback = default)
+    public TValue? Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue? fallback = default)
         => GetHelper.Get(name, noParamOrder, fallback);
 
     #endregion
@@ -130,7 +131,7 @@ public class DynamicStack: DynamicObject,
     #region Any*** properties just for documentation
 
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public dynamic AnyProperty => null;
+    public dynamic AnyProperty => null!;
 
     #endregion
 

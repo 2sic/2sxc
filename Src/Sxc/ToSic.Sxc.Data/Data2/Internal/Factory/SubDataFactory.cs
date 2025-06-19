@@ -14,12 +14,13 @@ internal class SubDataFactory(ICodeDataFactory cdf, bool propsRequired, ICanDebu
     /// </summary>
     /// <param name="contents"></param>
     /// <returns></returns>
-    public IDynamicEntity SubDynEntityOrNull(IEntity contents)
+    public IDynamicEntity? SubDynEntityOrNull(IEntity? contents)
         => SubDynEntityOrNull(contents, Cdf, canDebug.Debug, propsRequired: PropsRequired);
 
-    internal static IDynamicEntity SubDynEntityOrNull(IEntity contents, ICodeDataFactory cdf, bool? debug, bool propsRequired)
+    internal static IDynamicEntity? SubDynEntityOrNull(IEntity? contents, ICodeDataFactory cdf, bool? debug, bool propsRequired)
     {
-        if (contents == null) return null;
+        if (contents == null)
+            return null;
         var result = cdf.AsDynamic(contents, propsRequired);
         if (debug == true) result.Debug = true;
         return result;

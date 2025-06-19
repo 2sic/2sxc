@@ -30,8 +30,10 @@ partial class CodeDataFactory
     /// <param name="entity"></param>
     /// <param name="propsRequired"></param>
     /// <returns></returns>
-    public ITypedItem AsItem(IEntity entity, bool propsRequired)
-        => entity == null ? null : new TypedItemOfEntity(null, entity, this, propsRequired: propsRequired);
+    public ITypedItem? AsItem(IEntity? entity, bool propsRequired)
+        => entity == null
+            ? null
+            : new TypedItemOfEntity(null, entity, this, propsRequired: propsRequired);
 
     private LogFilter AsItemLogFilter
         => field ??= new(Log, logFirstMax: 25, reLogIteration: 100);
@@ -80,7 +82,7 @@ partial class CodeDataFactory
             : l.Return(new TypedItemOfEntity(null, e, this, propsRequired: propsRequired), typeName);
     }
 
-    public IEnumerable<ITypedItem> EntitiesToItems(IEnumerable<IEntity> entities, bool propsRequired = false)
+    public IEnumerable<ITypedItem> EntitiesToItems(IEnumerable<IEntity>? entities, bool propsRequired = false)
         => entities?.Select(e => AsItem(e, propsRequired: propsRequired)).ToList() ?? [];
 
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? required = default, IEnumerable<ITypedItem> fallback = default, bool? propsRequired = default) 

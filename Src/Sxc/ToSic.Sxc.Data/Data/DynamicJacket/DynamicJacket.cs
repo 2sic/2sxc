@@ -61,7 +61,7 @@ internal class DynamicJacket: DynamicJacketBase<JsonObject>
     /// </remarks>
     /// <param name="key">the key, case-insensitive</param>
     /// <returns>A value (string, int etc.), <see cref="DynamicJacket"/> or <see cref="DynamicJacketList"/></returns>
-    public object this[string key] => PreWrap.TryGetWrap(key).Result;
+    public object? this[string key] => PreWrap.TryGetWrap(key).Result;
 
     // 2023-08-17 2dm - completely removed this, I can't imagine it actually being used anywhere.
     ///// <summary>
@@ -85,7 +85,7 @@ internal class DynamicJacket: DynamicJacketBase<JsonObject>
     /// <param name="binder">.net binder object</param>
     /// <param name="result">usually a <see cref="DynamicJacket"/>, <see cref="DynamicJacketList"/> or null</param>
     /// <returns>always returns true, to avoid errors</returns>
-    public override bool TryGetMember(GetMemberBinder binder, out object result)
+    public override bool TryGetMember(GetMemberBinder binder, out object? result)
     {
         result = PreWrap.TryGetWrap(binder.Name).Result;
         // always say it was found to prevent runtime errors
@@ -95,7 +95,7 @@ internal class DynamicJacket: DynamicJacketBase<JsonObject>
     #endregion
 
     /// <inheritdoc />
-    public override object this[int index] => (_propertyArray ??= UnwrappedContents.Select(p => p.Value).ToArray())[index];
-    private JsonNode[] _propertyArray;
+    public override object? this[int index] => (_propertyArray ??= UnwrappedContents.Select(p => p.Value).ToArray())[index];
+    private JsonNode?[]? _propertyArray;
 
 }

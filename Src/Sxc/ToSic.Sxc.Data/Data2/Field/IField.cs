@@ -39,7 +39,7 @@ public interface IField: IHasLink, IHasMetadata
     /// </summary>
     [PrivateApi("Was public till 16.03, but don't think it should be surfaced...")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    object Raw { get; }
+    object? Raw { get; }
 
     /// <summary>
     /// The value of the field with modifications.
@@ -48,17 +48,12 @@ public interface IField: IHasLink, IHasMetadata
     /// </summary>
     [PrivateApi("Was public till 16.03, but don't think it should be surfaced...")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    object Value { get; }
+    object? Value { get; }
 
-    /// <summary>
-    /// Metadata of the thing in the field - if it has such metadata.
-    ///
-    /// The object will never be null, but it can of course not have any data if there is no metadata. 
-    /// </summary>
-    new IMetadata Metadata { get; }
-
-
-    //[PrivateApi("Internal use only, may change at any time")]
-    //[ShowApiWhenReleased(ShowApiMode.Never)]
-    //ImageDecorator ImageDecoratorOrNull { get; }
+    ///// <summary>
+    ///// Metadata of the thing in the field - if it has such metadata.
+    /////
+    ///// The object will never be null, but it can of course not have any data if there is no metadata. 
+    ///// </summary>
+    //new IMetadata Metadata { get; }
 }

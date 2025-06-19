@@ -25,7 +25,7 @@ public partial class DynamicEntity: IList<IDynamicEntity>
     [PrivateApi("would only confuse users, not useful in Razor / DynamicCode")]
     public IDynamicEntity this[int index]
     {
-        get => ListHelper.DynEntities[index];
+        get => ListHelper.DynEntities[index]!; // actually it can be null, but the `this[...]` interface would complain
         // note: set must be defined for IList<IDynamicEntity>
         set => throw new NotSupportedException();
     }

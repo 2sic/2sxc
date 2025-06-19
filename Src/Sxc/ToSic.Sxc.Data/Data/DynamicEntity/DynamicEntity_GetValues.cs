@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Data;
 public partial class DynamicEntity
 {
     [PrivateApi]
-    public override bool TryGetMember(GetMemberBinder binder, out object result)
+    public override bool TryGetMember(GetMemberBinder binder, out object? result)
     {
         // Check special cases #1 Toolbar - only in DNN and only on the explicit dynamic entity; not available in Oqtane
 #if NETFRAMEWORK

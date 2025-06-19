@@ -26,34 +26,35 @@ internal class Publishing(ITypedItem currentItem, ICodeDataFactory cdf)
     public bool HasBoth => HasUnpublished && HasPublished;
 
     // Get published - either current, or from appState
-    public ITypedItem GetPublished() => _published.Get(() =>
+    public ITypedItem? GetPublished() => _published.Get(() =>
     {
-        if (IsPublished) return currentItem;
+        if (IsPublished)
+            return currentItem;
         var pubEntity = cdf.GetPublished(currentItem.Entity);
         return cdf.AsItem(pubEntity, true);
     });
-    private readonly GetOnce<ITypedItem> _published = new();
+    private readonly GetOnce<ITypedItem?> _published = new();
 
     // Get draft - either current, or from appState
-    public ITypedItem GetUnpublished() => _draft.Get(() => !IsPublished
+    public ITypedItem? GetUnpublished() => _draft.Get(() => !IsPublished
         ? currentItem
         : cdf.AsItem(UnpublishedEntity, true)
     );
-    private readonly GetOnce<ITypedItem> _draft = new();
+    private readonly GetOnce<ITypedItem?> _draft = new();
 
     /// <summary>
     /// Get draft entity - either current, or from appState.
     /// Do this as a separate step, as we sometimes need the info without converting it to a typed item
     /// </summary>
-    private IEntity UnpublishedEntity => _unPubEntity.Get(() =>
+    private IEntity? UnpublishedEntity => _unPubEntity.Get(() =>
     {
         if (!IsPublished) return currentItem.Entity;
         var draftEntity = cdf.GetDraft(currentItem.Entity);
         return draftEntity;
     });
-    private readonly GetOnce<IEntity> _unPubEntity = new();
+    private readonly GetOnce<IEntity?> _unPubEntity = new();
 
     // Get opposite - either draft or published
-    public ITypedItem GetOpposite() => _other.Get(() => IsPublished ? GetUnpublished() : GetPublished());
-    private readonly GetOnce<ITypedItem> _other = new();
+    public ITypedItem? GetOpposite() => _other.Get(() => IsPublished ? GetUnpublished() : GetPublished());
+    private readonly GetOnce<ITypedItem?> _other = new();
 }
