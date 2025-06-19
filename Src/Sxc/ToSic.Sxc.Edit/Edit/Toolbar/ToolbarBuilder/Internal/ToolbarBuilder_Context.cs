@@ -25,17 +25,17 @@ partial record ToolbarBuilder : IToolbarBuilderInternal
     /// or any of the rules have one
     /// </summary>
     /// <returns></returns>
-    ToolbarContext IToolbarBuilderInternal.GetContext()
+    ToolbarContext? IToolbarBuilderInternal.GetContext()
         => Rules.OfType<ToolbarRuleContext>().FirstOrDefault()?.Context
            ?? Rules.FirstOrDefault(r => r.Context != null)?.Context;
 
 
-    private ToolbarContext GenerateContext(object target, string context)
+    private ToolbarContext? GenerateContext(object? target, string? context)
     {
         var l = Log.Fn<ToolbarContext>($"{nameof(context)}:{context}");
         // Check if context had already been prepared
         if (context.ContainsInsensitive("context:"))
-            return l.Return(new(context), "contains context:");
+            return l.Return(new(context!), "contains context:");
 
         if (target == null)
             return l.ReturnNull("no target");
@@ -52,13 +52,13 @@ partial record ToolbarBuilder : IToolbarBuilderInternal
         if (appId is 0 or NoAppId or KnownAppsConstants.TransientAppId or < 1)
             return l.ReturnNull("no app identified");
 
+        // This throws if the app doesn't exist in any zone
         var identity = appsCatalog.AppIdentity(appId);
-        if (identity == null) return l.ReturnNull("app not found");
 
         // If we're not forcing the context "true" then check cases where it's not needed
         if (!context.EqualsInsensitive(true.ToString()))
             // If we're still on the same app, and we didn't force the context, return null
-            if (CurrentAppIdentity != null && CurrentAppIdentity.AppId == identity.AppId)
+            if (CurrentAppIdentity?.AppId == identity.AppId)
             {
                 // ensure we're not in a global context where the current-context is already special
                 var globalAppId = appsCatalog.GetPrimaryAppOfAppId(appId, Log);

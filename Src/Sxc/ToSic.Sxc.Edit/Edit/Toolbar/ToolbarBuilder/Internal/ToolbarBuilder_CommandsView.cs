@@ -9,22 +9,22 @@ namespace ToSic.Sxc.Edit.Toolbar.Internal;
 partial record ToolbarBuilder
 {
     public IToolbarBuilder Layout(
-        object target = null,
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = null,
-        object parameters = null,
-        string operation = null
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = null,
+        object? parameters = null,
+        string? operation = null
     ) => AddAdminAction("layout", noParamOrder, ui, parameters, operation, target, tweak);
 
 
     public IToolbarBuilder Code(
         object target,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = null,
-        object parameters = null,
-        string operation = null
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = null,
+        object? parameters = null,
+        string? operation = null
     )
     {
         // If we don't have a tweak then create the params the classic way
@@ -40,12 +40,12 @@ partial record ToolbarBuilder
     }
 
     public IToolbarBuilder Fields(
-        object target = null,
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = null,
-        object parameters = null,
-        string operation = null
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = null,
+        object? parameters = null,
+        string? operation = null
     )
     {
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters);
@@ -54,36 +54,36 @@ partial record ToolbarBuilder
 
 
     public IToolbarBuilder Template(
-        object target = null,
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = null,
-        object parameters = null,
-        string operation = null
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = null,
+        object? parameters = null,
+        string? operation = null
     ) => AddAdminAction("template", noParamOrder, ui, parameters, operation, target, tweak);
 
     public IToolbarBuilder Query(
-        object target = null,
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = null,
-        object parameters = null,
-        string operation = null
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = null,
+        object? parameters = null,
+        string? operation = null
     ) => AddAdminAction("query", noParamOrder, ui, parameters, operation, target, tweak);
 
     public IToolbarBuilder View(
-        object target = null,
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = null,
-        object parameters = null,
-        string operation = null
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = null,
+        object? parameters = null,
+        string? operation = null
     ) => AddAdminAction("view", noParamOrder, ui, parameters, operation, target, tweak);
 
     public IToolbarBuilder Edition(
         NoParamOrder noParamOrder = default,
-        string editions = default,
-        Func<ITweakButton, ITweakButton> tweak = default
+        string? editions = default,
+        Func<ITweakButton, ITweakButton>? tweak = default
     )
     {
         var paramsMergeInTweak = editions == default ? null : new { editions };

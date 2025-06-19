@@ -13,7 +13,7 @@ internal abstract class ItemToolbarBase(string logName) : ServiceBase($"{SxcLogN
 
     public abstract string ToolbarAsTag { get; }
 
-    protected abstract string ToolbarJson { get; }
+    protected abstract string? ToolbarJson { get; }
 
     /// <summary>
     /// Generate the attributes to add to a toolbar tag 

@@ -22,7 +22,7 @@ partial record ToolbarBuilder
     protected override string ToHtmlString()
     {
         // Get edit, but don't exit if null, as the Render (later on) will add comments if Edit is null
-        var editSvc = ExCtx?.GetService<IEditService>(reuse: true);
+        var editSvc = ExCtx.GetService<IEditService>(reuse: true);
 
         // As the config can change before render, put `this` into a variable first
         var finalToolbar = this;
@@ -32,7 +32,7 @@ partial record ToolbarBuilder
         // since in this case it may not be activated
         if (showNonAdmin)
         {
-            ExCtx?.GetService<IPageService>(reuse: true)
+            ExCtx.GetService<IPageService>(reuse: true)
                 .Activate(SxcPageFeatures.ToolbarsInternal.NameId);
 
 
@@ -43,10 +43,10 @@ partial record ToolbarBuilder
         if (ShouldSwitchToItemDemoMode())
             finalToolbar = CreateStandaloneItemDemoToolbar();       // Implement Demo-Mode with info-button only
 
-        return finalToolbar.Render(editSvc, enabled);
+        return finalToolbar.Render(editSvc, enabled) ?? "";
     }
 
-    private (bool enabled, bool showNonAdmin) CheckShowConditions(IEditService editSvc)
+    private (bool enabled, bool showNonAdmin) CheckShowConditions(IEditService? editSvc)
     {
         // Get initial enabled from the Edit Service
         var enabled = editSvc?.Enabled == true;
@@ -61,7 +61,7 @@ partial record ToolbarBuilder
         enabled = enabled || showNonAdmins;
 
         // Check if enabled for certain groups
-        if (ExCtx != null)
+        if (ExCtx != null! /* paranoid */)
         {
             var user = ExCtx.GetState<ICmsContext>().User;
             var overrideShow = new ToolbarConfigurationShowHelper()
@@ -87,7 +87,7 @@ partial record ToolbarBuilder
 
 
 
-    private string Render(IEditService edit, bool enabled)
+    private string? Render(IEditService? edit, bool enabled)
     {
         // don't show toolbar if not enabled (or not for everyone)
         if (!enabled)

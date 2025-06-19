@@ -11,16 +11,17 @@ partial class EditService
     #region Context Attributes
 
     /// <inheritdoc/>
-    public IRawHtmlString ContextAttributes(ICanBeEntity target,
+    public IRawHtmlString? ContextAttributes(ICanBeEntity target,
         NoParamOrder noParamOrder = default,
-        string field = null,
-        string contentType = null,
+        string? field = null,
+        string? contentType = null,
         Guid? newGuid = null,
-        string apps = null,
+        string? apps = null,
         int max = 100)
     {
         Log.A("ctx attribs - enabled:{Enabled}");
-        if (!Enabled) return null;
+        if (!Enabled)
+            return null;
 
         if (field == null) throw new("need parameter 'field'");
 

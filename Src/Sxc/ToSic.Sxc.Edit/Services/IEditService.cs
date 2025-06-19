@@ -76,15 +76,15 @@ public interface IEditService: IHasLog // , INeedsCodeApiService
     /// 1. option to just use a ToolbarBuilder as first parameter or `toolbar` parameter added in v13 - this will skip all other parameters
     /// 1. Enhanced to return `IRawHtmlString` instead of `IHybridHtmlString` in 16.02
     /// </remarks>
-    IRawHtmlString Toolbar(
-        object target = null,
+    IRawHtmlString? Toolbar(
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        string actions = null,
-        string contentType = null,
-        object condition = null,
-        object prefill = null,
-        object settings = null,
-        object toolbar = null);
+        string? actions = null,
+        string? contentType = null,
+        object? condition = null,
+        object? prefill = null,
+        object? settings = null,
+        object? toolbar = null);
 
     /// <summary>
     /// Generate a toolbar attribute inside an html-tag <br/>
@@ -130,15 +130,15 @@ public interface IEditService: IHasLog // , INeedsCodeApiService
     /// 1. option to just use a ToolbarBuilder as first parameter or `toolbar` parameter added in v13 - this will skip all other parameters
     /// 1. Enhanced to return `IRawHtmlString` instead of `IHybridHtmlString` in 16.02
     /// </remarks>
-    IRawHtmlString TagToolbar(
-        object target = null,
+    IRawHtmlString? TagToolbar(
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        string actions = null,
-        string contentType = null,
-        object condition = null,
-        object prefill = null,
-        object settings = null,
-        object toolbar = null);
+        string? actions = null,
+        string? contentType = null,
+        object? condition = null,
+        object? prefill = null,
+        object? settings = null,
+        object? toolbar = null);
 
     /// <summary>
     /// Get html-attributes to mark the current context
@@ -161,13 +161,13 @@ public interface IEditService: IHasLog // , INeedsCodeApiService
     /// 1. Enhanced with apps and max in 10.27
     /// 1. Enhanced to return `IRawHtmlString` instead of `IHybridHtmlString` in 16.02
     /// </remarks>
-    IRawHtmlString ContextAttributes(
+    IRawHtmlString? ContextAttributes(
         ICanBeEntity target, 
         NoParamOrder noParamOrder = default, 
-        string field = null, 
-        string contentType = null,
+        string? field = null, 
+        string? contentType = null,
         Guid? newGuid = null,
-        string apps = null,
+        string? apps = null,
         int max = 100);
 
     // 2024-01-10 2dm disabled #WrapInContext - was for internal only, seems not to be used? Was created 2018? https://github.com/2sic/2sxc/issues/1479
@@ -223,7 +223,7 @@ public interface IEditService: IHasLog // , INeedsCodeApiService
     /// 2. Enhanced with parameter jsApi in 10.20
     /// 3. Being deprecated in 12.02, as you should now use the IPageService instead for most of these features
     /// </remarks>
-    string Enable(NoParamOrder noParamOrder = default,
+    string? Enable(NoParamOrder noParamOrder = default,
         bool? js = null,
         bool? api = null,
         bool? forms = null,
@@ -238,7 +238,7 @@ public interface IEditService: IHasLog // , INeedsCodeApiService
     /// <param name="name">the attribute name, used for ...=</param>
     /// <param name="value">the attribute value, used for ="..."</param>
     /// <returns>A string but as HtmlString, so it can be used with @Attribute(...)</returns>
-    IRawHtmlString Attribute(string name, string value);
+    IRawHtmlString? Attribute(string name, string value);
 
     /// <summary>
     /// Generate an HTML attribute by converting the value to JSON
@@ -247,6 +247,6 @@ public interface IEditService: IHasLog // , INeedsCodeApiService
     /// <param name="name">the attribute name, used for ...=</param>
     /// <param name="value">the attribute value, used for ="..."</param>
     /// <returns>A string but as HtmlString, so it can be used with @Attribute(...)</returns>
-    IRawHtmlString Attribute(string name, object value);
+    IRawHtmlString? Attribute(string name, object value);
 
 }

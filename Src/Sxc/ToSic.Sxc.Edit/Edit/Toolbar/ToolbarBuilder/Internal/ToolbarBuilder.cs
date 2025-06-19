@@ -46,7 +46,7 @@ public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, ITo
     public ILog Log { get; } = new Log(SxcLogName + ".TlbBld");
     
 
-    public void ConnectToRoot(IExecutionContext exCtx)
+    public void ConnectToRoot(IExecutionContext? exCtx)
     {
         if (exCtx == null)
             return;
@@ -55,16 +55,17 @@ public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, ITo
         Services.ToolbarButtonHelper.Value.MainAppIdentity = CurrentAppIdentity;
     }
 
-    private IAppIdentity CurrentAppIdentity { get; set; }
+    private IAppIdentity? CurrentAppIdentity { get; set; }
 
-    private IExecutionContext ExCtx { get; set; }
+    private IExecutionContext ExCtx { get; set; } = null!;
 
     #endregion
 
     #region Object state, init only for cloning
 
-    internal ToolbarBuilderConfiguration Configuration { get; init; }
+    internal ToolbarBuilderConfiguration Configuration { get; init; } = new();
 
+    [field: AllowNull, MaybeNull]
     private ToolbarBuilderUtilities Utils
     {
         get => field ??= new();
@@ -78,12 +79,12 @@ public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, ITo
 
     internal IToolbarBuilder Toolbar(
         string toolbarTemplate,
-        object target = default,
+        object? target = default,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = default,
-        object parameters = default,
-        object prefill = default
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = default,
+        object? parameters = default,
+        object? prefill = default
     )
     {
         var updated = this.AddInternal([new ToolbarRuleToolbar(toolbarTemplate, ui: PrepareUi(ui))]);
@@ -94,7 +95,7 @@ public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, ITo
     }
 
 
-    private T FindRule<T>() where T : class => Rules.FirstOrDefault(r => r is T) as T;
+    private T? FindRule<T>() where T : class => Rules.FirstOrDefault(r => r is T) as T;
 
 
     #region Enumerators
@@ -106,7 +107,7 @@ public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, ITo
 
         // **Special**
         // Previously standalone toolbars also hovered based on their wrapper DIV.
-        // But this isn't actually useful any more - normally hover is done with a non-standalone toolbar.
+        // But this isn't actually useful anymore - normally hover is done with a non-standalone toolbar.
         // But we cannot change the JS defaults, because that would affect old toolbars
         // So any standalone toolbar created using the tag-builder will automatically add a settings
         // to not-hover by default. 

@@ -11,6 +11,6 @@ internal class ToolbarRuleBase: RawHtmlString
     protected ToolbarRuleBase(string rule): base(rule) { }
 
 
-    public ToolbarContext Context { get; protected set; }
+    public ToolbarContext? Context { get; protected set; }
 
 }

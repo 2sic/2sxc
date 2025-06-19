@@ -27,10 +27,11 @@ public class ObjectToUrl
     public string KeyValueSeparator { get; set; } = "=";
 
 
-    public string? Serialize(object? data) => Serialize(data, Prefix);
+    public string? Serialize(object? data)
+        => Serialize(data, Prefix);
 
-    public string? SerializeChild(object child, string prefix) =>
-        SerializeWithChild(null, child, prefix);
+    public string? SerializeChild(object child, string? prefix)
+        => SerializeWithChild(null, child, prefix);
 
     /// <summary>
     /// 

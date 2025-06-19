@@ -39,7 +39,8 @@ internal class ToolbarButtonDecorator(IEntity entity) : EntityBasedType(entity)
             color = UiColor
         };
 
-        return ToolbarBuilderUtilities.GetUi2Url().SerializeWithChild(Ui, addOns);
+        return ToolbarBuilderUtilities.GetUi2Url()
+            .SerializeWithChild(Ui, addOns) ?? "";
     }
 
 }

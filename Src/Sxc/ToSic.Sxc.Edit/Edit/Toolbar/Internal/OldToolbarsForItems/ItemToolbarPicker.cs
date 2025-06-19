@@ -4,8 +4,8 @@ namespace ToSic.Sxc.Edit.Toolbar;
 
 internal class ItemToolbarPicker
 {
-    internal static ItemToolbarBase ItemToolbar(IEntity entity, string actions = null, string newType = null,
-        object prefill = null, object settings = null, object toolbar = null)
+    internal static ItemToolbarBase ItemToolbar(IEntity? entity, string? actions = null, string? newType = null,
+        object? prefill = null, object? settings = null, object? toolbar = null)
     {
         // Case v13+ Toolbar Builder
         if (toolbar is IToolbarBuilder toolbarBuilder)
@@ -19,7 +19,7 @@ internal class ItemToolbarPicker
             if (prefill != null && prefill is not string)
                 throw new("Tried to build toolbar in new V10 format, but prefill is not a string. In V10.27+ it expects a string in url format like field=value&field2=value2");
 
-            return new ItemToolbarV10(entity, newType, (string)prefill, settings as string, toolbar);
+            return new ItemToolbarV10(entity, newType, (string)prefill!, settings as string, toolbar);
         }
 
         // Case 2 - we have a classic V3 Toolbar object
@@ -34,7 +34,7 @@ internal class ItemToolbarPicker
         return new ItemToolbar(entity, actions, newType, prefill, settings, toolbar);
     }
 
-    internal static (bool IsV10, List<string> Rules) CheckIfParamsMeanV10(object toolbar = null, object settings = null, object prefill = null)
+    internal static (bool IsV10, List<string>? Rules) CheckIfParamsMeanV10(object? toolbar = null, object? settings = null, object? prefill = null)
     {
         // Case 1 - use the simpler string format in V10.27
         var toolbarAsStringArray = ToolbarV10OrNull(toolbar);
@@ -50,7 +50,7 @@ internal class ItemToolbarPicker
     /// </summary>
     /// <param name="toolbar"></param>
     /// <returns></returns>
-    internal static List<string> ToolbarV10OrNull(object toolbar)
+    internal static List<string>? ToolbarV10OrNull(object? toolbar)
     {
         // Fix 14.04 - I believe this case somehow got lost in history
         if (toolbar is string strToolbar)
@@ -68,7 +68,7 @@ internal class ItemToolbarPicker
         return !asArray.All(o => o is string or IRawHtmlString)
             ? null
             : asArray
-                .Select(o => o.ToString())
+                .Select(o => o.ToString() ?? "")
                 .Where(s => s != "")
                 .ToList();
     }

@@ -12,10 +12,10 @@ namespace ToSic.Sxc.Edit.Toolbar;
 internal class ItemToolbar: ItemToolbarBase
 {
     protected readonly List<ItemToolbarAction> Actions = [];
-    protected readonly object ClassicToolbarOrNull;
-    protected readonly object Settings;
+    protected readonly object? ClassicToolbarOrNull;
+    protected readonly object? Settings;
 
-    public ItemToolbar(IEntity entity, string actions = null, string newType = null, object prefill = null, object settings = null, object toolbar = null): base("TlbCls")
+    public ItemToolbar(IEntity? entity, string? actions = null, string? newType = null, object? prefill = null, object? settings = null, object? toolbar = null): base("TlbCls")
     {
         Settings = settings;
 
@@ -29,7 +29,7 @@ internal class ItemToolbar: ItemToolbarBase
         // Case 2 build a toolbar based on the actions or just from empty definition
         if (actions == null)
         {
-            Actions.Add(new(entity) {contentType = newType, prefill = prefill});
+            Actions.Add(new(entity) { contentType = newType, prefill = prefill });
             return;
         }
 
@@ -45,23 +45,27 @@ internal class ItemToolbar: ItemToolbarBase
 
     }
 
-    private string ToolbarObjJson() => JsonSerializer.Serialize(
-        ClassicToolbarOrNull ?? (Actions.Count == 1 ? Actions.First() : (object) Actions), JsonOptions.SafeJsonForHtmlAttributes);
+    private string ToolbarObjJson()
+        => JsonSerializer.Serialize(
+            ClassicToolbarOrNull ?? (Actions.Count == 1 ? Actions.First() : Actions),
+            JsonOptions.SafeJsonForHtmlAttributes);
 
 
     private string SettingsJson => JsonSerializer.Serialize(Settings, JsonOptions.SafeJsonForHtmlAttributes);
 
 
     [JsonIgnore]
-    public override string ToolbarAsTag => ToolbarTagTemplate.Replace(ToolbarTagPlaceholder, $" {Build.Attribute(JsonToolbarNodeName, ToolbarJson )} {AttributeSettings()} ");
+    public override string ToolbarAsTag
+        => ToolbarTagTemplate.Replace(ToolbarTagPlaceholder, $" {Build.Attribute(JsonToolbarNodeName, ToolbarJson )} {AttributeSettings()} ");
 
     protected override string ToolbarJson => ToolbarObjJson();
 
-    private string AttributeSettings() => Build.Attribute(JsonSettingsNodeName, SettingsJson).ToString();
+    private string AttributeSettings()
+        => Build.Attribute(JsonSettingsNodeName, SettingsJson).ToString() ?? "";
 
-    public override string ToolbarAsAttributes() =>
-        Build.Attribute(ToolbarAttributeName,
+    public override string ToolbarAsAttributes()
+        => Build.Attribute(ToolbarAttributeName,
             "{\"" + JsonToolbarNodeName + "\":" + ToolbarObjJson() + ",\"" + JsonSettingsNodeName + "\":" +
-            SettingsJson + "}").ToString();
+            SettingsJson + "}").ToString() ?? "";
         
 }

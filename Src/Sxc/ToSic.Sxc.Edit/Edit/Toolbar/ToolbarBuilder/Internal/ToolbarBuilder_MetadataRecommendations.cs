@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
 partial record ToolbarBuilder
 {
-    private List<string> GetMetadataTypeNames(object target, string contentTypes)
+    private List<string> GetMetadataTypeNames(object? target, string? contentTypes)
     {
         var types = contentTypes.CsvToArrayWithoutEmpty();
         if (!types.Any())
@@ -19,7 +19,7 @@ partial record ToolbarBuilder
         return finalTypes;
     }
 
-    private string[] FindMetadataRecommendations(object target)
+    private string[] FindMetadataRecommendations(object? target)
     {
         var l = Log.Fn<string[]>();
         // ReSharper disable once ConvertIfStatementToSwitchStatement
@@ -32,7 +32,7 @@ partial record ToolbarBuilder
         if (target is not IMetadataOf mdOf)
             return l.Return([], "not metadata");
 
-        var recommendations = mdOf?.Target?.Recommendations ?? [];
+        var recommendations = mdOf.Target?.Recommendations ?? [];
 
         return l.Return(recommendations, "ok");
     }

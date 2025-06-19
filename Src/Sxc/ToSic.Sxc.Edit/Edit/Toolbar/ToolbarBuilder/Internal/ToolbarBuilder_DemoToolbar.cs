@@ -60,7 +60,7 @@ partial record ToolbarBuilder
         // and add it to the new toolbar if it does
         // optionally tweak it if necessary
         // return true/false to indicate if it was added
-        bool AddRuleOfOriginal<T>(Func<T, T> tweak = null) where T : ToolbarRuleBase
+        bool AddRuleOfOriginal<T>(Func<T, T>? tweak = null) where T : ToolbarRuleBase
         {
             var possibleParams = FindRule<T>();
             if (possibleParams == null)

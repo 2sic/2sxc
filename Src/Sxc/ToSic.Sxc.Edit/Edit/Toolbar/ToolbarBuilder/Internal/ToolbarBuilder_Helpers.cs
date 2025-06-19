@@ -4,27 +4,32 @@ namespace ToSic.Sxc.Edit.Toolbar.Internal;
 
 partial record ToolbarBuilder
 {
-    private string PrepareUi(object ui, object uiMerge = default, string uiMergePrefix = default, IEnumerable<object> tweaks = default) 
+    private string? PrepareUi(object? ui, object? uiMerge = default, string? uiMergePrefix = default, IEnumerable<object?>? tweaks = default) 
         => Utils.PrepareUi(ui, uiMerge, uiMergePrefix, Configuration?.Group, tweaks: tweaks);
 
-    private ITweakButton RunTweaksOrErrorIfCombined(
+    private ITweakButton? RunTweaksOrErrorIfCombined(
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        ITweakButton initial = default,
-        object ui = default,
-        object parameters = default, object prefill = default, object filter = default, [CallerMemberName] string methodName = null)
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        ITweakButton? initial = default,
+        object? ui = default,
+        object? parameters = default,
+        object? prefill = default,
+        object? filter = default,
+        [CallerMemberName] string? methodName = null)
     {
         var tweaks = tweak?.Invoke(initial ?? new TweakButton());
         ErrorIfTweakCombined(tweaks, ui, parameters, prefill, filter, methodName);
         return tweaks;
     }
 
-    private void ErrorIfTweakCombined(ITweakButton tweak, object ui, object parameters, object prefill, object filter, string methodName)
+    private void ErrorIfTweakCombined(ITweakButton? tweak, object? ui, object? parameters, object? prefill, object? filter, string? methodName)
     {
         // No tweak, nothing to check
-        if (tweak == null) return;
+        if (tweak == null)
+            return;
         // If tweak exist, skip if nothing else was provided
-        if ((parameters ?? ui ?? prefill ?? filter) == null) return;
+        if ((parameters ?? ui ?? prefill ?? filter) == null)
+            return;
 
         // Figure out what name to show and alternative options
         (string Name, string Alternatives) err = ui != null

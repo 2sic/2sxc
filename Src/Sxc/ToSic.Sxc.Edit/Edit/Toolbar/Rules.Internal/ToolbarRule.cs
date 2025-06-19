@@ -17,7 +17,7 @@ internal abstract class ToolbarRule: ToolbarRuleBase
     /// <param name="operation"></param>
     /// <param name="operationCode">This is a string from the original command, which could affect the operator. It's only used to override the operator if there is a relevant match. </param>
     /// <param name="context"></param>
-    protected ToolbarRule(string command, string ui = null, string parameters = null, char? operation = null, string operationCode = null, ToolbarContext context = null)
+    protected ToolbarRule(string command, string? ui = null, string? parameters = null, char? operation = null, string? operationCode = null, ToolbarContext? context = null)
     {
         Command = command;
         Operation = operation == (char)OprNone ? null : operation; // reset operation if it's none
@@ -25,7 +25,8 @@ internal abstract class ToolbarRule: ToolbarRuleBase
         Ui = ui ?? "";
         Context = context;
 
-        if (!operationCode.HasValue()) return;
+        if (!operationCode.HasValue())
+            return;
         var targetCouldBeOperation = ToolbarRuleOperation.Pick(operationCode, OprUnknown);
         if (targetCouldBeOperation != (char)OprUnknown) 
             Operation = targetCouldBeOperation;
@@ -35,7 +36,7 @@ internal abstract class ToolbarRule: ToolbarRuleBase
 
     public string Command { get; protected init; }
 
-    public string CommandValue { get; protected init; }
+    public string? CommandValue { get; protected init; }
 
     public string Parameters { get; }
 
@@ -60,8 +61,10 @@ internal abstract class ToolbarRule: ToolbarRuleBase
         var result = Operation + Command + (CommandValue.HasValue() ? "=" + CommandValue : "");
 
         var genUi = GeneratedUiParams();
-        if (genUi.HasValue()) result += "&" + genUi;
-        if (Ui.HasValue()) result += "&" + Ui;
+        if (genUi.HasValue())
+            result += "&" + genUi;
+        if (Ui.HasValue())
+            result += "&" + Ui;
             
         var genCmdParams = GeneratedCommandParams();
         var hasGeneratedCmdParams = genCmdParams.HasValue();
@@ -75,7 +78,7 @@ internal abstract class ToolbarRule: ToolbarRuleBase
         return result;
     }
 
-    protected string BuildValidParameterList(IEnumerable<(string, string)> values)
+    protected string BuildValidParameterList(IEnumerable<(string, string?)> values)
     {
         var keep = values.Where(set => !string.IsNullOrWhiteSpace(set.Item2));
         return string.Join("&", keep.Select(set => $"{set.Item1}={set.Item2}"));

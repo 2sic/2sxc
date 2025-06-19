@@ -35,12 +35,12 @@ public interface IToolbarService
     /// * target, ui, parameters added in v14.04
     /// </remarks>
     IToolbarBuilder Default(
-        object target = null,
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = null,
-        object parameters = null,
-        object prefill = null
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = null,
+        object? parameters = null,
+        object? prefill = null
     );
 
     /// <summary>
@@ -61,12 +61,12 @@ public interface IToolbarService
     /// * target, ui, parameters added in v14.04
     /// </remarks>
     IToolbarBuilder Empty(
-        object target = null,
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = null,
-        object parameters = null,
-        object prefill = null
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = null,
+        object? parameters = null,
+        object? prefill = null
     );
 
     /// <summary>
@@ -93,13 +93,13 @@ public interface IToolbarService
     /// </remarks>
     IToolbarBuilder Metadata(
         object target,
-        string contentTypes = null,
+        string? contentTypes = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = null,
-        object parameters = null,
-        object prefill = null,
-        string context = null
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = null,
+        object? parameters = null,
+        object? prefill = null,
+        string? context = null
     );
 
 
@@ -119,6 +119,6 @@ public interface IToolbarService
     IToolbarBuilder Edit(
         object target,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default
+        Func<ITweakButton, ITweakButton>? tweak = default
     );
 }

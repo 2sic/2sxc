@@ -6,13 +6,13 @@ partial record ToolbarBuilder
 {
     public IToolbarBuilder Settings(
         NoParamOrder noParamOrder = default,
-        string show = default,
-        string hover = default,
-        string follow = default,
-        string classes = default,
-        string autoAddMore = default,
-        object ui = default,
-        object parameters = default)
+        string? show = default,
+        string? hover = default,
+        string? follow = default,
+        string? classes = default,
+        string? autoAddMore = default,
+        object? ui = default,
+        object? parameters = default)
         => this.AddInternal([
             new ToolbarRuleSettings(show: show, hover: hover, follow: follow, classes: classes,
                 autoAddMore: autoAddMore,
@@ -21,13 +21,13 @@ partial record ToolbarBuilder
 
 
     public IToolbarBuilder Parameters(
-        object target = default,
+        object? target = default,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = default,
-        object parameters = default,
-        object prefill = default,
-        string context = default
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = default,
+        object? parameters = default,
+        object? prefill = default,
+        string? context = default
     )
     {
         TargetCheck(target);
@@ -62,7 +62,7 @@ partial record ToolbarBuilder
         return clone;
     }
 
-    private void TargetCheck(object target)
+    private void TargetCheck(object? target)
     {
         if (target is IAsset)
             throw new("Got a 'target' parameter which seems to be an adam-file. " +
@@ -71,10 +71,11 @@ partial record ToolbarBuilder
 
     }
 
-    private static (object target, object parameters) FixTargetIsParameters(object target, object parameters)
+    private static (object? target, object? parameters) FixTargetIsParameters(object? target, object? parameters)
     {
         // No target, or parameters supplied
-        if (parameters != null || target == null) return (target, parameters);
+        if (parameters != null || target == null)
+            return (target, parameters);
 
         // Basically only keep the target as is, if it's a known target
         if (target is IEntity or ICanBeEntity or IEnumerable<IEntity> or IEnumerable<ICanBeEntity>)

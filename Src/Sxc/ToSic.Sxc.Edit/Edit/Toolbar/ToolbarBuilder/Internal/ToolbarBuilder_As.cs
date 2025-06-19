@@ -3,13 +3,13 @@
 partial record ToolbarBuilder
 {
 
-    public IToolbarBuilder AsTag(object target = null) =>
+    public IToolbarBuilder AsTag(object? target = null) =>
         With(mode: ToolbarHtmlModes.Standalone, target: target);
 
-    public IToolbarBuilder AsAttributes(object target = null) =>
+    public IToolbarBuilder AsAttributes(object? target = null) =>
         With(mode: ToolbarHtmlModes.OnTag, target: target);
 
-    public IToolbarBuilder AsJson(object target = null) =>
+    public IToolbarBuilder AsJson(object? target = null) =>
         With(mode: ToolbarHtmlModes.Json, target: target);
 
     /// <summary>
@@ -19,7 +19,7 @@ partial record ToolbarBuilder
     /// <param name="mode"></param>
     /// <param name="target"></param>
     /// <returns></returns>
-    private IToolbarBuilder With(NoParamOrder noParamOrder = default, string mode = default, object target = default)
+    private IToolbarBuilder With(NoParamOrder noParamOrder = default, string? mode = default, object? target = default)
     {
         // Create clone before starting to log so it's in there too
         var clone = target == null

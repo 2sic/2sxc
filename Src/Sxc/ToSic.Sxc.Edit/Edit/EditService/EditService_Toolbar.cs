@@ -10,39 +10,39 @@ partial class EditService
     private readonly string innerContentAttribute = "data-list-context";
 
     /// <inheritdoc />
-    public IRawHtmlString Toolbar(
-        object target = null,
+    public IRawHtmlString? Toolbar(
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        string actions = null,
-        string contentType = null,
-        object condition = null,
-        object prefill = null,
-        object settings = null,
-        object toolbar = null)
+        string? actions = null,
+        string? contentType = null,
+        object? condition = null,
+        object? prefill = null,
+        object? settings = null,
+        object? toolbar = null)
         => ToolbarInternal(false, target, noParamOrder, actions, contentType, condition, prefill, settings, toolbar);
 
     /// <inheritdoc/>
-    public IRawHtmlString TagToolbar(
-        object target = null,
+    public IRawHtmlString? TagToolbar(
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        string actions = null,
-        string contentType = null,
-        object condition = null,
-        object prefill = null,
-        object settings = null,
-        object toolbar = null)
+        string? actions = null,
+        string? contentType = null,
+        object? condition = null,
+        object? prefill = null,
+        object? settings = null,
+        object? toolbar = null)
         => ToolbarInternal(true, target, noParamOrder, actions, contentType, condition, prefill, settings, toolbar);
 
-    private IRawHtmlString ToolbarInternal(
+    private IRawHtmlString? ToolbarInternal(
         bool inTag,
-        object target,
+        object? target,
         NoParamOrder noParamOrder,
-        string actions,
-        string contentType,
-        object condition,
-        object prefill,
-        object settings,
-        object toolbar)
+        string? actions,
+        string? contentType,
+        object? condition,
+        object? prefill,
+        object? settings,
+        object? toolbar)
     {
         var l = Log.Fn<IRawHtmlString>($"enabled:{Enabled}; inline{inTag}");
 
@@ -66,7 +66,8 @@ partial class EditService
         else
         {
             // ensure that internally we always process it as an entity
-            var eTarget = target as IEntity ?? (target as ICanBeEntity)?.Entity;
+            var eTarget = target as IEntity
+                          ?? (target as ICanBeEntity)?.Entity;
             if (target != null && eTarget == null)
                 l.W("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
             if (toolbar is IToolbarBuilder tlbBuilder2)
@@ -88,19 +89,24 @@ partial class EditService
         return l.Return(result, "ok");
     }
 
-    private bool IsConditionOk(object condition)
+    private bool IsConditionOk(object? condition)
     {
         var l = Log.Fn<bool>();
         // Null = no condition and certainly not false, say ok
-        if (condition == null) return l.ReturnTrue("null,true");
+        if (condition == null)
+            return l.ReturnTrue("null,true");
 
         // Bool (non-null) and nullable
-        if (condition is false) return l.ReturnFalse("bool false");
-        if (condition as bool? == false) return l.ReturnFalse("null false");
+        if (condition is false)
+            return l.ReturnFalse("bool false");
+        if (condition as bool? == false)
+            return l.ReturnFalse("null false");
 
         // Int are only false if exactly 0
-        if (condition is 0) return l.ReturnFalse("int 0");
-        if (condition as int? == 0) return l.ReturnFalse("int nullable 0");
+        if (condition is 0)
+            return l.ReturnFalse("int 0");
+        if (condition as int? == 0)
+            return l.ReturnFalse("int nullable 0");
 
         // String
         if (condition is string s &&

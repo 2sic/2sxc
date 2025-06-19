@@ -10,29 +10,29 @@ partial record ToolbarBuilder
     private class CleanedParams
     {
         public char Operation { get; init; }
-        public string Ui { get; init; }
-        public string Parameters { get; init; }
+        public string? Ui { get; init; }
+        public string? Parameters { get; init; }
     }
 
     private class CleanedParamsWithParts: CleanedParams
     {
-        public Dictionary<string, CleanedParams> Parts;
+        public Dictionary<string, CleanedParams>? Parts;
     }
 
     private CleanedParamsWithParts PreCleanParams(
-        Func<ITweakButton, ITweakButton> tweak,
+        Func<ITweakButton, ITweakButton>? tweak,
         ToolbarRuleOps defOp, 
         NoParamOrder noParamOrder = default,
-        string operation = default, 
-        object ui = default, 
-        object uiMerge = default, 
-        string uiMergePrefix = default, 
-        object parameters = default, 
-        object prefill = default,
-        object filter = default,
-        string fields = default,
-        ITweakButton initialButton = default,
-        [CallerMemberName] string methodName = default)
+        string? operation = default, 
+        object? ui = default, 
+        object? uiMerge = default, 
+        string? uiMergePrefix = default, 
+        object? parameters = default, 
+        object? prefill = default,
+        object? filter = default,
+        string? fields = default,
+        ITweakButton? initialButton = default,
+        [CallerMemberName] string? methodName = default)
     {
         var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, initial: initialButton,
             ui: ui, parameters: parameters, prefill: prefill, filter: filter, methodName: methodName);
@@ -63,11 +63,11 @@ partial record ToolbarBuilder
 
     private (ToolbarRuleForEntity Rule, IToolbarBuilder Builder) EntityRule(
         string verb, 
-        object target,
+        object? target,
         CleanedParams pars,
-        string [] propsSkip = null,
-        string[] propsKeep = null,
-        string contentType = null
+        string []? propsSkip = null,
+        string[]? propsKeep = null,
+        string? contentType = null
     )
     {
         TargetCheck(target);
@@ -81,12 +81,12 @@ partial record ToolbarBuilder
     }
 
     public IToolbarBuilder Delete(
-        object target = null,
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = null,
-        object parameters = null,
-        string operation = null)
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = null,
+        object? parameters = null,
+        string? operation = null)
     {
         // Set default operation based on what toolbar is used
         var isDefToolbar = FindRule<ToolbarRuleToolbar>()?.IsDefault ?? false;
@@ -99,13 +99,13 @@ partial record ToolbarBuilder
     }
 
     public IToolbarBuilder Edit(
-        object target = null,
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = null,
-        object parameters = null,
-        object prefill = null,
-        string operation = null)
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = null,
+        object? parameters = null,
+        object? prefill = null,
+        string? operation = null)
     {
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
         return EntityRule("edit", target, pars, propsSkip: [KeyEntityGuid, KeyTitle, KeyPublished]).Builder;
@@ -114,13 +114,13 @@ partial record ToolbarBuilder
     internal const string BetaEditUiFieldsParamName = "uifields";
 
     public IToolbarBuilder New(
-        object target = null,
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = null,
-        object parameters = null,
-        object prefill = null,
-        string operation = null)
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = null,
+        object? parameters = null,
+        object? prefill = null,
+        string? operation = null)
     {
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
 
@@ -130,12 +130,12 @@ partial record ToolbarBuilder
     }
 
     public IToolbarBuilder Publish(
-        object target = null,
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = null,
-        object parameters = null,
-        string operation = null)
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = null,
+        object? parameters = null,
+        string? operation = null)
     {
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters);
 
@@ -147,14 +147,14 @@ partial record ToolbarBuilder
     /// <inheritdoc />
     public IToolbarBuilder Metadata(
         object target,
-        string contentTypes = null,
+        string? contentTypes = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object ui = null,
-        object parameters = null,
-        object prefill = null,
-        string operation = null,
-        string context = null)
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? ui = null,
+        object? parameters = null,
+        object? prefill = null,
+        string? operation = null,
+        string? context = null)
     {
         var l = Log.Fn<IToolbarBuilder>();
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
@@ -186,15 +186,15 @@ partial record ToolbarBuilder
 
     /// <inheritdoc />
     public IToolbarBuilder Copy(
-        object target = null,
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        string contentType = null,
-        object ui = null,
-        object parameters = null,
-        object prefill = null,
-        string operation = null,
-        string context = null)
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        string? contentType = null,
+        object? ui = null,
+        object? parameters = null,
+        object? prefill = null,
+        string? operation = null,
+        string? context = null)
     {
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
 
@@ -206,13 +206,13 @@ partial record ToolbarBuilder
 
 
     public IToolbarBuilder Data(
-        object target = null,
+        object? target = null,
         NoParamOrder noParamOrder = default,
-        Func<ITweakButton, ITweakButton> tweak = default,
-        object filter = null,
-        object ui = null,
-        object parameters = null,
-        string operation = null
+        Func<ITweakButton, ITweakButton>? tweak = default,
+        object? filter = null,
+        object? ui = null,
+        object? parameters = null,
+        string? operation = null
     )
     {
         var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, filter: filter);

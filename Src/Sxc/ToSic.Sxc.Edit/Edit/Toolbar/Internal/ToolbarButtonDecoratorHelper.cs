@@ -9,9 +9,9 @@ namespace ToSic.Sxc.Edit.Toolbar.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ToolbarButtonDecoratorHelper(IAppReaderFactory appReaders) : ServiceBase($"{SxcLogName}.TbdHlp", connect: [appReaders])
 {
-    public IAppIdentity MainAppIdentity { get; set; }
+    public IAppIdentity? MainAppIdentity { get; set; }
 
-    internal ToolbarButtonDecorator GetDecorator(IAppIdentity appIdentity, string typeName, string command)
+    internal ToolbarButtonDecorator? GetDecorator(IAppIdentity? appIdentity, string? typeName, string? command)
     {
         // If no special context was given, use the main one from the current context
         appIdentity ??= MainAppIdentity;
@@ -21,7 +21,7 @@ public class ToolbarButtonDecoratorHelper(IAppReaderFactory appReaders) : Servic
 
         var appReader = appReaders.Get(appIdentity);
 
-        var type = appReader?.TryGetContentType(typeName);
+        var type = appReader.TryGetContentType(typeName);
         if (type == null)
             return null;
 

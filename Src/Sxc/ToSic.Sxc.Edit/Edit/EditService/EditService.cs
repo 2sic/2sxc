@@ -29,11 +29,11 @@ internal partial class EditService(IJsonService jsonService)
     #region Attribute-helper
 
     /// <inheritdoc/>
-    public IRawHtmlString Attribute(string name, string value)
+    public IRawHtmlString? Attribute(string name, string value)
         => !Enabled ? null : Build.Attribute(name, value);
 
     /// <inheritdoc/>
-    public IRawHtmlString Attribute(string name, object value)
+    public IRawHtmlString? Attribute(string name, object value)
         => !Enabled ? null : Build.Attribute(name, jsonService.ToJson(value));
 
     #endregion Attribute Helper

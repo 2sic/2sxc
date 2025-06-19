@@ -10,10 +10,10 @@ internal class ToolbarRuleMetadata(
     object target,
     string typeName,
     char operation,
-    string ui = null,
-    string parameters = null,
-    ToolbarContext context = null,
-    ToolbarButtonDecoratorHelper decoHelper = null
+    string? ui = null,
+    string? parameters = null,
+    ToolbarContext? context = null,
+    ToolbarButtonDecoratorHelper? decoHelper = null
     ) : ToolbarRuleTargeted(target, CommandName, operation: operation, ui: ui, parameters: parameters, context: context, decoHelper: decoHelper)
 {
     internal const string CommandName = "metadata";

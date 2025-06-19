@@ -95,12 +95,15 @@ internal class ToolbarRuleOperation
     //    return (char)defOp;
     //}
 
-    internal static char Pick(string op, ToolbarRuleOps defOp, bool? condition = default)
-        => condition == false ? SkipInclude : PrePick(op, defOp);
+    internal static char Pick(string? op, ToolbarRuleOps defOp, bool? condition = default)
+        => condition == false
+            ? SkipInclude
+            : PrePick(op, defOp);
 
-    private static char PrePick(string op, ToolbarRuleOps defOp)
+    private static char PrePick(string? op, ToolbarRuleOps defOp)
     {
-        if (!op.HasValue()) return (char)defOp;
+        if (!op.HasValue())
+            return (char)defOp;
         op = op.Trim();
 
         if (op.Length == 1 && Enum.IsDefined(typeof(ToolbarRuleOps), (int)op[0]))

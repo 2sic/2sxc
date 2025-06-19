@@ -15,13 +15,13 @@ partial class EditService
     #region Scripts and CSS includes
 
     /// <inheritdoc/>
-    public string Enable(NoParamOrder noParamOrder = default, bool? js = null, bool? api = null,
+    public string? Enable(NoParamOrder noParamOrder = default, bool? js = null, bool? api = null,
         bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null)
     {
         var l = Log.Fn<string>();
 
         var ps = ExCtx.GetService<IPageService>(reuse: true);
-        if (ps == null)
+        if (ps == null! /* paranoid */)
             return l.ReturnNull("page service not found");
 
         if (js == true || api == true || forms == true) ps.Activate(SxcPageFeatures.JsCore.NameId);

@@ -4,7 +4,7 @@ internal interface IToolbarBuilderInternal
 {
     [PrivateApi("WIP / Debugging")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    ToolbarContext GetContext();
+    ToolbarContext? GetContext();
 
     [PrivateApi("WIP 14.07.04")]
     [ShowApiWhenReleased(ShowApiMode.Never)]

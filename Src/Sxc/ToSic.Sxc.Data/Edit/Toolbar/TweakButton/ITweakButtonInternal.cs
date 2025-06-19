@@ -11,11 +11,11 @@ public interface ITweakButtonInternal
     /// </summary>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)] 
-    IImmutableList<object> UiMerge { get; }
+    IImmutableList<object?> UiMerge { get; }
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    IImmutableList<object> ParamsMerge { get; }
+    IImmutableList<object?> ParamsMerge { get; }
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -37,7 +37,7 @@ public interface ITweakButtonInternal
     /// Not fully documented or standardized.
     /// </summary>
     /// <param name="name"></param>
-    /// <param name="value"></param>
+    /// <param name="tweak"></param>
     /// <returns></returns>
-    ITweakButton AddNamed(string name, Func<ITweakButton, ITweakButton> value);
+    ITweakButton AddNamed(string name, Func<ITweakButton, ITweakButton> tweak);
 }

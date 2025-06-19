@@ -1,6 +1,4 @@
-﻿
-using ToSic.Lib.Helpers;
-using ToSic.Sxc.Web.Internal.Url;
+﻿using ToSic.Sxc.Web.Internal.Url;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
@@ -20,28 +18,29 @@ internal class ToolbarBuilderUtilities
     /// <summary>
     /// Helper to process 'parameters' to url, ensuring lower-case etc. 
     /// </summary>
-    public ObjectToUrl Par2Url => _par2U.Get(() => new(null, [new UrlValueCamelCase()]));
-    private readonly GetOnce<ObjectToUrl> _par2U = new();
+    [field: AllowNull, MaybeNull]
+    public ObjectToUrl Par2Url => field ??= new(null, [new UrlValueCamelCase()]);
 
 
     /// <summary>
     /// Helper to process 'filter' to url - should not change the case of the properties and auto-fix some special scenarios
     /// </summary>
-    public ObjectToUrl Filter2Url => _f2U.Get(() => new(null, [new FilterValueProcessor()])
+    [field: AllowNull, MaybeNull]
+    public ObjectToUrl Filter2Url => field ??= new(null, [new FilterValueProcessor()])
     {
         ArrayBoxStart = "[",
         ArrayBoxEnd = "]"
-    });
-    private readonly GetOnce<ObjectToUrl> _f2U = new();
+    };
+
 
 
     /// <summary>
     /// Helper to process 'prefill' - should not change the case of the properties
     /// </summary>
-    public ObjectToUrl Prefill2Url => _pref2U.Get(() => new(null));
-    private readonly GetOnce<ObjectToUrl> _pref2U = new();
+    [field: AllowNull, MaybeNull]
+    public ObjectToUrl Prefill2Url => field ??= new(null);
 
-    public string PrepareParams(object parameters, ITweakButton tweaks = null)
+    public string? PrepareParams(object? parameters, ITweakButton? tweaks = null)
     {
         var strParams = Par2Url.Serialize(parameters);
         return MergeWithTweaks(strParams, (tweaks as ITweakButtonInternal)?.ParamsMerge);
@@ -58,20 +57,22 @@ internal class ToolbarBuilderUtilities
     ]);
 
 
-    public string PrepareUi(
-        object ui,
-        object uiMerge = null,
-        string uiMergePrefix = null,
-        string group = null, // current button-group name which must be merged into the Ui parameter
-        IEnumerable<object> tweaks = default
+    public string? PrepareUi(
+        object? ui,
+        object? uiMerge = null,
+        string? uiMergePrefix = null,
+        string? group = null, // current button-group name which must be merged into the Ui parameter
+        IEnumerable<object?>? tweaks = default
     )
     {
         var uiString = Ui2Url.SerializeWithChild(ui, uiMerge, uiMergePrefix);
-        if (group.HasValue()) uiString = Ui2Url.SerializeWithChild(uiString, $"group={group}");
+        if (group.HasValue())
+            uiString = Ui2Url.SerializeWithChild(uiString, $"group={group}");
         return MergeWithTweaks(uiString, tweaks);
     }
-    private ObjectToUrl Ui2Url => _ui2Url.Get(GetUi2Url);
-    private readonly GetOnce<ObjectToUrl> _ui2Url = new();
+
+    [field: AllowNull, MaybeNull]
+    private ObjectToUrl Ui2Url => field ??= GetUi2Url();
 
     #endregion
 
@@ -81,7 +82,7 @@ internal class ToolbarBuilderUtilities
     /// <param name="previous"></param>
     /// <param name="tweaks"></param>
     /// <returns></returns>
-    private string MergeWithTweaks(string previous, IEnumerable<object> tweaks = null)
+    private string? MergeWithTweaks(string? previous, IEnumerable<object?>? tweaks = null)
     {
         // new v15 - add UI tweaks - must come last / after group
         if (tweaks != null) 

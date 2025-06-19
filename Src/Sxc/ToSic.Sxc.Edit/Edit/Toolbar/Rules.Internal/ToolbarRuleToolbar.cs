@@ -9,9 +9,9 @@ internal class ToolbarRuleToolbar: ToolbarRule
     internal const string Empty = "empty";
     internal const string Default = "default";
 
-    public ToolbarRuleToolbar(string template = "", string ui = ""): base(RuleToolbar, ui: ui)
+    public ToolbarRuleToolbar(string template = "", string? ui = ""): base(RuleToolbar, ui: ui ?? "")
     {
-        CommandValue = template;
+        CommandValue = template ?? "";
     }
 
     public bool IsDefault => TemplateName == Default;
