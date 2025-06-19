@@ -4,7 +4,7 @@ namespace ToSic.Sxc.DataTests;
 
 internal static class TypedItemTestAccessors
 {
-    public static IMetadata TestMetadata(this ITypedItem item) => item.Metadata;
+    public static ITypedMetadata TestMetadata(this ITypedItem item) => item.Metadata;
 
     public static bool TestContainsKey(this ITyped item, string key) => item.ContainsKey(key);
 

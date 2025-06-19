@@ -271,7 +271,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
 
     /// <inheritdoc />
     [JsonIgnore] // prevent serialization as it's not a normal property
-    public IMetadata Metadata => _item.Metadata;
+    public ITypedMetadata Metadata => _item.Metadata;
 
     /// <inheritdoc />
     public IField? Field(string name, NoParamOrder noParamOrder = default, bool? required = default)

@@ -142,7 +142,7 @@ public interface ICmsUser: IUserModel, IHasMetadata
     /// History: Added in v13.12
     /// </remarks>
     [JsonIgnore] // prevent serialization as it's not a normal property
-    new IMetadata Metadata { get; }
+    new ITypedMetadata Metadata { get; }
 
     /// <summary>
     /// The username as should be displayed. 

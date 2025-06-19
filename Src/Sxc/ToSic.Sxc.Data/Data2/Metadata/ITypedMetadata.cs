@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Data.Entities.Sys.Wrappers;
+﻿using System.Text.Json.Serialization;
+using ToSic.Eav.Data.Entities.Sys.Wrappers;
 using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Data;
@@ -15,9 +16,10 @@ namespace ToSic.Sxc.Data;
 /// * Made compatible to <see cref="ITypedItem"/> in 16.02 to allow typed commands such as `.String(...)`
 /// * Renamed in v16.02 from `IDynamicMetadata` to `IMetadata` since it's not necessarily `dynamic` any more (but still supports `dynamic` where needed)
 ///     _Note that this is a breaking change, but we believe the type is never directly mentioned in any code_
+/// * Renamed in v20 to `ITypedMetadata` from `IMetadata` because it kept on causing confusions
 /// </remarks>
-[PublicApi]
-public interface IMetadata: IHasMetadata, ITypedItem, ICanDebug, ISxcDynamicObject, IEntityWrapper
+[InternalApi_DoNotUse_MayChangeWithoutNotice("The name can change, but the APIs are safe to use.")]
+public interface ITypedMetadata: IHasMetadata, ITypedItem, ICanDebug, ISxcDynamicObject, IEntityWrapper
 {
     /// <summary>
     /// Ask if there is metadata of the type specified.

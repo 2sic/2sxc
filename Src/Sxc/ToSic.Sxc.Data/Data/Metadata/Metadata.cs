@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Data.Internal.Metadata;
 [PrivateApi("Hide implementation")]
 internal partial class Metadata(IMetadataOf metadata, ICodeDataFactory cdf)
     : DynamicEntity(metadata, null, "Metadata(virtual-field)", KnownAppsConstants.TransientAppId, propsRequired: false, cdf),
-        IMetadata, IHasPropLookup, IHasJsonSource
+        ITypedMetadata, IHasPropLookup, IHasJsonSource
 {
     IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= new(this, () => Debug);
     private PropLookupMetadata? _propLookup;

@@ -57,7 +57,7 @@ public interface ICmsSite: IHasMetadata
     /// Added in v13.12
     /// </remarks>
     [JsonIgnore] // prevent serialization as it's not a normal property
-    new IMetadata Metadata { get; }
+    new ITypedMetadata Metadata { get; }
 
     //[PrivateApi]
     //ICmsSite Init(CmsContext parent, IAppStateInternal appState);

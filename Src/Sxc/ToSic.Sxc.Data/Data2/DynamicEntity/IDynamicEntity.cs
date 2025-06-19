@@ -49,7 +49,7 @@ public partial interface IDynamicEntity:
     /// * Added in v13
     /// * Changed type name to `IMetadata` from `IDynamicMetadata` in 16.02; same type, different type name
     /// </remarks>
-    IMetadata Metadata { get; }
+    ITypedMetadata Metadata { get; }
 
     #region Publishing / Draft Information
 

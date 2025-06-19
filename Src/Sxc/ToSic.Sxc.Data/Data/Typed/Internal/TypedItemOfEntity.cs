@@ -240,7 +240,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
 
     /// <inheritdoc />
     [JsonIgnore] // prevent serialization as it's not a normal property
-    IMetadata ITypedItem.Metadata => DynHelper.Metadata;
+    ITypedMetadata ITypedItem.Metadata => DynHelper.Metadata;
 
 
     ITypedItem? ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string? type, string? field)
@@ -368,7 +368,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
     #endregion
 
 
-    IMetadataOf IHasMetadata.Metadata => (DynHelper.Metadata as IHasMetadata)?.Metadata;
+    IMetadataOf IHasMetadata.Metadata => (DynHelper.Metadata as IHasMetadata)?.Metadata!;
 
     #region New Child<T> / Children<T> - disabled as ATM Kit is missing
 

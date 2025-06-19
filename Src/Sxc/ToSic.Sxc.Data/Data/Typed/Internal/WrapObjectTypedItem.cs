@@ -224,9 +224,9 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     [JsonIgnore] // prevent serialization as it's not a normal property
     [field: AllowNull, MaybeNull]
-    IMetadata ITypedItem.Metadata => field ??= BuildMetadata(PreWrap.TryGetWrap(nameof(ITypedItem.Metadata)).Raw);
+    ITypedMetadata ITypedItem.Metadata => field ??= BuildMetadata(PreWrap.TryGetWrap(nameof(ITypedItem.Metadata)).Raw);
 
-    private IMetadata BuildMetadata(object? raw)
+    private ITypedMetadata BuildMetadata(object? raw)
     {
         var objList = raw != null
             ? raw is IEnumerable rawEnum

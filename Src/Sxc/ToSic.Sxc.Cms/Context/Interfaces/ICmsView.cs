@@ -60,7 +60,7 @@ public interface ICmsView: IHasMetadata
     /// </remarks>
     // actually Added in v12.10; changed from IMetadataOf to IDynamicMetadata in 13.12
     [JsonIgnore] // prevent serialization as it's not a normal property
-    new IMetadata Metadata { get; }
+    new ITypedMetadata Metadata { get; }
 
     /// <summary>
     /// The path to this view.

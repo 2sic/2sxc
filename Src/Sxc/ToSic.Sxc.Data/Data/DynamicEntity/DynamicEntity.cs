@@ -143,7 +143,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     #region Metadata
 
     /// <inheritdoc />
-    public IMetadata Metadata => DynHelper.Metadata!;
+    public ITypedMetadata Metadata => DynHelper.Metadata!;
 
     /// <summary>
     /// Explicit implementation, so it's not really available on DynamicEntity, only when cast to IHasMetadata

@@ -27,7 +27,7 @@ internal abstract class AppAssetFile: IFile
 
     IMetadataOf IHasMetadata.Metadata => null;
 
-    IMetadata IAsset.Metadata => null;
+    ITypedMetadata IAsset.Metadata => null;
 
     #endregion
 

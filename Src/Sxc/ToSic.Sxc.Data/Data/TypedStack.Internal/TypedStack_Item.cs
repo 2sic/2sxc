@@ -153,7 +153,7 @@ internal partial class TypedStack: ITypedItem
     ITypedItem ITypedItem.Presentation => throw new NotImplementedException(NotImplementedError);
 
     [JsonIgnore] // prevent serialization as it's not a normal property
-    IMetadata ITypedItem.Metadata => throw new NotImplementedException(NotImplementedError);
+    ITypedMetadata ITypedItem.Metadata => throw new NotImplementedException(NotImplementedError);
 
     #endregion
 

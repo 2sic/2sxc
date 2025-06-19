@@ -29,7 +29,7 @@ public interface IAsset: IHasMetadata, IFromField
     /// <returns>
     /// An `IMetadata` which contains the metadata, or an empty IMetadata which still works if no metadata exists.
     /// </returns>
-    new IMetadata Metadata { get; }
+    new ITypedMetadata Metadata { get; }
 
 
     #endregion

@@ -41,7 +41,7 @@ public partial interface ITypedItem: ITyped, ICanBeEntity, ICanBeItem, IEquatabl
     /// Added in 16.02
     /// </remarks>
     [JsonIgnore] // prevent serialization as it's not a normal property
-    IMetadata Metadata { get; }
+    ITypedMetadata Metadata { get; }
 
     /// <summary>
     /// Get a special info-object describing a specific field in this item.

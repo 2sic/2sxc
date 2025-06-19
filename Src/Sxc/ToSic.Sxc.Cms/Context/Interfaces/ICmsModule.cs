@@ -50,6 +50,6 @@ public interface ICmsModule: IHasMetadata
     [ShowApiWhenReleased(ShowApiMode.Never)]
     [JsonIgnore] // prevent serialization as it's not a normal property
 #pragma warning disable CS0108, CS0114
-    IMetadata Metadata { get; }
+    ITypedMetadata Metadata { get; }
 #pragma warning restore CS0108, CS0114
 }

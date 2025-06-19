@@ -99,7 +99,7 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
         return item;
     }
 
-    private IEnumerable<MetadataOfDto> GetMetadataOf(IMetadata md)
+    private IEnumerable<MetadataOfDto> GetMetadataOf(ITypedMetadata md)
     {
         if (md == null) return null;
 

@@ -99,7 +99,7 @@ internal partial class Metadata: ITypedItem
     #region Basic Props like Id, Guid, Title, Type
 
     [PrivateApi]
-    int IMetadata.EntityId => Cdf.CodeInfo.GetAndWarn(V16To18("IMetadata.EntityId", message: $"Use {nameof(ITypedItem.Id)} instead of {nameof(EntityId)}"), EntityId);
+    int ITypedMetadata.EntityId => Cdf.CodeInfo.GetAndWarn(V16To18("IMetadata.EntityId", message: $"Use {nameof(ITypedItem.Id)} instead of {nameof(EntityId)}"), EntityId);
 
     [PrivateApi]
     int ITypedItem.Id => EntityId;
@@ -126,7 +126,7 @@ internal partial class Metadata: ITypedItem
 
     /// <inheritdoc />
     [JsonIgnore] // prevent serialization as it's not a normal property
-    IMetadata ITypedItem.Metadata
+    ITypedMetadata ITypedItem.Metadata
         => throw new NotSupportedException($"You can't access the Metadata of Metadata in ITypedItem");
 
     [PrivateApi]
