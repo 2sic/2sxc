@@ -19,20 +19,24 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// If the object is an entity-like thing, that will be converted.
     /// If it's a list of entity-like things, the first one will be converted.
     /// </summary>
-    TCustom AsCustom<TCustom>(object? source, NoParamOrder protector = default, bool mock = false)
+    TCustom? AsCustom<TCustom>(object? source, NoParamOrder protector = default, bool mock = false)
         where TCustom : class, ICanWrapData;
 
-    TCustom AsCustomFrom<TCustom, TData>(TData item)
+    [return: NotNullIfNotNull(nameof(item))]
+    TCustom? AsCustomFrom<TCustom, TData>(TData? item, ConvertItemSettings? settings = default)
         where TCustom : class, ICanWrapData;
 
     /// <summary>
     /// Create list of custom-typed ITypedItems
     /// </summary>
-    IEnumerable<TCustom>? AsCustomList<TCustom>(object? source, NoParamOrder protector, bool nullIfNull)
+    /// <remarks>
+    /// Never null, unless explicitly requested with `nullIfNull`, otherwise it would return an empty list.
+    /// </remarks>
+    IEnumerable<TCustom> AsCustomList<TCustom>(object? source, NoParamOrder protector, bool nullIfNull)
         where TCustom : class, ICanWrapData;
 
-    ITyped? AsTyped(object data, bool required = false, bool? propsRequired = default, string? detailsMessage = default);
-    IEnumerable<ITyped>? AsTypedList(object list, NoParamOrder noParamOrder, bool? required = false, bool? propsRequired = default);
+    ITyped? AsTyped(object data, ConvertItemSettings settings, string? detailsMessage = default);
+    IEnumerable<ITyped>? AsTypedList(object list, ConvertItemSettings settings);
     int CompatibilityLevel { get; }
     CodeDataServices Services { get; }
 
@@ -71,39 +75,40 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// <returns></returns>
     IDynamicEntity CodeAsDyn(IEntity entity);
 
-    IDynamicEntity AsDynamic(IEntity entity, bool propsRequired);
+    IDynamicEntity AsDynamic(IEntity entity, ConvertItemSettings settings);
 
     /// <summary>
     /// Convert a list of Entities into a DynamicEntity.
     /// Only used in DynamicCodeRoot.
     /// </summary>
-    IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, bool propsRequired, NoParamOrder protector = default, IEntity? parent = default, string? field = default);
+    IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, ConvertItemSettings settings, NoParamOrder protector = default, IEntity? parent = default, string? field = default);
 
     /// <summary>
     /// Convert any object into a dynamic list.
     /// Only used in Dynamic Code for the public API.
     /// </summary>
-    IEnumerable<dynamic>? CodeAsDynList(object list, bool propsRequired = false);
+    IEnumerable<dynamic>? CodeAsDynList(object list);
 
     /// <summary>
     /// Convert any object into a dynamic object.
     /// Only used in Dynamic Code for the public API.
     /// </summary>
-    object? AsDynamicFromObject(object dynObject, bool propsRequired = false);
+    object? AsDynamicFromObject(object dynObject);
 
     dynamic? MergeDynamic(object[] entities);
-    ITypedItem? AsItem(object data, NoParamOrder noParamOrder = default, bool? required = default, ITypedItem? fallback = default, bool? propsRequired = default, bool? mock = default);
+    ITypedItem? AsItem(object data, ConvertItemSettings settings, NoParamOrder noParamOrder = default, ITypedItem? fallback = default);
 
     /// <summary>
     /// Quick convert an entity to item - if not null, otherwise return null.
     /// </summary>
     /// <param name="entity"></param>
-    /// <param name="propsRequired"></param>
+    /// <param name="settings"></param>
     /// <returns></returns>
-    ITypedItem? AsItem(IEntity? entity, bool propsRequired);
+    [return: NotNullIfNotNull(nameof(entity))]
+    ITypedItem? AsItem(IEntity? entity, ConvertItemSettings settings);
 
-    IEnumerable<ITypedItem?> EntitiesToItems(IEnumerable<IEntity> entities, bool propsRequired = false);
-    IEnumerable<ITypedItem?> AsItems(object list, NoParamOrder noParamOrder = default, bool? required = default, IEnumerable<ITypedItem>? fallback = default, bool? propsRequired = default);
+    IEnumerable<ITypedItem> EntitiesToItems(IEnumerable<IEntity> entities, ConvertItemSettings settings);
+    IEnumerable<ITypedItem> AsItems(object list, ConvertItemSettings settings, NoParamOrder noParamOrder = default, IEnumerable<ITypedItem>? fallback = default);
     void SetCompatibilityLevel(int compatibilityLevel);
     void SetFallbacks(ISite site, int? compatibility = default, /*AdamManager*/ object? adamManagerPrepared = default);
     object? Json2Jacket(string json, string? fallback = default);
@@ -114,7 +119,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
 
     IDynamicStack AsDynStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources);
     ITypedStack AsTypedStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources);
-    IField? Field(ITypedItem parent, string? name, bool propsRequired, NoParamOrder noParamOrder = default, bool? required = default);
+    IField? Field(ITypedItem parent, string? name, ConvertItemSettings settings);
     IEntity AsEntity(object thingToConvert);
     IEntity FakeEntity(int appId);
 
@@ -130,7 +135,8 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// <param name="parent"></param>
     /// <param name="field"></param>
     /// <returns></returns>
-    IEnumerable<TTypedItem> CreateEmptyChildList<TTypedItem>(IEntity parent, string field) where TTypedItem : class, ITypedItem;
+    IEnumerable<TTypedItem> CreateEmptyChildList<TTypedItem>(IEntity parent, string field)
+        where TTypedItem : class, ITypedItem;
 
     IFile File(int id);
     IFolder Folder(Guid entityGuid, string fieldName, IField? field = default);

@@ -177,7 +177,7 @@ internal class GetAndConvertHelper(
             if (childrenShouldBeDynamic)
             {
                 l.A($"Convert entity list as DynamicEntity"); // {nameof(DynamicEntity)}");
-                var dynEnt = Cdf.AsDynamicFromEntities(children.ToArray(), parent: parent, field: field, propsRequired: PropsRequired);
+                var dynEnt = Cdf.AsDynamicFromEntities(children.ToArray(), new() { ItemIsStrict = PropsRequired }, parent: parent, field: field);
                 if (Debug)
                     dynEnt.Debug = true;
                 return l.Return(dynEnt, "ent-list, now dyn");

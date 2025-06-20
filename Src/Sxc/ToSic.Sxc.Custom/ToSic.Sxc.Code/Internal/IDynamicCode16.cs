@@ -230,7 +230,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     /// Data passed to this Razor template by a caller.
     /// This is typical for Razor components which are re-used, and called from other Razor templates using `@Html.Partial("filename.cshtml", new { thing = 7 })`.
     /// </summary>
-    ITypedModel MyModel { get; }
+    ITypedRazorModel MyModel { get; }
 
     #region SharedCode
 

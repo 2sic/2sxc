@@ -65,8 +65,9 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
     public IEnumerable<TCustomType> MyItems<TCustomType>()
         where TCustomType : class, ICanWrapData, new()
     {
-        // check if cache exists and was created with the sames specs
-        if (_myItems is IEnumerable<TCustomType> typed) return typed;
+        // check if cache exists and was created with the sames type as is now requested
+        if (_myItems is IEnumerable<TCustomType> typed)
+            return typed;
         
         // Get and cache for reuse
         var items = (ExCtx.GetState<IDataSource>() as ContextData)?.MyItems ?? [];
@@ -74,7 +75,7 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
         _myItems = created;
         return created;
     }
-    private object? _myItems;
+    private object? _myItems; // not typed, since we don't know the type yet, but we know it will be IEnumerable<TCustomType> when used
 
     public TCustomType MyHeader<TCustomType>()
         where TCustomType : class, ICanWrapData, new()

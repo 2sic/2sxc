@@ -50,7 +50,9 @@ partial class CodeDataFactory
         // If strict (new implementation for typed) throw error if unexpected data arrived
         if (strictTypes)
         {
-            var unexpected = cleaned.Where(s => s.lookup is null).ToList();
+            var unexpected = cleaned
+                .Where(s => s.lookup is null)
+                .ToList();
             if (unexpected.Any())
             {
                 var names = string.Join(", ", unexpected.Select(s => s.index + ":" + s.original.GetType()));
@@ -60,7 +62,8 @@ partial class CodeDataFactory
 
         // Must create a stack
         var sources = cleaned
-            .Select(s => new KeyValuePair<string, IPropertyLookup>(null, s.lookup))
+            .Where(s => s.lookup != null)
+            .Select(s => new KeyValuePair<string, IPropertyLookup>($"lookup-{s.index}", s.lookup!))
             .ToList();
         return l.ReturnAsOk(generate(name, sources));
     }

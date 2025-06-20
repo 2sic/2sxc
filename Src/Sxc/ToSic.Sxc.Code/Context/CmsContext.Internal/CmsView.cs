@@ -7,13 +7,14 @@ using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Sys.ExecutionContext;
+// ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
 
 namespace ToSic.Sxc.Context.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IView>(parent, block.View!), ICmsView
 {
-    private readonly IView? _view = block.View!;
+    private readonly IView _view = block.View!;
 
     /// <inheritdoc />
     public int Id => _view?.Id ?? 0;
@@ -35,7 +36,7 @@ internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IVi
 
     [PrivateApi]
     private IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string? location = default)
-        => new CmsViewFolder(this, block.App, AppAssetsHelpers.DetermineShared(location) ?? _view.IsShared);
+        => new CmsViewFolder(this, block.App!, AppAssetsHelpers.DetermineShared(location) ?? _view.IsShared);
 
     [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= Parent.ExCtx.GetCdf();
@@ -43,18 +44,18 @@ internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IVi
     /// <summary>
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work. This is by design.
     /// </summary>
-    ITypedItem ICmsView.Settings => _settings.Get(() => Cdf.AsItem(_view.Settings));
-    private readonly GetOnce<ITypedItem> _settings = new();
+    ITypedItem? ICmsView.Settings => _settings.Get(() => Cdf.AsItem(_view.Settings, new() { ItemIsStrict = true }));
+    private readonly GetOnce<ITypedItem?> _settings = new();
 
     /// <summary>
     /// Note: this is an explicit implementation, so in Dynamic Razor it won't work. This is by design.
     /// </summary>
-    ITypedItem ICmsView.Resources => _resources.Get(() => Cdf.AsItem(_view.Resources));
-    private readonly GetOnce<ITypedItem> _resources = new();
+    ITypedItem? ICmsView.Resources => _resources.Get(() => Cdf.AsItem(_view.Resources, new() { ItemIsStrict = true }));
+    private readonly GetOnce<ITypedItem?> _resources = new();
 
     /// <inheritdoc />
     [PrivateApi("Hidden in 16.04, because we want people to use the Folder. Can't remove it though, because there are many apps that already published this.")]
-    public string Path => _path.Get(() => FigureOutPath(block?.App.Path));
+    public string Path => _path.Get(() => FigureOutPath(block.App!.Path))!;
     private readonly GetOnce<string> _path = new();
 
     /// <summary>

@@ -148,7 +148,7 @@ public abstract class CodeCompiler(IServiceProvider serviceProvider, object[] co
             return l.ReturnFalse("didn't attach");
 
         // in case it supports shared code again, give it the relative path
-        codeForwarding.CreateInstancePath = Path.GetDirectoryName(virtualPath);
+        codeForwarding.CreateInstancePath = Path.GetDirectoryName(virtualPath)!;
         return l.ReturnTrue("attached");
     }
 }

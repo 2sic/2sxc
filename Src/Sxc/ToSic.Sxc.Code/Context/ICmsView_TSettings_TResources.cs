@@ -20,12 +20,12 @@ public interface ICmsView<out TSettings, out TResources> : ICmsView
     /// All the app settings which are custom for each app.
     /// These are typed - typically to AppCode.Data.AppSettings
     /// </summary>
-    new TSettings Settings { get; }
+    new TSettings? Settings { get; }
 
     /// <summary>
     /// All the app resources (usually used for multi-language labels etc.).
     /// /// These are typed - typically to AppCode.Data.AppResources
     /// </summary>
-    new TResources Resources { get; }
+    new TResources? Resources { get; }
 
 }

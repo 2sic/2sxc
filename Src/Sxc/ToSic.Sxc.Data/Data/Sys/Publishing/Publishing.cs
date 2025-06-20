@@ -31,14 +31,14 @@ internal class Publishing(ITypedItem currentItem, ICodeDataFactory cdf)
         if (IsPublished)
             return currentItem;
         var pubEntity = cdf.GetPublished(currentItem.Entity);
-        return cdf.AsItem(pubEntity, true);
+        return cdf.AsItem(pubEntity, new() { ItemIsStrict = true });
     });
     private readonly GetOnce<ITypedItem?> _published = new();
 
     // Get draft - either current, or from appState
     public ITypedItem? GetUnpublished() => _draft.Get(() => !IsPublished
         ? currentItem
-        : cdf.AsItem(UnpublishedEntity, true)
+        : cdf.AsItem(UnpublishedEntity, new() { ItemIsStrict = true })
     );
     private readonly GetOnce<ITypedItem?> _draft = new();
 

@@ -15,7 +15,7 @@ public partial class App
     private dynamic MakeDynProperty(IEntity contents, bool propsRequired)
     {
         var wrapped = CmsEditDecorator.Wrap(contents, false);
-        return Cdf.AsDynamic(wrapped, propsRequired: propsRequired);
+        return Cdf.AsDynamic(wrapped, new() { ItemIsStrict = propsRequired });
     }
 
     internal void SetupAsConverter(ICodeDataFactory cdf) => cdfLazy.Inject(cdf);

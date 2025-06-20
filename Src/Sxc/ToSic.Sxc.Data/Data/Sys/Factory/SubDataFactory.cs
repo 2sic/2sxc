@@ -21,7 +21,7 @@ internal class SubDataFactory(ICodeDataFactory cdf, bool propsRequired, ICanDebu
     {
         if (contents == null)
             return null;
-        var result = cdf.AsDynamic(contents, propsRequired);
+        var result = cdf.AsDynamic(contents, new() { ItemIsStrict = propsRequired });
         if (debug == true) result.Debug = true;
         return result;
     }

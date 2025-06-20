@@ -28,8 +28,8 @@ public partial class DynamicCodeService
 
     /// <inheritdoc />
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public IApp AppOfSite(NoParamOrder noParamOrder = default, int? siteId = null, ISite? site = null, bool? withUnpublished = null)
-        => App(GetPrimaryAppIdentity(siteId, site), site, withUnpublished);
+    public IApp AppOfSite(NoParamOrder noParamOrder = default, int? siteId = null, ISite? overrideSite = null, bool? withUnpublished = null)
+        => App(GetPrimaryAppIdentity(siteId, overrideSite), overrideSite, withUnpublished);
 
     private IAppIdentityPure GetPrimaryAppIdentity(int? siteId, ISite? site = default)
     {
@@ -40,12 +40,12 @@ public partial class DynamicCodeService
     }
 
 
-    private IApp App(IAppIdentityPure appIdentity, ISite site, bool? showDrafts = null)
+    private IApp App(IAppIdentityPure appIdentity, ISite? overrideSite, bool? showDrafts = null)
     {
-        var l = Log.Fn<IApp>($"{appIdentity.Show()}, site:{site != null}, showDrafts: {showDrafts}");
+        var l = Log.Fn<IApp>($"{appIdentity.Show()}, site:{overrideSite != null}, showDrafts: {showDrafts}");
         var app = _myScopedServices.AppGenerator.New();
         // if (site != null) app.PreInit(site);
-        app.Init(site, appIdentity, new() { ShowDrafts = showDrafts });
+        app.Init(overrideSite, appIdentity, new() { ShowDrafts = showDrafts });
         return l.Return(app);
     }
 

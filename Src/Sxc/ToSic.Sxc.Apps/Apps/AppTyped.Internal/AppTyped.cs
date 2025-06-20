@@ -69,7 +69,7 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> 
     private ITypedItem MakeTyped(ICanBeEntity contents, bool propsRequired)
     {
         var wrapped = CmsEditDecorator.Wrap(contents.Entity, false);
-        return Cdf.AsItem(wrapped, propsRequired: propsRequired)!;
+        return Cdf.AsItem(wrapped, new() { ItemIsStrict = propsRequired })!;
     }
 
     /// <inheritdoc />

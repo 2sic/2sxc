@@ -60,6 +60,7 @@ public partial class CodeDataFactory(
             ?? _siteOrNull
             ?? throw new("Tried getting site from context or fallback, neither returned anything useful. ");
 
+
     public int CompatibilityLevel => _priorityCompatibilityLevel ?? _compatibilityLevel;
     private int? _priorityCompatibilityLevel;
     private int _compatibilityLevel = CompatibilityLevels.CompatibilityLevel10;
@@ -106,6 +107,7 @@ public partial class CodeDataFactory(
     /// <remarks>
     /// IMPORTANT: LOWER-CASE guaranteed.
     /// </remarks>
+    [field: AllowNull, MaybeNull]
     public List<string> SiteCultures => field
         ??= zoneMapper.Value
                 .CulturesEnabledWithState(SiteFromContextOrFallback)?
@@ -122,4 +124,5 @@ public partial class CodeDataFactory(
     /// <returns></returns>
     public TService GetService<TService>() where TService : class
         => ExCtxOrNull?.GetService<TService>() ?? serviceProvider.Build<TService>();
+    
 }

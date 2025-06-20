@@ -101,13 +101,13 @@ public interface IDynamicCodeService
     /// </summary>
     /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="siteId">The SiteId which is the PortalId in DNN. Optional - without it, the current Site / Portal is used. </param>
-    /// <param name="site">Site information for further context (optional) </param>
+    /// <param name="overrideSite">Site information for further context (optional) </param>
     /// <param name="withUnpublished">Determines if the App.Data gives you unpublished data (like in admin-mode) or just published data. If not set, will default to user permissions.</param>
     /// <returns>An initialized App object which you can use to access App.Data</returns>
     IApp AppOfSite(
         // ReSharper disable once MethodOverloadWithOptionalParameter
         NoParamOrder noParamOrder = default,
         int? siteId = null,
-        ISite? site = null,
+        ISite? overrideSite = null,
         bool? withUnpublished = null);
 }

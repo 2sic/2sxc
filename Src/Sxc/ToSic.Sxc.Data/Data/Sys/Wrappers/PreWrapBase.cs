@@ -8,11 +8,11 @@ using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
 namespace ToSic.Sxc.Data.Sys.Wrappers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal abstract class PreWrapBase(object data) : IWrapper<object>, IHasJsonSource
+internal abstract class PreWrapBase(object? data) : IWrapper<object?>, IHasJsonSource
 {
     #region IWrapper
 
-    object IWrapper<object>.GetContents() => data;
+    object? IWrapper<object?>.GetContents() => data;
 
     #endregion
 
@@ -41,7 +41,7 @@ internal abstract class PreWrapBase(object data) : IWrapper<object>, IHasJsonSou
 
     public object TryGetObject(string name, NoParamOrder noParamOrder, bool? required, [CallerMemberName] string? cName = default)
     {
-        var result = TryGetWrap(name, true);
+        var result = TryGetWrap(name, wrapDefault: true);
         return IsErrStrict(result.Found, required, Settings.PropsRequired)
             ? throw ErrStrict(name, cName: cName)
             : result.Result!;
@@ -55,12 +55,11 @@ internal abstract class PreWrapBase(object data) : IWrapper<object>, IHasJsonSou
             : result.Result.ConvertOrFallback(fallback);
     }
 
-    /// <inheritdoc />
     [PrivateApi("Internal")]
     public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
     {
         path = path.KeepOrNew().Add($"PreWrap.{GetType()}", specs.Field);
-        var result = TryGetWrap(specs.Field, true).Result;
+        var result = TryGetWrap(specs.Field, wrapDefault: true).Result;
         return new(result: result, valueType: ValueTypesWithState.Dynamic, path: path) { Source = this, Name = "dynamic" };
     }
 

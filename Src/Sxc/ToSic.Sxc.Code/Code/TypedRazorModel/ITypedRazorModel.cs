@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Code;
 /// </summary>
 /// <remarks>Introduced in v16.02</remarks>
 [PublicApi]
-public interface ITypedModel: IHasKeys
+public interface ITypedRazorModel: IHasKeys
 {
     #region Check if parameters were supplied
 

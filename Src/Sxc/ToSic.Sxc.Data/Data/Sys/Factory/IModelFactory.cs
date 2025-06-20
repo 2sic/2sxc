@@ -5,6 +5,7 @@
 /// </summary>
 public interface IModelFactory
 {
-    TCustom AsCustomFrom<TCustom, TData>(TData item)
+    [return: NotNullIfNotNull(nameof(item))]
+    TCustom? AsCustomFrom<TCustom, TData>(TData? item, ConvertItemSettings? settings = default)
         where TCustom : class, ICanWrapData;
 }

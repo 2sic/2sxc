@@ -13,14 +13,14 @@ namespace ToSic.Sxc.Code;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class TypedModel(
+internal class TypedRazorModel(
     CodeHelperSpecs helperSpecs,
     IDictionary<string, object> paramsDictionary,
 #pragma warning disable CS9113 // Parameter is unread.
     bool isRazor,
 #pragma warning restore CS9113 // Parameter is unread.
     string razorFileName)
-    : ITypedModel
+    : ITypedRazorModel
 {
     private readonly IDictionary<string, object> _paramsDictionary = paramsDictionary?.ToInvariant() ?? new Dictionary<string, object>();
     private readonly TypedConverter _converter = new(helperSpecs.ExCtx.GetCdf());
@@ -87,7 +87,7 @@ internal class TypedModel(
         if (required == false)
             return null;
 
-        var call = $"{nameof(TypedModel)}.{method}(\"{name}\")";
+        var call = $"{nameof(TypedRazorModel)}.{method}(\"{name}\")";
         var callReqFalse = call.Replace(")", ", required: false)");
         throw new ArgumentException($@"Tried to get parameter with {call} but parameter '{name}' not provided. 
 Either change the calling Html.Partial(""{razorFileName}"", {{ {name} = ... }} ) or use {callReqFalse} to make it optional.", nameof(name));

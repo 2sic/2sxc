@@ -129,7 +129,7 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
         var findResult = _helper.TryGet(name);
         return IsErrStrict(findResult.Found, required, _helper.PropsRequired)
             ? throw ErrStrict(name)
-            : Cdf.AsItem(findResult.Result!);
+            : Cdf.AsItem(findResult.Result!, new() { FirstIsRequired = required ?? true, ItemIsStrict = _helper.PropsRequired });
     }
 
     IEnumerable<ITypedItem> /*ITypedStack*/ITypedItem.Children(string? field, NoParamOrder noParamOrder, string? type, bool? required)
@@ -137,7 +137,8 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
         var findResult = _helper.TryGet(field);
         return IsErrStrict(findResult.Found, required, _helper.PropsRequired)
             ? throw ErrStrict(field)
-            : Cdf.AsItems(findResult.Result!)
+            // TODO: #ConvertItemSettings - not sure if this default is correct
+            : Cdf.AsItems(findResult.Result!, new() { FirstIsRequired = required ?? true, ItemIsStrict = _helper.PropsRequired })
                 // Apply type filter - even if a bit "late"
                 .Where(i => i.Entity.Type.Is(type))
                 .ToList();

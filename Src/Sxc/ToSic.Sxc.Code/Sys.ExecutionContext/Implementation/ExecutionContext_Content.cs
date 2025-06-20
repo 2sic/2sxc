@@ -44,7 +44,7 @@ public partial class ExecutionContext
         var list = Data[sourceStream]!.List.ToList();
         return !list.Any()
             ? l.ReturnNull("first is null") 
-            : l.Return(Cdf.AsDynamicFromEntities(list, false), "found");
+            : l.Return(Cdf.AsDynamicFromEntities(list, new() { ItemIsStrict = false }), "found");
     }
         
     #endregion

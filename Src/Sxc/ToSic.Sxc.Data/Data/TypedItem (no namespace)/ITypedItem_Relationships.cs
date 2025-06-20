@@ -10,13 +10,13 @@ partial interface ITypedItem
     ITypedItem? Child(string name, NoParamOrder noParamOrder = default, bool? required = default);
 
     /// <inheritdoc cref="ITypedRelationshipsDocs.Children"/>
-    IEnumerable<ITypedItem?> Children(string? field = default, NoParamOrder noParamOrder = default, string? type = default, bool? required = default);
+    IEnumerable<ITypedItem> Children(string? field = default, NoParamOrder noParamOrder = default, string? type = default, bool? required = default);
 
     /// <inheritdoc cref="ITypedRelationshipsDocs.Parent"/>
     ITypedItem? Parent(NoParamOrder noParamOrder = default, bool? current = default, string? type = default, string? field = default);
 
     /// <inheritdoc cref="ITypedRelationshipsDocs.Parents"/>
-    IEnumerable<ITypedItem?> Parents(NoParamOrder noParamOrder = default, string? type = default, string? field = default);
+    IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder = default, string? type = default, string? field = default);
 
     #endregion
 
@@ -50,8 +50,9 @@ partial interface ITypedItem
     /// <returns></returns>
     /// <remarks>
     /// New v17.05
+    /// Never null, unless explicitly requested with `nullIfNull`, otherwise it would return an empty list.
     /// </remarks>
-    public IEnumerable<T>? Children<T>(string? field = default, NoParamOrder protector = default,
+    public IEnumerable<T> Children<T>(string? field = default, NoParamOrder protector = default,
         string? type = default, bool? required = default)
         where T : class, ICanWrapData, new();
 
@@ -87,8 +88,9 @@ partial interface ITypedItem
     /// <returns></returns>
     /// <remarks>
     /// New v17.06
+    /// Never null. If not found, will return an empty list.
     /// </remarks>
-    public IEnumerable<T>? Parents<T>(NoParamOrder protector = default,
+    public IEnumerable<T> Parents<T>(NoParamOrder protector = default,
         string? type = default, string? field = default)
         where T : class, ICanWrapData, new();
 

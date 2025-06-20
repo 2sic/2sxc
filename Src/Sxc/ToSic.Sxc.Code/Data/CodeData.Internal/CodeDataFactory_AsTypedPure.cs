@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Wrappers;
 
 namespace ToSic.Sxc.Data.Internal;
@@ -7,18 +8,18 @@ partial class CodeDataFactory
 {
     private const string NameOfAsTyped = /*nameof(IDynamicCode16.AsTyped)*/ "AsTyped" + "(...)";
 
-    public ITyped? AsTyped(object data, bool required = false, bool? propsRequired = default, string? detailsMessage = default)
+    public ITyped? AsTyped(object data, ConvertItemSettings settings, string? detailsMessage = default)
     {
         var l = Log.Fn<ITyped>();
 
-        if (AsTypedPreflightReturnNull(data, NameOfAsTyped, required, detailsMessage))
+        if (AsTypedPreflightReturnNull(data, NameOfAsTyped, settings.FirstIsRequired, detailsMessage))
             return l.ReturnNull();
 
         if (data is ITyped alreadyTyped)
             return l.Return(alreadyTyped, "already typed");
 
         var result = codeDataWrapper.Value.ChildNonJsonWrapIfPossible(data: data, wrapNonAnon: true,
-            WrapperSettings.Typed(children: true, realObjectsToo: false, propsRequired: propsRequired ?? true));
+            WrapperSettings.Typed(children: true, realObjectsToo: false, propsRequired: settings.ItemIsStrict));
         if (result is ITyped resTyped)
             return l.Return(resTyped, "converted to dyn-read");
 
@@ -26,11 +27,11 @@ partial class CodeDataFactory
     }
 
     private const string NameOfAsTypedList = /*nameof(IDynamicCode16.AsTypedList)*/ "AsTypedList" + "(...)";
-    public IEnumerable<ITyped>? AsTypedList(object list, NoParamOrder noParamOrder, bool? required = false, bool? propsRequired = default)
+    public IEnumerable<ITyped>? AsTypedList(object list, ConvertItemSettings settings)
     {
         var l = Log.Fn<IEnumerable<ITyped>>();
 
-        if (AsTypedPreflightReturnNull(list, NameOfAsTypedList, required == true))
+        if (AsTypedPreflightReturnNull(list, NameOfAsTypedList, settings.FirstIsRequired))
             return l.ReturnNull();
 
         if (list is IEnumerable<ITyped> alreadyTyped)
@@ -39,10 +40,11 @@ partial class CodeDataFactory
         if (list is not IEnumerable enumerable)
             throw new ArgumentException($"The object provided to {NameOfAsTypedList} is not enumerable/array so it can't be converted.", nameof(list));
 
-        var itemsRequired = required != false;
+        //var subSettings = new ConvertItemSettings { FirstIsRequired = required, ItemIsStrict = propsRequired ?? true };
         var result = enumerable
             .Cast<object>()
-            .Select((o, i) => AsTyped(o, itemsRequired, propsRequired, $"index: {i}"))
+            .Select((o, i) => AsTyped(o, settings, $"index: {i}")!)
+            .Where(o => o != null) // filter out nulls, as this is the default behavior
             .ToList();
 
         return result;

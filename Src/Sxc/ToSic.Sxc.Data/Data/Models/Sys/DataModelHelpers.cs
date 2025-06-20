@@ -31,19 +31,24 @@ internal class DataModelHelpers
     /// Typically, the type will be from your `AppCode.Data`.
     /// </summary>
     /// <returns></returns>
-    internal static IEnumerable<TCustom>? AsList<TCustom>(IModelFactory modelFactory, object? source, NoParamOrder protector = default, bool nullIfNull = false)
+    internal static IEnumerable<TCustom> AsList<TCustom>(IModelFactory modelFactory, object? source, ConvertItemSettings settings, NoParamOrder protector = default, bool nullIfNull = false)
         where TCustom : class, ICanWrapData
-        => source switch
+    {
+        var list = source switch
         {
             null => nullIfNull
-                ? null
+                ? null!
                 : [],
             IEnumerable<ITypedItem> typedItems => typedItems
-                .Select(modelFactory.AsCustomFrom<TCustom, ITypedItem>)
+                .Select(item => modelFactory.AsCustomFrom<TCustom, ITypedItem>(item))
                 .ToList(),
             IEnumerable<IEntity> entities => entities
-                .Select(modelFactory.AsCustomFrom<TCustom, IEntity>)
+                .Select(entity => modelFactory.AsCustomFrom<TCustom, IEntity>(entity))
                 .ToList(),
-            _ => throw new($"Type {typeof(TCustom).Name} not supported, only {typeof(IEntity)} and {nameof(ITypedItem)} are allowed as data"),
+            _ => throw new(
+                $"Type {typeof(TCustom).Name} not supported, only {typeof(IEntity)} and {nameof(ITypedItem)} are allowed as data"),
         };
+
+        return list;
+    }
 }

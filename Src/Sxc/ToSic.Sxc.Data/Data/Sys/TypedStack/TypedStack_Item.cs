@@ -83,7 +83,9 @@ internal partial class TypedStack: ITypedItem
 
         var sourceItem = findResult.Source as ITypedItem
                          ?? (findResult.Source as ICanBeItem)?.Item
-                         ?? (findResult.Source as ICanBeEntity).NullOrGetWith(e => Cdf.AsItem(e));
+                         // TODO: #ConvertItemSettings
+                         ?? (findResult.Source as ICanBeEntity)
+                         .NullOrGetWith(e => Cdf.AsItem(e, new() { ItemIsStrict = false }));
 
         return sourceItem;
     }
@@ -121,7 +123,7 @@ internal partial class TypedStack: ITypedItem
             source: ((ITypedItem)this).Child(name, required: required), protector: protector, mock: false
         );
 
-    IEnumerable<T>? ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required)
+    IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required)
         => Cdf.AsCustomList<T>(
             source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required),
             protector: protector,

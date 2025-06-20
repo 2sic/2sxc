@@ -96,7 +96,7 @@ public interface ICmsView: IHasMetadata
     ///
     /// Note that many views don't have their own settings, so this would be empty = `null`.
     /// </summary>
-    ITypedItem Settings { get; }
+    ITypedItem? Settings { get; }
 
     /// <summary>
     /// Settings of this view.
@@ -105,5 +105,5 @@ public interface ICmsView: IHasMetadata
     /// Note that many views don't have their own settings, so this would be empty = `null`.
     /// </summary>
     /// <remarks>Resources added to API in v17.04</remarks>
-    ITypedItem Resources { get; }
+    ITypedItem? Resources { get; }
 }

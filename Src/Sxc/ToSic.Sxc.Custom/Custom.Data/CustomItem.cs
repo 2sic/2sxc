@@ -117,7 +117,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     /// <summary>
     /// Override ToString to give more information about the current object
     /// </summary>
-    public override string? ToString() 
+    public override string ToString() 
         => $"{nameof(CustomItem)} Data Model {GetType().FullName} "
            + (_item == null ? "without backing data (null)" : $"for id:{Id} ({_item})");
 
@@ -362,7 +362,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     /// </remarks>
     protected IEnumerable<T> AsList<T>(IEnumerable<ITypedItem> source, NoParamOrder protector = default, bool nullIfNull = false)
         where T : class, ICanWrapData
-        => (source ?? (nullIfNull ? null : []))?.Select(_modelFactory.AsCustomFrom<T, ITypedItem>).ToList();
+        => (source ?? (nullIfNull ? null : []))?.Select(item => _modelFactory.AsCustomFrom<T, ITypedItem>(item)).ToList();
 
     #endregion
 

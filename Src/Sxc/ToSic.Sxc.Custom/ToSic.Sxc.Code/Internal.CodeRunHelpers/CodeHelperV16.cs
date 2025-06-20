@@ -51,17 +51,18 @@ public class TypedCode16Helper(object owner, CodeHelperSpecs helperSpecs, Func<o
 
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
 
-    public ITypedItem MyItem => _myItem.Get(() => Cdf.AsItem(Data.MyItems.FirstOrDefault(), propsRequired: DefaultStrict));
+    public ITypedItem MyItem => _myItem.Get(() => Cdf.AsItem(Data.MyItems.FirstOrDefault(), new() { ItemIsStrict = DefaultStrict }));
     private readonly GetOnce<ITypedItem> _myItem = new();
 
-    public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => Cdf.EntitiesToItems(Data.MyItems, propsRequired: DefaultStrict));
+    public IEnumerable<ITypedItem> MyItems => _myItems.Get(() =>
+        Cdf.EntitiesToItems(Data.MyItems, new() { ItemIsStrict = DefaultStrict, DropNullItems = true }));
     private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new();
 
-    public ITypedItem MyHeader => _myHeader.Get(() => Cdf.AsItem(Data.MyHeaders.FirstOrDefault(), propsRequired: DefaultStrict));
+    public ITypedItem MyHeader => _myHeader.Get(() => Cdf.AsItem(Data.MyHeaders.FirstOrDefault(), new() { ItemIsStrict = DefaultStrict }));
     private readonly GetOnce<ITypedItem> _myHeader = new();
 
-    public ITypedModel MyModel => _myModel.Get(() => new TypedModel(Specs, MyModelDic, Specs.IsRazor, Specs.CodeFileName));
-    private readonly GetOnce<ITypedModel> _myModel = new();
+    public ITypedRazorModel MyModel => _myModel.Get(() => new TypedRazorModel(Specs, MyModelDic, Specs.IsRazor, Specs.CodeFileName));
+    private readonly GetOnce<ITypedRazorModel> _myModel = new();
 
     private ICodeTypedApiHelper TypedApiHelper => field ??= ExCtx.GetTypedApi();
 

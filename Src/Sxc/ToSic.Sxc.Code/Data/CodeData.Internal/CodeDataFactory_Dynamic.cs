@@ -21,37 +21,41 @@ partial class CodeDataFactory: ICodeDataFactoryDeepWip
     public IDynamicEntity CodeAsDyn(IEntity entity)
         => new DynamicEntity(entity, this, propsRequired: false);
 
-    public IDynamicEntity AsDynamic(IEntity entity, bool propsRequired) =>
-        new DynamicEntity(entity, this, propsRequired: propsRequired);
+    public IDynamicEntity AsDynamic(IEntity entity, ConvertItemSettings settings)
+        => new DynamicEntity(entity, this, propsRequired: settings.ItemIsStrict);
 
     /// <summary>
     /// Convert a list of Entities into a DynamicEntity.
     /// Only used in DynamicCodeRoot.
     /// </summary>
-    public IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, bool propsRequired, NoParamOrder protector = default, IEntity? parent = default, string? field = default) 
-        => new DynamicEntity(list: list, parent: parent, field: field, appIdOrNull: null, propsRequired: propsRequired, cdf: this);
+    public IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, ConvertItemSettings settings, NoParamOrder protector = default, IEntity? parent = default, string? field = default) 
+        => new DynamicEntity(list: list, parent: parent, field: field, appIdOrNull: null, propsRequired: settings.ItemIsStrict, cdf: this);
 
     /// <summary>
     /// Convert any object into a dynamic list.
     /// Only used in Dynamic Code for the public API.
     /// </summary>
-    public IEnumerable<dynamic>? CodeAsDynList(object list, bool propsRequired = false)
-        => list switch
+    public IEnumerable<dynamic>? CodeAsDynList(object list) //, bool propsRequired = false)
+    {
+        var settings = new ConvertItemSettings() { ItemIsStrict = false };
+        return list switch
         {
             null => new List<dynamic>(),
             IDataSource dsEntities => CodeAsDynList(dsEntities.List),
-            IEnumerable<IEntity> iEntities => iEntities.Select(e => AsDynamic(e, propsRequired: propsRequired)),
+            IEnumerable<IEntity> iEntities =>
+                iEntities.Select(e => AsDynamic(e, settings)),
             IEnumerable<IDynamicEntity> dynIDynEnt => dynIDynEnt,
             IEnumerable<dynamic> dynEntities => dynEntities,
             _ => null
         };
+    }
 
 
     /// <summary>
     /// Convert any object into a dynamic object.
     /// Only used in Dynamic Code for the public API.
     /// </summary>
-    public object? AsDynamicFromObject(object dynObject, bool propsRequired = false)
+    public object? AsDynamicFromObject(object dynObject)
     {
         var l = Log.Fn<object?>();
         //var typed = AsTypedInternal(dynObject);
@@ -69,7 +73,7 @@ partial class CodeDataFactory: ICodeDataFactoryDeepWip
             case ISxcDynamicObject sxcDyn:
                 return l.Return(sxcDyn, "Dynamic Something");
             case IEntity entity:
-                return l.Return(new DynamicEntity(entity, this, propsRequired: propsRequired), "IEntity");
+                return l.Return(new DynamicEntity(entity, this, propsRequired: false), "IEntity");
             case DynamicObject typedDynObject:
                 return l.Return(typedDynObject, "DynamicObject");
             default:

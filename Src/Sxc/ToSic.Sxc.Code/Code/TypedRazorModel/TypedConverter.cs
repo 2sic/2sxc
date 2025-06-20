@@ -33,14 +33,17 @@ internal class TypedConverter(ICodeDataFactory cdf)
     {
         var (typed, untyped, ok) = EvalInterface(data, fallback);
         // Try to convert, in case it's an IEntity or something; could also result in error
-        return ok ? typed : Cdf.AsItem(untyped);
+        // TODO: #ConvertItemSettings
+        return ok ? typed : Cdf.AsItem(untyped, new() { ItemIsStrict = false });
     }
 
     public IEnumerable<ITypedItem> Items(object? maybe, NoParamOrder noParamOrder, IEnumerable<ITypedItem>? fallback)
     {
         var (typed, untyped, ok) = EvalInterface(maybe, fallback);
         // Try to convert, in case it's an IEntity or something; could also result in error
-        return ok ? typed : Cdf.AsItems(untyped);
+        return ok
+            ? typed
+            : Cdf.AsItems(untyped, new() { ItemIsStrict = false });
     }
 
     [return: NotNullIfNotNull(nameof(fallback))]
@@ -107,7 +110,8 @@ internal class TypedConverter(ICodeDataFactory cdf)
     {
         var (typed, untyped, ok) = EvalInterface(maybe, fallback);
         // Try to convert, in case it's an IEntity or something; could also result in error
-        return ok ? typed : Cdf.AsItem(untyped);
+        // TODO: #ConvertItemSettings
+        return ok ? typed : Cdf.AsItem(untyped, new() { ItemIsStrict = false });
     }
 
     #region Tags

@@ -18,7 +18,7 @@ public interface ICodeDataPoCoWrapperService
     /*WrapObjectDynamic*/
     object DynamicFromObject(object data, WrapperSettings settings);
     ITyped TypedFromObject(object data, WrapperSettings settings);
-    ITypedItem TypedItemFromObject(object data, WrapperSettings settings, ILazyLike<ICodeDataFactory>? cdf1 = default);
+    ITypedItem TypedItemFromObject(object? data, WrapperSettings settings, ILazyLike<ICodeDataFactory>? cdf1 = default);
 
     public /*DynamicFromDictionary<TKey, TValue>*/object FromDictionary<TKey, TValue>(IDictionary<TKey, TValue> original);
 

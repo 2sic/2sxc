@@ -23,8 +23,6 @@ internal partial class PreWrapObject: PreWrapBase, IPropertyLookup, IHasJsonSour
 {
     #region Constructor / Setup
 
-    //public object GetContents() => _innerObject;
-
     /// <summary>
     /// Case-insensitive property dictionary
     /// </summary>
@@ -40,7 +38,7 @@ internal partial class PreWrapObject: PreWrapBase, IPropertyLookup, IHasJsonSour
     /// </param>
     /// <param name="wrapperSvc"></param>
     [PrivateApi]
-    internal PreWrapObject(object data, WrapperSettings settings, ICodeDataPoCoWrapperService wrapperSvc): base(data)
+    internal PreWrapObject(object? data, WrapperSettings settings, ICodeDataPoCoWrapperService wrapperSvc): base(data)
     {
         WrapperSvc = wrapperSvc;
         _innerObject = data;
@@ -70,7 +68,7 @@ internal partial class PreWrapObject: PreWrapBase, IPropertyLookup, IHasJsonSour
     public override bool ContainsKey(string name) => PropDic.ContainsKey(name);
 
     public override IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default)
-        => FilterKeysIfPossible(noParamOrder, only, PropDic?.Keys);
+        => FilterKeysIfPossible(noParamOrder, only, PropDic.Keys);
 
     #endregion
 

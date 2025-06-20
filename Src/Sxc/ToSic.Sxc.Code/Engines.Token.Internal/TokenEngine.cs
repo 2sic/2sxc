@@ -96,7 +96,7 @@ public class TokenEngine(
     private void InitTokenReplace()
     {
         var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = Block };
-        var appDataConfig = tokenEngineWithContext.New().GetDataConfiguration(Block.App as SxcAppBase, specs);
+        var appDataConfig = tokenEngineWithContext.New().GetDataConfiguration((Block.App as SxcAppBase)!, specs);
 
         var lookUpEngine = new LookUpEngine(appDataConfig.Configuration, Log, sources: [
             new LookUpForTokenTemplate(ViewParts.ListContentLower, _dynamicApiSvc.Header, CultureInfo),
@@ -165,7 +165,7 @@ public class TokenEngine(
         for (var i = 0; i < itemsCount; i++)
         {
             // Create property sources for the current data item (for the current data item and its list information)
-            var dynEntity = Cdf.AsDynamic(dataItems.ElementAt(i), propsRequired: false);
+            var dynEntity = Cdf.AsDynamic(dataItems.ElementAt(i), new() { ItemIsStrict = false });
             var propertySources = new Dictionary<string, ILookUp>
             {
                 { sourceName, new LookUpForTokenTemplate(sourceName, dynEntity, CultureInfo, i, itemsCount) }
