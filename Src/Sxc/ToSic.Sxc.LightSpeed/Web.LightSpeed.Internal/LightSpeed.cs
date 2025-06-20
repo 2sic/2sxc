@@ -180,7 +180,7 @@ internal class LightSpeed(
     /// <returns>list of paths to monitor</returns>
     private IList<string> AppPaths(List<IAppReader> dependentApps)
     {
-        if ((_block as BlockOfModule)?.App is not SxcAppBase app)
+        if ((_block as BlockOfModule)?.AppOrNull is not SxcAppBase app)
             return null;
         if (dependentApps.SafeNone())
             return null;
@@ -224,7 +224,7 @@ internal class LightSpeed(
     private readonly GetOnce<int?> _userId = new();
 
     // Note 2023-10-30 2dm changed the handling of the preview template and checks if it's set. In case caching is too aggressive this can be the problem. Remove early 2024
-    private string ViewKey => _viewKey.Get(() => _block.Configuration?.PreviewViewEntity != null
+    private string ViewKey => _viewKey.Get(() => _block.ConfigurationIsReady && _block.Configuration.PreviewViewEntity != null
         ? $"{_block.Configuration.AppId}:{_block.Configuration.View?.Id}"
         : null
     );

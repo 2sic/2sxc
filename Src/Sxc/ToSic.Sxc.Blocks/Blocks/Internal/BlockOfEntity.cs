@@ -31,7 +31,11 @@ public sealed class BlockOfEntity(BlockServices services, LazySvc<AppFinder> app
 
         // Must override previous AppId, as that was of the container-block
         // but the current instance can be of another block
-        AppId = blockId.AppId;
+        BlockInfo = BlockInfo with
+        {
+            AppId = blockId.AppId,
+        };
+        //AppId = blockId.AppId;
 
         CompleteInit(parent, blockId, -blockEntity.EntityId);
 
@@ -49,7 +53,7 @@ public sealed class BlockOfEntity(BlockServices services, LazySvc<AppFinder> app
     /// <param name="contentBlockId">The block ID. Can sometimes be negative to mark inner-content-blocks</param>
     /// <returns></returns>
     private static IEntity GetBlockEntity(IBlock parent, int contentBlockId) 
-        => parent.App!.Data.List.One(Math.Abs(contentBlockId))!;
+        => parent.App.Data.List.One(Math.Abs(contentBlockId))!;
 
     #region ContentBlock Definition Entity
 

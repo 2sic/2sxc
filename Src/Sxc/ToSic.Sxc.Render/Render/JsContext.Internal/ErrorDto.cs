@@ -48,7 +48,7 @@ public class ErrorDto
                 Severity = ErrorSeverity.warning
             });
 
-        var appId = block.App?.AppId;
+        var appId = block.AppOrNull?.AppId;
         if (appId != null && codeWarnings.CodeInfoStats.AppHasWarnings(appId.Value))
             problems.Add(new()
             {

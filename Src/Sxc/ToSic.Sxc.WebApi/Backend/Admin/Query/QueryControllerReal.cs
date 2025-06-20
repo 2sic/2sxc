@@ -57,7 +57,7 @@ public class QueryControllerReal(
         var block = currentContextService.BlockRequired();
         var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = block };
         var lookUps = tokenEngineWithContext.New()
-            .GetDataConfiguration(block.App as SxcAppBase, specs)
+            .GetDataConfiguration((SxcAppBase)block.App, specs)
             .Configuration;
         return lookUps;
     }

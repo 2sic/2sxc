@@ -98,7 +98,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.My
         Block = block;
         AttachApp(block.App);
 
-        return cLog.Return(this, $"AppId: {App?.AppId}, Block: {block.Configuration?.BlockIdentifierOrNull?.Guid}");
+        return cLog.Return(this, $"AppId: {App?.AppId}, Block: {(block.ConfigurationIsReady ? block.Configuration?.BlockIdentifierOrNull?.Guid : null)}");
     }
 
     /// <inheritdoc />

@@ -52,15 +52,11 @@ public class ApiExplorerController() : OqtStatefulControllerBase(RealController.
 
         // Figure out the current edition
         var blockOrNull = CtxHlp.BlockOptional;
-        var edition = blockOrNull.NullOrGetWith(b => GetService<PolymorphConfigReader>().UseViewEditionOrGet(b));
+        var edition = blockOrNull
+            .NullOrGetWith(b => GetService<PolymorphConfigReader>().UseViewEditionOrGet(b));
 
-        var spec = new HotBuildSpec(blockOrNull?.AppId ?? KnownAppsConstants.AppIdEmpty, edition: edition, appName: blockOrNull?.App?.Name); 
-        
-        //if (block != null)
-        //    spec = new HotBuildSpec(spec.AppId,
-        //        edition: PolymorphConfigReader.UseViewEditionOrGetLazy(block.View,() => GetService<PolymorphConfigReader>().Init(block.Context.AppState.List)));
+        var spec = new HotBuildSpec(blockOrNull?.AppId ?? KnownAppsConstants.AppIdEmpty, edition: edition, appName: blockOrNull?.AppOrNull?.Name);
 
-        var appCodeLoader = GetService<LazySvc<AppCodeLoader>>();
         Log.A($"Controller path from root: {pathFromRoot}");
 
         // get full path

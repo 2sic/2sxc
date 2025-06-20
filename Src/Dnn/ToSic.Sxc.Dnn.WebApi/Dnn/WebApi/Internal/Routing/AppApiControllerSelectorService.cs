@@ -93,7 +93,7 @@ internal partial class AppApiControllerSelectorService(
             {
                 // TODO: HAD TO trim last slash, because it was added in the get-call, but causes trouble here
                 // must ensure it's improved and done the same way in Oqtane!!!
-                spec = new(block.AppId, edition: edition.TrimLastSlash(), block.App?.Name);
+                spec = new(block.AppId, edition: edition.TrimLastSlash(), block.AppOrNull?.Name);
                 l.A($"{nameof(spec)} from Block: {spec}");
             }
             else

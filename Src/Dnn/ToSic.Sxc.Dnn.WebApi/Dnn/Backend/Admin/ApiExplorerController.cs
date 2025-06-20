@@ -58,7 +58,7 @@ public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSu
             if (block != null)
             {
                 var edition = SysHlp.GetService<PolymorphConfigReader>().UseViewEditionOrGet(block);
-                spec = new(block.AppId, edition: edition, appName: block.App?.Name);
+                spec = new(block.AppId, edition: edition, appName: block.App.Name);
             }
             assembly = SysHlp.GetService<IRoslynBuildManager>().GetCompiledAssembly(codeFileInfo, className, spec)?.Assembly;
         }
@@ -67,7 +67,8 @@ public class ApiExplorerController() : DnnSxcControllerRoot(RealController.LogSu
             assembly = BuildManager.GetCompiledAssembly(controllerVirtualPath);
         }
 
-        if (assembly == null) throw new("Assembly not found or compiled to null (error).");
+        if (assembly == null)
+            throw new("Assembly not found or compiled to null (error).");
 
         return assembly;
     }

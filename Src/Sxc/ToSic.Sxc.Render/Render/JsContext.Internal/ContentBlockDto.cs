@@ -90,20 +90,22 @@ public class ContentBlockDto : EntityDto
         IsCreated = block.ContentGroupExists;
         IsContent = block.IsContentApp;
 
-        var configuration = block.Configuration;
+        var configuration = block.ConfigurationIsReady ? block.Configuration : null;
         Id = configuration?.Id ?? 0;
         Guid = configuration?.Guid ?? Guid.Empty;
         AppId = block.AppId;
 
         // App properties
-        var app = block.App;
+        var app = block.AppOrNull;
         AppName = app?.Name ?? "";
         AppUrl = app?.Path ?? "" + "/";
         AppSharedUrl = app?.PathShared ?? "" + "/";
         AppSettingsId = app?.Settings?.Entity?.Attributes?.Count > 0
-            ? app?.Settings?.EntityId : null;    // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
+            ? app?.Settings?.EntityId
+            : null;    // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
         AppResourcesId = app?.Resources?.Entity?.Attributes?.Count > 0
-            ? app?.Resources?.EntityId : null;  // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
+            ? app?.Resources?.EntityId
+            : null;  // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
 
         // View properties
         var view = block.ViewIsReady ? block.View : null;
@@ -150,14 +152,16 @@ public class ContentBlockDto : EntityDto
         }
 
         IsList = configuration?.View?.UseForList ?? false;
-        SupportsAjax = block.IsContentApp || (block.App?.Configuration?.EnableAjax ?? false);
+        SupportsAjax = block.IsContentApp || (app?.Configuration?.EnableAjax ?? false);
 
         RenderMs = statistics?.RenderMs ?? -1;
         RenderLightspeed = statistics?.UseLightSpeed ?? false;
 
+        if (app == null)
+            return;
+
         try
         {
-            if (app == null) return;
             var appJsonData = appJson.GetAppJson(app.AppId);
             if (appJsonData?.Editions != null)
             {

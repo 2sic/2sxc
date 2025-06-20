@@ -36,7 +36,7 @@ internal class ProblemSuggestions
         }
 
 
-        if (errorCode == null || block?.App == null)
+        if (errorCode == null || block?.AppOrNull == null)
             return suggestions;
 
         // Special suggestion for Blog v6.0.0/1

@@ -74,7 +74,7 @@ public class JsContextAll(JsContextLanguage jsLangCtxSvc, IJsApiService jsApiSer
             ? (bool?)false
             : null;
 
-        User = new(ctx.User, block.DataIsReady ? block.App.Data.List : []);
+        User = new(ctx.User, block.AppOrNull?.Data.List ?? []);
 
         ContentBlockReference = new(block, ctx.Publishing.Mode);
         ContentBlock = new(block, statistics, appJson);

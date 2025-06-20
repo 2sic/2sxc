@@ -72,7 +72,7 @@ partial class View
 
         // App management
         if (user.IsSiteAdmin && appIsKnown)
-            actions.Add(GetNextActionID(), "Admin" + (block.IsContentApp ? "" : " " + block.App?.Name), "",
+            actions.Add(GetNextActionID(), "Admin" + (block.IsContentApp ? "" : " " + block.AppOrNull?.Name), "",
                 "", "edit.gif",
                 JsAction("app"),
                 "", true,

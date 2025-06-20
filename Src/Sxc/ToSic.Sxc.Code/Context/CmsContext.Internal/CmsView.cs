@@ -36,7 +36,7 @@ internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IVi
 
     [PrivateApi]
     private IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string? location = default)
-        => new CmsViewFolder(this, block.App!, AppAssetsHelpers.DetermineShared(location) ?? _view.IsShared);
+        => new CmsViewFolder(this, block.App, AppAssetsHelpers.DetermineShared(location) ?? _view.IsShared);
 
     [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= Parent.ExCtx.GetCdf();
@@ -55,7 +55,7 @@ internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IVi
 
     /// <inheritdoc />
     [PrivateApi("Hidden in 16.04, because we want people to use the Folder. Can't remove it though, because there are many apps that already published this.")]
-    public string Path => _path.Get(() => FigureOutPath(block.App!.Path))!;
+    public string Path => _path.Get(() => FigureOutPath(block.App.Path))!;
     private readonly GetOnce<string> _path = new();
 
     /// <summary>

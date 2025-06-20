@@ -22,11 +22,11 @@ public class AppViewPickerBackend(
     public void SetAppId(int? appId) => blockEditorSelectorLazy.Value.GetEditor(Block).SetAppId(appId);
 
     public IEnumerable<TemplateUiInfo> Templates() =>
-        Block?.App == null 
-            ? Array.Empty<TemplateUiInfo>()
+        Block?.AppOrNull == null 
+            ? []
             : workBlockViews.New(AppWorkCtxPlus).GetCompatibleViews(Block);
 
-    public IEnumerable<ContentTypeUiInfo> ContentTypes() => Block?.App == null
+    public IEnumerable<ContentTypeUiInfo> ContentTypes() => Block?.AppOrNull == null
         ? null
         : workViews.New(AppWorkCtxPlus).GetContentTypesWithStatus(Block.App.Path ?? "", Block.App.PathShared ?? "");
 

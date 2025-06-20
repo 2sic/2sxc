@@ -62,7 +62,13 @@ public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDef
         var createTempBlockForPreview = blockId.Guid == Guid.Empty;
         l.A($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");
         var result = createTempBlockForPreview
-            ? new(null, AppWorkCtx, AppWorkCtx.Data.List.One(blockId.PreviewView), qDefBuilder, cultureResolver.CurrentCultureCode, Log)
+            ? new(null,
+                AppWorkCtx,
+                AppWorkCtx.Data.List.One(blockId.PreviewView),
+                qDefBuilder,
+                cultureResolver.CurrentCultureCode,
+                Log
+            )
             : GetBlockConfig(blockId.Guid);
         result.BlockIdentifierOrNull = blockId;
         return l.Return(result);

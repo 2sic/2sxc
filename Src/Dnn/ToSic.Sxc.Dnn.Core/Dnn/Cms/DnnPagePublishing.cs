@@ -104,7 +104,7 @@ internal partial class DnnPagePublishing(
                 var ids = list.Where(e => !e.IsPublished).Select(e => e.EntityId).ToList();
 
                 // publish BlockConfiguration as well - if there already is one
-                if (cb.Configuration != null)
+                if (cb.ConfigurationIsReady)
                 {
                     l.A($"add group id:{cb.Configuration.Id}");
                     ids.Add(cb.Configuration.Id);

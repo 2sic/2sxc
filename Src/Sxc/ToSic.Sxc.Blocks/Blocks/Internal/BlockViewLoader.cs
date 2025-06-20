@@ -13,7 +13,7 @@ internal class BlockViewLoader(ILog parentLog) : HelperBase(parentLog, "Blk.View
     internal IView? PickView(IBlock block, IView? configView, IContextOfBlock context, WorkViews views)
     {
         // #1 skip on ContentApp (not a feature there) or if not relevant or not yet initialized
-        if (block.IsContentApp || block.App == null)
+        if (block.IsContentApp || !block.DataIsReady)
             return configView;
 
         // #2 Change Template if URL contains the part in the metadata "ViewNameInUrl"

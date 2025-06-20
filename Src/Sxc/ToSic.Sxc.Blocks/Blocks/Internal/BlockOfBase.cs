@@ -16,32 +16,37 @@ namespace ToSic.Sxc.Blocks.Internal;
 public abstract class BlockOfBase(BlockServices services, string logName, object[]? connect = default)
     : ServiceBase<BlockServices>(services, logName, connect: connect ?? []), IBlock
 {
+    // New: WIP replacing the block with a stateless record
+    protected BlockInfoWip BlockInfo { get; set; } = new();
 
     #region Constructor and DI
 
     protected void Init(IContextOfBlock context, IAppIdentity appId)
     {
-        Context = context;
-        ZoneId = appId.ZoneId;
-        AppId = appId.AppId;
+        BlockInfo = BlockInfo with
+        {
+            Context = context,
+            ZoneId = appId.ZoneId,
+            AppId = appId.AppId,
+        };
     }
 
     protected bool CompleteInit(IBlock? parentBlockOrNull, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded)
     {
         var l = Log.Fn<bool>();
 
-        ParentBlock = parentBlockOrNull;
-        RootBlock = parentBlockOrNull?.RootBlock ?? this; // if parent is null, this is the root block
+        BlockInfo = BlockInfo with
+        {
+            ParentBlock = parentBlockOrNull,
+            RootBlock = parentBlockOrNull?.RootBlock ?? this, // if parent is null, this is the root block
 
-        // Note: this is "just" the module id, not the block id
-        ParentId = Context.Module.Id;
-        ContentBlockId = blockNumberUnsureIfNeeded;
+            // Note: this is "just" the module id, not the block id
+            ParentId = Context.Module.Id,
+            ContentBlockId = blockNumberUnsureIfNeeded,
+
+        };
 
         l.A($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
-
-        // 2020-09-04 2dm - new change, moved BlockBuilder up, so it's never null - may solve various issues
-        // but may introduce new ones
-        //BlockBuilder = Services.BlockBuilder.Value.Setup(this);
 
         switch (AppId)
         {
@@ -51,7 +56,7 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
                 return l.ReturnFalse("stop: app & data are missing");
             // If no app yet, stop now with BlockBuilder created
             case KnownAppsConstants.AppIdEmpty:
-                return l.ReturnFalse($"stop a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
+                return l.ReturnFalse($"stop a:{AppId}, container:{Context.Module.Id}, content-group:{ContentBlockId}");
         }
 
         l.A("Real app specified, will load App object with Data");
@@ -59,52 +64,54 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
         // note: requires EditAllowed, which isn't ready till App is created
         // 2dm #???
         var appWorkCtxPlus = Services.WorkViews.CtxSvc.ContextPlus(this.PureIdentity());
-        Configuration = Services.AppBlocks
+        var config = Services.AppBlocks
             .New(appWorkCtxPlus)
             .GetOrGeneratePreviewConfig(blockId);
 
+        BlockInfo = BlockInfo with
+        {
+            Configuration = config,
+        };
+
         // handle cases where the content group is missing - usually because of incomplete import
-        if (Configuration.DataIsMissing)
-            return l.ReturnFalse($"DataIsMissing a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
+        if (config.DataIsMissing)
+            return l.ReturnFalse($"DataIsMissing a:{AppId}, container:{Context.Module.Id}, content-group:{config.Id}");
 
         // Get App for this block
         var app = Services.AppLazy.Value;
         app.Init(Context.Site, this.PureIdentity(), new SxcAppDataConfigSpecs { BlockForLookupOrNull = this });
-        App = app;
+        AppOrNull = app;
         l.A("App created");
 
         // use the content-group template, which already covers stored data + module-level stored settings
         var view = new BlockViewLoader(Log)
-            .PickView(this, Configuration.View, Context, Services.WorkViews.New(appWorkCtxPlus));
+            .PickView(this, config.View, Context, Services.WorkViews.New(appWorkCtxPlus));
 
         if (view == null)
-            return l.ReturnFalse($"no view; a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
+            return l.ReturnFalse($"no view; a:{AppId}, container:{Context.Module.Id}, content-group:{config.Id}");
         
         View = view;
-        return l.ReturnTrue($"ok a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
+        return l.ReturnTrue($"ok a:{AppId}, container:{Context.Module.Id}, content-group:{config.Id}");
     }
 
     #endregion
 
-    public IBlock? ParentBlock { get; private set; }
+    public IBlock? ParentBlock => BlockInfo.ParentBlock;
 
-    public IBlock RootBlock { get; private set; } = null!;
+    public IBlock RootBlock => BlockInfo.RootBlock;
 
-    public int ZoneId { get; protected set; }
+    public int ZoneId => BlockInfo.ZoneId;
 
-    public int AppId { get; protected set; }
+    public int AppId => BlockInfo.AppId;
 
-    public IApp App
-    {
-        get => _app ?? throw new($"App and Data are missing and can't be accessed. Code running early on must first check for .{nameof(DataIsReady)}");
-        protected set => _app = value;
-    }
-    private IApp? _app;
-    public bool DataIsReady => _app != null;
+    public IApp App => AppOrNull
+                       ?? throw new($"App and Data are missing and can't be accessed. Code running early on must first check for .{nameof(DataIsReady)} or use {nameof(AppOrNull)}");
+    public bool DataIsReady => AppOrNull != null;
+    public IApp? AppOrNull { get; private set; }
 
 
     // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-    public bool ContentGroupExists => Configuration?.Exists ?? false; // This check may happen before Configuration is accessed, so we need the null check
+    public bool ContentGroupExists => _configuration?.Exists ?? false; // This check may happen before Configuration is accessed, so we need the null check
 
     public List<string> BlockFeatureKeys { get; } = [];
 
@@ -113,11 +120,11 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
             ? []
             : ((ContextOfBlock)Context).PageServiceShared.PageFeatures.GetWithDependents(BlockFeatureKeys, log ?? Log);
 
-    public int ParentId { get; protected set; }
+    public int ParentId => BlockInfo.ParentId; // This is the module id, not the block id
 
     public List<ProblemReport> Problems { get; } = [];
 
-    public int ContentBlockId { get; protected set; }
+    public int ContentBlockId => BlockInfo.ContentBlockId; // This is the content block id, not the module id
 
     #region Template and extensive template-choice initialization
 
@@ -147,7 +154,7 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
 
 
     /// <inheritdoc />
-    public IContextOfBlock Context { get; protected set; } = null!;
+    public IContextOfBlock Context => BlockInfo.Context;
 
 
     [field: AllowNull, MaybeNull]
@@ -160,12 +167,20 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
     private IDataSource GetData()
     {
         var l = Log.Fn<IDataSource>();
-        l.A($"About to load data source with possible app configuration provider. App is probably null: {App}");
-        var dataSource = Services.BdsFactoryLazy.Value.GetContextDataSource(this, App?.ConfigurationProvider);
+        l.A($"About to load data source with possible app configuration provider. App is probably null: {AppOrNull}");
+        var dataSource = Services.BdsFactoryLazy.Value.GetContextDataSource(this, AppOrNull?.ConfigurationProvider);
         return l.Return(dataSource);
     }
 
-    public BlockConfiguration Configuration { get; protected set; } = null!;
+    public BlockConfiguration Configuration
+    {
+        get => _configuration ?? throw new($"BlockConfiguration is not available and can't be accessed. Code running early on must first check for {nameof(ConfigurationIsReady)}");
+        protected set => _configuration = value;
+    }
+
+    private BlockConfiguration? _configuration;
+    public bool ConfigurationIsReady => _configuration != null;
+
 
     public bool IsContentApp { get; protected set; }
 

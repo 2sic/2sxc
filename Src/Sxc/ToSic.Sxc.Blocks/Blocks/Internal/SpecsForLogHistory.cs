@@ -13,7 +13,7 @@ public class SpecsForLogHistory
         try
         {
             // use app provided or try to use from block
-            app ??= block?.App;
+            app ??= block?.AppOrNull;
 
             // No context - neither blog nor App, exit
             var specs = new Dictionary<string, string>(InvariantCultureIgnoreCase);
@@ -29,7 +29,7 @@ public class SpecsForLogHistory
             {
                 specs.Add(nameof(block.ContentBlockId), block.ContentBlockId.ToString());
 
-                var view = block.View;
+                var view = block.ViewIsReady ? block.View : null; 
                 if (addView && view != null)
                 {
                     specs.Add("ViewId", view.Id.ToString());

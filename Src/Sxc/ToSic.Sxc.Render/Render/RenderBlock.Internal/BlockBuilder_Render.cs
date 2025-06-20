@@ -31,7 +31,8 @@ public partial class BlockBuilder
             // Caching only allowed if no errors, no exceptions, and the content-block is real (no preview etc.)
             var canCache = !isErr
                            && exceptionsOrNull.SafeNone()
-                           && (Block.ContentGroupExists || Block.Configuration?.PreviewViewEntity != null);
+                           && Block.ContentGroupExists
+                           && (Block.ContentGroupExists || Block.Configuration.PreviewViewEntity != null);
 
             // The change summary should only happen at top-level
             // Because once these properties are picked up, they are flushed
@@ -99,31 +100,30 @@ public partial class BlockBuilder
                 : null;
 
             #region Content-Group Exists
+
+            // If the body is still empty, it can be that there is nothing yet (empty block)
+            // or that something is wrong.
             // Check if the content-group exists - sometimes the Content-Group it's missing if a site is being imported and the data isn't in yet
-            if (body == null)
+            if (body == null && Block is { ConfigurationIsReady: true, DataIsReady: false })
             {
-                l.A("pre-init innerContent content is empty so no errors, will build");
-                if (!Block.DataIsReady)
-                {
-                    l.A("content-block is missing data - will show error or just stop if not-admin-user");
-                    var blockId = Block.Configuration?.BlockIdentifierOrNull;
-                    var msg = "Data is missing. ";
+                l.A("content-block is missing data - will show error or just stop if not-admin-user");
+                var blockId = Block.Configuration.BlockIdentifierOrNull;
+                var msg = "Data is missing. ";
 
-                    msg += (Block.Context.AppReaderOrNull?.IsHealthy == false)
-                        ? "The app is unhealthy, indicating that data wasn't properly loaded from SQL. "
-                          + "This is the message: '" + Block.Context.AppReaderRequired.HealthMessage + "'. "
-                          + "Please check the insights to see in more detail what happened."
-                        : "This is common when a site is copied " +
-                          "but the content / apps have not been imported yet" +
-                          " - check 2sxc.org/help?tag=export-import - ";
-                    msg += $" Zone/App: {Block.ZoneId}/{Block.AppId}; App NameId: {blockId?.AppDebugNameId}; ContentBlock GUID: {blockId?.Guid}";
+                msg += (Block.Context.AppReaderOrNull?.IsHealthy == false)
+                    ? "The app is unhealthy, indicating that data wasn't properly loaded from SQL. "
+                      + "This is the message: '" + Block.Context.AppReaderRequired.HealthMessage + "'. "
+                      + "Please check the insights to see in more detail what happened."
+                    : "This is common when a site is copied " +
+                      "but the content / apps have not been imported yet" +
+                      " - check 2sxc.org/help?tag=export-import - ";
+                msg += $" Zone/App: {Block.ZoneId}/{Block.AppId}; App NameId: {blockId?.AppDebugNameId}; ContentBlock GUID: {blockId?.Guid}";
 
-                    var ex = new Exception(msg);
-                    exceptions.Add(ex);
-                    body = RenderingHelper.DesignErrorMessage(exceptions, true);
-                    err = true;
-                    errorCode = ErrorDataIsMissing;
-                }
+                var ex = new Exception(msg);
+                exceptions.Add(ex);
+                body = RenderingHelper.DesignErrorMessage(exceptions, true);
+                err = true;
+                errorCode = ErrorDataIsMissing;
             }
             #endregion
 
@@ -149,7 +149,8 @@ public partial class BlockBuilder
                     if (Block.ViewIsReady) // when a content block is still new, there is no definition yet
                     {
                         l.A("standard case, found template, will render");
-                        var engine = GetEngine() ?? throw new("Engine missing, probably no view configured.");
+                        var engine = GetEngine()
+                                     ?? throw new("Engine missing, probably no view configured.");
                         var renderEngineResult = engine.Render(specs);
                         body = renderEngineResult.Html;
                         if (renderEngineResult.ExceptionsOrNull != null)

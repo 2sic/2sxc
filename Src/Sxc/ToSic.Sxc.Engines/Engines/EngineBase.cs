@@ -60,7 +60,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
         // Do various pre-checks and path variations
         var view = block.View!;
         var appReader = block.Context.AppReaderRequired;
-        var appPathRootInInstallation = block.App!.PathSwitch(view.IsShared, PathTypes.PhysRelative);
+        var appPathRootInInstallation = block.App.PathSwitch(view.IsShared, PathTypes.PhysRelative);
         var (polymorphPathOrNull, edition) = Services.EnginePolymorphism
             .PolymorphTryToSwitchPath(appPathRootInInstallation, view, appReader);
 
@@ -88,7 +88,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
         Template = view;
         Edition = edition;
         TemplatePath = templatePath;
-        App = Block.App!;
+        App = Block.App;
         DataSource = Block.Data;
 
         l.Done();
