@@ -94,14 +94,16 @@ public partial class BlockBuilder
 
             // do pre-check to see if system is stable & ready
             var (body, err) = GenerateErrorMsgIfInstallationNotOk();
-            var errorCode = err ? ErrorInstallationNotOk : null;
+            var errorCode = err
+                ? ErrorInstallationNotOk
+                : null;
 
             #region Content-Group Exists
             // Check if the content-group exists - sometimes the Content-Group it's missing if a site is being imported and the data isn't in yet
             if (body == null)
             {
                 l.A("pre-init innerContent content is empty so no errors, will build");
-                if (Block.DataIsMissing)
+                if (!Block.DataIsReady)
                 {
                     l.A("content-block is missing data - will show error or just stop if not-admin-user");
                     var blockId = Block.Configuration?.BlockIdentifierOrNull;
@@ -143,7 +145,8 @@ public partial class BlockBuilder
             if (body == null)
                 try
                 {
-                    if (Block.View != null) // when a content block is still new, there is no definition yet
+                    // If we got nothing, but we had a view, then there must be data missing, so we need to show an error
+                    if (Block.ViewIsReady) // when a content block is still new, there is no definition yet
                     {
                         l.A("standard case, found template, will render");
                         var engine = GetEngine() ?? throw new("Engine missing, probably no view configured.");
@@ -296,8 +299,8 @@ public partial class BlockBuilder
         if (_engine != null)
             return l.Return(_engine, "cached");
         // edge case: view hasn't been built/configured yet, so no engine to find/attach
-        if (Block.View == null)
-            return l.ReturnNull("no view");
+        if (!Block.ViewIsReady)
+            return l.ReturnNull("no data / view");
         _engine = Services.EngineFactory.CreateEngine(Block.View);
         _engine.Init(Block);
         return l.Return(_engine, "created");

@@ -38,7 +38,7 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
 
         // Get and cache for reuse
         var cmsContext = (CmsContext)ExCtx.GetState<ICmsContext>();
-        var created = new CmsView<TSettings, TResources>(cmsContext, cmsContext.RealBlockOrNull, false);
+        var created = new CmsView<TSettings, TResources>(cmsContext, cmsContext.BlockInternal, false);
         _view = created;
         return created;
     }

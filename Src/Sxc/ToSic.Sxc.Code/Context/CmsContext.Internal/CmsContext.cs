@@ -31,10 +31,10 @@ internal class CmsContext(
     internal new IExecutionContext ExCtx => base.ExCtx;
 
     // Note: Internal so it can be used for View<T, T>
-    internal IBlock? RealBlockOrNull => _realBlock.Get(() => ExCtx.GetState<IBlock>());
+    internal IBlock BlockInternal => _realBlock.Get(() => ExCtx.GetState<IBlock>())!;
     private readonly GetOnce<IBlock?> _realBlock = new();
 
-    internal IContextOfBlock? CtxBlockOrNull => _ctxBlock.Get(() => RealBlockOrNull?.Context);
+    internal IContextOfBlock? CtxBlockOrNull => _ctxBlock.Get(() => BlockInternal.Context);
     private readonly GetOnce<IContextOfBlock?> _ctxBlock = new();
 
     internal IContextOfSite CtxSite => CtxBlockOrNull ?? siteCtxFallback;
@@ -60,7 +60,7 @@ internal class CmsContext(
 
     [field: AllowNull, MaybeNull]
     public ICmsModule Module => field
-        ??= new CmsModule(this, RealBlockOrNull.Context?.Module ?? new ModuleUnknown(null), RealBlockOrNull);
+        ??= new CmsModule(this, BlockInternal.Context?.Module ?? new ModuleUnknown(null), BlockInternal);
 
     [field: AllowNull, MaybeNull]
     public ICmsUser User => field
@@ -75,9 +75,9 @@ internal class CmsContext(
 
     [field: AllowNull, MaybeNull]
     public ICmsView View => field
-        ??= new CmsView(this, RealBlockOrNull);
+        ??= new CmsView(this, BlockInternal);
 
     [field: AllowNull, MaybeNull]
     public ICmsBlock Block => field
-        ??= new CmsBlock(RealBlockOrNull);
+        ??= new CmsBlock(BlockInternal);
 }

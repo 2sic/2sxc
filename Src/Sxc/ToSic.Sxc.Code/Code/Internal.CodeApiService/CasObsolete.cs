@@ -76,10 +76,12 @@ public class CodeApiServiceObsolete(IExecutionContext dynCode)
     {
         dynCode.Log.A("try to build old List");
 
-        var data = dynCode.GetState<IDataSource>();
-        if (data == null! /* paranoid */ || dynCode.GetState<IBlock>().View == null)
+        var block = dynCode.GetState<IBlock>();
+        if (!block.DataIsReady || !block.ViewIsReady)
             return [];
-        if (!data.Out.ContainsKey(DataSourceConstants.StreamDefaultName))
+
+        var data = dynCode.GetState<IDataSource>();
+        if (data == null! /* paranoid */ || !data.Out.ContainsKey(DataSourceConstants.StreamDefaultName))
             return [];
 
         var entities = data.List.ToList();

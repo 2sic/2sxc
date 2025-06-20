@@ -5,10 +5,10 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.CodeApi;
 
-internal class CodeTypedApiHelper(ExecutionContext parent) : CodeAnyApiHelper(parent), ICodeTypedApiHelper
+internal class CodeTypedApiHelper(ExecutionContext exCtx) : CodeAnyApiHelper(exCtx), ICodeTypedApiHelper
 {
-    public IAppTyped AppTyped => Parent.AppTyped;
-    public ITypedStack AllSettings => Parent.AllSettings;
-    public ITypedStack AllResources => Parent.AllResources;
-    public ServiceKit16 ServiceKit16 => Parent.GetKit<ServiceKit16>();
+    public IAppTyped AppTyped => ExCtx.AppTyped;
+    public ITypedStack AllSettings => ExCtx.AllSettings;
+    public ITypedStack AllResources => ExCtx.AllResources;
+    public ServiceKit16 ServiceKit16 => ExCtx.GetKit<ServiceKit16>();
 }

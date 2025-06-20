@@ -7,23 +7,23 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code.CodeApi;
 
-internal abstract class CodeAnyApiHelper(ExecutionContext parent) : ICodeAnyApiHelper
+internal abstract class CodeAnyApiHelper(ExecutionContext exCtx) : ICodeAnyApiHelper
 {
-    protected ExecutionContext Parent = parent;
+    protected ExecutionContext ExCtx = exCtx;
 
-    public IBlock Block => Parent.Block;
+    public IBlock Block => ExCtx.Block;
 
-    public ICmsContext CmsContext => Parent.CmsContext;
-    public IDataSource Data => Parent.Data;
+    public ICmsContext CmsContext => ExCtx.CmsContext;
+    public IDataSource Data => ExCtx.Block.Data;
 
     public TService GetService<TService>(NoParamOrder protector = default, bool reuse = false, Type? type = default)
         where TService : class
-        => Parent.GetService<TService>(protector, reuse, type);
+        => ExCtx.GetService<TService>(protector, reuse, type);
 
-    public IDevTools DevTools => Parent.DevTools;
+    public IDevTools DevTools => ExCtx.DevTools;
 
-    public ICodeDataFactory Cdf => Parent.Cdf;
-    public ILinkService Link => Parent.Link;
+    public ICodeDataFactory Cdf => ExCtx.Cdf;
+    public ILinkService Link => ExCtx.Link;
 
-    public IConvertService Convert => Parent.Convert;
+    public IConvertService Convert => ExCtx.Convert;
 }

@@ -96,7 +96,6 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.My
             return cLog.Return(this, "no block");
 
         Block = block;
-        Data = block.Data;
         AttachApp(block.App);
 
         return cLog.Return(this, $"AppId: {App?.AppId}, Block: {block.Configuration?.BlockIdentifierOrNull?.Guid}");
@@ -104,9 +103,6 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.My
 
     /// <inheritdoc />
     internal IApp App { get; private set; }
-
-    /// <inheritdoc />
-    internal IDataSource? Data { get; private set; }
 
     /// <inheritdoc cref="IDynamicCode.Link" />
     [field: AllowNull, MaybeNull]

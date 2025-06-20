@@ -38,7 +38,7 @@ internal class DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitial
             return l.ReturnTrue("Previous check completed, will skip");
 
         // throw better error if SxcInstance isn't available
-        // not sure if this doesn't have side-effects...
+        // not sure if this doesn't have side effects...
         if (block == null)
             throw l.Done(new Exception("Error - can't find 2sxc instance configuration. " +
                                        "Probably trying to show an app or content that has been deleted or not yet installed. " +
@@ -46,15 +46,17 @@ internal class DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitial
 
         // check things if it's a module of this portal (ensure everything is ok, etc.)
         var isSharedModule = module.ModuleConfiguration.PortalID != module.ModuleConfiguration.OwnerPortalID;
-        if (isSharedModule) return l.ReturnFalse("skip, shared");
+        if (isSharedModule)
+            return l.ReturnFalse("skip, shared");
 
-        if (block.App != null)
+        // If the block is referencing data, then also check that the app folder exists
+        if (block.DataIsReady)
         {
-            l.A("Will check if site is ready and template folder exists");
+            l.A("Will check if site is ready and app folder exists");
             EnsureSiteIsConfiguredAndTemplateFolderExists(module, block);
 
             // If no exception was raised inside, everything is fine - must cache
-            CachedModuleResults.AddOrUpdate(module.ModuleId, true, (id, value) => true);
+            CachedModuleResults.AddOrUpdate(module.ModuleId, true, (_, _) => true);
         }
         else
             l.A("skip, content-block not ready");

@@ -70,11 +70,11 @@ public class JsContextAll(JsContextLanguage jsLangCtxSvc, IJsApiService jsApiSer
         Language = jsLangCtxSvc.Init(ctx.Site);
 
         // New in v13 - if the view is from remote, don't allow design
-        var blockCanDesign = block.View?.Entity.HasAncestor() ?? false
+        var blockCanDesign = !block.ViewIsReady || block.View.Entity.HasAncestor()
             ? (bool?)false
             : null;
 
-        User = new(ctx.User, block.App?.Data?.List);
+        User = new(ctx.User, block.DataIsReady ? block.App.Data.List : []);
 
         ContentBlockReference = new(block, ctx.Publishing.Mode);
         ContentBlock = new(block, statistics, appJson);

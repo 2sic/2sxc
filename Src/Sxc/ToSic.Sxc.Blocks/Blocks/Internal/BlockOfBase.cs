@@ -16,6 +16,7 @@ namespace ToSic.Sxc.Blocks.Internal;
 public abstract class BlockOfBase(BlockServices services, string logName, object[]? connect = default)
     : ServiceBase<BlockServices>(services, logName, connect: connect ?? []), IBlock
 {
+
     #region Constructor and DI
 
     protected void Init(IContextOfBlock context, IAppIdentity appId)
@@ -47,14 +48,24 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
             // If specifically no app found, end initialization here
             // Means we have no data, and no BlockBuilder
             case AppConstants.AppIdNotFound or EavConstants.NullId:
-                DataIsMissing = true;
-                return l.ReturnTrue("stop: app & data are missing");
+                return l.ReturnFalse("stop: app & data are missing");
             // If no app yet, stop now with BlockBuilder created
             case KnownAppsConstants.AppIdEmpty:
-                return l.ReturnTrue($"stop a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
+                return l.ReturnFalse($"stop a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
         }
 
         l.A("Real app specified, will load App object with Data");
+
+        // note: requires EditAllowed, which isn't ready till App is created
+        // 2dm #???
+        var appWorkCtxPlus = Services.WorkViews.CtxSvc.ContextPlus(this.PureIdentity());
+        Configuration = Services.AppBlocks
+            .New(appWorkCtxPlus)
+            .GetOrGeneratePreviewConfig(blockId);
+
+        // handle cases where the content group is missing - usually because of incomplete import
+        if (Configuration.DataIsMissing)
+            return l.ReturnFalse($"DataIsMissing a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
 
         // Get App for this block
         var app = Services.AppLazy.Value;
@@ -62,22 +73,14 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
         App = app;
         l.A("App created");
 
-        // note: requires EditAllowed, which isn't ready till App is created
-        var appWorkCtxPlus = Services.WorkViews.CtxSvc.ContextPlus(this);
-        Configuration = Services.AppBlocks.New(appWorkCtxPlus)
-            .GetOrGeneratePreviewConfig(blockId);
-
-        // handle cases where the content group is missing - usually because of incomplete import
-        if (Configuration.DataIsMissing)
-        {
-            DataIsMissing = true;
-            App = null;
-            return l.ReturnTrue($"DataIsMissing a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
-        }
-
         // use the content-group template, which already covers stored data + module-level stored settings
-        View = new BlockViewLoader(Log)
+        var view = new BlockViewLoader(Log)
             .PickView(this, Configuration.View, Context, Services.WorkViews.New(appWorkCtxPlus));
+
+        if (view == null)
+            return l.ReturnFalse($"no view; a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
+        
+        View = view;
         return l.ReturnTrue($"ok a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
     }
 
@@ -91,7 +94,14 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
 
     public int AppId { get; protected set; }
 
-    public IApp? App { get; protected set; }
+    public IApp App
+    {
+        get => _app ?? throw new($"App and Data are missing and can't be accessed. Code running early on must first check for .{nameof(DataIsReady)}");
+        protected set => _app = value;
+    }
+    private IApp? _app;
+    public bool DataIsReady => _app != null;
+
 
     // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
     public bool ContentGroupExists => Configuration?.Exists ?? false; // This check may happen before Configuration is accessed, so we need the null check
@@ -105,11 +115,10 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
 
     public int ParentId { get; protected set; }
 
-    public bool DataIsMissing { get; private set; }
     public List<ProblemReport> Problems { get; } = [];
 
     public int ContentBlockId { get; protected set; }
-        
+
     #region Template and extensive template-choice initialization
 
     // ensure the data is also set correctly...
@@ -119,16 +128,20 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
     // 5. If nothing exists, ensure system knows nothing applied 
     // #. possible override: If specifically defined in some object calls (like web-api), use that (set when opening this object?)
     // #. possible override in url - and allowed by permissions (admin/host), use that
-    public IView? View
+    public IView View
     {
-        get;
-        // ReSharper disable once ExplicitCallerInfoArgument
-        set => Log.Do(cName: $"set{nameof(value)}", action: () =>
+        get => _view ?? throw new($"View is not available and can't be accessed. Rode running early on accessing the view, must first check for {nameof(ViewIsReady)}");
+        set
         {
-            field = value;
+            var l = Log.Fn($"set{nameof(value)}");
+            _view = value;
             Data = null!; // reset this if the view changed...
-        });
+            l.Done();
+        }
     }
+
+    private IView? _view;
+    public bool ViewIsReady => _view != null;
 
     #endregion
 
@@ -153,9 +166,6 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
     }
 
     public BlockConfiguration Configuration { get; protected set; } = null!;
-        
-    ///// <inheritdoc />
-    //public object BlockBuilder { get; protected set; }
 
     public bool IsContentApp { get; protected set; }
 

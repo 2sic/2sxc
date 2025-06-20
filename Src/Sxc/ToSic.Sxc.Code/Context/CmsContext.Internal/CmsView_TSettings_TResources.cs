@@ -24,7 +24,7 @@ internal class CmsView<TSettings, TResources>(CmsContext parent, IBlock block, b
     where TSettings : class, ICanWrapData, new()
     where TResources : class, ICanWrapData, new()
 {
-    private readonly IView _view = block.View;
+    private readonly IView _view = block.View!;
 
     [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= Parent.ExCtx.GetCdf();

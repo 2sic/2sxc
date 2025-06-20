@@ -20,9 +20,6 @@ public interface IBlock: IAppIdentity, IHasLog
     int ParentId { get; }
 
     [PrivateApi]
-    bool DataIsMissing { get; }
-
-    [PrivateApi]
     List<ProblemReport> Problems { get; }
 
     [PrivateApi]
@@ -38,7 +35,8 @@ public interface IBlock: IAppIdentity, IHasLog
     /// <summary>
     /// The view which will be used to render this block
     /// </summary>
-    IView? View { get; set; }
+    IView View { get; set; }
+    bool ViewIsReady { get; }
 
     [PrivateApi("unsure if this should be public, or only needed to initialize it?")]
     BlockConfiguration Configuration { get; }
@@ -46,7 +44,7 @@ public interface IBlock: IAppIdentity, IHasLog
     /// <summary>
     /// The app this block is running in
     /// </summary>
-    IApp? App { get; }
+    IApp App { get; }
 
     /// <summary>
     /// The DataSource which delivers data for this block (will be used by the <see cref="IEngine"/> together with the View)
@@ -85,6 +83,9 @@ public interface IBlock: IAppIdentity, IHasLog
     /// </summary>
     [PrivateApi]
     public IBlock? RootBlock { get; }
+
+    bool DataIsReady { get; }
+
 
     List<IPageFeature> BlockFeatures(ILog? log = default);
 }

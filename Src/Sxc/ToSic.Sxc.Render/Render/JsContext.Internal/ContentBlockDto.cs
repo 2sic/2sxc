@@ -106,7 +106,7 @@ public class ContentBlockDto : EntityDto
             ? app?.Resources?.EntityId : null;  // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
 
         // View properties
-        var view = block.View;
+        var view = block.ViewIsReady ? block.View : null;
         HasContent = view != null && (configuration?.Exists ?? false);
 
         ZoneId = block.ZoneId;

@@ -14,8 +14,8 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
 
     internal IDataSource GetContextDataSource(IBlock block, ILookUpEngine? configLookUp)
     {
-        var l = Log.Fn<IDataSource>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.Permissions.IsContentAdmin}, view:{block.View?.Name}");
         var view = block.View;
+        var l = Log.Fn<IDataSource>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.Permissions.IsContentAdmin}, view:{view?.Name}");
 
         // Get ModuleDataSource
         var dsFactory = dataSourceFactory.Value;

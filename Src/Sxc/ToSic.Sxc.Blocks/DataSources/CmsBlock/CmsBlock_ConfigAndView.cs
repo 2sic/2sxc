@@ -13,7 +13,7 @@ public sealed partial class CmsBlock
             return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(false, default,
                 config.ErrorsSafe());
 
-        var view = OverrideView ?? config.Result!.View;
+        var view = OverrideView ?? config.Result?.View;
         if (view == null)
             return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(false, default,
                 Error.Create(title: "CmsBlock View Missing",

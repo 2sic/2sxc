@@ -135,7 +135,7 @@ public partial class ExecutionContext
             return (TState)((IAppWithInternal)App)?.AppReader;
 
         if (typeof(TState) == typeof(IDataSource))
-            return (TState)Data;
+            return (TState)Block.Data;
 
         if (typeof(TState) == typeof(IBlock))
             return (TState)Block;

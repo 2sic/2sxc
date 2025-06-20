@@ -55,7 +55,8 @@ internal class SearchController(
         ])
 {
     /// <summary>
-    /// Initialize all values which are needed - or return a text with the info why we must stop. 
+    /// Initialize all values which are needed - or return a text with the info why we must stop.
+    /// For example, check if the block is in a ready state to provide data.
     /// </summary>
     /// <param name="module"></param>
     /// <returns></returns>
@@ -81,11 +82,11 @@ internal class SearchController(
 
         Block = moduleAndBlockBuilder.Value.BuildBlock(DnnModule, null);
 
-        if (Block.View == null) return "no view";
-        if (Block.View.SearchIndexingDisabled) return "search disabled"; // new in 12.02
+        if (!Block.DataIsReady || !Block.ViewIsReady)
+            return "no data or view";
 
-        // This list will hold all EAV entities to be indexed
-        if (Block.Data == null) return "DataSource null";
+        if (Block.View.SearchIndexingDisabled)
+            return "search disabled"; // new in 12.02
 
 
         // Attach DNN Lookup Providers so query-params like [DateTime:Now] or [Portal:PortalId] will work
@@ -93,13 +94,12 @@ internal class SearchController(
 
         // Get all streams to index
         var streamsToIndex = GetStreamsToIndex();
-        if (!streamsToIndex.Any()) return l.ReturnAsOk("no streams to index");
+        if (!streamsToIndex.Any())
+            return l.ReturnAsOk("no streams to index");
 
         // Figure out the current edition - if none, stop here
         // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
         _edition = polymorphism.UseViewEditionOrGet(Block);
-        //Block.View.Edition.NullIfNoValue()
-        //           ?? _polymorphism.Init(Block.Context.AppState.List).Edition();
 
         // Convert DNN SearchDocuments from 2sxc SearchInfos
         SearchItems = BuildInitialSearchInfos(streamsToIndex, DnnModule);
@@ -125,25 +125,28 @@ internal class SearchController(
     /// <returns></returns>
     public IList<SearchDocument> GetModifiedSearchDocuments(IModule module, DateTime beginDate)
     {
-        var l = Log.Fn<IList<SearchDocument>>();
+        var l = Log.Fn<List<SearchDocument>>();
         // Turn off logging into history by default - the template code can reactivate this if desired
         var logWithPreserve = Log as Log;
-        if (logWithPreserve != null) logWithPreserve.Preserve = false;
+        if (logWithPreserve != null)
+            logWithPreserve.Preserve = false;
 
         // Log with infos, to ensure errors are caught
         var exitMessage = InitAllAndVerifyIfOk(module);
         if (exitMessage != null)
-            return l.Return(new List<SearchDocument>(), exitMessage);
+            return l.Return([], exitMessage);
 
+        var view = Block.View!;
         try
         {
-            var useCustomViewController = !string.IsNullOrWhiteSpace(Block.View.ViewController); // new in 12.02
+            var useCustomViewController = !string.IsNullOrWhiteSpace(view.ViewController); // new in 12.02
             l.A($"Use new Custom View Controller: {useCustomViewController}");
             if (useCustomViewController)
             {
                 /* New mode in 12.02 using a custom ViewController */
                 var customizeSearch = CreateAndInitViewController(DnnSite, Block);
-                if (customizeSearch == null) return l.Return(new List<SearchDocument>(), "exit");
+                if (customizeSearch == null)
+                    return l.Return([], "exit");
 
                 // Call CustomizeSearch in a try/catch
                 l.A("execute CustomizeSearch");
@@ -154,7 +157,7 @@ internal class SearchController(
             {
                 /* Old mode v06.02 - 12.01 using the Engine or Razor which customizes */
                 // Build the engine, as that's responsible for calling inner search stuff
-                var engine = engineFactory.CreateEngine(Block.View);
+                var engine = engineFactory.CreateEngine(view);
                 if (engine is IEngineDnnOldCompatibility oldEngine)
                 {
 #pragma warning disable CS0618
@@ -318,7 +321,7 @@ internal class SearchController(
             .Combine(Block.View.IsShared ? site.SharedAppsRootRelative() : site.AppsRootPhysical, block.Context.AppReaderRequired.Specs.Folder)
             .ForwardSlash();
         l.A($"compile ViewController class on path: {path}/{Block.View.ViewController}");
-        var spec = new HotBuildSpec(block.AppId, _edition, block.App?.Name);
+        var spec = new HotBuildSpec(block.AppId, _edition, block.App.Name);
         l.A($"prepare spec: {spec}");
         var instance = codeCompiler.New().InstantiateClass(virtualPath: block.View.ViewController, spec: spec, className: null, relativePath: path, throwOnError: true);
         l.A("got instance of compiled ViewController class");

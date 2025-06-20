@@ -325,10 +325,12 @@ internal class LightSpeed(
     /// Lightspeed Configuration at View Level
     /// </summary>
     private LightSpeedDecorator ViewConfigOrNull => _viewConfig.Get(() =>
-        _block.View?.Metadata
-            .OfType(LightSpeedDecorator.TypeNameId)
-            .FirstOrDefault()
-            .NullOrGetWith(viewLs => new LightSpeedDecorator(viewLs))
+        !_block.ViewIsReady
+            ? null
+            : _block.View.Metadata
+                .OfType(LightSpeedDecorator.TypeNameId)
+                .FirstOrDefault()
+                .NullOrGetWith(viewLs => new LightSpeedDecorator(viewLs))
     );
     private readonly GetOnce<LightSpeedDecorator> _viewConfig = new();
 
