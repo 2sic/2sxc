@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
+using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.Web.Internal.PageFeatures;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks.Internal;
@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Blocks.Internal;
 /// </summary>
 [PrivateApi("Was InternalApi_DoNotUse_... till v17")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public record BlockInfoWip : IAppIdentity, IBlock
+public record BlockSpecs : IAppIdentity, IBlock
 {
     public int AppId { get; init; }
     public int ZoneId { get; init; }
@@ -20,7 +20,7 @@ public record BlockInfoWip : IAppIdentity, IBlock
     /// <summary>
     /// The module ID or the parent-content-block id, probably not ideal here, but not sure
     /// </summary>
-    public int ParentId { get; init; }
+    public int ParentId => Context?.Module?.Id ?? 0;
 
     public List<ProblemReport> Problems { get; init; }
 
@@ -36,37 +36,39 @@ public record BlockInfoWip : IAppIdentity, IBlock
     /// <summary>
     /// The view which will be used to render this block
     /// </summary>
-    public IView View { get; set; } // WIP!
+    public IView View => ViewOrNull ?? throw new($"View is not available and can't be accessed. Rode running early on accessing the view, must first check for {nameof(ViewIsReady)}");
+    public IView? ViewOrNull { get; init; }
+    public bool ViewIsReady => ViewOrNull != null;
 
-    public bool ViewIsReady { get; init; }
+    public void SwapView(IView value) => throw new("This should never be called on the BlockSpecs!");
 
-    [PrivateApi("unsure if this should be public, or only needed to initialize it?")]
-    public BlockConfiguration Configuration { get; init; }
+    public BlockConfiguration Configuration
+    {
+        get => _configuration ?? throw new($"BlockConfiguration is not available and can't be accessed. Code running early on must first check for {nameof(ConfigurationIsReady)}");
+        init => _configuration = value;
+    }
+
+    private readonly BlockConfiguration? _configuration;
+    public bool ConfigurationIsReady => _configuration != null;
 
     /// <summary>
     /// The app this block is running in
     /// </summary>
-    public IApp App { get; init; }
+    public IApp App => AppOrNull
+                       ?? throw new($"App and Data are missing and can't be accessed. Code running early on must first check for .{nameof(DataIsReady)} or use {nameof(AppOrNull)}");
+    public bool DataIsReady => AppOrNull != null;
+    public IApp? AppOrNull { get; init; }
 
     /// <summary>
     /// The DataSource which delivers data for this block (will be used by the <see cref="IEngine"/> together with the View)
     /// </summary>
     public IDataSource Data { get; init; }
 
-    [PrivateApi("might rename this some time")]
     public bool IsContentApp { get; init; }
 
     #endregion
 
-    ///// <summary>
-    ///// The BlockBuilder.
-    ///// Must be stored on this object, but the type is in another project so here it's untyped.
-    ///// Access to this must go through the extension method `GetBlockBuilder()`
-    ///// </summary>
-    //[PrivateApi("naming not final")]
-    //object BlockBuilder { get; }
-
-    public bool ContentGroupExists { get; }
+    public bool ContentGroupExists => _configuration?.Exists ?? false; // This check may happen before Configuration is accessed, so we need the null check
 
     /// <summary>
     /// All the keys / features which were added in this block; in case the block should also modify its behavior.
@@ -77,22 +79,15 @@ public record BlockInfoWip : IAppIdentity, IBlock
     /// The parent block of this block, if any.
     /// </summary>
     [PrivateApi]
-    public IBlock? ParentBlock { get; init; }
+    public IBlock? ParentBlockOrNull { get; init; }
 
     /// <summary>
     /// The root block of this block - can be the same as `this`.
     /// </summary>
     [PrivateApi]
-    public IBlock? RootBlock { get; init; }
+    public IBlock RootBlock { get; init; }
 
-    public bool DataIsReady { get; init; }
-    public bool ConfigurationIsReady { get; init; }
-    public IApp? AppOrNull { get; init; }
-    public List<IPageFeature> BlockFeatures(ILog? log = default)
-    {
-        throw new NotImplementedException();
-    }
-
+    public IList<IDependentApp> DependentApps { get; } = [];
 
     //List<IPageFeature> BlockFeatures(ILog? log = default);
     public ILog? Log { get; }

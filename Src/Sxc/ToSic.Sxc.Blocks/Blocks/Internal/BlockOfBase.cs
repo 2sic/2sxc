@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Sys;
+﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.Sys;
@@ -7,7 +6,6 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.LookUp.Internal;
-using ToSic.Sxc.Web.Internal.PageFeatures;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks.Internal;
@@ -17,114 +15,105 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
     : ServiceBase<BlockServices>(services, logName, connect: connect ?? []), IBlock
 {
     // New: WIP replacing the block with a stateless record
-    protected BlockInfoWip BlockInfo { get; set; } = new();
+    public BlockSpecs Specs { get; protected set; } = new();
 
     #region Constructor and DI
 
-    protected void Init(IContextOfBlock context, IAppIdentity appId)
-    {
-        BlockInfo = BlockInfo with
-        {
-            Context = context,
-            ZoneId = appId.ZoneId,
-            AppId = appId.AppId,
-        };
-    }
+    //protected BlockSpecs CompleteInit(IBlock? parentBlockOrNull, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded)
+    //{
+    //    var l = Log.Fn<BlockSpecs>();
 
-    protected bool CompleteInit(IBlock? parentBlockOrNull, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded)
-    {
-        var l = Log.Fn<bool>();
+    //    Specs = Specs with
+    //    {
+    //        ParentBlockOrNull = parentBlockOrNull,
+    //        RootBlock = parentBlockOrNull?.RootBlock ?? this, // if parent is null, this is the root block
 
-        BlockInfo = BlockInfo with
-        {
-            ParentBlock = parentBlockOrNull,
-            RootBlock = parentBlockOrNull?.RootBlock ?? this, // if parent is null, this is the root block
+    //        // Note: this is "just" the module id, not the block id
+    //        //ParentId = Context.Module.Id,
+    //        ContentBlockId = blockNumberUnsureIfNeeded,
+    //    };
 
-            // Note: this is "just" the module id, not the block id
-            ParentId = Context.Module.Id,
-            ContentBlockId = blockNumberUnsureIfNeeded,
+    //    l.A($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
 
-        };
+    //    switch (AppId)
+    //    {
+    //        // If specifically no app found, end initialization here
+    //        // Means we have no data, and no BlockBuilder
+    //        case AppConstants.AppIdNotFound or EavConstants.NullId:
+    //            return l.Return(Specs, "stop: app & data are missing");
+    //        // If no app yet, stop now with BlockBuilder created
+    //        case KnownAppsConstants.AppIdEmpty:
+    //            return l.Return(Specs, $"stop a:{AppId}, container:{Context.Module.Id}, content-group:{ContentBlockId}");
+    //    }
 
-        l.A($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
+    //    l.A("Real app specified, will load App object with Data");
 
-        switch (AppId)
-        {
-            // If specifically no app found, end initialization here
-            // Means we have no data, and no BlockBuilder
-            case AppConstants.AppIdNotFound or EavConstants.NullId:
-                return l.ReturnFalse("stop: app & data are missing");
-            // If no app yet, stop now with BlockBuilder created
-            case KnownAppsConstants.AppIdEmpty:
-                return l.ReturnFalse($"stop a:{AppId}, container:{Context.Module.Id}, content-group:{ContentBlockId}");
-        }
+    //    // note: requires EditAllowed, which isn't ready till App is created
+    //    // 2dm #???
+    //    var appWorkCtxPlus = Services.WorkViews.CtxSvc.ContextPlus(this.PureIdentity());
+    //    var config = Services.AppBlocks
+    //        .New(appWorkCtxPlus)
+    //        .GetOrGeneratePreviewConfig(blockId);
 
-        l.A("Real app specified, will load App object with Data");
+    //    Specs = Specs with
+    //    {
+    //        Configuration = config,
+    //    };
 
-        // note: requires EditAllowed, which isn't ready till App is created
-        // 2dm #???
-        var appWorkCtxPlus = Services.WorkViews.CtxSvc.ContextPlus(this.PureIdentity());
-        var config = Services.AppBlocks
-            .New(appWorkCtxPlus)
-            .GetOrGeneratePreviewConfig(blockId);
+    //    // handle cases where the content group is missing - usually because of incomplete import
+    //    if (config.DataIsMissing)
+    //        return l.Return(Specs, $"DataIsMissing a:{AppId}, container:{Context.Module.Id}, content-group:{config.Id}");
 
-        BlockInfo = BlockInfo with
-        {
-            Configuration = config,
-        };
+    //    // Get App for this block
+    //    var app = Services.AppLazy.Value;
+    //    app.Init(Context.Site, this.PureIdentity(), new SxcAppDataConfigSpecs { BlockForLookupOrNull = this });
+    //    Specs = Specs with
+    //    {
+    //        AppOrNull = app,
+    //    };
+    //    l.A("App created");
 
-        // handle cases where the content group is missing - usually because of incomplete import
-        if (config.DataIsMissing)
-            return l.ReturnFalse($"DataIsMissing a:{AppId}, container:{Context.Module.Id}, content-group:{config.Id}");
+    //    // use the content-group template, which already covers stored data + module-level stored settings
+    //    var view = new BlockViewLoader(Log)
+    //        .PickView(Specs, config.View, Services.WorkViews.New(appWorkCtxPlus));
 
-        // Get App for this block
-        var app = Services.AppLazy.Value;
-        app.Init(Context.Site, this.PureIdentity(), new SxcAppDataConfigSpecs { BlockForLookupOrNull = this });
-        AppOrNull = app;
-        l.A("App created");
+    //    if (view == null)
+    //        return l.Return(Specs, $"no view; a:{AppId}, container:{Context.Module.Id}, content-group:{config.Id}");
 
-        // use the content-group template, which already covers stored data + module-level stored settings
-        var view = new BlockViewLoader(Log)
-            .PickView(this, config.View, Context, Services.WorkViews.New(appWorkCtxPlus));
+    //    Specs = Specs with
+    //    {
+    //        ViewOrNull = view,
+    //    };
+    //    return l.Return(Specs, $"ok a:{AppId}, container:{Context.Module.Id}, content-group:{config.Id}");
+    //}
 
-        if (view == null)
-            return l.ReturnFalse($"no view; a:{AppId}, container:{Context.Module.Id}, content-group:{config.Id}");
-        
-        View = view;
-        return l.ReturnTrue($"ok a:{AppId}, container:{Context.Module.Id}, content-group:{config.Id}");
-    }
+
 
     #endregion
 
-    public IBlock? ParentBlock => BlockInfo.ParentBlock;
+    public IBlock? ParentBlockOrNull => Specs.ParentBlockOrNull;
 
-    public IBlock RootBlock => BlockInfo.RootBlock;
+    public IBlock RootBlock => Specs.RootBlock;
 
-    public int ZoneId => BlockInfo.ZoneId;
+    public int ZoneId => Specs.ZoneId;
 
-    public int AppId => BlockInfo.AppId;
+    public int AppId => Specs.AppId;
 
-    public IApp App => AppOrNull
-                       ?? throw new($"App and Data are missing and can't be accessed. Code running early on must first check for .{nameof(DataIsReady)} or use {nameof(AppOrNull)}");
-    public bool DataIsReady => AppOrNull != null;
-    public IApp? AppOrNull { get; private set; }
+    public IApp App => Specs.App;
+    public bool DataIsReady => Specs.DataIsReady;
+    public IApp? AppOrNull => Specs.AppOrNull;
 
 
     // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-    public bool ContentGroupExists => _configuration?.Exists ?? false; // This check may happen before Configuration is accessed, so we need the null check
+    public bool ContentGroupExists => Specs.ContentGroupExists;
 
     public List<string> BlockFeatureKeys { get; } = [];
 
-    public List<IPageFeature> BlockFeatures(ILog? log = default)
-        => !BlockFeatureKeys.Any()
-            ? []
-            : ((ContextOfBlock)Context).PageServiceShared.PageFeatures.GetWithDependents(BlockFeatureKeys, log ?? Log);
-
-    public int ParentId => BlockInfo.ParentId; // This is the module id, not the block id
+    public int ParentId => Specs.ParentId; // This is the module id, not the block id
 
     public List<ProblemReport> Problems { get; } = [];
 
-    public int ContentBlockId => BlockInfo.ContentBlockId; // This is the content block id, not the module id
+    public int ContentBlockId => Specs.ContentBlockId; // This is the content block id, not the module id
 
     #region Template and extensive template-choice initialization
 
@@ -135,33 +124,32 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
     // 5. If nothing exists, ensure system knows nothing applied 
     // #. possible override: If specifically defined in some object calls (like web-api), use that (set when opening this object?)
     // #. possible override in url - and allowed by permissions (admin/host), use that
-    public IView View
-    {
-        get => _view ?? throw new($"View is not available and can't be accessed. Rode running early on accessing the view, must first check for {nameof(ViewIsReady)}");
-        set
-        {
-            var l = Log.Fn($"set{nameof(value)}");
-            _view = value;
-            Data = null!; // reset this if the view changed...
-            l.Done();
-        }
-    }
+    public IView View => Specs.View;
 
-    private IView? _view;
-    public bool ViewIsReady => _view != null;
+    public IView? ViewOrNull => Specs.ViewOrNull;
+
+    public bool ViewIsReady => Specs.ViewIsReady;
+
+    public void SwapView(IView value)
+    {
+        var l = Log.Fn($"set{nameof(value)}");
+        Specs = Specs with { ViewOrNull = value };
+        Data = null!; // reset this if the view changed...
+        l.Done();
+    }
 
     #endregion
 
 
     /// <inheritdoc />
-    public IContextOfBlock Context => BlockInfo.Context;
+    public IContextOfBlock Context => Specs.Context;
 
 
     [field: AllowNull, MaybeNull]
     public IDataSource Data
     {
         get => field ??= GetData();
-        set;
+        private set;
     }
 
     private IDataSource GetData()
@@ -172,41 +160,19 @@ public abstract class BlockOfBase(BlockServices services, string logName, object
         return l.Return(dataSource);
     }
 
-    public BlockConfiguration Configuration
-    {
-        get => _configuration ?? throw new($"BlockConfiguration is not available and can't be accessed. Code running early on must first check for {nameof(ConfigurationIsReady)}");
-        protected set => _configuration = value;
-    }
+    public BlockConfiguration Configuration => Specs.Configuration;
 
-    private BlockConfiguration? _configuration;
-    public bool ConfigurationIsReady => _configuration != null;
+    public bool ConfigurationIsReady => Specs.ConfigurationIsReady;
 
 
-    public bool IsContentApp { get; protected set; }
+    public bool IsContentApp => Specs.IsContentApp;
 
     #region Dependent Apps List so that caching knows what to monitor; relevant for inner-content scenarios
 
     /// <summary>
     /// This list is only populated on the root builder. Child builders don't actually use this.
     /// </summary>
-    internal IList<IDependentApp> DependentApps { get; } = new List<IDependentApp>();
-
-    internal void PushAppDependenciesToRoot()
-    {
-        var myAppId = AppId;
-        // this is only relevant for the root builder, so we can skip it for child builders
-        if (/*Block == null || Block.*/myAppId == 0)
-            return;
-
-        // Cast to current object type to access internal APIs
-        if (RootBlock is not BlockOfBase rootBuilder)
-            return;
-
-        // add dependent appId only once
-        if (rootBuilder.DependentApps.All(a => a.AppId != myAppId))
-            rootBuilder.DependentApps.Add(new DependentApp { AppId = myAppId });
-    }
-
+    public IList<IDependentApp> DependentApps => Specs.DependentApps;
 
     #endregion
 

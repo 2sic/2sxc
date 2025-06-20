@@ -87,9 +87,9 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.My
 
 
     [PrivateApi]
-    public virtual IExecutionContext InitDynCodeRoot(IBlock block, ILog? parentLog)
+    public virtual IExecutionContext InitDynCodeRoot(IBlock? block, ILog? parentLog)
     {
-        this.LinkLog(parentLog ?? block?.Log);
+        this.LinkLog(parentLog ?? (block as IHasLog)?.Log);
         var cLog = Log.Fn<IExecutionContext>();
 
         if (block == null)

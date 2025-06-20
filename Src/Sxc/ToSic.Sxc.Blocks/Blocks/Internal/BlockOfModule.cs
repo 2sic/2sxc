@@ -17,9 +17,13 @@ public sealed class BlockOfModule(BlockServices services) : BlockOfBase(services
     public BlockOfModule Init(IContextOfBlock ctx)
     {
         var l = Log.Fn<BlockOfModule>(timer: true);
-        Init(ctx, ctx.Module.BlockIdentifier);
-        IsContentApp = ctx.Module.IsContent;
-        CompleteInit(null, ctx.Module.BlockIdentifier, ctx.Module.Id);
+        Specs = BlockSpecsHelper.Init(Specs, ctx, ctx.Module.BlockIdentifier);
+        Specs = Specs with
+        {
+            IsContentApp = ctx.Module.IsContent,
+        };
+        Specs = BlockSpecsHelper.CompleteInit(this, Services, null, ctx.Module.BlockIdentifier, ctx.Module.Id, Log);
+        //CompleteInit(null, ctx.Module.BlockIdentifier, ctx.Module.Id);
         return l.ReturnAsOk(this);
     }
 

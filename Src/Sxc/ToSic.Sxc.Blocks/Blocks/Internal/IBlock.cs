@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
+using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Blocks.Internal;
 /// </summary>
 [PrivateApi("Was InternalApi_DoNotUse_... till v17")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IBlock: IAppIdentity, IHasLog
+public interface IBlock: IAppIdentity //, IHasLog
 {
     /// <summary>
     /// The module ID or the parent-content-block id, probably not ideal here, but not sure
@@ -35,7 +36,7 @@ public interface IBlock: IAppIdentity, IHasLog
     /// <summary>
     /// The view which will be used to render this block
     /// </summary>
-    IView View { get; set; }
+    IView View { get; }
     bool ViewIsReady { get; }
 
     [PrivateApi("unsure if this should be public, or only needed to initialize it?")]
@@ -76,18 +77,24 @@ public interface IBlock: IAppIdentity, IHasLog
     /// The parent block of this block, if any.
     /// </summary>
     [PrivateApi]
-    IBlock? ParentBlock { get; }
+    IBlock? ParentBlockOrNull { get; }
 
     /// <summary>
     /// The root block of this block - can be the same as `this`.
     /// </summary>
     [PrivateApi]
-    public IBlock? RootBlock { get; }
+    public IBlock RootBlock { get; }
 
     bool DataIsReady { get; }
     bool ConfigurationIsReady { get; }
     IApp? AppOrNull { get; }
 
+    /// <summary>
+    /// This list is only populated on the root builder. Child builders don't actually use this.
+    /// </summary>
+    IList<IDependentApp> DependentApps { get; }
 
-    List<IPageFeature> BlockFeatures(ILog? log = default);
+
+    //List<IPageFeature> BlockFeatures(ILog? log = default);
+    void SwapView(IView value);
 }

@@ -52,8 +52,8 @@ public partial class BlockBuilder
             };
 
             // If data comes from other apps, ensure that cache-tracking knows to depend on these changes
-            if ((Block as BlockOfBase)?.DependentApps.Any() == true)
-                result.DependentApps.AddRange(((BlockOfBase)Block).DependentApps);
+            if (Block.DependentApps.Any())
+                result.DependentApps.AddRange(Block.DependentApps);
 
             // Cache Result in case of multiple runs on the same service instance
             _cached = result;
@@ -91,7 +91,7 @@ public partial class BlockBuilder
             // This way first the top block does this, later on inner-child blocks
             // will also do it (since this same code is called for them when they render).
             // Later on we'll collect the result.
-            (Block as BlockOfBase)?.PushAppDependenciesToRoot();
+            BlockInfoHelpers.PushAppDependenciesToRoot(Block);
 
             // do pre-check to see if system is stable & ready
             var (body, err) = GenerateErrorMsgIfInstallationNotOk();
@@ -197,7 +197,7 @@ public partial class BlockBuilder
             var addJsApiOnly = false;
             if (!addEditCtx && Block.BlockFeatureKeys.Any())
             {
-                var features = Block.BlockFeatures(Log);
+                var features = BlockInfoHelpers.BlockFeatures(Block, Log);
                 addEditCtx = features.Contains(SxcPageFeatures.ContextModule);
                 addJsApiOnly = features.Contains(SxcPageFeatures.JsApiOnModule);
             }

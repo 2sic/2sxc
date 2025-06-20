@@ -46,7 +46,7 @@ public partial class BlockBuilder(BlockBuilder.MyServices services)
 
     public IBlockBuilder Setup(IBlock cb)
     {
-        var l = Log.Fn<BlockBuilder>($"get CmsInstance for a:{cb.AppId} cb:{cb.ContentBlockId}");
+        var l = Log.Fn<IBlockBuilder>($"get CmsInstance for a:{cb.AppId} cb:{cb.ContentBlockId}");
         // the root block is the main container. If there is none yet, use this, as it will be the root
         Block = cb;
         return l.Return(this);

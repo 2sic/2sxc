@@ -21,7 +21,7 @@ public sealed class BlockOfEntity(BlockServices services, LazySvc<AppFinder> app
     {
         var l = Log.Fn<BlockOfEntity>($"{nameof(contentBlockId)}:{contentBlockId}; {nameof(blockEntity)}:{blockEntity?.EntityId}", timer: true);
         var ctx = (IContextOfBlock)parent.Context.Clone(Log);
-        Init(ctx, parent);
+        Specs = BlockSpecsHelper.Init(Specs, ctx, parent);
         blockEntity ??= GetBlockEntity(parent, contentBlockId);
 
         Entity = blockEntity;
@@ -31,13 +31,13 @@ public sealed class BlockOfEntity(BlockServices services, LazySvc<AppFinder> app
 
         // Must override previous AppId, as that was of the container-block
         // but the current instance can be of another block
-        BlockInfo = BlockInfo with
+        Specs = Specs with
         {
             AppId = blockId.AppId,
         };
-        //AppId = blockId.AppId;
 
-        CompleteInit(parent, blockId, -blockEntity.EntityId);
+        Specs = BlockSpecsHelper.CompleteInit(this, Services, parent, blockId, -blockEntity.EntityId, Log);
+        //CompleteInit(parent, blockId, -blockEntity.EntityId);
 
         return l.Return(this);
     }
@@ -64,7 +64,10 @@ public sealed class BlockOfEntity(BlockServices services, LazySvc<AppFinder> app
     private IBlockIdentifier LoadBlockDefinition(int zoneId, IEntity blockDefinition)
     {
         var appNameId = blockDefinition.Get(BlockBuildingConstants.CbPropertyApp, fallback: "");
-        IsContentApp = appNameId == KnownAppsConstants.DefaultAppGuid;
+        Specs = Specs with
+        {
+            IsContentApp = appNameId == KnownAppsConstants.DefaultAppGuid,
+        };
         var temp = blockDefinition.Get(BlockBuildingConstants.CbPropertyContentGroup, fallback: "");
         Guid.TryParse(temp, out var contentGroupGuid);
 

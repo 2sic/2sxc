@@ -114,7 +114,7 @@ public class ContentBlockBackend(
         {
             var template = workViews.New(AppWorkCtxPlus).Get(templateId);
             template.Edition = edition;
-            Block.View = template;
+            Block.SwapView(template);
         }
 
         var builder = blockBuilderGenerator.New().Setup(Block);

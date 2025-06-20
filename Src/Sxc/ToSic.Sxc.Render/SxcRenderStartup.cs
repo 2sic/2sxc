@@ -25,10 +25,9 @@ public static class SxcRenderStartup
         services.TryAddTransient<Blocks.IRenderService, RenderService>();  // Obsolete, but keep for the few apps we already released in v12
 #pragma warning restore CS0618
 #endif
-        services.TryAddTransient<BlockBuilder>();
+        services.TryAddTransient<IBlockBuilder, BlockBuilder>();
         services.TryAddTransient<BlockBuilder.MyServices>();
 
-        services.TryAddTransient<IBlockBuilder, BlockBuilder>();
         services.TryAddTransient<IRenderingHelper, RenderingHelper>();
 
         // JS UI Context for render
