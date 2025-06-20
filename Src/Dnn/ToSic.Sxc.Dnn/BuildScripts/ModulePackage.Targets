@@ -73,7 +73,6 @@
 
       <!-- all global types and queries -->
       <InstallInclude Include="..\..\Data\**\App_Data\new-app\**\*.*" />
-      <InstallInclude Include="..\..\Data\**\App_Data\new-apps\**\*.*" />
       <InstallInclude Include="..\..\Data\**\App_Data\system\**\*.json" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="..\..\Data\**\assets\**\*.*" />
 

@@ -18,6 +18,7 @@
         <dependency type="type">System.Dynamic.ExpandoObject</dependency>
         <dependency type="CoreVersion">09.11.00</dependency>
       </dependencies>
+      
       <components>
 
         <component type="Script">
@@ -562,10 +563,10 @@
         <component type="Script">
           <scripts>
             <basePath>DesktopModules\ToSic.Sxc</basePath>
-            <!-- The following script makes sure that the app module is only installed if 2sxc installed/upgraded correctly to v15 -->
+            <!-- The following script makes sure that the app module is only installed if 2sxc installed/upgraded correctly to v20 -->
             <script type="Install">
               <path>SqlDataProvider</path>
-              <name>Require.SqlDataProvider</name>
+              <name>Require20.SqlDataProvider</name>
               <version>99.99.99</version>
             </script>
           </scripts>
@@ -693,6 +694,18 @@
       </dependencies>
 
       <components>
+
+        <component type="Script">
+          <scripts>
+            <basePath>DesktopModules\ToSic.Sxc</basePath>
+            <!-- The following script makes sure that the module is only installed if 2sxc installed/upgraded correctly to v20 -->
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>Require20.SqlDataProvider</name>
+              <version>99.99.99</version>
+            </script>
+          </scripts>
+        </component>
 
         <!-- "Assembly" component should be in front of "Config", or new/updated auto-generated assembly binding redirects in web.config are lost. -->
         <component type="Assembly">
@@ -1089,90 +1102,121 @@
       shows when upgrading 2sxc: https://github.com/2sic/2sxc/issues/1555
       -->
     <package name="Connect.Dnn.Koi" type="Library" version="03.00.00.01">
-	    <friendlyName>Connect Koi</friendlyName>
-	    <description>Koi</description>
-	    <iconFile>icon.png</iconFile>
-	    <owner>
-		    <name>2sic/2sxc</name>
-		    <organization>dnn-connect.org</organization>
-		    <url>https://connect-koi.net/</url>
-		    <email>info@2sxc.org</email>
-	    </owner>
-	    <license src="koi\License.txt"></license>
-	    <releaseNotes src="koi\ReleaseNotes.txt"></releaseNotes>
-	    <azureCompatible>true</azureCompatible>
-	    <dependencies>
-		    <dependency type="CoreVersion">09.06.01</dependency>
-	    </dependencies>
+      <friendlyName>Connect Koi</friendlyName>
+      <description>Koi</description>
+      <iconFile>icon.png</iconFile>
+      <owner>
+        <name>2sic/2sxc</name>
+        <organization>dnn-connect.org</organization>
+        <url>https://connect-koi.net/</url>
+        <email>info@2sxc.org</email>
+      </owner>
+      <license src="koi\License.txt"></license>
+      <releaseNotes src="koi\ReleaseNotes.txt"></releaseNotes>
+      <azureCompatible>true</azureCompatible>
+      <dependencies>
+        <dependency type="CoreVersion">09.06.01</dependency>
+      </dependencies>
 
-	    <components>
-		    <component type="ResourceFile">
-			    <resourceFiles>
-				    <basePath>DesktopModules/Connect.Dnn.Koi/</basePath>
-				    <resourceFile>
-					    <name>koi/Resources.zip</name>
-				    </resourceFile>
-			    </resourceFiles>
-		    </component>
-		    <component type="Assembly">
-			    <assemblies>
-				    <assembly>
-					    <name>Connect.Dnn.Koi.dll</name>
-					    <path>bin</path>
-				    </assembly>
-				    <assembly>
-					    <name>Connect.Koi.dll</name>
-					    <path>bin</path>
-				    </assembly>
-			    </assemblies>
-		    </component>
-	    </components>
+      <components>
+
+        <component type="Script">
+          <scripts>
+            <basePath>DesktopModules\ToSic.Sxc</basePath>
+            <!-- The following script makes sure that the app module is only installed if 2sxc installed/upgraded correctly to v20 -->
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>Require20.SqlDataProvider</name>
+              <version>99.99.99</version>
+            </script>
+          </scripts>
+        </component>
+        
+        <component type="ResourceFile">
+          <resourceFiles>
+            <basePath>DesktopModules/Connect.Dnn.Koi/</basePath>
+            <resourceFile>
+              <name>koi/Resources.zip</name>
+            </resourceFile>
+          </resourceFiles>
+        </component>
+        
+        <component type="Assembly">
+          <assemblies>
+            <assembly>
+              <name>Connect.Dnn.Koi.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Connect.Koi.dll</name>
+              <path>bin</path>
+            </assembly>
+          </assemblies>
+        </component>
+        
+      </components>
+      
     </package>
 
 
     <!-- Keep the 4th version number part as it is needed to prevent "repair install" message that DNN
       shows when upgrading 2sxc: https://github.com/2sic/2sxc/issues/1555
       -->
-	  <package name="ToSic.RazorBlade" type="Library" version="04.04.01.01">
-		  <friendlyName>2sic RazorBlade</friendlyName>
-		  <description>2sic RazorBlade</description>
-		  <iconFile>icon.png</iconFile>
-		  <owner>
-			  <name>2sic/2sxc</name>
-			  <organization>2sic.com</organization>
-			  <url>https://razor-blade.net</url>
-			  <email>info@2sxc.org</email>
-		  </owner>
-		  <license src="razorblade\License.txt"></license>
-		  <releaseNotes src="razorblade\ReleaseNotes.txt"></releaseNotes>
-		  <azureCompatible>true</azureCompatible>
-		  <dependencies>
-			  <dependency type="CoreVersion">09.06.01</dependency>
-		  </dependencies>
+    <package name="ToSic.RazorBlade" type="Library" version="04.04.01.01">
+      <friendlyName>2sic RazorBlade</friendlyName>
+      <description>2sic RazorBlade</description>
+      <iconFile>icon.png</iconFile>
+      <owner>
+        <name>2sic/2sxc</name>
+        <organization>2sic.com</organization>
+        <url>https://razor-blade.net</url>
+        <email>info@2sxc.org</email>
+      </owner>
+      <license src="razorblade\License.txt"></license>
+      <releaseNotes src="razorblade\ReleaseNotes.txt"></releaseNotes>
+      <azureCompatible>true</azureCompatible>
+      <dependencies>
+        <dependency type="CoreVersion">09.06.01</dependency>
+      </dependencies>
 
-		  <components>
-			  <component type="ResourceFile">
-				  <resourceFiles>
-					  <basePath>DesktopModules\ToSic.Razor\</basePath>
-					  <resourceFile>
-						  <name>razorblade\Resources.zip</name>
-					  </resourceFile>
-				  </resourceFiles>
-			  </component>
-			  <component type="Assembly">
-				  <assemblies>
-					  <assembly>
-						  <name>ToSic.Razor.dll</name>
-						  <path>bin</path>
-					  </assembly>
-					  <assembly>
-						  <name>ToSic.Razor.Dnn.dll</name>
-						  <path>bin</path>
-					  </assembly>
-				  </assemblies>
-			  </component>
-		  </components>
-	  </package>
+      <components>
+
+        <component type="Script">
+          <scripts>
+            <basePath>DesktopModules\ToSic.Sxc</basePath>
+            <!-- The following script makes sure that the app module is only installed if 2sxc installed/upgraded correctly to v20 -->
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>Require20.SqlDataProvider</name>
+              <version>99.99.99</version>
+            </script>
+          </scripts>
+        </component>
+        
+        <component type="ResourceFile">
+          <resourceFiles>
+            <basePath>DesktopModules\ToSic.Razor\</basePath>
+            <resourceFile>
+              <name>razorblade\Resources.zip</name>
+            </resourceFile>
+          </resourceFiles>
+        </component>
+        
+        <component type="Assembly">
+          <assemblies>
+            <assembly>
+              <name>ToSic.Razor.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>ToSic.Razor.Dnn.dll</name>
+              <path>bin</path>
+            </assembly>
+          </assemblies>
+        </component>
+        
+      </components>
+    </package>
   
 
     <!-- old Connect.Razor Blade package - keep for compatibility, so old stuff doesn't break-->
@@ -1194,6 +1238,19 @@
       </dependencies>
 
       <components>
+
+        <component type="Script">
+          <scripts>
+            <basePath>DesktopModules\ToSic.Sxc</basePath>
+            <!-- The following script makes sure that the app module is only installed if 2sxc installed/upgraded correctly to v20 -->
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>Require20.SqlDataProvider</name>
+              <version>99.99.99</version>
+            </script>
+          </scripts>
+        </component>
+        
         <component type="ResourceFile">
           <resourceFiles>
             <basePath>DesktopModules\Connect.Razor\</basePath>
@@ -1202,6 +1259,7 @@
             </resourceFile>
           </resourceFiles>
         </component>
+        
         <component type="Assembly">
           <assemblies>
             <assembly>
@@ -1214,6 +1272,7 @@
             </assembly>
           </assemblies>
         </component>
+        
       </components>
     </package>
   </packages>

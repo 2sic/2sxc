@@ -132,6 +132,7 @@
     </Content>
     <Content Include="ClientScripts\readme.md" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\Migrate.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\Require20.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\ToSic.Sxc.Dnn.dnn">
       <SubType>Designer</SubType>
     </Content>

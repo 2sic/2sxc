@@ -29,7 +29,6 @@
     <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\$targetframework$\ToSic.*.dll" exclude="**\ToSic.Sxc.Oqtane.Package.dll" target="lib\$targetframework$" />
     <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\$targetframework$\ToSic.*.pdb" exclude="**\ToSic.Sxc.Oqtane.Package.pdb" target="lib\$targetframework$" />
     <file src="..\..\Data\App_Data\new-app\**\*.*" target="content\2sxc\system\App_Data\new-app" />
-    <file src="..\..\Data\App_Data\new-apps\**\*.*" target="content\2sxc\system\App_Data\new-apps" />
     <file src="..\..\Data\App_Data\system\**\*.*" target="content\2sxc\system\App_Data\system" />
     <file src="..\..\Dnn\ToSic.Sxc.Dnn\ImportExport\**\*.*" target="content\2sxc\system\ImportExport" />
     <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc.Oqtane\**\*.*" exclude="**\*.map;" target="wwwroot\Modules\ToSic.Sxc.Oqtane" />
