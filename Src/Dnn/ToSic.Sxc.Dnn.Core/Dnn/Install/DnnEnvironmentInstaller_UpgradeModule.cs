@@ -55,10 +55,6 @@ partial class DnnEnvironmentInstaller
                     AddObsolete2SxcJs(version);
                     break;
 
-                // All versions before v15 should trigger this
-                case "15.00.00":
-                    throw new("Trying to upgrade pre v15 version - which isn't supported in v20+. Please first upgrade with older v15-v19 LTS, before running this upgrade to a v20+");
-
                 // case "15.00.00": // moved to 15.02 because of we accidentally skipped upgrades in 15.01 - see bug #2997
                 // case "15.02.00": // originally moved to here, but the Settings.Installation.LastVersionWithServerChanges had not been upgraded
                 //                  this results in no file being created for 15.02, so the "IsUpgradeComplete" always fails
