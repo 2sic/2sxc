@@ -49,7 +49,7 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public void App(int zoneId, string name, int? inheritAppId = null, int templateId = 0) => Real.App(zoneId, name, inheritAppId, templateId);
+    public void App(int zoneId, string name, int? inheritAppId = null) => Real.App(zoneId, name, inheritAppId);
 
     /// <inheritdoc />
     [HttpGet]

@@ -7,23 +7,5 @@
     "zip": null,
     "appName": null,
     "folder": null
-  },
-  {
-    "id": 1,
-    "name": "App Template Empty",
-    "teaser": "A empty app template with a first razor template",
-    "internalNotes": "should import the zip, reset the GUID, rename the App and folder",
-    "zip": "2sxcApp_AppTemplate-Empty_0.17.0.zip",
-    "appName": "AppTemplateEmpty",
-    "folder": "app-template-empty"
-  },
-  {
-    "id": 2,
-    "name": "App Template Basic",
-    "teaser": "A basic app template with simple instructions and a first razor template",
-    "internalNotes": "should import the zip, reset the GUID, rename the App and folder",
-    "zip": "2sxcApp_AppTemplate-Basic_0.17.0.zip",
-    "appName": "AppTemplateBasic",
-    "folder": "app-template-basic"
   }
 ]

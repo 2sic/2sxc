@@ -47,8 +47,6 @@ public class AppControllerReal(
         ])
 {
     public const string LogSuffix = "AppCon";
-    private const string TemplatesJson = "templates.json";
-
 
     public ICollection<AppDto> List(int zoneId)
         => appsBackendLazy.Value.Apps();
@@ -59,50 +57,12 @@ public class AppControllerReal(
     public void App(int zoneId, int appId, bool fullDelete = true)
         => workAppsRemove.Value.RemoveAppInSiteAndEav(zoneId, appId, fullDelete);
 
-    public void App(int zoneId, string name, int? inheritAppId = null, int templateId = 0)
+    public void App(int zoneId, string name, int? inheritAppId = null)
     {
-        var l = Log.Fn($"{nameof(zoneId)}:{zoneId}, {nameof(name)}:{name}, {nameof(inheritAppId)}:{inheritAppId}, {nameof(templateId)}:{templateId}");
-
-        if (templateId == 0)
-        {
-            l.A("create default new app without template");
-            appBuilderLazy.Value.Init(zoneId).Create(name, null, inheritAppId);
-            l.Done("ok");
-            // Exit here, because we created the app without template
-            return;
-        }
-
-        l.A($"find template app zip path for {nameof(templateId)}:{templateId}");
-        var zipPath = GetTemplateZipPathOrThrow(templateId);
-
-        l.A($"create new app from template zip:{zipPath}");
-        var resultDto = importAppLazy.Value.Import(zipPath, zoneId, name, inheritAppId);
-        if (!resultDto.Success)
-            throw l.Ex(new Exception($"Error importing app from template: {string.Join(", ", resultDto.Messages.Select(m => $"{m.MessageType}:{m.Text}"))}"));
-
+        var l = Log.Fn($"{nameof(zoneId)}:{zoneId}, {nameof(name)}:{name}, {nameof(inheritAppId)}:{inheritAppId}");
+        l.A("create default new app without template");
+        appBuilderLazy.Value.Init(zoneId).Create(name, null, inheritAppId);
         l.Done("ok");
-    }
-
-    private string GetTemplateZipPathOrThrow(int templateId)
-    {
-        var l = Log.Fn<string>($"{nameof(templateId)}:{templateId}");
-
-        var newAppTemplateFolder = globalConfiguration.NewAppsTemplateFolder();
-        var templatesJsonPath = Path.Combine(newAppTemplateFolder, TemplatesJson);
-
-        if (!File.Exists(templatesJsonPath))
-            throw l.Ex(new FileNotFoundException($"{TemplatesJson} file not found"));
-
-        var templatesJson = File.ReadAllText(templatesJsonPath);
-        var templates = json.Value.To<List<TemplateJson>>(templatesJson);
-        var template = templates.FirstOrDefault(t => t.Id == templateId) 
-            ?? throw l.Ex(new Exception($"Template with id {templateId} not found in {TemplatesJson}"));
-
-        var zipPath = Path.Combine(newAppTemplateFolder, template.Zip);
-        if (!File.Exists(zipPath))
-            throw l.Ex(new FileNotFoundException($"Template {Path.GetFileName(zipPath)} not found"));
-
-        return l.ReturnAsOk(zipPath);
     }
 
     public List<SiteLanguageDto> Languages(int appId)
