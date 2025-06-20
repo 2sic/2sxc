@@ -8,11 +8,11 @@ using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
 namespace ToSic.Sxc.Data.Sys.Wrappers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal abstract class PreWrapBase(object? data) : IWrapper<object?>, IHasJsonSource
+internal abstract class PreWrapBase(object? data) : IWrapper<object>, IHasJsonSource
 {
     #region IWrapper
 
-    object? IWrapper<object?>.GetContents() => data;
+    object? IWrapper<object>.GetContents() => data;
 
     #endregion
 

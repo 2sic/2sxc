@@ -43,12 +43,12 @@ public interface IAppTyped: IAppIdentity
     /// <summary>
     /// All the app settings which are custom for each app. 
     /// </summary>
-    ITypedItem? Settings { get;  }
+    ITypedItem Settings { get;  }
 
     /// <summary>
     /// All the app resources (usually used for multi-language labels etc.)
     /// </summary>
-    ITypedItem? Resources { get;  }
+    ITypedItem Resources { get;  }
 
     #region Paths / Urls
 

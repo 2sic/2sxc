@@ -6,8 +6,8 @@ namespace ToSic.Sxc.Data.Internal;
 
 partial class CodeDataFactory
 {
-    public IEntity AsEntity(object thingToConvert) =>
-        thingToConvert == null
+    public IEntity AsEntity(object thingToConvert)
+        => thingToConvert == null
             ? throw new ArgumentNullException(nameof(thingToConvert))
             : thingToConvert as IEntity
               ?? (thingToConvert as ICanBeEntity)?.Entity

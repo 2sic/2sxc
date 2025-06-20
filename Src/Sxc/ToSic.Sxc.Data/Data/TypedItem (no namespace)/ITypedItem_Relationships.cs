@@ -32,7 +32,7 @@ partial interface ITypedItem
     /// <remarks>
     /// New v17.05
     /// </remarks>
-    public T Child<T>(string name, NoParamOrder protector = default, bool? required = default)
+    public T? Child<T>(string name, NoParamOrder protector = default, bool? required = default)
         where T : class, ICanWrapData, new();
 
     /// <summary>
@@ -69,7 +69,7 @@ partial interface ITypedItem
     /// <remarks>
     /// New v17.06
     /// </remarks>
-    public T Parent<T>(NoParamOrder protector = default, bool? current = default, string? type = default,
+    public T? Parent<T>(NoParamOrder protector = default, bool? current = default, string? type = default,
         string? field = default)
         where T : class, ICanWrapData, new();
 

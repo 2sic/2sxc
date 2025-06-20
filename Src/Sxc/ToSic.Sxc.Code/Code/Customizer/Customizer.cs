@@ -48,7 +48,7 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
     [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
 
-    public TCustomType MyItem<TCustomType>()
+    public TCustomType? MyItem<TCustomType>()
         where TCustomType : class, ICanWrapData, new()
     {
         // check if cache exists and was created with the sames specs
@@ -77,7 +77,7 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
     }
     private object? _myItems; // not typed, since we don't know the type yet, but we know it will be IEnumerable<TCustomType> when used
 
-    public TCustomType MyHeader<TCustomType>()
+    public TCustomType? MyHeader<TCustomType>()
         where TCustomType : class, ICanWrapData, new()
     {
         // check if cache exists and was created with the sames specs

@@ -40,7 +40,7 @@ public interface ICodeCustomizer
     /// </summary>
     /// <typeparam name="TCustomType">Type to use for MyItem.</typeparam>
     /// <returns></returns>
-    public TCustomType MyItem<TCustomType>()
+    public TCustomType? MyItem<TCustomType>()
         where TCustomType : class, ICanWrapData, new();
 
     /// <summary>
@@ -55,6 +55,6 @@ public interface ICodeCustomizer
     /// Create (and cache for reuse) a strongly typed Header instance for the MyHeader object.
     /// </summary>
     /// <typeparam name="TCustomType">Type to use for MyHeader.</typeparam>
-    TCustomType MyHeader<TCustomType>()
+    TCustomType? MyHeader<TCustomType>()
         where TCustomType : class, ICanWrapData, new();
 }

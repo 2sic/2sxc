@@ -46,9 +46,9 @@ internal class DynamicCode12Proxy(IExecutionContext exCtx, ICodeDynamicApiHelper
 
     public IDataSource Data => dynamicApi.Data;
 
-    public dynamic Content => dynamicApi.Content;
+    public dynamic? Content => dynamicApi.Content;
 
-    public dynamic Header => dynamicApi.Header;
+    public dynamic? Header => dynamicApi.Header;
 
     IFolder IDynamicCode.AsAdam(ICanBeEntity item, string fieldName)
         => dynamicApi.AsAdam(item, fieldName);

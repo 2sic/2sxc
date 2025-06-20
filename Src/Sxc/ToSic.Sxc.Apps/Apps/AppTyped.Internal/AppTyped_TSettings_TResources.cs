@@ -17,10 +17,10 @@ internal class AppTyped<TSettings, TResources>(LazySvc<GlobalPaths> globalPaths,
 
     [field: AllowNull, MaybeNull]
     TSettings IAppTyped<TSettings, TResources>.Settings
-        => field ??= Cdf.AsCustom<TSettings>(((IAppTyped)this).Settings);
+        => field ??= Cdf.AsCustom<TSettings>(((IAppTyped)this).Settings)!;
 
     [field: AllowNull, MaybeNull]
     TResources IAppTyped<TSettings, TResources>.Resources
-        => field ??= Cdf.AsCustom<TResources>(((IAppTyped)this).Resources);
+        => field ??= Cdf.AsCustom<TResources>(((IAppTyped)this).Resources)!;
     
 }

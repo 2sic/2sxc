@@ -51,10 +51,10 @@ public interface IDynamicCode12 : IDynamicCode
     #region Content and Header
 
     /// <inheritdoc cref="IDynamicCode.Content" />
-    dynamic Content { get; }
+    dynamic? Content { get; }
 
     /// <inheritdoc cref="IDynamicCode.Header" />
-    dynamic Header { get; }
+    dynamic? Header { get; }
 
     #endregion
 

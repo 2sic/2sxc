@@ -30,8 +30,8 @@ internal class ConvertService16(
     /// <returns></returns>
     [PrivateApi("WIP, don't publish yet")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    T IConvertService16.As<T>(ICanBeEntity source, NoParamOrder protector, bool nullIfNull)
-        => Cdf.AsCustom<T>(source: source, protector: protector, mock: nullIfNull);
+    T IConvertService16.As<T>(ICanBeEntity source, NoParamOrder protector, bool mock)
+        => Cdf.AsCustom<T>(source: source, protector: protector, mock: mock)!;
 
     /// <summary>
     /// EXPERIMENTAL

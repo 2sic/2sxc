@@ -96,7 +96,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     object? AsDynamicFromObject(object dynObject);
 
     dynamic? MergeDynamic(object[] entities);
-    ITypedItem? AsItem(object data, ConvertItemSettings settings, NoParamOrder noParamOrder = default, ITypedItem? fallback = default);
+    ITypedItem? AsItem(object? data, ConvertItemSettings settings, NoParamOrder noParamOrder = default, ITypedItem? fallback = default);
 
     /// <summary>
     /// Quick convert an entity to item - if not null, otherwise return null.

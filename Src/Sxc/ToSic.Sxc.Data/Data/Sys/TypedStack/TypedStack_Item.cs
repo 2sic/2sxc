@@ -78,7 +78,7 @@ internal partial class TypedStack: ITypedItem
         var path = new PropertyLookupPath().Add("DynEntStart", name);
 
         var findResult = _stackPropLookup.FindPropertyInternal(specs, path);
-        if (findResult == null || findResult.ValueType == ValueTypesWithState.NotFound)
+        if (findResult == null! /* paranoid */ || findResult.ValueType == ValueTypesWithState.NotFound)
             return null;
 
         var sourceItem = findResult.Source as ITypedItem
@@ -118,8 +118,7 @@ internal partial class TypedStack: ITypedItem
     //IEnumerable<ITypedItem> ITypedItem.Children(string field, NoParamOrder noParamOrder, string type, bool? required)
     //    => (this as ITypedStack).Children(field, noParamOrder, type, required);
 
-    T ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required)
-        => Cdf.AsCustom<T>(
+    T? ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required) where T : class => Cdf.AsCustom<T>(
             source: ((ITypedItem)this).Child(name, required: required), protector: protector, mock: false
         );
 
@@ -138,10 +137,9 @@ internal partial class TypedStack: ITypedItem
     IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string? type, string? field)
         => throw new NotImplementedException(ParentNotImplemented);
 
-    T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field)
-        => throw new NotImplementedException(ParentNotImplemented);
+    T? ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field) where T : class => throw new NotImplementedException(ParentNotImplemented);
 
-    IEnumerable<T>? ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field)
+    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field)
         => throw new NotImplementedException(ParentNotImplemented);
 
     bool ITypedItem.IsPublished => throw new NotImplementedException(NotImplementedError);

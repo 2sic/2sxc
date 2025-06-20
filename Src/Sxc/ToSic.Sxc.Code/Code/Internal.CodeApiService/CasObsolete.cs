@@ -36,7 +36,7 @@ public class CodeApiServiceObsolete(IExecutionContext dynCode)
                 LookUp = configuration,
             };
             if (links != null)
-                return dataSources.DataSources.Value.Create(type: type, attach: links, options: cnf2Wip);
+                return dataSources.DataSources.Value.Create(type: type!, attach: links, options: cnf2Wip);
 
             var initialSource = dataSources.DataSources.Value.CreateDefault(new DataSourceOptions
             {
@@ -44,7 +44,7 @@ public class CodeApiServiceObsolete(IExecutionContext dynCode)
                 LookUp = dataSources.LookUpEngine,
             });
             return typeName != ""
-                ? dataSources.DataSources.Value.Create(type: type, attach: initialSource, options: cnf2Wip)
+                ? dataSources.DataSources.Value.Create(type: type!, attach: initialSource, options: cnf2Wip)
                 : initialSource;
         }
         catch (Exception ex)

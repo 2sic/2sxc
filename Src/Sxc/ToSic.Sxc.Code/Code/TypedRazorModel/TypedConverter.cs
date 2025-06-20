@@ -14,36 +14,47 @@ internal class TypedConverter(ICodeDataFactory cdf)
 {
     public ICodeDataFactory Cdf { get; } = cdf;
 
-    public (T? typed, object? untyped, bool ok) EvalInterface<T>(object? maybe, T? fallback = default) where T: class 
-    {
-        if (maybe == null)
-            return (fallback, null, true);
-        if (maybe is T typed) return (typed, maybe, true);
-        return (null, maybe, false);
-    }
+    private static (T? typed, object? untyped, bool ok) EvalInterface<T>(object? maybe, T? fallback = default)
+        where T: class
+        => maybe switch
+        {
+            null => (fallback, null, true),
+            T typed => (typed, maybe, true),
+            _ => (null, maybe, false)
+        };
 
-    public IEntity Entity(object maybe, IEntity fallback)
-    {
-        var (typed, untyped, ok) = EvalInterface(maybe, fallback);
-        // Try to convert, in case it's an IEntity or something; could also result in error
-        return ok ? typed : Cdf.AsEntity(untyped);
-    }
-
-    public ITypedItem Item(object? data, NoParamOrder noParamOrder, ITypedItem? fallback)
-    {
-        var (typed, untyped, ok) = EvalInterface(data, fallback);
-        // Try to convert, in case it's an IEntity or something; could also result in error
-        // TODO: #ConvertItemSettings
-        return ok ? typed : Cdf.AsItem(untyped, new() { ItemIsStrict = false });
-    }
-
-    public IEnumerable<ITypedItem> Items(object? maybe, NoParamOrder noParamOrder, IEnumerable<ITypedItem>? fallback)
+    public IEntity? Entity(object maybe, IEntity fallback)
     {
         var (typed, untyped, ok) = EvalInterface(maybe, fallback);
         // Try to convert, in case it's an IEntity or something; could also result in error
         return ok
             ? typed
-            : Cdf.AsItems(untyped, new() { ItemIsStrict = false });
+            : untyped == null
+                ? null
+                : Cdf.AsEntity(untyped);
+    }
+
+    public ITypedItem? Item(object? data, NoParamOrder noParamOrder, ITypedItem? fallback)
+    {
+        var (typed, untyped, ok) = EvalInterface(data, fallback);
+        // Try to convert, in case it's an IEntity or something; could also result in error
+        // TODO: #ConvertItemSettings
+        return ok
+            ? typed
+            : untyped == null
+                ? null
+                : Cdf.AsItem(untyped, new() { ItemIsStrict = false });
+    }
+
+    public IEnumerable<ITypedItem>? Items(object? maybe, NoParamOrder noParamOrder, IEnumerable<ITypedItem>? fallback)
+    {
+        var (typed, untyped, ok) = EvalInterface(maybe, fallback);
+        // Try to convert, in case it's an IEntity or something; could also result in error
+        return ok
+            ? typed
+            : untyped == null
+                ? null
+                : Cdf.AsItems(untyped, new() { ItemIsStrict = false });
     }
 
     [return: NotNullIfNotNull(nameof(fallback))]
@@ -51,7 +62,9 @@ internal class TypedConverter(ICodeDataFactory cdf)
     {
         var (typed, _, ok) = EvalInterface(maybe, fallback);
         // Try to convert, in case it's an IEntity or something; could also result in error
-        return ok ? typed : fallback;
+        return ok
+            ? typed
+            : fallback;
     }
 
 
@@ -63,18 +76,24 @@ internal class TypedConverter(ICodeDataFactory cdf)
             return typed;
 
         // Flatten list if necessary
-        return untyped is IEnumerable<IFile> list ? list.First() : fallback;
+        return untyped is IEnumerable<IFile> list
+            ? list.First()
+            : fallback;
     }
 
     [return: NotNullIfNotNull(nameof(fallback))]
     public IEnumerable<IFile>? Files(object maybe, IEnumerable<IFile>? fallback)
     {
+        // ReSharper disable PossibleMultipleEnumeration
         var (typed, untyped, ok) = EvalInterface(maybe, fallback);
         if (ok)
             return typed;
 
         // Wrap into list if necessary
-        return untyped is IFile item ? new List<IFile> { item } : fallback;
+        return untyped is IFile item
+            ? new List<IFile> { item }
+            : fallback;
+        // ReSharper restore PossibleMultipleEnumeration
     }
 
     [return: NotNullIfNotNull(nameof(fallback))]
@@ -91,11 +110,13 @@ internal class TypedConverter(ICodeDataFactory cdf)
     [return: NotNullIfNotNull(nameof(fallback))]
     public IEnumerable<IFolder>? Folders(object? maybe, IEnumerable<IFolder>? fallback)
     {
+        // ReSharper disable PossibleMultipleEnumeration
         var (typed, untyped, ok) = EvalInterface(maybe, fallback);
         if (ok) return typed;
 
         // Wrap into list if necessary
         return untyped is IFolder item ? new List<IFolder> { item } : fallback;
+        // ReSharper restore PossibleMultipleEnumeration
     }
 
     [return: NotNullIfNotNull(nameof(fallback))]

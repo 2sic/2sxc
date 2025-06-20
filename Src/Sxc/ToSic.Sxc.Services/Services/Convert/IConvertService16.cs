@@ -219,7 +219,7 @@ public interface IConvertService16
 
     [PrivateApi("WIP, don't publish yet")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool nullIfNull = false)
+    T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool mock = false)
         where T : class, ICanWrapData;
 
     [PrivateApi("WIP, don't publish yet")]

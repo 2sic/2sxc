@@ -236,7 +236,7 @@ public interface ITypedRazorModel: IHasKeys
     /// It is automatically `false` if a `fallback` is set / not `null`.
     /// </param>
     /// <returns>typed result if found, empty-list if not found.</returns>
-    IEnumerable<IFile> Files(string name, NoParamOrder protector = default, IEnumerable<IFile>? fallback = default, bool? required = default);
+    IEnumerable<IFile>? Files(string name, NoParamOrder protector = default, IEnumerable<IFile>? fallback = default, bool? required = default);
 
     /// <summary>
     /// Will get the value if specified.
@@ -317,7 +317,7 @@ public interface ITypedRazorModel: IHasKeys
     /// It is automatically `false` if a `fallback` is set / not `null`.
     /// </param>
     /// <returns>typed result if found, `null` if not found.</returns>
-    ITypedItem Item(string name, NoParamOrder protector = default, ITypedItem? fallback = default, bool? required = default);
+    ITypedItem? Item(string name, NoParamOrder protector = default, ITypedItem? fallback = default, bool? required = default);
 
     /// <summary>
     /// Will get the value if specified.
@@ -331,7 +331,7 @@ public interface ITypedRazorModel: IHasKeys
     /// It is automatically `false` if a `fallback` is set / not `null`.
     /// </param>
     /// <returns>typed result if found, empty-list if not found.</returns>
-    IEnumerable<ITypedItem> Items(string name, NoParamOrder protector = default, IEnumerable<ITypedItem>? fallback = default, bool? required = default);
+    IEnumerable<ITypedItem>? Items(string name, NoParamOrder protector = default, IEnumerable<ITypedItem>? fallback = default, bool? required = default);
 
     /// <summary>
     /// Will get the value being a toolbar as specified.

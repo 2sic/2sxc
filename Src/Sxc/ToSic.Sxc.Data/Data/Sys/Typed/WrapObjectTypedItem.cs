@@ -197,8 +197,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     #region New Child<T> / Children<T> - disabled as ATM Kit is missing
 
-    T ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required)
-        => Cdf.AsCustom<T>(
+    T? ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required) where T : class => Cdf.AsCustom<T>(
             source: (this as ITypedItem).Child(name, required: required), protector: protector, mock: false
         );
 
@@ -209,8 +208,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
             nullIfNull: false
         );
 
-    T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field)
-        => Cdf.AsCustom<T>(
+    T? ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field) where T : class => Cdf.AsCustom<T>(
             source: (this as ITypedItem).Parent(noParamOrder: protector, current: current, type: type ?? typeof(T).Name, field: field), protector: protector, mock: false
         );
 

@@ -10,11 +10,13 @@ namespace ToSic.Sxc.Code.CodeApi;
 
 internal class CodeDynamicApiHelper(ExecutionContext parent) : CodeAnyApiHelper(parent), ICodeDynamicApiHelper
 {
-    public dynamic Content => Parent.Content;
-    public dynamic Header => Parent.Header;
+    public dynamic? Content => Parent.Content;
+    public dynamic? Header => Parent.Header;
     public IApp App => Parent.App;
     public IDynamicStack Resources => Parent.Resources;
     public IDynamicStack Settings => Parent.Settings;
+
+    [field: AllowNull, MaybeNull]
     public IEditService Edit => field
         ??= Parent.GetService<IEditService>(reuse: true);
 

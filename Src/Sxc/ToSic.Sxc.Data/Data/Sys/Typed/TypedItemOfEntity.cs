@@ -374,8 +374,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
     #region New Child<T> / Children<T> - disabled as ATM Kit is missing
 
     /// <inheritdoc />
-    T ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required)
-        => Cdf.AsCustom<T>(
+    T? ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required) where T : class => Cdf.AsCustom<T>(
             source: ((ITypedItem)this).Child(name, required: required), protector: protector, mock: false
         );
 
@@ -388,8 +387,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
         );
 
     /// <inheritdoc />
-    T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field)
-        => Cdf.AsCustom<T>(
+    T? ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field) where T : class => Cdf.AsCustom<T>(
             source: ((ITypedItem)this).Parent(noParamOrder: protector, current: current, type: type ?? typeof(T).Name, field: field), protector: protector, mock: false
         );
 

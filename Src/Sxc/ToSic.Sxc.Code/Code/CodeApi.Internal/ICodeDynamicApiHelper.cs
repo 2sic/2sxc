@@ -15,11 +15,10 @@ public interface ICodeDynamicApiHelper: ICodeAnyApiHelper, ICreateInstance
 
     #region Content, Header, App, Data, Resources, Settings
 
-    /// <inheritdoc cref="System.Web.UI.WebControls.Content" />
-    dynamic Content { get; }
+    dynamic? Content { get; }
 
     /// <inheritdoc cref="Razor.Html5.Header" />
-    dynamic Header { get; }
+    dynamic? Header { get; }
 
     /// <inheritdoc cref="Eav.DataSources.App" />
     IApp App { get; }

@@ -45,7 +45,7 @@ public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // 
     /// To tell if it's the demo/default item, use <see cref="IDynamicEntity.IsDemoItem"/>.
     /// </summary>
     /// <returns>A <see cref="IDynamicEntity"/> object with the current content - or null.</returns>
-    dynamic Content { get; }
+    dynamic? Content { get; }
 
     /// <summary>
     /// The header object of the current razor view, if it's a list and has a header object.
@@ -56,7 +56,7 @@ public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // 
     /// <remarks>
     /// Introduced in 2sxc 10.10 - previously it was called ListContent, now deprecated.
     /// </remarks>
-    dynamic Header { get; }
+    dynamic? Header { get; }
 
     #endregion
 
