@@ -8,6 +8,7 @@ internal class CmsModule(CmsContext parent, IModule module, IBlock block)
 {
     public int Id => GetContents()?.Id ?? 0;
 
+    [field: AllowNull, MaybeNull]
     public ICmsBlock Block => field ??= new CmsBlock(block.RootBlock);
 
     protected override IMetadataOf GetMetadataOf() 

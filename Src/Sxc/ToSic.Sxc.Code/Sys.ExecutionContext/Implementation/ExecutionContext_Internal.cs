@@ -33,7 +33,7 @@ public partial class ExecutionContext
         _edition = Services.Polymorphism.UseViewEditionOrGet(Block?.View, ((IAppWithInternal)App).AppReader);
     }
 
-    private string _edition;
+    private string? _edition;
 
     [PrivateApi]
     [Obsolete("Warning - avoid using this on the DynamicCode Root - always use the one on the AsC")]
@@ -42,11 +42,13 @@ public partial class ExecutionContext
     [PrivateApi] public IBlock Block { get; private set; }
 
     [PrivateApi]
+    [field: AllowNull, MaybeNull]
     internal IAppTyped AppTyped => field ??= new Func<IAppTyped>(() => GetService<IAppTyped>(reuse: true))();
 
     #region Kit Handling
 
-    public TService GetService<TService>(NoParamOrder protector = default, bool reuse = false, Type type = default) where TService : class
+    // ReSharper disable once MethodOverloadWithOptionalParameter
+    public TService GetService<TService>(NoParamOrder protector = default, bool reuse = false, Type? type = default) where TService : class
     {
         // No reuse - just build and return, but optionally with the type specified
         if (!reuse)
@@ -97,7 +99,7 @@ public partial class ExecutionContext
     /// <typeparam name="TService"></typeparam>
     /// <param name="service"></param>
     internal void ReplaceServiceInCache<TService>(TService service)
-        => _reusableServices[typeof(TService)] = service;
+        => _reusableServices[typeof(TService)] = service!;
 
     /// <summary>
     /// Get or Create a Kit by type

@@ -110,7 +110,7 @@ public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // 
     /// If it can't be parsed, it will parse the fallback, which by default is an empty empty dynamic object.
     /// If you provide null for the fallback, then you will get null back.
     /// </returns>
-    dynamic AsDynamic(string json, string fallback = default);
+    dynamic? AsDynamic(string json, string? fallback = default);
 
     #endregion 
 
@@ -129,7 +129,7 @@ public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // 
     /// </summary>
     /// <param name="dynamicEntity">the original object</param>
     /// <returns>a dynamic object for easier coding</returns>
-    dynamic AsDynamic(object dynamicEntity);
+    dynamic? AsDynamic(object dynamicEntity);
 
         
     #endregion
@@ -141,7 +141,7 @@ public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // 
     /// </summary>
     /// <param name="dynamicEntity">the wrapped IEntity</param>
     /// <returns>A normal IEntity</returns>
-    IEntity AsEntity(object dynamicEntity);
+    IEntity? AsEntity(object dynamicEntity);
 
     #endregion
 
@@ -154,7 +154,7 @@ public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // 
     /// Can also be a <see cref="IDataSource"/> in which case it uses the default stream. </param>
     /// <remarks>Added in 2sxc 10.21.00</remarks>
     /// <returns>a list of <see cref="IDynamicEntity"/> objects</returns>
-    IEnumerable<dynamic> AsList(object list);
+    IEnumerable<dynamic>? AsList(object list);
 
     #endregion
 
@@ -177,7 +177,7 @@ public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // 
     /// <param name="configurationProvider">An alternate configuration provider for the DataSource</param>
     /// <typeparam name="T">A data-source type - must be inherited from IDataSource</typeparam>
     /// <returns>A typed DataSource object</returns>
-    T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource;
+    T CreateSource<T>(IDataSource? inSource = null, ILookUpEngine? configurationProvider = default) where T : IDataSource;
 
     #endregion
 

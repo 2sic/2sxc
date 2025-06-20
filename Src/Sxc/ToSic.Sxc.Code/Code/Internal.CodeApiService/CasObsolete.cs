@@ -1,12 +1,9 @@
 ﻿#if NETFRAMEWORK
 using ToSic.Eav.Data.EntityDecorators.Sys;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.LookUp;
 using ToSic.Lib.LookUp.Engines;
 using ToSic.SexyContent;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -19,7 +16,7 @@ public class CodeApiServiceObsolete(IExecutionContext dynCode)
 {
     [PrivateApi("obsolete")]
     [Obsolete("you should use the CreateSource<T> instead. Deprecated ca. v4 (but not sure), changed to error in v15.")]
-    public IDataSource CreateSource(string typeName = "", IDataSource links = null, ILookUpEngine configuration = null)
+    public IDataSource CreateSource(string typeName = "", IDataSource? links = null, ILookUpEngine? configuration = null)
     {
         // 2023-03-12 2dm
         // Completely rewrote this, because I got rid of some old APIs in v15 on the DataFactory
@@ -65,37 +62,29 @@ public class CodeApiServiceObsolete(IExecutionContext dynCode)
 #pragma warning disable 618
     [PrivateApi]
     [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in 2sxc v10")]
-    public List<Element> ElementList
-    {
-        get
-        {
-            if (_list == null) TryToBuildElementList();
-            return _list;
-        }
-    }
-    private List<Element> _list;
+    [field: AllowNull, MaybeNull]
+    public List<Element> ElementList => field ??= TryToBuildElementList();
 
+    [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= dynCode.GetCdf();
 
     /// <remarks>
     /// This must be lazy-loaded, otherwise initializing the AppAndDataHelper will break when the Data-object fails 
     /// - this would break API even though the List etc. are never accessed
     /// </remarks>
-    private void TryToBuildElementList()
+    private List<Element> TryToBuildElementList()
     {
         dynCode.Log.A("try to build old List");
-        _list = [];
 
         var data = dynCode.GetState<IDataSource>();
-        if (data == null || dynCode.GetState<IBlock>().View == null)
-            return;
+        if (data == null! /* paranoid */ || dynCode.GetState<IBlock>().View == null)
+            return [];
         if (!data.Out.ContainsKey(DataSourceConstants.StreamDefaultName))
-            return;
+            return [];
 
         var entities = data.List.ToList();
 
-        _list = entities.Select(GetElementFromEntity).ToList();
-        return;
+        return entities.Select(GetElementFromEntity).ToList();
 
         Element GetElementFromEntity(IEntity e)
         {

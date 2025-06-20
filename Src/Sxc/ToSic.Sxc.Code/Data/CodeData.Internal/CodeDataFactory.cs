@@ -38,7 +38,7 @@ public partial class CodeDataFactory(
 
     public void SetCompatibilityLevel(int compatibilityLevel) => _priorityCompatibilityLevel = compatibilityLevel;
 
-    public void SetFallbacks(ISite site, int? compatibility = default, object adamManagerPrepared = default)
+    public void SetFallbacks(ISite site, int? compatibility = default, object? adamManagerPrepared = default)
     {
         _siteOrNull = site;
         _compatibilityLevel = compatibility ?? _compatibilityLevel;
@@ -52,8 +52,9 @@ public partial class CodeDataFactory(
         else
             throw new($"The {nameof(adamManager)} must be of type {nameof(Adam.Manager.Internal.AdamManager)}");
     }
-    private ISite _siteOrNull;
+    private ISite? _siteOrNull;
 
+    [field: AllowNull, MaybeNull]
     private ISite SiteFromContextOrFallback => field 
         ??= (ExCtxOrNull?.GetState<ICmsContext>() as CmsContext)?.CtxSite.Site
             ?? _siteOrNull
@@ -72,7 +73,7 @@ public partial class CodeDataFactory(
         // if the render service is ever needed, it should be connected to the root
         //cds.RenderServiceGenerator.SetInit(nowRs => (nowRs as INeedsCodeApiService)?.ConnectToRoot(_CodeApiSvc));
         return cds;
-    });
+    })!;
     private readonly GetOnce<CodeDataServices> _services = new();
 
     /// <summary>
@@ -81,19 +82,20 @@ public partial class CodeDataFactory(
     /// </summary>
     // If we don't have a DynCodeRoot, try to generate the language codes and compatibility
     // There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
-    public string[] Dimensions => field ??=
+    [field: AllowNull, MaybeNull]
+    public string?[] Dimensions => field ??=
         // note: can't use SiteFromContextOrFallback.SafeLanguagePriorityCodes() because it will error during testing
         (ExCtxOrNull?.GetState<ICmsContext>() as CmsContext)?.CtxSite.Site.SafeLanguagePriorityCodes()
         ?? _siteOrNull.SafeLanguagePriorityCodes();
 
 
-    public IBlock BlockOrNull => ExCtxOrNull?.GetState<IBlock>();
+    public IBlock? BlockOrNull => ExCtxOrNull?.GetState<IBlock>();
 
-    public object BlockAsObjectOrNull => BlockOrNull;
+    public object? BlockAsObjectOrNull => BlockOrNull;
 
     #endregion
 
-    public object? Json2Jacket(string json, string fallback = default)
+    public object? Json2Jacket(string? json, string? fallback = default)
         => wrapJsonGenerator.New().Setup(WrapperSettings.Dyn(true, true))
             .Json2Jacket(json, fallback: fallback);
 

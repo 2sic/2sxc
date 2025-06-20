@@ -15,19 +15,22 @@ public partial class ExecutionContext: IExCtxLookUpEngine
         // check if we have a block-context, in which case the lookups also know about the module
         Data?.Configuration?.LookUpEngine
         // otherwise try to fallback to the App configuration provider, which has a lot, but not the module-context
+#pragma warning disable CS0618 // Type or member is obsolete
         ?? App?.ConfigurationProvider
+#pragma warning restore CS0618 // Type or member is obsolete
         // show explanation what went wrong
         ?? throw new("Tried to get Lookups for creating data-sources; neither module-context nor app is known.")
-    );
+    )!;
     private readonly GetOnce<ILookUpEngine> _lookupEngine = new();
 
     [PrivateApi]
+    [field: AllowNull, MaybeNull]
     public CodeCreateDataSourceSvc DataSources => field
         ??= Services.DataSources.Value.Setup(App, () => LookUpForDataSources);
 
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
-    public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource 
+    public T CreateSource<T>(IDataSource? inSource = null, ILookUpEngine? configurationProvider = default) where T : IDataSource 
         => DataSources.CreateDataSource<T>(false, attach: inSource, options: configurationProvider);
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />

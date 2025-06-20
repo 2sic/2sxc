@@ -10,8 +10,8 @@ public partial class ExecutionContext
     /// <inheritdoc />
     public dynamic CreateInstance(string virtualPath,
         NoParamOrder noParamOrder = default,
-        string name = null,
-        string relativePath = null,
+        string? name = null,
+        string? relativePath = null,
         bool throwOnError = true)
     {
         var l = Log.Fn<object>($"{virtualPath}, {name}, {relativePath}, {throwOnError}");

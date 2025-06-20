@@ -36,7 +36,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
         ListHelper = new(this, () => Debug, propsRequired: propsRequired, cdf);
     }
 
-    internal DynamicEntity(IEnumerable<IEntity> list, IEntity? parent, string field, int? appIdOrNull, bool propsRequired, ICodeDataFactory cdf)
+    internal DynamicEntity(IEnumerable<IEntity> list, IEntity? parent, string? field, int? appIdOrNull, bool propsRequired, ICodeDataFactory cdf)
         : this(cdf, propsRequired,
             // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
             list.FirstOrDefault() ?? cdf.PlaceHolderInBlock(appIdOrNull ?? 0, parent, field))

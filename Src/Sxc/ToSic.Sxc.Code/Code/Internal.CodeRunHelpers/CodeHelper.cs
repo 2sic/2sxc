@@ -21,26 +21,26 @@ public class CodeHelper() : CodeHelperBase("Sxc.CdHlp")
         return this;
     }
 
-    private IGetCodePath _parent;
+    private IGetCodePath _parent = null!;
 
     #endregion
 
     #region GetCode / CreateInstance
 
-    public object GetCode(string path, NoParamOrder noParamOrder = default, string className = default) 
+    public object? GetCode(string path, NoParamOrder noParamOrder = default, string? className = default) 
         => CreateInstance(path, name: className);
 
     /// <inheritdoc />
-    public object CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
+    public object? CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string? name = null, string? relativePath = null, bool throwOnError = true)
     {
-        var l = Log.Fn<object>();
+        var l = Log.Fn<object?>();
 
         // Prevent GetCode / CreateInstance from being used inside AppCode
         CodeRunThrowIfParentIsInsideAppCode(_parent);
 
         // usually we don't have a relative path, so we use the preset path from when this class was instantiated
         relativePath ??= _parent?.CreateInstancePath;
-        object instance = ExCtxOrNull?.GetDynamicApi()?.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
+        object? instance = ExCtxOrNull?.GetDynamicApi()?.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
         return l.Return(instance);
     }
 

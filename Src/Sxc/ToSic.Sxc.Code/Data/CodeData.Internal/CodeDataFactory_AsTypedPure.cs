@@ -7,7 +7,7 @@ partial class CodeDataFactory
 {
     private const string NameOfAsTyped = /*nameof(IDynamicCode16.AsTyped)*/ "AsTyped" + "(...)";
 
-    public ITyped AsTyped(object data, bool required = false, bool? propsRequired = default, string detailsMessage = default)
+    public ITyped? AsTyped(object data, bool required = false, bool? propsRequired = default, string? detailsMessage = default)
     {
         var l = Log.Fn<ITyped>();
 
@@ -26,7 +26,7 @@ partial class CodeDataFactory
     }
 
     private const string NameOfAsTypedList = /*nameof(IDynamicCode16.AsTypedList)*/ "AsTypedList" + "(...)";
-    public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder, bool? required = false, bool? propsRequired = default)
+    public IEnumerable<ITyped>? AsTypedList(object list, NoParamOrder noParamOrder, bool? required = false, bool? propsRequired = default)
     {
         var l = Log.Fn<IEnumerable<ITyped>>();
 
@@ -48,7 +48,7 @@ partial class CodeDataFactory
         return result;
     }
 
-    private bool AsTypedPreflightReturnNull(object original, string methodName, bool required, string detailsMessage = default)
+    private bool AsTypedPreflightReturnNull(object original, string methodName, bool required, string? detailsMessage = default)
     {
         var l = Log.Fn<bool>();
         switch (original)

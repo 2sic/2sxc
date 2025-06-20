@@ -19,7 +19,8 @@ public class Page(LazySvc<IHttp> httpLazy) : IPage
 
     public int Id { get; private set; } = EavConstants.NullId;
 
-    public virtual IParameters Parameters => field ??= new Parameters { Nvc = OriginalParameters.GetOverrideParams(httpLazy.Value?.QueryStringParams) };
+    [field: AllowNull, MaybeNull]
+    public virtual IParameters Parameters => field ??= new Parameters { Nvc = OriginalParameters.GetOverrideParams(httpLazy.Value?.QueryStringParams!) };
 
 
     public string Url { get; set; } = EavConstants.UrlNotInitialized;

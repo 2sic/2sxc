@@ -135,7 +135,7 @@ internal partial class Metadata: ITypedItem
 
     /// <inheritdoc />
     [PrivateApi]
-    IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string? type, string? field)
+    IEnumerable<ITypedItem?> ITypedItem.Parents(NoParamOrder noParamOrder, string? type, string? field)
     {
         // Protect & no Strict (as that's not really possible, since it's not a field)
 
@@ -163,7 +163,7 @@ internal partial class Metadata: ITypedItem
 
     /// <inheritdoc />
     [PrivateApi]
-    IEnumerable<ITypedItem> ITypedItem.Children(string? field, NoParamOrder noParamOrder, string? type, bool? required)
+    IEnumerable<ITypedItem?> ITypedItem.Children(string? field, NoParamOrder noParamOrder, string? type, bool? required)
     {
         // Protect & Strict
         if (IsErrStrictNameOptional(this, field, required, GetHelper.PropsRequired))
@@ -207,7 +207,7 @@ internal partial class Metadata: ITypedItem
         );
 
     /// <inheritdoc />
-    IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required)
+    IEnumerable<T>? ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required)
         => Cdf.AsCustomList<T>(
             source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required),
             protector: protector,
@@ -221,7 +221,7 @@ internal partial class Metadata: ITypedItem
         );
 
     /// <inheritdoc />
-    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field)
+    IEnumerable<T>? ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field)
         => Cdf.AsCustomList<T>(
             source: (this as ITypedItem).Parents(noParamOrder: protector, field: field, type: type ?? typeof(T).Name),
             protector: protector,

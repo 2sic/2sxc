@@ -121,7 +121,7 @@ internal partial class TypedStack: ITypedItem
             source: ((ITypedItem)this).Child(name, required: required), protector: protector, mock: false
         );
 
-    IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required)
+    IEnumerable<T>? ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required)
         => Cdf.AsCustomList<T>(
             source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required),
             protector: protector,
@@ -139,7 +139,7 @@ internal partial class TypedStack: ITypedItem
     T ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field)
         => throw new NotImplementedException(ParentNotImplemented);
 
-    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field)
+    IEnumerable<T>? ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field)
         => throw new NotImplementedException(ParentNotImplemented);
 
     bool ITypedItem.IsPublished => throw new NotImplementedException(NotImplementedError);

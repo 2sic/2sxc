@@ -13,11 +13,12 @@ public class HotBuildConstants
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
-    public static bool ObjectIsFromAppCode(object obj)
+    public static bool ObjectIsFromAppCode(object? obj)
     {
-        if (obj == null) return false;
+        if (obj == null)
+            return false;
         var ownType = obj.GetType();
         return (ownType.Namespace ?? "").StartsWith(FolderConstants.AppCode)
-               || ownType.Assembly.FullName.Contains(FolderConstants.AppCode);
+               || ownType.Assembly.FullName!.Contains(FolderConstants.AppCode);
     }
 }

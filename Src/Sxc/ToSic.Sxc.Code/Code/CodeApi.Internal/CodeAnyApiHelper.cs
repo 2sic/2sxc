@@ -2,7 +2,6 @@
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services;
 
@@ -17,7 +16,8 @@ internal abstract class CodeAnyApiHelper(ExecutionContext parent) : ICodeAnyApiH
     public ICmsContext CmsContext => Parent.CmsContext;
     public IDataSource Data => Parent.Data;
 
-    public TService GetService<TService>(NoParamOrder protector = default, bool reuse = false, Type type = default) where TService : class
+    public TService GetService<TService>(NoParamOrder protector = default, bool reuse = false, Type? type = default)
+        where TService : class
         => Parent.GetService<TService>(protector, reuse, type);
 
     public IDevTools DevTools => Parent.DevTools;

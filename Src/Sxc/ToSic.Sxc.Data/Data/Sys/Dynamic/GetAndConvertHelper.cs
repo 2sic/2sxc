@@ -122,7 +122,7 @@ internal class GetAndConvertHelper(
     /// <param name="possibleDims"></param>
     /// <param name="defaultDims"></param>
     /// <returns></returns>
-    internal static string?[] GetFinalLanguagesList(string language, List<string> possibleDims, string[] defaultDims)
+    internal static string?[] GetFinalLanguagesList(string language, List<string> possibleDims, string?[] defaultDims)
     {
         // if nothing specified, use default
         if (language == null! /* paranoid */)

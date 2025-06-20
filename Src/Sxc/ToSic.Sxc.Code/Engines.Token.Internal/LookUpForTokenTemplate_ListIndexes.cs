@@ -16,7 +16,7 @@ partial class LookUpForTokenTemplate
     public const string KeyIsLast = "islast";
     public const string KeyCount = "count";
 
-    private string ResolveRepeaterTokens(string strPropertyName)
+    private string? ResolveRepeaterTokens(string strPropertyName)
     {
         if (repeaterIndex <= -1 || !strPropertyName.StartsWith(TokenRepeater + ":", OrdinalIgnoreCase))
             return null;

@@ -16,7 +16,7 @@ public abstract class Module<T>(string logName) : ServiceBase(logName), IModule,
     #region Constructors and DI
 
     public T GetContents() => UnwrappedModule;
-    [PrivateApi] protected T UnwrappedModule;
+    [PrivateApi] protected T UnwrappedModule = null!;
 
     public IModule Init(T item)
     {

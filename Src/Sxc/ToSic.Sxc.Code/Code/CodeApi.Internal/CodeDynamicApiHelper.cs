@@ -24,7 +24,7 @@ internal class CodeDynamicApiHelper(ExecutionContext parent) : CodeAnyApiHelper(
     public T CreateSource<T>(IDataStream source) where T : IDataSource
         => Parent.CreateSource<T>(source);
 
-    public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
+    public T CreateSource<T>(IDataSource? inSource = null, ILookUpEngine? configurationProvider = default) where T : IDataSource
         => Parent.CreateSource<T>(inSource, configurationProvider);
 
     public ServiceKit14 ServiceKit14 => Parent.GetKit<ServiceKit14>();
@@ -35,8 +35,8 @@ internal class CodeDynamicApiHelper(ExecutionContext parent) : CodeAnyApiHelper(
         set => Parent.CreateInstancePath = value;
     }
 
-    public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null,
-        string relativePath = null, bool throwOnError = true) =>
+    public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string? name = null,
+        string? relativePath = null, bool throwOnError = true) =>
         Parent.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
 
 }

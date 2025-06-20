@@ -28,15 +28,15 @@ partial class CodeDataFactory: ICodeDataFactoryDeepWip
     /// Convert a list of Entities into a DynamicEntity.
     /// Only used in DynamicCodeRoot.
     /// </summary>
-    public IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, bool propsRequired, NoParamOrder protector = default, IEntity parent = default, string field = default) 
+    public IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, bool propsRequired, NoParamOrder protector = default, IEntity? parent = default, string? field = default) 
         => new DynamicEntity(list: list, parent: parent, field: field, appIdOrNull: null, propsRequired: propsRequired, cdf: this);
 
     /// <summary>
     /// Convert any object into a dynamic list.
     /// Only used in Dynamic Code for the public API.
     /// </summary>
-    public IEnumerable<dynamic> CodeAsDynList(object list, bool propsRequired = false) =>
-        list switch
+    public IEnumerable<dynamic>? CodeAsDynList(object list, bool propsRequired = false)
+        => list switch
         {
             null => new List<dynamic>(),
             IDataSource dsEntities => CodeAsDynList(dsEntities.List),
@@ -51,9 +51,9 @@ partial class CodeDataFactory: ICodeDataFactoryDeepWip
     /// Convert any object into a dynamic object.
     /// Only used in Dynamic Code for the public API.
     /// </summary>
-    public object AsDynamicFromObject(object dynObject, bool propsRequired = false)
+    public object? AsDynamicFromObject(object dynObject, bool propsRequired = false)
     {
-        var l = Log.Fn<object>();
+        var l = Log.Fn<object?>();
         //var typed = AsTypedInternal(dynObject);
         //if (typed != null) return l.Return(typed, nameof(ITypedRead));
 
@@ -95,7 +95,7 @@ partial class CodeDataFactory: ICodeDataFactoryDeepWip
 
     #region Merge Dynamic
 
-    public dynamic MergeDynamic(object[] entities) =>
+    public dynamic? MergeDynamic(object[]? entities) =>
         entities == null || !entities.Any()
             ? null
             : AsStack(null, entities, strictTypes: false, AsDynStack);
@@ -104,7 +104,7 @@ partial class CodeDataFactory: ICodeDataFactoryDeepWip
 
     // 2026-05-13 2dm - not sure if AppReaderRequired is correct, but I assume that if we do have a context,
     // then it must have an AppReader, so we can use it.
-    public IAppReader AppReaderOrNull => BlockOrNull?.Context?.AppReaderRequired;
+    public IAppReader? AppReaderOrNull => BlockOrNull?.Context?.AppReaderRequired;
 
     int ICodeDataFactoryDeepWip.AppIdOrZero => BlockOrNull?.AppId ?? 0;
 }

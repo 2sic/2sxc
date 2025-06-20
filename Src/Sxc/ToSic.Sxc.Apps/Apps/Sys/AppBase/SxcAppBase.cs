@@ -108,30 +108,30 @@ public abstract partial class SxcAppBase(SxcAppBase.MyServices services, string?
     #endregion
 
 
-    public SxcAppBase Init(ISite site, IAppIdentityPure appIdentity, AppDataConfigSpecs dataSpecs)
+    public SxcAppBase Init(ISite? replaceSite, IAppIdentityPure appIdentity, AppDataConfigSpecs? dataSpecs)
     {
         var l = Log.Fn<SxcAppBase>();
 
-        // 2024-03-18 moved here...
-        if (site != null)
-            Site = site;
+        // If we have a replacement site (like App being used from another site), set it here
+        if (replaceSite != null)
+            Site = replaceSite;
 
         // Env / Tenant must be re-checked here
-        if (Site == null) throw new("no site/portal received");
-            
+        if (Site == null)
+            throw new("no site/portal received");
+
+        // Update my AppIdentity and show for debug
+        InitAppBaseIds(appIdentity);
+        l.A($"prep App #{appIdentity.Show()}, has{nameof(dataSpecs)}:{dataSpecs != null}");
+
         // in case the DI gave a bad tenant, try to look up
         if (Site.Id == EavConstants.NullId
             && appIdentity.AppId != EavConstants.NullId
             && appIdentity.AppId != AppConstants.AppIdNotFound)
             Site = Services.ZoneMapper.SiteOfApp(appIdentity.AppId);
 
-        InitAppBaseIds(appIdentity);
-        l.A($"prep App #{appIdentity.Show()}, has{nameof(dataSpecs)}:{dataSpecs != null}");
-
         // Look up name in cache
         AppReaderInt = services.AppReaders.Get(this);
-
-        //InitializeResourcesSettingsAndMetadata();
 
         // for deferred initialization as needed
         _dataConfigSpecs = dataSpecs;

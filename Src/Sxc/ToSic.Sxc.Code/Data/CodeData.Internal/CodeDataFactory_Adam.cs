@@ -15,6 +15,7 @@ namespace ToSic.Sxc.Data.Internal;
 
 partial class CodeDataFactory
 {
+    [field: AllowNull, MaybeNull]
     public AdamManager AdamManager
     {
         get => field ??= GetAdamManager();
@@ -54,7 +55,9 @@ partial class CodeDataFactory
     public IFile File(int id)
         => AdamManager.AdamFs.GetFile(AdamAssetIdentifier.Create(id));
 
-    private ExecutionContext ExCtxReal => ExCtxOrNull as ExecutionContext;
+    private ExecutionContext ExCtxReal => (ExCtxOrNull as ExecutionContext)!;
+
+    [field: AllowNull, MaybeNull]
     private ServiceKit16 ServiceKit16 => field ??= ExCtxReal.GetKit<ServiceKit16>();
 
     // TODO: MUST FINISH THIS, NOT WORKING YET
@@ -64,24 +67,25 @@ partial class CodeDataFactory
     public IFolder Folder(int id)
         => AdamManager.AdamFs.GetFolder(AdamAssetIdentifier.Create(id));
 
-    public IFolder Folder(ICanBeEntity item, string name, IField field)
+    public IFolder Folder(ICanBeEntity item, string name, IField? field)
         => AdamManager.FolderOfField(item.Entity.EntityGuid, name, field);
 
     public IFolder Folder(Guid entityGuid, string fieldName, IField? field = default)
         => AdamManager.FolderOfField(entityGuid, fieldName, field);
 
+    [field: AllowNull, MaybeNull]
     private ICmsService CmsSvc => field ??= ExCtxReal.GetService<ICmsService>(reuse: true);
 
     // TODO: MUST FINISH THIS, NOT WORKING YET
     public IHtmlTag Html(
         object thing,
         NoParamOrder noParamOrder = default,
-        object container = default,
-        string classes = default,
+        object? container = default,
+        string? classes = default,
         bool debug = default,
-        object imageSettings = default,
+        object? imageSettings = default,
         bool? toolbar = default,
-        Func<ITweakInput<string>, ITweakInput<string>> tweak = default)
+        Func<ITweakInput<string>, ITweakInput<string>>? tweak = default)
         => CmsSvc.Html(
             thing,
             noParamOrder: noParamOrder,
@@ -93,40 +97,41 @@ partial class CodeDataFactory
             tweak: tweak
         );
 
+    [field: AllowNull, MaybeNull]
     private IImageService ImgSvc => field ??= ExCtxReal.GetService<IImageService>(reuse: true);
 
 
     public IResponsivePicture Picture(
-        object link = null,
-        object settings = default,
+        object? link = null,
+        object? settings = default,
         NoParamOrder noParamOrder = default,
-        Func<ITweakMedia, ITweakMedia> tweak = default,
-        object factor = default,
-        object width = default,
-        string imgAlt = default,
-        string imgAltFallback = default,
-        string imgClass = default,
-        object imgAttributes = default,
-        string pictureClass = default,
-        object pictureAttributes = default,
-        object toolbar = default,
-        object recipe = default
+        Func<ITweakMedia, ITweakMedia>? tweak = default,
+        object? factor = default,
+        object? width = default,
+        string? imgAlt = default,
+        string? imgAltFallback = default,
+        string? imgClass = default,
+        object? imgAttributes = default,
+        string? pictureClass = default,
+        object? pictureAttributes = default,
+        object? toolbar = default,
+        object? recipe = default
     ) => ImgSvc.Picture(link, settings, noParamOrder, tweak, factor, width, imgAlt, imgAltFallback, imgClass,
         imgAttributes, pictureClass, pictureAttributes, toolbar, recipe);
 
     public IResponsiveImage Img(
-        object link = null,
-        object settings = default,
+        object? link = null,
+        object? settings = default,
         NoParamOrder noParamOrder = default,
-        Func<ITweakMedia, ITweakMedia> tweak = default,
-        object factor = default,
-        object width = default,
-        string imgAlt = default,
-        string imgAltFallback = default,
-        string imgClass = default,
-        object imgAttributes = default,
-        object toolbar = default,
-        object recipe = default
+        Func<ITweakMedia, ITweakMedia>? tweak = default,
+        object? factor = default,
+        object? width = default,
+        string? imgAlt = default,
+        string? imgAltFallback = default,
+        string? imgClass = default,
+        object? imgAttributes = default,
+        object? toolbar = default,
+        object? recipe = default
     )
         => ImgSvc.Img(link, settings, noParamOrder, tweak, factor, width, imgAlt, imgAltFallback, imgClass,
             imgAttributes, toolbar, recipe);

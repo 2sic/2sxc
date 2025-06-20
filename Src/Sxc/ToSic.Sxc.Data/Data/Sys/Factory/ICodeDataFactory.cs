@@ -28,11 +28,11 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// <summary>
     /// Create list of custom-typed ITypedItems
     /// </summary>
-    IEnumerable<TCustom> AsCustomList<TCustom>(object? source, NoParamOrder protector, bool nullIfNull)
+    IEnumerable<TCustom>? AsCustomList<TCustom>(object? source, NoParamOrder protector, bool nullIfNull)
         where TCustom : class, ICanWrapData;
 
-    ITyped AsTyped(object data, bool required = false, bool? propsRequired = default, string? detailsMessage = default);
-    IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder, bool? required = false, bool? propsRequired = default);
+    ITyped? AsTyped(object data, bool required = false, bool? propsRequired = default, string? detailsMessage = default);
+    IEnumerable<ITyped>? AsTypedList(object list, NoParamOrder noParamOrder, bool? required = false, bool? propsRequired = default);
     int CompatibilityLevel { get; }
     CodeDataServices Services { get; }
 
@@ -59,7 +59,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// </summary>
     // If we don't have a DynCodeRoot, try to generate the language codes and compatibility
     // There are cases where these were supplied using SetFallbacks, but in some cases none of this is known
-    string[] Dimensions { get; }
+    string?[] Dimensions { get; }
 
     CodeInfoService CodeInfo { get; }
 
@@ -83,16 +83,16 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// Convert any object into a dynamic list.
     /// Only used in Dynamic Code for the public API.
     /// </summary>
-    IEnumerable<dynamic> CodeAsDynList(object list, bool propsRequired = false);
+    IEnumerable<dynamic>? CodeAsDynList(object list, bool propsRequired = false);
 
     /// <summary>
     /// Convert any object into a dynamic object.
     /// Only used in Dynamic Code for the public API.
     /// </summary>
-    object AsDynamicFromObject(object dynObject, bool propsRequired = false);
+    object? AsDynamicFromObject(object dynObject, bool propsRequired = false);
 
-    dynamic MergeDynamic(object[] entities);
-    ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? required = default, ITypedItem? fallback = default, bool? propsRequired = default, bool? mock = default);
+    dynamic? MergeDynamic(object[] entities);
+    ITypedItem? AsItem(object data, NoParamOrder noParamOrder = default, bool? required = default, ITypedItem? fallback = default, bool? propsRequired = default, bool? mock = default);
 
     /// <summary>
     /// Quick convert an entity to item - if not null, otherwise return null.
@@ -102,11 +102,11 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// <returns></returns>
     ITypedItem? AsItem(IEntity? entity, bool propsRequired);
 
-    IEnumerable<ITypedItem> EntitiesToItems(IEnumerable<IEntity> entities, bool propsRequired = false);
-    IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? required = default, IEnumerable<ITypedItem>? fallback = default, bool? propsRequired = default);
+    IEnumerable<ITypedItem?> EntitiesToItems(IEnumerable<IEntity> entities, bool propsRequired = false);
+    IEnumerable<ITypedItem?> AsItems(object list, NoParamOrder noParamOrder = default, bool? required = default, IEnumerable<ITypedItem>? fallback = default, bool? propsRequired = default);
     void SetCompatibilityLevel(int compatibilityLevel);
     void SetFallbacks(ISite site, int? compatibility = default, /*AdamManager*/ object? adamManagerPrepared = default);
-    object Json2Jacket(string json, string? fallback = default);
+    object? Json2Jacket(string json, string? fallback = default);
     ITypedStack AsStack(object[] parts);
 
     T AsStack<T>(object[] parts)
@@ -121,7 +121,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     TCustom? GetOne<TCustom>(Func<IEntity?> getItem, object id, bool skipTypeCheck)
         where TCustom : class, ICanWrapData;
 
-    IEntity PlaceHolderInBlock(int? appIdOrNull, IEntity? parent, string fieldName);
+    IEntity PlaceHolderInBlock(int? appIdOrNull, IEntity? parent, string? fieldName);
 
     /// <summary>
     /// Creates an empty list of a specific type, with hidden information to remember what field this is etc.

@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Code.Internal.SourceCode;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeFileInfo
 {
-    private CodeFileInfo(string inherits, CodeFileTypes type, List<CodeHelp> help, bool useAppCode = false, string sourceCode = default, string relativePath = default, string fullPath = default)
+    private CodeFileInfo(string inherits, CodeFileTypes type, List<CodeHelp> help, bool useAppCode = false, string? sourceCode = default, string? relativePath = default, string? fullPath = default)
     {
         Inherits = inherits;
         Type = type;
@@ -18,7 +18,7 @@ public class CodeFileInfo
         FullPath = fullPath;
     }
 
-    internal CodeFileInfo(CodeFileInfo original, string sourceCode, string relativePath = default, string fullPath = default, bool? useAppCode = default)
+    internal CodeFileInfo(CodeFileInfo original, string? sourceCode, string? relativePath = default, string? fullPath = default, bool? useAppCode = default)
     {
         Inherits = original.Inherits;
         Type = original.Type;
@@ -30,9 +30,9 @@ public class CodeFileInfo
     }
 
     public string Inherits { get; }
-    public string SourceCode { get; }
-    public string RelativePath { get; }
-    public string FullPath { get; }
+    public string? SourceCode { get; }
+    public string? RelativePath { get; }
+    public string? FullPath { get; }
     public CodeFileTypes Type { get; }
     public List<CodeHelp> Help { get; }
     public bool AppCode { get; }
@@ -69,12 +69,12 @@ public class CodeFileInfo
     /// Override ToString for better debugging
     /// </summary>
     public override string ToString() => _toString ??= $"{nameof(CodeFileInfo)} - {nameof(RelativePath)}: '{RelativePath}'; {nameof(FullPath)}: '{FullPath}'; {nameof(SourceCode)}: {SourceCode?.Length}; {nameof(Inherits)}: '{Inherits}'; {nameof(Type)}: '{Type}'; {nameof(AppCode)}: '{AppCode}'";
-    private string _toString;
+    private string? _toString;
 
     /// <summary>
     /// Create a dictionary of the specs for logging
     /// </summary>
-    public IDictionary<string, string> ToDictionary() => new Dictionary<string, string>
+    public IDictionary<string, string?> ToDictionary() => new Dictionary<string, string?>
     {
         { "RelativePath", RelativePath },
         { "FullPath", FullPath },

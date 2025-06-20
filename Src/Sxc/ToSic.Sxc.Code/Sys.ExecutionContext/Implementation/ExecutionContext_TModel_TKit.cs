@@ -28,7 +28,7 @@ public class ExecutionContext<TModel, TServiceKit>(ExecutionContext.MyServices s
     /// The primary kit for this service.
     /// Other kit versions can be accessed using `GetKit{TKit}`
     /// </summary>
-    public TServiceKit Kit => _kit.Get(GetKit<TServiceKit>);
+    public TServiceKit Kit => _kit.Get(GetKit<TServiceKit>)!;
     private readonly GetOnce<TServiceKit> _kit = new();
 
 }

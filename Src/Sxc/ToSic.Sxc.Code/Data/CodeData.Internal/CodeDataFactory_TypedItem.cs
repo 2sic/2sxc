@@ -13,7 +13,7 @@ partial class CodeDataFactory
 
     #region AsTyped Implementations
 
-    public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? required = default, ITypedItem fallback = default, bool? propsRequired = default, bool? mock = default)
+    public ITypedItem? AsItem(object data, NoParamOrder noParamOrder = default, bool? required = default, ITypedItem? fallback = default, bool? propsRequired = default, bool? mock = default)
     {
         // If we need mock data, return a fake object
         if (mock == true)
@@ -36,13 +36,14 @@ partial class CodeDataFactory
             ? null
             : new TypedItemOfEntity(null, entity, this, propsRequired: propsRequired);
 
+    [field: AllowNull, MaybeNull]
     private LogFilter AsItemLogFilter
         => field ??= new(Log, logFirstMax: 25, reLogIteration: 100);
 
-    internal ITypedItem AsItemInternal(object data, int recursions, bool propsRequired)
+    internal ITypedItem? AsItemInternal(object data, int recursions, bool propsRequired)
     {
         // Only log the first 25 calls to this method, then stop logging
-        var l = AsItemLogFilter.FnOrNull<ITypedItem>();
+        var l = AsItemLogFilter.FnOrNull<ITypedItem?>();
 
         if (recursions <= 0)
             throw l.Done(new Exception($"Conversion with {nameof(AsItem)} failed, max recursions reached"));
@@ -70,7 +71,8 @@ partial class CodeDataFactory
                 return ToItemOrNullAndLog(entList.FirstOrDefault(), nameof(IEnumerable<IEntity>));
             case IEnumerable enumerable:
                 var enumFirst = enumerable.Cast<object>().FirstOrDefault();
-                if (enumFirst is null) return l.ReturnNull($"{nameof(IEnumerable)} with null object");
+                if (enumFirst is null)
+                    return l.ReturnNull($"{nameof(IEnumerable)} with null object");
                 // retry conversion
                 return l.Return(AsItemInternal(enumFirst, recursions - 1, propsRequired: propsRequired));
             default:
@@ -78,20 +80,21 @@ partial class CodeDataFactory
                                                    $"If you are trying to create mock/fake/fallback data, try using \", mock: true\""));
         }
 
-        ITypedItem ToItemOrNullAndLog(IEntity e, string typeName) => e == null
-            ? l.ReturnNull($"empty {typeName}")
-            : l.Return(new TypedItemOfEntity(null, e, this, propsRequired: propsRequired), typeName);
+        ITypedItem? ToItemOrNullAndLog(IEntity? e, string typeName)
+            => e == null
+                ? l.ReturnNull($"empty {typeName}")
+                : l.Return(new TypedItemOfEntity(null, e, this, propsRequired: propsRequired), typeName);
     }
 
-    public IEnumerable<ITypedItem> EntitiesToItems(IEnumerable<IEntity>? entities, bool propsRequired = false)
+    public IEnumerable<ITypedItem?> EntitiesToItems(IEnumerable<IEntity>? entities, bool propsRequired = false)
         => entities?.Select(e => AsItem(e, propsRequired: propsRequired)).ToList() ?? [];
 
-    public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? required = default, IEnumerable<ITypedItem> fallback = default, bool? propsRequired = default) 
+    public IEnumerable<ITypedItem?> AsItems(object list, NoParamOrder noParamOrder = default, bool? required = default, IEnumerable<ITypedItem>? fallback = default, bool? propsRequired = default) 
         => AsItemList(list, required ?? true, fallback, MaxRecursions, propsRequired: propsRequired ?? false);
 
-    private IEnumerable<ITypedItem> AsItemList(object list, bool required, IEnumerable<ITypedItem> fallback, int recursions, bool propsRequired)
+    private IEnumerable<ITypedItem?> AsItemList(object list, bool required, IEnumerable<ITypedItem>? fallback, int recursions, bool propsRequired)
     {
-        var l = Log.Fn<IEnumerable<ITypedItem>>($"{nameof(list)}: '{list}'; {nameof(required)}: {required}; {nameof(recursions)}: {recursions}");
+        var l = Log.Fn<IEnumerable<ITypedItem?>>($"{nameof(list)}: '{list}'; {nameof(required)}: {required}; {nameof(recursions)}: {recursions}");
 
         if (recursions <= 0)
             return FallbackOrErrorAndLog("max recursions", $"Max recursions {MaxRecursions} reached.");
@@ -139,7 +142,7 @@ partial class CodeDataFactory
         }
 
         // Inner call to complete scenarios where the data couldn't be created
-        IEnumerable<ITypedItem> FallbackOrErrorAndLog(string fallbackMsg, string exMsg)
+        IEnumerable<ITypedItem?> FallbackOrErrorAndLog(string fallbackMsg, string exMsg)
             => fallback != null
                 ? l.Return(fallback, fallbackMsg + ", fallback")
                 : required

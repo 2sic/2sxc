@@ -18,6 +18,7 @@ public class HelpForRazor12
 
     #endregion
 
+    [field: AllowNull, MaybeNull]
     internal static List<CodeHelp> IssuesRazor12AlsoForRuntime => field ??= BuildListFromDiverseSources(
 
         #region New v20 warnings
@@ -48,6 +49,7 @@ public class HelpForRazor12
     /// <summary>
     /// List re-used in v12 and v14
     /// </summary>
+    [field: AllowNull, MaybeNull]
     internal static List<CodeHelp> Issues12To14 => field ??=
     [
         ..IssuesRazor12AlsoForRuntime,

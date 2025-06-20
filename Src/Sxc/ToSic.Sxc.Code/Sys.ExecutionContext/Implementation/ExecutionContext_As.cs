@@ -14,19 +14,19 @@ public partial class ExecutionContext
     {
         ((CodeDataFactory)Services.Cdf).ConnectToRoot(this);
         return Services.Cdf;
-    });
+    })!;
     private readonly GetOnce<ICodeDataFactory> _cdf = new();
 
     #region AsDynamic Implementations
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-    public dynamic AsDynamic(string json, string fallback = default) => Cdf.Json2Jacket(json, fallback);
+    public dynamic? AsDynamic(string json, string? fallback = default) => Cdf.Json2Jacket(json, fallback);
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
-    public dynamic AsDynamic(IEntity entity) => Cdf.CodeAsDyn(entity);
+    public dynamic? AsDynamic(IEntity entity) => Cdf.CodeAsDyn(entity);
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
-    public dynamic AsDynamic(object dynamicEntity) => Cdf.AsDynamicFromObject(dynamicEntity);
+    public dynamic? AsDynamic(object dynamicEntity) => Cdf.AsDynamicFromObject(dynamicEntity);
 
     // 2025-05-11 2dm disabled since we're not supporting DynamicCode12 any more...
     ///// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
@@ -41,7 +41,7 @@ public partial class ExecutionContext
     #region AsList
 
     /// <inheritdoc cref="IDynamicCode.AsList" />
-    public IEnumerable<dynamic> AsList(object list) => Cdf.CodeAsDynList(list);
+    public IEnumerable<dynamic>? AsList(object list) => Cdf.CodeAsDynList(list);
 
     #endregion
 

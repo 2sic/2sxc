@@ -10,7 +10,7 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
     public CodeFileInfo TypeOfVirtualPath(string virtualPath)
     {
         var l = Log.Fn<CodeFileInfo>($"{nameof(virtualPath)}: '{virtualPath}'");
-        string fullPath = default, sourceCode = default;
+        string? fullPath = default, sourceCode = default;
         try
         {
             (_, fullPath, sourceCode) = GetFileContentsOfVirtualPath(virtualPath);
@@ -24,9 +24,9 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
         }
     }
 
-    private (string relativePath, string fullPath, string sourceCode) GetFileContentsOfVirtualPath(string relativePath)
+    private (string relativePath, string? fullPath, string? sourceCode) GetFileContentsOfVirtualPath(string relativePath)
     {
-        var l = Log.Fn<(string, string, string)>($"{nameof(relativePath)}: '{relativePath}'");
+        var l = Log.Fn<(string, string?, string?)>($"{nameof(relativePath)}: '{relativePath}'");
 
         if (relativePath.IsEmptyOrWs())
             return l.Return((relativePath, null, null), "no relativePath");
@@ -42,7 +42,7 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
         return l.Return((relativePath, fullPath, sourceCode), $"found, {sourceCode.Length} bytes");
     }
 
-    private CodeFileInfo AnalyzeContent(string relativePath, string fullPath, string sourceCode)
+    private CodeFileInfo AnalyzeContent(string relativePath, string? fullPath, string sourceCode)
     {
         var l = Log.Fn<CodeFileInfo>($"{nameof(relativePath)}:{relativePath}");
         if (sourceCode.Length < 10)
@@ -176,9 +176,10 @@ public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc"
     /// Comments and Strings: If the class declaration is commented out or appears within a string, the regex will still match it, which might not be desired.
     /// More robust solution can be done with Roslyn source pars, but additional packages can be needed.
     /// </remarks>
-    public static string ExtractBaseClass(string sourceCode, string className)
+    public static string? ExtractBaseClass(string sourceCode, string className)
     {
-        if (sourceCode.IsEmptyOrWs() || className.IsEmptyOrWs()) return null;
+        if (sourceCode.IsEmptyOrWs() || className.IsEmptyOrWs())
+            return null;
         var pattern = $@"class\s+{className}\s*:\s*([^\s{{,]+)";
         var match = Regex.Match(sourceCode, pattern, RegexOptions.IgnoreCase);
         return match.Success && match.Groups.Count > 1

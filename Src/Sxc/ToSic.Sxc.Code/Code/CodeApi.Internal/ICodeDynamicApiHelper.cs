@@ -48,7 +48,7 @@ public interface ICodeDynamicApiHelper: ICodeAnyApiHelper, ICreateInstance
 
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
-    T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource;
+    T CreateSource<T>(IDataSource? inSource = null, ILookUpEngine? configurationProvider = default) where T : IDataSource;
 
     #endregion
 

@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class GenChangeOn(string fullNamespace, string name, (string Code, string Comment)[] alt)
+internal class GenChangeOn(string fullNamespace, string name, (string Code, string? Comment)[] alt)
     : GenNotExist(name, alt)
 {
 
@@ -11,8 +11,8 @@ internal class GenChangeOn(string fullNamespace, string name, (string Code, stri
     { }
 
     public readonly string FullNameSpace = fullNamespace;
-    public string MsgWhichWasCommon;
-    public string NotOn;
+    public string? MsgWhichWasCommon;
+    public string? NotOn;
 
     protected override string HtmlRecommendations() => Alt.Length == 1
         ? HtmlRec(("." + Alt[0].Code, Alt[0].Comment))

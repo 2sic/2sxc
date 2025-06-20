@@ -3,7 +3,6 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services.Internal;
@@ -27,24 +26,26 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
         _app = created;
         return created;
     }
-    private object _app;
+    private object? _app;
 
     public ICmsView<TSettings, TResources> MyView<TSettings, TResources>()
         where TSettings : class, ICanWrapData, new()
         where TResources : class, ICanWrapData, new()
     {
         // check if cache exists and was created with the sames specs
-        if (_view is ICmsView<TSettings, TResources> typed) return typed;
+        if (_view is ICmsView<TSettings, TResources> typed)
+            return typed;
 
         // Get and cache for reuse
-        var cmsContext = ExCtx.GetState<ICmsContext>() as CmsContext;
-        var created = new CmsView<TSettings, TResources>(cmsContext, cmsContext?.RealBlockOrNull, false);
+        var cmsContext = (CmsContext)ExCtx.GetState<ICmsContext>();
+        var created = new CmsView<TSettings, TResources>(cmsContext, cmsContext.RealBlockOrNull, false);
         _view = created;
         return created;
     }
 
-    private ICmsView _view;
+    private ICmsView? _view;
 
+    [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
 
     public TCustomType MyItem<TCustomType>()
@@ -59,7 +60,7 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
         _myItem = created;
         return created;
     }
-    private object _myItem;
+    private object? _myItem;
 
     public IEnumerable<TCustomType> MyItems<TCustomType>()
         where TCustomType : class, ICanWrapData, new()
@@ -73,7 +74,7 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
         _myItems = created;
         return created;
     }
-    private object _myItems;
+    private object? _myItems;
 
     public TCustomType MyHeader<TCustomType>()
         where TCustomType : class, ICanWrapData, new()
@@ -88,6 +89,6 @@ internal class Customizer(): ServiceWithContext(SxcLogName + ".CdeCst"), ICodeCu
         _myHeader = created;
         return created;
     }
-    private object _myHeader;
+    private object? _myHeader;
 
 }

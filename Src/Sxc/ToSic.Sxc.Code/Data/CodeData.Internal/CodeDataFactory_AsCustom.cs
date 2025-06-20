@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Sxc.Data.Models;
 using ToSic.Sxc.Data.Sys;
@@ -83,12 +82,12 @@ partial class CodeDataFactory: IModelFactory
         );
     }
 
-    // [field: AllowNull, MaybeNull]
+    [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
     /// <summary>
     /// Create list of custom-typed ITypedItems
     /// </summary>
-    public IEnumerable<TCustom> AsCustomList<TCustom>(object? source, NoParamOrder protector, bool nullIfNull)
+    public IEnumerable<TCustom>? AsCustomList<TCustom>(object? source, NoParamOrder protector, bool nullIfNull)
         where TCustom : class, ICanWrapData
     {
         return source switch

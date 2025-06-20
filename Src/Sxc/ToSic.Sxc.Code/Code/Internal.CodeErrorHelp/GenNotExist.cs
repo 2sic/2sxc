@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class GenNotExist(string name, (string Code, string Comment)[] alt)
+internal class GenNotExist(string name, (string Code, string? Comment)[]? alt)
 {
     public GenNotExist(string name, params string[] alt) : this(name, alt?.Select(r => (r, null as string)).ToArray()) { }
     public GenNotExist(string name, (string Code, string Comment) alt) : this(name, [alt]) { }
@@ -13,10 +13,10 @@ internal class GenNotExist(string name, (string Code, string Comment)[] alt)
         : $"<ol>{string.Join("\n", Alt.Select(HtmlRec))}</ol>";
 
     public readonly string Name = name;
-    public string Comments;
-    public (string Code, string Comment)[] Alt = alt.SafeAny() ? alt : new (string, string)[] { ("unknown", null) };
-    public string LinkCode;
-    public string MsgNotSupportedIn;
+    public string? Comments;
+    public (string Code, string? Comment)[] Alt = alt.SafeAny() ? alt : new (string, string?)[] { ("unknown", null) };
+    public string? LinkCode;
+    public string? MsgNotSupportedIn;
 
     public virtual CodeHelp Generate()
     {
@@ -46,6 +46,6 @@ Probably better:
     internal static string DetectTypeDoesNotContain(string typeName, string property) =>
         $"error CS1061: '{typeName}' does not contain a definition for '{property}' and no extension method '{property}' accepting a first argument of type '{typeName}' could be found";
 
-    protected static string HtmlRec((string Code, string Comment) r)
+    protected static string HtmlRec((string Code, string? Comment) r)
         => $"<li>{(r.Comment.HasValue() ? r.Comment + " - " : "")}<code>{r.Code}</code></li>";
 }

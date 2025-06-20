@@ -15,7 +15,7 @@ partial class CodeDataFactory
 
     public IEntity FakeEntity(int appId) => dataBuilderLazy.Value.FakeEntity(appId);
 
-    public IEntity PlaceHolderInBlock(int? appIdOrNull, IEntity? parent, string fieldName)
+    public IEntity PlaceHolderInBlock(int? appIdOrNull, IEntity? parent, string? fieldName)
     {
         var dummyEntity = FakeEntity(appIdOrNull ?? parent?.AppId ?? 0);
         return parent == null

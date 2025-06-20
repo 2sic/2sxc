@@ -17,7 +17,7 @@ partial class CodeDataFactory
         where T : class, ICanWrapData, new() 
         => AsCustom<T>(AsStack(parts));
 
-    private TStackType AsStack<TStackType>(string name, object[] parts, bool strictTypes, Func<string, List<KeyValuePair<string, IPropertyLookup>>, TStackType> generate)
+    private TStackType AsStack<TStackType>(string? name, object[] parts, bool strictTypes, Func<string, List<KeyValuePair<string, IPropertyLookup>>, TStackType> generate)
     {
         name ??= EavConstants.NullNameId;
         var l = Log.Fn<TStackType>($"'{name}', {parts?.Length}");
@@ -37,8 +37,10 @@ partial class CodeDataFactory
                 var lookup = GetPropertyLookupOrNull(original)
                              // This should cover the case where it's a list<ITypedItem> or similar
                              ?? (original is IEnumerable maybePlEnum
-                                 ? GetPropertyLookupOrNull(maybePlEnum.Cast<object>()
-                                     .FirstOrDefault(mpl => mpl is IHasPropLookup or IPropertyLookup))
+                                 ? GetPropertyLookupOrNull(maybePlEnum
+                                     .Cast<object>()
+                                     .FirstOrDefault(mpl => mpl is IHasPropLookup or IPropertyLookup)
+                                 )
                                  : null);
                 return new { index, original, lookup };
             })
@@ -63,7 +65,7 @@ partial class CodeDataFactory
         return l.ReturnAsOk(generate(name, sources));
     }
 
-    private static IPropertyLookup GetPropertyLookupOrNull(object original)
+    private static IPropertyLookup? GetPropertyLookupOrNull(object? original)
         => original switch
         {
             IPropertyLookup pl => pl,

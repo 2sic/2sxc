@@ -26,7 +26,7 @@ public class CodeJsonWrapper(Generator<WrapObjectTyped> wrapTypeGenerator)
     #endregion
 
 
-    internal DynamicJacketBase? Json2Jacket(string json, NoParamOrder noParamOrder = default, string? fallback = default)
+    internal DynamicJacketBase? Json2Jacket(string? json, NoParamOrder noParamOrder = default, string? fallback = default)
         => IfJsonTryConvertToJacket(AsJsonNode(json, fallback)).Final;
 
     public ITyped? JsonToTyped(string json, NoParamOrder noParamOrder = default, string? fallback = default)

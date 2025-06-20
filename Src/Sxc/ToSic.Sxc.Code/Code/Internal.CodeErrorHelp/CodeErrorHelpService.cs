@@ -73,7 +73,7 @@ public class CodeErrorHelpService: ServiceBase
 
     }
 
-    internal CodeHelp FindHelp(Exception ex)
+    internal CodeHelp? FindHelp(Exception ex)
     {
         switch (ex)
         {
@@ -95,22 +95,28 @@ public class CodeErrorHelpService: ServiceBase
         }
     }
 
-    private static CodeHelp FindHelp(Exception ex, List<CodeHelp> errorList)
+    private static CodeHelp? FindHelp(Exception? ex, List<CodeHelp> errorList)
     {
         var msg = $"{ex?.Message}{ex?.StackTrace}";
-        return msg.IsEmpty() ? null : errorList.FirstOrDefault(help =>
-        {
-            if (help.DetectRegex)
-                return Regex.IsMatch(msg, help.Detect);
-            return msg.Contains(help.Detect);
-        });
+        return msg.IsEmpty()
+            ? null
+            : errorList.FirstOrDefault(help
+                => help.Detect.HasValue()
+                   && (help.DetectRegex
+                       ? Regex.IsMatch(msg, help.Detect)
+                       : msg.Contains(help.Detect ?? "@#423-dummy-should-never-find"))
+            );
     }
-    private static List<CodeHelp> FindManyOrNull(Exception ex, List<CodeHelp> errorList)
+    private static List<CodeHelp>? FindManyOrNull(Exception? ex, List<CodeHelp> errorList)
     {
         var msg = ex?.Message;
-        if (msg.IsEmptyOrWs()) return null;
+        if (msg.IsEmptyOrWs())
+            return null;
         var list = errorList
-            .Where(help => help.DetectRegex ? Regex.IsMatch(msg, help.Detect) : msg.Contains(help.Detect))
+            .Where(help =>
+                help.Detect.HasValue()
+                && (help.DetectRegex ? Regex.IsMatch(msg, help.Detect) : msg.Contains(help.Detect))
+            )
             .ToList();
         return list.Any() ? list : null;
     }

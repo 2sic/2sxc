@@ -6,6 +6,7 @@ namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class HelpForRazor14
 {
+    [field: AllowNull, MaybeNull]
     internal static List<CodeHelp> Compile14 => field ??= CodeHelpBuilder.BuildListFromDiverseSources(
         // All which are common in 12 and 14
         Issues12To14,
@@ -22,7 +23,7 @@ internal class HelpForRazor14
     );
 
 
-    internal static CodeHelp HelpRemoved14(string property, string linkCode, params (string Code, string Comment)[] alt)
+    internal static CodeHelp HelpRemoved14(string property, string linkCode, params (string Code, string? Comment)[]? alt)
         => new GenNotExist(property, alt)
         {
             LinkCode = linkCode,

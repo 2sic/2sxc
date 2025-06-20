@@ -31,45 +31,53 @@ internal class CmsContext(
     internal new IExecutionContext ExCtx => base.ExCtx;
 
     // Note: Internal so it can be used for View<T, T>
-    internal IBlock RealBlockOrNull => _realBlock.Get(() => ExCtx.GetState<IBlock>());
-    private readonly GetOnce<IBlock> _realBlock = new();
+    internal IBlock? RealBlockOrNull => _realBlock.Get(() => ExCtx.GetState<IBlock>());
+    private readonly GetOnce<IBlock?> _realBlock = new();
 
-    internal IContextOfBlock CtxBlockOrNull => _ctxBlock.Get(() => RealBlockOrNull?.Context);
-    private readonly GetOnce<IContextOfBlock> _ctxBlock = new();
+    internal IContextOfBlock? CtxBlockOrNull => _ctxBlock.Get(() => RealBlockOrNull?.Context);
+    private readonly GetOnce<IContextOfBlock?> _ctxBlock = new();
 
     internal IContextOfSite CtxSite => CtxBlockOrNull ?? siteCtxFallback;
 
+    [field: AllowNull, MaybeNull]
     private IAppReader SiteAppReader => field ??= appReaders.GetZonePrimary(CtxSite.Site.ZoneId);
 
     #endregion
 
     public ICmsPlatform Platform { get; } = platform;
 
+    [field: AllowNull, MaybeNull]
     public ICmsSite Site => field
         ??= new CmsSite(this, SiteAppReader);
 
+    [field: AllowNull, MaybeNull]
     public ICmsPage Page => field
         ??= new CmsPage(this, SiteAppReader.Metadata, pageLazy);
 
+    [field: AllowNull, MaybeNull]
     public ICmsCulture Culture => field
         ??= new CmsCulture(this);
 
+    [field: AllowNull, MaybeNull]
     public ICmsModule Module => field
         ??= new CmsModule(this, RealBlockOrNull.Context?.Module ?? new ModuleUnknown(null), RealBlockOrNull);
 
+    [field: AllowNull, MaybeNull]
     public ICmsUser User => field
         ??= CreateCurrent();
 
     private ICmsUser CreateCurrent()
     {
         var userSvc = ExCtx.GetService<IUserService>(reuse: true);
-        var userModel = userSvc?.GetCurrentUser();
+        var userModel = userSvc.GetCurrentUser();
         return new CmsUser(this, userModel, SiteAppReader.Metadata);
     }
 
+    [field: AllowNull, MaybeNull]
     public ICmsView View => field
         ??= new CmsView(this, RealBlockOrNull);
 
+    [field: AllowNull, MaybeNull]
     public ICmsBlock Block => field
         ??= new CmsBlock(RealBlockOrNull);
 }

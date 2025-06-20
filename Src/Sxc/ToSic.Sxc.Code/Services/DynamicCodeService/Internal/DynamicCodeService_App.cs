@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Services.Internal;
 public partial class DynamicCodeService
 {
     /// <inheritdoc />
-    public IApp App(NoParamOrder noParamOrder = default, int? zoneId = null, int? appId = null, ISite site = null, bool? withUnpublished = null)
+    public IApp App(NoParamOrder noParamOrder = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
     {
         MakeSureLogIsInHistory();
 
@@ -28,10 +28,10 @@ public partial class DynamicCodeService
 
     /// <inheritdoc />
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public IApp AppOfSite(NoParamOrder noParamOrder = default, int? siteId = null, ISite site = null, bool? withUnpublished = null)
+    public IApp AppOfSite(NoParamOrder noParamOrder = default, int? siteId = null, ISite? site = null, bool? withUnpublished = null)
         => App(GetPrimaryAppIdentity(siteId, site), site, withUnpublished);
 
-    private IAppIdentityPure GetPrimaryAppIdentity(int? siteId, ISite site = default)
+    private IAppIdentityPure GetPrimaryAppIdentity(int? siteId, ISite? site = default)
     {
         siteId ??= site?.Id ?? Services.Site.Value.Id;
         var zoneId = Services.ZoneMapper.Value.GetZoneId(siteId.Value);

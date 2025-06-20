@@ -9,7 +9,6 @@ using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.LookUp;
@@ -79,10 +78,10 @@ public class TokenEngine(
         | RegexOptions.IgnorePatternWhitespace);
     #endregion
 
-    private IExecutionContext _executionContext;
-    private ICodeDynamicApiHelper _dynamicApiSvc;
+    private IExecutionContext _executionContext = null!;
+    private ICodeDynamicApiHelper _dynamicApiSvc = null!;
 
-    private TokenReplace _tokenReplace;
+    private TokenReplace _tokenReplace = null!;
 
     [PrivateApi]
     public override void Init(IBlock block)
@@ -106,8 +105,11 @@ public class TokenEngine(
 
         _tokenReplace = new(lookUpEngine);
     }
+
+    [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= _executionContext.GetCdf();
 
+    [field: AllowNull, MaybeNull]
     private CultureInfo CultureInfo => field ??= CultureHelpers.SafeCultureInfo(Cdf.Dimensions);
 
 
@@ -158,7 +160,7 @@ public class TokenEngine(
         if (!DataSource.Out.ContainsKey(streamName))
             throw new ArgumentException("Was not able to implement REPEAT because I could not find Data:" + streamName + ". Please check spelling the pipeline delivering data to this template.");
 
-        var dataItems = DataSource[streamName].List.ToImmutableOpt();
+        var dataItems = DataSource[streamName]!.List.ToImmutableOpt();
         var itemsCount = dataItems.Count;
         for (var i = 0; i < itemsCount; i++)
         {
@@ -182,8 +184,12 @@ public class TokenEngine(
 
         // Get the existing sources and remove the ones which would be duplicate
         var sources = _tokenReplace.LookupEngine.Sources.ToList();
-        foreach (var src in valuesForThisInstanceOnly) 
-            sources.Remove(sources.GetSource(src.Key));
+        foreach (var src in valuesForThisInstanceOnly)
+        {
+            var lookup = sources.GetSource(src.Key);
+            if (lookup != null)
+                sources.Remove(lookup);
+        }
 
         // Create a new lookup engine with the new sources; but skip the original sources; only use the downstream
         var newEngine = new LookUpEngine(_tokenReplace.LookupEngine, Log, sources: [..valuesForThisInstanceOnly.Values, ..sources], skipOriginalSource: true);

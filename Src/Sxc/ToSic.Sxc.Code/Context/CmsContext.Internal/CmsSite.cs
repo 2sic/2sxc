@@ -11,7 +11,7 @@ internal class CmsSite(CmsContext parent, IAppReader appReader)
 {
     public int Id => GetContents()?.Id ?? EavConstants.NullId;
     public string Url => GetContents()?.Url ?? string.Empty;
-    public string UrlRoot => GetContents().UrlRoot ?? string.Empty;
+    public string UrlRoot => GetContents()?.UrlRoot ?? string.Empty;
 
     protected override IMetadataOf GetMetadataOf() 
         => appReader.Metadata.GetMetadataOf(TargetTypes.Site, Id, title: Url)

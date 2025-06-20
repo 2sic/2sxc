@@ -124,7 +124,7 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
 
     #region Add-Ons for ITypedStack
 
-    ITypedItem /*ITypedStack*/ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required)
+    ITypedItem? /*ITypedStack*/ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required)
     {
         var findResult = _helper.TryGet(name);
         return IsErrStrict(findResult.Found, required, _helper.PropsRequired)

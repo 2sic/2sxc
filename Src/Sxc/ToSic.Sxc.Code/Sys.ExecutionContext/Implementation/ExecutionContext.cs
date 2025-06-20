@@ -7,7 +7,6 @@ using ToSic.Sxc.Code.CodeApi;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -88,7 +87,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.My
 
 
     [PrivateApi]
-    public virtual IExecutionContext InitDynCodeRoot(IBlock block, ILog parentLog)
+    public virtual IExecutionContext InitDynCodeRoot(IBlock block, ILog? parentLog)
     {
         this.LinkLog(parentLog ?? block?.Log);
         var cLog = Log.Fn<IExecutionContext>();
@@ -107,15 +106,17 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.My
     internal IApp App { get; private set; }
 
     /// <inheritdoc />
-    internal IDataSource Data { get; private set; }
+    internal IDataSource? Data { get; private set; }
 
     /// <inheritdoc cref="IDynamicCode.Link" />
+    [field: AllowNull, MaybeNull]
     internal ILinkService Link => field ??= GetService<ILinkService>(reuse: true);
 
 
     #region Edit
 
     /// <inheritdoc />
+    [field: AllowNull, MaybeNull]
     internal IEditService Edit => field ??= GetService<IEditService>(reuse: true);
 
     #endregion
@@ -126,7 +127,9 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.My
     /// <summary>
     /// WIP!
     /// </summary>
+    [field: AllowNull, MaybeNull]
     internal ICodeDynamicApiHelper DynamicApi => field ??= new CodeDynamicApiHelper(this);
 
+    [field: AllowNull, MaybeNull]
     internal ICodeTypedApiHelper TypedApi => field ??= new CodeTypedApiHelper(this);
 }

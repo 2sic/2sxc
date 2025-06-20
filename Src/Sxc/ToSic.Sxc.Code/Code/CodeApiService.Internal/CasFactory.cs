@@ -22,7 +22,7 @@ public class ExecutionContextFactory(IServiceProvider serviceProvider)
     /// <param name="parentLog"></param>
     /// <param name="compatibilityFallback"></param>
     /// <returns></returns>
-    public IExecutionContext New(object parentClassOrNull, IBlock blockOrNull, ILog parentLog, int compatibilityFallback)
+    public IExecutionContext New(object? parentClassOrNull, IBlock blockOrNull, ILog parentLog, int compatibilityFallback)
     {
         var compatibility = (parentClassOrNull as ICompatibilityLevel)?.CompatibilityLevel ?? compatibilityFallback;
         var l = Log.Fn<ExecutionContext>($"{nameof(compatibility)}: {compatibility}");

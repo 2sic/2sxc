@@ -25,8 +25,8 @@ public interface ICreateInstance: IGetCodePath
     /// </remarks>
     dynamic CreateInstance(string virtualPath,
         NoParamOrder noParamOrder = default,
-        string name = null,
-        string relativePath = null,
+        string? name = null,
+        string? relativePath = null,
         bool throwOnError = true);
 
 }

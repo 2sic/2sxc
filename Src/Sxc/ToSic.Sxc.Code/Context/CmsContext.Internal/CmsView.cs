@@ -5,16 +5,15 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Context.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IView>(parent, block.View), ICmsView
+internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IView>(parent, block.View!), ICmsView
 {
-    private readonly IView _view = block.View;
+    private readonly IView? _view = block.View!;
 
     /// <inheritdoc />
     public int Id => _view?.Id ?? 0;
@@ -26,17 +25,19 @@ internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IVi
     public string Identifier => _view?.Identifier ?? "";
 
     /// <inheritdoc />
-    public string Edition => _view?.Edition;
+    public string Edition => _view?.Edition ?? "";
 
     protected override IMetadataOf GetMetadataOf()
-        => _view?.Metadata.AddRecommendations();
+        => _view?.Metadata.AddRecommendations()!;
 
+    [field: AllowNull, MaybeNull]
     public IFolder Folder => field ??= FolderAdvanced();
 
     [PrivateApi]
-    private IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string location = default)
-        => new CmsViewFolder(this, block.App, AppAssetsHelpers.DetermineShared(location) ?? block.View.IsShared);
+    private IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string? location = default)
+        => new CmsViewFolder(this, block.App, AppAssetsHelpers.DetermineShared(location) ?? _view.IsShared);
 
+    [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= Parent.ExCtx.GetCdf();
 
     /// <summary>

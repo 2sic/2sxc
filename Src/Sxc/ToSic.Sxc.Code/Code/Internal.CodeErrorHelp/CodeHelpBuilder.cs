@@ -24,13 +24,14 @@ internal class CodeHelpBuilder
     /// </summary>
     /// <param name="parts"></param>
     /// <returns></returns>
-    public static List<CodeHelp> BuildListFromDiverseSources(params object[] parts)
+    [return: NotNullIfNotNull(nameof(parts))]
+    public static List<CodeHelp>? BuildListFromDiverseSources(params object[] parts)
         => parts?.SelectMany(r => r switch
             {
                 CodeHelp ch => [ch],
                 GenNotExist gen => [gen.Generate()],
                 IEnumerable<CodeHelp> list => list,
-                _ => Array.Empty<CodeHelp>()
+                _ => []
             })
             .ToList();
 }

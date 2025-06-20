@@ -85,7 +85,7 @@ public interface IDynamicCodeService
         NoParamOrder noParamOrder = default,
         int? zoneId = null,
         int? appId = null,
-        ISite site = null,
+        ISite? site = null,
         bool? withUnpublished = null);
 
     /// <summary>
@@ -108,6 +108,6 @@ public interface IDynamicCodeService
         // ReSharper disable once MethodOverloadWithOptionalParameter
         NoParamOrder noParamOrder = default,
         int? siteId = null,
-        ISite site = null,
+        ISite? site = null,
         bool? withUnpublished = null);
 }

@@ -22,8 +22,8 @@ public interface ICodeLog: IWrapper<ILog>
     /// <param name="cName">auto pre filled by the compiler - the method name</param>
     /// <param name="cLine">auto pre filled by the compiler - the code line</param>
     string Add(string message,
-        [CallerFilePath] string cPath = null,
-        [CallerMemberName] string cName = null,
+        [CallerFilePath] string? cPath = null,
+        [CallerMemberName] string? cName = null,
         [CallerLineNumber] int cLine = 0
     );
 
@@ -35,8 +35,8 @@ public interface ICodeLog: IWrapper<ILog>
     /// <param name="cName">auto pre filled by the compiler - the method name</param>
     /// <param name="cLine">auto pre filled by the compiler - the code line</param>
     void Warn(string message,
-        [CallerFilePath] string cPath = null,
-        [CallerMemberName] string cName = null,
+        [CallerFilePath] string? cPath = null,
+        [CallerMemberName] string? cName = null,
         [CallerLineNumber] int cLine = 0
     );
 
@@ -49,8 +49,8 @@ public interface ICodeLog: IWrapper<ILog>
     /// <param name="cName">auto pre filled by the compiler - the method name</param>
     /// <param name="cLine">auto pre filled by the compiler - the code line</param>
     void Exception(Exception ex,
-        [CallerFilePath] string cPath = null,
-        [CallerMemberName] string cName = null,
+        [CallerFilePath] string? cPath = null,
+        [CallerMemberName] string? cName = null,
         [CallerLineNumber] int cLine = 0
     );
 
@@ -65,11 +65,11 @@ public interface ICodeLog: IWrapper<ILog>
     /// <param name="cName">auto pre filled by the compiler - the method name</param>
     /// <param name="cLine">auto pre filled by the compiler - the code line</param>
     Action<string> Call(
-        string parameters = null,
-        string message = null,
+        string? parameters = null,
+        string? message = null,
         bool useTimer = false,
-        [CallerFilePath] string cPath = null,
-        [CallerMemberName] string cName = null,
+        [CallerFilePath] string? cPath = null,
+        [CallerMemberName] string? cName = null,
         [CallerLineNumber] int cLine = 0
     );
 
@@ -87,11 +87,11 @@ public interface ICodeLog: IWrapper<ILog>
     /// Before in the `ILog` it was (message, data), new is (data, message)
     /// </remarks>
     Func<T, string, T> Call<T>(
-        string parameters = null,
-        string message = null,
+        string? parameters = null,
+        string? message = null,
         bool useTimer = false,
-        [CallerFilePath] string cPath = null,
-        [CallerMemberName] string cName = null,
+        [CallerFilePath] string? cPath = null,
+        [CallerMemberName] string? cName = null,
         [CallerLineNumber] int cLine = 0
     );
 

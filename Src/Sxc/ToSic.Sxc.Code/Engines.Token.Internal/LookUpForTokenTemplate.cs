@@ -40,7 +40,7 @@ internal partial class LookUpForTokenTemplate(
     /// <param name="key"></param>
     /// <param name="strFormat"></param>
     /// <returns></returns>
-    private string GetProperty(string key, string strFormat)
+    private string? GetProperty(string key, string strFormat)
     {
 
         // As of 2025-05-13 v20 (2dm) the toolbar will only work in DNN
@@ -58,7 +58,7 @@ internal partial class LookUpForTokenTemplate(
 
 #endif
         // Return empty string if Entity is null
-        if (dynEntity == null || key.IsEmptyOrWs())
+        if (dynEntity == null! || key.IsEmptyOrWs())
             return "";
 
         // If we have a delimiter in the key, then we must check for sub-properties
@@ -104,10 +104,12 @@ internal partial class LookUpForTokenTemplate(
         return subLookup.GetProperty(subProp, "") ?? "";
     }
 
-    public string Get(string key, string strFormat) => GetProperty(key, strFormat);
+    public string Get(string key, string strFormat)
+        => GetProperty(key, strFormat) ?? "";
 
     /// <inheritdoc/>
-    public virtual string Get(string key) => Get(key, "");
+    public virtual string Get(string key)
+        => Get(key, "") ?? "";
 
     ILookUp ICanBeLookUp.LookUp => this;
 }

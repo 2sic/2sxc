@@ -7,11 +7,8 @@ namespace ToSic.Sxc.Data.Sys.Wrappers;
 
 internal class JsonProcessingHelpers
 {
-    internal static JsonNode? AsJsonNode(string json, string? fallback = EmptyJson)
+    internal static JsonNode? AsJsonNode(string? json, string? fallback = EmptyJson)
     {
-        JsonNode? StandardParse(string jsonToParse) =>
-            JsonNode.Parse(jsonToParse, JsonNodeDefaultOptions, JsonDocumentDefaultOptions);
-
         if (!json.HasValue())
             return fallback == null
                 ? null
@@ -33,6 +30,9 @@ internal class JsonProcessingHelpers
 
         // fallback
         return fallback == null ? null : StandardParse(fallback);
+
+        JsonNode? StandardParse(string jsonToParse)
+            => JsonNode.Parse(jsonToParse, JsonNodeDefaultOptions, JsonDocumentDefaultOptions);
     }
 
     /// <summary>

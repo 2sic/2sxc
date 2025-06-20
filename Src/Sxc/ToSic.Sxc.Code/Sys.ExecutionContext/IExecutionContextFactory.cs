@@ -13,5 +13,5 @@ public interface IExecutionContextFactory
     /// <param name="parentLog"></param>
     /// <param name="compatibilityFallback"></param>
     /// <returns></returns>
-    IExecutionContext New(object parentClassOrNull, IBlock blockOrNull, ILog parentLog, int compatibilityFallback);
+    IExecutionContext New(object? parentClassOrNull, IBlock? blockOrNull, ILog parentLog, int compatibilityFallback);
 }

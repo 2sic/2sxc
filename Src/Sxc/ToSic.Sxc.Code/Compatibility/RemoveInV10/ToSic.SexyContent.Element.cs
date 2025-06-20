@@ -11,12 +11,12 @@ public class Element
     /// <summary>
     /// The DynamicContent object, as dynamic
     /// </summary>
-    public dynamic Content { get; set; }
+    public dynamic? Content { get; set; }
 
     /// <summary>
     /// The Presentation object, as dynamic
     /// </summary>
-    public dynamic Presentation { get; set; }
+    public dynamic? Presentation { get; set; }
     
     /// <summary>
     /// The EntityID of the ContentGroupItem

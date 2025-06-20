@@ -9,7 +9,7 @@ partial class CodeDataFactory
 {
     public IField? Field(ITypedItem parent, string? name, bool propsRequired, NoParamOrder noParamOrder = default, bool? required = default)
     {
-        if (string.IsNullOrEmpty(name))
+        if (name.IsEmpty())
         {
             if (required == false)
                 return null; // name is optional, so no error

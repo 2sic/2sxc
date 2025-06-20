@@ -76,18 +76,18 @@ public interface IDynamicCode12 : IDynamicCode
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
 
-    dynamic AsDynamic(string json, string fallback = default);
+    dynamic? AsDynamic(string json, string? fallback = default);
 
     #endregion 
 
     #region AsDynamic for Entities
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
-    dynamic AsDynamic(IEntity entity);
+    dynamic? AsDynamic(IEntity entity);
 
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
-    dynamic AsDynamic(object dynamicEntity);
+    dynamic? AsDynamic(object dynamicEntity);
 
 
     #endregion
@@ -102,7 +102,7 @@ public interface IDynamicCode12 : IDynamicCode
     #region AsList
 
     /// <inheritdoc cref="IDynamicCode.AsList" />
-    IEnumerable<dynamic> AsList(object list);
+    IEnumerable<dynamic>? AsList(object list);
 
     #endregion
 
@@ -114,7 +114,7 @@ public interface IDynamicCode12 : IDynamicCode
 
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
-    T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource;
+    T CreateSource<T>(IDataSource? inSource = null, ILookUpEngine? configurationProvider = default) where T : IDataSource;
 
     #endregion
 
@@ -141,7 +141,7 @@ public interface IDynamicCode12 : IDynamicCode
     /// <remarks>
     /// New in 12.05
     /// </remarks>
-    dynamic AsDynamic(params object[] entities);
+    dynamic? AsDynamic(params object[] entities);
 
 
     #region Convert-Service

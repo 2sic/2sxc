@@ -380,7 +380,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
         );
 
     /// <inheritdoc />
-    IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required)
+    IEnumerable<T>? ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required)
         => Cdf.AsCustomList<T>(
             source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required),
             protector: protector,
@@ -394,7 +394,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
         );
 
     /// <inheritdoc />
-    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field)
+    IEnumerable<T>? ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field)
         => Cdf.AsCustomList<T>(
             source: ((ITypedItem)this).Parents(noParamOrder: protector, field: field, type: type ?? typeof(T).Name), protector: protector, nullIfNull: false
         );

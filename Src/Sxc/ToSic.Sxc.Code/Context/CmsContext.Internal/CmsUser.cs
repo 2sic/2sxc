@@ -14,11 +14,11 @@ internal class CmsUser(CmsContext parent, IUserModel userModel, IMetadataOfSourc
 
 
     public int Id => userModel.Id;
-    public string NameId => userModel.NameId;
+    public string NameId => userModel.NameId!;
     public Guid Guid => userModel.Guid;
 
-    public string Name => IsAnonymous ? "" : userModel.Name;
-    public string Username => IsAnonymous ? "" : userModel.Username;
+    public string Name => IsAnonymous ? "" : userModel.Name!;
+    public string Username => IsAnonymous ? "" : userModel.Username!;
 
     public DateTime Created => userModel.Created;
     public DateTime Modified => userModel.Modified;
