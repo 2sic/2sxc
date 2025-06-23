@@ -9,7 +9,7 @@ internal class FileGeneratorSpecs : IFileGeneratorSpecs
     public int AppId { get; init; }
 
     /// <inheritdoc />
-    public string Edition { get; init; }
+    public string? Edition { get; init; }
 
     public DateTime DateTime { get; init; } = DateTime.Now;
 }

@@ -15,11 +15,15 @@ internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper)
 
     protected CodeFragment GenPropSnip(int tabs, string returnType, string name, string method,
         NoParamOrder protector = default,
-        string sourceName = default,
-        string[] summary = default,
-        string[] remarks = default,
-        string[] returns = default,
-        string parameters = default, bool priority = true, List<string> usings = default, bool cache = false, bool jsonIgnore = false)
+        string? sourceName = default,
+        string[]? summary = default,
+        string[]? remarks = default,
+        string[]? returns = default,
+        string? parameters = default,
+        bool priority = true,
+        List<string>? usings = default,
+        bool cache = false,
+        bool jsonIgnore = false)
     {
         var overrideProp = OverridePropertyNames.Contains(name);
         var overrideMeth = OverrideMethods.Contains(method);
@@ -43,14 +47,14 @@ internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper)
             + GenAttribute(jsonIgnore, tabs)
             + GenProp(tabs, returnType, name, sourceName ?? name, method, parameters: parameters, cache, isOverride),
             priority: priority,
-            usings: GenUsings(usings, jsonIgnore)
+            usings: GenUsings(usings ?? [], jsonIgnore)
         );
     }
 
     private string GenAttribute(bool jsonIgnore, int tabs) 
         => jsonIgnore ? $"\n{CodeGenHelper.Indent(tabs)}[JsonIgnore]\n" : "";
 
-    private string GenProp(int tabs, string returnType, string name, string sourceName, string method, string parameters, bool cache, bool isOverride)
+    private string GenProp(int tabs, string returnType, string name, string sourceName, string method, string? parameters, bool cache, bool isOverride)
     {
         if (parameters.HasValue())
             parameters = ", " + parameters;

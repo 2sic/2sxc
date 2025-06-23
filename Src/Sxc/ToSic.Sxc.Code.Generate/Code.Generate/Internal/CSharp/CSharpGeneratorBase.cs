@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Code.Generate.Internal;
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class CSharpGeneratorBase(IUser user, IAppReaderFactory appReadFac, string logName)
+public abstract class CSharpGeneratorBase(IUser user, IAppReaderFactory appReadFac, string? logName)
     : ServiceBase(logName ?? (SxcLogName + ".DMoGen"))
 {
 
@@ -18,7 +18,7 @@ public abstract class CSharpGeneratorBase(IUser user, IAppReaderFactory appReadF
 
     #region Information for the interface
 
-    public string NameId => GetType().FullName;
+    public string NameId => GetType().FullName!;
 
     public string Name => GetType().Name;
 

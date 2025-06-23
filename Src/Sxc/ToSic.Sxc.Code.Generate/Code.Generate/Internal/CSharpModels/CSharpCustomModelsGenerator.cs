@@ -39,6 +39,6 @@ internal class CSharpCustomModelsGenerator(IUser user, IAppReaderFactory appRead
         return codeSpecs;
     }
 
-    protected override IGeneratedFile CreateFileGenerator(IContentType type, string className)
+    protected override IGeneratedFile? CreateFileGenerator(IContentType type, string className)
         => new CSharpCustomModelGenerator(this, type, className).PrepareFile();
 }

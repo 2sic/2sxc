@@ -3,6 +3,7 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Data.Ancestors.Sys;
 using ToSic.Eav.Data.ContentTypes.Sys;
 using ToSic.Eav.Data.Sys;
+using ToSic.Sys.Performance;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Code.Generate.Internal;
@@ -15,16 +16,16 @@ namespace ToSic.Sxc.Code.Generate.Internal;
 internal abstract class CSharpModelsGeneratorBase(IUser user, IAppReaderFactory appReadFac, string logName)
     : CSharpGeneratorBase(user, appReadFac, logName), IFileGenerator
 {
-    internal protected CSharpCodeSpecs Specs { get; protected set; } = new();
-    internal protected CSharpGeneratorHelper CodeGenHelper { get; protected set; }
+    protected internal CSharpCodeSpecs Specs { get; protected set; } = new();
+    protected internal CSharpGeneratorHelper CodeGenHelper { get; protected set; } = null!;
 
     // Abstract properties to be implemented by derived classes
-    public new abstract string Description { get; }
-    public new abstract string DescriptionHtml { get; }
+    public abstract string Description { get; }
+    public abstract string DescriptionHtml { get; }
     protected abstract string GeneratedSetName { get; }
 
     // OutputType is common
-    public new string OutputType => "DataModel";
+    public string OutputType => "DataModel";
 
     protected internal abstract CSharpCodeSpecs BuildDerivedSpecs(IFileGeneratorSpecs parameters);
 
@@ -64,22 +65,22 @@ internal abstract class CSharpModelsGeneratorBase(IUser user, IAppReaderFactory 
         CodeGenHelper = new(Specs, Log);
     }
 
-    protected abstract IGeneratedFile CreateFileGenerator(IContentType type, string className);
+    protected abstract IGeneratedFile? CreateFileGenerator(IContentType type, string className);
 
-    public new IGeneratedFileSet[] Generate(IFileGeneratorSpecs specs)
+    public IGeneratedFileSet[] Generate(IFileGeneratorSpecs specs)
     {
         Setup(specs);
 
         var classFiles = Specs.ExportedContentContentTypes
-            .Select(t => CreateFileGenerator(t, t.Name?.Replace("-", "")))
+            .Select(t => CreateFileGenerator(t, (t.Name ?? "").Replace("-", "")))
             .Where(f => f != null) // Ensure no null files are added
-            .ToList();
+            .ToListOpt();
 
         var result = new GeneratedFileSet
         {
             Name = GeneratedSetName,
-            Description = this.Description, // This will call the derived implementation
-            Generator = $"{this.Name} v{this.Version}", // Name and Version from CSharpGeneratorBase
+            Description = Description, // This will call the derived implementation
+            Generator = $"{Name} v{Version}", // Name and Version from CSharpGeneratorBase
             Path = GenerateConstants.PathToAppCode,
             Files = classFiles.Cast<IGeneratedFile>().ToList()
         };

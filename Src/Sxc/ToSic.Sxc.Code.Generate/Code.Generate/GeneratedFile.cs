@@ -8,13 +8,13 @@
 public class GeneratedFile: IGeneratedFile
 {
     /// <inheritdoc />
-    public string FileName { get; init; }
+    public required string FileName { get; init; }
 
     /// <inheritdoc />
-    public string Path { get; init; }
+    public required string Path { get; init; }
 
     /// <inheritdoc />
-    public string Body { get; init; }
+    public required string Body { get; init; }
 
     /// <inheritdoc />
     public IReadOnlyCollection<IGeneratedFileInfo> Dependencies { get; init; } = [];

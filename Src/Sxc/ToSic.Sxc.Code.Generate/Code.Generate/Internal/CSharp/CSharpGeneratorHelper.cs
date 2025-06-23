@@ -37,11 +37,11 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs, ILog parentLog): Hel
         return l.Return(sb.ToString());
     }
 
-    public string XmlComment(int tabs, string summary = default, string remarks = default, string returns = default, int padBefore = 1, int padAfter = default,
+    public string XmlComment(int tabs, string? summary = default, string? remarks = default, string? returns = default, int padBefore = 1, int padAfter = default,
         int altGap = 1)
         => XmlComment(tabs, summary: summary.SplitNewLine(), remarks: remarks.SplitNewLine(), returns: returns.SplitNewLine(), padBefore: padBefore, padAfter: padAfter, altGap: altGap);
 
-    public string XmlComment(int tabs, string[] summary = default, string[] remarks = default, string[] returns = default, int padBefore = 1, int padAfter = default, int altGap = 1)
+    public string XmlComment(int tabs, string[]? summary = default, string[]? remarks = default, string[]? returns = default, int padBefore = 1, int padAfter = default, int altGap = 1)
     {
         var l = Log.Fn<string>();
         // 1. If nothing, return empty lines as much as altGap
@@ -74,7 +74,7 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs, ILog parentLog): Hel
         return l.Return(sb.ToString());
     }
 
-    private static string XmlCommentOne(string indent, string tagName, string[] comments = default)
+    private static string? XmlCommentOne(string indent, string tagName, string[]? comments = default)
     {
         // If nothing, return empty lines as much as altGap
         if (comments == null || comments.All(s => s.IsEmptyOrWs()))
@@ -94,9 +94,10 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs, ILog parentLog): Hel
         return sb.ToString();
     }
 
-    public string GenerateUsings(List<string> usings)
+    public string? GenerateUsings(List<string>? usings)
     {
-        if (usings == null || !usings.Any()) return null;
+        if (usings == null || !usings.Any())
+            return null;
         var sb = new StringBuilder();
         foreach (var u in usings) sb.AppendLine($"using {u};");
         sb.AppendLine();
@@ -109,7 +110,7 @@ internal class CSharpGeneratorHelper(CSharpCodeSpecs specs, ILog parentLog): Hel
         return l.Return(new("namespace", $"{Indent(specs.TabsNamespace)}namespace {@namespace}" + "\n{", closing: "}"));
     }
 
-    internal CodeFragment ClassWrapper(string className, bool isAbstract, bool isPartial, string inherits)
+    internal CodeFragment ClassWrapper(string className, bool isAbstract, bool isPartial, string? inherits)
     {
         var l = Log.Fn<CodeFragment>($"{nameof(className)}: {className}; {nameof(isAbstract)}: {isAbstract}; {nameof(isPartial)}: {isPartial}; {nameof(inherits)}: {inherits}");
         var indent = Indent(specs.TabsClass);

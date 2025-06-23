@@ -19,7 +19,7 @@ public interface IFileGeneratorSpecs
     /// <summary>
     /// The Edition for which we're generating the file.
     /// </summary>
-    string Edition { get; }
+    string? Edition { get; }
 
     DateTime DateTime { get; }
 }

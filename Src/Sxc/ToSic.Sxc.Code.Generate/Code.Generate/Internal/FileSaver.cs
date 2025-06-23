@@ -31,7 +31,7 @@ public class FileSaver(ISite site, IAppReaderFactory appReadFac, IAppPathsMicroS
             if (addPath.StartsWith("/") || addPath.StartsWith("\\") || addPath.EndsWith("/") || addPath.EndsWith("\\") || addPath.Contains(".."))
                 throw new($"Invalid path '{addPath}' in class '{classSb.FileName}' - contains invalid path like '..' or starts/ends with a slash.");
 
-            var basePath = Path.Combine(physicalPath, classSb.Path);
+            var basePath = Path.Combine(physicalPath, addPath);
 
             // ensure the folder for the file exists - it could be different for each file
             Directory.CreateDirectory(basePath);

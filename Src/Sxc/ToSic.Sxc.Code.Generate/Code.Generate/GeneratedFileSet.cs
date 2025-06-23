@@ -7,17 +7,17 @@
 public class GeneratedFileSet : IGeneratedFileSet
 {
     /// <inheritdoc />
-    public string Name { get; init; }
+    public required string Name { get; init; }
 
     /// <inheritdoc />
-    public string Description { get; init; }
+    public required string Description { get; init; }
 
     /// <inheritdoc />
-    public string Generator { get; init; }
+    public required string Generator { get; init; }
 
     /// <inheritdoc />
-    public string Path { get; init; }
+    public required string Path { get; init; }
 
     /// <inheritdoc />
-    public IReadOnlyCollection<IGeneratedFile> Files { get; init; }
+    public required IReadOnlyCollection<IGeneratedFile> Files { get; init; }
 }

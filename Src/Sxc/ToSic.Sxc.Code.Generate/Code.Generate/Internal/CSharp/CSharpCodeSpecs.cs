@@ -12,9 +12,9 @@ internal class CSharpCodeSpecs: FileGeneratorSpecs
 
     public string AppName { get; set; } = "App";
 
-    internal IAppReadContentTypes AppContentTypes { get; set; }
+    internal IAppReadContentTypes AppContentTypes { get; set; } = null!; // not sure where this is set, nullability should be improved
 
-    public List<IContentType> ExportedContentContentTypes { get; set; }
+    public List<IContentType> ExportedContentContentTypes { get; set; } = null!; // not sure where this is set, nullability should be improved
 
     /// <summary>
     /// Namespace for the data classes

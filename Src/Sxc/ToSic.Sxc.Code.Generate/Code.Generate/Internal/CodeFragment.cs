@@ -7,7 +7,7 @@
 /// <param name="code"></param>
 /// <param name="usings"></param>
 /// <param name="closing">special closing string if the code wraps something else</param>
-internal class CodeFragment(string nameId, string code, bool priority = true, List<string> usings = default, string closing = default)
+internal class CodeFragment(string nameId, string code, bool priority = true, List<string>? usings = default, string? closing = default)
 {
     /// <summary>
     /// Distinct property name to deduplicate, in case multiple fragments would generate the same property.
@@ -37,5 +37,5 @@ internal class CodeFragment(string nameId, string code, bool priority = true, Li
     /// </summary>
     /// <param name="contents"></param>
     /// <returns></returns>
-    public string ToString(string contents) => code + contents + closing;
+    public string ToString(string? contents) => code + contents + closing;
 }

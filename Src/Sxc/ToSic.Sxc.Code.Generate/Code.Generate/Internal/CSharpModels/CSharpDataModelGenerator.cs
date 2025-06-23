@@ -26,7 +26,7 @@ internal class CSharpDataModelGenerator(CSharpDataModelsGenerator dmg, IContentT
           
           """;
 
-    protected override string GenerateMainClassComment(string firstPropertyName)
+    protected override string GenerateMainClassComment(string? firstPropertyName)
     {
         var remarks = GenerateCommonScopeRemarks();
         return CodeGenHelper.CodeComment(Specs.TabsClass,

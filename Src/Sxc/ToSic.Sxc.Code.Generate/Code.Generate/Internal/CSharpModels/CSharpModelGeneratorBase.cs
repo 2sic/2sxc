@@ -43,7 +43,7 @@ internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase gener
     /// </summary>
     /// <param name="firstPropertyName">The name of the first property for examples</param>
     /// <returns>The main class comment</returns>
-    protected abstract string GenerateMainClassComment(string firstPropertyName);
+    protected abstract string GenerateMainClassComment(string? firstPropertyName);
 
     /// <summary>
     /// Generates the auto-generated base class XML documentation comment
@@ -55,7 +55,7 @@ internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase gener
 
     #region Common Implementation
 
-    internal GeneratedDataModel PrepareFile()
+    internal GeneratedDataModel? PrepareFile()
     {
         var l = Log.Fn<GeneratedDataModel>($"{nameof(ClassName)}: {ClassName}; {nameof(Type)}: {Type?.Name} ({Type?.NameId})");
 
@@ -91,9 +91,9 @@ internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase gener
         return l.Return(new($"{ClassName}{Specs.FileGeneratedSuffix}", fileContents, GenerateFileIntroComment(UserName)), $"File size: {fileContents.Length}");
     }
 
-    private (bool HasProps, string Code, List<string> Usings, string FirstProperty) ClassProperties(List<IContentTypeAttribute> attributes)
+    private (bool HasProps, string? Code, List<string>? Usings, string? FirstProperty) ClassProperties(List<IContentTypeAttribute> attributes)
     {
-        var l = Log.Fn<(bool, string, List<string>, string)>($"{nameof(attributes)}: {attributes.Count}");
+        var l = Log.Fn<(bool, string?, List<string>?, string?)>($"{nameof(attributes)}: {attributes.Count}");
 
         // Generate all properties with the helpers
         var propsSnippets = attributes
@@ -143,7 +143,7 @@ internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase gener
 
     #region Helper Methods for Derived Classes
 
-    protected string GenerateCommonScopeRemarks()
+    protected string? GenerateCommonScopeRemarks()
     {
         var scope = Type.Scope;
         var scopeIsSpecial = scope != ScopeConstants.Default;
