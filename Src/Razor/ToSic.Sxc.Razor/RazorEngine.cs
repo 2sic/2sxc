@@ -26,16 +26,17 @@ internal class RazorEngine(
     : EngineBase(services, connect: [codeRootFactory, errorHelp, renderingHelper, razorRenderer]), IRazorEngine
 {
     /// <inheritdoc/>
-    protected override (string Contents, List<Exception>? Exception) RenderEntryRazor(RenderSpecs specs)
+    protected override (string? Contents, List<Exception>? Exception) RenderEntryRazor(RenderSpecs specs)
     {
-        var l = Log.Fn<(string, List<Exception>)>();
+        var l = Log.Fn<(string?, List<Exception>?)>();
         var task = RenderTask(specs);
         try
         {
             task.Wait();
             var result = task.Result;
 
-            if (result.Exception == null) return l.ReturnAsOk((result.TextWriter.ToString(), null));
+            if (result.Exception == null)
+                return l.ReturnAsOk((result.TextWriter?.ToString(), null));
 
             var errorMessage = renderingHelper.Value.Init(Block).DesignErrorMessage([result.Exception], true);
             return l.Return((errorMessage, [result.Exception]));
@@ -48,10 +49,10 @@ internal class RazorEngine(
     }
 
     [PrivateApi]
-    private async Task<(TextWriter TextWriter, Exception Exception)> RenderTask(RenderSpecs specs)
+    private async Task<(TextWriter? TextWriter, Exception? Exception)> RenderTask(RenderSpecs specs)
     {
         Log.A("will render into TextWriter");
-        RazorView page = null;
+        RazorView? page = null;
         try
         {
             if (string.IsNullOrEmpty(TemplatePath)) return (null, null);
@@ -62,7 +63,8 @@ internal class RazorEngine(
                 rzv =>
                 {
                     page = rzv; // keep for better errors
-                    if (rzv.RazorPage is not IRazor asSxc) return;
+                    if (rzv.RazorPage is not IRazor asSxc)
+                        return;
 
                     var dynCode = codeRootFactory.Value
                         .New(asSxc, Block, Log,

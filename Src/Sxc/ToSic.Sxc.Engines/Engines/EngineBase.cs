@@ -95,7 +95,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
     }
 
     [PrivateApi]
-    protected abstract (string Contents, List<Exception>? Exception) RenderEntryRazor(RenderSpecs specs);
+    protected abstract (string? Contents, List<Exception>? Exception) RenderEntryRazor(RenderSpecs specs);
 
     /// <inheritdoc />
     public virtual RenderEngineResult Render(RenderSpecs specs)

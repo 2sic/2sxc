@@ -30,7 +30,7 @@ internal class RazorCompiler(
             applicationPartManager, viewEngine, /* never! serviceProvider,*/ httpContextAccessor, actionContextAccessor, appCodeLoader, assemblyResolver, sourceAnalyzer
         ]), IRazorCompiler
 {
-    public async Task<(IView view, ActionContext context)> CompileView(string partialName, Action<RazorView> configure = null, IApp app = null, HotBuildSpec spec = default)
+    public async Task<(IView view, ActionContext context)> CompileView(string partialName, Action<RazorView>? configure = null, IApp? app = null, HotBuildSpec? spec = default)
     {
         var l = Log.Fn<(IView view, ActionContext context)>($"partialName:{partialName},appCodePath:{app}");
         var actionContext = actionContextAccessor.ActionContext ?? NewActionContext();
@@ -40,7 +40,7 @@ internal class RazorCompiler(
         return l.ReturnAsOk((partial, actionContext));
     }
 
-    private static bool _executedAlready = false;
+    private static bool _executedAlready;
     private async Task<IView> FindViewAsync(ActionContext actionContext, string partialName, IApp app, HotBuildSpec spec)
     {
         var l = Log.Fn<IView>($"partialName:{partialName}");
@@ -48,7 +48,7 @@ internal class RazorCompiler(
         var exceptions = new List<Exception>();
         try
         {
-            List<ApplicationPart> removeThis = null;
+            List<ApplicationPart>? removeThis = null;
             if (!_executedAlready)
             {
                 l.A($"one time execute, remove problematic ApplicationPart assemblies");

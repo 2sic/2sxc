@@ -19,7 +19,7 @@ internal class RazorRenderer(
         connect: [tempDataProvider, appCodeRazorCompiler]), IRazorRenderer
 {
 
-    public async Task<string> RenderToStringAsync<TModel>(string templatePath, TModel model, Action<RazorView> configure, IApp app = null, HotBuildSpec hotBuildSpec = default)
+    public async Task<string> RenderToStringAsync<TModel>(string templatePath, TModel model, Action<RazorView>? configure = null, IApp? app = null, HotBuildSpec? hotBuildSpec = default)
     {
         var l = Log.Fn<string>($"{nameof(templatePath)}: '{templatePath}'; {nameof(app.PhysicalPath)}: '{app?.PhysicalPath}'; {hotBuildSpec}");
 
@@ -58,9 +58,9 @@ internal class RazorRenderer(
     /// Main razor page view normally do not have instance of Model data (except in special case when model data is 
     /// eventually provided in uncommon rendering that could happen from our custom razor render code call)
     /// </remarks>
-    private dynamic CreateViewDataDictionaryForRazorViewWithGenericBaseTypeOrNull(IView view, object model)
+    private ViewDataDictionary? CreateViewDataDictionaryForRazorViewWithGenericBaseTypeOrNull(IView view, object? model)
     {
-        var l = Log.Fn<dynamic>($"{nameof(view.Path)}: '{view.Path}'");
+        var l = Log.Fn<ViewDataDictionary?>($"{nameof(view.Path)}: '{view.Path}'");
 
         if (view is not RazorView rsv)
             return l.ReturnNull("Not a RazorView");
@@ -73,7 +73,7 @@ internal class RazorRenderer(
         l.A($"Base type is generic: {baseTypeGenericTypeArgument}");
 
         // Create an instance of ViewDataDictionary<TModel> 
-        dynamic viewDataDictionary = Activator.CreateInstance(
+        var viewDataDictionary = (ViewDataDictionary?)Activator.CreateInstance(
             typeof(ViewDataDictionary<>).MakeGenericType(baseTypeGenericTypeArgument),
             [new EmptyModelMetadataProvider(), new ModelStateDictionary()]
         );
@@ -88,6 +88,6 @@ internal class RazorRenderer(
 
 
         l.Done("ok");
-        return viewDataDictionary;
+        return l.Return(viewDataDictionary);
     }
 }

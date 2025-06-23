@@ -17,8 +17,6 @@
   <!-- Nullable -->
   <Import Project="./Nullable.props" />
 
-  <!--TEMPORARY WORKAROUND - the EAV projects fail to build with this, not sure why, sys should work-->
-  <!-- All Sys projects are nullable -->
   <PropertyGroup>
     <Nullable>enable</Nullable>
   </PropertyGroup>

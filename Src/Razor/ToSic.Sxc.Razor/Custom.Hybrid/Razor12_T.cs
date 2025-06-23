@@ -1,4 +1,5 @@
-﻿using ToSic.Lib.Documentation;
+﻿using System.Diagnostics.CodeAnalysis;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;
@@ -34,6 +35,7 @@ public abstract class Razor12<TModel>() : OqtRazorBase<TModel>(CompatibilityLeve
 
     /// <inheritdoc cref="ICreateInstance.CreateInstancePath"/>
     [PrivateApi]
+    [field: AllowNull, MaybeNull]
     // Note: The path for CreateInstance / GetCode - unsure if this is actually used anywhere on this object
     string IGetCodePath.CreateInstancePath
     {
@@ -42,7 +44,7 @@ public abstract class Razor12<TModel>() : OqtRazorBase<TModel>(CompatibilityLeve
     }
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
-    public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
+    public dynamic? CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string? name = null, string? relativePath = null, bool throwOnError = true)
         => RzrHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
 
     #endregion
@@ -50,10 +52,10 @@ public abstract class Razor12<TModel>() : OqtRazorBase<TModel>(CompatibilityLeve
     #region Content, Header, etc.
 
     /// <inheritdoc cref="IDynamicCode.Content" />
-    public dynamic Content => CodeApi.Content;
+    public dynamic? Content => CodeApi.Content;
 
     /// <inheritdoc cref="IDynamicCode.Header" />
-    public dynamic Header => CodeApi.Header;
+    public dynamic? Header => CodeApi.Header;
 
     #endregion
 
@@ -77,16 +79,16 @@ public abstract class Razor12<TModel>() : OqtRazorBase<TModel>(CompatibilityLeve
     #region AsDynamic in many variations + AsList
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-    public dynamic AsDynamic(string json, string fallback = default) => CodeApi.Cdf.Json2Jacket(json, fallback);
+    public dynamic? AsDynamic(string json, string? fallback = default) => CodeApi.Cdf.Json2Jacket(json, fallback);
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
-    public dynamic AsDynamic(IEntity entity) => CodeApi.Cdf.CodeAsDyn(entity);
+    public dynamic? AsDynamic(IEntity entity) => CodeApi.Cdf.CodeAsDyn(entity);
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-    public dynamic AsDynamic(object dynamicEntity) => CodeApi.Cdf.AsDynamicFromObject(dynamicEntity);
+    public dynamic? AsDynamic(object dynamicEntity) => CodeApi.Cdf.AsDynamicFromObject(dynamicEntity);
 
     /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
-    public dynamic AsDynamic(params object[] entities) => CodeApi.Cdf.MergeDynamic(entities);
+    public dynamic? AsDynamic(params object[] entities) => CodeApi.Cdf.MergeDynamic(entities);
 
     /// <inheritdoc cref="IDynamicCode.AsList" />
     public IEnumerable<dynamic> AsList(object list) => CodeApi.Cdf.CodeAsDynList(list);
@@ -107,7 +109,7 @@ public abstract class Razor12<TModel>() : OqtRazorBase<TModel>(CompatibilityLeve
         => CodeApi.CreateSource<T>(source);
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
-    public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
+    public T CreateSource<T>(IDataSource? inSource = null, ILookUpEngine? configurationProvider = default) where T : IDataSource
         => CodeApi.CreateSource<T>(inSource, configurationProvider);
 
     #endregion

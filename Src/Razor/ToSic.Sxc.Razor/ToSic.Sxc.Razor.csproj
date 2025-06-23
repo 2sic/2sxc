@@ -6,6 +6,10 @@
 
   <Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />
 
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
   <!-- Note: not sure what this is for... -->
   <PropertyGroup>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>

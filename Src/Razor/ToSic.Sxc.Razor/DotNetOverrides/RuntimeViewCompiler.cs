@@ -426,17 +426,18 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         return references;
     }
 
-    private string GetAppCodeDllPath(string relativePath)
+    private string? GetAppCodeDllPath(string relativePath)
     {
         var (appRelativePath, edition) = GetSxcAppRelativePathWithEdition(relativePath);
-        if (appRelativePath == null) return null;
+        if (appRelativePath == null)
+            return null;
         if (edition.HasValue()) appRelativePath = Path.Combine(appRelativePath, edition);
         appRelativePath = appRelativePath.Backslash();
         var appCodeDllPath = _assemblyResolver.GetAssemblyLocation(appRelativePath);
         return appCodeDllPath;
     }
 
-    private (string appRelativePath, string edition) GetSxcAppRelativePathWithEdition(string relativePath)
+    private (string? appRelativePath, string? edition) GetSxcAppRelativePathWithEdition(string relativePath)
     {
         if (_httpContextAccessor?.HttpContext == null)
             return GetSxcAppRelativePathWithEditionFallback(relativePath);
@@ -456,7 +457,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
             return GetSxcAppRelativePathWithEditionFallback(relativePath);
 
         // Standard case (appRelativePath and edition from block)
-        var edition = sp.GetService<PolymorphConfigReader>().UseViewEditionOrGet(block);
+        var edition = sp.GetService<PolymorphConfigReader>()!.UseViewEditionOrGet(block);
         return (appRelativePath, edition);
     }
 
@@ -476,16 +477,16 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
     /// </summary>
     /// <param name="relativePath">string "/2sxc/n/aaa-folder-name/edition/etc..."</param>
     /// <returns>string "2sxc\\n\\aaa-folder-name\\edition" or null</returns>
-    private (string appRelativePath, string edition) GetSxcAppRelativePathWithEditionFallback(string relativePath)
+    private (string? appRelativePath, string? edition) GetSxcAppRelativePathWithEditionFallback(string? relativePath)
     {
-        var l = Dbg ? base.Log.Fn<(string appRelativePath, string edition)>($"{nameof(relativePath)}:'{relativePath}'") : null;
+        var l = Dbg ? base.Log.Fn<(string? appRelativePath, string? edition)>($"{nameof(relativePath)}:'{relativePath}'") : null;
 
         relativePath = relativePath?.ForwardSlash();
 
-        if ((string.IsNullOrEmpty(relativePath))
-            || (relativePath.Length < 8)
-            || (relativePath[0] != '/')
-            || (relativePath[5] != '/'))
+        if (string.IsNullOrEmpty(relativePath)
+            || relativePath.Length < 8
+            || relativePath[0] != '/'
+            || relativePath[5] != '/')
             //throw new($"relativePath:'{relativePath}' is not in format '/2sxc/n/app-folder-name/etc...'");
             return l.ReturnAsError((appRelativePath: null, edition: null));
 
@@ -584,11 +585,11 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
 
     private class ViewCompilerWorkItem
     {
-        public bool SupportsCompilation { get; set; } = default!;
+        public bool SupportsCompilation { get; init; } = default!;
 
-        public string NormalizedPath { get; set; } = default!;
+        public string NormalizedPath { get; init; } = default!;
 
-        public IList<IChangeToken> ExpirationTokens { get; set; } = default!;
+        public IList<IChangeToken> ExpirationTokens { get; init; } = default!;
 
         public CompiledViewDescriptor Descriptor { get; set; } = default!;
     }

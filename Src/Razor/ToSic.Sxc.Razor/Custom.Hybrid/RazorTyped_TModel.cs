@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -32,9 +33,12 @@ public abstract class RazorTyped<TModel>()
         ISetDynamicModel, IDynamicCode16, IHasCodeHelp
 {
     #region ServiceKit
+
+    [field: AllowNull, MaybeNull]
     internal ICodeTypedApiHelper CodeApi => field ??= RzrHlp.ExCtxRoot.GetTypedApi();
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
+    [field: AllowNull, MaybeNull]
     public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;
 
     #endregion
@@ -80,7 +84,7 @@ public abstract class RazorTyped<TModel>()
 
     /// <inheritdoc cref="IDynamicCode16.AsItem" />
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
-        => CodeApi.Cdf.AsItem(data, new() { ItemIsStrict = propsRequired ?? true, UseMock = mock == true });
+        => CodeApi.Cdf.AsItem(data, new() { ItemIsStrict = propsRequired ?? true, UseMock = mock == true })!;
 
     /// <inheritdoc cref="IDynamicCode16.AsItems" />
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
@@ -92,11 +96,11 @@ public abstract class RazorTyped<TModel>()
 
     /// <inheritdoc cref="IDynamicCode16.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => CodeApi.Cdf.AsTyped(original, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
+        => CodeApi.Cdf.AsTyped(original, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true })!;
 
     /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => CodeApi.Cdf.AsTypedList(list, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
+        => CodeApi.Cdf.AsTypedList(list, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true })!;
 
     /// <inheritdoc cref="IDynamicCode16.AsStack" />
     public ITypedStack AsStack(params object[] items)
@@ -111,7 +115,7 @@ public abstract class RazorTyped<TModel>()
 
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
-    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
+    public dynamic? GetCode(string path, NoParamOrder noParamOrder = default, string? className = default)
         => RzrHlp.GetCode(path, noParamOrder, className);
 
     #region MyContext & UniqueKey
@@ -148,28 +152,28 @@ public abstract class RazorTyped<TModel>()
     /// </summary>
 
     [RazorInject]
-    public IModelExpressionProvider ModelExpressionProvider { get; set; } = null;
+    public IModelExpressionProvider ModelExpressionProvider { get; set; } = null!;
 
     [RazorInject]
-    public IUrlHelper Url { get; set; } = null;
+    public IUrlHelper Url { get; set; } = null!;
 
     [RazorInject]
-    public IViewComponentHelper Component { get; set; } = null;
+    public IViewComponentHelper Component { get; set; } = null!;
 
     [RazorInject]
-    public IJsonHelper Json { get; set; } = null;
+    public IJsonHelper Json { get; set; } = null!;
 
     [RazorInject]
-    public IHtmlHelper<dynamic> Html { get; set; } = null;
+    public IHtmlHelper<dynamic> Html { get; set; } = null!;
 
-    public PageContext PageContext { get; set; } = default!;
+    public PageContext PageContext { get; set; } = null!;
 
     #region As / AsList WIP v17
 
     /// <inheritdoc />
     public T As<T>(object source, NoParamOrder protector = default, bool mock = false)
         where T : class, ICanWrapData
-        => CodeApi.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
+        => CodeApi.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock)!;
 
     /// <inheritdoc />
     public IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)

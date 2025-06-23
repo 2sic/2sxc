@@ -45,7 +45,7 @@ public class CodeErrorHelpService: ServiceBase
         }
     }
 
-    public Exception AddHelpIfKnownError(Exception ex, object mainCodeObject)
+    public Exception AddHelpIfKnownError(Exception ex, object? mainCodeObject)
     {
         var l = Log.Fn<Exception>();
         try

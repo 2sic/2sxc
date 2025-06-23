@@ -51,7 +51,7 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
     [PrivateApi("WIP 17.06,x")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
+    public TService GetService<TService>(NoParamOrder protector = default, string? typeName = default) where TService : class
         => RzrHlp.CodeHelper.GetService<TService>(protector, typeName);
 
 
@@ -70,7 +70,7 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    internal IExecutionContext ExCtx => RzrHlp.ExCtxRoot;
+    internal IExecutionContext ExCtx => RzrHlp.ExCtxRoot!;
 
     [PrivateApi]
     public void ConnectToRoot(IExecutionContext exCtx)

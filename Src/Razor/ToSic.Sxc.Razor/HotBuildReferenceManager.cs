@@ -21,13 +21,16 @@ namespace ToSic.Sxc.Razor
             var additionalReferencePaths = new List<string>();
             try
             {
-                if (spec != null)
+                if (spec != null! /* paranoid */ )
                 {
                     // TODO: need to invalidate this cache (_referencedAssembliesCache, _assemblyResolver, ...) if there is change in Dependencies folder
                     var (dependencies, _) = dependenciesLoader.Value.TryGetOrFallback(spec);
-                    assemblyResolver.AddAssemblies(dependencies);
 
-                    if (dependencies != null) additionalReferencePaths.AddRange(dependencies.Select(dependency => dependency.Location));
+                    if (dependencies != null)
+                    {
+                        assemblyResolver.AddAssemblies(dependencies);
+                        additionalReferencePaths.AddRange(dependencies.Select(dependency => dependency.Location));
+                    }
                 }
 
                 if (!string.IsNullOrEmpty(appCodeFullPath) && File.Exists(appCodeFullPath))
