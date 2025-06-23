@@ -22,7 +22,7 @@ internal abstract class CSharpModelGeneratorBase(CSharpModelsGeneratorBase gener
     #region Abstract Members
 
     /// <summary>
-    /// Gets the user name for file generation
+    /// Gets the username for file generation
     /// </summary>
     protected string UserName => Generator.User.Name;
 

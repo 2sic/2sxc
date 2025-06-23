@@ -23,7 +23,8 @@ internal class CSharpCustomModelsGenerator(IUser user, IAppReaderFactory appRead
 
     #endregion
 
-    protected internal override CSharpCodeSpecs BuildDerivedSpecs(IFileGeneratorSpecs parameters) => BuildCustomModelSpecs(parameters);
+    protected internal override CSharpCodeSpecs BuildDerivedSpecs(IFileGeneratorSpecs parameters)
+        => BuildCustomModelSpecs(parameters);
 
     /// <summary>
     /// Build CustomModel-specific specs with CustomModel inheritance and naming conventions
@@ -40,5 +41,12 @@ internal class CSharpCustomModelsGenerator(IUser user, IAppReaderFactory appRead
     }
 
     protected override IGeneratedFile? CreateFileGenerator(IContentType type, string className)
-        => new CSharpCustomModelGenerator(this, type, className).PrepareFile();
+    {
+        // Empty the list of override methods and property names
+        // since the model-generator doesn't add any overrides
+        // because the base class doesn't have any own methods or properties.
+        CodeGenHelper.OverrideMethods = [];
+        CodeGenHelper.OverridePropertyNames = [];
+        return new CSharpCustomModelGenerator(this, type, className).PrepareFile();
+    }
 }

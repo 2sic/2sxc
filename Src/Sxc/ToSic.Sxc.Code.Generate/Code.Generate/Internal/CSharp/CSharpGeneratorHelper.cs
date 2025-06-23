@@ -1,12 +1,16 @@
 ﻿using System.Text;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Code.Generate.Internal.CSharpModels;
 
 namespace ToSic.Sxc.Code.Generate.Internal;
 
 internal class CSharpGeneratorHelper(CSharpCodeSpecs specs, ILog parentLog): HelperBase(parentLog, "Cde.GenHlp")
 {
     public CSharpCodeSpecs Specs => specs;
+
+    public string[] OverridePropertyNames { get; set; } = ModelGeneratorConstants.OverridePropertyNames;
+    public string[] OverrideMethods { get; set; } = ModelGeneratorConstants.OverrideMethods;
 
     public string Indent(int depth) => new(' ', specs.TabSize * depth);
 
