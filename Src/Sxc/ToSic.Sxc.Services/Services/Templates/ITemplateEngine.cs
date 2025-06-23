@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.LookUp;
-using ToSic.Eav.LookUp;
 
 // TODO: unclear if the namespace is correct, feels a bit off...
 

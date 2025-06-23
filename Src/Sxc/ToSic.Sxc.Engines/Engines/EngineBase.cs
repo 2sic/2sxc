@@ -109,7 +109,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
 
         var renderedTemplate = RenderEntryRazor(specs);
         var resourceExtractor = Services.BlockResourceExtractor;
-        var result = resourceExtractor.Process(renderedTemplate.Contents);
+        var result = resourceExtractor.Process(renderedTemplate.Contents ?? "");
         if (renderedTemplate.Exception != null)
             result = result with
             {

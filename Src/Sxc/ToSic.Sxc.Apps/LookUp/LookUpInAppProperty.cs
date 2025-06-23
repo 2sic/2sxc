@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.LookUp;
 using ToSic.Eav.LookUp.Sources;
-using ToSic.Eav.LookUp;
 using ToSic.Sxc.Data;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -22,6 +21,7 @@ public class LookUpInAppProperty(string name, IApp app) : LookUpBase(name, "Look
             if (field != null || app.Settings == null)
                 return field;
             var dynEnt = app.Settings as IDynamicEntity;
+            // ReSharper disable once StringLiteralTypo
             return field = new LookUpInEntity("appsettings", dynEnt?.Entity, dynEnt?.Cdf.Dimensions);
         }
     }
