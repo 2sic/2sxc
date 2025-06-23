@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Oqt.Shared.Models;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class EavSystemInfo
 {
-    public static Version Version => Assembly.GetExecutingAssembly().GetName().Version;
+    public static Version Version => Assembly.GetExecutingAssembly().GetName().Version!;
 
     public static readonly string VersionString = VersionToNiceFormat(Version);
 
@@ -17,9 +17,7 @@ public class EavSystemInfo
     // Version is used also as cache-break for js assets.
     // In past build revision was good cache-break value, but since assemblies are deterministic 
     // we use application start unix time as slow changing revision value for cache-break purpose. 
-    //public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
-    public static readonly string VersionWithStartUpBuild =
-        VersionWithFakeBuildNumber(Assembly.GetExecutingAssembly().GetName().Version).ToString();
+    public static readonly string VersionWithStartUpBuild = VersionWithFakeBuildNumber(Version).ToString();
 
     /// <summary>
     /// application start unix time as slow changing revision value
@@ -27,7 +25,7 @@ public class EavSystemInfo
     /// <param name="version"></param>
     /// <returns></returns>
     private static Version VersionWithFakeBuildNumber(Version version) =>
-        new Version(version.Major, version.Minor, version.Build,
+        new(version.Major, version.Minor, version.Build,
             (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds);
 
 }

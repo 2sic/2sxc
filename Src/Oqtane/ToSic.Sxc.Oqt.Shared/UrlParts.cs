@@ -113,7 +113,7 @@ public class UrlParts
     public bool IsRelative => Path.StartsWith(".") && !IsAbsolute && !string.IsNullOrEmpty(Domain);
 
 
-    public string ToLink(string format = null, bool suffix = true)
+    public string ToLink(string? format = null, bool suffix = true)
     {
         var endPart = Path + (suffix ? Suffix() : "");
         if (format == "/") return endPart;

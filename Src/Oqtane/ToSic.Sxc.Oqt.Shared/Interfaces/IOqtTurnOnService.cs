@@ -12,9 +12,9 @@ public interface IOqtTurnOnService
 {
     string Run(object runOrSpecs,
         NoParamOrder noParamOrder = default,
-        object require = null,
-        object data = null,
-        IEnumerable<object> args = default,
-        string addContext = default
+        object? require = null,
+        object? data = null,
+        IEnumerable<object>? args = default,
+        string? addContext = default
     );
 }

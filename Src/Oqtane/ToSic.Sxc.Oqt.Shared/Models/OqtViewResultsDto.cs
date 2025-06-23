@@ -16,7 +16,7 @@ public class OqtViewResultsDto
     /// <summary>
     /// For special error messages, in case the backend has trouble with refs etc.
     /// </summary>
-    public string ErrorMessage { get; set; }
+    public string? ErrorMessage { get; set; }
 
     /// <summary>
     /// The resources which the template will need
@@ -56,9 +56,9 @@ public class OqtViewResultsDto
     /// </summary>
     public IEnumerable<OqtHeadChange> HeadChanges { get; set; }
 
-    /// <summary>
-    /// Features which are defined in the SystemSettings and wer requested by the code and should be enabled.
-    /// </summary>
+    ///// <summary>
+    ///// Features which are defined in the SystemSettings and wer requested by the code and should be enabled.
+    ///// </summary>
     //IList<IPageFeature> FeaturesFromSettings { get; }
 
     /// <summary>
