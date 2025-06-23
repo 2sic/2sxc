@@ -24,38 +24,49 @@ public class ContentBlockBackend(
     AppWorkContextService appWorkCtxService,
     Generator<BlockOfEntity> entityBlockGenerator,
     Generator<IBlockBuilder> blockBuilderGenerator)
-    : BlockWebApiBackendBase(multiPermissionsApp, appWorkCtxService, ctxService, "Bck.FldLst",
-        connect: [optimizerLazy, workBlocksMod, workViews, publishing, entityBlockGenerator, blockEditorSelectorLazy, blockBuilderGenerator])
+    : ServiceBase("Bck.FldLst",
+        connect: [workViews, multiPermissionsApp, publishing, workBlocksMod, ctxService, optimizerLazy, blockEditorSelectorLazy, appWorkCtxService, entityBlockGenerator, blockBuilderGenerator])
 {
 
-    public IRenderResult NewBlockAndRender(int parentId, string field, int index, string app = "", Guid? guid = null) 
+    public IRenderResult NewBlockAndRender(int parentId, string field, int index, string app = "", Guid? guid = null)
     {
-        var entityId = NewBlock(parentId, field, index, app, guid);
+        var block = ctxService.BlockRequired();
+        var entityId = NewBlock(block, parentId, field, index, app, guid);
 
         // now return a rendered instance
-        var newContentBlock = entityBlockGenerator.New().Init(Block, null, entityId);
+        var newContentBlock = entityBlockGenerator.New().Init(block, null, entityId);
         var builder = blockBuilderGenerator.New().Setup(newContentBlock);
         return builder.Run(true, specs: new());
     }
 
     // todo: probably move to CmsManager.Block
-    public int NewBlock(int parentId, string field, int sortOrder, string app = "", Guid? guid = null) 
-        => workBlocksMod.New(AppWorkCtxDb).NewBlockReference(parentId, field, sortOrder, app, guid);
+    private int NewBlock(IBlock block, int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
+    {
+        var appWorkCtxDb = appWorkCtxService.CtxWithDb(block.App);
+        return workBlocksMod.New(appWorkCtxDb).NewBlockReference(parentId, field, sortOrder, app, guid);
+    }
 
     public void AddItem(int? index = null)
     {
         Log.A($"add order:{index}");
+
+        var block = ctxService.BlockRequired();
+        var appWorCtxDb = appWorkCtxService.CtxWithDb(block.App);
+
         // use dnn versioning - this is always part of page
-        publishing.DoInsidePublishing(ContextOfBlock, _ 
-            => workBlocksMod.New(AppWorkCtxDb).AddEmptyItem(Block.Configuration, index, Block.Context.Publishing.ForceDraft));
+        publishing.DoInsidePublishing(block.Context, _ 
+            => workBlocksMod.New(appWorCtxDb).AddEmptyItem(block.Configuration, index, block.Context.Publishing.ForceDraft));
     }
 
         
     public bool PublishPart(string part, int index)
     {
         Log.A($"try to publish #{index} on '{part}'");
-        ThrowIfNotAllowedInApp(GrantSets.WritePublished);
-        return blockEditorSelectorLazy.Value.GetEditor(Block).Publish(part, index);
+        var block = ctxService.BlockRequired();
+        ApiForBlockHelpers.ThrowIfNotAllowedInApp(multiPermissionsApp, block.Context, GrantSets.WritePublished);
+        return blockEditorSelectorLazy.Value
+            .GetEditor(block)
+            .Publish(part, index);
     }
 
     public AjaxRenderDto RenderForAjax(int templateId, string lang, string root, string edition)
@@ -109,15 +120,17 @@ public class ContentBlockBackend(
     {
         var l = Log.Fn<IRenderResult>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
 
+        var block = ctxService.BlockRequired();
         // if a preview templateId was specified, swap to that
         if (templateId > 0)
         {
-            var template = workViews.New(AppWorkCtxPlus).Get(templateId);
+            var appWorkCtxPlus = appWorkCtxService.ContextPlus(block.Context.AppReaderRequired);
+            var template = workViews.New(appWorkCtxPlus).Get(templateId);
             template.Edition = edition;
-            Block.SwapView(template);
+            block.SwapView(template);
         }
 
-        var builder = blockBuilderGenerator.New().Setup(Block);
+        var builder = blockBuilderGenerator.New().Setup(block);
         var result = builder.Run(true, specs: new());
         return l.ReturnAsOk(result);
     }

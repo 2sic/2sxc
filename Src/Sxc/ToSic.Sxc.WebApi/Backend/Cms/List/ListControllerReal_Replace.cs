@@ -15,9 +15,14 @@ partial class ListControllerReal
 
         var l = Log.Fn($"target:{guid}, {nameof(part)}:{part}, {nameof(isContentPair)}: {isContentPair}, {nameof(index)}:{index}, {nameof(entityId)}:{entityId}, {nameof(add)}: {add}");
 
+        // use dnn versioning - this is always part of page
+        publishing.New().DoInsidePublishing(Context, InternalSave);
+        l.Done();
+        return;
+
         void InternalSave(VersioningActionInfo _)
         {
-            var entity = AppWorkCtx.AppReader.GetDraftOrPublished(guid)
+            var entity = Context.AppReaderRequired.GetDraftOrPublished(guid)
                          ?? throw l.Done( new Exception($"Can't find item '{guid}'"));
 
             // Make sure we have the correct casing for the field names
@@ -36,10 +41,6 @@ partial class ListControllerReal
                 fList.FieldListReplaceIfModified(entity, [part], index, [entityId],
                     forceDraft);
         }
-
-        // use dnn versioning - this is always part of page
-        publishing.New().DoInsidePublishing(Context, InternalSave);
-        l.Done();
     }
 
 

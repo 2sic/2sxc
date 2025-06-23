@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps.Sys.Permissions;
-using ToSic.Eav.Apps.Sys.State;
+﻿using ToSic.Eav.Apps.Sys.State;
 using ToSic.Eav.Data.Entities.Sys.Lists;
 using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Blocks.Internal;
@@ -10,18 +9,16 @@ namespace ToSic.Sxc.Backend.Cms;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class ListControllerReal(
-    Generator<MultiPermissionsApp> multiPermissionsApp,
-    GenWorkPlus<WorkEntities> workEntities,
     GenWorkDb<WorkFieldList> workFieldList,
+    GenWorkPlus<WorkEntities> workEntities,
     ISxcCurrentContextService ctxService,
-    AppWorkContextService appWorkCtxService,
     Generator<IPagePublishing> publishing)
-    : BlockWebApiBackendBase(multiPermissionsApp, appWorkCtxService, ctxService, "Api.LstRl",
-        connect: [workFieldList, workEntities, publishing]), IListController
+    : ServiceBase("Api.LstRl",
+        connect: [workFieldList, workEntities, publishing, ctxService]), IListController
 {
     public const string LogSuffix = "Lst";
 
-    private IContextOfBlock Context => field ??= CtxService.BlockContextRequired();
+    private IContextOfBlock Context => field ??= ctxService.BlockContextRequired();
 
 
     public void Move(Guid? parent, string fields, int index, int toIndex) 
@@ -49,10 +46,11 @@ public partial class ListControllerReal(
     private void ModifyList(IEntity target, string fields, Action<IEntity, string[], bool> action)
     {
         // use dnn versioning - items here are always part of list
-        publishing.New().DoInsidePublishing(ContextOfBlock, args =>
+        var context = ctxService.BlockContextRequired();
+        publishing.New().DoInsidePublishing(context, _ =>
         {
             // determine versioning
-            var forceDraft = (ContextOfBlock as IContextOfBlock)?.Publishing.ForceDraft ?? false;
+            var forceDraft = context.Publishing.ForceDraft;
             // check field list (default to content-block fields)
             var fieldList = fields is null or ViewParts.ContentLower
                 ? ViewParts.ContentPair
@@ -63,12 +61,13 @@ public partial class ListControllerReal(
 
     private IEntity FindOrThrow(Guid? parent)
     {
+        var block = ctxService.BlockRequired();
         var target = parent == null
-            ? CtxService.BlockRequired().Configuration.Entity
-            : ContextOfBlock.AppReaderRequired.List.One(parent.Value);
+            ? block.Configuration.Entity
+            : block.Context.AppReaderRequired.List.One(parent.Value);
 
         return target == null
             ? throw new($"Can't find parent {parent}")
-            : ContextOfBlock.AppReaderRequired.GetDraftOrKeep(target);
+            : block.Context.AppReaderRequired.GetDraftOrKeep(target);
     }
 }

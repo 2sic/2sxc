@@ -21,8 +21,7 @@ public class BlockControllerReal(
 
     #region Block
 
-    private ContentBlockBackend Backend => _backend = _backend ?? blockBackend.Value;
-    private ContentBlockBackend _backend;
+    private ContentBlockBackend Backend => field ??= blockBackend.Value;
 
     /// <inheritdoc />
     public string Block(int parentId, string field, int index, string app = "", Guid? guid = null)
@@ -34,9 +33,7 @@ public class BlockControllerReal(
     /// used to be GET Module/AddItem
     /// </summary>
     public void Item(int? index = null)
-    {
-        Backend.AddItem(index);
-    }
+        => Backend.AddItem(index);
 
     #endregion
 
@@ -48,7 +45,8 @@ public class BlockControllerReal(
     /// </summary>
     /// <param name="appId"></param>
 
-    public void App(int? appId) => viewsBackend.Value.SetAppId(appId);
+    public void App(int? appId)
+        => viewsBackend.Value.SetAppId(appId);
 
     /// <summary>
     /// used to be GET Module/GetSelectableApps
@@ -107,5 +105,6 @@ public class BlockControllerReal(
 
 
     /// <inheritdoc />
-    public bool Publish(string part, int index) => Backend.PublishPart(part, index);
+    public bool Publish(string part, int index)
+        => Backend.PublishPart(part, index);
 }
