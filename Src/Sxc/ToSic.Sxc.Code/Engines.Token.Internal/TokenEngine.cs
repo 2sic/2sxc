@@ -2,9 +2,11 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.LookUp;
+using ToSic.Eav.LookUp.Sys;
+using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Lib.DI;
-using ToSic.Lib.LookUp;
-using ToSic.Lib.LookUp.Engines;
+using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.CodeApi.Internal;

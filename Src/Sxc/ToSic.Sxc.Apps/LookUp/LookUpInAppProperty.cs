@@ -1,6 +1,6 @@
-﻿using ToSic.Eav.LookUp.Sources;
-using ToSic.Lib.LookUp;
-using ToSic.Lib.LookUp.Sources;
+﻿using ToSic.Eav.LookUp;
+using ToSic.Eav.LookUp.Sources;
+using ToSic.Eav.LookUp;
 using ToSic.Sxc.Data;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -52,7 +52,7 @@ public class LookUpInAppProperty(string name, IApp app) : LookUpBase(name, "Look
             // Maybe someday: also retrieve metadata like Folder, Name, Version
         }
 
-        var subToken = CheckAndGetSubToken(key);
+        var subToken = LookUpHelpers.CheckAndGetSubToken(key);
 
         if (!subToken.HasSubToken)
             return string.Empty;

@@ -2,7 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Lib.LookUp;
+using ToSic.Eav.LookUp;
+using ToSic.Eav.LookUp;
 using ToSic.Sxc.Data.Internal.Convert;
 using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.LookUp;

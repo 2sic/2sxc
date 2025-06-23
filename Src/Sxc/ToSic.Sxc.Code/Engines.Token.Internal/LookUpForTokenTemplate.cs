@@ -1,7 +1,8 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
-using ToSic.Lib.LookUp;
-using ToSic.Lib.LookUp.Sources;
+using ToSic.Eav.LookUp;
+using ToSic.Eav.LookUp.Sources;
+using ToSic.Eav.LookUp;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys;
@@ -73,11 +74,11 @@ internal partial class LookUpForTokenTemplate(
         return valueObject switch
         {
             null => string.Empty,
-            string str => LookUpBase.FormatString(str, strFormat),
-            bool b => LookUpBase.Format(b),
+            string str => LookUpHelpers.FormatString(str, strFormat),
+            bool b => LookUpHelpers.Format(b),
             DateTime or double or float or short or int or long or decimal =>
                 ((IFormattable)valueObject).ToString(strFormat.NullIfNoValue() ?? "g", cultureInfo),
-            _ => (string)LookUpBase.FormatString(valueObject.ToString(), strFormat),
+            _ => LookUpHelpers.FormatString(valueObject.ToString(), strFormat),
         };
     }
 

@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.DataSource.Internal;
+﻿using System.Diagnostics.CodeAnalysis;
+using ToSic.Eav.DataSource.Internal;
 
 namespace ToSic.Sxc.Apps;
 
@@ -11,11 +12,13 @@ partial class App
     /// - App.Query["One Event"].List
     /// </summary>
     /// <inheritdoc />
+    [field: AllowNull, MaybeNull]
     public IDictionary<string, IQuery> Query
     {
         get
         {
-            if (field != null) return field;
+            if (field != null)
+                return field;
 
             if (ConfigurationProvider == null)
                 throw new("Can't use app-queries, because the necessary configuration provider hasn't been initialized. Call InitData first.");

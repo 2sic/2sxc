@@ -1,6 +1,6 @@
-﻿#if NETCOREAPP
-using ToSic.Lib.LookUp.Sources;
+﻿using ToSic.Eav.LookUp.Sources;
 
+#if NETCOREAPP
 namespace ToSic.Sxc.LookUp;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ToSic.Lib.LookUp;
+using ToSic.Eav.LookUp;
 using ToSic.Sxc.Oqt.Server.LookUps;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;

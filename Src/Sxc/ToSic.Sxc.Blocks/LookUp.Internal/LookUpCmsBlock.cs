@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.DataSource.Internal.Query;
-using ToSic.Lib.LookUp.Sources;
+using ToSic.Eav.LookUp.Sources;
 using ToSic.Sxc.Blocks.Internal;
 
 namespace ToSic.Sxc.LookUp;

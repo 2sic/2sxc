@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Tokens;
-using ToSic.Lib.LookUp.Sources;
+using ToSic.Eav.LookUp.Sources;
 
 namespace ToSic.Sxc.Dnn.LookUp;
 

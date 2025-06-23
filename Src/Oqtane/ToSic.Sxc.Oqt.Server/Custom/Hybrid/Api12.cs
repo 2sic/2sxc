@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Lib.Coding;
-using ToSic.Lib.LookUp.Engines;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
@@ -58,7 +58,7 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
     [PrivateApi]
     public IExecutionContext ExCtxOrNull => CtxHlp.ExCtxOrNull;
 
-    /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public new TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
     [PrivateApi("Not yet ready")]

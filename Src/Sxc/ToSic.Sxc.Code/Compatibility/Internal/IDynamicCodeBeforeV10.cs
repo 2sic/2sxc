@@ -1,7 +1,7 @@
 ﻿#if NETFRAMEWORK
 
 using ToSic.Eav.DataSource;
-using ToSic.Lib.LookUp.Engines;
+using ToSic.Eav.LookUp.Sys.Engines;
 
 namespace ToSic.Sxc.Compatibility.Internal
 {
