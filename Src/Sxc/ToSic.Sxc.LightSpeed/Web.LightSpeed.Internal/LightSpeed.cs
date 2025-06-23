@@ -46,8 +46,8 @@ internal class LightSpeed(
     }
     private int _moduleId;
     private int _pageId;
-    private IBlock _block;
-    private IAppReader AppReader => field ??= _block?.Context?.AppReaderOrNull;
+    private IBlock? _block;
+    private IAppReader? AppReaderOrNull => field ??= _block?.Context?.AppReaderOrNull;
 
     public bool Save(IRenderResult data) => AddToLightSpeed(data);
 
@@ -56,7 +56,7 @@ internal class LightSpeed(
         => AddToLightSpeed(data, cacheData => cacheData.EnforcePre1025 = enforcePre1025);
 #endif
 
-    public bool AddToLightSpeed(IRenderResult data, Action<OutputCacheItem> doOtherStuff = null)
+    public bool AddToLightSpeed(IRenderResult? data, Action<OutputCacheItem>? doOtherStuff = null)
     {
         var l = Log.Fn<bool>(timer: true);
 
@@ -94,7 +94,7 @@ internal class LightSpeed(
                 return l.ReturnFalse("disabled in dependent app");
 
             // respect primary app (of site) as dependent app to ensure cache invalidation when primary app is changed
-            var appState = AppReader;
+            var appState = AppReaderOrNull;
             if (appState == null)
                 return l.ReturnFalse("no app");
 
@@ -131,7 +131,7 @@ internal class LightSpeed(
             l.A($"{nameof(appPathsToMonitor)} done");
 
             // add to cache and log
-            string cacheKey = null;
+            string? cacheKey = null;
             l.Do(message: "outputCacheManager add", timer: true,
                 action: () => cacheKey = OutCacheMan.Add(
                     CacheKey,
@@ -178,7 +178,7 @@ internal class LightSpeed(
     /// ADAM folders are not monitored
     /// </remarks>
     /// <returns>list of paths to monitor</returns>
-    private IList<string> AppPaths(List<IAppReader> dependentApps)
+    private IList<string>? AppPaths(List<IAppReader> dependentApps)
     {
         if (_block?.AppOrNull is not SxcAppBase app)
             return null;
@@ -195,9 +195,9 @@ internal class LightSpeed(
 
         return paths;
     }
-    private readonly GetOnce<IList<string>> _appPaths = new();
+    private readonly GetOnce<IList<string>?> _appPaths = new();
 
-    private int Duration => _duration ??= _block.Context.User switch
+    private int Duration => _duration ??= _block!.Context.User switch
     {
         { IsSystemAdmin: true } => AppConfig.DurationSystemAdmin,
         { IsSiteAdmin: true } => AppConfig.DurationEditors,
@@ -207,39 +207,39 @@ internal class LightSpeed(
     private int? _duration;
 
     private (bool CachingAllowed, string Extension) UrlParams => _urlParams.Get(() =>
-        LightSpeedUrlParams.GetUrlParams(ViewConfigOrNull ?? AppConfig, _block.Context.Page.Parameters, Log)
+        LightSpeedUrlParams.GetUrlParams(ViewConfigOrNull ?? AppConfig, _block?.Context.Page.Parameters, Log)
     );
     private readonly GetOnce<(bool CachingAllowed, string Extension)> _urlParams = new();
     
-    private string CurrentCulture => _currentCulture.Get(() => site.Value.SafeCurrentCultureCode());
+    private string CurrentCulture => _currentCulture.Get(() => site.Value.SafeCurrentCultureCode())!;
     private readonly GetOnce<string> _currentCulture = new();
 
 
     private string CacheKey => _key.Get(() => Log.Quick(()
         => OutputCacheManager.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, UrlParams.Extension, CurrentCulture)
-    ));
+    ))!;
     private readonly GetOnce<string> _key = new();
 
-    private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? null : _block.Context.User.Id);
+    private int? UserIdOrAnon => _userId.Get(() => _block?.Context.User.IsAnonymous == false ? _block.Context.User.Id : null);
     private readonly GetOnce<int?> _userId = new();
 
     // Note 2023-10-30 2dm changed the handling of the preview template and checks if it's set. In case caching is too aggressive this can be the problem. Remove early 2024
-    private string ViewKey => _viewKey.Get(() => _block.ConfigurationIsReady && _block.Configuration.PreviewViewEntity != null
+    private string? ViewKey => _viewKey.Get(() => _block is { ConfigurationIsReady: true, Configuration.PreviewViewEntity: not null }
         ? $"{_block.Configuration.AppId}:{_block.Configuration.View?.Id}"
         : null
     );
-    private readonly GetOnce<string> _viewKey = new();
+    private readonly GetOnce<string?> _viewKey = new();
 
-    public OutputCacheItem Existing => _existing.Get(GetExisting);
-    private readonly GetOnce<OutputCacheItem> _existing = new();
+    public OutputCacheItem? Existing => _existing.Get(GetExisting);
+    private readonly GetOnce<OutputCacheItem?> _existing = new();
 
-    private OutputCacheItem GetExisting()
+    private OutputCacheItem? GetExisting()
     {
         var l = Log.Fn<OutputCacheItem>();
         try
         {
             // If App not known, it can't have a cache - exit early
-            if (AppReader == null)
+            if (AppReaderOrNull == null)
                 return l.ReturnNull("no app");
 
             // If Cache is enabled, try to get
@@ -282,7 +282,7 @@ internal class LightSpeed(
         {
             // special - Oqtane seems to call this much earlier than Dnn, even on non-existing modules.
             // so on new modules this would fail and throw an error. So we'll just return false in this case.
-            if (AppReader == null)
+            if (AppReaderOrNull == null)
                 return l.ReturnFalse("disabled, no app");
 
             // Normal check.
@@ -318,27 +318,27 @@ internal class LightSpeed(
     /// <summary>
     /// Lightspeed Configuration at App Level
     /// </summary>
-    private LightSpeedDecorator AppConfig => _lsd.Get(() => GetLightSpeedConfigOfApp(AppReader));
+    private LightSpeedDecorator AppConfig => _lsd.Get(() => GetLightSpeedConfigOfApp(AppReaderOrNull))!;
     private readonly GetOnce<LightSpeedDecorator> _lsd = new();
 
     /// <summary>
     /// Lightspeed Configuration at View Level
     /// </summary>
-    private LightSpeedDecorator ViewConfigOrNull => _viewConfig.Get(() =>
-        !_block.ViewIsReady
+    private LightSpeedDecorator? ViewConfigOrNull => _viewConfig.Get(() =>
+        _block?.ViewIsReady != true
             ? null
             : _block.View.Metadata
                 .OfType(LightSpeedDecorator.TypeNameId)
                 .FirstOrDefault()
                 .NullOrGetWith(viewLs => new LightSpeedDecorator(viewLs))
     );
-    private readonly GetOnce<LightSpeedDecorator> _viewConfig = new();
+    private readonly GetOnce<LightSpeedDecorator?> _viewConfig = new();
 
-    private LightSpeedDecorator GetLightSpeedConfigOfApp(IAppReader appReader)
+    private LightSpeedDecorator GetLightSpeedConfigOfApp(IAppReader? appReader)
     {
         var l = Log.Fn<LightSpeedDecorator>();
         var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(appReader/*, Log*/);
-        return l.Return(decoFromPiggyBack, $"has decorator: {decoFromPiggyBack.Entity != null}");
+        return l.Return(decoFromPiggyBack, $"has decorator: {decoFromPiggyBack.Entity != null!}");
     }
 
     private OutputCacheManager OutCacheMan => outputCacheManager.Value;

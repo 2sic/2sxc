@@ -16,7 +16,7 @@ public class OutputCacheItem(IRenderResult data): ICanEstimateSize, ITimestamped
     public bool EnforcePre1025 = true;
 
 #endif
-    public SizeEstimate EstimateSize(ILog log = default) 
+    public SizeEstimate EstimateSize(ILog? log = default) 
         => (data as ICanEstimateSize)?.EstimateSize(log)
            ?? new SizeEstimate(0, 0, Unknown: true);
 

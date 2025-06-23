@@ -7,7 +7,7 @@ using ToSic.Sxc.Services.OutputCache;
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class LightSpeedDecorator(IEntity entity) : EntityBasedType(entity), IOutputCacheSettings
+internal class LightSpeedDecorator(IEntity? entity) : EntityBasedType(entity!), IOutputCacheSettings
 {
     /// <summary>
     /// Nice name. If it ever changes, remember to also update UI as it has references to it.
@@ -37,9 +37,9 @@ internal class LightSpeedDecorator(IEntity entity) : EntityBasedType(entity), IO
 
     public string Advanced => GetThis("");
 
-    public static LightSpeedDecorator GetFromAppStatePiggyBack(IAppReader appReader/*, ILog log*/)
+    public static LightSpeedDecorator GetFromAppStatePiggyBack(IAppReader? appReader/*, ILog log*/)
     {
-        var appState = appReader.GetCache();
+        var appState = appReader?.GetCache();
         var decoFromPiggyBack = appState?.PiggyBack
             .GetOrGenerate(appState, $"decorator-{TypeNameId}", () =>
             {

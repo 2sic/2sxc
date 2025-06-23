@@ -10,7 +10,7 @@ public interface IOutputCache: IHasLog
 
     IOutputCache Init(int moduleId, int pageId, IBlock block);
 
-    OutputCacheItem Existing { get; }
+    OutputCacheItem? Existing { get; }
 
     bool Save(IRenderResult data);
 

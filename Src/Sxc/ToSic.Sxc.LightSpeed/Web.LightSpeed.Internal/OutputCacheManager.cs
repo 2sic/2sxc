@@ -9,17 +9,21 @@ internal class OutputCacheManager(MemoryCacheService memoryCacheService, LazySvc
 {
     internal const string GlobalCacheRoot = "Sxc-LightSpeed.Module.";
 
-    internal static string Id(int moduleId, int pageId, int? userId, string view, string suffix, string currentCulture)
+    internal static string Id(int moduleId, int pageId, int? userId, string? view, string? suffix, string? currentCulture)
     {
         var id = $"{GlobalCacheRoot}p:{pageId}-m:{moduleId}";
-        if (userId.HasValue) id += $"-u:{userId.Value}";
-        if (view != null) id += $"-v:{view}";
-        if (suffix != null) id += $"-s:{suffix}";
-        if (currentCulture != null) id += $"-c:{currentCulture}";
+        if (userId.HasValue)
+            id += $"-u:{userId.Value}";
+        if (view != null)
+            id += $"-v:{view}";
+        if (suffix != null)
+            id += $"-s:{suffix}";
+        if (currentCulture != null)
+            id += $"-c:{currentCulture}";
         return id;
     }
 
-    public string Add(string cacheKey, OutputCacheItem data, int duration, List<ICanBeCacheDependency> apps, IList<string> appPaths)
+    public string Add(string cacheKey, OutputCacheItem data, int duration, List<ICanBeCacheDependency> apps, IList<string>? appPaths)
     {
         var l = Log.Fn<string>($"key: {cacheKey}", timer: true);
 
@@ -52,5 +56,5 @@ internal class OutputCacheManager(MemoryCacheService memoryCacheService, LazySvc
         return l.ReturnAsError("error");
     }
 
-    public OutputCacheItem Get(string key) => memoryCacheService.Get<OutputCacheItem>(key);
+    public OutputCacheItem? Get(string key) => memoryCacheService.Get<OutputCacheItem>(key);
 }
