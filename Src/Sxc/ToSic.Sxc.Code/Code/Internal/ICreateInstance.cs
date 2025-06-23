@@ -23,7 +23,7 @@ public interface ICreateInstance: IGetCodePath
     /// Note that the C# code which we are creating inherits from a standard base class such as <see cref="Code12"/> or <see cref="DynamicCode"/>
     /// then it will automatically be initialized to support App, AsDynamic etc.
     /// </remarks>
-    dynamic CreateInstance(string virtualPath,
+    dynamic? CreateInstance(string virtualPath,
         NoParamOrder noParamOrder = default,
         string? name = null,
         string? relativePath = null,

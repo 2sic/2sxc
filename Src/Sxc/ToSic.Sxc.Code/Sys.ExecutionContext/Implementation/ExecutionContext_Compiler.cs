@@ -8,7 +8,7 @@ public partial class ExecutionContext
     #region SharedCode Compiler
 
     /// <inheritdoc />
-    public dynamic CreateInstance(string virtualPath,
+    public object? CreateInstance(string virtualPath,
         NoParamOrder noParamOrder = default,
         string? name = null,
         string? relativePath = null,
@@ -39,7 +39,7 @@ public partial class ExecutionContext
     }
 
     /// <inheritdoc />
-    public string CreateInstancePath { get; set; }
+    public string CreateInstancePath { get; set; } = null!; // must be set as the context becomes clear
 
     #endregion
 }

@@ -1,13 +1,14 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Data.Entities.Sys.Lists;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Context.Internal;
 
 namespace ToSic.Sxc.Blocks.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public sealed class BlockOfEntity(BlockGeneratorHelpers services, LazySvc<AppFinder> appFinderLazy)
-    : BlockOfBase(services, "CB.Ent", connect: [appFinderLazy])
+public sealed class BlockOfEntity(BlockGeneratorHelpers helpers, LazySvc<AppFinder> appFinderLazy)
+    : ServiceBase("CB.Ent", connect: [appFinderLazy, helpers])
 {
     #region Init
 
@@ -25,7 +26,7 @@ public sealed class BlockOfEntity(BlockGeneratorHelpers services, LazySvc<AppFin
 
         // Must override previous AppId, as that was of the container-block
         // but the current instance can be of another block
-        Specs = new()
+        var specs = new BlockSpecs
         {
             Context = ctx,
             AppId = blockId.AppId,
@@ -34,14 +35,14 @@ public sealed class BlockOfEntity(BlockGeneratorHelpers services, LazySvc<AppFin
             IsInnerBlock = true,
         };
 
-        Specs = BlockSpecsHelper.CompleteInit(Specs, Services, parentBlock, blockId, -blockEntity.EntityId, Log);
+        specs = BlockSpecsHelper.CompleteInit(specs, helpers, parentBlock, blockId, -blockEntity.EntityId, Log);
 
-        Specs = Specs with
+        specs = specs with
         {
-            Data = GetData(),
+            Data = helpers.GetData(specs),
         };
 
-        return l.Return(Specs);
+        return l.Return(specs);
     }
 
     #endregion

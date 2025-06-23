@@ -82,7 +82,7 @@ internal class TypedConverter(ICodeDataFactory cdf)
     }
 
     [return: NotNullIfNotNull(nameof(fallback))]
-    public IEnumerable<IFile>? Files(object maybe, IEnumerable<IFile>? fallback)
+    public IEnumerable<IFile>? Files(object? maybe, IEnumerable<IFile>? fallback)
     {
         // ReSharper disable PossibleMultipleEnumeration
         var (typed, untyped, ok) = EvalInterface(maybe, fallback);

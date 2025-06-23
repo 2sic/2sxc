@@ -102,7 +102,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.My
     }
 
     /// <inheritdoc />
-    internal IApp App { get; private set; }
+    internal IApp App { get; private set; } = null!;
 
     /// <inheritdoc cref="IDynamicCode.Link" />
     [field: AllowNull, MaybeNull]

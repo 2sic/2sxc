@@ -39,7 +39,7 @@ public partial class ExecutionContext
     [Obsolete("Warning - avoid using this on the DynamicCode Root - always use the one on the AsC")]
     public int CompatibilityLevel => Cdf.CompatibilityLevel;
 
-    [PrivateApi] public IBlock Block { get; private set; }
+    [PrivateApi] public IBlock Block { get; private set; } = null!;
 
     [PrivateApi]
     [field: AllowNull, MaybeNull]
@@ -79,7 +79,8 @@ public partial class ExecutionContext
     public TService GetServiceForData<TService>() where TService : class
     {
         if (typeof(TService) == typeof(AdamManager))
-            return ((CodeDataFactory)Cdf).AdamManager as TService;
+            return ((CodeDataFactory)Cdf).AdamManager as TService
+                ?? throw new InvalidOperationException("Can't get AdamManager from ExecutionContext - it is not initialized.");
 
         throw new NotImplementedException();
     }
@@ -132,7 +133,7 @@ public partial class ExecutionContext
             return (TState)App;
 
         if (typeof(TState) == typeof(IAppReader))
-            return (TState)((IAppWithInternal)App)?.AppReader;
+            return (TState)((IAppWithInternal)App)?.AppReader!;
 
         if (typeof(TState) == typeof(IDataSource))
             return (TState)Block.Data;
@@ -141,7 +142,7 @@ public partial class ExecutionContext
             return (TState)Block;
 
         if (typeof(TState) == typeof(IContextOfBlock))
-            return (TState)Block?.Context;
+            return (TState)Block?.Context!;
 
         if (typeof(TState) == typeof(IAppTyped))
             return (TState)AppTyped;

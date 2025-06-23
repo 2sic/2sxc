@@ -24,7 +24,7 @@ internal class DynamicCode12Proxy(IExecutionContext exCtx, ICodeDynamicApiHelper
         }
     }
 
-    public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string? name = null,
+    public dynamic? CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string? name = null,
         string? relativePath = null, bool throwOnError = true)
         => (
                 dynamicApi

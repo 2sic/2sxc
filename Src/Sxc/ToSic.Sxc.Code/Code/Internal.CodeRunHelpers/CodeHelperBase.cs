@@ -20,7 +20,7 @@ public class CodeHelperBase : ServiceWithContext
 
     #region CodeLog / Html Helper
 
-    public ICodeLog CodeLog => _codeLog.Get(() => new CodeLog(Log));
+    public ICodeLog CodeLog => _codeLog.Get(() => new CodeLog(Log))!;
     private readonly GetOnce<ICodeLog> _codeLog = new();
 
     #endregion

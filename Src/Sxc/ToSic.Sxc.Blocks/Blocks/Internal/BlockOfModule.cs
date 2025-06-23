@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Context.Internal;
+﻿using ToSic.Lib.Services;
+using ToSic.Sxc.Context.Internal;
 
 namespace ToSic.Sxc.Blocks.Internal;
 
@@ -7,7 +8,7 @@ namespace ToSic.Sxc.Blocks.Internal;
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public sealed class BlockOfModule(BlockGeneratorHelpers services) : BlockOfBase(services, "CB.Mod")
+public sealed class BlockOfModule(BlockGeneratorHelpers helpers) : ServiceBase("CB.Mod", connect: [helpers])
 {
     /// <summary>
     /// Create a module-content block
@@ -18,7 +19,7 @@ public sealed class BlockOfModule(BlockGeneratorHelpers services) : BlockOfBase(
     {
         var l = Log.Fn<BlockSpecs>(timer: true);
         var appIdentity = ctx.Module.BlockIdentifier;
-        Specs = new()
+        var specs = new BlockSpecs
         {
             Context = ctx,
             AppId = appIdentity.AppId,
@@ -27,14 +28,14 @@ public sealed class BlockOfModule(BlockGeneratorHelpers services) : BlockOfBase(
             IsContentApp = ctx.Module.IsContent,
             IsInnerBlock = false,
         };
-        Specs = BlockSpecsHelper.CompleteInit(Specs, Services, null, ctx.Module.BlockIdentifier, ctx.Module.Id, Log);
+        specs = BlockSpecsHelper.CompleteInit(specs, helpers, null, ctx.Module.BlockIdentifier, ctx.Module.Id, Log);
 
-        Specs = Specs with
+        specs = specs with
         {
-            Data = GetData(),
+            Data = helpers.GetData(specs),
         };
 
-        return l.ReturnAsOk(Specs);
+        return l.ReturnAsOk(specs);
     }
 
 }

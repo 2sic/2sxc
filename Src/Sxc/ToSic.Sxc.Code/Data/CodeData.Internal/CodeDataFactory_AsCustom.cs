@@ -14,6 +14,7 @@ partial class CodeDataFactory: IModelFactory
     /// If the object is an entity-like thing, that will be converted.
     /// If it's a list of entity-like things, the first one will be converted.
     /// </summary>
+    [return: NotNullIfNotNull(nameof(source))]
     public TCustom? AsCustom<TCustom>(object? source, NoParamOrder protector = default, bool mock = false)
         where TCustom : class, ICanWrapData
     {
