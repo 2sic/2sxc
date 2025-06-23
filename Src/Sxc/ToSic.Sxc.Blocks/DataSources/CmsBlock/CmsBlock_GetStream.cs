@@ -135,13 +135,7 @@ public sealed partial class CmsBlock
             if (presentationId.HasValue)
                 return originals.One(presentationId.Value);
 
-            // 2021-10-12 2dm - believe this is an unnecessary loop to re-retrieve the demo item, will short-circuit
             return null;
-            //var demoPresentationId = demo != null && originals.Has(demo.EntityId)
-            //    ? demo.EntityId
-            //    : new int?();
-
-            //return demoPresentationId.HasValue ? originals.One(demoPresentationId.Value) : null;
         }
         catch (Exception ex)
         {

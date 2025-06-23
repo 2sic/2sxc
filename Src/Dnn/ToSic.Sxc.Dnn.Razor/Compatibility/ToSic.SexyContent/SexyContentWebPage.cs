@@ -1,22 +1,16 @@
 ﻿using Custom.Hybrid;
-using DotNetNuke.Entities.Modules;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.LookUp.Sys.Engines;
-using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.Search;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Compatibility.Internal;
 using ToSic.Sxc.Compatibility.RazorPermissions;
 using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Data.Sys.Wrappers;
-using ToSic.Sxc.DataSources.Internal.Compatibility;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Search;
 using ToSic.Sxc.Sys.ExecutionContext;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -35,9 +29,10 @@ public abstract class SexyContentWebPage :
     RazorComponentBase,
     ICreateInstance,
     IHasDnn,
-#pragma warning disable CS0618 // Type or member is obsolete
-    IDnnRazorCustomize, 
-#pragma warning restore CS0618 // Type or member is obsolete
+    // #RemovedV20 #ModulePublish
+//#pragma warning disable CS0618 // Type or member is obsolete
+//    IDnnRazorCustomize, 
+//#pragma warning restore CS0618 // Type or member is obsolete
     IDynamicCodeBeforeV10,
 #pragma warning disable 618
     IAppAndDataHelpers
@@ -93,7 +88,7 @@ public abstract class SexyContentWebPage :
     #region Data - with old interface #DataInAddWontWork
 
     /// <inheritdoc />
-    public IBlockDataSource Data => (IBlockDataSource)CodeApi.Data;
+    public IDataSource Data => /*(IBlockDataSource)*/CodeApi.Data;
 
     //// This is explicitly implemented so the interfaces don't complain
     //// but actually we're not showing this - in reality we're showing the Old (see above)
@@ -101,10 +96,10 @@ public abstract class SexyContentWebPage :
         
     #endregion
 
-    // Explicit implementation of expected interface, but it should not work in the normal code
-    // as the old code sometimes expects Data.Cache.GetContentType
-    /// <inheritdoc />
-    IDataSource IDynamicCode.Data => CodeApi.Data;
+    //// Explicit implementation of expected interface, but it should not work in the normal code
+    //// as the old code sometimes expects Data.Cache.GetContentType
+    ///// <inheritdoc />
+    //IDataSource IDynamicCode.Data => CodeApi.Data;
 
     public RazorPermissions Permissions => new(CodeApi.Block?.Context.Permissions.IsContentAdmin ?? false);
 
@@ -236,22 +231,25 @@ public abstract class SexyContentWebPage :
 
     #endregion
 
-    #region Customize Data & Search
+    #region Customize Data & Search - all have been removed in v20 // #RemovedV20 #ModulePublish
 
-    /// <inheritdoc />
-    public virtual void CustomizeData() {}
+    ///// <inheritdoc />
+    //public virtual void CustomizeData() {}
 
-    /// <inheritdoc />
-    public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate) { }
+    ///// <inheritdoc />
+    //public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate) { }
 
-    [PrivateApi("this is the old signature, should still be supported")]
-    public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate) { }
+    // #RemovedV20 #ModulePublish
+    //[PrivateApi("this is the old signature, should still be supported")]
+    //public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate) { }
 
-    [Obsolete("should not be used any more")]
-    public Purpose Purpose { get; internal set; }
+    // #RemovedV20 #ModulePublish
+    //[Obsolete("should not be used any more")]
+    //public Purpose Purpose { get; internal set; }
 
-    [Obsolete("should not be used any more")]
-    public InstancePurposes InstancePurpose { get; internal set; }
+    // #RemovedV20 #ModulePublish
+    //[Obsolete("should not be used any more")]
+    //public InstancePurposes InstancePurpose { get; internal set; }
 
     #endregion
 

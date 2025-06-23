@@ -54,7 +54,9 @@ internal class DnnDynamicCodeService: DynamicCodeService
             user.IsContentAdmin
         );
         _scopedServices.DnnPageChanges.Value.Apply(Page, changes);
-        var dnnClientResources = _scopedServices.DnnClientResources.Value.Init(Page, false, null);
+
+        // #RemovedV20 #OldDnnAntiForgery
+        var dnnClientResources = _scopedServices.DnnClientResources.Value.Init(Page, /*false,*/ null);
         dnnClientResources.AddEverything(changes?.Features);
         l.Done();
     }

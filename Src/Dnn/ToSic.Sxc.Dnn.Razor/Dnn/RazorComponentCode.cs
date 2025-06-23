@@ -1,7 +1,4 @@
-﻿using ToSic.Eav.Run;
-using ToSic.Sxc.Search;
-
-namespace ToSic.Sxc.Dnn;
+﻿namespace ToSic.Sxc.Dnn;
 
 /// <summary>
 /// This is the type used by code-behind classes of razor components.
@@ -12,24 +9,26 @@ namespace ToSic.Sxc.Dnn;
 [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely. There are now better ways of doing this")]
 public abstract class RazorComponentCode: RazorComponent
 {
-    /// <inheritdoc />
-    [PrivateApi]
-    [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely. There are now better ways of doing this")]
-    public override void CustomizeData() { }
+    // #RemovedV20 #ModulePublish
 
-#pragma warning disable 618
-    /// <inheritdoc />
-    [PrivateApi]
-    [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely. There are now better ways of doing this")]
-    public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate)
-    {
-        CustomizeSearch(searchInfos, moduleInfo as IContainer, beginDate);
-    }
+//    /// <inheritdoc />
+//    [PrivateApi]
+//    [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely. There are now better ways of doing this")]
+//    public override void CustomizeData() { }
 
-    [PrivateApi]
-    [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely. There are now better ways of doing this")]
-    public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo, DateTime beginDate) { }
-#pragma warning restore 618
+//#pragma warning disable 618
+//    /// <inheritdoc />
+//    [PrivateApi]
+//    [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely. There are now better ways of doing this")]
+//    public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate)
+//    {
+//        CustomizeSearch(searchInfos, moduleInfo as IContainer, beginDate);
+//    }
+
+//    [PrivateApi]
+//    [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely. There are now better ways of doing this")]
+//    public override void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo, DateTime beginDate) { }
+//#pragma warning restore 618
 
 
 }

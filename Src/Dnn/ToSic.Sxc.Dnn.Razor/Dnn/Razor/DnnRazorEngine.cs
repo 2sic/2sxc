@@ -1,6 +1,4 @@
 ﻿using System.Configuration;
-using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Dnn.Razor.Internal;
 using ToSic.Sxc.Engines;
@@ -16,7 +14,9 @@ namespace ToSic.Sxc.Dnn.Razor;
 // ReSharper disable once UnusedMember.Global
 internal partial class DnnRazorEngine(EngineBase.MyServices helpers, DnnRazorCompiler razorCompiler)
     : EngineBase(helpers, connect: [razorCompiler]),
-        IRazorEngine, IEngineDnnOldCompatibility
+        IRazorEngine
+        // #RemovedV20 #ModulePublish
+        //, IEngineDnnOldCompatibility
 {
     /// <inheritdoc />
     [PrivateApi]
@@ -68,17 +68,19 @@ internal partial class DnnRazorEngine(EngineBase.MyServices helpers, DnnRazorCom
         var razorBuild = razorCompiler.InitWebpage(templatePath, exitIfNoHotBuild: false);
         var pageToInit = razorBuild.Instance;
 
-        if (pageToInit is RazorComponent rzrPage)
-        {
-#pragma warning disable CS0618
-            rzrPage.Purpose = Purpose;
-#pragma warning restore CS0618
-        }
+        // #RemovedV20 #ModulePublish
+        //        if (pageToInit is RazorComponent rzrPage)
+        //        {
+        //#pragma warning disable CS0618
+        //            rzrPage.Purpose = Purpose;
+        //#pragma warning restore CS0618
+        //        }
 
-#pragma warning disable 618, CS0612
-        if (pageToInit is SexyContentWebPage oldPage)
-            oldPage.InstancePurpose = (InstancePurposes)Purpose;
-#pragma warning restore 618, CS0612
+        // #RemovedV20 #ModulePublish
+        //#pragma warning disable 618, CS0612
+        //        if (pageToInit is SexyContentWebPage oldPage)
+        //            oldPage.InstancePurpose = (InstancePurposes)Purpose;
+        //#pragma warning restore 618, CS0612
 
         return l.ReturnAsOk(new(pageToInit, razorBuild.UsesHotBuild));
 

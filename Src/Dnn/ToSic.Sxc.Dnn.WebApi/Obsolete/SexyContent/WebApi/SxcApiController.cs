@@ -76,7 +76,7 @@ public abstract partial class SxcApiController() :
     public IApp App => CodeApi.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IBlockDataSource Data => (IBlockDataSource)CodeApi.Data;
+    public IDataSource Data => /*(IBlockDataSource)*/CodeApi.Data;
 
     // Explicit implementation of expected interface, but it should not work in the normal code
     // as the old code sometimes expects Data.Cache.GetContentType

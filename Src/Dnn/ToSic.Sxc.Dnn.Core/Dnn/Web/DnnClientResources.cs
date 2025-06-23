@@ -16,19 +16,19 @@ namespace ToSic.Sxc.Dnn.Web;
 internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader, DnnRequirements dnnRequirements)
     : ServiceBase($"{DnnConstants.LogName}.JsCss", connect: [dnnJsApiHeader, dnnRequirements])
 {
-    public DnnClientResources Init(Page page, bool? forcePre1025Behavior, IBlockBuilder blockBuilder)
+    // #RemovedV20 #OldDnnAntiForgery
+    public DnnClientResources Init(Page page, /*bool? forcePre1025Behavior,*/ IBlockBuilder blockBuilder)
     {
-        _forcePre1025Behavior = forcePre1025Behavior;
+        //_forcePre1025Behavior = forcePre1025Behavior;
         _page = page;
         _blockBuilder = blockBuilder;
         return this;
     }
     private IBlockBuilder _blockBuilder;
     private Page _page;
-    private bool? _forcePre1025Behavior;
+    //private bool? _forcePre1025Behavior;
 
-    internal IList<IPageFeature> Features => _features ??= _blockBuilder?.Run(true, specs: new())?.Features ?? new List<IPageFeature>();
-    private IList<IPageFeature> _features;
+    internal IList<IPageFeature> Features => field ??= _blockBuilder?.Run(true, specs: new())?.Features ?? new List<IPageFeature>();
 
     public IList<IPageFeature> AddEverything(IList<IPageFeature> features = null)
     {
@@ -54,33 +54,36 @@ internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader, DnnRequirements
         // so we have to move adding the header to here.
         // MustAddHeaders may have been set earlier by the engine, or now by the various js added
         l.A($"{nameof(MustAddHeaders)}={MustAddHeaders}");
-        if (MustAddHeaders) dnnJsApiHeader.AddHeaders();
+        if (MustAddHeaders)
+            dnnJsApiHeader.AddHeaders();
 
         return l.ReturnAsOk(features);
     }
 
 
-    /// <summary>
-    /// new in 10.25 - by default jQuery isn't loaded any more
-    /// but older razor templates might still expect it
-    /// and any other old behaviour, incl. no-view defined, etc. should activate compatibility
-    /// </summary>
-    public void EnforcePre1025Behavior()
-    {
-        var l = Log.Fn("Activate Anti-Forgery for compatibility with old behavior");
-        ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
-        MustAddHeaders = true;
-        l.Done();
-    }
+    // #RemovedV20 #OldDnnAntiForgery
+    ///// <summary>
+    ///// new in 10.25 - by default jQuery isn't loaded any more
+    ///// but older razor templates might still expect it
+    ///// and any other old behaviour, incl. no-view defined, etc. should activate compatibility
+    ///// </summary>
+    //public void EnforcePre1025Behavior()
+    //{
+    //    var l = Log.Fn("Activate Anti-Forgery for compatibility with old behavior");
+    //    ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
+    //    MustAddHeaders = true;
+    //    l.Done();
+    //}
 
-    /// <summary>
-    /// new in 10.25 - by default now jQuery isn't loaded!
-    /// but any old behaviour, incl. no-view defined, etc. should activate compatibility
-    /// </summary>
-    /// <returns></returns>
-    public bool NeedsPre1025Behavior() => _forcePre1025Behavior
-                                          ?? (dnnRequirements.RequirementsMet() ? (_blockBuilder?.GetEngine() as IEngineDnnOldCompatibility)?.OldAutoLoadJQueryAndRvt : null)
-                                          ?? true;
+    // #RemovedV20 #OldDnnAntiForgery
+    ///// <summary>
+    ///// new in 10.25 - by default now jQuery isn't loaded!
+    ///// but any old behaviour, incl. no-view defined, etc. should activate compatibility
+    ///// </summary>
+    ///// <returns></returns>
+    //public bool NeedsPre1025Behavior() => _forcePre1025Behavior
+    //                                      ?? (dnnRequirements.RequirementsMet() ? (_blockBuilder?.GetEngine() as IEngineDnnOldCompatibility)?.OldAutoLoadJQueryAndRvt : null)
+    //                                      ?? true;
 
 
     public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss, IList<IPageFeature> overrideFeatures = null)
@@ -142,7 +145,8 @@ internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader, DnnRequirements
 
     private static void RegisterJs(Page page, string version, string path, bool toHead, int priority)
     {
-        if (string.IsNullOrWhiteSpace(path)) return;
+        if (string.IsNullOrWhiteSpace(path))
+            return;
 
         var url = UrlHelpers.QuickAddUrlParameter(path, "v", version);
         if (toHead)

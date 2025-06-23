@@ -75,7 +75,9 @@ public partial class View : PortalModuleBase, IActionable
             var l = Log.Fn(message: nameof(Page_Load), timer: true);
             // todo: this should be dynamic at some future time, because normally once it's been checked, it wouldn't need checking again
             var checkPortalIsReady = true;
-            bool? requiresPre1025Behavior = null; // null = auto-detect, true/false
+
+            // #RemovedV20 #OldDnnAntiForgery
+            //bool? requiresPre1025Behavior = null; // null = auto-detect, true/false
 
             // get the block early, to see any errors separately - before accessing cache (which also uses the block)
             var block = TryCatchAndLogToDnn(() => Block);
@@ -87,7 +89,8 @@ public partial class View : PortalModuleBase, IActionable
                 if (OutputCache?.Existing != null)
                 {
                     checkPortalIsReady = false;
-                    requiresPre1025Behavior = OutputCache.Existing.EnforcePre1025;
+                    // #RemovedV20 #OldDnnAntiForgery
+                    //requiresPre1025Behavior = OutputCache.Existing.EnforcePre1025;
                 }
             }
             catch { /* ignore */ }
@@ -105,17 +108,22 @@ public partial class View : PortalModuleBase, IActionable
                 if (checkPortalIsReady)
                     if (!DnnReadyCheckTurbo.QuickCheckSiteAndAppFoldersAreReady(this, Log))
                         GetService<DnnReadyCheckTurbo>().EnsureSiteAndAppFoldersAreReady(this, block);
-                var blockBuilder = requiresPre1025Behavior == false ? null : BlockBuilder;
-                _dnnClientResources = GetService<DnnClientResources>().Init(Page, null, blockBuilder);
-                _enforcePre1025JQueryLoading = requiresPre1025Behavior ?? _dnnClientResources.NeedsPre1025Behavior();
-                if (_enforcePre1025JQueryLoading) _dnnClientResources.EnforcePre1025Behavior();
+
+                // #RemovedV20 #OldDnnAntiForgery
+                // var blockBuilder = requiresPre1025Behavior == false ? null : BlockBuilder;
+                _dnnClientResources = GetService<DnnClientResources>().Init(Page, /*null,*/ null /*blockBuilder*/);
+
+                // #RemovedV20 #OldDnnAntiForgery
+                //_enforcePre1025JQueryLoading = requiresPre1025Behavior ?? _dnnClientResources.NeedsPre1025Behavior();
+                //if (_enforcePre1025JQueryLoading)
+                //    _dnnClientResources.EnforcePre1025Behavior();
                 return true;
             });
             l.Done();
         });
 
     private DnnClientResources _dnnClientResources;
-    private bool _enforcePre1025JQueryLoading;
+    //private bool _enforcePre1025JQueryLoading;
 
 
     /// <summary>
@@ -181,7 +189,9 @@ public partial class View : PortalModuleBase, IActionable
 
                     // #Lightspeed
                     var lLightSpeed = Log.Fn(message: "Lightspeed", timer: true);
-                    OutputCache?.Save(renderResult, _enforcePre1025JQueryLoading);
+                    
+                    // #RemovedV20 #OldDnnAntiForgery
+                    OutputCache?.Save(renderResult/*, _enforcePre1025JQueryLoading*/);
                     lLightSpeed.Done();
 
                     return true; // dummy result for TryCatchAndLogToDnn

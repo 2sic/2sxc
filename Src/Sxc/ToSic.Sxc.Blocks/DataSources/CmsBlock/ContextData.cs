@@ -3,10 +3,12 @@ using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.DataSources;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks.Internal;
-#if NETFRAMEWORK
-using ToSic.Eav.Apps;
-using CodeInfoService = ToSic.Sys.Code.InfoSystem.CodeInfoService;
-#endif
+
+// 2025-06 removed for v20
+//#if NETFRAMEWORK
+//using ToSic.Eav.Apps;
+//using CodeInfoService = ToSic.Sys.Code.InfoSystem.CodeInfoService;
+//#endif
 
 namespace ToSic.Sxc.DataSources;
 
@@ -23,25 +25,25 @@ namespace ToSic.Sxc.DataSources;
 [PrivateApi("used to be Internal... till 16.01, then changed to private to hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 // ReSharper disable once PartialTypeWithSinglePart
-public partial class ContextData : PassThrough
+public partial class ContextData(DataSourceBase.MyServices services) : PassThrough(services, "Sxc.BlckDs")
 {
     #region Constructor and Init
 
-#if NETFRAMEWORK
-    public ContextData(MyServices services, IAppReaderFactory appReaders, LazySvc<CodeInfoService> codeChanges) : base(services, "Sxc.BlckDs")
-    {
-        ConnectLogs([
-            _appReaders = appReaders,
-            _codeChanges = codeChanges
-        ]);
-    }
-#else
-
-#pragma warning disable IDE0290 // Use primary constructor
-    public ContextData(MyServices services) : base(services, "Sxc.BlckDs")
-#pragma warning restore IDE0290 // Use primary constructor
-    { }
-#endif
+    // 2025-06 removed for v20
+    //#if NETFRAMEWORK
+    //    public ContextData(MyServices services, IAppReaderFactory appReaders, LazySvc<CodeInfoService> codeChanges) : base(services, "Sxc.BlckDs")
+    //    {
+    //        ConnectLogs([
+    //            _appReaders = appReaders,
+    //            _codeChanges = codeChanges
+    //        ]);
+    //    }
+    //#else
+    //#pragma warning disable IDE0290 // Use primary constructor
+    //    public ContextData(MyServices services) : base(services, "Sxc.BlckDs")
+    //#pragma warning restore IDE0290 // Use primary constructor
+    //    { }
+    //#endif
 
     #endregion
 

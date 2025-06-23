@@ -47,16 +47,18 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
         if (view != null)
         {
             // Note: Deprecated feature in v13, remove ca. 14 - should warn
-            // TODO: #WarnDeprecated
-#if NETFRAMEWORK
-            if (contextDataSource is Compatibility.IBlockDataSource old)
-            {
-#pragma warning disable CS0618 // Type or member is obsolete
-                old.Publish.Enabled = view.PublishData;
-                old.Publish.Streams = view.StreamsToPublish;
-#pragma warning restore CS0618 // Type or member is obsolete
-            }
-#endif
+            // #RemovedV20 #ModulePublish
+//            // TODO: #WarnDeprecated
+//#if NETFRAMEWORK
+//            if (contextDataSource is Compatibility.IBlockDataSource old)
+//            {
+//#pragma warning disable CS0618 // Type or member is obsolete
+//                old.Publish.Enabled = view.PublishData;
+//                old.Publish.Streams = view.StreamsToPublish;
+//#pragma warning restore CS0618 // Type or member is obsolete
+//            }
+//#endif
+
             l.A($"use template, & query#{view.Query?.Id}");
             // Append Streams of the Data-Query (this doesn't require a change of the viewDataSource itself)
             if (view.Query != null)

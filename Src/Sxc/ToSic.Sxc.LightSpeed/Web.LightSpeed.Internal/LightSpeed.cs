@@ -51,10 +51,11 @@ internal class LightSpeed(
 
     public bool Save(IRenderResult data) => AddToLightSpeed(data);
 
-#if NETFRAMEWORK
-    public bool Save(IRenderResult data, bool enforcePre1025)
-        => AddToLightSpeed(data, cacheData => cacheData.EnforcePre1025 = enforcePre1025);
-#endif
+    // #RemovedV20 #OldDnnAntiForgery
+    //#if NETFRAMEWORK
+    //    public bool Save(IRenderResult data, bool enforcePre1025)
+    //        => AddToLightSpeed(data, cacheData => cacheData.EnforcePre1025 = enforcePre1025);
+    //#endif
 
     public bool AddToLightSpeed(IRenderResult? data, Action<OutputCacheItem>? doOtherStuff = null)
     {

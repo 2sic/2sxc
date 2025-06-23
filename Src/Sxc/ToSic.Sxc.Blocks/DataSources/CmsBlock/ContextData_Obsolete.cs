@@ -1,37 +1,39 @@
-﻿#if NETFRAMEWORK
-using ToSic.Eav.Apps;
-using ToSic.Sxc.DataSources.Internal.Compatibility;
-using ToSic.Sys.Code.InfoSystem;
-using static ToSic.Sys.Code.Infos.CodeInfoObsolete;
+﻿// 2025-06 removed for v20
 
-namespace ToSic.Sxc.DataSources;
+//#if NETFRAMEWORK
+//using ToSic.Eav.Apps;
+//using ToSic.Sxc.DataSources.Internal.Compatibility;
+//using ToSic.Sys.Code.InfoSystem;
+//using static ToSic.Sys.Code.Infos.CodeInfoObsolete;
 
-partial class ContextData: IBlockDataSource
-{
-    private readonly LazySvc<CodeInfoService> _codeChanges;
+//namespace ToSic.Sxc.DataSources;
 
-    private readonly IAppReaderFactory _appReaders;
+//partial class ContextData: IBlockDataSource
+//{
+//    private readonly LazySvc<CodeInfoService> _codeChanges;
 
-#pragma warning disable 618
-    [Obsolete("Old property on this data source, should really not be used at all. Must add warning in v13, and remove ca. v15")]
-    [PrivateApi]
-    [field: AllowNull, MaybeNull]
-    public CacheWithGetContentType Cache
-    {
-        get
-        {
-            if (field != null)
-                return field;
-            // on first access report problem
-            _codeChanges.Value.Warn(CaV8To17("Data.Cache", "https://go.2sxc.org/brc-13-datasource-cache"));
-            return field = new(_appReaders.Get(this));
-        }
-    }
+//    private readonly IAppReaderFactory _appReaders;
 
-    [PrivateApi("older use case, probably don't publish")]
-    public DataPublishing Publish { get; } = new();
-#pragma warning restore 618
+//#pragma warning disable 618
+//    [Obsolete("Old property on this data source, should really not be used at all. Must add warning in v13, and remove ca. v15")]
+//    [PrivateApi]
+//    [field: AllowNull, MaybeNull]
+//    public CacheWithGetContentType Cache
+//    {
+//        get
+//        {
+//            if (field != null)
+//                return field;
+//            // on first access report problem
+//            _codeChanges.Value.Warn(CaV8To17("Data.Cache", "https://go.2sxc.org/brc-13-datasource-cache"));
+//            return field = new(_appReaders.Get(this));
+//        }
+//    }
+
+//    [PrivateApi("older use case, probably don't publish")]
+//    public DataPublishing Publish { get; } = new();
+//#pragma warning restore 618
     
-}
+//}
 
-#endif
+//#endif

@@ -14,7 +14,8 @@ public interface IOutputCache: IHasLog
 
     bool Save(IRenderResult data);
 
-#if NETFRAMEWORK
-    bool Save(IRenderResult data, bool enforcePre1025);
-#endif
+    // #RemovedV20 #OldDnnAntiForgery
+    //#if NETFRAMEWORK
+    //    bool Save(IRenderResult data, bool enforcePre1025);
+    //#endif
 }

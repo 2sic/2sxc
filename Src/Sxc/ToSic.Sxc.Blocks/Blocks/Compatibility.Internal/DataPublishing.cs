@@ -1,16 +1,18 @@
-﻿#if NETFRAMEWORK
-namespace ToSic.Sxc.DataSources.Internal.Compatibility;
+﻿// 2025-06 removed for v20
 
-/// <summary>
-/// This is for data sources to determine that they can be published as JSON stream from the module.
-/// This was a system we used before queries.
-/// </summary>
-[PrivateApi("older use case, probably obsolete some day")]
-[ShowApiWhenReleased(ShowApiMode.Never)]
-public class DataPublishing
-{
-    public bool Enabled { get; set; } = false;
-    public string Streams { get; set; } = "";
-}
+//#if NETFRAMEWORK
+//namespace ToSic.Sxc.DataSources.Internal.Compatibility;
 
-#endif
+///// <summary>
+///// This is for data sources to determine that they can be published as JSON stream from the module.
+///// This was a system we used before queries.
+///// </summary>
+//[PrivateApi("older use case, probably obsolete some day")]
+//[ShowApiWhenReleased(ShowApiMode.Never)]
+//public class DataPublishing
+//{
+//    public bool Enabled { get; set; } = false;
+//    public string Streams { get; set; } = "";
+//}
+
+//#endif

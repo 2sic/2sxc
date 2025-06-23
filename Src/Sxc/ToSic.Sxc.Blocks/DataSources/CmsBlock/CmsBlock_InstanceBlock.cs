@@ -10,11 +10,13 @@ public sealed partial class CmsBlock
     /// The block for which this DataSource is needed - provides context and configuration
     /// </summary>
     [PrivateApi]
+    [field: AllowNull, MaybeNull]
     internal IBlock Block
     {
         get
         {
-            if (field != null) return field;
+            if (field != null)
+                return field;
 
             if (!Configuration.LookUpEngine.HasSource(LookUpConstants.InstanceContext))
                 throw new("value provider didn't have sxc provider - can't use module data source");
