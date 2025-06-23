@@ -132,7 +132,7 @@
     </Content>
     <Content Include="ClientScripts\readme.md" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\Migrate.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\Require20.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\RequireLatest.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\ToSic.Sxc.Dnn.dnn">
       <SubType>Designer</SubType>
     </Content>
@@ -142,7 +142,7 @@
     <Content Include="DnnPackageBuilder\SqlDataProvider\16.07.01.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\18.03.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\19.00.00.SqlDataProvider" />
-    <Content Include="DnnPackageBuilder\SqlDataProvider\Require.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\RequireMinimal.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="web.config" />
     <None Include="web.Debug.config">

@@ -33,7 +33,7 @@
             <!-- The following script makes sure that the app module is only installed if 2sxc installed/upgraded correctly to v15 -->
             <script type="Install">
               <path>SqlDataProvider</path>
-              <name>Require.SqlDataProvider</name>
+              <name>RequireMinimal.SqlDataProvider</name>
               <version>15.00.00</version>
             </script>
             <script type="Install">
@@ -566,7 +566,7 @@
             <!-- The following script makes sure that the app module is only installed if 2sxc installed/upgraded correctly to v20 -->
             <script type="Install">
               <path>SqlDataProvider</path>
-              <name>Require20.SqlDataProvider</name>
+              <name>RequireLatest.SqlDataProvider</name>
               <version>99.99.99</version>
             </script>
           </scripts>
@@ -701,7 +701,7 @@
             <!-- The following script makes sure that the module is only installed if 2sxc installed/upgraded correctly to v20 -->
             <script type="Install">
               <path>SqlDataProvider</path>
-              <name>Require20.SqlDataProvider</name>
+              <name>RequireLatest.SqlDataProvider</name>
               <version>99.99.99</version>
             </script>
           </scripts>
@@ -1126,7 +1126,7 @@
             <!-- The following script makes sure that the app module is only installed if 2sxc installed/upgraded correctly to v20 -->
             <script type="Install">
               <path>SqlDataProvider</path>
-              <name>Require20.SqlDataProvider</name>
+              <name>RequireLatest.SqlDataProvider</name>
               <version>99.99.99</version>
             </script>
           </scripts>
@@ -1187,7 +1187,7 @@
             <!-- The following script makes sure that the app module is only installed if 2sxc installed/upgraded correctly to v20 -->
             <script type="Install">
               <path>SqlDataProvider</path>
-              <name>Require20.SqlDataProvider</name>
+              <name>RequireLatest.SqlDataProvider</name>
               <version>99.99.99</version>
             </script>
           </scripts>
@@ -1245,7 +1245,7 @@
             <!-- The following script makes sure that the app module is only installed if 2sxc installed/upgraded correctly to v20 -->
             <script type="Install">
               <path>SqlDataProvider</path>
-              <name>Require20.SqlDataProvider</name>
+              <name>RequireLatest.SqlDataProvider</name>
               <version>99.99.99</version>
             </script>
           </scripts>
