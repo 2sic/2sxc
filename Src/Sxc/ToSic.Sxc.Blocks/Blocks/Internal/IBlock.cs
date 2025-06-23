@@ -17,6 +17,8 @@ public interface IBlock: IAppIdentity //, IHasLog
     //// WIP
     //IEntity? Entity { get; }
 
+    public bool IsInnerBlock { get; }
+
     /// <summary>
     /// The module ID or the parent-content-block id, probably not ideal here, but not sure
     /// </summary>

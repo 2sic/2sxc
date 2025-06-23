@@ -6,14 +6,14 @@ using ToSic.Sxc.LookUp.Internal;
 namespace ToSic.Sxc.Blocks.Internal;
 internal class BlockSpecsHelper
 {
-    public static BlockSpecs CompleteInit(BlockOfBase parent, BlockGeneratorHelpers Services, IBlock? parentBlockOrNull, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded, ILog Log)
+    public static BlockSpecs CompleteInit(BlockSpecs currentSpecs, /*BlockOfBase parent,*/ BlockGeneratorHelpers Services, IBlock? parentBlockOrNull, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded, ILog Log)
     {
         var l = Log.Fn<BlockSpecs>();
 
-        var specs = parent.Specs with
+        var specs = currentSpecs with
         {
             ParentBlockOrNull = parentBlockOrNull,
-            RootBlock = parentBlockOrNull?.RootBlock ?? parent, // if parent is null, this is the root block
+            RootBlock = parentBlockOrNull?.RootBlock ?? currentSpecs, // if parent is null, this is the root block
 
             // Note: this is "just" the module id, not the block id
             //ParentId = Context.Module.Id,
@@ -53,7 +53,7 @@ internal class BlockSpecsHelper
 
         // Get App for this block
         var app = Services.AppLazy.Value;
-        app.Init(specs.Context.Site, specs.PureIdentity(), new SxcAppDataConfigSpecs { BlockForLookupOrNull = parent });
+        app.Init(specs.Context.Site, specs.PureIdentity(), new SxcAppDataConfigSpecs { BlockForLookupOrNull = specs });
         specs = specs with
         {
             AppOrNull = app,

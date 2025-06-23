@@ -40,12 +40,15 @@ public partial class View : PortalModuleBase, IActionable
     /// Block needs to self-initialize when first requested, because it's used in the Actions-Menu builder
     /// which runs before page-load
     /// </summary>
-    private IBlock Block => _blockGetOnce.Get(Log,
-        () => LogTimer.DoInTimer(()
-            => GetService<IModuleAndBlockBuilder>().BuildBlock(ModuleConfiguration, null)
-        ), timer: true
-    );
+    private IBlock Block => _blockGetOnce.Get(GetBlock);
     private readonly GetOnce<IBlock> _blockGetOnce = new();
+
+    private IBlock GetBlock()
+    {
+        var l = Log.Fn<IBlock>(timer: true);
+        var block = GetService<IModuleAndBlockBuilder>().BuildBlock(ModuleConfiguration, null);
+        return l.Return(block);
+    }
 
     private IBlockBuilder BlockBuilder => field ??= GetService<IBlockBuilder>().Setup(Block);
 

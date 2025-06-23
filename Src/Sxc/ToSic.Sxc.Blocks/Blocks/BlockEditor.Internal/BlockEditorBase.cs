@@ -11,34 +11,25 @@ public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.MySe
 {
     #region DI and Construction
 
-    public class MyServices : MyServicesBase
+    public class MyServices(
+        GenWorkPlus<WorkBlocks> appBlocks,
+        GenWorkDb<WorkBlocksMod> workBlocksMod,
+        GenWorkDb<WorkEntityPublish> publisher
+        //,
+        //Generator<BlockEditorForModule> blkEdtForMod,
+        //Generator<BlockEditorForEntity> blkEdtForEnt
+        )
+        : MyServicesBase(connect: [workBlocksMod, /*blkEdtForMod, blkEdtForEnt,*/ appBlocks, publisher])
     {
-        public GenWorkDb<WorkBlocksMod> WorkBlocksMod { get; }
-        public GenWorkDb<WorkEntityPublish> Publisher { get; }
-        public GenWorkPlus<WorkBlocks> AppBlocks { get; }
-        public Generator<BlockEditorForModule> BlkEdtForMod { get; }
-        public Generator<BlockEditorForEntity> BlkEdtForEnt { get; }
-
-        public MyServices(
-            GenWorkPlus<WorkBlocks> appBlocks,
-            GenWorkDb<WorkBlocksMod> workBlocksMod,
-            GenWorkDb<WorkEntityPublish> publisher,
-            Generator<BlockEditorForModule> blkEdtForMod,
-            Generator<BlockEditorForEntity> blkEdtForEnt)
-        {
-            ConnectLogs([
-                WorkBlocksMod = workBlocksMod,
-                BlkEdtForMod = blkEdtForMod,
-                BlkEdtForEnt = blkEdtForEnt,
-                AppBlocks = appBlocks,
-                Publisher = publisher
-            ]);
-        }
+        public GenWorkDb<WorkBlocksMod> WorkBlocksMod { get; } = workBlocksMod;
+        public GenWorkDb<WorkEntityPublish> Publisher { get; } = publisher;
+        public GenWorkPlus<WorkBlocks> AppBlocks { get; } = appBlocks;
+        //public Generator<BlockEditorForModule> BlkEdtForMod { get; } = blkEdtForMod;
+        //public Generator<BlockEditorForEntity> BlkEdtForEnt { get; } = blkEdtForEnt;
     }
 
-    internal BlockEditorBase(MyServices services) : base(services, "CG.RefMan")
-    {
-    }
+    internal BlockEditorBase(MyServices services, object[] connect) : base(services, "CG.RefMan", connect: connect)
+    { }
 
     internal void Init(IBlock block) => Block = block;
 

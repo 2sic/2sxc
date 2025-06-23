@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.DataSource;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.DataSource;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Context.Internal;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -14,6 +15,8 @@ public record BlockSpecs : IBlock
 {
     public required int AppId { get; init; }
     public required int ZoneId { get; init; }
+
+    public required bool IsInnerBlock { get; init; }
 
     /// <summary>
     /// The module ID or the parent-content-block id, probably not ideal here, but not sure
@@ -91,5 +94,11 @@ public record BlockSpecs : IBlock
     public IList<IDependentApp> DependentApps { get; } = [];
 
     //List<IPageFeature> BlockFeatures(ILog? log = default);
-    public ILog? Log { get; }
+    //public ILog? Log { get; }
+
+    /// <summary>
+    /// Must override ToString, otherwise any ToString() will result in properties being accessed, which throw because they are not available yet.
+    /// </summary>
+    public override string ToString()
+        => $"Block with App: {this.Show()}; IsInner: {IsInnerBlock}; IsContent: {IsContentApp}; View: {ViewIsReady} {ViewOrNull}; Parent: {ParentId}; Block: {ContentBlockId}";
 }

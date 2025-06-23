@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Blocks.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class BlockOfBase(BlockGeneratorHelpers services, string logName, object[]? connect = default)
-    : ServiceBase<BlockGeneratorHelpers>(services, logName, connect: connect ?? []), IBlock
+    : ServiceBase<BlockGeneratorHelpers>(services, logName, connect: connect ?? []) // , IBlock
 {
     // New: WIP replacing the block with a stateless record
     public BlockSpecs Specs { get; protected set; } = null!;
@@ -53,15 +53,6 @@ public abstract class BlockOfBase(BlockGeneratorHelpers services, string logName
     public IView? ViewOrNull => Specs.ViewOrNull;
 
     public bool ViewIsReady => Specs.ViewIsReady;
-
-    //public BlockSpecs SwapView(IView value)
-    //{
-    //    var l = Log.Fn($"set{nameof(value)}");
-    //    Specs = Specs with { ViewOrNull = value };
-    //    Data = null!; // reset this if the view changed...
-    //    l.Done();
-    //    return Specs;
-    //}
 
     #endregion
 

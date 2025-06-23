@@ -4,20 +4,12 @@ using ToSic.Sxc.Apps.Sys;
 namespace ToSic.Sxc.Blocks.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class BlockEditorForEntity : BlockEditorBase
+public class BlockEditorForEntity(
+    BlockEditorBase.MyServices services,
+    GenWorkDb<WorkEntityUpdate> entityUpdate,
+    IAppsCatalog appsCatalog)
+    : BlockEditorBase(services, connect: [entityUpdate, appsCatalog])
 {
-    private readonly IAppsCatalog _appsCatalog;
-    private readonly GenWorkDb<WorkEntityUpdate> _entityUpdate;
-
-    public BlockEditorForEntity(MyServices services, GenWorkDb<WorkEntityUpdate> entityUpdate, IAppsCatalog appsCatalog)
-        : base(services)
-    {
-        ConnectLogs([
-            _entityUpdate = entityUpdate,
-            _appsCatalog = appsCatalog,
-        ]);
-    }
-
     #region methods which the entity-implementation must customize 
 
     protected override void SavePreviewTemplateId(Guid templateGuid)
@@ -33,8 +25,8 @@ public class BlockEditorForEntity : BlockEditorBase
         var appName = "";
         if (appId.HasValue)
         {
-            var zoneAppId = _appsCatalog.AppIdentity(appId.Value);
-            appName = _appsCatalog.AppNameId(zoneAppId);
+            var zoneAppId = appsCatalog.AppIdentity(appId.Value);
+            appName = appsCatalog.AppNameId(zoneAppId);
         }
         UpdateValue(BlockBuildingConstants.CbPropertyApp, appName);
     }
@@ -62,7 +54,7 @@ public class BlockEditorForEntity : BlockEditorBase
     {
         var parentBlock = Block.ParentBlockOrNull!; // must exist on an entity-block
         var parentBlockAppState = ((IAppWithInternal)parentBlock.App).AppReader;
-        _entityUpdate.New(parentBlockAppState)
+        entityUpdate.New(parentBlockAppState)
             .UpdateParts(Math.Abs(Block.ContentBlockId), newValues, new());
     }
 

@@ -36,13 +36,14 @@ public sealed class BlockOfEntity(BlockGeneratorHelpers services, LazySvc<AppFin
         {
             //GetData = GetData,
             Context = ctx,
-            //Entity = blockEntity,
-            IsContentApp = isContentApp,
             AppId = blockId.AppId,
             ZoneId = parentBlock.ZoneId,
+            //Entity = blockEntity,
+            IsContentApp = isContentApp,
+            IsInnerBlock = true,
         };
 
-        Specs = BlockSpecsHelper.CompleteInit(this, Services, parentBlock, blockId, -blockEntity.EntityId, Log);
+        Specs = BlockSpecsHelper.CompleteInit(Specs, /*this,*/ Services, parentBlock, blockId, -blockEntity.EntityId, Log);
 
         Specs = Specs with
         {

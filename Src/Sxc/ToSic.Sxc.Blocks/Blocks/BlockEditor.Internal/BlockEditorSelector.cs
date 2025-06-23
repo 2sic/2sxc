@@ -3,9 +3,7 @@
 namespace ToSic.Sxc.Blocks.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class BlockEditorSelector(
-    LazySvc<BlockEditorForModule> blkEdtForMod,
-    LazySvc<BlockEditorForEntity> blkEdtForEnt)
+public class BlockEditorSelector(LazySvc<BlockEditorForModule> blkEdtForMod, LazySvc<BlockEditorForEntity> blkEdtForEnt)
     : ServiceBase($"{SxcLogName}.BlEdSl", connect: [blkEdtForMod, blkEdtForEnt])
 {
     public BlockEditorBase GetEditor(IBlock block)
@@ -16,11 +14,10 @@ public class BlockEditorSelector(
         return l.Return(editor);
     }
 
-    private BlockEditorBase GetEditorInternal(IBlock block) =>
-        block switch
+    private BlockEditorBase GetEditorInternal(IBlock block)
+        => block.IsInnerBlock switch
         {
-            BlockOfModule => blkEdtForMod.Value,
-            BlockOfEntity => blkEdtForEnt.Value,
-            _ => throw new("Can't find BlockEditor - the base block type in unknown")
+            false => blkEdtForMod.Value,
+            true => blkEdtForEnt.Value,
         };
 }

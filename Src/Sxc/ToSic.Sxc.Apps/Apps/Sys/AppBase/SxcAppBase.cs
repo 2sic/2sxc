@@ -134,7 +134,7 @@ public abstract partial class SxcAppBase(SxcAppBase.MyServices services, string?
         AppReaderInt = services.AppReaders.Get(this);
 
         // for deferred initialization as needed
-        _dataConfigSpecs = dataSpecs;
+        _dataConfigSpecs = dataSpecs ?? new AppDataConfigSpecs();
 
         return l.Return(this);
     }

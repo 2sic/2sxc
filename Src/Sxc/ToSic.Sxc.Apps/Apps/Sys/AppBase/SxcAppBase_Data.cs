@@ -15,7 +15,7 @@ partial class SxcAppBase
     private IAppDataConfiguration AppDataConfig => _appDataConfigOnce.Get(() =>
     {
         // New v17
-        var config = Services.DataConfigProvider.GetDataConfiguration(this, _dataConfigSpecs ?? new AppDataConfigSpecs());
+        var config = Services.DataConfigProvider.GetDataConfiguration(this, _dataConfigSpecs);
 
         // needed to initialize data - must always happen a bit later because the show-draft info isn't available when creating the first App-object.
         // todo: later this should be moved to initialization of this object
@@ -24,7 +24,7 @@ partial class SxcAppBase
 
     })!;
     private readonly GetOnce<IAppDataConfiguration> _appDataConfigOnce = new();
-    private AppDataConfigSpecs? _dataConfigSpecs;
+    private AppDataConfigSpecs _dataConfigSpecs = null!;
 
     #region Data
 

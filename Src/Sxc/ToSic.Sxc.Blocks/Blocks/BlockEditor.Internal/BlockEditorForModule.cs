@@ -3,17 +3,12 @@
 namespace ToSic.Sxc.Blocks.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class BlockEditorForModule : BlockEditorBase
+public class BlockEditorForModule(
+    BlockEditorBase.MyServices services,
+    LazySvc<IPlatformModuleUpdater> platformModuleUpdater)
+    : BlockEditorBase(services, connect: [platformModuleUpdater])
 {
-    public BlockEditorForModule(MyServices services,
-        LazySvc<IPlatformModuleUpdater> platformModuleUpdater) : base(services)
-    {
-        ConnectLogs([_platformModuleUpdater = platformModuleUpdater]);
-    }
-
-    private readonly LazySvc<IPlatformModuleUpdater> _platformModuleUpdater;
-
-    private IPlatformModuleUpdater PlatformModuleUpdater => _platformModuleUpdater.Value;
+    private IPlatformModuleUpdater PlatformModuleUpdater => platformModuleUpdater.Value;
 
 
     protected override void SavePreviewTemplateId(Guid templateGuid)
