@@ -166,7 +166,7 @@
               <name>ToSic.Eav.Work.dll</name>
             </assembly>
             <assembly>
-              <name>ToSic.Lib.LookUp.dll</name>
+              <name>ToSic.Eav.LookUp.dll</name>
             </assembly>
             <assembly>
               <name>ToSic.Sxc.Adam.dll</name>
