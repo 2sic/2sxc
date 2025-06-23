@@ -14,15 +14,9 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing;
 /// Note that it's probably not yet complete. As of now, it only provides ?x=y&a=b stuff,
 /// but if Blazor has any cute-url system like x/y/a/b this would probably not work yet
 /// </remarks>
-internal class HttpBlazor : HttpAbstractionBase, IHttp
+internal class HttpBlazor(IHttpContextAccessor contextAccessor, NavigationManager navigationManager) : HttpAbstractionBase, IHttp
 {
-    private readonly NavigationManager _navigationManager;
-
-    public HttpBlazor(IHttpContextAccessor contextAccessor, NavigationManager navigationManager)
-    {
-        _navigationManager = navigationManager;
-        Current = contextAccessor?.HttpContext;
-    }
+    public override HttpContext Current => contextAccessor?.HttpContext!;
 
     public override NameValueCollection QueryStringParams
     {
@@ -43,7 +37,7 @@ internal class HttpBlazor : HttpAbstractionBase, IHttp
             {
 
                 // Sample taken from https://chrissainty.com/working-with-query-strings-in-blazor/
-                var uri = _navigationManager.ToAbsoluteUri(_navigationManager.Uri);
+                var uri = navigationManager.ToAbsoluteUri(navigationManager.Uri);
                 var queryBits = QueryHelpers.ParseQuery(uri.Query);
                     
                 if (!queryBits.Any()) 

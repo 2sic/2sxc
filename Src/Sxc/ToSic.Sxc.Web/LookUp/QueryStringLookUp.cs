@@ -13,8 +13,8 @@ namespace ToSic.Sxc.LookUp;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class QueryStringLookUp(LazySvc<IHttp> httpLazy) : LookUpBase(LookUpConstants.SourceQueryString, "LookUp in QueryString")
 {
-    private NameValueCollection _source;
-    private NameValueCollection _originalParams;
+    private NameValueCollection? _source;
+    private NameValueCollection? _originalParams;
 
 
     public override string Get(string key, string format)
@@ -22,15 +22,18 @@ public class QueryStringLookUp(LazySvc<IHttp> httpLazy) : LookUpBase(LookUpConst
         _source ??= httpLazy.Value?.QueryStringParams ?? [];
 
         // Special handling when having original parameters in query string.
-        var originalParametersQueryStringValue = _source[OriginalParameters.NameInUrlForOriginalParameters];
+        var originalParametersQueryStringValue = _source[OriginalParameters.NameInUrlForOriginalParameters]!;
         var overrideParam = GetOverrideParam(key, originalParametersQueryStringValue);
 
-        return !string.IsNullOrEmpty(overrideParam) ? overrideParam : _source[key];
+        return !string.IsNullOrEmpty(overrideParam)
+            ? overrideParam!
+            : _source[key] ?? "";
     }
 
-    private string GetOverrideParam(string key, string originalParametersQueryStringValue)
+    private string? GetOverrideParam(string key, string originalParametersQueryStringValue)
     {
-        if (string.IsNullOrEmpty(originalParametersQueryStringValue)) return string.Empty;
+        if (string.IsNullOrEmpty(originalParametersQueryStringValue))
+            return string.Empty;
 
         _originalParams ??= OriginalParameters.GetOverrideParams(originalParametersQueryStringValue);
 

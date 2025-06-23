@@ -42,5 +42,5 @@ public interface IHttp
     ///// </summary>
     //IDictionary<object, object> Items { get; }
 
-    string GetCookie(string cookieName);
+    string? GetCookie(string cookieName);
 }

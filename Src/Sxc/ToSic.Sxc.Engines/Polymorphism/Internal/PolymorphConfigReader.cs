@@ -47,7 +47,7 @@ public class PolymorphConfigReader(LazySvc<ServiceSwitcher<IPolymorphismResolver
 
     public string? Edition()
     {
-        var l = Log.Fn<string>();
+        var l = Log.Fn<string?>();
         try
         {
             var resolver = Configuration.Resolver;

@@ -12,12 +12,12 @@ namespace ToSic.Sxc.Web.Internal.DotNet;
 public abstract class HttpAbstractionBase: IHttp
 {
     /// <inheritdoc />
-    public HttpContext Current { get; protected set; }
+    public abstract HttpContext Current { get; }
 
     #region Request and properties thereof
 
     /// <inheritdoc />
-    public HttpRequest Request => Current?.Request;
+    public HttpRequest Request => Current?.Request!;
 
     /// <inheritdoc />
     public abstract NameValueCollection QueryStringParams { get; }
@@ -25,20 +25,23 @@ public abstract class HttpAbstractionBase: IHttp
     /// <inheritdoc />
     public List<KeyValuePair<string, string>> QueryStringKeyValuePairs()
     {
-        if (_queryStringKeyValuePairs != null) return _queryStringKeyValuePairs;
+        if (_queryStringKeyValuePairs != null)
+            return _queryStringKeyValuePairs;
         var qs = QueryStringParams;
-        _queryStringKeyValuePairs = qs?.AllKeys
-                                        .Select(key => new KeyValuePair<string, string>(key, qs[key]))
+        _queryStringKeyValuePairs = qs
+                                        ?.AllKeys
+                                        .Select(key => new KeyValuePair<string, string>(key!, qs[key]!))
                                         .ToList()
                                     ?? [];
         return _queryStringKeyValuePairs;
     }
-    private List<KeyValuePair<string, string>> _queryStringKeyValuePairs;
+    private List<KeyValuePair<string, string>>? _queryStringKeyValuePairs;
 
 
-    public string GetCookie(string cookieName)
+    public string? GetCookie(string cookieName)
     {
-        if (Request == null) return null;
+        if (Request == null!)
+            return null;
 
 #if NETFRAMEWORK
         return Request.Cookies[cookieName]?.Value;
