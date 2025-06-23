@@ -4,7 +4,6 @@ using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.CodeApi.Internal;
-using ToSic.Sxc.Compatibility.Internal;
 using ToSic.Sxc.Compatibility.RazorPermissions;
 using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Data.Sys.Wrappers;
@@ -28,15 +27,16 @@ namespace ToSic.SexyContent.Razor;
 public abstract class SexyContentWebPage : 
     RazorComponentBase,
     ICreateInstance,
-    IHasDnn,
+    IHasDnn
     // #RemovedV20 #ModulePublish
 //#pragma warning disable CS0618 // Type or member is obsolete
 //    IDnnRazorCustomize, 
 //#pragma warning restore CS0618 // Type or member is obsolete
-    IDynamicCodeBeforeV10,
-#pragma warning disable 618
-    IAppAndDataHelpers
-#pragma warning restore 618
+    // #RemovedV20 #IAppAndDataHelpers
+    //IDynamicCodeBeforeV10
+//#pragma warning disable 618
+//    IAppAndDataHelpers
+//#pragma warning restore 618
 {
     internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
@@ -217,9 +217,10 @@ public abstract class SexyContentWebPage :
     [Obsolete("Use Header.Presentation instead")]
     public dynamic ListPresentation => CodeApi.Header?.Presentation;
 
-    [Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
-    [field: Obsolete("don't use any more")]
-    public List<Element> List => field ??= new CodeApiServiceObsolete(ExCtx).ElementList;
+    // #RemovedV20 #Element
+    //[Obsolete("This is an old way used to loop things - shouldn't be used any more - will be removed in a future version")]
+    //[field: Obsolete("don't use any more")]
+    //public List<Element> List => field ??= new CodeApiServiceObsolete(ExCtx).ElementList;
 #pragma warning restore 618
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />

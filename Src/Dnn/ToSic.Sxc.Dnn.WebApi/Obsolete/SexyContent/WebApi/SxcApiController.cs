@@ -9,19 +9,16 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
-using ToSic.Sxc.Compatibility.Internal;
 using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.DataSources.Internal.Compatibility;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Services;
-using IApp = ToSic.Sxc.Apps.IApp;
-
-using IFolder = ToSic.Sxc.Adam.IFolder;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
 using ToSic.Sxc.Sys.ExecutionContext;
+using IApp = ToSic.Sxc.Apps.IApp;
+using IFolder = ToSic.Sxc.Adam.IFolder;
 
 // ReSharper disable InheritdocInvalidUsage
 
@@ -42,13 +39,15 @@ namespace ToSic.SexyContent.WebApi;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract partial class SxcApiController() :
     DnnSxcCustomControllerBase("OldApi"),
-    IDynamicCode, IHasDnn,
+    IDynamicCode,
+    IHasDnn,
     ICreateInstance,
     IDynamicWebApi,
-    IDynamicCodeBeforeV10,
-#pragma warning disable 618
-    IAppAndDataHelpers,
-#pragma warning restore 618
+    // #RemovedV20 #IAppAndDataHelpers
+    //IDynamicCodeBeforeV10
+    //#pragma warning disable 618
+    //    IAppAndDataHelpers,
+    //#pragma warning restore 618
     IHasCodeLog
 {
     internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
@@ -166,8 +165,9 @@ public abstract partial class SxcApiController() :
     [Obsolete("please use Header.Presentation instead")]
     public dynamic ListPresentation => CodeApi.Header?.Presentation;
 
-    [Obsolete("This is an old way used to loop things. Use Data[\"Default\"] instead. Will be removed in 2sxc v10")]
-    public List<Element> List => new CodeApiServiceObsolete(ExCtx).ElementList;
+    // #RemovedV20 #Element
+    //[Obsolete("This is an old way used to loop things. Use Data[\"Default\"] instead. Will be removed in 2sxc v10")]
+    //public List<Element> List => new CodeApiServiceObsolete(ExCtx).ElementList;
 
     #endregion
 
@@ -198,9 +198,9 @@ public abstract partial class SxcApiController() :
 
     #region Link & Edit - added in 2sxc 10.01
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => CodeApi?.Link;
+    public ILinkService Link => CodeApi?.Link!;
     /// <inheritdoc cref="IDynamicCode.Edit" />
-    public IEditService Edit => CodeApi?.Edit;
+    public IEditService Edit => CodeApi?.Edit!;
 
     #endregion
 

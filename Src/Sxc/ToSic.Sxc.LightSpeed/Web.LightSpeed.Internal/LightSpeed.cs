@@ -51,7 +51,7 @@ internal class LightSpeed(
 
     public bool Save(IRenderResult data) => AddToLightSpeed(data);
 
-    // #RemovedV20 #OldDnnAntiForgery
+    // #RemovedV20 #OldDnnAutoJQuery
     //#if NETFRAMEWORK
     //    public bool Save(IRenderResult data, bool enforcePre1025)
     //        => AddToLightSpeed(data, cacheData => cacheData.EnforcePre1025 = enforcePre1025);

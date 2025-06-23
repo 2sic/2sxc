@@ -55,7 +55,7 @@ internal class DnnDynamicCodeService: DynamicCodeService
         );
         _scopedServices.DnnPageChanges.Value.Apply(Page, changes);
 
-        // #RemovedV20 #OldDnnAntiForgery
+        // #RemovedV20 #OldDnnAutoJQuery
         var dnnClientResources = _scopedServices.DnnClientResources.Value.Init(Page, /*false,*/ null);
         dnnClientResources.AddEverything(changes?.Features);
         l.Done();

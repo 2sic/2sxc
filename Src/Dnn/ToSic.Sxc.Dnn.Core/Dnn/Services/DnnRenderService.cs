@@ -45,7 +45,7 @@ internal class DnnRenderService : RenderService
     private void DnnPageProcess(Page dnnPage, IRenderResult result)
     {
         _dnnPageChanges.Value.Apply(dnnPage, result);
-        // #RemovedV20 #OldDnnAntiForgery
+        // #RemovedV20 #OldDnnAutoJQuery
         _dnnClientResources.Value.Init(dnnPage, /*null,*/ null).AddEverything(result.Features);
     }
 }

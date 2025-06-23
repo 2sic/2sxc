@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn.Web;
 internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader, DnnRequirements dnnRequirements)
     : ServiceBase($"{DnnConstants.LogName}.JsCss", connect: [dnnJsApiHeader, dnnRequirements])
 {
-    // #RemovedV20 #OldDnnAntiForgery
+    // #RemovedV20 #OldDnnAutoJQuery
     public DnnClientResources Init(Page page, /*bool? forcePre1025Behavior,*/ IBlockBuilder blockBuilder)
     {
         //_forcePre1025Behavior = forcePre1025Behavior;
@@ -61,7 +61,7 @@ internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader, DnnRequirements
     }
 
 
-    // #RemovedV20 #OldDnnAntiForgery
+    // #RemovedV20 #OldDnnAutoJQuery
     ///// <summary>
     ///// new in 10.25 - by default jQuery isn't loaded any more
     ///// but older razor templates might still expect it
@@ -75,7 +75,7 @@ internal class DnnClientResources(DnnJsApiHeader dnnJsApiHeader, DnnRequirements
     //    l.Done();
     //}
 
-    // #RemovedV20 #OldDnnAntiForgery
+    // #RemovedV20 #OldDnnAutoJQuery
     ///// <summary>
     ///// new in 10.25 - by default now jQuery isn't loaded!
     ///// but any old behaviour, incl. no-view defined, etc. should activate compatibility

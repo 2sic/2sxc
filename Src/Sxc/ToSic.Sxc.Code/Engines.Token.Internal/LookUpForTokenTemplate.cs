@@ -2,7 +2,6 @@
 using System.Text.RegularExpressions;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.LookUp.Sources;
-using ToSic.Eav.LookUp;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys;

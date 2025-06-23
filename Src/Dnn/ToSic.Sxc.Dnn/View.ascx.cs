@@ -76,7 +76,7 @@ public partial class View : PortalModuleBase, IActionable
             // todo: this should be dynamic at some future time, because normally once it's been checked, it wouldn't need checking again
             var checkPortalIsReady = true;
 
-            // #RemovedV20 #OldDnnAntiForgery
+            // #RemovedV20 #OldDnnAutoJQuery
             //bool? requiresPre1025Behavior = null; // null = auto-detect, true/false
 
             // get the block early, to see any errors separately - before accessing cache (which also uses the block)
@@ -89,7 +89,7 @@ public partial class View : PortalModuleBase, IActionable
                 if (OutputCache?.Existing != null)
                 {
                     checkPortalIsReady = false;
-                    // #RemovedV20 #OldDnnAntiForgery
+                    // #RemovedV20 #OldDnnAutoJQuery
                     //requiresPre1025Behavior = OutputCache.Existing.EnforcePre1025;
                 }
             }
@@ -109,11 +109,11 @@ public partial class View : PortalModuleBase, IActionable
                     if (!DnnReadyCheckTurbo.QuickCheckSiteAndAppFoldersAreReady(this, Log))
                         GetService<DnnReadyCheckTurbo>().EnsureSiteAndAppFoldersAreReady(this, block);
 
-                // #RemovedV20 #OldDnnAntiForgery
+                // #RemovedV20 #OldDnnAutoJQuery
                 // var blockBuilder = requiresPre1025Behavior == false ? null : BlockBuilder;
                 _dnnClientResources = GetService<DnnClientResources>().Init(Page, /*null,*/ null /*blockBuilder*/);
 
-                // #RemovedV20 #OldDnnAntiForgery
+                // #RemovedV20 #OldDnnAutoJQuery
                 //_enforcePre1025JQueryLoading = requiresPre1025Behavior ?? _dnnClientResources.NeedsPre1025Behavior();
                 //if (_enforcePre1025JQueryLoading)
                 //    _dnnClientResources.EnforcePre1025Behavior();
@@ -190,7 +190,7 @@ public partial class View : PortalModuleBase, IActionable
                     // #Lightspeed
                     var lLightSpeed = Log.Fn(message: "Lightspeed", timer: true);
                     
-                    // #RemovedV20 #OldDnnAntiForgery
+                    // #RemovedV20 #OldDnnAutoJQuery
                     OutputCache?.Save(renderResult/*, _enforcePre1025JQueryLoading*/);
                     lLightSpeed.Done();
 
