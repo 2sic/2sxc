@@ -72,8 +72,10 @@ public class DnnModule: Module<ModuleInfo>
     {
         get
         {
-            if (_blockIdentifier != null) return _blockIdentifier;
-            if (UnwrappedModule == null) return null;
+            if (_blockIdentifier != null)
+                return _blockIdentifier;
+            if (UnwrappedModule == null)
+                return null;
 
             // find ZoneId, AppId and prepare settings for next values
             // note: this is the correct zone, even if the module is shared from another portal, because the Site is prepared correctly

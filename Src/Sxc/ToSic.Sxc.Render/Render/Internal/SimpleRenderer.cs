@@ -27,7 +27,7 @@ public class SimpleRenderer(Generator<BlockOfEntity> blkFrmEntGen, Generator<IBl
 
         // render it
         l.A("found, will render");
-        var blockOfEntity = blkFrmEntGen.New().Init(parentBlock, entity);
+        var blockOfEntity = blkFrmEntGen.New().GetBlockOfEntity(parentBlock, entity);
         var builder = blockBuilderGenerator.New().Setup(blockOfEntity);
         var result = builder.Run(false, specs: new() { Data = data });
 

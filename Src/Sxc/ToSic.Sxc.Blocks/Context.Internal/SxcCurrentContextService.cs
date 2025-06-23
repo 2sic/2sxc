@@ -3,6 +3,7 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Internal;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Internal.DotNet;
 using ToSic.Sys.Users.Permissions;
@@ -16,9 +17,10 @@ internal partial class SxcCurrentContextService(
     Generator<IContextOfApp> appCtxGenerator,
     LazySvc<IFeaturesService> featuresService,
     LazySvc<IAppReaderFactory> appReaderFactory,
+    LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
     LazySvc<IHttp> http)
     : ContextResolverBase(siteCtxGenerator, appCtxGenerator, "Sxc.CtxRes",
-        connect: [appIdResolverLazy, siteCtxGenerator, appCtxGenerator, featuresService, http, appReaderFactory]),
+        connect: [appIdResolverLazy, siteCtxGenerator, appCtxGenerator, featuresService, http, appReaderFactory, bdsFactoryLazy]),
         ISxcCurrentContextService
 {
     private const string CookieTemplate = "app-{0}-data-preview";
@@ -82,6 +84,24 @@ internal partial class SxcCurrentContextService(
     }
     private IBlock? _block;
 
+    public IBlock SwapBlockView(IView newView)
+    {
+        var specs = _block as BlockSpecs
+            ??throw new NullReferenceException("Block is not attached, cannot swap view.");
+
+        var newSpecs = specs with
+        {
+            ViewOrNull = newView,
+        };
+        newSpecs = newSpecs with
+        {
+            Data = bdsFactoryLazy.Value.GetContextDataSource(newSpecs, newSpecs.AppOrNull?.ConfigurationProvider)
+        };
+        //var newBlock = specs.SwapView(newView);
+        _block = newSpecs;
+        return _block;
+    }
+
     public IBlock? BlockOrNull() => _block;
 
     public IBlock BlockRequired() => BlockOrNull()
@@ -91,6 +111,7 @@ internal partial class SxcCurrentContextService(
                                                      ?? throw new("Block context required but not known. It was not attached.");
 
     public IContextOfBlock? BlockContextOrNull() => _block?.Context;
+
 
 
     #endregion

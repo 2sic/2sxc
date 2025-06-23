@@ -15,7 +15,7 @@ public class BlockConfiguration: EntityBasedWithLog, IAppIdentity
 
     public IEntity? PreviewViewEntity { get; }
 
-    public IBlockIdentifier? BlockIdentifierOrNull;
+    public IBlockIdentifier? BlockIdentifierOrNull { get; set; }
 
     private readonly Generator<QueryDefinitionBuilder> _qDefBuilder;
 

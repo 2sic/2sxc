@@ -8,17 +8,12 @@ using ToSic.Sxc.Dnn.Context;
 
 namespace ToSic.Sxc.Dnn;
 
-internal class DnnModuleAndBlockBuilder: ModuleAndBlockBuilder
+internal class DnnModuleAndBlockBuilder(
+    Generator<IModule> moduleGenerator,
+    Generator<IContextOfBlock> contextGenerator,
+    Generator<BlockOfModule> blockGenerator)
+    : ModuleAndBlockBuilder(blockGenerator, DnnConstants.LogName, connect: [moduleGenerator, contextGenerator])
 {
-    public DnnModuleAndBlockBuilder(Generator<IModule> moduleGenerator, Generator<IContextOfBlock> contextGenerator, Generator<BlockOfModule> blockGenerator) : base(blockGenerator, DnnConstants.LogName)
-    {
-        ConnectLogs([
-            _moduleGenerator = moduleGenerator,
-            _contextGenerator = contextGenerator
-        ]);
-    }
-    private readonly Generator<IModule> _moduleGenerator;
-    private readonly Generator<IContextOfBlock> _contextGenerator;
     private ILog ParentLog => (Log as Log)?.Parent ?? Log;
 
 
@@ -30,7 +25,7 @@ internal class DnnModuleAndBlockBuilder: ModuleAndBlockBuilder
         l.A($"Page Id on DNN Module: {moduleInfo.TabID} - should be {pageId}");
 
         ThrowIfModuleIsNull(pageId, moduleId, moduleInfo);
-        var module = ((DnnModule)_moduleGenerator.New()).Init(moduleInfo);
+        var module = ((DnnModule)moduleGenerator.New()).Init(moduleInfo);
 
         return l.Return(module, $"Page Id on IModule: {module.BlockIdentifier} - should be {pageId}");
     }
@@ -52,7 +47,7 @@ internal class DnnModuleAndBlockBuilder: ModuleAndBlockBuilder
     private IContextOfBlock InitDnnSiteModuleAndBlockContext(ModuleInfo dnnModule, int? pageId)
     {
         var l = Log.Fn<IContextOfBlock>($"{nameof(pageId)}: {pageId}, {nameof(dnnModule.ModuleID)}: {dnnModule.ModuleID}");
-        var context = _contextGenerator.New();
+        var context = contextGenerator.New();
         l.A($"Will try-swap module info of {dnnModule.ModuleID} into site");
         ((DnnSite)context.Site).TryInitModule(dnnModule, ParentLog);
         l.A("Will init module");

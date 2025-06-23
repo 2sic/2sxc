@@ -53,7 +53,7 @@ public class DnnGetBlock(
                 return l.Return(FindInnerContentParentBlock(block, blockId, blockIds), $"from {HeaderContentBlockList}");
         }
 
-        var entBlock = blockFromEntity.New().Init(block, null, blockId);
+        var entBlock = blockFromEntity.New().GetBlockOfEntity(block, null, blockId);
 
         return l.Return(entBlock);
     }
@@ -70,7 +70,7 @@ public class DnnGetBlock(
             var id = int.Parse(parentIds[0]);
             if (!int.TryParse(parentIds[1], out var cbid) || id == cbid || cbid >= 0) continue;
             if (cbid == contentBlockId) break; // we are done, because block should be parent/ancestor of cbid
-            parent = blockFromEntity.New().Init(parent, null, cbid);
+            parent = blockFromEntity.New().GetBlockOfEntity(parent, null, cbid);
         }
 
         return parent;

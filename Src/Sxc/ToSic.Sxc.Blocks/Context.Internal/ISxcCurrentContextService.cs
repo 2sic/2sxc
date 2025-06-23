@@ -40,4 +40,5 @@ public interface ISxcCurrentContextService: ICurrentContextService, ISxcAppCurre
 
     IBlock BlockRequired();
 
+    IBlock SwapBlockView(IView newView);
 }

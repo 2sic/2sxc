@@ -79,7 +79,8 @@ internal class OqtModule: Module<Module>
     {
         get
         {
-            if (_blockIdentifier != null) return _blockIdentifier;
+            if (_blockIdentifier != null)
+                return _blockIdentifier;
 
             // find ZoneId, AppId and prepare settings for next values
             var zoneId = _site.ZoneId; // ZoneMapper.GetZoneId(UnwrappedContents.SiteId);

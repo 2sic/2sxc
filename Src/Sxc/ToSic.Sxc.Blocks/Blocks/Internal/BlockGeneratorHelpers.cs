@@ -5,7 +5,7 @@ using ToSic.Sxc.DataSources.Internal;
 
 namespace ToSic.Sxc.Blocks.Internal;
 
-public class BlockServices(GenWorkPlus<WorkViews> workViews, GenWorkPlus<WorkBlocks> appBlocks, LazySvc<BlockDataSourceFactory> bdsFactoryLazy, LazySvc<App> appLazy)
+public class BlockGeneratorHelpers(GenWorkPlus<WorkViews> workViews, GenWorkPlus<WorkBlocks> appBlocks, LazySvc<BlockDataSourceFactory> bdsFactoryLazy, LazySvc<App> appLazy)
     : MyServicesBase(connect: [bdsFactoryLazy, appLazy, workViews, appBlocks])
 {
     internal LazySvc<BlockDataSourceFactory> BdsFactoryLazy { get; } = bdsFactoryLazy;

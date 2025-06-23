@@ -24,7 +24,7 @@ public static class SxcBlocksStartup
         // Note: not sure if this is the best way, it's connected to the blocks needing services
         services.TryAddTransient<BlockOfModule>();
         services.TryAddTransient<BlockOfEntity>();
-        services.TryAddTransient<BlockServices>();
+        services.TryAddTransient<BlockGeneratorHelpers>();
 
         services.TryAddTransient<BlockEditorSelector>();
 

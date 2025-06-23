@@ -180,7 +180,7 @@ internal class LightSpeed(
     /// <returns>list of paths to monitor</returns>
     private IList<string> AppPaths(List<IAppReader> dependentApps)
     {
-        if ((_block as BlockOfModule)?.AppOrNull is not SxcAppBase app)
+        if (_block?.AppOrNull is not SxcAppBase app)
             return null;
         if (dependentApps.SafeNone())
             return null;

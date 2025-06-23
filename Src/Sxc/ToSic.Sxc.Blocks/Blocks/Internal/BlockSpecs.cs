@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.DataSource;
+﻿using ToSic.Eav.DataSource;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Context.Internal;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -11,18 +10,17 @@ namespace ToSic.Sxc.Blocks.Internal;
 /// </summary>
 [PrivateApi("Was InternalApi_DoNotUse_... till v17")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public record BlockSpecs : IAppIdentity, IBlock
+public record BlockSpecs : IBlock
 {
-    public int AppId { get; init; }
-    public int ZoneId { get; init; }
-
+    public required int AppId { get; init; }
+    public required int ZoneId { get; init; }
 
     /// <summary>
     /// The module ID or the parent-content-block id, probably not ideal here, but not sure
     /// </summary>
-    public int ParentId => Context?.Module?.Id ?? 0;
+    public int ParentId => Context.Module?.Id ?? 0;
 
-    public List<ProblemReport> Problems { get; init; }
+    public List<ProblemReport> Problems { get; init; } = [];
 
     public int ContentBlockId { get; init; }
 
@@ -31,16 +29,14 @@ public record BlockSpecs : IAppIdentity, IBlock
     /// <summary>
     /// The context we're running in, with tenant, container etc.
     /// </summary>
-    public IContextOfBlock Context { get; init; }
+    public required IContextOfBlock Context { get; init; }
 
     /// <summary>
     /// The view which will be used to render this block
     /// </summary>
     public IView View => ViewOrNull ?? throw new($"View is not available and can't be accessed. Rode running early on accessing the view, must first check for {nameof(ViewIsReady)}");
-    public IView? ViewOrNull { get; init; }
+    public IView? ViewOrNull { get; /*init;*/ set; }
     public bool ViewIsReady => ViewOrNull != null;
-
-    public void SwapView(IView value) => throw new("This should never be called on the BlockSpecs!");
 
     public BlockConfiguration Configuration
     {
@@ -60,11 +56,16 @@ public record BlockSpecs : IAppIdentity, IBlock
     public IApp? AppOrNull { get; init; }
 
     /// <summary>
-    /// The DataSource which delivers data for this block (will be used by the <see cref="IEngine"/> together with the View)
+    /// The DataSource which delivers data for this block (will be used by the Engine together with the View)
     /// </summary>
-    public IDataSource Data { get; init; }
+    [field: AllowNull, MaybeNull]
+    public IDataSource Data
+    {
+        get => field ?? throw new NullReferenceException($"Can't access {nameof(Data)}, it was never properly initialized.");// ??= GetData();
+        set;
+    } = null!;
 
-    public bool IsContentApp { get; init; }
+    public required bool IsContentApp { get; init; }
 
     #endregion
 
@@ -73,7 +74,7 @@ public record BlockSpecs : IAppIdentity, IBlock
     /// <summary>
     /// All the keys / features which were added in this block; in case the block should also modify its behavior.
     /// </summary>
-    public List<string> BlockFeatureKeys { get; init; }
+    public List<string> BlockFeatureKeys { get; init; } = [];
 
     /// <summary>
     /// The parent block of this block, if any.

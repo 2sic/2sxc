@@ -51,7 +51,7 @@ internal class OqtGetBlock(
 
         var module = modRepoLazy.Value.GetModule(moduleId);
         var ctx = cntOfBlkGen.New().Init(pageId, module);
-        var block = blkFromModGen.New().Init(ctx);
+        var block = blkFromModGen.New().GetBlockOfModule(ctx);
 
         // only if it's negative, do we load the inner block
         var contentBlockId = requestHelper.GetTypedHeader(HeaderContentBlockId, 0); // this can be negative, so use 0
@@ -59,7 +59,7 @@ internal class OqtGetBlock(
             return l.Return(block, "found block");
 
         l.A($"Inner Content: {contentBlockId}");
-        var entityBlock = blkFromEntGen.New().Init(block, null, contentBlockId);
+        var entityBlock = blkFromEntGen.New().GetBlockOfEntity(block, null, contentBlockId);
         return l.Return(entityBlock, $"inner block {contentBlockId}");
     }
 

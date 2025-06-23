@@ -7,24 +7,33 @@ namespace ToSic.Sxc.Blocks.Internal;
 /// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public sealed class BlockOfModule(BlockServices services) : BlockOfBase(services, "CB.Mod")
+public sealed class BlockOfModule(BlockGeneratorHelpers services) : BlockOfBase(services, "CB.Mod")
 {
     /// <summary>
     /// Create a module-content block
     /// </summary>
     /// <param name="ctx"></param>
     ///// <param name="overrideParams">optional override parameters</param>
-    public BlockOfModule Init(IContextOfBlock ctx)
+    public IBlock GetBlockOfModule(IContextOfBlock ctx)
     {
-        var l = Log.Fn<BlockOfModule>(timer: true);
-        Specs = BlockSpecsHelper.Init(Specs, ctx, ctx.Module.BlockIdentifier);
-        Specs = Specs with
+        var l = Log.Fn<BlockSpecs>(timer: true);
+        var appIdentity = ctx.Module.BlockIdentifier;
+        Specs = new()
         {
+            Context = ctx,
+            AppId = appIdentity.AppId,
+            ZoneId = appIdentity.ZoneId,
+
             IsContentApp = ctx.Module.IsContent,
         };
         Specs = BlockSpecsHelper.CompleteInit(this, Services, null, ctx.Module.BlockIdentifier, ctx.Module.Id, Log);
-        //CompleteInit(null, ctx.Module.BlockIdentifier, ctx.Module.Id);
-        return l.ReturnAsOk(this);
+
+        Specs = Specs with
+        {
+            Data = GetData(),
+        };
+
+        return l.ReturnAsOk(Specs);
     }
 
 }

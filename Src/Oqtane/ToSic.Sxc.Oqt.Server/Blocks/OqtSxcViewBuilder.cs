@@ -100,7 +100,8 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
                 // CSP settings
                 CspEnabled = renderResult.CspEnabled,
                 CspEnforced = renderResult.CspEnforced,
-                CspParameters = renderResult.CspParameters.Select(c => c.NvcToString())
+                CspParameters = renderResult.CspParameters
+                    .Select(c => c.NvcToString())
                     .ToList(), // convert NameValueCollection to (query) string because can't serialize NameValueCollection to json
             };
         }));
@@ -129,7 +130,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     private IBlock Block => _blockGetOnce.Get(() => LogTimer.DoInTimer(() =>
     {
         var ctx = _contextOfBlockEmpty.Init(Page.PageId, Module);
-        var block = _blockModuleEmpty.Init(ctx);
+        var block = _blockModuleEmpty.GetBlockOfModule(ctx);
 
         // Special for Oqtane - normally the IContextResolver is only used in WebAPIs
         // But the ModuleLookUp and PageLookUp also rely on this, so the IContextResolver must know about this for now

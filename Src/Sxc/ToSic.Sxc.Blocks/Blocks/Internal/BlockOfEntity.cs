@@ -6,54 +6,54 @@ using ToSic.Sxc.Context.Internal;
 namespace ToSic.Sxc.Blocks.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public sealed class BlockOfEntity(BlockServices services, LazySvc<AppFinder> appFinderLazy)
-    : BlockOfBase(services, "CB.Ent", connect: [appFinderLazy]), ICanBeEntity
+public sealed class BlockOfEntity(BlockGeneratorHelpers services, LazySvc<AppFinder> appFinderLazy)
+    : BlockOfBase(services, "CB.Ent", connect: [appFinderLazy]) //, ICanBeEntity
 {
-    /// <summary>
-    /// This is the entity that was used to configure the block
-    /// We need it for later operations, like mentioning what index it was on in a list
-    /// </summary>
-    public IEntity Entity { get; private set; } = null!;
-        
+    ///// <summary>
+    ///// This is the entity that was used to configure the block
+    ///// We need it for later operations, like mentioning what index it was on in a list
+    ///// </summary>
+    //public IEntity Entity { get; protected set; } = null!;
+
+
     #region Init
 
-    public BlockOfEntity Init(IBlock parent, IEntity blockEntity, int contentBlockId = -1)
+    public IBlock GetBlockOfEntity(IBlock parentBlock, IEntity blockEntity, int contentBlockId = -1)
     {
-        var l = Log.Fn<BlockOfEntity>($"{nameof(contentBlockId)}:{contentBlockId}; {nameof(blockEntity)}:{blockEntity?.EntityId}", timer: true);
-        var ctx = (IContextOfBlock)parent.Context.Clone(Log);
-        Specs = BlockSpecsHelper.Init(Specs, ctx, parent);
-        blockEntity ??= GetBlockEntity(parent, contentBlockId);
+        var l = Log.Fn<BlockSpecs>($"{nameof(contentBlockId)}:{contentBlockId}; {nameof(blockEntity)}:{blockEntity?.EntityId}", timer: true);
 
-        Entity = blockEntity;
+        // Get the content-block definition if we only have the ID
+        // The block ID. Is usually negative to mark inner-content-blocks
+        blockEntity ??= parentBlock.App.Data.List.One(Math.Abs(contentBlockId))!;
 
-        var blockId = LoadBlockDefinition(parent.ZoneId, blockEntity);
-        Context.ResetApp(blockId);
+        var (isContentApp, blockId) = LoadBlockDefinition(appFinderLazy, parentBlock.ZoneId, blockEntity);
+        var ctx = (IContextOfBlock)parentBlock.Context.Clone(Log);
+        ctx.ResetApp(blockId);
 
         // Must override previous AppId, as that was of the container-block
         // but the current instance can be of another block
-        Specs = Specs with
+        Specs = new()
         {
+            //GetData = GetData,
+            Context = ctx,
+            //Entity = blockEntity,
+            IsContentApp = isContentApp,
             AppId = blockId.AppId,
+            ZoneId = parentBlock.ZoneId,
         };
 
-        Specs = BlockSpecsHelper.CompleteInit(this, Services, parent, blockId, -blockEntity.EntityId, Log);
-        //CompleteInit(parent, blockId, -blockEntity.EntityId);
+        Specs = BlockSpecsHelper.CompleteInit(this, Services, parentBlock, blockId, -blockEntity.EntityId, Log);
 
-        return l.Return(this);
+        Specs = Specs with
+        {
+            Data = GetData(),
+        };
+
+        return l.Return(Specs);
     }
 
     #endregion
 
-
-
-    /// <summary>
-    /// Get the content-block definition if we only have the ID
-    /// </summary>
-    /// <param name="parent"></param>
-    /// <param name="contentBlockId">The block ID. Can sometimes be negative to mark inner-content-blocks</param>
-    /// <returns></returns>
-    private static IEntity GetBlockEntity(IBlock parent, int contentBlockId) 
-        => parent.App.Data.List.One(Math.Abs(contentBlockId))!;
 
     #region ContentBlock Definition Entity
 
@@ -61,21 +61,22 @@ public sealed class BlockOfEntity(BlockServices services, LazySvc<AppFinder> app
     /// Get all the specs for this content-block from the entity
     /// </summary>
     /// <returns></returns>
-    private IBlockIdentifier LoadBlockDefinition(int zoneId, IEntity blockDefinition)
+    private static (bool IsContentApp, IBlockIdentifier BlockIdentifier) LoadBlockDefinition(LazySvc<AppFinder> appFinderLazy, int zoneId, IEntity blockDefinition)
     {
         var appNameId = blockDefinition.Get(BlockBuildingConstants.CbPropertyApp, fallback: "");
-        Specs = Specs with
-        {
-            IsContentApp = appNameId == KnownAppsConstants.DefaultAppGuid,
-        };
+        var isContentApp = appNameId == KnownAppsConstants.DefaultAppGuid;
+
         var temp = blockDefinition.Get(BlockBuildingConstants.CbPropertyContentGroup, fallback: "");
+#pragma warning disable CA1806
         Guid.TryParse(temp, out var contentGroupGuid);
 
         temp = blockDefinition.Get(ViewParts.TemplateContentType, fallback: "");
         Guid.TryParse(temp, out var previewTemplateGuid);
+#pragma warning restore CA1806
 
         var appId = appFinderLazy.Value.FindAppId(zoneId, appNameId);
-        return new BlockIdentifier(zoneId, appId, appNameId, contentGroupGuid, previewTemplateGuid);
+        var identifier = new BlockIdentifier(zoneId, appId, appNameId, contentGroupGuid, previewTemplateGuid);
+        return (isContentApp, identifier);
     }
     #endregion
 

@@ -5,8 +5,8 @@ using ToSic.Sxc.Context.Internal;
 namespace ToSic.Sxc.Blocks.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class ModuleAndBlockBuilder(Generator<BlockOfModule> blockGenerator, string logPrefix)
-    : ServiceBase($"{logPrefix}.BnMBld", connect: [blockGenerator]), IModuleAndBlockBuilder
+public abstract class ModuleAndBlockBuilder(Generator<BlockOfModule> blockGenerator, string logPrefix, object[]? connect = default)
+    : ServiceBase($"{logPrefix}.BnMBld", connect: [..connect ?? [], blockGenerator]), IModuleAndBlockBuilder
 {
     /// <summary>
     /// Get the module specific to each platform.
@@ -27,7 +27,7 @@ public abstract class ModuleAndBlockBuilder(Generator<BlockOfModule> blockGenera
         var module = GetModuleImplementation(pageId, moduleId);
         var ctx = GetContextOfBlock(module, pageId);
         
-        var block = blockGenerator.New().Init(ctx);
+        var block = blockGenerator.New().GetBlockOfModule(ctx);
         return l.ReturnAsOk(block);
     }
 
@@ -35,7 +35,7 @@ public abstract class ModuleAndBlockBuilder(Generator<BlockOfModule> blockGenera
     {
         var l = Log.Fn<IBlock>($"{module}, {page}");
         var ctx = GetContextOfBlock(module, page);
-        var block = blockGenerator.New().Init(ctx);
+        var block = blockGenerator.New().GetBlockOfModule(ctx);
         return l.Return(block);
     }
 

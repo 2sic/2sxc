@@ -31,19 +31,13 @@ public class ContentBlockBackend(
     public IRenderResult NewBlockAndRender(int parentId, string field, int index, string app = "", Guid? guid = null)
     {
         var block = ctxService.BlockRequired();
-        var entityId = NewBlock(block, parentId, field, index, app, guid);
+        var appWorkCtxDb = appWorkCtxService.CtxWithDb(block.App);
+        var entityId = workBlocksMod.New(appWorkCtxDb).NewBlockReference(parentId, field, index, app, guid);
 
         // now return a rendered instance
-        var newContentBlock = entityBlockGenerator.New().Init(block, null, entityId);
+        var newContentBlock = entityBlockGenerator.New().GetBlockOfEntity(block, null, entityId);
         var builder = blockBuilderGenerator.New().Setup(newContentBlock);
         return builder.Run(true, specs: new());
-    }
-
-    // todo: probably move to CmsManager.Block
-    private int NewBlock(IBlock block, int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
-    {
-        var appWorkCtxDb = appWorkCtxService.CtxWithDb(block.App);
-        return workBlocksMod.New(appWorkCtxDb).NewBlockReference(parentId, field, sortOrder, app, guid);
     }
 
     public void AddItem(int? index = null)
@@ -78,22 +72,27 @@ public class ContentBlockBackend(
         l.A("2.1. Build Resources");
         var resources = new List<AjaxResourceDto>();
         var ver = EavSystemInfo.VersionWithStartUpBuild;
-        if (result.Features.Contains(SxcPageFeatures.TurnOn))
+        if (result.Features?.Contains(SxcPageFeatures.TurnOn) == true)
             resources.Add(new() { Url = UrlHelpers.QuickAddUrlParameter(root.SuffixSlash() + SxcPageFeatures.TurnOn.UrlInDist, "v", ver) });
 
         l.A("2.2. Add JS & CSS which were stripped before");
-        resources.AddRange(result.Assets.Select(asset => new AjaxResourceDto
-        {
-            // Note: Url can be empty if it has contents
-            Url = string.IsNullOrWhiteSpace(asset.Url) ? null : UrlHelpers.QuickAddUrlParameter(asset.Url, "v", ver), 
-            Type = asset.IsJs ? "js" : "css",
-            Contents = asset.Content,
-            Attributes = asset.HtmlAttributes,
-        }));
+        resources.AddRange(result.Assets
+                               ?.Select(asset => new AjaxResourceDto
+                               {
+                                   // Note: Url can be empty if it has contents
+                                   Url = string.IsNullOrWhiteSpace(asset.Url)
+                                       ? null
+                                       : UrlHelpers.QuickAddUrlParameter(asset.Url, "v", ver),
+                                   Type = asset.IsJs ? "js" : "css",
+                                   Contents = asset.Content,
+                                   Attributes = asset.HtmlAttributes,
+                               })
+                           ?? []
+        );
 
         l.A("3. Add manual resources (fancybox etc.)");
         // First get all the parts out of HTML, as the configuration is still stored as plain HTML
-        var mergedFeatures  = string.Join("\n", result.FeaturesFromSettings.Select(mc => mc.Html));
+        var mergedFeatures  = string.Join("\n", (result.FeaturesFromSettings?.Select(mc => mc.Html) ?? []));
 
         l.A("4.1. Process optimizers");
         var renderResult = optimizerLazy.Value.Process(mergedFeatures, new(extractAll: true));
@@ -127,7 +126,7 @@ public class ContentBlockBackend(
             var appWorkCtxPlus = appWorkCtxService.ContextPlus(block.Context.AppReaderRequired);
             var template = workViews.New(appWorkCtxPlus).Get(templateId);
             template.Edition = edition;
-            block.SwapView(template);
+            block = ctxService.SwapBlockView(template);
         }
 
         var builder = blockBuilderGenerator.New().Setup(block);

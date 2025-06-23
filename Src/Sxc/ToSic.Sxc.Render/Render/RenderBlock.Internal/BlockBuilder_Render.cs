@@ -110,7 +110,7 @@ public partial class BlockBuilder
                 var blockId = Block.Configuration.BlockIdentifierOrNull;
                 var msg = "Data is missing. ";
 
-                msg += (Block.Context.AppReaderOrNull?.IsHealthy == false)
+                msg += Block.Context.AppReaderOrNull?.IsHealthy == false
                     ? "The app is unhealthy, indicating that data wasn't properly loaded from SQL. "
                       + "This is the message: '" + Block.Context.AppReaderRequired.HealthMessage + "'. "
                       + "Please check the insights to see in more detail what happened."

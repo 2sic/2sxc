@@ -2,7 +2,6 @@
 using ToSic.Eav.DataSource;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.Web.Internal.PageFeatures;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks.Internal;
@@ -14,6 +13,10 @@ namespace ToSic.Sxc.Blocks.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IBlock: IAppIdentity //, IHasLog
 {
+
+    //// WIP
+    //IEntity? Entity { get; }
+
     /// <summary>
     /// The module ID or the parent-content-block id, probably not ideal here, but not sure
     /// </summary>
@@ -96,5 +99,5 @@ public interface IBlock: IAppIdentity //, IHasLog
 
 
     //List<IPageFeature> BlockFeatures(ILog? log = default);
-    void SwapView(IView value);
+    //BlockSpecs SwapView(IView value);
 }
