@@ -1,12 +1,25 @@
-﻿-- This SQL file is used for the app-module package (in .dnn manifest file) which must not be installed or upgraded if the 2sxc module fails to install
-DECLARE @RequiredVersion int;
-SET @RequiredVersion = 20;
+﻿-- This SQL file is used for the in 2sxc package (in .dnn manifest file) for all other modules, which must not be installed or upgraded if the 2sxc module fails to install
+DECLARE @requiredVersion NVARCHAR(20) = '20.00.00', @installedVersion NVARCHAR(20);
+SELECT @installedVersion = ISNULL(
+    (SELECT [Version] FROM Packages WHERE [Name] = N'2sxc'),
+    '99.99.99'
+)
 
-DECLARE @RequiredVersionIsInstalled int;
-SELECT @RequiredVersionIsInstalled = CASE WHEN EXISTS(SELECT * FROM {databaseOwner}[{objectQualifier}Packages] WHERE Name = N'2sxc' AND CONVERT(int, LEFT([Version], CHARINDEX('.', [Version])-1)) >= @RequiredVersion) THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END;
-
-If @RequiredVersionIsInstalled = 0
+-- skip further execution if requiredVersion > installedVersion
+IF (
+    TRY_CAST(PARSENAME(@requiredVersion, 3) AS INT) >  TRY_CAST(PARSENAME(@installedVersion, 3) AS INT) OR
+    (
+        TRY_CAST(PARSENAME(@requiredVersion, 3) AS INT) = TRY_CAST(PARSENAME(@installedVersion, 3) AS INT) AND
+        (
+            TRY_CAST(PARSENAME(@requiredVersion, 2) AS INT) >  TRY_CAST(PARSENAME(@installedVersion, 2) AS INT) OR
+            (
+                TRY_CAST(PARSENAME(@requiredVersion, 2) AS INT) = TRY_CAST(PARSENAME(@installedVersion, 2) AS INT) AND
+                TRY_CAST(PARSENAME(@requiredVersion, 1) AS INT) > TRY_CAST(PARSENAME(@installedVersion, 1) AS INT)
+            )
+        )
+    )
+)
 BEGIN
-	RAISERROR(N'2sxc 20 or newer must be installed for the module to install. Probably something else went wrong while installing - see previous errors for more information. ****************************************************************************************************************************************************************************************************************************************************************************************************************************************************', 16, 1);
+	RAISERROR(N'2sxc 20.00.00 must be installed for the module to install. Probably something else went wrong while installing - see previous errors for more information. ****************************************************************************************************************************************************************************************************************************************************************************************************************************************************', 16, 1);
 	RETURN;
 END
