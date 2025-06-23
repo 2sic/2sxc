@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
@@ -71,10 +72,11 @@ public class RolesDataSourceTests(DataBuilder dataBuilder, DataSourcesTstBuilder
         Equal(expected, rolesDataSource.List.ToList().Count);
     }
 
-    private UserRoles GenerateRolesDataSourceDataSource(object options = default) 
+    private UserRoles GenerateRolesDataSourceDataSource(object? options = default) 
         => dsSvc.CreateDataSourceNew<UserRoles>(new DataSourceOptionConverter()
             .Create(new DataSourceOptions
             {
+                AppIdentityOrReader = new AppIdentity(0, 0),
                 LookUp = new LookUpTestData(dataBuilder).AppSetAndRes()
             }, options));
 }

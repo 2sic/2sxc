@@ -7,7 +7,7 @@ public class LinkHelperToTestBase(ILinkService Link)
 {
     private const string SkipTest = "!skip-test!";
 
-    public void TestToPageParts(int? pageId = null, object p = null, string standard = SkipTest, string full = SkipTest, string relative = SkipTest)
+    public void TestToPageParts(int? pageId = null, object? p = null, string standard = SkipTest, string full = SkipTest, string relative = SkipTest)
     {
         void TestType(string expected, string type)
         {

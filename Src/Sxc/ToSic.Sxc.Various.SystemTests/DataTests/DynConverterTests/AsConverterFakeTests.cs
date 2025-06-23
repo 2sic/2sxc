@@ -19,7 +19,7 @@ public class AsConverterFakeTests(ICodeDataFactory cdf)
     [Fact]
     public void ItemFake()
     {
-        var fake = cdf.AsItem(cdf.FakeEntityTac(0), propsRequired: false);
+        var fake = cdf.AsItem(cdf.FakeEntityTac(0), new() { ItemIsStrict = false });
         NotNull(fake);
         Null(fake.String("some-field"));
     }

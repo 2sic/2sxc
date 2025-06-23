@@ -25,7 +25,7 @@ public class LightSpeedTestData(DataBuilder builder) //: TestBaseEavCore
         ]
     );
 
-    public IEntity LightSpeedTestEntity(bool? isEnabled = default, bool? byUrlParameters = default, bool? caseSensitive = default, string names = default, bool? othersDisableCache = default)
+    public IEntity LightSpeedTestEntity(bool? isEnabled = default, bool? byUrlParameters = default, bool? caseSensitive = default, string? names = default, bool? othersDisableCache = default)
     {
         var valDaniel = new Dictionary<string, object>
         {
@@ -40,6 +40,6 @@ public class LightSpeedTestData(DataBuilder builder) //: TestBaseEavCore
         return ent;
     }
 
-    internal LightSpeedDecorator Decorator(bool? isEnabled = default, bool? byUrlParameters = null, bool? caseSensitive = null, string names = default, bool? othersDisableCache = default)
+    internal LightSpeedDecorator Decorator(bool? isEnabled = default, bool? byUrlParameters = null, bool? caseSensitive = null, string? names = default, bool? othersDisableCache = default)
         => new(LightSpeedTestEntity(isEnabled: isEnabled, byUrlParameters: byUrlParameters, caseSensitive: caseSensitive, names: names, othersDisableCache: othersDisableCache));
 }

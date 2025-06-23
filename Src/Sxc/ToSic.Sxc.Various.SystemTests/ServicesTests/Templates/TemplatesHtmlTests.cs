@@ -20,7 +20,7 @@ public class TemplatesHtmlTests(ITemplateService templateSvc, TemplatesTestsBase
     [InlineData("<div>Val1</div>", "<div>[Html:Key1]</div>")]
     [InlineData("<strong>Val2</strong>", "<strong>[Html:Key2]</strong>")]
     [InlineData("<strong>" + HtmlValue + "</strong>", "<strong>[Html:HTml]</strong>")]
-    public void HtmlAllowed(string expected, string value, string notes = default)
+    public void HtmlAllowed(string expected, string value, string? notes = default)
     {
         var svc = templateSvc;
         var result = svc.Empty(sources: [GetHtml()]).Parse(value, allowHtml: true);
@@ -31,7 +31,7 @@ public class TemplatesHtmlTests(ITemplateService templateSvc, TemplatesTestsBase
     [InlineData("<div>Val1</div>", "<div>[Html:Key1]</div>")]
     [InlineData("<strong>Val2</strong>", "<strong>[Html:Key2]</strong>")]
     [InlineData("<strong>&lt;div&gt;message&lt;/div&gt;</strong>", "<strong>[Html:Html]</strong>")]
-    public void HtmlForbidden(string expected, string value, string notes = default)
+    public void HtmlForbidden(string expected, string value, string? notes = default)
     {
         var svc = templateSvc;
         var result = svc.Empty(sources: [GetHtml()]).Parse(value);

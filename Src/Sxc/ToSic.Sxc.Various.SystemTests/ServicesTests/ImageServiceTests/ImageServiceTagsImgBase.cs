@@ -4,7 +4,7 @@ using Xunit.Abstractions;
 
 namespace ToSic.Sxc.ServicesTests.ImageServiceTests;
 
-public abstract class ImageServiceTagsImgBase(IImageService svc, ITestOutputHelper output, TestScenario testScenario = default) : ImageServiceTagsBase(svc, output, testScenario)
+public abstract class ImageServiceTagsImgBase(IImageService svc, ITestOutputHelper output, TestScenario? testScenario = default) : ImageServiceTagsBase(svc, output, testScenario)
 {
 
     public virtual void ImageTagMultiTest(string expected, string variants, object factor, string testName)

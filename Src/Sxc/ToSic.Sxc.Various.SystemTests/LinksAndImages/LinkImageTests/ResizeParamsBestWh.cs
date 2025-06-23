@@ -94,7 +94,7 @@ public class ResizeParamsBestWh(LinkImageTestHelper helper)//: LinkImageTestBase
     }
 
 
-    internal static bool TestBestWH(int expW, int expH, object width = null, object height = null, object factor = null, object ar = null, ICanGetByName settings = null)
+    internal static bool TestBestWH(int expW, int expH, object? width = null, object? height = null, object? factor = null, object? ar = null, ICanGetByName? settings = null)
     {
         // Get a new linker for each test run
         var paramMerger = new ResizeParamMerger(null);

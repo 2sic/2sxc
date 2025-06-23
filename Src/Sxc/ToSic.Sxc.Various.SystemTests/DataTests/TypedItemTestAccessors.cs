@@ -8,5 +8,5 @@ internal static class TypedItemTestAccessors
 
     public static bool TestContainsKey(this ITyped item, string key) => item.ContainsKey(key);
 
-    public static IEnumerable<string> TestKeys(this ITyped item, IEnumerable<string> only = default) => item.Keys(only: only);
+    public static IEnumerable<string> TestKeys(this ITyped item, IEnumerable<string>? only = default) => item.Keys(only: only);
 }

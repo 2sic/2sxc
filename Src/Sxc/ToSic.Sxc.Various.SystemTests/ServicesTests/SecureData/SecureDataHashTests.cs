@@ -49,7 +49,7 @@ public class SecureDataHashTests(ISecureDataService sds)
     [Theory]
     [InlineData("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", ".")]
     [InlineData("aef87954c3c56f1d53eaca2e1ae5f863bf1c0331e418bdf71e9e4c07085eebdd", ".", "asc4y9is2!y")]
-    public void TestSha256Invalid(string expected, string value, string salt = default)
+    public void TestSha256Invalid(string expected, string value, string? salt = default)
     {
         var sds = GetSecureDataService();
         var result = sds.HashSha256(value + salt);
@@ -84,7 +84,7 @@ public class SecureDataHashTests(ISecureDataService sds)
     [Theory]
     [InlineData("cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e", " ")]
     [InlineData("3578b7e749b86c2a7d2e38ad9bd29573edb96edee4b1a4367ab917321d8adac0965d16b9a440cc99cf50014be3d9cc904043ca5d531131e0b7ae34cae25b3788", " ", "asc4y9is2!y")]
-    public void TestSha512Invalid(string expected, string value, string salt = default)
+    public void TestSha512Invalid(string expected, string value, string? salt = default)
     {
         var sds = GetSecureDataService();
         var result = sds.HashSha512(value + salt);

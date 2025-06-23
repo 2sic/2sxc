@@ -6,7 +6,7 @@ namespace ToSic.Sxc.DataTests;
 /// Helper structure to create data describing what a property is like
 /// for tests which then use this
 /// </summary>
-public struct PropInfo(string name, bool exists, bool hasData = false, object value = default, string note = default): IXunitSerializable
+public struct PropInfo(string name, bool exists, bool hasData = false, object? value = default, string? note = default): IXunitSerializable
 {
     public string Name = name;
     public bool Exists = exists;

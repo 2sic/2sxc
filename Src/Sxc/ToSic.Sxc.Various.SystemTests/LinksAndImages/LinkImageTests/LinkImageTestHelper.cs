@@ -31,17 +31,17 @@ public class LinkImageTestHelper
 
 
     public void TestOnLinkerAndHelper(string expected,
-        string url = null,
-        object settings = null,
-        object factor = null,
+        string? url = null,
+        object? settings = null,
+        object? factor = null,
         NoParamOrder noParamOrder = default,
-        object width = null,
-        object height = null,
-        object quality = null,
-        string resizeMode = null,
-        string scaleMode = null,
-        string format = null,
-        object aspectRatio = null)
+        object? width = null,
+        object? height = null,
+        object? quality = null,
+        string? resizeMode = null,
+        string? scaleMode = null,
+        string? format = null,
+        object? aspectRatio = null)
     {
         // Test with Linker
         var linker = GetLinker();
@@ -64,18 +64,18 @@ public class LinkImageTestHelper
 
 
     public void TestOnLinkerSrcSet(string expected,
-        string url = null,
-        object settings = null,
-        object factor = null,
+        string? url = null,
+        object? settings = null,
+        object? factor = null,
         NoParamOrder noParamOrder = default,
-        object width = null,
-        object height = null,
-        object quality = null,
-        string resizeMode = null,
-        string scaleMode = null,
-        string format = null,
-        object aspectRatio = null,
-        string variants = null)
+        object? width = null,
+        object? height = null,
+        object? quality = null,
+        string? resizeMode = null,
+        string? scaleMode = null,
+        string? format = null,
+        object? aspectRatio = null,
+        string? variants = null)
     {
         // Test with Linker
         var linker = GetLinker();

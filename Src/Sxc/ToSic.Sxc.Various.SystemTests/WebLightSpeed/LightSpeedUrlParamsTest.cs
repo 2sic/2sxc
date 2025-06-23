@@ -20,11 +20,11 @@ public class LightSpeedUrlParamsTest(DataBuilder dataBuilder)//: TestBaseEavCore
     private static NameValueCollection Parse(string query) => UrlHelpers.ParseQueryString(query);
 
     internal static (bool CachingAllowed, string Extension) GetUrlParamsTac(LightSpeedDecorator lsConfig,
-        string pageParameters, ILog log = null, bool usePiggyBack = true)
+        string pageParameters, ILog? log = null, bool usePiggyBack = true)
         => GetUrlParamsTac(lsConfig, new Parameters { Nvc = Parse(pageParameters) }, log, usePiggyBack);
 
     internal static (bool CachingAllowed, string Extension) GetUrlParamsTac(LightSpeedDecorator lsConfig,
-        IParameters pageParameters = null, ILog log = null, bool usePiggyBack = true)
+        IParameters? pageParameters = null, ILog? log = null, bool usePiggyBack = true)
         => LightSpeedUrlParams.GetUrlParams(lsConfig, pageParameters ?? new Parameters(), log, usePiggyBack);
 
     [Theory]
@@ -49,7 +49,7 @@ public class LightSpeedUrlParamsTest(DataBuilder dataBuilder)//: TestBaseEavCore
     [InlineData(true, "a=b&test=y&zeta=beta", true, true, "zeta=beta&test=y&a=b")]//, DisplayName = "Ensure parameters are sorted")]
     [InlineData(true, "a=alpha&a=beta", true, true, "a=beta&a=alpha")]//, DisplayName = "Ensure parameter values are sorted")]
     [InlineData(false, "", false, null, "")]
-    public void ByUrlParameters(bool expected, string expValue, bool? isEnabled, bool? byUrlParameters, string urlParameters, string message = default)
+    public void ByUrlParameters(bool expected, string expValue, bool? isEnabled, bool? byUrlParameters, string urlParameters, string? message = default)
     {
         var lsDecorator = _testData.Decorator(isEnabled: isEnabled, byUrlParameters: byUrlParameters, othersDisableCache: false);
         var result = GetUrlParamsTac(lsDecorator, urlParameters);
@@ -65,7 +65,7 @@ public class LightSpeedUrlParamsTest(DataBuilder dataBuilder)//: TestBaseEavCore
     [InlineData("a=b", "a,b", "a=b")]//, DisplayName = "more possible, but only some given")]
     [InlineData("a=b", "*", "a=b")]
     [InlineData("a=b&c=d", "*", "a=b&c=d")]
-    public void NamesShouldFilterResults(string expValue, string names, string urlParameters, string message = default)
+    public void NamesShouldFilterResults(string expValue, string names, string urlParameters, string? message = default)
     {
         var lsDecorator = _testData.Decorator(isEnabled: true, byUrlParameters: true, names: names, othersDisableCache: true);
         var result = GetUrlParamsTac(lsDecorator, urlParameters);
@@ -97,7 +97,7 @@ public class LightSpeedUrlParamsTest(DataBuilder dataBuilder)//: TestBaseEavCore
     [InlineData("a=b", "a // this is because xyz", "a=b")]
     [InlineData("a=b&b=c", "a // ok\nb // also ok", "a=b&b=c")]
     [InlineData("a=b&c=d", "* // whatever", "a=b&c=d")]
-    public void NamesCanBeMultilineAndCommented(string expValue, string names, string urlParameters, string message = default)
+    public void NamesCanBeMultilineAndCommented(string expValue, string names, string urlParameters, string? message = default)
     {
         var lsDecorator = _testData.Decorator(isEnabled: true, byUrlParameters: true, names: names, othersDisableCache: true);
         var result = GetUrlParamsTac(lsDecorator, urlParameters);

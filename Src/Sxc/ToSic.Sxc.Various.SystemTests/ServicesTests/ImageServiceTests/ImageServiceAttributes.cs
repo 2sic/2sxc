@@ -13,7 +13,7 @@ public class ImageServiceAttributes(IImageService imgSvc)
     /// <param name="OnCall">Parameter to use when calling .Picture() or .Img() </param>
     /// <param name="OnRecipe">Parameter to use when calling with recipe...</param>
     /// <param name="useRecipe"></param>
-    public record TestCase(string Name, string Expected, string OnCall, string OnRecipe = default, bool useRecipe = false)
+    public record TestCase(string Name, string Expected, string OnCall, string? OnRecipe = default, bool useRecipe = false)
     {
         public readonly bool UseRecipe = useRecipe || OnRecipe != null;
 

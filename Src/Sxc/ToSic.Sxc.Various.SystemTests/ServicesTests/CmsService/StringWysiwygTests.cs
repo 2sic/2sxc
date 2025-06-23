@@ -46,7 +46,7 @@ public class StringWysiwygTests(
             .First(a => a.Name == nameof(MockHtmlContentType.SomeHtml));
 
         var data = dataForCmsTests.TstDataEntity("hello", conversion.Original, ctWithHtmlField);
-        var typed = cdf.AsItem(data);
+        var typed = cdf.AsItem(data, new() { ItemIsStrict = true });
         var field = typed.Field(nameof(MockHtmlContentType.SomeHtml));
 
         var folder = DataForCmsServiceTests.GenerateFolderWithTestPng();

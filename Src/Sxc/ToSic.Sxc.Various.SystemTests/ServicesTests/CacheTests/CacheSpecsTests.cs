@@ -85,7 +85,7 @@ public class CacheSpecsTests(ICacheService svc)
     [InlineData("A,B,C", "too many names")]
     [InlineData("A", "names with exact casing")]
     [InlineData("a", "names with different casing")]
-    public void VaryByParametersOneNamed(string names, string testName, string specialExpected = default)
+    public void VaryByParametersOneNamed(string names, string testName, string? specialExpected = default)
     {
         var expected = MainPrefix + ("VaryByParameters=" + (specialExpected ?? "A=AVal")).ToLowerInvariant();
         var pars = new Parameters

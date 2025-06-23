@@ -72,7 +72,7 @@ public class WrapJsonArray(DynAndTypedTestHelper helper)
 
     [Theory]
     [MemberData(nameof(DetectJsonType))]
-    public void DetectJsonComplexOfObject(bool expComplex, bool expArray, object value, string testName = default)
+    public void DetectJsonComplexOfObject(bool expComplex, bool expArray, object value, string? testName = default)
     {
         var json = helper.JsonSerialize(value);
         var (isComplex, isArray) = JsonProcessingHelpers.AnalyzeJson(json);

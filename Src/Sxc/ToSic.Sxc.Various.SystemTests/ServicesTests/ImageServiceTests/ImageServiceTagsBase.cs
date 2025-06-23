@@ -4,7 +4,7 @@ using Xunit.Abstractions;
 
 namespace ToSic.Sxc.ServicesTests.ImageServiceTests;
 
-public abstract class ImageServiceTagsBase(IImageService svc, ITestOutputHelper output, TestScenario testScenario = default)
+public abstract class ImageServiceTagsBase(IImageService svc, ITestOutputHelper output, TestScenario? testScenario = default)
 {
     protected const string ImgUrl = "/abc/def/test.jpg";
     protected const string Img120x24 = ImgUrl + "?w=120&amp;h=24";
