@@ -7,49 +7,27 @@ using static System.StringComparison;
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
+public partial class AppFilesControllerReal(
+    ISite site,
+    IUser user,
+    Generator<AssetEditor> assetEditorGenerator,
+    IAppReaderFactory appReaders,
+    LazySvc<CodeControllerReal> codeController,
+    LazySvc<AppCodeLoader> appCodeLoader,
+    AssetTemplates assetTemplates,
+    IAppPathsMicroSvc appPathsFactoryTemp)
+    : ServiceBase("Bck.Assets",
+        connect:
+        [
+            assetEditorGenerator, assetTemplates, appReaders, codeController, appCodeLoader, appPathsFactoryTemp
+        ]), IAppFilesController
 {
     public const string LogSuffix = "AppAss";
-    #region Constructor / DI
-
-    public AppFilesControllerReal(
-        ISite site,
-        IUser user, 
-        Generator<AssetEditor> assetEditorGenerator,
-        IAppReaderFactory appReaders,
-        LazySvc<CodeControllerReal> codeController,
-        LazySvc<AppCodeLoader> appCodeLoader,
-        IAppPathsMicroSvc appPathsFactoryTemp
-    ) : base("Bck.Assets")
-    {
-        _site = site;
-        _user = user;
-        ConnectLogs([
-            _assetEditorGenerator = assetEditorGenerator,
-            _assetTemplates = new(),
-            _appReaders = appReaders,
-            _codeController = codeController,
-            _appCodeLoader = appCodeLoader,
-            _appPathsFactoryTemp = appPathsFactoryTemp
-        ]);
-    }
-
-    private readonly ISite _site;
-    private readonly Generator<AssetEditor> _assetEditorGenerator;
-    private readonly AssetTemplates _assetTemplates;
-    private readonly IAppReaderFactory _appReaders;
-    private readonly IAppPathsMicroSvc _appPathsFactoryTemp;
-    private IAppPaths _appPaths;
-    private readonly IUser _user;
-    private readonly LazySvc<CodeControllerReal> _codeController;
-    private readonly LazySvc<AppCodeLoader> _appCodeLoader;
-
-    #endregion
 
     /// <summary>
     /// Get details and source code
     /// </summary>
-    public AssetEditInfo Asset(int appId, int templateId = 0, string path = null, bool global = false)
+    public AssetEditInfo Asset(int appId, int templateId = 0, string? path = null, bool global = false)
     {
         var l = Log.Fn<AssetEditInfo>($"asset templ:{templateId}, path:{path}, global:{global}");
         var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(appId, templateId, global, path);
@@ -60,11 +38,11 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
     /// <summary>
     /// Save operation - but must be called Asset to match public REST API
     /// </summary>
-    public bool Asset(int appId, AssetEditInfo template, int templateId, string path, bool global)
+    public bool Asset(int appId, AssetEditInfo template, int templateId, string? path, bool global)
     {
         var l = Log.Fn<bool>($"templ:{templateId}, global:{global}, path:{path}");
         var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(appId, templateId, global, path);
-        assetEditor.Source = template.Code;
+        assetEditor.Source = template.Code!;
         return l.ReturnTrue();
     }
 
@@ -87,28 +65,34 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
         };
         var l = Log.Fn<bool>($"create a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
 
-        EnsureRequiredFolder(assetFromTemplateDto);
+        assetFromTemplateDto = EnsureRequiredFolder(assetFromTemplateDto);
 
         var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(assetFromTemplateDto);
 
         // get and prepare template content
-        var body = GetTemplateContent(assetFromTemplateDto);
+        var body = GetTemplateContent(assetFromTemplateDto) ?? "";
 
         return l.Return(assetEditor.Create(body), "Created");
     }
 
-    private static void EnsureRequiredFolder(AppFileDto assetFromTemplateDto)
+    private static AppFileDto EnsureRequiredFolder(AppFileDto assetFromTemplateDto)
     {
-        assetFromTemplateDto.Path = assetFromTemplateDto.Path.Replace("/", "\\");
+        assetFromTemplateDto = assetFromTemplateDto with { Path = assetFromTemplateDto.Path.Replace("/", "\\") };
 
         // ensure that DataSource is in DataSources folder
         if (assetFromTemplateDto.TemplateKey == AssetTemplates.DataSourceHybrid.Key)
         {
             var directoryName = Path.GetDirectoryName(assetFromTemplateDto.Path) ?? string.Empty;
             var fileName = Path.GetFileName(assetFromTemplateDto.Path) ?? string.Empty;
-            if (!directoryName.StartsWith(AssetTemplates.DataSourceHybrid.Folder) && !directoryName.Contains(AssetTemplates.DataSourceHybrid.Folder))
-                assetFromTemplateDto.Path = Path.Combine(AssetTemplates.DataSourceHybrid.Folder, fileName);
+            if (!directoryName.StartsWith(AssetTemplates.DataSourceHybrid.Folder) &&
+                !directoryName.Contains(AssetTemplates.DataSourceHybrid.Folder))
+                assetFromTemplateDto = assetFromTemplateDto with
+                {
+                    Path = Path.Combine(AssetTemplates.DataSourceHybrid.Folder, fileName)
+                };
         }
+
+        return assetFromTemplateDto;
     }
 
     /// <summary>
@@ -117,9 +101,9 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
     /// <param name="purpose">filter by Purpose when provided</param>
     /// <param name="type"></param>
     /// <returns></returns>
-    public TemplatesDto GetTemplates(string purpose, string type)
+    public TemplatesDto GetTemplates(string? purpose, string? type)
     {
-        var templateInfos = _assetTemplates.GetTemplates();
+        var templateInfos = assetTemplates.GetTemplates();
 
         // TBD: future purpose implementation
         purpose = (purpose ?? AssetTemplates.ForTemplate).ToLowerInvariant().Trim();
@@ -146,13 +130,13 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
         };
     }
 
-    private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string path)
+    private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string? path)
     {
         var l = Log.Fn<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
-        var app = _appReaders.Get(appId);
-        var assetEditor = _assetEditorGenerator.New();
+        var app = appReaders.Get(appId);
+        var assetEditor = assetEditorGenerator.New();
 
-        assetEditor.Init(app, path, global, templateId);
+        assetEditor.Init(app, path! /* not sure about this, but ignore for now 2026-06-23 2dm */, global, templateId);
         assetEditor.EnsureUserMayEditAssetOrThrow();
         return l.Return(assetEditor);
     }
@@ -160,8 +144,8 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
     private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(AppFileDto assetFromTemplateDto)
     {
         var l = Log.Fn<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
-        var app = _appReaders.Get(assetFromTemplateDto.AppId);
-        var assetEditor = _assetEditorGenerator.New().Init(app, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0);
+        var app = appReaders.Get(assetFromTemplateDto.AppId);
+        var assetEditor = assetEditorGenerator.New().Init(app, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0);
         assetEditor.EnsureUserMayEditAssetOrThrow(assetEditor.InternalPath);
         return l.Return(assetEditor);
     }
@@ -180,7 +164,7 @@ public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
                 TemplateKey = templateKey,
             };
 
-            EnsureRequiredFolder(assetFromTemplateDto);
+            assetFromTemplateDto = EnsureRequiredFolder(assetFromTemplateDto);
 
             // check if file can be created
             var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(assetFromTemplateDto);

@@ -36,7 +36,7 @@ public class AppViewPickerBackend(
     {
         var block = ctxService.BlockRequired();
         return block?.AppOrNull == null
-            ? null
+            ? []
             : workViews.New(appWorkCtxService.ContextPlus(block.Context.AppReaderRequired))
                 .GetContentTypesWithStatus(block.App.Path ?? "", block.App.PathShared ?? "");
     }

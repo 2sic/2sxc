@@ -29,7 +29,7 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
 
     #region Initialize
 
-    internal new IExecutionContext ExCtxOrNull => base.ExCtxOrNull;
+    internal new IExecutionContext? ExCtxOrNull => base.ExCtxOrNull;
 
     /// <summary>
     /// This will make sure that any services requiring the context can get it.
@@ -46,8 +46,8 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
 
     private bool _blockContextInitialized;
 
-    private ISxcCurrentContextService CtxService { get; set; }
-    internal IBlock BlockOptional { get; private set; }
+    private ISxcCurrentContextService CtxService { get; set; } = null!;
+    internal IBlock? BlockOptional { get; private set; }
 
     public void OnActionExecutingEnd(ActionExecutingContext context)
     {
@@ -74,11 +74,11 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
         // create instances of .cs files
         if (context.HttpContext.Items.TryGetValue(SourceCodeConstants.SharedCodeRootPathKeyInCache, out var createInstancePath))
             if (_owner is IGetCodePath withCodePath)
-                withCodePath.CreateInstancePath = createInstancePath as string;
+                withCodePath.CreateInstancePath = (createInstancePath as string)!;
     }
 
 
-    private void TryToAttachAppFromUrlParams(ActionExecutingContext context) => base.Log.Do(() =>
+    private void TryToAttachAppFromUrlParams(ActionExecutingContext context) => Log.Do(() =>
     {
         var found = false;
         try
@@ -135,14 +135,14 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
 
     #region Adam
 
-    public AdamCode AdamCode { get; private set; }
+    public AdamCode AdamCode { get; private set; } = null!;
 
     public Sxc.Adam.IFile SaveInAdam(NoParamOrder noParamOrder = default,
-        Stream stream = null,
-        string fileName = null,
-        string contentType = null,
+        Stream? stream = null,
+        string? fileName = null,
+        string? contentType = null,
         Guid? guid = null,
-        string field = null,
+        string? field = null,
         string subFolder = "") =>
         AdamCode.SaveInAdam(
             stream: stream,

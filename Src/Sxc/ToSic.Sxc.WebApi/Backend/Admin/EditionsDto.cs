@@ -9,16 +9,16 @@ namespace ToSic.Sxc.Backend.Admin;
 /// </summary>
 public class EditionsDto: RichResult
 {
-    public bool IsConfigured { get; set; }
-    public ICollection<EditionDto> Editions { get; set; } = [];
+    public bool IsConfigured { get; init; }
+    public ICollection<EditionDto> Editions { get; init; } = [];
 
-    public ICollection<GeneratorDto> Generators { get; set; } = [];
+    public ICollection<GeneratorDto> Generators { get; init; } = [];
 }
 
 public class EditionDto
 {
-    public string Name { get; set; }
-    public string? Description { get; set; }
+    public required string Name { get; init; }
+    public string? Description { get; init; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public bool IsDefault { get; set; }

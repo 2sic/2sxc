@@ -51,13 +51,13 @@ public class ViewsExportImport(
         var appReader = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(context.Site.ZoneId, appId, context.User, context.Site.ZoneId);
         var bundle = new BundleEntityWithAssets
         {
-            Entity = appReader.List.One(viewId).IfOfType(Settings.TemplateContentType)
+            Entity = appReader.List.One(viewId)!.IfOfType(Settings.TemplateContentType)!
         };
 
         var appPaths = appPathSvc.Get(appReader, context.Site);
 
         // Attach files
-        var view = new View(bundle.Entity, [context.Site.CurrentCultureCode], Log, qDefBuilder);
+        var view = new View(bundle.Entity!, [context.Site.CurrentCultureCode], Log, qDefBuilder);
 
         if (!string.IsNullOrEmpty(view.Path))
         {
@@ -108,7 +108,7 @@ public class ViewsExportImport(
 
             var bundles = files.Select(f => serializer.DeserializeEntityWithAssets(f.Contents)).ToList();
 
-            if (bundles.Any(t => t == null))
+            if (bundles.Any(t => t == null!))
                 throw new NullReferenceException("At least one file returned a null-item, something is wrong");
 
             // 1.1 Verify these are view-entities
@@ -123,7 +123,8 @@ public class ViewsExportImport(
             // 3. Import the attachments
             var assets = bundles.SelectMany(b => b.Assets);
             var assetMan = new JsonAssets();
-            foreach (var asset in assets) assetMan.Create(GetRealPath(appPaths, asset), asset);
+            foreach (var asset in assets)
+                assetMan.Create(GetRealPath(appPaths, asset), asset);
 
             // 3. possibly show messages / issues
             return l.ReturnAsOk(new(true));
@@ -135,10 +136,11 @@ public class ViewsExportImport(
         }
     }
 
-    private string GetRealPath(IAppPaths app, JsonAsset asset)
+    private string? GetRealPath(IAppPaths app, JsonAsset asset)
     {
-        if (!string.IsNullOrEmpty(asset.Storage) && asset.Storage != JsonAsset.StorageApp) return null;
+        if (!string.IsNullOrEmpty(asset.Storage) && asset.Storage != JsonAsset.StorageApp)
+            return null;
         var root = app.PhysicalPathSwitch(false);
-        return Path.Combine(root, asset.Folder, asset.Name);
+        return Path.Combine(root, asset.Folder!, asset.Name);
     }
 }

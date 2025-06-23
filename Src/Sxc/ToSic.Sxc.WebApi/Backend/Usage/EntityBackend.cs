@@ -13,7 +13,7 @@ public class EntityBackend(
 {
     // New feature in 11.03 - Usage Statistics
 
-    public dynamic Usage(int appId, Guid guid)
+    public object? Usage(int appId, Guid guid)
     {
         var context = ctxService.GetExistingAppOrSet(appId);
         var permCheck = appPermissions.New().Init(context, context.AppReaderRequired);

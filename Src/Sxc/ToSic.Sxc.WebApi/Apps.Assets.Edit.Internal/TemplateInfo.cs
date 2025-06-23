@@ -27,22 +27,22 @@ public class TemplateInfo(
     public string Folder { get; set; } = string.Empty;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string Body { get; set; }
+    public string? Body { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string Prefix { get; set; }
+    public string? Prefix { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string Suffix { get; set; }
+    public string? Suffix { get; set; }
 
     /// <summary>
     /// Returns an array of platforms this template supports so the UI can pick
     /// </summary>
-    public IEnumerable<string> Platforms => PlatformTypes?.ToString().Split(',').Select(p => p.Trim());
+    public IEnumerable<string>? Platforms => PlatformTypes?.ToString().Split(',').Select(p => p.Trim());
 
     [JsonIgnore]
     public PlatformType? PlatformTypes { get; set; } = PlatformType.Hybrid | PlatformType.Dnn | PlatformType.Oqtane;

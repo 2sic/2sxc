@@ -11,7 +11,7 @@ public partial class EditLoadPrefetchHelper(
     EntityPickerApi entityPickerBackend)
     : ServiceBase(SxcLogName + ".Prefetch", connect: [adamTransGetItems, hyperlinkBackend, entityPickerBackend])
 {
-    public EditPrefetchDto TryToPrefectAdditionalData(int appId, EditDto editData)
+    public EditPrefetchDto TryToPrefectAdditionalData(int appId, EditLoadDto editData)
         => Log.Quick(() => new EditPrefetchDto
         {
             Links = PrefetchLinks(appId, editData),
@@ -20,7 +20,7 @@ public partial class EditLoadPrefetchHelper(
         });
 
 
-    private ICollection<EntityForPickerDto> PrefetchEntities(int appId, EditDto editData)
+    private ICollection<EntityForPickerDto> PrefetchEntities(int appId, EditLoadDto editData)
     {
         var l = Log.Fn<ICollection<EntityForPickerDto>>();
         try
@@ -31,19 +31,19 @@ public partial class EditLoadPrefetchHelper(
                 .Where(b => b.Entity?.Attributes?.Entity?.Any() ?? false)
                 .Select(b => new
                 {
-                    b.Entity.Guid,
+                    b.Entity!.Guid,
                     b.Entity.Attributes.Entity
                 })
                 .ToListOpt();
 
             var entities = bundlesHavingEntities
-                .SelectMany(set => set.Entity
+                .SelectMany(set => set.Entity!
                     .SelectMany(e => e.Value
-                        ?.SelectMany(entityAttrib => entityAttrib.Value)
+                        ?.SelectMany(entityAttrib => entityAttrib.Value) ?? []
                     )
                 )
                 .Where(guid => guid != null)
-                .Select(guid => guid.ToString())
+                .Select(guid => guid.ToString()!)
                 // Step 2: Check which ones have a link reference
                 .ToListOpt();
 

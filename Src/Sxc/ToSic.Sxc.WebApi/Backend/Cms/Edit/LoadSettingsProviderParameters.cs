@@ -3,9 +3,9 @@
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class LoadSettingsProviderParameters
 {
-    public IContextOfApp ContextOfApp { get; set; }
+    public required IContextOfApp ContextOfApp { get; init; }
 
-    public  List<IContentType> ContentTypes { get; set; }
+    public  required List<IContentType> ContentTypes { get; init; }
 
-    public List<string> InputTypes { get; set; }
+    public required List<string> InputTypes { get; init; }
 }

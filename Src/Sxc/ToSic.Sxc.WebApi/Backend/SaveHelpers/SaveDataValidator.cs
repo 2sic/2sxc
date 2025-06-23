@@ -6,16 +6,16 @@ using ToSic.Eav.WebApi.Sys.Helpers.Validation;
 
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
-internal class SaveDataValidator(EditDto package, ILog parentLog = null) : ValidatorBase(parentLog, "Val.Save")
+internal class SaveDataValidator(EditSaveDto package, ILog parentLog) : ValidatorBase(parentLog, "Val.Save")
 {
-    public EditDto Package = package;
+    public EditSaveDto Package = package;
 
     public void PrepareForEntityChecks(WorkEntities workEntities)
     {
         WorkEntities = workEntities;
     }
 
-    public WorkEntities WorkEntities { get; private set; }
+    public WorkEntities WorkEntities { get; private set; } = null!;
 
 
     /// <summary>
@@ -24,16 +24,12 @@ internal class SaveDataValidator(EditDto package, ILog parentLog = null) : Valid
     /// or that invalid combinations get back here
     /// </summary>
     /// <returns></returns>
-    internal HttpExceptionAbstraction ContainsOnlyExpectedNodes()
+    internal HttpExceptionAbstraction? ContainsOnlyExpectedNodes()
     {
-        var l = Log.Fn<HttpExceptionAbstraction>();
-        if (Package.ContentTypes != null)
-            Add("package contained content-types, unexpected!");
-        if (Package.InputTypes != null)
-            Add("package contained input types, unexpected!");
+        var l = Log.Fn<HttpExceptionAbstraction?>();
 
         // check that items are mostly intact
-        if (Package.Items == null || Package.Items.Count == 0)
+        if (Package.Items == null! || Package.Items.Count == 0)
             Add("package didn't contain items, unexpected!");
         else
         {
@@ -54,7 +50,7 @@ internal class SaveDataValidator(EditDto package, ILog parentLog = null) : Valid
         var l = Log.Fn($"{list.Count}");
         foreach (var item in list)
         {
-            if (item.Header == null || item.Entity == null)
+            if (item.Header == null! /* paranoid */ || item.Entity == null!)
                 Add($"item {list.IndexOf(item)} header or entity is missing");
             else if (item.Header.Guid != item.Entity.Guid) // check this first (because .Group may not exist)
             {
@@ -97,9 +93,9 @@ internal class SaveDataValidator(EditDto package, ILog parentLog = null) : Valid
     }
 
 
-    internal HttpExceptionAbstraction EntityIsOk(int count, IEntity newEntity)
+    internal HttpExceptionAbstraction? EntityIsOk(int count, IEntity? newEntity)
     {
-        var l = Log.Fn<HttpExceptionAbstraction>();
+        var l = Log.Fn<HttpExceptionAbstraction?>();
         if (newEntity == null)
         {
             Add($"entity {count} couldn't deserialize");
@@ -115,9 +111,9 @@ internal class SaveDataValidator(EditDto package, ILog parentLog = null) : Valid
         return l.Return(preparedException2, "second test");
     }
 
-    internal (int? ResetId, HttpExceptionAbstraction Exception) IfUpdateValidateAndCorrectIds(int count, IEntity newEntity)
+    internal (int? ResetId, HttpExceptionAbstraction? Exception) IfUpdateValidateAndCorrectIds(int count, IEntity newEntity)
     {
-        var l = Log.Fn<(int?, HttpExceptionAbstraction)>();
+        var l = Log.Fn<(int?, HttpExceptionAbstraction?)>();
         var previousEntity = WorkEntities.Get(newEntity.EntityId) ?? WorkEntities.Get(newEntity.EntityGuid);
 
         int? resetId = default;

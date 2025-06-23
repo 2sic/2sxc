@@ -28,6 +28,9 @@ public class AdamControllerReal<TIdentifier>(
                 return l.Return(new("No file was uploaded."), "Error, no files");
 
             var (fileName, stream) = uploadInfo.GetStream();
+            if (stream == null!)
+                return l.ReturnAsError(new("File Stream is empty"));
+
             var uploader = adamUpload.New(new()
             {
                 AppId = appId,
@@ -66,6 +69,9 @@ public class AdamControllerReal<TIdentifier>(
         });
         var results = adamGet.ItemsInField(subfolder);
 
+        if (results == null)
+            return l.ReturnAsError([], "got empty object, user probably restricted");
+
         var dto = dtoMaker
             .New(new() { AdamContext = adamGet.AdamContext })
             .Convert(results);
@@ -75,6 +81,7 @@ public class AdamControllerReal<TIdentifier>(
 
     public IEnumerable</*AdamItemDto*/object> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
     {
+        var l = Log.Fn<IEnumerable<object>>();
         adamFolders.New(new()
             {
                 AppId = appId,
@@ -95,10 +102,13 @@ public class AdamControllerReal<TIdentifier>(
         });
         var folder = adamGet.ItemsInField(subfolder);
 
+        if (folder == null)
+            return l.ReturnAsError([], "got empty object, user probably restricted");
+
         var dto = dtoMaker
             .New(new() { AdamContext = adamGet.AdamContext })
             .Convert(folder);
-        return dto;
+        return l.ReturnAsOk(dto);
     }
 
     public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, TIdentifier id, bool usePortalRoot)

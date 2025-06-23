@@ -3,13 +3,13 @@
 /// <summary>
 /// helper class with all the info to identify a file in the app folder
 /// </summary>
-public class AppFileDto
+public record AppFileDto
 {
-    public int AppId { get; set; }
+    public int AppId { get; init; }
 
-    public string Path { get; set; }
+    public required string Path { get; init; }
 
-    public bool Global { get; set; }
+    public bool Global { get; init; }
 
-    public string TemplateKey { get; set; }
+    public required string TemplateKey { get; init; }
 }

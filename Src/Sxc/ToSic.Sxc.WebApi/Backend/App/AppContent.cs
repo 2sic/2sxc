@@ -36,13 +36,14 @@ public class AppContent(
 {
     #region Constructor / DI
 
-    public AppContent Init(string appName)
+    public AppContent Init(string? appName)
     {
         // if app-path specified, use that app, otherwise use from context
         Context = ctxService.AppNameRouteBlock(appName);
         return this;
     }
-    protected IContextOfApp Context;
+
+    protected IContextOfApp Context = null!;
 
     protected IAppReader AppReader => Context?.AppReaderRequired ??
                                    throw new("Can't access AppState before Context is ready. Did you forget to call Init(...)?");
@@ -52,7 +53,7 @@ public class AppContent(
 
     #region Get Items
 
-    public IEnumerable<IDictionary<string, object>> GetItems(string contentType, string appPath = default, string oDataSelect = default)
+    public IEnumerable<IDictionary<string, object>> GetItems(string contentType, string? appPath = default, string? oDataSelect = default)
     {
         var l = Log.Fn<IEnumerable<IDictionary<string, object>>>($"get entities type:{contentType}, path:{appPath}");
 
@@ -62,8 +63,8 @@ public class AppContent(
         var includeDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
         var result = api
             .GetEntities(AppReader, contentType, includeDrafts, oDataSelect)
-            ?.ToListOpt();
-        return l.Return(result, "found: " + result?.Count);
+            .ToListOpt();
+        return l.Return(result, "found: " + result.Count);
     }
 
 
@@ -77,7 +78,7 @@ public class AppContent(
     /// </summary>
     /// <returns></returns>
     public IDictionary<string, object> GetOne(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, 
-        string appPath, string oDataSelect)
+        string? appPath, string? oDataSelect)
     {
         Log.A($"get and serialize after security check type:{contentType}, path:{appPath}");
 
@@ -89,7 +90,7 @@ public class AppContent(
         if (!permCheck.EnsureAny(GrantSets.ReadDraft))
             itm = getOne(AppReader.GetListPublished());
 
-        return InitEavAndSerializer(AppReader.AppId, Context.Permissions.IsContentAdmin, oDataSelect).Convert(itm);
+        return InitEavAndSerializer(AppReader.AppId, Context.Permissions.IsContentAdmin, oDataSelect).Convert(itm)!;
     }
 
 
@@ -98,7 +99,7 @@ public class AppContent(
     #region CreateOrUpdate
 
 
-    public IDictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object> newContentItem, int? id = null, string appPath = null)
+    public IDictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object> newContentItem, int? id = null, string? appPath = null)
     {
         Log.A($"create or update type:{contentType}, id:{id}, path:{appPath}");
 
@@ -138,16 +139,16 @@ public class AppContent(
 
             Log.A($"new entity id: {id}");
             // Get Metadata - not sure why we're using the raw values, but maybe there were removed in cleaned?
-            var added = AddParentRelationship(rawValuesCaseInsensitive, id.Value);
+            var added = AddParentRelationship(rawValuesCaseInsensitive!, id.Value);
         }
         else
             dataController.Update(id.Value, cleanedNewItem);
 
         return InitEavAndSerializer(AppReader.AppId, Context.Permissions.IsContentAdmin, null)
-            .Convert(AppReader.List.One(id.Value));
+            .Convert(AppReader.List.One(id.Value)!)!;
     }
 
-    private bool AddParentRelationship(IDictionary<string, object> valuesCaseInsensitive, int addedEntityId)
+    private bool AddParentRelationship(IDictionary<string, object?> valuesCaseInsensitive, int addedEntityId)
     {
         var l = Log.Fn<bool>($"item dictionary key count: {valuesCaseInsensitive.Count}");
 
@@ -170,9 +171,9 @@ public class AppContent(
             return l.ReturnFalse("Parent entity is missing");
 
         var ids = new[] { addedEntityId as int? };
-        var index = (int)parentRelationship[ParentRelIndex];
+        var index = (int)parentRelationship[ParentRelIndex]!;
 
-        var field = (string)parentRelationship[ParentRelField];
+        var field = (string)parentRelationship[ParentRelField]!;
         var fields = new[] { field };
 
         workFieldList.New(AppReader).FieldListAdd(parentEntity, fields, index, ids, asDraft: false, forceAddToEnd: false);
@@ -180,7 +181,7 @@ public class AppContent(
         return l.ReturnTrue($"new ParentRelationship p:{parentGuid},f:{field},i:{index}");
     }
 
-    private Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive)
+    private Target? GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive)
     {
         var l = Log.Fn<Target>($"count: {newContentItemCaseInsensitive.Count}");
         if (!newContentItemCaseInsensitive.Keys.Contains(AttributeNames.JsonKeyMetadataFor))
@@ -193,11 +194,14 @@ public class AppContent(
         if (objectOrNull is not JsonObject metadataFor)
             return l.ReturnNull($"'{AttributeNames.JsonKeyMetadataFor}' value is not JsonObject");
 
-        var metaData = new Target(GetTargetType(metadataFor[AttributeNames.TargetNiceName]?.AsValue()), null,
+        var targetTypeName = metadataFor[AttributeNames.TargetNiceName]?.AsValue();
+        if (targetTypeName == null)
+            return l.ReturnNull($"'{AttributeNames.TargetNiceName}' value is null");
+        var metaData = new Target(GetTargetType(targetTypeName), null,
             
             keyGuid: (Guid?)metadataFor[AttributeNames.GuidNiceName],
             keyNumber: (int?)metadataFor[AttributeNames.NumberNiceName],
-            keyString: (string)metadataFor[AttributeNames.StringNiceName]
+            keyString: (string)metadataFor[AttributeNames.StringNiceName]!
         );
         return l.Return(metaData, $"new metadata g:{metaData.KeyGuid},n:{metaData.KeyNumber},s:{metaData.KeyString}");
 
@@ -207,20 +211,20 @@ public class AppContent(
         target.GetValue<JsonElement>().ValueKind switch
         {
             JsonValueKind.Number => (int)target,
-            JsonValueKind.String when Enum.TryParse<TargetTypes>((string)target, out var targetTypes) =>
-                (int)targetTypes,
+            JsonValueKind.String when Enum.TryParse<TargetTypes>((string)target!, out var targetTypes)
+                => (int)targetTypes,
             _ => throw new ArgumentOutOfRangeException(AttributeNames.TargetNiceName,
-                "Value is not 'int' or TargetTypes 'string'.")
+                @"Value is not 'int' or TargetTypes 'string'.")
         };
 
     private SimpleDataEditService DataController(IAppIdentity app) => _dataController ??= dataControllerLazy.Value.Init(app.ZoneId, app.AppId);
-    private SimpleDataEditService _dataController;
+    private SimpleDataEditService? _dataController;
 
     #endregion
 
     #region helpers / initializers to prep the EAV and Serializer
 
-    private IConvertToEavLight InitEavAndSerializer(int appId, bool userMayEdit, string oDataSelect)
+    private IConvertToEavLight InitEavAndSerializer(int appId, bool userMayEdit, string? oDataSelect)
     {
         var l = Log.Fn<IConvertToEavLight>($"init eav for a#{appId}");
         // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
@@ -238,9 +242,9 @@ public class AppContent(
 
     #region Delete
 
-    public void Delete(string contentType, int id, string appPath)
+    public void Delete(string contentType, int id, string? appPathForLogOnly)
     {
-        var l = Log.Fn($"id:{id}, type:{contentType}, path:{appPath}");
+        var l = Log.Fn($"id:{id}, type:{contentType}, path:{appPathForLogOnly}");
         // Note: if app-path specified, use that app, otherwise use from context - probably automatic based on headers?
 
         // don't allow type "any" on this
@@ -254,9 +258,9 @@ public class AppContent(
         l.Done();
     }
 
-    public void Delete(string contentType, Guid guid, string appPath)
+    public void Delete(string? contentType, Guid guid, string? appPathForLogOnly)
     {
-        var l = Log.Fn($"guid:{guid}, type:{contentType}, path:{appPath}");
+        var l = Log.Fn($"guid:{guid}, type:{contentType}, path:{appPathForLogOnly}");
         // Note: if app-path specified, use that app, otherwise use from context - probably automatic based on headers?
 
         var entityApi = api.Init(AppReader.AppId);

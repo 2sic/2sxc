@@ -26,7 +26,7 @@ partial class ListControllerReal
                          ?? throw l.Done( new Exception($"Can't find item '{guid}'"));
 
             // Make sure we have the correct casing for the field names
-            part = entity.Type[part].Name;
+            part = entity.Type[part]!.Name;
 
             var fList = workFieldList.New(Context.AppReaderRequired);
 
@@ -44,13 +44,13 @@ partial class ListControllerReal
     }
 
 
-    internal ReplacementListDto GetListToReorder(Guid guid, string part, int index, string typeName)
+    internal ReplacementListDto? GetListToReorder(Guid guid, string part, int index, string? typeName)
     {
         var l = Log.Fn<ReplacementListDto>($"{nameof(typeName)}:{typeName}, {nameof(part)}:{part}, {nameof(index)}:{index}");
 
         var (existingItemsInField, typeNameOfField) = FindItemAndFieldTypeName(guid, part);
 
-        typeName = typeName ?? typeNameOfField;
+        typeName ??= typeNameOfField;
 
         // if no type was defined in this set, then return an empty list as there is nothing to choose from
         if (string.IsNullOrEmpty(typeName))
@@ -58,17 +58,19 @@ partial class ListControllerReal
 
         var ct = Context.AppReaderRequired.GetContentType(typeName);
 
-        var listTemp = workEntities.New(Context.AppReaderRequired).Get(typeName).ToList();
+        var listTemp = workEntities.New(Context.AppReaderRequired)
+            .Get(typeName)
+            .ToList();
 
         var preferDraft = listTemp
             .Select(Context.AppReaderRequired.GetDraftOrKeep)
-            .GroupBy(e => e.EntityId)
-            .Select(g => g.OrderBy(e => e.RepositoryId).Last())
+            .GroupBy(e => e!.EntityId)
+            .Select(g => g.OrderBy(e => e!.RepositoryId).Last())
             .ToList();
 
         var results = preferDraft.ToDictionary(
-            p => p.EntityId,
-            p => p.GetBestTitle() ?? ""
+            p => p!.EntityId,
+            p => p!.GetBestTitle() ?? ""
         );
 
         // if list is empty or shorter than index (would happen in an add-to-end-request) return null
@@ -89,8 +91,11 @@ partial class ListControllerReal
             throw l.Done(new Exception($"No item found for {guid}"));
         if (!parent.Attributes.ContainsKey(part))
             throw l.Done(new Exception($"Could not find field {part} in item {guid}"));
-        var itemList = parent.Children(part)
+        var itemList = parent
+            .Children(part)
             .Select(Context.AppReaderRequired.GetDraftOrKeep)
+            .Where(e => e != null)
+            .Cast<IEntity>()
             .ToList();
 
         // find attribute-type-name

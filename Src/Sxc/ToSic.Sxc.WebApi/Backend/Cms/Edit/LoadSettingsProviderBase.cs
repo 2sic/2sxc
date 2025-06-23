@@ -11,7 +11,7 @@ public abstract class LoadSettingsProviderBase(string logName) : ServiceBase(log
         // Try to find each setting
         var settings = keys.ToDictionary(
             key => key,
-            key => appSettings.InternalGetPath(key).Result
+            key => appSettings.InternalGetPath(key).Result!
         );
 
         return l.Return(settings, $"{settings.Count}");

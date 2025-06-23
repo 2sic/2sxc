@@ -83,7 +83,7 @@ public class AppControllerReal(
     public bool SaveData(AppExportSpecs specs)
         => exportAppLazy.Value.SaveDataForVersionControl(specs);
 
-    public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
+    public List<AppStackDataRaw> GetStack(int appId, string? part, string? key = null, Guid? view = null)
         => appStackBackendLazy.Value.GetAll(appId, part ?? AppStackConstants.RootNameSettings, key, view);
 
     public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage, bool withPortalFiles)
@@ -104,6 +104,8 @@ public class AppControllerReal(
             return l.Return(new(false, "no file uploaded"), "no file uploaded");
 
         var (_, stream) = uploadInfo.GetStream(0);
+        if (stream == null!)
+            throw new NullReferenceException("File Stream is null, upload canceled");
 
         var result = importAppLazy.Value.Import(stream, zoneId, renameApp);
 

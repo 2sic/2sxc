@@ -45,9 +45,9 @@ public partial class EditLoadBackend(
 {
 
 
-    public EditDto Load(int appId, List<ItemIdentifier> items)
+    public EditLoadDto Load(int appId, List<ItemIdentifier> items)
     {
-        var l = Log.Fn<EditDto>($"load many a#{appId}, items⋮{items.Count}");
+        var l = Log.Fn<EditLoadDto>($"load many a#{appId}, items⋮{items.Count}");
         // Security check
         var context = ctxService.GetExistingAppOrSet(appId);
         
@@ -77,10 +77,10 @@ public partial class EditLoadBackend(
         var list = entityApi.GetEntitiesForEditing(items);
         var jsonSerializer = jsonSerializerGenerator.New().SetApp(appReader);
 
-        var result = new EditDto
+        var result = new EditLoadDto
         {
             Items = list
-                .Select(e => new BundleWithHeader<JsonEntity>
+                .Select(e => new BundleWithHeaderOptional<JsonEntity>
                 {
                     Header = e.Header,
                     Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, appReader, appWorkCtx)
@@ -126,12 +126,12 @@ public partial class EditLoadBackend(
         result = result with
         {
             ContentTypes = jsonTypes
-                .Select(t => t.ContentType)
+                .Select(t => t.ContentType!)
                 .ToList(),
 
             // Also add global Entities like Formulas which would not be included otherwise
             ContentTypeItems = jsonTypes
-                .SelectMany(t => t.Entities)
+                .SelectMany(t => t.Entities!)
                 .ToList(),
         };
 
@@ -143,7 +143,7 @@ public partial class EditLoadBackend(
         #region Input Types on ContentTypes and general definitions
 
         // Fix not-supported input-type names; map to correct name
-        foreach (var at in result.ContentTypes.SelectMany(jt => jt.Attributes))
+        foreach (var at in result.ContentTypes.SelectMany(jt => jt.AttributesSafe()))
             at.InputType = InputTypes.MapInputTypeV10(at.InputType);
 
         // load input-field configurations
@@ -181,7 +181,7 @@ public partial class EditLoadBackend(
         var inheritedFields = usedTypes
             .SelectMany(t => t.Attributes
                 .Where(a => a.SysSettings?.InheritMetadata == true)
-                .Select(a => new { Name = a.Name, Type = t}))
+                .Select(a => new { a.Name, Type = t}))
             .ToList();
 
         if (inheritedFields.Any())
@@ -205,17 +205,21 @@ public partial class EditLoadBackend(
     /// <summary>
     /// new 2020-12-08 - correct entity-id with lookup of existing if marked as singleton
     /// </summary>
+    // ReSharper disable once UnusedMethodReturnValue.Local
     private bool TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, IMetadataSource appMdSource)
     {
         var l = Log.Fn<bool>();
-        foreach (var header in list
-                     .Where(header => header.For?.Singleton == true && header.ContentTypeName.HasValue()))
+        var headersWithMetadataFor = list
+            .Where(header => header.For?.Singleton == true && header.ContentTypeName.HasValue())
+            .ToListOpt();
+
+        foreach (var header in headersWithMetadataFor)
         {
             l.A("Found an entity with the auto-lookup marker");
             // try to find metadata for this
             var mdFor = header.For;
             // #TargetTypeIdInsteadOfTarget
-            var type = mdFor.TargetType != 0
+            var type = mdFor!.TargetType != 0
                 ? mdFor.TargetType
                 : mdTargetTypes.GetId(mdFor.Target!);
             var mds = mdFor.Guid != null

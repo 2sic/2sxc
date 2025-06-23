@@ -24,13 +24,13 @@ public class EditController() : OqtStatefulControllerBase(RealController.LogSuff
     [HttpPost]
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
     [AllowAnonymous]   // will check security internally, so assume no requirements
-    public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
+    public EditLoadDto Load([FromBody] List<ItemIdentifier> items, int appId)
         => Real.Load(items, appId);
 
     [HttpPost]
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
     [Authorize(Roles = RoleNames.Admin)]
-    public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
+    public Dictionary<Guid, int> Save([FromBody] EditSaveDto package, int appId, bool partOfPage)
         => Real.Save(package, appId, partOfPage);
 
     /// <inheritdoc />

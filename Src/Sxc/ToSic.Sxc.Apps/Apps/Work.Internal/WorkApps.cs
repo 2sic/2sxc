@@ -14,7 +14,7 @@ public class WorkApps(IAppStateCacheService appStates, IAppReaderFactory appRead
     : ServiceBase("Cms.AppsRt", connect: [appStates, appReaders, appPathsGen, globalPaths, appsCatalog])
 {
 
-    public IList<AppUiInfo> GetSelectableApps(ISite site, string filter)
+    public IList<AppUiInfo> GetSelectableApps(ISite site, string? filter)
     {
         var l = Log.Fn<List<AppUiInfo>>($"filter:{filter}");
         var list =
@@ -37,9 +37,9 @@ public class WorkApps(IAppStateCacheService appStates, IAppReaderFactory appRead
                     {
                         Name = specs.Name,
                         AppId = specs.AppId,
-                        SupportsAjaxReload = specs.Configuration?.EnableAjax ?? false,
+                        SupportsAjaxReload = specs.Configuration.EnableAjax,
                         Thumbnail = thumbnail,
-                        Version = specs.Configuration?.Version?.ToString() ?? ""
+                        Version = specs.Configuration.Version.ToString() ?? ""
                     };
                 })
                 .ToList();

@@ -2,7 +2,7 @@
 
 partial class EditLoadPrefetchHelper
 {
-    private Dictionary<string, Dictionary<string, IEnumerable< /*AdamItemDto*/object>>> PrefetchAdam(int appId, EditDto editData)
+    private Dictionary<string, Dictionary<string, IEnumerable< /*AdamItemDto*/object>>> PrefetchAdam(int appId, EditLoadDto editData)
     {
         var l = Log.Fn<Dictionary<string, Dictionary<string, IEnumerable<object>>>>();
 

@@ -12,9 +12,13 @@ public class DocsAttribute: Attribute
 {
     public required string[] Messages { get; set; }
 
-    public string[] GetMessages(string fullName)
+    public string[] GetMessages(string? fullName)
     {
-        if (!AutoLink) return Messages;
+        if (fullName == null)
+            return [];
+
+        if (!AutoLink)
+            return Messages;
 
         var newMessages = Messages.ToList();
         var helpLink = $"[documentation](https://docs.2sxc.org/api/dot-net/{fullName}.html)";

@@ -10,7 +10,7 @@ internal static class MultiPermissionTypeExtensions
 {
     public static MultiPermissionsTypes Init(this MultiPermissionsTypes parent, IContextOfSite context, IAppIdentity app, List<ItemIdentifier> items)
     {
-        var l = parent.Log.Fn<MultiPermissionsTypes>($"..., appId: {app.AppId}, items: {items?.Count}");
+        var l = parent.Log.Fn<MultiPermissionsTypes>($"..., appId: {app.AppId}, items: {items.Count}");
         parent.Init(context, app);
         var contentTypes = ExtractTypeNamesFromItems(parent, items);
         parent.InitTypesAfterInit(contentTypes);
@@ -36,9 +36,9 @@ internal static class MultiPermissionTypeExtensions
                 l.A($"item: {item.EntityId}, useItemTypeName: {useItemTypeName}, itemTypeName: {itemTypeName}");
 
                 if (useItemTypeName)
-                    return itemTypeName;
+                    return itemTypeName!;
 
-                var entityFromRepo = allData.FindRepoId(item.EntityId);
+                var entityFromRepo = allData.FindRepoId(item.EntityId)!;
                 //if (entityFromRepo == null)
                 //{
                 //    l.A($"Entity not found in repo: {item.EntityId}");

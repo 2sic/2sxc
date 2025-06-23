@@ -77,7 +77,7 @@ public class ViewsBackend(
     /// <param name="staticName"></param>
     /// <param name="maybeEntity"></param>
     /// <returns></returns>
-    private static ViewContentTypeDto TypeSpecs(IEnumerable<IContentType> allCTs, string staticName, IEntity maybeEntity)
+    private static ViewContentTypeDto TypeSpecs(IEnumerable<IContentType> allCTs, string staticName, IEntity? maybeEntity)
     {
         var found = allCTs.FirstOrDefault(ct => ct.NameId == staticName);
         return new()

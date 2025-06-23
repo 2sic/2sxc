@@ -2,7 +2,7 @@
 
 public class EntityDto: IdentifierDto
 {
-    public string Title;
+    public string? Title;
     public ContentTypeDto Type;
 
     public EntityDto(IEntity entity)

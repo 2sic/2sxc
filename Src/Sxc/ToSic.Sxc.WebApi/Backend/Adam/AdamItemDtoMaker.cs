@@ -21,7 +21,9 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
     }
 
     private readonly IAdamSecurityCheckService _security = services.Security;
-    public AdamContext AdamContext => field ??= Options.AdamContext;
+
+    [field: AllowNull, MaybeNull]
+    public AdamContext AdamContext => field ??= Options.AdamContext!;
 
     #endregion
 
@@ -99,9 +101,10 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
         return item;
     }
 
-    private IEnumerable<MetadataOfDto> GetMetadataOf(ITypedMetadata md)
+    private IEnumerable<MetadataOfDto>? GetMetadataOf(ITypedMetadata? md)
     {
-        if (md == null) return null;
+        if (md == null)
+            return null;
 
         var result = ((IHasMetadata)md).Metadata
             .Select(m => new MetadataOfDto
@@ -111,7 +114,9 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
                 Type = new(m)
             })
             .ToArray();
-        return result.Any() ? result : null;
+        return result.Any()
+            ? result
+            : null;
     }
 
     private bool CanEditFolder(Eav.Apps.Assets.IAsset original)

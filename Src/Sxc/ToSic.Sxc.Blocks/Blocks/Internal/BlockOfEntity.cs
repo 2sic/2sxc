@@ -12,7 +12,7 @@ public sealed class BlockOfEntity(BlockGeneratorHelpers helpers, LazySvc<AppFind
 {
     #region Init
 
-    public IBlock GetBlockOfEntity(IBlock parentBlock, IEntity blockEntity, int contentBlockId = -1)
+    public IBlock GetBlockOfEntity(IBlock parentBlock, IEntity? blockEntity, int contentBlockId = -1)
     {
         var l = Log.Fn<BlockSpecs>($"{nameof(contentBlockId)}:{contentBlockId}; {nameof(blockEntity)}:{blockEntity?.EntityId}", timer: true);
 

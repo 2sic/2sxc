@@ -27,10 +27,11 @@ public class SaveSecurity: SaveHelperBase
 
     public IMultiPermissionCheck DoPreSaveSecurityCheck(IEnumerable<BundleWithHeader> items)
     {
-        var l = Log.Fn<IMultiPermissionCheck>($"{items.Count()} items");
+        var list = items.ToListOpt();
+        var l = Log.Fn<IMultiPermissionCheck>($"{list.Count} items");
 
         var permCheck = _multiPermissionsTypesGen.New()
-            .Init(Context, Context.AppReaderRequired, items.Select(i => i.Header).ToList());
+            .Init(Context, Context.AppReaderRequired, list.Select(i => i.Header).ToList());
         if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
             throw HttpException.PermissionDenied(error);
         if (!permCheck.UserCanWriteAndPublicFormsEnabled(out _, out error))

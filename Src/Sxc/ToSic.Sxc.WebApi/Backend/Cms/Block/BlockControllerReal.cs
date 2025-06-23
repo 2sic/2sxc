@@ -21,11 +21,12 @@ public class BlockControllerReal(
 
     #region Block
 
+    [field: AllowNull, MaybeNull]
     private ContentBlockBackend Backend => field ??= blockBackend.Value;
 
     /// <inheritdoc />
     public string Block(int parentId, string field, int index, string app = "", Guid? guid = null)
-        => Backend.NewBlockAndRender(parentId, field, index, app, guid).Html;
+        => Backend.NewBlockAndRender(parentId, field, index, app, guid).Html ?? "";
     #endregion
 
     #region BlockItems
@@ -53,7 +54,7 @@ public class BlockControllerReal(
     /// </summary>
     /// <param name="apps"></param>
     /// <returns></returns>
-    public IEnumerable<AppUiInfo> Apps(string apps = null)
+    public IEnumerable<AppUiInfo> Apps(string? apps = null)
     {
         // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
         var site = context.Value.Site;
@@ -101,7 +102,8 @@ public class BlockControllerReal(
         _moduleRoot = moduleRoot;
         return this;
     }
-    private string _moduleRoot;
+
+    private string _moduleRoot = null!;
 
 
     /// <inheritdoc />

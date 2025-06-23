@@ -64,7 +64,7 @@ public class ViewControllerReal(
         for (var i = 0; i < uploadInfo.Count; i++)
         {
             var (fileName, stream) = uploadInfo.GetStream(i);
-            streams.Add(new() {Name = fileName, Stream = stream});
+            streams.Add(new() { Name = fileName, Stream = stream! });
         }
         var result = viewExportImport.Value.ImportView(zoneId, appId, streams, context.Value.Site.DefaultCultureCode);
 
@@ -86,7 +86,7 @@ public class ViewControllerReal(
         FinalBuilder = finalBuilder;
         return this;
     }
-    private Func<ICollection<IView>, ICollection<BlockConfiguration>, IEnumerable<ViewDto>> FinalBuilder { get; set; }
+    private Func<ICollection<IView>, ICollection<BlockConfiguration>, IEnumerable<ViewDto>>? FinalBuilder { get; set; }
 
     /// <summary>
     /// Helper method to get SiteId for ControllerReal proxy class.

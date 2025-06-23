@@ -57,19 +57,9 @@ public interface IApp : IAppIdentity, IHasMetadata
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    [Obsolete("Don't use any more, use NameId instead, will be removed ca. v14")]
+    [Obsolete("Don't use any more?? note: 2026-06 2dm not sure if this is really deprecated, used to say: use NameId instead, will be removed ca. v14")]
     // TODO: MARK as #Deprecated and log access
     ILookUpEngine ConfigurationProvider { get; }
-
-
-    // 2024-08-21 2dm - commented out now, for 18.01
-    ///// <summary>
-    ///// The stored / cached, read-only App State
-    ///// </summary>
-    //[PrivateApi("Was public till 14.7 but probably never communicated / used except internally. Made Private again in 15.06. Till then was AppState, not interface")]
-    //[ShowApiWhenReleased(ShowApiMode.Never)]
-    //[Obsolete("Don't use any more, use NameId instead, will be removed ca. v14")]
-    //IAppState AppState { get; }
 
     #endregion
 }

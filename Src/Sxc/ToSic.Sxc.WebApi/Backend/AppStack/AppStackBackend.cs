@@ -18,7 +18,7 @@ public class AppStackBackend(
     IPropertyDumpService dumperService)
     : ServiceBase("Sxc.ApiApQ", connect: [dataStackService, zoneCulture, appReaders, dumperService])
 {
-    public List<AppStackDataRaw> GetAll(int appId, string part, string key, Guid? viewGuid)
+    public List<AppStackDataRaw> GetAll(int appId, string part, string? key, Guid? viewGuid)
     {
         // Correct languages
         //if (languages == null || !languages.Any())
@@ -46,7 +46,7 @@ public class AppStackBackend(
 
 
 
-    public List<PropertyDumpItem> GetStackDump(IAppReader appReader, string partName, string[] languages, IEntity viewSettingsMixin)
+    public List<PropertyDumpItem> GetStackDump(IAppReader appReader, string partName, string?[] languages, IEntity? viewSettingsMixin)
     {
         // Build Sources List
         var settings = dataStackService.Init(appReader).GetStack(partName, viewSettingsMixin);
@@ -55,12 +55,12 @@ public class AppStackBackend(
         // #DropUseOfDumpProperties
         //var results = settings._DumpNameWipDroppingMostCases(new(null, languages, true, Log), null);
 
-        var results = dumperService.Dump(settings, new(null, languages, true, Log), null);
+        var results = dumperService.Dump(settings, new(null!, languages, true, Log), null!);
         return results;
     }
 
 
-    private IEntity GetViewSettingsForMixin(Guid? viewGuid, string[] languages, IAppReadEntities appState, string realName)
+    private IEntity? GetViewSettingsForMixin(Guid? viewGuid, string?[] languages, IAppReadEntities appState, string realName)
     {
         if (viewGuid == null)
             return null;

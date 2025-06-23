@@ -27,11 +27,11 @@ public interface IDynamicWebApi
     /// <returns></returns>
     [ShowApiWhenReleased(ShowApiMode.Never)]
     IFile SaveInAdam(NoParamOrder noParamOrder = default,
-        Stream stream = null,
-        string fileName = null,
-        string contentType = null,
+        Stream? stream = null,
+        string? fileName = null,
+        string? contentType = null,
         Guid? guid = null,
-        string field = null,
+        string? field = null,
         string subFolder = "");
 
 
@@ -56,10 +56,10 @@ public interface IDynamicWebApi
         // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
         bool? download = null,
         // important: this is the virtualPath, but it should not have the same name, to not confuse the compiler with same sounding param names
-        string virtualPath = null,
-        string contentType = null,
-        string fileDownloadName = null,
-        object contents = null
+        string? virtualPath = null,
+        string? contentType = null,
+        string? fileDownloadName = null,
+        object? contents = null
     );
 
 }

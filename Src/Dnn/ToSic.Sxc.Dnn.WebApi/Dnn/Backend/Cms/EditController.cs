@@ -19,9 +19,9 @@ public class EditController() : DnnSxcControllerBase(RealController.LogSuffix), 
     /// <inheritdoc />
     [HttpPost]
     [AllowAnonymous] // will check security internally, so assume no requirements
-    public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
+    public EditLoadDto Load([FromBody] List<ItemIdentifier> items, int appId)
     {
-        var l = Log.Fn<EditDto>($"Items: {items.Count}, AppId: {appId}");
+        var l = Log.Fn<EditLoadDto>($"Items: {items.Count}, AppId: {appId}");
         return l.ReturnAsOk(Real.Load(items, appId));
     }
 
@@ -29,7 +29,7 @@ public class EditController() : DnnSxcControllerBase(RealController.LogSuffix), 
     /// <inheritdoc />
     [HttpPost]
     [AllowAnonymous] // will check security internally, so assume no requirements
-    public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
+    public Dictionary<Guid, int> Save([FromBody] EditSaveDto package, int appId, bool partOfPage)
     {
         var l = Log.Fn<Dictionary<Guid, int>>($"Items: {package?.Items?.Count}, AppId: {appId}, PartOfPage: {partOfPage}");
         return l.ReturnAsOk(Real.Save(package, appId, partOfPage));

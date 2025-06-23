@@ -47,10 +47,10 @@ internal class LoadSettingsForPickerSources() : LoadSettingsProviderBase($"{SxcL
 
         // Find all the NameIds which the DataSource says it can create
         var createTypes = pickerSources
-            .Select(p => p.DataSource.Get<string>(nameof(IUiPickerSourceEntity.CreateTypes), languages: []))
+            .Select(p => p.DataSource!.Get<string>(nameof(IUiPickerSourceEntity.CreateTypes), languages: []))
             .Where(s => s.HasValue())
             // TODO: INFO @SDV - he probably has comma separated values
-            .SelectMany(s => s
+            .SelectMany(s => s!
                 // TODO!!! NEW-LINES seem to be saved wrong!
                 .Replace("\\n", "\n")
                 .LinesToArrayWithoutEmpty())
@@ -72,7 +72,7 @@ internal class LoadSettingsForPickerSources() : LoadSettingsProviderBase($"{SxcL
             return l.Return([], "no types to enable create");
 
         var typesOnly = typesToEnableCreate
-            .Select(t => t.Type)
+            .Select(t => t.Type!)
             .ToList();
         return l.Return(typesOnly, $"{typesOnly.Count}");
     }

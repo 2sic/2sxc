@@ -32,7 +32,7 @@ public class TypeControllerReal(
     public const string LogSuffix = "Types";
 
 
-    public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
+    public IEnumerable<ContentTypeDto> List(int appId, string? scope = null, bool withStatistics = false)
     {
         var l = Log.Fn<IEnumerable<ContentTypeDto>>($"{appId}, scope:{scope}, stats:{withStatistics}");
         var list = ctApiLazy.Value.List(appId, scope, withStatistics);
@@ -69,7 +69,7 @@ public class TypeControllerReal(
     /// <summary>
     /// Used to be GET ContentTypes/Scopes
     /// </summary>
-    public ContentTypeDto Get(int appId, string contentTypeId, string scope = null)
+    public ContentTypeDto Get(int appId, string contentTypeId, string? scope = null)
         => ctApiLazy.Value.GetSingle(appId, contentTypeId, scope);
 
 
@@ -87,8 +87,11 @@ public class TypeControllerReal(
         if (item == null)
             return l.ReturnFalse("item was null, will cancel");
 
-        var dic = item.ToDictionary(i => i.Key, i => i.Value?.ToString());
-        var result = typeMod.New(appId).AddOrUpdate(dic["StaticName"], dic["Scope"], dic["Name"], null, false);
+        var dic = item.ToDictionary(
+            i => i.Key,
+            i => i.Value?.ToString()
+        );
+        var result = typeMod.New(appId).AddOrUpdate(dic["StaticName"]!, dic["Scope"]!, dic["Name"]!, null, false);
             
         return l.ReturnAndLog(result);
     }
@@ -141,7 +144,7 @@ public class TypeControllerReal(
         for (var i = 0; i < uploadInfo.Count; i++)
         {
             var (fileName, stream) = uploadInfo.GetStream(i);
-            streams.Add(new() { Name = fileName, Stream = stream });
+            streams.Add(new() { Name = fileName, Stream = stream! });
         }
         var result = importContent.New()
             .ImportJsonFiles(zoneId, appId, streams, context.Value.Site.DefaultCultureCode);

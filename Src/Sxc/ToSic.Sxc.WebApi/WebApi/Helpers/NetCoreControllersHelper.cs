@@ -11,12 +11,12 @@ namespace ToSic.Eav.WebApi.Helpers;
 public class NetCoreControllersHelper(ControllerBase parent) : ICanGetService
 {
     public ControllerBase Parent { get; } = parent;
-    public ILog LogOrNull { get; } = (parent as IHasLog)?.Log;
+    public ILog? LogOrNull { get; } = (parent as IHasLog)?.Log;
 
-    private ILogCall _actionTimerWrap; // it is used across events to track action execution total time
+    private ILogCall? _actionTimerWrap; // it is used across events to track action execution total time
 
     public IServiceProvider ServiceProvider => _serviceProvider ?? throw new($"{nameof(ServiceProvider)} is only available after calling {nameof(OnActionExecuting)}");
-    private IServiceProvider _serviceProvider;
+    private IServiceProvider? _serviceProvider;
 
 
     public void OnActionExecuting(ActionExecutingContext context, string historyLogGroup)
@@ -28,7 +28,8 @@ public class NetCoreControllersHelper(ControllerBase parent) : ICanGetService
         _serviceProvider = context.HttpContext.RequestServices;
 
         // Add to Log History
-        GetService<ILogStore>().Add(historyLogGroup, LogOrNull);
+        if (LogOrNull != null)
+            GetService<ILogStore>().Add(historyLogGroup, LogOrNull);
     }
 
     public void OnActionExecuted(ActionExecutedContext context)

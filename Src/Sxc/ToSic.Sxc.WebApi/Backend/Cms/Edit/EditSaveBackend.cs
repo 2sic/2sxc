@@ -36,11 +36,11 @@ public class EditSaveBackend(
         return this;
     }
 
-    private IContextOfApp _context;
+    private IContextOfApp _context = null!;
     private int _appId;
     #endregion
 
-    public Dictionary<Guid, int> Save(EditDto package, bool partOfPage)
+    public Dictionary<Guid, int> Save(EditSaveDto package, bool partOfPage)
     {
         var l = Log.Fn<Dictionary<Guid, int>>($"save started with a#{_appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
 

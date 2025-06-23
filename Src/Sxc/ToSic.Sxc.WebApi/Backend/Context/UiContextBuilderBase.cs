@@ -41,8 +41,8 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
     #region Constructor / DI
 
     protected int ZoneId => Services.SiteCtx.Site.ZoneId;
-    protected IAppSpecs AppSpecsOrNull;
-    private IAppReader _appReaderOrNull;
+    protected IAppSpecs? AppSpecsOrNull;
+    private IAppReader? _appReaderOrNull;
 
     #endregion
 
@@ -74,9 +74,10 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
         return ctx;
     }
 
-    protected virtual ContextLanguageDto GetLanguage()
+    protected virtual ContextLanguageDto? GetLanguage()
     {
-        if (ZoneId == 0) return null;
+        if (ZoneId == 0)
+            return null;
         var site = Services.SiteCtx.Site;
 
         var converted = Services.LanguagesBackend.Value.GetLanguagesOfApp(_appReaderOrNull);
@@ -136,19 +137,25 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
             DebugMode = user.IsSystemAdmin ||
                         Services.Features.Value.IsEnabled(EditUiAllowDebugModeForEditors)
         };
-        if (ctx.HasFlag(CtxEnable.AppPermissions)) dto.AppPermissions = isRealApp;
-        if (ctx.HasFlag(CtxEnable.CodeEditor)) dto.CodeEditor = user.IsSystemAdmin;
-        if (ctx.HasFlag(CtxEnable.Query)) dto.Query = isRealApp && user.IsSystemAdmin;
-        if (ctx.HasFlag(CtxEnable.FormulaSave)) dto.FormulaSave = user.IsSystemAdmin;
-        if (ctx.HasFlag(CtxEnable.OverrideEditRestrictions)) dto.OverrideEditRestrictions = user.IsSystemAdmin;
+        if (ctx.HasFlag(CtxEnable.AppPermissions))
+            dto.AppPermissions = isRealApp;
+        if (ctx.HasFlag(CtxEnable.CodeEditor))
+            dto.CodeEditor = user.IsSystemAdmin;
+        if (ctx.HasFlag(CtxEnable.Query))
+            dto.Query = isRealApp && user.IsSystemAdmin;
+        if (ctx.HasFlag(CtxEnable.FormulaSave))
+            dto.FormulaSave = user.IsSystemAdmin;
+        if (ctx.HasFlag(CtxEnable.OverrideEditRestrictions))
+            dto.OverrideEditRestrictions = user.IsSystemAdmin;
         return dto;
     }
 
     protected virtual string GetGettingStartedUrl() => EavConstants.UrlNotInitialized;
 
-    protected virtual ContextAppDto GetApp(Ctx flags)
+    protected virtual ContextAppDto? GetApp(Ctx flags)
     {
-        if (_appReaderOrNull == null) return null;
+        if (_appReaderOrNull == null)
+            return null;
         var appReader = _appReaderOrNull;
         var appSpecs = appReader.Specs;
         var paths = Services.AppPaths.Get(appReader, Services.SiteCtx.Site);
@@ -165,23 +172,23 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
         if (!flags.HasFlag(Ctx.AppEdit) && !flags.HasFlag(Ctx.AppAdvanced))
             return result;
 
-        result.IsGlobalApp = AppSpecsOrNull.IsGlobalSettingsApp();
-        result.IsSiteApp = AppSpecsOrNull.IsSiteSettingsApp();
+        result.IsGlobalApp = appSpecs.IsGlobalSettingsApp();
+        result.IsSiteApp = appSpecs.IsSiteSettingsApp();
         // only check content if not global, as that has the same id
         if (!result.IsGlobalApp)
-            result.IsContentApp = AppSpecsOrNull.IsContentApp();
+            result.IsContentApp = appSpecs.IsContentApp();
 
         // Stop now if we don't need advanced infos
         if (!flags.HasFlag(Ctx.AppAdvanced))
             return result;
 
         result.GettingStartedUrl = GetGettingStartedUrl();
-        result.Identifier = AppSpecsOrNull.NameId;
+        result.Identifier = appSpecs.NameId;
             
         // #SiteApp v13
-        result.SettingsScope = AppSpecsOrNull.IsGlobalSettingsApp()
+        result.SettingsScope = appSpecs.IsGlobalSettingsApp()
             ? "Global" 
-            : AppSpecsOrNull.IsSiteSettingsApp()
+            : appSpecs.IsSiteSettingsApp()
                 ? "Site" 
                 : "App";
 
@@ -190,7 +197,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
         result.IsShared = appReader.IsShared();
         result.IsInherited = appReader.IsInherited();
 
-        result.Icon = AppAssetThumbnail.GetUrl(appReader, paths, Services.GlobalPaths);
+        result.Icon = AppAssetThumbnail.GetUrl(appReader, paths!, Services.GlobalPaths);
         return result;
     }
 
@@ -215,7 +222,6 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
     /// <summary>
     /// Features provided must be virtual, so that applications can override this.
     /// </summary>
-    /// <param name="ctx"></param>
     /// <returns></returns>
     protected virtual IList<FeatureDto> GetFeatures(Ctx flags)
         => Services.UiDataLazy.Value.FeaturesDto(Services.SiteCtx.Permissions.IsContentAdmin, flags.HasFlag(Ctx.FeaturesForSystemTypes));

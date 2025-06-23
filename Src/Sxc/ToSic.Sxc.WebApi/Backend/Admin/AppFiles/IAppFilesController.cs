@@ -4,7 +4,7 @@ namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
 public interface IAppFilesController
 {
-    ICollection<string> All(int appId, bool global, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false);
+    ICollection<string> All(int appId, bool global, string? path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false);
 
     /// <summary>
     /// Get details and source code
@@ -15,7 +15,7 @@ public interface IAppFilesController
     /// <param name="appId"></param>
     /// <returns></returns>
     AssetEditInfo Asset(int appId, 
-        int templateId = 0, string path = null, // identifier is always one of these two
+        int templateId = 0, string? path = null, // identifier is always one of these two
         bool global = false);
 
     /// <summary>
@@ -31,7 +31,7 @@ public interface IAppFilesController
         int appId, 
         AssetEditInfo template,
         int templateId = 0, 
-        string path = null, // identifier is either template Id or path
+        string? path = null, // identifier is either template Id or path
         // todo w/SPM - global never seems to be used - must check why and if we remove or add to UI
         bool global = false);
 
@@ -55,10 +55,10 @@ public interface IAppFilesController
     /// </summary>
     /// <param name="purpose">filter by Purpose when provided</param>
     /// <returns></returns>
-    TemplatesDto GetTemplates(string purpose = null, string type = null);
+    TemplatesDto GetTemplates(string? purpose = null, string? type = null);
 
     TemplatePreviewDto Preview(int appId, string path, string templateKey, bool global = false);
 
-    AllFilesDto AppFiles(int appId, string path = null, string mask = null);
+    AllFilesDto AppFiles(int appId, string? path = null, string? mask = null);
 
 }

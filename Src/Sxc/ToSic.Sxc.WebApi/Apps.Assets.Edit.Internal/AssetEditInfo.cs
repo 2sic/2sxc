@@ -11,7 +11,7 @@ public class AssetEditInfo
         
     private static readonly string[] SafeFileWhitelist = "txt,html,js,md,json,doc,docx,xls,xlsx,xml".Split(',');
 
-    public string
+    public string?
         Name,
         Code,
         FileName,
@@ -27,7 +27,7 @@ public class AssetEditInfo
     public bool IsShared;
     public Dictionary<string, string> Streams = new();
 
-    public string Extension => Path.GetExtension(FileName);
+    public string Extension => Path.GetExtension(FileName ?? "");
 
     /// <summary>
     /// parameter-less constructor for deserialization, to fix "System.InvalidOperationException"

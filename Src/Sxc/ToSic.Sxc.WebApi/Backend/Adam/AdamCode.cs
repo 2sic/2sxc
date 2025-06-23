@@ -20,11 +20,11 @@ public class AdamCode(Generator<AdamWorkUpload, AdamWorkOptions> adamUploadGener
     : ServiceWithContext("AdamCode", connect: [adamUploadGenerator, featuresLazy])
 {
     public IFile SaveInAdam(NoParamOrder noParamOrder = default,
-        Stream stream = null,
-        string fileName = null,
-        string contentType = null,
+        Stream? stream = null,
+        string? fileName = null,
+        string? contentType = null,
         Guid? guid = null,
-        string field = null,
+        string? field = null,
         string subFolder = "")
     {
         var l = Log.Fn<IFile>();

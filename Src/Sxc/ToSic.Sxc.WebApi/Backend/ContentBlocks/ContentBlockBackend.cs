@@ -82,7 +82,7 @@ public class ContentBlockBackend(
                                    // Note: Url can be empty if it has contents
                                    Url = string.IsNullOrWhiteSpace(asset.Url)
                                        ? null
-                                       : UrlHelpers.QuickAddUrlParameter(asset.Url, "v", ver),
+                                       : UrlHelpers.QuickAddUrlParameter(asset.Url!, "v", ver),
                                    Type = asset.IsJs ? "js" : "css",
                                    Contents = asset.Content,
                                    Attributes = asset.HtmlAttributes,

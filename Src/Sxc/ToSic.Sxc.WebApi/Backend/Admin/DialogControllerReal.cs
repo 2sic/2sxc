@@ -46,5 +46,5 @@ public class DialogControllerReal(
 
 public class DialogContextStandaloneDto
 {
-    public ContextDto Context { get; set; }
+    public required ContextDto Context { get; init; }
 }

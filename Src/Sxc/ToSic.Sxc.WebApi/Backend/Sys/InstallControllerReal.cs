@@ -75,7 +75,7 @@ public class InstallControllerReal(
             .GetStack(AppStackConstants.Settings);
         var stack = new PropertyStack().Init(AppStackConstants.RootNameSettings, settingsSources);
 
-        var rules = stack.InternalGetPath(new PropReqSpecs("SiteSetup.AutoInstallApps", PropReqSpecs.EmptyDimensions, true, Log), null);
+        var rules = stack.InternalGetPath(new PropReqSpecs("SiteSetup.AutoInstallApps", PropReqSpecs.EmptyDimensions, true, Log), new());
         var ruleEntities = rules.Result as IEnumerable<IEntity>;    // note: Result is null if nothing found...
         var rulesFinal = ruleEntities?
             .Select(e => new SiteSetupAutoInstallAppsRule(e).GetRuleDto())
@@ -91,7 +91,7 @@ public class InstallControllerReal(
         {
             remoteUrl = url,
             installedApps = appsOfThisSite,
-            rules = rulesFinal
+            rules = rulesFinal,
         };
     }
 
@@ -102,7 +102,7 @@ public class InstallControllerReal(
     /// <param name="container"></param>
     /// <param name="newName"></param>
     /// <returns></returns>
-    public THttpResponseType RemotePackage(string packageUrl, IModule container, string newName = null)
+    public THttpResponseType RemotePackage(string packageUrl, IModule container, string? newName = null)
     {
         var l = Log.Fn<THttpResponseType>();
 

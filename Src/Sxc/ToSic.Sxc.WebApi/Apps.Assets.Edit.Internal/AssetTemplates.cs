@@ -39,7 +39,7 @@ public partial class AssetTemplates() : ServiceBase("SxcAss.Templt")
         EmptyTextFile,
         EmptyFile
     ];
-    private static List<TemplateInfo> _templates;
+    private static List<TemplateInfo>? _templates;
 
     public const string CsApiTemplateControllerName = "PleaseRenameController";
     public const string CsDataSourceName = "PleaseRename";

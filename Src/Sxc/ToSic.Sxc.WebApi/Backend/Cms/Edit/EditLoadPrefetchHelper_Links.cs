@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Backend.Cms;
 
 partial class EditLoadPrefetchHelper
 {
-    private Dictionary<string, LinkInfoDto> PrefetchLinks(int appId, EditDto editData)
+    private Dictionary<string, LinkInfoDto> PrefetchLinks(int appId, EditLoadDto editData)
     {
         try
         {
@@ -13,13 +13,14 @@ partial class EditLoadPrefetchHelper
             var bundlesHavingLinks = BundleWithLinkFields(editData);
 
             var links = bundlesHavingLinks
-                .SelectMany(set => set.HyperlinkFields
-                    .SelectMany(h => h.Value?.Select(linkAttrib => new
+                .SelectMany(set => (set.HyperlinkFields ?? [])
+                    .SelectMany(h => (h.Value ?? [])
+                        .Select(linkAttrib => new
                     {
                         Link = linkAttrib.Value,
                         Converted = TryToConvertOrErrorText(appId, set.ContentTypeName, h.Key, linkAttrib.Value, set.Guid),
                     })))
-                .Where(set => set != null)
+                //.Where(set => set != null)
                 // Step 2: Check which ones have a link reference
                 .Where(set => ValueConverterBase.CouldBeReference(set.Link))
                 // Make distinct by Link
@@ -47,7 +48,7 @@ partial class EditLoadPrefetchHelper
     {
         try
         {
-            var hlnkBackend = _hyperlinkBackend.Get(() => hyperlinkBackend.New());
+            var hlnkBackend = _hyperlinkBackend.Get(hyperlinkBackend.New)!;
             var result = hlnkBackend.LookupHyperlink(appId, value, contentType, entityGuid, field);
             return result;
         }
@@ -59,7 +60,7 @@ partial class EditLoadPrefetchHelper
     private readonly GetOnce<HyperlinkBackend> _hyperlinkBackend = new();
 
 
-    private static List<BundleWithLinkField> BundleWithLinkFields(EditDto editData, bool includeStringFields = false)
+    private static List<BundleWithLinkField> BundleWithLinkFields(EditLoadDto editData, bool includeStringFields = false)
     {
         var bundlesHavingLinks = editData.Items
             // Only these with hyperlinks
@@ -71,9 +72,9 @@ partial class EditLoadPrefetchHelper
             })
             .Select(b => new BundleWithLinkField
             {
-                Guid = b.Entity.Guid,
-                HyperlinkFields = b.Entity.Attributes.Hyperlink,
-                StringFields = b.Entity.Attributes.String,
+                Guid = b.Entity!.Guid,
+                HyperlinkFields = b.Entity.Attributes.Hyperlink!,
+                StringFields = b.Entity.Attributes.String!,
                 ContentTypeName = b.Entity.Type.Name,
             });
         return bundlesHavingLinks.ToList();
@@ -82,9 +83,9 @@ partial class EditLoadPrefetchHelper
     private class BundleWithLinkField
     {
         //public int AppId;
-        public Guid Guid;
-        public Dictionary<string, Dictionary<string, string>> HyperlinkFields;
-        public Dictionary<string, Dictionary<string, string>> StringFields;
-        public string ContentTypeName;
+        public required Guid Guid;
+        public required string ContentTypeName;
+        public required Dictionary<string, Dictionary<string, string>>? HyperlinkFields;
+        public required Dictionary<string, Dictionary<string, string>>? StringFields;
     }
 }

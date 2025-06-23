@@ -62,7 +62,7 @@ public class AppPartsControllerReal(
         var (fileName, stream) = uploadInfo.GetStream(0);
 
         var result = importContent.New()
-            .Import(zoneId: zoneId, appId: appId, fileName: fileName, stream: stream, defaultLanguage: context.Value.Site.DefaultCultureCode);
+            .Import(zoneId: zoneId, appId: appId, fileName: fileName, stream: stream!, defaultLanguage: context.Value.Site.DefaultCultureCode);
 
         return l.ReturnAsOk(result);
     }

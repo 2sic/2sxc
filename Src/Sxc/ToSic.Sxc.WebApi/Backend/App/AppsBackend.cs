@@ -33,9 +33,9 @@ public class AppsBackend(
 
     private AppDto CreateAppDto(IAppReader appReader)
     {
-        AppMetadataDto lightspeed = null;
+        AppMetadataDto? lightspeed = null;
         var lightSpeedDeco = LightSpeedDecorator.GetFromAppStatePiggyBack(appReader/*, Log*/);
-        if (lightSpeedDeco.Entity != null)
+        if (lightSpeedDeco.Entity != null! /* paranoid */)
             lightspeed = new () { Id = lightSpeedDeco.Id, Title = lightSpeedDeco.Title, IsEnabled = lightSpeedDeco.IsEnabled };
 
         var paths = appPathsGen.New().Get(appReader, context.Site);

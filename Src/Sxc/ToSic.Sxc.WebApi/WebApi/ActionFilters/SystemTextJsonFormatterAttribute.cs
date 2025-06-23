@@ -33,9 +33,10 @@ public class SystemTextJsonFormatterAttribute : ActionFilterAttribute, IControll
     public void Apply(ActionModel action)
     {
         // Set the model binder to NewtonsoftJsonBodyModelBinder for parameters that are bound to the request body.
-        var parameters = action.Parameters.Where(p => p.BindingInfo?.BindingSource == BindingSource.Body);
+        var parameters = action.Parameters
+            .Where(p => p.BindingInfo?.BindingSource == BindingSource.Body);
         foreach (var p in parameters)
-            p.BindingInfo.BinderType = typeof(SystemTextJsonBodyModelBinder);
+            p.BindingInfo!.BinderType = typeof(SystemTextJsonBodyModelBinder);
     }
 
     public override void OnActionExecuted(ActionExecutedContext context)
@@ -73,7 +74,7 @@ public class SystemTextJsonFormatterAttribute : ActionFilterAttribute, IControll
         return new(jsonSerializerOptions);
     }
 
-    private static EavJsonConverterFactory GetEavJsonConverterFactory(EntityFormat? entityFormat, ActionExecutedContext context)
+    private static EavJsonConverterFactory? GetEavJsonConverterFactory(EntityFormat? entityFormat, ActionExecutedContext context)
     {
         switch (entityFormat)
         {

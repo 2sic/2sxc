@@ -47,7 +47,7 @@ public class DataControllerReal(
         for (var i = 0; i < uploadInfo.Count; i++)
         {
             var (fileName, stream) = uploadInfo.GetStream(i);
-            streams.Add(new() { Name = fileName, Stream = stream });
+            streams.Add(new() { Name = fileName, Stream = stream! });
         }
         var result = importContent.New()
             .ImportJsonFiles(zoneId, appId, streams, context.Value.Site.DefaultCultureCode);

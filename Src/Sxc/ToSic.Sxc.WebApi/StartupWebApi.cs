@@ -4,6 +4,7 @@ using ToSic.Eav.Sys.Insights;
 using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Apps.Internal;
+using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.Admin.AppFiles;
@@ -103,6 +104,8 @@ public static class StartupWebApi
         services.TryAddTransient<BlockControllerReal>();
         services.TryAddTransient<CodeControllerReal>();
         services.TryAddTransient<DataControllerReal>();
+
+        services.TryAddTransient<AssetTemplates>();
 
         services.AddLoadSettingsProviders();
 

@@ -31,11 +31,11 @@ public class AppQueryControllerReal(
 
     #region In-Container-Context Queries
 
-    public IDictionary<string, IEnumerable<EavLightEntity>> Query(string name, int? appId, string stream = null,
+    public IDictionary<string, IEnumerable<EavLightEntity>> Query(string name, int? appId, string? stream = null,
         bool includeGuid = false)
         => QueryPost(name, null, appId, stream, includeGuid);
 
-    public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(string name, QueryParametersDtoFromClient more, int? appId, string stream = null, bool includeGuid = false)
+    public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(string name, QueryParametersDtoFromClient? more, int? appId, string? stream = null, bool includeGuid = false)
     {
         var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
         var appCtx = appId != null ? ctxService.GetExistingAppOrSet(appId.Value) : ctxService.BlockContextRequired();
@@ -58,11 +58,11 @@ public class AppQueryControllerReal(
 
     #region Public Queries
 
-    public IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery(string appPath, string name, string stream)
+    public IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery(string appPath, string name, string? stream)
         => PublicQueryPost(appPath, name, null, stream);
 
 
-    public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(string appPath, string name, QueryParametersDtoFromClient more, string stream) 
+    public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(string appPath, string name, QueryParametersDtoFromClient? more, string? stream) 
     {
         var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"path:{appPath}, name:{name}, stream: {stream}");
         if (string.IsNullOrEmpty(name))
@@ -84,11 +84,11 @@ public class AppQueryControllerReal(
     private IDictionary<string, IEnumerable<EavLightEntity>> BuildQueryAndRun(
         IAppIdentity app,
         string name,
-        string stream,
+        string? stream,
         bool includeGuid,
         IContextOfApp context,
-        QueryParametersDtoFromClient more,
-        ILookUpEngine preparedLookup = null)
+        QueryParametersDtoFromClient? more,
+        ILookUpEngine? preparedLookup = null)
     {
         var modId = (context as IContextOfBlock)?.Module.Id ?? -1;
 
@@ -120,7 +120,9 @@ public class AppQueryControllerReal(
         dataConverter.WithGuid = includeGuid;
         if (dataConverter is ConvertToEavLightWithCmsInfo serializerWithEdit)
             serializerWithEdit.WithEdit = context.Permissions.IsContentAdmin;
-        if (stream == AllStreams) stream = null;
+
+        if (stream == AllStreams)
+            stream = null;
 
 
         // New v17 experimental with special fields

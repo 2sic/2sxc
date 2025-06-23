@@ -1,14 +1,10 @@
 ﻿using ToSic.Lib.Coding;
-using ToSic.Sxc.Code.Generate.Internal.CSharpModels;
-using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Code.Generate.Internal;
 
 internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper)
 {
     protected CSharpCodeSpecs Specs = helper.Specs;
-
-    protected CSharpGeneratorHelper CodeGenHelper = helper;
 
     public abstract ValueTypes ForDataType { get; }
 
@@ -41,7 +37,7 @@ internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper)
             ];
         }
 
-        var comment = CodeGenHelper.XmlComment(tabs, summary: summary, remarks: remarks, returns: returns);
+        var comment = helper.XmlComment(tabs, summary: summary, remarks: remarks, returns: returns);
         return new(
             name,
             comment
@@ -53,14 +49,14 @@ internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper)
     }
 
     private string GenAttribute(bool jsonIgnore, int tabs) 
-        => jsonIgnore ? $"\n{CodeGenHelper.Indent(tabs)}[JsonIgnore]\n" : "";
+        => jsonIgnore ? $"\n{helper.Indent(tabs)}[JsonIgnore]\n" : "";
 
     private string GenProp(int tabs, string returnType, string name, string sourceName, string method, string? parameters, bool cache, bool isOverride)
     {
         if (parameters.HasValue())
             parameters = ", " + parameters;
 
-        var indent = CodeGenHelper.Indent(tabs);
+        var indent = helper.Indent(tabs);
 
         var cacheVarName = $"_{char.ToLower(name[0])}{name.Substring(1)}";
         var cacheResult = cache ? $"{cacheVarName} ??= " : "";

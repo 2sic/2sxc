@@ -18,7 +18,7 @@ public class HyperlinkBackend(
     IValueConverter valueConverter)
     : ServiceBase("Bck.HypLnk", connect: [adamCtxLazy, appPermissions, ctxService, adamDtoMaker, valueConverter])
 {
-    public LinkInfoDto LookupHyperlink(int appId, string hyperlink, string contentType, Guid guid, string field)
+    public LinkInfoDto LookupHyperlink(int appId, string hyperlink, string? contentType, Guid guid, string? field)
     {
         try
         {
@@ -52,7 +52,7 @@ public class HyperlinkBackend(
             // file-check, more abilities to allow
             // this will already do a ensure-or-throw inside it if outside of adam
             var adamCtx = adamCtxLazy.Value;
-            adamCtx.Init(context, contentType, field, guid, isOutsideOfAdam);
+            adamCtx.Init(context, contentType!, field!, guid, isOutsideOfAdam);
             if (adamCtx.Security.UserIsRestrictedAndAccessingItemOutsideOfFolder(resolved, out var exp))
                 throw exp;
             if (adamCtx.Security.UserNotPermittedOnField(GrantSets.ReadSomething, out exp))
@@ -70,7 +70,11 @@ public class HyperlinkBackend(
             var dtoMaker = adamDtoMaker.New(new() { AdamContext = adamCtx });
             // if everything worked till now, it's ok to return the result
             var adam = dtoMaker.Create(file);
-            return new() {Adam = adam, Value = adam.Url};
+            return new()
+            {
+                Adam = adam,
+                Value = adam.Url!
+            };
         }
         catch
         {

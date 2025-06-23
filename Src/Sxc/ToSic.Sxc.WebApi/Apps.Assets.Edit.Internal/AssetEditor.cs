@@ -18,19 +18,20 @@ public class AssetEditor(
 
     #region Constructor / DI
 
-    private IAppSpecs _appSpecs;
+    private IAppSpecs _appSpecs = null!;
 
-    private AssetEditInfo EditInfo { get; set; }
+    private AssetEditInfo EditInfo { get; set; } = null!;
 
-    private IAppPaths _appPaths;
+    private IAppPaths _appPaths = null!;
 
 
-    public AssetEditor Init(IAppReader appReader, string path, bool global, int viewId)
+    public AssetEditor Init(IAppReader appReader, string fileName, bool global, int viewId)
     {
         _appSpecs = appReader.Specs;
         _appPaths = appPaths.Get(appReader, site);
-        EditInfo = new(_appSpecs.AppId, _appSpecs.Name, path, global);
-        if (viewId == 0) return this;
+        EditInfo = new(_appSpecs.AppId, _appSpecs.Name, fileName, global);
+        if (viewId == 0)
+            return this;
 
         var view = workViews.New(appReader).Get(viewId);
         AddViewDetailsAndTypes(EditInfo, view);
@@ -51,7 +52,7 @@ public class AssetEditor(
     /// <summary>
     /// Check permissions and if not successful, give detailed explanation
     /// </summary>
-    public void EnsureUserMayEditAssetOrThrow(string fullPath = null)
+    public void EnsureUserMayEditAssetOrThrow(string? fullPath = null)
     {
         // check super user permissions - then all is allowed
         if (user.IsSystemAdmin) return;
@@ -92,7 +93,8 @@ public class AssetEditor(
         return template;
     }
 
-    public string InternalPath => field ??= NormalizePath(Path.Combine(_appPaths.PhysicalPathSwitch(EditInfo.IsShared), EditInfo.FileName));
+    [field: AllowNull, MaybeNull]
+    public string InternalPath => field ??= NormalizePath(Path.Combine(_appPaths.PhysicalPathSwitch(EditInfo.IsShared), EditInfo.FileName ?? ""));
 
     private static string NormalizePath(string path) => Path.GetFullPath(new Uri(path).LocalPath);
 
@@ -142,7 +144,7 @@ public class AssetEditor(
     private void SanitizeFileName()
     {
         // todo: maybe add some security for special dangerous file names like .cs, etc.?
-        EditInfo.FileName = Regex.Replace(EditInfo.FileName, @"[?:\/*""<>|]", "");
+        EditInfo.FileName = Regex.Replace(EditInfo.FileName ?? "", @"[?:\/*""<>|]", "");
     }
 
     // check if the folder already exists, or create it...

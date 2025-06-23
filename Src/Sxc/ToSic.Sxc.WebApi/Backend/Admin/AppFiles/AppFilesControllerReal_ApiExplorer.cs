@@ -21,8 +21,8 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
         const string mask = $"*{EavConstants.ApiControllerSuffix}.cs";
 
         var appPath = ResolveAppPath(appId, global: false);
-        var app = _appReaders.Get(appId).Specs;
-        var editions = _codeController.Value.GetEditions(appId);
+        var app = appReaders.Get(appId).Specs;
+        var editions = codeController.Value.GetEditions(appId);
         l.A($"{nameof(app.Folder)}:'{app.Folder}', appPath:'{appPath}', editions:{editions.Editions.Count}");
 
         List<AllApiFileDto> appCodeApiControllerFiles = [];
@@ -37,13 +37,13 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
                 continue;
             }
 
-            Assembly appCodeAssembly = null;
+            Assembly? appCodeAssembly = null;
             try
             {
                 // get AppCode assembly
                 var spec = new HotBuildSpec(appId, edition: edition, app.Folder);
                 l.A($"{spec}");
-                var (result, _) = _appCodeLoader.Value.GetAppCode(spec);
+                var (result, _) = appCodeLoader.Value.GetAppCode(spec);
                 appCodeAssembly = result?.Assembly;
             }
             catch (Exception e)
@@ -71,7 +71,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
     }
 
     private ICollection<string> ApiControllerFilesInAppCode(string mask, string appPath, string edition,
-        Assembly appCodeAssembly)
+        Assembly? appCodeAssembly)
     {
         var l = Log.Fn<ICollection<string>>(
             $"list ApiController files, {nameof(mask)}:'{mask}', {nameof(appPath)}:'{appPath}', {nameof(edition)}:'{edition}', has appCode assembly:{appCodeAssembly != null}");
@@ -112,7 +112,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
                 OptionalCheckForControllerTypeInAppCodeAssembly(Path.GetFileNameWithoutExtension(f.Name),
                     appCodeAssembly))
             .Select(f => f.FullName)
-            .Select(p => EnsurePathMayBeAccessed(p, appPath, _user.IsSystemAdmin)) // do another security check
+            .Select(p => EnsurePathMayBeAccessed(p, appPath, user.IsSystemAdmin)) // do another security check
             .Select(x => x.Replace(appPath + "\\", "")) // truncate / remove internal server root path
             .Select(x => x.ForwardSlash()) // tip the slashes to web-convention (old template entries used "\")
             .ToListOpt();
@@ -129,6 +129,6 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
         if (controllerTypeName.EndsWith(EavConstants.ApiControllerSuffix, StringComparison.OrdinalIgnoreCase))
             return l.ReturnTrue($"'{controllerTypeName}' is not controller type");
 
-        return l.ReturnAndLog(appCodeAssembly.FindControllerTypeByName(controllerTypeName) != null);
+        return l.ReturnAndLog(appCodeAssembly?.FindControllerTypeByName(controllerTypeName) != null);
     }
 }

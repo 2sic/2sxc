@@ -22,9 +22,11 @@ public class SystemTextJsonBodyModelBinder(
 {
     private static IInputFormatter[] GetInputFormatters(
         ILoggerFactory loggerFactory,
+        // ReSharper disable UnusedParameter.Local
         ArrayPool<char> charPool,
         ObjectPoolProvider objectPoolProvider,
         IOptions<MvcOptions> mvcOptions)
+        // ReSharper restore UnusedParameter.Local
     {
         return
         [
@@ -32,19 +34,18 @@ public class SystemTextJsonBodyModelBinder(
         ];
     }
 
+    [field: AllowNull, MaybeNull]
     public static Microsoft.AspNetCore.Mvc.JsonOptions SxcJsonOptions
     {
         get
         {
-            if (_sxcJsonOptions == null)
+            if (field == null)
             {
-                _sxcJsonOptions = new();
-                _sxcJsonOptions.JsonSerializerOptions.SetUnsafeJsonSerializerOptions();
+                field = new();
+                field.JsonSerializerOptions.SetUnsafeJsonSerializerOptions();
             }
-            return _sxcJsonOptions;
+            return field;
         }
     }
-    private static Microsoft.AspNetCore.Mvc.JsonOptions _sxcJsonOptions;
-
 }
 #endif

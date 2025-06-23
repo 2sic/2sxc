@@ -28,7 +28,7 @@ public class EditLoadSettingsHelper(
     {
         var l = Log.Fn<EditSettingsDto>();
         var allInputTypes = jsonTypes
-            .SelectMany(ct => ct.Attributes
+            .SelectMany(ct => ct.AttributesSafe()
                 .Select(at => at.InputType)
             )
             .Distinct()
@@ -109,9 +109,9 @@ public class EditLoadSettingsHelper(
         var nameMap = typesFromProviders
             .Select(t =>
             {
-                var normal = serializerForTypes.ToPackage(t, serSettings).ContentType;
+                var normal = serializerForTypes.ToPackage(t, serSettings).ContentType!;
                 var title = t.DetailsOrNull()?.Title;
-                return new JsonContentTypeWithTitleWip()
+                return new JsonContentTypeWithTitleWip
                 {
                     Id = normal.Id,
                     Name = normal.Name,
