@@ -7,7 +7,6 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
@@ -49,9 +48,11 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
 
     [PrivateApi("WIP 17.06,x")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
+    // ReSharper disable once MethodOverloadWithOptionalParameter
+    public TService GetService<TService>(NoParamOrder protector = default, string? typeName = default) where TService : class
         => CodeHelper.GetService<TService>(protector, typeName);
 
+    [field: AllowNull, MaybeNull]
     private TypedCode16Helper CodeHelper
         => field ??= new(owner: this, helperSpecs: new(CodeRootOrError(), false, "c# code file"), getRazorModel: () => null, getModelDic: () => null);
 
@@ -62,13 +63,14 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     #endregion
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
+    [field: AllowNull, MaybeNull]
     public ServiceKit16 Kit => field ??= CodeApi().ServiceKit16;
 
-    private ICodeTypedApiHelper CodeApi([CallerMemberName] string propName = default)
+    private ICodeTypedApiHelper CodeApi([CallerMemberName] string? propName = default)
         => _codeApi ??= CodeRootOrError(propName).GetTypedApi();
-    private ICodeTypedApiHelper _codeApi;
+    private ICodeTypedApiHelper? _codeApi;
 
-    private IExecutionContext CodeRootOrError([CallerMemberName] string propName = default)
+    private IExecutionContext CodeRootOrError([CallerMemberName] string? propName = default)
         => ExCtxOrNull
            ?? throw new ExceptionWithHelp(new CodeHelp
                {
@@ -96,7 +98,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
 
     #region Link and Edit
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => CodeApi()?.Link;
+    public ILinkService Link => CodeApi().Link;
 
     #endregion
 
@@ -105,10 +107,10 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
 
     /// <inheritdoc />
     [PrivateApi]
-    string IGetCodePath.CreateInstancePath { get; set; }
+    string IGetCodePath.CreateInstancePath { get; set; } = null!;
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
-    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
+    public dynamic? GetCode(string path, NoParamOrder noParamOrder = default, string? className = default)
         => CodeHlp.GetCode(path: path, className: className);
 
 
@@ -118,7 +120,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     #region New App, Settings, Resources
 
     /// <inheritdoc />
-    public IAppTyped App => CodeApi()?.AppTyped;
+    public IAppTyped App => CodeApi().AppTyped;
 
     /// <inheritdoc cref="IDynamicCode16.AllResources" />
     public ITypedStack AllResources => CodeHelper.AllResources;
@@ -146,7 +148,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
 
     /// <inheritdoc cref="IDynamicCode16.AsItem" />
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
-        => CodeApi().Cdf.AsItem(data, new() { ItemIsStrict = propsRequired ?? true });
+        => CodeApi().Cdf.AsItem(data, new() { ItemIsStrict = propsRequired ?? true })!;
 
     /// <inheritdoc cref="IDynamicCode16.AsItems" />
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
@@ -158,11 +160,11 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
 
     /// <inheritdoc cref="IDynamicCode16.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => CodeApi().Cdf.AsTyped(original, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
+        => CodeApi().Cdf.AsTyped(original, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true })!;
 
     /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => CodeApi().Cdf.AsTypedList(list, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
+        => CodeApi().Cdf.AsTypedList(list, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true })!;
 
     /// <inheritdoc cref="IDynamicCode16.AsStack" />
     public ITypedStack AsStack(params object[] items)
@@ -199,12 +201,13 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
 
     #region As / AsList WIP v17
 
+    [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
 
     /// <inheritdoc />
     public T As<T>(object source, NoParamOrder protector = default, bool mock = false)
         where T : class, ICanWrapData
-        => Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
+        => Cdf.AsCustom<T>(source: source, protector: protector, mock: mock)!;
 
     /// <inheritdoc />
     public IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
@@ -223,6 +226,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     /// * Stable and ready for production in v18.00
     /// </remarks>
     [ShowApiWhenReleased(ShowApiMode.Never)]
+    [field: AllowNull, MaybeNull]
     protected ICodeCustomizer Customize
         => field ??= ExCtx.GetService<ICodeCustomizer>(reuse: true);
 

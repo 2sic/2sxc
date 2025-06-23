@@ -26,11 +26,11 @@ public abstract partial class DataSource16
 
     [PrivateApi("Hide in docs to only show important APIs for DataSource creators")]
     public IReadOnlyDictionary<string, IDataStream> Out => _inner.Out;
-    IDataStream IDataSource.this[string outName] => _inner[outName];
+    IDataStream IDataSource.this[string outName] => _inner[outName]!;
 
     /// <inheritdoc />
     [PrivateApi("Hide in docs to only show important APIs for DataSource creators")]
-    public IDataStream GetStream(string name = null, NoParamOrder noParamOrder = default, bool nullIfNotFound = false, bool emptyIfNotFound = false)
+    public IDataStream? GetStream(string? name = null, NoParamOrder noParamOrder = default, bool nullIfNotFound = false, bool emptyIfNotFound = false)
         => _inner.GetStream(name, noParamOrder, nullIfNotFound, emptyIfNotFound);
 
     /// <inheritdoc />
@@ -38,7 +38,8 @@ public abstract partial class DataSource16
     public IEnumerable<IEntity> List => _inner.List;
 
     // Note: changed to explicit in v19.01; not sure why it was not explicit before
-    void IDataSource.Setup(IDataSourceOptions options, IDataSourceLinkable attach) => _inner.Setup(options, attach);
+    void IDataSource.Setup(IDataSourceOptions? options, IDataSourceLinkable? attach)
+        => _inner.Setup(options, attach);
 
     ILog IHasLog.Log => _inner.Log;
 

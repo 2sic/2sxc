@@ -1,6 +1,5 @@
 ﻿using ToSic.Sxc.Code.Internal.CodeRunHelpers;
 using ToSic.Sxc.Services.Internal;
-using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Internal;
 
@@ -22,17 +21,17 @@ public abstract class CustomCodeBase : ServiceWithContext, ICompatibilityLevel
     /// </summary>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
+    [field: AllowNull, MaybeNull]
     protected internal CodeHelper CodeHlp => field
-        ??= ExCtx.GetService<CodeHelper>().Init(this as IGetCodePath); // inheriting classes must implement IGetCodePath
+        ??= ExCtx.GetService<CodeHelper>().Init(this as IGetCodePath ?? throw new($"Can't cast to {nameof(IGetCodePath)}, but inheriting classes must implement it."));
 
 
-    [PrivateApi]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    public override void ConnectToRoot(IExecutionContext exCtx)
-    {
-        base.ConnectToRoot(exCtx);
-        //GetCodeHlp.ConnectToRoot(codeRoot);
-    }
+    //[PrivateApi]
+    //[ShowApiWhenReleased(ShowApiMode.Never)]
+    //public override void ConnectToRoot(IExecutionContext exCtx)
+    //{
+    //    base.ConnectToRoot(exCtx);
+    //}
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]

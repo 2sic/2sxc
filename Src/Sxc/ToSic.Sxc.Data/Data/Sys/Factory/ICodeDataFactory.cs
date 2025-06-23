@@ -87,7 +87,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// Convert any object into a dynamic list.
     /// Only used in Dynamic Code for the public API.
     /// </summary>
-    IEnumerable<dynamic>? CodeAsDynList(object list);
+    IEnumerable<dynamic> CodeAsDynList(object list);
 
     /// <summary>
     /// Convert any object into a dynamic object.

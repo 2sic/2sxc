@@ -36,7 +36,7 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.MyServices>
     /// </summary>
     /// <param name="services">All the needed services - see [](xref:NetCode.Conventions.MyServices)</param>
     /// <param name="logName">Optional name for logging such as `My.JsonDS`</param>
-    protected DataSource16(MyServices services, string logName = default): base(services, logName ?? "Cus.HybDs")
+    protected DataSource16(MyServices services, string? logName = default): base(services, logName ?? "Cus.HybDs")
     {
         _inner = BreachExtensions.CustomDataSourceLight(services.ParentServices, this, logName: logName ?? "Cus.HybDs");
         _inner.BreachProvideOut(GetDefault);
@@ -74,7 +74,7 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.MyServices>
         Func<object> getList,
         NoParamOrder noParamOrder = default,
         string name = DataSourceConstants.StreamDefaultName,
-        Func<DataFactoryOptions> options = default
+        Func<DataFactoryOptions>? options = default
     )
         => _inner.BreachProvideOut(getList, name: name, options: options);
 
@@ -82,7 +82,7 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.MyServices>
     #region CodeLog
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
-    public new ICodeLog Log => _codeLog.Get(() => new CodeLog(_inner.Log));
+    public new ICodeLog Log => _codeLog.Get(() => new CodeLog(_inner.Log))!;
     private readonly GetOnce<ICodeLog> _codeLog = new();
 
     #endregion
@@ -103,11 +103,11 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.MyServices>
     #region IDataTarget - allmost all hidden
 
     /// <inheritdoc/>
-    public IImmutableList<IEntity> TryGetIn(string name = DataSourceConstants.StreamDefaultName)
+    public IImmutableList<IEntity>? TryGetIn(string name = DataSourceConstants.StreamDefaultName)
         => _inner.TryGetIn(name);
 
     /// <inheritdoc/>
-    public IImmutableList<IEntity> TryGetOut(string name = DataSourceConstants.StreamDefaultName)
+    public IImmutableList<IEntity>? TryGetOut(string name = DataSourceConstants.StreamDefaultName)
         => _inner.TryGetOut(name);
 
     // The rest is all explicit implementation only

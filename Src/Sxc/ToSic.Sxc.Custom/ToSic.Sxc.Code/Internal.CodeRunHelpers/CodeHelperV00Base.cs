@@ -19,7 +19,7 @@ public abstract class CodeHelperV00Base(CodeHelperSpecs helperSpecs, string logN
     protected CodeHelperSpecs Specs { get; } = helperSpecs;
 
 
-    public IDevTools DevTools => _devTools.Get(() => new DevTools(Specs, Log));
+    public IDevTools DevTools => _devTools.Get(() => new DevTools(Specs, Log))!;
     private readonly GetOnce<IDevTools> _devTools = new();
 
 }

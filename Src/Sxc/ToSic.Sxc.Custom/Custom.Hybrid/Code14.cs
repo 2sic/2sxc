@@ -33,6 +33,7 @@ public abstract class Code14()
 
     #region Constructor / Setup
 
+    [field: AllowNull, MaybeNull]
     internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
@@ -41,12 +42,15 @@ public abstract class Code14()
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
-    [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
+    [PrivateApi]
+    public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 
+    [field: AllowNull, MaybeNull]
     private CodeHelperV14 CodeHelper => field ??= new(new(ExCtx, false, "c# code file"));
 
     #endregion
 
+    [field: AllowNull, MaybeNull]
     public ServiceKit14 Kit => field ??= CodeApi.ServiceKit14;
 
     #region Stuff added by Code12
@@ -55,10 +59,10 @@ public abstract class Code14()
     //public IConvertService Convert => _DynCodeRoot.Convert;
 
     /// <inheritdoc cref="IDynamicCode12.Resources" />
-    public dynamic Resources => CodeApi?.Resources;
+    public dynamic? Resources => CodeApi.Resources;
 
     /// <inheritdoc cref="IDynamicCode12.Settings" />
-    public dynamic Settings => CodeApi?.Settings;
+    public dynamic? Settings => CodeApi.Settings;
 
     [PrivateApi("Not yet ready")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -74,15 +78,15 @@ public abstract class Code14()
     #region App / Data / Content / Header
 
     /// <inheritdoc cref="IDynamicCode.App" />
-    public IApp App => CodeApi?.App;
+    public IApp App => CodeApi.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IDataSource Data => CodeApi?.Data;
+    public IDataSource Data => CodeApi.Data;
 
     /// <inheritdoc cref="IDynamicCode.Content" />
-    public dynamic Content => CodeApi?.Content;
+    public dynamic? Content => CodeApi.Content;
     /// <inheritdoc cref="IDynamicCode.Header" />
-    public dynamic Header => CodeApi?.Header;
+    public dynamic? Header => CodeApi.Header;
 
     #endregion
 
@@ -91,10 +95,10 @@ public abstract class Code14()
     #region Link and Edit
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => CodeApi?.Link;
+    public ILinkService Link => CodeApi.Link;
 
     /// <inheritdoc cref="IDynamicCode.Edit" />
-    public IEditService Edit => CodeApi?.Edit;
+    public IEditService Edit => CodeApi.Edit;
 
     #endregion
 
@@ -102,16 +106,16 @@ public abstract class Code14()
 
     /// <inheritdoc />
     [PrivateApi]
-    string IGetCodePath.CreateInstancePath { get; set; }
+    string IGetCodePath.CreateInstancePath { get; set; } = null!;
 
     /// <inheritdoc cref="IDynamicCode.CreateInstance" />
-    public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true) =>
+    public dynamic? CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string? name = null, string? relativePath = null, bool throwOnError = true) =>
         CodeHlp.CreateInstance(virtualPath: virtualPath, name: name, relativePath: relativePath, throwOnError: throwOnError);
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
     [PrivateApi("added in 16.05, but not sure if it should be public")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
+    public dynamic? GetCode(string path, NoParamOrder noParamOrder = default, string? className = default)
         => CodeHlp.GetCode(path: path, className: className);
 
     #endregion
@@ -119,33 +123,33 @@ public abstract class Code14()
     #region Context, Settings, Resources
 
     /// <inheritdoc cref="IDynamicCode.CmsContext" />
-    public ICmsContext CmsContext => CodeApi?.CmsContext;
+    public ICmsContext CmsContext => CodeApi.CmsContext;
 
     #endregion CmsContext
 
     #region AsDynamic and AsEntity
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-    public dynamic AsDynamic(string json, string fallback = default) => CodeApi?.Cdf.Json2Jacket(json, fallback);
+    public dynamic? AsDynamic(string json, string? fallback = default) => CodeApi.Cdf.Json2Jacket(json, fallback);
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
-    public dynamic AsDynamic(IEntity entity) => CodeApi?.Cdf.CodeAsDyn(entity);
+    public dynamic? AsDynamic(IEntity entity) => CodeApi.Cdf.CodeAsDyn(entity);
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
-    public dynamic AsDynamic(object dynamicEntity) => CodeApi?.Cdf.AsDynamicFromObject(dynamicEntity);
+    public dynamic? AsDynamic(object dynamicEntity) => CodeApi.Cdf.AsDynamicFromObject(dynamicEntity);
 
     /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
-    public dynamic AsDynamic(params object[] entities) => CodeApi?.Cdf.MergeDynamic(entities);
+    public dynamic? AsDynamic(params object[] entities) => CodeApi.Cdf.MergeDynamic(entities);
 
     /// <inheritdoc cref="IDynamicCode.AsEntity" />
-    public IEntity AsEntity(object dynamicEntity) => CodeApi?.Cdf.AsEntity(dynamicEntity);
+    public IEntity AsEntity(object dynamicEntity) => CodeApi.Cdf.AsEntity(dynamicEntity);
 
     #endregion
 
     #region AsList
 
     /// <inheritdoc cref="IDynamicCode.AsList" />
-    public IEnumerable<dynamic> AsList(object list) => CodeApi?.Cdf.CodeAsDynList(list);
+    public IEnumerable<dynamic> AsList(object list) => CodeApi.Cdf.CodeAsDynList(list);
 
     #endregion
 
@@ -156,13 +160,13 @@ public abstract class Code14()
         => CodeApi.CreateSource<T>(source);
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
-    public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
+    public T CreateSource<T>(IDataSource? inSource = null, ILookUpEngine? configurationProvider = default) where T : IDataSource
         => CodeApi.CreateSource<T>(inSource, configurationProvider);
 
 
     #endregion
 
     /// <inheritdoc cref="IDynamicCode.AsAdam" />
-    public IFolder AsAdam(ICanBeEntity item, string fieldName) => CodeApi?.AsAdam(item, fieldName);
+    public IFolder AsAdam(ICanBeEntity item, string fieldName) => CodeApi.AsAdam(item, fieldName);
 
 }

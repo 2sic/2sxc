@@ -35,7 +35,7 @@ partial class CodeDataFactory: ICodeDataFactoryDeepWip
     /// Convert any object into a dynamic list.
     /// Only used in Dynamic Code for the public API.
     /// </summary>
-    public IEnumerable<dynamic>? CodeAsDynList(object list) //, bool propsRequired = false)
+    public IEnumerable<dynamic> CodeAsDynList(object list) //, bool propsRequired = false)
     {
         var settings = new ConvertItemSettings() { ItemIsStrict = false };
         return list switch
@@ -46,7 +46,7 @@ partial class CodeDataFactory: ICodeDataFactoryDeepWip
                 iEntities.Select(e => AsDynamic(e, settings)),
             IEnumerable<IDynamicEntity> dynIDynEnt => dynIDynEnt,
             IEnumerable<dynamic> dynEntities => dynEntities,
-            _ => null
+            _ => throw new($"Error trying to convert object into a dynamic list; object type unknown"),
         };
     }
 

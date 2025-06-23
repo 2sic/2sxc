@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataSource;
@@ -81,7 +80,7 @@ internal class AppDataSourcesLoader(
                             ? [physicalPath]
                             : [],
                         CacheKeys: (data.Any() && !string.IsNullOrEmpty(cacheKey))
-                            ? [cacheKey]
+                            ? [cacheKey!]
                             : [] // cache dependency on existing cache item with AppCode assembly
                         )
                 );
@@ -112,9 +111,9 @@ internal class AppDataSourcesLoader(
         return l.ReturnAsOk(spec);
     }
 
-    private string FigureEdition()
+    private string? FigureEdition()
     {
-        var l = Log.Fn<string>(timer: true);
+        var l = Log.Fn<string?>(timer: true);
 
         var block = ctxService.BlockOrNull();
         var edition = block.NullOrGetWith(polymorphism.UseViewEditionOrGet);
@@ -133,9 +132,9 @@ internal class AppDataSourcesLoader(
 
     private class TempDsInfo
     {
-        public string ClassName;
-        public Type Type;
-        public DataSourceInfoError Error;
+        public required string ClassName;
+        public Type? Type;
+        public DataSourceInfoError? Error;
     }
 
     /// <summary>
@@ -144,7 +143,7 @@ internal class AppDataSourcesLoader(
     /// <param name="spec"></param>
     /// <param name="cacheKey">return for CacheEntryChangeMonitor</param>
     /// <returns></returns>
-    private IEnumerable<TempDsInfo> LoadAppCodeDataSources(HotBuildSpec spec, out string cacheKey)
+    private IEnumerable<TempDsInfo> LoadAppCodeDataSources(HotBuildSpec spec, out string? cacheKey)
     {
         var l = Log.Fn<IEnumerable<TempDsInfo>>();
 
@@ -256,7 +255,7 @@ internal class AppDataSourcesLoader(
                 // 1. Make sure we only keep DataSources and not other classes in the same folder
                 // but assume all null-types are errors, which we should preserve
                 if (!typeof(IDataSource).IsAssignableFrom(pair.Type))
-                    return l2.ReturnNull($"error: not a {nameof(IDataSource)}");
+                    return l2.ReturnNull($"error: not a {nameof(IDataSource)}")!;
 
                 // 2. Get VisualQuery Attribute if available, or create new, since it's optional in DynamicCode
                 var vq = pair.Type.GetDirectlyAttachedAttribute<VisualQueryAttribute>()
@@ -284,12 +283,13 @@ internal class AppDataSourcesLoader(
                 // If In has not been set, make sure we show the Default In as an option
                 vq.In ??= [DataSourceConstants.StreamDefaultName];
                 // Only set dynamic in if it was never set
-                if (!vq._DynamicInWasSet) vq.DynamicIn = true;
+                if (!vq._DynamicInWasSet)
+                    vq.DynamicIn = true;
 
                 // 4. Build DataSourceInfo with the manually built Visual Query Attribute
                 return l2.ReturnAsOk(new(pair.Type, false, overrideVisualQuery: vq));
             })
-            .Where(dsi => dsi != null)
+            .Where(dsi => dsi != null!)
             .ToList();
 
         return l.Return(data, $"{data.Count}");

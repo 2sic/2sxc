@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
 {
-    public List<Exception> ExceptionsOrNull { get; private set; }
+    public List<Exception>? ExceptionsOrNull { get; private set; }
 
     public void Add(Exception ex) => (ExceptionsOrNull ??= []).Add(ex);
 
@@ -17,7 +17,7 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
     /// <param name="path"></param>
     /// <param name="overrideRootExCtx">Insert another code Root, ATM a patch for Oqtane Razor</param>
     /// <returns></returns>
-    protected string ResolvePathIfAbsoluteToApp(string path, IExecutionContext overrideRootExCtx = default)
+    protected string? ResolvePathIfAbsoluteToApp(string? path, IExecutionContext? overrideRootExCtx = default)
     {
         var l = Log.Fn<string>(path);
         if (path == null || (!path.StartsWith("/") && !path.StartsWith("\\")))
@@ -36,22 +36,22 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
 
     #region CreateInstance / GetCode
 
-    public object GetCode(string path, NoParamOrder noParamOrder = default, string className = default) 
+    public object? GetCode(string path, NoParamOrder noParamOrder = default, string? className = default) 
         => GetCode(path, noParamOrder: noParamOrder, name: className, throwOnError: true);
 
     /// <summary>
     /// Creates instances of the shared pages with the given relative path
     /// </summary>
     /// <returns></returns>
-    private object GetCode(string virtualPath,
+    private object? GetCode(string virtualPath,
         NoParamOrder noParamOrder,
-        string name,
+        string? name,
         bool throwOnError)
     {
         // Note: Don't do parameter checks, as they have already been done
         // and the warnings are a bit different depending on the public signature
 
-        var l = Log.Fn<object>($"'{virtualPath}', '{name}'");
+        var l = Log.Fn<object?>($"'{virtualPath}', '{name}'");
 
         if (virtualPath.IsEmptyOrWs())
             return !throwOnError
@@ -68,7 +68,7 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
 
         try
         {
-            object result = path.EndsWith(SourceCodeConstants.CsFileExtension)
+            object? result = path.EndsWith(SourceCodeConstants.CsFileExtension)
                 ? ExCtx.GetDynamicApi().CreateInstance(path, noParamOrder, name: name, relativePath: null, throwOnError: throwOnError)
                 : GetCodeCshtml(path);
             return l.Return(result, "ok");
@@ -76,16 +76,17 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
         catch (Exception ex)
         {
             l.Done(ex);
-            if (throwOnError) throw;
+            if (throwOnError)
+                throw;
             return null;
         }
     }
 
 
-    public object CreateInstance(string virtualPath,
+    public object? CreateInstance(string virtualPath,
         NoParamOrder noParamOrder = default,
-        string name = null,
-        string relativePath = null,
+        string? name = null,
+        string? relativePath = null,
         bool throwOnError = true
     ) => GetCode(virtualPath: virtualPath, noParamOrder: noParamOrder, name: name, throwOnError: throwOnError);
 

@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class HotBuildSpec(int appId, string? edition, string appName)
+public class HotBuildSpec(int appId, string? edition, string? appName)
 {
     public int AppId => appId;
 
@@ -14,7 +14,7 @@ public class HotBuildSpec(int appId, string? edition, string appName)
     /// <summary>
     /// AppName for logging - ATM no other purpose, so it can be null
     /// </summary>
-    public string AppName => appName;
+    public string? AppName => appName;
 
     /// <summary>
     /// Override ToString for better debugging
@@ -52,18 +52,20 @@ public class HotBuildSpec(int appId, string? edition, string appName)
     /// need temp name assembly without shared suffix
     /// </summary>
     /// <returns></returns>
-    public HotBuildSpecWithSharedSuffix WithoutSharedSuffix() => new(AppId, edition, appName, false);
+    public HotBuildSpecWithSharedSuffix WithoutSharedSuffix()
+        => new(AppId, edition, appName, false);
 
     /// <summary>
     /// Use in very special case for AppCode in shared (global) path
     /// need temp name assembly with shared suffix
     /// </summary>
     /// <returns></returns>
-    public HotBuildSpecWithSharedSuffix WithSharedSuffix() => new(AppId, edition, appName, true);
+    public HotBuildSpecWithSharedSuffix WithSharedSuffix()
+        => new(AppId, edition, appName, true);
 }
 
 
-public class HotBuildSpecWithSharedSuffix(int appId, string? edition, string appName, bool addSharedSuffixToAssemblyName) : HotBuildSpec(appId, edition, appName)
+public class HotBuildSpecWithSharedSuffix(int appId, string? edition, string? appName, bool addSharedSuffixToAssemblyName) : HotBuildSpec(appId, edition, appName)
 {
     /// <summary>
     /// "addSharedSuffixToAssemblyName" is optional parameter used just as info for AppCode assembly naming in very special case,

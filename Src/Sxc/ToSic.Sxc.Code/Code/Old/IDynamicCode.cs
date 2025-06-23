@@ -121,7 +121,7 @@ public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // 
     /// </summary>
     /// <param name="entity">the original object</param>
     /// <returns>a dynamic object for easier coding</returns>
-    dynamic AsDynamic(IEntity entity);
+    dynamic? AsDynamic(IEntity entity);
 
 
     /// <summary>

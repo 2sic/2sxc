@@ -6,13 +6,14 @@ namespace Custom.Data;
 
 partial class CustomItem: IMultiWrapper<IEntity>
 {
-    bool IEquatable<ITypedItem>.Equals(ITypedItem other) => Equals(other);
+    bool IEquatable<ITypedItem>.Equals(ITypedItem? other)
+        => Equals(other);
 
     /// <summary>
     /// Ensure that the equality check is done correctly.
     /// If two objects wrap the same item, they will be considered equal.
     /// </summary>
-    public override bool Equals(object b)
+    public override bool Equals(object? b)
         => MultiWrapperEquality.EqualsObj(this, b);
 
     [PrivateApi]

@@ -1,10 +1,8 @@
 ﻿using ToSic.Eav.DataSource;
-
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code.CodeApi.Internal;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -20,24 +18,24 @@ namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
 /// <param name="getRazorModel"></param>
 /// <param name="getModelDic"></param>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class TypedCode16Helper(object owner, CodeHelperSpecs helperSpecs, Func<object> getRazorModel, Func<IDictionary<string, object>> getModelDic)
+public class TypedCode16Helper(object owner, CodeHelperSpecs helperSpecs, Func<object?> getRazorModel, Func<IDictionary<string, object>?> getModelDic)
     : CodeHelperV00Base(helperSpecs, SxcLogName + ".TCd16H")
 {
     public bool DefaultStrict = true;
 
     // Note: we're passing in factory methods so they don't get processed unless needed
     // Reason is that we have 2 scenarios, which can throw errors if processed in the wrong scenario
-    public object RazorModel => _razorModel.Get(getRazorModel);
-    private readonly GetOnce<object> _razorModel = new();
+    public object? RazorModel => _razorModel.Get(getRazorModel);
+    private readonly GetOnce<object?> _razorModel = new();
 
-    public IDictionary<string, object> MyModelDic => _myModelDic.Get(getModelDic);
-    private readonly GetOnce<IDictionary<string, object>> _myModelDic = new();
+    public IDictionary<string, object> MyModelDic => _myModelDic.Get(getModelDic)!;
+    private readonly GetOnce<IDictionary<string, object>?> _myModelDic = new();
 
     public TModel GetModel<TModel>()
     {
         try
         {
-            return (TModel)RazorModel;
+            return (TModel)RazorModel!;
         }
         catch (Exception ex)
         {
@@ -47,23 +45,25 @@ public class TypedCode16Helper(object owner, CodeHelperSpecs helperSpecs, Func<o
         }
     }
 
-    internal ContextData Data { get; } = helperSpecs.ExCtx.GetState<IDataSource>() as ContextData;
+    internal ContextData Data { get; } = (ContextData)helperSpecs.ExCtx.GetState<IDataSource>();
 
+    [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
 
-    public ITypedItem MyItem => _myItem.Get(() => Cdf.AsItem(Data.MyItems.FirstOrDefault(), new() { ItemIsStrict = DefaultStrict }));
+    public ITypedItem MyItem => _myItem.Get(() => Cdf.AsItem(Data.MyItems.FirstOrDefault(), new() { ItemIsStrict = DefaultStrict })!)!;
     private readonly GetOnce<ITypedItem> _myItem = new();
 
     public IEnumerable<ITypedItem> MyItems => _myItems.Get(() =>
-        Cdf.EntitiesToItems(Data.MyItems, new() { ItemIsStrict = DefaultStrict, DropNullItems = true }));
+        Cdf.EntitiesToItems(Data.MyItems, new() { ItemIsStrict = DefaultStrict, DropNullItems = true }))!;
     private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new();
 
-    public ITypedItem MyHeader => _myHeader.Get(() => Cdf.AsItem(Data.MyHeaders.FirstOrDefault(), new() { ItemIsStrict = DefaultStrict }));
+    public ITypedItem MyHeader => _myHeader.Get(() => Cdf.AsItem(Data.MyHeaders.FirstOrDefault(), new() { ItemIsStrict = DefaultStrict })!)!;
     private readonly GetOnce<ITypedItem> _myHeader = new();
 
-    public ITypedRazorModel MyModel => _myModel.Get(() => new TypedRazorModel(Specs, MyModelDic, Specs.IsRazor, Specs.CodeFileName));
+    public ITypedRazorModel MyModel => _myModel.Get(() => new TypedRazorModel(Specs, MyModelDic, Specs.IsRazor, Specs.CodeFileName))!;
     private readonly GetOnce<ITypedRazorModel> _myModel = new();
 
+    [field: AllowNull, MaybeNull]
     private ICodeTypedApiHelper TypedApiHelper => field ??= ExCtx.GetTypedApi();
 
     public ITypedStack AllResources => TypedApiHelper.AllResources;
@@ -73,7 +73,7 @@ public class TypedCode16Helper(object owner, CodeHelperSpecs helperSpecs, Func<o
     //public IDevTools DevTools => _devTools.Get(() => new DevTools(IsRazor, CodeFileName, Log));
     //private readonly GetOnce<IDevTools> _devTools = new GetOnce<IDevTools>();
 
-    public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
+    public TService GetService<TService>(NoParamOrder protector = default, string? typeName = default) where TService : class
     {
         if (typeName.IsEmptyOrWs())
             return ExCtx.GetService<TService>();

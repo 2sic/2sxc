@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode.props" />
+  <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-Nullable.props" />
 
   <PropertyGroup>
     <AssemblyName>ToSic.Sxc.Custom</AssemblyName>

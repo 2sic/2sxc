@@ -72,7 +72,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
         _item = source;
         _modelFactory = modelFactory;
     }
-    private IModelFactory _modelFactory;
+    private IModelFactory _modelFactory = null!;
 
     /// <summary>
     /// The actual item which is being wrapped, in rare cases where you must access it.
@@ -96,6 +96,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     object? ICanBeItem.TryGetBlock()
         => _item.TryGetBlock();
 
+    [field: AllowNull, MaybeNull]
     IPropertyLookup IHasPropLookup.PropertyLookup
         => field ??= ((IHasPropLookup)((ICanBeItem)this).Item).PropertyLookup;
 
@@ -111,7 +112,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     /// </remarks>
 #pragma warning disable IDE1006
     // ReSharper disable once InconsistentNaming
-    protected internal ITypedItem _item { get; private set; }
+    protected internal ITypedItem _item { get; private set; } = null!;
 #pragma warning restore IDE1006
 
     /// <summary>
@@ -119,7 +120,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     /// </summary>
     public override string ToString() 
         => $"{nameof(CustomItem)} Data Model {GetType().FullName} "
-           + (_item == null ? "without backing data (null)" : $"for id:{Id} ({_item})");
+           + (_item == null! ? "without backing data (null)" : $"for id:{Id} ({_item})");
 
 
     #region Keys and Empty-Checks
@@ -129,15 +130,15 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
         => ((IHasKeys)_item).ContainsKey(name);
 
     /// <inheritdoc cref="IHasKeys.Keys"/>
-    public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string> only = default)
+    public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default)
         => _item.Keys(noParamOrder, only);
 
     /// <inheritdoc cref="IHasKeys.IsEmpty"/>
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string? language = default)
         => _item.IsEmpty(name, noParamOrder, language: language);
 
     /// <inheritdoc cref="IHasKeys.IsNotEmpty"/>
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string language = default)
+    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string? language = default)
         => _item.IsNotEmpty(name, noParamOrder, language: language);
 
     #endregion
@@ -146,11 +147,11 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     #region Basic Get
 
     /// <inheritdoc />
-    public object? Get(string name, NoParamOrder noParamOrder = default, bool? required = default, string language = default)
+    public object? Get(string name, NoParamOrder noParamOrder = default, bool? required = default, string? language = default)
         => _item.Get(name: name, noParamOrder: noParamOrder, required: required, language: language);
 
     /// <inheritdoc />
-    public TValue? Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue fallback = default, bool? required = default, string language = default)
+    public TValue? Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue? fallback = default, bool? required = default, string? language = default)
         => _item.Get(name: name, noParamOrder: noParamOrder, fallback: fallback, required: required, language: language);
 
     #endregion
@@ -166,7 +167,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
         _item.DateTime(name, noParamOrder, fallback, required);
 
     /// <inheritdoc />
-    public string? String(string name, NoParamOrder noParamOrder = default, string fallback = default, bool? required = default, object scrubHtml = default)
+    public string? String(string name, NoParamOrder noParamOrder = default, string? fallback = default, bool? required = default, object? scrubHtml = default)
         => _item.String(name, noParamOrder, fallback, required, scrubHtml);
 
     /// <inheritdoc />
@@ -185,7 +186,7 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     public double Double(string name, NoParamOrder noParamOrder = default, double fallback = default, bool? required = default) => _item.Double(name, noParamOrder, fallback, required);
 
     /// <inheritdoc />
-    public string? Url(string name, NoParamOrder noParamOrder = default, string fallback = default, bool? required = default) => _item.Url(name, noParamOrder, fallback, required);
+    public string? Url(string name, NoParamOrder noParamOrder = default, string? fallback = default, bool? required = default) => _item.Url(name, noParamOrder, fallback, required);
 
     #endregion
 
@@ -197,27 +198,27 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     #region Advanced Get Methods: Attribute, Html, File, Folder etc.
 
     /// <inheritdoc />
-    public IRawHtmlString? Attribute(string name, NoParamOrder noParamOrder = default, string fallback = default,
+    public IRawHtmlString? Attribute(string name, NoParamOrder noParamOrder = default, string? fallback = default,
         bool? required = default) =>
         _item.Attribute(name, noParamOrder, fallback, required);
 
     /// <inheritdoc />
-    public IHtmlTag? Html(string name, NoParamOrder noParamOrder = default, object container = default, bool? toolbar = default,
-        object imageSettings = default, bool? required = default, bool debug = default, Func<ITweakInput<string>, ITweakInput<string>> tweak = default) =>
+    public IHtmlTag? Html(string name, NoParamOrder noParamOrder = default, object? container = default, bool? toolbar = default,
+        object? imageSettings = default, bool? required = default, bool debug = default, Func<ITweakInput<string>, ITweakInput<string>>? tweak = default) =>
         _item.Html(name, noParamOrder, container, toolbar, imageSettings, required, debug, tweak);
 
     /// <inheritdoc />
     public IResponsivePicture? Picture(string name, NoParamOrder noParamOrder = default,
-        Func<ITweakMedia, ITweakMedia> tweak = default,
-        object settings = default,
-        object factor = default, object width = default, string imgAlt = default, string imgAltFallback = default,
-        string imgClass = default, object imgAttributes = default, string pictureClass = default,
-        object pictureAttributes = default, object toolbar = default, object recipe = default) =>
+        Func<ITweakMedia, ITweakMedia>? tweak = default,
+        object? settings = default,
+        object? factor = default, object? width = default, string? imgAlt = default, string? imgAltFallback = default,
+        string? imgClass = default, object? imgAttributes = default, string? pictureClass = default,
+        object? pictureAttributes = default, object? toolbar = default, object? recipe = default) =>
         _item.Picture(name, noParamOrder, tweak, settings, factor, width, imgAlt, imgAltFallback, imgClass, imgAttributes, pictureClass, pictureAttributes, toolbar, recipe);
 
     /// <inheritdoc />
-    public IResponsiveImage? Img(string name, NoParamOrder noParamOrder = default, Func<ITweakMedia, ITweakMedia> tweak = default, object settings = default, object factor = default, object width = default,
-        string imgAlt = default, string imgAltFallback = default, string imgClass = default, object imgAttributes = default, object toolbar = default, object recipe = default) =>
+    public IResponsiveImage? Img(string name, NoParamOrder noParamOrder = default, Func<ITweakMedia, ITweakMedia>? tweak = default, object? settings = default, object? factor = default, object? width = default,
+        string? imgAlt = default, string? imgAltFallback = default, string? imgClass = default, object? imgAttributes = default, object? toolbar = default, object? recipe = default) =>
         _item.Img(name, noParamOrder, tweak, settings, factor, width, imgAlt, imgAltFallback, imgClass, imgAttributes, toolbar, recipe);
 
     /// <inheritdoc />
@@ -237,15 +238,15 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
         => _item.Child(name, noParamOrder, required);
 
     /// <inheritdoc />
-    public IEnumerable<ITypedItem> Children(string field, NoParamOrder noParamOrder = default, string type = default, bool? required = default)
+    public IEnumerable<ITypedItem> Children(string? field, NoParamOrder noParamOrder = default, string? type = default, bool? required = default)
         => _item.Children(field, noParamOrder, type, required);
 
     /// <inheritdoc />
-    public ITypedItem? Parent(NoParamOrder noParamOrder = default, bool? current = default, string type = default, string field = default)
+    public ITypedItem? Parent(NoParamOrder noParamOrder = default, bool? current = default, string? type = default, string? field = default)
         => _item.Parent(noParamOrder, current, type, field);
 
     /// <inheritdoc />
-    public IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder = default, string type = default, string field = default)
+    public IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder = default, string? type = default, string? field = default)
         => _item.Parents(noParamOrder, type, field);
 
     #endregion
@@ -304,25 +305,25 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     #region New Child<T> / Children<T>
 
     /// <inheritdoc />
-    public T Child<T>(string name, NoParamOrder protector = default, bool? required = default)
+    public T? Child<T>(string name, NoParamOrder protector = default, bool? required = default)
         where T : class, ICanWrapData, new()
         => _item.Child<T>(name, protector: protector, required: required);
 
     /// <inheritdoc />
-    public IEnumerable<T> Children<T>(string field, NoParamOrder protector = default,
-        string type = default, bool? required = default)
+    public IEnumerable<T> Children<T>(string? field, NoParamOrder protector = default,
+        string? type = default, bool? required = default)
         where T : class, ICanWrapData, new()
         => _item.Children<T>(field: field, protector: protector, type: type, required: required);
 
     /// <inheritdoc />
-    public T Parent<T>(NoParamOrder protector = default, bool? current = default, string type = default,
-        string field = default)
+    public T? Parent<T>(NoParamOrder protector = default, bool? current = default, string? type = default,
+        string? field = default)
         where T : class, ICanWrapData, new()
         => _item.Parent<T>(protector: protector, current: current, type: type, field: field);
 
     /// <inheritdoc />
     public IEnumerable<T> Parents<T>(NoParamOrder protector = default,
-        string type = default, string field = default)
+        string? type = default, string? field = default)
         where T : class, ICanWrapData, new()
         => _item.Parents<T>(protector: protector, type: type ?? typeof(T).Name, field: field);
 
@@ -360,16 +361,18 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     /// <remarks>
     /// New in v17.03
     /// </remarks>
-    protected IEnumerable<T> AsList<T>(IEnumerable<ITypedItem> source, NoParamOrder protector = default, bool nullIfNull = false)
+    protected IEnumerable<T> AsList<T>(IEnumerable<ITypedItem>? source, NoParamOrder protector = default, bool nullIfNull = false)
         where T : class, ICanWrapData
-        => (source ?? (nullIfNull ? null : []))?.Select(item => _modelFactory.AsCustomFrom<T, ITypedItem>(item)).ToList();
+        => (source ?? (nullIfNull ? null : []))
+            ?.Select(item => _modelFactory.AsCustomFrom<T, ITypedItem>(item))
+            .ToList()!;
 
     #endregion
 
     /// <summary>
     /// Get by name should never throw an error, as it's used to get null if not found.
     /// </summary>
-    object ICanGetByName.Get(string name)
+    object? ICanGetByName.Get(string name)
         => (this as ITypedItem).Get(name, required: false);
 
 }

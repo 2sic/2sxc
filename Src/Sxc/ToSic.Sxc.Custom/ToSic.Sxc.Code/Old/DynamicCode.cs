@@ -41,15 +41,15 @@ public abstract class DynamicCode() : CustomCodeBase("Sxc.DynCod"), IHasCodeLog,
     #region App / Data / Content / Header
 
     /// <inheritdoc cref="IDynamicCode.App" />
-    public IApp App => CodeApi?.App;
+    public IApp App => CodeApi.App;
 
     /// <inheritdoc cref="IDynamicCode.Data" />
-    public IDataSource Data => CodeApi?.Data;
+    public IDataSource Data => CodeApi.Data;
 
     /// <inheritdoc cref="IDynamicCode.Content" />
-    public dynamic Content => CodeApi?.Content;
+    public dynamic? Content => CodeApi.Content;
     /// <inheritdoc cref="IDynamicCode.Header" />
-    public dynamic Header => CodeApi?.Header;
+    public dynamic? Header => CodeApi.Header;
 
     #endregion
 
@@ -57,9 +57,9 @@ public abstract class DynamicCode() : CustomCodeBase("Sxc.DynCod"), IHasCodeLog,
     #region Link and Edit
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => CodeApi?.Link;
+    public ILinkService Link => CodeApi.Link;
     /// <inheritdoc cref="IDynamicCode.Edit" />
-    public IEditService Edit => CodeApi?.Edit;
+    public IEditService Edit => CodeApi.Edit;
 
     #endregion
 
@@ -67,10 +67,10 @@ public abstract class DynamicCode() : CustomCodeBase("Sxc.DynCod"), IHasCodeLog,
 
     /// <inheritdoc />
     [PrivateApi]
-    string IGetCodePath.CreateInstancePath { get; set; }
+    string IGetCodePath.CreateInstancePath { get; set; } = null!;
 
     /// <inheritdoc />
-    public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true) =>
+    public dynamic? CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string? name = null, string? relativePath = null, bool throwOnError = true) =>
         CodeHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
 
     #endregion
@@ -78,33 +78,33 @@ public abstract class DynamicCode() : CustomCodeBase("Sxc.DynCod"), IHasCodeLog,
     #region Context, Settings, Resources
 
     /// <inheritdoc cref="IDynamicCode.CmsContext" />
-    public ICmsContext CmsContext => CodeApi?.CmsContext;
+    public ICmsContext CmsContext => CodeApi.CmsContext;
 
     #endregion CmsContext
 
     #region AsDynamic and AsEntity
 
     /// <inheritdoc />
-    public dynamic AsDynamic(string json, string fallback = default) => CodeApi?.Cdf.Json2Jacket(json, fallback);
+    public dynamic? AsDynamic(string json, string? fallback = default) => CodeApi.Cdf.Json2Jacket(json, fallback);
 
     /// <inheritdoc />
-    public dynamic AsDynamic(IEntity entity) => CodeApi?.Cdf.CodeAsDyn(entity);
+    public dynamic AsDynamic(IEntity entity) => CodeApi.Cdf.CodeAsDyn(entity);
 
     /// <inheritdoc />
-    public dynamic AsDynamic(object dynamicEntity) => CodeApi?.Cdf.AsDynamicFromObject(dynamicEntity);
+    public dynamic? AsDynamic(object dynamicEntity) => CodeApi.Cdf.AsDynamicFromObject(dynamicEntity);
 
     /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
-    public dynamic AsDynamic(params object[] entities) => CodeApi?.Cdf.MergeDynamic(entities);
+    public dynamic? AsDynamic(params object[] entities) => CodeApi.Cdf.MergeDynamic(entities);
 
     /// <inheritdoc />
-    public IEntity AsEntity(object dynamicEntity) => CodeApi?.Cdf.AsEntity(dynamicEntity);
+    public IEntity AsEntity(object dynamicEntity) => CodeApi.Cdf.AsEntity(dynamicEntity);
 
     #endregion
 
     #region AsList
 
     /// <inheritdoc />
-    public IEnumerable<dynamic> AsList(object list) => CodeApi?.Cdf.CodeAsDynList(list);
+    public IEnumerable<dynamic> AsList(object list) => CodeApi.Cdf.CodeAsDynList(list);
 
     #endregion
 
@@ -115,7 +115,7 @@ public abstract class DynamicCode() : CustomCodeBase("Sxc.DynCod"), IHasCodeLog,
         => CodeApi.CreateSource<T>(source);
 
     /// <inheritdoc />
-    public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
+    public T CreateSource<T>(IDataSource? inSource = null, ILookUpEngine? configurationProvider = default) where T : IDataSource
         => CodeApi.CreateSource<T>(inSource, configurationProvider);
 
 
@@ -124,7 +124,7 @@ public abstract class DynamicCode() : CustomCodeBase("Sxc.DynCod"), IHasCodeLog,
     #region AsAdam
 
     /// <inheritdoc />
-    public IFolder AsAdam(ICanBeEntity item, string fieldName) => CodeApi?.AsAdam(item, fieldName);
+    public IFolder AsAdam(ICanBeEntity item, string fieldName) => CodeApi.AsAdam(item, fieldName);
 
     #endregion
 }

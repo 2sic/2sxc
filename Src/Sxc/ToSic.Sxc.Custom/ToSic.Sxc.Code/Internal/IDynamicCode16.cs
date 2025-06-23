@@ -33,7 +33,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     /// <param name="typeName">Optional fully qualified type name to get the class based on a string identifier.</param>
     /// <remarks>New in 17.06.01</remarks>
     /// <returns></returns>
-    TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class;
+    TService GetService<TService>(NoParamOrder protector = default, string? typeName = default) where TService : class;
 
     #region Kit
 
@@ -249,7 +249,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     /// 
     /// In older code there was a similar `CreateInstance` method
     /// </remarks>
-    dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default);
+    dynamic? GetCode(string path, NoParamOrder noParamOrder = default, string? className = default);
 
     #endregion
 

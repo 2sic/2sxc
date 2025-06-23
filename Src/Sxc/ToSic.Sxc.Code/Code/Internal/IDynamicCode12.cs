@@ -166,7 +166,7 @@ public interface IDynamicCode12 : IDynamicCode
     /// 🪒 Use in Razor: `@Resources.CtaButtonLabel`
     /// </summary>
     /// <remarks>New in 12.03</remarks>
-    dynamic Resources { get; }
+    dynamic? Resources { get; }
 
     /// <summary>
     /// Settings for this Scenario. This is a dynamic object based on the <see cref="IDynamicStack"/>.
@@ -176,7 +176,7 @@ public interface IDynamicCode12 : IDynamicCode
     /// 🪒 Use in Razor: `@Settings.ItemsPerRow`
     /// </summary>
     /// <remarks>New in 12.03</remarks>
-    dynamic Settings { get; }
+    dynamic? Settings { get; }
 
     #endregion
 
