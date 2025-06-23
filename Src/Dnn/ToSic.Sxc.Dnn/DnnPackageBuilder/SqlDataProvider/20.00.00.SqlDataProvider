@@ -8,7 +8,7 @@ GO
 SET XACT_ABORT ON
 GO
 
-DECLARE @upgradeVersion NVARCHAR(20) = '20.00.00', @installedVersion NVARCHAR(20);
+DECLARE @upgradeVersion NVARCHAR(20) = REPLACE('20-00-00','-','.'), @installedVersion NVARCHAR(20);
 SELECT @installedVersion = ISNULL(
     (SELECT [Version] FROM Packages WHERE [Name] = N'2SexyContent'),
     '99.99.99'
