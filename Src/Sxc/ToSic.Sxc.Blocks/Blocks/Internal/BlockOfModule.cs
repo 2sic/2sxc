@@ -27,7 +27,7 @@ public sealed class BlockOfModule(BlockGeneratorHelpers services) : BlockOfBase(
             IsContentApp = ctx.Module.IsContent,
             IsInnerBlock = false,
         };
-        Specs = BlockSpecsHelper.CompleteInit(Specs, /*this,*/ Services, null, ctx.Module.BlockIdentifier, ctx.Module.Id, Log);
+        Specs = BlockSpecsHelper.CompleteInit(Specs, Services, null, ctx.Module.BlockIdentifier, ctx.Module.Id, Log);
 
         Specs = Specs with
         {

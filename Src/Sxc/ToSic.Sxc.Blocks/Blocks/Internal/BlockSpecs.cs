@@ -89,7 +89,12 @@ public record BlockSpecs : IBlock
     /// The root block of this block - can be the same as `this`.
     /// </summary>
     [PrivateApi]
-    public IBlock RootBlock { get; init; }
+    [field: AllowNull, MaybeNull]
+    public IBlock RootBlock
+    {
+        get => field ?? this; // never store the result, as the fallback should still return me-object in future if never set.
+        init;
+    }
 
     public IList<IDependentApp> DependentApps { get; } = [];
 

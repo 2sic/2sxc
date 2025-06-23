@@ -7,15 +7,8 @@ namespace ToSic.Sxc.Blocks.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public sealed class BlockOfEntity(BlockGeneratorHelpers services, LazySvc<AppFinder> appFinderLazy)
-    : BlockOfBase(services, "CB.Ent", connect: [appFinderLazy]) //, ICanBeEntity
+    : BlockOfBase(services, "CB.Ent", connect: [appFinderLazy])
 {
-    ///// <summary>
-    ///// This is the entity that was used to configure the block
-    ///// We need it for later operations, like mentioning what index it was on in a list
-    ///// </summary>
-    //public IEntity Entity { get; protected set; } = null!;
-
-
     #region Init
 
     public IBlock GetBlockOfEntity(IBlock parentBlock, IEntity blockEntity, int contentBlockId = -1)
@@ -34,16 +27,14 @@ public sealed class BlockOfEntity(BlockGeneratorHelpers services, LazySvc<AppFin
         // but the current instance can be of another block
         Specs = new()
         {
-            //GetData = GetData,
             Context = ctx,
             AppId = blockId.AppId,
             ZoneId = parentBlock.ZoneId,
-            //Entity = blockEntity,
             IsContentApp = isContentApp,
             IsInnerBlock = true,
         };
 
-        Specs = BlockSpecsHelper.CompleteInit(Specs, /*this,*/ Services, parentBlock, blockId, -blockEntity.EntityId, Log);
+        Specs = BlockSpecsHelper.CompleteInit(Specs, Services, parentBlock, blockId, -blockEntity.EntityId, Log);
 
         Specs = Specs with
         {

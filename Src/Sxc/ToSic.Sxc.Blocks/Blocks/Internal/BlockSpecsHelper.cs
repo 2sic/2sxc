@@ -6,18 +6,16 @@ using ToSic.Sxc.LookUp.Internal;
 namespace ToSic.Sxc.Blocks.Internal;
 internal class BlockSpecsHelper
 {
-    public static BlockSpecs CompleteInit(BlockSpecs currentSpecs, /*BlockOfBase parent,*/ BlockGeneratorHelpers Services, IBlock? parentBlockOrNull, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded, ILog Log)
+    public static BlockSpecs CompleteInit(BlockSpecs currentSpecs, /*BlockOfBase parent,*/ BlockGeneratorHelpers helpers, IBlock? parentOrNull, IBlockIdentifier blockIdentifier, int blockId, ILog log)
     {
-        var l = Log.Fn<BlockSpecs>();
+        var l = log.Fn<BlockSpecs>();
 
         var specs = currentSpecs with
         {
-            ParentBlockOrNull = parentBlockOrNull,
-            RootBlock = parentBlockOrNull?.RootBlock ?? currentSpecs, // if parent is null, this is the root block
+            ParentBlockOrNull = parentOrNull,
+            RootBlock = parentOrNull?.RootBlock!, // if parent is null, this is the root block
 
-            // Note: this is "just" the module id, not the block id
-            //ParentId = Context.Module.Id,
-            ContentBlockId = blockNumberUnsureIfNeeded,
+            ContentBlockId = blockId,
         };
 
         l.A($"parent#{specs.ParentId}, content-block#{specs.ContentBlockId}, z#{specs.ZoneId}, a#{specs.AppId}");
@@ -37,10 +35,10 @@ internal class BlockSpecsHelper
 
         // note: requires EditAllowed, which isn't ready till App is created
         // 2dm #???
-        var appWorkCtxPlus = Services.WorkViews.CtxSvc.ContextPlus(specs.PureIdentity());
-        var config = Services.AppBlocks
+        var appWorkCtxPlus = helpers.WorkViews.CtxSvc.ContextPlus(specs.PureIdentity());
+        var config = helpers.AppBlocks
             .New(appWorkCtxPlus)
-            .GetOrGeneratePreviewConfig(blockId);
+            .GetOrGeneratePreviewConfig(blockIdentifier);
 
         specs = specs with
         {
@@ -52,7 +50,7 @@ internal class BlockSpecsHelper
             return l.Return(specs, $"DataIsMissing a:{specs.AppId}, container:{specs.ParentId}, content-group:{config.Id}");
 
         // Get App for this block
-        var app = Services.AppLazy.Value;
+        var app = helpers.AppLazy.Value;
         app.Init(specs.Context.Site, specs.PureIdentity(), new SxcAppDataConfigSpecs { BlockForLookupOrNull = specs });
         specs = specs with
         {
@@ -61,8 +59,8 @@ internal class BlockSpecsHelper
         l.A("App created");
 
         // use the content-group template, which already covers stored data + module-level stored settings
-        var view = new BlockViewLoader(Log)
-            .PickView(specs, config.View, Services.WorkViews.New(appWorkCtxPlus));
+        var view = new BlockViewLoader(log)
+            .PickView(specs, config.View, helpers.WorkViews.New(appWorkCtxPlus));
 
         if (view == null)
             return l.Return(specs, $"no view; a:{specs.AppId}, container:{specs.ParentId}, content-group:{config.Id}");
