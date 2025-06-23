@@ -46,6 +46,19 @@ public class HelpForRazor12
 
     );
 
+    // New v20 - detect usage of `GetBestValue(...)` which does not exist anymore
+    public static CodeHelp GetBestValueGone = new CodeHelp
+    {
+        Name = "Detect use of old GetBestValue - any which stopped existing",
+        // Full error is something like: "ToSic.Eav.Data.EntityDecorators.Sys.EntityWithDecorator<ToSic.Sxc.Data.Sys.Decorators.CmsEditDecorator>' does not contain a definition for 'GetBestValue' at CallSite"
+        Detect = @"does not contain a definition for 'GetBestValue'",
+        UiMessage =
+            "Your code seems to use an old 'GetBestValue() overload to get with/without converting to links. Please use Get(...) instead. Please see guide TODO!",
+        LinkCode = "brc-20-getbestvalue",
+    };
+
+
+
     /// <summary>
     /// List re-used in v12 and v14
     /// </summary>
@@ -144,6 +157,8 @@ public class HelpForRazor12
                 Detect = @"error CS1739: The best overload for 'GetBestValue' does not have a parameter named 'resolveHyperlinks'",
                 UiMessage = "Your code seems to use an old 'GetBestValue() overload to get with/without converting to links. This has been inactive for a long time and is removed in v20. Please see guide TODO!",
             },
+
+            GetBestValueGone,
 
             new CodeHelp
             {

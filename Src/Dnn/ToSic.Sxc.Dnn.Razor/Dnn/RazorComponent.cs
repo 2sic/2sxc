@@ -2,9 +2,11 @@
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.CodeApi.Internal;
+using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Code.Help;
 
 namespace ToSic.Sxc.Dnn;
 
@@ -15,10 +17,18 @@ namespace ToSic.Sxc.Dnn;
 [PublicApi("...but deprecated! use Razor14, RazorTyped or newer")]
 public abstract partial class RazorComponent : RazorComponentBase,
     // #RemovedV20 #ModulePublish
-//#pragma warning disable CS0618
-//    IDnnRazorCustomize, 
-//#pragma warning restore CS0618
-    IDnnRazorCompatibility, IDnnRazor11, ICreateInstance
+    //#pragma warning disable CS0618
+    //    IDnnRazorCustomize, 
+    //#pragma warning restore CS0618
+    // Remainders after removing IDnnRazorCustomize
+    IDynamicCode,
+    IHasDnn,
+    // previous
+    IDnnRazorCompatibility,
+    IDnnRazor11,
+    ICreateInstance,
+    // new
+    IHasCodeHelp
 {
     internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
@@ -187,5 +197,8 @@ public abstract partial class RazorComponent : RazorComponentBase,
         => RzrHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError: throwOnError);
 
     #endregion
+
+    // Added this in v20 to show uses of GetBestValue; but much of it may not be applicable, in which case we should create a separate list for SexyContentWebPage and Dnn.RazorComponent
+    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpForRazor12.Compile12;
 
 }

@@ -103,6 +103,7 @@ should be <br>
         ProbablyCommentAfterInherits,
         RazorBaseClassDoesntInheritCorrectly,
         ListObjectNotFound, // v20 - removal of #RemovedV20 #Element
+        HelpForRazor12.GetBestValueGone,
     ];
 
 }

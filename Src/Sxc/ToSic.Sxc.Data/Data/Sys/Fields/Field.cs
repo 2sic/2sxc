@@ -47,15 +47,16 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
     }
     private readonly GetOnce<string?> _url = new();
 
-    // 2025-06-19 2dm disabled again as we must find out why it was re-enabled and document
-    // Keep this comments till EOY 2025 in case we need to re-activate it again.
-    ///// <summary>
-    ///// The Dynamic metadata - probably used somewhere...?
-    ///// 2023-08-14 v16.03 removed by 2dm as never used; KISS
-    ///// ...but reactivated for some reason I don't know...
-    ///// </summary>
-    //public IMetadata Metadata => _dynMeta.Get(() => cdf.Metadata(MetadataOfValue))!;
-    //private readonly GetOnce<IMetadata> _dynMeta = new();
+    /// <summary>
+    /// The Dynamic metadata - probably used somewhere...?
+    /// 2023-08-14 v16.03 removed by 2dm as never used; KISS
+    /// ...but reactivated for some reason I don't know...
+    /// 2025-06 2dm: It appears we reactivated it, because various older apps had code like this:
+    /// `var altText = Text.First(post.Field("Image").Metadata.Description, post.Title);`
+    /// Apps include Blog v5.3.1, News 5.2.3, ImageHotspot 3.2.2
+    /// </summary>
+    public ITypedMetadata Metadata => _dynMeta.Get(() => cdf.Metadata(MetadataOfValue!))!;
+    private readonly GetOnce<ITypedMetadata> _dynMeta = new();
 
 
     private IMetadataOf? MetadataOfValue => _itemMd.Get(() =>

@@ -4,6 +4,7 @@ using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Code.CodeApi.Internal;
+using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Compatibility.RazorPermissions;
 using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Data.Sys.Wrappers;
@@ -11,6 +12,7 @@ using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Code.Help;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 
@@ -27,16 +29,20 @@ namespace ToSic.SexyContent.Razor;
 public abstract class SexyContentWebPage : 
     RazorComponentBase,
     ICreateInstance,
-    IHasDnn
+    IHasDnn,
     // #RemovedV20 #ModulePublish
-//#pragma warning disable CS0618 // Type or member is obsolete
-//    IDnnRazorCustomize, 
-//#pragma warning restore CS0618 // Type or member is obsolete
+    //#pragma warning disable CS0618 // Type or member is obsolete
+    //    IDnnRazorCustomize, 
+    //#pragma warning restore CS0618 // Type or member is obsolete
     // #RemovedV20 #IAppAndDataHelpers
     //IDynamicCodeBeforeV10
-//#pragma warning disable 618
-//    IAppAndDataHelpers
-//#pragma warning restore 618
+    //#pragma warning disable 618
+    //    IAppAndDataHelpers
+    //#pragma warning restore 618
+    // Remainders after removing IDnnRazorCustomize
+    IDynamicCode,
+    // new,
+    IHasCodeHelp
 {
     internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
@@ -278,5 +284,8 @@ public abstract class SexyContentWebPage :
         => RzrHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError: throwOnError);
 
     #endregion
+
+    // Added this in v20 to show uses of GetBestValue; but much of it may not be applicable, in which case we should create a separate list for SexyContentWebPage and Dnn.RazorComponent
+    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpForRazor12.Compile12;
 
 }
