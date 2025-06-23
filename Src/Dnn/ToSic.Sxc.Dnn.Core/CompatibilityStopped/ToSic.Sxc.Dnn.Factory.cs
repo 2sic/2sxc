@@ -13,7 +13,7 @@ public static class Factory
     internal static string GenerateMessage([CallerMemberName] string cName = default)
         => $"The old {nameof(Factory)}.{cName}() API has been deprecated since v13 and announced for removal in v15. They were removed in v20. " +
            $"Please use Dependency Injection and the IRenderService or IDynamicCodeService instead. " +
-           $"For guidance, see https://go.2sxc.org/brc-13-dnn-factory";
+           $"For guidance, see https://go.2sxc.org/brc-20-dnn-factory";
 
     [Obsolete]
     public static object CmsBlock(int pageId, int modId)

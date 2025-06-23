@@ -14,7 +14,7 @@ public class Render
     internal static string GenerateMessage(string fullNameSpace)
         => $"The old {fullNameSpace} API has been deprecated since v12 and announced for removal in v15. They were removed in v20. " +
            $"Please use the @Kit.Render.One(...)/All(...) instead. " +
-           $"For guidance, see https://go.2sxc.org/brc-13-static-render";
+           $"For guidance, see https://go.2sxc.org/brc-20-static-render";
 
     [Obsolete]
     public static string One(object parent, object noParamOrder = default, object item = null, string field = null, object newGuid = null)
