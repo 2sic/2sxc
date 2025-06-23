@@ -328,7 +328,8 @@ internal class SearchController(
         l.A("got instance of compiled ViewController class");
 
         // 2. Check if it implements ToSic.Sxc.Search.ICustomizeSearch - otherwise just return the empty search results as shown above
-        if (!(instance is ICustomizeSearch customizeSearch)) return l.ReturnNull("exit, class do not implements ICustomizeSearch");
+        if (!(instance is ICustomizeSearch customizeSearch))
+            return l.ReturnNull("exit, class do not implements ICustomizeSearch");
 
         // 3. Make sure it has the full context if it's based on DynamicCode (like Code12)
         if (instance is INeedsExecutionContext instanceWithContext)

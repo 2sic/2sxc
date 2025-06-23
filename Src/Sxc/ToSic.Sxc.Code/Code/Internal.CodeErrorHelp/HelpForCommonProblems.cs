@@ -56,7 +56,7 @@ internal class HelpForCommonProblems
         ..HelpForInvalidCast,
         DynamicList,
         DynamicEntity,
-        NoParamOrderUsed
+        NoParamOrderUsed,
     ];
 
     public static List<CodeHelp> HelpForRuntimeProblems =

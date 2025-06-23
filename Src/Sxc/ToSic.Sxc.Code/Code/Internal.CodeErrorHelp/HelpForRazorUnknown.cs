@@ -86,13 +86,23 @@ should be <br>
 "
     };
 
+    // New v20 - removal of #RemovedV20 #Element
+    private static readonly CodeHelp ListObjectNotFound = new()
+    {
+        Name = "List not available on SexyContentWebPage, resulting in c# thinking it could want to access List<T>",
+        Detect = "error CS0305: Using the generic type 'List<T>' requires 1 type arguments",
+        LinkCode = "brc-20-list-element",
+        UiMessage = "The old List (of Element) object had to be removed."
+    };
+
 
     internal static List<CodeHelp> CompileUnknown =
     [
         UnknownNamespace,
         ProbablySemicolonAfterInherits,
         ProbablyCommentAfterInherits,
-        RazorBaseClassDoesntInheritCorrectly
+        RazorBaseClassDoesntInheritCorrectly,
+        ListObjectNotFound, // v20 - removal of #RemovedV20 #Element
     ];
 
 }

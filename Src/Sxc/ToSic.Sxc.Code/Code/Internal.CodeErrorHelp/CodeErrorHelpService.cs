@@ -7,7 +7,7 @@ using ToSic.Sys.Exceptions;
 #if NETFRAMEWORK
 using HttpCompileException = System.Web.HttpCompileException;
 #else
-// TODO: What's the real compile exception type?
+// TODO: @STV What's the real compile exception type? we need it, so that the errors are better
 using HttpCompileException = System.Exception;
 #endif
 
