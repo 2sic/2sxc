@@ -35,12 +35,7 @@ public sealed class BlockOfEntity(BlockGeneratorHelpers helpers, LazySvc<AppFind
             IsInnerBlock = true,
         };
 
-        specs = BlockSpecsHelper.CompleteInit(specs, helpers, parentBlock, blockId, -blockEntity.EntityId, Log);
-
-        specs = specs with
-        {
-            Data = helpers.GetData(specs),
-        };
+        specs = helpers.CompleteInit(specs, parentBlock, blockId, -blockEntity.EntityId);
 
         return l.Return(specs);
     }

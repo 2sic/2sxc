@@ -28,12 +28,7 @@ public sealed class BlockOfModule(BlockGeneratorHelpers helpers) : ServiceBase("
             IsContentApp = ctx.Module.IsContent,
             IsInnerBlock = false,
         };
-        specs = BlockSpecsHelper.CompleteInit(specs, helpers, null, ctx.Module.BlockIdentifier, ctx.Module.Id, Log);
-
-        specs = specs with
-        {
-            Data = helpers.GetData(specs),
-        };
+        specs = helpers.CompleteInit(specs, null, ctx.Module.BlockIdentifier, ctx.Module.Id);
 
         return l.ReturnAsOk(specs);
     }
