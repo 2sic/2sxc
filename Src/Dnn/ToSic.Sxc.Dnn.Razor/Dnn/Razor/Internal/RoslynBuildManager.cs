@@ -127,10 +127,13 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             var mainType = FindMainType(generatedAssembly, className, isCshtml);
             l.A($"Main type: {mainType}");
 
-            var assemblyResult = new AssemblyResult(generatedAssembly, safeClassName: className, mainType: mainType);
-            assemblyResult.CacheDependencyId = AssemblyCacheManager.KeyTemplate(codeFileInfo.FullPath);
+            var assemblyResult = new AssemblyResult(generatedAssembly)
+            {
+                SafeClassName = className,
+                MainType = mainType,
+                CacheDependencyId = AssemblyCacheManager.KeyTemplate(codeFileInfo.FullPath)
+            };
 
-            
 
             assemblyCacheManager.Add(
                 cacheKey: assemblyResult.CacheDependencyId,

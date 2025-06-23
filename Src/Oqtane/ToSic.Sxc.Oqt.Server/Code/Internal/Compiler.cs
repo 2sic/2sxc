@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
                 }
 
                 //throw l.Done(new InvalidOperationException(string.Join("\n", errors)));
-                return l.ReturnAsError(new AssemblyResult(errorMessages: string.Join("\n", errors)));
+                return l.ReturnAsError(new() { ErrorMessages = string.Join("\n", errors), });
             }
 
             peStream.Seek(0, SeekOrigin.Begin);
@@ -84,11 +84,11 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
 
             var assembly = assemblyLoadContext.LoadFromStream(peStream, pdbStream);
 
-            return l.ReturnAsOk(new AssemblyResult(assembly));
+            return l.ReturnAsOk(new(assembly));
         }
 
         // Ensure that can't be kept alive by stack slot references (real- or JIT-introduced locals).
-        // That could keep the SimpleUnloadableAssemblyLoadContext alive and prevent the unload.
+        // That could keep the SimpleUnloadableAssemblyLoadContext alive and prevent an unload.
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal AssemblyResult GetCompiledAssemblyFromFolder(string[] sourceFiles, string assemblyFilePath, string pdbFilePath, string dllName, HotBuildSpec spec)
         {
@@ -145,7 +145,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
                     }
 
                     //throw l.Done(new IOException(string.Join("\n", errors)));
-                    return l.ReturnAsError(new AssemblyResult(errorMessages: string.Join("\n", errors)));
+                    return l.ReturnAsError(new() { ErrorMessages = string.Join("\n", errors), });
                 }
 
                 // Create file streams to save the compiled assembly and PDB to disk
@@ -161,12 +161,12 @@ namespace ToSic.Sxc.Oqt.Server.Code.Internal
                 var assembly = assemblyLoadContext.LoadFromAssemblyPath(assemblyFilePath);
 
 
-                return l.ReturnAsOk(new AssemblyResult(assembly));
+                return l.ReturnAsOk(new(assembly));
             }
             catch (Exception ex)
             {
                 l.E($"Exception during compilation: {ex.Message}");
-                return l.ReturnAsError(new AssemblyResult(errorMessages: ex.Message));
+                return l.ReturnAsError(new() { ErrorMessages = ex.Message, });
             }
             finally
             {

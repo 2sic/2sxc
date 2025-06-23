@@ -45,18 +45,26 @@ internal class AppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, Generat
             };
 
             if (!assemblyResult.ErrorMessages.IsEmpty())
-                return l.ReturnAsError(new(errorMessages: assemblyResult.ErrorMessages, infos: dicInfos), assemblyResult.ErrorMessages);
+                return l.ReturnAsError(new()
+                {
+                    ErrorMessages = assemblyResult.ErrorMessages,
+                    Infos = dicInfos,
+                }, assemblyResult.ErrorMessages);
 
             // Compile ok
             LogAllTypes(assemblyResult.Assembly);
-            return l.ReturnAsOk(new(assembly: assemblyResult.Assembly, assemblyLocations: [symbolsPath, assemblyPath], infos: dicInfos));
+            return l.ReturnAsOk(new(assemblyResult.Assembly)
+            {
+                AssemblyLocations = [symbolsPath, assemblyPath],
+                Infos = dicInfos,
+            });
 
         }
         catch (Exception ex)
         {
             l.Ex(ex);
             var errorMessage = $"Error: Can't compile '{AppCodeDll}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. {ex.Message}";
-            return l.ReturnAsError(new(errorMessages: errorMessage), "error");
+            return l.ReturnAsError(new() { ErrorMessages = errorMessage, }, "error");
         }
     }
 

@@ -49,7 +49,11 @@ internal class AppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironm
             if (!results.Errors.HasErrors)
             {
                 LogAllTypes(results.CompiledAssembly);
-                return l.ReturnAsOk(new(assembly: results.CompiledAssembly, assemblyLocations: [symbolsPath, assemblyPath], infos: dicInfos));
+                return l.ReturnAsOk(new(assembly: results.CompiledAssembly)
+                {
+                    AssemblyLocations = [symbolsPath, assemblyPath],
+                    Infos = dicInfos,
+                });
             }
 
             // Compile error case
@@ -67,13 +71,17 @@ internal class AppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironm
                 errors += $"{msg}\n";
             }
 
-            return l.ReturnAsError(new(errorMessages: errors, infos: dicInfos), errors);
+            return l.ReturnAsError(new()
+            {
+                ErrorMessages = errors,
+                Infos = dicInfos,
+            }, errors);
         }
         catch (Exception ex)
         {
             l.Ex(ex);
             var errorMessage = $"Error: Can't compile '{AppCodeDll}' in {Path.GetFileName(relativePath)}. Details are logged into insights. {ex.Message}";
-            return l.ReturnAsError(new(errorMessages: errorMessage));
+            return l.ReturnAsError(new() { ErrorMessages = errorMessage, });
         }
     }
     private string _relativePath;

@@ -14,7 +14,7 @@ public static class AppCodeExtensions
     /// <returns></returns>
     /// <remarks>
     /// </remarks>
-    public static Type FindControllerTypeByName(this Assembly appCodeAssembly, string controllerTypeName)
+    public static Type? FindControllerTypeByName(this Assembly appCodeAssembly, string controllerTypeName)
     {
         var type = appCodeAssembly.GetType(controllerTypeName, false, true)
                    // Find in case it's in a namespace

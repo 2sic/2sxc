@@ -22,7 +22,7 @@ internal class CodeCompilerNetFull(
             var errorMessage =
                 $"Can't compile '{className}' in {Path.GetFileName(relativePath)}. Details are logged into insights. {additionalInfo}" +
                 ex.Message;
-            return new(errorMessages: errorMessage);
+            return new() { ErrorMessages = errorMessage, };
         }
 
         try

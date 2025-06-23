@@ -82,7 +82,7 @@ public class Util(IGlobalConfiguration globalConfiguration)
     }
 
     // Helper method to extract the prefix from the filename, validating the hash part
-    private static string GetFilePrefix(string fileName)
+    private static string? GetFilePrefix(string fileName)
     {
         if (Path.GetExtension(fileName) != Dll)
             return null;

@@ -11,7 +11,7 @@ public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : Servi
 
     #region Static Calls for **AppCode** - to use before requiring DI
 
-    public (AssemblyResult AssemblyResult, string cacheKey) TryGetAppCode(HotBuildSpec spec)
+    public (AssemblyResult? AssemblyResult, string cacheKey) TryGetAppCode(HotBuildSpec spec)
     {
         var cacheKey = KeyAppCode(spec);
         return (Get(cacheKey), cacheKey);
@@ -23,7 +23,7 @@ public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : Servi
 
     #region Static Calls for **Dependecies** - to use before requiring DI
 
-    public (List<AssemblyResult> assemblyResults, string cacheKey) TryGetDependencies(HotBuildSpec spec)
+    public (List<AssemblyResult>? assemblyResults, string cacheKey) TryGetDependencies(HotBuildSpec spec)
     {
         var cacheKey = KeyDependency(spec);
         return (memoryCacheService.Get<List<AssemblyResult>>(cacheKey), cacheKey);
@@ -37,13 +37,15 @@ public class AssemblyCacheManager(MemoryCacheService memoryCacheService) : Servi
 
     internal static string KeyTemplate(string templateFullPath) => $"{GlobalCacheRoot}view:{templateFullPath.ToLowerInvariant()}";
 
-    private AssemblyResult Get(string key) => memoryCacheService.Get<AssemblyResult>(key);
+    private AssemblyResult? Get(string key)
+        => memoryCacheService.Get<AssemblyResult>(key);
 
-    public AssemblyResult TryGetTemplate(string templateFullPath) => Get(KeyTemplate(templateFullPath));
+    public AssemblyResult? TryGetTemplate(string templateFullPath)
+        => Get(KeyTemplate(templateFullPath));
 
     #endregion
 
-    public string Add(string cacheKey, object data, int slidingDuration, IList<string> filePaths = null, IDictionary<string, bool> folderPaths = null, IEnumerable<ICanBeCacheDependency> dependencies = default)
+    public string Add(string cacheKey, object data, int slidingDuration, IList<string>? filePaths = null, IDictionary<string, bool>? folderPaths = null, IEnumerable<ICanBeCacheDependency>? dependencies = default)
     {
         var l = Log.Fn<string>($"{nameof(cacheKey)}: {cacheKey}; {nameof(slidingDuration)}: {slidingDuration}", timer: true);
 

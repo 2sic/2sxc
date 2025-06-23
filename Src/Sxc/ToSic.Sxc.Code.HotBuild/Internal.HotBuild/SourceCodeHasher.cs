@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Code.Internal.HotBuild
             // See if in memory cache
             var cacheKey = FolderHashCacheKey(folderPath);
             if (memoryCacheService.TryGet<string>(cacheKey, out var fromCache))
-                return l.Return(fromCache, "from cache");
+                return l.Return(fromCache!, "from cache");
 
             var result = _lockHashProvider.Call(
                 conditionToGenerate: () => !memoryCacheService.TryGet<string>(cacheKey, out _),
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Code.Internal.HotBuild
                 cacheOrFallback: () => memoryCacheService.Get<string>(cacheKey)
             );
 
-            return l.ReturnAsOk(result.Result);
+            return l.ReturnAsOk(result.Result!);
         }
 
         internal string[] GetSourceFilesInFolder(string fullPath)
@@ -55,13 +55,16 @@ namespace ToSic.Sxc.Code.Internal.HotBuild
             // See if in memory cache
             var cacheKey = SourceFilesInFolderCacheKey(fullPath);
             if (memoryCacheService.TryGet<string[]>(cacheKey, out var fromCache))
-                return l.Return(fromCache, "from cache");
+                return l.Return(fromCache!, "from cache");
 
             var result = _lockSourceFilesProvider.Call(
                 conditionToGenerate: () => !memoryCacheService.TryGet<string[]>(cacheKey, out _),
                 generator: () =>
                 {
-                    var files = Directory.GetFiles(fullPath, $"*{CsFiles}", UseSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+                    var files = Directory.GetFiles(fullPath, $"*{CsFiles}", UseSubfolders
+                        ? SearchOption.AllDirectories
+                        : SearchOption.TopDirectoryOnly
+                    );
                     l.A($"{files.Length} files found with {nameof(UseSubfolders)}: {UseSubfolders}");
                     Array.Sort(files, StringComparer.Ordinal); // sort the array of file paths before processing to ensure hashing deterministic behavior.
                     l.A("sorted files");
@@ -75,7 +78,7 @@ namespace ToSic.Sxc.Code.Internal.HotBuild
                 cacheOrFallback: () => memoryCacheService.Get<string[]>(cacheKey)
             );
 
-            return l.ReturnAsOk(result.Result);
+            return l.ReturnAsOk(result.Result!);
         }
 
 
@@ -103,7 +106,7 @@ namespace ToSic.Sxc.Code.Internal.HotBuild
             hashAlgorithm.TransformFinalBlock([], 0, 0); // Finalize the hash computation
             l.A("finalized hash");
 
-            return l.ReturnAsOk(hashAlgorithm.Hash);
+            return l.ReturnAsOk(hashAlgorithm.Hash ?? []);
         }
 
         /// <summary>
@@ -115,14 +118,14 @@ namespace ToSic.Sxc.Code.Internal.HotBuild
 
         // Cache platform bytes
         private byte[] PlatformBytes => _platformBytes ??= GetPlatformBytes();
-        private static byte[] _platformBytes;
+        private static byte[]? _platformBytes;
 
         // Combines relevant keys, incl. 2sxc and platform versions to hash.
         private byte[] GetPlatformBytes()
         {
             var l = Log.Fn<byte[]>($"", timer: true);
             var platformVersion = platform.Value.Version;
-            var sxcVersion = Assembly.GetExecutingAssembly().GetName().Version;
+            var sxcVersion = Assembly.GetExecutingAssembly().GetName().Version!;
             var platformString = $"{platform.Value.Name.ToLowerInvariant()}:{platformVersion.Major}.{platformVersion.Minor}.{platformVersion.Build}.{platformVersion.Revision}_2sxc:{sxcVersion.Major}.{sxcVersion.Minor}.{sxcVersion.Build}.{sxcVersion.Revision}";
             l.A($"platform string: '{platformString}'");
             return l.ReturnAsOk(System.Text.Encoding.UTF8.GetBytes(platformString));

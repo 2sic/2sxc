@@ -28,9 +28,9 @@ public class AppCodeLoader(
     /// </summary>
     /// <param name="spec"></param>
     /// <returns></returns>
-    public (AssemblyResult AssemblyResult, HotBuildSpec Specs) GetAppCode(HotBuildSpec spec)
+    public (AssemblyResult? AssemblyResult, HotBuildSpec Specs) GetAppCode(HotBuildSpec spec)
     {
-        var l = Log.Fn<(AssemblyResult, HotBuildSpec)>(spec.ToString());
+        var l = Log.Fn<(AssemblyResult?, HotBuildSpec)>(spec.ToString());
         var firstRound = GetOrBuildAppCode(spec);
         if (firstRound.AssemblyResult?.Assembly != null)
             return l.Return(firstRound, $"AppCode for '{spec.EditionToLog}'.");
@@ -50,9 +50,9 @@ public class AppCodeLoader(
     /// </summary>
     /// <param name="spec"></param>
     /// <returns></returns>
-    private (AssemblyResult AssemblyResult, HotBuildSpec Specs) GetOrBuildAppCode(HotBuildSpec spec)
+    private (AssemblyResult? AssemblyResult, HotBuildSpec Specs) GetOrBuildAppCode(HotBuildSpec spec)
     {
-        var l = Log.Fn<(AssemblyResult, HotBuildSpec)>(spec.ToString());
+        var l = Log.Fn<(AssemblyResult?, HotBuildSpec)>(spec.ToString());
 
         // Check cache first
         var assemblyResult = assemblyCacheManager.TryGetAppCode(spec).AssemblyResult;
@@ -70,14 +70,14 @@ public class AppCodeLoader(
     /// </summary>
     /// <param name="spec"></param>
     /// <returns></returns>
-    private AssemblyResult TryBuildAppCodeAndLog(HotBuildSpec spec)
+    private AssemblyResult? TryBuildAppCodeAndLog(HotBuildSpec spec)
     {
         // Add to global history and add specs
-        var logSummary = logStore.Add(SxcLogAppCodeLoader, Log);
+        var logSummary = logStore.Add(SxcLogAppCodeLoader, Log)!;
         logSummary.UpdateSpecs(spec.ToDictionary());
 
         // Initial message for insights-overview
-        var l = Log.Fn<AssemblyResult>($"{spec}", timer: true);
+        var l = Log.Fn<AssemblyResult?>($"{spec}", timer: true);
 
         var assemblyResults = TryBuildAppCode(spec, logSummary);
 
@@ -86,18 +86,18 @@ public class AppCodeLoader(
             return l.ReturnAsOk(assemblyResults);
 
         // Problems - log and throw
-        l.ReturnAsError(null, assemblyResults.ErrorMessages);
+        l.ReturnAsError(null, assemblyResults!.ErrorMessages);
         throw new(assemblyResults.ErrorMessages);
     }
 
     private static readonly NamedLocks CompileLocks = new();
 
-    private AssemblyResult TryBuildAppCode(HotBuildSpec spec, LogStoreEntry logSummary)
+    private AssemblyResult? TryBuildAppCode(HotBuildSpec spec, LogStoreEntry logSummary)
     {
-        var l = Log.Fn<AssemblyResult>($"{spec}");
+        var l = Log.Fn<AssemblyResult?>($"{spec}");
 
         var (result, cacheKey) = assemblyCacheManager.TryGetAppCode(spec);
-        logSummary.AddSpec("Cached", $"{result != null} on {cacheKey}");
+        logSummary.AddSpec("Cached", $"{result != null!} on {cacheKey}");
 
         if (result != null)
             return l.ReturnAsOk(result);
@@ -234,7 +234,7 @@ public class AppCodeLoader(
         var appPaths = appPathsLazy.Value.Get(appReadFac.Get(spec.AppId), site);
         var folderWithEdition = folder.HasValue()
             ? spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder
-            : spec.Edition;
+            : spec.Edition!;
         var physicalPath = Path.Combine(appPaths.PhysicalPath, folderWithEdition);
         //l.A($"{nameof(physicalPath)}: '{physicalPath}'");
         var relativePath = Path.Combine(appPaths.RelativePath, folderWithEdition);

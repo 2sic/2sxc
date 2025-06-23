@@ -16,9 +16,9 @@ namespace ToSic.Sxc.Code.Internal.HotBuild;
 /// </remarks>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class CodeCompiler(IServiceProvider serviceProvider, object[] connect = default) : ServiceBase("Sys.CsCmpl", connect: connect /* never! serviceProvider */), IClassCompiler
+public abstract class CodeCompiler(IServiceProvider serviceProvider, object[]? connect = default) : ServiceBase("Sys.CsCmpl", connect: connect /* never! serviceProvider */), IClassCompiler
 {
-    public object InstantiateClass(string virtualPath, HotBuildSpec spec, string className = null, string relativePath = null, bool throwOnError = true)
+    public object? InstantiateClass(string virtualPath, HotBuildSpec spec, string? className = null, string? relativePath = null, bool throwOnError = true)
     {
         var l = Log.Fn<object>($"{virtualPath}; {spec}; {nameof(className)}:{className}; {nameof(relativePath)}:{relativePath}; {nameof(throwOnError)}: {throwOnError}");
 
@@ -28,16 +28,17 @@ public abstract class CodeCompiler(IServiceProvider serviceProvider, object[] co
         {
             l.A($"Error: {hasErrorMessage}");
             l.ReturnNull("failed");
-            if (throwOnError) throw new(hasErrorMessage);
-            return null;
+            if (throwOnError)
+                throw new(hasErrorMessage);
+            return null; // special, l.Return was already called
         }
 
         var pathLowerCase = virtualPath.ToLowerInvariant();
         var isCs = pathLowerCase.EndsWith(SourceCodeConstants.CsFileExtension);
         var isCshtml = pathLowerCase.EndsWith(SourceCodeConstants.CsHtmlFileExtension);
 
-        Type compiledType = null;
-        string errorMessages;
+        Type? compiledType = null;
+        string? errorMessages;
         if (isCshtml && string.IsNullOrEmpty(className))
             (compiledType, errorMessages) = GetCsHtmlType(virtualPath);
         // compile .cs files
@@ -54,15 +55,15 @@ public abstract class CodeCompiler(IServiceProvider serviceProvider, object[] co
             return null;
         }
 
-        var instance = serviceProvider.Build<object>(compiledType, Log);
+        var instance = serviceProvider.Build<object>(compiledType!, Log);
         AttachRelativePath(virtualPath, instance);
 
-        return l.Return(instance, $"found: {instance != null}");
+        return l.Return(instance, $"found: {instance != null!}");
     }
 
-    public (Type Type, string ErrorMessages) GetTypeOrErrorMessages(string relativePath, string className, bool throwOnError, HotBuildSpec spec)
+    public (Type? Type, string? ErrorMessages) GetTypeOrErrorMessages(string relativePath, string? className, bool throwOnError, HotBuildSpec spec)
     {
-        var l = Log.Fn<(Type Type, string ErrorMessages)>($"{nameof(relativePath)}: '{relativePath}'; {nameof(className)} '{className}'; {nameof(throwOnError)}: {throwOnError}; {spec}");
+        var l = Log.Fn<(Type? Type, string? ErrorMessages)>($"{nameof(relativePath)}: '{relativePath}'; {nameof(className)} '{className}'; {nameof(throwOnError)}: {throwOnError}; {spec}");
 
         // if no name provided, use the name which is the same as the file name
         className ??= Path.GetFileNameWithoutExtension(relativePath) ?? EavConstants.NullNameId;
@@ -71,12 +72,14 @@ public abstract class CodeCompiler(IServiceProvider serviceProvider, object[] co
         var assembly = assResult.Assembly;
         var errorMessages = assResult.ErrorMessages;
 
-        if (errorMessages != null) return l.Return((null, errorMessages), "error messages");
+        if (errorMessages != null)
+            return l.Return((null, errorMessages), "error messages");
 
-        if (assembly == null) return l.Return((null, "assembly is null"), "no assembly");
+        if (assembly == null)
+            return l.Return((null, "assembly is null"), "no assembly");
 
         var possibleErrorMessage = $"Error: Didn't find type '{className}' in {Path.GetFileName(relativePath)}. Maybe the class name doesn't match the file name. ";
-        Type compiledType = null;
+        Type? compiledType = null;
         try
         {
             compiledType = assembly.GetType(className, false, true);
@@ -104,7 +107,7 @@ public abstract class CodeCompiler(IServiceProvider serviceProvider, object[] co
     public abstract AssemblyResult GetAssembly(string relativePath, string className, HotBuildSpec spec);
 
 
-    protected abstract (Type Type, string ErrorMessage) GetCsHtmlType(string relativePath);
+    protected abstract (Type Type, string? ErrorMessage) GetCsHtmlType(string relativePath);
 
 
     /// <summary>
@@ -113,7 +116,7 @@ public abstract class CodeCompiler(IServiceProvider serviceProvider, object[] co
     /// <param name="virtualPath">primary path to use</param>
     /// <param name="relativePath">optional second path to which the primary one would be attached to</param>
     /// <returns>null if all is ok, or an error message if not</returns>
-    private string CheckIfPathsOkAndCleanUp(ref string virtualPath, string relativePath)
+    private string? CheckIfPathsOkAndCleanUp(ref string virtualPath, string? relativePath)
     {
         var l = Log.Fn<string>($"{nameof(virtualPath)}: '{virtualPath}', {nameof(relativePath)}: '{relativePath}'");
         if (string.IsNullOrWhiteSpace(virtualPath))

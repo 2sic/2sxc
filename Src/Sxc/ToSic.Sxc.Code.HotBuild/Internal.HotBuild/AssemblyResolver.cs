@@ -26,7 +26,7 @@ public class AssemblyResolver : ServiceBase, ILogShouldNeverConnect
     private const bool Debug = false;
 #endif
 
-    public AssemblyResolver(ILogStore logStore) : base($"{SxcLogging.SxcLogName}.AsmRsl")
+    public AssemblyResolver(ILogStore logStore) : base($"{SxcLogName}.AsmRsl")
     {
         var l = Debug ? Log.Fn() : null;
         
@@ -45,14 +45,16 @@ public class AssemblyResolver : ServiceBase, ILogShouldNeverConnect
         l.Done("registered first time");
     }
 
-    private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+    private Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
     {
-        var l = Debug ? Log.Fn<Assembly>($"{nameof(sender)}:'{sender}'; {nameof(args.Name)}:'{args.Name}'; {nameof(args.RequestingAssembly)}:'{args.RequestingAssembly}'") : null;
-        var r = _assemblyCache.TryGetValue(args.Name, out var assembly) ? assembly : null;
-        return l.Return(r, (r != null) ? "Ok" : "can't find");
+        var l = Debug ? Log.Fn<Assembly?>($"{nameof(sender)}:'{sender}'; {nameof(args.Name)}:'{args.Name}'; {nameof(args.RequestingAssembly)}:'{args.RequestingAssembly}'") : null;
+        var r = _assemblyCache.TryGetValue(args.Name, out var assembly)
+            ? assembly
+            : null;
+        return l.Return(r, r != null ? "Ok" : "can't find");
     }
 
-    public void AddAssemblies(List<Assembly> assemblies, string appRelativePath = null)
+    public void AddAssemblies(List<Assembly> assemblies, string? appRelativePath = null)
     {
         var l = Debug ? Log.Fn($"{nameof(assemblies)}:'{assemblies?.Count}'; {nameof(appRelativePath)}:'{appRelativePath}'") : null;
         if (assemblies == null)
@@ -65,7 +67,7 @@ public class AssemblyResolver : ServiceBase, ILogShouldNeverConnect
         l.Done("Ok");
     }
 
-    public void AddAssembly(Assembly assembly, string appRelativePath = null)
+    public void AddAssembly(Assembly? assembly, string? appRelativePath = null)
     {
         var l = Debug ? Log.Fn($"{nameof(assembly)}:'{assembly}'; {nameof(appRelativePath)}:'{appRelativePath}'") : null;
         if (assembly == null)
@@ -86,11 +88,18 @@ public class AssemblyResolver : ServiceBase, ILogShouldNeverConnect
         l.Done("Ok");
     }
 
-    public string GetAssemblyLocation(string appRelativePath)
+    public string? GetAssemblyLocation(string? appRelativePath)
     {
-        appRelativePath = appRelativePath?.Backslash();
-        var l = Debug ? Log.Fn<string>($"{nameof(appRelativePath)}:'{appRelativePath}'") : null; 
-        var r = _assemblyPathPerApp.TryGetValue(appRelativePath, out var location) ? location : null;
-        return l.Return(r, (r != null) ? $"Ok:'{r}'" : "can't find");
+        if (appRelativePath == null)
+            return null; // No app-relative path means no assembly location can be found
+
+        appRelativePath = appRelativePath.Backslash();
+        var l = Debug
+            ? Log.Fn<string?>($"{nameof(appRelativePath)}:'{appRelativePath}'")
+            : null; 
+        var r = _assemblyPathPerApp.TryGetValue(appRelativePath, out var location)
+            ? location
+            : null;
+        return l.Return(r, r != null ? $"Ok:'{r}'" : "can't find");
     }
 }

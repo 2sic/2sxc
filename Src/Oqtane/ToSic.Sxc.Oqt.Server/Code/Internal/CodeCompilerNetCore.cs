@@ -32,7 +32,7 @@ internal class CodeCompilerNetCore(
             var errorMessage =
                 $"Error: Can't compile '{className}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. " +
                 ex.Message;
-            return l.ReturnAsError(new AssemblyResult(errorMessages: errorMessage), "error");
+            return l.ReturnAsError(new() { ErrorMessages = errorMessage, }, "error");
         }
     }
 

@@ -14,16 +14,19 @@ public class DependenciesLoader(ILogStore logStore, IAppReaderFactory appReadFac
 {
     public const string DependenciesFolder = "Dependencies";
 
-    public (List<Assembly> Assemblies, HotBuildSpec Specs) TryGetOrFallback(HotBuildSpec spec)
+    public (List<Assembly>? Assemblies, HotBuildSpec Specs) TryGetOrFallback(HotBuildSpec spec)
     {
-        var l = Log.Fn<(List<Assembly>, HotBuildSpec)>(spec.ToString());
+        var l = Log.Fn<(List<Assembly>?, HotBuildSpec)>(spec.ToString());
         var (assemblyResults, cacheKey) = TryGetAssemblyOfDependenciesFromCache(spec, Log);
-        if (assemblyResults != null) return l.Return((assemblyResults.Select(r => r.Assembly).ToList(), spec), "Dependencies where cached.");
+        if (assemblyResults != null)
+            return l.Return((assemblyResults.Select(r => r.Assembly!).ToList(), spec), "Dependencies where cached.");
 
         var assemblies = LoadDependencyAssembliesOrNull(spec, cacheKey);
-        if (assemblies != null) return l.Return((assemblies, spec), $"Dependencies loaded from '/{spec.Edition}'");
+        if (assemblies != null)
+            return l.Return((assemblies, spec), $"Dependencies loaded from '/{spec.Edition}'");
 
-        if (spec.Edition.IsEmpty()) return l.Return((null, spec), $"Dependencies not found in '/', done.");
+        if (spec.Edition.IsEmpty())
+            return l.Return((null, spec), $"Dependencies not found in '/', done.");
 
         // try get root edition
         var rootSpec = spec.CloneWithoutEdition();
@@ -31,27 +34,28 @@ public class DependenciesLoader(ILogStore logStore, IAppReaderFactory appReadFac
         return l.Return(pairFromRoot, "Dependencies found in '/'." + (pairFromRoot.Assemblies == null ? ", null." : ""));
     }
 
-    private (List<AssemblyResult> assemblyResults, string cacheKey) TryGetAssemblyOfDependenciesFromCache(HotBuildSpec spec, ILog callerLog)
+    private (List<AssemblyResult>? assemblyResults, string cacheKey) TryGetAssemblyOfDependenciesFromCache(HotBuildSpec spec, ILog callerLog)
     {
-        var l = callerLog.Fn<(List<AssemblyResult>, string)>($"{spec}");
+        var l = callerLog.Fn<(List<AssemblyResult>?, string)>($"{spec}");
         var (assemblyResults, cacheKey) = assemblyCacheManager.TryGetDependencies(spec);
-        if (assemblyResults == null) return l.Return((null, cacheKey), "no dependencies in cache");
+        if (assemblyResults == null)
+            return l.Return((null, cacheKey), "no dependencies in cache");
 
         l.A($"dependencies from cache: {assemblyResults.Count}");
 
         foreach (var assemblyResult in assemblyResults)
             l.A(assemblyResult.HasAssembly
-                ? $"dependency from cache: {assemblyResult.Assembly.FullName} location: {assemblyResult.Assembly.Location}"
+                ? $"dependency from cache: {assemblyResult.Assembly!.FullName} location: {assemblyResult.Assembly.Location}"
                 : $"error in dependency from cache: {assemblyResult.ErrorMessages} ");
 
         return l.ReturnAsOk((assemblyResults, cacheKey));
     }
 
-    private List<Assembly> LoadDependencyAssembliesOrNull(HotBuildSpec spec, string cacheKey)
+    private List<Assembly>? LoadDependencyAssembliesOrNull(HotBuildSpec spec, string cacheKey)
     {
         // Add to global history and add specs
         var logSummary = logStore.Add(SxcLogAppCodeLoader, Log);
-        logSummary.UpdateSpecs(spec.ToDictionary());
+        logSummary?.UpdateSpecs(spec.ToDictionary());
 
         // Initial message for insights-overview
         var l = Log.Fn<List<Assembly>>($"{spec}", timer: true);
@@ -59,20 +63,23 @@ public class DependenciesLoader(ILogStore logStore, IAppReaderFactory appReadFac
         var assemblyResults = TryLoadDependencyAssemblies(spec, cacheKey, logSummary);
 
         return assemblyResults != null
-            ? l.ReturnAsOk(assemblyResults.Select(r => r.Assembly).ToList())
+            ? l.ReturnAsOk(assemblyResults.Select(r => r.Assembly!).ToList())
             : l.ReturnNull("no dependencies");
     }
 
-    private List<AssemblyResult> TryLoadDependencyAssemblies(HotBuildSpec spec, string cacheKey, LogStoreEntry logSummary)
+    private List<AssemblyResult>? TryLoadDependencyAssemblies(HotBuildSpec spec, string cacheKey, LogStoreEntry? logSummary)
     {
         var l = Log.Fn<List<AssemblyResult>>($"{spec}");
 
         // Get paths
         var (physicalPath, relativePath, physicalPathShared, relativePathShared) = GetDependenciesPaths(DependenciesFolder, spec);
-        logSummary.AddSpec("Dependencies PhysicalPath", physicalPath);
-        logSummary.AddSpec("Dependencies RelativePath", relativePath);
-        logSummary.AddSpec("Dependencies PhysicalPathShared", physicalPathShared);
-        logSummary.AddSpec("Dependencies RelativePathShared", relativePathShared);
+        if (logSummary != null)
+        {
+            logSummary.AddSpec("Dependencies PhysicalPath", physicalPath);
+            logSummary.AddSpec("Dependencies RelativePath", relativePath);
+            logSummary.AddSpec("Dependencies PhysicalPathShared", physicalPathShared);
+            logSummary.AddSpec("Dependencies RelativePathShared", relativePathShared);
+        }
 
         List<AssemblyResult> assemblyResults;
         if (Directory.Exists(physicalPath))
@@ -116,7 +123,10 @@ public class DependenciesLoader(ILogStore logStore, IAppReaderFactory appReadFac
                 var location = appCodeCompilerLazy.Value.GetDependencyAssemblyLocations(dependency, spec);
                 File.Copy(dependency, location, true);
                 var assembly = Assembly.LoadFrom(location);
-                assemblyResults.Add(new(assembly, assemblyLocations: [dependency]));
+                assemblyResults.Add(new(assembly)
+                {
+                    AssemblyLocations = [dependency],
+                });
                 l.A($"dependency loaded: {assembly.FullName} location: {location}");
             }
             catch (Exception ex)
@@ -181,8 +191,10 @@ public class DependenciesLoader(ILogStore logStore, IAppReaderFactory appReadFac
         var l = Log.Fn<(string physicalPath, string relativePath, string physicalPathShared, string relativePathShared)>($"{spec}");
         var appPaths = appPathsLazy.Value.Get(appReadFac.Get(spec.AppId));
         var folderWithEdition = folder.HasValue()
-            ? (spec.Edition.HasValue() ? Path.Combine(spec.Edition, folder) : folder)
-            : spec.Edition;
+            ? spec.Edition.HasValue()
+                ? Path.Combine(spec.Edition, folder)
+                : folder
+            : spec.Edition!;
         var physicalPath = Path.Combine(appPaths.PhysicalPath, folderWithEdition);
         // l.A($"dependencies {nameof(physicalPath)}: '{physicalPath}'");
         var relativePath = Path.Combine(appPaths.RelativePath, folderWithEdition);

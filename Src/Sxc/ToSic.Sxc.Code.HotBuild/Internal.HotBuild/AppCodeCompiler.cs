@@ -5,7 +5,7 @@ using ToSic.Sys.Configuration;
 namespace ToSic.Sxc.Code.Internal.HotBuild;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, SourceCodeHasher sourceCodeHasher, object[] connect = default) : ServiceBase("Sxc.MyApCd", connect: connect)
+public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, SourceCodeHasher sourceCodeHasher, object[]? connect = default) : ServiceBase("Sxc.MyApCd", connect: connect)
 {
     protected const string AppCodeDll = "AppCode.dll";
 
@@ -81,15 +81,23 @@ public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, 
     /// </summary>
     /// <param name="fullPath"></param>
     /// <returns></returns>
-    protected static string NormalizeFullPath(string fullPath) => new FileInfo(fullPath).FullName;
+    protected static string NormalizeFullPath(string fullPath)
+        => new FileInfo(fullPath).FullName;
 
 
-    protected void LogAllTypes(Assembly assembly)
+    protected void LogAllTypes(Assembly? assembly)
     {
         var l = Log.Fn<bool>(assembly?.FullName);
 
+        if (assembly == null)
+        {
+            l.Done("Assembly is null, nothing to log");
+            return;
+        }
+
         var list = AssemblyAnalyzer.TypeInformation(assembly);
-        foreach (var item in list) l.A(item);
+        foreach (var item in list)
+            l.A(item);
 
         l.Done();
     }
