@@ -14,7 +14,6 @@ using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.Help;
 using ToSic.Sys.Exceptions;
 
-// ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
 
 /// <summary>

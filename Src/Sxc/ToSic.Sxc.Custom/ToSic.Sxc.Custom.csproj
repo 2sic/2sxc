@@ -6,6 +6,10 @@
     <AssemblyName>ToSic.Sxc.Custom</AssemblyName>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <RootNamespace></RootNamespace>
+  </PropertyGroup>
+
   <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
 
   <ItemGroup>

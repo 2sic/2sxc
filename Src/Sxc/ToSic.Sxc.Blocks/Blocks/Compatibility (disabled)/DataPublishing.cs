@@ -1,4 +1,4 @@
-﻿// 2025-06 removed for v20
+﻿// #RemovedV20 #ModulePublish
 
 //#if NETFRAMEWORK
 //namespace ToSic.Sxc.DataSources.Internal.Compatibility;

@@ -10,8 +10,6 @@ using ToSic.Sxc.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-
-// ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
 
 /// <summary>
