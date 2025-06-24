@@ -9,17 +9,17 @@ public sealed partial class CmsBlock
     private ResultOrError<(BlockConfiguration BlockConfiguration, IView View)> ConfigAndViewOrErrors => _everything.Get(() =>
     {
         var config = LoadBlockConfiguration();
-        if (config.IsError())
+        if (!config.IsOk)
             return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(false, default,
                 config.ErrorsSafe());
 
-        var view = OverrideView ?? config.Result?.View;
+        var view = OverrideView ?? config.Result.View;
         if (view == null)
             return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(false, default,
                 Error.Create(title: "CmsBlock View Missing",
                     message: "Cannot find View configuration of current CmsBlock"));
         // all ok 
-        return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(true, (config.Result!, view));
+        return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(true, (config.Result, view));
     })!;
 
     private readonly GetOnce<ResultOrError<(BlockConfiguration blockConfiguration, IView view)>> _everything = new();
@@ -28,7 +28,7 @@ public sealed partial class CmsBlock
     {
         var l = Log.Fn<ResultOrError<BlockConfiguration>>();
         if (UseSxcInstanceContentGroup)
-            return l.Return(new(true, Block.Configuration, null), "need content-group, will use from Sxc Instance ContentGroup");
+            return l.Return(new(true, Block.Configuration), "need content-group, will use from Sxc Instance ContentGroup");
 
         // If we don't have a context, then look it up based on the InstanceId
         l.A("need content-group, will construct as cannot use context");
@@ -41,7 +41,7 @@ public sealed partial class CmsBlock
         var container = _services.ModuleLazy.Value.Init(ModuleId.Value);
         var blockId = container.BlockIdentifier;
         var blockConfig = _services.AppBlocks.New(this).GetOrGeneratePreviewConfig(blockId);
-        return l.Return(new(IsOk: true, Result: blockConfig), "ok");
+        return l.Return(new(true, blockConfig), "ok");
     }
 
 

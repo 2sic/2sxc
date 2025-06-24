@@ -81,7 +81,7 @@ public sealed partial class CmsBlock : DataSourceBase
     {
         // First check if BlockConfiguration works - to give better error if not
         var blockSpecsAndErrors = ConfigAndViewOrErrors;
-        if (blockSpecsAndErrors.IsError())
+        if (!blockSpecsAndErrors.IsOk)
             return blockSpecsAndErrors.ErrorsSafe();
 
         var parts = blockSpecsAndErrors.Result;
@@ -98,7 +98,7 @@ public sealed partial class CmsBlock : DataSourceBase
     {
         // First check if BlockConfiguration works - to give better error if not
         var blockSpecsAndErrors = ConfigAndViewOrErrors;
-        if (blockSpecsAndErrors.IsError())
+        if (!blockSpecsAndErrors.IsOk)
             return blockSpecsAndErrors.ErrorsSafe();
 
         var parts = blockSpecsAndErrors.Result;
