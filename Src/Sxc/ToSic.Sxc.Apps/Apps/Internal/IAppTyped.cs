@@ -62,7 +62,7 @@ public interface IAppTyped: IAppIdentity
     /// <returns>an IFolder object which can then use `.Url`, `.PhysicalPath` etc.</returns>
     /// <remarks>
     /// * Despite being of type `IFolder`, the object is currently not able to traverse children folders/files.
-    ///   We may add this some day in future.
+    ///   We may add this some day in the future.
     /// * Previously the `Folder` property returned containing the name. This is now on `.Folder().Name`.
     /// </remarks>
     IFolder FolderAdvanced(NoParamOrder noParamOrder = default, string? location = default);

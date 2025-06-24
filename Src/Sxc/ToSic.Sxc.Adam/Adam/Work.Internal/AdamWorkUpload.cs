@@ -58,7 +58,7 @@ public partial class AdamWorkUpload(AdamWorkBase.MyServices services)
 
         // check metadata of the FieldDef to see if still allowed extension
         // note 2018-04-20 2dm: can't do this for wysiwyg, as it doesn't have a setting for allowed file-uploads
-        var additionalFilter = AdamContext.Attribute!.Metadata.GetBestValue<string>("FileFilter");
+        var additionalFilter = AdamContext.Attribute!.Metadata.Get<string>("FileFilter");
         if (!string.IsNullOrWhiteSpace(additionalFilter) && !CustomFileFilterOk(additionalFilter!, fileName))
             throw HttpException.NotAllowedFileType(fileName, "field has custom file-filter, which doesn't match");
 

@@ -14,8 +14,8 @@ internal class GeneratePropertyApp(CSharpGeneratorHelper helper) : GeneratePrope
 
         var name = attribute.Name;
 
-        var entityType = attribute.Metadata.GetBestValue<string>("EntityType");
-        var allowMulti = attribute.Metadata.GetBestValue<bool>("AllowMultiValue");
+        var entityType = attribute.Metadata.Get<string>("EntityType");
+        var allowMulti = attribute.Metadata.Get<bool>("AllowMultiValue");
 
         var msgPrefix = $"{name} as " + (allowMulti ? "list" : "single item") + " of";
         // var msgSuffix = "Use methods such as .Children(\"{name}\") or .Child(\"{name}\") to get the actual items.";

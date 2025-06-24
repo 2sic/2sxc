@@ -8,7 +8,7 @@ internal class GeneratePropertyNumber(CSharpGeneratorHelper helper) : GeneratePr
     {
         var name = attribute.Name;
 
-        var decimals = attribute.Metadata.GetBestValue<int>("Decimals");
+        var decimals = attribute.Metadata.Get<int>("Decimals");
 
         return decimals == 0
             ?
