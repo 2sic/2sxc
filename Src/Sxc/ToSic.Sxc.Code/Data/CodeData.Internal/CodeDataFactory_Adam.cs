@@ -29,10 +29,6 @@ partial class CodeDataFactory
     /// <exception cref="Exception"></exception>
     private AdamManager GetAdamManager()
     {
-        // if this was initialized with an ADAM manager, use that
-        // 2023-08-08 2dm - try to use the new GetOnce.Reset functionality
-        //if (_adamManagerPrepared != null) return _adamManagerPrepared;
-
         // If we don't even have a _DynCodeRoot (like when exporting from a neutral WebAPI)
         if (ExCtxOrNull is null)
             throw new($"Can't create App Context for {nameof(AdamManager)} in {nameof(ICodeDataFactory)} - no block, no App");

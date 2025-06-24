@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Dynamic;
-using ToSic.Eav.Data.PropertyStack.Sys;
 using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Data.Sys.PropertyStack;
 using ToSic.Lib.Wrappers;
 using ToSic.Sxc.Data.Sys.Dynamic;
 using ToSic.Sxc.Data.Sys.Factory;

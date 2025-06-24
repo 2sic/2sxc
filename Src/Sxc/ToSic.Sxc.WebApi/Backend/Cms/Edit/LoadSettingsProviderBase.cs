@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.PropertyStack.Sys;
+﻿using ToSic.Eav.Data.Sys.PropertyStack;
 
 namespace ToSic.Sxc.Backend.Cms;
 

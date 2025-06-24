@@ -1,5 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-using ToSic.Eav.Data.PropertyStack.Sys;
+using ToSic.Eav.Data.Sys.PropertyStack;
 using ToSic.Sys.Code.Help;
 using ToSic.Sys.Exceptions;
 

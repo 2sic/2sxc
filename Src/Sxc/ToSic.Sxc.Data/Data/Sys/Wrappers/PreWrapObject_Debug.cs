@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Data.PropertyDump.Sys;
-using ToSic.Eav.Data.Sys;
+﻿using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Data.Sys.PropertyDump;
 
 namespace ToSic.Sxc.Data.Sys.Wrappers;
 

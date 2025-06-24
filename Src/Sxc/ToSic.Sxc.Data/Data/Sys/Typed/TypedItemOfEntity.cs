@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Data.Entities.Sys.Wrappers;
-using ToSic.Eav.Data.PropertyStack.Sys;
 using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Data.Sys.PropertyStack;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Wrappers;
