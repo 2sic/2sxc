@@ -59,7 +59,7 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
     private readonly GetOnce<ITypedMetadata> _dynMeta = new();
 
 
-    private IMetadataOf? MetadataOfValue => _itemMd.Get(() =>
+    private IMetadata? MetadataOfValue => _itemMd.Get(() =>
     {
         // Check if string is valid, and also a valid reference like file:742
         if (Raw is not string rawString
@@ -76,12 +76,12 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
             .SetImageRecommendations(mdOf, Url); // needs the url so it can check if we use image recommendations
         return mdOf;
     });
-    private readonly GetOnce<IMetadataOf?> _itemMd = new();
+    private readonly GetOnce<IMetadata?> _itemMd = new();
 
     [PrivateApi("Internal use only, may change at any time")]
     public ImageDecorator? ImageDecoratorOrNull =>
         _imgDec.Get(() => ImageDecorator.GetOrNull(this, cdf.Dimensions));
     private readonly GetOnce<ImageDecorator?> _imgDec = new();
 
-    IMetadataOf IHasMetadata.Metadata => MetadataOfValue!;
+    IMetadata IHasMetadata.Metadata => MetadataOfValue!;
 }

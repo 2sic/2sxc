@@ -25,7 +25,7 @@ internal abstract class AppAssetFile: IFile
 
     bool IAsset.HasMetadata => false;
 
-    IMetadataOf IHasMetadata.Metadata => null!;
+    IMetadata IHasMetadata.Metadata => null!;
 
     ITypedMetadata IAsset.Metadata => null!;
 

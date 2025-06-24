@@ -41,7 +41,7 @@ public interface IApp : IAppIdentity, IHasMetadata
     /// The app metadata - like settings, resources etc.
     /// </summary>
     /// <returns>A metadata provider for the app</returns>
-    new IMetadataOf Metadata { get; }
+    new IMetadata Metadata { get; }
 
 
     #region Experimental / new

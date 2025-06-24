@@ -119,7 +119,7 @@ public class AdamManager(AdamManager.MyServices services)
     /// <summary>
     /// Get the first metadata entity of an item - or return a fake one instead
     /// </summary>
-    internal ITypedMetadata CreateMetadata(string key, string title, Action<IMetadataOf>? mdInit = null)
+    internal ITypedMetadata CreateMetadata(string key, string title, Action<IMetadata>? mdInit = null)
     {
         var mdOf = AppWorkCtx.AppReader.Metadata.GetMetadataOf(TargetTypes.CmsItem, key, title: title);
         mdInit?.Invoke(mdOf);

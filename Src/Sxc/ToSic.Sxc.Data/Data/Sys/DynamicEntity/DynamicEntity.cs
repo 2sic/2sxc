@@ -151,7 +151,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     /// This is important, because it uses the same name "Metadata"
     /// </summary>
     [PrivateApi]
-    IMetadataOf IHasMetadata.Metadata => Entity?.Metadata!;
+    IMetadata IHasMetadata.Metadata => Entity?.Metadata!;
 
 
     #endregion

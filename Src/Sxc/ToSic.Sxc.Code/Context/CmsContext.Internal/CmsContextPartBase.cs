@@ -20,10 +20,10 @@ internal abstract class CmsContextPartBase<T>(CmsContext parent, T contents) : W
     private readonly GetOnce<ITypedMetadata> _dynMeta = new();
 
     [JsonIgnore] // ignore, as it's published through the Metadata property which is better typed.
-    IMetadataOf IHasMetadata.Metadata => MetadataRaw;
+    IMetadata IHasMetadata.Metadata => MetadataRaw;
 
-    private IMetadataOf MetadataRaw => _md.Get(GetMetadataOf)!;
-    private readonly GetOnce<IMetadataOf> _md = new();
+    private IMetadata MetadataRaw => _md.Get(GetMetadataOf)!;
+    private readonly GetOnce<IMetadata> _md = new();
 
-    protected abstract IMetadataOf GetMetadataOf();
+    protected abstract IMetadata GetMetadataOf();
 }

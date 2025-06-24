@@ -29,7 +29,7 @@ partial record ToolbarBuilder
         if (target is IHasMetadata withMetadata)
             target = withMetadata.Metadata;
 
-        if (target is not IMetadataOf mdOf)
+        if (target is not IMetadata mdOf)
             return l.Return([], "not metadata");
 
         var recommendations = mdOf.Target?.Recommendations ?? [];

@@ -28,7 +28,7 @@ internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IVi
     /// <inheritdoc />
     public string Edition => _view?.Edition ?? "";
 
-    protected override IMetadataOf GetMetadataOf()
+    protected override IMetadata GetMetadataOf()
         => _view?.Metadata.AddRecommendations()!;
 
     [field: AllowNull, MaybeNull]

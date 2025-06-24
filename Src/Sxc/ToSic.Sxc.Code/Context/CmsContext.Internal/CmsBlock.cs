@@ -19,5 +19,5 @@ internal class CmsBlock(IBlock block) : ICmsBlock
     public bool IsRoot => block is { ParentBlockOrNull: null };
 
     /// <inheritdoc />
-    public IMetadataOf Metadata => block.Configuration.Metadata;
+    public IMetadata Metadata => block.Configuration.Metadata;
 }

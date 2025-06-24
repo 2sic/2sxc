@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Data.Sys.Metadata;
 
 
 [PrivateApi("Hide implementation")]
-internal partial class Metadata(IMetadataOf metadata, ICodeDataFactory cdf)
+internal partial class Metadata(IMetadata metadata, ICodeDataFactory cdf)
     : DynamicEntity(metadata, null, "Metadata(virtual-field)", KnownAppsConstants.TransientAppId, propsRequired: false, cdf),
         ITypedMetadata, IHasPropLookup, IHasJsonSource
 {
@@ -21,10 +21,10 @@ internal partial class Metadata(IMetadataOf metadata, ICodeDataFactory cdf)
     private CodeItemHelper ItemHelper => field ??= new(GetHelper, this);
 
     [PrivateApi("Hide this")]
-    private readonly IMetadataOf _metadata = metadata;
+    private readonly IMetadata _metadata = metadata;
 
 
-    IMetadataOf IHasMetadata.Metadata => _metadata;
+    IMetadata IHasMetadata.Metadata => _metadata;
 
 
 

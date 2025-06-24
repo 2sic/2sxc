@@ -5,6 +5,6 @@ namespace ToSic.Sxc.Data.Internal;
 
 partial class CodeDataFactory
 {
-    public ITypedMetadata Metadata(IMetadataOf mdOf)
+    public ITypedMetadata Metadata(IMetadata mdOf)
         => new Metadata(mdOf, this);
 }

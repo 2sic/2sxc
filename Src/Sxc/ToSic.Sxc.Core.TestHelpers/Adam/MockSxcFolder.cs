@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Adam;
 
 public class MockSxcFolder: MockFolder, IFolder
 {
-    private IMetadataOf _metadata;
+    private IMetadata _metadata;
     private ITypedMetadata _metadata1;
     public bool HasMetadata { get; }
 
@@ -15,7 +15,7 @@ public class MockSxcFolder: MockFolder, IFolder
     public string Url { get; init; }
     public string Type { get; init; }
 
-    IMetadataOf IHasMetadata.Metadata => _metadata;
+    IMetadata IHasMetadata.Metadata => _metadata;
 
     public IField Field { get; set; }
     public IEnumerable<IFile> Files { get; init; }

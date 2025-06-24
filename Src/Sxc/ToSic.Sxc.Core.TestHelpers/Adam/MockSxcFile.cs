@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Adam;
 
 public class MockSxcFile : Eav.Apps.Assets.MockFile, IFile, IHasLink
 {
-    private IMetadataOf _metadata;
+    private IMetadata _metadata;
     private ITypedMetadata _metadata1;
     public bool HasMetadata { get; init; } = false;
 
@@ -16,7 +16,7 @@ public class MockSxcFile : Eav.Apps.Assets.MockFile, IFile, IHasLink
     public string Url { get; init; }
     public string Type => Classification.TypeName(Extension);
 
-    IMetadataOf IHasMetadata.Metadata => _metadata;
+    IMetadata IHasMetadata.Metadata => _metadata;
 
     public IField Field { get; set; }
 }

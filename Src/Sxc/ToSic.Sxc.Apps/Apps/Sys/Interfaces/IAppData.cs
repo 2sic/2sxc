@@ -6,7 +6,7 @@ namespace ToSic.Eav.Apps;
 /// An App-DataSource which also provides direct commands to edit/update/delete data.
 /// </summary>
 [PublicApi]
-public interface IAppData: IDataSource, IMetadataGet
+public interface IAppData: IDataSource, IMetadataSource
 {
     /// <summary>
     /// Create a new entity in the storage.

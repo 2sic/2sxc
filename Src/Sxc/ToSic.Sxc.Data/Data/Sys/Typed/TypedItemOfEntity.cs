@@ -369,7 +369,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
     #endregion
 
 
-    IMetadataOf IHasMetadata.Metadata => (DynHelper.Metadata as IHasMetadata)?.Metadata!;
+    IMetadata IHasMetadata.Metadata => (DynHelper.Metadata as IHasMetadata)?.Metadata!;
 
     #region New Child<T> / Children<T> - disabled as ATM Kit is missing
 

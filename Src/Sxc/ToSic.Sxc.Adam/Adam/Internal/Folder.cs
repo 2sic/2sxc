@@ -20,7 +20,7 @@ public class Folder<TFolderId, TFileId>(AdamManager adamManager)
     [field: AllowNull, MaybeNull]
     public ITypedMetadata Metadata => field ??= AdamManager.CreateMetadata(CmsMetadata.FolderPrefix + SysId, Name);
 
-    IMetadataOf IHasMetadata.Metadata => (Metadata as IHasMetadata).Metadata;
+    IMetadata IHasMetadata.Metadata => (Metadata as IHasMetadata).Metadata;
 
     /// <inheritdoc />
     [JsonIgnore]

@@ -11,7 +11,7 @@ static class CmsContextPartHelpers
     /// </summary>
     /// <returns></returns>
     [return: NotNullIfNotNull(nameof(md))]
-    internal static IMetadataOf? AddRecommendations(this IMetadataOf? md, string[]? recommendations = default)
+    internal static IMetadata? AddRecommendations(this IMetadata? md, string[]? recommendations = default)
     {
         if (md == null)
             return null;

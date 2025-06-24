@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Data.Sys.Factory;
 
 public interface ICodeDataFactory: ICanGetService, IHasLog
 {
-    ITypedMetadata Metadata(IMetadataOf mdOf);
+    ITypedMetadata Metadata(IMetadata mdOf);
 
     /// <summary>
     /// Convert an object to a custom type, if possible.

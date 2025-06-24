@@ -89,7 +89,7 @@ public abstract partial class SxcAppBase(SxcAppBase.MyServices services, string?
     #region Metadata and Permission Accessors
 
     /// <inheritdoc />
-    public IMetadataOf Metadata => AppSpecs.Metadata;
+    public IMetadata Metadata => AppSpecs.Metadata;
 
     /// <summary>
     /// Permissions of this app

@@ -31,7 +31,7 @@ public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets
     /// Attach metadata recommendations
     /// </summary>
     /// <param name="mdOf"></param>
-    private void AttachMdRecommendations(IMetadataOf mdOf)
+    private void AttachMdRecommendations(IMetadata mdOf)
     {
         if (mdOf?.Target == null || Type != Classification.Image)
             return;
@@ -42,7 +42,7 @@ public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets
                                       ?? [];
     }
 
-    IMetadataOf IHasMetadata.Metadata => (Metadata as IHasMetadata).Metadata;
+    IMetadata IHasMetadata.Metadata => (Metadata as IHasMetadata).Metadata;
 
     /// <inheritdoc />
     [JsonIgnore]

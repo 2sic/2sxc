@@ -32,7 +32,7 @@ internal class CmsUser(CmsContext parent, IUserModel userModel, IMetadataOfSourc
     public bool IsSiteDeveloper => userModel.IsSiteDeveloper;
 
 
-    protected override IMetadataOf GetMetadataOf() 
+    protected override IMetadata GetMetadataOf() 
         => appReader.GetMetadataOf(TargetTypes.User, Id, title: "User (" + Id + ")")
             .AddRecommendations();
 

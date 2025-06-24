@@ -24,7 +24,7 @@ internal abstract class AppAssetFolder: IFolder
 
     bool IAsset.HasMetadata => false;
 
-    IMetadataOf IHasMetadata.Metadata => null!;
+    IMetadata IHasMetadata.Metadata => null!;
 
     ITypedMetadata IAsset.Metadata => null!;
 
