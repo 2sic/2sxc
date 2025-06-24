@@ -69,22 +69,64 @@ should be <br>
 "
         };
 
-    internal static CodeHelp RazorBaseClassDoesntInheritCorrectly = new()
+    // v20 CustomizeData() removed, so this is no longer relevant
+    internal static CodeHelp CustomizeDataRemoved = new()
     {
-        Name = "Razor Base Class doesn't inherit correctly",
-        Detect = "no suitable method found to override",
+        Name = nameof(CustomizeDataRemoved),
+        Detect = "CustomizeData()': no suitable method found to override",
         UiMessage = @"
-Check for custom AppCode.Razor.SomeRazor that forgets to inherit 'Custom.Hybrid.RazorTyped' or similar.
+CustomizeData(...) has been removed in v20.
 ",
         DetailsHtml = @"
-Your razor template cshtml seems to inherit <code>AppCode.Razor.SomeRazor</code> from AppCode, while AppCode.Razor.SomeRazor doesn't inherit correctly. Check and fix your code.
-<br>
-<strong>Example</strong>: <br>
-<code>public abstract class SomeRazor</code> <br>
-should be <br>
-<code>public abstract class SomeRazor : Custom.Hybrid.RazorTyped</code> or similar.<br>
-"
+<code>CustomizeData(...)</code> is an old API which has been removed in v20. It was used to customize the data passed to Razor templates, but now this is done differently.
+",
+        LinkCode = "brc-20-customizedata",
     };
+
+    // v20 CustomizeSearch() removed, so this is no longer relevant
+    internal static CodeHelp CustomizeSearchRemoved = new()
+    {
+        Name = nameof(CustomizeSearchRemoved),
+        Detect = "CustomizeSearch(Dictionary", // just the extract, since there are multiple overloads
+        UiMessage = @"
+CustomizeSearch(...) has been removed in v20.
+",
+        DetailsHtml = @"
+<code>CustomizeSearch(...)</code> is an old API which has been removed in v20. It was used to customize the data passed to Razor templates, but now this is done differently.
+",
+        LinkCode = "brc-20-customizedata",
+    };
+
+    // v20 CustomizeSearch() removed, so this is no longer relevant
+    internal static CodeHelp CustomizeSearchRemovedISearchItemDetection = new()
+    {
+        Name = nameof(CustomizeSearchRemovedISearchItemDetection),
+        Detect = "The type or namespace name 'ISearchItem' could not be found",
+        UiMessage = @"
+ISearchItem should not be used in v20.
+",
+        DetailsHtml = @"
+<code>ISearchItem(...)</code> should not be used in Razor any more. It was used to customize data for the search indexer, now this is done differently.
+",
+        LinkCode = "brc-20-customizedata",
+    };
+
+//    internal static CodeHelp RazorBaseClassDoesNotInheritCorrectly = new()
+//    {
+//        Name = "Razor Base Class doesn't inherit correctly",
+//        Detect = "no suitable method found to override",
+//        UiMessage = @"
+//Check for custom AppCode.Razor.SomeRazor that forgets to inherit 'Custom.Hybrid.RazorTyped' or similar.
+//",
+//        DetailsHtml = @"
+//Your razor template cshtml seems to inherit <code>AppCode.Razor.SomeRazor</code> from AppCode, while AppCode.Razor.SomeRazor doesn't inherit correctly. Check and fix your code.
+//<br>
+//<strong>Example</strong>: <br>
+//<code>public abstract class SomeRazor</code> <br>
+//should be <br>
+//<code>public abstract class SomeRazor : Custom.Hybrid.RazorTyped</code> or similar.<br>
+//"
+//    };
 
     // New v20 - removal of #RemovedV20 #Element
     private static readonly CodeHelp ListObjectNotFound = new()
@@ -95,13 +137,22 @@ should be <br>
         UiMessage = "The old List (of Element) object had to be removed."
     };
 
+    internal static List<CodeHelp> RemovedApisInV20ForAllRazorClasses =
+    [
+        // New v20
+        CustomizeDataRemoved,
+        CustomizeSearchRemoved,
+        CustomizeSearchRemovedISearchItemDetection,
+        //RazorBaseClassDoesNotInheritCorrectly,
+    ];
 
     internal static List<CodeHelp> CompileUnknown =
     [
         UnknownNamespace,
         ProbablySemicolonAfterInherits,
         ProbablyCommentAfterInherits,
-        RazorBaseClassDoesntInheritCorrectly,
+        ..RemovedApisInV20ForAllRazorClasses,
+        // also v20
         ListObjectNotFound, // v20 - removal of #RemovedV20 #Element
         HelpForRazor12.GetBestValueGone,
     ];
