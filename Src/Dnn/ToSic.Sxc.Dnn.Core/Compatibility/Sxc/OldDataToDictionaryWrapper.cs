@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
-using ToSic.Sxc.Data.Internal.Convert;
+using ToSic.Sxc.Data.Sys.Convert;
 
 namespace ToSic.Sxc.Compatibility.Sxc;
 

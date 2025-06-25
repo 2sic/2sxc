@@ -2,12 +2,11 @@
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Http;
-using ToSic.Sxc.Web.Sys.Http;
 
-namespace ToSic.Sxc.Web.Internal.DotNet;
+namespace ToSic.Sxc.Web.Sys.Http;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class HttpNetCore(IHttpContextAccessor contextAccessor) : HttpAbstractionBase, IHttp
+public class HttpHybrid(IHttpContextAccessor contextAccessor) : HttpAbstractionBase, IHttp
 {
     [field: AllowNull, MaybeNull]
     public override HttpContext Current => field ??= contextAccessor.HttpContext!;

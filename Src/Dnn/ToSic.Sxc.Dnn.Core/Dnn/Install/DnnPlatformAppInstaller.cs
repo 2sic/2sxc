@@ -3,9 +3,9 @@ using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Context;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal.Work;
+using ToSic.Sxc.Apps.Sys.Installation;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
-using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.WebApi.ExternalLinks;
 
 namespace ToSic.Sxc.Dnn.Install;

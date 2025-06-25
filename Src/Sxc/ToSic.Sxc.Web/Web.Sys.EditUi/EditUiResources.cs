@@ -7,7 +7,7 @@ using ToSic.Sys.Utils;
 using static ToSic.Eav.Apps.Sys.AppStack.AppStackConstants;
 using static ToSic.Sxc.Web.Sys.WebResources.WebResourceConstants;
 
-namespace ToSic.Sxc.Web.Internal.EditUi;
+namespace ToSic.Sxc.Web.Sys.EditUi;
 
 /// <summary>
 /// Provide all resources (fonts, icons, etc.) needed for the edit-ui

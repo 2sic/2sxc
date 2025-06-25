@@ -4,7 +4,7 @@ using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Edit.Sys;
 
-namespace ToSic.Sxc.Data.Internal.Convert;
+namespace ToSic.Sxc.Data.Sys.Convert;
 
 /// <summary>
 /// Convert various types of entities (standalone, dynamic, in streams, etc.) to Dictionaries <br/>

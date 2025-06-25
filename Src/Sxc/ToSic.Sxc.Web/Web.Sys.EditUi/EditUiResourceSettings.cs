@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Web.Internal.EditUi;
+﻿namespace ToSic.Sxc.Web.Sys.EditUi;
 
 /// <summary>
 /// Configuration which icons/fonts are needed by the various edit-UIs

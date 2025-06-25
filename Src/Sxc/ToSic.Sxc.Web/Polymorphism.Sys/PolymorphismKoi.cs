@@ -1,7 +1,8 @@
 ﻿using Connect.Koi;
+using ToSic.Sxc.Polymorphism.Internal;
 using static System.StringComparison;
 
-namespace ToSic.Sxc.Polymorphism.Internal;
+namespace ToSic.Sxc.Polymorphism.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

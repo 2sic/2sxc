@@ -4,10 +4,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Web;
 using ToSic.Sxc.Web.Sys.Http;
 
-namespace ToSic.Sxc.Web.Internal.DotNet;
+namespace ToSic.Sxc.Web.Sys.Http;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class HttpNetFramework: HttpAbstractionBase, IHttp
+public class HttpHybrid: HttpAbstractionBase, IHttp
 {
     public override HttpContext Current => HttpContext.Current!;
 

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Specialized;
-using ToSic.Sxc.Web.Internal.DotNet;
+using ToSic.Sxc.Web.Sys.Http;
 
 namespace ToSic.Sxc.Dnn.Web;
 
@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Dnn.Web;
 /// It needs this, because DNN automatically creates invisible parameters like tabid=323 and language=en-US
 /// But if we want to create a link to the same page again, then this would result in wrong paths. 
 /// </summary>
-internal class DnnHttp: HttpNetFramework
+internal class DnnHttp: HttpHybrid
 {
     public override NameValueCollection QueryStringParams
     {

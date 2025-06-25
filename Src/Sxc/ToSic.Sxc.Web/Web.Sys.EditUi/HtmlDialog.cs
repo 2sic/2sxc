@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Sys;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Web.Internal.EditUi;
+namespace ToSic.Sxc.Web.Sys.EditUi;
 
 /// <summary>
 /// Helper to add resources etc. to the JS dialogs.

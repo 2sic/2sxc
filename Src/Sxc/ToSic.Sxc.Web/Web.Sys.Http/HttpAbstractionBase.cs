@@ -4,10 +4,9 @@ using System.Web;
 using Microsoft.AspNetCore.Http;
 #endif
 using System.Collections.Specialized;
-using ToSic.Sxc.Web.Sys.Http;
 
 
-namespace ToSic.Sxc.Web.Internal.DotNet;
+namespace ToSic.Sxc.Web.Sys.Http;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class HttpAbstractionBase: IHttp

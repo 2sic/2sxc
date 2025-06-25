@@ -3,16 +3,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.LookUp;
-using ToSic.Sxc.Data.Internal.Convert;
-using ToSic.Sxc.Integration.Installation;
+using ToSic.Sxc.Apps.Sys.Installation;
+using ToSic.Sxc.Data.Sys.Convert;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Polymorphism;
-using ToSic.Sxc.Polymorphism.Internal;
-using ToSic.Sxc.Web.Internal.DotNet;
-using ToSic.Sxc.Web.Internal.EditUi;
+using ToSic.Sxc.Polymorphism.Sys;
+using ToSic.Sxc.Web.Sys.EditUi;
 using ToSic.Sxc.Web.Sys.Http;
 
-namespace ToSic.Sxc;
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Startup;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class SxcWebStartup
@@ -56,7 +56,7 @@ public static class SxcWebStartup
         // basic environment, pages, modules etc.
         // Note that it's not really part of .Web, but we want it to be quite late so we don't need
         // to move up dependencies which it has.
-        services.TryAddTransient<IPlatformAppInstaller, BasicPlatformAppInstaller>();
+        services.TryAddTransient<IPlatformAppInstaller, PlatformAppInstallerUnknown>();
 
 
         return services;
@@ -77,9 +77,9 @@ public static class SxcWebStartup
     {
 #if NETFRAMEWORK
         // WebForms implementations
-        services.TryAddScoped<IHttp, HttpNetFramework>();
+        services.TryAddScoped<IHttp, HttpHybrid>();
 #else
-        services.TryAddTransient<IHttp, HttpNetCore>();
+        services.TryAddTransient<IHttp, HttpHybrid>();
 #endif
         return services;
     }

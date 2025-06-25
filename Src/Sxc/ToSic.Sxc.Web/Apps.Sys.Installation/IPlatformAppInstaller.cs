@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Sxc.Context;
 
-namespace ToSic.Sxc.Integration.Installation;
+namespace ToSic.Sxc.Apps.Sys.Installation;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IPlatformAppInstaller : IHasLog

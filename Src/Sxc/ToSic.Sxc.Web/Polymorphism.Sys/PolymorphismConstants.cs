@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Polymorphism.Internal;
+﻿namespace ToSic.Sxc.Polymorphism.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class PolymorphismConstants

@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Web.Internal.EditUi;
+﻿using ToSic.Sxc.Web.Sys.EditUi;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Dnn.dist.eavUi;

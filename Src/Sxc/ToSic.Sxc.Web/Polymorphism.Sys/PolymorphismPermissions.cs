@@ -1,8 +1,9 @@
-﻿using ToSic.Sys.Users;
+﻿using ToSic.Sxc.Polymorphism.Internal;
+using ToSic.Sys.Users;
 using ToSic.Sys.Utils;
 using static System.StringComparison;
 
-namespace ToSic.Sxc.Polymorphism.Internal;
+namespace ToSic.Sxc.Polymorphism.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class PolymorphismPermissions(IUser user) : IPolymorphismResolver

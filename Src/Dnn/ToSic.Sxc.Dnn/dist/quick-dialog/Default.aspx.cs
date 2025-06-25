@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Web.Internal.EditUi;
+﻿using ToSic.Sxc.Web.Sys.EditUi;
 
 namespace ToSic.Sxc.Dnn.dist.quick_dialog;
 

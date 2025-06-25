@@ -1,5 +1,5 @@
 ﻿using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Web.Internal.EditUi;
+using ToSic.Sxc.Web.Sys.EditUi;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi;
 
