@@ -2,7 +2,7 @@
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
+namespace ToSic.Sxc.Code.Sys.CodeRunHelpers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeHelperBase : ServiceWithContext

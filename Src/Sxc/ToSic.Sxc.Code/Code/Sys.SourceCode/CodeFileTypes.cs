@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Code.Internal.SourceCode;
+﻿namespace ToSic.Sxc.Code.Sys.SourceCode;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public enum CodeFileTypes

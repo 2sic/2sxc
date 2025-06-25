@@ -2,13 +2,12 @@
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Code;
+namespace ToSic.Sxc.Code.Sys.CodeApiService;
 
 internal class DynamicCode12Proxy(IExecutionContext exCtx, ICodeDynamicApiHelper dynamicApi): IDynamicCode12
 {

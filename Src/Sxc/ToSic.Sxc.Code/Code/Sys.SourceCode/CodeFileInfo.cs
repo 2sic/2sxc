@@ -1,8 +1,8 @@
 ﻿using ToSic.Lib;
-using ToSic.Sxc.Code.Internal.CodeErrorHelp;
+using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sys.Code.Help;
 
-namespace ToSic.Sxc.Code.Internal.SourceCode;
+namespace ToSic.Sxc.Code.Sys.SourceCode;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeFileInfo

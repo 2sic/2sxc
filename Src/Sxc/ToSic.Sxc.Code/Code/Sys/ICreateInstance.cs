@@ -1,7 +1,5 @@
 ﻿
-using ToSic.Sxc.Code.Sys;
-
-namespace ToSic.Sxc.Code.Internal;
+namespace ToSic.Sxc.Code.Sys;
 
 /// <summary>
 /// Marks objects - usually DynamicCode - which can create instances of other C# files. <br/>

@@ -1,11 +1,10 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Code.CodeApi;
+namespace ToSic.Sxc.Code.Sys.CodeApi;
 
 internal abstract class CodeAnyApiHelper(ExecutionContext exCtx) : ICodeAnyApiHelper
 {

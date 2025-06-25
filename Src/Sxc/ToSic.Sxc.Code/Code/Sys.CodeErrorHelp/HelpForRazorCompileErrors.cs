@@ -1,6 +1,6 @@
 ﻿using ToSic.Sys.Code.Help;
 
-namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
+namespace ToSic.Sxc.Code.Sys.CodeErrorHelp;
 
 /// <summary>
 /// Help for compile errors before the Razor base class is known.

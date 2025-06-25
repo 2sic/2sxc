@@ -4,7 +4,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Code.Internal;
+namespace ToSic.Sxc.Code.Sys.CodeApi;
 
 public interface ICodeAnyApiHelper
 {

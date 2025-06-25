@@ -6,7 +6,7 @@ using ToSic.Eav.Services;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 
-namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
+namespace ToSic.Sxc.Code.Sys.CodeApiService;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

@@ -1,9 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Sys;
 
-namespace ToSic.Sxc.Code.Internal.SourceCode;
+namespace ToSic.Sxc.Code.Sys.SourceCode;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class SourceAnalyzer(IServerPaths serverPaths) : ServiceBase("Sxc.RzrSrc", connect: [serverPaths])

@@ -1,7 +1,6 @@
-﻿using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Sys.ExecutionContext;
+﻿using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Code.CodeApi.Internal;
+namespace ToSic.Sxc.Code.Sys.CodeApi;
 
 public static class ExecutionContextExtensions
 {

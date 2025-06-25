@@ -1,17 +1,17 @@
-﻿using System.Text.RegularExpressions;
-using Microsoft.CSharp.RuntimeBinder;
-using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Internal.SourceCode;
-using ToSic.Sys.Code.Help;
-using ToSic.Sys.Exceptions;
-#if NETFRAMEWORK
+﻿#if NETFRAMEWORK
 using HttpCompileException = System.Web.HttpCompileException;
 #else
 // TODO: @STV What's the real compile exception type? we need it, so that the errors are better
 using HttpCompileException = System.Exception;
 #endif
+using System.Text.RegularExpressions;
+using Microsoft.CSharp.RuntimeBinder;
+using ToSic.Lib.Services;
+using ToSic.Sxc.Code.Sys.SourceCode;
+using ToSic.Sys.Code.Help;
+using ToSic.Sys.Exceptions;
 
-namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
+namespace ToSic.Sxc.Code.Sys.CodeErrorHelp;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeErrorHelpService: ServiceBase

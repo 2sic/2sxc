@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
+namespace ToSic.Sxc.Code.Sys.CodeRunHelpers;
 
 /// <summary>
 /// Helper information for all code helpers, which is often passed around from one helper to another.

@@ -1,4 +1,4 @@
-﻿using static ToSic.Sxc.Code.Internal.CodeErrorHelp.HelpForRazor12;
+﻿using static ToSic.Sxc.Code.Sys.CodeErrorHelp.HelpForRazor12;
 
  // ReSharper disable once CheckNamespace
  namespace Custom.Hybrid; 

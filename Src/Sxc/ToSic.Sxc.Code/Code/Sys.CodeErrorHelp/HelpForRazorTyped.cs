@@ -4,10 +4,10 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sys.Code.Help;
-using static ToSic.Sxc.Code.Internal.CodeErrorHelp.CodeHelpBuilder;
+using static ToSic.Sxc.Code.Sys.CodeErrorHelp.CodeHelpBuilder;
 
 
-namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
+namespace ToSic.Sxc.Code.Sys.CodeErrorHelp;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class HelpForRazorTyped

@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using ToSic.Lib.Exceptions;
-using ToSic.Sxc.Code.Internal.CodeErrorHelp;
+using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 
 namespace ToSic.Sxc.Dnn.Integration;
 

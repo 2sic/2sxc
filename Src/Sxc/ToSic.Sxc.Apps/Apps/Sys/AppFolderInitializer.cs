@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Eav.Sys;
-using ToSic.Sxc.Internal;
 using ToSic.Sys.Configuration;
 
 namespace ToSic.Sxc.Apps.Internal;

@@ -1,6 +1,6 @@
 ﻿using ToSic.Sys.Code.Help;
 
-namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
+namespace ToSic.Sxc.Code.Sys.CodeErrorHelp;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class GenNotExist(string name, (string Code, string? Comment)[]? alt)

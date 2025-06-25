@@ -2,7 +2,7 @@
 using ToSic.Sys.Code.Infos;
 using CodeInfoService = ToSic.Sys.Code.InfoSystem.CodeInfoService;
 
-namespace ToSic.Sxc.Compatibility;
+namespace ToSic.Sxc.Code.Sys.CodeErrorHelp;
 
 internal static class CodeChangeServiceExtensions
 {

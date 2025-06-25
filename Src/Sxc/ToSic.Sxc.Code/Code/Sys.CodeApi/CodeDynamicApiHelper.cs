@@ -2,11 +2,10 @@
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Code.CodeApi;
+namespace ToSic.Sxc.Code.Sys.CodeApi;
 
 internal class CodeDynamicApiHelper(ExecutionContext exCtx) : CodeAnyApiHelper(exCtx), ICodeDynamicApiHelper
 {

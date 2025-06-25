@@ -1,7 +1,7 @@
 ﻿using ToSic.Sys.Code.Help;
-using static ToSic.Sxc.Code.Internal.CodeErrorHelp.HelpForRazor12;
+using static ToSic.Sxc.Code.Sys.CodeErrorHelp.HelpForRazor12;
 
-namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
+namespace ToSic.Sxc.Code.Sys.CodeErrorHelp;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class HelpForRazor14

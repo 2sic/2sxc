@@ -6,10 +6,9 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
-
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
-namespace ToSic.Sxc.Code;
+namespace ToSic.Sxc.Code.Sys;
 
 /// <summary>
 /// Dynamic code files like Razor or WebApis.

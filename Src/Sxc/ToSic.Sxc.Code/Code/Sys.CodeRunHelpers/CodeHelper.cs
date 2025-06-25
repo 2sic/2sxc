@@ -1,8 +1,7 @@
-﻿using ToSic.Sxc.Code.CodeApi.Internal;
-using ToSic.Sxc.Code.Internal.HotBuild;
-using ToSic.Sxc.Code.Sys;
+﻿using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Sys.CodeApi;
 
-namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
+namespace ToSic.Sxc.Code.Sys.CodeRunHelpers;
 
 /// <summary>
 /// The CodeHelper for custom code.

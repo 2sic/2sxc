@@ -1,7 +1,7 @@
 ﻿using ToSic.Sys.Code.Infos;
 using static ToSic.Sys.Code.Infos.CodeInfoWarning;
 
-namespace ToSic.Sxc.Code.Internal.CodeErrorHelp;
+namespace ToSic.Sxc.Code.Sys.CodeErrorHelp;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class DynamicCode16Warnings

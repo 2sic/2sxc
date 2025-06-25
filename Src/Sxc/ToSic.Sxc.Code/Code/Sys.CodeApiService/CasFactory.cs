@@ -1,10 +1,11 @@
 ﻿using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Code.Internal;
+namespace ToSic.Sxc.Code.Sys.CodeApiService;
 
 /// <summary>
 /// Special helper which will create the code-root based on the parent class requesting it.
