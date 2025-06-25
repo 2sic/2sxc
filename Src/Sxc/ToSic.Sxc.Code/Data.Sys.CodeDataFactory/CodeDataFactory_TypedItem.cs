@@ -5,7 +5,7 @@ using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sxc.Data.Sys.Wrappers;
 
-namespace ToSic.Sxc.Data.Internal;
+namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
 partial class CodeDataFactory
 {
@@ -14,7 +14,7 @@ partial class CodeDataFactory
     #region AsTyped Implementations
 
     [return: NotNullIfNotNull(nameof(data)), NotNullIfNotNull(nameof(fallback))]
-    public ITypedItem? AsItem(object? data, ConvertItemSettings settings, NoParamOrder noParamOrder = default, ITypedItem? fallback = default)
+    public ITypedItem? AsItem(object? data, Factory.ConvertItemSettings settings, NoParamOrder noParamOrder = default, ITypedItem? fallback = default)
     {
         // If we need mock data, return a fake object
         if (settings.UseMock)
@@ -31,7 +31,7 @@ partial class CodeDataFactory
     /// </summary>
     /// <returns></returns>
     [return: NotNullIfNotNull(nameof(entity))]
-    public ITypedItem? AsItem(IEntity? entity, ConvertItemSettings settings)
+    public ITypedItem? AsItem(IEntity? entity, Factory.ConvertItemSettings settings)
         => entity == null
             ? null
             : new TypedItemOfEntity(null, entity, this, propsRequired: settings.ItemIsStrict);
@@ -41,7 +41,7 @@ partial class CodeDataFactory
         => field ??= new(Log, logFirstMax: 25, reLogIteration: 100);
 
     [return: NotNullIfNotNull(nameof(data))]
-    internal ITypedItem? AsItemInternal(object? data, ConvertItemSettings settings, int recursions)
+    internal ITypedItem? AsItemInternal(object? data, Factory.ConvertItemSettings settings, int recursions)
     {
         // Only log the first 25 calls to this method, then stop logging
         var l = AsItemLogFilter.FnOrNull<ITypedItem?>();
@@ -88,7 +88,7 @@ partial class CodeDataFactory
                 : l.Return(new TypedItemOfEntity(null, e, this, propsRequired: settings.ItemIsStrict), typeName);
     }
 
-    public IEnumerable<ITypedItem> EntitiesToItems(IEnumerable<IEntity>? entities, ConvertItemSettings settings)
+    public IEnumerable<ITypedItem> EntitiesToItems(IEnumerable<IEntity>? entities, Factory.ConvertItemSettings settings)
     {
         if (entities == null)
             return [];
@@ -105,10 +105,10 @@ partial class CodeDataFactory
         return result;
     }
 
-    public IEnumerable<ITypedItem> AsItems(object list, ConvertItemSettings settings, NoParamOrder noParamOrder = default, IEnumerable<ITypedItem>? fallback = null) 
+    public IEnumerable<ITypedItem> AsItems(object list, Factory.ConvertItemSettings settings, NoParamOrder noParamOrder = default, IEnumerable<ITypedItem>? fallback = null) 
         => AsItemList(list, fallback, MaxRecursions, settings);
 
-    private IEnumerable<ITypedItem> AsItemList(object list, IEnumerable<ITypedItem>? fallback, int recursions, ConvertItemSettings settings)
+    private IEnumerable<ITypedItem> AsItemList(object list, IEnumerable<ITypedItem>? fallback, int recursions, Factory.ConvertItemSettings settings)
     {
         var l = Log.Fn<IEnumerable<ITypedItem>>($"{nameof(list)}: '{list}'; Settings: {settings}");
 

@@ -5,6 +5,7 @@ using ToSic.Eav.Environment.Sys.Permissions;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Context.Sys;
+using ToSic.Sxc.Context.Sys.Module;
 
 namespace ToSic.Sxc.Dnn.Run;
 

@@ -2,6 +2,8 @@
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeApiService;
@@ -9,13 +11,12 @@ using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sys.Caching.PiggyBack;
 using IApp = ToSic.Sxc.Apps.IApp;
 // ReSharper disable InheritdocInvalidUsage
 
-namespace ToSic.Sxc.Code.Internal;
+namespace ToSic.Sxc.Sys.ExecutionContext;
 
 /// <summary>
 /// Base class for any dynamic code root objects. <br/>
@@ -24,7 +25,7 @@ namespace ToSic.Sxc.Code.Internal;
 /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
 /// </summary>
 /// <remarks>
-/// It can usually not be created directly, but through the <see cref="IExecutionContextFactory"/> which would return a <see cref="ExecutionContextUnknown"/>.
+/// It can usually not be created directly, but through the <see cref="ExecutionContextUnknown"/> which would return a <see cref="IExecutionContextFactory"/>.
 /// </remarks>
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

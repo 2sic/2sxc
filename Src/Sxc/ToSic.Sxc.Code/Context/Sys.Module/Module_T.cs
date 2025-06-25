@@ -2,7 +2,7 @@
 using ToSic.Lib.Services;
 using ToSic.Lib.Wrappers;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys.Module;
 
 /// <summary>
 /// A base implementation of the block information wrapping the CMS specific object along with it.

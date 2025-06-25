@@ -8,4 +8,3 @@ global using ToSic.Lib.Documentation;
 global using ToSic.Lib.Logging;
 global using ToSic.Sys.Performance;
 global using ToSic.Sys.Utils;
-global using ExecutionContext = ToSic.Sxc.Code.Internal.ExecutionContext;

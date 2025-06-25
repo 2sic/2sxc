@@ -1,9 +1,10 @@
 ﻿using ToSic.Eav.Sys;
 using ToSic.Lib.DI;
+using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Web.Sys.Http;
 using ToSic.Sxc.Web.Sys.Parameters;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys.Page;
 
 /// <summary>
 /// Constructor for DI

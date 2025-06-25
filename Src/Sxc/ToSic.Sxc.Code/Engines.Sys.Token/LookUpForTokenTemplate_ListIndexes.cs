@@ -1,6 +1,6 @@
 ﻿using static System.StringComparison;
 
-namespace ToSic.Sxc.LookUp;
+namespace ToSic.Sxc.Engines.Sys.Token;
 
 partial class LookUpForTokenTemplate
 {

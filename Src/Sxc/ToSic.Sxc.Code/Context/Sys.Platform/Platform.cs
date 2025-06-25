@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Context.Internal;
+﻿namespace ToSic.Sxc.Context.Sys.Platform;
 
 /// <summary>
 /// General platform information
@@ -8,7 +8,7 @@
 /// </remarks>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public  abstract class Platform: IPlatform
+public abstract class Platform: IPlatform
 {
 
     /// <summary>

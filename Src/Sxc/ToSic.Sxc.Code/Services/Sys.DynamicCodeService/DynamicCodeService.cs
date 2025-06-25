@@ -9,7 +9,7 @@ using ToSic.Sxc.Code.Internal;
 using ToSic.Sys.Users;
 using App = ToSic.Sxc.Apps.App;
 
-namespace ToSic.Sxc.Services.Internal;
+namespace ToSic.Sxc.Services.Sys.DynamicCodeService;
 
 /// <summary>
 /// WIP - goal is to have a DI factory which creates DynamicCode objects for use in Skins and other external controls

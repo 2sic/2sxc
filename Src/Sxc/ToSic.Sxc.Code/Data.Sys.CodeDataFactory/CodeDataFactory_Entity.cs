@@ -2,7 +2,7 @@
 using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Data.Sys.Typed;
 
-namespace ToSic.Sxc.Data.Internal;
+namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
 partial class CodeDataFactory
 {

@@ -1,6 +1,6 @@
 ﻿using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys.Platform;
 
 internal class PlatformUnknown: Platform, IIsUnknown
 {

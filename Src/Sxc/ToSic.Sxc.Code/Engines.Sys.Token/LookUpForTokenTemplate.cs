@@ -4,9 +4,8 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.LookUp.Sources;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Sys;
 
-namespace ToSic.Sxc.LookUp;
+namespace ToSic.Sxc.Engines.Sys.Token;
 
 /// <summary>
 /// LookUp for creating token based templates. In addition to retrieving values, it also resolves special tokens like
@@ -51,7 +50,7 @@ internal partial class LookUpForTokenTemplate(
         // Create Toolbar if requested, even if dynEntity is null
         if (key == ViewConstants.FieldToolbar)
 #pragma warning disable CS0618 // Type or member is obsolete
-            return (dynEntity as DynamicEntity)?.Toolbar.ToString();
+            return (dynEntity as ToSic.Sxc.Data.Sys.DynamicEntity)?.Toolbar.ToString();
 #pragma warning restore CS0618 // Type or member is obsolete
         // old till 2025-05-13, changed to not depend on the ItemToolbar object
         // return new Edit.Toolbar.ItemToolbar(dynEntity?.Entity).ToolbarAsTag;

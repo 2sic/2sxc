@@ -1,11 +1,10 @@
 ﻿using System.Dynamic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
-using ToSic.Sxc.Data.Sys;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Wrappers;
 
-namespace ToSic.Sxc.Data.Internal;
+namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
 partial class CodeDataFactory: ICodeDataFactoryDeepWip
 {
@@ -21,14 +20,14 @@ partial class CodeDataFactory: ICodeDataFactoryDeepWip
     public IDynamicEntity CodeAsDyn(IEntity entity)
         => new DynamicEntity(entity, this, propsRequired: false);
 
-    public IDynamicEntity AsDynamic(IEntity entity, ConvertItemSettings settings)
+    public IDynamicEntity AsDynamic(IEntity entity, Factory.ConvertItemSettings settings)
         => new DynamicEntity(entity, this, propsRequired: settings.ItemIsStrict);
 
     /// <summary>
     /// Convert a list of Entities into a DynamicEntity.
     /// Only used in DynamicCodeRoot.
     /// </summary>
-    public IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, ConvertItemSettings settings, NoParamOrder protector = default, IEntity? parent = default, string? field = default) 
+    public IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, Factory.ConvertItemSettings settings, NoParamOrder protector = default, IEntity? parent = default, string? field = default) 
         => new DynamicEntity(list: list, parent: parent, field: field, appIdOrNull: null, propsRequired: settings.ItemIsStrict, cdf: this);
 
     /// <summary>
@@ -37,7 +36,7 @@ partial class CodeDataFactory: ICodeDataFactoryDeepWip
     /// </summary>
     public IEnumerable<dynamic> CodeAsDynList(object list) //, bool propsRequired = false)
     {
-        var settings = new ConvertItemSettings() { ItemIsStrict = false };
+        var settings = new Factory.ConvertItemSettings() { ItemIsStrict = false };
         return list switch
         {
             null => new List<dynamic>(),

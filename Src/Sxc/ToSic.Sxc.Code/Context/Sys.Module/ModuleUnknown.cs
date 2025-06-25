@@ -2,7 +2,7 @@
 using ToSic.Eav.Sys;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys.Module;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ModuleUnknown: IModule, IIsUnknown

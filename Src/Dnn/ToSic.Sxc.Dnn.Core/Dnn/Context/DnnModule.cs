@@ -7,6 +7,7 @@ using ToSic.Eav.Sys;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Context.Sys.Module;
 using ISite = ToSic.Eav.Context.ISite;
 
 namespace ToSic.Sxc.Dnn.Context;

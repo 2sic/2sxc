@@ -1,10 +1,9 @@
 ﻿using ToSic.Eav.Metadata;
-using ToSic.Sxc.Data.Sys.Metadata;
 
-namespace ToSic.Sxc.Data.Internal;
+namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
 partial class CodeDataFactory
 {
     public ITypedMetadata Metadata(IMetadata mdOf)
-        => new Metadata(mdOf, this);
+        => new Metadata.Metadata(mdOf, this);
 }

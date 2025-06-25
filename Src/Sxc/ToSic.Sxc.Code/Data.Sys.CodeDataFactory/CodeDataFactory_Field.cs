@@ -1,14 +1,12 @@
 ﻿using ToSic.Eav.Data.Sys.PropertyStack;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Data.Sys.Factory;
-using ToSic.Sxc.Data.Sys.Fields;
 using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
 
-namespace ToSic.Sxc.Data.Internal;
+namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
 partial class CodeDataFactory
 {
-    public IField? Field(ITypedItem parent, string? name, ConvertItemSettings settings)
+    public IField? Field(ITypedItem parent, string? name, Factory.ConvertItemSettings settings)
     {
         if (name.IsEmptyOrWs())
         {
@@ -34,7 +32,7 @@ partial class CodeDataFactory
 
         return IsErrStrictNameRequired(parent, name, settings.FirstIsRequired, settings.ItemIsStrict)
             ? throw ErrStrictForTyped(parent, name)
-            : new Field(parent, name, this);
+            : new Fields.Field(parent, name, this);
     }
 
 }

@@ -15,7 +15,7 @@ using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sys.Code.InfoSystem;
 
-namespace ToSic.Sxc.Data.Internal;
+namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
 // todo: make internal once we have an interface
 [PrivateApi]

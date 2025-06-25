@@ -1,10 +1,8 @@
 ﻿using System.Collections;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Sys;
-using ToSic.Sxc.Data.Sys.DynamicStack;
-using ToSic.Sxc.Data.Sys.TypedStack;
 
-namespace ToSic.Sxc.Data.Internal;
+namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
 partial class CodeDataFactory
 {
@@ -77,8 +75,8 @@ partial class CodeDataFactory
         };
 
     public IDynamicStack AsDynStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources)
-        => new DynamicStack(name, this, sources);
+        => new DynamicStack.DynamicStack(name, this, sources);
 
     public ITypedStack AsTypedStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources)
-        => new TypedStack(name, this, sources);
+        => new TypedStack.TypedStack(name, this, sources);
 }

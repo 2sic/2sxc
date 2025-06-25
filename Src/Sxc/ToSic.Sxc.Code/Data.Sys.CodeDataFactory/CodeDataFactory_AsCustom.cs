@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using Microsoft.Extensions.DependencyInjection;
+using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Models;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Typed;
 
-namespace ToSic.Sxc.Data.Internal;
+namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
 partial class CodeDataFactory: IModelFactory
 {
@@ -17,7 +18,7 @@ partial class CodeDataFactory: IModelFactory
     public TCustom? AsCustom<TCustom>(object? source, NoParamOrder protector = default, bool mock = false)
         where TCustom : class, ICanWrapData
     {
-        var settings = new ConvertItemSettings { ItemIsStrict = true, UseMock = mock };
+        var settings = new Factory.ConvertItemSettings { ItemIsStrict = true, UseMock = mock };
         return source switch
         {
             null when !mock => null,
@@ -28,7 +29,7 @@ partial class CodeDataFactory: IModelFactory
     }
 
     [return: NotNullIfNotNull("item")]
-    public TCustom? AsCustomFrom<TCustom, TData>(TData? item, ConvertItemSettings? settings)
+    public TCustom? AsCustomFrom<TCustom, TData>(TData? item, Factory.ConvertItemSettings? settings)
         where TCustom : class, ICanWrapData
     {
         if (item == null)

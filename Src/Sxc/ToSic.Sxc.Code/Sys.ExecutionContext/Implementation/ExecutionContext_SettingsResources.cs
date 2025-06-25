@@ -5,7 +5,7 @@ using ToSic.Sxc.Data;
 using static ToSic.Eav.Apps.Sys.AppStack.AppStackConstants;
 using SettingsSources = System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, ToSic.Eav.Data.IPropertyLookup>>;
 
-namespace ToSic.Sxc.Code.Internal;
+namespace ToSic.Sxc.Sys.ExecutionContext;
 
 public partial class ExecutionContext
 {

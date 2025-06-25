@@ -1,12 +1,11 @@
 ﻿using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code.Sys;
-using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Data.Sys.CodeDataFactory;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services;
-
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
-namespace ToSic.Sxc.Code.Internal;
+namespace ToSic.Sxc.Sys.ExecutionContext;
 
 public partial class ExecutionContext
 {

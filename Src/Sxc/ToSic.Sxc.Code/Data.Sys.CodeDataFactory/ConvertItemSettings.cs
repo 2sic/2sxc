@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Data.CodeData.Internal;
+﻿namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 public record ConvertItemSettings
 {
     public required bool ItemIsStrict { get; init; }

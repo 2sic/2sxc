@@ -2,7 +2,7 @@
 using ToSic.Eav.Context;
 using IApp = ToSic.Sxc.Apps.IApp;
 
-namespace ToSic.Sxc.Services.Internal;
+namespace ToSic.Sxc.Services.Sys.DynamicCodeService;
 
 /// <summary>
 /// WIP - goal is to have a DI factory which creates DynamicCode objects for use in Skins and other external controls

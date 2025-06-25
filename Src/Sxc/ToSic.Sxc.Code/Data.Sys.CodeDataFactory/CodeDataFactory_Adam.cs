@@ -11,7 +11,7 @@ using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Services.Tweaks;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Data.Internal;
+namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
 partial class CodeDataFactory
 {

@@ -1,7 +1,6 @@
 ﻿using ToSic.Sxc.Code.Sys.HotBuild;
-using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Code.Internal;
+namespace ToSic.Sxc.Sys.ExecutionContext;
 
 public partial class ExecutionContext
 {

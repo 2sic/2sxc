@@ -1,14 +1,13 @@
 ﻿using System.Collections;
-using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Wrappers;
 
-namespace ToSic.Sxc.Data.Internal;
+namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
 partial class CodeDataFactory
 {
     private const string NameOfAsTyped = /*nameof(IDynamicCode16.AsTyped)*/ "AsTyped" + "(...)";
 
-    public ITyped? AsTyped(object data, ConvertItemSettings settings, string? detailsMessage = default)
+    public ITyped? AsTyped(object data, Factory.ConvertItemSettings settings, string? detailsMessage = default)
     {
         var l = Log.Fn<ITyped>();
 
@@ -27,7 +26,7 @@ partial class CodeDataFactory
     }
 
     private const string NameOfAsTypedList = /*nameof(IDynamicCode16.AsTypedList)*/ "AsTypedList" + "(...)";
-    public IEnumerable<ITyped>? AsTypedList(object list, ConvertItemSettings settings)
+    public IEnumerable<ITyped>? AsTypedList(object list, Factory.ConvertItemSettings settings)
     {
         var l = Log.Fn<IEnumerable<ITyped>>();
 
