@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace ToSic.Sxc.WebApi.ActionFilters;
+namespace ToSic.Sxc.WebApi.Sys.ActionFilters;
 /// <summary>
 /// TODO: @STV pls document what this is for
 /// </summary>
@@ -29,17 +29,14 @@ public class OptionalBodyFilter : ActionFilterAttribute
         {
             var parameter = context.ActionDescriptor.Parameters[i];
             if (parameter.BindingInfo?.BindingSource != BindingSource.Body)
-            {
                 continue;
-            }
 
             if (methodParameters[i].HasDefaultValue)
-            {
                 continue;
-            }
 
             context.ActionArguments.TryGetValue(parameter.Name, out var boundValue);
-            if (boundValue != null) continue;
+            if (boundValue != null)
+                continue;
 
             // This should be equivalent of global setting
             // options.AllowEmptyInputInBodyModelBinding = true;

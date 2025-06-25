@@ -6,7 +6,7 @@ using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Apps.Sys.Installation;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
-using ToSic.Sxc.WebApi.ExternalLinks;
+using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 
 namespace ToSic.Sxc.Dnn.Install;
 

@@ -7,7 +7,7 @@ using ToSic.Sxc.Apps.Sys.Installation;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Sys.Integration.Installation;
-using ToSic.Sxc.WebApi.ExternalLinks;
+using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 

@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.WebApi.ExternalLinks;
+﻿namespace ToSic.Sxc.WebApi.Sys.ExternalLinks;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public enum ExternalSxcDestinations

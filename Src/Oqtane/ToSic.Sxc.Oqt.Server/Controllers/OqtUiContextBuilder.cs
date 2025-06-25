@@ -3,7 +3,7 @@ using ToSic.Eav.Context;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Sys.Integration.Paths;
-using ToSic.Sxc.WebApi.ExternalLinks;
+using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers;

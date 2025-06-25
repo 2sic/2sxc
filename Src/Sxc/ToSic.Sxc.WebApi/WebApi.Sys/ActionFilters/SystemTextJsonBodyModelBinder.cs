@@ -7,10 +7,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
-using ToSic.Eav.Serialization;
 using ToSic.Eav.Serialization.Sys.Json;
 
-namespace ToSic.Sxc.WebApi.ActionFilters;
+namespace ToSic.Sxc.WebApi.Sys.ActionFilters;
 
 public class SystemTextJsonBodyModelBinder(
     ILoggerFactory loggerFactory,
@@ -39,11 +38,10 @@ public class SystemTextJsonBodyModelBinder(
     {
         get
         {
-            if (field == null)
-            {
-                field = new();
-                field.JsonSerializerOptions.SetUnsafeJsonSerializerOptions();
-            }
+            if (field != null)
+                return field;
+            field = new();
+            field.JsonSerializerOptions.SetUnsafeJsonSerializerOptions();
             return field;
         }
     }

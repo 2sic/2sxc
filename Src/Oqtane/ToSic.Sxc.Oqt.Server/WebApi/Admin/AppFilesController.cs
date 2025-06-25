@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Sxc.Apps.Internal.Assets;
+using ToSic.Sxc.Apps.Sys.EditAssets;
 using ToSic.Sxc.Backend.Admin.AppFiles;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.Admin.AppFiles.AppFilesControllerReal;

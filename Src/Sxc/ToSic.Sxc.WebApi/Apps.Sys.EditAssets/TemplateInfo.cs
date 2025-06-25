@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Sxc.Context;
 
-namespace ToSic.Sxc.Apps.Internal.Assets;
+namespace ToSic.Sxc.Apps.Sys.EditAssets;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class TemplateInfo(

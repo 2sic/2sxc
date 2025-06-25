@@ -1,10 +1,11 @@
 ﻿using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sys.Users;
 
-namespace ToSic.Sxc.Apps.Internal.Assets;
+namespace ToSic.Sxc.Apps.Sys.EditAssets;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AssetEditor(

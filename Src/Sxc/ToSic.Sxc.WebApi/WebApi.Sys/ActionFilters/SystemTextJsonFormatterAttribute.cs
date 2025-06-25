@@ -9,7 +9,7 @@ using ToSic.Eav.WebApi.Sys.Helpers.Json;
 using JsonOptions = ToSic.Eav.Serialization.Sys.Json.JsonOptions;
 
 
-namespace ToSic.Sxc.WebApi.ActionFilters;
+namespace ToSic.Sxc.WebApi.Sys.ActionFilters;
 
 /// <summary>
 /// Make sure .net controllers behave the same in terms of JSON serialization like Newtonsoft

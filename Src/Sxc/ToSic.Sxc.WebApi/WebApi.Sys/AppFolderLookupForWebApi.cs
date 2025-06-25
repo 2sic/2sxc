@@ -1,7 +1,7 @@
 ﻿using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context.Sys;
 
-namespace ToSic.Sxc.Apps.Internal;
+namespace ToSic.Sxc.WebApi.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppFolderLookupForWebApi(ISxcCurrentContextService ctxService) : ServiceBase("AppFld")

@@ -7,7 +7,7 @@ using ToSic.Lib.Wrappers;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.WebApi.ExternalLinks;
+using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 
 namespace ToSic.Sxc.Dnn.WebApi.Context;
 

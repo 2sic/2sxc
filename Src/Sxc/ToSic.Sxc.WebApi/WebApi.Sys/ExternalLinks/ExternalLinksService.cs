@@ -4,7 +4,7 @@ using ToSic.Eav.Sys;
 using ToSic.Sys.Capabilities.Fingerprints;
 using ToSic.Sys.Capabilities.Platform;
 
-namespace ToSic.Sxc.WebApi.ExternalLinks;
+namespace ToSic.Sxc.WebApi.Sys.ExternalLinks;
 
 /// <summary>
 /// Service to generate links to getting started, app-details and more.

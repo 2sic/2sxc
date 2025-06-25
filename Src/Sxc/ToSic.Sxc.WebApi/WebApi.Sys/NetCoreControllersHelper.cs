@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Eav.WebApi.Helpers;
+namespace ToSic.Sxc.WebApi.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class NetCoreControllersHelper(ControllerBase parent) : ICanGetService

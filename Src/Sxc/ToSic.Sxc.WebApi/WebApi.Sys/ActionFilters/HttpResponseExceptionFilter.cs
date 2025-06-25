@@ -1,10 +1,9 @@
 ﻿#if NETCOREAPP
-using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.WebApi.Sys.Helpers.Http;
 
-namespace ToSic.Sxc.WebApi.ActionFilters;
+namespace ToSic.Sxc.WebApi.Sys.ActionFilters;
 /// <summary>
 /// TODO: @STV pls document what this is for
 /// </summary>
@@ -27,7 +26,7 @@ public class HttpResponseExceptionFilter : IActionFilter, IOrderedFilter
             };
             context.ExceptionHandled = true;
         }
-        else if (context.Exception is Exception anyException)
+        else if (context.Exception is { } anyException)
         {
             context.Result = new ObjectResult(500)
             {
