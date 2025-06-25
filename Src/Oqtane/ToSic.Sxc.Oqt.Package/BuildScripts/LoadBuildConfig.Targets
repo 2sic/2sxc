@@ -2,18 +2,22 @@
 <Project>
 
   <Target Name="CheckBuildTool" AfterTargets="Build" BeforeTargets="PostBuild">
+    <Message Text="Running CheckBuildTool" Importance="high"/>
+    <Message Text="MSBuildRuntimeType: $(MSBuildRuntimeType)" Importance="high"/>
+    <Message Text="MSBuildProjectDirectory: $(MSBuildProjectDirectory)" Importance="high"/>
     <Message Text="Running on .NET Core MSBuild" Condition="'$(MSBuildRuntimeType)' == 'Core'" Importance="high"/>
     <Message Text="Running on Full MSBuild" Condition="'$(MSBuildRuntimeType)' != 'Core'" Importance="high"/>
   </Target>
 
-  <UsingTask Condition="'$(MSBuildRuntimeType)' == 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net9.0\ToSic.Sxc.BuildTasks.dll " TaskName="GetBuildConfig"/>
-  <UsingTask Condition="'$(MSBuildRuntimeType)' != 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll " TaskName="GetBuildConfig"/>
-  <UsingTask Condition="'$(MSBuildRuntimeType)' == 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net9.0\ToSic.Sxc.BuildTasks.dll " TaskName="ColorMessage"/>
-  <UsingTask Condition="'$(MSBuildRuntimeType)' != 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll " TaskName="ColorMessage"/>
-  <UsingTask Condition="'$(MSBuildRuntimeType)' == 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net9.0\ToSic.Sxc.BuildTasks.dll " TaskName="ModifyXmlDocumentation"/>
-  <UsingTask Condition="'$(MSBuildRuntimeType)' != 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll " TaskName="ModifyXmlDocumentation"/>
+  <UsingTask Condition="'$(MSBuildRuntimeType)' == 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net9.0\ToSic.Sxc.BuildTasks.dll" TaskName="GetBuildConfig"/>
+  <UsingTask Condition="'$(MSBuildRuntimeType)' != 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" TaskName="GetBuildConfig"/>
+  <UsingTask Condition="'$(MSBuildRuntimeType)' == 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net9.0\ToSic.Sxc.BuildTasks.dll" TaskName="ColorMessage"/>
+  <UsingTask Condition="'$(MSBuildRuntimeType)' != 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" TaskName="ColorMessage"/>
+  <UsingTask Condition="'$(MSBuildRuntimeType)' == 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net9.0\ToSic.Sxc.BuildTasks.dll" TaskName="ModifyXmlDocumentation"/>
+  <UsingTask Condition="'$(MSBuildRuntimeType)' != 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" TaskName="ModifyXmlDocumentation"/>
 
   <Target Name="BuildConfigTarget" AfterTargets="CheckBuildTool">
+    <Message Text="Running BuildConfigTarget" Importance="high"/>
 
     <GetBuildConfig>
       <Output TaskParameter="BuildConfigPath" PropertyName="BuildConfigPath" />
@@ -31,6 +35,8 @@
       <OqtaneExist Condition="Exists('$(OqtaneTarget)')">true</OqtaneExist>
       <OqtaneExist Condition="!Exists('$(OqtaneTarget)')">false</OqtaneExist>
     </PropertyGroup>
+    <Message Text="SourceExist: $(SourceExist) - $(Source)" Importance="high"/>
+    <Message Text="OqtaneExist: $(OqtaneExist) - $(OqtaneTarget)" Importance="high"/>
 
     <ColorMessage Text="------------------------------------------------------------------------------" ForegroundColor="White" BackgroundColor="Magenta"/>
     <ColorMessage Text="$(BuildConfigPath)" ForegroundColor="Magenta"/>

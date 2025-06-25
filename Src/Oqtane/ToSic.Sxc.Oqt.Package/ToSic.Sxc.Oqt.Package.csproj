@@ -25,7 +25,7 @@
   <Import Project="BuildScripts\LoadBuildConfig.Targets" />
 
   <Target Name="PostBuild" AfterTargets="Build" DependsOnTargets="BuildConfigTarget" Condition="'$(SourceExist)|$(OqtaneExist)' == 'true|true'">
-
+    <Message Text="Running PostBuild" Importance="high"/>
     <!-- XML documentation -->
     <ItemGroup Condition="'$(Configuration)'=='Release'">
       <AssemblyDocumentation Include="$(OutDir)\ToSic.*.xml" Exclude="**\ToSic.Sxc.Oqtane.Package.xml" />
