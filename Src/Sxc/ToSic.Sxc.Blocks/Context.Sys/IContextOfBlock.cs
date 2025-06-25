@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Context;
-using ToSic.Sxc.Cms.Internal.Publishing;
+using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sxc.Sys.Render.PageContext;
 
 namespace ToSic.Sxc.Context.Sys;

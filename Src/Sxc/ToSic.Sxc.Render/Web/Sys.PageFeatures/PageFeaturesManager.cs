@@ -1,7 +1,7 @@
 ﻿
 using ToSic.Sxc.Sys.Render.PageFeatures;
 
-namespace ToSic.Sxc.Web.Internal.PageFeatures;
+namespace ToSic.Sxc.Web.Sys.PageFeatures;
 
 /// <summary>
 /// Constructor - ATM we'll just add our known services here. 

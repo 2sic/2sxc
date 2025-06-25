@@ -1,7 +1,7 @@
 ﻿using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
+namespace ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CspOfPage(Generator<CspParameterFinalizer> cspParameterFinalizer)

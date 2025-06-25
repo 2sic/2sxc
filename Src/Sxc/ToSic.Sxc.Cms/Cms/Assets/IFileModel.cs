@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Apps.Assets;
-using ToSic.Sxc.Cms.Assets.Internal;
+using ToSic.Sxc.Cms.Assets.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Models;
 

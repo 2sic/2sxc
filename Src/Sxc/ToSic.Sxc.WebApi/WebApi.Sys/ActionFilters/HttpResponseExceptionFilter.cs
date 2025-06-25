@@ -1,7 +1,6 @@
 ﻿#if NETCOREAPP
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using ToSic.Eav.WebApi.Sys.Helpers.Http;
 
 namespace ToSic.Sxc.WebApi.Sys.ActionFilters;
 /// <summary>

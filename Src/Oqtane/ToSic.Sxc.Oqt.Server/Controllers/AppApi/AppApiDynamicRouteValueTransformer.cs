@@ -7,7 +7,6 @@ using Oqtane.Repository;
 using System.Net;
 using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Backend;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Code.Sys;

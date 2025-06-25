@@ -1,7 +1,7 @@
 ﻿using System.Collections.Specialized;
 using ToSic.Sxc.Web.Sys.Url;
 
-namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
+namespace ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CspParameters: NameValueCollection

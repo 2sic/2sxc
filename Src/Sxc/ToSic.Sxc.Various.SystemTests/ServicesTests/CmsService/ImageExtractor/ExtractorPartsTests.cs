@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Web.Internal.HtmlParsing;
+﻿using ToSic.Sxc.Web.Sys.HtmlParsing;
 
 namespace ToSic.Sxc.ServicesTests.CmsService.ImageExtractor;
 

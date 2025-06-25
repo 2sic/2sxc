@@ -3,7 +3,6 @@ using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Eav.Data.Sys.PropertyStack;
 using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Eav.Sys;
-using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Eav.WebApi.Sys.Install;
 using ToSic.Sxc.Apps.Sys.Installation;

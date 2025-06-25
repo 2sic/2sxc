@@ -1,6 +1,5 @@
 ﻿using DotNetNuke.Entities.Portals;
-using ToSic.Sxc.Cms.Sites.Internal;
-using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Cms.Sites.Sys;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources;

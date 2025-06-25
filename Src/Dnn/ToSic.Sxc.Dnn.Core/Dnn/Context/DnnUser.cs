@@ -4,8 +4,8 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Internal;
 using ToSic.Sys.Users;
 using ToSic.Sys.Users.Permissions;
 

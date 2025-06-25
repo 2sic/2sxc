@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using ToSic.Sxc.Render.Sys.Output;
 
-namespace ToSic.Sxc.Web.Internal.HtmlParsing;
+namespace ToSic.Sxc.Web.Sys.HtmlParsing;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class RegexUtil

@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Cms.Pages.Internal;
+﻿using ToSic.Sxc.Cms.Pages.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Models;
 

@@ -3,8 +3,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Sys.Insights;
 using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.ImportExport;
-using ToSic.Sxc.Apps.Internal;
-using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Apps.Sys.EditAssets;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Backend.Admin;

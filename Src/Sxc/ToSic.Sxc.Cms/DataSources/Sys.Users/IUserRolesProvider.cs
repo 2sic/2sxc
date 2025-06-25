@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Cms.Users.Internal;
+﻿using ToSic.Sxc.Cms.Users.Sys;
 
 namespace ToSic.Sxc.DataSources.Internal;
 

@@ -3,7 +3,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
-using ToSic.Sxc.Cms.Users.Internal;
+using ToSic.Sxc.Cms.Users.Sys;
 
 namespace ToSic.Sxc.DataSources;
 

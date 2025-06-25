@@ -1,7 +1,7 @@
 ﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Sys.Render.PageContext;
 
-namespace ToSic.Sxc.Web.Internal.PageService;
+namespace ToSic.Sxc.Web.Sys.PageServiceShared;
 
 partial class PageServiceShared
 {

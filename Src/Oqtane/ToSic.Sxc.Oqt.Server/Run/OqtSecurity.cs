@@ -5,7 +5,7 @@ using Oqtane.Security;
 using Oqtane.Shared;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Cms.Users.Internal;
+using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run;

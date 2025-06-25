@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
-
-namespace ToSic.Sxc.Services.Internal;
+﻿namespace ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 
 [PrivateApi("The service isn't publicly documented, as the functionality happens on the IPageService object")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

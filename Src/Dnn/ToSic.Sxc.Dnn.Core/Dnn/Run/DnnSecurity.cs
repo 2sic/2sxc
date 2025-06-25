@@ -4,8 +4,7 @@ using DotNetNuke.Entities.Users;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Security.Roles;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Cms.Users.Internal;
-using ToSic.Sxc.Internal;
+using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sys.Users.Permissions;
 using static ToSic.Sxc.Dnn.DnnSxcSettings;
 

@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys.Paths;
-using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Apps.Sys.EditAssets;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sys.Users;

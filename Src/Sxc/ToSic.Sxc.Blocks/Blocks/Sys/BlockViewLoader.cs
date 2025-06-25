@@ -1,5 +1,5 @@
 ﻿using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.Internal.Work;
+using ToSic.Sxc.Apps.Sys.Work;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Context.Sys;
 

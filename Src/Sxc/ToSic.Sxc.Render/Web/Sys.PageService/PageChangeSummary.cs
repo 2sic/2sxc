@@ -1,19 +1,18 @@
-﻿
-using ToSic.Lib.DI;
+﻿using ToSic.Lib.DI;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.Output;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
-using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
-using ToSic.Sxc.Web.PageServiceShared.Internal;
 using ToSic.Sxc.Web.Sys.ClientAssets;
+using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
+using ToSic.Sxc.Web.Sys.PageServiceShared;
 using ToSic.Sys.Requirements;
 using static ToSic.Sxc.Render.Sys.Output.ClientAssetConstants;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
-namespace ToSic.Sxc.Web.Internal.PageService;
+namespace ToSic.Sxc.Web.Sys.PageService;
 
 /// <summary>
 /// This should bundle all the page changes once a module is done.

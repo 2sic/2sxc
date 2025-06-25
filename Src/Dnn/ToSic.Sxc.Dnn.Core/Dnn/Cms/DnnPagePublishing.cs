@@ -2,14 +2,13 @@
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.Apps.Sys.Work;
-using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
-using ToSic.Sxc.Cms.Internal.Publishing;
+using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Dnn.Context;

@@ -5,9 +5,8 @@ using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys;
+using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Sys.Url;
-using CspOfPage = ToSic.Sxc.Web.Internal.ContentSecurityPolicy.CspOfPage;
-using CspParameters = ToSic.Sxc.Web.Internal.ContentSecurityPolicy.CspParameters;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
 

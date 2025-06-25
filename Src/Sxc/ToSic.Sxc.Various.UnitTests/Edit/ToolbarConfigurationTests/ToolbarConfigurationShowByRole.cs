@@ -1,6 +1,6 @@
 ﻿
 using ToSic.Sxc.Cms.Users;
-using ToSic.Sxc.Cms.Users.Internal;
+using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.Edit.Toolbar.Internal;
 using ToSic.Sys.Utils;
 

@@ -7,7 +7,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.Internal.Work;
+using ToSic.Sxc.Apps.Sys.Work;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context;

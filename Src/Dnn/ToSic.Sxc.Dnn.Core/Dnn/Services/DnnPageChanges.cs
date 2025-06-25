@@ -11,8 +11,8 @@ using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
-using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Sys.ClientAssets;
+using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 using static ToSic.Sxc.Render.Sys.Output.ClientAssetConstants;
 
 namespace ToSic.Sxc.Dnn.Services;

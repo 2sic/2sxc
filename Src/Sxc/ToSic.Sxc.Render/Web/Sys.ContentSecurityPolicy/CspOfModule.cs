@@ -8,7 +8,7 @@ using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
-namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
+namespace ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CspOfModule(IUser user, IFeaturesService featuresService)

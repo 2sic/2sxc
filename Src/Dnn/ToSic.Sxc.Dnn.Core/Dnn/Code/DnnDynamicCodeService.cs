@@ -5,7 +5,7 @@ using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Services.Sys.DynamicCodeService;
 using ToSic.Sxc.Sys.Render.PageContext;
-using ToSic.Sxc.Web.Internal.PageService;
+using ToSic.Sxc.Web.Sys.PageService;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Dnn.Code;

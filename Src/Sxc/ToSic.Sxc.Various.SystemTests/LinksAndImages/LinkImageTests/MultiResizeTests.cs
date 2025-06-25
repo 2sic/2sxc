@@ -1,5 +1,4 @@
 ﻿using ToSic.Sxc.Images;
-using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Images.Sys;
 using static ToSic.Sxc.DataForImageTests.ResizeRecipesData;
 

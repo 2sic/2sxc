@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using ToSic.Sxc.Images;
-using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Web.Sys.Url;
 
 namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow;

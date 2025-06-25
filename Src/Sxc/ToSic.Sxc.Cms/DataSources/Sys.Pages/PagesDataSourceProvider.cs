@@ -1,5 +1,5 @@
 ﻿using ToSic.Lib.Services;
-using ToSic.Sxc.Cms.Pages.Internal;
+using ToSic.Sxc.Cms.Pages.Sys;
 
 namespace ToSic.Sxc.DataSources.Internal;
 

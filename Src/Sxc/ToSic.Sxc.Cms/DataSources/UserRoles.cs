@@ -3,7 +3,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Sxc.Cms.Users;
-using ToSic.Sxc.Cms.Users.Internal;
+using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.DataSources.Internal;
 
 // Important Info to people working with this

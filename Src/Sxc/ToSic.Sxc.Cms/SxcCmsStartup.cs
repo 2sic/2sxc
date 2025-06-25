@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Cms.Internal.Publishing;
-using ToSic.Sxc.Cms.Users.Internal;
+using ToSic.Sxc.Cms.Publishing.Sys;
+using ToSic.Sxc.Cms.Sites.Sys;
+using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.DataSources.Internal;
 
 namespace ToSic.Sxc;

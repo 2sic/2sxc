@@ -1,7 +1,6 @@
 ﻿using ToSic.Lib.Services;
-using ToSic.Sxc.Services.Internal;
 
-namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
+namespace ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 
 /// <summary>
 /// Very experimental, do not use

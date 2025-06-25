@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.DataSources.Internal;
-using ToSic.Sxc.Cms.Users.Internal;
+using ToSic.Sxc.Cms.Sites.Sys;
+using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Oqt.Server.ToSic.Sxc.DataSources;
 

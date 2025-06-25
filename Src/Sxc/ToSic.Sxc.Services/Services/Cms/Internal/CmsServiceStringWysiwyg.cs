@@ -4,7 +4,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.Render.PageFeatures;
-using ToSic.Sxc.Web.Internal.HtmlParsing;
+using ToSic.Sxc.Web.Sys.HtmlParsing;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.CmsService.Internal;

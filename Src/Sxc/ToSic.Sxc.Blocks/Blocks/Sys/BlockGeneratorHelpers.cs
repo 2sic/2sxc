@@ -4,7 +4,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.Sys;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Apps.Internal.Work;
+using ToSic.Sxc.Apps.Sys.Work;
 using ToSic.Sxc.Blocks.Sys.Work;
 using ToSic.Sxc.DataSources.Sys;
 using ToSic.Sxc.LookUp.Sys;

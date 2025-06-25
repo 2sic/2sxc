@@ -6,7 +6,7 @@ using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
 
-namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
+namespace ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 
 /// <summary>
 /// This object reads the CSP settings of an app and passes it to the <see cref="CspOfModule"/>.

@@ -1,5 +1,5 @@
 ﻿using ToSic.Lib.Services;
-using ToSic.Sxc.Cms.Pages.Internal;
+using ToSic.Sxc.Cms.Pages.Sys;
 
 #pragma warning disable CS9113 // Parameter is unread.
 

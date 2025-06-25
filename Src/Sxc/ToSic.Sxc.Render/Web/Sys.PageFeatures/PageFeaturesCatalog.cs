@@ -2,7 +2,7 @@
 using ToSic.Sys.Startup;
 using static ToSic.Sxc.Sys.Render.PageFeatures.SxcPageFeatures;
 
-namespace ToSic.Sxc.Web.Internal.PageFeatures;
+namespace ToSic.Sxc.Web.Sys.PageFeatures;
 
 /// <summary>
 /// Important: This is a singleton!

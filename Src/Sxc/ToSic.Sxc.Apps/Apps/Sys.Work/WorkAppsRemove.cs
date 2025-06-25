@@ -2,7 +2,7 @@
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.ImportExport.Sys.Zip;
 
-namespace ToSic.Sxc.Apps.Internal.Work;
+namespace ToSic.Sxc.Apps.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkAppsRemove(

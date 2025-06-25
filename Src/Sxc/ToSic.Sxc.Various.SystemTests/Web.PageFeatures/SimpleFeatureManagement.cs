@@ -1,5 +1,5 @@
 ﻿using ToSic.Sxc.Sys.Render.PageFeatures;
-using ToSic.Sxc.Web.Internal.PageFeatures;
+using ToSic.Sxc.Web.Sys.PageFeatures;
 
 namespace ToSic.Sxc.Web.PageFeatures;
 

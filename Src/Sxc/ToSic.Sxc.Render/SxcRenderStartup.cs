@@ -6,9 +6,10 @@ using ToSic.Sxc.Render.Sys.RenderBlock;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
-using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
-using ToSic.Sxc.Web.Internal.PageFeatures;
-using ToSic.Sxc.Web.Internal.PageService;
+using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
+using ToSic.Sxc.Web.Sys.PageFeatures;
+using ToSic.Sxc.Web.Sys.PageService;
+using ToSic.Sxc.Web.Sys.PageServiceShared;
 
 namespace ToSic.Sxc;
 

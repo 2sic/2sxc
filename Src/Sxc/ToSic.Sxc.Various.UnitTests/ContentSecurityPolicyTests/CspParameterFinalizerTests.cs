@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
+﻿using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 
 namespace ToSic.Sxc.Tests.ContentSecurityPolicyTests;
 

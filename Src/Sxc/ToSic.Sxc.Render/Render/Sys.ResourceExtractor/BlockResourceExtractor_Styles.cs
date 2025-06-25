@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using ToSic.Sxc.Render.Sys.Output;
-using ToSic.Sxc.Web.Internal.HtmlParsing;
+using ToSic.Sxc.Web.Sys.HtmlParsing;
 
 namespace ToSic.Sxc.Render.Sys.ResourceExtractor;
 

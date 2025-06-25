@@ -5,7 +5,7 @@ using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Services;
 using ToSic.Sxc.Cms.Users;
-using ToSic.Sxc.Cms.Users.Internal;
+using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sys.Users;
 
 // Important Info to people working with this

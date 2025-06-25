@@ -7,7 +7,6 @@ using ToSic.Lib.DI;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Images;
-using ToSic.Sxc.Images.Internal;
 using ToSic.Sys.Boot;
 using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Configuration;

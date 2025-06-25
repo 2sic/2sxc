@@ -1,8 +1,7 @@
-﻿using ToSic.Sxc.Services.Internal;
-using ToSic.Sxc.Sys.Render.PageContext;
-using ToSic.Sxc.Web.PageServiceShared.Internal;
+﻿using ToSic.Sxc.Sys.Render.PageContext;
+using ToSic.Sxc.Web.Sys.PageServiceShared;
 
-namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
+namespace ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 
 /// <summary>
 /// Transient CSP Service.

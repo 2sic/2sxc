@@ -9,10 +9,11 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.Metadata.Sys;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Blocks.Sys.Views;
 
 // note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
-namespace ToSic.Sxc.Apps.Internal.Work;
+namespace ToSic.Sxc.Apps.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkViews(

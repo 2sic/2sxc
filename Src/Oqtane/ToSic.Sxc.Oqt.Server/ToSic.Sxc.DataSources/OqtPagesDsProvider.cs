@@ -4,7 +4,7 @@ using Oqtane.Security;
 using Oqtane.Shared;
 using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Cms.Pages.Internal;
+using ToSic.Sxc.Cms.Pages.Sys;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Sys.Integration.Paths;
 using ToSic.Sxc.Web.Sys.Url;

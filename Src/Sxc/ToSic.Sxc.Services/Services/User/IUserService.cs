@@ -1,6 +1,7 @@
 ﻿using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Sys.ExecutionContext;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Services;
 
 /// <summary>

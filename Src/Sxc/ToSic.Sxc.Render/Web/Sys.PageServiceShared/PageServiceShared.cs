@@ -1,10 +1,9 @@
 ﻿using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
-using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
-using ToSic.Sxc.Web.PageServiceShared.Internal;
+using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
-namespace ToSic.Sxc.Web.Internal.PageService;
+namespace ToSic.Sxc.Web.Sys.PageServiceShared;
 
 /// <summary>
 /// This controller should collect what all the <see cref="ToSic.Sxc.Services.IPageService"/> objects do, for use on the final page

@@ -7,7 +7,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Internal.Environment;
 using ToSic.Sxc.Apps.Internal.Assets;
 
-namespace ToSic.Sxc.Apps.Internal.Work;
+namespace ToSic.Sxc.Apps.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkApps(IAppStateCacheService appStates, IAppReaderFactory appReaders, Generator<IAppPathsMicroSvc> appPathsGen, LazySvc<GlobalPaths> globalPaths, IAppsCatalog appsCatalog)

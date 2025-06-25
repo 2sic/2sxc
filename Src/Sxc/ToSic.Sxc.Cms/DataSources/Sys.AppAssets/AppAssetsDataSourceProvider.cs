@@ -5,7 +5,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Cms.Assets.Internal;
+using ToSic.Sxc.Cms.Assets.Sys;
 
 namespace ToSic.Sxc.DataSources.Internal;
 

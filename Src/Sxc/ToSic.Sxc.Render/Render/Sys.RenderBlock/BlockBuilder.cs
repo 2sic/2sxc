@@ -4,7 +4,7 @@ using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.Integration.Installation;
-using ToSic.Sxc.Web.Internal.PageService;
+using ToSic.Sxc.Web.Sys.PageService;
 using ToSic.Sys.Capabilities.Licenses;
 using ToSic.Sys.Code.InfoSystem;
 

@@ -2,7 +2,7 @@
 using ToSic.Lib.Services;
 using ToSic.Sys.Users;
 
-namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
+namespace ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 
 /// <summary>
 /// Helper class to read the dynamic settings for the current site or global to be used in CSP

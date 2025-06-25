@@ -3,7 +3,6 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeApiService;
@@ -11,7 +10,7 @@ using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
+using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 using ToSic.Sys.Caching.PiggyBack;
 using IApp = ToSic.Sxc.Apps.IApp;
 // ReSharper disable InheritdocInvalidUsage

@@ -1,7 +1,7 @@
 ﻿using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 
-namespace ToSic.Sxc.Web.Internal.PageFeatures;
+namespace ToSic.Sxc.Web.Sys.PageFeatures;
 
 [PrivateApi("Internal stuff, hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
