@@ -3,7 +3,6 @@ using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using ToSic.Eav.Environment.Sys.Permissions;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Context.Sys.Module;
 
