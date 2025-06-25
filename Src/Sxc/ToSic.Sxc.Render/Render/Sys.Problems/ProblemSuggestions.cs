@@ -28,8 +28,8 @@ internal class ProblemSuggestions
                 .ToList();
 
             foreach (var ex in unique)
-                if ((ex as IExceptionWithHelp)?.Helps is List<CodeHelp> helps)
-                    helps.ForEach(h => suggestions.Add(new()
+                if ((ex as IExceptionWithHelp)?.Helps is IEnumerable<CodeHelp> helps)
+                    suggestions.AddRange(helps.Select(h => new ProblemReport
                     {
                         Link = h.Link.NullIfNoValue(),
                         Message = h.DetailsHtml ?? h.UiMessage,

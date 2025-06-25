@@ -26,7 +26,7 @@ public interface IView: IEntityBasedType
     /// </summary>
     /// <remarks>New in 12.02</remarks>
     string Icon { get; }
-        
+
     /// <summary>
     /// Path to the template
     /// </summary>
