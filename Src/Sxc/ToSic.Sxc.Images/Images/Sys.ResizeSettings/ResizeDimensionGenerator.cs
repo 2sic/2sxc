@@ -1,5 +1,5 @@
 ﻿using ToSic.Lib.Services;
-using static ToSic.Sxc.Images.Internal.ImageConstants;
+using static ToSic.Sxc.Images.Sys.ImageConstants;
 using static ToSic.Sxc.Images.RecipeVariant;
 using static ToSic.Sxc.Sys.Plumbing.ParseObject;
 

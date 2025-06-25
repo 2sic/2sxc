@@ -7,8 +7,8 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Internal;
+using ToSic.Sxc.Render.Sys.JsContext;
 using ToSic.Sxc.Sys.Integration.Paths;
-using ToSic.Sxc.Web.Internal.JsContext;
 using ToSic.Sxc.Web.Sys.Html;
 using static ToSic.Sxc.Blocks.BlockBuildingConstants;
 

@@ -2,7 +2,7 @@
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Lib.DI;
 
-namespace ToSic.Sxc.Web.Internal.JsContext;
+namespace ToSic.Sxc.Render.Sys.JsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class JsContextLanguage(LazySvc<IZoneMapper> zoneMapperLazy)

@@ -3,9 +3,9 @@ using Oqtane.Shared;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Render.Sys;
+using ToSic.Sxc.Render.Sys.JsContext;
 using ToSic.Sxc.Render.Sys.Output;
 using ToSic.Sxc.Sys.Render.PageFeatures;
-using ToSic.Sxc.Web.Internal.JsContext;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output;

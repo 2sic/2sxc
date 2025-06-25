@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Web.Internal.JsContextEdit;
+﻿namespace ToSic.Sxc.Render.Sys.JsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class EntityDto

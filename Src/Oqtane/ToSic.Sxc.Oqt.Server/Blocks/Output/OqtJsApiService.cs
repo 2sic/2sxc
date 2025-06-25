@@ -6,7 +6,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Web.Internal.JsContext;
+using ToSic.Sxc.Render.Sys.JsContext;
 using ToSic.Sys.Security.Encryption;
 using ToSic.Sys.Utils;
 

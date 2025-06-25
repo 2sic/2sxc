@@ -3,7 +3,7 @@ using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 
-namespace ToSic.Sxc.Images;
+namespace ToSic.Sxc.Images.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal partial class ImageService(ImgResizeLinker imgLinker, IFeaturesService features)

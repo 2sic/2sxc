@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Web.Internal.JsContext;
+﻿namespace ToSic.Sxc.Render.Sys.JsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IJsApiService

@@ -5,6 +5,7 @@ using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Images.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.Render.PageFeatures;

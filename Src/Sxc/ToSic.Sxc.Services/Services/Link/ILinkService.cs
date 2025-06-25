@@ -2,6 +2,7 @@
 
 #pragma warning disable CS0108, CS0114
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Services;
 
 /// <summary>

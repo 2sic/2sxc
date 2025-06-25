@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Images.Internal;
+﻿namespace ToSic.Sxc.Images.Sys;
 
 [PrivateApi("Can and will change any time, don't use outside of 2sxc")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

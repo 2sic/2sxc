@@ -2,7 +2,7 @@
 using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sys.Users;
 
-namespace ToSic.Sxc.Web.Internal.JsContext;
+namespace ToSic.Sxc.Render.Sys.JsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class JsContextUser(IUser user, IEnumerable<IEntity>? dataList)

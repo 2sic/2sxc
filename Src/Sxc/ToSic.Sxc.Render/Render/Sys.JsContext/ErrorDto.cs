@@ -6,7 +6,7 @@ using ToSic.Sys.Code.InfoSystem;
 using static System.Text.Json.Serialization.JsonIgnoreCondition;
 using static ToSic.Sxc.Blocks.Sys.Problems.ProblemReport;
 
-namespace ToSic.Sxc.Web.Internal.JsContextEdit;
+namespace ToSic.Sxc.Render.Sys.JsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ErrorDto

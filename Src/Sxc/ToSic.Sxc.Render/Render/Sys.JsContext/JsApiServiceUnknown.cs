@@ -2,7 +2,7 @@
 
 #pragma warning disable CS9113 // Parameter is unread.
 
-namespace ToSic.Sxc.Web.Internal.JsContext;
+namespace ToSic.Sxc.Render.Sys.JsContext;
 
 internal class JsApiServiceUnknown(WarnUseOfUnknown<JsApiServiceUnknown> _) : ServiceBase($"{LogScopes.NotImplemented}.JsApi"), IJsApiService, IIsUnknown
 {

@@ -1,6 +1,6 @@
 ﻿using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Images;
+namespace ToSic.Sxc.Images.Sys;
 
 partial class ImageService
 {

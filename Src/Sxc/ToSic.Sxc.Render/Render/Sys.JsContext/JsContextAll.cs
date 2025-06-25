@@ -4,14 +4,12 @@ using ToSic.Eav.Data.Sys.Ancestors;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.Render.PageFeatures;
-using ToSic.Sxc.Web.Internal.JsContextEdit;
 using ToSic.Sys.Code.InfoSystem;
 
-namespace ToSic.Sxc.Web.Internal.JsContext;
+namespace ToSic.Sxc.Render.Sys.JsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class JsContextAll(JsContextLanguage jsLangCtxSvc, IJsApiService jsApiService, CodeInfosInScope codeWarnings, IAppJsonConfigurationService appJson, LazySvc<IFeaturesService> featuresSvc)

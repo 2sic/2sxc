@@ -6,7 +6,7 @@ using Oqtane.Repository;
 using System.Text;
 using ToSic.Sxc.Oqt.Server.Blocks.Output;
 using ToSic.Sxc.Oqt.Server.Plumbing;
-using ToSic.Sxc.Web.Internal.JsContext;
+using ToSic.Sxc.Render.Sys.JsContext;
 using ToSic.Sxc.Web.Sys.EditUi;
 using ToSic.Sys.Caching;
 

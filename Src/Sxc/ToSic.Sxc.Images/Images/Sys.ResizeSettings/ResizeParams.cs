@@ -1,7 +1,7 @@
 ﻿using System.Collections.Specialized;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Web.Sys.Url;
-using static ToSic.Sxc.Images.Internal.ImageConstants;
+using static ToSic.Sxc.Images.Sys.ImageConstants;
 using static ToSic.Sxc.Sys.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images;

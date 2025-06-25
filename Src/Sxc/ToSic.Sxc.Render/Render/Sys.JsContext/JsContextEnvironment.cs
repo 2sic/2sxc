@@ -2,7 +2,7 @@
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Web.Sys.Parameters;
 
-namespace ToSic.Sxc.Web.Internal.JsContext;
+namespace ToSic.Sxc.Render.Sys.JsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class JsContextEnvironment(string systemRootUrl, IContextOfBlock ctx)

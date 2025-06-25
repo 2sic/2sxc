@@ -2,7 +2,7 @@
 using ToSic.Lib.Services;
 using ToSic.Sxc.Web.Sys.Http;
 
-namespace ToSic.Sxc.Web.Internal.JsContext;
+namespace ToSic.Sxc.Render.Sys.JsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class JsApiCacheService(IHttp http) : ServiceBase("JsApi", connect: [http])

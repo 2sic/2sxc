@@ -1,8 +1,7 @@
-﻿
-using ToSic.Sys.Utils;
+﻿using ToSic.Sys.Utils;
 using static ToSic.Sxc.Sys.Plumbing.ParseObject;
 
-namespace ToSic.Sxc.Images.Internal;
+namespace ToSic.Sxc.Images.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal static class ResizeSettingsExtensions

@@ -1,5 +1,6 @@
 ﻿using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Link.Sys;
 using static ToSic.Sxc.LinksAndImages.ParametersTestExtensions;
 
 namespace ToSic.Sxc.LinksAndImages.LinkHelperTests;

@@ -2,7 +2,7 @@
 using ToSic.Sys.Utils;
 using static ToSic.Sxc.Sys.Configuration.SxcFeatures;
 
-namespace ToSic.Sxc.Images;
+namespace ToSic.Sxc.Images.Sys;
 
 partial class ImageService
 {

@@ -1,7 +1,8 @@
 ﻿using System.Text.Json.Serialization;
+
 // ReSharper disable UnusedMember.Global
 
-namespace ToSic.Sxc.Web.Internal.JsContextEdit;
+namespace ToSic.Sxc.Render.Sys.JsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class UiDto(bool autoToolbar)

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Internal;
 
 namespace ToSic.Sxc.Tests.Images;

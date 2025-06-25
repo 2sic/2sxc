@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Images;
+using ToSic.Sxc.Images.Sys;
 
 namespace ToSic.Sxc.ServicesTests.ImageServiceTests;
 

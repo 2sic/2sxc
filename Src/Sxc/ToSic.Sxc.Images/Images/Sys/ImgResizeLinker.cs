@@ -8,15 +8,16 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Capabilities.Features;
 using static ToSic.Sxc.Sys.Configuration.SxcFeatures;
-using static ToSic.Sxc.Images.Internal.ImageConstants;
+using static ToSic.Sxc.Images.Sys.ImageConstants;
 using static ToSic.Sxc.Images.Internal.ImageDecorator;
 using static ToSic.Sxc.Images.RecipeVariant;
 
-namespace ToSic.Sxc.Images.Internal;
+namespace ToSic.Sxc.Images.Sys;
 
 [PrivateApi("Internal stuff")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

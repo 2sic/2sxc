@@ -6,7 +6,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Blocks.Output;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Run;
-using ToSic.Sxc.Web.Internal.JsContext;
+using ToSic.Sxc.Render.Sys.JsContext;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;

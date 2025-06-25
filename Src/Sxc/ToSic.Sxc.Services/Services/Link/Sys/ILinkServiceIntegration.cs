@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Services.Internal;
+﻿namespace ToSic.Sxc.Services.Link.Sys;
 
 /// <summary>
 /// Not yet used - idea is to make the LinkService more composition instead of inheritance.

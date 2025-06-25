@@ -1,7 +1,7 @@
 ﻿using DotNetNuke.Common;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Web.Internal.JsContext;
+using ToSic.Sxc.Render.Sys.JsContext;
 
 namespace ToSic.Sxc.Dnn.Web;
 

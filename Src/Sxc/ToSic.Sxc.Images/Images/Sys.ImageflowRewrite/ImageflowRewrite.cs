@@ -1,6 +1,6 @@
 ﻿using System.Collections.Specialized;
 
-namespace ToSic.Sxc.Images.Internal;
+namespace ToSic.Sxc.Images;
 
 // Is executed in dnn imageflow module and oqtane imageflow module to
 // rewrite query string params before imageflow middleware take a care of them.

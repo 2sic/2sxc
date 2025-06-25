@@ -1,10 +1,10 @@
 ﻿using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Images.Internal;
+using ToSic.Sxc.Images.Sys;
 using ToSic.Sxc.Sys.Integration.Paths;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Services.Internal;
+namespace ToSic.Sxc.Services.Link.Sys;
 
 [PrivateApi("for testing / un-implemented use")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

@@ -1,10 +1,9 @@
-﻿
-using ToSic.Sxc.Edit.Toolbar;
+﻿using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sys.Utils;
 using static System.StringComparer;
 
-namespace ToSic.Sxc.Images;
+namespace ToSic.Sxc.Images.Sys;
 
 internal record TweakMedia(
     ImageService ImageSvc,

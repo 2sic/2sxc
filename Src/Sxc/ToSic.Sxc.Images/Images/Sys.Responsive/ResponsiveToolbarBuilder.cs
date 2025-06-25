@@ -3,6 +3,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Adam.Sys.Security;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Edit.Toolbar.Internal;
+using ToSic.Sxc.Images.Sys;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Images.Internal;

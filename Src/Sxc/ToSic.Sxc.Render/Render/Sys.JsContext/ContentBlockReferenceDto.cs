@@ -4,7 +4,7 @@ using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Data.Sys.Decorators;
 
-namespace ToSic.Sxc.Web.Internal.JsContextEdit;
+namespace ToSic.Sxc.Render.Sys.JsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentBlockReferenceDto

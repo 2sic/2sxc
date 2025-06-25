@@ -1,7 +1,7 @@
-﻿using ToSic.Sxc.Services;
-using ToSic.Sxc.Sys.ExecutionContext;
+﻿using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Code.Internal;
+namespace ToSic.Sxc.Sys.ExecutionContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IExecutionContext<out TModel, out TServiceKit>: IExecutionContext, IHasKit<TServiceKit>
