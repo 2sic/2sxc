@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.LookUp;
 
-namespace ToSic.Sxc.LookUp.Internal;
+namespace ToSic.Sxc.LookUp.Sys;
 
 /// <summary>
 /// Resolves / builds the LookUp Engine.

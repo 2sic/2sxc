@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Context.Internal;
+﻿namespace ToSic.Sxc.Context.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

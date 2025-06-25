@@ -8,6 +8,7 @@ using ToSic.Sxc.Render.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Blocks.Internal.Render;

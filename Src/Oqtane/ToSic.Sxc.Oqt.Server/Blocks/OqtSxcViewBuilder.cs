@@ -3,7 +3,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Shared;
@@ -90,8 +90,12 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
             {
                 Html = renderResult.Html,
                 TemplateResources = PageOutput.GetSxcResources(),
-                SxcContextMetaName = PageOutput.AddContextMeta ? PageOutput.ContextMetaName : null,
-                SxcContextMetaContents = PageOutput.AddContextMeta ? PageOutput.ContextMetaContents() : null,
+                SxcContextMetaName = PageOutput.AddContextMeta
+                    ? PageOutput.ContextMetaName
+                    : null,
+                SxcContextMetaContents = PageOutput.AddContextMeta
+                    ? PageOutput.ContextMetaContents()
+                    : null,
                 SxcScripts = PageOutput.Scripts().ToList(),
                 SxcStyles = PageOutput.Styles().ToList(),
                 PageProperties = PageOutput.GetOqtPagePropertyChangesList(renderResult.PageChanges),
@@ -118,7 +122,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     }
 
     // convert System.Collections.Generic.IList<ToSic.Sxc.Web.PageService.HttpHeader> to System.Collections.Generic.IList<ToSic.Sxc.Oqt.Shared.HttpHeader>
-    private static IList<HttpHeader> ConvertHttpHeaders(IList<Web.Internal.PageService.HttpHeader> httpHeaders) 
+    private static IList<HttpHeader> ConvertHttpHeaders(IList<Sys.Render.PageContext.HttpHeader> httpHeaders) 
         => httpHeaders.Select(httpHeader => new HttpHeader(httpHeader.Name, httpHeader.Value)).ToList();
 
     internal Alias Alias;

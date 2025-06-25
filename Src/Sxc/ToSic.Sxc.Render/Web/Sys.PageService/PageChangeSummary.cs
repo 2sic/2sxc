@@ -3,6 +3,8 @@ using ToSic.Lib.DI;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.Render.PageContext;
+using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageFeatures;

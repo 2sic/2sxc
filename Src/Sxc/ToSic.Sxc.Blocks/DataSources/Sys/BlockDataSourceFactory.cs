@@ -5,7 +5,7 @@ using ToSic.Eav.Services;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
 
-namespace ToSic.Sxc.DataSources.Internal;
+namespace ToSic.Sxc.DataSources.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFactory, LazySvc<Query> queryLazy)

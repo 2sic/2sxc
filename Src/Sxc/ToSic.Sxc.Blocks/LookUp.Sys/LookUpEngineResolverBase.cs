@@ -4,9 +4,8 @@ using ToSic.Eav.LookUp.Sys;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Lib.Services;
 using ToSic.Sys.Utils;
-using LookUpConstants = ToSic.Sxc.LookUp.Sys.LookUpConstants;
 
-namespace ToSic.Sxc.LookUp.Internal;
+namespace ToSic.Sxc.LookUp.Sys;
 
 public abstract class LookUpEngineResolverBase(LazySvc<IEnumerable<ILookUp>> builtInSources, string logName, NoParamOrder protect = default, object[]? connect = default)
     : ServiceBase(logName, protect, connect), ILookUpEngineResolver

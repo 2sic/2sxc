@@ -1,14 +1,14 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
-using ToSic.Eav.Context.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.DataSources.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Sys.Http;
 using ToSic.Sys.Users.Permissions;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal partial class SxcCurrentContextService(

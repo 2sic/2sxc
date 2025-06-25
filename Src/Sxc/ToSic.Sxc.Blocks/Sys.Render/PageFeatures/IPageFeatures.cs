@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Web.Internal.PageFeatures;
+﻿namespace ToSic.Sxc.Sys.Render.PageFeatures;
 
 /// <summary>
 /// Part of the <see cref="ToSic.Sxc.Services.IPageService"/> to activate features on the page.

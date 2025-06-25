@@ -2,6 +2,7 @@
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.Render.PageContext;
 
 namespace ToSic.Sxc.Web.Internal.PageService;
 

@@ -7,6 +7,7 @@ using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.Configuration;
+using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Internal.JsContextEdit;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sys.Code.InfoSystem;

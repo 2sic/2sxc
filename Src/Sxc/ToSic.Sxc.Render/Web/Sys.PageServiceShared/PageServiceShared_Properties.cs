@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Web.Internal.PageService;
+﻿using ToSic.Sxc.Sys.Render.PageContext;
+
+namespace ToSic.Sxc.Web.Internal.PageService;
 
 partial class PageServiceShared
 {

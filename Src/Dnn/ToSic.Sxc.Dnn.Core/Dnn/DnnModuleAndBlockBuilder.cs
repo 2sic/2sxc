@@ -3,7 +3,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Context.Sys.Site;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.Context;
 
 namespace ToSic.Sxc.Dnn;

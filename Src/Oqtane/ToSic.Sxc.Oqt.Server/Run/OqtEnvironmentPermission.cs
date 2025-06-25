@@ -5,7 +5,7 @@ using System.Security.Claims;
 using ToSic.Eav.Environment.Sys.Permissions;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sys.Users;
 using static System.StringComparison;

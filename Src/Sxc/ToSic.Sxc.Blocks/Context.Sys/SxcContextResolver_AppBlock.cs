@@ -2,7 +2,7 @@
 using ToSic.Eav.Context;
 using ToSic.Sxc.Sys.Configuration;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys;
 
 partial class SxcCurrentContextService
 {

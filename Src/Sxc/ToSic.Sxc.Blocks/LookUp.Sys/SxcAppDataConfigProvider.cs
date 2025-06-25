@@ -11,12 +11,11 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Web.Sys.Http;
-using LookUpConstants = ToSic.Sxc.LookUp.Sys.LookUpConstants;
 
-namespace ToSic.Sxc.LookUp.Internal;
+namespace ToSic.Sxc.LookUp.Sys;
 
 /// <summary>
 /// Service to find the configuration for the AppData, especially the lookup...

@@ -26,13 +26,13 @@ public class OqtViewResultsDto
     /// <summary>
     /// The Context meta name tag - null if not needed
     /// </summary>
-    public string SxcContextMetaName { get; set; }
+    public string? SxcContextMetaName { get; set; }
         
     /// <summary>
     /// Will return the meta-header which the $2sxc client needs for context, page id, request verification token etc.
     /// </summary>
     /// <returns></returns>
-    public string SxcContextMetaContents { get; set; }
+    public string? SxcContextMetaContents { get; set; }
 
     /// <summary>
     /// The JavaScripts needed by 2sxc (not by the template)

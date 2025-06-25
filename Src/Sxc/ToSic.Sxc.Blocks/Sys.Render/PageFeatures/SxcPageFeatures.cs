@@ -1,7 +1,7 @@
 ﻿using ToSic.Sys.Requirements;
 using static ToSic.Sys.Capabilities.Features.BuiltInFeatures;
 
-namespace ToSic.Sxc.Web.Internal.PageFeatures;
+namespace ToSic.Sxc.Sys.Render.PageFeatures;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class SxcPageFeatures

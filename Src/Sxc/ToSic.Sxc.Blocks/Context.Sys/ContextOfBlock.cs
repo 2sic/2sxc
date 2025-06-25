@@ -1,9 +1,9 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Cms.Internal.Publishing;
-using ToSic.Sxc.Web.Internal.PageService;
+using ToSic.Sxc.Sys.Render.PageContext;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys;
 
 /// <remarks>
 /// Important: this is the third inheritance, so it cannot create

@@ -2,7 +2,7 @@
 using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web.Internal.PageFeatures;
+using ToSic.Sxc.Sys.Render.PageFeatures;
 using static ToSic.Sxc.Edit.Toolbar.ItemToolbarBase;
 using Attribute = ToSic.Razor.Markup.Attribute;
 

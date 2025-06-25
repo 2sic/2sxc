@@ -1,6 +1,7 @@
 ﻿using DotNetNuke.Web.Client;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.PageService;
 

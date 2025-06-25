@@ -1,7 +1,7 @@
 ﻿using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys;
 
 /// <summary>
 /// This provides other systems with a context

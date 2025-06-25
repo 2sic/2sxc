@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Web.Internal.PageFeatures;
+﻿using ToSic.Sxc.Sys.Render.PageFeatures;
+
+namespace ToSic.Sxc.Web.Internal.PageFeatures;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IPageFeaturesManager

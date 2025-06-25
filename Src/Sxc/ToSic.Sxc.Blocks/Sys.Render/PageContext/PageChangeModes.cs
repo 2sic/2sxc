@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Web.Internal.PageService;
+﻿namespace ToSic.Sxc.Sys.Render.PageContext;
 
 [PrivateApi("not final yet, probably will not be implemented like this")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

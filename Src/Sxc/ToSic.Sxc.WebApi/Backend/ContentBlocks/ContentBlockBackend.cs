@@ -5,6 +5,8 @@ using ToSic.Sxc.Backend.InPage;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Cms.Internal.Publishing;
+using ToSic.Sxc.Context.Sys;
+using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Security.Permissions;

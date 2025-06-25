@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Web.Internal.PageFeatures;
+﻿using ToSic.Sxc.Sys.Render.PageFeatures;
+using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Web.PageFeatures;
 

@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps.Internal;
 using ToSic.Sxc.Blocks.Internal;
 
-namespace ToSic.Sxc.LookUp.Internal;
+namespace ToSic.Sxc.LookUp.Sys;
 
 public class SxcAppDataConfigSpecs: AppDataConfigSpecs
 {

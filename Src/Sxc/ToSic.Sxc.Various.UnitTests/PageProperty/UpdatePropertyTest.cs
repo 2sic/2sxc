@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Web.Internal.PageService;
+﻿using ToSic.Sxc.Sys.Render.PageContext;
+using ToSic.Sxc.Web.Internal.PageService;
 
 namespace ToSic.Sxc.PageProperty;
 

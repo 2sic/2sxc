@@ -1,4 +1,5 @@
 ﻿using ToSic.Lib.Services;
+using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.PageService;
 #pragma warning disable CS9113 // Parameter is unread.

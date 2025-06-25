@@ -1,4 +1,6 @@
 ﻿using ToSic.Sxc.Services.OutputCache;
+using ToSic.Sxc.Sys.Render.PageContext;
+using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageFeatures;

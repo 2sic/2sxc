@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Blocks.Internal.Render;
-using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.Web.Internal.PageFeatures;
+using ToSic.Sxc.Context.Sys;
+using ToSic.Sxc.Sys.Render.PageFeatures;
 
 namespace ToSic.Sxc.Blocks.Internal;
 internal class BlockInfoHelpers

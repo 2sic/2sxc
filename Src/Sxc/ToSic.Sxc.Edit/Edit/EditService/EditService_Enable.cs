@@ -1,5 +1,5 @@
 ﻿using ToSic.Sxc.Services;
-using ToSic.Sxc.Web.Internal.PageFeatures;
+using ToSic.Sxc.Sys.Render.PageFeatures;
 
 namespace ToSic.Sxc.Edit.EditService;
 

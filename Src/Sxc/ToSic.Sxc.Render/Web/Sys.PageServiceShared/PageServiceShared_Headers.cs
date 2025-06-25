@@ -1,4 +1,5 @@
 ﻿using ToSic.Razor.Blade;
+using ToSic.Sxc.Sys.Render.PageContext;
 
 namespace ToSic.Sxc.Web.Internal.PageService;
 

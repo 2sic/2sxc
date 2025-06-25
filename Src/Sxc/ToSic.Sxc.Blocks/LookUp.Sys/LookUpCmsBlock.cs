@@ -2,7 +2,7 @@
 using ToSic.Eav.LookUp.Sources;
 using ToSic.Sxc.Blocks.Internal;
 
-namespace ToSic.Sxc.LookUp;
+namespace ToSic.Sxc.LookUp.Sys;
 
 /// <inheritdoc />
 /// <summary>

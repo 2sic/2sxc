@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Sys;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Web.Sys.Parameters;
 
 namespace ToSic.Sxc.Web.Internal.JsContext;

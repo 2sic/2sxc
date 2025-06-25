@@ -1,6 +1,6 @@
 ﻿using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Web.Internal.PageService;
+namespace ToSic.Sxc.Sys.Render.PageContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class Helpers

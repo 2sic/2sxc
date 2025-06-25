@@ -2,17 +2,13 @@
 using ToSic.Eav.Context;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Cms.Internal.Publishing;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Cms;
 
 internal class OqtPagePublishing() : ServiceBase($"{OqtConstants.OqtLogPrefix}.Publsh"), IPagePublishing
 {
-    #region Constructor / DI
-
-    #endregion
-
     public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
     {
         var containerId = (context as IContextOfBlock)?.Module.Id ?? Eav.Sys.EavConstants.IdNotInitialized;

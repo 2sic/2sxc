@@ -1,6 +1,6 @@
 ﻿using ToSic.Razor.Blade;
 
-namespace ToSic.Sxc.Web.Internal.PageService;
+namespace ToSic.Sxc.Sys.Render.PageContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public struct HeadChange

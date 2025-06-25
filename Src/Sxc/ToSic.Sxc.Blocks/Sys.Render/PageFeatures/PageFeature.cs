@@ -1,6 +1,6 @@
 ﻿using ToSic.Sys.Requirements;
 
-namespace ToSic.Sxc.Web.Internal.PageFeatures;
+namespace ToSic.Sxc.Sys.Render.PageFeatures;
 
 /// <summary>
 /// A feature describes something that can be enabled on a page. It can be a script, some css, an inline JS or combinations thereof.

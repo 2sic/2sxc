@@ -3,7 +3,7 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Web.Sys.Http;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys;
 
 /// <summary>
 /// This helps API calls to get the app which is currently needed

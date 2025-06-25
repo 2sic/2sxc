@@ -1,8 +1,9 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 
-namespace ToSic.Eav.Context.Internal;
+namespace ToSic.Sxc.Context.Sys;
 
 /// <summary>
 /// Base class for Context Resolver.

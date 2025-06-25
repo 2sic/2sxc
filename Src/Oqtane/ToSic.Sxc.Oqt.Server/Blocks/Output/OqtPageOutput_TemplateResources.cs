@@ -1,7 +1,7 @@
 ﻿using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
+using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Internal.ClientAssets;
-using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output;
 

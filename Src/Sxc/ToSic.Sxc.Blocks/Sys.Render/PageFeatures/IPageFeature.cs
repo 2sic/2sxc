@@ -1,7 +1,7 @@
 ﻿using ToSic.Lib.Data;
 using ToSic.Sys.Requirements;
 
-namespace ToSic.Sxc.Web.Internal.PageFeatures;
+namespace ToSic.Sxc.Sys.Render.PageFeatures;
 
 [PrivateApi("Internal / not final - neither name, namespace or anything")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

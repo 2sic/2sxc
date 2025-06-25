@@ -1,9 +1,9 @@
 ﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Internal.ClientAssets;
-using ToSic.Sxc.Web.Internal.PageFeatures;
 
-namespace ToSic.Sxc.Web.Internal.PageService;
+namespace ToSic.Sxc.Sys.Render.PageContext;
 
 public interface IPageServiceShared: IChangeQueue
 {

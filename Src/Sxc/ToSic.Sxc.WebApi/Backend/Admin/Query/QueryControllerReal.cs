@@ -4,7 +4,8 @@ using ToSic.Eav.WebApi.Sys;
 using ToSic.Eav.WebApi.Sys.Admin.Query;
 using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Apps.Sys;
-using ToSic.Sxc.LookUp.Internal;
+using ToSic.Sxc.Context.Sys;
+using ToSic.Sxc.LookUp.Sys;
 
 namespace ToSic.Sxc.Backend.Admin.Query;
 
