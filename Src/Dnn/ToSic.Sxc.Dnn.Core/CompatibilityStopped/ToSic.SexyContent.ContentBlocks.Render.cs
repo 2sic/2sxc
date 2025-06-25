@@ -5,6 +5,7 @@ namespace ToSic.SexyContent.ContentBlocks;
 
 /// <summary>
 /// Deprecated since v13, announced for removal in v15, removed in v20.
+/// Remove this entire class (which currently just shows warnings) EOY 2025.
 /// </summary>
 [Obsolete]
 [ShowApiWhenReleased(ShowApiMode.Never)]

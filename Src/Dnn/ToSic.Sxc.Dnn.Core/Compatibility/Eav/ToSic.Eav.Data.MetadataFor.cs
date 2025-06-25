@@ -5,8 +5,7 @@
 
 using ToSic.Eav.Metadata.Targets;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Eav.Data;
 
-public class MetadataFor: Target
-{
-}
+public class MetadataFor: Target;

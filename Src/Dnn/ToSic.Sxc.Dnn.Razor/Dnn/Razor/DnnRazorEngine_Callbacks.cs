@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Engines;
+﻿using ToSic.Sxc.Engines;
 using ToSic.Sxc.Render.Sys.Specs;
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -9,15 +7,16 @@ namespace ToSic.Sxc.Dnn.Razor;
 
 partial class DnnRazorEngine
 {
-    /// <inheritdoc />
-    public void Init(IBlock block, Purpose purpose)
-    {
-        // #RemovedV20 #ModulePublish
-        var l = Log.Fn($"{nameof(purpose)}:{purpose}");
-        //Purpose = purpose;
-        Init(block);
-        l.Done();
-    }
+    // #RemovedV20 #ModulePublish
+    ///// <inheritdoc />
+    //public void Init(IBlock block, Purpose purpose)
+    //{
+    //    // #RemovedV20 #ModulePublish
+    //    var l = Log.Fn($"{nameof(purpose)}:{purpose}");
+    //    //Purpose = purpose;
+    //    Init(block);
+    //    l.Done();
+    //}
 
     public override RenderEngineResult Render(RenderSpecs specs)
     {

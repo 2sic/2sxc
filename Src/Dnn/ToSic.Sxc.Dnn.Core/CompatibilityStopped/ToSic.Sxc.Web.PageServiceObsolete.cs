@@ -9,10 +9,22 @@ namespace ToSic.Sxc.Web;
 /// This is the obsolete version of the PageService, which is needed to keep old Apps working which used this.
 /// The apps will get it using `var page = GetService{ToSic.Sxc.Web.IPageService}()` or similar.
 /// </summary>
-/// <param name="pageServiceImplementation"></param>
 [Obsolete]
-internal class WebPageServiceObsolete(Services.IPageService pageServiceImplementation) : IPageService, INeedsExecutionContext
+internal class WebPageServiceObsolete : IPageService, INeedsExecutionContext
 {
+    private readonly Services.IPageService _pageServiceImplementation;
+
+    /// <summary>
+    /// This is the obsolete version of the PageService, which is needed to keep old Apps working which used this.
+    /// The apps will get it using `var page = GetService{ToSic.Sxc.Web.IPageService}()` or similar.
+    /// </summary>
+    /// <param name="pageServiceImplementation"></param>
+    public WebPageServiceObsolete(Services.IPageService pageServiceImplementation)
+    {
+        throw new("The interface ToSic.Sxc.Web.IPageService has been replaced with ToSic.Sxc.Services.IPageService. Deprecated since v12, removed in v20.");
+        _pageServiceImplementation = pageServiceImplementation;
+    }
+
     /// <summary>
     /// Forward execution context to the actual implementation.
     /// 
@@ -21,80 +33,80 @@ internal class WebPageServiceObsolete(Services.IPageService pageServiceImplement
     /// <param name="exCtx"></param>
     public void ConnectToRoot(IExecutionContext exCtx)
     {
-        (pageServiceImplementation as INeedsExecutionContext)?.ConnectToRoot(exCtx);
+        (_pageServiceImplementation as INeedsExecutionContext)?.ConnectToRoot(exCtx);
     }
 
     public string SetBase(string url = null)
     {
-        return pageServiceImplementation.SetBase(url);
+        return _pageServiceImplementation.SetBase(url);
     }
 
     public string SetTitle(string value, string placeholder = null)
     {
-        return pageServiceImplementation.SetTitle(value, placeholder);
+        return _pageServiceImplementation.SetTitle(value, placeholder);
     }
 
     public string SetDescription(string value, string placeholder = null)
     {
-        return pageServiceImplementation.SetDescription(value, placeholder);
+        return _pageServiceImplementation.SetDescription(value, placeholder);
     }
 
     public string SetKeywords(string value, string placeholder = null)
     {
-        return pageServiceImplementation.SetKeywords(value, placeholder);
+        return _pageServiceImplementation.SetKeywords(value, placeholder);
     }
 
     public string SetHttpStatus(int statusCode, string message = null)
     {
-        return pageServiceImplementation.SetHttpStatus(statusCode, message);
+        return _pageServiceImplementation.SetHttpStatus(statusCode, message);
     }
 
     public string AddToHead(string tag)
     {
-        return pageServiceImplementation.AddToHead(tag);
+        return _pageServiceImplementation.AddToHead(tag);
     }
 
     public string AddToHead(IHtmlTag tag)
     {
-        return pageServiceImplementation.AddToHead(tag);
+        return _pageServiceImplementation.AddToHead(tag);
     }
 
     public string AddMeta(string name, string content)
     {
-        return pageServiceImplementation.AddMeta(name, content);
+        return _pageServiceImplementation.AddMeta(name, content);
     }
 
     public string AddOpenGraph(string property, string content)
     {
-        return pageServiceImplementation.AddOpenGraph(property, content);
+        return _pageServiceImplementation.AddOpenGraph(property, content);
     }
 
     public string AddJsonLd(string jsonString)
     {
-        return pageServiceImplementation.AddJsonLd(jsonString);
+        return _pageServiceImplementation.AddJsonLd(jsonString);
     }
 
     public string AddJsonLd(object jsonObject)
     {
-        return pageServiceImplementation.AddJsonLd(jsonObject);
+        return _pageServiceImplementation.AddJsonLd(jsonObject);
     }
 
     public string AddIcon(string path, NoParamOrder noParamOrder = default, string rel = "", int size = 0,
         string type = null)
     {
-        return pageServiceImplementation.AddIcon(path, noParamOrder, rel, size, type);
+        return _pageServiceImplementation.AddIcon(path, noParamOrder, rel, size, type);
     }
 
     public string AddIconSet(string path, NoParamOrder noParamOrder = default, object favicon = null,
         IEnumerable<string> rels = null,
         IEnumerable<int> sizes = null)
     {
-        return pageServiceImplementation.AddIconSet(path, noParamOrder, favicon, rels, sizes);
+        return _pageServiceImplementation.AddIconSet(path, noParamOrder, favicon, rels, sizes);
     }
 
     public string Activate(params string[] keys)
     {
-        return pageServiceImplementation.Activate(keys);
+        return _pageServiceImplementation.Activate(keys);
     }
 
 }
