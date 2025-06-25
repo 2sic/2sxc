@@ -3,9 +3,12 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sxc.Cms.Sites.Sys;
 using ToSic.Sxc.Cms.Users.Sys;
-using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.DataSources;
+using ToSic.Sxc.DataSources.Sys.AppAssets;
+using ToSic.Sxc.DataSources.Sys.Pages;
 
-namespace ToSic.Sxc;
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Startup;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class SxcCmsStartup

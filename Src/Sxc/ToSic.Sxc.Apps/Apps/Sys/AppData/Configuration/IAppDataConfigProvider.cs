@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Apps.Sys;
-
-namespace ToSic.Eav.Apps.Internal;
+﻿namespace ToSic.Sxc.Apps.Sys;
 
 /// <summary>
 /// System which provides AppDataConfiguration, so that the client can know if it should show drafts etc.

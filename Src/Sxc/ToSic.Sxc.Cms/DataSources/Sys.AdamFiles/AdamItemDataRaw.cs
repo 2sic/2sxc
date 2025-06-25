@@ -2,7 +2,7 @@
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Raw.Sys;
 
-namespace ToSic.Sxc.DataSources.Internal;
+namespace ToSic.Sxc.DataSources;
 
 [PrivateApi("Was InternalApi till v17 - hide till we know how to handle to-typed-conversions")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

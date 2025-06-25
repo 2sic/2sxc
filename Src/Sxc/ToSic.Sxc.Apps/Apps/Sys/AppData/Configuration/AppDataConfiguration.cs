@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.LookUp.Sys.Engines;
 
-namespace ToSic.Eav.Apps.Internal;
+namespace ToSic.Sxc.Apps.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppDataConfiguration(ILookUpEngine configuration, bool? showDrafts = null) : IAppDataConfiguration

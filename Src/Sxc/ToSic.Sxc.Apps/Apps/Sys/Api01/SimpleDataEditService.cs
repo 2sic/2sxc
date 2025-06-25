@@ -16,7 +16,7 @@ using static System.StringComparer;
 // like code to build attributes, or convert id-relationships to guids
 // this should be in the AttributeBuilder or similar
 
-namespace ToSic.Eav.Apps.Internal.Api01;
+namespace ToSic.Sxc.Apps.Sys.Api01;
 
 /// <summary>
 /// This is a simple controller with some Create, Update and Delete commands.

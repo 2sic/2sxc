@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Cms.Users.Sys;
 
-namespace ToSic.Sxc.DataSources.Internal;
+namespace ToSic.Sxc.DataSources;
 
 /// <summary>
 /// Base class to provide data to the RolesDataSourceProvider.

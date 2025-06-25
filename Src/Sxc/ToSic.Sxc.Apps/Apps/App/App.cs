@@ -1,8 +1,8 @@
 ﻿using ToSic.Eav.Apps.Sys.Paths;
-using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps.Internal.Assets;
 using ToSic.Sxc.Apps.Sys;
+using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Data.Sys.Factory;
 using CodeInfoService = ToSic.Sys.Code.InfoSystem.CodeInfoService;
 

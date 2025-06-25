@@ -1,4 +1,4 @@
-﻿namespace ToSic.Eav.Internal.Environment;
+﻿namespace ToSic.Sxc.Apps.Sys.Paths;
 
 [PrivateApi]
 public enum PathTypes

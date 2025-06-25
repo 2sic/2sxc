@@ -3,7 +3,7 @@ using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Eav.Sys;
 using ToSic.Sys.Configuration;
 
-namespace ToSic.Sxc.Apps.Internal;
+namespace ToSic.Sxc.Apps.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppFolderInitializer(IServerPaths serverPaths, IGlobalConfiguration globalConfiguration, ISite site)

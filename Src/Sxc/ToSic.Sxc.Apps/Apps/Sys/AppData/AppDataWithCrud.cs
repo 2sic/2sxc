@@ -1,10 +1,10 @@
-﻿using ToSic.Eav.Apps.Internal.Api01;
-using ToSic.Eav.Data.Sys;
+﻿using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource.Internal.Caching;
 using ToSic.Eav.Metadata;
+using ToSic.Sxc.Apps.Sys.Api01;
 
-namespace ToSic.Eav.DataSources.Internal;
+namespace ToSic.Sxc.Apps.Sys;
 
 /// <summary>
 /// The Data object on an App. It's also a data-source of type <see cref="Eav.DataSources.App"/>,

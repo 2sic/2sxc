@@ -6,7 +6,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.DataSources.Internal;
+namespace ToSic.Sxc.DataSources;
 
 /// <summary>
 /// Base class to provide data to the Adam DataSource.

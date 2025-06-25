@@ -1,4 +1,4 @@
-﻿namespace ToSic.Eav.Apps.Internal;
+﻿namespace ToSic.Sxc.Apps.Sys;
 
 public class AppDataConfigSpecs
 {

@@ -1,6 +1,6 @@
 ﻿using static ToSic.Eav.Apps.Sys.Api01.SaveApiAttributes;
 
-namespace ToSic.Eav.Apps.Internal.Api01;
+namespace ToSic.Sxc.Apps.Sys.Api01;
 
 partial class SimpleDataEditService
 {

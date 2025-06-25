@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.LookUp.Sys.Engines;
 
-namespace ToSic.Eav.Apps.Internal;
+namespace ToSic.Sxc.Apps.Sys;
 
 /// <summary>
 /// The configuration of an app-data - usually relevant so the source will auto-filter out unpublished data for normal viewers.

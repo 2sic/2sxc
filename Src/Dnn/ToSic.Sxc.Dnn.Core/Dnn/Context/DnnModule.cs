@@ -2,9 +2,9 @@
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
-using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys.Module;
 using ISite = ToSic.Eav.Context.ISite;
@@ -72,8 +72,8 @@ public class DnnModule: Module<ModuleInfo>
     {
         get
         {
-            if (_blockIdentifier != null)
-                return _blockIdentifier;
+            if (field != null)
+                return field;
             if (UnwrappedModule == null)
                 return null;
 
@@ -93,10 +93,9 @@ public class DnnModule: Module<ModuleInfo>
                 : new();
 
             // Create identifier
-            return _blockIdentifier = new BlockIdentifier(zoneId, appId, appNameId, blockGuid, overrideView);
+            return field = new BlockIdentifier(zoneId, appId, appNameId, blockGuid, overrideView);
         }
     }
-    private IBlockIdentifier _blockIdentifier;
 
     private (int AppId, string AppNameId) GetInstanceAppIdAndName(int zoneId)
     {

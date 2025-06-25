@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Apps.Internal;
 using ToSic.Eav.Context;
 using ToSic.Eav.LookUp.Sys.Engines;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Blocks.Sys.BlockEditor;

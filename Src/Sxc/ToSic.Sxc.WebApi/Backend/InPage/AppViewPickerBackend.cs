@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Apps.Internal.Ui;
-using ToSic.Eav.Apps.Sys.Permissions;
+﻿using ToSic.Eav.Apps.Sys.Permissions;
+using ToSic.Sxc.Apps.Sys.Ui;
 using ToSic.Sxc.Blocks.Sys.BlockEditor;
 using ToSic.Sxc.Blocks.Sys.Work;
 using ToSic.Sys.Security.Permissions;

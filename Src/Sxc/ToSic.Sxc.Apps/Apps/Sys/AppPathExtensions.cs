@@ -1,7 +1,7 @@
-﻿using ToSic.Eav.Internal.Environment;
+﻿using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Blocks.Sys.Views;
 
-namespace ToSic.Sxc.Apps.Internal;
+namespace ToSic.Sxc.Apps.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class AppPathExtensions

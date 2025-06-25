@@ -4,7 +4,6 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.DataSources.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Tests.DataSources;

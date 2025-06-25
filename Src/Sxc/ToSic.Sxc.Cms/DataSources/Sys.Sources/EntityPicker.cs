@@ -14,9 +14,7 @@ using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Users;
 using static ToSic.Eav.DataSource.DataSourceConstants;
 
-
-// ReSharper disable once CheckNamespace
-namespace ToSic.Eav.DataSources;
+namespace ToSic.Sxc.DataSources.Sys.Sources;
 
 /// <inheritdoc />
 /// <summary>

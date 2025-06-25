@@ -1,7 +1,7 @@
 ﻿using ToSic.Lib.Services;
 using ToSic.Sxc.Cms.Pages.Sys;
 
-namespace ToSic.Sxc.DataSources.Internal;
+namespace ToSic.Sxc.DataSources.Sys.Pages;
 
 /// <summary>
 /// Base class to provide data to the Pages DataSource.

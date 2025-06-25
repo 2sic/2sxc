@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Cms.Users.Sys;
 
-namespace ToSic.Sxc.DataSources.Internal;
+namespace ToSic.Sxc.DataSources;
 
 public record UsersGetSpecsParsed(UsersGetSpecs Specs)
 {

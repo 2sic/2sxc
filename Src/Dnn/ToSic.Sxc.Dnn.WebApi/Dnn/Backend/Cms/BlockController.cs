@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Internal.Ui;
+﻿using ToSic.Sxc.Apps.Sys.Ui;
 using ToSic.Sxc.Backend.Cms;
 using ToSic.Sxc.Backend.InPage;
 using RealController = ToSic.Sxc.Backend.Cms.BlockControllerReal;

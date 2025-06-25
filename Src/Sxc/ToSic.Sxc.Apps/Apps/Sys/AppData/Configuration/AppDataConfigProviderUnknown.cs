@@ -1,9 +1,8 @@
 ﻿using ToSic.Eav.LookUp.Sys.Engines;
-using ToSic.Sxc.Apps.Sys;
 
 #pragma warning disable CS9113 // Parameter is unread.
 
-namespace ToSic.Eav.Apps.Internal;
+namespace ToSic.Sxc.Apps.Sys;
 
 internal class AppDataConfigProviderUnknown(WarnUseOfUnknown<AppDataConfigProviderUnknown> _) : IAppDataConfigProvider
 {

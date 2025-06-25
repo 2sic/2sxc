@@ -1,11 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.Apps.Internal.Api01;
-using ToSic.Eav.Internal.Environment;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Sys;
+using ToSic.Sxc.Apps.Sys.Api01;
+using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Apps.Sys.Work;
 
 namespace ToSic.Sxc;

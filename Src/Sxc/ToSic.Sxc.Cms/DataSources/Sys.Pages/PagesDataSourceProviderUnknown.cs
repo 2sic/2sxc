@@ -3,7 +3,7 @@ using ToSic.Sxc.Cms.Pages.Sys;
 
 #pragma warning disable CS9113 // Parameter is unread.
 
-namespace ToSic.Sxc.DataSources.Internal;
+namespace ToSic.Sxc.DataSources.Sys.Pages;
 
 internal class PagesDataSourceProviderUnknown(WarnUseOfUnknown<PagesDataSourceProviderUnknown> _) : PagesDataSourceProvider($"{SxcLogName}.{LogConstants.NameUnknown}")
 {

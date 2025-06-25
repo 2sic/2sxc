@@ -1,7 +1,8 @@
 ﻿using ToSic.Eav.Environment.Sys.ServerPaths;
-using ToSic.Eav.Internal.Environment;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal;
+using ToSic.Sxc.Apps.Sys;
+using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Render.Sys.Output;

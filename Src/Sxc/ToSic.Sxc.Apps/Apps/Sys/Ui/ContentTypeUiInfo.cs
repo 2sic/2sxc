@@ -1,4 +1,4 @@
-﻿namespace ToSic.Eav.Apps.Internal.Ui;
+﻿namespace ToSic.Sxc.Apps.Sys.Ui;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public struct ContentTypeUiInfo

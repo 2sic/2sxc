@@ -1,4 +1,4 @@
-﻿namespace ToSic.Eav.Cms.Internal;
+﻿namespace ToSic.Sxc.Blocks.Sys;
 
 /// <inheritdoc />
 [ShowApiWhenReleased(ShowApiMode.Never)]

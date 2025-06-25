@@ -7,7 +7,7 @@ using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Cms.Assets.Sys;
 
-namespace ToSic.Sxc.DataSources.Internal;
+namespace ToSic.Sxc.DataSources.Sys.AppAssets;
 
 /// <summary>
 /// Base class to provide data to the AppFiles DataSource.

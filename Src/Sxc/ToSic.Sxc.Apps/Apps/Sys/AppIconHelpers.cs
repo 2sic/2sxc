@@ -1,10 +1,10 @@
 ﻿using ToSic.Eav.Data.ValueConverter.Sys;
-using ToSic.Eav.Internal.Environment;
+using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Blocks.Sys.Views;
 using static System.StringComparison;
 using static ToSic.Eav.Apps.Sys.AppConstants;
 
-namespace ToSic.Sxc.Apps.Internal;
+namespace ToSic.Sxc.Apps.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppIconHelpers(LazySvc<IValueConverter> iconConverterLazy)

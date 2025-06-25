@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 
-namespace ToSic.Eav.Cms.Internal;
+namespace ToSic.Sxc.Blocks.Sys;
 
 /// <summary>
 /// Identifies a content-block with all the parameters necessary to find it in the system

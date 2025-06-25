@@ -2,7 +2,7 @@
 using ToSic.Sys.Configuration;
 using static System.IO.Path;
 
-namespace ToSic.Eav.Internal.Environment;
+namespace ToSic.Sxc.Apps.Sys.Paths;
 
 public class GlobalPaths(LazySvc<IServerPaths> serverPaths, LazySvc<IGlobalConfiguration> config)
     : ServiceBase("Viw.Help", connect: [serverPaths, config])

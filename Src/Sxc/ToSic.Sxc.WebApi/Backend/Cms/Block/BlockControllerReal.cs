@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Apps.Internal.Ui;
-using ToSic.Eav.Sys;
+﻿using ToSic.Eav.Sys;
+using ToSic.Sxc.Apps.Sys.Ui;
 using ToSic.Sxc.Backend.ContentBlocks;
 using ToSic.Sxc.Backend.InPage;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
