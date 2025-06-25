@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 #endif
 using System.Collections.Specialized;
 
-namespace ToSic.Sxc.Web.Internal.DotNet;
+namespace ToSic.Sxc.Web.Sys.Http;
 
 /// <summary>
 /// Goal is that anything on this will be able to provide HttpContext operations as needed

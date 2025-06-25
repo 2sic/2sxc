@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Web.Internal.Url;
+namespace ToSic.Sxc.Web.Sys.Url;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ObjectToUrl

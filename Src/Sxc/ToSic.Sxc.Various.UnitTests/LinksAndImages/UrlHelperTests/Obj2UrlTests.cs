@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Web.Internal.Url;
-
-namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests;
+﻿namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests;
 
 
 public class Obj2UrlTests

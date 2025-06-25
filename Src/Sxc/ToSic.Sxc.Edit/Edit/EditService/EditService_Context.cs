@@ -2,7 +2,7 @@
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.Sys.Html;
 
 namespace ToSic.Sxc.Edit.EditService;
 
@@ -36,7 +36,7 @@ partial class EditService
             type = contentType ?? AppConstants.ContentGroupRefTypeName,
         }, JsonOptions.SafeJsonForHtmlAttributes);
 
-        return Build.Attribute(innerContentAttribute, serialized);
+        return HtmlAttribute.Create(innerContentAttribute, serialized);
     }
 
     // 2024-01-10 2dm disabled #WrapInContext - was for internal only, seems not to be used? Was created 2018? https://github.com/2sic/2sxc/issues/1479

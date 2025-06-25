@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Web.Parameters;
+﻿namespace ToSic.Sxc.Web.Sys.Parameters;
 
 /// <summary>
 /// Workaround for deserializing KeyValuePair - it requires lowercase properties (case sensitive), 

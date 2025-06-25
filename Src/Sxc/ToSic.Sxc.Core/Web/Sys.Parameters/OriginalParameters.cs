@@ -2,7 +2,7 @@
 using System.Text.Json;
 using ToSic.Eav.Serialization.Sys.Json;
 
-namespace ToSic.Sxc.Web.Parameters;
+namespace ToSic.Sxc.Web.Sys.Parameters;
 
 internal class OriginalParameters
 {
@@ -16,7 +16,8 @@ internal class OriginalParameters
     /// <returns></returns>
     public static NameValueCollection GetOverrideParams(NameValueCollection requestParams)
     {
-        if (requestParams == null) return [];
+        if (requestParams == null! /* paranoid */)
+            return [];
 
         var paramSet = requestParams[NameInUrlForOriginalParameters];
         return string.IsNullOrEmpty(paramSet)

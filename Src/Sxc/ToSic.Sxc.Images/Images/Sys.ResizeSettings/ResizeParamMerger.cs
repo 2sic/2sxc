@@ -5,7 +5,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils;
 using static ToSic.Sxc.Images.Internal.ImageConstants;
-using static ToSic.Sxc.Internal.Plumbing.ParseObject;
+using static ToSic.Sxc.Sys.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images;
 

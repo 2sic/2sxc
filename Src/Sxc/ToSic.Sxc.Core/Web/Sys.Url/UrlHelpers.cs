@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Web.Internal.Url;
+namespace ToSic.Sxc.Web.Sys.Url;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class UrlHelpers

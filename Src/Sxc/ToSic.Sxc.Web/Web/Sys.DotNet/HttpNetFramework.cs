@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Web;
+using ToSic.Sxc.Web.Sys.Http;
 
 namespace ToSic.Sxc.Web.Internal.DotNet;
 

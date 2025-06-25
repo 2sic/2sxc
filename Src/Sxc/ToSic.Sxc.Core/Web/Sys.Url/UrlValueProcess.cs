@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Serialization.Sys;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Web.Internal.Url;
+namespace ToSic.Sxc.Web.Sys.Url;
 
 /// <summary>
 /// Base class for processing URL Values before keeping / converting to a string-url

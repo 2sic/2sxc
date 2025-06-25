@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace ToSic.Sxc.Internal.Plumbing;
+namespace ToSic.Sxc.Sys.Plumbing;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal static partial class ParseObject

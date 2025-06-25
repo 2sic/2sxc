@@ -5,7 +5,7 @@ using ToSic.Sxc.Data.Sys;
 using ToSic.Sxc.Data.Sys.DynamicStack;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.WebResources;
-using static ToSic.Sxc.Web.WebResources.WebResourceConstants;
+using static ToSic.Sxc.Web.Sys.WebResources.WebResourceConstants;
 
 namespace ToSic.Sxc.Web.Internal.PageService;
 

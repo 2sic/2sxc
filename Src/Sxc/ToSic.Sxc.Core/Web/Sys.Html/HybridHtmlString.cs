@@ -1,13 +1,11 @@
-﻿
-using ToSic.Razor.Markup;
-#if NETFRAMEWORK
+﻿#if NETFRAMEWORK
 using IHtmlString = System.Web.IHtmlString;
 #else
-using IHtmlString = Microsoft.AspNetCore.Html.IHtmlContent;
 using HtmlEncoder = System.Text.Encodings.Web.HtmlEncoder;
 #endif
+using ToSic.Razor.Markup;
 
-namespace ToSic.Sxc.Web.Internal;
+namespace ToSic.Sxc.Web.Sys.Html;
 
 /// <summary>
 /// Cross-platform (.net core and framework) HTML string implementation

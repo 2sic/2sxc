@@ -7,9 +7,9 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Sys.Integration.Paths;
-using ToSic.Sxc.Web.Internal.DotNet;
-using ToSic.Sxc.Web.Internal.Url;
-using ToSic.Sxc.Web.Parameters;
+using ToSic.Sxc.Web.Sys.Http;
+using ToSic.Sxc.Web.Sys.Parameters;
+using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Utils;
 using Page = ToSic.Sxc.Context.Internal.Page;
 

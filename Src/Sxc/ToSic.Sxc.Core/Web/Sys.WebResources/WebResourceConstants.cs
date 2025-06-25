@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Web.WebResources;
+﻿namespace ToSic.Sxc.Web.Sys.WebResources;
 
 internal class WebResourceConstants
 {

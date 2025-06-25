@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.Serialization.Sys.Json;
-using ToSic.Sxc.Web.Internal.Url;
+using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Utils;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarButtonDecorator;
 

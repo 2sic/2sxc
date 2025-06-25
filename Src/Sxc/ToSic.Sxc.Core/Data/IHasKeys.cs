@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Data.Internal;
+﻿namespace ToSic.Sxc.Data;
 
 /// <summary>
 /// Interface for things that can check keys and/or existence of values.

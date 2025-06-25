@@ -5,7 +5,7 @@ using ToSic.Sxc.Edit.Internal;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.Sys.Html;
 
 namespace ToSic.Sxc.Edit.EditService;
 
@@ -30,11 +30,11 @@ internal partial class EditService(IJsonService jsonService)
 
     /// <inheritdoc/>
     public IRawHtmlString? Attribute(string name, string value)
-        => !Enabled ? null : Build.Attribute(name, value);
+        => !Enabled ? null : HtmlAttribute.Create(name, value);
 
     /// <inheritdoc/>
     public IRawHtmlString? Attribute(string name, object value)
-        => !Enabled ? null : Build.Attribute(name, jsonService.ToJson(value));
+        => !Enabled ? null : HtmlAttribute.Create(name, jsonService.ToJson(value));
 
     #endregion Attribute Helper
 

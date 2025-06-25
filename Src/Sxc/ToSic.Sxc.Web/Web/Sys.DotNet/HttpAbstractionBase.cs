@@ -4,6 +4,7 @@ using System.Web;
 using Microsoft.AspNetCore.Http;
 #endif
 using System.Collections.Specialized;
+using ToSic.Sxc.Web.Sys.Http;
 
 
 namespace ToSic.Sxc.Web.Internal.DotNet;

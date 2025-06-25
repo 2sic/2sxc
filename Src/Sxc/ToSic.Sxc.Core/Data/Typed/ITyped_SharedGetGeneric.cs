@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Data.Internal;
-using ToSic.Sys.GetByName;
+﻿using ToSic.Sys.GetByName;
 
 namespace ToSic.Sxc.Data;
 

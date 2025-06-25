@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Internal.Plumbing;
-
-namespace ToSic.Sxc.Tests.PlumbingTests;
+﻿namespace ToSic.Sxc.Tests.PlumbingTests;
 
 
 public class CleanParamTests

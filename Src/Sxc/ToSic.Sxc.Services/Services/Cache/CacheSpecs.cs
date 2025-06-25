@@ -6,7 +6,7 @@ using ToSic.Lib.DI;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
-using ToSic.Sxc.Web.Internal.Url;
+using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Caching.Policies;
 using ToSic.Sys.Utils;
 

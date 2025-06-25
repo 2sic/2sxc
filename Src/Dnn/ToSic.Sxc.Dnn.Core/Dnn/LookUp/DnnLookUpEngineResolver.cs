@@ -5,7 +5,7 @@ using ToSic.Eav.LookUp.Sources;
 using ToSic.Eav.LookUp.Sys;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.LookUp.Internal;
-using ToSic.Sxc.Web.Internal.DotNet;
+using ToSic.Sxc.Web.Sys.Http;
 using static ToSic.Sxc.LookUp.Sys.LookUpConstants;
 
 namespace ToSic.Sxc.Dnn.LookUp;

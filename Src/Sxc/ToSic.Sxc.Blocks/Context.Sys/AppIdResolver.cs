@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Web.Internal.DotNet;
+using ToSic.Sxc.Web.Sys.Http;
 
 namespace ToSic.Sxc.Context.Internal;
 

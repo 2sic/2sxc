@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Web.Internal.Url;
+﻿namespace ToSic.Sxc.Web.Sys.Url;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class NameObjectSet

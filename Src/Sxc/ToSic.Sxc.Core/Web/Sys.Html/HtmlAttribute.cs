@@ -1,10 +1,10 @@
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 
-namespace ToSic.Sxc.Web;
+namespace ToSic.Sxc.Web.Sys.Html;
 
 [PrivateApi("internal use only, may be removed/changed some day")]
-internal class Build
+internal class HtmlAttribute
 {
     /// <summary>
     /// Generate an HTML attribute
@@ -19,6 +19,6 @@ internal class Build
     /// ...because it makes the html hard to work with when debugging
     /// so we just manually replace all apos to make sure it doesn't create invalid html
     /// </remarks>
-    public static IRawHtmlString Attribute(string name, string? value)
+    public static IRawHtmlString Create(string name, string? value)
         => new RawHtmlString($" {Tag.Attr(name, value)} ");
 }

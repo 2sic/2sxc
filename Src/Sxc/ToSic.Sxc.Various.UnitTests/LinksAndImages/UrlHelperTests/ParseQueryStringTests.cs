@@ -1,5 +1,4 @@
 ﻿using System.Collections.Specialized;
-using ToSic.Sxc.Web.Internal.Url;
 using static ToSic.Sxc.Tests.LinksAndImages.ParametersTestExtensions;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests;

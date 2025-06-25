@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel;
 using ToSic.Lib.Memory;
 using ToSic.Sxc.Services.OutputCache;
-using ToSic.Sxc.Web.Internal;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.Internal.PageService;
+using ToSic.Sxc.Web.Sys.Html;
 
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 

@@ -9,7 +9,7 @@ using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Sys.Integration.Paths;
-using ToSic.Sxc.Web.Internal.Url;
+using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Capabilities.Features;
 using static ToSic.Eav.Context.Sys.ZoneCulture.IZoneCultureResolverExtensions;
 using ISite = ToSic.Eav.Context.ISite;

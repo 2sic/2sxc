@@ -1,6 +1,6 @@
 ﻿using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Web.Internal.Url;
+namespace ToSic.Sxc.Web.Sys.Url;
 
 /// <summary>
 /// Helper to process url values - and keep or skip certain properties.

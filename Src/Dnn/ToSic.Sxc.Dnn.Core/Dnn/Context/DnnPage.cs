@@ -2,7 +2,7 @@
 using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.Web.Internal.DotNet;
+using ToSic.Sxc.Web.Sys.Http;
 
 namespace ToSic.Sxc.Dnn.Context;
 

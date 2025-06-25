@@ -1,6 +1,6 @@
 ﻿
 using ToSic.Sys.Utils;
-using static ToSic.Sxc.Internal.Plumbing.ParseObject;
+using static ToSic.Sxc.Sys.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images.Internal;
 

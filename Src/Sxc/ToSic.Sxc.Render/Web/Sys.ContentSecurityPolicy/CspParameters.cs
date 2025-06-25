@@ -1,5 +1,5 @@
 ﻿using System.Collections.Specialized;
-using ToSic.Sxc.Web.Internal.Url;
+using ToSic.Sxc.Web.Sys.Url;
 
 namespace ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 

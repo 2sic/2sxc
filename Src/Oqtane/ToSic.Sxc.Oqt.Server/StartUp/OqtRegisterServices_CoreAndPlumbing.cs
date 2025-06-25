@@ -13,7 +13,7 @@ using ToSic.Sxc.Oqt.Server.Services;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Sys.Integration.Installation;
 using ToSic.Sxc.Sys.Integration.Paths;
-using ToSic.Sxc.Web.Internal.DotNet;
+using ToSic.Sxc.Web.Sys.Http;
 using ToSic.Sys.Capabilities.Platform;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;

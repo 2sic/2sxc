@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 using ToSic.Eav.Serialization.Sys.Json;
-using Build = ToSic.Sxc.Web.Build;
+using ToSic.Sxc.Web.Sys.Html;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
@@ -12,14 +12,14 @@ internal class ItemToolbarV14(IEntity? entity, IToolbarBuilder toolbar)
     protected readonly IToolbarBuilder ToolbarBuilder = toolbar;
 
     protected override string ToolbarAttributes(string tlbAttrName) 
-        => $" {ContextAttribute()} {Build.Attribute(tlbAttrName, ToolbarJson)} ";
+        => $" {ContextAttribute()} {HtmlAttribute.Create(tlbAttrName, ToolbarJson)} ";
 
     protected string? ContextAttribute()
     {
         var ctx = (ToolbarBuilder as IToolbarBuilderInternal)?.GetContext();
         return ctx == null
             ? null
-            : Build.Attribute(ContextAttributeName, JsonSerializer.Serialize(ctx, JsonOptions.SafeJsonForHtmlAttributes)).ToString();
+            : HtmlAttribute.Create(ContextAttributeName, JsonSerializer.Serialize(ctx, JsonOptions.SafeJsonForHtmlAttributes)).ToString();
     }
 
 }

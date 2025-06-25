@@ -2,7 +2,7 @@
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Web.Internal.DotNet;
+using ToSic.Sxc.Web.Sys.Http;
 
 namespace ToSic.Sxc.Polymorphism.Internal;
 

@@ -7,8 +7,8 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Sys.Integration.Paths;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Internal.JsContext;
+using ToSic.Sxc.Web.Sys.Html;
 using static ToSic.Sxc.Blocks.Internal.BlockBuildingConstants;
 
 namespace ToSic.Sxc.Blocks.Internal.Render;
@@ -77,7 +77,7 @@ internal class RenderingHelper(ILinkPaths linkPaths, LazySvc<IEnvironmentLogger>
                 : ctxGen.GetJsApiOnly(Block);
 
             var contextInfos = JsonSerializer.Serialize(context, JsonOptions.SafeJsonForHtmlAttributes);
-            contextAttribs += Build.Attribute("data-edit-context", contextInfos);
+            contextAttribs += HtmlAttribute.Create("data-edit-context", contextInfos);
         }
         return contextAttribs;
     }

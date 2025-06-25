@@ -2,7 +2,7 @@
 using System.Collections.Specialized;
 using System.Runtime.CompilerServices;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Web.Internal.Url;
+using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.GetByName;
 
 namespace ToSic.Sxc.Context.Internal;

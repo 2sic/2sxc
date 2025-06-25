@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Web.Internal.Url;
+﻿using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using ToSic.Sxc.Web.Sys.Url;
 
 namespace ToSic.Sxc.Tests.LinksAndImages;
 
@@ -6,7 +7,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages;
 public class QueryHelperTests
 {
     private static string AddQueryString(string url, NameValueCollection queryParams)
-        => Web.Internal.Url.UrlHelpers.AddQueryString(url, queryParams);
+        => UrlHelpers.AddQueryString(url, queryParams);
 
     private const string urlRelativeNoParams = "/xyz/abc.jpg";
     private const string urlHttpNoParams = "http://2sxc.org/xyz/abc.jpg";

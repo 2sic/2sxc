@@ -9,7 +9,7 @@ using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Sys.ExecutionContext;
-using ToSic.Sxc.Web.Internal.Url;
+using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Capabilities.Features;
 using static ToSic.Sxc.Sys.Configuration.SxcFeatures;
 using static ToSic.Sxc.Images.Internal.ImageConstants;

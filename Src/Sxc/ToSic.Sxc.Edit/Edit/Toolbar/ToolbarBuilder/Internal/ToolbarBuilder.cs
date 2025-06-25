@@ -4,7 +4,7 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
-using ToSic.Sxc.Web.Internal;
+using ToSic.Sxc.Web.Sys.Html;
 
 namespace ToSic.Sxc.Edit.Toolbar.Internal;
 

@@ -8,7 +8,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Dnn.Features;
 using ToSic.Sxc.Web.Internal.PageFeatures;
-using ToSic.Sxc.Web.Internal.Url;
+using ToSic.Sxc.Web.Sys.Url;
 
 namespace ToSic.Sxc.Dnn.Web;
 

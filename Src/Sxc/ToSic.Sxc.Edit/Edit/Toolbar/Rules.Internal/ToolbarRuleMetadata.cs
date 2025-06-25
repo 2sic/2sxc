@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Metadata;
 using ToSic.Sxc.Edit.Toolbar.Internal;
-using ToSic.Sxc.Web.Internal.Url;
+using ToSic.Sxc.Web.Sys.Url;
 using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
 
 namespace ToSic.Sxc.Edit.Toolbar;

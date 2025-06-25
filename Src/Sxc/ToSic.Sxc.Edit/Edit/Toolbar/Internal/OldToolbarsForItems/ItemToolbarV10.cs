@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Web.Internal.Url;
+using ToSic.Sxc.Web.Sys.Html;
+using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Utils;
 using static System.String;
-using Build = ToSic.Sxc.Web.Build;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 
@@ -29,7 +29,7 @@ internal class ItemToolbarV10(
 
     public override string ToolbarAsAttributes() => ToolbarAttributes(ToolbarAttributeName);
 
-    protected virtual string ToolbarAttributes(string tlbAttrName) => $" {Build.Attribute(tlbAttrName, ToolbarJson)} ";
+    protected virtual string ToolbarAttributes(string tlbAttrName) => $" {HtmlAttribute.Create(tlbAttrName, ToolbarJson)} ";
 
     private string ToolbarV10Json()
     {

@@ -1,7 +1,6 @@
 ﻿using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web.Internal.Url;
 using Xunit.Sdk;
 
 namespace ToSic.Sxc.ServicesTests.ImageServiceTests;

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Web.Internal.DotNet;
+using ToSic.Sxc.Web.Sys.Http;
 
 namespace ToSic.Sxc.Web.Internal.JsContext;
 

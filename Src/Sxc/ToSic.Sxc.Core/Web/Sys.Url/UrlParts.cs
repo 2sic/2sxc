@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace ToSic.Sxc.Web.Internal.Url;
+namespace ToSic.Sxc.Web.Sys.Url;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

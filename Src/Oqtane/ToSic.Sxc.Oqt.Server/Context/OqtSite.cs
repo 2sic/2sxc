@@ -11,7 +11,7 @@ using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Sys.Integration.Paths;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
-using UrlParts = ToSic.Sxc.Web.Internal.Url.UrlParts;
+using UrlParts = ToSic.Sxc.Web.Sys.Url.UrlParts;
 
 namespace ToSic.Sxc.Oqt.Server.Context;
 

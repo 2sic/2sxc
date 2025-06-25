@@ -5,7 +5,7 @@ using ToSic.Eav.Context.Internal;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.DataSources.Internal;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web.Internal.DotNet;
+using ToSic.Sxc.Web.Sys.Http;
 using ToSic.Sys.Users.Permissions;
 
 namespace ToSic.Sxc.Context.Internal;

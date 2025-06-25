@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Web.Internal.Url;
-
-namespace ToSic.Sxc.Tests.WebUrlTests;
+﻿namespace ToSic.Sxc.Tests.WebUrlTests;
 
 
 public class UrlValueCamelCaseTest

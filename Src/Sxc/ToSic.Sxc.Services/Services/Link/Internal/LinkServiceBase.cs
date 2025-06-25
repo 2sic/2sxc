@@ -5,7 +5,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Integration.Paths;
-using ToSic.Sxc.Web.Internal.Url;
+using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.Internal;
