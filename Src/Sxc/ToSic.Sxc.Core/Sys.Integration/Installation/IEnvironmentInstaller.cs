@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Integration.Installation;
+﻿namespace ToSic.Sxc.Sys.Integration.Installation;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IEnvironmentInstaller: IHasLog

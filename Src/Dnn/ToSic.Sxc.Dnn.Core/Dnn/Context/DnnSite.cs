@@ -8,7 +8,7 @@ using ToSic.Eav.Context.Sys.Site;
 using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Sys;
-using ToSic.Sxc.Integration.Paths;
+using ToSic.Sxc.Sys.Integration.Paths;
 using ToSic.Sxc.Web.Internal.Url;
 using ToSic.Sys.Capabilities.Features;
 using static ToSic.Eav.Context.Sys.ZoneCulture.IZoneCultureResolverExtensions;

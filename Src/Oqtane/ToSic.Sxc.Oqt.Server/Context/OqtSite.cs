@@ -6,10 +6,10 @@ using ToSic.Eav.Context.Sys.Site;
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Sys.Integration.Paths;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 using UrlParts = ToSic.Sxc.Web.Internal.Url.UrlParts;
 

@@ -2,7 +2,7 @@
 
 #pragma warning disable CS9113 // Parameter is unread.
 
-namespace ToSic.Sxc.Integration.Paths;
+namespace ToSic.Sxc.Sys.Integration.Paths;
 
 internal class LinkPathsUnknown(WarnUseOfUnknown<LinkPathsUnknown> _) : ILinkPaths, IIsUnknown
 {

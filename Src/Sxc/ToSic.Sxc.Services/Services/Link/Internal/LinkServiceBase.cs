@@ -3,8 +3,8 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images.Internal;
-using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sxc.Sys.Integration.Paths;
 using ToSic.Sxc.Web.Internal.Url;
 using ToSic.Sys.Utils;
 

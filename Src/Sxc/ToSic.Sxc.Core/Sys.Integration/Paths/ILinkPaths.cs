@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Integration.Paths;
+﻿namespace ToSic.Sxc.Sys.Integration.Paths;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ILinkPaths

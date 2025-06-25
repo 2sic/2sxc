@@ -4,9 +4,9 @@ using ToSic.Lib.Coding;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Images.Internal;
-using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.Integration.Paths;
 
 namespace ToSic.Sxc.Dnn.Services;
 

@@ -5,7 +5,7 @@ using ToSic.Eav.Data.Sys;
 using ToSic.Eav.ImportExport.Integration;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Integration;
+namespace ToSic.Sxc.Sys.Integration;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class SxcImportExportEnvironmentBase: EavImportExportEnvironmentBase

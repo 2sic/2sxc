@@ -1,16 +1,15 @@
-﻿using ToSic.Eav.Data.ValueConverter.Sys;
-using ToSic.Eav.Environment.Sys.ServerPaths;
-using ToSic.Lib.DI;
+﻿using ToSic.Eav.Environment.Sys.ServerPaths;
 #if NETFRAMEWORK
+using ToSic.Eav.Data.ValueConverter.Sys;
 using System.Web.Hosting;
+using ToSic.Lib.DI;
+
 #else
-using System;
-using System.IO;
 using Microsoft.AspNetCore.Hosting;
 #endif
 
 
-namespace ToSic.Sxc.Integration.Paths;
+namespace ToSic.Sxc.Sys.Integration.Paths;
 
 /// <summary>
 /// In the default implementation, all things have the same root so content-path and app-path

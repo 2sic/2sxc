@@ -6,7 +6,7 @@ using ToSic.Lib.Coding;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Cms.Pages.Internal;
 using ToSic.Sxc.DataSources.Internal;
-using ToSic.Sxc.Integration.Paths;
+using ToSic.Sxc.Sys.Integration.Paths;
 using ToSic.Sxc.Web.Internal.Url;
 using ToSic.Sys.Utils;
 

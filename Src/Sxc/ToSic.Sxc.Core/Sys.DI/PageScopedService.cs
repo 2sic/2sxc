@@ -1,4 +1,4 @@
-﻿using ToSic.Lib.DI;
+﻿
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Lib.DI;

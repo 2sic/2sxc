@@ -1,8 +1,8 @@
 ﻿#if !NETFRAMEWORK
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Mvc;
 
-namespace ToSic.Sxc.Integration.Paths;
+namespace ToSic.Sxc.Sys.Integration.Paths;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class LinkPaths(IUrlHelper urlHelper) : ILinkPaths

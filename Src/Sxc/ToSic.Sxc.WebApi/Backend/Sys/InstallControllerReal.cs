@@ -10,6 +10,7 @@ using ToSic.Eav.WebApi.Sys.Install;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Integration.Installation;
+using ToSic.Sxc.Sys.Integration.Installation;
 using ToSic.Sys.Capabilities.Features;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;

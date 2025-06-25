@@ -2,7 +2,7 @@
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Persistence.Sys.Logging;
-using ToSic.Sxc.Integration;
+using ToSic.Sxc.Sys.Integration;
 
 namespace ToSic.Sxc.Dnn.ImportExport;
 
