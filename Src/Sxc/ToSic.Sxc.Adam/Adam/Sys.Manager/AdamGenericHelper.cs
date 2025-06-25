@@ -1,9 +1,8 @@
 ﻿using ToSic.Eav.Apps.Assets.Internal;
-using ToSic.Sxc.Adam.Storage.Internal;
-using ToSic.Sxc.Adam.Sys;
+using ToSic.Sxc.Adam.Sys.Storage;
 using ToSic.Sxc.Data;
 
-namespace ToSic.Sxc.Adam.Manager.Internal;
+namespace ToSic.Sxc.Adam.Sys.Manager;
 
 /// <summary>
 /// Helper construct so that correctly typed objects can be generated,

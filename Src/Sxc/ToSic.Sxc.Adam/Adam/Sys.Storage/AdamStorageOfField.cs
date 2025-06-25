@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Identity;
 
-namespace ToSic.Sxc.Adam.Storage.Internal;
+namespace ToSic.Sxc.Adam.Sys.Storage;
 
 /// <summary>
 /// Container of the assets of a field

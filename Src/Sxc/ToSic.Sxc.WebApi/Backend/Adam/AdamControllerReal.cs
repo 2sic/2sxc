@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Adam.Sys;
-using ToSic.Sxc.Adam.Work.Internal;
+using ToSic.Sxc.Adam.Sys.Work;
 
 namespace ToSic.Sxc.Backend.Adam;
 

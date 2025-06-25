@@ -2,10 +2,10 @@
 using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Adam.Manager.Internal;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Adam.Sys.Manager;
+using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Adam.Work.Internal;
+namespace ToSic.Sxc.Adam.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AdamWorkBase(AdamWorkBase.MyServices services, string logName)

@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Adam.Manager.Internal;
+﻿using ToSic.Sxc.Adam.Sys.Manager;
 
 namespace ToSic.Sxc.Adam.Sys.FileSystem;
 

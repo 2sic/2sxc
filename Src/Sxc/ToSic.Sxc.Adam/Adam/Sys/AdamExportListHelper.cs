@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps.Assets.Internal;
-using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sxc.Adam.Sys.FileSystem;
+using ToSic.Sxc.Adam.Sys.Manager;
 
 namespace ToSic.Sxc.Adam.Sys;
 

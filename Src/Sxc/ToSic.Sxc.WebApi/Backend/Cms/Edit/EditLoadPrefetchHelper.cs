@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.WebApi.Sys.Cms;
-using ToSic.Sxc.Adam.Work.Internal;
+using ToSic.Sxc.Adam.Sys.Work;
 using ToSic.Sxc.Backend.Adam;
 
 namespace ToSic.Sxc.Backend.Cms;

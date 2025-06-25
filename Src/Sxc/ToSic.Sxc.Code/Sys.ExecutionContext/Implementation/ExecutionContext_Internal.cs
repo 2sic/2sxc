@@ -2,7 +2,7 @@
 using ToSic.Eav.DataSource;
 using ToSic.Lib.DI;
 using ToSic.Lib.Wrappers;
-using ToSic.Sxc.Adam.Manager.Internal;
+using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Internal;

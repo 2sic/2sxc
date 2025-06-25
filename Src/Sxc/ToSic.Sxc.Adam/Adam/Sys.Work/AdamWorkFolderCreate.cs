@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sys.Security.Permissions;
 
-namespace ToSic.Sxc.Adam.Work.Internal;
+namespace ToSic.Sxc.Adam.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamWorkFolderCreate(AdamWorkBase.MyServices services)

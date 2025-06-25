@@ -1,8 +1,8 @@
 ﻿using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Adam.Manager.Internal;
+using ToSic.Sxc.Adam.Sys.Manager;
 
-namespace ToSic.Sxc.Adam.Paths.Internal;
+namespace ToSic.Sxc.Adam.Sys.Paths;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamPathsBase : ServiceBase, IAdamPaths

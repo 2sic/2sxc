@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Adam.Storage.Internal;
+﻿namespace ToSic.Sxc.Adam.Sys.Storage;
 
 /// <summary>
 /// A container for the tenant (top level)

@@ -1,8 +1,8 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sxc.Adam.Sys;
+using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Images;

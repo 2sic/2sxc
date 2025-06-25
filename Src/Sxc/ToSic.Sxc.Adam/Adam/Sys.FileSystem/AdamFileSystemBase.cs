@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Adam.Manager.Internal;
-using ToSic.Sxc.Adam.Paths.Internal;
+using ToSic.Sxc.Adam.Sys.Manager;
+using ToSic.Sxc.Adam.Sys.Paths;
 
 namespace ToSic.Sxc.Adam.Sys.FileSystem;
 

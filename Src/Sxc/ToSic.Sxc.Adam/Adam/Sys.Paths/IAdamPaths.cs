@@ -1,6 +1,6 @@
-﻿using ToSic.Sxc.Adam.Manager.Internal;
+﻿using ToSic.Sxc.Adam.Sys.Manager;
 
-namespace ToSic.Sxc.Adam.Paths.Internal;
+namespace ToSic.Sxc.Adam.Sys.Paths;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IAdamPaths: IHasLog

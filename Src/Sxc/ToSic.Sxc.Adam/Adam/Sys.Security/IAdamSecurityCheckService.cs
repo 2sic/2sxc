@@ -1,8 +1,8 @@
 ﻿using ToSic.Eav.WebApi.Sys.Helpers.Http;
-using ToSic.Sxc.Adam.Manager.Internal;
+using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sys.Security.Permissions;
 
-namespace ToSic.Sxc.Adam.Security.Internal;
+namespace ToSic.Sxc.Adam.Sys.Security;
 
 public interface IAdamSecurityCheckService
 {

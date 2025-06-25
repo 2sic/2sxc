@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace ToSic.Sxc.Adam.Work.Internal;
+namespace ToSic.Sxc.Adam.Sys.Work;
 
 partial class AdamWorkUpload
 {

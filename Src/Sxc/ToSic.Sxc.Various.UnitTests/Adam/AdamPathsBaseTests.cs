@@ -1,4 +1,4 @@
-using ToSic.Sxc.Adam.Paths.Internal;
+using ToSic.Sxc.Adam.Sys.Paths;
 
 namespace ToSic.Sxc.Tests.Adam;
 

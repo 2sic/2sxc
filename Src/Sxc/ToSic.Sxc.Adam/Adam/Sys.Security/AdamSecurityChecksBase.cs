@@ -4,10 +4,10 @@ using ToSic.Eav.Security.Files;
 using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Adam.Manager.Internal;
+using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sys.Security.Permissions;
 
-namespace ToSic.Sxc.Adam.Security.Internal;
+namespace ToSic.Sxc.Adam.Sys.Security;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices services, string logPrefix)

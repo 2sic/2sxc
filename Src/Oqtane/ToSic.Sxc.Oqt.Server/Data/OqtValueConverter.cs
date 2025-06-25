@@ -3,7 +3,7 @@ using Oqtane.Repository;
 using ToSic.Eav.Data.ValueConverter.Sys;
 using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Adam.Security.Internal;
+using ToSic.Sxc.Adam.Sys.Security;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sys.Capabilities.Features;

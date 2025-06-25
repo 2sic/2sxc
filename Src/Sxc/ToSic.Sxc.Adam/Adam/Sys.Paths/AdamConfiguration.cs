@@ -3,7 +3,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Data.Sys.Entities;
 
-namespace ToSic.Sxc.Adam.Paths.Internal;
+namespace ToSic.Sxc.Adam.Sys.Paths;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamConfiguration(IAppReaderFactory appReaders)

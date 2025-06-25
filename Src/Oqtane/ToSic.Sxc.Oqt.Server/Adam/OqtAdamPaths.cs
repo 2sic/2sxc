@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Environment.Sys.ServerPaths;
-using ToSic.Sxc.Adam.Paths.Internal;
+using ToSic.Sxc.Adam.Sys.Paths;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sys.Utils;

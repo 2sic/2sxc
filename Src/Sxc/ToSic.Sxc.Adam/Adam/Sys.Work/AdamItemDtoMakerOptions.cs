@@ -1,6 +1,6 @@
-﻿using ToSic.Sxc.Adam.Manager.Internal;
+﻿using ToSic.Sxc.Adam.Sys.Manager;
 
-namespace ToSic.Sxc.Adam.Work.Internal;
+namespace ToSic.Sxc.Adam.Sys.Work;
 public record AdamItemDtoMakerOptions
 {
     public AdamContext? AdamContext { get; init; }

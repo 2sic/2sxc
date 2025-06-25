@@ -1,7 +1,8 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Sys.Users.Permissions;
 
-namespace ToSic.Eav.Context.Internal;
+namespace ToSic.Sxc.Sys.ExecutionContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICurrentContextService: IHasLog, ICurrentContextUserPermissionsService

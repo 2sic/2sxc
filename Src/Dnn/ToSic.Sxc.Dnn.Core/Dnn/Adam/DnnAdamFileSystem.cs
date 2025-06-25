@@ -5,9 +5,9 @@ using System.Web.Configuration;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sxc.Adam.Sys;
 using ToSic.Sxc.Adam.Sys.FileSystem;
+using ToSic.Sxc.Adam.Sys.Manager;
 
 namespace ToSic.Sxc.Dnn.Adam;
 

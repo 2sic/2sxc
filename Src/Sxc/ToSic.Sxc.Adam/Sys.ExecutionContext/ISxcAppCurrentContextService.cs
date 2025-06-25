@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Context;
-using ToSic.Eav.Context.Internal;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Sys.ExecutionContext;
 
 /// <summary>
 /// This provides other systems with a context

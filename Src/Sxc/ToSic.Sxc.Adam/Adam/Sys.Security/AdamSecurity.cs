@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Identity;
 
-namespace ToSic.Sxc.Adam.Security.Internal;
+namespace ToSic.Sxc.Adam.Sys.Security;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamSecurity

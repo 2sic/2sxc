@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Adam.Work.Internal;
+﻿namespace ToSic.Sxc.Adam.Sys.Work;
 
 /// <summary>
 /// Bundle of files/folders describing a folder and things inside it.

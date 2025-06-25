@@ -1,8 +1,8 @@
 ﻿using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Adam.Manager.Internal;
+using ToSic.Sxc.Adam.Sys.Manager;
 
-namespace ToSic.Sxc.Adam.Storage.Internal;
+namespace ToSic.Sxc.Adam.Sys.Storage;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AdamStorage(string? logName = default) : ServiceBase(logName ?? "Adm.Base")
