@@ -76,8 +76,7 @@ public class HelpForRazor12
                 },
                 h => h with
                 {
-                    Detect =
-                    @"error CS0305: Using the generic type 'System.Collections.Generic.List<T>' requires 1 type arguments",
+                    Detect = @"error CS0305: Using the generic type 'System.Collections.Generic.List<T>' requires 1 type arguments",
                 }
             ),
 
@@ -168,6 +167,8 @@ public class HelpForRazor12
                 UiMessage = "Your code seems to use a generic 'Get...(...). This is an extension method as of v20. Make sure you add '@using ToSic.Eav.Data' to your razor file.",
             },
 
+            HelpForRazorCompileErrors.BlocksIRenderServiceRemoved,
+
             #endregion
 
             // Added in v20, but for everything - detect calls to APIs without using parameter names
@@ -191,16 +192,20 @@ public class HelpForRazor12
                 DetectRegex = true,
                 LinkCode =
                     "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.Services.IDataService.html#ToSic_Sxc_Services_IDataService_GetSource_",
-                UiMessage = $@"
-You are probably calling CreateSource(stringNameOfSource, ...) which {IsNotSupportedIn12Plus}. 
-",
-                DetailsHtml = $@"
-You are probably calling <code>CreateSource(stringNameOfSource, ...)</code> which {IsNotSupportedIn12Plus}. Use: 
-<ol>
-    <li>Kit.Data.GetSource&lt;TypeName&gt;(...)</li>
-    <li>Kit.Data.GetSource(appDataSourceName, ...)</li>
-</ol>
-"
+                UiMessage = $"""
+
+                             You are probably calling CreateSource(stringNameOfSource, ...) which {IsNotSupportedIn12Plus}. 
+
+                             """,
+                DetailsHtml = $"""
+
+                               You are probably calling <code>CreateSource(stringNameOfSource, ...)</code> which {IsNotSupportedIn12Plus}. Use: 
+                               <ol>
+                                   <li>Kit.Data.GetSource&lt;TypeName&gt;(...)</li>
+                                   <li>Kit.Data.GetSource(appDataSourceName, ...)</li>
+                               </ol>
+
+                               """
             }
 
             // Not handled - can't because the AsDynamic accepts IEntity which works in Razor14
@@ -228,16 +233,18 @@ You are probably calling <code>CreateSource(stringNameOfSource, ...)</code> whic
     {
         Name = "Object-Dnn-Not-In-Hybrid",
         Detect = @"error CS0118: 'Dnn' is a 'namespace' but is used like a 'variable'",
-        UiMessage = $@"
-You are probably trying to use the 'Dnn' object which is not supported in 'Custom.Hybrid.Razor' templates. 
-",
-        DetailsHtml = $@"
-You are probably trying to use the <code>Dnn</code> object which is not supported in <code>Custom.Hybrid.Razor</code> templates. Use: 
-<ol>
-    <li>Other APIs such as <code>CmsContext</code> to get page/module etc. information</li>
-    <li>If really necessary (not recommended) use the standard Dnn APIs to get the necessary objects.</li>
-</ol>
-"
+        UiMessage = $"""
+                     You are probably trying to use the 'Dnn' object which is not supported in 'Custom.Hybrid.Razor' templates. 
+
+                     """,
+        DetailsHtml = $"""
+                       You are probably trying to use the <code>Dnn</code> object which is not supported in <code>Custom.Hybrid.Razor</code> templates. Use: 
+                       <ol>
+                           <li>Other APIs such as <code>CmsContext</code> to get page/module etc. information</li>
+                           <li>If really necessary (not recommended) use the standard Dnn APIs to get the necessary objects.</li>
+                       </ol>
+
+                       """
     };
     #endregion
 

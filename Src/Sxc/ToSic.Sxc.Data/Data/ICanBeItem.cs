@@ -13,13 +13,14 @@
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface ICanBeItem: ICanBeEntity
 {
-    /// <summary>
-    /// Important: Always implement explicitly, so it doesn't appear in the API
-    /// </summary>
-    /// <returns></returns>
-    [PrivateApi]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    object? TryGetBlock();
+    // #RemoveBlocksIRenderService
+    ///// <summary>
+    ///// Important: Always implement explicitly, so it doesn't appear in the API
+    ///// </summary>
+    ///// <returns></returns>
+    //[PrivateApi]
+    //[ShowApiWhenReleased(ShowApiMode.Never)]
+    //object? TryGetBlock();
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]

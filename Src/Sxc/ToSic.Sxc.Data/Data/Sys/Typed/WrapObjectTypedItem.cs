@@ -286,7 +286,8 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     #endregion
 
 
-    object? ICanBeItem.TryGetBlock() => Cdf.BlockAsObjectOrNull;
+    // #RemoveBlocksIRenderService
+    //object? ICanBeItem.TryGetBlock() => Cdf.BlockAsObjectOrNull;
 
     public ITypedItem Item => this;
 

@@ -258,6 +258,15 @@ internal class HelpForRazorCompileErrors
         UiMessage = "The old List (of Element) object had to be removed."
     };
 
+    // New v20 - removal of #RemovedV20 #Element
+    internal static readonly CodeHelp BlocksIRenderServiceRemoved = new()
+    {
+        Name = "The Blocks.IRenderService was removed",
+        Detect = "error CS0234: The type or namespace name 'IRenderService' does not exist in the namespace 'ToSic.Sxc.Blocks'",
+        LinkCode = "brc-20-blocks-irenderservice",
+        UiMessage = "The old List ToSic.Sxc.Blocks.IRenderService has been replaced/renamed with ToSic.Sxc.Services.IRenderService."
+    };
+
     internal static List<CodeHelp> RemovedApisInV20ForAllRazorClasses =
     [
         // New v20
@@ -281,6 +290,7 @@ internal class HelpForRazorCompileErrors
         LinkMissingAfterAutoInheritsRemoved, // new help for missing Link after auto-inherits removed
         EditMissingAfterAutoInheritsRemoved, // new help for missing Edit after auto-inherits removed
         DnnHelperModuleMissing, // new help for missing Dnn.Module after v20
+        BlocksIRenderServiceRemoved,
         //MustDeriveFromRazorComponentBase, // new help for must derive from RazorComponentBase
         HelpForRazor12.GetBestValueGone,
     ];

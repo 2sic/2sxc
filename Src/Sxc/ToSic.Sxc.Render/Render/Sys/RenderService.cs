@@ -5,11 +5,9 @@ using ToSic.Razor.Markup;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Edit.Internal;
 using ToSic.Sxc.Render.Sys.RenderBlock;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 
 namespace ToSic.Sxc.Render.Sys;
@@ -21,13 +19,14 @@ namespace ToSic.Sxc.Render.Sys;
 /// </summary>
 [PrivateApi("Hide Implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class RenderService: ServiceWithContext,
-    ToSic.Sxc.Services.IRenderService
-#if NETFRAMEWORK
-#pragma warning disable CS0618
-   , ToSic.Sxc.Blocks.IRenderService
-#pragma warning restore CS0618
-#endif
+public class RenderService(RenderService.MyServices services) : ServiceWithContext("Sxc.RndSvc", connect: [services]),
+    IRenderService
+// #RemoveBlocksIRenderService
+//#if NETFRAMEWORK
+//#pragma warning disable CS0618
+//   , Blocks.IRenderService
+//#pragma warning restore CS0618
+//#endif
 {
     #region Constructor & ConnectToRoot
 
@@ -48,34 +47,30 @@ public class RenderService: ServiceWithContext,
         public LazySvc<ILogStore> LogStore { get; } = logStore;
     }
 
-    public RenderService(MyServices services) : base("Sxc.RndSvc")
-    {
-        Services = services.ConnectServices(Log);
-    }
-
     // ReSharper disable once InconsistentNaming
-    private readonly MyServices Services;
 
-    public override void ConnectToRoot(IExecutionContext exCtx)
-    {
-        base.ConnectToRoot(exCtx);
-        _logIsInHistory = true; // if we link it to a parent, we don't need to add own entry in log history
-    }
+    // #RemoveBlocksIRenderService
+    //public override void ConnectToRoot(IExecutionContext exCtx)
+    //{
+    //    base.ConnectToRoot(exCtx);
+    //    _logIsInHistory = true; // if we link it to a parent, we don't need to add own entry in log history
+    //}
 
-    private bool _logIsInHistory;
-
-    #endregion
-
-    #region Ensure Logging in Insight
-
-    protected void MakeSureLogIsInHistory()
-    {
-        if (_logIsInHistory) return;
-        _logIsInHistory = true;
-        Services.LogStore.Value.Add("render-service", Log);
-    }
 
     #endregion
+
+    // #RemoveBlocksIRenderService
+    //#region Ensure Logging in Insight
+    //private bool _logIsInHistory;
+
+    //protected void MakeSureLogIsInHistory()
+    //{
+    //    if (_logIsInHistory) return;
+    //    _logIsInHistory = true;
+    //    services.LogStore.Value.Add("render-service", Log);
+    //}
+
+    //#endregion
 
 
     /// <summary>
@@ -99,9 +94,11 @@ public class RenderService: ServiceWithContext,
         Guid? newGuid = null)
     {
         item ??= parent.Item;
-        MakeSureLogIsInHistory();
-        var simpleRenderer = Services.SimpleRenderer.New();
-        var block = parent.GetRequiredBlockForRender();
+        // #RemoveBlocksIRenderService
+        //MakeSureLogIsInHistory();
+        //var block = parent.GetRequiredBlockForRender();
+        var block = ExCtx.GetState<IBlock>();
+        var simpleRenderer = services.SimpleRenderer.New();
         return Tag.Custom(field == null
             ? simpleRenderer.Render(block, item.Entity, data: data) // without field edit-context
             : simpleRenderer.RenderWithEditContext(block, parent, item, field, newGuid, GetEditService(block), data)); // with field-edit-context data-list-context
@@ -128,13 +125,18 @@ public class RenderService: ServiceWithContext,
         int max = 100,
         string? merge = null)
     {
-        if (string.IsNullOrWhiteSpace(field)) throw new ArgumentNullException(nameof(field));
+        if (string.IsNullOrWhiteSpace(field))
+            throw new ArgumentNullException("To render all items, you must specify a field where the items are stored.", nameof(field));
 
-        MakeSureLogIsInHistory();
-        var block = parent.GetRequiredBlockForRender();
+        // #RemoveBlocksIRenderService
+        //MakeSureLogIsInHistory();
+        //var block = parent.GetRequiredBlockForRender();
+        var block = ExCtx.GetState<IBlock>(); 
+        var editService = GetEditService(block);
         return Tag.Custom(merge == null
-            ? Services.SimpleRenderer.New().RenderListWithContext(block, parent.Entity, field, apps, max, GetEditService(block))
-            : Services.InTextRenderer.New().RenderMerge(block, parent.Entity, field, merge, GetEditService(block)));
+            ? services.SimpleRenderer.New().RenderListWithContext(block, parent.Entity, field, apps, max, editService)
+            : services.InTextRenderer.New().RenderMerge(block, parent.Entity, field, merge, editService)
+        );
     }
 
 
@@ -142,11 +144,18 @@ public class RenderService: ServiceWithContext,
     public virtual IRenderResult Module(int pageId, int moduleId, NoParamOrder noParamOrder = default, object? data = null)
     {
         var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
-        MakeSureLogIsInHistory();
-        var moduleBlock = Services.Builder.Value.BuildBlock(pageId, moduleId);
+        // #RemoveBlocksIRenderService
+        //MakeSureLogIsInHistory();
+
+        // This service is often used from a theme/skin, in which case it doesn't have a ExecutionContext,
+        // which also means that it was not logged - which we're doing here.
+        if (ExCtxOrNull == null)
+            services.LogStore.Value.Add("render-service", Log);
+
+        var moduleBlock = services.Builder.Value.BuildBlock(pageId, moduleId);
 
         moduleBlock.BlockFeatureKeys.Add(SxcPageFeatures.JsApiOnModule.NameId);
-        var builder = Services.BlockBuilderGenerator.New().Setup(moduleBlock);
+        var builder = services.BlockBuilderGenerator.New().Setup(moduleBlock);
         var result = builder.Run(true, specs: new() { Data = data });
 
         return l.ReturnAsOk(result);
@@ -159,13 +168,16 @@ public class RenderService: ServiceWithContext,
     private IEditService GetEditService(IBlock blockOrNull)
     {
         // If we have a dyn-code, use that
-        var editSvc = ExCtxOrNull?.GetService<IEditService>(reuse: true);
-        if (editSvc != null)
-            return editSvc;
+        return ExCtx.GetService<IEditService>(reuse: true);
+        
+        // #RemoveBlocksIRenderService
+        //var editSvc = ExCtxOrNull?.GetService<IEditService>(reuse: true);
+        //if (editSvc != null)
+        //    return editSvc;
 
-        // Otherwise create a new one - even though it's not clear if this would have any real effect
-        var newEdit = ExCtxOrNull?.GetService<IEditService>() ?? Services.EditGenerator.New();
-        newEdit = ((IEditServiceSetup)newEdit).SetBlock(ExCtxOrNull, blockOrNull);
-        return newEdit;
+        //// Otherwise create a new one - even though it's not clear if this would have any real effect
+        //var newEdit = ExCtxOrNull?.GetService<IEditService>() ?? services.EditGenerator.New();
+        //newEdit = ((IEditServiceSetup)newEdit).SetBlock(ExCtxOrNull, blockOrNull);
+        //return newEdit;
     }
 }

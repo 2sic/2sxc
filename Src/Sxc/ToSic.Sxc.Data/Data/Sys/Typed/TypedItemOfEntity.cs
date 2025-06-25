@@ -69,7 +69,8 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
     IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= new(Entity, canDebug: this);
     private PropLookupWithPathEntity? _propLookup;
 
-    [PrivateApi] object? ICanBeItem.TryGetBlock() => Cdf?.BlockAsObjectOrNull;
+    // #RemoveBlocksIRenderService
+    //[PrivateApi] object? ICanBeItem.TryGetBlock() => Cdf?.BlockAsObjectOrNull;
     [PrivateApi] ITypedItem ICanBeItem.Item => this;
 
     #endregion

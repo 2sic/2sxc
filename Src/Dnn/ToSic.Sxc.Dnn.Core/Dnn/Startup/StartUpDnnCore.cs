@@ -97,10 +97,10 @@ internal static class StartUpDnnCore
         services.TryAddSingleton<IPlatform, DnnPlatformContext>();
 
         // add page publishing
-        services.TryAddTransient<IPagePublishing, Cms.DnnPagePublishing>();
+        services.TryAddTransient<IPagePublishing, DnnPagePublishing>();
 
         // v13 option to not use page publishing... #SwitchServicePagePublishingResolver #2749
-        services.AddTransient<IPagePublishingGetSettings, Cms.DnnPagePublishingGetSettings>();
+        services.AddTransient<IPagePublishingGetSettings, DnnPagePublishingGetSettings>();
 
         // new in v12 - .net specific code compiler
         services.TryAddTransient<CodeCompiler, CodeCompilerNetFull>();
@@ -131,10 +131,12 @@ internal static class StartUpDnnCore
         // v14
         services.TryAddTransient<IDynamicCodeService, DnnDynamicCodeService>();
         services.TryAddTransient<DnnDynamicCodeService.MyScopedServices>();   // new v15
-        services.TryAddTransient<Sxc.Services.IRenderService, DnnRenderService>();
-#pragma warning disable CS0618
-        services.TryAddTransient<Blocks.IRenderService, DnnRenderService>();  // Obsolete, but keep for the few apps we already released in v12
-#pragma warning restore CS0618
+        services.TryAddTransient<IRenderService, DnnRenderService>();
+
+        // #RemoveBlocksIRenderService
+//#pragma warning disable CS0618
+//        services.TryAddTransient<Blocks.IRenderService, DnnRenderService>();  // Obsolete, but keep for the few apps we already released in v12
+//#pragma warning restore CS0618
 
         // v15 - move ready check turbo into a service
         services.TryAddTransient<DnnReadyCheckTurbo>();
