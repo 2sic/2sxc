@@ -1,8 +1,8 @@
 ﻿using ToSic.Eav.Apps.Assets.Internal;
-using ToSic.Sxc.Adam.FileSystem.Internal;
 using ToSic.Sxc.Adam.Manager.Internal;
+using ToSic.Sxc.Adam.Sys.FileSystem;
 
-namespace ToSic.Sxc.Adam.Internal;
+namespace ToSic.Sxc.Adam.Sys;
 
 /// <summary>
 /// Export helper

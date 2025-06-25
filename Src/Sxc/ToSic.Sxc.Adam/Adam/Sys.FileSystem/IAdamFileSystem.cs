@@ -1,7 +1,6 @@
-﻿using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Adam.Manager.Internal;
+﻿using ToSic.Sxc.Adam.Manager.Internal;
 
-namespace ToSic.Sxc.Adam.FileSystem.Internal;
+namespace ToSic.Sxc.Adam.Sys.FileSystem;
 
 /// <summary>
 /// WIP 

@@ -1,10 +1,9 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sxc.Adam.Paths.Internal;
 
-namespace ToSic.Sxc.Adam.FileSystem.Internal;
+namespace ToSic.Sxc.Adam.Sys.FileSystem;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AdamFileSystemBase : ServiceBase, IAdamFileSystem

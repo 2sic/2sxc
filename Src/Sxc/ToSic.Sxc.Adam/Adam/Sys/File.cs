@@ -6,7 +6,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Field;
 using ToSic.Sxc.Images.Internal;
 
-namespace ToSic.Sxc.Adam.Internal;
+namespace ToSic.Sxc.Adam.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets.Internal.File<TFolderId, TFileId>,

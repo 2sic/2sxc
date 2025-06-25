@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data.ValueConverter.Sys;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Adam.Internal;
 using ToSic.Sxc.Adam.Manager.Internal;
+using ToSic.Sxc.Adam.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
 

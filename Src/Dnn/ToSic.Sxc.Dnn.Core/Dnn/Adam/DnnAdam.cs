@@ -1,5 +1,5 @@
 ﻿using ToSic.Sxc.Adam;
-using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Adam.Sys;
 
 namespace ToSic.Sxc.Dnn.Adam;
 
@@ -10,14 +10,17 @@ internal static class DnnAdam
 {
     internal static File<int, int> AsDnn(this IFile file)
     {
-        if (file == null) return null;
-        if (file is not File<int, int> recast) throw new("Tried to cast IFile to internal type, failed");
+        if (file == null)
+            return null;
+        if (file is not File<int, int> recast)
+            throw new("Tried to cast IFile to internal type, failed");
         return recast;
     }
 
     internal static Folder<int, int> AsDnn(this IFolder folder)
     {
-        if (folder == null) return null;
+        if (folder == null)
+            return null;
         if (folder is not Folder<int, int> recast)
             throw new("Tried to cast IFolder to internal type, failed");
         return recast;

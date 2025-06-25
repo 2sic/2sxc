@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.WebApi.Sys.Helpers.Http;
-using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Adam.Sys;
 using ToSic.Sxc.Adam.Work.Internal;
 
 namespace ToSic.Sxc.Backend.Adam;

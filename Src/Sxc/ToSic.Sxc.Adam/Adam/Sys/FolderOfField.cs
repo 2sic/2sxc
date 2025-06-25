@@ -3,7 +3,7 @@ using ToSic.Sxc.Adam.Manager.Internal;
 using ToSic.Sxc.Adam.Storage.Internal;
 using ToSic.Sxc.Data;
 
-namespace ToSic.Sxc.Adam.Internal;
+namespace ToSic.Sxc.Adam.Sys;
 
 /// <summary>
 /// The ADAM Navigator creates a folder object for an entity/field combination

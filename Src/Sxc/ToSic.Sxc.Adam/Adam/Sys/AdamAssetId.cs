@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Adam.Internal;
+﻿namespace ToSic.Sxc.Adam.Sys;
 
 /// <summary>
 /// Dummy interface to mark a object which is used as a file identifier.
