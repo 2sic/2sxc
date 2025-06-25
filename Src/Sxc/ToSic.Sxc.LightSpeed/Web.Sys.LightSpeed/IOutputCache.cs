@@ -1,7 +1,7 @@
 ﻿using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Render.Sys;
 
-namespace ToSic.Sxc.Web.Internal.LightSpeed;
+namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IOutputCache: IHasLog

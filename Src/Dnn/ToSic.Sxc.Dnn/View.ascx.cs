@@ -10,7 +10,7 @@ using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.RenderBlock;
-using ToSic.Sxc.Web.Internal.LightSpeed;
+using ToSic.Sxc.Web.Sys.LightSpeed;
 
 namespace ToSic.Sxc.Dnn;
 

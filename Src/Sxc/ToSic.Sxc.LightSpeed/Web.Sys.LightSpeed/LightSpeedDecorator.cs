@@ -3,7 +3,7 @@ using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Sxc.Services.OutputCache;
 
-namespace ToSic.Sxc.Web.Internal.LightSpeed;
+namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class LightSpeedDecorator(IEntity? entity) : EntityBasedType(entity!), IOutputCacheSettings

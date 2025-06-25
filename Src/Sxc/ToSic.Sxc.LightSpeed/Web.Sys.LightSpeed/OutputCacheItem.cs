@@ -2,7 +2,7 @@
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sys.Caching;
 
-namespace ToSic.Sxc.Web.Internal.LightSpeed;
+namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class OutputCacheItem(IRenderResult data): ICanEstimateSize, ITimestamped

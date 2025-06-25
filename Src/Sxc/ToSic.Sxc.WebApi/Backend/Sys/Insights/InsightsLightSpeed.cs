@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Sys;
 using ToSic.Eav.Sys.Insights;
 using ToSic.Eav.Sys.Insights.HtmlHelpers;
-using ToSic.Sxc.Web.Internal.LightSpeed;
+using ToSic.Sxc.Web.Sys.LightSpeed;
 using ToSic.Sys.Utils;
 using static ToSic.Razor.Blade.Tag;
 

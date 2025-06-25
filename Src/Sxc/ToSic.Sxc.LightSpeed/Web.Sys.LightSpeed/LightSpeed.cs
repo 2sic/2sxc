@@ -14,7 +14,7 @@ using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Utils;
 using static ToSic.Sxc.Sys.Configuration.SxcFeatures;
 
-namespace ToSic.Sxc.Web.Internal.LightSpeed;
+namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class LightSpeed(

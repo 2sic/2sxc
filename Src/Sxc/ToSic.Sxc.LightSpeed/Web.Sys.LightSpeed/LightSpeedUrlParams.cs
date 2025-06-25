@@ -3,7 +3,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sys.Caching.PiggyBack;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Web.Internal.LightSpeed;
+namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
 internal class LightSpeedUrlParams
 {

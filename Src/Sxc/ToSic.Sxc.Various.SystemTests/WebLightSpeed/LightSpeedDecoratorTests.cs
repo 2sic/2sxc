@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Data.Build;
-using ToSic.Sxc.Web.Internal.LightSpeed;
+using ToSic.Sxc.Web.Sys.LightSpeed;
 
 namespace ToSic.Sxc.WebLightSpeed;
 
