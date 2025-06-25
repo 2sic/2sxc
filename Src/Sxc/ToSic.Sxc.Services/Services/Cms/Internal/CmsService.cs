@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.ContentTypes.Sys;
+﻿using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Lib.DI;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;

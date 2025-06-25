@@ -1,6 +1,6 @@
 ﻿
 using ToSic.Eav.Apps.Sys.AppStack;
-using ToSic.Eav.Data.ContentTypes.Sys;
+using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Sys.Utils;
 using static System.String;
 

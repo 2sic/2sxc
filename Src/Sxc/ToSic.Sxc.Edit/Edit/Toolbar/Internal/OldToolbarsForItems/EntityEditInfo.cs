@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Data.EntityDecorators.Sys;
+using ToSic.Eav.Data.Sys.EntityDecorators;
 using ToSic.Sxc.Data.Sys.Decorators;
 
 // ReSharper disable InconsistentNaming

@@ -4,7 +4,7 @@ using THttpResponseType = System.Net.Http.HttpResponseMessage;
 using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 #endif
 using ToSic.Eav.Apps.AppReader.Sys;
-using ToSic.Eav.Data.ContentTypes.Sys;
+using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.ImportExport.Sys.XmlExport;
 using ToSic.Eav.WebApi.Sys.Helpers.Http;

@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Data.EntityDecorators.Sys;
+using ToSic.Eav.Data.Sys.EntityDecorators;
 
 namespace ToSic.Sxc.Data.Sys.Decorators;
 

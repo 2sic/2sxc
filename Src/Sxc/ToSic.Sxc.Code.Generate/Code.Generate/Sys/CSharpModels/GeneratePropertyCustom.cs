@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.ContentTypes.Sys;
+﻿using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Sxc.Cms.Data;
 
 namespace ToSic.Sxc.Code.Generate.Internal;
