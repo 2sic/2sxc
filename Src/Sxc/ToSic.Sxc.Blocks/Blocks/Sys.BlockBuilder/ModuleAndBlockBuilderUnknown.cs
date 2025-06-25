@@ -2,7 +2,7 @@
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Blocks.Sys.BlockBuilder;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ModuleAndBlockBuilderUnknown: ModuleAndBlockBuilder

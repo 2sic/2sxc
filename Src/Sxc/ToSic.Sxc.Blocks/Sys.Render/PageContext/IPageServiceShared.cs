@@ -1,7 +1,7 @@
 ﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Sys.Render.PageFeatures;
-using ToSic.Sxc.Web.Internal.ClientAssets;
+using ToSic.Sxc.Web.Sys.ClientAssets;
 
 namespace ToSic.Sxc.Sys.Render.PageContext;
 

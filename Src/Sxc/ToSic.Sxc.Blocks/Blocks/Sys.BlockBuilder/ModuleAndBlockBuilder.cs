@@ -2,7 +2,7 @@
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Blocks.Sys.BlockBuilder;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class ModuleAndBlockBuilder(Generator<BlockOfModule> blockGenerator, string logPrefix, object[]? connect = default)

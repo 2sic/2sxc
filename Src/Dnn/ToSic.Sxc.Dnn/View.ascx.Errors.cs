@@ -1,5 +1,6 @@
 ﻿using System.Web.UI;
 using DotNetNuke.Services.Exceptions;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Internal.Render;
 

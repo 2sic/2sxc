@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Blocks.Internal;
+﻿namespace ToSic.Sxc.Blocks.Sys.BlockBuilder;
 
 [PrivateApi("internal use only")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

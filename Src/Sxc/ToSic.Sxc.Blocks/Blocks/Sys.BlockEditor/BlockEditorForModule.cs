@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Integration.Modules;
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Blocks.Sys.BlockEditor;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockEditorForModule(

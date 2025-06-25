@@ -3,7 +3,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sys.Utils;
 using static System.StringComparer;
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Blocks.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class SpecsForLogHistory

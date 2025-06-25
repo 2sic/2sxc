@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Blocks.Internal.Render;
+﻿namespace ToSic.Sxc.Blocks.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IDependentApp

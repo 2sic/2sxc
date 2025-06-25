@@ -4,12 +4,13 @@ using ToSic.Eav.ImportExport.Integration;
 using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Internal;
 using ToSic.Sxc.Sys.Integration.Paths;
 using ToSic.Sxc.Web.Internal.JsContext;
 using ToSic.Sxc.Web.Sys.Html;
-using static ToSic.Sxc.Blocks.Internal.BlockBuildingConstants;
+using static ToSic.Sxc.Blocks.BlockBuildingConstants;
 
 namespace ToSic.Sxc.Blocks.Internal.Render;
 

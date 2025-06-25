@@ -8,6 +8,7 @@ using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.HtmlParsing;
 using ToSic.Sxc.Web.Internal.PageService;
+using ToSic.Sxc.Web.Sys.ClientAssets;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Blocks.Internal;

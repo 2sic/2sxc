@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Web.Internal.ClientAssets;
+﻿namespace ToSic.Sxc.Web.Sys.ClientAssets;
 
 public record ClientAsset
 {

@@ -9,6 +9,7 @@ using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.PageServiceShared.Internal;
+using ToSic.Sxc.Web.Sys.ClientAssets;
 using ToSic.Sys.Requirements;
 using static ToSic.Sxc.Web.Internal.ClientAssets.ClientAssetConstants;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;

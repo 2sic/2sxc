@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Web.Internal.ClientAssets;
+﻿using ToSic.Sxc.Web.Sys.ClientAssets;
 
 namespace ToSic.Sxc.Engines;
 

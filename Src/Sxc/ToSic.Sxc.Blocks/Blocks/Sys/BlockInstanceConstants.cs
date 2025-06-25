@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.DataSources;
+﻿namespace ToSic.Sxc.Blocks.Sys;
 
 public class BlockInstanceConstants
 {

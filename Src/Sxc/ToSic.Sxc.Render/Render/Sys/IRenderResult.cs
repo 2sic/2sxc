@@ -1,10 +1,12 @@
-﻿using ToSic.Sxc.Services.OutputCache;
+﻿using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.Internal.PageService;
+using ToSic.Sxc.Web.Sys.ClientAssets;
 
 namespace ToSic.Sxc.Blocks.Internal.Render;
 

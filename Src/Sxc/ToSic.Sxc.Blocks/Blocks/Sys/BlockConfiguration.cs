@@ -2,10 +2,12 @@
 using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource.Internal.Query;
+using ToSic.Sxc.Blocks.Internal;
+
 // ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
 #pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Blocks.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockConfiguration: EntityBasedWithLog, IAppIdentity

@@ -2,9 +2,10 @@
 using ToSic.Eav.Cms.Internal;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context.Sys;
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Blocks.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public sealed class BlockOfEntity(BlockGeneratorHelpers helpers, LazySvc<AppFinder> appFinderLazy)

@@ -2,7 +2,7 @@
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Sxc.Blocks.Internal;
 
-namespace ToSic.Sxc.Apps.Internal.Work;
+namespace ToSic.Sxc.Blocks.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkBlocksMod(

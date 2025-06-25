@@ -6,7 +6,7 @@ using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Sxc.Blocks.Internal;
 
-namespace ToSic.Sxc.Apps.Internal.Work;
+namespace ToSic.Sxc.Blocks.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkBlocks(IZoneCultureResolver cultureResolver, Generator<QueryDefinitionBuilder> qDefBuilder, GenWorkPlus<WorkEntities> workEntities)

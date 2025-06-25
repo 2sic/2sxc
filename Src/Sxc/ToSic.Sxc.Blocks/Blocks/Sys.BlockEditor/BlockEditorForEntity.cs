@@ -1,7 +1,8 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Sxc.Apps.Sys;
+using ToSic.Sxc.Blocks.Internal;
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Blocks.Sys.BlockEditor;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockEditorForEntity(

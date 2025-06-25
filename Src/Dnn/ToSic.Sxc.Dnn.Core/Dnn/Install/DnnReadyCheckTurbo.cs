@@ -4,6 +4,7 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Dnn.Install;

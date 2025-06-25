@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using static System.Text.Json.Serialization.JsonIgnoreCondition;
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Blocks.Sys.Problems;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ProblemReport

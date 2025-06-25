@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Blocks.Internal;
+﻿namespace ToSic.Sxc.Blocks.Sys.BlockEditor;
 
 public partial class BlockEditorBase
 {

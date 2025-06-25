@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Data.Sys;
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Blocks;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockBuildingConstants

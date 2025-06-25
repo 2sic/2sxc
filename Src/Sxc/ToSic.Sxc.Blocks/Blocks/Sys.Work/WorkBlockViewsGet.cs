@@ -6,7 +6,7 @@ using ToSic.Sxc.Apps.Internal.Work;
 using ToSic.Sxc.Blocks.Internal;
 
 // note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
-namespace ToSic.Sxc.Blocks.Work.Internal;
+namespace ToSic.Sxc.Blocks.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class WorkBlockViewsGet(GenWorkPlus<WorkViews> workViews, LazySvc<AppIconHelpers> appIconHelpers)

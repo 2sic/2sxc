@@ -1,11 +1,12 @@
 ﻿using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Internal.PageFeatures;
-using static ToSic.Sxc.Blocks.Internal.BlockBuildingConstants;
+using static ToSic.Sxc.Blocks.BlockBuildingConstants;
 
 namespace ToSic.Sxc.Blocks.Internal;
 

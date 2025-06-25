@@ -2,6 +2,8 @@
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using static ToSic.Sxc.Backend.SxcWebApiConstants;
 
 namespace ToSic.Sxc.Dnn.Integration;

@@ -1,7 +1,7 @@
 ﻿using ToSic.Lib.Services;
 using ToSic.Sxc.Context.Sys;
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Blocks.Sys;
 
 /// <summary>
 /// Official constructor, must call Init afterward

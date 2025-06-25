@@ -5,11 +5,11 @@ using ToSic.Eav.Sys;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Blocks.Sys.Work;
 using ToSic.Sxc.DataSources.Sys;
 using ToSic.Sxc.LookUp.Sys;
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Blocks.Sys;
 
 public class BlockGeneratorHelpers(GenWorkPlus<WorkViews> workViews, GenWorkPlus<WorkBlocks> appBlocks, LazySvc<BlockDataSourceFactory> bdsFactoryLazy, LazySvc<App> appLazy)
     : ServiceBase("Eav.BlGenH", connect: [bdsFactoryLazy, appLazy, workViews, appBlocks])

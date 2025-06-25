@@ -1,10 +1,11 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
-using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Sys.Problems;
 using ToSic.Sxc.Context.Sys;
 using IApp = ToSic.Sxc.Apps.IApp;
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Blocks.Sys;
 
 /// <summary>
 /// INTERNAL: A unit / block of output in a CMS. 

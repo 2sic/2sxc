@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Internal;
+﻿namespace ToSic.Sxc.Blocks;
 
 /// <summary>
 /// Contains special constants for setting-names stored in the Dnn/Oqtane module settings.

@@ -2,6 +2,8 @@
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Internal;
 using ToSic.Sxc.Render.Internal;
