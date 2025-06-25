@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Oqtane.Infrastructure;
-using OqtaneSSR.Extensions;
 using ToSic.Eav;
 using ToSic.Eav.Integration;
 using ToSic.Eav.Sys;

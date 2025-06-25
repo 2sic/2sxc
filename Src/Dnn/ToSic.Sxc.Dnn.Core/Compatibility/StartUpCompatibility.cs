@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Configuration;
-using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Sys;
 using ToSic.Sxc.Services;
 

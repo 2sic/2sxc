@@ -1,4 +1,4 @@
-﻿namespace ToSic.Eav.Metadata;
+﻿namespace ToSic.Sxc.Cms.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CmsMetadata

@@ -87,9 +87,9 @@ internal partial class DnnRazorEngine(EngineBase.MyServices helpers, DnnRazorCom
     }
 
 
-    /// <summary>
-    /// Special old mechanism to always request jQuery and Rvt
-    /// </summary>
-    public bool OldAutoLoadJQueryAndRvt => EntryRazorComponent.CompatibilityLevel <= CompatibilityLevels.MaxLevelForAutoJQuery;
+    ///// <summary>
+    ///// Special old mechanism to always request jQuery and Rvt
+    ///// </summary>
+    //public bool OldAutoLoadJQueryAndRvt => EntryRazorComponent.CompatibilityLevel <= CompatibilityLevels.MaxLevelForAutoJQuery;
 
 }

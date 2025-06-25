@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
+using ToSic.Sxc.Code.Sys.HotBuild;
 
 namespace ToSic.Sxc.Dnn.Compile.Internal;
 

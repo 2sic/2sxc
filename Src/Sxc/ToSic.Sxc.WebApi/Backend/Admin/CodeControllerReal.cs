@@ -2,7 +2,7 @@
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Sxc.Code.Generate;
 using ToSic.Sxc.Code.Generate.Internal;
-using ToSic.Sxc.Code.Internal.Documentation;
+using ToSic.Sxc.Code.Sys.Documentation;
 using ToSic.Sys.Utils.Assemblies;
 
 namespace ToSic.Sxc.Backend.Admin;

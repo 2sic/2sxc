@@ -1,5 +1,4 @@
-﻿using DotNetNuke.Framework;
-using DotNetNuke.Framework.JavaScriptLibraries;
+﻿using DotNetNuke.Framework.JavaScriptLibraries;
 using DotNetNuke.Web.Client;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;

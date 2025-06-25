@@ -4,7 +4,6 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.LookUp.Sources;
 using ToSic.Eav.LookUp.Sys;
 using ToSic.Eav.LookUp.Sys.Engines;
-using ToSic.Eav.LookUp;
 using ToSic.Sxc.LookUp.Internal;
 using ToSic.Sxc.Web.Internal.DotNet;
 using static ToSic.Sxc.LookUp.LookUpConstants;

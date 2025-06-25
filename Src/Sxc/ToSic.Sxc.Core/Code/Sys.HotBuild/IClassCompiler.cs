@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Code.Internal.HotBuild;
+﻿namespace ToSic.Sxc.Code.Sys.HotBuild;
 
 public interface IClassCompiler
 {

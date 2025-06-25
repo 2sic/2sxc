@@ -1,6 +1,6 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Sys.HotBuild;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal;
 

@@ -1,6 +1,8 @@
 ﻿using ToSic.Eav.Sys;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Code.Sys.HotBuild;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.Code.Internal.HotBuild;

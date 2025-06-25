@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.LookUp;
-using ToSic.Eav.LookUp;
 using ToSic.Sxc.Services;
 #pragma warning disable xUnit1026
 

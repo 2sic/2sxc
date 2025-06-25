@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Code.Internal;
+﻿namespace ToSic.Sxc.Code.Sys;
 
 public class SourceCodeConstants
 {

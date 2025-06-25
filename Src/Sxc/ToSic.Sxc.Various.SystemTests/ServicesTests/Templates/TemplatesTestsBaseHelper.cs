@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.LookUp;
-using ToSic.Eav.LookUp;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.ServicesTests.Templates;

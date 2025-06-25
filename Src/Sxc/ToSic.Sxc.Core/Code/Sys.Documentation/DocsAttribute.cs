@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Code.Internal.Documentation;
+﻿namespace ToSic.Sxc.Code.Sys.Documentation;
 
 /// <summary>
 /// This was an experimental way to add attributes to classes, which should generate documentation for the

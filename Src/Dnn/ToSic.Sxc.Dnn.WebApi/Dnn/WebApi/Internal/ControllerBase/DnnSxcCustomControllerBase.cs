@@ -1,5 +1,5 @@
 ﻿using System.Web.Http.Controllers;
-using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal;

@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Internal;
+﻿namespace ToSic.Sxc.Code.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CompatibilityLevels

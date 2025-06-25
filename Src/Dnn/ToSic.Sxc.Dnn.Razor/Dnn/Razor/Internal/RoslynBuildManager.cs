@@ -9,6 +9,8 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Internal.SourceCode;
+using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sys.Caching;
 using ToSic.Sys.Locking;

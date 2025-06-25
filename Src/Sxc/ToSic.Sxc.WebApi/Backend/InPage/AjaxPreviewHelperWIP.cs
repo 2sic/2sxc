@@ -1,10 +1,4 @@
-﻿using ToSic.Eav.Sys;
-using ToSic.Razor.Blade;
-using ToSic.Sxc.Blocks.Internal.Render;
-using ToSic.Sxc.Web.Internal.PageFeatures;
-using ToSic.Sys.Utils;
-
-namespace ToSic.Sxc.Backend.InPage;
+﻿namespace ToSic.Sxc.Backend.InPage;
 
 // 2025-06-23 2dm - as of now doesn't seem in use, and probably has not been for a long time.
 

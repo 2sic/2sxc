@@ -4,6 +4,7 @@ using System.Web.Compilation;
 using System.Web.Configuration;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Sys.HotBuild;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Dnn.Compile;

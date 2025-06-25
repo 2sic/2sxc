@@ -2,6 +2,7 @@
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.ApiExplorer;
 using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
