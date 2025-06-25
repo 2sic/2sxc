@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Data.Sys;
-using ToSic.Eav.Data.Sys.PropertyStack;
+﻿using ToSic.Eav.Data.Sys.PropertyStack;
 
 namespace ToSic.Sxc.Data.Sys;
 

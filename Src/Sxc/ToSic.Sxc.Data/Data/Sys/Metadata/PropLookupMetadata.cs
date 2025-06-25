@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Data.Sys;
-using ToSic.Eav.Metadata;
+﻿using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Data.Sys.Metadata;
 

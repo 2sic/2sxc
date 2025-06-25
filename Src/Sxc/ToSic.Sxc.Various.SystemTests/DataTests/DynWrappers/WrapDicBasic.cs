@@ -1,5 +1,4 @@
 ﻿using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Internal;
 using ToSic.Sxc.Data.Sys.Wrappers;
 
 namespace ToSic.Sxc.DataTests.DynWrappers;
