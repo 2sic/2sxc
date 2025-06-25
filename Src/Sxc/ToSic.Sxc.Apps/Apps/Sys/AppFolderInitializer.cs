@@ -27,14 +27,6 @@ public class AppFolderInitializer(IServerPaths serverPaths, IGlobalConfiguration
         // Create 2sxc folder if it does not exists
         sxcFolder.Create();
 
-        // Create web.config (copy from DesktopModules folder, but only if is there, and for Oqtane is not)
-        // Note that DNN needs it because many razor file don't use @inherits and the web.config contains the default class
-        // but in Oqtane we'll require that to work
-        var webConfigTemplateFilePath =
-            Path.Combine(globalConfiguration.GlobalFolder(), SpecialFiles.WebConfigTemplateFile);
-        if (File.Exists(webConfigTemplateFilePath) && !sxcFolder.GetFiles(SpecialFiles.WebConfigFileName).Any())
-            File.Copy(webConfigTemplateFilePath, Path.Combine(sxcFolder.FullName, SpecialFiles.WebConfigFileName));
-
         // Create a Content folder (or App Folder)
         if (string.IsNullOrEmpty(appFolder))
         {

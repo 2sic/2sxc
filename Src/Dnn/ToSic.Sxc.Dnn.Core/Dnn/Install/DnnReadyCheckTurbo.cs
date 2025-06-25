@@ -72,8 +72,7 @@ internal class DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitial
         var l = Log.Fn($"module {module.ModuleId} on page {module.TabId}");
         var sxcFolder = new DirectoryInfo(block.Context.Site.AppsRootPhysicalFull);
         var contentFolder = new DirectoryInfo(Path.Combine(sxcFolder.FullName, KnownAppsConstants.ContentAppFolder));
-        var webConfigTemplate = new FileInfo(Path.Combine(sxcFolder.FullName, SpecialFiles.WebConfigFileName));
-        if (!(sxcFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
+        if (!(sxcFolder.Exists && contentFolder.Exists))
         {
             // configure it
             var tm = appFolderInitializerLazy.Value;

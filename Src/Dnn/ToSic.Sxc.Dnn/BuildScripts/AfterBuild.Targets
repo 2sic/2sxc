@@ -144,7 +144,6 @@
     <Exec Command="xcopy &quot;$(ProjectDir)View.ascx&quot; &quot;$(BuildTarget)&quot; /y" IgnoreExitCode="true"/>
     <Exec Command="xcopy &quot;$(ProjectDir)icon.png&quot; &quot;$(BuildTarget)&quot; /y" IgnoreExitCode="true"/>
     <Exec Command="xcopy &quot;$(ProjectDir)icon-app.png&quot; &quot;$(BuildTarget)&quot; /y" IgnoreExitCode="true"/>
-    <Exec Command="xcopy &quot;$(ProjectDir)WebConfigTemplate.config&quot; &quot;$(BuildTarget)&quot; /y" IgnoreExitCode="true"/>
     <!-- ... Add other xcopy commands similarly ... -->
 
     <!-- Echo Statements -->
