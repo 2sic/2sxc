@@ -1,5 +1,5 @@
-﻿using ToSic.Sxc.Configuration.Internal;
-using ToSic.Sxc.Services;
+﻿using ToSic.Sxc.Services;
+using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sys.Capabilities.Licenses;
 using ToSic.Sys.Capabilities.Platform;
 using ToSic.Testing.Shared.Platforms;

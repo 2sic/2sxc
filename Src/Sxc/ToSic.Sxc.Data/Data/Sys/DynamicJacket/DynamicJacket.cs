@@ -1,7 +1,7 @@
 ﻿using System.Dynamic;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using ToSic.Sxc.Data.Internal.Convert;
+using ToSic.Sxc.Data.Sys.Json;
 using ToSic.Sxc.Data.Sys.Wrappers;
 
 namespace ToSic.Sxc.Data.Sys.DynamicJacket;

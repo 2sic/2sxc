@@ -1,8 +1,8 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Caching;
 using ToSic.Sys.Capabilities.Features;

@@ -1,7 +1,7 @@
 ﻿using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Capabilities.Licenses;
 
-namespace ToSic.Sxc.Configuration.Internal;
+namespace ToSic.Sxc.Sys.Configuration;
 internal class SxcLicenseRules
 {
     public static List<FeatureLicenseRule> ForPatronsPerfectionist = BuiltInLicenseRules.BuildRule(BuiltInLicenses.PatronPerfectionist, true);

@@ -4,6 +4,7 @@ using ToSic.Eav.LookUp.Sys;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Lib.Services;
 using ToSic.Sys.Utils;
+using LookUpConstants = ToSic.Sxc.LookUp.Sys.LookUpConstants;
 
 namespace ToSic.Sxc.LookUp.Internal;
 

@@ -1,6 +1,7 @@
 ﻿using ToSic.Lib.DI;
 
-namespace ToSic.Sxc.Internal.Plumbing;
+// ReSharper disable once CheckNamespace
+namespace ToSic.Lib.DI;
 
 /// <summary>
 /// Provide page scoped services

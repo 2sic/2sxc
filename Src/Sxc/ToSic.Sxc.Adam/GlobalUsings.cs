@@ -7,5 +7,5 @@ global using ToSic.Eav.Data;
 global using ToSic.Lib.Coding;
 global using ToSic.Lib.Documentation;
 global using ToSic.Lib.Logging;
-global using static ToSic.Sxc.Internal.SxcLogging;
+global using static ToSic.Sxc.Sys.SxcLogging;
 global using ToSic.Sys.Utils;

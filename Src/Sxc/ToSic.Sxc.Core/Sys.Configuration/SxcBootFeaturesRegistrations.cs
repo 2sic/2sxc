@@ -1,8 +1,7 @@
-﻿using ToSic.Sxc.Configuration.Internal;
-using ToSic.Sys.Boot;
+﻿using ToSic.Sys.Boot;
 using ToSic.Sys.Capabilities.Features;
 
-namespace ToSic.Sxc.Startup;
+namespace ToSic.Sxc.Sys.Configuration;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class SxcBootFeaturesRegistrations(FeaturesCatalog featuresCatalog)

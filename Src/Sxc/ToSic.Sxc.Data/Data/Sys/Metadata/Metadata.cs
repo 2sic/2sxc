@@ -1,9 +1,9 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Metadata;
-using ToSic.Sxc.Data.Internal.Convert;
 using ToSic.Sxc.Data.Sys.Dynamic;
 using ToSic.Sxc.Data.Sys.Factory;
+using ToSic.Sxc.Data.Sys.Json;
 
 namespace ToSic.Sxc.Data.Sys.Metadata;
 

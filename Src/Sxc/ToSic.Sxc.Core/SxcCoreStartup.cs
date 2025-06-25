@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Environment.Sys.ServerPaths;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Integration;
 using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Internal.Plumbing;
-using ToSic.Sxc.Startup;
+using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sys.Boot;
 
 namespace ToSic.Sxc;

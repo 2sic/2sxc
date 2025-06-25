@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.LookUp;
+﻿namespace ToSic.Sxc.LookUp.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

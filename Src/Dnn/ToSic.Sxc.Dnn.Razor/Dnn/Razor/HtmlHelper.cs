@@ -8,7 +8,7 @@ using ToSic.Sxc.Code.Internal.CodeErrorHelp;
 using ToSic.Sxc.Code.Internal.SourceCode;
 using ToSic.Sxc.Dnn.Razor.Internal;
 using static System.StringComparer;
-using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
+using static ToSic.Sxc.Sys.Configuration.SxcFeatures;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Dnn.Razor;

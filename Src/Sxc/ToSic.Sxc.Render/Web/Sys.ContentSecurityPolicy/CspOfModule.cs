@@ -1,9 +1,9 @@
 ﻿using ToSic.Eav.Apps.Sys.AppStack;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;

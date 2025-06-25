@@ -11,4 +11,4 @@ global using ToSic.Lib.DI;
 global using ToSic.Lib.Documentation;
 global using ToSic.Lib.Logging;
 global using ToSic.Sys.Performance;
-global using static ToSic.Sxc.Internal.SxcLogging;
+global using static ToSic.Sxc.Sys.SxcLogging;

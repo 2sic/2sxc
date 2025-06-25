@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Data.Internal.Convert;
+﻿namespace ToSic.Sxc.Data.Sys.Json;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

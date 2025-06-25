@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Internal;
+﻿namespace ToSic.Sxc.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class SxcLogging

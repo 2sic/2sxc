@@ -3,7 +3,7 @@ using Oqtane.Shared;
 using ToSic.Eav.LookUp.Sources;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Oqt.Server.Plumbing;
-using static ToSic.Sxc.LookUp.LookUpConstants;
+using static ToSic.Sxc.LookUp.Sys.LookUpConstants;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps;
 

@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.LookUp;
-using LookUpConstants = ToSic.Sxc.LookUp.LookUpConstants;
+using LookUpConstants = ToSic.Sxc.LookUp.Sys.LookUpConstants;
 
 namespace ToSic.Sxc.DataSources;
 

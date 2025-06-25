@@ -5,7 +5,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Wrappers;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Data.Internal.Convert;
+using ToSic.Sxc.Data.Sys.Json;
 using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Services.Internal;
 

@@ -6,4 +6,4 @@ global using System.Linq;
 global using ToSic.Sys.Utils;
 global using ToSic.Eav.Data;
 global using ToSic.Lib.Documentation;
-global using static ToSic.Sxc.Internal.SxcLogging;
+global using static ToSic.Sxc.Sys.SxcLogging;

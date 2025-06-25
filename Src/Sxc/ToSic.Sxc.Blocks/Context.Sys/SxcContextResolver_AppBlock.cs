@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
-using ToSic.Sxc.Configuration.Internal;
+using ToSic.Sxc.Sys.Configuration;
 
 namespace ToSic.Sxc.Context.Internal;
 

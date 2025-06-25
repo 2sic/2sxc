@@ -1,9 +1,9 @@
 ﻿using System.Text.RegularExpressions;
 
 using ToSic.Lib.Services;
-using ToSic.Sxc.Configuration.Internal;
 using ToSic.Sxc.Data.Sys;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Web.Internal.HtmlParsing;
 using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sys.Utils;

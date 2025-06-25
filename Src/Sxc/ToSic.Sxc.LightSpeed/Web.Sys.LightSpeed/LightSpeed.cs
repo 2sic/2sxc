@@ -12,7 +12,7 @@ using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sys.Caching;
 using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Utils;
-using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
+using static ToSic.Sxc.Sys.Configuration.SxcFeatures;
 
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
 

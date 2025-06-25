@@ -14,6 +14,7 @@ using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Web.Internal.DotNet;
+using LookUpConstants = ToSic.Sxc.LookUp.Sys.LookUpConstants;
 
 namespace ToSic.Sxc.LookUp.Internal;
 

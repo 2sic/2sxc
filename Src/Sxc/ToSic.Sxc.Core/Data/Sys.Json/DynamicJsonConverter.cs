@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
-namespace ToSic.Sxc.Data.Internal.Convert;
+namespace ToSic.Sxc.Data.Sys.Json;
 
 /// <summary>
 /// This is a serializer-helper which System.Text.Json will pick up automatically when converting a DynamicJacket or DynamicReadObject to JSON

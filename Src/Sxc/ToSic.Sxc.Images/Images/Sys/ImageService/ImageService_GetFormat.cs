@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Images.Internal;
 using ToSic.Sys.Utils;
-using static ToSic.Sxc.Configuration.Internal.SxcFeatures;
+using static ToSic.Sxc.Sys.Configuration.SxcFeatures;
 
 namespace ToSic.Sxc.Images;
 

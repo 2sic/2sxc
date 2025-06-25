@@ -2,7 +2,7 @@
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Sys.Decorators;
-using ToSic.Sxc.Edit.Internal;
+using ToSic.Sxc.Edit.Sys;
 
 namespace ToSic.Sxc.Data.Internal.Convert;
 

@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Configuration.Internal;
+﻿using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Capabilities.Licenses;
 

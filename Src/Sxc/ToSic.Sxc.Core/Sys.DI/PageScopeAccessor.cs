@@ -1,4 +1,5 @@
-﻿namespace ToSic.Sxc.Internal.Plumbing;
+﻿// ReSharper disable once CheckNamespace
+namespace ToSic.Lib.DI;
 
 /// <summary>
 /// Special helper to get a ServiceProvider of the page scope, in scenarios where each module has an own scope. 

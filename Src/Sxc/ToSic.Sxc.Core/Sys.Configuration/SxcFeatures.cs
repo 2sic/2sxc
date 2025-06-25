@@ -1,6 +1,6 @@
 ﻿using ToSic.Sys.Capabilities.Features;
 
-namespace ToSic.Sxc.Configuration.Internal;
+namespace ToSic.Sxc.Sys.Configuration;
 
 /// <summary>
 /// Internal - built-in features.

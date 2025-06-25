@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using ToSic.Sxc.Data.Internal.Convert;
+using ToSic.Sxc.Data.Sys.Json;
 
 namespace ToSic.Sxc.Data;
 
