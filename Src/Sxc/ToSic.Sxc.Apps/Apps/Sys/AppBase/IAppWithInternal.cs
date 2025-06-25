@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Apps.Sys;
 
-public interface IAppWithInternal : Eav.Apps.IApp
+public interface IAppWithInternal : IApp
 {
     IAppReader AppReader { get; }
 }

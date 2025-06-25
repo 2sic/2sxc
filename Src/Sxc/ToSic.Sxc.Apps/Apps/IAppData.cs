@@ -21,7 +21,7 @@ public interface IAppData: IDataSource, IMetadataSource
     IEntity Create(string contentTypeName, Dictionary<string, object> values, string? userName = null, ITarget? target = null);
 
     /// <summary>
-    /// Create a bunch of new entities in one single call (much faster, because cache doesn't need to repopulate in the mean time).
+    /// Create a bunch of new entities in one single call (much faster, because cache doesn't need to repopulate in the meantime).
     /// </summary>
     /// <param name="contentTypeName">The type name</param>
     /// <param name="multiValues">many dictionaries, each will become an own item when stored</param>

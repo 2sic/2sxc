@@ -1,4 +1,6 @@
-﻿using ToSic.Sxc.Data;
+﻿using ToSic.Eav.LookUp.Sys.Engines;
+using ToSic.Eav.Metadata;
+using ToSic.Sxc.Data;
 
 
 // ReSharper disable UnusedMemberInSuper.Global
@@ -10,13 +12,53 @@ namespace ToSic.Sxc.Apps;
 /// </summary>
 [PublicApi]
 public interface IApp: 
-    Eav.Apps.IApp,
-    IAppPaths
+    IAppPaths,
+    IAppIdentity,
+    IHasMetadata
 // #TryToDropOldIApp: 2025-05-14 2dm v20 try to remove this for now
 //#if NETFRAMEWORK
 //        , SexyContent.Interfaces.IApp // inherits from old namespace for compatibility
 //#endif
 {
+
+    #region Experimental / new
+
+    [PrivateApi]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    [Obsolete("Don't use any more?? note: 2026-06 2dm not sure if this is really deprecated, used to say: use NameId instead, will be removed ca. v14")]
+    // TODO: MARK as #Deprecated and log access
+    ILookUpEngine ConfigurationProvider { get; }
+
+    #endregion
+
+
+    /// <summary>
+    /// App Name
+    /// </summary>
+    /// <returns>The name as configured in the app configuration.</returns>
+    string Name { get; }
+
+    /// <summary>
+    /// App Folder
+    /// </summary>
+    /// <returns>The folder as configured in the app configuration.</returns>
+    string Folder { get; }
+
+    /// <summary>
+    /// NameId of the App - usually a string-GUID
+    /// </summary>
+    string NameId { get; }
+
+    [PrivateApi]
+    [Obsolete("Don't use any more, use NameId instead, will be removed ca. v14")]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    string AppGuid { get; }
+
+    /// <summary>
+    /// Data of the app
+    /// </summary>
+    IAppData Data { get; }
+
     /// <summary>
     /// Configuration object with information about the App.
     /// This contains things like app version, path etc.

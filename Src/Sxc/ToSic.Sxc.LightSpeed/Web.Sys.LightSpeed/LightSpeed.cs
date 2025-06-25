@@ -189,7 +189,7 @@ internal class LightSpeed(
         var paths = new List<string>();
         foreach (var appState in dependentApps)
         {
-            var appPaths = appPathsLazy.New().Get(appState, app.Site);
+            var appPaths = appPathsLazy.New().Get(appState, site.Value);
             if (Directory.Exists(appPaths.PhysicalPath)) paths.Add(appPaths.PhysicalPath);
             if (Directory.Exists(appPaths.PhysicalPathShared)) paths.Add(appPaths.PhysicalPathShared);
         }

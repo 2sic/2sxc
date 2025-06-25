@@ -3,8 +3,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Apps;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
 using ToSic.Sys.Utils;
 using MailMessage = System.Net.Mail.MailMessage;
@@ -12,20 +10,11 @@ using MailMessage = System.Net.Mail.MailMessage;
 namespace ToSic.Sxc.Services.Internal;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class MailServiceBase(LazySvc<IUser> userLazy)
-    : ServiceWithContext($"{SxcLogName}.MailSrv", connect: [userLazy]), IMailService
+public abstract class MailServiceBase(LazySvc<IUser> userLazy, object[]? connect = default)
+    : ServiceWithContext($"{SxcLogName}.MailSrv", connect: [..connect ?? [], userLazy]), IMailService
 {
     private static readonly Regex HtmlDetectionRegex = new("<(.*\\s*)>", RegexOptions.Compiled);
-
-    [PrivateApi] protected IApp App = null!;
-
-    /// <inheritdoc />
-    public override void ConnectToRoot(IExecutionContext exCtx)
-    {
-        base.ConnectToRoot(exCtx);
-        App = exCtx.GetApp();
-    }
-
+    
     protected abstract SmtpClient SmtpClient();
 
     /// <inheritdoc />

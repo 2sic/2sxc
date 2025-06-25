@@ -22,15 +22,18 @@ public partial class App(
     LazySvc<CodeInfoService> codeChanges,
     IAppPathsMicroSvc pathFactoryTemp)
     // Note: If this is ever changed to not inherit from the EavApp, make sure you correct/update the LightSpeed code as well as it checks for this base class
-    : SxcAppBase(services, "App.SxcApp", connect: [globalPaths, cdfLazy, codeChanges, pathFactoryTemp]), IApp
+    : SxcAppBase(services, "App.SxcApp", connect: [globalPaths, cdfLazy, codeChanges, pathFactoryTemp]),
+        IAppWithInternal
 {
     #region Special objects
 
-    private ICodeDataFactory Cdf => _cdf.Get(() => cdfLazy.SetInit(obj => obj.SetFallbacks(Site)).Value)!;
+    IAppReader IAppWithInternal.AppReader => AppReaderInt;
+
+    private ICodeDataFactory Cdf => _cdf.Get(() => cdfLazy.SetInit(obj => obj.SetFallbacks(MySite)).Value)!;
     private readonly GetOnce<ICodeDataFactory> _cdf = new();
 
 
-    private IAppPaths AppPaths => _appPaths.Get(() => pathFactoryTemp.Get(AppReaderInt, Site))!;
+    private IAppPaths AppPaths => _appPaths.Get(() => pathFactoryTemp.Get(AppReaderInt, MySite))!;
     private readonly GetOnce<IAppPaths> _appPaths = new();
 
     #endregion

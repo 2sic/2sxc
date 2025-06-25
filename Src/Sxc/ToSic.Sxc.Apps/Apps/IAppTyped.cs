@@ -13,10 +13,10 @@ public interface IAppTyped: IAppIdentity
 {
     #region Properties basically from Eav.Apps.IApp
 
-    /// <inheritdoc cref="Eav.Apps.IApp.Name"/>
+    /// <inheritdoc cref="IApp.Name"/>
     string Name { get; }
 
-    /// <inheritdoc cref="Eav.Apps.IApp.Data"/>
+    /// <inheritdoc cref="IApp.Data"/>
     IAppDataTyped Data { get; }
 
     #endregion

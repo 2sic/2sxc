@@ -24,8 +24,7 @@ namespace ToSic.Sxc.Apps.Sys;
 [PrivateApi("Hide implementation - was PublicApi_Stable_ForUseInYourCode till 16.09")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract partial class SxcAppBase(SxcAppBase.MyServices services, string? logName = default, object[]? connect = default)
-    : AppBase<SxcAppBase.MyServices>(services, logName ?? "Eav.App", connect: connect),
-        IAppWithInternal
+    : AppBase<SxcAppBase.MyServices>(services, logName ?? "Eav.App", connect: connect)
 {
     // ReSharper disable once InconsistentNaming
     private readonly MyServices services = services;
@@ -62,8 +61,6 @@ public abstract partial class SxcAppBase(SxcAppBase.MyServices services, string?
         get => field ?? throw new("AppReaderInt not set, did you call Init()?");
         private set;
     } = null!;
-
-    IAppReader IAppWithInternal.AppReader => AppReaderInt;
 
 
     [field: AllowNull, MaybeNull]
@@ -114,10 +111,12 @@ public abstract partial class SxcAppBase(SxcAppBase.MyServices services, string?
 
         // If we have a replacement site (like App being used from another site), set it here
         if (replaceSite != null)
-            Site = replaceSite;
+        {
+            MySite = replaceSite;
+        }
 
         // Env / Tenant must be re-checked here
-        if (Site == null)
+        if (MySite == null)
             throw new("no site/portal received");
 
         // Update my AppIdentity and show for debug
@@ -125,10 +124,10 @@ public abstract partial class SxcAppBase(SxcAppBase.MyServices services, string?
         l.A($"prep App #{appIdentity.Show()}, has{nameof(dataSpecs)}:{dataSpecs != null}");
 
         // in case the DI gave a bad tenant, try to look up
-        if (Site.Id == EavConstants.NullId
+        if (MySite.Id == EavConstants.NullId
             && appIdentity.AppId != EavConstants.NullId
             && appIdentity.AppId != AppConstants.AppIdNotFound)
-            Site = Services.ZoneMapper.SiteOfApp(appIdentity.AppId);
+            MySite = Services.ZoneMapper.SiteOfApp(appIdentity.AppId);
 
         // Look up name in cache
         AppReaderInt = services.AppReaders.Get(this);
