@@ -1,6 +1,6 @@
 ﻿using ToSic.Lib.Coding;
 
-namespace ToSic.Sxc.Code.Generate.Internal;
+namespace ToSic.Sxc.Code.Generate.Sys;
 
 internal abstract class GeneratePropertyBase(CSharpGeneratorHelper helper)
 {

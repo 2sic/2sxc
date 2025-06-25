@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Sxc.Cms.Data;
 
-namespace ToSic.Sxc.Code.Generate.Internal;
+namespace ToSic.Sxc.Code.Generate.Sys;
 
 internal class GeneratePropertyCustom(CSharpGeneratorHelper helper) : GeneratePropertyBase(helper)
 {

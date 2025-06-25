@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Code.Generate.Internal;
+﻿namespace ToSic.Sxc.Code.Generate.Sys;
 
 /// <summary>
 /// Object which contains the info to generate the class code file.

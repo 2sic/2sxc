@@ -15,6 +15,7 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Hosting;
 using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Sys.HotBuild;
 using DependencyContextCompilationOptions = Microsoft.Extensions.DependencyModel.CompilationOptions;
 
 namespace ToSic.Sxc.Razor.DotNetOverrides;

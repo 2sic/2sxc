@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace ToSic.Sxc.Code.Internal.HotBuild;
+namespace ToSic.Sxc.Code.Sys.HotBuild;
 
 [PrivateApi("Internal stuff")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

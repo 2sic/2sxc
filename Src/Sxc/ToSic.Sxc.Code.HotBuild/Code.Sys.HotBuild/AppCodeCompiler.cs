@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Sys.HotBuild;
+using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sys.Configuration;
 
-namespace ToSic.Sxc.Code.Internal.HotBuild;
+namespace ToSic.Sxc.Code.Sys.HotBuild;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, SourceCodeHasher sourceCodeHasher, object[]? connect = default) : ServiceBase("Sxc.MyApCd", connect: connect)

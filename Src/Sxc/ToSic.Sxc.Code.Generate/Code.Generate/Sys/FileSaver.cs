@@ -4,7 +4,7 @@ using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Code.Generate.Internal;
+namespace ToSic.Sxc.Code.Generate.Sys;
 
 /// <summary>
 /// Service to take generated files and save them to the file system

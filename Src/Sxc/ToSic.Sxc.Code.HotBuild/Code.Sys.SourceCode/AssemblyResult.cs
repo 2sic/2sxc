@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using ToSic.Sys.Caching;
 
-namespace ToSic.Sxc.Code.Internal.HotBuild;
+namespace ToSic.Sxc.Code.Sys.SourceCode;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AssemblyResult(Assembly? assembly = null): ICanBeCacheDependency, ITimestamped

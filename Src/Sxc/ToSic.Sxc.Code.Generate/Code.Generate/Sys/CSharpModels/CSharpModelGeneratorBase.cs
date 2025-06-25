@@ -3,7 +3,7 @@ using ToSic.Eav.Data.Sys;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Code.Generate.Internal;
+namespace ToSic.Sxc.Code.Generate.Sys;
 
 /// <summary>
 /// Abstract base class for C# model generators (both DataModel and CustomModel)

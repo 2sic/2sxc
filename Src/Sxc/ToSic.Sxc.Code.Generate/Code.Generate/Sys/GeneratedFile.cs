@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Code.Generate;
+﻿namespace ToSic.Sxc.Code.Generate.Sys;
 
 /// <summary>
 /// Represents a generated file.

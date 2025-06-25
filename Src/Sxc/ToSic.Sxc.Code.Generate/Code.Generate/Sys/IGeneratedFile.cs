@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Code.Generate;
+﻿namespace ToSic.Sxc.Code.Generate.Sys;
 
 /// <summary>
 /// Data which is meant to create a new file.

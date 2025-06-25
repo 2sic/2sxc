@@ -3,14 +3,14 @@ using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Sys;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Sys.HotBuild;
+using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Caching;
 using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Locking;
 using ISite = ToSic.Eav.Context.ISite;
 
-namespace ToSic.Sxc.Code.Internal.HotBuild;
+namespace ToSic.Sxc.Code.Sys.HotBuild;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppCodeLoader(
@@ -29,9 +29,9 @@ public class AppCodeLoader(
     /// </summary>
     /// <param name="spec"></param>
     /// <returns></returns>
-    public (AssemblyResult? AssemblyResult, HotBuildSpec Specs) GetAppCode(HotBuildSpec spec)
+    public (SourceCode.AssemblyResult? AssemblyResult, HotBuildSpec Specs) GetAppCode(HotBuildSpec spec)
     {
-        var l = Log.Fn<(AssemblyResult?, HotBuildSpec)>(spec.ToString());
+        var l = Log.Fn<(SourceCode.AssemblyResult?, HotBuildSpec)>(spec.ToString());
         var firstRound = GetOrBuildAppCode(spec);
         if (firstRound.AssemblyResult?.Assembly != null)
             return l.Return(firstRound, $"AppCode for '{spec.EditionToLog}'.");
@@ -51,7 +51,7 @@ public class AppCodeLoader(
     /// </summary>
     /// <param name="spec"></param>
     /// <returns></returns>
-    private (AssemblyResult? AssemblyResult, HotBuildSpec Specs) GetOrBuildAppCode(HotBuildSpec spec)
+    private (SourceCode.AssemblyResult? AssemblyResult, HotBuildSpec Specs) GetOrBuildAppCode(HotBuildSpec spec)
     {
         var l = Log.Fn<(AssemblyResult?, HotBuildSpec)>(spec.ToString());
 

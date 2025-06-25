@@ -1,6 +1,6 @@
 ﻿using ToSic.Lib.Data;
 
-namespace ToSic.Sxc.Code.Generate;
+namespace ToSic.Sxc.Code.Generate.Sys;
 
 /// <summary>
 /// Describes a file generator which can generate (code) files.

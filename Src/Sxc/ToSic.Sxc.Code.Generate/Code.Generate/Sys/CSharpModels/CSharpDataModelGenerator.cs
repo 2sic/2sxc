@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Code.Generate.Internal;
+﻿namespace ToSic.Sxc.Code.Generate.Sys;
 
 internal class CSharpDataModelGenerator(CSharpDataModelsGenerator dmg, IContentType type, string className) 
     : CSharpModelGeneratorBase(dmg, type, className, dmg.Log, "Gen.DtaCls")

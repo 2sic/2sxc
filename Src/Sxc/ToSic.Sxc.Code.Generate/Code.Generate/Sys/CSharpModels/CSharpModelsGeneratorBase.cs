@@ -6,7 +6,7 @@ using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Sys.Performance;
 using ToSic.Sys.Users;
 
-namespace ToSic.Sxc.Code.Generate.Internal;
+namespace ToSic.Sxc.Code.Generate.Sys;
 
 /// <summary>
 /// Base class for C# models (data/custom) generators.

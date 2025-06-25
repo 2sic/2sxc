@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Code.Generate;
+﻿namespace ToSic.Sxc.Code.Generate.Sys;
 
 /// <summary>
 /// Set of code files to generate, including some information about the generator.

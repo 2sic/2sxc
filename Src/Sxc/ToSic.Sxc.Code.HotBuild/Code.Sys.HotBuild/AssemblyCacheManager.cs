@@ -1,8 +1,8 @@
 ﻿using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Sys.HotBuild;
+using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sys.Caching;
 
-namespace ToSic.Sxc.Code.Internal.HotBuild;
+namespace ToSic.Sxc.Code.Sys.HotBuild;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

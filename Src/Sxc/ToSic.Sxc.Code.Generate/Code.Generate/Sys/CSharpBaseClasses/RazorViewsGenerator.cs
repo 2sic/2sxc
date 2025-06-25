@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Sys.Users;
 
-namespace ToSic.Sxc.Code.Generate.Internal.CSharpBaseClasses;
+namespace ToSic.Sxc.Code.Generate.Sys.CSharpBaseClasses;
 
 /// <summary>
 /// Experimental

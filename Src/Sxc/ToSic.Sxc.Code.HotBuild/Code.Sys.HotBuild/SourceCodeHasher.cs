@@ -6,7 +6,7 @@ using ToSic.Sys.Caching;
 using ToSic.Sys.Capabilities.Platform;
 using ToSic.Sys.Locking;
 
-namespace ToSic.Sxc.Code.Internal.HotBuild
+namespace ToSic.Sxc.Code.Sys.HotBuild
 {
     public class SourceCodeHasher(LazySvc<IPlatformInfo> platform, MemoryCacheService memoryCacheService) : ServiceBase("Sxc.ScCdHsh", connect: [memoryCacheService])
     {

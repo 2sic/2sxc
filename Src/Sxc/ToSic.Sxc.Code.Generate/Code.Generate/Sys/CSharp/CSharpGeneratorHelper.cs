@@ -1,9 +1,8 @@
 ﻿using System.Text;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Generate.Internal.CSharpModels;
 
-namespace ToSic.Sxc.Code.Generate.Internal;
+namespace ToSic.Sxc.Code.Generate.Sys;
 
 internal class CSharpGeneratorHelper(CSharpCodeSpecs specs, ILog parentLog): HelperBase(parentLog, "Cde.GenHlp")
 {

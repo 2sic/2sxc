@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Code.Generate;
+﻿namespace ToSic.Sxc.Code.Generate.Sys;
 
 /// <summary>
 /// WIP - should contain a list of code-files and additional specs

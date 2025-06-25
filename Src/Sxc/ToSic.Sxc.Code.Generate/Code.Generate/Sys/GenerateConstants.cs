@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Sys;
 
-namespace ToSic.Sxc.Code.Generate;
+namespace ToSic.Sxc.Code.Generate.Sys;
 
 /// <summary>
 /// Constants used in the code generation process.

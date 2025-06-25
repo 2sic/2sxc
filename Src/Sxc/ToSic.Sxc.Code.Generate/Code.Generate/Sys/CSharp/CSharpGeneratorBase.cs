@@ -3,7 +3,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Internal;
 using ToSic.Sys.Users;
 
-namespace ToSic.Sxc.Code.Generate.Internal;
+namespace ToSic.Sxc.Code.Generate.Sys;
 
 /// <summary>
 /// Experimental

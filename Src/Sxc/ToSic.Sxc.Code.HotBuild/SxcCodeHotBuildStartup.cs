@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Sys.HotBuild;
 
-namespace ToSic.Sxc.Code.HotBuild;
+namespace ToSic.Sxc;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class SxcCodeHotBuildStartup

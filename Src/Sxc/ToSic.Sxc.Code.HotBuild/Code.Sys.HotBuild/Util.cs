@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using ToSic.Sys.Configuration;
 
-namespace ToSic.Sxc.Code.Internal.HotBuild;
+namespace ToSic.Sxc.Code.Sys.HotBuild;
 
 /// <summary>
 /// On start need to clean the "2sxc.bin", because it is used to temporarily save shared temp AppCode assemblies.

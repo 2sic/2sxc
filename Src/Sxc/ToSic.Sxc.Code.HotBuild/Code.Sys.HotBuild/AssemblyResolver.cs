@@ -2,7 +2,7 @@
 using System.Reflection;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Code.Internal.HotBuild;
+namespace ToSic.Sxc.Code.Sys.HotBuild;
 
 /// <summary>
 /// Special SINGLETON service to resolve assemblies.

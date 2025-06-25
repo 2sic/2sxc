@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Code.Generate;
-using ToSic.Sxc.Code.Generate.Internal;
-using ToSic.Sxc.Code.Generate.Internal.CSharpBaseClasses;
+using ToSic.Sxc.Code.Generate.Sys;
+using ToSic.Sxc.Code.Generate.Sys.CSharpBaseClasses;
 
-namespace ToSic.Sxc.Integration.Startup;
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Startup;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class SxcCodeGenerateStartup
