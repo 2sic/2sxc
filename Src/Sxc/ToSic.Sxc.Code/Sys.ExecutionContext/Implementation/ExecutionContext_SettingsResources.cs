@@ -3,7 +3,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Data;
 using static ToSic.Eav.Apps.Sys.AppStack.AppStackConstants;
-using SettingsSources = System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, ToSic.Eav.Data.Sys.IPropertyLookup>>;
+using SettingsSources = System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, ToSic.Eav.Data.IPropertyLookup>>;
 
 namespace ToSic.Sxc.Code.Internal;
 

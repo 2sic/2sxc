@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.EntityBased.Sys;
+﻿using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource.Internal.Query;
 
 namespace ToSic.Sxc.Blocks.Internal;

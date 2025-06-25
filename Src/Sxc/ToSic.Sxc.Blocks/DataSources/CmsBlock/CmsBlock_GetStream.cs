@@ -1,5 +1,5 @@
 ﻿using System.Collections.Immutable;
-using ToSic.Eav.Data.Entities.Sys.Lists;
+using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource;
 using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Data.Sys.Decorators;

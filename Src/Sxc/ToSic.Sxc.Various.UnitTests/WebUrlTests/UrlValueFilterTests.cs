@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Tests.WebUrlTests;
+﻿using ToSic.Sxc.Web.Sys.Url;
+
+namespace ToSic.Sxc.Tests.WebUrlTests;
 
 
 public class UrlValueFilterTests

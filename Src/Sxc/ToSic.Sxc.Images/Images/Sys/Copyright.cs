@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Data.EntityBased.Sys;
+﻿using ToSic.Eav.Data.Sys.Entities;
 
 namespace ToSic.Sxc.Images.Internal;
 

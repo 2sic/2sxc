@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Data.Entities.Sys.Lists;
-using ToSic.Eav.Data.EntityBased.Sys;
+﻿using ToSic.Eav.Data.Sys.Entities;
 
 namespace ToSic.Sxc.Polymorphism.Internal;
 

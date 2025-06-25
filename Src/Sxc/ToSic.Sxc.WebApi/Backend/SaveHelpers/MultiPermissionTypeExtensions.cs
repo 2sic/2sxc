@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys.Permissions;
-using ToSic.Eav.Data.Entities.Sys.Lists;
+using ToSic.Eav.Data.Sys.Entities;
 
 namespace ToSic.Eav.WebApi.Security;
 

@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests;
+﻿using ToSic.Sxc.Web.Sys.Url;
+
+namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests;
 
 
 public class Obj2UrlMerge

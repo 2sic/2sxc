@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Tests.PlumbingTests;
+﻿using ToSic.Sxc.Sys.Plumbing;
+
+namespace ToSic.Sxc.Tests.PlumbingTests;
 
 
 public class CleanParamTests

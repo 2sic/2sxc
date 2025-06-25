@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Tests.LinksAndImages;
+﻿using ToSic.Sxc.Web.Sys.Url;
+
+namespace ToSic.Sxc.Tests.LinksAndImages;
 
 public class UrlPartsTestBase
 {
