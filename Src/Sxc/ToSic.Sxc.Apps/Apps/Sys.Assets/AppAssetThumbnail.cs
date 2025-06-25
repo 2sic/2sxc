@@ -4,7 +4,7 @@ using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sys.Caching.PiggyBack;
 using static ToSic.Eav.Apps.Sys.AppConstants;
 
-namespace ToSic.Sxc.Apps.Internal.Assets;
+namespace ToSic.Sxc.Apps.Sys.Assets;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class AppAssetThumbnail(IAppReader appReader, IAppPaths appPaths, LazySvc<GlobalPaths> globalPaths)

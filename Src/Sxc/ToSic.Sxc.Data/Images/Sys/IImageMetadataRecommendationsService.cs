@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Metadata;
 
-namespace ToSic.Sxc.Images.Internal;
+namespace ToSic.Sxc.Images.Sys;
 
 public interface IImageMetadataRecommendationsService
 {

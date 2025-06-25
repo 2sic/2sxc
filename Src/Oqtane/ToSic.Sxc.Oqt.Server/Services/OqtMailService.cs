@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Mail;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Context.Sys;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Mail.Sys;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Oqt.Server.Services;

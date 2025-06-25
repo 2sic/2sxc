@@ -1,6 +1,6 @@
 ﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Apps.Internal.Assets;
+using ToSic.Sxc.Apps.Sys.Assets;
 
 namespace ToSic.Sxc.Context.Internal;
 

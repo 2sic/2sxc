@@ -2,7 +2,7 @@
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Apps.Internal.Assets;
+using ToSic.Sxc.Apps.Sys.Assets;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Data;

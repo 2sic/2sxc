@@ -2,7 +2,7 @@
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Apps.Sys.State;
-using ToSic.Sxc.Apps.Internal.Assets;
+using ToSic.Sxc.Apps.Sys.Assets;
 using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 using ToSic.Sys.Code.InfoSystem;

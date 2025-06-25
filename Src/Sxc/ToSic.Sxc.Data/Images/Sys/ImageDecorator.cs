@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.Metadata;
 
-namespace ToSic.Sxc.Images.Internal;
+namespace ToSic.Sxc.Images.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

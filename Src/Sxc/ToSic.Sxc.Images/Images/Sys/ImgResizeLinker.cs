@@ -14,7 +14,7 @@ using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Capabilities.Features;
 using static ToSic.Sxc.Sys.Configuration.SxcFeatures;
 using static ToSic.Sxc.Images.Sys.ImageConstants;
-using static ToSic.Sxc.Images.Internal.ImageDecorator;
+using static ToSic.Sxc.Images.Sys.ImageDecorator;
 using static ToSic.Sxc.Images.RecipeVariant;
 
 namespace ToSic.Sxc.Images.Sys;

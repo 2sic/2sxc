@@ -2,6 +2,7 @@
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images.Internal;
+using ToSic.Sxc.Images.Sys;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Sys.HtmlParsing;

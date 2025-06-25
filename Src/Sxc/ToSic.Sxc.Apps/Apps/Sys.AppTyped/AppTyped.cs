@@ -3,7 +3,7 @@ using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Apps.Internal.Assets;
+using ToSic.Sxc.Apps.Sys.Assets;
 using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Decorators;

@@ -5,7 +5,7 @@ using ToSic.Sxc.Data;
 using IAsset = ToSic.Sxc.Adam.IAsset;
 using IFile = ToSic.Sxc.Adam.IFile;
 
-namespace ToSic.Sxc.Apps.Internal.Assets;
+namespace ToSic.Sxc.Apps.Sys.Assets;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal abstract class AppAssetFile: IFile

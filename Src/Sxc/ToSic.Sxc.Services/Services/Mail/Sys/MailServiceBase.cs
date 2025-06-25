@@ -3,11 +3,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Lib.DI;
+using ToSic.Sxc.Services.Internal;
 using ToSic.Sys.Users;
 using ToSic.Sys.Utils;
 using MailMessage = System.Net.Mail.MailMessage;
 
-namespace ToSic.Sxc.Services.Internal;
+namespace ToSic.Sxc.Services.Mail.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class MailServiceBase(LazySvc<IUser> userLazy, object[]? connect = default)

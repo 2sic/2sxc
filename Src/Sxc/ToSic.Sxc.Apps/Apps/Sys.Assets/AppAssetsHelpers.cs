@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Apps.Internal.Assets;
+﻿namespace ToSic.Sxc.Apps.Sys.Assets;
 
 /// <summary>
 /// Constants for App Assets

@@ -2,7 +2,7 @@
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 
-namespace ToSic.Sxc.Apps.Internal.Assets;
+namespace ToSic.Sxc.Apps.Sys.Assets;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal abstract class AppAssetFolder: IFolder

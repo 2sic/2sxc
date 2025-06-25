@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Images.Internal;
+﻿namespace ToSic.Sxc.Images.Sys;
 
 /// <summary>
 /// Interface for ImageDecorator,

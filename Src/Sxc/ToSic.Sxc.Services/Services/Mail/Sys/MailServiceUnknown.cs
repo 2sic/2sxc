@@ -3,7 +3,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sys.Users;
 
-namespace ToSic.Sxc.Services.Internal;
+namespace ToSic.Sxc.Services.Mail.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class MailServiceUnknown : MailServiceBase
