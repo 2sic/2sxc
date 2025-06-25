@@ -20,7 +20,7 @@ public class DnnAppFolderUtilities(
 {
     private HttpRequestMessage _request;
 
-    private HttpRequestMessage Request => _request ?? throw new Exception("Request not available - call Setup(...) first!");
+    private HttpRequestMessage Request => _request ?? throw new("Request not available - call Setup(...) first!");
 
     public DnnAppFolderUtilities Setup(HttpRequestMessage request)
     {
