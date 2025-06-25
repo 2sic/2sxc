@@ -9,6 +9,7 @@
     <Message Text="Running on Full MSBuild" Condition="'$(MSBuildRuntimeType)' != 'Core'" Importance="high"/>
   </Target>
 
+  <!-- Use different helper DLLs depending on run mode - in VS 2022 it's .net Framework, in the command line it's .net core -->
   <UsingTask Condition="'$(MSBuildRuntimeType)' == 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net9.0\ToSic.Sxc.BuildTasks.dll" TaskName="GetBuildConfig"/>
   <UsingTask Condition="'$(MSBuildRuntimeType)' != 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" TaskName="GetBuildConfig"/>
   <UsingTask Condition="'$(MSBuildRuntimeType)' == 'Core'" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net9.0\ToSic.Sxc.BuildTasks.dll" TaskName="ColorMessage"/>
@@ -19,6 +20,7 @@
   <Target Name="BuildConfigTarget" AfterTargets="CheckBuildTool">
     <Message Text="Running BuildConfigTarget" Importance="high"/>
 
+    <!-- Get parameters from the JSON configuration file "2sxc-build.config.json" -->
     <GetBuildConfig>
       <Output TaskParameter="BuildConfigPath" PropertyName="BuildConfigPath" />
       <Output TaskParameter="OqtaneTargets" PropertyName="OqtaneTargets" />
