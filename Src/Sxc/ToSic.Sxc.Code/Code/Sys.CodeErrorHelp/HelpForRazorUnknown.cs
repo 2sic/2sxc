@@ -33,7 +33,7 @@ internal class HelpForRazorCompileErrors
     /// </summary>
     internal static CodeHelp ProbablySemicolonAfterInherits = new()
     {
-Name = "inherits-breaks-with-semicolon",
+        Name = "inherits-breaks-with-semicolon",
         // full message is like "error CS1003: Syntax error, ',' expected at System.Web.Compilation.AssemblyBuilder.Compile()"
         // but only a part of it is in the initial exception, so we only check for the part that is there
         Detect = "Syntax error, ',' expected",
@@ -135,7 +135,104 @@ Name = "inherits-breaks-with-semicolon",
         LinkCode = "brc-20-customizedata",
     };
 
-//    internal static CodeHelp RazorBaseClassDoesNotInheritCorrectly = new()
+    /// <summary>
+    /// Factory to generate CodeHelp for missing methods after v20 auto-inherits removal
+    /// </summary>
+    internal static CodeHelp MissingAfterAutoInherits(string methodName) => new()
+    {
+        Name = $"{methodName.ToLowerInvariant()}-missing-after-auto-inherits-removed",
+        Detect = $"error CS0103: The name '{methodName}' does not exist in the current context",
+        UiMessage = $"""
+
+                    Your Razor code is using '{methodName}', but the base class is missing. In v20, automatic @inherits was removed. Add the correct @inherits statement to your .cshtml file.
+
+                    """,
+        DetailsHtml = $"""
+
+                      Your Razor template uses <code>{methodName}</code>, but the required base class is missing. In v20, automatic <code>@inherits</code> was removed for security and clarity. You must now add the correct <code>@inherits</code> statement at the top of your .cshtml file.
+                      <br>
+                      <strong>Example</strong>: <br>
+                      <code>@inherits ToSic.SexyContent.Razor.SexyContentWebPage</code>
+                      <br>
+                      See the docs for more info.
+
+                      """,
+        LinkCode = "brc-20-stop-auto-inherits",
+    };
+
+    /// <summary>
+    /// Help for missing AsDynamic after v20 auto-inherits removal
+    /// </summary>
+    internal static CodeHelp AsDynamicMissingAfterAutoInheritsRemoved = MissingAfterAutoInherits("AsDynamic");
+
+    /// <summary>
+    /// Help for missing CreateInstance after v20 auto-inherits removal
+    /// </summary>
+    internal static CodeHelp CreateInstanceMissingAfterAutoInheritsRemoved = MissingAfterAutoInherits("CreateInstance");
+
+    /// <summary>
+    /// Help for missing Link after v20 auto-inherits removal
+    /// </summary>
+    internal static CodeHelp LinkMissingAfterAutoInheritsRemoved = MissingAfterAutoInherits("Link");
+
+    /// <summary>
+    /// Help for missing Edit after v20 auto-inherits removal
+    /// </summary>
+    internal static CodeHelp EditMissingAfterAutoInheritsRemoved = MissingAfterAutoInherits("Edit");
+
+    /// <summary>
+    /// Help for missing 'Module' property on DnnHelper after v20 changes
+    /// </summary>
+    internal static CodeHelp DnnHelperModuleMissing = new()
+    {
+        Name = "dnnhelper-module-missing-after-v20",
+        Detect = "error CS1061: 'DnnHelper<dynamic>' does not contain a definition for 'Module'",
+        UiMessage = """
+
+                    Your Razor code is trying to use 'Module', but this property is not available. In v20, APIs and base classes changed. Make sure your template inherits from the correct base class and check the docs for updated usage.
+
+                    """,
+        DetailsHtml = """
+
+                      The <code>Module</code> property is not available on <code>DnnHelper&lt;dynamic&gt;</code> in v20. This is likely because your template is missing the correct <code>@inherits</code> statement or is using an outdated API. 
+                      <br>
+                      <strong>Solution:</strong> <br>
+                      Ensure your Razor file has the correct <code>@inherits</code> statement for v20. See the docs for more info.
+                      <br>
+                      <code>@inherits ToSic.SexyContent.Razor.SexyContentWebPage</code>
+                      <br>
+                      See the docs for more info.
+
+                      """,
+        LinkCode = "brc-20-stop-auto-inherits",
+    };
+
+    /// <summary>
+    /// Help for Razor file not deriving from RazorComponentBase after v20 changes
+    /// </summary>
+    //internal static CodeHelp MustDeriveFromRazorComponentBase = new()
+    //{
+    //    Name = "must-derive-from-razorcomponentbase",
+    //    Detect = "must derive from RazorComponentBase",
+    //    UiMessage = """
+
+    //                Your Razor file must inherit from the correct base class. In v20, Razor files must explicitly use @inherits with the right base class. Add the correct @inherits statement to your .cshtml file.
+
+    //                """,
+    //    DetailsHtml = """
+
+    //                  The error means your Razor file does not inherit from <code>RazorComponentBase</code> or another required base class. In v20, automatic <code>@inherits</code> was removed for security and clarity. You must now add the correct <code>@inherits</code> statement at the top of your .cshtml file.
+    //                  <br>
+    //                  <strong>Example</strong>: <br>
+    //                  <code>@inherits ToSic.SexyContent.Razor.SexyContentWebPage</code>
+    //                  <br>
+    //                  See the docs for more info.
+
+    //                  """,
+    //    LinkCode = "brc-20-stop-auto-inherits",
+    //};
+
+    //    internal static CodeHelp RazorBaseClassDoesNotInheritCorrectly = new()
 //    {
 //        Name = "Razor Base Class doesn't inherit correctly",
 //        Detect = "no suitable method found to override",
@@ -179,6 +276,12 @@ Name = "inherits-breaks-with-semicolon",
         ..RemovedApisInV20ForAllRazorClasses,
         // also v20
         ListObjectNotFound, // v20 - removal of #RemovedV20 #Element
+        AsDynamicMissingAfterAutoInheritsRemoved, // new help for missing AsDynamic after auto-inherits removed
+        CreateInstanceMissingAfterAutoInheritsRemoved, // new help for missing CreateInstance after auto-inherits removed
+        LinkMissingAfterAutoInheritsRemoved, // new help for missing Link after auto-inherits removed
+        EditMissingAfterAutoInheritsRemoved, // new help for missing Edit after auto-inherits removed
+        DnnHelperModuleMissing, // new help for missing Dnn.Module after v20
+        //MustDeriveFromRazorComponentBase, // new help for must derive from RazorComponentBase
         HelpForRazor12.GetBestValueGone,
     ];
 
