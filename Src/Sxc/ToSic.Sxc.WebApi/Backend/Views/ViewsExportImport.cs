@@ -15,7 +15,7 @@ using ToSic.Eav.WebApi.Sys.Helpers.Validation;
 using ToSic.Eav.WebApi.Sys.Security;
 using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Backend.ImportExport;
-using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sys.Utils;
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;

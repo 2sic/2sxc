@@ -1,6 +1,5 @@
 ﻿using ToSic.Sxc.Context;
 using ToSic.Sxc.Sys.Render.PageFeatures;
-using ToSic.Sxc.Web.Internal.PageFeatures;
 
 namespace ToSic.Sxc.Web.Internal.PageService;
 

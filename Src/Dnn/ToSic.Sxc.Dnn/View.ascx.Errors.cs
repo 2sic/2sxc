@@ -1,8 +1,7 @@
 ﻿using System.Web.UI;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.Render.Sys;
 
 namespace ToSic.Sxc.Dnn;
 

@@ -1,17 +1,15 @@
 ﻿using System.Text.RegularExpressions;
-
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Render.Sys.Output;
 using ToSic.Sxc.Sys.Render.PageContext;
-using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Internal.HtmlParsing;
-using ToSic.Sxc.Web.Internal.PageService;
 using ToSic.Sxc.Web.Sys.ClientAssets;
 using static System.StringComparer;
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Render.Sys.ResourceExtractor;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract partial class BlockResourceExtractor(IPageServiceShared pageServiceShared)

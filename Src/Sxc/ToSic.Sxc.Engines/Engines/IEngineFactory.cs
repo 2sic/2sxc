@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Blocks.Internal;
+﻿using ToSic.Sxc.Blocks.Sys.Views;
 
 namespace ToSic.Sxc.Engines;
 

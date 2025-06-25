@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
-using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Problems;
+using ToSic.Sxc.Render.Sys.Problems;
 using ToSic.Sys.Code.InfoSystem;
 using static System.Text.Json.Serialization.JsonIgnoreCondition;
 using static ToSic.Sxc.Blocks.Sys.Problems.ProblemReport;

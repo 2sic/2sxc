@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.Render.Sys;
+using ToSic.Sxc.Render.Sys.RenderBlock;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;

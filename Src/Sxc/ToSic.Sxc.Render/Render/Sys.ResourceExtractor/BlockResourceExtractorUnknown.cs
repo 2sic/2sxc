@@ -1,10 +1,10 @@
 ﻿using ToSic.Lib.Services;
+using ToSic.Sxc.Render.Sys.Output;
 using ToSic.Sxc.Sys.Render.PageContext;
-using ToSic.Sxc.Web.Internal.ClientAssets;
-using ToSic.Sxc.Web.Internal.PageService;
+
 #pragma warning disable CS9113 // Parameter is unread.
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Render.Sys.ResourceExtractor;
 
 // ReSharper disable once UnusedMember.Global
 internal class BlockResourceExtractorUnknown(WarnUseOfUnknown<BlockResourceExtractorUnknown> _, IPageServiceShared pageServiceShared) : BlockResourceExtractor(pageServiceShared)

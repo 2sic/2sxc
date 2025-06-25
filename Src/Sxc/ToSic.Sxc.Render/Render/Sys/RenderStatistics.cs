@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Blocks.Internal.Render;
+﻿namespace ToSic.Sxc.Render.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

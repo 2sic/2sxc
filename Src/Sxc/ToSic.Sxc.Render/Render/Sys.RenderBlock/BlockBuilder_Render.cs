@@ -1,14 +1,13 @@
 ﻿using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.Render.PageFeatures;
-using ToSic.Sxc.Web.Internal.PageFeatures;
 using static ToSic.Sxc.Blocks.BlockBuildingConstants;
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Render.Sys.RenderBlock;
 
 public partial class BlockBuilder
 {
@@ -135,7 +134,7 @@ public partial class BlockBuilder
             {
                 l.A("app is unhealthy, show health message");
                 exceptions.Add(new(AppIsUnhealthy + Block.Context.AppReaderRequired.HealthMessage));
-                body = RenderingHelper.DesignErrorMessage(exceptions, true, AppIsUnhealthy + Render.RenderingHelper.DefaultVisitorError)
+                body = RenderingHelper.DesignErrorMessage(exceptions, true, AppIsUnhealthy + Render.Sys.RenderingHelper.DefaultVisitorError)
                        + $"{body}";
                 err = true;
                 errorCode = ErrorAppIsUnhealthy;

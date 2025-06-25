@@ -2,7 +2,7 @@
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.DataSources;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Sys.Views;
 
 // 2025-06 removed for v20
 //#if NETFRAMEWORK

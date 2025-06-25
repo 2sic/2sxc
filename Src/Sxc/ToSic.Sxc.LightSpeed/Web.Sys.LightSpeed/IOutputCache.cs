@@ -1,6 +1,5 @@
-﻿using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Blocks.Internal.Render;
-using ToSic.Sxc.Blocks.Sys;
+﻿using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Render.Sys;
 
 namespace ToSic.Sxc.Web.Internal.LightSpeed;
 

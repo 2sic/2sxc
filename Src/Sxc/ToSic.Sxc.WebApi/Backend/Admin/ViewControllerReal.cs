@@ -2,8 +2,8 @@
 using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Backend.Views;
-using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Blocks.Sys.Views;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;

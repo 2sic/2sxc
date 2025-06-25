@@ -6,14 +6,13 @@ using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Internal;
-using ToSic.Sxc.Render.Internal;
+using ToSic.Sxc.Render.Sys.RenderBlock;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
-using ToSic.Sxc.Web.Internal.PageFeatures;
 
-namespace ToSic.Sxc.Blocks.Internal.Render;
+namespace ToSic.Sxc.Render.Sys;
 
 /// <summary>
 /// Block-Rendering system. It's responsible for taking a Block and delivering HTML for the output. <br/>

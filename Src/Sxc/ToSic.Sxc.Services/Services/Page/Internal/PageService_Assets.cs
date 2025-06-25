@@ -1,6 +1,6 @@
 ﻿using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Web.Internal.ClientAssets;
+using ToSic.Sxc.Render.Sys.Output;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
 using Attribute = ToSic.Razor.Markup.Attribute;
 

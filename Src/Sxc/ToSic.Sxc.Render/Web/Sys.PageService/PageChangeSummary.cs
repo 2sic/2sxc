@@ -1,17 +1,16 @@
 ﻿
 using ToSic.Lib.DI;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.Render.Sys;
+using ToSic.Sxc.Render.Sys.Output;
+using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
-using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
-using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.PageServiceShared.Internal;
 using ToSic.Sxc.Web.Sys.ClientAssets;
 using ToSic.Sys.Requirements;
-using static ToSic.Sxc.Web.Internal.ClientAssets.ClientAssetConstants;
+using static ToSic.Sxc.Render.Sys.Output.ClientAssetConstants;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.Web.Internal.PageService;

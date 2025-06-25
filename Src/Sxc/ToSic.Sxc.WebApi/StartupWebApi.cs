@@ -20,7 +20,8 @@ using ToSic.Sxc.Backend.SaveHelpers;
 using ToSic.Sxc.Backend.Sys;
 using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Backend.Views;
-using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Render.Sys.Output;
+using ToSic.Sxc.Render.Sys.ResourceExtractor;
 using ToSic.Sxc.WebApi.ExternalLinks;
 
 namespace ToSic.Sxc.Backend;
@@ -32,15 +33,6 @@ public static class StartupWebApi
     {
         // WIP - objects which are not really final
         services.TryAddTransient<ExternalLinksService>();
-
-
-        //services.TryAddScoped<ILinkPaths, LinkPaths>(); // moved to core...
-        // Removed v19.03.03 2025-03-11 by 2dm https://github.com/2sic/2sxc/issues/3598
-        //services.TryAddTransient<XmlImportWithFiles, XmlImportFull>();
-        //services.TryAddTransient<EngineBase.MyServices>();
-        //services.TryAddTransient<EngineCheckTemplate>();
-        //services.TryAddTransient<EnginePolymorphism>();
-        //services.TryAddTransient<EngineAppRequirements>();
 
         // These are usually replaced by the target platform
         services.TryAddTransient<IBlockResourceExtractor, BlockResourceExtractorUnknown>();

@@ -1,8 +1,8 @@
-﻿using ToSic.Sxc.Blocks.Internal.Render;
-using ToSic.Sxc.Blocks.Sys;
+﻿using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Render.Sys.Specs;
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Render.Sys.RenderBlock;
 
 /// <summary>
 /// This is kind of the master-container for a content-management block. It's the wrapper which is in the CMS (DNN), and the module will talk with this

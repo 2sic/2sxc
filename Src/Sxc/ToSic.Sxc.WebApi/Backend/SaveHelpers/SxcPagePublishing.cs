@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Blocks.Sys;
+﻿using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Cms.Internal.Publishing;
 using ToSic.Sys.Security.Permissions;
 

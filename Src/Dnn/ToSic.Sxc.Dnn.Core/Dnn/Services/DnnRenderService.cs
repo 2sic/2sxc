@@ -1,8 +1,8 @@
 ﻿using System.Web;
 using ToSic.Lib.Coding;
-using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Render.Sys;
 using Page = System.Web.UI.Page;
 
 namespace ToSic.Sxc.Dnn.Services;

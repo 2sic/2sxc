@@ -6,17 +6,14 @@ using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Dnn;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
-using ToSic.Sxc.Web.Internal.ClientAssets;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
-using ToSic.Sxc.Web.Internal.PageFeatures;
-using ToSic.Sxc.Web.Internal.PageService;
 using ToSic.Sxc.Web.Sys.ClientAssets;
-using static ToSic.Sxc.Web.Internal.ClientAssets.ClientAssetConstants;
+using static ToSic.Sxc.Render.Sys.Output.ClientAssetConstants;
 
 namespace ToSic.Sxc.Dnn.Services;
 

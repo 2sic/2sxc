@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Blocks.Sys.Work;
 
 namespace ToSic.Sxc.Blocks.Sys.BlockEditor;

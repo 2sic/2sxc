@@ -2,14 +2,14 @@
 using System.Web.UI;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Dnn.Features;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Render.Sys;
+using ToSic.Sxc.Render.Sys.RenderBlock;
 using ToSic.Sxc.Web.Internal.LightSpeed;
 
 namespace ToSic.Sxc.Dnn;

@@ -6,7 +6,7 @@ using ToSic.Sys.Exceptions;
 
 // ReSharper disable ConvertTypeCheckPatternToNullCheck
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Render.Sys.Problems;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class ProblemSuggestions

@@ -1,8 +1,8 @@
 ﻿using System.Text.RegularExpressions;
-using ToSic.Sxc.Web.Internal.ClientAssets;
+using ToSic.Sxc.Render.Sys.Output;
 using ToSic.Sxc.Web.Internal.HtmlParsing;
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Render.Sys.ResourceExtractor;
 
 public abstract partial class BlockResourceExtractor
 {

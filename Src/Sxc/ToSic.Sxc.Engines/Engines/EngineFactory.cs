@@ -1,6 +1,6 @@
 ﻿using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Sys.Views;
 
 namespace ToSic.Sxc.Engines;
 

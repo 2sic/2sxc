@@ -4,7 +4,7 @@ using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.Data.Sys.PropertyDump;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.DataSources.Sys.Internal;
-using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Sys.Views;
 using static ToSic.Eav.Apps.Sys.AppStack.AppStackConstants;
 
 namespace ToSic.Sxc.Backend.AppStack;

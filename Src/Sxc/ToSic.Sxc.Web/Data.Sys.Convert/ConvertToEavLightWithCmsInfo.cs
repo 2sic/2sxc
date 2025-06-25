@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Edit.Sys;
 

@@ -1,8 +1,7 @@
-﻿using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Blocks.Sys;
+﻿using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Data;
 
-namespace ToSic.Sxc.Render.Internal;
+namespace ToSic.Sxc.Render.Sys;
 
 public static class ICanBeItemExtensions
 {

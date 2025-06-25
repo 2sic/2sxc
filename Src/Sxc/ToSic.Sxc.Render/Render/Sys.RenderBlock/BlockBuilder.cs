@@ -1,6 +1,5 @@
 ﻿using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Services.Internal;
@@ -9,7 +8,7 @@ using ToSic.Sxc.Web.Internal.PageService;
 using ToSic.Sys.Capabilities.Licenses;
 using ToSic.Sys.Code.InfoSystem;
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Render.Sys.RenderBlock;
 
 /// <summary>
 /// This is an instance-context of a Content-Module. It basically encapsulates the instance-state, incl.

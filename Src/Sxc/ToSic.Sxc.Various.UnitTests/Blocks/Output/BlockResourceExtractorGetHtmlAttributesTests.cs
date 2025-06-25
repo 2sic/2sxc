@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Blocks.Internal;
+﻿using ToSic.Sxc.Render.Sys.ResourceExtractor;
 
 namespace ToSic.Sxc.Tests.Blocks.Output;
 

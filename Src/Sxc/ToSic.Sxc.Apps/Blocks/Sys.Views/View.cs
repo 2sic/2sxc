@@ -2,10 +2,10 @@
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps.Internal.Assets;
-using static ToSic.Sxc.Blocks.Internal.ViewConstants;
+using static ToSic.Sxc.Blocks.Sys.Views.ViewConstants;
 
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Blocks.Sys.Views;
 
 [PrivateApi("Internal implementation - don't publish")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

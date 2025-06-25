@@ -1,8 +1,8 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.WebApi.Sys.Context;
-using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Dnn.Pages;
 
 namespace ToSic.Sxc.Dnn.Backend.Context;

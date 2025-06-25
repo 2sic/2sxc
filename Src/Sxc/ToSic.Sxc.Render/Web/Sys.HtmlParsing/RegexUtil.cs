@@ -1,5 +1,5 @@
 ﻿using System.Text.RegularExpressions;
-using ToSic.Sxc.Web.Internal.ClientAssets;
+using ToSic.Sxc.Render.Sys.Output;
 
 namespace ToSic.Sxc.Web.Internal.HtmlParsing;
 

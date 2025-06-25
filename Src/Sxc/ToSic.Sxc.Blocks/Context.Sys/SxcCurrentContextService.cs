@@ -1,9 +1,8 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
-using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.DataSources.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Sys.Http;

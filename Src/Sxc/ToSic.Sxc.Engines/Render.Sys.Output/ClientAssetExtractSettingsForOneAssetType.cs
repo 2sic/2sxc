@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Web.Internal.ClientAssets;
+﻿namespace ToSic.Sxc.Render.Sys.Output;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ClientAssetExtractSettingsForOneAssetType(bool extractAll, string location, int priority, bool autoDefer, bool autoAsync)

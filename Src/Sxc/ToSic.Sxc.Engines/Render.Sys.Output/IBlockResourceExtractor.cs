@@ -1,7 +1,6 @@
 ﻿using ToSic.Sxc.Engines;
-using ToSic.Sxc.Web.Internal.ClientAssets;
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Render.Sys.Output;
 
 /// <summary>
 /// System to automatically pick up JS/CSS files which should be bundled

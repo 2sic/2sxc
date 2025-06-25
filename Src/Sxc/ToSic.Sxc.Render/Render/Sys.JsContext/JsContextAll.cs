@@ -3,14 +3,12 @@ using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Data.Sys.Ancestors;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Blocks.Internal.Render;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Internal.JsContextEdit;
-using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sys.Code.InfoSystem;
 
 namespace ToSic.Sxc.Web.Internal.JsContext;

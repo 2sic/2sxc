@@ -1,5 +1,5 @@
 ﻿using ToSic.Lib.Memory;
-using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.Render.Sys;
 using ToSic.Sys.Caching;
 
 namespace ToSic.Sxc.Web.Internal.LightSpeed;

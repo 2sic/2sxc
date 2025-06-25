@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Data.ValueConverter.Sys;
 using ToSic.Eav.Internal.Environment;
-using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Sys.Views;
 using static System.StringComparison;
 using static ToSic.Eav.Apps.Sys.AppConstants;
 

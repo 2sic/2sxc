@@ -5,10 +5,9 @@ using DotNetNuke.Web.Client.Providers;
 using System.Web.UI;
 using ToSic.Eav.Sys;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks.Internal;
 using ToSic.Sxc.Dnn.Features;
+using ToSic.Sxc.Render.Sys.RenderBlock;
 using ToSic.Sxc.Sys.Render.PageFeatures;
-using ToSic.Sxc.Web.Internal.PageFeatures;
 using ToSic.Sxc.Web.Sys.Url;
 
 namespace ToSic.Sxc.Dnn.Web;

@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Blocks.Sys;
 
-namespace ToSic.Sxc.Blocks.Internal.Render;
+namespace ToSic.Sxc.Render.Sys;
 
 [PrivateApi("Internal only")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

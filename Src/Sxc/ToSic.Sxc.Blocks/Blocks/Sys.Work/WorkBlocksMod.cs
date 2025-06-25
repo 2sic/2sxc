@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Data.Sys.Entities;
-using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Sys.Views;
 
 namespace ToSic.Sxc.Blocks.Sys.Work;
 

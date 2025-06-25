@@ -12,7 +12,7 @@ using ToSic.Sxc.Web.Internal.JsContext;
 using ToSic.Sxc.Web.Sys.Html;
 using static ToSic.Sxc.Blocks.BlockBuildingConstants;
 
-namespace ToSic.Sxc.Blocks.Internal.Render;
+namespace ToSic.Sxc.Render.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class RenderingHelper(ILinkPaths linkPaths, LazySvc<IEnvironmentLogger> errorLogger, Generator<JsContextAll> jsContextAllGen)

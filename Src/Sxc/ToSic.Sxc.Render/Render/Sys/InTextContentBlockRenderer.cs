@@ -5,7 +5,7 @@ using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Performance;
 
-namespace ToSic.Sxc.Blocks.Internal.Render;
+namespace ToSic.Sxc.Render.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class InTextContentBlockRenderer(SimpleRenderer simpleRenderer)

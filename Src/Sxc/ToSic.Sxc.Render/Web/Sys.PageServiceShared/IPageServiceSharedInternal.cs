@@ -1,6 +1,5 @@
 ﻿using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Web.Internal.ContentSecurityPolicy;
-using ToSic.Sxc.Web.Internal.PageService;
 
 namespace ToSic.Sxc.Web.PageServiceShared.Internal;
 

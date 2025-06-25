@@ -1,9 +1,8 @@
 ﻿using DotNetNuke.Web.Client;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Render.Sys.Output;
+using ToSic.Sxc.Render.Sys.ResourceExtractor;
 using ToSic.Sxc.Sys.Render.PageContext;
-using ToSic.Sxc.Web.Internal.ClientAssets;
-using ToSic.Sxc.Web.Internal.PageService;
 
 namespace ToSic.Sxc.Dnn.Web;
 

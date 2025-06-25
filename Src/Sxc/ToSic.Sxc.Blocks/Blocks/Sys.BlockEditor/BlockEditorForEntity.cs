@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Sxc.Apps.Sys;
-using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Sys.Views;
 
 namespace ToSic.Sxc.Blocks.Sys.BlockEditor;
 

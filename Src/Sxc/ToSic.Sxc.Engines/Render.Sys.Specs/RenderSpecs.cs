@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Engines;
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Render.Sys.Specs;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

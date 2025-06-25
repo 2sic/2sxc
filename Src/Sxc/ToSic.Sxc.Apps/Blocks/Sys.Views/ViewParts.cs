@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Blocks.Internal;
+﻿namespace ToSic.Sxc.Blocks.Sys.Views;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ViewParts

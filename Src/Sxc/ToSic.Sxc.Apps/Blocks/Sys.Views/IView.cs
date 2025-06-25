@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource.Internal.Query;
 
-namespace ToSic.Sxc.Blocks.Internal;
+namespace ToSic.Sxc.Blocks.Sys.Views;
 
 /// <summary>
 /// Defines a view configuration which is loaded from a <see cref="EntityBasedType"/>.
