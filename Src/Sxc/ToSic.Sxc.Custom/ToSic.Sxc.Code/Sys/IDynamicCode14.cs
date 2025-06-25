@@ -1,18 +1,17 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
-
 using IFolder = ToSic.Sxc.Adam.IFolder;
 // Disable warnings that properties should be marked as new
 // Because we need them here as additional definition because of Razor problems with inherited interfaces
 #pragma warning disable CS0108, CS0114
 
-namespace ToSic.Sxc.Code.Internal;
+namespace ToSic.Sxc.Code.Sys;
 
 /// <summary>
 /// Interface for Dynamic Code with enhancements after v12. It extends <see cref="IDynamicCode"/>

@@ -2,7 +2,8 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Code.Sys.HotBuild;
 
-namespace ToSic.Sxc;
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Startup;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class SxcCodeHotBuildStartup

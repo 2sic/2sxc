@@ -2,7 +2,6 @@
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code.Internal.HotBuild;
 using ToSic.Sxc.Code.Sys.CodeApi;
-using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
@@ -10,7 +9,7 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
+namespace ToSic.Sxc.Code.Sys.CodeRunHelpers;
 
 /// <summary>
 /// Code Helper for typed code v16+

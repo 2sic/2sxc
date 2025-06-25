@@ -1,7 +1,8 @@
 ﻿using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Razor.Internal;
+namespace Custom.Razor.Sys;
 
 [PrivateApi("not sure yet if this will stay in Hybrid or go to Web.Razor or something, so keep it private for now")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

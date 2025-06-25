@@ -1,12 +1,12 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Code.Internal;
+namespace ToSic.Sxc.Code.Sys;
 
 /// <summary>
 /// Standard interface for all TypedCode such as RazorPro or WebApiPro.

@@ -11,7 +11,6 @@ using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
 using ToSic.Sys.GetByName;
 
-// ReSharper disable once CheckNamespace
 namespace Custom.Data;
 
 /// <summary>

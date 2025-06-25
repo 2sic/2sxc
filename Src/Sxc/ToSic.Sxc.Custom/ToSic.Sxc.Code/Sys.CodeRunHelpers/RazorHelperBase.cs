@@ -1,10 +1,8 @@
-﻿using ToSic.Sxc.Code.Sys;
-using ToSic.Sxc.Code.Sys.CodeApi;
-using ToSic.Sxc.Code.Sys.CodeRunHelpers;
+﻿using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Code.Internal.CodeRunHelpers;
+namespace ToSic.Sxc.Code.Sys.CodeRunHelpers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)

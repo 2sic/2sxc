@@ -15,7 +15,7 @@ using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sys.Caching;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.DataSources.Internal;
+namespace ToSic.Sxc.DataSources.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class AppDataSourcesLoader(

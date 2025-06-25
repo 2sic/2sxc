@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Razor.Internal;
+namespace Custom.Razor.Sys;
 
 [PrivateApi("not sure where/if it goes anywhere")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

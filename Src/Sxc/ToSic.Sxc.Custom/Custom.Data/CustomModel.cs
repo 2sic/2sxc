@@ -1,6 +1,5 @@
 ﻿using ToSic.Sxc.Data.Models;
 
-// ReSharper disable once CheckNamespace
 namespace Custom.Data;
 
 /// <summary>
