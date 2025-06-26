@@ -78,6 +78,7 @@ public class OqtStartup : IServerStartup
             .AddSxcRender()
             .AddSxcCms()
             .AddSxcServices()
+            .AddSxcServicesObsolete()
             .AddSxcWeb()
             .AddSxcLightSpeed()             // LightSpeed services
             .AddSxcCodeGen()                // Code generation services
