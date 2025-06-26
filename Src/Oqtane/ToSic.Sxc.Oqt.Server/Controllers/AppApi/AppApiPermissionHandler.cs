@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Oqtane.Infrastructure;
 using Oqtane.Security;
-using System.Threading.Tasks;
-using ToSic.Eav.WebApi.Infrastructure;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Eav.WebApi.Sys.Helpers.Http;
+using ToSic.Sxc.Context.Sys;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 

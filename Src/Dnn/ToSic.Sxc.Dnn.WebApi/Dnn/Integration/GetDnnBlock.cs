@@ -1,16 +1,15 @@
-﻿using System.Linq;
-using ToSic.Eav.Plumbing;
-using ToSic.Lib.DI;
+﻿using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using static ToSic.Sxc.Backend.SxcWebApiConstants;
 
 namespace ToSic.Sxc.Dnn.Integration;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DnnGetBlock(
-    Generator<BlockFromEntity> blockFromEntity,
+    Generator<BlockOfEntity> blockFromEntity,
     Generator<IModuleAndBlockBuilder> moduleAndBlockBuilder)
     : ServiceBase($"{LogName}.GetBlk", connect: [blockFromEntity, moduleAndBlockBuilder])
 {
@@ -55,7 +54,7 @@ public class DnnGetBlock(
                 return l.Return(FindInnerContentParentBlock(block, blockId, blockIds), $"from {HeaderContentBlockList}");
         }
 
-        var entBlock = blockFromEntity.New().Init(block, null, blockId);
+        var entBlock = blockFromEntity.New().GetBlockOfEntity(block, null, blockId);
 
         return l.Return(entBlock);
     }
@@ -72,7 +71,7 @@ public class DnnGetBlock(
             var id = int.Parse(parentIds[0]);
             if (!int.TryParse(parentIds[1], out var cbid) || id == cbid || cbid >= 0) continue;
             if (cbid == contentBlockId) break; // we are done, because block should be parent/ancestor of cbid
-            parent = blockFromEntity.New().Init(parent, null, cbid);
+            parent = blockFromEntity.New().GetBlockOfEntity(parent, null, cbid);
         }
 
         return parent;

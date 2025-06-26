@@ -1,28 +1,26 @@
-﻿using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Web.Http.Routing;
 using ToSic.Eav.Context;
-using ToSic.Eav.Helpers;
-using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.WebApi.Sys.Routing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.Internal;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Code.Internal.CodeErrorHelp;
+using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Code.Sys.CodeErrorHelp;
+using ToSic.Sxc.WebApi.Sys;
 
 namespace ToSic.Sxc.Dnn.Integration;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DnnAppFolderUtilities(
-    Generator<AppFolder> folder,
+    Generator<AppFolderLookupForWebApi> folder,
     Generator<DnnGetBlock> dnnGetBlock,
     LazySvc<CodeErrorHelpService> errorHelp)
     : ServiceBase($"{DnnConstants.LogName}.AppFld", connect: [errorHelp, folder, dnnGetBlock])
 {
     private HttpRequestMessage _request;
 
-    private HttpRequestMessage Request => _request ?? throw new Exception("Request not available - call Setup(...) first!");
+    private HttpRequestMessage Request => _request ?? throw new("Request not available - call Setup(...) first!");
 
     public DnnAppFolderUtilities Setup(HttpRequestMessage request)
     {

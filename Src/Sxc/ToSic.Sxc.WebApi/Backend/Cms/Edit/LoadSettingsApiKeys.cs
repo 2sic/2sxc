@@ -16,7 +16,8 @@ internal class LoadSettingsApiKeys(LazySvc<ISecureDataService> secureDataService
             "Settings.GoogleTranslate.ApiKey"
         };
 
-        var result = apiKeyNames.Select(key =>
+        var result = apiKeyNames
+            .Select(key =>
             {
                 var prop = stack.InternalGetPath(key, Log);
                 if (prop.Result is not string strResult)
@@ -35,7 +36,10 @@ internal class LoadSettingsApiKeys(LazySvc<ISecureDataService> secureDataService
                 };
             })
             .Where(v => v?.Value != null)
-            .ToDictionary(k => k.Key, k => k.Value as object);
+            .ToDictionary(
+                k => k!.Key,
+                object (k) => k!.Value
+            );
 
         return l.Return(result);
     }

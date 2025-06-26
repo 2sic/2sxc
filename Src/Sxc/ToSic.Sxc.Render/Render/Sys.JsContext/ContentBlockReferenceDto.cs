@@ -1,0 +1,68 @@
+﻿using System.Text.Json.Serialization;
+using ToSic.Eav.Data.Sys.Entities;
+using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Cms.Publishing.Sys;
+using ToSic.Sxc.Data.Sys.Decorators;
+
+namespace ToSic.Sxc.Render.Sys.JsContext;
+
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public class ContentBlockReferenceDto
+{
+    /// <summary>
+    /// Info how this item is edited (draft required / optional)
+    /// </summary>
+    [JsonPropertyName("publishingMode")]
+    public string PublishingMode { get; }
+        
+    /// <summary>
+    /// ID of the reference item
+    /// </summary>
+    [JsonPropertyName("id")]
+    public int Id { get; }
+
+    /// <summary>
+    /// GUID of parent
+    /// </summary>
+    [JsonPropertyName("parentGuid")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public Guid? ParentGuid { get; }
+        
+    /// <summary>
+    /// Field it's being referenced in
+    /// </summary>
+    [JsonPropertyName("parentField")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? ParentField { get; }
+        
+    /// <summary>
+    /// Index / sort-order, where this is in the list of content-blocks
+    /// </summary>
+    [JsonPropertyName("parentIndex")]
+    public int ParentIndex { get; }
+        
+    /// <summary>
+    /// If this should be regarded as part of page - relevant for page publishing features
+    /// </summary>
+    [JsonPropertyName("partOfPage")]
+    public bool PartOfPage { get; }
+
+    internal ContentBlockReferenceDto(IBlock contentBlock, PublishingMode publishingMode)
+    {
+        Id = contentBlock.ContentBlockId;
+            
+        // if the CBID is the Mod-Id, then it's part of page
+        PartOfPage = contentBlock.ParentId == contentBlock.ContentBlockId;
+            
+        PublishingMode = publishingMode.ToString();
+            
+        // try to get more information about the block
+        // if it's an inner-content having a configuration entity
+        var decorator = (contentBlock as ICanBeEntity)?.Entity.GetDecorator<EntityInListDecorator>();
+        if (decorator == null)
+            return;
+        ParentGuid = decorator.ParentGuid;
+        ParentField = decorator.FieldName;
+        ParentIndex = decorator.SortOrder;
+    }
+}

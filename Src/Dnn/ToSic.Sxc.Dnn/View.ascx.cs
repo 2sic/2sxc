@@ -1,20 +1,20 @@
 ﻿using DotNetNuke.Entities.Modules;
-using System.Linq;
 using System.Web.UI;
-using ToSic.Eav.StartUp;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Blocks.Internal.Render;
+using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Dnn.Features;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Web.Internal.LightSpeed;
+using ToSic.Sxc.Render.Sys;
+using ToSic.Sxc.Render.Sys.RenderBlock;
+using ToSic.Sxc.Web.Sys.LightSpeed;
 
 namespace ToSic.Sxc.Dnn;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class View : PortalModuleBase, IActionable
 {
     private static bool _loggedToBootLog;
@@ -42,8 +42,17 @@ public partial class View : PortalModuleBase, IActionable
     /// Block needs to self-initialize when first requested, because it's used in the Actions-Menu builder
     /// which runs before page-load
     /// </summary>
-    private IBlock Block => _blockGetOnce.Get(Log, () => LogTimer.DoInTimer(() => GetService<IModuleAndBlockBuilder>().BuildBlock(ModuleConfiguration, null)), timer: true);
+    private IBlock Block => _blockGetOnce.Get(GetBlock);
     private readonly GetOnce<IBlock> _blockGetOnce = new();
+
+    private IBlock GetBlock()
+    {
+        var l = Log.Fn<IBlock>(timer: true);
+        var block = GetService<IModuleAndBlockBuilder>().BuildBlock(ModuleConfiguration, null);
+        return l.Return(block);
+    }
+
+    private IBlockBuilder BlockBuilder => field ??= GetService<IBlockBuilder>().Setup(Block);
 
     #region Logging
 
@@ -68,7 +77,9 @@ public partial class View : PortalModuleBase, IActionable
             var l = Log.Fn(message: nameof(Page_Load), timer: true);
             // todo: this should be dynamic at some future time, because normally once it's been checked, it wouldn't need checking again
             var checkPortalIsReady = true;
-            bool? requiresPre1025Behavior = null; // null = auto-detect, true/false
+
+            // #RemovedV20 #OldDnnAutoJQuery
+            //bool? requiresPre1025Behavior = null; // null = auto-detect, true/false
 
             // get the block early, to see any errors separately - before accessing cache (which also uses the block)
             var block = TryCatchAndLogToDnn(() => Block);
@@ -80,7 +91,8 @@ public partial class View : PortalModuleBase, IActionable
                 if (OutputCache?.Existing != null)
                 {
                     checkPortalIsReady = false;
-                    requiresPre1025Behavior = OutputCache.Existing.EnforcePre1025;
+                    // #RemovedV20 #OldDnnAutoJQuery
+                    //requiresPre1025Behavior = OutputCache.Existing.EnforcePre1025;
                 }
             }
             catch { /* ignore */ }
@@ -98,16 +110,22 @@ public partial class View : PortalModuleBase, IActionable
                 if (checkPortalIsReady)
                     if (!DnnReadyCheckTurbo.QuickCheckSiteAndAppFoldersAreReady(this, Log))
                         GetService<DnnReadyCheckTurbo>().EnsureSiteAndAppFoldersAreReady(this, block);
-                _dnnClientResources = GetService<DnnClientResources>().Init(Page, null, requiresPre1025Behavior == false ? null : block?.BlockBuilder);
-                _enforcePre1025JQueryLoading = requiresPre1025Behavior ?? _dnnClientResources.NeedsPre1025Behavior();
-                if (_enforcePre1025JQueryLoading) _dnnClientResources.EnforcePre1025Behavior();
+
+                // #RemovedV20 #OldDnnAutoJQuery
+                // var blockBuilder = requiresPre1025Behavior == false ? null : BlockBuilder;
+                _dnnClientResources = GetService<DnnClientResources>().Init(Page, /*null,*/ null /*blockBuilder*/);
+
+                // #RemovedV20 #OldDnnAutoJQuery
+                //_enforcePre1025JQueryLoading = requiresPre1025Behavior ?? _dnnClientResources.NeedsPre1025Behavior();
+                //if (_enforcePre1025JQueryLoading)
+                //    _dnnClientResources.EnforcePre1025Behavior();
                 return true;
             });
             l.Done();
         });
 
     private DnnClientResources _dnnClientResources;
-    private bool _enforcePre1025JQueryLoading;
+    //private bool _enforcePre1025JQueryLoading;
 
 
     /// <summary>
@@ -173,7 +191,9 @@ public partial class View : PortalModuleBase, IActionable
 
                     // #Lightspeed
                     var lLightSpeed = Log.Fn(message: "Lightspeed", timer: true);
-                    OutputCache?.Save(renderResult, _enforcePre1025JQueryLoading);
+                    
+                    // #RemovedV20 #OldDnnAutoJQuery
+                    OutputCache?.Save(renderResult/*, _enforcePre1025JQueryLoading*/);
                     lLightSpeed.Done();
 
                     return true; // dummy result for TryCatchAndLogToDnn
@@ -194,10 +214,9 @@ public partial class View : PortalModuleBase, IActionable
         var result = new RenderResult();
         TryCatchAndLogToDnn(() =>
         {
-            var blockBuilder = Block.BlockBuilder;
             if (RenderNaked)
-                blockBuilder.WrapInDiv = false;
-            result = (RenderResult)blockBuilder.Run(
+                BlockBuilder.WrapInDiv = false;
+            result = (RenderResult)BlockBuilder.Run(
                 true,
                 specs: new()
                 {
@@ -209,7 +228,7 @@ public partial class View : PortalModuleBase, IActionable
             if (result.Errors?.Any() ?? false)
             {
                 var warnings = result.Errors
-                    .Select(e => blockBuilder.RenderingHelper.DesignError(e));
+                    .Select(e => BlockBuilder.RenderingHelper.DesignError(e));
 
                 result = result with { Html = string.Join("", warnings) + result.Html };
             }

@@ -1,19 +1,19 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using System.Web;
-using ToSic.Eav.WebApi.Context;
-using ToSic.Eav.WebApi.Dto;
-using ToSic.Lib.Data;
+using ToSic.Eav.WebApi.Sys.Context;
+using ToSic.Eav.WebApi.Sys.Dto;
+using ToSic.Lib.Wrappers;
 using ToSic.Sxc.Backend.Context;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Integration.Installation;
+using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 
 namespace ToSic.Sxc.Dnn.WebApi.Context;
 
 internal sealed class DnnUiContextBuilder(
-    ISxcContextResolver ctxResolver,
-    RemoteRouterLink remoteRouterLink,
+    ISxcCurrentContextService ctxService,
+    ExternalLinksService externalLinksService,
     UiContextBuilderBase.MyServices deps)
     : UiContextBuilderBase(deps)
 {
@@ -21,7 +21,7 @@ internal sealed class DnnUiContextBuilder(
 
     private readonly PortalSettings _portal = PortalSettings.Current;
 
-    private ModuleInfo Module => (ctxResolver.BlockContextOrNull()?.Module as IWrapper<ModuleInfo>)?.GetContents();
+    private ModuleInfo Module => (ctxService.BlockContextOrNull()?.Module as IWrapper<ModuleInfo>)?.GetContents();
 
     #endregion
 
@@ -73,10 +73,11 @@ internal sealed class DnnUiContextBuilder(
     /// <returns></returns>
     protected override string GetGettingStartedUrl()
     {
-        if (AppSpecsOrNull is not { } app) return "";
+        if (AppSpecsOrNull is not { } app)
+            return "";
 
-        var gsUrl = remoteRouterLink.LinkToRemoteRouter(
-            RemoteDestinations.GettingStarted,
+        var gsUrl = externalLinksService.LinkToDestination(
+            ExternalSxcDestinations.GettingStarted,
             Services.SiteCtx.Site,
             Module.ModuleID,
             app,

@@ -1,6 +1,6 @@
 ﻿using System.Web;
-using ToSic.Eav.WebApi.Admin;
-using ToSic.Eav.WebApi.Dto;
+using ToSic.Eav.WebApi.Sys.Admin;
+using ToSic.Eav.WebApi.Sys.Dto;
 using ToSic.Sxc.Backend.Admin;
 using RealController = ToSic.Sxc.Backend.Admin.TypeControllerReal;
 
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 /// Security checking is possible, because the cookie still contains user information
 /// </remarks>
 [DnnLogExceptions]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), ITypeController
 {
     private RealController Real => SysHlp.GetService<RealController>();
@@ -55,7 +55,8 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     [HttpGet]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => Real.Get(appId, contentTypeId, scope);
+    public ContentTypeDto Get(int appId, string contentTypeId, string scope = null)
+        => Real.Get(appId, contentTypeId, scope);
 
 
     /// <summary>

@@ -2,21 +2,22 @@
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Entities.Users;
-using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Context.Sys;
+using ToSic.Sxc.Context.Sys.Module;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.Context;
 
-internal class DnnContext : IDnnContext, INeedsCodeApiService
+internal class DnnContext : IDnnContext, INeedsExecutionContext
 {
     /// <summary>
     /// Build DNN Helper
     /// Note that the context can be null, in which case it will have no module context, and default to the current portal
     /// </summary>
-    public void ConnectToRoot(ICodeApiService codeRoot)
+    public void ConnectToRoot(IExecutionContext exCtx)
     {
-        var moduleContext = ((ICodeApiServiceInternal)codeRoot)._Block?.Context?.Module;
+        var moduleContext = exCtx.GetState<IContextOfBlock>()?.Module;
         Module = (moduleContext as Module<ModuleInfo>)?.GetContents();
         // note: this may be a bug, I assume it should be Module.OwnerPortalId
         Portal = PortalSettings.Current ?? 

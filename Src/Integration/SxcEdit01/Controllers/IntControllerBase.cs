@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Lib.Logging;
-using ToSic.Eav.WebApi;
-using ToSic.Eav.WebApi.Helpers;
+using ToSic.Sxc.WebApi.Sys;
 
 namespace IntegrationSamples.SxcEdit01.Controllers
 {

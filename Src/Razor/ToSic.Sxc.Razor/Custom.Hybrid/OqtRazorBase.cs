@@ -3,17 +3,19 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Internal;
+using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Razor;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
 using ILog = ToSic.Lib.Logging.ILog;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
 
 [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>, IHasCodeLog, IHasLog, ISetDynamicModel, IGetCodePath
 {
     #region Constructor / DI / SysHelp
@@ -31,6 +33,7 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
     [PrivateApi] public int CompatibilityLevel { get; }
 
+
     /// <summary>
     /// Special helper to move all Razor logic into a separate class.
     /// For architecture of Composition over Inheritance.
@@ -43,11 +46,12 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
     #region GetService / Logs / DevTools
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
-    public TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
+    public TService GetService<TService>() where TService : class
+        => RzrHlp.ExCtxRoot.GetTypedApi().GetService<TService>();
 
     [PrivateApi("WIP 17.06,x")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    public TService GetService<TService>(NoParamOrder protector = default, string? typeName = default) where TService : class
         => RzrHlp.CodeHelper.GetService<TService>(protector, typeName);
 
 
@@ -57,17 +61,20 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
     [PrivateApi] ILog IHasLog.Log => RzrHlp.Log;
 
     [PrivateApi("Not yet ready")]
-    public IDevTools DevTools => _CodeApiSvc.DevTools;
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    public IDevTools DevTools => RzrHlp.ExCtxRoot.GetTypedApi().DevTools;
 
     #endregion
 
     #region DynCode Root
 
     [PrivateApi]
-    public ICodeApiService _CodeApiSvc => RzrHlp.DynCodeRootMain;
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    internal IExecutionContext ExCtx => RzrHlp.ExCtxRoot!;
 
     [PrivateApi]
-    public void ConnectToRoot(ICodeApiService parent) => RzrHlp.ConnectToRoot(parent);
+    public void ConnectToRoot(IExecutionContext exCtx)
+        => RzrHlp.ConnectToRoot(exCtx);
 
     [RazorInject]
     [PrivateApi]
@@ -94,11 +101,10 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
     // Note: The path for CreateInstance / GetCode - unsure if this is actually used anywhere on this object
     string IGetCodePath.CreateInstancePath
     {
-        get => _createInstancePath ?? Path;
-        set => _createInstancePath = value;
+        get => field ?? Path;
+        set;
     }
-    private string _createInstancePath;
-        
+
     #endregion
 
 

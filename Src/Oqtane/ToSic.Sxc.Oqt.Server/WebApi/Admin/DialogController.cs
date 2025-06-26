@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.Admin.DialogControllerReal;
@@ -23,7 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 
 [ApiController]
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DialogController() : OqtStatefulControllerBase(RealController.LogSuffix), IDialogController
 {
     private RealController Real => GetService<RealController>();

@@ -3,7 +3,7 @@ using RealController = ToSic.Sxc.Backend.Cms.ContentGroupControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Cms;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentGroupController() : DnnSxcControllerBase(RealController.LogSuffix), IContentGroupController
 {
     private RealController Real => SysHlp.GetService<RealController>();

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Net.Http.Formatting;
+﻿using System.Net.Http.Formatting;
 using System.Web.Http.Controllers;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
@@ -10,7 +9,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
 /// https://github.com/2sic/2sxc/issues/2917
 /// Should only be applied to the base classes up to Api14, but not on newer classes
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]   // unclear if this needs to be public
+[ShowApiWhenReleased(ShowApiMode.Never)]   // unclear if this needs to be public
 public class DefaultToNewtonsoftForHttpJsonAttribute : Attribute
 {
     public void Initialize(HttpControllerSettings controllerSettings, HttpControllerDescriptor controllerDescriptor)

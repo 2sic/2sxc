@@ -1,52 +1,39 @@
-﻿using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.LookUp;
-using ToSic.Eav.WebApi;
-using ToSic.Eav.WebApi.Admin.Query;
-using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.LookUp.Internal;
+﻿using ToSic.Eav.LookUp.Sys.Engines;
+using ToSic.Eav.WebApi.Sys;
+using ToSic.Eav.WebApi.Sys.Admin.Query;
+using ToSic.Sxc.Apps.Sys;
+using ToSic.Sxc.LookUp.Sys;
 
 namespace ToSic.Sxc.Backend.Admin.Query;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class QueryControllerReal: QueryControllerBase<QueryControllerReal>
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public class QueryControllerReal(
+    QueryControllerBase<QueryControllerReal>.MyServices services,
+    GenWorkPlus<WorkViews> workViews,
+    ISxcCurrentContextService currentContextService,
+    Generator<IAppDataConfigProvider> tokenEngineWithContext)
+    : QueryControllerBase<QueryControllerReal>(services, "Api." + LogSuffix, connect: [workViews, currentContextService, tokenEngineWithContext])
 {
-    private readonly Generator<IAppDataConfigProvider> _tokenEngineWithContext;
-    private readonly GenWorkPlus<WorkViews> _workViews;
     public const string LogSuffix = "Query";
     public const string LogGroup = EavWebApiConstants.HistoryNameWebApi + "-query";
 
-    private readonly ISxcContextResolver _contextResolver;
-
-    public QueryControllerReal(
-        MyServices services,
-        GenWorkPlus<WorkViews> workViews,
-        ISxcContextResolver contextResolver,
-        Generator<IAppDataConfigProvider> tokenEngineWithContext
-    ) : base(services, "Api." + LogSuffix)
-    {
-        ConnectLogs([
-            _workViews = workViews,
-            _contextResolver = contextResolver,
-            _tokenEngineWithContext = tokenEngineWithContext
-        ]);
-    }
     /// <summary>
     /// Delete a Pipeline with the Pipeline Entity, Pipeline Parts and their Configurations.
-    /// Stops if the if the Pipeline Entity has relationships to other Entities or is in use in a 2sxc-Template.
+    /// Stops if the Pipeline Entity has relationships to other Entities or is in use in a 2sxc-Template.
     /// </summary>
     public bool DeleteIfUnused(int appId, int id)
     {
         var l = Log.Fn<bool>($"{nameof(appId)}: {appId}; {nameof(id)}: {id}");
 
         // Stop if views still use this Query
-        var viewUsingQuery = _workViews.New(appId)
+        var viewUsingQuery = workViews.New(appId)
             .GetAll()
             .Where(t => t.Query?.Id == id)
             .Select(t => t.Id)
             .ToArray();
 
         if (viewUsingQuery.Any())
-            throw l.Done(new Exception($"Query is used by Views and cant be deleted. Query ID: {id}. TemplateIds: {string.Join(", ", viewUsingQuery)}"));
+            throw l.Done(new Exception($"Query is used by Views and can't be deleted. Query ID: {id}. TemplateIds: {string.Join(", ", viewUsingQuery)}"));
 
         var queryMod = Services.WorkUnitQueryMod.New(appId: appId);
         return l.Return( queryMod.Delete(id));
@@ -65,9 +52,11 @@ public class QueryControllerReal: QueryControllerBase<QueryControllerReal>
 
     private ILookUpEngine LookUpEngineWithBlockRequired()
     {
-        var block = _contextResolver.BlockRequired();
+        var block = currentContextService.BlockRequired();
         var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = block };
-        var lookUps = _tokenEngineWithContext.New().GetDataConfiguration(block.App as EavApp, specs).Configuration;
+        var lookUps = tokenEngineWithContext.New()
+            .GetDataConfiguration((SxcAppBase)block.App, specs)
+            .Configuration;
         return lookUps;
     }
 

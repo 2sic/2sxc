@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Admin.Metadata;
-using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.WebApi.Sys.Admin.Metadata;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using RealController = ToSic.Eav.WebApi.Admin.Metadata.MetadataControllerReal;
+using RealController = ToSic.Eav.WebApi.Sys.Admin.Metadata.MetadataControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 
@@ -17,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class MetadataController() : OqtStatefulControllerBase(RealController.LogSuffix), IMetadataController
 {
     private RealController Real => GetService<RealController>();

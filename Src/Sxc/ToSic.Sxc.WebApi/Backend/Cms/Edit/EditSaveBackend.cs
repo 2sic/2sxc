@@ -1,19 +1,18 @@
 ﻿using ToSic.Eav.Data.Build;
-using ToSic.Eav.ImportExport.Json;
-using ToSic.Eav.Plumbing;
-using ToSic.Eav.Serialization.Internal;
-using ToSic.Eav.WebApi.Errors;
-using ToSic.Eav.WebApi.Formats;
-using ToSic.Eav.WebApi.SaveHelpers;
+using ToSic.Eav.ImportExport.Json.Sys;
+using ToSic.Eav.Serialization.Sys;
+using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Backend.SaveHelpers;
+using ToSic.Sys.Security.Permissions;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.Cms;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class EditSaveBackend(
     SxcPagePublishing pagePublishing,
     GenWorkPlus<WorkEntities> workEntities,
-    ISxcContextResolver ctxResolver,
+    ISxcCurrentContextService ctxService,
     JsonSerializer jsonSerializer,
     SaveSecurity saveSecurity,
     SaveEntities saveBackendHelper,
@@ -21,7 +20,7 @@ public class EditSaveBackend(
     : ServiceBase("Cms.SaveBk",
         connect:
         [
-            pagePublishing, workEntities, ctxResolver, jsonSerializer, saveSecurity, saveBackendHelper, dataBuilder
+            pagePublishing, workEntities, ctxService, jsonSerializer, saveSecurity, saveBackendHelper, dataBuilder
         ])
 {
     #region DI Constructor and Init
@@ -31,16 +30,16 @@ public class EditSaveBackend(
         _appId = appId;
         // The context should be from the block if there is one, because it affects saving/publishing
         // Basically it can result in things being saved draft or titles being updated
-        _context = ctxResolver.GetBlockOrSetApp(appId);
+        _context = ctxService.GetExistingAppOrSet(appId);
         pagePublishing.Init(_context);
         return this;
     }
 
-    private IContextOfApp _context;
+    private IContextOfApp _context = null!;
     private int _appId;
     #endregion
 
-    public Dictionary<Guid, int> Save(EditDto package, bool partOfPage)
+    public Dictionary<Guid, int> Save(EditSaveDto package, bool partOfPage)
     {
         var l = Log.Fn<Dictionary<Guid, int>>($"save started with a#{_appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
 
@@ -101,11 +100,7 @@ public class EditSaveBackend(
 
                 ent = dataBuilder.Entity.CreateFrom(ent,
                     id: resultValidator.ResetId,
-                    isPublished: package.IsPublished,
-                    // #WipDraftShouldBranch
-                    // placeDraftInBranch: package.DraftShouldBranch
-
-                    owner: ent.Owner.NullIfNoValue() ?? _context.User.IdentityToken
+                    isPublished: package.IsPublished, owner: ent.Owner.NullIfNoValue() ?? _context.User.IdentityToken
                 );
 
                 // new in 11.01
@@ -131,7 +126,7 @@ public class EditSaveBackend(
         l.A("items to save generated, all data tests passed");
 
         var result = pagePublishing.SaveInPagePublishing(
-            ctxResolver.BlockOrNull(),
+            ctxService.BlockOrNull(),
             _appId,
             items,
             partOfPage,

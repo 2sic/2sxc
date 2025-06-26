@@ -1,0 +1,11 @@
+<Project>
+  <!-- Don't generate assembly properties from this XML which should come from the core file, like version - these lines must be in sync in all ToSic.Eav.*.csproj files -->
+  <PropertyGroup>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+  </PropertyGroup>
+</Project>

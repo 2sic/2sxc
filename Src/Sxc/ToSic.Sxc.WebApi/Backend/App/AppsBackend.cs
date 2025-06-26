@@ -1,16 +1,15 @@
-﻿using ToSic.Eav.Apps.Integration;
-using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.Apps.Internal.MetadataDecorators;
-using ToSic.Eav.Apps.State;
-using ToSic.Eav.Code.InfoSystem;
-using ToSic.Eav.Internal.Environment;
-using ToSic.Sxc.Apps.Internal.Assets;
-using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.Web.Internal.LightSpeed;
+﻿using ToSic.Eav.Apps.AppReader.Sys;
+using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.Apps.Sys.State;
+using ToSic.Sxc.Apps.Sys.Assets;
+using ToSic.Sxc.Apps.Sys.Paths;
+using ToSic.Sxc.Web.Sys.LightSpeed;
+using ToSic.Sys.Code.InfoSystem;
 
 namespace ToSic.Sxc.Backend.App;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppsBackend(
     WorkApps workApps,
     IContextOfSite context,
@@ -19,23 +18,23 @@ public class AppsBackend(
     LazySvc<GlobalPaths> globalPaths)
     : ServiceBase("Bck.Apps", connect: [workApps, codeStats, context, appPathsGen, globalPaths])
 {
-    public List<AppDto> Apps()
+    public ICollection<AppDto> Apps()
     {
         var list = workApps.GetApps(context.Site);
-        return list.Select(CreateAppDto).ToList();
+        return list.Select(CreateAppDto).ToListOpt();
     }
 
-    public List<AppDto> GetInheritableApps()
+    public ICollection<AppDto> GetInheritableApps()
     {
         var list = workApps.GetInheritableApps(context.Site);
-        return list.Select(CreateAppDto).ToList();
+        return list.Select(CreateAppDto).ToListOpt();
     }
 
     private AppDto CreateAppDto(IAppReader appReader)
     {
-        AppMetadataDto lightspeed = null;
+        AppMetadataDto? lightspeed = null;
         var lightSpeedDeco = LightSpeedDecorator.GetFromAppStatePiggyBack(appReader/*, Log*/);
-        if (lightSpeedDeco.Entity != null)
+        if (lightSpeedDeco.Entity != null! /* paranoid */)
             lightspeed = new () { Id = lightSpeedDeco.Id, Title = lightSpeedDeco.Title, IsEnabled = lightSpeedDeco.IsEnabled };
 
         var paths = appPathsGen.New().Get(appReader, context.Site);
@@ -44,8 +43,8 @@ public class AppsBackend(
         return new ()
         {
             Id = appReader.AppId,
-            IsApp = specs.NameId != Eav.Constants.DefaultAppGuid &&
-                    specs.NameId != Eav.Constants.PrimaryAppGuid, // #SiteApp v13
+            IsApp = specs.NameId != KnownAppsConstants.DefaultAppGuid &&
+                    specs.NameId != KnownAppsConstants.PrimaryAppGuid, // #SiteApp v13
             Guid = specs.NameId,
             Name = specs.Name,
             Folder = specs.Folder,

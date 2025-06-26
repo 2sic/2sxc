@@ -3,11 +3,9 @@ using DotNetNuke.Entities.Users;
 using DotNetNuke.Security.Membership;
 using DotNetNuke.Security.Roles;
 using System.Collections;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Cms.Users;
-using ToSic.Sxc.Cms.Users.Internal;
-using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Run;
 using static DotNetNuke.Common.Utilities.Null;
@@ -25,7 +23,7 @@ internal class DnnUsersProvider(LazySvc<DnnSecurity> dnnSecurity)
 
     public string PlatformIdentityTokenPrefix => DnnConstants.UserTokenPrefix;
 
-    public IUserModel GetUser(int userId, int siteId)
+    public IUserModel? GetUser(int userId, int siteId)
     {
         var user = UserController.Instance.GetUserById(siteId, userId);
         return user == null

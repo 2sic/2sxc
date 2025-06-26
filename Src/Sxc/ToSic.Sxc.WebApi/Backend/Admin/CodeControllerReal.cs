@@ -1,14 +1,13 @@
 ﻿using System.Reflection;
-using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Code.Generate;
-using ToSic.Sxc.Code.Generate.Internal;
-using ToSic.Sxc.Code.Internal.Documentation;
+using ToSic.Eav.Apps.Sys.AppJson;
+using ToSic.Sxc.Code.Generate.Sys;
+using ToSic.Sxc.Code.Sys.Documentation;
+using ToSic.Sys.Utils.Assemblies;
 
 namespace ToSic.Sxc.Backend.Admin;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGenerator>> generators, LazySvc<IAppJsonService> appJsonService) 
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGenerator>> generators, LazySvc<IAppJsonConfigurationService> appJsonService) 
     : ServiceBase("Api.CodeRl", connect: [appJsonService])
 {
     public const string LogSuffix = "Code";
@@ -16,48 +15,41 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
     public class HelpItem
     {
         // the name of the class
-        public string Term { get; set; }
+        public required string Term { get; set; }
         // message from the attribute
-        public string[] Help { get; set; }
-
-
-        // not supported in System.Text.Json
-        //// ignore some of serialization exceptions
-        //// https://www.newtonsoft.com/json/help/html/serializationerrorhandling.htm
-        //[OnError]
-        //internal void OnError(StreamingContext context, ErrorContext errorContext)
-        //{
-        //    errorContext.Handled = true;
-        //}
+        public required string[] Help { get; set; }
     }
 
     public IEnumerable<HelpItem> InlineHelp(string language)
     {
         var l = Log.Fn<IEnumerable<HelpItem>>($"InlineHelp:l:{language}", timer: true);
 
-        if (_inlineHelp != null) return l.ReturnAsOk(_inlineHelp);
+        if (_inlineHelp != null)
+            return l.ReturnAsOk(_inlineHelp);
 
         // TODO: stv# how to use languages?
 
         try
         {
             _inlineHelp = AssemblyHandling.GetTypes(Log)
-                .Where(t => t?.IsDefined(typeof(DocsAttribute)) ?? false)
+                .Where(t => t != null!)
+                .Where(t => t.IsDefined(typeof(DocsAttribute)))
                 .Select(t => new HelpItem
                 {
-                    Term = t?.Name,
-                    Help = t?.GetCustomAttribute<DocsAttribute>()?.GetMessages(t?.FullName)
-                }).ToArray();
+                    Term = t.Name,
+                    Help = t.GetCustomAttribute<DocsAttribute>()?.GetMessages(t.FullName) ?? []
+                })
+                .ToArray();
+            return l.ReturnAsOk(_inlineHelp);
         }
         catch (Exception e)
         {
             l.A("Exception in inline help.");
             l.Ex(e);
+            return l.ReturnAsError([]);
         }
-
-        return l.ReturnAsOk(_inlineHelp);
     }
-    private static IEnumerable<HelpItem> _inlineHelp;
+    private static IEnumerable<HelpItem>? _inlineHelp;
 
     public RichResult GenerateDataModels(int appId, string edition, string generator)
     {
@@ -109,12 +101,14 @@ public class CodeControllerReal(FileSaver fileSaver, LazySvc<IEnumerable<IFileGe
         var l = Log.Fn<EditionsDto>($"{nameof(appId)}:{appId}");
 
         // get generators
-        var fileGenerators = generators.Value.Select(g => new GeneratorDto(g)).ToList();
+        var fileGenerators = generators.Value
+            .Select(g => new GeneratorDto(g))
+            .ToListOpt();
 
         var appJson = appJsonService.Value.GetAppJson(appId);
         if (appJson?.Editions?.Count > 0)
         {
-            l.A($"has editions in app.json: {appJson?.Editions?.Count}");
+            l.A($"has editions in app.json: {appJson.Editions.Count}");
             return l.ReturnAsOk(appJson.ToEditionsDto(fileGenerators));
         }
 

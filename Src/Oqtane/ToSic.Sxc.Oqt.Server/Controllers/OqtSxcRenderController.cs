@@ -4,7 +4,6 @@ using Oqtane.Controllers;
 using Oqtane.Enums;
 using Oqtane.Infrastructure;
 using Oqtane.Shared;
-using System;
 using System.Net;
 using ToSic.Sxc.Oqt.Shared.Helpers;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
@@ -15,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers;
 //[Route("{alias:int}/api/[controller]")]
 [Route(ControllerRoutes.ApiRoute)]
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class OqtSxcRenderController(
     IHttpContextAccessor accessor,
     ILogManager logger,

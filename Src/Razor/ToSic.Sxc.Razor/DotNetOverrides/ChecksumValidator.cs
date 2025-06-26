@@ -4,10 +4,7 @@
 // based on: https://github.dev/dotnet/aspnetcore/tree/v8.0.5
 // src/Mvc/Mvc.Razor.RuntimeCompilation/src/ChecksumValidator.cs
 
-using System;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Razor.Hosting;
 using Microsoft.AspNetCore.Razor.Language;

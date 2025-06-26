@@ -1,6 +1,7 @@
-﻿using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Eav.Internal.Features;
+﻿using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sys.Capabilities.Features;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Backend.Cms;
@@ -18,7 +19,7 @@ internal class LoadSettingsForGpsDefaults(
         if (features.Value.IsEnabled(BuiltInFeatures.EditUiGpsCustomDefaults.NameId))
         {
             var getMaps = parameters.ContextOfApp.AppSettings.InternalGetPath(googleMapsSettings.SettingsIdentifier);
-            coordinates = getMaps.GetFirstResultEntity() is { } mapsEntity
+            coordinates = getMaps?.GetFirstResultEntity() is { } mapsEntity
                 ? googleMapsSettings.Init(mapsEntity).DefaultCoordinates
                 : MapsCoordinates.Defaults;
         }

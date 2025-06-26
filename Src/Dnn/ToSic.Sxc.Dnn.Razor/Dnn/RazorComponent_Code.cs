@@ -5,8 +5,7 @@ abstract partial class RazorComponent
     #region Code Behind - a Dnn feature which probably won't exist in Oqtane
 
     [PrivateApi]
-    internal RazorCodeManager CodeManager => _codeManager ??= new(this, Log?.GetContents());
-    private RazorCodeManager _codeManager;
+    internal RazorCodeManager CodeManager => field ??= new(this, Log?.GetContents());
 
     /// <inheritdoc />
     public dynamic Code => CodeManager.CodeOrException;

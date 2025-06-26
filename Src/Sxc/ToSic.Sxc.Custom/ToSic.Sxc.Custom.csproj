@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-Nullable.props" />
+
+  <PropertyGroup>
+    <AssemblyName>ToSic.Sxc.Custom</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <RootNamespace></RootNamespace>
+  </PropertyGroup>
+
+  <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\ToSic.Sxc.Code.HotBuild\ToSic.Sxc.Code.HotBuild.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Code\ToSic.Sxc.Code.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Services\ToSic.Sxc.Services.csproj" />
+  </ItemGroup>
+
+</Project>

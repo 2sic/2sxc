@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.WebApi.Admin.App;
-using ToSic.Eav.WebApi.Admin.Query;
-using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.WebApi.Sys.Admin.App;
+using ToSic.Eav.WebApi.Sys.Admin.Query;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.App.AppQueryControllerReal;
 
@@ -15,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 [Route(OqtWebApiConstants.AppRootPathAndLang)]
 
 [AllowAnonymous] // All functions will check security internally, so assume no requirements
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppQueryController() : OqtStatefulControllerBase(RealController.LogSuffix), IAppQueryController
 {
     private RealController Real => GetService<RealController>();
@@ -36,7 +35,7 @@ public class AppQueryController() : OqtStatefulControllerBase(RealController.Log
     public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(
         [FromRoute] string appPath,
         [FromRoute] string name,
-        QueryParameters more,
+        QueryParametersDtoFromClient more,
         [FromRoute] string stream = null
     ) => Real.PublicQueryPost(appPath, name, more, stream);
 
@@ -53,7 +52,7 @@ public class AppQueryController() : OqtStatefulControllerBase(RealController.Log
     [HttpPost($"{AppParts.Auto}/{AppParts.Query}" + "/{name}/{stream?}")]
     public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(
         [FromRoute] string name,
-        QueryParameters more,
+        QueryParametersDtoFromClient more,
         [FromQuery] int? appId = null,
         [FromRoute] string stream = null,
         [FromQuery] bool includeGuid = false

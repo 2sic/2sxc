@@ -7,12 +7,9 @@
 // which were added by a newer .net but missing in Dnn
 // Also not sure when we can remove this
 
-using System.IO;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
 namespace System.Net.Http.Formatting;

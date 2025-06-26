@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Apps.Internal.Ui;
+﻿using ToSic.Sxc.Apps.Sys.Ui;
 using ToSic.Sxc.Backend.InPage;
 
 namespace ToSic.Sxc.Backend.Cms;
@@ -27,7 +27,7 @@ public interface IBlockController
     /// </summary>
     /// <param name="apps"></param>
     /// <returns></returns>
-    IEnumerable<AppUiInfo> Apps(string apps = null);
+    IEnumerable<AppUiInfo> Apps(string? apps = null);
 
     /// <summary>
     /// used to be GET Module/GetSelectableContentTypes

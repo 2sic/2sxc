@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ToSic.Eav.Persistence.Versions;
-using ToSic.Eav.WebApi.Cms;
-using ToSic.Eav.WebApi.Formats;
-using ToSic.Eav.WebApi.Routing;
-using ToSic.Sxc.WebApi.Cms;
+using ToSic.Sxc.Backend.Cms;
 
 namespace IntegrationSamples.SxcEdit01.Controllers
 {
@@ -23,7 +20,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
 
         /// <inheritdoc />
         [HttpPost]
-        public bool Restore(int appId, int changeId, [FromBody] ItemIdentifier item) =>
-            Real.Restore(appId, changeId, item);
+        public bool Restore(int appId, int transactionId, [FromBody] ItemIdentifier item) =>
+            Real.Restore(appId, transactionId, item);
     }
 }

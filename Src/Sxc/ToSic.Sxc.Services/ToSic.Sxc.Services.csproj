@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-Nullable.props" />
+
+  <PropertyGroup>
+    <AssemblyName>ToSic.Sxc.Services</AssemblyName>
+  </PropertyGroup>
+
+  <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\ToSic.Sxc.Adam\ToSic.Sxc.Adam.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Apps\ToSic.Sxc.Apps.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Cms\ToSic.Sxc.Cms.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Core\ToSic.Sxc.Core.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Data\ToSic.Sxc.Data.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Edit\ToSic.Sxc.Edit.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Images\ToSic.Sxc.Images.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Render\ToSic.Sxc.Render.csproj" />
+  </ItemGroup>
+
+  <!-- Include Connect.Koi -->
+  <ItemGroup>
+    <Reference Include="Connect.Koi">
+      <HintPath>..\..\..\Dependencies\Koi\netstandard2.0\Connect.Koi.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

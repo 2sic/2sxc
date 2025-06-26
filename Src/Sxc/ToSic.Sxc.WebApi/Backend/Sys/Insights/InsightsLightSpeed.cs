@@ -1,13 +1,14 @@
-﻿using ToSic.Eav;
-using ToSic.Eav.Apps.Internal.Insights;
-using ToSic.Eav.Plumbing;
-using ToSic.Eav.WebApi.Sys.Insights;
-using ToSic.Sxc.Web.Internal.LightSpeed;
+﻿using ToSic.Eav.Sys;
+using ToSic.Eav.Sys.Insights;
+using ToSic.Eav.Sys.Insights.HtmlHelpers;
+using ToSic.Sxc.Web.Sys.LightSpeed;
+using ToSic.Sys.Utils;
 using static ToSic.Razor.Blade.Tag;
 
 namespace ToSic.Sxc.Backend.Sys;
 
-internal class InsightsLightSpeed(LightSpeedStats lightSpeedStats, IAppReaderFactory appReader) : InsightsProvider(Link, teaser: "Show LightSpeed Caching Statistics", helpCategory: "Performance")
+internal class InsightsLightSpeed(LightSpeedStats lightSpeedStats, IAppReaderFactory appReader)
+    : InsightsProvider(new() { Name = Link, Teaser = "Show LightSpeed Caching Statistics", HelpCategory = "Performance" }, connect: [lightSpeedStats, appReader])
 {
     public static string Link = "LightSpeedStats";
 
@@ -20,7 +21,7 @@ internal class InsightsLightSpeed(LightSpeedStats lightSpeedStats, IAppReaderFac
             var sizeStats = lightSpeedStats.Size;
             msg += P($"Apps in Cache: {countStats.Count}");
             msg += "<table id='table'>"
-                   + InsightsHtmlTable.HeadFields("#", "ZoneId", "AppId", "Name", "Items in Cache", "Ca. Memory Use", "NameId")
+                   + InsightsHtmlTable.HeadFields(["#", "ZoneId", "AppId", "Name", "Items in Cache", "Ca. Memory Use", "NameId"])
                    + "<tbody>";
             var count = 0;
             var totalItems = 0;
@@ -28,21 +29,21 @@ internal class InsightsLightSpeed(LightSpeedStats lightSpeedStats, IAppReaderFac
             foreach (var cacheItem in countStats)
             {
                 var appSpecs = appReader.Get(cacheItem.Key).Specs;
-                msg += InsightsHtmlTable.RowFields(
+                msg += InsightsHtmlTable.RowFields([
                     ++count,
                     SpecialField.Right(appSpecs.ZoneId),
                     SpecialField.Right(cacheItem.Key),
                     appSpecs.Name,
                     SpecialField.Right(cacheItem.Value),
-                    SpecialField.Right(sizeStats.TryGetValue(cacheItem.Key, out var size) ? ByteToKByte(size) : Constants.NullNameId),
+                    SpecialField.Right(sizeStats.TryGetValue(cacheItem.Key, out var size) ? ByteToKByte(size) : EavConstants.NullNameId),
                     appSpecs.NameId
-                );
+                ]);
                 totalItems += cacheItem.Value;
                 totalMemory += size;
             }
             msg += "</tbody>";
             msg += "<tfoot>";
-            msg += InsightsHtmlTable.RowFields(
+            msg += InsightsHtmlTable.RowFields([
                 B("Total:"),
                 "",
                 "",
@@ -50,7 +51,7 @@ internal class InsightsLightSpeed(LightSpeedStats lightSpeedStats, IAppReaderFac
                 SpecialField.Right(B($"{totalItems}")),
                 SpecialField.Right(B(ByteToKByte(totalMemory))),
                 ""
-            );
+            ]);
 
             msg += "</tfoot>";
             msg += "</table>";

@@ -1,0 +1,15 @@
+<Project>
+
+  <ItemGroup>
+    <Reference Include="ToSic.Razor">
+      <HintPath Condition="'$(TargetFramework)' == 'net472'">..\..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.dll</HintPath>
+      <HintPath Condition="'$(TargetFramework)' == 'net9.0'">..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <!-- This is needed for the IHtmlString or whatever in .net Framework -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+    <Reference Include="System.Web" />
+  </ItemGroup>
+
+</Project>

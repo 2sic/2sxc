@@ -1,6 +1,6 @@
-﻿using ToSic.Eav.WebApi.Sys;
+﻿using ToSic.Eav.WebApi.Sys.Logs;
 using ToSic.Sxc.Dnn.Run;
-using RealController = ToSic.Eav.WebApi.Sys.LogControllerReal;
+using RealController = ToSic.Eav.WebApi.Sys.Logs.LogControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Sys;
 
@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Dnn.Backend.Sys;
 [DnnLogExceptions]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class LogController() : DnnSxcControllerRoot(RealController.LogSuffix), ILogController
 {
     private RealController Real => SysHlp.GetService<RealController>();

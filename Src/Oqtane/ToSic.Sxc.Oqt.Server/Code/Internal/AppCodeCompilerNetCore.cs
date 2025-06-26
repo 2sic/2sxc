@@ -1,12 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using ToSic.Eav.Helpers;
-using ToSic.Eav.Internal.Configuration;
-using ToSic.Eav.Internal.Environment;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Sys.HotBuild;
+using ToSic.Sxc.Code.Sys.SourceCode;
+using ToSic.Sys.Configuration;
+using ToSic.Sys.Locking;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Oqt.Server.Code.Internal;
 
@@ -15,7 +13,7 @@ internal class AppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, Generat
 {
     private readonly TryLockTryDo _lockAppCodeAssemblyProvider = new();
 
-    protected internal override AssemblyResult GetAppCode(string virtualPath, HotBuildSpecWithSharedSuffix spec)
+    public override AssemblyResult GetAppCode(string virtualPath, HotBuildSpecWithSharedSuffix spec)
     {
         var l = Log.Fn<AssemblyResult>($"{nameof(virtualPath)}: '{virtualPath}'; {spec}", timer: true);
 
@@ -48,18 +46,26 @@ internal class AppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, Generat
             };
 
             if (!assemblyResult.ErrorMessages.IsEmpty())
-                return l.ReturnAsError(new(errorMessages: assemblyResult.ErrorMessages, infos: dicInfos), assemblyResult.ErrorMessages);
+                return l.ReturnAsError(new()
+                {
+                    ErrorMessages = assemblyResult.ErrorMessages,
+                    Infos = dicInfos,
+                }, assemblyResult.ErrorMessages);
 
             // Compile ok
             LogAllTypes(assemblyResult.Assembly);
-            return l.ReturnAsOk(new(assembly: assemblyResult.Assembly, assemblyLocations: [symbolsPath, assemblyPath], infos: dicInfos));
+            return l.ReturnAsOk(new(assemblyResult.Assembly)
+            {
+                AssemblyLocations = [symbolsPath, assemblyPath],
+                Infos = dicInfos,
+            });
 
         }
         catch (Exception ex)
         {
             l.Ex(ex);
             var errorMessage = $"Error: Can't compile '{AppCodeDll}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. {ex.Message}";
-            return l.ReturnAsError(new(errorMessages: errorMessage), "error");
+            return l.ReturnAsError(new() { ErrorMessages = errorMessage, }, "error");
         }
     }
 

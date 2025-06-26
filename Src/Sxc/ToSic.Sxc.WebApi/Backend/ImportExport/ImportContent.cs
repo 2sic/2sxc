@@ -1,23 +1,23 @@
-﻿using System.IO;
-using System.Xml.Linq;
-using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.Data.Source;
+﻿using System.Xml.Linq;
+using ToSic.Eav.Apps.Sys.Caching;
+using ToSic.Eav.Data.Sys.Entities.Sources;
 using ToSic.Eav.Identity;
-using ToSic.Eav.ImportExport.Internal;
-using ToSic.Eav.ImportExport.Internal.Zip;
-using ToSic.Eav.ImportExport.Json;
-using ToSic.Eav.Integration.Environment;
-using ToSic.Eav.Internal.Configuration;
-using ToSic.Eav.Internal.Features;
-using ToSic.Eav.Persistence.Logging;
-using ToSic.Eav.Plumbing;
-using ToSic.Eav.Serialization.Internal;
-using ToSic.Eav.WebApi.Assets;
-using ToSic.Eav.WebApi.Validation;
+using ToSic.Eav.ImportExport.Integration;
+using ToSic.Eav.ImportExport.Json.Sys;
+using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.ImportExport.Sys.XmlImport;
+using ToSic.Eav.ImportExport.Sys.Zip;
+using ToSic.Eav.Persistence.Sys.Logging;
+using ToSic.Eav.Serialization.Sys;
+using ToSic.Eav.WebApi.Sys.Helpers.Validation;
+using ToSic.Sys.Capabilities.Features;
+using ToSic.Sys.Configuration;
+using ToSic.Sys.Users;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.ImportExport;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ImportContent(
     IEnvironmentLogger envLogger,
     LazySvc<ImportService> importerLazy,
@@ -28,7 +28,7 @@ public class ImportContent(
     IAppReaderFactory appReaders,
     LazySvc<IUser> userLazy,
     AppCachePurger appCachePurger,
-    LazySvc<IEavFeaturesService> features,
+    LazySvc<ISysFeaturesService> features,
     GenWorkDb<WorkEntitySave> workEntSave)
     : ServiceBase("Bck.Export",
         connect:
@@ -40,8 +40,9 @@ public class ImportContent(
 
     protected readonly AppCachePurger AppCachePurger = appCachePurger;
 
-    public ImportResultDto Import(int zoneId, int appId, string fileName, Stream stream, string defaultLanguage) => Log.Func(l =>
+    public ImportResultDto Import(int zoneId, int appId, string fileName, Stream stream, string defaultLanguage)
     {
+        var l = Log.Fn<ImportResultDto>();
         var result = new ImportResultDto();
 
         var allowSystemChanges = userLazy.Value.IsSystemAdmin;
@@ -50,7 +51,7 @@ public class ImportContent(
             try
             {
                 zipImport.Init(zoneId, appId, userLazy.Value.IsSystemAdmin);
-                var temporaryDirectory = Path.Combine(globalConfiguration.TemporaryFolder, Mapper.GuidCompress(Guid.NewGuid()).Substring(0, 8));
+                var temporaryDirectory = Path.Combine(globalConfiguration.TemporaryFolder(), Guid.NewGuid().GuidCompress().Substring(0, 8));
 
                 result.Success = zipImport.ImportZip(stream, temporaryDirectory);
                 result.Messages.AddRange(zipImport.Messages);
@@ -70,19 +71,18 @@ public class ImportContent(
             result.Success = xmlImport.ImportXml(zoneId, appId, parentAppId: null /* not sure if we never have a parent here */, xmlDocument);
             result.Messages.AddRange(xmlImport.Messages);
         }
-        return result;
-    });
+        return l.Return(result);
+    }
 
 
-    public ImportResultDto ImportJsonFiles(int zoneId, int appId, List<FileUploadDto> files,
-        string defaultLanguage
-    ) => Log.Func($"{zoneId}, {appId}, {defaultLanguage}", l =>
+    public ImportResultDto ImportJsonFiles(int zoneId, int appId, List<FileUploadDto> files, string defaultLanguage)
     {
+        var l = Log.Fn<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
         try
         {
             // 0. Verify it's json etc.
             if (files.Any(file => !Json.IsValidJson(file.Contents)))
-                throw new ArgumentException("a file is not json");
+                throw l.Ex(new ArgumentException("a file is not json"));
 
             // 1. Create content types
             var serializer = jsonSerializerGenerator.New().SetApp(appReaders.Get(new AppIdentity(zoneId, appId)));
@@ -107,7 +107,7 @@ public class ImportContent(
                     if (isEnabled)
                         types.AddRange(serializer.GetContentTypesFromBundles(package.Value).Select(set => set.ContentType));
                     else
-                        throw new NotSupportedException("Bundle packages import feature is not enabled.");
+                        throw l.Ex(new NotSupportedException("Bundle packages import feature is not enabled."));
                 }
 
                 // single json
@@ -116,13 +116,13 @@ public class ImportContent(
             }
 
             if (types.Any(t => t == null))
-                throw new NullReferenceException("One ContentType is null, something is wrong");
+                throw l.Ex(new NullReferenceException("One ContentType is null, something is wrong"));
 
             // 1.3 Import the type
             var import = importerLazy.Value.Init(zoneId, appId, true, true);
             if (types.Any())
             {
-                import.ImportIntoDb(types, null);
+                import.ImportIntoDb(types, []);
 
                 l.A($"Purging {zoneId}/{appId}");
                 AppCachePurger.Purge(zoneId, appId);
@@ -130,7 +130,7 @@ public class ImportContent(
 
             // are there any entities from bundles for import?
             if (packages.All(p => p.Value.Bundles?.Any(b => b.Entities.SafeAny()) != true))
-                return (new(true), "ok (types only)");
+                return l.Return(new(true), "ok (types only)");
 
             // 2. Create Entities
 
@@ -148,7 +148,8 @@ public class ImportContent(
                 foreach (var package in packages)
                 {
                     l.A($"import entities from package: {package.Key}");
-                    if (package.Value.Bundles.SafeNone()) continue;
+                    if (package.Value.Bundles.SafeNone())
+                        continue;
                     // bundle json
                     var entitiesFromBundles = serializer.GetEntitiesFromBundles(package.Value, relationships.Source);
                     l.A($"entities from bundles: {entitiesFromBundles.Count}");
@@ -167,13 +168,13 @@ public class ImportContent(
                 workEntSave.New(appState).Import(entities);
 
             // 3. possibly show messages / issues
-            return (new(true), "ok (with entities)");
+            return l.Return(new(true), "ok (with entities)");
         }
         catch (Exception ex)
         {
             l.Ex(ex);
             envLogger.LogException(ex);
-            return (new ImportResultDto(false, ex.Message, Message.MessageTypes.Error), "error");
+            return l.Return(new ImportResultDto(false, ex.Message, Message.MessageTypes.Error), "error");
         }
-    });
+    }
 }

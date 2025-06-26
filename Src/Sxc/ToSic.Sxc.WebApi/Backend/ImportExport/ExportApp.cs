@@ -1,21 +1,20 @@
-﻿using ToSic.Eav.Apps.Integration;
-using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.Apps.State;
-using ToSic.Eav.Data.Shared;
-using ToSic.Eav.ImportExport.Internal.Zip;
-using ToSic.Eav.Integration;
-using ToSic.Eav.Internal.Features;
-using ToSic.Eav.Plumbing;
-using ToSic.Eav.Security;
-using ToSic.Sxc.Apps.Internal.Work;
+﻿using ToSic.Eav.Apps.AppReader.Sys;
+using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.Apps.Sys.State;
+using ToSic.Eav.Context.Sys.ZoneMapper;
+using ToSic.Eav.Data.Sys.Ancestors;
 using ISite = ToSic.Eav.Context.ISite;
-using ToSic.Eav.ImportExport.Internal;
+using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.ImportExport.Sys.Zip;
+using ToSic.Eav.WebApi.Sys;
+using ToSic.Eav.WebApi.Sys.ImportExport;
+using ToSic.Eav.WebApi.Sys.Security;
+using ToSic.Sys.Capabilities.Features;
+using ToSic.Sys.Capabilities.SysFeatures;
+using ToSic.Sys.Users;
 
 
 #if NETFRAMEWORK
-using System.IO;
-using System.Net.Http;
-using ToSic.Eav.WebApi.ImportExport;
 using HttpResponse = System.Net.Http.HttpResponseMessage;
 #else
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +23,7 @@ using HttpResponse = Microsoft.AspNetCore.Mvc.IActionResult;
 
 namespace ToSic.Sxc.Backend.ImportExport;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExportApp(
     IZoneMapper zoneMapper,
     ZipExport export,
@@ -34,7 +33,7 @@ public class ExportApp(
     ISite site,
     IUser user,
     Generator<ImpExpHelpers> impExpHelpers,
-    IEavFeaturesService features,
+    ISysFeaturesService features,
     IAppPathsMicroSvc appPathSvc)
     : ServiceBase("Bck.Export",
         connect:
@@ -69,10 +68,10 @@ public class ExportApp(
             TemplatesCount = appViews.GetAll().Count(),
             HasRazorTemplates = appViews.GetRazor().Any(),
             HasTokenTemplates = appViews.GetToken().Any(),
-            FilesCount = zipExport.FileManager.AllFiles().Count() // PortalFilesCount
-                         + (appHasCustomParent ? 0 : zipExport.FileManagerGlobal.AllFiles().Count()), // GlobalFilesCount
-            TransferableFilesCount = zipExport.FileManager.GetAllTransferableFiles().Count() // TransferablePortalFilesCount
-                                     + (appHasCustomParent ? 0 : zipExport.FileManagerGlobal.GetAllTransferableFiles().Count()), // TransferableGlobalFilesCount
+            FilesCount = zipExport.AppFileManager.AllFiles().Count() // PortalFilesCount
+                         + (appHasCustomParent ? 0 : zipExport.AppFileManagerGlobal.AllFiles().Count()), // GlobalFilesCount
+            TransferableFilesCount = zipExport.AppFileManager.GetAllTransferableFiles().Count() // TransferablePortalFilesCount
+                                     + (appHasCustomParent ? 0 : zipExport.AppFileManagerGlobal.GetAllTransferableFiles().Count()), // TransferableGlobalFilesCount
         });
     }
 
@@ -94,7 +93,7 @@ public class ExportApp(
         return l.ReturnTrue();
     }
 
-    internal static void SyncWithSiteFilesVerifyFeaturesOrThrow(IEavFeaturesService features, bool withSiteFiles)
+    internal static void SyncWithSiteFilesVerifyFeaturesOrThrow(ISysFeaturesService features, bool withSiteFiles)
     {
         if (!withSiteFiles) return;
         features.ThrowIfNotEnabled("Requires features enabled to sync with site files ",
@@ -123,7 +122,7 @@ public class ExportApp(
         using var fileStream = zipExport.ExportApp(specs);
         var fileBytes = fileStream.ToArray();
         l.A("will stream so many bytes:" + fileBytes.Length);
-        var mimeType = MimeHelper.FallbackType;
+        var mimeType = MimeTypeConstants.FallbackType;
 
 #if NETFRAMEWORK
         return l.Return(HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, mimeType, new MemoryStream(fileBytes)));

@@ -1,10 +1,9 @@
-﻿using System.IO;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Oqtane.Repository;
-using ToSic.Eav.Helpers;
-using ToSic.Eav.Internal.Environment;
+using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
@@ -21,20 +20,15 @@ internal class OqtServerPaths(IWebHostEnvironment hostingEnvironment, LazySvc<IF
     }
 
 
-    protected override string FullPathOfReference(int id) => fileRepository.Value.GetFilePath(id);
+    protected override string FullPathOfReference(int id)
+        => fileRepository.Value.GetFilePath(id);
 
     public static string GetAppRootWithSiteId(int siteId)
-    {
-        return string.Format(OqtConstants.AppRootPublicBase, siteId);
-    }
+        => string.Format(OqtConstants.AppRootPublicBase, siteId);
 
     public static string GetAppPath(int siteId, string appFolder)
-    {
-        return Path.Combine(GetAppRootWithSiteId(siteId), appFolder);
-    }
+        => Path.Combine(GetAppRootWithSiteId(siteId), appFolder);
 
     public static string GetAppApiPath(int siteId, string appFolder, string apiPath)
-    {
-        return Path.Combine(GetAppPath(siteId, appFolder), apiPath);
-    }
+        => Path.Combine(GetAppPath(siteId, appFolder), apiPath);
 }

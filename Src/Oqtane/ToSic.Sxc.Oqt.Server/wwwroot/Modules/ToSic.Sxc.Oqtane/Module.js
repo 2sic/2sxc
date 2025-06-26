@@ -55,7 +55,7 @@ ToSic.Sxc.Oqtane = ToSic.Sxc.Oqtane || {
         const debug = window?.$2sxc?.urlParams?.isDebug() ?? false;
         if (debug) console.log('includeInlineScripts:', inlineScripts);
         for (let i = 0; i < inlineScripts.length; i++) {
-            Oqtane.Interop.includeScript(inlineScripts[i].id, inlineScripts[i].src, inlineScripts[i].integrity, inlineScripts[i].crossorigin, inlineScripts[i].type, inlineScripts[i].content, inlineScripts[i].location)
+          Oqtane.Interop.includeScript(inlineScripts[i].id, inlineScripts[i].src, inlineScripts[i].integrity, inlineScripts[i].crossorigin, inlineScripts[i].type, inlineScripts[i].content, inlineScripts[i].location, inlineScripts[i].dataAttributes)
         }
     }
 };

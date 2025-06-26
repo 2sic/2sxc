@@ -2,9 +2,9 @@
 
 public class ViewContentTypeDto
 {
-    public string StaticName { get; set; }
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public int DemoId { get; set; }
-    public string DemoTitle { get; set; }
+    public required string StaticName { get; set; }
+    public required int Id { get; set; }
+    public required string Name { get; set; }
+    public required int DemoId { get; set; }
+    public required string DemoTitle { get; set; }
 }

@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Web.Internal.EditUi;
+﻿using ToSic.Sxc.Web.Sys.EditUi;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Dnn.dist.eavUi;
@@ -9,7 +9,7 @@ public class Default : CachedPageBase
     {
         Response.AppendHeader("test-dev", "2sxc");
 
-        Response.Write(PageOutputCached("~/DesktopModules/ToSIC_SexyContent/dist/ng-edit/index-raw.html",
+        Response.Write(PageOutputCached("~/DesktopModules/ToSic.Sxc/dist/ng-edit/index-raw.html",
             EditUiResourceSettings.EditUi));
 
         // HACK: opening editui will change user language in cookie, so disable that

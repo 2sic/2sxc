@@ -1,8 +1,8 @@
 ﻿using System.Web;
 using ToSic.Lib.Coding;
-using ToSic.Sxc.Blocks.Internal.Render;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Render.Sys;
 using Page = System.Web.UI.Page;
 
 namespace ToSic.Sxc.Dnn.Services;
@@ -45,6 +45,7 @@ internal class DnnRenderService : RenderService
     private void DnnPageProcess(Page dnnPage, IRenderResult result)
     {
         _dnnPageChanges.Value.Apply(dnnPage, result);
-        _dnnClientResources.Value.Init(dnnPage, null, null).AddEverything(result.Features);
+        // #RemovedV20 #OldDnnAutoJQuery
+        _dnnClientResources.Value.Init(dnnPage, /*null,*/ null).AddEverything(result.Features);
     }
 }

@@ -1,7 +1,7 @@
-﻿using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.Internal.Configuration;
+﻿using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Integration.Installation;
+using ToSic.Sxc.Sys.Integration.Installation;
+using ToSic.Sys.Configuration;
 
 namespace ToSic.Sxc.Dnn.Install;
 
@@ -11,12 +11,12 @@ internal partial class DnnEnvironmentInstaller : ServiceBase, IEnvironmentInstal
 
     private readonly DnnInstallLogger _installLogger;
     private readonly LazySvc<IGlobalConfiguration> _globalConfiguration;
-    private readonly LazySvc<IAppJsonService> _appJsonService;
+    private readonly LazySvc<IAppJsonConfigurationService> _appJsonService;
 
     /// <summary>
     /// Instance initializers...
     /// </summary>
-    public DnnEnvironmentInstaller(ILogStore logStore, DnnInstallLogger installLogger, LazySvc<IGlobalConfiguration> globalConfiguration, LazySvc<IAppJsonService> appJsonService) : base("Dnn.InstCo")
+    public DnnEnvironmentInstaller(ILogStore logStore, DnnInstallLogger installLogger, LazySvc<IGlobalConfiguration> globalConfiguration, LazySvc<IAppJsonConfigurationService> appJsonService) : base("Dnn.InstCo")
     {
         _appJsonService = appJsonService;
         logStore.Add(LogNames.LogStoreInstallation, Log);

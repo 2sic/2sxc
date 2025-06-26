@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Web;
-using ToSic.Eav.Code.InfoSystem;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Internal.Plumbing;
 
 namespace ToSic.Sxc.Dnn;
 
@@ -26,11 +24,8 @@ public static class DnnStaticDi
     /// <returns></returns>
     [PrivateApi]
     [Obsolete("Avoid using at all cost - only DNN and test-code may use this!")]
-    public static T StaticBuild<T>(ILog parentLog = null) => GetPageScopedServiceProvider().Build<T>(parentLog);
-
-#pragma warning disable CS0618
-    public static CodeInfoService CodeInfos => StaticBuild<CodeInfoService>();
-#pragma warning restore CS0618
+    public static T StaticBuild<T>(ILog parentLog = null)
+        => GetPageScopedServiceProvider().Build<T>(parentLog);
 
     /// <summary>
     /// Dictionary key for keeping the Scoped Injection Service Provider in the Http-Context
@@ -40,10 +35,12 @@ public static class DnnStaticDi
     /// </remarks>
     private static readonly Type ServiceScopeKey = typeof(IServiceScope);
 
-    public static IServiceProvider GetGlobalScopedServiceProvider() => GetGlobalServiceProvider().CreateScope().ServiceProvider;
+    public static IServiceProvider GetGlobalScopedServiceProvider()
+        => GetGlobalServiceProvider().CreateScope().ServiceProvider;
 
     [PrivateApi("Very internal, to use at startup, so singletons are not lost")]
-    private /*public*/ static IServiceProvider GetGlobalServiceProvider() => Sp.Get(() => _getGlobalDnnServiceProvider?.Invoke() ?? throw new("can't access global DNN service provider"));
+    private static IServiceProvider GetGlobalServiceProvider()
+        => Sp.Get(() => _getGlobalDnnServiceProvider?.Invoke() ?? throw new("can't access global DNN service provider"));
     private static readonly GetOnce<IServiceProvider> Sp = new();
 
     [PrivateApi("This is just a temporary solution - shouldn't be used long term")]
@@ -56,7 +53,8 @@ public static class DnnStaticDi
         // Work-around for issue https://github.com/2sic/2sxc/issues/1200
         // Scope service-provider based on request
         var httpCtx = HttpContext.Current;
-        if (httpCtx == null) return GetGlobalServiceProvider().CreateScope().ServiceProvider;
+        if (httpCtx == null)
+            return GetGlobalServiceProvider().CreateScope().ServiceProvider;
 
         // This only runs in Dnn 7.4.2 - Dnn 9.3, because Dnn 9.4 provides this in the http context
         if (!httpCtx.Items.Contains(ServiceScopeKey))

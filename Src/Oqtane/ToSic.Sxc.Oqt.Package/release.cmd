@@ -1,9 +1,10 @@
 @ECHO off
 SET Source=%1
 SET OqtaneInstallPackage=%2
+SET TargetFramework=%3
 ECHO Source=%Source%
 ECHO OqtaneInstallPackage=%OqtaneInstallPackage%
-
+ECHO TargetFramework=%TargetFramework%
 
 REM enables the use of the ! delimiter for delayed variable expansion.
 SETLOCAL enabledelayedexpansion 
@@ -20,7 +21,7 @@ ROBOCOPY /mir "%Source%\js\ " "%BuildTarget%\js\ "
 ROBOCOPY /mir "%Source%\system\ " "%BuildTarget%\system\ "
 ROBOCOPY /mir "%Source%\dist\ " "%BuildTarget%\dist\ "
 
-.nuget\nuget.exe pack %PackageName%.Install.nuspec
+.nuget\nuget.exe pack %PackageName%.Install.nuspec -Properties targetframework=%TargetFramework%;projectname=%PackageName%
 
 REM performs the string substitution. Specifically, it replaces forward slashes (/) with backslashes (\).
 SET "NormalizedPath=!OqtaneInstallPackage:/=\!"

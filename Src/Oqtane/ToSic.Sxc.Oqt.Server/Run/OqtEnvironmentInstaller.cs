@@ -1,19 +1,21 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Internal.Work;
+using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Context;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.Internal.Work;
+using ToSic.Sxc.Apps.Sys.Installation;
+using ToSic.Sxc.Apps.Sys.Work;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Sys.Integration.Installation;
+using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
 
 internal class OqtEnvironmentInstaller(
     GenWorkPlus<WorkViews> workViews,
-    RemoteRouterLink remoteRouterLink,
+    ExternalLinksService externalLinksService,
     IAppsCatalog appsCatalog)
-    : ServiceBase($"{OqtConstants.OqtLogPrefix}.Instll", connect: [remoteRouterLink, workViews, appsCatalog]),
+    : ServiceBase($"{OqtConstants.OqtLogPrefix}.Instll", connect: [externalLinksService, workViews, appsCatalog]),
         IEnvironmentInstaller, IPlatformAppInstaller
 {
     public string UpgradeMessages()
@@ -47,8 +49,8 @@ internal class OqtEnvironmentInstaller(
             }
             catch { /* ignore */ }
 
-        var link = remoteRouterLink.LinkToRemoteRouter(
-            RemoteDestinations.AutoConfigure,
+        var link = externalLinksService.LinkToDestination(
+            ExternalSxcDestinations.AutoConfigure,
             site,
             module.Id,
             appSpecsOrNull: null,

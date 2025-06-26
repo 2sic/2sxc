@@ -1,59 +1,69 @@
-﻿using ToSic.Eav;
-using ToSic.Eav.Helpers;
-using ToSic.Eav.Security.Internal;
-using ToSic.Sxc.Apps.Internal.Work;
+﻿using ToSic.Eav.Apps.Sys.Permissions;
+using ToSic.Eav.Sys;
 using ToSic.Sxc.Backend.InPage;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Blocks.Internal.Render;
-using ToSic.Sxc.Cms.Internal.Publishing;
-using ToSic.Sxc.Web.Internal.ClientAssets;
-using ToSic.Sxc.Web.Internal.PageFeatures;
-using ToSic.Sxc.Web.Internal.Url;
+using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Blocks.Sys.BlockEditor;
+using ToSic.Sxc.Blocks.Sys.Work;
+using ToSic.Sxc.Cms.Publishing.Sys;
+using ToSic.Sxc.Render.Sys;
+using ToSic.Sxc.Render.Sys.Output;
+using ToSic.Sxc.Render.Sys.RenderBlock;
+using ToSic.Sxc.Sys.Render.PageFeatures;
+using ToSic.Sxc.Web.Sys.Url;
+using ToSic.Sys.Security.Permissions;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.ContentBlocks;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentBlockBackend(
     GenWorkPlus<WorkViews> workViews,
     Generator<MultiPermissionsApp> multiPermissionsApp,
     IPagePublishing publishing,
     GenWorkDb<WorkBlocksMod> workBlocksMod,
-    ISxcContextResolver ctxResolver,
+    ISxcCurrentContextService ctxService,
     LazySvc<IBlockResourceExtractor> optimizerLazy,
     LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
     AppWorkContextService appWorkCtxService,
-    Generator<BlockFromEntity> entityBlockGenerator)
-    : BlockWebApiBackendBase(multiPermissionsApp, appWorkCtxService, ctxResolver, "Bck.FldLst",
-        connect: [optimizerLazy, workBlocksMod, workViews, publishing, entityBlockGenerator, blockEditorSelectorLazy])
+    Generator<BlockOfEntity> entityBlockGenerator,
+    Generator<IBlockBuilder> blockBuilderGenerator)
+    : ServiceBase("Bck.FldLst",
+        connect: [workViews, multiPermissionsApp, publishing, workBlocksMod, ctxService, optimizerLazy, blockEditorSelectorLazy, appWorkCtxService, entityBlockGenerator, blockBuilderGenerator])
 {
 
-    public IRenderResult NewBlockAndRender(int parentId, string field, int index, string app = "", Guid? guid = null) 
+    public IRenderResult NewBlockAndRender(int parentId, string field, int index, string app = "", Guid? guid = null)
     {
-        var entityId = NewBlock(parentId, field, index, app, guid);
+        var block = ctxService.BlockRequired();
+        var appWorkCtxDb = appWorkCtxService.CtxWithDb(block.App);
+        var entityId = workBlocksMod.New(appWorkCtxDb).NewBlockReference(parentId, field, index, app, guid);
 
         // now return a rendered instance
-        var newContentBlock = entityBlockGenerator.New().Init(Block, null, entityId);
-        return newContentBlock.BlockBuilder.Run(true, specs: new());
+        var newContentBlock = entityBlockGenerator.New().GetBlockOfEntity(block, null, entityId);
+        var builder = blockBuilderGenerator.New().Setup(newContentBlock);
+        return builder.Run(true, specs: new());
     }
-
-    // todo: probably move to CmsManager.Block
-    public int NewBlock(int parentId, string field, int sortOrder, string app = "", Guid? guid = null) 
-        => workBlocksMod.New(AppWorkCtxDb).NewBlockReference(parentId, field, sortOrder, app, guid);
 
     public void AddItem(int? index = null)
     {
         Log.A($"add order:{index}");
+
+        var block = ctxService.BlockRequired();
+        var appWorCtxDb = appWorkCtxService.CtxWithDb(block.App);
+
         // use dnn versioning - this is always part of page
-        publishing.DoInsidePublishing(ContextOfBlock, _ 
-            => workBlocksMod.New(AppWorkCtxDb).AddEmptyItem(Block.Configuration, index, Block.Context.Publishing.ForceDraft));
+        publishing.DoInsidePublishing(block.Context, _ 
+            => workBlocksMod.New(appWorCtxDb).AddEmptyItem(block.Configuration, index, block.Context.Publishing.ForceDraft));
     }
 
         
     public bool PublishPart(string part, int index)
     {
         Log.A($"try to publish #{index} on '{part}'");
-        ThrowIfNotAllowedInApp(GrantSets.WritePublished);
-        return blockEditorSelectorLazy.Value.GetEditor(Block).Publish(part, index);
+        var block = ctxService.BlockRequired();
+        ApiForBlockHelpers.ThrowIfNotAllowedInApp(multiPermissionsApp, block.Context, GrantSets.WritePublished);
+        return blockEditorSelectorLazy.Value
+            .GetEditor(block)
+            .Publish(part, index);
     }
 
     public AjaxRenderDto RenderForAjax(int templateId, string lang, string root, string edition)
@@ -65,22 +75,27 @@ public class ContentBlockBackend(
         l.A("2.1. Build Resources");
         var resources = new List<AjaxResourceDto>();
         var ver = EavSystemInfo.VersionWithStartUpBuild;
-        if (result.Features.Contains(SxcPageFeatures.TurnOn))
+        if (result.Features?.Contains(SxcPageFeatures.TurnOn) == true)
             resources.Add(new() { Url = UrlHelpers.QuickAddUrlParameter(root.SuffixSlash() + SxcPageFeatures.TurnOn.UrlInDist, "v", ver) });
 
         l.A("2.2. Add JS & CSS which were stripped before");
-        resources.AddRange(result.Assets.Select(asset => new AjaxResourceDto
-        {
-            // Note: Url can be empty if it has contents
-            Url = string.IsNullOrWhiteSpace(asset.Url) ? null : UrlHelpers.QuickAddUrlParameter(asset.Url, "v", ver), 
-            Type = asset.IsJs ? "js" : "css",
-            Contents = asset.Content,
-            Attributes = asset.HtmlAttributes,
-        }));
+        resources.AddRange(result.Assets
+                               ?.Select(asset => new AjaxResourceDto
+                               {
+                                   // Note: Url can be empty if it has contents
+                                   Url = string.IsNullOrWhiteSpace(asset.Url)
+                                       ? null
+                                       : UrlHelpers.QuickAddUrlParameter(asset.Url!, "v", ver),
+                                   Type = asset.IsJs ? "js" : "css",
+                                   Contents = asset.Content,
+                                   Attributes = asset.HtmlAttributes,
+                               })
+                           ?? []
+        );
 
         l.A("3. Add manual resources (fancybox etc.)");
         // First get all the parts out of HTML, as the configuration is still stored as plain HTML
-        var mergedFeatures  = string.Join("\n", result.FeaturesFromSettings.Select(mc => mc.Html));
+        var mergedFeatures  = string.Join("\n", (result.FeaturesFromSettings?.Select(mc => mc.Html) ?? []));
 
         l.A("4.1. Process optimizers");
         var renderResult = optimizerLazy.Value.Process(mergedFeatures, new(extractAll: true));
@@ -105,18 +120,21 @@ public class ContentBlockBackend(
 
     private IRenderResult RenderToResult(int templateId, string lang, string edition)
     {
-        var callLog = Log.Fn<IRenderResult>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
+        var l = Log.Fn<IRenderResult>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
 
+        var block = ctxService.BlockRequired();
         // if a preview templateId was specified, swap to that
         if (templateId > 0)
         {
-            var template = workViews.New(AppWorkCtxPlus).Get(templateId);
+            var appWorkCtxPlus = appWorkCtxService.ContextPlus(block.Context.AppReaderRequired);
+            var template = workViews.New(appWorkCtxPlus).Get(templateId);
             template.Edition = edition;
-            Block.View = template;
+            block = ctxService.SwapBlockView(template);
         }
 
-        var result = Block.BlockBuilder.Run(true, specs: new());
-        return callLog.ReturnAsOk(result);
+        var builder = blockBuilderGenerator.New().Setup(block);
+        var result = builder.Run(true, specs: new());
+        return l.ReturnAsOk(result);
     }
 
 }

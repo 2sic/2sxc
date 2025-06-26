@@ -1,17 +1,17 @@
-﻿using System.IO;
-using System.Web.Hosting;
+﻿using System.Web.Hosting;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
-using ToSic.Eav.Context;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using DotNetNuke.Services.Localization;
-using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.Integration;
-using ToSic.Eav.Internal.Features;
-using ToSic.Sxc.Integration.Paths;
-using ToSic.Sxc.Web.Internal.Url;
-using static ToSic.Eav.Context.IZoneCultureResolverExtensions;
+using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Context.Sys.Site;
+using ToSic.Eav.Context.Sys.ZoneCulture;
+using ToSic.Eav.Context.Sys.ZoneMapper;
+using ToSic.Eav.Sys;
+using ToSic.Sxc.Sys.Integration.Paths;
+using ToSic.Sxc.Web.Sys.Url;
+using ToSic.Sys.Capabilities.Features;
+using static ToSic.Eav.Context.Sys.ZoneCulture.IZoneCultureResolverExtensions;
 using ISite = ToSic.Eav.Context.ISite;
 
 namespace ToSic.Sxc.Dnn.Context;
@@ -28,7 +28,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     /// DI Constructor, will get the current portal settings
     /// #TodoDI not ideal yet, as PortalSettings.current is still retrieved from global
     /// </summary>
-    public DnnSite(LazySvc<IZoneMapper> zoneMapperLazy, LazySvc<ILinkPaths> linkPathsLazy, LazySvc<IEavFeaturesService> featuresSvc): base(DnnConstants.LogName)
+    public DnnSite(LazySvc<IZoneMapper> zoneMapperLazy, LazySvc<ILinkPaths> linkPathsLazy, LazySvc<ISysFeaturesService> featuresSvc): base(DnnConstants.LogName)
     {
         ConnectLogs([
             _featuresSvc = featuresSvc,
@@ -39,19 +39,20 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     }
     private readonly LazySvc<IZoneMapper> _zoneMapperLazy;
     private readonly LazySvc<ILinkPaths> _linkPathsLazy;
-    private readonly LazySvc<IEavFeaturesService> _featuresSvc;
+    private readonly LazySvc<ISysFeaturesService> _featuresSvc;
     private ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
     /// <inheritdoc />
-    public override ISite Init(int siteId, ILog parentLog) => TryInitPortal(new(siteId), parentLog);
+    public override ISite Init(int siteId, ILog? parentLogOrNull)
+        => TryInitPortal(new(siteId), parentLogOrNull);
 
     #endregion
 
     #region Swap new Portal Settings into this object
 
-    internal DnnSite TryInitPortal(PortalSettings settings, ILog extLogOrNull = default)
+    internal DnnSite TryInitPortal(PortalSettings settings, ILog parentLogOrNull = default)
     {
-        AttachToExternalLog(extLogOrNull);
+        AttachToExternalLog(parentLogOrNull);
 
         var l = Log.Fn<DnnSite>();
         UnwrappedSite = KeepBestPortalSettings(settings);
@@ -119,27 +120,52 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     private string _defaultLanguage;
 
 
-    public override string CurrentCultureCode => _currentCulture.GetM(Log, l =>
+    public override string CurrentCultureCode => _currentCulture.Get(GetCurrentCultureCode);
+    //    .GetM(Log, l =>
+    //{
+    //    // First check if we know more about the site
+    //    var portal = UnwrappedSite;
+    //    if (portal == null) return (null, "no portal");
+    //    var aliasCulture = portal.PortalAlias?.CultureCode ?? "";
+
+    //    if (aliasCulture.HasValue())
+    //    {
+    //        var aliasCult = aliasCulture.ToLowerInvariant();
+    //        return (aliasCult, $"{nameof(portal.PortalAlias)}: {aliasCult}");
+    //    }
+
+    //    // if alias is unknown, then we might be in search mode or something
+    //    var result = portal.CultureCode?.ToLowerInvariant();
+    //    return (result, $"Portal.CultureCode: {result}");
+    //});
+    private readonly GetOnce<string> _currentCulture = new();
+
+    private string GetCurrentCultureCode()
     {
+        var l = Log.Fn<string>();
         // First check if we know more about the site
         var portal = UnwrappedSite;
-        if (portal == null) return (null, "no portal");
+        if (portal == null)
+            return l.ReturnNull("no portal");
         var aliasCulture = portal.PortalAlias?.CultureCode ?? "";
 
         if (aliasCulture.HasValue())
         {
             var aliasCult = aliasCulture.ToLowerInvariant();
-            return (aliasCult, $"{nameof(portal.PortalAlias)}: {aliasCult}");
+            return l.Return(aliasCult, $"{nameof(portal.PortalAlias)}: {aliasCult}");
         }
 
         // if alias is unknown, then we might be in search mode or something
         var result = portal.CultureCode?.ToLowerInvariant();
-        return (result, $"Portal.CultureCode: {result}");
-    });
-    private readonly GetOnce<string> _currentCulture = new();
+        return l.Return(result, $"Portal.CultureCode: {result}");
+    }
 
-    public List<string> CultureCodesWithFallbacks => _currentCodeFallbacks.GetL(Log, l =>
+    public List<string> CultureCodesWithFallbacks => _currentCodeFallbacks.Get(GetCultureCodesWithFallbacks);
+    private readonly GetOnce<List<string>> _currentCodeFallbacks = new();
+
+    private List<string> GetCultureCodesWithFallbacks()
     {
+        var l = Log.Fn<List<string>>();
         // 2023-08-31 2dm - new code, as it could contain risks, use try/catch/null to default
         try
         {
@@ -186,15 +212,13 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
         {
             return null;
         }
-    });
-    private readonly GetOnce<List<string>> _currentCodeFallbacks = new();
-
+    }
 
     #endregion
 
     // ReSharper disable once InheritdocInvalidUsage
     /// <inheritdoc />
-    public override int Id => UnwrappedSite?.PortalId ?? Eav.Constants.NullId;
+    public override int Id => UnwrappedSite?.PortalId ?? EavConstants.NullId;
 
     /// <inheritdoc />
     public override string Name => UnwrappedSite.PortalName;
@@ -248,7 +272,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
         get { 
             if(_zoneId != null) return _zoneId.Value;
             // check if id is negative; 0 is a valid tenant id
-            if (Id < 0) return (_zoneId = Eav.Constants.NullId).Value;
+            if (Id < 0) return (_zoneId = EavConstants.NullId).Value;
             _zoneId = _zoneMapperLazy.Value.GetZoneId(Id);
             return _zoneId.Value;
         }

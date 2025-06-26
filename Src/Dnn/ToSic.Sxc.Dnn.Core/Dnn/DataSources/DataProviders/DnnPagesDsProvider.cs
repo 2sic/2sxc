@@ -1,11 +1,9 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Security.Permissions;
-using ToSic.Eav.Helpers;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Coding;
-using ToSic.Sxc.Cms.Pages.Internal;
-using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Cms.Pages.Sys;
+using ToSic.Sxc.DataSources.Sys.Pages;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources;

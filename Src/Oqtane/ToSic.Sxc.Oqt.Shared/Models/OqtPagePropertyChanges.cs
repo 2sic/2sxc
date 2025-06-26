@@ -1,17 +1,16 @@
-﻿using System;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Oqt.Shared.Models;
 
 /// <summary>
 /// Used to transfer what / how page properties should change based on the Razor file
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public struct OqtPagePropertyChanges
 {
     public OqtPagePropertyOperation Change { get; set; }
     public OqtPageProperties Property { get; set; }
-    public string Value { get; set; }
+    public string? Value { get; set; }
     public string Placeholder { get; set; }
 
 
@@ -21,7 +20,7 @@ public struct OqtPagePropertyChanges
     /// with old value, effectively injecting old value in new value
     /// </summary>
     /// <param name="original">old value</param>
-    public OqtPagePropertyChanges InjectOriginalInValue(string original)
+    public OqtPagePropertyChanges InjectOriginalInValue(string? original)
     {
         if (string.IsNullOrEmpty(Value) || !Value.Contains(OriginalToken, StringComparison.OrdinalIgnoreCase))
             return this;

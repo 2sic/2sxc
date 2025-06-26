@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Sys.HotBuild;
+using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Oqt.Server.Code.Internal;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 
@@ -15,6 +16,7 @@ partial class OqtRegisterServices
     {
         // App WebApi: .net specific code compiler
         services.TryAddTransient<CodeCompiler, CodeCompilerNetCore>();
+        services.TryAddTransient<IClassCompiler, CodeCompilerNetCore>();
         services.TryAddTransient<AppCodeCompiler, AppCodeCompilerNetCore>();
 
         services.AddSingleton<IActionDescriptorChangeProvider>(AppApiActionDescriptorChangeProvider.Instance);

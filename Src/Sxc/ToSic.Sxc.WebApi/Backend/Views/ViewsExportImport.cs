@@ -1,23 +1,22 @@
-﻿using System.IO;
-using ToSic.Eav.Apps.Integration;
+﻿using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource.Internal.Query;
-using ToSic.Eav.Helpers;
-using ToSic.Eav.ImportExport.Internal;
-using ToSic.Eav.ImportExport.Internal.Xml;
-using ToSic.Eav.ImportExport.Json;
+using ToSic.Eav.Environment.Sys.ServerPaths;
+using ToSic.Eav.ImportExport.Integration;
+using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
-using ToSic.Eav.ImportExport.Validation;
-using ToSic.Eav.Integration.Environment;
-using ToSic.Eav.Internal.Environment;
-using ToSic.Eav.Persistence.Logging;
-using ToSic.Eav.Security;
-using ToSic.Eav.Serialization.Internal;
-using ToSic.Eav.WebApi.Assets;
-using ToSic.Eav.WebApi.Infrastructure;
-using ToSic.Eav.WebApi.Validation;
+using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.ImportExport.Sys.Xml;
+using ToSic.Eav.Persistence.Sys.Logging;
+using ToSic.Eav.Serialization.Sys;
+using ToSic.Eav.WebApi.Sys.Helpers.Validation;
+using ToSic.Eav.WebApi.Sys.Security;
 using ToSic.Sxc.Apps.Internal;
+using ToSic.Sxc.Apps.Sys;
+using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Backend.ImportExport;
-using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Sys.Views;
+using ToSic.Sys.Utils;
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;
 #else
@@ -26,7 +25,7 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 
 namespace ToSic.Sxc.Backend.Views;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ViewsExportImport(
     GenWorkDb<WorkEntitySave> workEntSave,
     IServerPaths serverPaths,
@@ -52,13 +51,13 @@ public class ViewsExportImport(
         var appReader = impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(context.Site.ZoneId, appId, context.User, context.Site.ZoneId);
         var bundle = new BundleEntityWithAssets
         {
-            Entity = appReader.List.One(viewId).IfOfType(Settings.TemplateContentType)
+            Entity = appReader.List.One(viewId)!.IfOfType(Settings.TemplateContentType)!
         };
 
         var appPaths = appPathSvc.Get(appReader, context.Site);
 
         // Attach files
-        var view = new View(bundle.Entity, [context.Site.CurrentCultureCode], Log, qDefBuilder);
+        var view = new View(bundle.Entity!, [context.Site.CurrentCultureCode], Log, qDefBuilder);
 
         if (!string.IsNullOrEmpty(view.Path))
         {
@@ -92,7 +91,7 @@ public class ViewsExportImport(
 
     public ImportResultDto ImportView(int zoneId, int appId, List<FileUploadDto> files, string defaultLanguage)
     {
-        var callLog = Log.Fn<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
+        var l = Log.Fn<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
 
         try
         {
@@ -109,7 +108,7 @@ public class ViewsExportImport(
 
             var bundles = files.Select(f => serializer.DeserializeEntityWithAssets(f.Contents)).ToList();
 
-            if (bundles.Any(t => t == null))
+            if (bundles.Any(t => t == null!))
                 throw new NullReferenceException("At least one file returned a null-item, something is wrong");
 
             // 1.1 Verify these are view-entities
@@ -124,22 +123,24 @@ public class ViewsExportImport(
             // 3. Import the attachments
             var assets = bundles.SelectMany(b => b.Assets);
             var assetMan = new JsonAssets();
-            foreach (var asset in assets) assetMan.Create(GetRealPath(appPaths, asset), asset);
+            foreach (var asset in assets)
+                assetMan.Create(GetRealPath(appPaths, asset), asset);
 
             // 3. possibly show messages / issues
-            return callLog.ReturnAsOk(new(true));
+            return l.ReturnAsOk(new(true));
         }
         catch (Exception ex)
         {
             envLogger.LogException(ex);
-            return callLog.Return(new(false, ex.Message, Message.MessageTypes.Error), "error");
+            return l.Return(new(false, ex.Message, Message.MessageTypes.Error), "error");
         }
     }
 
-    private string GetRealPath(IAppPaths app, JsonAsset asset)
+    private string? GetRealPath(IAppPaths app, JsonAsset asset)
     {
-        if (!string.IsNullOrEmpty(asset.Storage) && asset.Storage != JsonAsset.StorageApp) return null;
+        if (!string.IsNullOrEmpty(asset.Storage) && asset.Storage != JsonAsset.StorageApp)
+            return null;
         var root = app.PhysicalPathSwitch(false);
-        return Path.Combine(root, asset.Folder, asset.Name);
+        return Path.Combine(root, asset.Folder!, asset.Name);
     }
 }

@@ -1,9 +1,10 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
-using ToSic.Eav.Integration.Security;
+using ToSic.Eav.Environment.Sys.Permissions;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Context.Sys;
+using ToSic.Sxc.Context.Sys.Module;
 
 namespace ToSic.Sxc.Dnn.Run;
 
@@ -64,20 +65,17 @@ internal class DnnEnvironmentPermission() : EnvironmentPermission(DnnConstants.L
         try
         {
             // skip during search (usual HttpContext is missing for search)
-            return System.Web.HttpContext.Current == null
-                ? l.ReturnFalse()
-                : l.ReturnAsOk(
-                    ModulePermissionController.HasModuleAccess(SecurityAccessLevel.Edit, "", Module)
-                        || ModulePermissionController.CanEditModuleContent(Module)
-                        //|| ModulePermissionController.CanDeleteModule(Module)
-                        //|| ModulePermissionController.CanExportModule(Module)
-                        //|| ModulePermissionController.CanImportModule(Module)
-                        //|| ModulePermissionController.CanManageModule(Module)
-                    );
+            if (System.Web.HttpContext.Current == null)
+                return l.ReturnFalse();
+
+            var isEditor = ModulePermissionController.HasModuleAccess(SecurityAccessLevel.Edit, "", Module)
+                           || ModulePermissionController.CanEditModuleContent(Module);
+            return l.ReturnAndLog(isEditor);
         }
-        catch
+        catch (Exception e)
         {
-            return l.ReturnFalse();
+            l.Ex(e);
+            return l.ReturnFalse("error");
         }
     }
 }

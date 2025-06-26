@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Oqt.Shared;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CspConstants
 {
     public const string LogPrefix = "Csp";

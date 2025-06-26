@@ -1,12 +1,12 @@
-﻿using ToSic.Eav.WebApi.App;
-using static ToSic.Eav.WebApi.EavWebApiConstants;
+﻿using ToSic.Eav.WebApi.Sys.App;
+using static ToSic.Eav.WebApi.Sys.EavWebApiConstants;
 using RealController = ToSic.Sxc.Backend.App.AppDataControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.App;
 
 /// <inheritdoc />
 [AllowAnonymous]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppDataController() : DnnSxcControllerBase(RealController.LogSuffix), IAppDataController
 {
     private RealController Real => SysHlp.GetService<RealController>();
@@ -16,7 +16,7 @@ public class AppDataController() : DnnSxcControllerBase(RealController.LogSuffix
     /// <inheritdoc />
     [HttpGet]
     [AllowAnonymous]   // will check security internally, so assume no requirements
-    public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string appPath = default, [FromUri(Name = ODataSelect)] string oDataSelect = default)
+    public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string appPath = default, [FromUri(Name = ODataSelectParamName)] string oDataSelect = default)
         => Real.GetEntities(contentType, appPath, oDataSelect: oDataSelect);
 
     #endregion
@@ -26,12 +26,12 @@ public class AppDataController() : DnnSxcControllerBase(RealController.LogSuffix
     /// <inheritdoc />
     [HttpGet]
     [AllowAnonymous] // will check security internally, so assume no requirements
-    public IDictionary<string, object> GetOne(string contentType, string guid, string appPath = default, [FromUri(Name = ODataSelect)] string oDataSelect = default) // this will handle Guid
+    public IDictionary<string, object> GetOne(string contentType, string guid, string appPath = default, [FromUri(Name = ODataSelectParamName)] string oDataSelect = default) // this will handle Guid
         => Real.GetOne(contentType, guid, appPath, oDataSelect: oDataSelect);
 
     [HttpGet]
     [AllowAnonymous] // will check security internally, so assume no requirements
-    public IDictionary<string, object> GetOne(string contentType, int id, string appPath = default, [FromUri(Name = ODataSelect)] string oDataSelect = default) // this will handle int id
+    public IDictionary<string, object> GetOne(string contentType, int id, string appPath = default, [FromUri(Name = ODataSelectParamName)] string oDataSelect = default) // this will handle int id
         => Real.GetOne(contentType, id.ToString(), appPath, oDataSelect: oDataSelect);
 
     #endregion

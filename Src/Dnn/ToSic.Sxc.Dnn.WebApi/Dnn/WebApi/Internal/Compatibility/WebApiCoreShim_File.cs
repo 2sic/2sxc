@@ -1,9 +1,8 @@
-﻿using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Text;
 using System.Web;
 using System.Xml;
-using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Backend;
 
@@ -25,7 +24,7 @@ partial class WebApiCoreShim
 
         // Try to figure out file mime type as needed
         if (string.IsNullOrWhiteSpace(contentType))
-            contentType = (string.IsNullOrWhiteSpace(fileDownloadName ?? virtualPath)) ? MimeHelper.FallbackType : MimeMapping.GetMimeMapping(fileDownloadName ?? virtualPath);
+            contentType = (string.IsNullOrWhiteSpace(fileDownloadName ?? virtualPath)) ? MimeTypeConstants.FallbackType : MimeMapping.GetMimeMapping(fileDownloadName ?? virtualPath);
 
         HttpContent httpContent = new ByteArrayContent(Encoding.UTF8.GetBytes(string.Empty));
 

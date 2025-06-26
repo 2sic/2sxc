@@ -1,26 +1,18 @@
 ﻿using Oqtane.Repository;
 using Oqtane.Shared;
-using System;
 using System.Configuration;
 using System.Net;
 using System.Net.Mail;
-using ToSic.Eav.Context;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Context.Sys;
+using ToSic.Sxc.Services.Mail.Sys;
+using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
 
-internal class OqtMailService : MailServiceBase
+internal class OqtMailService(LazySvc<ISettingRepository> settingRepositoryLazy, LazySvc<IUser> userLazy)
+    : MailServiceBase(userLazy, connect: [settingRepositoryLazy])
 {
-    private readonly LazySvc<ISettingRepository> _settingRepositoryLazy;
-
-    public OqtMailService(LazySvc<ISettingRepository> settingRepositoryLazy, LazySvc<IUser> userLazy) : base(userLazy)
-    {
-        ConnectLogs([
-            _settingRepositoryLazy = settingRepositoryLazy
-        ]);
-    }
-
     protected override SmtpClient SmtpClient()
     {
         var settings = GetSettings();
@@ -57,7 +49,13 @@ internal class OqtMailService : MailServiceBase
 
     private Dictionary<string, string> GetSettings()
     {
-        var settings = _settingRepositoryLazy.Value.GetSettings(EntityNames.Site, App.Site.Id).ToList();
-        return settings.OrderBy(item => item.SettingName).ToList().ToDictionary(setting => setting.SettingName, setting => setting.SettingValue);
+        var site = ExCtx.GetState<IContextOfBlock>().Site;
+        var settings = settingRepositoryLazy.Value
+            .GetSettings(EntityNames.Site, site.Id)
+            .ToList();
+        return settings
+            .OrderBy(item => item.SettingName)
+            .ToList()
+            .ToDictionary(setting => setting.SettingName, setting => setting.SettingValue);
     }
 }

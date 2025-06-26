@@ -1,0 +1,71 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+
+  <PropertyGroup>
+    <TargetFrameworks>net472;net9.0;</TargetFrameworks>
+    <RootNamespace>ToSic.Sxc</RootNamespace>
+    <AssemblyName>ToSic.Sxc.Edit</AssemblyName>
+    <Deterministic>true</Deterministic>
+    <!--<FileAlignment>512</FileAlignment>-->
+    <NoWarn>7035;CS1591</NoWarn>
+    <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
+    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
+    <!-- Don't generate assembly properties from this XML which should come from the core file, like version - these lines must be in sync in all ToSic.Eav.*.csproj files -->
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <LangVersion>preview</LangVersion>
+    <!-- end: Don't generate... -->
+  </PropertyGroup>
+
+  <!--<PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>-->
+
+  <!-- Import common files which change how the project compiles; AssemblyInfo from 2sxc; rest form Lib.Imports -->
+  <ItemGroup>
+    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\SxcSharedAssemblyInfo.cs" Link="Properties\SxcSharedAssemblyInfo.cs" />
+    <Compile Include="..\..\..\..\eav-server\ToSic.Lib.Imports\System.Runtime.CompilerServices.cs" Link="Properties\System.Runtime.CompilerServices.cs" />
+    <Compile Include="..\..\..\..\eav-server\ToSic.Lib.Imports\HideInternalApisOnReleaseOnly.cs" Link="Properties\HideInternalApisOnReleaseOnly.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ToSic.Sxc\ToSic.Sxc.csproj" />
+  </ItemGroup>
+
+
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+    <!--<Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.WebRequest" />-->
+    <!--<Reference Include="System.Web" />-->
+    <!--<Reference Include="System.Web.Http">
+      <HintPath>..\..\..\Dependencies\System.Web\System.Web.Http.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>-->
+    <!--<Reference Include="ToSic.Razor">
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.dll</HintPath>
+    </Reference>-->
+    <!--<Reference Include="Microsoft.CSharp" />-->
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+    <!--<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="4.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
+    <PackageReference Include="System.Runtime.Caching" Version="9.0.0" />
+    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />-->
+
+    <!--<Reference Include="ToSic.Razor">
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
+    </Reference>-->
+  </ItemGroup>
+
+</Project>

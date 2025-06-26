@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../SharedImports/CsProj.Props/AllImportsForTestCode.props" />
+
+  <PropertyGroup>
+    <RootNamespace>Tests.ToSic.ToSxc.WebApi</RootNamespace>
+    <AssemblyName>2sxc.WebApi.Tests</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="AdamTests\" />
+  </ItemGroup>
+
+</Project>

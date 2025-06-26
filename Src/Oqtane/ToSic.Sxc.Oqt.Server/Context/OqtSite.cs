@@ -1,16 +1,17 @@
 ﻿using Oqtane.Models;
 using Oqtane.Repository;
-using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
-using ToSic.Eav.Integration;
-using ToSic.Eav.Internal.Environment;
+using ToSic.Eav.Context.Sys.Site;
+using ToSic.Eav.Context.Sys.ZoneMapper;
+using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Sys.Integration.Paths;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
-using UrlParts = ToSic.Sxc.Web.Internal.Url.UrlParts;
+using UrlParts = ToSic.Sxc.Web.Sys.Url.UrlParts;
 
 namespace ToSic.Sxc.Oqt.Server.Context;
 
@@ -56,7 +57,7 @@ internal sealed class OqtSite: Site<Site>
         return this;
     }
 
-    public override ISite Init(int siteId, ILog parentLog)
+    public override ISite Init(int siteId, ILog? parentLogOrNull)
     {
         UnwrappedSite = _siteRepository.Value.GetSite(siteId);
         return this;
@@ -118,7 +119,7 @@ internal sealed class OqtSite: Site<Site>
         {
             if (_zoneId != null) return _zoneId.Value;
             // check if id is negative; 0 is a valid tenant id
-            if (Id < 0) return (_zoneId = Eav.Constants.NullId).Value;
+            if (Id < 0) return (_zoneId = Eav.Sys.EavConstants.NullId).Value;
             _zoneId = _zoneMapper.Value.GetZoneId(Id);
             return _zoneId.Value;
         }

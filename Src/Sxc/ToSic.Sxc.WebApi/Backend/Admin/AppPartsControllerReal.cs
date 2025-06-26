@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.WebApi.Adam;
-using ToSic.Eav.WebApi.Admin;
+﻿using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Sxc.Backend.ImportExport;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 #if NETFRAMEWORK
@@ -10,7 +9,7 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 
 namespace ToSic.Sxc.Backend.Admin;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppPartsControllerReal(
     LazySvc<IContextOfSite> context,
     LazySvc<ExportContent> exportContent,
@@ -62,7 +61,7 @@ public class AppPartsControllerReal(
         var (fileName, stream) = uploadInfo.GetStream(0);
 
         var result = importContent.New()
-            .Import(zoneId: zoneId, appId: appId, fileName: fileName, stream: stream, defaultLanguage: context.Value.Site.DefaultCultureCode);
+            .Import(zoneId: zoneId, appId: appId, fileName: fileName, stream: stream!, defaultLanguage: context.Value.Site.DefaultCultureCode);
 
         return l.ReturnAsOk(result);
     }

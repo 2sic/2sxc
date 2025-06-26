@@ -1,8 +1,8 @@
-﻿using ToSic.Eav.ImportExport.Internal.Options;
-using ToSic.Eav.WebApi.Admin;
-using ToSic.Eav.WebApi.Dto;
+﻿using ToSic.Eav.ImportExport.Sys.Options;
+using ToSic.Eav.WebApi.Sys.Admin;
+using ToSic.Eav.WebApi.Sys.Dto;
 using Guid = System.Guid;
-using RealController = ToSic.Eav.WebApi.Admin.EntityControllerReal;
+using RealController = ToSic.Eav.WebApi.Sys.Admin.EntityControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 /// Security checking is possible, because the cookie still contains user information
 /// </remarks>
 [DnnLogExceptions]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class EntityController() : DnnSxcControllerBase(RealController.LogSuffix), IEntityController
 {
     private RealController Real => SysHlp.GetService<RealController>();

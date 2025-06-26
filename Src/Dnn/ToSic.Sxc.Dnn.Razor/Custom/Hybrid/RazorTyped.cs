@@ -1,12 +1,15 @@
-﻿using ToSic.Eav.Code.Help;
-using ToSic.Eav.Plumbing;
+﻿using Custom.Razor.Sys;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code.Internal.CodeErrorHelp;
-using ToSic.Sxc.Code.Internal.CodeRunHelpers;
+using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Code.Sys.CodeApi;
+using ToSic.Sxc.Code.Sys.CodeErrorHelp;
+using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Razor.Internal;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Code.Help;
 using static System.StringComparer;
 
 // ReSharper disable once CheckNamespace
@@ -27,36 +30,37 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 {
     #region Constructor, Setup, Helpers
 
+    internal ICodeTypedApiHelper CodeApi => field
+        ??= ExCtx.GetTypedApi();
+
+
     /// <inheritdoc cref="DnnRazorHelper.RenderPageNotSupported"/>
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public override HelperResult RenderPage(string path, params object[] data)
         => RzrHlp.RenderPageNotSupported();
 
 
     /// <inheritdoc cref="ICompatibilityLevel.CompatibilityLevel"/>
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel16;
 
-    /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
-    public TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
+    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
     [PrivateApi("WIP 17.06,x")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
         => CodeHelper.GetService<TService>(protector, typeName);
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
-    public ServiceKit16 Kit => _kit.Get(_CodeApiSvc.GetKit<ServiceKit16>);
-    private readonly GetOnce<ServiceKit16> _kit = new();
+    public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;
 
-    internal TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
-    private TypedCode16Helper _codeHelper;
+    internal TypedCode16Helper CodeHelper => field ??= CreateCodeHelper();
 
     /// <inheritdoc cref="CodeTyped.Customize"/>
-    protected ICodeCustomizer Customize => _customize ??= _CodeApiSvc.GetService<ICodeCustomizer>(reuse: true);
-    private ICodeCustomizer _customize;
+    protected ICodeCustomizer Customize => field ??= CodeApi.GetService<ICodeCustomizer>(reuse: true);
 
     void ISetDynamicModel.SetDynamicModel(object data) => _overridePageData = data;
 
@@ -65,7 +69,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     private TypedCode16Helper CreateCodeHelper() =>
         new(
             owner: this,
-            new(_CodeApiSvc, true, Path),
+            new(ExCtx, true, Path),
             getRazorModel: () => _overridePageData
                                  // the default/only value would be on a 0 key
                                  ?? (PageData?.TryGetValue(0, out var zeroData) ?? false ? zeroData as object : null),
@@ -95,7 +99,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     #region Link, Edit
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => _CodeApiSvc.Link;
+    public ILinkService Link => CodeApi.Link;
 
     #endregion
 
@@ -103,7 +107,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     #region New App, Settings, Resources
 
     /// <inheritdoc />
-    public new IAppTyped App => _CodeApiSvc.AppTyped;
+    public new IAppTyped App => CodeApi.AppTyped;
 
     /// <inheritdoc cref="IDynamicCode16.AllResources" />
     public ITypedStack AllResources => CodeHelper.AllResources;
@@ -125,10 +129,10 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     public ITypedItem MyHeader => CodeHelper.MyHeader;
 
     /// <inheritdoc />
-    public IDataSource MyData => _CodeApiSvc.Data;
+    public IDataSource MyData => CodeApi.Data;
 
     /// <inheritdoc />
-    public ITypedModel MyModel => CodeHelper.MyModel;
+    public ITypedRazorModel MyModel => CodeHelper.MyModel;
 
     #endregion
 
@@ -136,16 +140,16 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     #region MyContext & UniqueKey
 
     /// <inheritdoc cref="IDynamicCode16.MyContext" />
-    public ICmsContext MyContext => _CodeApiSvc.CmsContext;
+    public ICmsContext MyContext => CodeApi.CmsContext;
 
     /// <inheritdoc cref="IDynamicCode16.MyPage" />
-    public ICmsPage MyPage => _CodeApiSvc.CmsContext.Page;
+    public ICmsPage MyPage => CodeApi.CmsContext.Page;
 
     /// <inheritdoc cref="IDynamicCode16.MyUser" />
-    public ICmsUser MyUser => _CodeApiSvc.CmsContext.User;
+    public ICmsUser MyUser => CodeApi.CmsContext.User;
 
     /// <inheritdoc cref="IDynamicCode16.MyView" />
-    public ICmsView MyView => _CodeApiSvc.CmsContext.View;
+    public ICmsView MyView => CodeApi.CmsContext.View;
 
     /// <inheritdoc cref="IDynamicCode16.UniqueKey" />
     public string UniqueKey => Kit.Key.UniqueKey;
@@ -156,32 +160,32 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 
     /// <inheritdoc cref="IDynamicCode16.AsItem" />
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
-        => _CodeApiSvc.Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
+        => CodeApi.Cdf.AsItem(data, new() { ItemIsStrict = propsRequired ?? true, UseMock = mock == true });
 
     /// <inheritdoc cref="IDynamicCode16.AsItems" />
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default) 
-        => _CodeApiSvc.Cdf.AsItems(list, propsRequired: propsRequired ?? true);
+        => CodeApi.Cdf.AsItems(list, new() { ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="IDynamicCode16.AsEntity" />
     public IEntity AsEntity(ICanBeEntity thing)
-        => _CodeApiSvc.Cdf.AsEntity(thing);
+        => CodeApi.Cdf.AsEntity(thing);
 
     /// <inheritdoc cref="IDynamicCode16.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _CodeApiSvc.Cdf.AsTyped(original, propsRequired: propsRequired);
+        => CodeApi.Cdf.AsTyped(original, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _CodeApiSvc.Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
+        => CodeApi.Cdf.AsTypedList(list, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="IDynamicCode16.AsStack" />
     public ITypedStack AsStack(params object[] items)
-        => _CodeApiSvc.Cdf.AsStack(items);
+        => CodeApi.Cdf.AsStack(items);
 
     /// <inheritdoc cref="IDynamicCode16.AsStack{T}" />
     public T AsStack<T>(params object[] items)
         where T : class, ICanWrapData, new()
-        => _CodeApiSvc.Cdf.AsStack<T>(items);
+        => CodeApi.Cdf.AsStack<T>(items);
 
     #endregion
 
@@ -206,12 +210,12 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     /// <inheritdoc />
     public T As<T>(object source, NoParamOrder protector = default, bool mock = false)
         where T : class, ICanWrapData
-        => _CodeApiSvc.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
+        => CodeApi.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
 
     /// <inheritdoc />
     public IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
         where T : class, ICanWrapData
-        => _CodeApiSvc.Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
+        => CodeApi.Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
 
     #endregion
 

@@ -1,0 +1,850 @@
+/************************************************************/
+/*****              SqlDataProvider                     *****/
+/*****                                                  *****/
+/*****                                                  *****/
+/***** Note: To manually execute this script you must   *****/
+/*****       perform a search and replace operation     *****/
+/*****       for {databaseOwner} and {objectQualifier}  *****/
+/*****                                                  *****/
+/************************************************************/
+-- The following SQL script is actually 'Install.SqlDataProvider' for clean install v20.00.00 DB, but adjusted for 2sxc Package rename
+
+-- Set session language to english to ensure DateTime format is correct (all following insert statements in this script expect that)
+SET LANGUAGE English;
+
+-- Check for custom Object Qualifier - break installation if it's configured (2sxc does not support object qualifier)
+IF '{objectQualifier}' <> ''
+BEGIN
+    RAISERROR(N'Your SQL installation is non-standard using a Custom Object Qualifier. 2sic uses the standard Microsoft Entity Framework which doesn''t work well with this feature - installation aborted.', 16, 1);
+	RETURN;
+END
+GO
+
+-- adjusted for 2sxc Package rename
+-- find if old package '2SexyContent' is installed, and if so, skip this clean install script
+DECLARE @upgradeVersion NVARCHAR(20) = '00.00.01', @installedVersion NVARCHAR(20);
+SELECT @installedVersion = ISNULL(
+    (SELECT [Version] FROM Packages WHERE [Name] = N'2SexyContent'),
+    '00.00.00'
+);
+
+-- skip further execution if installedVersion > upgradeVersion
+IF (
+    TRY_CAST(PARSENAME(@installedVersion, 3) AS INT) >  TRY_CAST(PARSENAME(@upgradeVersion, 3) AS INT) OR
+    (
+        TRY_CAST(PARSENAME(@installedVersion, 3) AS INT) = TRY_CAST(PARSENAME(@upgradeVersion, 3) AS INT) AND
+        (
+            TRY_CAST(PARSENAME(@installedVersion, 2) AS INT) >  TRY_CAST(PARSENAME(@upgradeVersion, 2) AS INT) OR
+            (
+                TRY_CAST(PARSENAME(@installedVersion, 2) AS INT) = TRY_CAST(PARSENAME(@upgradeVersion, 2) AS INT) AND
+                TRY_CAST(PARSENAME(@installedVersion, 1) AS INT) > TRY_CAST(PARSENAME(@upgradeVersion, 1) AS INT)
+            )
+        )
+    )
+)
+RETURN;
+
+-- special case to handle clean install of Install.SqlDataProvider for v20.00.00 db, after 2sxc Packaga rename
+PRINT N'Clean install 00.00.01.SqlDataProvider (actually Install.SqlDataProvider for v20.00.00)';
+
+-- Start of install procedure which replaces all install scripts and code updates until and including version 20.00.00 -------------------------------------------------
+
+/****** Object:  Table [dbo].[TsDynDataApp]    Script Date: 15.5.2025. 13:42:07 ******/
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER ON;
+
+CREATE TABLE [dbo].[TsDynDataApp](
+	[AppId] [int] IDENTITY(1,1) NOT NULL,
+	[ZoneId] [int] NOT NULL,
+	[Name] [nvarchar](255) NOT NULL,
+	[SysSettings] [nvarchar](max) NULL,
+	[TransCreatedId] [int] NULL,
+	[TransModifiedId] [int] NULL,
+	[TransDeletedId] [int] NULL,
+ CONSTRAINT [PK_TsDynDataApp] PRIMARY KEY CLUSTERED 
+(
+	[AppId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+/****** Object:  Table [dbo].[TsDynDataAttribute]    Script Date: 15.5.2025. 13:42:08 ******/
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER ON;
+
+CREATE TABLE [dbo].[TsDynDataAttribute](
+	[AttributeId] [int] IDENTITY(1,1) NOT NULL,
+	[StaticName] [nvarchar](50) NOT NULL,
+	[Type] [nvarchar](50) NOT NULL,
+	[TransCreatedId] [int] NOT NULL,
+	[TransDeletedId] [int] NULL,
+	[Guid] [uniqueidentifier] NULL,
+	[SysSettings] [nvarchar](max) NULL,
+	[ContentTypeId] [int] NOT NULL,
+	[SortOrder] [int] NOT NULL,
+	[IsTitle] [bit] NOT NULL,
+	[TransModifiedId] [int] NULL,
+ CONSTRAINT [PK_TsDynDataAttribute] PRIMARY KEY CLUSTERED 
+(
+	[AttributeId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
+
+/****** Object:  Table [dbo].[TsDynDataAttributeType]    Script Date: 15.5.2025. 13:42:08 ******/
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER ON;
+
+CREATE TABLE [dbo].[TsDynDataAttributeType](
+	[Type] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_TsDynDataAttributeType] PRIMARY KEY CLUSTERED 
+(
+	[Type] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY];
+
+/****** Object:  Table [dbo].[TsDynDataContentType]    Script Date: 15.5.2025. 13:42:08 ******/
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER ON;
+
+CREATE TABLE [dbo].[TsDynDataContentType](
+	[ContentTypeId] [int] IDENTITY(1,1) NOT NULL,
+	[StaticName] [nvarchar](150) NULL,
+	[Name] [nvarchar](150) NULL,
+	[Scope] [nvarchar](50) NULL,
+	[TransCreatedId] [int] NOT NULL,
+	[TransDeletedId] [int] NULL,
+	[AppId] [int] NOT NULL,
+	[InheritContentTypeId] [int] NULL,
+	[IsGlobal] [bit] NOT NULL,
+	[Json] [nvarchar](max) NULL,
+	[SysSettings] [nvarchar](max) NULL,
+	[TransModifiedId] [int] NULL,
+ CONSTRAINT [PK_TsDynDataContentType] PRIMARY KEY CLUSTERED 
+(
+	[ContentTypeId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
+
+/****** Object:  Table [dbo].[TsDynDataDimension]    Script Date: 15.5.2025. 13:42:08 ******/
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER ON;
+
+CREATE TABLE [dbo].[TsDynDataDimension](
+	[DimensionId] [int] IDENTITY(1,1) NOT NULL,
+	[Parent] [int] NULL,
+	[Name] [nvarchar](100) NOT NULL,
+	[SystemKey] [nvarchar](100) NULL,
+	[ExternalKey] [nvarchar](100) NULL,
+	[Active] [bit] NOT NULL,
+	[ZoneId] [int] NOT NULL,
+ CONSTRAINT [PK_TsDynDataDimension] PRIMARY KEY CLUSTERED 
+(
+	[DimensionId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY];
+
+/****** Object:  Table [dbo].[TsDynDataEntity]    Script Date: 15.5.2025. 13:42:08 ******/
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER ON;
+
+CREATE TABLE [dbo].[TsDynDataEntity](
+	[EntityId] [int] IDENTITY(1,1) NOT NULL,
+	[EntityGuid] [uniqueidentifier] NOT NULL,
+	[ContentTypeId] [int] NOT NULL,
+	[TargetTypeId] [int] NOT NULL,
+	[KeyNumber] [int] NULL,
+	[KeyGuid] [uniqueidentifier] NULL,
+	[KeyString] [nvarchar](100) NULL,
+	[TransCreatedId] [int] NOT NULL,
+	[TransDeletedId] [int] NULL,
+	[IsPublished] [bit] NOT NULL,
+	[PublishedEntityId] [int] NULL,
+	[TransModifiedId] [int] NOT NULL,
+	[Owner] [nvarchar](250) NULL,
+	[Json] [nvarchar](max) NULL,
+	[Version] [int] NOT NULL,
+	[AppId] [int] NOT NULL,
+	[ContentType] [nvarchar](250) NULL,
+ CONSTRAINT [PK_TsDynDataEntity] PRIMARY KEY CLUSTERED 
+(
+	[EntityId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
+
+/****** Object:  Table [dbo].[TsDynDataHistory]    Script Date: 15.5.2025. 13:42:08 ******/
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER ON;
+
+CREATE TABLE [dbo].[TsDynDataHistory](
+	[HistoryId] [int] IDENTITY(1,1) NOT NULL,
+	[SourceTable] [nvarchar](250) NOT NULL,
+	[SourceId] [int] NULL,
+	[SourceGuid] [uniqueidentifier] NULL,
+	[Operation] [nchar](1) NOT NULL,
+	[Timestamp] [datetime] NOT NULL,
+	[TransactionId] [int] NULL,
+	[Json] [nvarchar](max) NULL,
+	[CJson] [varbinary](max) NULL,
+ CONSTRAINT [PK_TsDynDataHistory] PRIMARY KEY CLUSTERED 
+(
+	[HistoryId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
+
+/****** Object:  Table [dbo].[TsDynDataRelationship]    Script Date: 15.5.2025. 13:42:08 ******/
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER ON;
+
+CREATE TABLE [dbo].[TsDynDataRelationship](
+	[AttributeId] [int] NOT NULL,
+	[ParentEntityId] [int] NOT NULL,
+	[ChildEntityId] [int] NULL,
+	[SortOrder] [int] NOT NULL,
+ CONSTRAINT [PK_TsDynDataRelationship] PRIMARY KEY CLUSTERED 
+(
+	[AttributeId] ASC,
+	[ParentEntityId] ASC,
+	[SortOrder] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY];
+
+/****** Object:  Table [dbo].[TsDynDataTargetType]    Script Date: 15.5.2025. 13:42:08 ******/
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER ON;
+
+CREATE TABLE [dbo].[TsDynDataTargetType](
+	[TargetTypeId] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](50) NOT NULL,
+	[Description] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_TsDynDataTargetType] PRIMARY KEY CLUSTERED 
+(
+	[TargetTypeId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
+
+/****** Object:  Table [dbo].[TsDynDataTransaction]    Script Date: 15.5.2025. 13:42:08 ******/
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER ON;
+
+CREATE TABLE [dbo].[TsDynDataTransaction](
+	[TransactionId] [int] IDENTITY(1,1) NOT NULL,
+	[Timestamp] [datetime] NOT NULL,
+	[User] [nvarchar](255) NULL,
+ CONSTRAINT [PK_TsDynDataTransaction] PRIMARY KEY CLUSTERED 
+(
+	[TransactionId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY];
+
+/****** Object:  Table [dbo].[TsDynDataValue]    Script Date: 15.5.2025. 13:42:08 ******/
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER ON;
+
+CREATE TABLE [dbo].[TsDynDataValue](
+	[ValueId] [int] IDENTITY(1,1) NOT NULL,
+	[EntityId] [int] NOT NULL,
+	[AttributeId] [int] NOT NULL,
+	[Value] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_TsDynDataValue] PRIMARY KEY CLUSTERED 
+(
+	[ValueId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
+
+/****** Object:  Table [dbo].[TsDynDataValueDimension]    Script Date: 15.5.2025. 13:42:08 ******/
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER ON;
+
+CREATE TABLE [dbo].[TsDynDataValueDimension](
+	[ValueId] [int] NOT NULL,
+	[DimensionId] [int] NOT NULL,
+	[ReadOnly] [bit] NOT NULL,
+ CONSTRAINT [PK_TsDynDataValueDimension] PRIMARY KEY CLUSTERED 
+(
+	[ValueId] ASC,
+	[DimensionId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY];
+
+/****** Object:  Table [dbo].[TsDynDataZone]    Script Date: 15.5.2025. 13:42:08 ******/
+SET ANSI_NULLS ON;
+
+SET QUOTED_IDENTIFIER ON;
+
+CREATE TABLE [dbo].[TsDynDataZone](
+	[ZoneId] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](255) NOT NULL,
+	[TransCreatedId] [int] NULL,
+	[TransModifiedId] [int] NULL,
+	[TransDeletedId] [int] NULL,
+ CONSTRAINT [PK_TsDynDataZone] PRIMARY KEY CLUSTERED 
+(
+	[ZoneId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY];
+
+
+
+
+SET IDENTITY_INSERT [dbo].[TsDynDataApp] ON;
+INSERT [dbo].[TsDynDataApp] ([AppId], [ZoneId], [Name], [SysSettings], [TransCreatedId], [TransModifiedId], [TransDeletedId]) VALUES (1, 1, N'Default', NULL, NULL, NULL, NULL);
+SET IDENTITY_INSERT [dbo].[TsDynDataApp] OFF;
+
+
+INSERT [dbo].[TsDynDataAttributeType] ([Type]) VALUES (N'Boolean');
+INSERT [dbo].[TsDynDataAttributeType] ([Type]) VALUES (N'Custom');
+INSERT [dbo].[TsDynDataAttributeType] ([Type]) VALUES (N'DateTime');
+INSERT [dbo].[TsDynDataAttributeType] ([Type]) VALUES (N'Empty');
+INSERT [dbo].[TsDynDataAttributeType] ([Type]) VALUES (N'Entity');
+INSERT [dbo].[TsDynDataAttributeType] ([Type]) VALUES (N'Hyperlink');
+INSERT [dbo].[TsDynDataAttributeType] ([Type]) VALUES (N'Number');
+INSERT [dbo].[TsDynDataAttributeType] ([Type]) VALUES (N'String');
+
+
+SET IDENTITY_INSERT [dbo].[TsDynDataContentType] ON; 
+INSERT [dbo].[TsDynDataContentType] ([ContentTypeId], [StaticName], [Name], [Scope], [TransCreatedId], [TransDeletedId], [AppId], [InheritContentTypeId], [IsGlobal], [Json], [SysSettings], [TransModifiedId]) VALUES (1, N'Default', N'Default (built in)', N'2SexyContent-System', 1, NULL, 1, NULL, 1, NULL, NULL, NULL);
+SET IDENTITY_INSERT [dbo].[TsDynDataContentType] OFF;
+
+
+SET IDENTITY_INSERT [dbo].[TsDynDataDimension] ON;
+INSERT [dbo].[TsDynDataDimension] ([DimensionId], [Parent], [Name], [SystemKey], [ExternalKey], [Active], [ZoneId]) VALUES (1, NULL, N'Culture Root', N'Culture', NULL, 1, 1);
+SET IDENTITY_INSERT [dbo].[TsDynDataDimension] OFF;
+
+
+SET IDENTITY_INSERT [dbo].[TsDynDataTargetType] ON; 
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (1, N'Default', N'Default');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (2, N'EAV Field Properties', N'EAV Field Properties');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (3, N'App', N'App');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (4, N'Entity', N'For Permissions, Data Pipelines with Pipeline Parts and Configurations');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (5, N'ContentType', N'Metadata for ContentTypes');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (6, N'Zone', N'Metadata for Zone');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (7, N'Scope', N'Metadata for Scope');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (8, N'Dimension', N'Metadata for Dimension');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (9, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (10, N'CmsObject', N'References to CMS objects like files and pages');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (11, N'System', N'Metadata for System');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (12, N'Site', N'Metadata for Site');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (13, N'SiteVariant', N'Metadata for SiteVariant');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (14, N'Page', N'Metadata for Page');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (15, N'PageVariant', N'Metadata for PageVariant');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (16, N'Module', N'Metadata for Module');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (17, N'ModuleVariant', N'Metadata for ModuleVariant');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (18, N'User', N'Metadata for User');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (19, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (20, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (21, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (22, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (23, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (24, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (25, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (26, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (27, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (28, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (29, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (30, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (31, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (32, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (33, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (34, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (35, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (36, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (37, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (38, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (39, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (40, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (41, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (42, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (43, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (44, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (45, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (46, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (47, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (48, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (49, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (50, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (51, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (52, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (53, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (54, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (55, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (56, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (57, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (58, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (59, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (60, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (61, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (62, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (63, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (64, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (65, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (66, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (67, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (68, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (69, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (70, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (71, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (72, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (73, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (74, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (75, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (76, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (77, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (78, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (79, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (80, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (81, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (82, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (83, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (84, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (85, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (86, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (87, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (88, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (89, N'Reserved', N'Reserved');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (90, N'Custom', N'Custom');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (91, N'Custom1', N'Custom1');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (92, N'Custom2', N'Custom2');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (93, N'Custom3', N'Custom3');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (94, N'Custom4', N'Custom4');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (95, N'Custom5', N'Custom5');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (96, N'Custom6', N'Custom6');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (97, N'Custom7', N'Custom7');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (98, N'Custom8', N'Custom8');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (99, N'Custom9', N'Custom9');
+INSERT [dbo].[TsDynDataTargetType] ([TargetTypeId], [Name], [Description]) VALUES (100, N'Reserved', N'Reserved');
+SET IDENTITY_INSERT [dbo].[TsDynDataTargetType] OFF;
+
+
+SET IDENTITY_INSERT [dbo].[TsDynDataTransaction] ON;
+INSERT [dbo].[TsDynDataTransaction] ([TransactionId], [Timestamp], [User]) VALUES (1, CAST(N'2012-05-02T08:31:35.297' AS DateTime), NULL);
+INSERT [dbo].[TsDynDataTransaction] ([TransactionId], [Timestamp], [User]) VALUES (100, CAST(N'2020-10-20T00:00:00.000' AS DateTime), NULL);
+SET IDENTITY_INSERT [dbo].[TsDynDataTransaction] OFF;
+
+
+SET IDENTITY_INSERT [dbo].[TsDynDataZone] ON ;
+INSERT [dbo].[TsDynDataZone] ([ZoneId], [Name], [TransCreatedId], [TransModifiedId], [TransDeletedId]) VALUES (1, N'Default', NULL, NULL, NULL);
+SET IDENTITY_INSERT [dbo].[TsDynDataZone] OFF;
+
+
+
+
+SET ANSI_PADDING ON;
+
+/****** Object:  Index [UQ_TsDynDataApp_Name_ZoneId]    Script Date: 15.5.2025. 13:42:08 ******/
+ALTER TABLE [dbo].[TsDynDataApp] ADD  CONSTRAINT [UQ_TsDynDataApp_Name_ZoneId] UNIQUE NONCLUSTERED 
+(
+	[Name] ASC,
+	[ZoneId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataApp_TransCreatedId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataApp_TransCreatedId] ON [dbo].[TsDynDataApp]
+(
+	[TransCreatedId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataApp_TransDeletedId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataApp_TransDeletedId] ON [dbo].[TsDynDataApp]
+(
+	[TransDeletedId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataApp_TransModifiedId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataApp_TransModifiedId] ON [dbo].[TsDynDataApp]
+(
+	[TransModifiedId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataApp_ZoneId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataApp_ZoneId] ON [dbo].[TsDynDataApp]
+(
+	[ZoneId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataAttribute_AttributeId_StaticName]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataAttribute_AttributeId_StaticName] ON [dbo].[TsDynDataAttribute]
+(
+	[AttributeId] ASC
+)
+INCLUDE([StaticName]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataAttribute_ContentTypeId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataAttribute_ContentTypeId] ON [dbo].[TsDynDataAttribute]
+(
+	[ContentTypeId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataAttribute_TransCreatedId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataAttribute_TransCreatedId] ON [dbo].[TsDynDataAttribute]
+(
+	[TransCreatedId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataAttribute_TransDeletedId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataAttribute_TransDeletedId] ON [dbo].[TsDynDataAttribute]
+(
+	[TransDeletedId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataAttribute_TransModifiedId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataAttribute_TransModifiedId] ON [dbo].[TsDynDataAttribute]
+(
+	[TransModifiedId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataContentType_AppId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataContentType_AppId] ON [dbo].[TsDynDataContentType]
+(
+	[AppId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataContentType_TransCreatedId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataContentType_TransCreatedId] ON [dbo].[TsDynDataContentType]
+(
+	[TransCreatedId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataContentType_TransDeletedId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataContentType_TransDeletedId] ON [dbo].[TsDynDataContentType]
+(
+	[TransDeletedId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataContentType_TransModifiedId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataContentType_TransModifiedId] ON [dbo].[TsDynDataContentType]
+(
+	[TransModifiedId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataDimension_ZoneId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataDimension_ZoneId] ON [dbo].[TsDynDataDimension]
+(
+	[ZoneId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataEntity_AppId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataEntity_AppId] ON [dbo].[TsDynDataEntity]
+(
+	[AppId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataEntity_ContentTypeId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataEntity_ContentTypeId] ON [dbo].[TsDynDataEntity]
+(
+	[ContentTypeId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataEntity_KeyNumber]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataEntity_KeyNumber] ON [dbo].[TsDynDataEntity]
+(
+	[KeyNumber] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataEntity_TargetTypeId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataEntity_TargetTypeId] ON [dbo].[TsDynDataEntity]
+(
+	[TargetTypeId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataEntity_TransCreatedId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataEntity_TransCreatedId] ON [dbo].[TsDynDataEntity]
+(
+	[TransCreatedId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataEntity_TransDeletedId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataEntity_TransDeletedId] ON [dbo].[TsDynDataEntity]
+(
+	[TransDeletedId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataEntity_TransModifiedId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataEntity_TransModifiedId] ON [dbo].[TsDynDataEntity]
+(
+	[TransModifiedId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataHistory_SourceGuid]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataHistory_SourceGuid] ON [dbo].[TsDynDataHistory]
+(
+	[SourceGuid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataHistory_SourceId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataHistory_SourceId] ON [dbo].[TsDynDataHistory]
+(
+	[SourceId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataHistory_TransactionId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataHistory_TransactionId] ON [dbo].[TsDynDataHistory]
+(
+	[TransactionId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataRelationship_ChildEntityId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataRelationship_ChildEntityId] ON [dbo].[TsDynDataRelationship]
+(
+	[ChildEntityId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataRelationship_ParentEntityId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataRelationship_ParentEntityId] ON [dbo].[TsDynDataRelationship]
+(
+	[ParentEntityId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+SET ANSI_PADDING ON;
+
+/****** Object:  Index [IX_TsDynDataTargetType_Name]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataTargetType_Name] ON [dbo].[TsDynDataTargetType]
+(
+	[Name] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataValue_AttributeId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataValue_AttributeId] ON [dbo].[TsDynDataValue]
+(
+	[AttributeId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataValue_AttributeId_EntityId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataValue_AttributeId_EntityId] ON [dbo].[TsDynDataValue]
+(
+	[AttributeId] ASC,
+	[EntityId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataValue_EntityId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataValue_EntityId] ON [dbo].[TsDynDataValue]
+(
+	[EntityId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataValue_EntityId_AttributeId_ValueId_Include_Value]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataValue_EntityId_AttributeId_ValueId_Include_Value] ON [dbo].[TsDynDataValue]
+(
+	[EntityId] ASC,
+	[AttributeId] ASC,
+	[ValueId] ASC
+)
+INCLUDE([Value]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataZone_TransCreatedId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataZone_TransCreatedId] ON [dbo].[TsDynDataZone]
+(
+	[TransCreatedId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataZone_TransDeletedId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataZone_TransDeletedId] ON [dbo].[TsDynDataZone]
+(
+	[TransDeletedId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+/****** Object:  Index [IX_TsDynDataZone_TransModifiedId]    Script Date: 15.5.2025. 13:42:08 ******/
+CREATE NONCLUSTERED INDEX [IX_TsDynDataZone_TransModifiedId] ON [dbo].[TsDynDataZone]
+(
+	[TransModifiedId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+ALTER TABLE [dbo].[TsDynDataAttribute] ADD  CONSTRAINT [DF_TsDynDataAttribute_ContentTypeId]  DEFAULT ((0)) FOR [ContentTypeId];
+
+ALTER TABLE [dbo].[TsDynDataAttribute] ADD  CONSTRAINT [DF_TsDynDataAttribute_SortOrder]  DEFAULT ((0)) FOR [SortOrder];
+
+ALTER TABLE [dbo].[TsDynDataAttribute] ADD  CONSTRAINT [DF_TsDynDataAttribute_IsTitle]  DEFAULT ((0)) FOR [IsTitle];
+
+ALTER TABLE [dbo].[TsDynDataContentType] ADD  CONSTRAINT [DF_TsDynDataContentType_StaticName]  DEFAULT (newid()) FOR [StaticName];
+
+ALTER TABLE [dbo].[TsDynDataContentType] ADD  CONSTRAINT [DF_TsDynDataContentType_IsGlobal]  DEFAULT ((0)) FOR [IsGlobal];
+
+ALTER TABLE [dbo].[TsDynDataDimension] ADD  CONSTRAINT [DF_TsDynDataDimension_Active]  DEFAULT ((1)) FOR [Active];
+
+ALTER TABLE [dbo].[TsDynDataEntity] ADD  CONSTRAINT [DF_TsDynDataEntity_EntityGuid]  DEFAULT (newid()) FOR [EntityGuid];
+
+ALTER TABLE [dbo].[TsDynDataEntity] ADD  CONSTRAINT [DF_TsDynDataEntity_IsPublished]  DEFAULT ((1)) FOR [IsPublished];
+
+ALTER TABLE [dbo].[TsDynDataHistory] ADD  CONSTRAINT [DF_TsDynDataHistory_Operation]  DEFAULT (N'I') FOR [Operation];
+
+ALTER TABLE [dbo].[TsDynDataTransaction] ADD  CONSTRAINT [DF_TsDynDataTransaction_Timestamp]  DEFAULT (getdate()) FOR [Timestamp];
+
+ALTER TABLE [dbo].[TsDynDataValueDimension] ADD  CONSTRAINT [DF_TsDynDataValueDimension_ReadOnly]  DEFAULT ((0)) FOR [ReadOnly];
+
+ALTER TABLE [dbo].[TsDynDataApp]  WITH NOCHECK ADD  CONSTRAINT [FK_TsDynDataApp_TsDynDataTransactionCreated] FOREIGN KEY([TransCreatedId])
+REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+
+ALTER TABLE [dbo].[TsDynDataApp] CHECK CONSTRAINT [FK_TsDynDataApp_TsDynDataTransactionCreated];
+
+ALTER TABLE [dbo].[TsDynDataApp]  WITH NOCHECK ADD  CONSTRAINT [FK_TsDynDataApp_TsDynDataTransactionDeleted] FOREIGN KEY([TransDeletedId])
+REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+
+ALTER TABLE [dbo].[TsDynDataApp] CHECK CONSTRAINT [FK_TsDynDataApp_TsDynDataTransactionDeleted];
+
+ALTER TABLE [dbo].[TsDynDataApp]  WITH NOCHECK ADD  CONSTRAINT [FK_TsDynDataApp_TsDynDataTransactionModified] FOREIGN KEY([TransModifiedId])
+REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+
+ALTER TABLE [dbo].[TsDynDataApp] CHECK CONSTRAINT [FK_TsDynDataApp_TsDynDataTransactionModified];
+
+ALTER TABLE [dbo].[TsDynDataApp]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataApp_TsDynDataZone] FOREIGN KEY([ZoneId])
+REFERENCES [dbo].[TsDynDataZone] ([ZoneId]);
+
+ALTER TABLE [dbo].[TsDynDataApp] CHECK CONSTRAINT [FK_TsDynDataApp_TsDynDataZone];
+
+ALTER TABLE [dbo].[TsDynDataAttribute]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataAttribute_TsDynDataAttributeType] FOREIGN KEY([Type])
+REFERENCES [dbo].[TsDynDataAttributeType] ([Type]);
+
+ALTER TABLE [dbo].[TsDynDataAttribute] CHECK CONSTRAINT [FK_TsDynDataAttribute_TsDynDataAttributeType];
+
+ALTER TABLE [dbo].[TsDynDataAttribute]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataAttribute_TsDynDataContentType] FOREIGN KEY([ContentTypeId])
+REFERENCES [dbo].[TsDynDataContentType] ([ContentTypeId]);
+
+ALTER TABLE [dbo].[TsDynDataAttribute] CHECK CONSTRAINT [FK_TsDynDataAttribute_TsDynDataContentType];
+
+ALTER TABLE [dbo].[TsDynDataAttribute]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataAttribute_TsDynDataTransactionCreated] FOREIGN KEY([TransCreatedId])
+REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+
+ALTER TABLE [dbo].[TsDynDataAttribute] CHECK CONSTRAINT [FK_TsDynDataAttribute_TsDynDataTransactionCreated];
+
+ALTER TABLE [dbo].[TsDynDataAttribute]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataAttribute_TsDynDataTransactionDeleted] FOREIGN KEY([TransDeletedId])
+REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+
+ALTER TABLE [dbo].[TsDynDataAttribute] CHECK CONSTRAINT [FK_TsDynDataAttribute_TsDynDataTransactionDeleted];
+
+ALTER TABLE [dbo].[TsDynDataAttribute]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataAttribute_TsDynDataTransactionModified] FOREIGN KEY([TransModifiedId])
+REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+
+ALTER TABLE [dbo].[TsDynDataAttribute] CHECK CONSTRAINT [FK_TsDynDataAttribute_TsDynDataTransactionModified];
+
+ALTER TABLE [dbo].[TsDynDataContentType]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataContentType_TsDynDataApp] FOREIGN KEY([AppId])
+REFERENCES [dbo].[TsDynDataApp] ([AppId]);
+
+ALTER TABLE [dbo].[TsDynDataContentType] CHECK CONSTRAINT [FK_TsDynDataContentType_TsDynDataApp];
+
+ALTER TABLE [dbo].[TsDynDataContentType]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataContentType_TsDynDataContentType] FOREIGN KEY([InheritContentTypeId])
+REFERENCES [dbo].[TsDynDataContentType] ([ContentTypeId]);
+
+ALTER TABLE [dbo].[TsDynDataContentType] CHECK CONSTRAINT [FK_TsDynDataContentType_TsDynDataContentType];
+
+ALTER TABLE [dbo].[TsDynDataContentType]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataContentType_TsDynDataTransactionCreated] FOREIGN KEY([TransCreatedId])
+REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+
+ALTER TABLE [dbo].[TsDynDataContentType] CHECK CONSTRAINT [FK_TsDynDataContentType_TsDynDataTransactionCreated];
+
+ALTER TABLE [dbo].[TsDynDataContentType]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataContentType_TsDynDataTransactionDeleted] FOREIGN KEY([TransDeletedId])
+REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+
+ALTER TABLE [dbo].[TsDynDataContentType] CHECK CONSTRAINT [FK_TsDynDataContentType_TsDynDataTransactionDeleted];
+
+ALTER TABLE [dbo].[TsDynDataContentType]  WITH NOCHECK ADD  CONSTRAINT [FK_TsDynDataContentType_TsDynDataTransactionModified] FOREIGN KEY([TransModifiedId])
+REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+
+ALTER TABLE [dbo].[TsDynDataContentType] CHECK CONSTRAINT [FK_TsDynDataContentType_TsDynDataTransactionModified];
+
+ALTER TABLE [dbo].[TsDynDataDimension]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataDimension_TsDynDataDimension] FOREIGN KEY([Parent])
+REFERENCES [dbo].[TsDynDataDimension] ([DimensionId]);
+
+ALTER TABLE [dbo].[TsDynDataDimension] CHECK CONSTRAINT [FK_TsDynDataDimension_TsDynDataDimension];
+
+ALTER TABLE [dbo].[TsDynDataDimension]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataDimension_TsDynDataZone] FOREIGN KEY([ZoneId])
+REFERENCES [dbo].[TsDynDataZone] ([ZoneId]);
+
+ALTER TABLE [dbo].[TsDynDataDimension] CHECK CONSTRAINT [FK_TsDynDataDimension_TsDynDataZone];
+
+ALTER TABLE [dbo].[TsDynDataEntity]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataEntity_TsDynDataApp] FOREIGN KEY([AppId])
+REFERENCES [dbo].[TsDynDataApp] ([AppId]);
+
+ALTER TABLE [dbo].[TsDynDataEntity] CHECK CONSTRAINT [FK_TsDynDataEntity_TsDynDataApp];
+
+ALTER TABLE [dbo].[TsDynDataEntity]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataEntity_TsDynDataContentType] FOREIGN KEY([ContentTypeId])
+REFERENCES [dbo].[TsDynDataContentType] ([ContentTypeId]);
+
+ALTER TABLE [dbo].[TsDynDataEntity] CHECK CONSTRAINT [FK_TsDynDataEntity_TsDynDataContentType];
+
+ALTER TABLE [dbo].[TsDynDataEntity]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataEntity_TsDynDataTargetType] FOREIGN KEY([TargetTypeId])
+REFERENCES [dbo].[TsDynDataTargetType] ([TargetTypeId]);
+
+ALTER TABLE [dbo].[TsDynDataEntity] CHECK CONSTRAINT [FK_TsDynDataEntity_TsDynDataTargetType];
+
+ALTER TABLE [dbo].[TsDynDataEntity]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataEntity_TsDynDataTransactionCreated] FOREIGN KEY([TransCreatedId])
+REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+
+ALTER TABLE [dbo].[TsDynDataEntity] CHECK CONSTRAINT [FK_TsDynDataEntity_TsDynDataTransactionCreated];
+
+ALTER TABLE [dbo].[TsDynDataEntity]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataEntity_TsDynDataTransactionDeleted] FOREIGN KEY([TransDeletedId])
+REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+
+ALTER TABLE [dbo].[TsDynDataEntity] CHECK CONSTRAINT [FK_TsDynDataEntity_TsDynDataTransactionDeleted];
+
+ALTER TABLE [dbo].[TsDynDataEntity]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataEntity_TsDynDataTransactionModified] FOREIGN KEY([TransModifiedId])
+REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+
+ALTER TABLE [dbo].[TsDynDataEntity] CHECK CONSTRAINT [FK_TsDynDataEntity_TsDynDataTransactionModified];
+
+ALTER TABLE [dbo].[TsDynDataHistory]  WITH NOCHECK ADD  CONSTRAINT [FK_TsDynDataHistory_TsDynDataTransaction] FOREIGN KEY([TransactionId])
+REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+
+ALTER TABLE [dbo].[TsDynDataHistory] CHECK CONSTRAINT [FK_TsDynDataHistory_TsDynDataTransaction];
+
+ALTER TABLE [dbo].[TsDynDataRelationship]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataRelationship_TsDynDataAttribute] FOREIGN KEY([AttributeId])
+REFERENCES [dbo].[TsDynDataAttribute] ([AttributeId])
+ON DELETE CASCADE;
+
+ALTER TABLE [dbo].[TsDynDataRelationship] CHECK CONSTRAINT [FK_TsDynDataRelationship_TsDynDataAttribute];
+
+ALTER TABLE [dbo].[TsDynDataRelationship]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataRelationship_TsDynDataEntityChild] FOREIGN KEY([ChildEntityId])
+REFERENCES [dbo].[TsDynDataEntity] ([EntityId]);
+
+ALTER TABLE [dbo].[TsDynDataRelationship] CHECK CONSTRAINT [FK_TsDynDataRelationship_TsDynDataEntityChild];
+
+ALTER TABLE [dbo].[TsDynDataRelationship]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataRelationship_TsDynDataEntityParent] FOREIGN KEY([ParentEntityId])
+REFERENCES [dbo].[TsDynDataEntity] ([EntityId]);
+
+ALTER TABLE [dbo].[TsDynDataRelationship] CHECK CONSTRAINT [FK_TsDynDataRelationship_TsDynDataEntityParent];
+
+ALTER TABLE [dbo].[TsDynDataValue]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataValue_TsDynDataAttribute] FOREIGN KEY([AttributeId])
+REFERENCES [dbo].[TsDynDataAttribute] ([AttributeId])
+ON DELETE CASCADE;
+
+ALTER TABLE [dbo].[TsDynDataValue] CHECK CONSTRAINT [FK_TsDynDataValue_TsDynDataAttribute];
+
+ALTER TABLE [dbo].[TsDynDataValue]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataValue_TsDynDataEntity] FOREIGN KEY([EntityId])
+REFERENCES [dbo].[TsDynDataEntity] ([EntityId]);
+
+ALTER TABLE [dbo].[TsDynDataValue] CHECK CONSTRAINT [FK_TsDynDataValue_TsDynDataEntity];
+
+ALTER TABLE [dbo].[TsDynDataValueDimension]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataValueDimension_TsDynDataDimension] FOREIGN KEY([DimensionId])
+REFERENCES [dbo].[TsDynDataDimension] ([DimensionId]);
+
+ALTER TABLE [dbo].[TsDynDataValueDimension] CHECK CONSTRAINT [FK_TsDynDataValueDimension_TsDynDataDimension];
+
+ALTER TABLE [dbo].[TsDynDataValueDimension]  WITH CHECK ADD  CONSTRAINT [FK_TsDynDataValueDimension_TsDynDataValue] FOREIGN KEY([ValueId])
+REFERENCES [dbo].[TsDynDataValue] ([ValueId]);
+
+ALTER TABLE [dbo].[TsDynDataValueDimension] CHECK CONSTRAINT [FK_TsDynDataValueDimension_TsDynDataValue];
+
+ALTER TABLE [dbo].[TsDynDataZone]  WITH NOCHECK ADD  CONSTRAINT [FK_TsDynDataZone_TsDynDataTransactionCreated] FOREIGN KEY([TransCreatedId])
+REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+
+ALTER TABLE [dbo].[TsDynDataZone] CHECK CONSTRAINT [FK_TsDynDataZone_TsDynDataTransactionCreated];
+
+ALTER TABLE [dbo].[TsDynDataZone]  WITH NOCHECK ADD  CONSTRAINT [FK_TsDynDataZone_TsDynDataTransactionDeleted] FOREIGN KEY([TransDeletedId])
+REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+
+ALTER TABLE [dbo].[TsDynDataZone] CHECK CONSTRAINT [FK_TsDynDataZone_TsDynDataTransactionDeleted];
+
+ALTER TABLE [dbo].[TsDynDataZone]  WITH NOCHECK ADD  CONSTRAINT [FK_TsDynDataZone_TsDynDataTransactionModified] FOREIGN KEY([TransModifiedId])
+REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId]);
+
+ALTER TABLE [dbo].[TsDynDataZone] CHECK CONSTRAINT [FK_TsDynDataZone_TsDynDataTransactionModified];
+

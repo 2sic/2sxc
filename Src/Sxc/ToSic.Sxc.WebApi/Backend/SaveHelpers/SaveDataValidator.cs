@@ -1,22 +1,20 @@
 ﻿using ToSic.Eav.ImportExport.Json.V1;
-using ToSic.Eav.Metadata;
-using ToSic.Eav.WebApi.Errors;
-using ToSic.Eav.WebApi.Formats;
-using ToSic.Eav.WebApi.Validation;
-using IEntity = ToSic.Eav.Data.IEntity;
+using ToSic.Eav.Metadata.Sys;
+using ToSic.Eav.WebApi.Sys.Helpers.Validation;
+
 
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
-internal class SaveDataValidator(EditDto package, ILog parentLog = null) : ValidatorBase(parentLog, "Val.Save")
+internal class SaveDataValidator(EditSaveDto package, ILog parentLog) : ValidatorBase(parentLog, "Val.Save")
 {
-    public EditDto Package = package;
+    public EditSaveDto Package = package;
 
     public void PrepareForEntityChecks(WorkEntities workEntities)
     {
         WorkEntities = workEntities;
     }
 
-    public WorkEntities WorkEntities { get; private set; }
+    public WorkEntities WorkEntities { get; private set; } = null!;
 
 
     /// <summary>
@@ -25,13 +23,12 @@ internal class SaveDataValidator(EditDto package, ILog parentLog = null) : Valid
     /// or that invalid combinations get back here
     /// </summary>
     /// <returns></returns>
-    internal HttpExceptionAbstraction ContainsOnlyExpectedNodes() => Log.Func(() =>
+    internal HttpExceptionAbstraction? ContainsOnlyExpectedNodes()
     {
-        if (Package.ContentTypes != null) Add("package contained content-types, unexpected!");
-        if (Package.InputTypes != null) Add("package contained input types, unexpected!");
+        var l = Log.Fn<HttpExceptionAbstraction?>();
 
         // check that items are mostly intact
-        if (Package.Items == null || Package.Items.Count == 0)
+        if (Package.Items == null! || Package.Items.Count == 0)
             Add("package didn't contain items, unexpected!");
         else
         {
@@ -41,17 +38,18 @@ internal class SaveDataValidator(EditDto package, ILog parentLog = null) : Valid
         }
 
         BuildExceptionIfHasIssues(out var preparedException, "ContainsOnlyExpectedNodes() done");
-        return preparedException;
-    });
+        return l.Return(preparedException);
+    }
 
     /// <summary>
     /// Do various validity checks on each item
     /// </summary>
-    private void ValidateEachItemInBundle(IList<BundleWithHeader<JsonEntity>> list) => Log.Do($"{list.Count}", () =>
+    private void ValidateEachItemInBundle(IList<BundleWithHeader<JsonEntity>> list)
     {
+        var l = Log.Fn($"{list.Count}");
         foreach (var item in list)
         {
-            if (item.Header == null || item.Entity == null)
+            if (item.Header == null! /* paranoid */ || item.Entity == null!)
                 Add($"item {list.IndexOf(item)} header or entity is missing");
             else if (item.Header.Guid != item.Entity.Guid) // check this first (because .Group may not exist)
             {
@@ -63,7 +61,8 @@ internal class SaveDataValidator(EditDto package, ILog parentLog = null) : Valid
                 // otherwise we're fine
             }
         }
-    });
+        l.Done();
+    }
 
     /// <summary>
     /// ensure all want to save to the same assignment type - either in group or not!
@@ -93,26 +92,27 @@ internal class SaveDataValidator(EditDto package, ILog parentLog = null) : Valid
     }
 
 
-    internal HttpExceptionAbstraction EntityIsOk(int count, IEntity newEntity) => Log.Func(() =>
+    internal HttpExceptionAbstraction? EntityIsOk(int count, IEntity? newEntity)
     {
+        var l = Log.Fn<HttpExceptionAbstraction?>();
         if (newEntity == null)
         {
             Add($"entity {count} couldn't deserialize");
             BuildExceptionIfHasIssues(out var preparedException);
-            return (preparedException, "newEntity is null");
+            return l.Return(preparedException, "newEntity is null");
         }
 
         // New #2595 allow saving empty metadata decorator entities
-        if (newEntity.Attributes.Count == 0 && !newEntity.Type.Metadata.HasType(Decorators.SaveEmptyDecoratorId))
+        if (newEntity.Attributes.Count == 0 && !newEntity.Type.Metadata.HasType(KnownDecorators.SaveEmptyDecoratorId))
             Add($"entity {count} doesn't have attributes (or they are invalid)");
 
         BuildExceptionIfHasIssues(out var preparedException2, "EntityIsOk() done");
-        return (preparedException2, "second test");
-    });
+        return l.Return(preparedException2, "second test");
+    }
 
-    internal (int? ResetId, HttpExceptionAbstraction Exception) IfUpdateValidateAndCorrectIds(int count, IEntity newEntity)
+    internal (int? ResetId, HttpExceptionAbstraction? Exception) IfUpdateValidateAndCorrectIds(int count, IEntity newEntity)
     {
-        var l = Log.Fn<(int?, HttpExceptionAbstraction)>();
+        var l = Log.Fn<(int?, HttpExceptionAbstraction?)>();
         var previousEntity = WorkEntities.Get(newEntity.EntityId) ?? WorkEntities.Get(newEntity.EntityGuid);
 
         int? resetId = default;
@@ -139,23 +139,25 @@ internal class SaveDataValidator(EditDto package, ILog parentLog = null) : Valid
     }
 
 
-    private void CompareTypes(int count, IEntityLight originalEntity, IEntityLight newEntity) =>
-        Log.Do($"ids:{newEntity.Type.NameId}/{originalEntity.Type.NameId}", () =>
-        {
-            if (originalEntity.Type.NameId != newEntity.Type.NameId)
-                Add($"entity type mismatch on {count}");
-        });
+    private void CompareTypes(int count, IEntity originalEntity, IEntity newEntity)
+    {
+        var l = Log.Fn($"ids:{newEntity.Type.NameId}/{originalEntity.Type.NameId}");
+        if (originalEntity.Type.NameId != newEntity.Type.NameId)
+            Add($"entity type mismatch on {count}");
+        l.Done();
+    }
 
-    private void CompareIdentities(int count, IEntityLight originalEntity, IEntityLight newEntity) =>
-        Log.Do($"ids:{newEntity.EntityId}/{originalEntity.EntityId}", () =>
-        {
-            if (originalEntity.EntityId != newEntity.EntityId)
-                Add($"entity ID mismatch on {count} - {newEntity.EntityId}/{originalEntity.EntityId}");
+    private void CompareIdentities(int count, IEntity originalEntity, IEntity newEntity)
+    {
+        var l = Log.Fn($"ids:{newEntity.EntityId}/{originalEntity.EntityId}");
+        if (originalEntity.EntityId != newEntity.EntityId)
+            Add($"entity ID mismatch on {count} - {newEntity.EntityId}/{originalEntity.EntityId}");
 
-            Log.A($"Guids:{newEntity.EntityGuid}/{originalEntity.EntityGuid}");
-            if (originalEntity.EntityGuid != newEntity.EntityGuid)
-                Add($"entity GUID mismatch on {count} - {newEntity.EntityGuid}/{originalEntity.EntityGuid}");
-        });
+        l.A($"Guids:{newEntity.EntityGuid}/{originalEntity.EntityGuid}");
+        if (originalEntity.EntityGuid != newEntity.EntityGuid)
+            Add($"entity GUID mismatch on {count} - {newEntity.EntityGuid}/{originalEntity.EntityGuid}");
+        l.Done();
+    }
 
     private void CompareAttributes(int count, IEntity original, IEntity ent)
     {

@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using System;
-using ToSic.Eav.WebApi.Cms;
-using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Formats;
-using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.Cms.EditControllerReal;
 
@@ -19,7 +15,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [ValidateAntiForgeryToken]
 
 [ApiController]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class EditController() : OqtStatefulControllerBase(RealController.LogSuffix), IEditController
 {
     private RealController Real => GetService<RealController>();
@@ -28,13 +24,13 @@ public class EditController() : OqtStatefulControllerBase(RealController.LogSuff
     [HttpPost]
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
     [AllowAnonymous]   // will check security internally, so assume no requirements
-    public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
+    public EditLoadDto Load([FromBody] List<ItemIdentifier> items, int appId)
         => Real.Load(items, appId);
 
     [HttpPost]
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
     [Authorize(Roles = RoleNames.Admin)]
-    public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
+    public Dictionary<Guid, int> Save([FromBody] EditSaveDto package, int appId, bool partOfPage)
         => Real.Save(package, appId, partOfPage);
 
     /// <inheritdoc />

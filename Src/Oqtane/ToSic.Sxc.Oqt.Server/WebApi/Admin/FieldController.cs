@@ -1,14 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using System;
-using ToSic.Eav.Apps.Internal.Work;
-using ToSic.Eav.Data;
-using ToSic.Eav.WebApi.Admin;
-using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Data.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using RealController = ToSic.Eav.WebApi.Admin.FieldControllerReal;
+using RealController = ToSic.Eav.WebApi.Sys.Admin.FieldControllerReal;
 // ReSharper disable RouteTemplates.MethodMissingRouteParameters
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
@@ -21,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class FieldController() : OqtStatefulControllerBase(RealController.LogSuffix), IFieldController
 {
     private RealController Real => GetService<RealController>();
@@ -44,11 +40,11 @@ public class FieldController() : OqtStatefulControllerBase(RealController.LogSuf
     /// Used to be GET ContentType/InputTypes
     /// </summary>
     [HttpGet]
-    public List<InputTypeInfo> InputTypes(int appId) => Real.InputTypes(appId);
+    public ICollection<InputTypeInfo> InputTypes(int appId) => Real.InputTypes(appId);
 
     /// <inheritdoc />
     [HttpGet]
-    public Dictionary<string, string> ReservedNames() => Attributes.ReservedNames;
+    public Dictionary<string, string> ReservedNames() => AttributeNames.ReservedNames;
 
     /// <summary>
     /// Used to be GET ContentType/AddField

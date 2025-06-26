@@ -1,8 +1,8 @@
-﻿using ToSic.Eav.Helpers;
-using ToSic.Eav.Internal.Environment;
-using ToSic.Sxc.Adam.Internal;
+﻿using ToSic.Eav.Environment.Sys.ServerPaths;
+using ToSic.Sxc.Adam.Sys.Paths;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Oqt.Server.Adam;
 

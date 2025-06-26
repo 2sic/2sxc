@@ -1,6 +1,8 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:Boolean x:Key="/Default/GrammarAndSpelling/GrammarChecking/Exceptions/=Id/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/GrammarAndSpelling/GrammarChecking/Exceptions/=in_0020future_002C/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/GrammarAndSpelling/GrammarChecking/Exceptions/=piggy_002Dback/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/GrammarAndSpelling/GrammarChecking/Exceptions/=should_0020always_0020fallback/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=attrib/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=attribs/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Backends/@EntryIndexedValue">True</s:Boolean>
@@ -13,6 +15,7 @@
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=desktopmodules/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=dont/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Emoji/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=enableoptimizations/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Evoq/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=fallbacks/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Guids/@EntryIndexedValue">True</s:Boolean>

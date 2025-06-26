@@ -1,11 +1,11 @@
-﻿using ToSic.Eav.Data.Shared;
-using ToSic.Eav.Persistence.Logging;
-using ToSic.Eav.WebApi;
-using ToSic.Eav.WebApi.Adam;
-using ToSic.Eav.WebApi.Admin;
-using ToSic.Eav.WebApi.Assets;
-using ToSic.Eav.WebApi.ImportExport;
+﻿using ToSic.Eav.Data.Sys.Ancestors;
+using ToSic.Eav.Data.Sys.ContentTypes;
+using ToSic.Eav.Persistence.Sys.Logging;
+using ToSic.Eav.WebApi.Sys;
+using ToSic.Eav.WebApi.Sys.Admin;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.ImportExport;
+using ToSic.Sys.Users;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 #if NETFRAMEWORK
@@ -16,7 +16,7 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 
 namespace ToSic.Sxc.Backend.Admin;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class TypeControllerReal(
     LazySvc<IContextOfSite> context,
     LazySvc<ContentTypeDtoService> ctApiLazy,
@@ -31,7 +31,7 @@ public class TypeControllerReal(
     public const string LogSuffix = "Types";
 
 
-    public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
+    public IEnumerable<ContentTypeDto> List(int appId, string? scope = null, bool withStatistics = false)
     {
         var l = Log.Fn<IEnumerable<ContentTypeDto>>($"{appId}, scope:{scope}, stats:{withStatistics}");
         var list = ctApiLazy.Value.List(appId, scope, withStatistics);
@@ -68,7 +68,7 @@ public class TypeControllerReal(
     /// <summary>
     /// Used to be GET ContentTypes/Scopes
     /// </summary>
-    public ContentTypeDto Get(int appId, string contentTypeId, string scope = null)
+    public ContentTypeDto Get(int appId, string contentTypeId, string? scope = null)
         => ctApiLazy.Value.GetSingle(appId, contentTypeId, scope);
 
 
@@ -79,14 +79,18 @@ public class TypeControllerReal(
     // 2019-11-15 2dm special change: item to be Dictionary<string, object> because in DNN 9.4
     // it causes problems when a content-type has additional metadata, where a value then is a deeper object
     // in the future, the JS front-end should send something clearer and not the whole object
-    public bool Save(int appId, Dictionary<string, object> item)
+    public bool Save(int appId, Dictionary<string, object>? item)
     {
         var l = Log.Fn<bool>();
             
-        if (item == null) return l.ReturnFalse("item was null, will cancel");
+        if (item == null)
+            return l.ReturnFalse("item was null, will cancel");
 
-        var dic = item.ToDictionary(i => i.Key, i => i.Value?.ToString());
-        var result = typeMod.New(appId).AddOrUpdate(dic["StaticName"], dic["Scope"], dic["Name"], null, false);
+        var dic = item.ToDictionary(
+            i => i.Key,
+            i => i.Value?.ToString()
+        );
+        var result = typeMod.New(appId).AddOrUpdate(dic["StaticName"]!, dic["Scope"]!, dic["Name"]!, null, false);
             
         return l.ReturnAndLog(result);
     }
@@ -139,7 +143,7 @@ public class TypeControllerReal(
         for (var i = 0; i < uploadInfo.Count; i++)
         {
             var (fileName, stream) = uploadInfo.GetStream(i);
-            streams.Add(new() { Name = fileName, Stream = stream });
+            streams.Add(new() { Name = fileName, Stream = stream! });
         }
         var result = importContent.New()
             .ImportJsonFiles(zoneId, appId, streams, context.Value.Site.DefaultCultureCode);

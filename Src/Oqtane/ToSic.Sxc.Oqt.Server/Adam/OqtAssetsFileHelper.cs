@@ -1,16 +1,14 @@
-using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.StaticFiles;
 using Oqtane.Models;
 using Oqtane.Shared;
-using ToSic.Eav.Helpers;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Oqt.Server.Adam;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class OqtAssetsFileHelper() : ServiceBase(OqtConstants.OqtLogPrefix + ".FilHlp")
 {
     public const string RouteAdam = "adam";
@@ -19,7 +17,7 @@ public class OqtAssetsFileHelper() : ServiceBase(OqtConstants.OqtLogPrefix + ".F
 
     public static readonly Regex RiskyDetector = Eav.Security.Files.FileNames.RiskyDownloadDetector;
 
-    public const string FallbackMimeType = MimeHelper.FallbackType;
+    public const string FallbackMimeType = MimeTypeConstants.FallbackType;
 
 
     public static string GetMimeType(string fileName)

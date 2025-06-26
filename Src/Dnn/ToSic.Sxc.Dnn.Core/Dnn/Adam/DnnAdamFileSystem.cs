@@ -1,27 +1,28 @@
-﻿using System.Configuration;
+﻿using DotNetNuke.Services.FileSystem;
+using System.Configuration;
 using System.Data.SqlClient;
-using System.IO;
 using System.Web.Configuration;
-using DotNetNuke.Services.FileSystem;
-using ToSic.Eav.Apps.Internal;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Adam.Sys;
+using ToSic.Sxc.Adam.Sys.FileSystem;
+using ToSic.Sxc.Adam.Sys.Manager;
 
 namespace ToSic.Sxc.Dnn.Adam;
 
-internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem<int, int>
+internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem
 {
     #region Constructor / DI / Init
 
-    public void Init(AdamManager<int, int> adamManager)
+    public void Init(AdamManager adamManager)
     {
         var l = Log.Fn();
         AdamManager = adamManager;
         l.Done();
     }
 
-    protected AdamManager<int, int> AdamManager;
+    protected AdamManager AdamManager;
 
     #endregion
 
@@ -36,9 +37,16 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem<
     #region Files
     private readonly IFileManager _dnnFiles = FileManager.Instance;
 
-    public File<int, int> GetFile(int fileId)
+    //public File<int, int> GetFile(int fileId)
+    //{
+    //    var file = _dnnFiles.GetFile(fileId);
+    //    return DnnToAdam(file);
+    //}
+
+    public IFile GetFile(AdamAssetIdentifier fileId)
     {
-        var file = _dnnFiles.GetFile(fileId);
+        var id = ((AdamAssetId<int>)fileId).SysId;
+        var file = _dnnFiles.GetFile(id);
         return DnnToAdam(file);
     }
 
@@ -52,19 +60,23 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem<
 
     public void Delete(IFile file)
     {
-        var l = Log.Fn($"file: {file.Id}");
+        var l = Log.Fn($"file: {file.Id}", timer: true);
         var dnnFile = _dnnFiles.GetFile(file.AsDnn().SysId);
-        _dnnFiles.DeleteFile(dnnFile);
+        // 2025-06 For unknown reasons this suddenly breaks; same DNN, some 2sxc code
+        // Says file is in use, but if we debug-step-through, it works; seems to be timing
+        Retry.RetryOnException(() => _dnnFiles.DeleteFile(dnnFile), l, repeat: 10, delay: 200, silent: false);
+
         l.Done();
     }
 
-    public File<int, int> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
+    public IFile Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
     {
-        var l = Log.Fn<File<int, int>>($"..., {fileName}, {ensureUniqueName}");
+        var l = Log.Fn<IFile>($"..., {fileName}, {ensureUniqueName}");
         if (ensureUniqueName) fileName = FindUniqueFileName(parent, fileName);
         var dnnFolder = _dnnFolders.GetFolder(parent.AsDnn().SysId);
         var dnnFile = _dnnFiles.AddFile(dnnFolder, Path.GetFileName(fileName), body);
-        return l.ReturnAsOk(GetFile(dnnFile.FileId));
+        var file = GetFile(AdamAssetIdentifier.Create(dnnFile.FileId));
+        return l.ReturnAsOk(file);
     }
 
     /// <summary>
@@ -148,16 +160,16 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem<
     }
 
 
-    public Folder<int, int> Get(string path)
+    public IFolder Get(string path)
     {
-        var l = Log.Fn<Folder<int, int>>($"path:{path}");
+        var l = Log.Fn<IFolder>($"path:{path}");
         return l.ReturnAsOk(DnnToAdam(_dnnFolders.GetFolder(AdamManager.Site.Id, path)));
     }
 
 
-    public List<Folder<int, int>> GetFolders(IFolder folder)
+    public List<IFolder> GetFolders(IFolder folder)
     {
-        var l = Log.Fn<List<Folder<int, int>>>($"folder:{folder.Id}");
+        var l = Log.Fn<List<IFolder>>($"folder:{folder.Id}");
         var fldObj = GetDnnFolder(folder.AsDnn().SysId);
         if (fldObj == null) return l.Return([], "");
 
@@ -167,7 +179,12 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem<
         return l.Return(folders, $"{folders.Count}");
     }
 
-    public Folder<int, int> GetFolder(int folderId) => DnnToAdam(GetDnnFolder(folderId));
+    //public Folder<int, int> GetFolder(int folderId)
+    //    => DnnToAdam(GetDnnFolder(folderId));
+
+    public IFolder GetFolder(AdamAssetIdentifier folderId)
+        => DnnToAdam(GetDnnFolder(((AdamAssetId<int>)folderId).SysId));
+
 
     #endregion
 
@@ -179,12 +196,13 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem<
     private IFolderInfo GetDnnFolder(int folderId) => _dnnFolders.GetFolder(folderId);
 
 
-    public List<File<int, int>> GetFiles(IFolder folder)
+    public List<IFile> GetFiles(IFolder folder)
     {
-        var l = Log.Fn<List<File<int, int>>>($"folder:{folder.Id}");
+        var l = Log.Fn<List<IFile>>($"folder:{folder.Id}");
         var fldObj = _dnnFolders.GetFolder(folder.AsDnn().SysId);
         // sometimes the folder doesn't exist for whatever reason
-        if (fldObj == null) return l.Return([], "");
+        if (fldObj == null)
+            return l.Return([], "");
 
         // try to find the files
         var firstList = _dnnFolders.GetFiles(fldObj);
@@ -203,11 +221,12 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem<
 
     public string GetUrl(string folderPath) => AdamManager.Site.ContentPath + folderPath;
 
-    private Folder<int, int> DnnToAdam(IFolderInfo dnnFolderInfo)
+    private /*Folder<int, int>*/IFolder DnnToAdam(IFolderInfo dnnFolderInfo)
     {
         var l = Log.Fn<Folder<int, int>>($"folderName: {dnnFolderInfo.FolderName}");
 
-        if (dnnFolderInfo == null) throw l.Done(new ArgumentNullException(nameof(dnnFolderInfo), ErrorDnnObjectNull));
+        if (dnnFolderInfo == null)
+            throw l.Done(new ArgumentNullException(nameof(dnnFolderInfo), ErrorDnnObjectNull));
 
         var folder = new Folder<int, int>(AdamManager)
         {
@@ -226,13 +245,14 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem<
     }
 
 
-    private File<int, int> DnnToAdam(IFileInfo dnnFileInfo)
+    private /*File<int, int>*/IFile DnnToAdam(IFileInfo dnnFileInfo)
     {
         var l = Log.Fn<File<int, int>>($"fileName: {dnnFileInfo.FileName}");
             
-        if (dnnFileInfo == null) throw l.Done(new ArgumentNullException(nameof(dnnFileInfo), ErrorDnnObjectNull));
+        if (dnnFileInfo == null)
+            throw l.Done(new ArgumentNullException(nameof(dnnFileInfo), ErrorDnnObjectNull));
 
-        return l.ReturnAsOk(new(AdamManager)
+        return l.ReturnAsOk(new File<int, int>(AdamManager)
         {
             FullName = dnnFileInfo.FileName,
             Extension = dnnFileInfo.Extension,

@@ -1,10 +1,10 @@
 ﻿using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using System.CodeDom.Compiler;
-using System.IO;
 using System.Reflection;
-using ToSic.Eav.Internal.Configuration;
-using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Sys.HotBuild;
+using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
+using ToSic.Sys.Configuration;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Code;
@@ -14,7 +14,7 @@ internal class AppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironm
     : AppCodeCompiler(globalConfiguration, sourceCodeHasher, connect: [hostingEnvironment, referencedAssembliesProvider, sourceCodeHasher])
 {
 
-    protected internal override AssemblyResult GetAppCode(string relativePath, HotBuildSpecWithSharedSuffix spec)
+    public override AssemblyResult GetAppCode(string relativePath, HotBuildSpecWithSharedSuffix spec)
     {
         var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {spec}");
 
@@ -50,7 +50,11 @@ internal class AppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironm
             if (!results.Errors.HasErrors)
             {
                 LogAllTypes(results.CompiledAssembly);
-                return l.ReturnAsOk(new(assembly: results.CompiledAssembly, assemblyLocations: [symbolsPath, assemblyPath], infos: dicInfos));
+                return l.ReturnAsOk(new(assembly: results.CompiledAssembly)
+                {
+                    AssemblyLocations = [symbolsPath, assemblyPath],
+                    Infos = dicInfos,
+                });
             }
 
             // Compile error case
@@ -68,13 +72,17 @@ internal class AppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironm
                 errors += $"{msg}\n";
             }
 
-            return l.ReturnAsError(new(errorMessages: errors, infos: dicInfos), errors);
+            return l.ReturnAsError(new()
+            {
+                ErrorMessages = errors,
+                Infos = dicInfos,
+            }, errors);
         }
         catch (Exception ex)
         {
             l.Ex(ex);
             var errorMessage = $"Error: Can't compile '{AppCodeDll}' in {Path.GetFileName(relativePath)}. Details are logged into insights. {ex.Message}";
-            return l.ReturnAsError(new(errorMessages: errorMessage));
+            return l.ReturnAsError(new() { ErrorMessages = errorMessage, });
         }
     }
     private string _relativePath;

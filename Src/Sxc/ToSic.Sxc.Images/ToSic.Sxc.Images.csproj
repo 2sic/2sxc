@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-Nullable.props" />
+
+  <PropertyGroup>
+    <AssemblyName>ToSic.Sxc.Images</AssemblyName>
+  </PropertyGroup>
+
+  <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\ToSic.Sxc.Adam\ToSic.Sxc.Adam.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Data\ToSic.Sxc.Data.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Edit\ToSic.Sxc.Edit.csproj" />
+  </ItemGroup>
+
+  <!-- Include Connect.Koi -->
+  <ItemGroup>
+    <Reference Include="Connect.Koi">
+      <HintPath>..\..\..\Dependencies\Koi\netstandard2.0\Connect.Koi.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

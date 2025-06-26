@@ -1,12 +1,13 @@
-﻿using ToSic.Eav.LookUp;
-using ToSic.Eav.Run;
+﻿using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Code.Sys.CodeApi;
+using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Search;
-using ToSic.Sxc.DataSources.Internal.Compatibility;
+using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Code.Help;
 
 namespace ToSic.Sxc.Dnn;
 
@@ -15,14 +16,25 @@ namespace ToSic.Sxc.Dnn;
 /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
 /// </summary>
 [PublicApi("...but deprecated! use Razor14, RazorTyped or newer")]
-public abstract partial class RazorComponent : RazorComponentBase, 
-#pragma warning disable CS0618
-    IDnnRazorCustomize, 
-#pragma warning restore CS0618
-    IDnnRazorCompatibility, IDnnRazor11, ICreateInstance
+public abstract partial class RazorComponent : RazorComponentBase,
+    // #RemovedV20 #ModulePublish
+    //#pragma warning disable CS0618
+    //    IDnnRazorCustomize, 
+    //#pragma warning restore CS0618
+    // Remainders after removing IDnnRazorCustomize
+    IDynamicCode,
+    IHasDnn,
+    // previous
+    IDnnRazorCompatibility,
+    IDnnRazor11,
+    ICreateInstance,
+    // new
+    IHasCodeHelp
 {
+    internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
+
     /// <inheritdoc />
-    public IDnnContext Dnn => (_CodeApiSvc as IHasDnn)?.Dnn;
+    public IDnnContext Dnn => (ExCtx as IHasDnn)?.Dnn;
 
     public const string NotImplementedUseCustomBase = "Use a newer base class like Custom.Hybrid.Razor12 or Custom.Dnn.Razor12 to leverage this.";
 
@@ -37,47 +49,47 @@ public abstract partial class RazorComponent : RazorComponentBase,
     #endregion
 
 
-    #region CustomizeSearch corrections
+    #region CustomizeSearch corrections - all have been removed in v20 // #RemovedV20 #ModulePublish
 
-    /// <inheritdoc />
-    [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
-    public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
-        DateTime beginDate)
-    {
-        // in 2sxc 11.11 the signature changed. 
-        // so the engine will call this function
-        // but the override will be the other one - so I must call that
-        // unless of course this method was overridden by the final inheriting RazorComponent
-#pragma warning disable 618 // disable warning about IContainer being obsolete
-        CustomizeSearch(searchInfos, moduleInfo as IContainer, beginDate);
-#pragma warning restore 618
-    }
+//    /// <inheritdoc />
+//    [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
+//    public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
+//        DateTime beginDate)
+//    {
+//        // in 2sxc 11.11 the signature changed. 
+//        // so the engine will call this function
+//        // but the override will be the other one - so I must call that
+//        // unless of course this method was overridden by the final inheriting RazorComponent
+//#pragma warning disable 618 // disable warning about IContainer being obsolete
+//        CustomizeSearch(searchInfos, moduleInfo as IContainer, beginDate);
+//#pragma warning restore 618
+//    }
 
-    [PrivateApi("shouldn't be used any more, but was still in v12 when released. v13+ must completely remove this")]
-#pragma warning disable 618 // disable warning about IContainer being obsolete
-    [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
-    public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
-#pragma warning restore 618
-        DateTime beginDate)
-    {
-        // new in 2sxc 11, if it has not been overridden, then try to check if code has something for us.
-        var code = CodeManager.CodeOrNull;
-        if (code == null) return;
-        if (code is RazorComponentCode codeAsRazor) codeAsRazor.CustomizeSearch(searchInfos, moduleInfo, beginDate);
-    }
+//    [PrivateApi("shouldn't be used any more, but was still in v12 when released. v13+ must completely remove this")]
+//#pragma warning disable 618 // disable warning about IContainer being obsolete
+//    [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
+//    public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
+//#pragma warning restore 618
+//        DateTime beginDate)
+//    {
+//        // new in 2sxc 11, if it has not been overridden, then try to check if code has something for us.
+//        var code = CodeManager.CodeOrNull;
+//        if (code == null) return;
+//        if (code is RazorComponentCode codeAsRazor) codeAsRazor.CustomizeSearch(searchInfos, moduleInfo, beginDate);
+//    }
 
-    [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
-    public virtual void CustomizeData()
-    {
-        // new in 2sxc 11, if it has not been overridden, then try to check if code has something for us.
-        var code = CodeManager.CodeOrNull;
-        if (code == null) return;
-        if (code is RazorComponentCode codeAsRazor) codeAsRazor.CustomizeData();
-    }
+//    [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
+//    public virtual void CustomizeData()
+//    {
+//        // new in 2sxc 11, if it has not been overridden, then try to check if code has something for us.
+//        var code = CodeManager.CodeOrNull;
+//        if (code == null) return;
+//        if (code is RazorComponentCode codeAsRazor) codeAsRazor.CustomizeData();
+//    }
 
-    /// <inheritdoc />
-    [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
-    public Purpose Purpose { get; internal set; }
+//    /// <inheritdoc />
+//    [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
+//    public Purpose Purpose { get; internal set; }
 
 
     #endregion
@@ -85,29 +97,29 @@ public abstract partial class RazorComponent : RazorComponentBase,
     #region Link, Edit, Dnn, App, Data
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => _CodeApiSvc.Link;
+    public ILinkService Link => CodeApi.Link;
 
     /// <inheritdoc cref="IDynamicCode.Edit" />
-    public IEditService Edit => _CodeApiSvc.Edit;
+    public IEditService Edit => CodeApi.Edit;
 
-    /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
-    public TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
+    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
+    public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel10;
 
     /// <inheritdoc />
-    public new IApp App => _CodeApiSvc.App;
+    public new IApp App => CodeApi.App;
 
     #endregion
 
     #region Data - with old interface #DataInAddWontWork
 
     [PrivateApi]
-    public IBlockDataSource Data => (IBlockDataSource)_CodeApiSvc.Data;
+    public IDataSource Data => /*(IBlockDataSource)*/CodeApi.Data;
 
-    // This is explicitly implemented so the interfaces don't complain
-    // but actually we're not showing this - in reality we're showing the Old (see above)
-    IDataSource IDynamicCode.Data => _CodeApiSvc.Data;
+    //// This is explicitly implemented so the interfaces don't complain
+    //// but actually we're not showing this - in reality we're showing the Old (see above)
+    //IDataSource IDynamicCode.Data => CodeApi.Data;
 
     #endregion
 
@@ -115,27 +127,27 @@ public abstract partial class RazorComponent : RazorComponentBase,
     #region AsDynamic in many variations
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-    public dynamic AsDynamic(string json, string fallback = default) => _CodeApiSvc.Cdf.Json2Jacket(json, fallback);
+    public dynamic AsDynamic(string json, string fallback = default) => CodeApi.Cdf.Json2Jacket(json, fallback);
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
-    public dynamic AsDynamic(IEntity entity) => _CodeApiSvc.Cdf.CodeAsDyn(entity);
+    public dynamic AsDynamic(IEntity entity) => CodeApi.Cdf.CodeAsDyn(entity);
 
     /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-    public dynamic AsDynamic(object dynamicEntity) => _CodeApiSvc.Cdf.AsDynamicFromObject(dynamicEntity);
+    public dynamic AsDynamic(object dynamicEntity) => CodeApi.Cdf.AsDynamicFromObject(dynamicEntity);
 
     #endregion
 
     #region AsEntity
 
     /// <inheritdoc cref="IDynamicCode.AsEntity" />
-    public IEntity AsEntity(object dynamicEntity) => _CodeApiSvc.Cdf.AsEntity(dynamicEntity);
+    public IEntity AsEntity(object dynamicEntity) => CodeApi.Cdf.AsEntity(dynamicEntity);
 
     #endregion
 
     #region AsList
 
     /// <inheritdoc cref="IDynamicCode.AsList" />
-    public IEnumerable<dynamic> AsList(object list) => _CodeApiSvc.Cdf.CodeAsDynList(list);
+    public IEnumerable<dynamic> AsList(object list) => CodeApi.Cdf.CodeAsDynList(list);
 
     #endregion
 
@@ -144,21 +156,21 @@ public abstract partial class RazorComponent : RazorComponentBase,
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
     public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
-        => _CodeApiSvc.CreateSource<T>(inSource, configurationProvider);
+        => CodeApi.CreateSource<T>(inSource, configurationProvider);
 
     /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
     public T CreateSource<T>(IDataStream source) where T : IDataSource
-        => _CodeApiSvc.CreateSource<T>(source);
+        => CodeApi.CreateSource<T>(source);
 
     #endregion
 
 
     #region Content, Header, etc. and List
     /// <inheritdoc cref="IDynamicCode.Content" />
-    public dynamic Content => _CodeApiSvc.Content;
+    public dynamic Content => CodeApi.Content;
 
     /// <inheritdoc cref="IDynamicCode.Header" />
-    public dynamic Header => _CodeApiSvc.Header;
+    public dynamic Header => CodeApi.Header;
 
     #endregion
 
@@ -166,14 +178,14 @@ public abstract partial class RazorComponent : RazorComponentBase,
     #region Adam 
 
     /// <inheritdoc cref="IDynamicCode.AsAdam" />
-    public IFolder AsAdam(ICanBeEntity item, string fieldName) => _CodeApiSvc.AsAdam(item, fieldName);
+    public IFolder AsAdam(ICanBeEntity item, string fieldName) => CodeApi.AsAdam(item, fieldName);
 
     #endregion
 
     #region CmsContext
 
     /// <inheritdoc cref="IDynamicCode.CmsContext" />
-    public ICmsContext CmsContext => _CodeApiSvc.CmsContext;
+    public ICmsContext CmsContext => CodeApi.CmsContext;
 
     #endregion
 
@@ -186,5 +198,8 @@ public abstract partial class RazorComponent : RazorComponentBase,
         => RzrHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError: throwOnError);
 
     #endregion
+
+    // Added this in v20 to show uses of GetBestValue; but much of it may not be applicable, in which case we should create a separate list for SexyContentWebPage and Dnn.RazorComponent
+    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpForRazor12.Compile12;
 
 }

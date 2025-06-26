@@ -1,6 +1,7 @@
-﻿using ToSic.Eav.ImportExport.Json;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.State;
+using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
-using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.Sxc.Backend.Cms;
 
@@ -12,7 +13,7 @@ partial class EditLoadBackend
     /// based on the header (if none already existed)
     /// </summary>
     /// <returns></returns>
-    private JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleWithHeader<IEntity> bundle,
+    private JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleWithHeaderOptional<IEntity> bundle,
         JsonSerializer jsonSerializer, IAppReader appReader, IAppWorkCtx appSysCtx)
     {
         var l = Log.Fn<JsonEntity>();
@@ -25,13 +26,14 @@ partial class EditLoadBackend
         }
         else
         {
-            ent = jsonSerializer.ToJson(ConstructEmptyEntity(appId, bundle.Header, appSysCtx), 0);
+            ent = jsonSerializer.ToJson(ConstructEmptyEntity(appId, bundle.Header!, appSysCtx), 0);
 
             // only attach metadata, if no metadata already exists
-            if (ent.For == null && bundle.Header?.For != null) ent.For = bundle.Header.For;
+            if (ent.For == null && bundle.Header?.For != null)
+                ent.For = bundle.Header.For;
         }
 
-        // new UI doesn't use this any more, reset it
+        // new UI doesn't use this anymore, reset it
         if (bundle.Header != null) bundle.Header.For = null;
 
         try
@@ -42,7 +44,7 @@ partial class EditLoadBackend
                 // #TargetTypeIdInsteadOfTarget
                 var targetType = targetId.TargetType != 0
                     ? targetId.TargetType
-                    : jsonSerializer.MetadataTargets.GetId(targetId.Target);
+                    : jsonSerializer.MetadataTargets.GetId(targetId.Target!);
                 ent.For.Title = appReader.FindTargetTitle(targetType,
                     targetId.String ?? targetId.Guid?.ToString() ?? targetId.Number?.ToString());
             }
@@ -52,18 +54,18 @@ partial class EditLoadBackend
         return l.Return(ent);
     }
 
-    private List<IContentType> UsedTypes(List<BundleWithHeader<IEntity>> list, IAppWorkCtx appSysCtx)
+    private List<IContentType> UsedTypes(List<BundleWithHeaderOptional<IEntity>> list, IAppWorkCtx appSysCtx)
         => list.Select(i
                 // try to get the entity type, but if there is none (new), look it up according to the header
                 => i.Entity?.Type
-                   ?? appSysCtx.AppReader.GetContentType(i.Header.ContentTypeName))
+                   ?? appSysCtx.AppReader.GetContentType(i.Header!.ContentTypeName!))
             .ToList();
 
     private List<InputTypeInfo> GetNecessaryInputTypes(List<JsonContentType> contentTypes, IAppWorkCtxPlus appCtx)
     {
         var l = Log.Fn<List<InputTypeInfo>>($"{nameof(contentTypes)}: {contentTypes.Count}");
         var fields = contentTypes
-            .SelectMany(t => t.Attributes)
+            .SelectMany(t => t.AttributesSafe())
             .Select(a => a.InputType)
             .Distinct()
             .ToList();
@@ -99,7 +101,7 @@ partial class EditLoadBackend
     private IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, IAppWorkCtx appSysCtx)
     {
         var l = Log.Fn<IEntity>();
-        var type = appSysCtx.AppReader.GetContentType(header.ContentTypeName);
+        var type = appSysCtx.AppReader.GetContentType(header.ContentTypeName!);
         var ent = entityBuilder.EmptyOfType(appId, header.Guid, header.EntityId, type);
         return l.Return(ent);
     }

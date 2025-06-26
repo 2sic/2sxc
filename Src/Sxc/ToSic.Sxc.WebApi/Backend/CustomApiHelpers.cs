@@ -1,15 +1,13 @@
-﻿using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
-using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.Backend;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class CustomApiHelpers
 {
     public static string FileParamsInitialCheck(NoParamOrder noParamOrder, bool? download, string virtualPath,
@@ -34,7 +32,7 @@ public class CustomApiHelpers
                 $"Multiple file setting properties like '{nameof(contents)}' or '{nameof(virtualPath)}' have a value - only one can be provided.");
     }
 
-    public static string CheckForceDownload(bool? download, string virtualPath, string fileDownloadName)
+    public static string CheckForceDownload(bool? download, string virtualPath, string? fileDownloadName)
     {
         // Set reallyForceDownload based on forceDownload and file name
         var reallyForceDownload = download == true || !string.IsNullOrWhiteSpace(fileDownloadName);
@@ -43,20 +41,22 @@ public class CustomApiHelpers
         if (reallyForceDownload && string.IsNullOrWhiteSpace(fileDownloadName))
         {
             // try to guess name based on virtualPath name
-            fileDownloadName = !string.IsNullOrWhiteSpace(virtualPath) ? Path.GetFileName(virtualPath) : null;
+            fileDownloadName = !string.IsNullOrWhiteSpace(virtualPath)
+                ? Path.GetFileName(virtualPath)
+                : null;
             if (string.IsNullOrWhiteSpace(fileDownloadName))
                 throw new HttpExceptionAbstraction(HttpStatusCode.NotFound,
                     $"Can't force download without a {nameof(fileDownloadName)} or a real {nameof(virtualPath)}",
                     "Not Found");
         }
 
-        return fileDownloadName;
+        return fileDownloadName!;
     }
 
     /*
      * for "Content-Disposition: inline" fileDownloadName should be null
      */
-    public static string EnsureFileDownloadNameIsNullForInline(bool? download, string fileDownloadName)
+    public static string? EnsureFileDownloadNameIsNullForInline(bool? download, string fileDownloadName)
     {
         return download == true ? fileDownloadName : null;
     }
@@ -122,7 +122,7 @@ public class CustomApiHelpers
         var xmlDeclaration = xmlDocument.ChildNodes.OfType<XmlDeclaration>().FirstOrDefault();
         return (xmlDeclaration?.Encoding == null)
             ? Encoding.UTF8
-            : Encoding.GetEncoding(xmlDeclaration?.Encoding);
+            : Encoding.GetEncoding(xmlDeclaration.Encoding);
     }
 
     public static Encoding GetEncoding(string xmlString)

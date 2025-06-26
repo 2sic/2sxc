@@ -4,12 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
-using System.IO;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using ToSic.Eav.Security.Encryption;
-using JsonOptions = ToSic.Eav.Serialization.JsonOptions;
+using ToSic.Sys.Security.Encryption;
+using JsonOptions = ToSic.Eav.Serialization.Sys.Json.JsonOptions;
 
 namespace ToSic.Sxc.WebApi;
 
@@ -42,7 +40,7 @@ public class SecureEndpointAttribute : ActionFilterAttribute
             // Deserializes the JSON string to an EncryptedData object and performs a "EncryptedData" check.
             // If encrypted data is missing, sets the request content stream to the original JSON string and returns.
             var encryptedData = JsonSerializer.Deserialize<EncryptedData>(jsonString, JsonOptions.SafeJsonForHtmlAttributes);
-            if (encryptedData?.Data is null && encryptedData?.Key is null && encryptedData?.Iv is null && encryptedData?.Version == 1)
+            if (encryptedData == null || (encryptedData.Data is null && encryptedData.Key is null && encryptedData.Iv is null && encryptedData.Version == 1))
             {
                 //SetRequestContentStream(request, jsonString);
                 return;

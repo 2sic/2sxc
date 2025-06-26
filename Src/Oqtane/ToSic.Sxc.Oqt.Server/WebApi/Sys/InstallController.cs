@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Routing;
-using ToSic.Eav.WebApi.Sys;
+using ToSic.Eav.WebApi.Sys.Install;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
 using RealController = ToSic.Sxc.Backend.Sys.InstallControllerReal;
@@ -14,7 +13,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + "/" + AreaRoutes.Sys)]
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class InstallController()
     : OqtStatefulControllerBase(RealController.LogSuffix), IInstallController<IActionResult>
 {
@@ -48,11 +47,11 @@ public class InstallController()
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [Authorize(Roles = RoleNames.Admin)]
     [ValidateAntiForgeryToken]
-    public IActionResult RemotePackage(string packageUrl)
+    public IActionResult RemotePackage(string packageUrl, string newName = null)
     {
         HotReloadEnabledCheck.Check(); // Ensure that Hot Reload is not enabled or try to disable it.
         // Make sure the Scoped ResponseMaker has this controller context
         CtxHlp.SetupResponseMaker();
-        return Real.RemotePackage(packageUrl, CtxHlp.BlockOptional?.Context.Module);
+        return Real.RemotePackage(packageUrl, CtxHlp.BlockOptional?.Context.Module, newName);
     }
 }

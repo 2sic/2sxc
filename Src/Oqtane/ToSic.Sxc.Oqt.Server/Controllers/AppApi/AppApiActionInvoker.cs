@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 

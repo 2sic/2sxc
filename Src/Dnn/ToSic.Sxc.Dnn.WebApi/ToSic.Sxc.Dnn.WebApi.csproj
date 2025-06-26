@@ -1,99 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-NetFramework.props" />
+
+  <Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />
+
+  <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
+
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8398FE44-7164-48CB-96CF-74BA9C270BD2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.Sxc.Dnn.WebApi</AssemblyName>
-    <TargetFramework>net472</TargetFramework>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
-    <!-- Don't generate assembly properties from this XML which should come from the core file, like version - these lines must be in sync in all ToSic.Eav.*.csproj files -->
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <!-- end: Don't generate... -->
   </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <!-- generate xml docs -->
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>1701;1702;CS1570;CS1572;CS1573;CS1574;CS1587;CS1591;CS1710;CS1711</NoWarn>
     <!-- ignore warning that Dnn was loaded 2x - ATM necessary for MS build? @STV -->
-    <NoWarn>MSB4011</NoWarn>
+    <NoWarn>$(NoWarn);MSB4011</NoWarn>
     <!-- ignore warning that it's using a dangerous version of Dnn (v9.6.1) @2dm -->
-    <NoWarn>NU1902</NoWarn>
+    <NoWarn>$(NoWarn);NU1902</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'efc and WebApi|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\efc and WebApi\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'debug eav only|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\debug eav only\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dbg Testing|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Dbg Testing\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugOqtane|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\DebugOqtane\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugDnn|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\DebugDnn\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
+
   <PropertyGroup>
     <NoWarn>$(NoWarn);MSB3277</NoWarn>
-    <LangVersion>default</LangVersion>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="DotNetNuke.Core" Version="9.6.1">
       <ExcludeAssets>runtime</ExcludeAssets>
@@ -101,10 +33,12 @@
     <PackageReference Include="DotNetNuke.Web" Version="9.6.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
+    <PackageReference Include="DotNetNuke.Web.Mvc" Version="9.6.1" />
     <PackageReference Include="Microsoft.AspNet.WebApi.WebHost">
       <Version>5.2.3</Version>
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.WebPages" Version="3.1.2" />
     <PackageReference Include="System.Text.Json" Version="9.0.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
@@ -126,48 +60,19 @@
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.dll</HintPath>
     </Reference>
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs">
-      <Link>Properties\AssemblyInfoInherited.cs</Link>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">
-      <Project>{fa1b4495-6b85-400f-a5e3-0e292ccbfae2}</Project>
-      <Name>ToSic.Eav.Apps</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj">
-      <Project>{82f94588-269b-4cdd-98d1-d5cb14c39090}</Project>
-      <Name>ToSic.Eav.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSources\ToSic.Eav.DataSources.csproj">
-      <Project>{daae8e21-ca5f-400b-9f5a-5e4e1196b21b}</Project>
-      <Name>ToSic.Eav.DataSources</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj">
-      <Project>{5a75cd35-99f4-4cf0-944a-dc0f5d68b430}</Project>
-      <Name>ToSic.Eav.ImportExport</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj">
-      <Project>{f93f5fb1-95a6-4c4b-bdcf-b001e82f766f}</Project>
-      <Name>ToSic.Eav.WebApi</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj">
-      <Project>{bc93efb1-d740-4617-9c90-d9167f9e4545}</Project>
-      <Name>ToSic.Lib.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj">
-      <Project>{80d15f35-334b-4c7c-af94-b0ff1e6cc354}</Project>
-      <Name>ToSic.Sxc.WebApi</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj">
-      <Project>{5D87EB0C-BF67-4814-A0FF-D96256C9B852}</Project>
-      <Name>ToSic.Sxc</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ToSic.Sxc.Dnn.Core\ToSic.Sxc.Dnn.Core.csproj">
-      <Project>{a94de6d7-d1e6-4be2-b5b5-dc4a6a61cd80}</Project>
-      <Name>ToSic.Sxc.Dnn.Core</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSources\ToSic.Eav.DataSources.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Utils\ToSic.Sys.Utils.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Adam\ToSic.Sxc.Adam.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Apps\ToSic.Sxc.Apps.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Dnn.Core\ToSic.Sxc.Dnn.Core.csproj" />
+
   </ItemGroup>
   <ItemGroup>
     <None Include="Custom\readme.md" />

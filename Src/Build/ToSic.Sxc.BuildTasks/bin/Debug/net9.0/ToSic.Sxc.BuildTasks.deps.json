@@ -8,153 +8,165 @@
     ".NETCoreApp,Version=v9.0": {
       "ToSic.Sxc.BuildTasks/1.0.0": {
         "dependencies": {
-          "Microsoft.Build.Tasks.Core": "17.10.4",
-          "System.Text.Json": "9.0.0"
+          "Microsoft.Build.Tasks.Core": "17.14.8",
+          "System.Text.Json": "9.0.5"
         },
         "runtime": {
           "ToSic.Sxc.BuildTasks.dll": {}
         }
       },
-      "Microsoft.Build.Framework/17.10.4": {
+      "Microsoft.Build.Framework/17.14.8": {
         "runtime": {
-          "lib/net8.0/Microsoft.Build.Framework.dll": {
+          "lib/net9.0/Microsoft.Build.Framework.dll": {
             "assemblyVersion": "15.1.0.0",
-            "fileVersion": "17.10.4.21802"
+            "fileVersion": "17.14.8.25101"
           }
         }
       },
-      "Microsoft.Build.Tasks.Core/17.10.4": {
+      "Microsoft.Build.Tasks.Core/17.14.8": {
         "dependencies": {
-          "Microsoft.Build.Framework": "17.10.4",
-          "Microsoft.Build.Utilities.Core": "17.10.4",
-          "Microsoft.NET.StringTools": "17.10.4",
-          "System.CodeDom": "8.0.0",
-          "System.Collections.Immutable": "8.0.0",
-          "System.Configuration.ConfigurationManager": "8.0.0",
-          "System.Resources.Extensions": "8.0.0",
-          "System.Security.Cryptography.Pkcs": "8.0.0",
-          "System.Security.Cryptography.Xml": "8.0.0"
+          "Microsoft.Build.Framework": "17.14.8",
+          "Microsoft.Build.Utilities.Core": "17.14.8",
+          "Microsoft.NET.StringTools": "17.14.8",
+          "System.CodeDom": "9.0.0",
+          "System.Collections.Immutable": "9.0.0",
+          "System.Configuration.ConfigurationManager": "9.0.0",
+          "System.Diagnostics.EventLog": "9.0.0",
+          "System.Formats.Nrbf": "9.0.0",
+          "System.Resources.Extensions": "9.0.0",
+          "System.Security.Cryptography.Pkcs": "9.0.0",
+          "System.Security.Cryptography.ProtectedData": "9.0.0",
+          "System.Security.Cryptography.Xml": "9.0.0"
         },
         "runtime": {
-          "lib/net8.0/Microsoft.Build.Tasks.Core.dll": {
+          "lib/net9.0/Microsoft.Build.Tasks.Core.dll": {
             "assemblyVersion": "15.1.0.0",
-            "fileVersion": "17.10.4.21802"
+            "fileVersion": "17.14.8.25101"
           }
         }
       },
-      "Microsoft.Build.Utilities.Core/17.10.4": {
+      "Microsoft.Build.Utilities.Core/17.14.8": {
         "dependencies": {
-          "Microsoft.Build.Framework": "17.10.4",
-          "Microsoft.NET.StringTools": "17.10.4",
-          "System.Collections.Immutable": "8.0.0",
-          "System.Configuration.ConfigurationManager": "8.0.0"
+          "Microsoft.Build.Framework": "17.14.8",
+          "Microsoft.NET.StringTools": "17.14.8",
+          "System.Collections.Immutable": "9.0.0",
+          "System.Configuration.ConfigurationManager": "9.0.0",
+          "System.Diagnostics.EventLog": "9.0.0",
+          "System.Security.Cryptography.ProtectedData": "9.0.0"
         },
         "runtime": {
-          "lib/net8.0/Microsoft.Build.Utilities.Core.dll": {
+          "lib/net9.0/Microsoft.Build.Utilities.Core.dll": {
             "assemblyVersion": "15.1.0.0",
-            "fileVersion": "17.10.4.21802"
+            "fileVersion": "17.14.8.25101"
           }
         }
       },
-      "Microsoft.NET.StringTools/17.10.4": {
+      "Microsoft.NET.StringTools/17.14.8": {
         "runtime": {
-          "lib/net8.0/Microsoft.NET.StringTools.dll": {
+          "lib/net9.0/Microsoft.NET.StringTools.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "17.10.4.21802"
+            "fileVersion": "17.14.8.25101"
           }
         }
       },
-      "System.CodeDom/8.0.0": {
+      "System.CodeDom/9.0.0": {
         "runtime": {
-          "lib/net8.0/System.CodeDom.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
+          "lib/net9.0/System.CodeDom.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52809"
           }
         }
       },
-      "System.Collections.Immutable/8.0.0": {},
-      "System.Configuration.ConfigurationManager/8.0.0": {
+      "System.Collections.Immutable/9.0.0": {},
+      "System.Configuration.ConfigurationManager/9.0.0": {
         "dependencies": {
-          "System.Diagnostics.EventLog": "8.0.0",
-          "System.Security.Cryptography.ProtectedData": "8.0.0"
+          "System.Diagnostics.EventLog": "9.0.0",
+          "System.Security.Cryptography.ProtectedData": "9.0.0"
         },
         "runtime": {
-          "lib/net8.0/System.Configuration.ConfigurationManager.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
+          "lib/net9.0/System.Configuration.ConfigurationManager.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52809"
           }
         }
       },
-      "System.Diagnostics.EventLog/8.0.0": {
+      "System.Diagnostics.EventLog/9.0.0": {
         "runtime": {
-          "lib/net8.0/System.Diagnostics.EventLog.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
+          "lib/net9.0/System.Diagnostics.EventLog.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52809"
           }
         },
         "runtimeTargets": {
-          "runtimes/win/lib/net8.0/System.Diagnostics.EventLog.Messages.dll": {
+          "runtimes/win/lib/net9.0/System.Diagnostics.EventLog.Messages.dll": {
             "rid": "win",
             "assetType": "runtime",
-            "assemblyVersion": "8.0.0.0",
+            "assemblyVersion": "9.0.0.0",
             "fileVersion": "0.0.0.0"
           },
-          "runtimes/win/lib/net8.0/System.Diagnostics.EventLog.dll": {
+          "runtimes/win/lib/net9.0/System.Diagnostics.EventLog.dll": {
             "rid": "win",
             "assetType": "runtime",
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52809"
           }
         }
       },
-      "System.Formats.Asn1/8.0.0": {},
-      "System.Resources.Extensions/8.0.0": {
+      "System.Formats.Nrbf/9.0.0": {
         "runtime": {
-          "lib/net8.0/System.Resources.Extensions.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
+          "lib/net9.0/System.Formats.Nrbf.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52809"
           }
         }
       },
-      "System.Security.Cryptography.Pkcs/8.0.0": {
+      "System.Resources.Extensions/9.0.0": {
         "dependencies": {
-          "System.Formats.Asn1": "8.0.0"
+          "System.Formats.Nrbf": "9.0.0"
         },
         "runtime": {
-          "lib/net8.0/System.Security.Cryptography.Pkcs.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
+          "lib/net9.0/System.Resources.Extensions.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52809"
+          }
+        }
+      },
+      "System.Security.Cryptography.Pkcs/9.0.0": {
+        "runtime": {
+          "lib/net9.0/System.Security.Cryptography.Pkcs.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52809"
           }
         },
         "runtimeTargets": {
-          "runtimes/win/lib/net8.0/System.Security.Cryptography.Pkcs.dll": {
+          "runtimes/win/lib/net9.0/System.Security.Cryptography.Pkcs.dll": {
             "rid": "win",
             "assetType": "runtime",
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52809"
           }
         }
       },
-      "System.Security.Cryptography.ProtectedData/8.0.0": {
+      "System.Security.Cryptography.ProtectedData/9.0.0": {
         "runtime": {
-          "lib/net8.0/System.Security.Cryptography.ProtectedData.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
+          "lib/net9.0/System.Security.Cryptography.ProtectedData.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52809"
           }
         }
       },
-      "System.Security.Cryptography.Xml/8.0.0": {
+      "System.Security.Cryptography.Xml/9.0.0": {
         "dependencies": {
-          "System.Security.Cryptography.Pkcs": "8.0.0"
+          "System.Security.Cryptography.Pkcs": "9.0.0"
         },
         "runtime": {
-          "lib/net8.0/System.Security.Cryptography.Xml.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
+          "lib/net9.0/System.Security.Cryptography.Xml.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52809"
           }
         }
       },
-      "System.Text.Json/9.0.0": {}
+      "System.Text.Json/9.0.5": {}
     }
   },
   "libraries": {
@@ -163,103 +175,103 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Microsoft.Build.Framework/17.10.4": {
+    "Microsoft.Build.Framework/17.14.8": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-4qXCwNOXBR1dyCzuks9SwTwFJQO/xmf2wcMislotDWJu7MN/r3xDNoU8Ae5QmKIHPaLG1xmfDkYS7qBVzxmeKw==",
-      "path": "microsoft.build.framework/17.10.4",
-      "hashPath": "microsoft.build.framework.17.10.4.nupkg.sha512"
+      "sha512": "sha512-hwpXdyiD8phuIRtYK4fcPrSKRXn6MHI37IkbvAM2D50OnPRbmKGPwtrXi/vYQ7+VQbMzmw1zaKp+rsroBwNGtg==",
+      "path": "microsoft.build.framework/17.14.8",
+      "hashPath": "microsoft.build.framework.17.14.8.nupkg.sha512"
     },
-    "Microsoft.Build.Tasks.Core/17.10.4": {
+    "Microsoft.Build.Tasks.Core/17.14.8": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-k1sefpk2VvJNwcexMjisH+TdzhspCVRtYvh4fAez5qRM20VvsNxcOIjfDe3h3StZRIGI2aiFKGxBZYkwM+WV+A==",
-      "path": "microsoft.build.tasks.core/17.10.4",
-      "hashPath": "microsoft.build.tasks.core.17.10.4.nupkg.sha512"
+      "sha512": "sha512-Wvmz7gpstoGHLOVpOy2/Upsa+N1D/xqg7DUcqRi1DiabEPTRSRXVg0cbjXAgoS3754g2JPgCVm3/xRZxmSW51w==",
+      "path": "microsoft.build.tasks.core/17.14.8",
+      "hashPath": "microsoft.build.tasks.core.17.14.8.nupkg.sha512"
     },
-    "Microsoft.Build.Utilities.Core/17.10.4": {
+    "Microsoft.Build.Utilities.Core/17.14.8": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-eEB/tcXkSV+nQgvoa/l53UPtn+KVtKZ8zBceDZsXVTrfE4fA+4+/olrx9W8n2tq4XiESsL9UuGJgCKzqBwQCoQ==",
-      "path": "microsoft.build.utilities.core/17.10.4",
-      "hashPath": "microsoft.build.utilities.core.17.10.4.nupkg.sha512"
+      "sha512": "sha512-y9YkXfwoSduSYMSpf8wbIhn7XGmO+pNG5p4lqDSjGLxQ7KBHcnlvsfz+W3Hsp82abHFk3xCLPLImMZ9wUnWQCw==",
+      "path": "microsoft.build.utilities.core/17.14.8",
+      "hashPath": "microsoft.build.utilities.core.17.14.8.nupkg.sha512"
     },
-    "Microsoft.NET.StringTools/17.10.4": {
+    "Microsoft.NET.StringTools/17.14.8": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-wyABaqY+IHCMMSTQmcc3Ca6vbmg5BaEPgicnEgpll+4xyWZWlkQqUwafweUd9VAhBb4jqplMl6voUHQ6yfdUcg==",
-      "path": "microsoft.net.stringtools/17.10.4",
-      "hashPath": "microsoft.net.stringtools.17.10.4.nupkg.sha512"
+      "sha512": "sha512-j85iHjtDLnqVSLCv2Rfee9WI6NzcQX9fqVjnuIgiSeQSTm5MFwBaeNL/rwil4RUaHUF9GXtfxvSEg6jYF6cxCw==",
+      "path": "microsoft.net.stringtools/17.14.8",
+      "hashPath": "microsoft.net.stringtools.17.14.8.nupkg.sha512"
     },
-    "System.CodeDom/8.0.0": {
+    "System.CodeDom/9.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-WTlRjL6KWIMr/pAaq3rYqh0TJlzpouaQ/W1eelssHgtlwHAH25jXTkUphTYx9HaIIf7XA6qs/0+YhtLEQRkJ+Q==",
-      "path": "system.codedom/8.0.0",
-      "hashPath": "system.codedom.8.0.0.nupkg.sha512"
+      "sha512": "sha512-oTE5IfuMoET8yaZP/vdvy9xO47guAv/rOhe4DODuFBN3ySprcQOlXqO3j+e/H/YpKKR5sglrxRaZ2HYOhNJrqA==",
+      "path": "system.codedom/9.0.0",
+      "hashPath": "system.codedom.9.0.0.nupkg.sha512"
     },
-    "System.Collections.Immutable/8.0.0": {
+    "System.Collections.Immutable/9.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-AurL6Y5BA1WotzlEvVaIDpqzpIPvYnnldxru8oXJU2yFxFUy3+pNXjXd1ymO+RA0rq0+590Q8gaz2l3Sr7fmqg==",
-      "path": "system.collections.immutable/8.0.0",
-      "hashPath": "system.collections.immutable.8.0.0.nupkg.sha512"
+      "sha512": "sha512-QhkXUl2gNrQtvPmtBTQHb0YsUrDiDQ2QS09YbtTTiSjGcf7NBqtYbrG/BE06zcBPCKEwQGzIv13IVdXNOSub2w==",
+      "path": "system.collections.immutable/9.0.0",
+      "hashPath": "system.collections.immutable.9.0.0.nupkg.sha512"
     },
-    "System.Configuration.ConfigurationManager/8.0.0": {
+    "System.Configuration.ConfigurationManager/9.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-JlYi9XVvIREURRUlGMr1F6vOFLk7YSY4p1vHo4kX3tQ0AGrjqlRWHDi66ImHhy6qwXBG3BJ6Y1QlYQ+Qz6Xgww==",
-      "path": "system.configuration.configurationmanager/8.0.0",
-      "hashPath": "system.configuration.configurationmanager.8.0.0.nupkg.sha512"
+      "sha512": "sha512-PdkuMrwDhXoKFo/JxISIi9E8L+QGn9Iquj2OKDWHB6Y/HnUOuBouF7uS3R4Hw3FoNmwwMo6hWgazQdyHIIs27A==",
+      "path": "system.configuration.configurationmanager/9.0.0",
+      "hashPath": "system.configuration.configurationmanager.9.0.0.nupkg.sha512"
     },
-    "System.Diagnostics.EventLog/8.0.0": {
+    "System.Diagnostics.EventLog/9.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-fdYxcRjQqTTacKId/2IECojlDSFvp7LP5N78+0z/xH7v/Tuw5ZAxu23Y6PTCRinqyu2ePx+Gn1098NC6jM6d+A==",
-      "path": "system.diagnostics.eventlog/8.0.0",
-      "hashPath": "system.diagnostics.eventlog.8.0.0.nupkg.sha512"
+      "sha512": "sha512-qd01+AqPhbAG14KtdtIqFk+cxHQFZ/oqRSCoxU1F+Q6Kv0cl726sl7RzU9yLFGd4BUOKdN4XojXF0pQf/R6YeA==",
+      "path": "system.diagnostics.eventlog/9.0.0",
+      "hashPath": "system.diagnostics.eventlog.9.0.0.nupkg.sha512"
     },
-    "System.Formats.Asn1/8.0.0": {
+    "System.Formats.Nrbf/9.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-AJukBuLoe3QeAF+mfaRKQb2dgyrvt340iMBHYv+VdBzCUM06IxGlvl0o/uPOS7lHnXPN6u8fFRHSHudx5aTi8w==",
-      "path": "system.formats.asn1/8.0.0",
-      "hashPath": "system.formats.asn1.8.0.0.nupkg.sha512"
+      "sha512": "sha512-F/6tNE+ckmdFeSQAyQo26bQOqfPFKEfZcuqnp4kBE6/7jP26diP+QTHCJJ6vpEfaY6bLy+hBLiIQUSxSmNwLkA==",
+      "path": "system.formats.nrbf/9.0.0",
+      "hashPath": "system.formats.nrbf.9.0.0.nupkg.sha512"
     },
-    "System.Resources.Extensions/8.0.0": {
+    "System.Resources.Extensions/9.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-psnQ6GRQOvt+evda5C4nD5EuV49mz2Tv0DD2JDVDEbE/TKoMukxSkGJcsBJ0pajpPuFRr67syFYlkJ4Wj6A5Zw==",
-      "path": "system.resources.extensions/8.0.0",
-      "hashPath": "system.resources.extensions.8.0.0.nupkg.sha512"
+      "sha512": "sha512-tvhuT1D2OwPROdL1kRWtaTJliQo0WdyhvwDpd8RM997G7m3Hya5nhbYhNTS75x6Vu+ypSOgL5qxDCn8IROtCxw==",
+      "path": "system.resources.extensions/9.0.0",
+      "hashPath": "system.resources.extensions.9.0.0.nupkg.sha512"
     },
-    "System.Security.Cryptography.Pkcs/8.0.0": {
+    "System.Security.Cryptography.Pkcs/9.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-ULmp3xoOwNYjOYp4JZ2NK/6NdTgiN1GQXzVVN1njQ7LOZ0d0B9vyMnhyqbIi9Qw4JXj1JgCsitkTShboHRx7Eg==",
-      "path": "system.security.cryptography.pkcs/8.0.0",
-      "hashPath": "system.security.cryptography.pkcs.8.0.0.nupkg.sha512"
+      "sha512": "sha512-8tluJF8w9si+2yoHeL8rgVJS6lKvWomTDC8px65Z8MCzzdME5eaPtEQf4OfVGrAxB5fW93ncucy1+221O9EQaw==",
+      "path": "system.security.cryptography.pkcs/9.0.0",
+      "hashPath": "system.security.cryptography.pkcs.9.0.0.nupkg.sha512"
     },
-    "System.Security.Cryptography.ProtectedData/8.0.0": {
+    "System.Security.Cryptography.ProtectedData/9.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-+TUFINV2q2ifyXauQXRwy4CiBhqvDEDZeVJU7qfxya4aRYOKzVBpN+4acx25VcPB9ywUN6C0n8drWl110PhZEg==",
-      "path": "system.security.cryptography.protecteddata/8.0.0",
-      "hashPath": "system.security.cryptography.protecteddata.8.0.0.nupkg.sha512"
+      "sha512": "sha512-CJW+x/F6fmRQ7N6K8paasTw9PDZp4t7G76UjGNlSDgoHPF0h08vTzLYbLZpOLEJSg35d5wy2jCXGo84EN05DpQ==",
+      "path": "system.security.cryptography.protecteddata/9.0.0",
+      "hashPath": "system.security.cryptography.protecteddata.9.0.0.nupkg.sha512"
     },
-    "System.Security.Cryptography.Xml/8.0.0": {
+    "System.Security.Cryptography.Xml/9.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-HQSFbakswZ1OXFz2Bt3AJlC6ENDqWeVpgqhf213xqQUMDifzydOHIKVb1RV4prayobvR3ETIScMaQdDF2hwGZA==",
-      "path": "system.security.cryptography.xml/8.0.0",
-      "hashPath": "system.security.cryptography.xml.8.0.0.nupkg.sha512"
+      "sha512": "sha512-GQZn5wFd+pyOfwWaCbqxG7trQ5ox01oR8kYgWflgtux4HiUNihGEgG2TktRWyH+9bw7NoEju1D41H/upwQeFQw==",
+      "path": "system.security.cryptography.xml/9.0.0",
+      "hashPath": "system.security.cryptography.xml.9.0.0.nupkg.sha512"
     },
-    "System.Text.Json/9.0.0": {
+    "System.Text.Json/9.0.5": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-js7+qAu/9mQvnhA4EfGMZNEzXtJCDxgkgj8ohuxq/Qxv+R56G+ljefhiJHOxTNiw54q8vmABCWUwkMulNdlZ4A==",
-      "path": "system.text.json/9.0.0",
-      "hashPath": "system.text.json.9.0.0.nupkg.sha512"
+      "sha512": "sha512-rnP61ZfloTgPQPe7ecr36loNiGX3g1PocxlKHdY/FUpDSsExKkTxpMAlB4X35wNEPr1X7mkYZuQvW3Lhxmu7KA==",
+      "path": "system.text.json/9.0.5",
+      "hashPath": "system.text.json.9.0.5.nupkg.sha512"
     }
   }
 }

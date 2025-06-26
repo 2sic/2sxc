@@ -1,15 +1,13 @@
-﻿using System.IO;
-using ToSic.Lib.Coding;
+﻿using ToSic.Lib.Coding;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Code.Internal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
 
 /// <summary>
 /// </summary>
 [DnnLogExceptions]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-internal abstract class ApiTempShimmed : DnnSxcCustomControllerBase, IDynamicWebApi, IHasCodeApiService, INetCoreCompatibility
+[ShowApiWhenReleased(ShowApiMode.Never)]
+internal abstract class ApiTempShimmed : DnnSxcCustomControllerBase, IDynamicWebApi, INetCoreCompatibility
 {
 
     #region Net Core Compatibility Shims - Copy this entire section to WebApi Files

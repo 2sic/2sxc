@@ -1,5 +1,6 @@
 # Keep ToSic_SexyContent folder
 !ToSIC_SexyContent
+!ToSic.Sxc
 
 # other stuff in the DesktopModules Folder
 /2sxc-docs/*
@@ -25,3 +26,4 @@ Src/Integration/SxcEdit01/wwwroot/adam/*
 **/2sxc-build.config.json
 .vs/
 /Src/2sxc Multi-Target Oqt510.sln
+/Src/Dnn/ToSic.Sxc.Dnn/DnnPackageBuilder/ToSic.Sxc.Dnn.dnn

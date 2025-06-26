@@ -1,12 +1,12 @@
 ﻿using DotNetNuke.Web.Client;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Web.Internal.ClientAssets;
-using ToSic.Sxc.Web.Internal.PageService;
+using ToSic.Sxc.Render.Sys.Output;
+using ToSic.Sxc.Render.Sys.ResourceExtractor;
+using ToSic.Sxc.Sys.Render.PageContext;
 
 namespace ToSic.Sxc.Dnn.Web;
 
-internal class DnnBlockResourceExtractor(PageServiceShared pageServiceShared)
+internal class DnnBlockResourceExtractor(IPageServiceShared pageServiceShared)
     : BlockResourceExtractor(pageServiceShared)
 {
     protected override ClientAssetsExtractSettings Settings => _settings.Get(() => new(

@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.LookUp;
-using ToSic.Sxc.Code.Internal.CodeErrorHelp;
+using ToSic.Eav.LookUp.Sys.Engines;
+using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
@@ -21,23 +21,23 @@ partial class Api14
 
     #endregion
 
-    #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
+    #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10 - Removed in v20
 
-    [PrivateApi]
-    [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
-    public dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity)
-        => HelpForRazor12.ExAsDynamicInterfacesIEntity();
+    //[PrivateApi]
+    //[Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
+    //public dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity)
+    //    => HelpForRazor12.ExAsDynamicInterfacesIEntity();
 
 
-    [PrivateApi]
-    [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
-    public dynamic AsDynamic(KeyValuePair<int, ToSic.Eav.Interfaces.IEntity> entityKeyValuePair)
-        => HelpForRazor12.AsDynamicKvpInterfacesIEntity();
+    //[PrivateApi]
+    //[Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
+    //public dynamic AsDynamic(KeyValuePair<int, ToSic.Eav.Interfaces.IEntity> entityKeyValuePair)
+    //    => HelpForRazor12.AsDynamicKvpInterfacesIEntity();
 
-    [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
-    [PrivateApi]
-    public IEnumerable<dynamic> AsDynamic(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities)
-        => HelpForRazor12.AsDynamicIEnumInterfacesIEntity();
+    //[Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
+    //[PrivateApi]
+    //public IEnumerable<dynamic> AsDynamic(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities)
+    //    => HelpForRazor12.AsDynamicIEnumInterfacesIEntity();
 
 
     #endregion

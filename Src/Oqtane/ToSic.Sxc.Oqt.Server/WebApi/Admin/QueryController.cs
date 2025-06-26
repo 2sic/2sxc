@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource.Internal.Query;
-using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.PublicApi;
-using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.WebApi.Sys.Admin.Query;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.Admin.Query.QueryControllerReal;
 
@@ -22,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class QueryController() : OqtStatefulControllerBase(RealController.LogSuffix), IQueryController
 {
     private RealController Real => GetService<RealController>();

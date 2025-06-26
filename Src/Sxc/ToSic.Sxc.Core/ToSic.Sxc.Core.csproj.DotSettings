@@ -1,0 +1,12 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=context_002Eparameters_005Cparameters/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=context_005Cpage/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=context_005Cparameters/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=data_005Ctyped/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=services_005Cfeatures/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=services_005Cjson/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=services_005Cjsonservice/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=services_005Cpage/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=services_005Cpageservice/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=services_005Cuser/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=services_005Cusersservices/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

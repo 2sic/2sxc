@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Apps.Internal;
+using ToSic.Sxc.Apps.Sys;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
@@ -6,7 +7,9 @@ partial class AppFilesControllerReal
 {
     private string ResolveAppPath(int appId, bool global) =>
         (
-            _appPaths ??= _appPathsFactoryTemp.Get(_appReaders.Get(appId), _site)
+            _appPaths ??= appPathsFactoryTemp.Get(appReaders.Get(appId), site)
         )
         .PhysicalPathSwitch(global);
+    private IAppPaths? _appPaths;
+
 }

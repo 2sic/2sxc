@@ -1,20 +1,22 @@
 ﻿using Oqtane.Models;
+using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
-using ToSic.Sxc.Web.Internal.LightSpeed;
-using ToSic.Sxc.Web.Internal.Url;
+using ToSic.Sxc.Render.Sys.RenderBlock;
+using ToSic.Sxc.Web.Sys.LightSpeed;
+using ToSic.Sxc.Web.Sys.Url;
 using Page = Oqtane.Models.Page;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
 {
     #region Constructor and DI
@@ -22,30 +24,30 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     public OqtSxcViewBuilder(
         Output.OqtPageOutput pageOutput,
         IContextOfBlock contextOfBlockEmpty,
-        BlockFromModule blockModuleEmpty,
-        ISxcContextResolver contextResolverForLookUps,
+        BlockOfModule blockModuleEmpty,
+        ISxcCurrentContextService currentContextServiceForLookUps,
         ILogStore logStore,
         GlobalTypesCheck globalTypesCheck,
-        IOutputCache outputCache
-    ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
+        IOutputCache outputCache,
+        Generator<IBlockBuilder> blockBuilderGenerator) : base($"{OqtConstants.OqtLogPrefix}.Buildr", connect: [pageOutput, contextOfBlockEmpty, blockModuleEmpty, currentContextServiceForLookUps, globalTypesCheck, outputCache, pageOutput, blockBuilderGenerator])
     {
-        ConnectLogs([
-            _contextOfBlockEmpty = contextOfBlockEmpty,
-            _blockModuleEmpty = blockModuleEmpty,
-            _contextResolverForLookUps = contextResolverForLookUps,
-            _globalTypesCheck = globalTypesCheck,
-            _outputCache = outputCache,
-            PageOutput = pageOutput,
-        ]);
+        _contextOfBlockEmpty = contextOfBlockEmpty;
+        _blockModuleEmpty = blockModuleEmpty;
+        _currentContextServiceForLookUps = currentContextServiceForLookUps;
+        _globalTypesCheck = globalTypesCheck;
+        OutputCache = outputCache;
+        PageOutput = pageOutput;
+        _blockBuilderGenerator = blockBuilderGenerator;
         logStore.Add("oqt-view", Log);
     }
 
     public Output.OqtPageOutput PageOutput { get; }
     private readonly IContextOfBlock _contextOfBlockEmpty;
-    private readonly BlockFromModule _blockModuleEmpty;
-    private readonly ISxcContextResolver _contextResolverForLookUps;
+    private readonly BlockOfModule _blockModuleEmpty;
+    private readonly ISxcCurrentContextService _currentContextServiceForLookUps;
     private readonly GlobalTypesCheck _globalTypesCheck;
-    private readonly IOutputCache _outputCache;
+    private readonly Generator<IBlockBuilder> _blockBuilderGenerator;
+
     #endregion
 
     #region Prepare
@@ -72,7 +74,11 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
             var useLightspeed = OutputCache?.IsEnabled ?? false;
             if (OutputCache?.Existing != null) Log.A("Lightspeed hit - will use cached");
             var renderResult = OutputCache?.Existing?.Data
-                               ?? Block.BlockBuilder.Run(true, specs: new() { UseLightspeed = useLightspeed, IncludeAllAssetsInOqtane = (site.RenderMode == "Interactive") });
+                               ?? _blockBuilderGenerator.New().Setup(Block).Run(true, specs: new()
+                               {
+                                   UseLightspeed = useLightspeed,
+                                   IncludeAllAssetsInOqtane = site.RenderMode == "Interactive",
+                               });
             finalMessage = !useLightspeed ? "" :
                 OutputCache?.Existing?.Data != null ? "⚡⚡" : "⚡⏳";
             OutputCache?.Save(renderResult);
@@ -85,8 +91,12 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
             {
                 Html = renderResult.Html,
                 TemplateResources = PageOutput.GetSxcResources(),
-                SxcContextMetaName = PageOutput.AddContextMeta ? PageOutput.ContextMetaName : null,
-                SxcContextMetaContents = PageOutput.AddContextMeta ? PageOutput.ContextMetaContents() : null,
+                SxcContextMetaName = PageOutput.AddContextMeta
+                    ? PageOutput.ContextMetaName
+                    : null,
+                SxcContextMetaContents = PageOutput.AddContextMeta
+                    ? PageOutput.ContextMetaContents()
+                    : null,
                 SxcScripts = PageOutput.Scripts().ToList(),
                 SxcStyles = PageOutput.Styles().ToList(),
                 PageProperties = PageOutput.GetOqtPagePropertyChangesList(renderResult.PageChanges),
@@ -95,7 +105,8 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
                 // CSP settings
                 CspEnabled = renderResult.CspEnabled,
                 CspEnforced = renderResult.CspEnforced,
-                CspParameters = renderResult.CspParameters.Select(c => c.NvcToString())
+                CspParameters = renderResult.CspParameters
+                    .Select(c => c.NvcToString())
                     .ToList(), // convert NameValueCollection to (query) string because can't serialize NameValueCollection to json
             };
         }));
@@ -112,7 +123,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     }
 
     // convert System.Collections.Generic.IList<ToSic.Sxc.Web.PageService.HttpHeader> to System.Collections.Generic.IList<ToSic.Sxc.Oqt.Shared.HttpHeader>
-    private static IList<HttpHeader> ConvertHttpHeaders(IList<Web.Internal.PageService.HttpHeader> httpHeaders) 
+    private static IList<HttpHeader> ConvertHttpHeaders(IList<Sys.Render.PageContext.HttpHeader> httpHeaders) 
         => httpHeaders.Select(httpHeader => new HttpHeader(httpHeader.Name, httpHeader.Value)).ToList();
 
     internal Alias Alias;
@@ -124,12 +135,12 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     private IBlock Block => _blockGetOnce.Get(() => LogTimer.DoInTimer(() =>
     {
         var ctx = _contextOfBlockEmpty.Init(Page.PageId, Module);
-        var block = _blockModuleEmpty.Init(ctx);
+        var block = _blockModuleEmpty.GetBlockOfModule(ctx);
 
         // Special for Oqtane - normally the IContextResolver is only used in WebAPIs
         // But the ModuleLookUp and PageLookUp also rely on this, so the IContextResolver must know about this for now
         // In future, we should find a better way for this, so that IContextResolver is really only used on WebApis
-        _contextResolverForLookUps.AttachBlock(block);
+        _currentContextServiceForLookUps.AttachBlock(block);
         return block;
     }));
     private readonly GetOnce<IBlock> _blockGetOnce = new();
@@ -138,7 +149,7 @@ internal class OqtSxcViewBuilder : ServiceBase, IOqtSxcViewBuilder
     private readonly GetOnce<ILogCall> _logTimer = new();
 
 
-    private IOutputCache OutputCache => _oc.Get(() => _outputCache.Init(Module.ModuleId, Page?.PageId ?? 0, Block));
+    private IOutputCache OutputCache => _oc.Get(() => field.Init(Module.ModuleId, Page?.PageId ?? 0, Block));
     private readonly GetOnce<IOutputCache> _oc = new();
 
     #endregion

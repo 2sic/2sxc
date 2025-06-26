@@ -1,8 +1,8 @@
-﻿using ToSic.Eav.Apps.State;
+﻿using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Backend.ImportExport;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ImpExpHelpers(IAppReaderFactory appReadFac) : ServiceBase("Sxc.ImExHl", connect: [appReadFac])
 {
     /// <summary>
@@ -15,7 +15,7 @@ public class ImpExpHelpers(IAppReaderFactory appReadFac) : ServiceBase("Sxc.ImEx
         if (!user.IsSystemAdmin && zoneId != contextZoneId)
         {
             l.ReturnNull("error");
-            throw Eav.WebApi.Errors.HttpException.PermissionDenied("Tried to access app from another zone. Requires SuperUser permissions.");
+            throw HttpException.PermissionDenied("Tried to access app from another zone. Requires SuperUser permissions.");
         }
 
         var app = appReadFac.Get(new AppIdentity(zoneId, appId));

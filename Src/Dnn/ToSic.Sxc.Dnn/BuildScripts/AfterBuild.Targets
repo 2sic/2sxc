@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
 
-  <Target Name="PostBuild" AfterTargets="Build" Condition="'$(DnnTargets)' != ''">
+  <Target Name="PostBuild" AfterTargets="Build" Condition="'$(DnnTargets)' != '' and '$(Configuration)' == 'Debug'">
+    <Message Text="Configuration='$(Configuration)'" Importance="High"/>
     <Message Text="DnnTargets='$(DnnTargets)'" Importance="High"/>
 
     <!--Split the paths in DnnTargets into individual items-->
@@ -15,11 +16,12 @@
     <Message Text="DnnRoot='$(DnnRootIdentityValue)'" Importance="High"/>
   </Target>
 
-  <Target Name="PostBuildForEachItem" AfterTargets="PostBuild" DependsOnTargets="PostBuild" Outputs="%(DnnRoot.Identity)" Condition="'$(DnnTargets)' != ''">
+  <Target Name="PostBuildForEachItem" AfterTargets="PostBuild" DependsOnTargets="PostBuild" Outputs="%(DnnRoot.Identity)" Condition="'$(DnnTargets)' != '' and '$(Configuration)' == 'Debug'">
+    <Message Text="Configuration='$(Configuration)'" Importance="High"/>
     <Message Text="DnnRoot='%(DnnRoot.Identity)'" Importance="High"/>
     <PropertyGroup>
       <CurrentDnnRoot>%(DnnRoot.Identity)</CurrentDnnRoot>
-      <BuildTarget>$(CurrentDnnRoot)DesktopModules/ToSic_SexyContent</BuildTarget>
+      <BuildTarget>$(CurrentDnnRoot)DesktopModules\ToSic.Sxc</BuildTarget>
     </PropertyGroup>
     <!-- Echo Statements -->
     <Message Text="BuildTarget='$(BuildTarget)'" Importance="High"/>
@@ -27,91 +29,84 @@
     <!-- XML documentation is generated in Release only -->
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
       <!-- itmes included only in Release configuration -->
-      <DnnBinInclude Include="bin\ToSic.Sxc.xml" />
-      <DnnBinInclude Include="bin\ToSic.Sxc.Dnn.xml" />
-      <!--<DnnBinInclude Include="bin\ToSic.Sxc*.xml" />
-      <DnnBinInclude Include="bin\ToSic.Eav*.xml" />
-      <DnnBinInclude Include="bin\ToSic.Lib*.xml" />-->
+      <!--<DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.xml" />-->
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.Dnn.xml" />
     </ItemGroup>
     
     <ItemGroup>
       <!-- Global / Shared 2sxc and EAV DLLs-->
-      <DnnBinInclude Include="bin\ToSic.Sxc.dll" />
-      <DnnBinInclude Include="bin\ToSic.Sxc.pdb" />
-      <DnnBinInclude Include="bin\ToSic.Sxc.Code.Generate.dll" />
-      <DnnBinInclude Include="bin\ToSic.Sxc.Code.Generate.pdb" />
-      <DnnBinInclude Include="bin\ToSic.Sxc.WebApi.dll" />
-      <DnnBinInclude Include="bin\ToSic.Sxc.WebApi.pdb" />
-      <DnnBinInclude Include="bin\ToSic.Eav*.dll" />
-      <DnnBinInclude Include="bin\ToSic.Eav*.pdb" />
-      <DnnBinInclude Include="bin\ToSic.Lib*.dll" />
-      <DnnBinInclude Include="bin\ToSic.Lib*.pdb" />
-
-      <!-- DNN specific DLLs -->
-      <DnnBinInclude Include="bin\ToSic.Sxc.Dnn*.dll" />
-      <DnnBinInclude Include="bin\ToSic.Sxc.Dnn*.pdb" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.*.dll" Exclude="ToSic.Sxc.Dnn.Enterprise.dll"/>
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sxc.*.pdb" Exclude="ToSic.Sxc.Dnn.Enterprise.pdb"/>
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Eav.*.dll" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Eav.*.pdb" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Lib.*.dll" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Lib.*.pdb" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sys.*.dll" />
+      <DnnBinInclude Include="$(MSBuildProjectDirectory)\bin\ToSic.Sys.*.pdb" />
 
       <!-- 2sxc 13+ netstandard2.0/framework 4.7.2 assemblies -->
-      <DependeciesInclude Include="bin\Microsoft.Bcl.AsyncInterfaces.dll" />
-      <DependeciesInclude Include="bin\Microsoft.Bcl.HashCode.dll" />
-      <DependeciesInclude Include="bin\Microsoft.EntityFrameworkCore.Abstractions.dll" />
-      <DependeciesInclude Include="bin\Microsoft.EntityFrameworkCore.dll" />
-      <DependeciesInclude Include="bin\Microsoft.EntityFrameworkCore.Relational.dll" />
-      <DependeciesInclude Include="bin\Microsoft.EntityFrameworkCore.SqlServer.dll" />
-      <DependeciesInclude Include="bin\Microsoft.Extensions.Caching.Abstractions.dll" />
-      <DependeciesInclude Include="bin\Microsoft.Extensions.Caching.Memory.dll" />
-      <DependeciesInclude Include="bin\Microsoft.Extensions.Configuration.Abstractions.dll" />
-      <DependeciesInclude Include="bin\Microsoft.Extensions.Configuration.Binder.dll" />
-      <DependeciesInclude Include="bin\Microsoft.Extensions.Configuration.dll" />
-      <!--<DependeciesInclude Include="bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />-->
-      <!--<DependeciesInclude Include="bin\Microsoft.Extensions.DependencyInjection.dll" />-->
-      <DependeciesInclude Include="bin\Microsoft.Extensions.Logging.Abstractions.dll" />
-      <DependeciesInclude Include="bin\Microsoft.Extensions.Logging.dll" />
-      <DependeciesInclude Include="bin\Microsoft.Extensions.Options.dll" />
-      <DependeciesInclude Include="bin\Microsoft.Extensions.Primitives.dll" />
-      <!--<DependeciesInclude Include="bin\Newtonsoft.Json.dll" />-->
-      <DependeciesInclude Include="bin\Remotion.Linq.dll" />
-      <DependeciesInclude Include="bin\System.Buffers.dll" />
-      <DependeciesInclude Include="bin\System.Collections.Immutable.dll" />
-      <DependeciesInclude Include="bin\System.ComponentModel.Annotations.dll" />
-      <DependeciesInclude Include="bin\System.Data.SqlClient.dll" />
-      <DependeciesInclude Include="bin\System.Diagnostics.DiagnosticSource.dll" />
-      <DependeciesInclude Include="bin\System.Interactive.Async.dll" />
-      <DependeciesInclude Include="bin\System.IO.Pipelines.dll" />
-      <DependeciesInclude Include="bin\System.Memory.dll" />
-      <!--<DependeciesInclude Include="bin\System.Net.Http.Formatting.dll" />-->
-      <DependeciesInclude Include="bin\System.Numerics.Vectors.dll" />
-      <DependeciesInclude Include="bin\System.Runtime.CompilerServices.Unsafe.dll" />
-      <DependeciesInclude Include="bin\System.Text.Encodings.Web.dll" />
-      <DependeciesInclude Include="bin\System.Text.Json.dll" />
-      <DependeciesInclude Include="bin\System.Threading.Tasks.Extensions.dll" />
-      <DependeciesInclude Include="bin\System.ValueTuple.dll" />
-      <!--<DependeciesInclude Include="bin\System.Web.Http.dll" />-->
-      <!--<DependeciesInclude Include="bin\System.Web.Http.WebHost.dll" />-->
+      <SxcDependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Bcl.AsyncInterfaces.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Bcl.HashCode.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.EntityFrameworkCore.Abstractions.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.EntityFrameworkCore.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.EntityFrameworkCore.Relational.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.EntityFrameworkCore.SqlServer.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Extensions.Caching.Abstractions.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Extensions.Caching.Memory.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Extensions.Configuration.Abstractions.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Extensions.Configuration.Binder.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Extensions.Configuration.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Extensions.Logging.Abstractions.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Extensions.Logging.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Extensions.Options.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Microsoft.Extensions.Primitives.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\Remotion.Linq.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\System.Buffers.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\System.Collections.Immutable.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\System.ComponentModel.Annotations.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\System.Data.SqlClient.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\System.Diagnostics.DiagnosticSource.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\System.Interactive.Async.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\System.IO.Pipelines.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\System.Memory.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\System.Numerics.Vectors.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\System.Runtime.CompilerServices.Unsafe.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\System.Text.Encodings.Web.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\System.Text.Json.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\System.Threading.Tasks.Extensions.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\System.ValueTuple.dll" />
 
       <!-- Other DLLs -->
-      <DependeciesInclude Include="bin\CsvHelper.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\bin\CsvHelper.dll" />
 
       <!-- DNN specific DLLs -->
-      <DependeciesInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\ToSic.Imageflow.Dnn.dll" />
-      <DependeciesInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Newtonsoft.Json.dll" />
+      <DependeciesInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\*.dll" />
       <DependeciesInclude Include="$(MSBuildProjectDirectory)\koi\bin\*.dll" />
       <DependeciesInclude Include="$(MSBuildProjectDirectory)\razorblade\bin\*.dll" />
       <DependeciesInclude Include="$(MSBuildProjectDirectory)\razorblade-old\bin\*.dll" />
 
     </ItemGroup>
-    
-    <Copy SourceFiles="@(DnnBinInclude)" DestinationFolder="$(CurrentDnnRoot)/bin" />
-    <Copy SourceFiles="@(DependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)/bin" />
+
+    <Copy SourceFiles="@(DnnBinInclude)" DestinationFolder="$(CurrentDnnRoot)bin" />
+    <CopyNewerFileVersion SourceFiles="@(DependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)bin" />
+    <CopyNewerFileVersion SourceFiles="@(SxcDependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)bin\2sxc" />
 
     <!-- Copy Imageflow and dependecies -->
-    <!--<Exec Command="robocopy /S &quot;$(ProjectDir)Extensions/Imageflow/bin/&quot; &quot;$(CurrentDnnRoot)bin/&quot; /XF *.dll.pending" IgnoreExitCode="true"/>-->
-    <Exec Command="robocopy /S &quot;$(ProjectDir)Extensions/Imageflow/bin/&quot; &quot;$(CurrentDnnRoot)bin/&quot;" IgnoreExitCode="true"/>
+    <!-- include Imageflow folder -->
+    <Exec Command="robocopy /S &quot;$(ProjectDir)Extensions/Imageflow/bin/&quot; &quot;$(CurrentDnnRoot)bin/&quot; /XF *.dll /XF *.dll.pending" IgnoreExitCode="true"/>
+    <ItemGroup>
+      <ImageflowAssemblyInclude Include="$(ProjectDir)\Extensions\Imageflow\bin\**\ToSic.*.dll" />
+      <ImageflowDependeciesInclude Include="$(ProjectDir)\Extensions\Imageflow\bin\**\*.dll" Exclude="ToSic.*.dll"/>
+      <ImageflowAssemblyInclude Include="$(ProjectDir)\Extensions\Imageflow\bin\**\imageflow.dll.pending" />
+    </ItemGroup>
+    <CopyNewerFileVersion SourceFiles="@(ImageflowAssemblyInclude)" DestinationFolder="$(CurrentDnnRoot)bin" />
+    <CopyNewerFileVersion SourceFiles="@(ImageflowDependeciesInclude)" DestinationFolder="$(CurrentDnnRoot)bin" />
     
     <!-- Imageflow.dll Handling -->
     <!-- this is optimization for development, to prevent second DNN restart that happens by 'imageflow' module when file 'imageflow.dll.pending' exists in 'bin/runtimes/win-???/native/' -->
     <!-- when exists 'imageflow.dll.pending' it will rename it to 'imageflow.dll' ( but first need to remove old 'imageflow.dll' if one exists ) -->
     <!-- note: DEL and RENAME cmds should have consistend backslash based path, we should not mix \ / becuase that is not working as expected -->
+    <Exec Command="if exist &quot;$(CurrentDnnRoot)bin/runtimes/win-arm64/native/imageflow.dll.pending&quot; ( ( if exist &quot;$(CurrentDnnRoot)bin/runtimes/win-arm64/native/imageflow.dll&quot; del &quot;$(CurrentDnnRoot)bin\runtimes\win-arm64\native\imageflow.dll&quot; ) &amp; rename &quot;$(CurrentDnnRoot)bin\runtimes\win-arm64\native\imageflow.dll.pending&quot; imageflow.dll )" IgnoreExitCode="true"/>
     <Exec Command="if exist &quot;$(CurrentDnnRoot)bin/runtimes/win-x64/native/imageflow.dll.pending&quot; ( ( if exist &quot;$(CurrentDnnRoot)bin/runtimes/win-x64/native/imageflow.dll&quot; del &quot;$(CurrentDnnRoot)bin\runtimes\win-x64\native\imageflow.dll&quot; ) &amp; rename &quot;$(CurrentDnnRoot)bin\runtimes\win-x64\native\imageflow.dll.pending&quot; imageflow.dll )" IgnoreExitCode="true"/>
     <Exec Command="if exist &quot;$(CurrentDnnRoot)bin/runtimes/win-x86/native/imageflow.dll.pending&quot; ( ( if exist &quot;$(CurrentDnnRoot)bin/runtimes/win-x86/native/imageflow.dll&quot; del &quot;$(CurrentDnnRoot)bin\runtimes\win-x86\native\imageflow.dll&quot; ) &amp; rename &quot;$(CurrentDnnRoot)bin\runtimes\win-x86\native\imageflow.dll.pending&quot; imageflow.dll )" IgnoreExitCode="true"/>
 
@@ -133,7 +128,7 @@
     It has been commented out to prevent unexpected behavior for frontend (JavaScript) developers, particularly the issue of the latest JavaScript assets in the DNN development environment 
     being overwritten with older JavaScript assets from'2sxc-sources\_latest'.
     
-    Backend developers are advised to manually copy all JavaScript assets from '2sxc-sources\_latest' to the DNN development environment at '2sxc-dnn\Website\DesktopModules\ToSIC_SexyContent'. 
+    Backend developers are advised to manually copy all JavaScript assets from '2sxc-sources\_latest' to the DNN development environment at '2sxc-dnn\Website\DesktopModules\ToSic.Sxc'. 
     This ensures the latest version of JavaScript assets are used, as this step no longer occurs automatically with each update of the 2sxc version in DNN dev env. 
     Another option is to run npm scripts in 'eav-ui', as is the practice among frontend (JavaScript) developers.
     -->
@@ -149,7 +144,6 @@
     <Exec Command="xcopy &quot;$(ProjectDir)View.ascx&quot; &quot;$(BuildTarget)&quot; /y" IgnoreExitCode="true"/>
     <Exec Command="xcopy &quot;$(ProjectDir)icon.png&quot; &quot;$(BuildTarget)&quot; /y" IgnoreExitCode="true"/>
     <Exec Command="xcopy &quot;$(ProjectDir)icon-app.png&quot; &quot;$(BuildTarget)&quot; /y" IgnoreExitCode="true"/>
-    <Exec Command="xcopy &quot;$(ProjectDir)WebConfigTemplate.config&quot; &quot;$(BuildTarget)&quot; /y" IgnoreExitCode="true"/>
     <!-- ... Add other xcopy commands similarly ... -->
 
     <!-- Echo Statements -->

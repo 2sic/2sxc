@@ -2,12 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using ToSic.Eav.WebApi.Cms;
-using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Formats;
-using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Backend.Cms;
-using ToSic.Sxc.WebApi.Cms;
 
 namespace IntegrationSamples.SxcEdit01.Controllers
 {

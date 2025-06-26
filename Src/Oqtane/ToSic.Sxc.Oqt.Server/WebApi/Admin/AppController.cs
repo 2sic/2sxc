@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using System;
 using ToSic.Eav.DataSources.Sys.Internal;
-using ToSic.Eav.ImportExport.Internal;
-using ToSic.Eav.WebApi.Admin;
-using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Routing;
+
+using ToSic.Eav.ImportExport.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
 using RealController = ToSic.Sxc.Backend.Admin.AppControllerReal;
@@ -22,7 +19,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppController() : OqtStatefulControllerBase(RealController.LogSuffix), IAppController<IActionResult>
 {
     private RealController Real => GetService<RealController>();
@@ -31,43 +28,49 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     [HttpGet]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public List<AppDto> List(int zoneId) => Real.List(zoneId);
+    public ICollection<AppDto> List(int zoneId)
+        => Real.List(zoneId);
 
     /// <inheritdoc />
     [HttpGet]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Host)]
-    public List<AppDto> InheritableApps() => Real.InheritableApps();
+    public ICollection<AppDto> InheritableApps()
+        => Real.InheritableApps();
 
     /// <inheritdoc />
     [HttpDelete]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public void App(int zoneId, int appId, bool fullDelete = true) => Real.App(zoneId, appId, fullDelete);
+    public void App(int zoneId, int appId, bool fullDelete = true)
+        => Real.App(zoneId, appId, fullDelete);
 
     /// <inheritdoc />
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public void App(int zoneId, string name, int? inheritAppId = null, int templateId = 0) => Real.App(zoneId, name, inheritAppId, templateId);
+    public void App(int zoneId, string name, int? inheritAppId = null) => Real.App(zoneId, name, inheritAppId);
 
     /// <inheritdoc />
     [HttpGet]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public List<SiteLanguageDto> Languages(int appId) => Real.Languages(appId);
+    public ICollection<SiteLanguageDto> Languages(int appId)
+        => Real.Languages(appId);
 
     /// <inheritdoc />
     [HttpGet]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public AppExportInfoDto Statistics(int zoneId, int appId) => Real.Statistics(zoneId, appId);
+    public AppExportInfoDto Statistics(int zoneId, int appId)
+        => Real.Statistics(zoneId, appId);
 
     /// <inheritdoc />
     [HttpGet]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool FlushCache(int zoneId, int appId) => Real.FlushCache(zoneId, appId);
+    public bool FlushCache(int zoneId, int appId)
+        => Real.FlushCache(zoneId, appId);
 
     /// <inheritdoc />
     [HttpGet]

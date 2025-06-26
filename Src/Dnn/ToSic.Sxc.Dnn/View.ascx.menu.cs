@@ -1,8 +1,8 @@
 ﻿using DotNetNuke.Entities.Modules.Actions;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
-using ToSic.Eav.Context;
-using ToSic.Eav.Plumbing;
+using ToSic.Sys.Users;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Dnn;
 
@@ -42,10 +42,11 @@ partial class View
             return actions;
         var block = Block;
         var appIsKnown = block.AppId > 0;
+        var viewToUse = block.ViewIsReady ? block.View : null;
         if (appIsKnown)
         {
             // Edit item
-            if (!block.View?.UseForList ?? false)
+            if (viewToUse?.UseForList == true)
                 actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), "", "", "edit.gif",
                     JsAction("edit", "{ useModuleList: true, index: 0 }"),
                     "test", true,
@@ -61,7 +62,7 @@ partial class View
         var user = GetService<IUser>();
 
         // Edit Template Button
-        if (user.IsSiteDeveloper && appIsKnown && block.View != null)
+        if (user.IsSiteDeveloper && appIsKnown && viewToUse != null)
             actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent,
                 "templatehelp", "edit.gif",
                 JsAction("template-develop"),
@@ -71,7 +72,7 @@ partial class View
 
         // App management
         if (user.IsSiteAdmin && appIsKnown)
-            actions.Add(GetNextActionID(), "Admin" + (block.IsContentApp ? "" : " " + block.App?.Name), "",
+            actions.Add(GetNextActionID(), "Admin" + (block.IsContentApp ? "" : " " + block.AppOrNull?.Name), "",
                 "", "edit.gif",
                 JsAction("app"),
                 "", true,

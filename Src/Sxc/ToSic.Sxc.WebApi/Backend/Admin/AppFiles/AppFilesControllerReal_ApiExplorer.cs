@@ -1,30 +1,28 @@
-﻿using System.IO;
-using System.Reflection;
-using ToSic.Eav;
-using ToSic.Eav.Helpers;
-using ToSic.Eav.WebApi.ApiExplorer;
-using ToSic.Sxc.Code.Internal.HotBuild;
+﻿using System.Reflection;
+using ToSic.Eav.Sys;
+using ToSic.Eav.WebApi.Sys.ApiExplorer;
+using ToSic.Sxc.Code.Sys.HotBuild;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
-partial class AppFilesControllerReal : Eav.WebApi.Admin.IAppExplorerControllerDependency
+partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControllerDependency
 {
-
     /// <summary>
     /// Get all api controller files from AppCode for all editions
     /// </summary>
     /// <param name="appId"></param>
     /// <returns>used by ApiExplorerControllerReal.AppApiFiles</returns>
     [PrivateApi]
-    public List<AllApiFileDto> AllApiFilesInAppCodeForAllEditions(int appId)
+    public ICollection<AllApiFileDto> AllApiFilesInAppCodeForAllEditions(int appId)
     {
         var l = Log.Fn<List<AllApiFileDto>>($"list all in AppCode a#{appId}");
 
-        const string mask = $"*{Constants.ApiControllerSuffix}.cs";
+        const string mask = $"*{EavConstants.ApiControllerSuffix}.cs";
 
         var appPath = ResolveAppPath(appId, global: false);
-        var app = _appReaders.Get(appId).Specs;
-        var editions = _codeController.Value.GetEditions(appId);
+        var app = appReaders.Get(appId).Specs;
+        var editions = codeController.Value.GetEditions(appId);
         l.A($"{nameof(app.Folder)}:'{app.Folder}', appPath:'{appPath}', editions:{editions.Editions.Count}");
 
         List<AllApiFileDto> appCodeApiControllerFiles = [];
@@ -33,19 +31,19 @@ partial class AppFilesControllerReal : Eav.WebApi.Admin.IAppExplorerControllerDe
             var edition = editionDto.Name;
             l.A($"collect ApiController files in AppCode for edition:'{edition}'");
 
-            if (!Directory.Exists(Path.Combine(appPath, edition, Constants.AppCode)))
+            if (!Directory.Exists(Path.Combine(appPath, edition, FolderConstants.AppCode)))
             {
-                l.A($"edition:'{edition}' folder or '{Constants.AppCode}' subfolder do not exist in app");
+                l.A($"edition:'{edition}' folder or '{FolderConstants.AppCode}' subfolder do not exist in app");
                 continue;
             }
 
-            Assembly appCodeAssembly = null;
+            Assembly? appCodeAssembly = null;
             try
             {
                 // get AppCode assembly
                 var spec = new HotBuildSpec(appId, edition: edition, app.Folder);
                 l.A($"{spec}");
-                var (result, _) = _appCodeLoader.Value.GetAppCode(spec);
+                var (result, _) = appCodeLoader.Value.GetAppCode(spec);
                 appCodeAssembly = result?.Assembly;
             }
             catch (Exception e)
@@ -65,16 +63,17 @@ partial class AppFilesControllerReal : Eav.WebApi.Admin.IAppExplorerControllerDe
                         EndpointPath = ApiExplorerControllerReal.AppCodeEndpointPath(edition, Path.GetFileNameWithoutExtension(f)),
                         IsCompiled = true,
                         Edition = edition
-                    }));
+                    })
+            );
         }
 
         return l.Return(appCodeApiControllerFiles, $"ok, count:{appCodeApiControllerFiles.Count}");
     }
 
-    private List<string> ApiControllerFilesInAppCode(string mask, string appPath, string edition,
-        Assembly appCodeAssembly)
+    private ICollection<string> ApiControllerFilesInAppCode(string mask, string appPath, string edition,
+        Assembly? appCodeAssembly)
     {
-        var l = Log.Fn<List<string>>(
+        var l = Log.Fn<ICollection<string>>(
             $"list ApiController files, {nameof(mask)}:'{mask}', {nameof(appPath)}:'{appPath}', {nameof(edition)}:'{edition}', has appCode assembly:{appCodeAssembly != null}");
 
         // 1. Check for AppCode assembly
@@ -82,7 +81,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Admin.IAppExplorerControllerDe
             return l.Return([], "nothing to do, AppCode assembly is missing");
 
         // 2. Check for AppCode directory
-        var fullPath = Path.Combine(appPath, edition, Constants.AppCode);
+        var fullPath = Path.Combine(appPath, edition, FolderConstants.AppCode);
         // if the edition directory doesn't exist, optional fallback to root edition AppCode
         if (!Directory.Exists(fullPath))
         {
@@ -93,7 +92,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Admin.IAppExplorerControllerDe
                 return l.Return([], "nothing to do, root edition AppCode folder do not exits");
 
             // fallback to root edition AppCode
-            fullPath = Path.Combine(appPath, Constants.AppCode);
+            fullPath = Path.Combine(appPath, FolderConstants.AppCode);
             l.A($"fallback to root edition AppCode:'{fullPath}'");
 
             // if the root edition directory doesn't exist, then nothing to do
@@ -113,10 +112,10 @@ partial class AppFilesControllerReal : Eav.WebApi.Admin.IAppExplorerControllerDe
                 OptionalCheckForControllerTypeInAppCodeAssembly(Path.GetFileNameWithoutExtension(f.Name),
                     appCodeAssembly))
             .Select(f => f.FullName)
-            .Select(p => EnsurePathMayBeAccessed(p, appPath, _user.IsSystemAdmin)) // do another security check
+            .Select(p => EnsurePathMayBeAccessed(p, appPath, user.IsSystemAdmin)) // do another security check
             .Select(x => x.Replace(appPath + "\\", "")) // truncate / remove internal server root path
             .Select(x => x.ForwardSlash()) // tip the slashes to web-convention (old template entries used "\")
-            .ToList();
+            .ToListOpt();
 
         return l.Return(apiControllerFilesInAppCode, $"ok, count:{apiControllerFilesInAppCode.Count}");
     }
@@ -127,9 +126,9 @@ partial class AppFilesControllerReal : Eav.WebApi.Admin.IAppExplorerControllerDe
             $"{nameof(OptionalCheckForControllerTypeInAppCodeAssembly)}({nameof(controllerTypeName)}:'{controllerTypeName}', has appCode assembly:{appCodeAssembly != null})");
 
         // check if it is controller type
-        if (controllerTypeName.EndsWith(Constants.ApiControllerSuffix, StringComparison.OrdinalIgnoreCase))
+        if (controllerTypeName.EndsWith(EavConstants.ApiControllerSuffix, StringComparison.OrdinalIgnoreCase))
             return l.ReturnTrue($"'{controllerTypeName}' is not controller type");
 
-        return l.ReturnAndLog(appCodeAssembly.FindControllerTypeByName(controllerTypeName) != null);
+        return l.ReturnAndLog(appCodeAssembly?.FindControllerTypeByName(controllerTypeName) != null);
     }
 }

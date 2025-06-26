@@ -16,16 +16,6 @@
     <!-- end: Don't generate... -->
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <!-- generate xml docs -->
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>1701;1702;CS1570;CS1572;CS1573;CS1574;CS1587;CS1591;CS1710;CS1711</NoWarn>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="ToSic.Imageflow.Oqtane" Version="1.11.0" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Client\ToSic.Sxc.Oqt.Client.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Server\ToSic.Sxc.Oqt.Server.csproj" />
@@ -35,12 +25,10 @@
   <Import Project="BuildScripts\LoadBuildConfig.Targets" />
 
   <Target Name="PostBuild" AfterTargets="Build" DependsOnTargets="BuildConfigTarget" Condition="'$(SourceExist)|$(OqtaneExist)' == 'true|true'">
-
+    <Message Text="Running PostBuild" Importance="high"/>
     <!-- XML documentation -->
     <ItemGroup Condition="'$(Configuration)'=='Release'">
-      <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.xml" />
-      <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.Oqtane.*.xml" Exclude="**\ToSic.Sxc.Oqtane.Package.xml" />
-      <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.Razor.xml" />
+      <AssemblyDocumentation Include="$(OutDir)\ToSic.*.xml" Exclude="**\ToSic.Sxc.Oqtane.Package.xml" />
     </ItemGroup>
     <!-- Run the modification task for each documentation file -->
     <ModifyXmlDocumentation XmlDocumentationPath="%(AssemblyDocumentation.Identity)" Condition="'$(Configuration)'=='Release'"/>
@@ -48,7 +36,7 @@
     <PropertyGroup>
       <OqtaneInstallPackage Condition=" '$(OqtaneInstallPackage)' == '' ">$(MSBuildProjectDirectory)\..\..\..\InstallPackages\OqtaneModule\</OqtaneInstallPackage>
     </PropertyGroup>
-    <Exec Command="IF $(ConfigurationName) == Release (release.cmd $(Source) $(OqtaneInstallPackage))" />
+    <Exec Command="IF $(ConfigurationName) == Release (release.cmd $(Source) $(OqtaneInstallPackage) $(TargetFramework))" />
   </Target>
 
   <Target Name="PostBuild2" AfterTargets="Build" DependsOnTargets="BuildConfigTarget" Condition="'$(ConfigurationName)|$(OqtaneExist)' == 'Debug|true' OR '$(ConfigurationName)|$(OqtaneExist)' == 'DebugOqtane|true'">

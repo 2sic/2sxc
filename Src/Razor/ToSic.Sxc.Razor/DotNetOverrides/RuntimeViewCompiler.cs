@@ -18,25 +18,19 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using ToSic.Eav;
-using ToSic.Eav.Helpers;
-using ToSic.Eav.Plumbing;
+using ToSic.Eav.Sys;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Internal.HotBuild;
-using ToSic.Sxc.Code.Internal.SourceCode;
-using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.Internal;
+using ToSic.Sxc.Code.Sys.HotBuild;
+using ToSic.Sxc.Code.Sys.SourceCode;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Polymorphism.Internal;
+using ToSic.Sxc.Sys;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Razor.DotNetOverrides;
 
@@ -387,13 +381,13 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         l.A($"{nameof(appRelativePath)}:'{appRelativePath}'; {nameof(edition)}:'{edition}'");
 
         if (!appRelativePath.HasValue())
-            return l.ReturnEmpty($"{nameof(appRelativePath)} is empty");
+            return l.Return("", $"{nameof(appRelativePath)} is empty");
 
-        if (edition.HasValue() && Directory.Exists(Path.Combine(_env.ContentRootPath, appRelativePath.Backslash(), edition, Constants.AppCode)))
-            return l.ReturnAndLog(Path.Combine(appRelativePath.Backslash(), edition, Constants.AppCode));
+        if (edition.HasValue() && Directory.Exists(Path.Combine(_env.ContentRootPath, appRelativePath.Backslash(), edition, FolderConstants.AppCode)))
+            return l.ReturnAndLog(Path.Combine(appRelativePath.Backslash(), edition, FolderConstants.AppCode));
 
-        return l.ReturnAndLog((Directory.Exists(Path.Combine(_env.ContentRootPath, appRelativePath.Backslash(), Constants.AppCode))
-            ? Path.Combine(appRelativePath.Backslash(), Constants.AppCode)
+        return l.ReturnAndLog((Directory.Exists(Path.Combine(_env.ContentRootPath, appRelativePath.Backslash(), FolderConstants.AppCode))
+            ? Path.Combine(appRelativePath.Backslash(), FolderConstants.AppCode)
             : ""));
     }
 
@@ -432,23 +426,24 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         return references;
     }
 
-    private string GetAppCodeDllPath(string relativePath)
+    private string? GetAppCodeDllPath(string relativePath)
     {
         var (appRelativePath, edition) = GetSxcAppRelativePathWithEdition(relativePath);
-        if (appRelativePath == null) return null;
+        if (appRelativePath == null)
+            return null;
         if (edition.HasValue()) appRelativePath = Path.Combine(appRelativePath, edition);
         appRelativePath = appRelativePath.Backslash();
         var appCodeDllPath = _assemblyResolver.GetAssemblyLocation(appRelativePath);
         return appCodeDllPath;
     }
 
-    private (string appRelativePath, string edition) GetSxcAppRelativePathWithEdition(string relativePath)
+    private (string? appRelativePath, string? edition) GetSxcAppRelativePathWithEdition(string relativePath)
     {
         if (_httpContextAccessor?.HttpContext == null)
             return GetSxcAppRelativePathWithEditionFallback(relativePath);
         
         var sp = _httpContextAccessor.HttpContext.RequestServices;
-        var ctxResolver = sp.GetService<ISxcContextResolver>();
+        var ctxResolver = sp.GetService<ISxcCurrentContextService>();
 
         var block = ctxResolver?.BlockOrNull();
         if (block == null)
@@ -462,7 +457,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
             return GetSxcAppRelativePathWithEditionFallback(relativePath);
 
         // Standard case (appRelativePath and edition from block)
-        var edition = sp.GetService<PolymorphConfigReader>().UseViewEditionOrGet(block);
+        var edition = sp.GetService<PolymorphConfigReader>()!.UseViewEditionOrGet(block);
         return (appRelativePath, edition);
     }
 
@@ -482,16 +477,16 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
     /// </summary>
     /// <param name="relativePath">string "/2sxc/n/aaa-folder-name/edition/etc..."</param>
     /// <returns>string "2sxc\\n\\aaa-folder-name\\edition" or null</returns>
-    private (string appRelativePath, string edition) GetSxcAppRelativePathWithEditionFallback(string relativePath)
+    private (string? appRelativePath, string? edition) GetSxcAppRelativePathWithEditionFallback(string? relativePath)
     {
-        var l = Dbg ? base.Log.Fn<(string appRelativePath, string edition)>($"{nameof(relativePath)}:'{relativePath}'") : null;
+        var l = Dbg ? base.Log.Fn<(string? appRelativePath, string? edition)>($"{nameof(relativePath)}:'{relativePath}'") : null;
 
         relativePath = relativePath?.ForwardSlash();
 
-        if ((string.IsNullOrEmpty(relativePath))
-            || (relativePath.Length < 8)
-            || (relativePath[0] != '/')
-            || (relativePath[5] != '/'))
+        if (string.IsNullOrEmpty(relativePath)
+            || relativePath.Length < 8
+            || relativePath[0] != '/'
+            || relativePath[5] != '/')
             //throw new($"relativePath:'{relativePath}' is not in format '/2sxc/n/app-folder-name/etc...'");
             return l.ReturnAsError((appRelativePath: null, edition: null));
 
@@ -590,11 +585,11 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
 
     private class ViewCompilerWorkItem
     {
-        public bool SupportsCompilation { get; set; } = default!;
+        public bool SupportsCompilation { get; init; } = default!;
 
-        public string NormalizedPath { get; set; } = default!;
+        public string NormalizedPath { get; init; } = default!;
 
-        public IList<IChangeToken> ExpirationTokens { get; set; } = default!;
+        public IList<IChangeToken> ExpirationTokens { get; init; } = default!;
 
         public CompiledViewDescriptor Descriptor { get; set; } = default!;
     }

@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../SharedImports/CsProj.Props/AllImportsForTestCode-NetFramework.props" />
+
+  <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
+
+  <PropertyGroup>
+    <RootNamespace>ToSic.Sxc.Dnn</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotNetNuke.Web" Version="9.13.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps.TestsHelpers\ToSic.Eav.Apps.TestHelpers.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core.TestHelpers\ToSic.Eav.Core.TestHelpers.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Testing.FullDbFixtures\ToSic.Eav.Testing.FullDbFixtures.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Dnn\ToSic.Sxc.Dnn.csproj" />
+  </ItemGroup>
+
+</Project>

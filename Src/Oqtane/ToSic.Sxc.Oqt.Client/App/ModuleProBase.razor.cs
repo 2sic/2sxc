@@ -4,11 +4,7 @@ using Microsoft.JSInterop;
 using Oqtane.Modules;
 using Oqtane.Security;
 using Oqtane.Shared;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Oqt.Client;
@@ -18,7 +14,7 @@ using ToSic.Sxc.Oqt.Shared.Interfaces;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.App;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class ModuleProBase: ModuleBase, IOqtHybridLog
 {
     #region Injected Services

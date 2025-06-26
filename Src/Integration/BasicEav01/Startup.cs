@@ -6,11 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using ToSic.Eav;
-using ToSic.Eav.Configuration;
-using ToSic.Eav.Context;
-using ToSic.Eav.Run;
-using ToSic.Eav.StartUp;
 
 namespace IntegrationSamples.BasicEav01
 {

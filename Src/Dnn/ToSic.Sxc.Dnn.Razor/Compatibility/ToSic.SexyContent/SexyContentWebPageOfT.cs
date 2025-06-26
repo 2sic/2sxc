@@ -7,7 +7,7 @@ namespace ToSic.SexyContent.Razor;
 /// We have no need for the internal type, so there is no code except for the inheritance
 /// </summary>
 /// <typeparam name="T"></typeparam>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class SexyContentWebPage<T>:SexyContentWebPage
 {
 

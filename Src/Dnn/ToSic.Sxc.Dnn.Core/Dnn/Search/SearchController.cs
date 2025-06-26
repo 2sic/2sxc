@@ -1,31 +1,29 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
-using System.Collections.Immutable;
-using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.Caching;
+using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.Helpers;
-using ToSic.Eav.LookUp;
+using ToSic.Eav.LookUp.Sys.Engines;
+using ToSic.Eav.Sys;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Blocks.Sys.BlockBuilder;
+using ToSic.Sxc.Blocks.Sys.Views;
+using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Code.Sys.HotBuild;
+using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Context.Sys.Module;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.LookUp;
-using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Internal;
 using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.Search;
+using ToSic.Sxc.Sys.ExecutionContext;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Dnn.Search;
@@ -42,7 +40,7 @@ namespace ToSic.Sxc.Dnn.Search;
 internal class SearchController(
     AppsCacheSwitch appsCache,
     Generator<CodeCompiler> codeCompiler,
-    Generator<CodeApiServiceFactory> codeRootFactory,
+    Generator<IExecutionContextFactory> codeRootFactory,
     Generator<ISite> siteGenerator,
     LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
     LazySvc<ILookUpEngineResolver> dnnLookUpEngineResolver,
@@ -57,7 +55,8 @@ internal class SearchController(
         ])
 {
     /// <summary>
-    /// Initialize all values which are needed - or return a text with the info why we must stop. 
+    /// Initialize all values which are needed - or return a text with the info why we must stop.
+    /// For example, check if the block is in a ready state to provide data.
     /// </summary>
     /// <param name="module"></param>
     /// <returns></returns>
@@ -74,7 +73,7 @@ internal class SearchController(
 
         // New Context because Portal-Settings.Current is null
         var appId = module.BlockIdentifier.AppId;
-        if (appId == AppConstants.AppIdNotFound || appId == Eav.Constants.NullId)
+        if (appId is AppConstants.AppIdNotFound or EavConstants.NullId)
             return l.ReturnAsOk("no app id");
 
         // Ensure cache builds up with correct primary language
@@ -83,11 +82,11 @@ internal class SearchController(
 
         Block = moduleAndBlockBuilder.Value.BuildBlock(DnnModule, null);
 
-        if (Block.View == null) return "no view";
-        if (Block.View.SearchIndexingDisabled) return "search disabled"; // new in 12.02
+        if (!Block.DataIsReady || !Block.ViewIsReady)
+            return "no data or view";
 
-        // This list will hold all EAV entities to be indexed
-        if (Block.Data == null) return "DataSource null";
+        if (Block.View.SearchIndexingDisabled)
+            return "search disabled"; // new in 12.02
 
 
         // Attach DNN Lookup Providers so query-params like [DateTime:Now] or [Portal:PortalId] will work
@@ -95,13 +94,12 @@ internal class SearchController(
 
         // Get all streams to index
         var streamsToIndex = GetStreamsToIndex();
-        if (!streamsToIndex.Any()) return l.ReturnAsOk("no streams to index");
+        if (!streamsToIndex.Any())
+            return l.ReturnAsOk("no streams to index");
 
         // Figure out the current edition - if none, stop here
         // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
         _edition = polymorphism.UseViewEditionOrGet(Block);
-        //Block.View.Edition.NullIfNoValue()
-        //           ?? _polymorphism.Init(Block.Context.AppState.List).Edition();
 
         // Convert DNN SearchDocuments from 2sxc SearchInfos
         SearchItems = BuildInitialSearchInfos(streamsToIndex, DnnModule);
@@ -127,25 +125,28 @@ internal class SearchController(
     /// <returns></returns>
     public IList<SearchDocument> GetModifiedSearchDocuments(IModule module, DateTime beginDate)
     {
-        var l = Log.Fn<IList<SearchDocument>>();
+        var l = Log.Fn<List<SearchDocument>>();
         // Turn off logging into history by default - the template code can reactivate this if desired
         var logWithPreserve = Log as Log;
-        if (logWithPreserve != null) logWithPreserve.Preserve = false;
+        if (logWithPreserve != null)
+            logWithPreserve.Preserve = false;
 
         // Log with infos, to ensure errors are caught
         var exitMessage = InitAllAndVerifyIfOk(module);
         if (exitMessage != null)
-            return l.Return(new List<SearchDocument>(), exitMessage);
+            return l.Return([], exitMessage);
 
+        var view = Block.View!;
         try
         {
-            var useCustomViewController = !string.IsNullOrWhiteSpace(Block.View.ViewController); // new in 12.02
+            var useCustomViewController = !string.IsNullOrWhiteSpace(view.ViewController); // new in 12.02
             l.A($"Use new Custom View Controller: {useCustomViewController}");
             if (useCustomViewController)
             {
                 /* New mode in 12.02 using a custom ViewController */
                 var customizeSearch = CreateAndInitViewController(DnnSite, Block);
-                if (customizeSearch == null) return l.Return(new List<SearchDocument>(), "exit");
+                if (customizeSearch == null)
+                    return l.Return([], "exit");
 
                 // Call CustomizeSearch in a try/catch
                 l.A("execute CustomizeSearch");
@@ -156,22 +157,23 @@ internal class SearchController(
             {
                 /* Old mode v06.02 - 12.01 using the Engine or Razor which customizes */
                 // Build the engine, as that's responsible for calling inner search stuff
-                var engine = engineFactory.CreateEngine(Block.View);
-                if (engine is IEngineDnnOldCompatibility oldEngine)
-                {
-#pragma warning disable CS0618
-                    oldEngine.Init(Block, Purpose.IndexingForSearch);
+                var engine = engineFactory.CreateEngine(view);
+                // #RemovedV20 #ModulePublish
+//                if (engine is IEngineDnnOldCompatibility oldEngine)
+//                {
+//#pragma warning disable CS0618
+//                    oldEngine.Init(Block, Purpose.IndexingForSearch);
 
-                    // Only run CustomizeData() if we're in the older, classic model of search-indexing
-                    // The new model v12.02 won't need this
-                    l.A("Will run CustomizeData() in the Razor Engine which will call it in the Razor if exists");
-                    oldEngine.CustomizeData();
+//                    // Only run CustomizeData() if we're in the older, classic model of search-indexing
+//                    // The new model v12.02 won't need this
+//                    l.A("Will run CustomizeData() in the Razor Engine which will call it in the Razor if exists");
+//                    oldEngine.CustomizeData();
 
-                    // check if the cshtml has search customizations
-                    l.A("Will run CustomizeSearch() in the Razor Engine which will call it in the Razor if exists");
-                    oldEngine.CustomizeSearch(SearchItems, Block.Context.Module, beginDate);
-#pragma warning restore CS0618
-                } else
+//                    // check if the cshtml has search customizations
+//                    l.A("Will run CustomizeSearch() in the Razor Engine which will call it in the Razor if exists");
+//                    oldEngine.CustomizeSearch(SearchItems, Block.Context.Module, beginDate);
+//#pragma warning restore CS0618
+//                } else
                     engine.Init(Block);
 
             }
@@ -235,12 +237,11 @@ internal class SearchController(
         var searchInfoDictionary = new Dictionary<string, List<ISearchItem>>();
         foreach (var stream in streamsToIndex)
         {
-            var entities = stream.Value.List.ToImmutableList();
+            var entities = stream.Value.List.ToListOpt();
             var searchInfoList = searchInfoDictionary[stream.Key] = [];
 
-            searchInfoList.AddRange(entities.Select(entity =>
-            {
-                var searchInfo = new SearchItem
+            var additions = entities
+                .Select(entity => new SearchItem
                 {
                     Entity = entity,
                     Url = "",
@@ -256,10 +257,10 @@ internal class SearchController(
                     IsActive = true,
                     TabId = dnnModule.TabID,
                     PortalId = dnnModule.PortalID
-                };
+                })
+                .ToListOpt();
 
-                return searchInfo;
-            }));
+            searchInfoList.AddRange(additions);
         }
 
         return l.Return(searchInfoDictionary, $"{searchInfoDictionary.Count}");
@@ -318,19 +319,20 @@ internal class SearchController(
         var l = Log.Fn<ICustomizeSearch>();
         // 1. Get and compile the view.ViewController
         var path = Path
-            .Combine(Block.View.IsShared ? site.SharedAppsRootRelative() : site.AppsRootPhysical, block.Context.AppReader.Specs.Folder)
+            .Combine(Block.View.IsShared ? site.SharedAppsRootRelative() : site.AppsRootPhysical, block.Context.AppReaderRequired.Specs.Folder)
             .ForwardSlash();
         l.A($"compile ViewController class on path: {path}/{Block.View.ViewController}");
-        var spec = new HotBuildSpec(block.AppId, _edition, block.App?.Name);
+        var spec = new HotBuildSpec(block.AppId, _edition, block.App.Name);
         l.A($"prepare spec: {spec}");
         var instance = codeCompiler.New().InstantiateClass(virtualPath: block.View.ViewController, spec: spec, className: null, relativePath: path, throwOnError: true);
         l.A("got instance of compiled ViewController class");
 
         // 2. Check if it implements ToSic.Sxc.Search.ICustomizeSearch - otherwise just return the empty search results as shown above
-        if (!(instance is ICustomizeSearch customizeSearch)) return l.ReturnNull("exit, class do not implements ICustomizeSearch");
+        if (!(instance is ICustomizeSearch customizeSearch))
+            return l.ReturnNull("exit, class do not implements ICustomizeSearch");
 
         // 3. Make sure it has the full context if it's based on DynamicCode (like Code12)
-        if (instance is INeedsCodeApiService instanceWithContext)
+        if (instance is INeedsExecutionContext instanceWithContext)
         {
             l.A($"attach DynamicCode context to class instance");
             var parentDynamicCodeRoot = codeRootFactory.New()

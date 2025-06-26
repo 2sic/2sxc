@@ -1,15 +1,14 @@
-﻿using System;
-using Oqtane.Models;
+﻿using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.Cms.Internal;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
+using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.Internal;
+using ToSic.Sxc.Context.Sys.Module;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
 
@@ -80,7 +79,8 @@ internal class OqtModule: Module<Module>
     {
         get
         {
-            if (_blockIdentifier != null) return _blockIdentifier;
+            if (_blockIdentifier != null)
+                return _blockIdentifier;
 
             // find ZoneId, AppId and prepare settings for next values
             var zoneId = _site.ZoneId; // ZoneMapper.GetZoneId(UnwrappedContents.SiteId);
@@ -111,7 +111,7 @@ internal class OqtModule: Module<Module>
             return l.Return((_appsCatalog.DefaultAppIdentity(zoneId).AppId, "Content"), "Content");
 
         if (!_settings.TryGetValue(ModuleSettingNames.AppName, out var setting)) 
-            return l.Return((Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty), Eav.Constants.AppNameIdEmpty);
+            return l.Return((KnownAppsConstants.AppIdEmpty, KnownAppsConstants.AppNameIdEmpty), KnownAppsConstants.AppNameIdEmpty);
 
         var guid = setting ?? "";
         var appId = _appFinderLazy.Value.FindAppId(zoneId, guid);

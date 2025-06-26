@@ -1,8 +1,6 @@
-﻿using System;
+﻿namespace ToSic.Sxc.Oqt.Shared.Helpers;
 
-namespace ToSic.Sxc.Oqt.Shared.Helpers;
-
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ErrorHelper
 {
     public static string ErrorMessage(Exception ex, bool isSuperUser = false)

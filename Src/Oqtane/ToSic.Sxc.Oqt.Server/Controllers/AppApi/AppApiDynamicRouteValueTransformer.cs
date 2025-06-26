@@ -4,22 +4,19 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Oqtane.Models;
 using Oqtane.Repository;
-using System.IO;
 using System.Net;
-using System.Threading.Tasks;
-using ToSic.Eav.Helpers;
-using ToSic.Eav.WebApi.Errors;
-using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Backend;
 using ToSic.Sxc.Backend.Context;
+using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.WebApi.Sys;
 using Log = ToSic.Lib.Logging.Log;
-using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 
@@ -91,7 +88,7 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
                 // but as a transient dependencies from the request service provider
                 var blockInitializer = httpContext.RequestServices.Build<IWebApiContextBuilder>();
                 blockInitializer.PrepareContextResolverForApiRequest();
-                appFolder = httpContext.RequestServices.Build<AppFolder>().GetAppFolder();
+                appFolder = httpContext.RequestServices.Build<AppFolderLookupForWebApi>().GetAppFolder();
             }
 
             if (!values.ContainsKey("controller"))
@@ -134,7 +131,7 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
             values.Add("dllName", dllName);
 
             // help with path resolution for compilers running inside the created controller
-            httpContext./*Request?.HttpContext.*/Items.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
+            httpContext./*Request?.HttpContext.*/Items.Add(SourceCodeConstants.SharedCodeRootPathKeyInCache, controllerFolder);
 
             httpContext./*Request?.HttpContext.*/Items.Add(SxcWebApiConstants.HttpContextKeyForAppFolder, appFolder);
 

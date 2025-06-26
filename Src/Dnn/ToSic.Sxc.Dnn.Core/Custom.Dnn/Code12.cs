@@ -1,7 +1,7 @@
 ﻿using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Internal;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Dnn;
@@ -11,11 +11,11 @@ namespace Custom.Dnn;
 /// By inheriting from this base class, you will automatically have the context like the App object etc. available. 
 /// </summary>
 [PublicApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]   // #DocsButNotForIntellisense
+[ShowApiWhenReleased(ShowApiMode.Never)]   // #DocsButNotForIntellisense
 public abstract class Code12 : DynamicCode12, IHasDnn
 {
     /// <inheritdoc />
-    public IDnnContext Dnn => (_CodeApiSvc as IHasDnn)?.Dnn;
+    public IDnnContext Dnn => (ExCtxOrNull as IHasDnn)?.Dnn;
 
     [PrivateApi] public override int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel12;
 

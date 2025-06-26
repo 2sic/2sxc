@@ -1,20 +1,16 @@
-﻿using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Web;
+﻿using System.Web;
 using System.Web.Caching;
 using DotNetNuke.Common.Extensions;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Framework;
 using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Helpers;
-using ToSic.Eav.Integration.Environment;
-using ToSic.Eav.Plumbing;
+using ToSic.Eav.ImportExport.Integration;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Web.Internal.EditUi;
-using ToSic.Sxc.Web.Internal.JsContext;
+using ToSic.Sxc.Render.Sys.JsContext;
+using ToSic.Sxc.Web.Sys.EditUi;
+using ToSic.Sys.Utils;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.Dnn.dist;
@@ -145,7 +141,7 @@ public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to pre
     }
 
     /// <summary>
-    /// portalId and pageId context is lost on DesktopModules/ToSIC_SexyContent/dist/...aspx
+    /// portalId and pageId context is lost on DesktopModules/ToSic.Sxc/dist/...aspx
     /// and DNN Framework can not resolve site root, so we need to handle it by ourselves
     /// </summary>
     /// <param name="pageId"></param>

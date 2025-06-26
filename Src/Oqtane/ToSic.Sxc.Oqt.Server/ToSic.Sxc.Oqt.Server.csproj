@@ -1,26 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
+  <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-NetCore.props" />
+
+  <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
+
+  <Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />
+
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <LangVersion>preview</LangVersion>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <AssemblyName>ToSic.Sxc.Oqtane.Server</AssemblyName>
     <!--2dm I think we need this to include DLLs-->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     <AnalysisLevel>none</AnalysisLevel>
-    <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
-    <Deterministic>true</Deterministic>
-    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
-    <RestoreSources>$(RestoreSources);../../packages/;../../../../oqtane/oqtane-imageflow/InstallPackages/</RestoreSources>
-    <!-- Don't generate assembly properties from this XML which should come from the core file, like version - these lines must be in sync in all ToSic.Eav.*.csproj files -->
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <!-- end: Don't generate... -->
 
     <!-- 2dm - this seems necessary to ensure that compiler DLLs are included in the output -->
     <!-- See: https://github.com/toddams/RazorLight/issues/294 and https://stackoverflow.com/questions/40426665/what-is-the-use-of-preservecompilationcontext-under-build-option-in-project-json -->
@@ -30,17 +22,6 @@
     <PreserveCompilationContext>true</PreserveCompilationContext>-->
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <!-- generate xml docs -->
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>1701;1702;CS1570;CS1572;CS1573;CS1574;CS1587;CS1591;CS1710;CS1711</NoWarn>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs" Link="Properties\AssemblyInfoInherited.cs" />
-    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
-    <Compile Include="..\..\..\..\eav-server\ToSic.Eav.Core\Properties\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Remove="Apps\**" />
     <Compile Remove="Contents\**" />
@@ -96,6 +77,8 @@
     <EmbeddedResource Include="Scripts\ToSic.Sxc.16.07.01.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.18.03.00.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.19.00.00.sql" />
+    <EmbeddedResource Include="Scripts\ToSic.Sxc.20.00.00.sql" />
+    <EmbeddedResource Include="Scripts\ToSic.Sxc.Install.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.Uninstall.sql" />
   </ItemGroup>
 
@@ -111,27 +94,36 @@
     <PackageReference Include="Oqtane.Client" Version="6.0.1" />
     <PackageReference Include="Oqtane.Server" Version="6.0.1" />
     <PackageReference Include="Oqtane.Shared" Version="6.0.1" />
-    <PackageReference Include="ToSic.Imageflow.Oqtane" Version="1.11.0" />
+    <PackageReference Include="ToSic.Imageflow.Oqtane" Version="1.12.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj" />
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj" />
     <!--<ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Server\Oqtane.Server.csproj" />-->
     <!--<ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Shared\Oqtane.Shared.csproj" />-->
     <ProjectReference Include="..\..\Razor\ToSic.Sxc.Razor\ToSic.Sxc.Razor.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Adam\ToSic.Sxc.Adam.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Apps\ToSic.Sxc.Apps.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Blocks\ToSic.Sxc.Blocks.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Cms\ToSic.Sxc.Cms.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Code.HotBuild\ToSic.Sxc.Code.HotBuild.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Core\ToSic.Sxc.Core.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Custom\ToSic.Sxc.Custom.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Data\ToSic.Sxc.Data.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Edit\ToSic.Sxc.Edit.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Images\ToSic.Sxc.Images.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.LightSpeed\ToSic.Sxc.LightSpeed.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Render\ToSic.Sxc.Render.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Services\ToSic.Sxc.Services.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj" />
-    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Web\ToSic.Sxc.Web.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Connect.Koi">
       <HintPath>..\..\..\Dependencies\Koi\net6.0\Connect.Koi.dll</HintPath>
-    </Reference>
-    <Reference Include="ToSic.Razor">
-      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
     </Reference>
   </ItemGroup>
 

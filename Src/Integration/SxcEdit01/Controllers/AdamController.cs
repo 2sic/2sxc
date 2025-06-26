@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using ToSic.Eav.WebApi.Adam;
-using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.Eav.WebApi.Routing;
-using ToSic.Sxc.WebApi.Adam;
+using ToSic.Eav.WebApi.Sys.Helpers.Http;
 
 // #todo: security checks on APIs still completely missing
 

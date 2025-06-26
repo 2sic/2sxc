@@ -1,22 +1,24 @@
-﻿using ToSic.Eav.Apps.Internal.Specs;
-using ToSic.Eav.Apps.Services;
-using ToSic.Eav.Data.Debug;
+﻿using ToSic.Eav.Apps.Sys.AppStack;
+using ToSic.Eav.Context.Sys.ZoneCulture;
+using ToSic.Eav.Data.Sys.Entities;
+using ToSic.Eav.Data.Sys.PropertyDump;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.DataSources.Sys.Internal;
-using ToSic.Sxc.Blocks.Internal;
-using static ToSic.Eav.Apps.AppStackConstants;
+using ToSic.Sxc.Blocks.Sys.Views;
+using static ToSic.Eav.Apps.Sys.AppStack.AppStackConstants;
 
 namespace ToSic.Sxc.Backend.AppStack;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppStackBackend(
     AppDataStackService dataStackService,
     IZoneCultureResolver zoneCulture,
     IAppReaderFactory appReaders,
-    Generator<QueryDefinitionBuilder> qDefBuilder)
-    : ServiceBase("Sxc.ApiApQ", connect: [dataStackService, zoneCulture, appReaders])
+    Generator<QueryDefinitionBuilder> qDefBuilder,
+    IPropertyDumpService dumperService)
+    : ServiceBase("Sxc.ApiApQ", connect: [dataStackService, zoneCulture, appReaders, dumperService])
 {
-    public List<AppStackDataRaw> GetAll(int appId, string part, string key, Guid? viewGuid)
+    public List<AppStackDataRaw> GetAll(int appId, string part, string? key, Guid? viewGuid)
     {
         // Correct languages
         //if (languages == null || !languages.Any())
@@ -44,18 +46,21 @@ public class AppStackBackend(
 
 
 
-    public List<PropertyDumpItem> GetStackDump(IAppReader appState, string partName, string[] languages, IEntity viewSettingsMixin)
+    public List<PropertyDumpItem> GetStackDump(IAppReader appReader, string partName, string?[] languages, IEntity? viewSettingsMixin)
     {
         // Build Sources List
-        var settings = dataStackService.Init(appState).GetStack(partName, viewSettingsMixin);
+        var settings = dataStackService.Init(appReader).GetStack(partName, viewSettingsMixin);
 
         // Dump results
-        var results = settings._Dump(new(null, languages, true, Log), null);
+        // #DropUseOfDumpProperties
+        //var results = settings._DumpNameWipDroppingMostCases(new(null, languages, true, Log), null);
+
+        var results = dumperService.Dump(settings, new(null!, languages, true, Log), null!);
         return results;
     }
 
 
-    private IEntity GetViewSettingsForMixin(Guid? viewGuid, string[] languages, IAppReadEntities appState, string realName)
+    private IEntity? GetViewSettingsForMixin(Guid? viewGuid, string?[] languages, IAppReadEntities appState, string realName)
     {
         if (viewGuid == null)
             return null;

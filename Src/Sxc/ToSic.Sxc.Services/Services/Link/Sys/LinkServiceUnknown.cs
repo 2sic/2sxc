@@ -1,0 +1,57 @@
+﻿using ToSic.Lib.DI;
+using ToSic.Lib.Services;
+using ToSic.Sxc.Images.Sys;
+using ToSic.Sxc.Sys.Integration.Paths;
+using ToSic.Sys.Utils;
+
+namespace ToSic.Sxc.Services.Link.Sys;
+
+[PrivateApi("for testing / un-implemented use")]
+[ShowApiWhenReleased(ShowApiMode.Never)]
+#pragma warning disable CS9113 // Parameter is unread.
+internal class LinkServiceUnknown(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy, WarnUseOfUnknown<LinkServiceUnknown> _)
+#pragma warning restore CS9113 // Parameter is unread.
+    : LinkServiceBase(imgLinker, linkPathsLazy), IIsUnknown
+{
+    public const string DefDomain = "unknown.2sxc.org";
+    public const string DefProtocol = "https";
+    public const string DefRoot = DefProtocol +"://" + DefDomain;
+    public const string NiceCurrentPath = "/folder/sub-folder/";
+    public const string NiceCurrentPage = "current-page";
+    public const string NiceCurrentRelative = NiceCurrentPath + NiceCurrentPage;
+
+    public const string NiceCurrentUrlRoot = DefRoot + NiceCurrentRelative;
+    public const string NiceCurrentUrl = NiceCurrentUrlRoot;
+
+    public const string UglyAnyQuery = "tabId={0}";
+    public const string UglyCurrentQuery = "tabId=27";
+    public const string UglyCurrentPage = "default.aspx?" + UglyCurrentQuery;
+    public const string UglyAnyPage = "default.aspx?" + UglyAnyQuery;
+    public const string UglyCurrentUrl = DefRoot + "/" + UglyCurrentPage;
+    public const string UglyAnyPageUrl = DefRoot + "/" + UglyAnyPage;
+
+    public const string NiceAnyRelative = "/page{0}";
+    public static string NiceAnyPageUrl = DefRoot + NiceAnyRelative;
+
+    internal static string CurrentPageUrl = NiceCurrentUrl;
+    internal static string AnyPageUrl = NiceAnyPageUrl;
+
+    protected override string ToApi(string api, string? parameters = null) => $"{api}{Parameters(parameters)}";
+
+    protected override string ToPage(int? pageId, string? parameters = null, string? language = null) =>
+        // Page or Api?
+        pageId != null
+            ? string.Format(AnyPageUrl, pageId) + Parameters(parameters)
+            : $"{CurrentPageUrl}{Parameters(parameters)}";
+
+    private static string? Parameters(string? parameters)
+        => parameters.IsEmpty() ? parameters : $"?{parameters}";
+
+
+    public static void SwitchModeToUgly(bool uglyOn)
+    {
+        CurrentPageUrl = uglyOn ? UglyCurrentUrl : NiceCurrentUrl;
+        AnyPageUrl = uglyOn ? UglyAnyPageUrl : NiceAnyPageUrl;
+    }
+
+}

@@ -1,13 +1,14 @@
 ﻿using Oqtane.Repository;
 using Oqtane.Shared;
-using ToSic.Eav.LookUp;
+using ToSic.Eav.LookUp.Sources;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Oqt.Server.Plumbing;
-using static ToSic.Sxc.LookUp.LookUpConstants;
+using static ToSic.Sxc.LookUp.Sys.LookUpConstants;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps;
 
-internal class OqtSiteLookUp(LazySvc<AliasResolver> siteStateInitializer, SiteState siteState, LazySvc<SiteRepository> siteRepository) : LookUpBase(SourceSite, "LookUp in Oqtane Site")
+internal class OqtSiteLookUp(LazySvc<AliasResolver> siteStateInitializer, SiteState siteState, LazySvc<SiteRepository> siteRepository)
+    : LookUpBase(SourceSite, "LookUp in Oqtane Site")
 {
     public SiteState SiteState { get; } = siteState;
     protected Oqtane.Models.Site Site { get; set; }

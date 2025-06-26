@@ -4,11 +4,8 @@
 // based on: https://github.dev/dotnet/aspnetcore/tree/v8.0.5
 // src/Mvc/Mvc.Razor.RuntimeCompilation/src/CSharpCompiler.cs
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.CodeAnalysis;
@@ -17,7 +14,7 @@ using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Hosting;
-using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Sys.HotBuild;
 using DependencyContextCompilationOptions = Microsoft.Extensions.DependencyModel.CompilationOptions;
 
 namespace ToSic.Sxc.Razor.DotNetOverrides;

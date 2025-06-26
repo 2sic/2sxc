@@ -1,12 +1,12 @@
 ﻿using Oqtane.Models;
-using ToSic.Eav.LookUp;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Eav.LookUp.Sources;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Server.Context;
-using static ToSic.Sxc.LookUp.LookUpConstants;
+using static ToSic.Sxc.LookUp.Sys.LookUpConstants;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps;
 
-internal class OqtModuleLookUp(ISxcContextResolver ctxResolver) : LookUpBase(SourceModule, "LookUp in Oqtane Module")
+internal class OqtModuleLookUp(ISxcCurrentContextService ctxService) : LookUpBase(SourceModule, "LookUp in Oqtane Module")
 {
     private Module Module { get; set; }
 
@@ -14,7 +14,7 @@ internal class OqtModuleLookUp(ISxcContextResolver ctxResolver) : LookUpBase(Sou
     {
         if (_alreadyTried) return null;
         _alreadyTried = true;
-        var ctx = ctxResolver.BlockContextOrNull();
+        var ctx = ctxService.BlockContextOrNull();
         var module = (OqtModule)ctx?.Module;
         return module?.GetContents();
     }

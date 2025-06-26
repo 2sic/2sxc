@@ -1,13 +1,14 @@
 ﻿using System.Collections;
-using ToSic.Eav.ImportExport.Json;
+using ToSic.Eav.Data.Sys.ContentTypes;
+using ToSic.Eav.ImportExport.Json.Sys;
 using ToSic.Eav.ImportExport.Json.V1;
-using ToSic.Eav.Plumbing;
-using ToSic.Eav.Serialization.Internal;
+using ToSic.Eav.Serialization.Sys;
+using ToSic.Sys.Utils;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Backend.Cms;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class EditLoadSettingsHelper(
     Generator<JsonSerializer> jsonSerializerGenerator,
     IEnumerable<ILoadSettingsProvider> loadSettingsProviders,
@@ -27,7 +28,7 @@ public class EditLoadSettingsHelper(
     {
         var l = Log.Fn<EditSettingsDto>();
         var allInputTypes = jsonTypes
-            .SelectMany(ct => ct.Attributes
+            .SelectMany(ct => ct.AttributesSafe()
                 .Select(at => at.InputType)
             )
             .Distinct()
@@ -96,7 +97,7 @@ public class EditLoadSettingsHelper(
             .ToList();
 
         // Setup Type Serializer - same as EditLoadBackend
-        var serializerForTypes = jsonSerializerGenerator.New().SetApp(parameters.ContextOfApp.AppReader);
+        var serializerForTypes = jsonSerializerGenerator.New().SetApp(parameters.ContextOfApp.AppReaderRequired);
         var serSettings = new JsonSerializationSettings
         {
             CtIncludeInherited = true,
@@ -108,9 +109,9 @@ public class EditLoadSettingsHelper(
         var nameMap = typesFromProviders
             .Select(t =>
             {
-                var normal = serializerForTypes.ToPackage(t, serSettings).ContentType;
-                var title = t.Metadata.DetailsOrNull?.Title;
-                return new JsonContentTypeWithTitleWip()
+                var normal = serializerForTypes.ToPackage(t, serSettings).ContentType!;
+                var title = t.DetailsOrNull()?.Title;
+                return new JsonContentTypeWithTitleWip
                 {
                     Id = normal.Id,
                     Name = normal.Name,

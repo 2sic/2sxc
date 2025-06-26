@@ -2,13 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Reflection;
-using ToSic.Eav.Internal.Environment;
-using ToSic.Eav.Plumbing;
-using ToSic.Eav.WebApi.ApiExplorer;
-using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Environment.Sys.ServerPaths;
+using ToSic.Eav.WebApi.Sys.ApiExplorer;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Apps.Internal;
-using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Oqt.Server.Code.Internal;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
@@ -16,7 +14,9 @@ using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Polymorphism.Internal;
 using ToSic.Sxc.WebApi;
-using RealController = ToSic.Eav.WebApi.ApiExplorer.ApiExplorerControllerReal;
+using ToSic.Sxc.WebApi.Sys;
+using ToSic.Sys.Utils;
+using RealController = ToSic.Eav.WebApi.Sys.ApiExplorer.ApiExplorerControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [Authorize(Roles = RoleNames.Admin)]
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ApiExplorerController() : OqtStatefulControllerBase(RealController.LogSuffix), IApiExplorerController
 {
     private RealController Real => GetService<RealController>();
@@ -47,20 +47,16 @@ public class ApiExplorerController() : OqtStatefulControllerBase(RealController.
     {
         // get path from root
         var siteId = GetService<SiteState>()?.Alias?.SiteId ?? GetService<AliasResolver>().Alias.SiteId;
-        var appFolder = GetService<AppFolder>().GetAppFolder();
+        var appFolder = GetService<AppFolderLookupForWebApi>().GetAppFolder();
         var pathFromRoot = OqtServerPaths.GetAppApiPath(siteId, appFolder, path);
 
         // Figure out the current edition
         var blockOrNull = CtxHlp.BlockOptional;
-        var edition = blockOrNull.NullOrGetWith(b => GetService<PolymorphConfigReader>().UseViewEditionOrGet(b));
+        var edition = blockOrNull
+            .NullOrGetWith(b => GetService<PolymorphConfigReader>().UseViewEditionOrGet(b));
 
-        var spec = new HotBuildSpec(blockOrNull?.AppId ?? Eav.Constants.AppIdEmpty, edition: edition, appName: blockOrNull?.App?.Name); 
-        
-        //if (block != null)
-        //    spec = new HotBuildSpec(spec.AppId,
-        //        edition: PolymorphConfigReader.UseViewEditionOrGetLazy(block.View,() => GetService<PolymorphConfigReader>().Init(block.Context.AppState.List)));
+        var spec = new HotBuildSpec(blockOrNull?.AppId ?? KnownAppsConstants.AppIdEmpty, edition: edition, appName: blockOrNull?.AppOrNull?.Name);
 
-        var appCodeLoader = GetService<LazySvc<AppCodeLoader>>();
         Log.A($"Controller path from root: {pathFromRoot}");
 
         // get full path

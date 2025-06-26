@@ -1,7 +1,7 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Dnn.Pages;
 

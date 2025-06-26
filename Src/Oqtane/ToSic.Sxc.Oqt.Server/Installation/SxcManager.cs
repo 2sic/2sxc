@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Oqt.Server.Installation;
 /// <remarks>
 /// WARNING: Careful when renaming / moving, the name is listed in the ModuleInfo.cs in the Client.
 /// </remarks>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class SxcManager(ISqlRepository sql) : IInstallable
 {
     public bool Install(Tenant tenant, string version)

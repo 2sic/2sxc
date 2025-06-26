@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Dnn;
+﻿using Custom.Razor.Sys;
+using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 
@@ -13,6 +14,6 @@ namespace Custom.Dnn;
 public abstract class Razor12 : Hybrid.Razor12, IHasDnn, IRazor12, IDnnRazorCompatibility
 {
     /// <inheritdoc />
-    public IDnnContext Dnn => (_CodeApiSvc as IHasDnn)?.Dnn;
+    public IDnnContext Dnn => (ExCtx as IHasDnn)?.Dnn;
 
 }

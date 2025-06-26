@@ -4,11 +4,10 @@
 // So it's not meant to replace the existing one, but add another mechanism of finding it
 // I hope/assume it will be used if the other one fails.
 
-using System.Linq;
 using System.Web;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Context.Sys;
 
 namespace ToSic.Sxc.Dnn.Providers;
 

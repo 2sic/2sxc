@@ -1,9 +1,10 @@
-﻿using ToSic.Eav.WebApi.App;
+﻿using ToSic.Eav.Data.Sys.Entities;
+using ToSic.Eav.WebApi.Sys.App;
 
 namespace ToSic.Sxc.Backend.App;
 
 /// <inheritdoc cref="IAppDataController" />
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppDataControllerReal(LazySvc<AppContent> appContentLazy)
     : ServiceBase("Api.DataRl", connect: [appContentLazy]), IAppDataController
 {
@@ -13,7 +14,7 @@ public class AppDataControllerReal(LazySvc<AppContent> appContentLazy)
     #region Get List / all of a certain content-type
 
     /// <inheritdoc />
-    public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string appPath = default, string oDataSelect = default)
+    public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string? appPath = default, string? oDataSelect = default)
         => appContentLazy.Value.Init(appPath).GetItems(contentType, appPath, oDataSelect);
 
     #endregion
@@ -22,7 +23,7 @@ public class AppDataControllerReal(LazySvc<AppContent> appContentLazy)
     #region GetOne by ID / GUID
 
     /// <inheritdoc />
-    public IDictionary<string, object> GetOne(string contentType, string id, string appPath = default, string oDataSelect = default)
+    public IDictionary<string, object> GetOne(string contentType, string id, string? appPath = default, string? oDataSelect = default)
     {
         if(int.TryParse(id, out var intId))
             return GetAndSerializeOneAfterSecurityChecks(contentType,
@@ -45,7 +46,7 @@ public class AppDataControllerReal(LazySvc<AppContent> appContentLazy)
     /// <param name="getOne"></param>
     /// <param name="appPath"></param>
     /// <returns></returns>
-    private IDictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath, string oDataSelect)
+    private IDictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string? appPath, string? oDataSelect)
     {
         return appContentLazy.Value.Init(appPath).GetOne(contentType, getOne, appPath, oDataSelect);
     }
@@ -57,7 +58,7 @@ public class AppDataControllerReal(LazySvc<AppContent> appContentLazy)
 
     /// <inheritdoc />
     public IDictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object> newContentItem, int? id = null,
-        string appPath = null)
+        string? appPath = null)
         => appContentLazy.Value.Init(appPath)
             .CreateOrUpdate(contentType, newContentItem, id, appPath);
 
@@ -67,7 +68,7 @@ public class AppDataControllerReal(LazySvc<AppContent> appContentLazy)
     #region Delete
 
     /// <inheritdoc />
-    public void Delete(string contentType, string id, string appPath = null)
+    public void Delete(string contentType, string id, string? appPath = null)
     {
         if (int.TryParse(id, out var intId))
         {

@@ -1,11 +1,12 @@
 ﻿using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.Cms.Internal;
+using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Sys;
+using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.Internal;
+using ToSic.Sxc.Context.Sys.Module;
 using ISite = ToSic.Eav.Context.ISite;
 
 namespace ToSic.Sxc.Dnn.Context;
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Dnn.Context;
 /// <summary>
 /// The DNN implementation of a Block Container (a Module).
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 [PrivateApi("this is just internal, external users don't really have anything to do with this")]
 public class DnnModule: Module<ModuleInfo>
 {
@@ -59,7 +60,7 @@ public class DnnModule: Module<ModuleInfo>
 
 
     /// <inheritdoc />
-    public override int Id => UnwrappedModule?.ModuleID ?? Eav.Constants.NullId;
+    public override int Id => UnwrappedModule?.ModuleID ?? EavConstants.NullId;
 
 
     /// <inheritdoc />
@@ -71,8 +72,10 @@ public class DnnModule: Module<ModuleInfo>
     {
         get
         {
-            if (_blockIdentifier != null) return _blockIdentifier;
-            if (UnwrappedModule == null) return null;
+            if (field != null)
+                return field;
+            if (UnwrappedModule == null)
+                return null;
 
             // find ZoneId, AppId and prepare settings for next values
             // note: this is the correct zone, even if the module is shared from another portal, because the Site is prepared correctly
@@ -90,10 +93,9 @@ public class DnnModule: Module<ModuleInfo>
                 : new();
 
             // Create identifier
-            return _blockIdentifier = new BlockIdentifier(zoneId, appId, appNameId, blockGuid, overrideView);
+            return field = new BlockIdentifier(zoneId, appId, appNameId, blockGuid, overrideView);
         }
     }
-    private IBlockIdentifier _blockIdentifier;
 
     private (int AppId, string AppNameId) GetInstanceAppIdAndName(int zoneId)
     {
@@ -114,6 +116,6 @@ public class DnnModule: Module<ModuleInfo>
         }
 
         Log.A($"{msg} not found = null");
-        return l.Return((Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty), "not found");
+        return l.Return((KnownAppsConstants.AppIdEmpty, KnownAppsConstants.AppNameIdEmpty), "not found");
     }
 }

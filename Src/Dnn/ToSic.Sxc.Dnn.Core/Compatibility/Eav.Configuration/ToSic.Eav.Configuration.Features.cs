@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Internal.Features;
+﻿using ToSic.Sys.Capabilities.Features;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Eav.Configuration;
@@ -20,9 +20,9 @@ public static class Features
     /// <returns>true if the features were signed correctly</returns>
     [PrivateApi]
     [Obsolete("Deprecated in 2sxc 12 - use IFeatures.Valid")]
-    public static bool Valid => EavFeaturesService.ValidInternal;
+    public static bool Valid => LibSysFeaturesService.ValidInternal;
 
-    public static IEavFeaturesService FeaturesFromDi { get; internal set; }= null;
+    public static ISysFeaturesService FeaturesFromDi { get; internal set; }= null;
 
     /// <summary>
     /// Checks if a feature is enabled

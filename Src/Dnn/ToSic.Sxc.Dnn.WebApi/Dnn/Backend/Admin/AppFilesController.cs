@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.WebApi.Assets;
-using ToSic.Sxc.Apps.Internal.Assets;
+﻿using ToSic.Eav.WebApi.Sys.Dto;
+using ToSic.Sxc.Apps.Sys.EditAssets;
 using ToSic.Sxc.Backend.Admin.AppFiles;
 using RealController = ToSic.Sxc.Backend.Admin.AppFiles.AppFilesControllerReal;
 
@@ -12,13 +12,14 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [DnnLogExceptions]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppFilesController() : DnnSxcControllerBase(RealController.LogSuffix), IAppFilesController
 {
     private RealController Real => SysHlp.GetService<RealController>();
 
     [HttpGet]
-    public List<string> All(int appId, bool global, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false) 
+    public ICollection<string> All(int appId, bool global, string path = null, string mask = "*.*",
+        bool withSubfolders = false, bool returnFolders = false) 
         => Real.All(appId, global, path, mask, withSubfolders, returnFolders);
 
     [HttpGet]

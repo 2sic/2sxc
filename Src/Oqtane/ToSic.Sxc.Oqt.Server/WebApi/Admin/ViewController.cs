@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using System;
 using ToSic.Lib.DI;
-using ToSic.Eav.WebApi.Context;
-using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.Views;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -20,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ViewController : OqtStatefulControllerBase, IViewController
 {
     public ViewController(LazySvc<Pages.Pages> pages) : base(RealController.LogSuffix)

@@ -1,8 +1,8 @@
-﻿using ToSic.Eav.Apps.Internal.Work;
-using ToSic.Eav.Data;
-using ToSic.Eav.WebApi.Admin;
-using ToSic.Eav.WebApi.Dto;
-using RealController = ToSic.Eav.WebApi.Admin.FieldControllerReal;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Data.Sys;
+using ToSic.Eav.WebApi.Sys.Admin;
+using ToSic.Eav.WebApi.Sys.Dto;
+using RealController = ToSic.Eav.WebApi.Sys.Admin.FieldControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [SupportedModules(DnnSupportedModuleNames)]
 [ValidateAntiForgeryToken]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class FieldController() : DnnSxcControllerBase(RealController.LogSuffix), IFieldController
 {
     private RealController Real => SysHlp.GetService<RealController>();
@@ -35,11 +35,11 @@ public class FieldController() : DnnSxcControllerBase(RealController.LogSuffix),
     /// Used to be GET ContentType/InputTypes
     /// </summary>
     [HttpGet]
-    public List<InputTypeInfo> InputTypes(int appId) => Real.InputTypes(appId);
+    public ICollection<InputTypeInfo> InputTypes(int appId) => Real.InputTypes(appId);
 
     /// <inheritdoc />
     [HttpGet]
-    public Dictionary<string, string> ReservedNames() => Attributes.ReservedNames;
+    public Dictionary<string, string> ReservedNames() => AttributeNames.ReservedNames;
         
     /// <summary>
     /// Used to be GET ContentType/AddField

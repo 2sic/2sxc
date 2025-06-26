@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.WebApi.Admin.Metadata;
-using RealController = ToSic.Eav.WebApi.Admin.Metadata.MetadataControllerReal;
+﻿using ToSic.Eav.WebApi.Sys.Admin.Metadata;
+using RealController = ToSic.Eav.WebApi.Sys.Admin.Metadata.MetadataControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [SupportedModules(DnnSupportedModuleNames)]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class MetadataController() : DnnSxcControllerBase(RealController.LogSuffix), IMetadataController
 {
     private RealController Real => SysHlp.GetService<RealController>();

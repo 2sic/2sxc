@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
-using ToSic.Sxc.Data.Internal.Convert;
+using ToSic.Sxc.Data.Sys.Convert;
 
 namespace ToSic.Sxc.Compatibility.Sxc;
 
@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Compatibility.Sxc;
 // Important: Changed Dictionary... to IDictionary in 12.04 2021-08-29 - may cause issues, but probably shouldn't
 [Obsolete]
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class OldDataToDictionaryWrapper
 {
     public OldDataToDictionaryWrapper(bool userMayEdit, IConvertToEavLight innerConverter)
@@ -41,8 +41,9 @@ public class OldDataToDictionaryWrapper
     public IEnumerable<IDictionary<string, object>> Prepare(IEnumerable<IEntity> entities)
         => _converter.Convert(entities);
 
-    public IEnumerable<IDictionary<string, object>> Prepare(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities)
-        => _converter.Convert(entities as IEnumerable<IEntity>);
+    // Removed in v20
+    //public IEnumerable<IDictionary<string, object>> Prepare(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities)
+    //    => _converter.Convert(entities as IEnumerable<IEntity>);
 
     public IDictionary<string, object> Prepare(IEntity entity)
         => _converter.Convert(entity);

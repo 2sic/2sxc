@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Threading.Tasks;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web.Internal.Url;
-using CspOfPage = ToSic.Sxc.Web.Internal.ContentSecurityPolicy.CspOfPage;
-using CspParameters = ToSic.Sxc.Web.Internal.ContentSecurityPolicy.CspParameters;
+using ToSic.Sxc.Sys;
+using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
+using ToSic.Sxc.Web.Sys.Url;
 
 namespace ToSic.Sxc.Oqt.Server.Services;
 

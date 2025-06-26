@@ -1,16 +1,15 @@
-﻿using System.IO;
-using ToSic.Eav.Apps.Internal;
+﻿using ToSic.Eav.Apps.Sys.AppStack;
+using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.DataSources.Sys.Internal;
-using ToSic.Eav.ImportExport.Internal;
-using ToSic.Eav.Internal.Configuration;
-using ToSic.Eav.WebApi.Adam;
-using ToSic.Eav.WebApi.ImportExport;
-using ToSic.Eav.WebApi.Languages;
-using ToSic.Sxc.Apps.Internal.Work;
+using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.Sys;
+using ToSic.Eav.WebApi.Sys.ImportExport;
+using ToSic.Eav.WebApi.Sys.Languages;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Backend.AppStack;
 using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sxc.Services;
+using ToSic.Sys.Configuration;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;
@@ -24,7 +23,7 @@ namespace ToSic.Sxc.Backend.Admin;
 /// Experimental new class
 /// Goal is to reduce code in the Dnn and Oqtane controllers, which basically does the same thing, mostly DI work
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppControllerReal(
     LazySvc<AppsBackend> appsBackendLazy,
     LazySvc<WorkAppsRemove> workAppsRemove,
@@ -38,7 +37,7 @@ public class AppControllerReal(
     LazySvc<AppStackBackend> appStackBackendLazy,
     LazySvc<IJsonService> json,
     IGlobalConfiguration globalConfiguration)
-    : ServiceBase($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl",
+    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
         connect:
         [
             appsBackendLazy, workAppsRemove, exportAppLazy, importAppLazy, appBuilderLazy, resetAppLazy,
@@ -46,59 +45,22 @@ public class AppControllerReal(
         ])
 {
     public const string LogSuffix = "AppCon";
-    private const string TemplatesJson = "templates.json";
 
+    public ICollection<AppDto> List(int zoneId)
+        => appsBackendLazy.Value.Apps();
 
-    public List<AppDto> List(int zoneId) => appsBackendLazy.Value.Apps();
-
-    public List<AppDto> InheritableApps() => appsBackendLazy.Value.GetInheritableApps();
+    public ICollection<AppDto> InheritableApps()
+        => appsBackendLazy.Value.GetInheritableApps();
 
     public void App(int zoneId, int appId, bool fullDelete = true)
         => workAppsRemove.Value.RemoveAppInSiteAndEav(zoneId, appId, fullDelete);
 
-    public void App(int zoneId, string name, int? inheritAppId = null, int templateId = 0)
+    public void App(int zoneId, string name, int? inheritAppId = null)
     {
-        var l = Log.Fn($"{nameof(zoneId)}:{zoneId}, {nameof(name)}:{name}, {nameof(inheritAppId)}:{inheritAppId}, {nameof(templateId)}:{templateId}");
-
-        if (templateId == 0)
-        {
-            l.A("create default new app without template");
-            appBuilderLazy.Value.Init(zoneId).Create(name, null, inheritAppId);
-            l.Done("ok");
-            // Exit here, because we created the app without template
-            return;
-        }
-
-        l.A($"find template app zip path for {nameof(templateId)}:{templateId}");
-        var zipPath = GetTemplateZipPathOrThrow(templateId);
-
-        l.A($"create new app from template zip:{zipPath}");
-        var resultDto = importAppLazy.Value.Import(zipPath, zoneId, name, inheritAppId);
-        if (!resultDto.Success)
-            throw l.Ex(new Exception($"Error importing app from template: {string.Join(", ", resultDto.Messages.Select(m => $"{m.MessageType}:{m.Text}"))}"));
-
+        var l = Log.Fn($"{nameof(zoneId)}:{zoneId}, {nameof(name)}:{name}, {nameof(inheritAppId)}:{inheritAppId}");
+        l.A("create default new app without template");
+        appBuilderLazy.Value.Init(zoneId).Create(name, null, inheritAppId);
         l.Done("ok");
-    }
-
-    private string GetTemplateZipPathOrThrow(int templateId)
-    {
-        var l = Log.Fn<string>($"{nameof(templateId)}:{templateId}");
-
-        var templatesJsonPath = Path.Combine(globalConfiguration.NewAppsTemplateFolder, TemplatesJson);
-
-        if (!File.Exists(templatesJsonPath))
-            throw l.Ex(new FileNotFoundException($"{TemplatesJson} file not found"));
-
-        var templatesJson = File.ReadAllText(templatesJsonPath);
-        var templates = json.Value.To<List<TemplateJson>>(templatesJson);
-        var template = templates.FirstOrDefault(t => t.Id == templateId) 
-            ?? throw l.Ex(new Exception($"Template with id {templateId} not found in {TemplatesJson}"));
-
-        var zipPath = Path.Combine(globalConfiguration.NewAppsTemplateFolder, template.Zip);
-        if (!File.Exists(zipPath))
-            throw l.Ex(new FileNotFoundException($"Template {Path.GetFileName(zipPath)} not found"));
-
-        return l.ReturnAsOk(zipPath);
     }
 
     public List<SiteLanguageDto> Languages(int appId)
@@ -119,7 +81,7 @@ public class AppControllerReal(
     public bool SaveData(AppExportSpecs specs)
         => exportAppLazy.Value.SaveDataForVersionControl(specs);
 
-    public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
+    public List<AppStackDataRaw> GetStack(int appId, string? part, string? key = null, Guid? view = null)
         => appStackBackendLazy.Value.GetAll(appId, part ?? AppStackConstants.RootNameSettings, key, view);
 
     public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage, bool withPortalFiles)
@@ -140,6 +102,8 @@ public class AppControllerReal(
             return l.Return(new(false, "no file uploaded"), "no file uploaded");
 
         var (_, stream) = uploadInfo.GetStream(0);
+        if (stream == null!)
+            throw new NullReferenceException("File Stream is null, upload canceled");
 
         var result = importAppLazy.Value.Import(stream, zoneId, renameApp);
 

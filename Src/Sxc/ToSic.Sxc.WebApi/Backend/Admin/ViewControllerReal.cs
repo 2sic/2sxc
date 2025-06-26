@@ -1,11 +1,8 @@
-﻿using ToSic.Eav.Persistence.Logging;
-using ToSic.Eav.WebApi.Adam;
-using ToSic.Eav.WebApi.Assets;
-using ToSic.Eav.WebApi.Context;
-using ToSic.Sxc.Apps.Internal;
+﻿using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Sxc.Backend.Usage;
 using ToSic.Sxc.Backend.Views;
-using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Blocks.Sys.Views;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;
@@ -15,7 +12,7 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 
 namespace ToSic.Sxc.Backend.Admin;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ViewControllerReal(
     LazySvc<IContextOfSite> context,
     LazySvc<ViewsBackend> viewsBackend,
@@ -67,7 +64,7 @@ public class ViewControllerReal(
         for (var i = 0; i < uploadInfo.Count; i++)
         {
             var (fileName, stream) = uploadInfo.GetStream(i);
-            streams.Add(new() {Name = fileName, Stream = stream});
+            streams.Add(new() { Name = fileName, Stream = stream! });
         }
         var result = viewExportImport.Value.ImportView(zoneId, appId, streams, context.Value.Site.DefaultCultureCode);
 
@@ -84,12 +81,12 @@ public class ViewControllerReal(
         }
         return usageBackend.Value.ViewUsage(appId, guid, FinalBuilder);
     }
-    public ViewControllerReal UsagePreparations(Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
+    public ViewControllerReal UsagePreparations(Func<ICollection<IView>, ICollection<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
     {
         FinalBuilder = finalBuilder;
         return this;
     }
-    private Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> FinalBuilder { get; set; }
+    private Func<ICollection<IView>, ICollection<BlockConfiguration>, IEnumerable<ViewDto>>? FinalBuilder { get; set; }
 
     /// <summary>
     /// Helper method to get SiteId for ControllerReal proxy class.

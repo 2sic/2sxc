@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Routing;
 using ToSic.Eav.WebApi.Sys.Licenses;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Eav.WebApi.Sys.Licenses.LicenseControllerReal;
@@ -13,7 +12,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + "/" + AreaRoutes.Sys)]
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class LicenseController() : OqtStatefulControllerBase("License"), ILicenseController
 {
     private RealController Real => GetService<RealController>();

@@ -1,0 +1,47 @@
+﻿-- ===================================
+-- 2sxc upgrade: rename packages, definitions & selected settings
+
+
+-- 1) Package and module definitions
+IF EXISTS (SELECT 1 FROM dbo.Packages WHERE [Name] IN ('2SexyContent','2SexyContent-App'))
+BEGIN
+
+    DECLARE @SxcModuleDefId INT, @SxcAppModuleDefId INT, @DelSxcModuleDefId INT, @DelSxcAppModuleDefId INT;
+    SET @SxcModuleDefId = (SELECT TOP 1 ModuleDefID FROM dbo.ModuleDefinitions WHERE DefinitionName IN ('2sxc'));
+    SET @SxcAppModuleDefId = (SELECT TOP 1 ModuleDefID FROM dbo.ModuleDefinitions WHERE DefinitionName IN ('2sxc-app'));
+    SET @DelSxcModuleDefId = (SELECT TOP 1 ModuleDefID FROM dbo.ModuleDefinitions WHERE DefinitionName IN ('2Sexy Content'));
+    SET @DelSxcAppModuleDefId = (SELECT TOP 1 ModuleDefID FROM dbo.ModuleDefinitions WHERE DefinitionName IN ('2Sexy Content App'));
+
+    UPDATE dbo.Modules SET ModuleDefID = @SxcModuleDefId WHERE ModuleDefID = @DelSxcModuleDefId;
+    UPDATE dbo.Modules SET ModuleDefID = @SxcAppModuleDefId WHERE ModuleDefID = @DelSxcAppModuleDefId;
+
+    DELETE FROM dbo.Packages WHERE [Name] IN ('2SexyContent','2SexyContent-App');
+    DELETE FROM dbo.ModuleDefinitions WHERE DefinitionName IN ('2Sexy Content', '2Sexy Content App');
+END
+GO
+
+ -- 2) PortalSettings: specific key rename
+ UPDATE dbo.PortalSettings SET SettingName = 'TsDynDataZoneId'
+ WHERE SettingName = 'ToSIC_SexyContent_ZoneID';
+
+ -- 3) ModuleSettings: multiple specific key renames
+ UPDATE dbo.ModuleSettings SET SettingName = 'TsDynDataApp'
+ WHERE SettingName = 'ToSIC_SexyContent_AppName';
+
+ UPDATE dbo.ModuleSettings SET SettingName = 'TsDynDataContentGroup'
+ WHERE SettingName = 'ToSIC_SexyContent_ContentGroupGuid';
+
+ UPDATE dbo.ModuleSettings SET SettingName = 'TsDynDataPreview'
+ WHERE SettingName = 'ToSIC_SexyContent_PreviewTemplateId';
+
+ -- 4) TabModuleSettings: same renames as ModuleSettings
+ UPDATE dbo.TabModuleSettings SET SettingName = 'TsDynDataApp'
+ WHERE SettingName = 'ToSIC_SexyContent_AppName';
+
+ UPDATE dbo.TabModuleSettings SET SettingName = 'TsDynDataContentGroup'
+ WHERE SettingName = 'ToSIC_SexyContent_ContentGroupGuid';
+
+ UPDATE dbo.TabModuleSettings SET SettingName = 'TsDynDataPreview'
+ WHERE SettingName = 'ToSIC_SexyContent_PreviewTemplateId';
+
+ GO

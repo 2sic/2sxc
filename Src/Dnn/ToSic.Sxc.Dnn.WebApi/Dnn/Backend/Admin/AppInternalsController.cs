@@ -1,6 +1,6 @@
-﻿using ToSic.Eav.WebApi.Admin;
-using ToSic.Eav.WebApi.Dto;
-using RealController = ToSic.Eav.WebApi.Admin.AppInternalsControllerReal;
+﻿using ToSic.Eav.WebApi.Sys.Admin;
+using ToSic.Eav.WebApi.Sys.Dto;
+using RealController = ToSic.Eav.WebApi.Sys.Admin.AppInternalsControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 /// Proxy Class to the AppInternalsController (Web API Controller)
 /// </summary>
 [DnnLogExceptions]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppInternalsController() : DnnSxcControllerBase(RealController.LogSuffix), IAppInternalsController
 {
     private RealController Real => SysHlp.GetService<RealController>();

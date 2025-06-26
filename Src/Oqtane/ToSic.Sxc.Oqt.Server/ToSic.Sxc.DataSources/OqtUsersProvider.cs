@@ -2,16 +2,14 @@
 using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
-using System;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Cms.Users;
-using ToSic.Sxc.Cms.Users.Internal;
-using ToSic.Sxc.DataSources.Internal;
+using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sys.Utils;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources;
@@ -32,7 +30,7 @@ internal class OqtUsersProvider(
 
     public string PlatformIdentityTokenPrefix => OqtConstants.UserTokenPrefix;
 
-    public IUserModel GetUser(int userId, int siteId)
+    public IUserModel? GetUser(int userId, int siteId)
     {
         var user = userManager.Value.GetUser(userId, SiteId);
         return user == null 

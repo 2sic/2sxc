@@ -1,12 +1,11 @@
-﻿using System.IO;
-using ToSic.Eav;
-using ToSic.Eav.ImportExport.Internal;
+﻿using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.Sys;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
 partial class AppFilesControllerReal
 {
-    private readonly string _appCodeFolder = $"{Path.DirectorySeparatorChar}{Constants.AppCode}{Path.DirectorySeparatorChar}".ToLower();
+    private readonly string _appCodeFolder = $"{Path.DirectorySeparatorChar}{FolderConstants.AppCode}{Path.DirectorySeparatorChar}".ToLower();
 
     private void FullDirList(DirectoryInfo dir, string searchPattern, List<DirectoryInfo> folders, List<FileInfo> files, SearchOption opt, int level = 0)
     {
@@ -14,8 +13,8 @@ partial class AppFilesControllerReal
         try
         {
             if (!IsApiControllerFilesSearch(searchPattern)
-                || (Constants.Api.Equals(dir.Name, StringComparison.OrdinalIgnoreCase) // controller files in "api" folder
-                    || Constants.AppCode.Equals(dir.Name, StringComparison.OrdinalIgnoreCase) // controller files directly in "AppCode" folder
+                || (EavConstants.Api.Equals(dir.Name, StringComparison.OrdinalIgnoreCase) // controller files in "api" folder
+                    || FolderConstants.AppCode.Equals(dir.Name, StringComparison.OrdinalIgnoreCase) // controller files directly in "AppCode" folder
                     || dir.FullName.ToLower().Contains(_appCodeFolder) // controller files in any "AppCode" subfolder
                     )
                 )
@@ -50,7 +49,7 @@ partial class AppFilesControllerReal
                 if (IsApiControllerFilesSearch(searchPattern))
                 {
                     //  we need to skip "AppCode" because it is handled differently in AllApiControllerFilesInAppCodeForAllEditions
-                    if (Constants.AppCode.Equals(d.Name, StringComparison.OrdinalIgnoreCase)) continue;
+                    if (FolderConstants.AppCode.Equals(d.Name, StringComparison.OrdinalIgnoreCase)) continue;
 
                     // we skip any folder that is deeper more than 2 levels (except "AppCode" and its subfolders),
                     // because "api" folder can't be deeper than 2 levels
@@ -69,5 +68,5 @@ partial class AppFilesControllerReal
 
     // detect special case when searching for api controller files
     private static bool IsApiControllerFilesSearch(string searchPattern) 
-        => searchPattern.Equals($"*{Constants.ApiControllerSuffix}.cs", StringComparison.OrdinalIgnoreCase);
+        => searchPattern.Equals($"*{EavConstants.ApiControllerSuffix}.cs", StringComparison.OrdinalIgnoreCase);
 }

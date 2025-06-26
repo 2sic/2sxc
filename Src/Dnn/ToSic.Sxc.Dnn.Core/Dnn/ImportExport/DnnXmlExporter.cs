@@ -1,31 +1,31 @@
 ﻿using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Eav.ImportExport.Internal;
-using ToSic.Eav.ImportExport.Internal.Xml;
-using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.Internal;
+using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.ImportExport.Sys.Xml;
+using ToSic.Sxc.Adam.Sys;
+using ToSic.Sxc.Adam.Sys.Manager;
+using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Context.Sys;
+using ToSic.Sxc.ExportImport.Sys;
 using FileManager = DotNetNuke.Services.FileSystem.FileManager;
 
 namespace ToSic.Sxc.Dnn.ImportExport;
 
 internal class DnnXmlExporter(
-    AdamManager<int, int> adamManager,
-    ISxcContextResolver ctxResolver,
+    AdamManager adamManager,
+    ISxcCurrentContextService ctxService,
     XmlSerializer xmlSerializer,
     IAppsCatalog appsCat)
-    : XmlExporter(xmlSerializer, appsCat, ctxResolver, DnnConstants.LogName, connect: [adamManager])
+    : SxcXmlExporter(xmlSerializer, appsCat, ctxService, DnnConstants.LogName, connect: [adamManager])
 {
     #region Constructor / DI
 
     private readonly IFileManager _dnnFiles = FileManager.Instance;
-    internal AdamManager<int, int> AdamManager { get; } = adamManager;
-
 
     protected override void PostContextInit(IContextOfApp appContext)
     {
-        AdamManager.Init(ctx: appContext, compatibility: CompatibilityLevels.CompatibilityLevel10, cdf: null);
+        adamManager.Init(appCtx: appContext, compatibility: CompatibilityLevels.CompatibilityLevel10);
     }
 
     #endregion
@@ -33,11 +33,12 @@ internal class DnnXmlExporter(
     public override void AddFilesToExportQueue()
     {
         // Add Adam Files To Export Queue
-        var adamIds = AdamManager.Export.AppFiles;
+        var exportList = new AdamExportListHelper<int, int>(adamManager);
+        var adamIds = exportList.AppFiles;
         adamIds.ForEach(AddFileAndFolderToQueue);
 
         // also add folders in adam - because empty folders may also have metadata assigned
-        var adamFolders = AdamManager.Export.AppFolders;
+        var adamFolders = exportList.AppFolders;
         adamFolders.ForEach(ReferencedFolderIds.Add);
     }
 

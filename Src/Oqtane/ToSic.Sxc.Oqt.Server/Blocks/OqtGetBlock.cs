@@ -1,10 +1,10 @@
 ﻿using Oqtane.Repository;
-using ToSic.Eav.WebApi.Infrastructure;
+using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Backend.Context;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Server.Context;
 using static ToSic.Sxc.Backend.SxcWebApiConstants;
 
@@ -16,22 +16,22 @@ namespace ToSic.Sxc.Oqt.Server.Blocks;
 internal class OqtGetBlock(
     LazySvc<IModuleRepository> modRepoLazy,
     RequestHelper requestHelper,
-    ISxcContextResolver contextResolverToInit,
+    ISxcCurrentContextService currentContextServiceToInit,
     Generator<IContextOfBlock> cntOfBlkGen,
-    Generator<BlockFromModule> blkFromModGen,
-    Generator<BlockFromEntity> blkFromEntGen)
+    Generator<BlockOfModule> blkFromModGen,
+    Generator<BlockOfEntity> blkFromEntGen)
     : ServiceBase("Sxc.GetBlk",
-            connect: [modRepoLazy, requestHelper, contextResolverToInit, cntOfBlkGen, blkFromModGen, blkFromEntGen]),
+            connect: [modRepoLazy, requestHelper, currentContextServiceToInit, cntOfBlkGen, blkFromModGen, blkFromEntGen]),
         IWebApiContextBuilder
 {
-    public ISxcContextResolver PrepareContextResolverForApiRequest()
+    public ISxcCurrentContextService PrepareContextResolverForApiRequest()
     {
-        if (_alreadyTriedToLoad) return contextResolverToInit;
+        if (_alreadyTriedToLoad) return currentContextServiceToInit;
         _alreadyTriedToLoad = true;
 
         var block = InitializeBlock();
-        contextResolverToInit.AttachBlock(block);
-        return contextResolverToInit;
+        currentContextServiceToInit.AttachBlock(block);
+        return currentContextServiceToInit;
     }
     private bool _alreadyTriedToLoad;
 
@@ -42,16 +42,16 @@ internal class OqtGetBlock(
 
         // WebAPI calls can contain the original parameters that made the page, so that views can respect that
         var moduleId = TryGetId(ContextConstants.ModuleIdKey);
-        if (moduleId == Eav.Constants.NullId)
+        if (moduleId == Eav.Sys.EavConstants.NullId)
             return l.ReturnNull("missing block because ModuleId not found in request");
 
         var pageId = TryGetId(ContextConstants.PageIdKey);
-        if (pageId == Eav.Constants.NullId)
+        if (pageId == Eav.Sys.EavConstants.NullId)
             return l.ReturnNull("missing block because PageId not found in request");
 
         var module = modRepoLazy.Value.GetModule(moduleId);
         var ctx = cntOfBlkGen.New().Init(pageId, module);
-        var block = blkFromModGen.New().Init(ctx);
+        var block = blkFromModGen.New().GetBlockOfModule(ctx);
 
         // only if it's negative, do we load the inner block
         var contentBlockId = requestHelper.GetTypedHeader(HeaderContentBlockId, 0); // this can be negative, so use 0
@@ -59,7 +59,7 @@ internal class OqtGetBlock(
             return l.Return(block, "found block");
 
         l.A($"Inner Content: {contentBlockId}");
-        var entityBlock = blkFromEntGen.New().Init(block, null, contentBlockId);
+        var entityBlock = blkFromEntGen.New().GetBlockOfEntity(block, null, contentBlockId);
         return l.Return(entityBlock, $"inner block {contentBlockId}");
     }
 
@@ -67,6 +67,6 @@ internal class OqtGetBlock(
     {
         var l = Log.Fn<int>(key);
         var id = requestHelper.TryGetId(key);
-        return l.Return(id, id == Eav.Constants.NullId ? "not found" : $"found {id}");
+        return l.Return(id, id == Eav.Sys.EavConstants.NullId ? "not found" : $"found {id}");
     }
 }

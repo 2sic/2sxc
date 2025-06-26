@@ -1,9 +1,6 @@
 ﻿using Oqtane.Models;
 using Oqtane.Shared;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using ToSic.Sxc.Oqt.Shared.Models;
@@ -11,7 +8,7 @@ using ResourceLevel = Oqtane.Shared.ResourceLevel;
 
 namespace ToSic.Sxc.Oqt.Shared.Helpers;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class HtmlHelper
 {
     private static readonly string Timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmssfff");
@@ -80,7 +77,7 @@ public class HtmlHelper
     //    return html;
     //}
 
-    public static string GetMetaTagContent(string html, string name, bool decode = true)
+    public static string? GetMetaTagContent(string html, string name, bool decode = true)
     {
         if (html.IsNullOrEmpty() || name.IsNullOrEmpty())
             return null;
@@ -107,7 +104,8 @@ public class HtmlHelper
 
     public static string AddHeadChanges(string html, IEnumerable<OqtHeadChange> headChanges)
     {
-        if (headChanges == null) return html;
+        if (headChanges == null! /* paranoid, should never happen */)
+            return html;
         html ??= string.Empty;
 
         var str = string.Empty;
@@ -121,7 +119,8 @@ public class HtmlHelper
 
     public static string ManageStyleSheets(string html, OqtViewResultsDto viewResults, Alias alias, string themeName, string pageHtml = "")
     {
-        if (viewResults == null) return html;
+        if (viewResults == null! /* paranoid */)
+            return html;
         html ??= string.Empty;
 
         var list = viewResults.TemplateResources.Where(r => r.IsExternal && r.ResourceType == ResourceType.Stylesheet)
@@ -167,7 +166,7 @@ public class HtmlHelper
         foreach (var url in viewResults.SxcScripts) 
             html = url.IsNullOrEmpty()
                 ? html
-                : AddScript(html, new Resource { Url = url, Reload = false }, alias, pageHtml, ++count);
+                : AddScript(html, new() { Url = url, Reload = false }, alias, pageHtml, ++count);
 
         return html;
     }

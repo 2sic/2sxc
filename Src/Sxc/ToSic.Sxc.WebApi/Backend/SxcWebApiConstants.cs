@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Backend;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class SxcWebApiConstants
 {
     //public const string HeaderInstanceId = "moduleid";

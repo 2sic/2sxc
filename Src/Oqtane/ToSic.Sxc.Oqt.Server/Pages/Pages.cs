@@ -1,16 +1,14 @@
 ﻿using Oqtane.Repository;
-using System;
 using Oqtane.Models;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Context;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.Internal;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Internal;
+using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Blocks.Sys.Views;
 
 namespace ToSic.Sxc.Oqt.Server.Pages;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class Pages(
     IPageModuleRepository pageModuleRepository,
     IPageRepository pageRepository,
@@ -48,50 +46,51 @@ public class Pages(
     }
 
 
-    public ViewDto ViewDtoBuilder(IView view, List<BlockConfiguration> blocks, List<Oqtane.Models.PageModule> pageModules, ViewDto dto = null)
+    public ViewDto ViewDtoBuilder(IView view, ICollection<BlockConfiguration> blocks, List<PageModule> pageModules)
     {
-        dto ??= new();
-        dto.Id = view.Entity.EntityId;
-        dto.Guid = view.Entity.EntityGuid;
-        dto.Name = view.Name;
-        dto.Path = view.Path;
-        dto.Blocks = blocks
-            .Where(b => b.View.Guid == view.Guid)
-            .Select(blWMod => ContentBlockDtoBuilder(blWMod, pageModules.Where(m => m.Module.Settings[ModuleSettingNames.ContentGroup] == blWMod.Guid.ToString()).ToList()));
+        var dto = new ViewDto
+        {
+            Id = view.Entity.EntityId,
+            Guid = view.Entity.EntityGuid,
+            Name = view.Name,
+            Path = view.Path,
+            Blocks = blocks
+                .Where(b => b.View.Guid == view.Guid)
+                .Select(blWMod => ContentBlockDtoBuilder(blWMod,
+                    pageModules.Where(m => m.Module.Settings[ModuleSettingNames.ContentGroup] == blWMod.Guid.ToString())
+                        .ToList()))
+        };
         return dto;
     }
 
-    private ContentBlockDto ContentBlockDtoBuilder(BlockConfiguration block, List<Oqtane.Models.PageModule> blockModules, ContentBlockDto dto = null)
-    {
-        dto ??= new();
-        dto.Id = block.Id;
-        dto.Guid = block.Guid;
-        dto.Modules = blockModules.Select(m => InstanceDtoBuilder(m, pageRepository.GetPage(m.PageId)));
-        return dto;
-    }
+    private ContentBlockDto ContentBlockDtoBuilder(BlockConfiguration block, List<PageModule> blockModules)
+        => new()
+        {
+            Id = block.Id,
+            Guid = block.Guid,
+            Modules = blockModules.Select(m => InstanceDtoBuilder(m, pageRepository.GetPage(m.PageId))),
+        };
 
-    private static InstanceDto InstanceDtoBuilder(Oqtane.Models.PageModule pageModule, Oqtane.Models.Page page, InstanceDto dto = null)
-    {
-        dto ??= new();
-        dto.Id = pageModule.ModuleId;
-        dto.ShowOnAllPages = pageModule.Module.AllPages;
-        dto.Title = pageModule.Title;
-        dto.UsageId = pageModule.PageModuleId;
-        dto.IsDeleted = pageModule.IsDeleted || page.IsDeleted;
-        dto.Page = PageDtoBuilder(page);
-        return dto;
-    }
+    private static InstanceDto InstanceDtoBuilder(PageModule pageModule, Page page)
+        => new()
+        {
+            Id = pageModule.ModuleId,
+            ShowOnAllPages = pageModule.Module.AllPages,
+            Title = pageModule.Title,
+            UsageId = pageModule.PageModuleId,
+            IsDeleted = pageModule.IsDeleted || page.IsDeleted,
+            Page = PageDtoBuilder(page),
+        };
 
-    private static PageDto PageDtoBuilder(Oqtane.Models.Page page, PageDto dto = null)
-    {
-        dto ??= new();
-        dto.Id = page.PageId;
-        dto.Url = page.Url;
-        dto.Name = page.Name;
-        dto.CultureCode = Eav.Constants.NullNameId;
-        dto.Visible = !page.IsDeleted;
-        dto.Title = page.Title;
-        dto.Portal = new(page.SiteId);
-        return dto;
-    }
+    private static PageDto PageDtoBuilder(Page page)
+        => new()
+        {
+            Id = page.PageId,
+            Url = page.Url,
+            Name = page.Name,
+            CultureCode = Eav.Sys.EavConstants.NullNameId,
+            Visible = !page.IsDeleted,
+            Title = page.Title,
+            Portal = new(page.SiteId),
+        };
 }

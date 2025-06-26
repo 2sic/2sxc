@@ -1,7 +1,7 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Cms.Internal.Publishing;
+using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Install;
@@ -46,15 +46,15 @@ public class DnnBusinessController : ModuleSearchBase, IHasLog
     {
         get
         {
-            if (_publishing != null) return Publishing;
+            if (field != null)
+                return Publishing;
 
             // if publishing is used, make sure it's in the log-history
-            _publishing = ServiceProvider.Build<IPagePublishing>(Log);
+            field = ServiceProvider.Build<IPagePublishing>(Log);
             ServiceProvider.Build<ILogStore>().Add("dnn-publishing", Log);
-            return _publishing;
+            return field;
         }
     }
-    private IPagePublishing _publishing;
 
 
     public int GetLatestVersion(int instanceId) => Publishing.GetLatestVersion(instanceId);

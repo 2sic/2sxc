@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-Nullable.props" />
+
+  <PropertyGroup>
+    <AssemblyName>ToSic.Sxc.Render</AssemblyName>
+  </PropertyGroup>
+
+  <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\ToSic.Sxc.Blocks\ToSic.Sxc.Blocks.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Core\ToSic.Sxc.Core.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Edit\ToSic.Sxc.Edit.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Engines\ToSic.Sxc.Engines.csproj" />
+  </ItemGroup>
+
+</Project>

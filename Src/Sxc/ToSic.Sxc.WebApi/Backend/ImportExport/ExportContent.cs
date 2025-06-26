@@ -1,18 +1,19 @@
-﻿#if NETFRAMEWORK
+﻿using ToSic.Eav.Apps.AppReader.Sys;
+using ToSic.Eav.Data.Sys.ContentTypes;
+using ToSic.Eav.ImportExport.Sys;
+using ToSic.Eav.ImportExport.Sys.XmlExport;
+using ToSic.Eav.WebApi.Sys.Security;
+using ToSic.Sys.Users;
+
+#if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;
 #else
 using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 #endif
-using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.ImportExport.Internal;
-using ToSic.Eav.Security;
-using ToSic.Eav.WebApi.Infrastructure;
-using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.Backend.App;
 
 namespace ToSic.Sxc.Backend.ImportExport;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExportContent(
     XmlExporter xmlExporter,
     GenWorkPlus<WorkViews> workViews,

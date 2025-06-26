@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using RealController = ToSic.Eav.WebApi.Sys.Insights.InsightsControllerReal;
+using RealController = ToSic.Eav.Sys.Insights.InsightsControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 
@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + "/sys/[controller]/")]
     
 [ApiController]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class InsightsController() : OqtControllerBase(false, RealController.LogSuffix)
 {
     private RealController Real => GetService<RealController>();

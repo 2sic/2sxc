@@ -6119,6 +6119,119 @@
                     "Owner": "dnn:userid=41"
                   }
                 ]
+              },
+              {
+                "Name": "CacheErrorDurationInSeconds",
+                "Type": "String",
+                "InputType": "string-dropdown",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 184154,
+                    "Version": 2,
+                    "Guid": "afcb4644-b6c3-4897-9f09-9fe5fad1456d",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-dropdown"
+                        },
+                        "Name": {
+                          "en-us": "CacheErrorDurationInSeconds"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Determine how long streams should be cached which contain errors.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 184155,
+                    "Version": 1,
+                    "Guid": "93169d80-1521-4c87-8df1-6ea4d980db5f",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 184156,
+                    "Version": 1,
+                    "Guid": "24f8267e-81bf-4b01-8707-e8c5be0424e8",
+                    "Type": {
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": "0:0 = Cache for 3 times as-long-as-it-takes to generate source data (delay retry on slow source)\n-1:-1 = don't cache at all and retry immediately\n15:15 seconds\n60:60 seconds\n300:5 minutes"
+                        },
+                        "DropdownValuesFormat": {
+                          "en-us": "value-label"
+                        }
+                      },
+                      "Boolean": {
+                        "EnableTextEntry": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
               }
             ]
           },
@@ -16192,33 +16305,6 @@
             "Scope": "System.DataSources",
             "Metadata": [
               {
-                "Id": 166589,
-                "Version": 1,
-                "Guid": "8da53d14-f2e4-446c-aae6-1692eb0b959d",
-                "Type": {
-                  "Id": "e2f569c9-d1dd-4458-a54e-4aaf53e9ae3c",
-                  "Name": "LanguagesDecorator"
-                },
-                "Attributes": {
-                  "String": {
-                    "Title": {
-                      "en-us": "Disable translation"
-                    }
-                  },
-                  "Boolean": {
-                    "Enabled": {
-                      "en-us": false
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "ac11fae7-1916-4d2d-8583-09872e1e6966"
-                }
-              },
-              {
                 "Id": 160779,
                 "Version": 2,
                 "Guid": "910bb098-0184-4134-8ea4-f121a30acafe",
@@ -16256,6 +16342,33 @@
                     },
                     "Link": {
                       "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "ac11fae7-1916-4d2d-8583-09872e1e6966"
+                }
+              },
+              {
+                "Id": 166589,
+                "Version": 1,
+                "Guid": "8da53d14-f2e4-446c-aae6-1692eb0b959d",
+                "Type": {
+                  "Id": "e2f569c9-d1dd-4458-a54e-4aaf53e9ae3c",
+                  "Name": "LanguagesDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "Title": {
+                      "en-us": "Disable translation"
+                    }
+                  },
+                  "Boolean": {
+                    "Enabled": {
+                      "en-us": false
                     }
                   }
                 },

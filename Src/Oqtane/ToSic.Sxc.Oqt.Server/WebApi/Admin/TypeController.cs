@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using System;
-using ToSic.Eav.WebApi.Admin;
-using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.Admin.TypeControllerReal;
@@ -25,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class TypeController() : OqtStatefulControllerBase(RealController.LogSuffix), ITypeController
 {
     private RealController Real => GetService<RealController>();

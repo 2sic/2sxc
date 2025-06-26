@@ -1,42 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-NetCore.props" />
+
+  <Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />
+
+  <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
+
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <LangVersion>preview</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <AssemblyName>ToSic.Sxc.Oqtane.Shared</AssemblyName>
-    <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
-    <Deterministic>true</Deterministic>
-    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
-    <!-- Don't generate assembly properties from this XML which should come from the core file, like version - these lines must be in sync in all ToSic.Eav.*.csproj files -->
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <!-- end: Don't generate... -->
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <!-- generate xml docs -->
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>1701;1702;CS1570;CS1572;CS1573;CS1574;CS1587;CS1591;CS1710;CS1711</NoWarn>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="App\**" />
-    <Compile Remove="Run\**" />
-    <EmbeddedResource Remove="App\**" />
-    <EmbeddedResource Remove="Run\**" />
-    <None Remove="App\**" />
-    <None Remove="Run\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs" Link="Properties\AssemblyInfoInherited.cs" />
-    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
-    <Compile Include="..\..\..\..\eav-server\ToSic.Eav.Core\Properties\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" /><!-- from Oqtane.Shared.csproj -->
@@ -45,11 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <!--<ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Shared\Oqtane.Shared.csproj" />-->
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj" />
   </ItemGroup>
 
 </Project>

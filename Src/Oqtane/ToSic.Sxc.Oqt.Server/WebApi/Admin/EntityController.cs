@@ -1,13 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using System;
-using ToSic.Eav.ImportExport.Internal.Options;
-using ToSic.Eav.WebApi.Admin;
-using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.ImportExport.Sys.Options;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using RealController = ToSic.Eav.WebApi.Admin.EntityControllerReal;
+using RealController = ToSic.Eav.WebApi.Sys.Admin.EntityControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 
@@ -30,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class EntityController() : OqtStatefulControllerBase(RealController.LogSuffix), IEntityController
 {
     private RealController Real => GetService<RealController>();

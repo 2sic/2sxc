@@ -1,5 +1,4 @@
-﻿using System.IO;
-using ToSic.Lib.Coding;
+﻿using ToSic.Lib.Coding;
 using ToSic.Sxc.Adam;
 
 // ReSharper disable UnusedMember.Global
@@ -11,7 +10,7 @@ namespace ToSic.Sxc.WebApi;
 /// It's important, because if 2sxc also runs on other CMS platforms, then the Dnn Context won't be available, so it's in a separate interface.
 /// </summary>
 [PrivateApi("Was public till v17, but now the docs are all objects directly")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IDynamicWebApi
 {
     /// <summary>
@@ -26,13 +25,13 @@ public interface IDynamicWebApi
     /// <param name="field"></param>
     /// <param name="subFolder"></param>
     /// <returns></returns>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     IFile SaveInAdam(NoParamOrder noParamOrder = default,
-        Stream stream = null,
-        string fileName = null,
-        string contentType = null,
+        Stream? stream = null,
+        string? fileName = null,
+        string? contentType = null,
         Guid? guid = null,
-        string field = null,
+        string? field = null,
         string subFolder = "");
 
 
@@ -52,15 +51,15 @@ public interface IDynamicWebApi
     /// <remarks>
     /// Added in 2sxc 12.05
     /// </remarks>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     dynamic File(NoParamOrder noParamOrder = default,
         // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
         bool? download = null,
         // important: this is the virtualPath, but it should not have the same name, to not confuse the compiler with same sounding param names
-        string virtualPath = null,
-        string contentType = null,
-        string fileDownloadName = null,
-        object contents = null
+        string? virtualPath = null,
+        string? contentType = null,
+        string? fileDownloadName = null,
+        object? contents = null
     );
 
 }

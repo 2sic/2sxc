@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../SharedImports/CsProj.Props/AllImportsForTestCode.props" />
+
+  <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSource.TestHelpers\ToSic.Eav.DataSource.TestHelpers.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Testing.FullDbFixtures\ToSic.Eav.Testing.FullDbFixtures.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Adam\ToSic.Sxc.Adam.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Apps\ToSic.Sxc.Apps.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Blocks\ToSic.Sxc.Blocks.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Cms\ToSic.Sxc.Cms.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Code\ToSic.Sxc.Code.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Core\ToSic.Sxc.Core.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Edit\ToSic.Sxc.Edit.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.LightSpeed\ToSic.Sxc.LightSpeed.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Render\ToSic.Sxc.Render.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Services\ToSic.Sxc.Services.csproj" />
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Web\ToSic.Sxc.Web.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Core.TestHelpers\ToSic.Sxc.Core.TestHelpers.csproj" />
+  </ItemGroup>
+
+</Project>

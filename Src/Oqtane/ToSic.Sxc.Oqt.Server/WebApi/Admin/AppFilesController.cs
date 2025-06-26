@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Assets;
-using ToSic.Eav.WebApi.Routing;
-using ToSic.Sxc.Apps.Internal.Assets;
+using ToSic.Sxc.Apps.Sys.EditAssets;
 using ToSic.Sxc.Backend.Admin.AppFiles;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.Admin.AppFiles.AppFilesControllerReal;
@@ -21,14 +19,14 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppFilesController() : OqtStatefulControllerBase(RealController.LogSuffix), IAppFilesController
 {
     private RealController Real => GetService<RealController>();
 
 
     [HttpGet]
-    public List<string> All(
+    public ICollection<string> All(
         [FromQuery] int appId,
         [FromQuery] bool global,
         [FromQuery] string path = null,

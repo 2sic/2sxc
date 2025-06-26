@@ -1,7 +1,7 @@
 ﻿using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Internal;
 using ToSic.Sxc.Dnn.Integration;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal;
 
@@ -10,14 +10,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal;
 /// This doesn't work in DNN.
 /// But for consistency, we're building a comparable structure here.
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ApiControllerMyServices(
-    CodeApiServiceFactory codeApiServiceFactory,
+    IExecutionContextFactory exCtxFactory,
     DnnAppFolderUtilities appFolderUtilities,
     LazySvc<Apps.App> appOverrideLazy)
-    : MyServicesBase(connect: [codeApiServiceFactory, appFolderUtilities, appOverrideLazy])
+    : MyServicesBase(connect: [exCtxFactory, appFolderUtilities, appOverrideLazy])
 {
     public LazySvc<Apps.App> AppOverrideLazy { get; } = appOverrideLazy;
-    public CodeApiServiceFactory CodeApiServiceFactory { get; } = codeApiServiceFactory;
+    public IExecutionContextFactory ExecutionContextFactory { get; } = exCtxFactory;
     public DnnAppFolderUtilities AppFolderUtilities { get; } = appFolderUtilities;
 }

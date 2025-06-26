@@ -1,20 +1,20 @@
-﻿using System.IO;
-using ToSic.Eav.Apps.Integration;
-using ToSic.Eav.ImportExport.Internal;
-using ToSic.Eav.ImportExport.Internal.ImportHelpers;
-using ToSic.Eav.ImportExport.Internal.Zip;
-using ToSic.Eav.Internal.Environment;
-using ToSic.Eav.Internal.Features;
-using ToSic.Eav.Persistence.Logging;
-using ToSic.Eav.Security;
-using ToSic.Sxc.Apps.Internal.Work;
+﻿using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.ImportExport.Integration;
+using ToSic.Eav.ImportExport.Sys.ImportHelpers;
+using ToSic.Eav.ImportExport.Sys.XmlImport;
+using ToSic.Eav.ImportExport.Sys.Zip;
+using ToSic.Eav.Persistence.Sys.Logging;
+using ToSic.Eav.Sys;
+using ToSic.Eav.WebApi.Sys.Security;
+using ToSic.Sys.Capabilities.Features;
+using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Backend.ImportExport;
 
 /// <summary>
 /// This object will ensure that an app is reset to the state it was in when the app.xml was last exported
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ResetApp(
     LazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
     ImpExpHelpers impExpHelpers,
@@ -23,7 +23,7 @@ public class ResetApp(
     IUser user,
     IImportExportEnvironment env,
     ZipImport zipImport,
-    IEavFeaturesService features,
+    ISysFeaturesService features,
     IAppPathsMicroSvc appPathSvc)
     : ServiceBase("Bck.Export",
         connect:
@@ -58,12 +58,12 @@ public class ResetApp(
         //    return result;
         //}
 
-        var appDataFolder = Path.Combine(appPaths.PhysicalPath, Eav.Constants.AppDataProtectedFolder);
-        var filePath = Path.Combine(appDataFolder, Eav.Constants.AppDataFile);
+        var appDataFolder = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppDataProtectedFolder);
+        var filePath = Path.Combine(appDataFolder, FolderConstants.AppDataFile);
         if (!File.Exists(filePath))
         {
             result.Success = false;
-            result.Messages.Add(new($"Can't find the {Eav.Constants.AppDataFile} in the folder", Message.MessageTypes.Error));
+            result.Messages.Add(new($"Can't find the {FolderConstants.AppDataFile} in the folder", Message.MessageTypes.Error));
             return result;
         }
 
@@ -73,10 +73,10 @@ public class ResetApp(
         // 3. Optional reset SiteFiles
         if (withSiteFiles)
         {
-            var sourcePath = Path.Combine(appPaths.PhysicalPath, Eav.Constants.AppDataProtectedFolder);
+            var sourcePath = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppDataProtectedFolder);
 
             // Copy app global template files persisted in /App_Data/2sexyGlobal/ back to app [globalTemplatesRoot]
-            var globalTemplatesStateFolder = Path.Combine(appDataFolder, Eav.Constants.ZipFolderForGlobalAppStuff);
+            var globalTemplatesStateFolder = Path.Combine(appDataFolder, FolderConstants.ZipFolderForGlobalAppStuff);
             if (Directory.Exists(globalTemplatesStateFolder))
             {
                 zipImport.Init(zoneId, appId, allowCode: true);
@@ -85,7 +85,7 @@ public class ResetApp(
             }
 
             // Copy portal files persisted in /App_Data/SiteFiles/ back to site
-            env.TransferFilesToSite(Path.Combine(sourcePath, Eav.Constants.ZipFolderForSiteFiles), string.Empty);
+            env.TransferFilesToSite(Path.Combine(sourcePath, FolderConstants.ZipFolderForSiteFiles), string.Empty);
         }
 
         // 4. Now import the App.xml

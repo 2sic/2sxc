@@ -1,10 +1,8 @@
 ﻿using System.Configuration;
-using System.IO;
-using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.Razor;
-using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Dnn.Razor.Internal;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Render.Sys.Specs;
 
 namespace ToSic.Sxc.Dnn.Razor;
 
@@ -13,11 +11,13 @@ namespace ToSic.Sxc.Dnn.Razor;
 /// </summary>
 [PrivateApi("used to be InternalApi_DoNotUse_MayChangeWithoutNotice till v16.09")]
 [EngineDefinition(Name = "Razor")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 // ReSharper disable once UnusedMember.Global
 internal partial class DnnRazorEngine(EngineBase.MyServices helpers, DnnRazorCompiler razorCompiler)
     : EngineBase(helpers, connect: [razorCompiler]),
-        IRazorEngine, IEngineDnnOldCompatibility
+        IRazorEngine
+        // #RemovedV20 #ModulePublish
+        //, IEngineDnnOldCompatibility
 {
     /// <inheritdoc />
     [PrivateApi]
@@ -34,10 +34,7 @@ internal partial class DnnRazorEngine(EngineBase.MyServices helpers, DnnRazorCom
         // Catch web.config Error on DNNs upgraded to 7
         catch (ConfigurationErrorsException exc)
         {
-            var e = new Exception("Configuration Error. Your web.config seems to be wrong in the 2sxc folder.", exc);
-            //old till 2023-05-11 " Please follow this checklist to solve the problem: http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7", exc);
-            // see https://web.archive.org/web/20131201093234/http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7
-            throw l.Done(e);
+            throw l.Done(new Exception("Configuration Error. Your web.config seems to be wrong in the 2sxc folder.", exc));
         }
         l.Done();
     }
@@ -45,15 +42,13 @@ internal partial class DnnRazorEngine(EngineBase.MyServices helpers, DnnRazorCom
     [PrivateApi]
     private RazorComponentBase EntryRazorComponent
     {
-        get => Log.Getter(() => _entryRazorComponent);
-        set => Log.Setter(() => _entryRazorComponent = value);
+        get => Log.Getter(() => field);
+        set => Log.Do(cName: $"set{nameof(EntryRazorComponent)}", action: () => field = value);
     }
-    private RazorComponentBase _entryRazorComponent;
-
 
 
     [PrivateApi]
-    protected override (string, List<Exception>) RenderEntryRazor(RenderSpecs specs)
+    protected override (string, List<Exception>?) RenderEntryRazor(RenderSpecs specs)
     {
         var (writer, exceptions) = RenderImplementation(EntryRazorComponent, specs);
         return (writer.ToString(), exceptions);
@@ -74,26 +69,28 @@ internal partial class DnnRazorEngine(EngineBase.MyServices helpers, DnnRazorCom
         var razorBuild = razorCompiler.InitWebpage(templatePath, exitIfNoHotBuild: false);
         var pageToInit = razorBuild.Instance;
 
-        if (pageToInit is RazorComponent rzrPage)
-        {
-#pragma warning disable CS0618
-            rzrPage.Purpose = Purpose;
-#pragma warning restore CS0618
-        }
+        // #RemovedV20 #ModulePublish
+        //        if (pageToInit is RazorComponent rzrPage)
+        //        {
+        //#pragma warning disable CS0618
+        //            rzrPage.Purpose = Purpose;
+        //#pragma warning restore CS0618
+        //        }
 
-#pragma warning disable 618, CS0612
-        if (pageToInit is SexyContentWebPage oldPage)
-            oldPage.InstancePurpose = (InstancePurposes)Purpose;
-#pragma warning restore 618, CS0612
+        // #RemovedV20 #ModulePublish
+        //#pragma warning disable 618, CS0612
+        //        if (pageToInit is SexyContentWebPage oldPage)
+        //            oldPage.InstancePurpose = (InstancePurposes)Purpose;
+        //#pragma warning restore 618, CS0612
 
         return l.ReturnAsOk(new(pageToInit, razorBuild.UsesHotBuild));
 
     }
 
 
-    /// <summary>
-    /// Special old mechanism to always request jQuery and Rvt
-    /// </summary>
-    public bool OldAutoLoadJQueryAndRvt => EntryRazorComponent._CodeApiSvc.Cdf.CompatibilityLevel <= CompatibilityLevels.MaxLevelForAutoJQuery;
+    ///// <summary>
+    ///// Special old mechanism to always request jQuery and Rvt
+    ///// </summary>
+    //public bool OldAutoLoadJQueryAndRvt => EntryRazorComponent.CompatibilityLevel <= CompatibilityLevels.MaxLevelForAutoJQuery;
 
 }

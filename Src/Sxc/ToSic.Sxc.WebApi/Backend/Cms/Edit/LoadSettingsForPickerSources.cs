@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Data.Sys.ContentTypes;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.Cms;
 
@@ -19,7 +20,7 @@ internal class LoadSettingsForPickerSources() : LoadSettingsProviderBase($"{SxcL
             .SelectMany(ct => ct.Attributes
                 .Where(a => PickerNames.Contains(a.InputType()))
             )
-            .ToList();
+            .ToListOpt();
 
         if (pickerAttributes.Count == 0) return l.Return([], "no picker fields");
 
@@ -33,25 +34,26 @@ internal class LoadSettingsForPickerSources() : LoadSettingsProviderBase($"{SxcL
                     .SelectMany(e => e.Children(nameof(IUiPicker.DataSources)));
 
                 // Flatten and remember the attribute for debugging
-                return dsEntities.Select(ds => new
-                {
-                    Attribute = a,
-                    DataSource = ds
-                });
+                return dsEntities
+                    .Select(ds => new
+                    {
+                        Attribute = a,
+                        DataSource = ds
+                    });
             })
             .Where(ps => ps?.DataSource != null)
-            .ToList();
+            .ToListOpt();
 
         // Find all the NameIds which the DataSource says it can create
         var createTypes = pickerSources
-            .Select(p => p.DataSource.Get<string>(nameof(IUiPickerSourceEntity.CreateTypes), languages: []))
+            .Select(p => p.DataSource!.Get<string>(nameof(IUiPickerSourceEntity.CreateTypes), languages: []))
             .Where(s => s.HasValue())
             // TODO: INFO @SDV - he probably has comma separated values
-            .SelectMany(s => s
+            .SelectMany(s => s!
                 // TODO!!! NEW-LINES seem to be saved wrong!
                 .Replace("\\n", "\n")
                 .LinesToArrayWithoutEmpty())
-            .ToList();
+            .ToListOpt();
 
         // Look up the types in the app-state
         var typesToEnableCreate = createTypes
@@ -60,14 +62,17 @@ internal class LoadSettingsForPickerSources() : LoadSettingsProviderBase($"{SxcL
             .Select(nameId => new
             {
                 NameId = nameId,
-                Type = parameters.ContextOfApp.AppReader.GetContentType(nameId)
+                Type = parameters.ContextOfApp.AppReaderRequired.TryGetContentType(nameId)
             })
             .Where(t => t.Type != null)
+            .ToListOpt();
+
+        if (typesToEnableCreate.Count == 0)
+            return l.Return([], "no types to enable create");
+
+        var typesOnly = typesToEnableCreate
+            .Select(t => t.Type!)
             .ToList();
-
-        if (typesToEnableCreate.Count == 0) return l.Return([], "no types to enable create");
-
-        var typesOnly = typesToEnableCreate.Select(t => t.Type).ToList();
         return l.Return(typesOnly, $"{typesOnly.Count}");
     }
 }

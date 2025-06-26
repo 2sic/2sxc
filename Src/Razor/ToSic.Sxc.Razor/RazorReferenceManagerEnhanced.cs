@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Options;
-using System.Collections.Generic;
-using System.Linq;
 using ToSic.Sxc.Razor.DotNetOverrides;
 
 namespace ToSic.Sxc.Razor
@@ -11,8 +9,7 @@ namespace ToSic.Sxc.Razor
     internal class RazorReferenceManagerEnhanced(ApplicationPartManager partManager, IOptions<MvcRazorRuntimeCompilationOptions> options) : RazorReferenceManager(partManager, options)
     {
         // cache references for reuse;
-        public override IReadOnlyList<MetadataReference> CompilationReferences => _compilationReferences ??= base.CompilationReferences;
-        private IReadOnlyList<MetadataReference> _compilationReferences;
+        public override IReadOnlyList<MetadataReference> CompilationReferences => field ??= base.CompilationReferences;
 
         public IReadOnlyList<MetadataReference> GetAdditionalCompilationReferences(IEnumerable<string> additionalReferencePaths)
         {

@@ -1,0 +1,10 @@
+<Project>
+
+  <!-- Import common files which change how the project compiles; AssemblyInfo from 2sxc; rest form Lib.Imports -->
+  <ItemGroup>
+    <Compile Include="..\..\SharedImports\Properties\SxcSharedAssemblyInfo.cs" Link="Properties\SxcSharedAssemblyInfo.cs" />
+    <Compile Include="..\..\..\..\eav-server\SharedImports\Code\System.Runtime.CompilerServices.cs" Link="Properties\System.Runtime.CompilerServices.cs" />
+    <Compile Include="..\..\..\..\eav-server\SharedImports\Code\HideInternalApisOnReleaseOnly.cs" Link="Properties\HideInternalApisOnReleaseOnly.cs" />
+  </ItemGroup>
+
+</Project>

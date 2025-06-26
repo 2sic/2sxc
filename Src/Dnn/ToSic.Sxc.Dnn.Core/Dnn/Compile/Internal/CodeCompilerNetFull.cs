@@ -1,29 +1,19 @@
-﻿using System.IO;
-using System.Web.Compilation;
-using ToSic.Eav.Apps.Internal;
-using ToSic.Sxc.Code.Internal.HotBuild;
-using ToSic.Sxc.Code.Internal.SourceCode;
+﻿using System.Web.Compilation;
+using ToSic.Eav.Apps.Sys.AppJson;
+using ToSic.Sxc.Code.Sys.HotBuild;
+using ToSic.Sxc.Code.Sys.SourceCode;
 
 namespace ToSic.Sxc.Dnn.Compile.Internal;
 
 [PrivateApi]
-internal class CodeCompilerNetFull : CodeCompiler
+internal class CodeCompilerNetFull(
+    IServiceProvider serviceProvider,
+    IRoslynBuildManager roslynBuildManager,
+    LazySvc<SourceAnalyzer> sourceAnalyzer,
+    LazySvc<IAppJsonConfigurationService> appJson)
+    : CodeCompiler(serviceProvider, connect: [roslynBuildManager, sourceAnalyzer, appJson])
 {
-    private readonly IRoslynBuildManager _roslynBuildManager;
-    private readonly LazySvc<SourceAnalyzer> _sourceAnalyzer;
-    private readonly LazySvc<IAppJsonService> _appJson;
-
-    public CodeCompilerNetFull(IServiceProvider serviceProvider, IRoslynBuildManager roslynBuildManager, LazySvc<SourceAnalyzer> sourceAnalyzer, LazySvc<IAppJsonService> appJson) : base(serviceProvider)
-    {
-
-        ConnectLogs([
-            _roslynBuildManager = roslynBuildManager,
-            _sourceAnalyzer = sourceAnalyzer,
-            _appJson = appJson
-        ]);
-    }
-
-    protected internal override AssemblyResult GetAssembly(string relativePath, string className, HotBuildSpec spec)
+    public override AssemblyResult GetAssembly(string relativePath, string className, HotBuildSpec spec)
     {
         var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {nameof(className)}: '{className}'; {spec}", timer: true);
 
@@ -32,18 +22,18 @@ internal class CodeCompilerNetFull : CodeCompiler
             var errorMessage =
                 $"Can't compile '{className}' in {Path.GetFileName(relativePath)}. Details are logged into insights. {additionalInfo}" +
                 ex.Message;
-            return new(errorMessages: errorMessage);
+            return new() { ErrorMessages = errorMessage, };
         }
 
         try
         {
             // TODO: SHOULD OPTIMIZE so the file doesn't need to read multiple times
-            var codeFileInfo = _sourceAnalyzer.Value.TypeOfVirtualPath(relativePath);
+            var codeFileInfo = sourceAnalyzer.Value.TypeOfVirtualPath(relativePath);
 
             try
             {
-                if (_appJson.Value.DnnCompilerAlwaysUseRoslyn(spec.AppId) || codeFileInfo.IsHotBuildSupported())
-                    return l.Return(_roslynBuildManager.GetCompiledAssembly(codeFileInfo, className, spec),
+                if (appJson.Value.DnnCompilerAlwaysUseRoslyn(spec.AppId) || codeFileInfo.IsHotBuildSupported())
+                    return l.Return(roslynBuildManager.GetCompiledAssembly(codeFileInfo, className, spec),
                         "Ok, RoslynBuildManager");
             }
             catch (Exception ex)

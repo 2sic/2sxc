@@ -1,9 +1,9 @@
-﻿using ToSic.Sxc.Apps.Internal.Assets;
+﻿using ToSic.Sxc.Apps.Sys.EditAssets;
 
 namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
 public class TemplatesDto
 {
-    public string Default { get; set; }
-    public List<TemplateInfo> Templates;
+    public required string Default { get; set; }
+    public required List<TemplateInfo> Templates;
 }

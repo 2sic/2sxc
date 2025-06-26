@@ -9,8 +9,9 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dependencies;
 using System.Web.Http.Filters;
-using ToSic.Eav.Security.Encryption;
 using ToSic.Eav.Serialization;
+using ToSic.Eav.Serialization.Sys.Json;
+using ToSic.Sys.Security.Encryption;
 
 namespace ToSic.Sxc.WebApi;
 
@@ -51,7 +52,9 @@ public class SecureEndpointAttribute : ActionFilterAttribute
             // Deserializes the JSON string to an EncryptedData object and performs a "EncryptedData" check.
             // If encrypted data is missing, sets the request content stream to the original JSON string and returns.
             var encryptedData = JsonSerializer.Deserialize<EncryptedData>(jsonString, options: JsonOptions.SafeJsonForHtmlAttributes);
-            if (encryptedData?.Data is null && encryptedData?.Key is null && encryptedData?.Iv is null && encryptedData?.Version == 1)
+            // ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+            if (encryptedData == null || (encryptedData.Data is null && encryptedData.Key is null && encryptedData.Iv is null && encryptedData.Version == 1))
+                                          // ReSharper restore ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
             {
                 SetRequestContentStream(request, jsonString);
                 return;

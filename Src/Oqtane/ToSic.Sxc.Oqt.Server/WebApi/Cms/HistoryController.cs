@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using ToSic.Eav.Persistence.Versions;
-using ToSic.Eav.WebApi.Cms;
-using ToSic.Eav.WebApi.Formats;
-using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.Cms.HistoryControllerReal;
 
@@ -19,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Cms}")]
 [PrivateApi]
 [ValidateAntiForgeryToken]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class HistoryController() : OqtStatefulControllerBase(RealController.LogSuffix), IHistoryController
 {
     private RealController Real => GetService<RealController>();
@@ -36,6 +34,6 @@ public class HistoryController() : OqtStatefulControllerBase(RealController.LogS
     [HttpPost]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Restore(int appId, int changeId, [FromBody] ItemIdentifier item) 
-        => Real.Restore(appId, changeId, item);
+    public bool Restore(int appId, [FromQuery(Name = "changeId")] int transactionId, [FromBody] ItemIdentifier item) 
+        => Real.Restore(appId, transactionId, item);
 }

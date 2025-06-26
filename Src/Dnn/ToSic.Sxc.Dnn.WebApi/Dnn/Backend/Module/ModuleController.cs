@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Dnn.Backend.Module;
 [SupportedModules(DnnSupportedModuleNames)]
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [ValidateAntiForgeryToken]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ModuleController() : DnnSxcControllerRoot("Mod")
 {
     [HttpGet]

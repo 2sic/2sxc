@@ -1,40 +1,68 @@
-﻿using ToSic.Eav.ImportExport.Json.V1;
-using ToSic.Eav.Metadata;
-using ToSic.Eav.WebApi.Dto.Metadata;
+﻿using ToSic.Eav.Metadata;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Adam.Sys;
+using ToSic.Sxc.Adam.Sys.Manager;
+using ToSic.Sxc.Adam.Sys.Security;
+using ToSic.Sxc.Adam.Sys.Work;
 using ToSic.Sxc.Data;
+using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Backend.Adam;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TFileId>.MyServices services)
+    : ServiceWithSetup<AdamItemDtoMakerOptions>("Adm"), IAdamItemDtoMaker
 {
     #region Constructor / DI
 
-    public class MyServices(AdamSecurityChecksBase security)
+    public class MyServices(IAdamSecurityCheckService security)
     {
-        public AdamSecurityChecksBase Security { get; } = security;
+        public IAdamSecurityCheckService Security { get; } = security;
     }
 
-    public AdamItemDtoMaker<TFolderId, TFileId> Init(AdamContext adamContext)
-    {
-        AdamContext = adamContext;
-        return this;
-    }
+    private readonly IAdamSecurityCheckService _security = services.Security;
 
-    private readonly AdamSecurityChecksBase _security = services.Security;
-    public AdamContext AdamContext;
+    [field: AllowNull, MaybeNull]
+    public AdamContext AdamContext => field ??= Options.AdamContext!;
 
     #endregion
 
     private const string ThumbnailPattern = "{0}?w=120&h=120&mode=crop&urlSource=backend";
     private const string PreviewPattern = "{0}?w=800&h=800&mode=max&urlSource=backend";
 
-    public virtual AdamItemDto Create(File<TFolderId, TFileId> file)
+    public IEnumerable<AdamItemDto> Convert(AdamFolderFileSet set)
+    {
+        // This will contain the list of items
+        var list = new List<AdamItemDto>();
+
+        if (set.Root != null)
+        {
+            var currentFolderDto = Create(set.Root);
+            currentFolderDto.Name = ".";
+            list.Insert(0, currentFolderDto);
+        }
+
+        var folders = set.Folders
+            .Select(Create)
+            .ToListOpt();
+        list.AddRange(folders);
+
+        var files = set.Files
+            .Select(Create)
+            .ToListOpt();
+        list.AddRange(files);
+        return list;
+    }
+
+    public virtual AdamItemDto Create(IFile file)
     {
         var url = file.Url;
-        var item = new AdamItemDto<TFolderId, TFileId>(false, file.SysId, file.ParentSysId,
+        // Cast to typed, to access the SysId and ParentSysId
+        var fileAsTyped = (File<TFolderId, TFileId>)file;
+        var item = new AdamItemDto<TFolderId, TFileId>(
+            false,
+            fileAsTyped.SysId,
+            fileAsTyped.ParentSysId,
             file.FullName, file.Size,
             file.Created, file.Modified)
         {
@@ -42,7 +70,7 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
             ThumbnailUrl = string.Format(ThumbnailPattern, url),
             PreviewUrl = string.Format(PreviewPattern, url),
             Url = url,
-            ReferenceId = (file as IHasMetadata).Metadata.Target.KeyString,
+            ReferenceId = ((IHasMetadata)file).Metadata.Target.KeyString,
             AllowEdit = CanEditFolder(file),
             Metadata = GetMetadataOf(file.Metadata),
             Type = Classification.TypeName(file.Extension),
@@ -51,24 +79,32 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
     }
 
 
-    public virtual AdamItemDto Create(Folder<TFolderId, TFileId> folder)
+    public virtual AdamItemDto Create(IFolder folder)
     {
-        var item = new AdamItemDto<TFolderId, TFolderId>(true, folder.SysId, folder.ParentSysId, folder.Name, 0,
+        // Cast to typed, to access the SysId and ParentSysId
+        var folderAsTyped = (Folder<TFolderId, TFileId>)folder;
+        var item = new AdamItemDto<TFolderId, TFolderId>(
+            true,
+            folderAsTyped.SysId,
+            folderAsTyped.ParentSysId,
+            folder.Name,
+            0,
             folder.Created,
             folder.Modified)
         {
             Path = folder.Path,
             AllowEdit = CanEditFolder(folder),
-            ReferenceId = (folder as IHasMetadata).Metadata.Target.KeyString,
+            ReferenceId = ((IHasMetadata)folder).Metadata.Target.KeyString,
             //MetadataId = (int)folder.Metadata.EntityId,
             Metadata = GetMetadataOf(folder.Metadata),
         };
         return item;
     }
 
-    private IEnumerable<MetadataOfDto> GetMetadataOf(IMetadata md)
+    private IEnumerable<MetadataOfDto>? GetMetadataOf(ITypedMetadata? md)
     {
-        if (md == null) return null;
+        if (md == null)
+            return null;
 
         var result = ((IHasMetadata)md).Metadata
             .Select(m => new MetadataOfDto
@@ -78,20 +114,20 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
                 Type = new(m)
             })
             .ToArray();
-        return result.Any() ? result : null;
+        return result.Any()
+            ? result
+            : null;
     }
 
     private bool CanEditFolder(Eav.Apps.Assets.IAsset original)
-    {
-        return AdamContext.UseSiteRoot
+        => AdamContext.UseSiteRoot
             ? _security.CanEditFolder(original)
             : ContextAllowsEdit;
-    }
 
     /// <summary>
     /// Do this check once only, as the result will never change during one lifecycle
     /// </summary>
-    private bool ContextAllowsEdit 
+    private bool ContextAllowsEdit
         => _contextAllowsEdit ??= !AdamContext.Security.UserIsRestricted || AdamContext.Security.FieldPermissionOk(GrantSets.WriteSomething);
     private bool? _contextAllowsEdit;
 

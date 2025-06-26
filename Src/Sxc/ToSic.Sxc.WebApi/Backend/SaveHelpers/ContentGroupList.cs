@@ -1,14 +1,16 @@
-﻿using ToSic.Eav.Apps.State;
-using ToSic.Eav.Plumbing;
-using ToSic.Eav.WebApi.Formats;
-using ToSic.Sxc.Apps.Internal;
-using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.Blocks.Internal;
+﻿using ToSic.Eav.Apps.Sys.State;
+using ToSic.Eav.Data.Sys.ContentTypes;
+using ToSic.Eav.Data.Sys.Entities;
+using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Blocks.Sys.BlockEditor;
+using ToSic.Sxc.Blocks.Sys.Views;
+using ToSic.Sxc.Blocks.Sys.Work;
+using ToSic.Sys.Utils;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ContentGroupList(
     GenWorkPlus<WorkBlocks> blocks,
     LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
@@ -23,16 +25,17 @@ public class ContentGroupList(
         AppCtx = blocks.CtxSvc.Context(appIdentity);
         return this;
     }
-    private IAppIdentity _appIdentity;
-    private IAppWorkCtx AppCtx { get; set; }
+
+    private IAppIdentity _appIdentity = null!;
+    private IAppWorkCtx AppCtx { get; set; } = null!;
     #endregion
 
-    internal bool IfChangesAffectListUpdateIt(IBlock block, List<BundleWithHeader<IEntity>> items, Dictionary<Guid, int> ids)
+    internal bool IfChangesAffectListUpdateIt(IBlock? block, List<BundleWithHeader<IEntity>> items, Dictionary<Guid, int> ids)
     {
         var l = Log.Fn<bool>();
         var groupItems = items
             .Where(i => i.Header.Parent != null)
-            .GroupBy(i => i.Header.Parent.Value.ToString() + i.Header.IndexSafeOrFallback() + i.Header.AddSafe)
+            .GroupBy(i => i.Header.Parent!.Value.ToString() + i.Header.IndexSafeOrFallback() + i.Header.AddSafe)
             .ToList();
 
         // if it's new, it has to be added to a group
@@ -42,24 +45,28 @@ public class ContentGroupList(
             : l.Return(true, "no additional group processing necessary");
     }
 
-    private bool PostSaveUpdateIdsInParent(IBlock block, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, BundleWithHeader<IEntity>>> pairsOrSingleItems)
+    private bool PostSaveUpdateIdsInParent(IBlock? block, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, BundleWithHeader<IEntity>>> pairsOrSingleItems)
     {
         var l = Log.Fn<bool>($"{_appIdentity.AppId}");
 
         // If no content block given, skip all this
-        if (block == null) return l.ReturnTrue("no block, nothing to update");
+        if (block == null)
+            return l.ReturnTrue("no block, nothing to update");
 
 
         foreach (var bundle in pairsOrSingleItems)
         {
             l.A("processing:" + bundle.Key);
 
-            if (bundle.First().Header.Parent == null) continue;
+            if (bundle.First().Header.Parent == null)
+                continue;
 
-            var parent = AppCtx.AppReader.GetDraftOrPublished(bundle.First().Header.GetParentEntityOrError());
+            var parent = AppCtx.AppReader.GetDraftOrPublished(bundle.First().Header.GetParentEntityOrError())!;
             var targetIsContentBlock = parent.Type.Name == WorkBlocks.BlockTypeName;
                 
-            var primaryItem = targetIsContentBlock ? FindContentItem(bundle) : bundle.First();
+            var primaryItem = targetIsContentBlock
+                ? FindContentItem(bundle)
+                : bundle.First();
             var primaryId = GetIdFromGuidOrError(postSaveIds, primaryItem.Entity.EntityGuid);
 
             var ids = targetIsContentBlock
@@ -75,8 +82,8 @@ public class ContentGroupList(
             l.A($"will add: {willAdd}; Group.Add:{primaryItem.Header.Add}; EntityId:{primaryItem.Entity.EntityId}");
 
             var fieldPair = targetIsContentBlock
-                ? ViewParts.PickFieldPair(primaryItem.Header.Field)
-                : [primaryItem.Header.Field];
+                ? ViewParts.PickFieldPair(primaryItem.Header.Field!)
+                : [primaryItem.Header.Field!];
 
             var fieldList = workFieldList.New(AppCtx.AppReader);
             if (willAdd) // this cannot be auto-detected, it must be specified
@@ -84,7 +91,8 @@ public class ContentGroupList(
 
                 // handle edge case on app with empty list, when index=1, but it should be index=0 (indexNullAddToEnd=true have the same effect)
                 // fix https://github.com/2sic/2sxc/issues/2943 
-                if (!parent.Children(fieldPair.First()).Any() && !targetIsContentBlock) indexNullAddToEnd = true;
+                if (!parent.Children(fieldPair.First()).Any() && !targetIsContentBlock)
+                    indexNullAddToEnd = true;
                     
                 fieldList.FieldListAdd(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft, indexNullAddToEnd, targetIsContentBlock);
             }
@@ -119,34 +127,38 @@ public class ContentGroupList(
         return id;
     }
 
-    private int? FindPresentationItem(IReadOnlyDictionary<Guid, int> postSaveIds,
-        IGrouping<string, BundleWithHeader<IEntity>> bundle) => Log.Func(() =>
+    private int? FindPresentationItem(IReadOnlyDictionary<Guid, int> postSaveIds, IGrouping<string, BundleWithHeader<IEntity>> bundle)
     {
+        var l = Log.Fn<int?>();
         int? presentationId = null;
         var presItem =
             bundle.FirstOrDefault(e => string.Equals(e.Header.Field, ViewParts.Presentation, OrdinalIgnoreCase))
             ?? bundle.FirstOrDefault(e =>
                 string.Equals(e.Header.Field, ViewParts.ListPresentation, OrdinalIgnoreCase));
 
-        if (presItem == null) return (null, "no presentation");
+        if (presItem == null)
+            return l.ReturnNull("no presentation");
         // use null if it shouldn't have one
-        if (presItem.Header.IsEmpty) return (null, "header is empty");
+        if (presItem.Header.IsEmpty)
+            return l.ReturnNull("header is empty");
 
         if (postSaveIds.TryGetValue(presItem.Entity.EntityGuid, out var id))
             presentationId = id;
 
-        return (presentationId, "found");
-    });
+        return l.Return(presentationId, "found");
+    }
 
-    internal ContentGroupList ConvertGroup(List<ItemIdentifier> identifiers) => Log.Func(() =>
+    internal ContentGroupList ConvertGroup(List<ItemIdentifier> identifiers)
     {
+        var l = Log.Fn<ContentGroupList>();
         foreach (var identifier in identifiers.Where(identifier => identifier != null))
             identifier.IsContentBlockMode = DetectContentBlockMode(identifier);
-        return this;
-    });
+        return l.Return(this);
+    }
 
-    internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers) => Log.Func(() =>
+    internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers)
     {
+        var l = Log.Fn<List<ItemIdentifier>>();
         var newItems = new List<ItemIdentifier>();
         var appBlocks = blocks.New(AppCtx);
         foreach (var identifier in identifiers)
@@ -158,7 +170,7 @@ public class ContentGroupList(
 
                 //var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(identifier.GetParentEntityOrError());
                 var contentGroup = appBlocks.GetBlockConfig(identifier.GetParentEntityOrError());
-                var contentTypeName = (contentGroup.View as View)?.GetTypeStaticName(identifier.Field) ?? "";
+                var contentTypeName = (contentGroup.View as View)?.GetTypeStaticName(identifier.Field!) ?? "";
 
                 // if there is no content-type for this, then skip it (don't deliver anything)
                 if (contentTypeName == "")
@@ -172,11 +184,11 @@ public class ContentGroupList(
 
             // Case #2 it's an entity inside a field of another entity
             // Added in v11.01
-            if (identifier.Parent != null && identifier.Field != null)
+            if (identifier is { Parent: not null, Field: not null })
             {
                 // look up type
-                var target = AppCtx.AppReader.List.One(identifier.Parent.Value);
-                var field = target.Type[identifier.Field];
+                var target = AppCtx.AppReader.List.One(identifier.Parent.Value)!;
+                var field = target.Type[identifier.Field]!;
                 identifier.ContentTypeName = field.EntityFieldItemTypePrimary();
                 newItems.Add(identifier);
                 continue;
@@ -186,8 +198,8 @@ public class ContentGroupList(
             newItems.Add(identifier);
         }
 
-        return newItems;
-    });
+        return l.Return(newItems, $"{newItems.Count}");
+    }
 
 
     /// <summary>
@@ -202,7 +214,7 @@ public class ContentGroupList(
             return l.ReturnFalse("no parent");
 
         // get the entity and determine if it's a content-block. If yes, that should affect the differences in load/save
-        var entity = AppCtx.AppReader.List.One(identifier.Parent.Value);
+        var entity = AppCtx.AppReader.List.One(identifier.Parent.Value)!;
         return l.Return(entity.Type.Name == WorkBlocks.BlockTypeName, "type name should match");
     }
 
@@ -210,7 +222,7 @@ public class ContentGroupList(
     private bool ConvertListIndexToEntityIds(ItemIdentifier identifier, BlockConfiguration blockConfiguration)
     {
         var l = Log.Fn<bool>();
-        var part = blockConfiguration[identifier.Field];
+        var part = blockConfiguration[identifier.Field!];
         if (!identifier.AddSafe) // not in add-mode
         {
             var idx = identifier.IndexSafeOrFallback(part.Count - 1);
@@ -220,7 +232,7 @@ public class ContentGroupList(
         }
 
         // tell the UI that it should not actually use this data yet, keep it locked
-        if (!identifier.Field.ToLowerInvariant().Contains(ViewParts.PresentationLower))
+        if (!identifier.Field!.ToLowerInvariant().Contains(ViewParts.PresentationLower))
             return l.ReturnFalse("no presentation");
 
         // the following steps are only for presentation items
@@ -232,8 +244,8 @@ public class ContentGroupList(
         identifier.IsEmpty = true;
 
         identifier.DuplicateEntity = identifier.Field.ToLowerInvariant() == ViewParts.PresentationLower
-            ? blockConfiguration.View.PresentationItem?.EntityId
-            : blockConfiguration.View.HeaderPresentationItem?.EntityId;
+            ? blockConfiguration.View!.PresentationItem?.EntityId
+            : blockConfiguration.View!.HeaderPresentationItem?.EntityId;
 
         return l.ReturnTrue("ok");
     }

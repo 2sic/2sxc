@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Dnn.StartUp;
 /// This is the preferred way to start Dependency Injection, but it requires Dnn 9.4+
 /// If an older version of Dnn is used, this code will not run
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class StartupDnn9 : IDnnStartup
 {
     public void ConfigureServices(IServiceCollection services)

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 using ToSic.Lib.DI;

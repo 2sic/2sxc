@@ -1,17 +1,18 @@
-﻿using ToSic.Eav.WebApi;
+﻿using ToSic.Eav.WebApi.Sys.Cms;
+using ToSic.Sxc.Adam.Sys.Work;
 using ToSic.Sxc.Backend.Adam;
 
 namespace ToSic.Sxc.Backend.Cms;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public partial class EditLoadPrefetchHelper(
-    Generator<HyperlinkBackend<int, int>> hyperlinkBackend,
-    Generator<IAdamTransGetItems> adamTransGetItems,
+    Generator<HyperlinkBackend> hyperlinkBackend,
+    Generator<IAdamPrefetchHelper, AdamWorkOptions> adamTransGetItems,
     EntityPickerApi entityPickerBackend)
     : ServiceBase(SxcLogName + ".Prefetch", connect: [adamTransGetItems, hyperlinkBackend, entityPickerBackend])
 {
-    public EditPrefetchDto TryToPrefectAdditionalData(int appId, EditDto editData) => Log.Func(() =>
-        new EditPrefetchDto
+    public EditPrefetchDto TryToPrefectAdditionalData(int appId, EditLoadDto editData)
+        => Log.Quick(() => new EditPrefetchDto
         {
             Links = PrefetchLinks(appId, editData),
             Entities = PrefetchEntities(appId, editData),
@@ -19,9 +20,9 @@ public partial class EditLoadPrefetchHelper(
         });
 
 
-    private List<EntityForPickerDto> PrefetchEntities(int appId, EditDto editData)
+    private ICollection<EntityForPickerDto> PrefetchEntities(int appId, EditLoadDto editData)
     {
-        var l = Log.Fn<List<EntityForPickerDto>>();
+        var l = Log.Fn<ICollection<EntityForPickerDto>>();
         try
         {
             // Step 1: try to find entity fields
@@ -30,21 +31,25 @@ public partial class EditLoadPrefetchHelper(
                 .Where(b => b.Entity?.Attributes?.Entity?.Any() ?? false)
                 .Select(b => new
                 {
-                    b.Entity.Guid,
+                    b.Entity!.Guid,
                     b.Entity.Attributes.Entity
                 })
-                .ToList();
+                .ToListOpt();
 
-            var entities = bundlesHavingEntities.SelectMany(set
-                    => set.Entity.SelectMany(e
-                        => e.Value?.SelectMany(entityAttrib => entityAttrib.Value)))
+            var entities = bundlesHavingEntities
+                .SelectMany(set => set.Entity!
+                    .SelectMany(e => e.Value
+                        ?.SelectMany(entityAttrib => entityAttrib.Value) ?? []
+                    )
+                )
                 .Where(guid => guid != null)
-                .Select(guid => guid.ToString())
+                .Select(guid => guid.ToString()!)
                 // Step 2: Check which ones have a link reference
-                .ToArray();
+                .ToListOpt();
 
             // stop here if nothing found, otherwise the backend will return all entities
-            if (!entities.Any()) return l.Return([], "none found");
+            if (!entities.Any())
+                return l.Return([], "none found");
 
             var items = entityPickerBackend.GetForEntityPicker(appId, entities, null, allowFromAllScopes: true);
             return l.Return(items, $"{items.Count}");

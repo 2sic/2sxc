@@ -1,19 +1,16 @@
-﻿using System.IO;
-using System.Web.Http.Controllers;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Code.InfoSystem;
-using ToSic.Eav.Generics;
+﻿using System.Web.Http.Controllers;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Backend.Adam;
-using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Code.Internal.CodeRunHelpers;
-using ToSic.Sxc.Code.Internal.HotBuild;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Code.Sys.CodeRunHelpers;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.Code;
-using ToSic.Sxc.Internal;
+using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Code.InfoSystem;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal;
@@ -40,16 +37,17 @@ internal class DynamicApiCodeHelpers: CodeHelper
     /// <param name="request"></param>
     public void InitializeBlockContext(HttpRequestMessage request)
     {
-        if (_blockContextInitialized) return;
+        if (_blockContextInitialized)
+            return;
         _blockContextInitialized = true;
-        SharedContextResolver = SysHlp.GetService<ISxcContextResolver>();
-        SharedContextResolver.AttachBlock(SysHlp.GetBlockAndContext(request));
+        SharedCurrentContextService = SysHlp.GetService<ISxcCurrentContextService>();
+        SharedCurrentContextService.AttachBlock(SysHlp.GetBlockAndContext(request));
     }
 
     private bool _blockContextInitialized;
 
 
-    public (ICodeApiService Root, string Folder) Initialize(HttpControllerContext controllerContext)
+    public (IExecutionContext Root, string Folder) Initialize(HttpControllerContext controllerContext)
     {
         var request = controllerContext.Request;
         InitializeBlockContext(request);
@@ -59,7 +57,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
         Log.A($"HasBlock: {block != null}");
 
         var services = SysHlp.GetService<ApiControllerMyServices>().ConnectServices(Log);
-        var codeRoot = services.CodeApiServiceFactory
+        var codeRoot = services.ExecutionContextFactory
             .New(_owner, block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel10);
 
         SysHlp.ConnectToRoot(codeRoot);
@@ -67,12 +65,13 @@ internal class DynamicApiCodeHelpers: CodeHelper
         AdamCode = codeRoot.GetService<AdamCode>();
 
         // In case SxcBlock was null, there is no instance, but we may still need the app
-        if (codeRoot.App == null)
+        var app = codeRoot.GetApp();
+        if (app == null)
         {
             Log.A("DynCode.App is null");
-            var app = GetAppOrNullFromUrlParams(services, request);
+            app = GetAppOrNullFromUrlParams(services, request);
             if (app != null)
-                ((ICodeApiServiceInternal)codeRoot).AttachApp(app);
+                ((IExCtxAttachApp)codeRoot).AttachApp(app);
         }
 
         var reqProperties = request.Properties;
@@ -81,12 +80,12 @@ internal class DynamicApiCodeHelpers: CodeHelper
         reqProperties.Add(DnnConstants.DnnContextKey, (codeRoot as IHasDnn)?.Dnn);
 
         /*if (*/
-        reqProperties.TryGetTyped(CodeCompiler.SharedCodeRootPathKeyInCache, out string path);
+        reqProperties.TryGetTyped(SourceCodeConstants.SharedCodeRootPathKeyInCache, out string path);
         /*) CreateInstancePath = path; */
 
         // 16.02 - try to log more details about the current API call
-        var currentPath = reqProperties.TryGetTyped(CodeCompiler.SharedCodeRootFullPathKeyInCache, out string p2) ? p2.AfterLast("/") : null;
-        SysHlp.WebApiLogging?.AddLogSpecs(block, codeRoot.App, currentPath, SysHlp.GetService<CodeInfosInScope>());
+        var currentPath = reqProperties.TryGetTyped(SourceCodeConstants.SharedCodeRootFullPathKeyInCache, out string p2) ? p2.AfterLast("/") : null;
+        SysHlp.WebApiLogging?.AddLogSpecs(block, app, currentPath, SysHlp.GetService<CodeInfosInScope>());
 
 
         return (codeRoot, path);
@@ -99,12 +98,12 @@ internal class DynamicApiCodeHelpers: CodeHelper
         try
         {
             var routeAppPath = services.AppFolderUtilities.Setup(request).GetAppFolder(false);
-            var appReader = SharedContextResolver.SetAppOrNull(routeAppPath)?.AppReader;
+            var appReader = SharedCurrentContextService.SetAppOrNull(routeAppPath)?.AppReaderRequired;
 
             if (appReader == default)
                 return l.ReturnNull("no app detected");
             
-            var siteCtx = SharedContextResolver.Site();
+            var siteCtx = SharedCurrentContextService.Site();
             // Look up if page publishing is enabled - if module context is not available, always false
             l.A($"AppId: {appReader.AppId}");
             var app = services.AppOverrideLazy.Value;
@@ -120,7 +119,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
 
     #endregion
 
-    public ISxcContextResolver SharedContextResolver;
+    public ISxcCurrentContextService SharedCurrentContextService;
 
     #region Adam
 

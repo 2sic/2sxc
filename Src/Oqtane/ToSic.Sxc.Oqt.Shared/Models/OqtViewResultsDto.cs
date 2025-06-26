@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
+﻿namespace ToSic.Sxc.Oqt.Shared.Models;
 
-namespace ToSic.Sxc.Oqt.Shared.Models;
-
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class OqtViewResultsDto
 {
     /// <summary>
@@ -18,7 +16,7 @@ public class OqtViewResultsDto
     /// <summary>
     /// For special error messages, in case the backend has trouble with refs etc.
     /// </summary>
-    public string ErrorMessage { get; set; }
+    public string? ErrorMessage { get; set; }
 
     /// <summary>
     /// The resources which the template will need
@@ -28,13 +26,13 @@ public class OqtViewResultsDto
     /// <summary>
     /// The Context meta name tag - null if not needed
     /// </summary>
-    public string SxcContextMetaName { get; set; }
+    public string? SxcContextMetaName { get; set; }
         
     /// <summary>
     /// Will return the meta-header which the $2sxc client needs for context, page id, request verification token etc.
     /// </summary>
     /// <returns></returns>
-    public string SxcContextMetaContents { get; set; }
+    public string? SxcContextMetaContents { get; set; }
 
     /// <summary>
     /// The JavaScripts needed by 2sxc (not by the template)
@@ -58,9 +56,9 @@ public class OqtViewResultsDto
     /// </summary>
     public IEnumerable<OqtHeadChange> HeadChanges { get; set; }
 
-    /// <summary>
-    /// Features which are defined in the SystemSettings and wer requested by the code and should be enabled.
-    /// </summary>
+    ///// <summary>
+    ///// Features which are defined in the SystemSettings and wer requested by the code and should be enabled.
+    ///// </summary>
     //IList<IPageFeature> FeaturesFromSettings { get; }
 
     /// <summary>

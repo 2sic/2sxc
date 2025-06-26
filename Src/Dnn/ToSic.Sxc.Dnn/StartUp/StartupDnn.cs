@@ -1,15 +1,16 @@
 ﻿using DotNetNuke.Web.Api;
 using System.Configuration;
 using System.Web.Hosting;
-using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.Internal.Configuration;
-using ToSic.Eav.Internal.Features;
-using ToSic.Eav.Internal.Loaders;
-using ToSic.Eav.StartUp;
+using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Sys;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Dnn.Integration;
-using ToSic.Sxc.Images.Internal;
+using ToSic.Sxc.Images;
+using ToSic.Sys.Boot;
+using ToSic.Sys.Capabilities.Features;
+using ToSic.Sys.Configuration;
+using ToSic.Sys.Security.Encryption;
 
 namespace ToSic.Sxc.Dnn.StartUp;
 
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Dnn.StartUp;
 /// This way DNN will auto-run this code before anything else
 /// </summary>
 // ReSharper disable once UnusedMember.Global
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class StartupDnn : IServiceRouteMapper
 {
     /// <summary>
@@ -53,19 +54,26 @@ public class StartupDnn : IServiceRouteMapper
         var transientSp = DnnStaticDi.GetGlobalScopedServiceProvider();
 
         // now we should be able to instantiate registration of DB
-        transientSp.Build<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
+        var connectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
+        
         var globalConfig = transientSp.Build<IGlobalConfiguration>();
 
-        globalConfig.GlobalFolder = HostingEnvironment.MapPath(DnnConstants.SysFolderRootVirtual);
-        globalConfig.AssetsVirtualUrl = DnnConstants.SysFolderRootVirtual + "assets/";
-        globalConfig.SharedAppsFolder = "~/Portals/_default/" + AppConstants.AppsRootFolder + "/";
-        globalConfig.TempAssemblyFolder = HostingEnvironment.MapPath($"~/{Eav.Constants.AppDataProtectedFolder}/{Eav.Constants.TempAssemblyFolder}/"); // ".../App_Data/2sxc.bin"
-        globalConfig.CryptoFolder = HostingEnvironment.MapPath($"~/{Eav.Constants.AppDataProtectedFolder}/{Eav.Constants.CryptoFolder}/");
+        globalConfig.ConnectionString(connectionString);
 
-        var sxcSysLoader = transientSp.Build<SystemLoader>();
+        globalConfig.GlobalFolder(HostingEnvironment.MapPath(DnnConstants.SysFolderRootVirtual));
+        globalConfig.AssetsVirtualUrl(DnnConstants.SysFolderRootVirtual + "assets/");
+        globalConfig.SharedAppsFolder("~/Portals/_default/" + AppConstants.AppsRootFolder + "/");
+        globalConfig.TempAssemblyFolder(HostingEnvironment.MapPath($"~/{FolderConstants.AppDataProtectedFolder}/{FolderConstants.TempAssemblyFolder}/")); // ".../App_Data/2sxc.bin"
+        globalConfig.CryptoFolder(HostingEnvironment.MapPath($"~/{FolderConstants.AppDataProtectedFolder}/{FolderConstants.CryptoFolder}/")!);
+
+        var sxcSysLoader = transientSp.Build<BootCoordinator>();
         sxcSysLoader.StartUp();
 
-        SetupOldStaticFeaturesForCompatibility(sxcSysLoader.EavSystemLoader.Features);
+        // Place a copy of the features service on the old static variable
+        // Note: not perfect, it doesn't update on changes
+        // But since we don't want to encourage this old mechanism, it's ok
+        var featuresSvc = transientSp.Build<ISysFeaturesService>();
+        SetupOldStaticFeaturesForCompatibility(featuresSvc);
 
         // Optional registration of query string rewrite functionality implementation for dnn imageflow module
         Imageflow.Dnn.StartUp.RegisterQueryStringRewrite(ImageflowRewrite.QueryStringRewrite);
@@ -81,7 +89,7 @@ public class StartupDnn : IServiceRouteMapper
     /// After the SysLoader got the features, we must attach it to an old API which had was public
     /// This was used in Mobius etc. to see if features are activated
     /// </summary>
-    public void SetupOldStaticFeaturesForCompatibility(IEavFeaturesService featuresSvc)
+    public void SetupOldStaticFeaturesForCompatibility(ISysFeaturesService featuresSvc)
     {
 #pragma warning disable CS0618
         Eav.Configuration.Features.FeaturesFromDi = featuresSvc;

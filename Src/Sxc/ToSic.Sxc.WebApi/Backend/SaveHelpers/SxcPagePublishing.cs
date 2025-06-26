@@ -1,17 +1,16 @@
-﻿using ToSic.Eav.Security;
-using ToSic.Eav.WebApi.Formats;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Cms.Internal.Publishing;
+﻿using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Cms.Publishing.Sys;
+using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Backend.SaveHelpers;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class SxcPagePublishing(ContentGroupList contentGroupList, IPagePublishing pagePublishing, IAppsCatalog appsCatalog)
     : SaveHelperBase("Sxc.PgPubl", connect: [contentGroupList, pagePublishing, appsCatalog])
 {
 
     internal Dictionary<Guid, int> SaveInPagePublishing(
-        IBlock blockOrNull,
+        IBlock? blockOrNull,
         int appId,
         List<BundleWithHeader<IEntity>> items,
         bool partOfPage,
@@ -25,19 +24,11 @@ public class SxcPagePublishing(ContentGroupList contentGroupList, IPagePublishin
         l.A($"allowWrite: {allowWriteLive} forceDraft: {forceDraft}");
 
         // list of saved IDs
-        Dictionary<Guid, int> postSaveIds = null;
+        Dictionary<Guid, int>? postSaveIds = null;
 
         // The internal call which will be used further down
         var appIdentity = appsCatalog.AppIdentity(appId);
         var groupList = contentGroupList.Init(appIdentity);
-
-        Dictionary<Guid, int> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call, bool forceSaveAsDraft)
-        {
-            var ids = call.Invoke(forceSaveAsDraft);
-            // now assign all content-groups as needed
-            groupList.IfChangesAffectListUpdateIt(blockOrNull, items, ids);
-            return ids;
-        }
 
 
         // use dnn versioning if partOfPage
@@ -52,7 +43,15 @@ public class SxcPagePublishing(ContentGroupList contentGroupList, IPagePublishin
             postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft);
         }
 
-        var logIds = l.Try(() => string.Join(",", postSaveIds.Select(psi => $"{psi.Key}({psi.Value})")));
-        return l.Return(postSaveIds, $"post save IDs: {logIds}");
+        var logIds = l.Try(() => string.Join(",", postSaveIds!.Select(psi => $"{psi.Key}({psi.Value})")));
+        return l.Return(postSaveIds!, $"post save IDs: {logIds}");
+
+        Dictionary<Guid, int> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call, bool forceSaveAsDraft)
+        {
+            var ids = call.Invoke(forceSaveAsDraft);
+            // now assign all content-groups as needed
+            groupList.IfChangesAffectListUpdateIt(blockOrNull, items, ids);
+            return ids;
+        }
     }
 }

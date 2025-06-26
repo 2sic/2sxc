@@ -1,9 +1,9 @@
-﻿using ToSic.Eav.Apps.Internal.Insights;
+﻿using ToSic.Eav.Sys.Insights;
 using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Backend.Sys;
 
-internal class InsightsAppCodeBuild() : InsightsProvider(Link, helpCategory: HiddenFromAutoDisplay)
+internal class InsightsAppCodeBuild() : InsightsProvider(new() { Name = Link })
 {
     public static string Link = "AppCodeBuild";
 
@@ -26,7 +26,7 @@ internal class InsightsAppCodeBuild() : InsightsProvider(Link, helpCategory: Hid
         msg += "Type: " + Parameters["type"];
 
 
-        msg += Linker.LinkTo(view: Name, label: "Run", appId: AppId.Value, more: "type=run");
+        msg += Linker.LinkTo(view: Specs.Name, label: "Run", appId: AppId.Value, more: "type=run");
 
         return msg;
 

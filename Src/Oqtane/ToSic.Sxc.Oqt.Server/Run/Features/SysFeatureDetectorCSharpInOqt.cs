@@ -1,5 +1,6 @@
-﻿using ToSic.Eav.Internal.Features;
-using static ToSic.Eav.Internal.Features.SysFeatureSuggestions;
+﻿using ToSic.Sys.Capabilities.SysFeatures;
+using static ToSic.Sys.Capabilities.SysFeatures.SysFeatureSuggestions;
+// ReSharper disable UnusedMember.Global
 
 namespace ToSic.Sxc.Oqt.Server.Run.Features;
 

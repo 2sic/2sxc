@@ -1,20 +1,18 @@
 ﻿using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using System.CodeDom.Compiler;
-using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Razor;
 using System.Web.Razor.Generator;
-using ToSic.Eav.Caching;
-using ToSic.Eav.Helpers;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Internal.HotBuild;
-using ToSic.Sxc.Code.Internal.SourceCode;
+using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Code.Sys.HotBuild;
+using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
-using CodeCompiler = ToSic.Sxc.Code.Internal.HotBuild.CodeCompiler;
+using ToSic.Sys.Caching;
+using ToSic.Sys.Locking;
 
 namespace ToSic.Sxc.Dnn.Razor.Internal
 {
@@ -105,7 +103,7 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             // Compile the template
             lTimer = Log.Fn("timer for Compile", timer: true);
             var pathLowerCase = codeFileInfo.RelativePath.ToLowerInvariant();
-            var isCshtml = pathLowerCase.EndsWith(CodeCompiler.CsHtmlFileExtension);
+            var isCshtml = pathLowerCase.EndsWith(SourceCodeConstants.CsHtmlFileExtension);
             if (isCshtml) className = GetSafeClassName(codeFileInfo.FullPath);
             l.A($"Compiling template. Class: {className}");
 
@@ -130,10 +128,13 @@ namespace ToSic.Sxc.Dnn.Razor.Internal
             var mainType = FindMainType(generatedAssembly, className, isCshtml);
             l.A($"Main type: {mainType}");
 
-            var assemblyResult = new AssemblyResult(generatedAssembly, safeClassName: className, mainType: mainType);
-            assemblyResult.CacheDependencyId = AssemblyCacheManager.KeyTemplate(codeFileInfo.FullPath);
+            var assemblyResult = new AssemblyResult(generatedAssembly)
+            {
+                SafeClassName = className,
+                MainType = mainType,
+                CacheDependencyId = AssemblyCacheManager.KeyTemplate(codeFileInfo.FullPath)
+            };
 
-            
 
             assemblyCacheManager.Add(
                 cacheKey: assemblyResult.CacheDependencyId,

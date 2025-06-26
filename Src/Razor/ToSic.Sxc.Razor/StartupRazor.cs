@@ -3,20 +3,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Razor.DotNetOverrides;
-using ToSic.Sxc.Web.Internal.DotNet;
-using RuntimeViewCompiler = ToSic.Sxc.Razor.DotNetOverrides.RuntimeViewCompiler;
 
 namespace ToSic.Sxc.Razor;
 
 // ReSharper disable once InconsistentNaming
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public static class StartupRazor
 {
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static IServiceCollection AddSxcRazor(this IServiceCollection services)
     {
         // .net Core parts
-        services.TryAddTransient<IHttp, HttpNetCore>();
+        //services.TryAddTransient<IHttp, HttpNetCore>();
 
         // 2sxc Razor Parts
         services.TryAddTransient<IRazorCompiler, RazorCompiler>();

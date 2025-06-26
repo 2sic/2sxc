@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!-- WARNING, WARNING, WARNING -->
 <!-- REMEMBER THAT IF YOU MODIFY THE TARGETS FILE YOU NEED TO CLOSE/OPEN THE PROJECT FOR THE CHANGES TO TAKE EFFECT -->
 
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <Import Project="MSBuild.Community.Tasks.Targets" />
+  <UsingTask TaskName="CopyNewerFileVersion" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" />
   <UsingTask TaskName="ModifyXmlDocumentation" AssemblyFile="$(MSBuildProjectDirectory)\..\..\Build\ToSic.Sxc.BuildTasks\bin\Debug\net472\ToSic.Sxc.BuildTasks.dll" />
 
   <!-- The Dnn Build Package - Should only run after release compile -->
@@ -73,7 +73,6 @@
 
       <!-- all global types and queries -->
       <InstallInclude Include="..\..\Data\**\App_Data\new-app\**\*.*" />
-      <InstallInclude Include="..\..\Data\**\App_Data\new-apps\**\*.*" />
       <InstallInclude Include="..\..\Data\**\App_Data\system\**\*.json" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="..\..\Data\**\assets\**\*.*" />
 
@@ -93,23 +92,58 @@
 
     <ItemGroup>
       <!-- Global / Shared 2sxc and EAV DLLs-->
-      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.dll" />
+      <!--<AssemblyInclude Include="$(OutDir)\ToSic.Sxc.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Core.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Core.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Adam.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Adam.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Apps.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Apps.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Blocks.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Blocks.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Cms.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Cms.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Code.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Code.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Code.Generate.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Code.Generate.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Code.HotBuild.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Code.HotBuild.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Custom.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Custom.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Data.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Data.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Edit.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Edit.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Engines.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Engines.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Images.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Images.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.LightSpeed.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.LightSpeed.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Render.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Render.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Services.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Services.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Web.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Web.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.WebApi.dll" />
-      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.WebApi.pdb" />
-      <AssemblyInclude Include="$(OutDir)\ToSic.Eav*.dll" />
-      <AssemblyHelper Include="$(OutDir)\ToSic.Eav*.pdb" />
-      <AssemblyInclude Include="$(OutDir)\ToSic.Lib*.dll" />
-      <AssemblyHelper Include="$(OutDir)\ToSic.Lib*.pdb" />
-
-      <!-- DNN specific DLLs -->
-      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Dnn*.dll" />
-      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Dnn*.pdb" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.WebApi.pdb" />-->
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.*.dll" Exclude="ToSic.Sxc.Dnn.Enterprise.dll"/>
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.*.pdb" Exclude="ToSic.Sxc.Dnn.Enterprise.pdb"/>
+      <!-- 2025-06-04 2dm v20 doesn't have the ToSic.Eav.dll any more -->
+      <!--<AssemblyInclude Include="$(OutDir)\ToSic.Eav.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Eav.pdb" />-->
+      <AssemblyInclude Include="$(OutDir)\ToSic.Eav.*.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Eav.*.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Lib.*.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Lib.*.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Sys.*.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Sys.*.pdb" />
 
       <!-- XML documentation -->
-      <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.xml" />
+      <!--<AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.xml" />-->
       <AssemblyDocumentation Include="$(OutDir)\ToSic.Sxc.Dnn.xml" />
 
       <!-- 2sxc 13+ netstandard2.0/framework 4.7.2 assemblies -->
@@ -201,13 +235,9 @@
 
     <ItemGroup>
       <!-- DNN specific DLLs -->
-      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\ToSic.Imageflow.Dnn.dll" />
-
-      <!-- DNN shared assemblies, Imageflow.NET transient dependency -->
-      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Newtonsoft.Json.dll" />
+      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\*.dll" />
     </ItemGroup>
-
-    <Copy SourceFiles="@(ImageflowAssemblyInclude)" DestinationFolder="$(TempPackageFolder)\bin" />
+    <CopyNewerFileVersion SourceFiles="@(ImageflowAssemblyInclude)" DestinationFolder="$(TempPackageFolder)\bin" />
 
     <!-- include koi folder -->
     <ItemGroup>
@@ -217,7 +247,7 @@
     <ItemGroup>
       <KoiDllFiles Include="$(MSBuildProjectDirectory)/koi/bin/*.dll" />
     </ItemGroup>
-    <Copy SourceFiles="@(KoiDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
+    <CopyNewerFileVersion SourceFiles="@(KoiDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
 
     <!-- include new razorblade 3 module -->
     <ItemGroup>
@@ -227,7 +257,7 @@
     <ItemGroup>
       <RazorBlade3DllFiles Include="$(MSBuildProjectDirectory)/razorblade/bin/*.dll" />
     </ItemGroup>
-    <Copy SourceFiles="@(RazorBlade3DllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
+    <CopyNewerFileVersion SourceFiles="@(RazorBlade3DllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
 
     <!-- include razorblade old module -->
     <ItemGroup>
@@ -237,7 +267,7 @@
     <ItemGroup>
       <RazorBladeDllFiles Include="$(MSBuildProjectDirectory)/razorblade-old/bin/*.dll" />
     </ItemGroup>
-    <Copy SourceFiles="@(RazorBladeDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
+    <CopyNewerFileVersion SourceFiles="@(RazorBladeDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
 
 
     <!-- create the INSTALL RESOURCES.ZIP file -->

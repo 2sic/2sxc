@@ -1,15 +1,15 @@
 ﻿using Microsoft.Data.SqlClient;
 using Oqtane.Models;
 using Oqtane.Repository;
-using System;
-using ToSic.Eav.Helpers;
-using ToSic.Eav.Internal.Environment;
-using ToSic.Eav.Persistence.Logging;
-using ToSic.Sxc.Integration;
+using ToSic.Eav.Environment.Sys.ServerPaths;
+using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Sys.Integration;
+using ToSic.Sys.Utils;
+using File = Oqtane.Models.File;
 using IO = System.IO;
 
 namespace ToSic.Sxc.Oqt.Server.Run;
@@ -93,7 +93,7 @@ internal class OqtImportExportEnvironment(
         return l.Return(messages);
     }
 
-    public override Version TenantVersion => typeof(OqtImportExportEnvironment).Assembly.GetName().Version;
+    public override Version TenantVersion => typeof(OqtImportExportEnvironment).Assembly.GetName().Version!;
 
     public override void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap
     ) => Log.Do($"files: {filesAndPaths.Count}, map size: {fileIdMap.Count}", l =>
@@ -184,7 +184,7 @@ internal class OqtImportExportEnvironment(
 
     private File Add(Folder parent, IO.Stream body, string fileName, OqtSite oqtSite)
     {
-        var callLog = Log.Fn<File>($"Add {fileName}, folderId:{parent.FolderId}, siteId {oqtSite.Id}");
+        var l = Log.Fn<File>($"Add {fileName}, folderId:{parent.FolderId}, siteId {oqtSite.Id}");
 
         var fullContentPath = IO.Path.Combine(oqtServerPaths.FullContentPath(oqtSite.ContentPath), parent.Path);
         IO.Directory.CreateDirectory(fullContentPath);
@@ -206,7 +206,7 @@ internal class OqtImportExportEnvironment(
             ImageWidth = 0
         };
         var oqtFile = oqtFileRepository.AddFile(oqtFileData);
-        return callLog.ReturnAsOk(oqtFile);
+        return l.ReturnAsOk(oqtFile);
     }
 
     private bool FolderExists(string path) => GetOqtFolderByPath(path) != null;
@@ -222,9 +222,9 @@ internal class OqtImportExportEnvironment(
     private Folder AddFolder(string path)
     {
         path = path.EnsureOqtaneFolderFormat();
-        var callLog = Log.Fn<Folder>(path);
+        var l = Log.Fn<Folder>(path);
 
-        if (FolderExists(path)) return callLog.ReturnNull("error, missing folder");
+        if (FolderExists(path)) return l.ReturnNull("error, missing folder");
 
         try
         {
@@ -236,7 +236,7 @@ internal class OqtImportExportEnvironment(
 
             // Create the new virtual folder
             var newFolder = CreateVirtualFolder(parentFolder, path, subfolder);
-            return callLog.ReturnAsOk(newFolder);
+            return l.ReturnAsOk(newFolder);
         }
         catch (SqlException)
         {
@@ -251,7 +251,7 @@ internal class OqtImportExportEnvironment(
             Log.A("error, probably folder already exists");
         }
 
-        return callLog.ReturnNull("?");
+        return l.ReturnNull("?");
     }
 
     private Folder CreateVirtualFolder(Folder parentFolder, string path, string folder)

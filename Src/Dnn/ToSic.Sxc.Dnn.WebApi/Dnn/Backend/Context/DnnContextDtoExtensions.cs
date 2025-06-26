@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using DotNetNuke.Entities.Modules;
+﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
-using ToSic.Eav.WebApi.Context;
-using ToSic.Sxc.Apps.Internal;
-using ToSic.Sxc.Blocks.Internal;
+using ToSic.Eav.WebApi.Sys.Context;
+using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Dnn.Pages;
 
 namespace ToSic.Sxc.Dnn.Backend.Context;
@@ -14,49 +13,46 @@ namespace ToSic.Sxc.Dnn.Backend.Context;
 /// </summary>
 internal static class DnnContextDtoExtensions
 {
-    internal static ContentBlockDto Init(this ContentBlockDto dto, BlockConfiguration block, IEnumerable<ModuleWithContent> blockModules)
-    {
-        dto.Id = block.Id;
-        dto.Guid = block.Guid;
-        dto.Modules = blockModules.Select(m => new InstanceDto().Init(m.Module, m.Page));
-        return dto;
-    }
+    internal static ContentBlockDto ToDto(this BlockConfiguration block, IEnumerable<ModuleWithContent> blockModules)
+        => new()
+        {
+            Id = block.Id,
+            Guid = block.Guid,
+            Modules = blockModules.Select(m => m.Module.ToDto(m.Page)),
+        };
 
-    internal static InstanceDto Init(this InstanceDto dto, ModuleInfo module, TabInfo page)
-    {
-        dto.Id = module.ModuleID;
-        dto.ShowOnAllPages = module.AllTabs;
-        dto.Title = module.ModuleTitle;
-        dto.UsageId = module.TabModuleID;
-        dto.IsDeleted = module.IsDeleted || page.IsDeleted;
-        dto.Page = new PageDto().Init(page);
-        return dto;
-    }
+    internal static InstanceDto ToDto(this ModuleInfo module, TabInfo page)
+        => new()
+        {
+            Id = module.ModuleID,
+            ShowOnAllPages = module.AllTabs,
+            Title = module.ModuleTitle,
+            UsageId = module.TabModuleID,
+            IsDeleted = module.IsDeleted || page.IsDeleted,
+            Page = page.ToDto(),
+        };
 
-    internal static PageDto Init(this PageDto dto, TabInfo page)
-    {
-        dto.Id = page.TabID;
-        dto.Url = page.FullUrl;
-        dto.Name = page.TabName;
-        dto.CultureCode = page.CultureCode;
-        dto.Visible = page.IsVisible;
-        dto.Title = page.Title;
-        dto.Portal = new(page.PortalID);
-        return dto;
-    }
+    internal static PageDto ToDto(this TabInfo page)
+        => new()
+        {
+            Id = page.TabID,
+            Url = page.FullUrl,
+            Name = page.TabName,
+            CultureCode = page.CultureCode,
+            Visible = page.IsVisible,
+            Title = page.Title,
+            Portal = new(page.PortalID),
+        };
 
-    internal static ViewDto Init(this ViewDto dto, IView view, List<BlockConfiguration> blocks, List<ModuleWithContent> modules)
-    {
-        dto.Id = view.Entity.EntityId;
-        dto.Guid = view.Entity.EntityGuid;
-        dto.Name = view.Name;
-        dto.Path = view.Path;
-        dto.Blocks = blocks
-            .Where(b => b.View.Guid == view.Guid)
-            .Select(blWMod => new ContentBlockDto().Init(blWMod,
-                modules.Where(m => m.ContentGroup == blWMod.Guid)));
-        return dto;
-    }
-
-
+    internal static ViewDto Init(this IView view, ICollection<BlockConfiguration> blocks, List<ModuleWithContent> modules)
+        => new()
+        {
+            Id = view.Entity.EntityId,
+            Guid = view.Entity.EntityGuid,
+            Name = view.Name,
+            Path = view.Path,
+            Blocks = blocks
+                .Where(b => b.View.Guid == view.Guid)
+                .Select(blWMod => blWMod.ToDto(modules.Where(m => m.ContentGroup == blWMod.Guid))),
+        };
 }

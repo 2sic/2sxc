@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
-using ToSic.Eav.Apps.Internal.Specs;
-using ToSic.Sxc.Code.Generate;
+using ToSic.Eav.Apps.Sys.AppJson;
+using ToSic.Sxc.Code.Generate.Sys;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -9,16 +9,17 @@ namespace ToSic.Sxc.Backend.Admin;
 /// </summary>
 public class EditionsDto: RichResult
 {
-    public bool IsConfigured { get; set; }
-    public List<EditionDto> Editions { get; set; } = [];
+    public bool IsConfigured { get; init; }
+    public ICollection<EditionDto> Editions { get; init; } = [];
 
-    public List<GeneratorDto> Generators { get; set; } = [];
+    public ICollection<GeneratorDto> Generators { get; init; } = [];
 }
 
 public class EditionDto
 {
-    public string Name { get; set; }
-    public string Description { get; set; }
+    public required string Name { get; init; }
+    public string? Description { get; init; }
+
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public bool IsDefault { get; set; }
 }
@@ -35,7 +36,7 @@ public class GeneratorDto(IFileGenerator generator)
 
 public static class EditionsJsonExtension
 {
-    public static EditionsDto ToEditionsDto(this AppJson appJson, List<GeneratorDto> generators)
+    public static EditionsDto ToEditionsDto(this AppJsonConfiguration appJson, ICollection<GeneratorDto> generators)
         => new()
         {
             Ok = true,
@@ -47,7 +48,7 @@ public static class EditionsJsonExtension
                     Description = e.Value.Description,
                     IsDefault = e.Value.IsDefault
                 })
-                .ToList(),
+                .ToListOpt(),
             Generators = generators
         };
 }

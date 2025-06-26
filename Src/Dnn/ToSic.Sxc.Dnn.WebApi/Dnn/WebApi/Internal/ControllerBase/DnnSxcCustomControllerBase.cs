@@ -1,6 +1,6 @@
 ﻿using System.Web.Http.Controllers;
-using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Code.Internal.CodeRunHelpers;
+using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal;
 
@@ -14,10 +14,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal;
 // Note: 2022-02 2dm I'm not sure if this was ever published as the official api controller, but it may have been?
 [DnnLogExceptions]
 // Can't hide in Intellisense, because that would hide it for all derived classes too
-// [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+// [ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
 public abstract class DnnSxcCustomControllerBase(string logSuffix, string insightsGroup = default)
-    : DnnSxcControllerBase(logSuffix, insightsGroup), IHasCodeApiService
+    : DnnSxcControllerBase(logSuffix, insightsGroup)
 {
     #region Constructor & DI / Setup
 
@@ -34,7 +34,7 @@ public abstract class DnnSxcCustomControllerBase(string logSuffix, string insigh
         var init = DynHlp.Initialize(controllerContext);
         if (this is IGetCodePath thisWithPath)
             thisWithPath.CreateInstancePath = init.Folder;
-        _CodeApiSvc = init.Root;
+        ExCtx = init.Root;
     }
 
     #endregion
@@ -42,8 +42,9 @@ public abstract class DnnSxcCustomControllerBase(string logSuffix, string insigh
     #region Internal / Plumbing / Obsolete
 
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public ICodeApiService _CodeApiSvc { get; private set; }
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    public IExecutionContext ExCtx { get; private set; }
+
 
 
     /// <summary>
@@ -53,7 +54,7 @@ public abstract class DnnSxcCustomControllerBase(string logSuffix, string insigh
     [Obsolete("Deprecated in v13.03 - doesn't serve a purpose any more. Will just remain to avoid breaking public uses of this property.")]
     // ReSharper disable once UnassignedGetOnlyAutoProperty
     [PrivateApi]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     protected virtual string HistoryLogName { get; }
 
     #endregion

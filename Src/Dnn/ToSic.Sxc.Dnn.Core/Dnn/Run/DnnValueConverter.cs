@@ -4,12 +4,10 @@ using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Localization;
-using System.IO;
 using ToSic.Eav.Context;
-using ToSic.Eav.Data;
-using ToSic.Eav.Internal.Features;
-using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Internal.Plumbing;
+using ToSic.Eav.Data.ValueConverter.Sys;
+using ToSic.Sxc.Adam.Sys.Security;
+using ToSic.Sys.Capabilities.Features;
 
 namespace ToSic.Sxc.Dnn.Run;
 
@@ -23,7 +21,7 @@ internal class DnnValueConverter : ValueConverterBase
 
     #region DI Constructor
 
-    public DnnValueConverter(ISite site, LazySvc<IEavFeaturesService> featuresLazy, LazySvc<PageScopedService<ISite>> siteFromPageLazy, LazySvc<INavigationManager> navigationManager) : base(
+    public DnnValueConverter(ISite site, LazySvc<ISysFeaturesService> featuresLazy, LazySvc<PageScopedService<ISite>> siteFromPageLazy, LazySvc<INavigationManager> navigationManager) : base(
         $"{DnnConstants.LogName}.ValCnv")
     {
         ConnectLogs([
@@ -35,7 +33,7 @@ internal class DnnValueConverter : ValueConverterBase
     }
 
     private readonly ISite _site;
-    private readonly LazySvc<IEavFeaturesService> _featuresLazy;
+    private readonly LazySvc<ISysFeaturesService> _featuresLazy;
     private readonly LazySvc<PageScopedService<ISite>> _siteFromPageLazy;
     private readonly LazySvc<INavigationManager> _navigationManager;
     private int PageSiteId => _siteFromPageLazy.Value.Value.Id; // PortalId from page di scope
@@ -43,10 +41,12 @@ internal class DnnValueConverter : ValueConverterBase
     #endregion
 
     /// <inheritdoc />
-    public override string ToReference(string value) => TryToResolveOneLinkToInternalDnnCode(value);
+    public override string ToReference(string value)
+        => TryToResolveOneLinkToInternalDnnCode(value);
 
     /// <inheritdoc />
-    public override string ToValue(string reference, Guid itemGuid = default) => TryToResolveCodeToLink(itemGuid, reference);
+    public override string? ToValue(string? reference, Guid itemGuid = default)
+        => TryToResolveCodeToLink(itemGuid, reference);
 
     /// <summary>
     /// Will take a link like http:\\... to a file or page and try to return a DNN-style info like
@@ -104,7 +104,7 @@ internal class DnnValueConverter : ValueConverterBase
             if (!_featuresLazy.Value.IsEnabled(BuiltInFeatures.AdamRestrictLookupToEntity.Guid)) return result;
 
             // check if it's in this item. We won't check the field, just the item, so the field is ""
-            return !Security.PathIsInItemAdam(itemGuid, "", filePath)
+            return !AdamSecurity.PathIsInItemAdam(itemGuid, "", filePath)
                 ? null
                 : result;
         }

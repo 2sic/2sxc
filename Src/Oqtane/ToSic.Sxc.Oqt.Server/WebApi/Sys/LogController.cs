@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Routing;
-using ToSic.Eav.WebApi.Sys;
+using ToSic.Eav.WebApi.Sys.Logs;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Integration;
-using RealController = ToSic.Eav.WebApi.Sys.LogControllerReal;
+using RealController = ToSic.Eav.WebApi.Sys.Logs.LogControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 
@@ -16,7 +15,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys;
 
 // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [Authorize(Roles = RoleNames.Admin)]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class LogController() : OqtStatefulControllerBase(RealController.LogSuffix), ILogController
 {
     private RealController Real => GetService<RealController>();

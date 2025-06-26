@@ -1,10 +1,10 @@
 ﻿using System.Web;
 using System.Web.Http.Controllers;
-using ToSic.Eav.Code.InfoSystem;
-using ToSic.Eav.WebApi;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sys.Code.InfoSystem;
 
 namespace ToSic.Sxc.Dnn.Integration;
 

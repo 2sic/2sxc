@@ -1,4 +1,4 @@
-﻿## SexyContent folder
+﻿## Sxc folder
 
 This folder only contains a special folder called:
 

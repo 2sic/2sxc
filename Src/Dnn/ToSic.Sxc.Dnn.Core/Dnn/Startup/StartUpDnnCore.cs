@@ -1,20 +1,19 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Context;
-using ToSic.Eav.Data;
-using ToSic.Eav.ImportExport.Internal;
-using ToSic.Eav.Integration;
-using ToSic.Eav.Integration.Environment;
-using ToSic.Eav.Internal.Environment;
-using ToSic.Eav.LookUp;
-using ToSic.Eav.Security;
-using ToSic.Eav.StartUp;
-using ToSic.Sxc.Adam.Internal;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Cms.Internal.Publishing;
+using ToSic.Eav.Context.Sys.ZoneCulture;
+using ToSic.Eav.Context.Sys.ZoneMapper;
+using ToSic.Eav.Data.ValueConverter.Sys;
+using ToSic.Eav.ImportExport.Integration;
+using ToSic.Eav.ImportExport.Sys.XmlExport;
+using ToSic.Eav.LookUp.Sys.Engines;
+using ToSic.Sxc.Adam.Sys.FileSystem;
+using ToSic.Sxc.Apps.Sys.Installation;
+using ToSic.Sxc.Blocks.Sys.BlockBuilder;
+using ToSic.Sxc.Cms.Publishing.Sys;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Code.Internal.HotBuild;
+using ToSic.Sxc.Code.Sys.HotBuild;
+using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Adam;
 using ToSic.Sxc.Dnn.Cms;
@@ -31,12 +30,18 @@ using ToSic.Sxc.Dnn.Search;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.StartUp;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Integration.Installation;
 using ToSic.Sxc.Integration.Modules;
+using ToSic.Sxc.Render.Sys.JsContext;
+using ToSic.Sxc.Render.Sys.Output;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Internal;
-using ToSic.Sxc.Web.Internal.DotNet;
-using ToSic.Sxc.Web.Internal.JsContext;
+using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sxc.Sys.Integration.Installation;
+using ToSic.Sxc.Web.Sys.Http;
+using ToSic.Sys.Boot;
+using ToSic.Sys.Capabilities.Platform;
+using ToSic.Sys.Security.Permissions;
+using ToSic.Sys.Users;
+using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
 
 namespace ToSic.Sxc.Dnn.Startup;
 
@@ -73,15 +78,14 @@ internal static class StartUpDnnCore
         services.TryAddTransient<DnnInstallLogger>();
 
 
-        services.TryAddTransient<CodeApiService, DnnCodeApiService>();
-        services.TryAddTransient<DnnCodeApiService>();
+        services.TryAddTransient<ExecutionContext, DnnExecutionContext>();
+        services.TryAddTransient<DnnExecutionContext>();
         // New v14
-        services.TryAddTransient(typeof(CodeApiService<,>), typeof(DnnCodeApiService<,>));
+        services.TryAddTransient(typeof(ExecutionContext<,>), typeof(DnnExecutionContext<,>));
 
 
         // ADAM
-        services.TryAddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();
-        services.TryAddTransient<AdamManager, AdamManager<int, int>>();
+        services.TryAddTransient<IAdamFileSystem, DnnAdamFileSystem>();
 
         services.TryAddTransient<ILookUpEngineResolver, DnnLookUpEngineResolver>();
         services.TryAddTransient<DnnLookUpEngineResolver>();
@@ -94,13 +98,14 @@ internal static class StartUpDnnCore
         services.TryAddSingleton<IPlatform, DnnPlatformContext>();
 
         // add page publishing
-        services.TryAddTransient<IPagePublishing, Cms.DnnPagePublishing>();
+        services.TryAddTransient<IPagePublishing, DnnPagePublishing>();
 
         // v13 option to not use page publishing... #SwitchServicePagePublishingResolver #2749
-        services.AddTransient<IPagePublishingGetSettings, Cms.DnnPagePublishingGetSettings>();
+        services.AddTransient<IPagePublishingGetSettings, DnnPagePublishingGetSettings>();
 
         // new in v12 - .net specific code compiler
         services.TryAddTransient<CodeCompiler, CodeCompilerNetFull>();
+        services.TryAddTransient<IClassCompiler, CodeCompilerNetFull>();
 
         // new in v12.02 - RazorBlade DI
         services.TryAddScoped<DnnPageChanges>();
@@ -122,15 +127,17 @@ internal static class StartUpDnnCore
         services.TryAddTransient<IModuleAndBlockBuilder, DnnModuleAndBlockBuilder>();
 
         // v13.12
-        services.AddTransient<IStartUpRegistrations, DnnStartUpRegistrations>();   // must be Add, not TryAdd
+        services.AddTransient<IBootProcess, DnnBootFeaturesRegistration>();   // must be Add, not TryAdd
 
         // v14
         services.TryAddTransient<IDynamicCodeService, DnnDynamicCodeService>();
         services.TryAddTransient<DnnDynamicCodeService.MyScopedServices>();   // new v15
-        services.TryAddTransient<Sxc.Services.IRenderService, DnnRenderService>();
-#pragma warning disable CS0618
-        services.TryAddTransient<Blocks.IRenderService, DnnRenderService>();  // Obsolete, but keep for the few apps we already released in v12
-#pragma warning restore CS0618
+        services.TryAddTransient<IRenderService, DnnRenderService>();
+
+        // #RemoveBlocksIRenderService
+//#pragma warning disable CS0618
+//        services.TryAddTransient<Blocks.IRenderService, DnnRenderService>();  // Obsolete, but keep for the few apps we already released in v12
+//#pragma warning restore CS0618
 
         // v15 - move ready check turbo into a service
         services.TryAddTransient<DnnReadyCheckTurbo>();

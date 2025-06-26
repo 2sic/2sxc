@@ -1,17 +1,17 @@
 ﻿using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
-using ToSic.Eav.Helpers;
-using ToSic.Lib.Data;
 using ToSic.Lib.DI;
+using ToSic.Lib.Wrappers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.Integration.Paths;
 using ToSic.Sxc.Oqt.Server.Plumbing;
-using ToSic.Sxc.Web.Internal.DotNet;
-using ToSic.Sxc.Web.Internal.Url;
-using ToSic.Sxc.Web.Parameters;
-using Page = ToSic.Sxc.Context.Internal.Page;
+using ToSic.Sxc.Sys.Integration.Paths;
+using ToSic.Sxc.Web.Sys.Http;
+using ToSic.Sxc.Web.Sys.Parameters;
+using ToSic.Sxc.Web.Sys.Url;
+using ToSic.Sys.Utils;
+using Page_Page = ToSic.Sxc.Context.Sys.Page.Page;
 
 namespace ToSic.Sxc.Oqt.Server.Context;
 
@@ -21,7 +21,7 @@ internal class OqtPage(
     LazySvc<AliasResolver> aliasResolver,
     LazySvc<IPageRepository> pages,
     LazySvc<ILinkPaths> linkPathsLazy)
-    : Page(httpBlazor), IWrapper<Oqtane.Models.Page>
+    : Page_Page(httpBlazor), IWrapper<Oqtane.Models.Page>
 {
     // ReSharper disable once InconsistentNaming
     private readonly LazySvc<IHttp> httpBlazor = httpBlazor;

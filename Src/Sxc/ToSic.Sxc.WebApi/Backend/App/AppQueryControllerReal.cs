@@ -1,12 +1,12 @@
 ﻿using System.Net;
+using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource.Internal.Query;
-using ToSic.Eav.LookUp;
-using ToSic.Eav.Security.Internal;
-using ToSic.Eav.WebApi.Admin.App;
-using ToSic.Eav.WebApi.Admin.Query;
-using ToSic.Eav.WebApi.Errors;
-using ToSic.Sxc.Data.Internal.Convert;
+using ToSic.Eav.LookUp.Sys.Engines;
+using ToSic.Eav.WebApi.Sys.Admin.App;
+using ToSic.Eav.WebApi.Sys.Admin.Query;
+using ToSic.Sxc.Data.Sys.Convert;
+using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Backend.App;
 
@@ -14,15 +14,15 @@ namespace ToSic.Sxc.Backend.App;
 /// In charge of delivering Pipeline-Queries on the fly
 /// They will only be delivered if the security is confirmed - it must be publicly available
 /// </summary>
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppQueryControllerReal(
-    ISxcContextResolver ctxResolver,
+    ISxcCurrentContextService ctxService,
     IConvertToEavLight dataConverter,
     Generator<AppPermissionCheck> appPermissionCheck,
     LazySvc<QueryManager> queryManager,
     LazySvc<ILookUpEngineResolver> lookupResolver)
     : ServiceBase("Sxc.ApiApQ",
-        connect: [lookupResolver, ctxResolver, dataConverter, appPermissionCheck, queryManager]), IAppQueryController
+        connect: [lookupResolver, ctxService, dataConverter, appPermissionCheck, queryManager]), IAppQueryController
 {
     public const string LogSuffix = "AppQry";
 
@@ -30,17 +30,17 @@ public class AppQueryControllerReal(
 
     #region In-Container-Context Queries
 
-    public IDictionary<string, IEnumerable<EavLightEntity>> Query(string name, int? appId, string stream = null,
+    public IDictionary<string, IEnumerable<EavLightEntity>> Query(string name, int? appId, string? stream = null,
         bool includeGuid = false)
         => QueryPost(name, null, appId, stream, includeGuid);
 
-    public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(string name, QueryParameters more, int? appId, string stream = null, bool includeGuid = false)
+    public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(string name, QueryParametersDtoFromClient? more, int? appId, string? stream = null, bool includeGuid = false)
     {
         var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
-        var appCtx = appId != null ? ctxResolver.GetBlockOrSetApp(appId.Value) : ctxResolver.BlockContextRequired();
+        var appCtx = appId != null ? ctxService.GetExistingAppOrSet(appId.Value) : ctxService.BlockContextRequired();
 
         // If the appId wasn't specified or == to the Block-AppId, then also include block info to enable more data-sources like CmsBlock
-        var maybeBlock = appId == null || appId == appCtx.AppReader.AppId ? ctxResolver.BlockOrNull() : null;
+        var maybeBlock = appId == null || appId == appCtx.AppReaderRequired.AppId ? ctxService.BlockOrNull() : null;
 
         // If no app available from context, check if an app-id was supplied in url
         // Note that it may only be an app from the current portal
@@ -49,7 +49,7 @@ public class AppQueryControllerReal(
 
         var blockLookupOrNull = maybeBlock?.Data?.Configuration?.LookUpEngine;
 
-        var result = BuildQueryAndRun(appCtx.AppReader, name, stream, includeGuid, appCtx, more, blockLookupOrNull);
+        var result = BuildQueryAndRun(appCtx.AppReaderRequired, name, stream, includeGuid, appCtx, more, blockLookupOrNull);
         return l.Return(result);
     }
 
@@ -57,22 +57,22 @@ public class AppQueryControllerReal(
 
     #region Public Queries
 
-    public IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery(string appPath, string name, string stream)
+    public IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery(string appPath, string name, string? stream)
         => PublicQueryPost(appPath, name, null, stream);
 
 
-    public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(string appPath, string name, QueryParameters more, string stream) 
+    public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(string appPath, string name, QueryParametersDtoFromClient? more, string? stream) 
     {
         var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"path:{appPath}, name:{name}, stream: {stream}");
         if (string.IsNullOrEmpty(name))
             throw l.Ex(HttpException.MissingParam(nameof(name)));
 
-        var appCtx = ctxResolver.SetAppOrGetBlock(appPath);
+        var appCtx = ctxService.SetAppOrGetBlock(appPath);
 
-        var blockLookupOrNull = ctxResolver.BlockOrNull()?.Data?.Configuration?.LookUpEngine;
+        var blockLookupOrNull = ctxService.BlockOrNull()?.Data?.Configuration?.LookUpEngine;
 
         // now just run the default query check and serializer
-        var result = BuildQueryAndRun(appCtx.AppReader, name, stream, false, appCtx, more, blockLookupOrNull);
+        var result = BuildQueryAndRun(appCtx.AppReaderRequired, name, stream, false, appCtx, more, blockLookupOrNull);
         return l.Return(result);
     }
 
@@ -83,11 +83,11 @@ public class AppQueryControllerReal(
     private IDictionary<string, IEnumerable<EavLightEntity>> BuildQueryAndRun(
         IAppIdentity app,
         string name,
-        string stream,
+        string? stream,
         bool includeGuid,
         IContextOfApp context,
-        QueryParameters more,
-        ILookUpEngine preparedLookup = null)
+        QueryParametersDtoFromClient? more,
+        ILookUpEngine? preparedLookup = null)
     {
         var modId = (context as IContextOfBlock)?.Module.Id ?? -1;
 
@@ -105,7 +105,7 @@ public class AppQueryControllerReal(
         l.A($"Check permission on query {query.Definition.Id}");
         var permissionChecker = appPermissionCheck.New()
             .ForItem(context, app, query.Definition.Entity);
-        var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething);
+        var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething).Allowed;
 
         var isAdmin = context.User.IsContentAdmin;
 
@@ -119,7 +119,9 @@ public class AppQueryControllerReal(
         dataConverter.WithGuid = includeGuid;
         if (dataConverter is ConvertToEavLightWithCmsInfo serializerWithEdit)
             serializerWithEdit.WithEdit = context.Permissions.IsContentAdmin;
-        if (stream == AllStreams) stream = null;
+
+        if (stream == AllStreams)
+            stream = null;
 
 
         // New v17 experimental with special fields

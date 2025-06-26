@@ -1,12 +1,12 @@
 ﻿using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.WebApi.Admin.App;
-using ToSic.Eav.WebApi.Admin.Query;
+using ToSic.Eav.WebApi.Sys.Admin.App;
+using ToSic.Eav.WebApi.Sys.Admin.Query;
 using RealController = ToSic.Sxc.Backend.App.AppQueryControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.App;
 
 [AllowAnonymous] // All functions will check security internally, so assume no requirements
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppQueryController() : DnnSxcControllerBase(RealController.LogSuffix), IAppQueryController
 {
     private RealController Real => SysHlp.GetService<RealController>();
@@ -23,7 +23,7 @@ public class AppQueryController() : DnnSxcControllerBase(RealController.LogSuffi
 
     [HttpPost]
     public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost([FromUri] string name,
-        [FromBody] QueryParameters more,
+        [FromBody] QueryParametersDtoFromClient more,
         [FromUri] int? appId = null,
         [FromUri] string stream = null,
         [FromUri] bool includeGuid = false
@@ -40,7 +40,7 @@ public class AppQueryController() : DnnSxcControllerBase(RealController.LogSuffi
     public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(
         [FromUri] string appPath,
         [FromUri] string name,
-        [FromBody] QueryParameters more,
+        [FromBody] QueryParametersDtoFromClient more,
         [FromUri] string stream = null
     ) => Real.PublicQueryPost(appPath, name, more, stream);
 }

@@ -1,18 +1,18 @@
-﻿using ToSic.Eav.Apps.Internal.Ui;
-using ToSic.Sxc.Apps.Internal.Work;
+﻿using ToSic.Eav.Sys;
+using ToSic.Sxc.Apps.Sys.Ui;
 using ToSic.Sxc.Backend.ContentBlocks;
 using ToSic.Sxc.Backend.InPage;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.Backend.Cms;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockControllerReal(
     LazySvc<IContextOfSite> context,
     LazySvc<ContentBlockBackend> blockBackend,
     LazySvc<AppViewPickerBackend> viewsBackend,
     LazySvc<WorkApps> workApps)
-    : ServiceBase($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl", connect: [context, blockBackend, viewsBackend, workApps]),
+    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [context, blockBackend, viewsBackend, workApps]),
         IBlockController
 {
     public const string LogSuffix = "Block";
@@ -20,12 +20,12 @@ public class BlockControllerReal(
 
     #region Block
 
-    private ContentBlockBackend Backend => _backend = _backend ?? blockBackend.Value;
-    private ContentBlockBackend _backend;
+    [field: AllowNull, MaybeNull]
+    private ContentBlockBackend Backend => field ??= blockBackend.Value;
 
     /// <inheritdoc />
     public string Block(int parentId, string field, int index, string app = "", Guid? guid = null)
-        => Backend.NewBlockAndRender(parentId, field, index, app, guid).Html;
+        => Backend.NewBlockAndRender(parentId, field, index, app, guid).Html ?? "";
     #endregion
 
     #region BlockItems
@@ -33,9 +33,7 @@ public class BlockControllerReal(
     /// used to be GET Module/AddItem
     /// </summary>
     public void Item(int? index = null)
-    {
-        Backend.AddItem(index);
-    }
+        => Backend.AddItem(index);
 
     #endregion
 
@@ -47,14 +45,15 @@ public class BlockControllerReal(
     /// </summary>
     /// <param name="appId"></param>
 
-    public void App(int? appId) => viewsBackend.Value.SetAppId(appId);
+    public void App(int? appId)
+        => viewsBackend.Value.SetAppId(appId);
 
     /// <summary>
     /// used to be GET Module/GetSelectableApps
     /// </summary>
     /// <param name="apps"></param>
     /// <returns></returns>
-    public IEnumerable<AppUiInfo> Apps(string apps = null)
+    public IEnumerable<AppUiInfo> Apps(string? apps = null)
     {
         // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
         var site = context.Value.Site;
@@ -102,9 +101,11 @@ public class BlockControllerReal(
         _moduleRoot = moduleRoot;
         return this;
     }
-    private string _moduleRoot;
+
+    private string _moduleRoot = null!;
 
 
     /// <inheritdoc />
-    public bool Publish(string part, int index) => Backend.PublishPart(part, index);
+    public bool Publish(string part, int index)
+        => Backend.PublishPart(part, index);
 }

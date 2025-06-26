@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Admin;
-using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Routing;
-using ToSic.Eav.WebApi.Zone;
+using ToSic.Eav.WebApi.Sys.Zone;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using RealController = ToSic.Eav.WebApi.Admin.ZoneControllerReal;
+using RealController = ToSic.Eav.WebApi.Sys.Admin.ZoneControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 
@@ -20,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ZoneController() : OqtStatefulControllerBase(RealController.LogSuffix), IZoneController
 {
     private RealController Real => GetService<RealController>();

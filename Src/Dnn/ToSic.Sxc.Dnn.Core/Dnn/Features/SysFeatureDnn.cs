@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Internal.Features;
-using ToSic.Eav.SysData;
+﻿using ToSic.Sys.Capabilities.Features;
+using ToSic.Sys.Capabilities.SysFeatures;
 
 namespace ToSic.Sxc.Dnn.Features;
 
@@ -11,6 +11,6 @@ internal class SysFeatureDnn() : SysFeatureDetector(DefStatic, true)
         NameId = "Dnn",
         Guid = new("00cb8d98-bfac-4a18-b7de-b1237498f183"),
         Name = "Dnn",
-        LicenseRules = BuiltInFeatures.SystemEnabled,
+        LicenseRules = BuiltInLicenseRules.SystemEnabled,
     };
 }

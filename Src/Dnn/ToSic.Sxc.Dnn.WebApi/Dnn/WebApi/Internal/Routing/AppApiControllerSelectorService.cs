@@ -1,26 +1,25 @@
-﻿using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http.Controllers;
-using ToSic.Eav;
-using ToSic.Eav.Apps.Internal;
-using ToSic.Eav.Caching;
+using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Context;
-using ToSic.Eav.Helpers;
-using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.Sys;
+using ToSic.Eav.WebApi.Sys.Routing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Internal.CodeErrorHelp;
-using ToSic.Sxc.Code.Internal.HotBuild;
-using ToSic.Sxc.Code.Internal.SourceCode;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Code.Sys.CodeErrorHelp;
+using ToSic.Sxc.Code.Sys.HotBuild;
+using ToSic.Sxc.Code.Sys.SourceCode;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Compile.Internal;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Integration;
+using ToSic.Sys.Caching;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal;
 
@@ -38,9 +37,9 @@ internal partial class AppApiControllerSelectorService(
     LazySvc<CodeErrorHelpService> codeErrorSvc,
     LazySvc<AssemblyCacheManager> assemblyCacheManager,
     LazySvc<AppCodeLoader> appCodeLoader,
-    LazySvc<ISxcContextResolver> sxcContextResolver,
+    LazySvc<ISxcCurrentContextService> sxcContextResolver,
     MemoryCacheService memoryCacheService,
-    LazySvc<IAppJsonService> appJson)
+    LazySvc<IAppJsonConfigurationService> appJson)
     : ServiceBase("Dnn.ApiSSv", connect: [folderUtilities, site, roslynLazy, getBlockLazy, analyzerLazy, codeErrorSvc, assemblyCacheManager, appCodeLoader, sxcContextResolver, memoryCacheService, appJson])
 {
     #region Setup / Init
@@ -68,7 +67,7 @@ internal partial class AppApiControllerSelectorService(
 
         var routeData = request.GetRouteData();
 
-        var controllerTypeName = routeData.Values[VarNames.Controller] + Constants.ApiControllerSuffix;
+        var controllerTypeName = routeData.Values[VarNames.Controller] + EavConstants.ApiControllerSuffix;
         l.A($"Controller: {controllerTypeName}");
 
         // Now Handle the 2sxc app-api queries
@@ -94,13 +93,13 @@ internal partial class AppApiControllerSelectorService(
             {
                 // TODO: HAD TO trim last slash, because it was added in the get-call, but causes trouble here
                 // must ensure it's improved and done the same way in Oqtane!!!
-                spec = new(block.AppId, edition: edition.TrimLastSlash(), block.App?.Name);
+                spec = new(block.AppId, edition: edition.TrimLastSlash(), block.AppOrNull?.Name);
                 l.A($"{nameof(spec)} from Block: {spec}");
             }
             else
             {
                 // find AppId based on path - otherwise we don't have a proper spec, and things fail
-                var appSpecs = sxcContextResolver.Value.SetAppOrNull(appFolder)?.AppReader.Specs ?? throw new("App not found");
+                var appSpecs = sxcContextResolver.Value.SetAppOrNull(appFolder)?.AppReaderRequired.Specs ?? throw new("App not found");
                 spec = new(appSpecs.AppId, edition: edition.TrimLastSlash(), appSpecs.Name);
                 l.A($"{nameof(spec)} from App based on path: {spec}");
             }
@@ -228,7 +227,7 @@ internal partial class AppApiControllerSelectorService(
     private void PreservePathForGetCodeInController(string controllerFolder, string controllerPath)
     {
         if (Request == null) return;
-        Request.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
-        Request.Properties.Add(CodeCompiler.SharedCodeRootFullPathKeyInCache, controllerPath);
+        Request.Properties.Add(SourceCodeConstants.SharedCodeRootPathKeyInCache, controllerFolder);
+        Request.Properties.Add(SourceCodeConstants.SharedCodeRootFullPathKeyInCache, controllerPath);
     }
 }

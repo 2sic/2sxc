@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Context;
 
 namespace IntegrationSamples.BasicEav01.Context
 {

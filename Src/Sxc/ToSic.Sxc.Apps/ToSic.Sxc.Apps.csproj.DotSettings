@@ -1,0 +1,7 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=apps_005Capp/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=apps_005Csys_005Capi01/@EntryIndexedValue">False</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=apps_005Csys_005Cappbase/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=apps_005Csys_005Cappdata/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=apps_005Csys_005Cappdata_005Cconfiguration/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=apps_005Csys_005Cpaths/@EntryIndexedValue">False</s:Boolean></wpf:ResourceDictionary>

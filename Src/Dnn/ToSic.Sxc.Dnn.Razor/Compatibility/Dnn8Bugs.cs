@@ -15,7 +15,7 @@
 // ReSharper disable once CheckNamespace
 namespace Dnn.Modules.DynamicContentViewer.Helpers;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 class Dnn8Bugs
 {
 }

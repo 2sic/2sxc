@@ -1,7 +1,4 @@
-﻿using System;
-using ToSic.Eav.Data;
-using ToSic.Eav.WebApi;
-using ToSic.Lib.Helpers;
+﻿using ToSic.Eav.Data;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
@@ -11,14 +8,14 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.Oqt.Server.Custom;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
 using ToSic.Sxc.Adam;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Coding;
-using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Code.Internal.CodeRunHelpers;
-using ToSic.Sxc.Internal;
+using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Code.Sys.CodeApi;
+using ToSic.Sxc.Code.Sys.CodeRunHelpers;
+using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
@@ -30,12 +27,15 @@ namespace Custom.Hybrid;
 /// </summary>
 [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
 [JsonFormatter]
-public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(logSuffix), IDynamicWebApi, IHasCodeLog,
-    IHasCodeApiService, IDynamicCode16
+public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(logSuffix), IDynamicWebApi, IHasCodeLog, IDynamicCode16
 {
     #region setup
 
     protected ApiTyped() : this(EavWebApiConstants.HistoryNameWebApi) { }
+
+    internal ICodeTypedApiHelper CodeApi => field
+        ??= ExCtxOrNull.GetTypedApi();
+
 
     /// <summary>
     /// Our custom dynamic 2sxc app api controllers, depends on event OnActionExecuting to provide dependencies (without DI in constructor).
@@ -58,19 +58,19 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     public new ICodeLog Log => CtxHlp.CodeLog;
 
     // ReSharper disable once InconsistentNaming
-    [PrivateApi] public ICodeApiService _CodeApiSvc => CtxHlp._CodeApiSvc;
+    [PrivateApi] internal IExecutionContext ExCtxOrNull => CtxHlp.ExCtxOrNull;
 
     /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
-    public new TService GetService<TService>() where TService : class => _CodeApiSvc.GetService<TService>();
+    public new TService GetService<TService>() where TService : class
+        => CodeApi.GetService<TService>();
 
     [PrivateApi("WIP 17.06,x")]
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
         => CodeHelper.GetService<TService>(protector, typeName);
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
-    public ServiceKit16 Kit => _kit.Get(() => _CodeApiSvc.GetKit<ServiceKit16>());
-    private readonly GetOnce<ServiceKit16> _kit = new();
+    public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;
 
     [PrivateApi("Not yet ready")]
     public IDevTools DevTools => CodeHelper.DevTools;
@@ -80,7 +80,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     #region Link & Edit - added to API in 2sxc 10.01
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => _CodeApiSvc?.Link;
+    public ILinkService Link => CodeApi?.Link;
 
     #endregion
 
@@ -104,7 +104,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     #region New App, Settings, Resources
 
     /// <inheritdoc />
-    public IAppTyped App => _CodeApiSvc?.AppTyped;
+    public IAppTyped App => CodeApi?.AppTyped;
 
     /// <inheritdoc cref="IDynamicCode16.AllResources" />
     public ITypedStack AllResources => CodeHelper.AllResources;
@@ -116,10 +116,9 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     #region My... Stuff
 
-    private TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
-    private TypedCode16Helper _codeHelper;
+    private TypedCode16Helper CodeHelper => field ??= CreateCodeHelper();
 
-    private TypedCode16Helper CreateCodeHelper() => new(owner: this, helperSpecs: new(_CodeApiSvc, false, ((IGetCodePath)this).CreateInstancePath), getRazorModel: () => null, getModelDic: () => null);
+    private TypedCode16Helper CreateCodeHelper() => new(owner: this, helperSpecs: new(ExCtxOrNull, false, ((IGetCodePath)this).CreateInstancePath), getRazorModel: () => null, getModelDic: () => null);
 
     public ITypedItem MyItem => CodeHelper.MyItem;
 
@@ -127,7 +126,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     public ITypedItem MyHeader => CodeHelper.MyHeader;
 
-    public IDataSource MyData => _CodeApiSvc.Data;
+    public IDataSource MyData => CodeApi.Data;
 
     #endregion
 
@@ -136,39 +135,38 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     /// <inheritdoc cref="IDynamicCode16.AsItem" />
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
-        => _CodeApiSvc.Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
+        => CodeApi.Cdf.AsItem(data, new() { ItemIsStrict = propsRequired ?? true, UseMock = mock == true });
 
     /// <inheritdoc cref="IDynamicCode16.AsItems" />
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _CodeApiSvc.Cdf.AsItems(list, propsRequired: propsRequired ?? true);
+        => CodeApi.Cdf.AsItems(list, new() { ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="IDynamicCode16.AsEntity" />
     public IEntity AsEntity(ICanBeEntity thing)
-        => _CodeApiSvc.Cdf.AsEntity(thing);
+        => CodeApi.Cdf.AsEntity(thing);
 
     /// <inheritdoc cref="IDynamicCode16.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _CodeApiSvc.Cdf.AsTyped(original, propsRequired: propsRequired);
+        => CodeApi.Cdf.AsTyped(original, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _CodeApiSvc.Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
+        => CodeApi.Cdf.AsTypedList(list, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="IDynamicCode16.AsStack" />
     public ITypedStack AsStack(params object[] items)
-        => _CodeApiSvc.Cdf.AsStack(items);
+        => CodeApi.Cdf.AsStack(items);
 
     /// <inheritdoc cref="IDynamicCode16.AsStack{T}" />
     public T AsStack<T>(params object[] items)
         where T : class, ICanWrapData, new()
-        => _CodeApiSvc.Cdf.AsStack<T>(items);
+        => CodeApi.Cdf.AsStack<T>(items);
 
     #endregion
 
-    public ITypedModel MyModel => CodeHelper.MyModel;
+    public ITypedRazorModel MyModel => CodeHelper.MyModel;
 
-    private CodeHelper CodeHlp => _codeHlp ??= GetService<CodeHelper>().Init(this);
-    private CodeHelper _codeHlp;
+    private CodeHelper CodeHlp => field ??= GetService<CodeHelper>().Init(this);
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
     public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
@@ -177,16 +175,16 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     #region MyContext & UniqueKey
 
     /// <inheritdoc cref="IDynamicCode16.MyContext" />
-    public ICmsContext MyContext => _CodeApiSvc.CmsContext;
+    public ICmsContext MyContext => CodeApi.CmsContext;
 
     /// <inheritdoc cref="IDynamicCode16.MyPage" />
-    public ICmsPage MyPage => _CodeApiSvc.CmsContext.Page;
+    public ICmsPage MyPage => CodeApi.CmsContext.Page;
 
     /// <inheritdoc cref="IDynamicCode16.MyUser" />
-    public ICmsUser MyUser => _CodeApiSvc.CmsContext.User;
+    public ICmsUser MyUser => CodeApi.CmsContext.User;
 
     /// <inheritdoc cref="IDynamicCode16.MyView" />
-    public ICmsView MyView => _CodeApiSvc.CmsContext.View;
+    public ICmsView MyView => CodeApi.CmsContext.View;
 
     /// <inheritdoc cref="IDynamicCode16.UniqueKey" />
     public string UniqueKey => Kit.Key.UniqueKey;
@@ -219,21 +217,20 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     /// <inheritdoc />
     public T As<T>(object source, NoParamOrder protector = default, bool mock = default)
         where T : class, ICanWrapData
-        => _CodeApiSvc.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
+        => CodeApi.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
 
     /// <inheritdoc />
     public IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
         where T : class, ICanWrapData
-        => _CodeApiSvc.Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
+        => CodeApi.Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
 
     #endregion
 
     #region Customize
 
     /// <inheritdoc cref="CodeTyped.Customize"/>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    protected ICodeCustomizer Customize => _customize ??= _CodeApiSvc.GetService<ICodeCustomizer>(reuse: true);
-    private ICodeCustomizer _customize;
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    protected ICodeCustomizer Customize => field ??= CodeApi.GetService<ICodeCustomizer>(reuse: true);
 
     #endregion
 

@@ -2,12 +2,12 @@
 <package>
   <metadata>
     <id>ToSic.Sxc.Oqtane.Install</id>
-    <version>19.03.04</version>
+    <version>20.00.00</version>
     <authors>2sic internet solutions GmbH, Switzerland</authors>
     <owners>2sic internet solutions GmbH, Switzerland</owners>
     <title>2sxc CMS and Meta-Module for Oqtane</title>
     <description>2sxc is a Oqtane module to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
-    <copyright>Copyright MIT © 2sic 2024</copyright>
+    <copyright>Copyright MIT © 2sic 2025</copyright>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/2sic/2sxc</projectUrl>
@@ -19,54 +19,50 @@
     <releaseNotes>https://github.com/2sic/2sxc/releases</releaseNotes>
     <summary>2sxc - CMS &amp; App-Engine for Oqtane</summary>
     <dependencies>
-      <dependency id="Oqtane.Framework" version="6.0.1" />
-      <dependency id="ToSic.Imageflow.Oqtane" version="1.11.0" />
+      <dependency id="Oqtane.Framework" version="6.1.3" />
+      <dependency id="ToSic.Imageflow.Oqtane" version="1.12.0" />
     </dependencies>
   </metadata>
   <files>
     <file src="images\1000.png" target="images\" />
     <file src="README.md" target="docs\" />
-    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net9.0\ToSic.*.dll" exclude="**\ToSic.Sxc.Oqtane.Package.dll" target="lib\net9.0" />
-    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net9.0\ToSic.*.pdb" exclude="**\ToSic.Sxc.Oqtane.Package.pdb" target="lib\net9.0" />
+    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\$targetframework$\ToSic.*.dll" exclude="**\ToSic.Sxc.Oqtane.Package.dll" target="lib\$targetframework$" />
+    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\$targetframework$\ToSic.*.pdb" exclude="**\ToSic.Sxc.Oqtane.Package.pdb" target="lib\$targetframework$" />
     <file src="..\..\Data\App_Data\new-app\**\*.*" target="content\2sxc\system\App_Data\new-app" />
-    <file src="..\..\Data\App_Data\new-apps\**\*.*" target="content\2sxc\system\App_Data\new-apps" />
     <file src="..\..\Data\App_Data\system\**\*.*" target="content\2sxc\system\App_Data\system" />
     <file src="..\..\Dnn\ToSic.Sxc.Dnn\ImportExport\**\*.*" target="content\2sxc\system\ImportExport" />
     <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc.Oqtane\**\*.*" exclude="**\*.map;" target="wwwroot\Modules\ToSic.Sxc.Oqtane" />
     <!-- XML documentation -->
-    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net9.0\ToSic.Sxc.xml" target="lib\net9.0" />
-    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net9.0\ToSic.Sxc.Oqtane.*.xml" exclude="**\ToSic.Sxc.Oqtane.Package.xml" target="lib\net9.0" />
-    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net9.0\ToSic.Sxc.Razor.xml" target="lib\net9.0" />
+    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\$targetframework$\ToSic.*.xml" exclude="**\ToSic.Sxc.Oqtane.Package.xml" target="lib\$targetframework$" />
     <!-- 3rd party dependencies -->
 
     <!-- ToSic.Sxc.Dnn.Main PackageReference -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\Connect.Koi.dll" target="lib\net9.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Connect.Koi.dll" target="lib\$targetframework$" />
     <!-- ToSic.Eav.DataSources PackageReference -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\CsvHelper.dll" target="lib\net9.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\CsvHelper.dll" target="lib\$targetframework$" />
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation v9.0.0 transitive dependency: Microsoft.AspNetCore.Mvc.Razor.Extensions (>= 6.0.0) -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll" target="lib\net9.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll" target="lib\$targetframework$" />
     <!-- ToSic.Sxc.Razor PackageReference -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll" target="lib\net9.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll" target="lib\$targetframework$" />
     <!-- Microsoft.CodeAnalysis.Razor transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\Microsoft.AspNetCore.Razor.Language.dll" target="lib\net9.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Microsoft.AspNetCore.Razor.Language.dll" target="lib\$targetframework$" />
     <!-- Microsoft.CodeAnalysis.Razor transitive dependency:  -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\Microsoft.CodeAnalysis.CSharp.dll" target="lib\net9.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Microsoft.CodeAnalysis.CSharp.dll" target="lib\$targetframework$" />
     <!-- Microsoft.CodeAnalysis.Razor transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\Microsoft.CodeAnalysis.dll" target="lib\net9.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Microsoft.CodeAnalysis.dll" target="lib\$targetframework$" />
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency: Microsoft.CodeAnalysis.Razor (>= 6.0.0) -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\Microsoft.CodeAnalysis.Razor.dll" target="lib\net9.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Microsoft.CodeAnalysis.Razor.dll" target="lib\$targetframework$" />
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency: Microsoft.Extensions.DependencyModel (>= 9.0.0) -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\Microsoft.Extensions.DependencyModel.dll" target="lib\net9.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\Microsoft.Extensions.DependencyModel.dll" target="lib\$targetframework$" />
     <!-- ToSic.Sxc dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net9.0\System.Runtime.Caching.dll" target="lib\net9.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\$targetframework$\System.Runtime.Caching.dll" target="lib\$targetframework$" />
  
-    <!-- ToSic.Imageflow.Oqtane v1.11.0 -->
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\lib\net7.0\ToSic.Imageflow.Oqt.Server.Oqtane.dll" target="lib\net9.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\lib\net7.0\ToSic.Imageflow.Oqt.Server.Oqtane.pdb" target="lib\net9.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\lib\net7.0\Imageflow.*" target="lib\net9.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\lib\net7.0\Imazen.*" target="lib\net9.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\lib\net7.0\Microsoft.IO.*" target="lib\net9.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\lib\net7.0\Newtonsoft.Json.dll" target="lib\net9.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.11.0\runtimes\win*\**\*imageflow.*" target="runtimes" />
+    <!-- ToSic.Imageflow.Oqtane v1.12.0 -->
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.12.0\lib\net9.0\ToSic.Imageflow.Oqt.Server.Oqtane.dll" target="lib\$targetframework$" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.12.0\lib\net9.0\ToSic.Imageflow.Oqt.Server.Oqtane.pdb" target="lib\$targetframework$" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.12.0\lib\net9.0\Imageflow.*" target="lib\$targetframework$" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.12.0\lib\net9.0\Imazen.*" target="lib\$targetframework$" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.12.0\lib\net9.0\Microsoft.IO.*" target="lib\$targetframework$" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.12.0\runtimes\win-x64*\**\*imageflow.*" target="runtimes" />
   </files>
 </package>

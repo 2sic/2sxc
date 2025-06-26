@@ -1,10 +1,10 @@
 ﻿using System.Web;
-using ToSic.Eav.WebApi.Infrastructure;
+using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Code.Internal.CodeRunHelpers;
+using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Dnn.Integration;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal;
@@ -46,9 +46,9 @@ internal class DnnWebApiHelper : CodeHelperBase
     /// <remarks>
     /// This will override the base functionality to ensure that any services created will be able to get the CodeContext.
     /// </remarks>
-    public TService GetService<TService>() where TService : class => _CodeApiSvc != null
-        ? _CodeApiSvc.GetService<TService>()
-        : _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
+    public TService GetService<TService>() where TService : class
+        => ExCtxOrNull?.GetService<TService>()
+            ?? _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
     // Must cache it, to be really sure we use the same ServiceProvider in the same request
     private readonly GetOnce<IServiceProvider> _serviceProvider = new();
 

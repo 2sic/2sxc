@@ -1,26 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System.Diagnostics.CodeAnalysis;
+using Custom.Razor.Sys;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using ToSic.Eav.Code.Help;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Coding;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Code.Internal.CodeErrorHelp;
-using ToSic.Sxc.Code.Internal.CodeRunHelpers;
+using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Code.Sys.CodeApi;
+using ToSic.Sxc.Code.Sys.CodeErrorHelp;
+using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Internal;
-using ToSic.Sxc.Razor.Internal;
 using ToSic.Sxc.Services;
+using ToSic.Sys.Code.Help;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
@@ -34,26 +33,29 @@ public abstract class RazorTyped<TModel>()
 {
     #region ServiceKit
 
+    [field: AllowNull, MaybeNull]
+    internal ICodeTypedApiHelper CodeApi => field ??= RzrHlp.ExCtxRoot.GetTypedApi();
+
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
-    public ServiceKit16 Kit => _kit.Get(() => _CodeApiSvc.GetKit<ServiceKit16>());
-    private readonly GetOnce<ServiceKit16> _kit = new();
+    [field: AllowNull, MaybeNull]
+    public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;
 
     #endregion
 
     #region MyModel
 
     [PrivateApi("WIP v16.02")]
-    public ITypedModel MyModel => CodeHelper.MyModel;
+    public ITypedRazorModel MyModel => CodeHelper.MyModel;
 
     #endregion
 
     #region New App, Settings, Resources
 
     /// <inheritdoc cref="IDynamicCode.Link" />
-    public ILinkService Link => _CodeApiSvc.Link;
+    public ILinkService Link => CodeApi.Link;
 
     /// <inheritdoc />
-    public IAppTyped App => _CodeApiSvc.AppTyped;
+    public IAppTyped App => CodeApi.AppTyped;
 
     /// <inheritdoc cref="IDynamicCode16.AllResources" />
     public ITypedStack AllResources => CodeHelper.AllResources;
@@ -73,7 +75,7 @@ public abstract class RazorTyped<TModel>()
 
     public ITypedItem MyHeader => CodeHelper.MyHeader;
 
-    public IDataSource MyData => _CodeApiSvc.Data;
+    public IDataSource MyData => CodeApi.Data;
 
     #endregion
 
@@ -81,53 +83,53 @@ public abstract class RazorTyped<TModel>()
 
     /// <inheritdoc cref="IDynamicCode16.AsItem" />
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
-        => _CodeApiSvc.Cdf.AsItem(data, propsRequired: propsRequired ?? true, mock: mock);
+        => CodeApi.Cdf.AsItem(data, new() { ItemIsStrict = propsRequired ?? true, UseMock = mock == true })!;
 
     /// <inheritdoc cref="IDynamicCode16.AsItems" />
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _CodeApiSvc.Cdf.AsItems(list, propsRequired: propsRequired ?? true);
+        => CodeApi.Cdf.AsItems(list, new() { ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="IDynamicCode16.AsEntity" />
     public IEntity AsEntity(ICanBeEntity thing)
-        => _CodeApiSvc.Cdf.AsEntity(thing);
+        => CodeApi.Cdf.AsEntity(thing);
 
     /// <inheritdoc cref="IDynamicCode16.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _CodeApiSvc.Cdf.AsTyped(original, propsRequired: propsRequired);
+        => CodeApi.Cdf.AsTyped(original, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true })!;
 
     /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => _CodeApiSvc.Cdf.AsTypedList(list, noParamOrder, propsRequired: propsRequired);
+        => CodeApi.Cdf.AsTypedList(list, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true })!;
 
     /// <inheritdoc cref="IDynamicCode16.AsStack" />
     public ITypedStack AsStack(params object[] items)
-        => _CodeApiSvc.Cdf.AsStack(items);
+        => CodeApi.Cdf.AsStack(items);
 
     /// <inheritdoc cref="IDynamicCode16.AsStack{T}" />
     public T AsStack<T>(params object[] items)
         where T : class, ICanWrapData, new()
-        => _CodeApiSvc.Cdf.AsStack<T>(items);
+        => CodeApi.Cdf.AsStack<T>(items);
 
     #endregion
 
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
-    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
+    public dynamic? GetCode(string path, NoParamOrder noParamOrder = default, string? className = default)
         => RzrHlp.GetCode(path, noParamOrder, className);
 
     #region MyContext & UniqueKey
 
     /// <inheritdoc cref="IDynamicCode16.MyContext" />
-    public ICmsContext MyContext => _CodeApiSvc.CmsContext;
+    public ICmsContext MyContext => CodeApi.CmsContext;
 
     /// <inheritdoc cref="IDynamicCode16.MyPage" />
-    public ICmsPage MyPage => _CodeApiSvc.CmsContext.Page;
+    public ICmsPage MyPage => CodeApi.CmsContext.Page;
 
     /// <inheritdoc cref="IDynamicCode16.MyUser" />
-    public ICmsUser MyUser => _CodeApiSvc.CmsContext.User;
+    public ICmsUser MyUser => CodeApi.CmsContext.User;
 
     /// <inheritdoc cref="IDynamicCode16.MyView" />
-    public ICmsView MyView => _CodeApiSvc.CmsContext.View;
+    public ICmsView MyView => CodeApi.CmsContext.View;
 
     /// <inheritdoc cref="IDynamicCode16.UniqueKey" />
     public string UniqueKey => Kit.Key.UniqueKey;
@@ -149,33 +151,33 @@ public abstract class RazorTyped<TModel>()
     /// </summary>
 
     [RazorInject]
-    public IModelExpressionProvider ModelExpressionProvider { get; set; } = null;
+    public IModelExpressionProvider ModelExpressionProvider { get; set; } = null!;
 
     [RazorInject]
-    public IUrlHelper Url { get; set; } = null;
+    public IUrlHelper Url { get; set; } = null!;
 
     [RazorInject]
-    public IViewComponentHelper Component { get; set; } = null;
+    public IViewComponentHelper Component { get; set; } = null!;
 
     [RazorInject]
-    public IJsonHelper Json { get; set; } = null;
+    public IJsonHelper Json { get; set; } = null!;
 
     [RazorInject]
-    public IHtmlHelper<dynamic> Html { get; set; } = null;
+    public IHtmlHelper<dynamic> Html { get; set; } = null!;
 
-    public PageContext PageContext { get; set; } = default!;
+    public PageContext PageContext { get; set; } = null!;
 
     #region As / AsList WIP v17
 
     /// <inheritdoc />
     public T As<T>(object source, NoParamOrder protector = default, bool mock = false)
         where T : class, ICanWrapData
-        => _CodeApiSvc.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
+        => CodeApi.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock)!;
 
     /// <inheritdoc />
     public IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
         where T : class, ICanWrapData
-        => _CodeApiSvc.Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
+        => CodeApi.Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
 
     #endregion
 
@@ -193,9 +195,8 @@ public abstract class RazorTyped<TModel>()
     public new TModel Model => CodeHelper.GetModel<TModel>();
 
     /// <inheritdoc cref="CodeTyped.Customize"/>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    protected ICodeCustomizer Customize => _customize ??= _CodeApiSvc.GetService<ICodeCustomizer>(reuse: true);
-    private ICodeCustomizer _customize;
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    protected ICodeCustomizer Customize => field ??= CodeApi.GetService<ICodeCustomizer>(reuse: true);
 
     #endregion
 

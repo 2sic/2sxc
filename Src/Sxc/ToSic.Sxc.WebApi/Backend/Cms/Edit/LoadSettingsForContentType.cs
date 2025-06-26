@@ -1,4 +1,7 @@
-﻿using ToSic.Eav.Plumbing;
+﻿
+using ToSic.Eav.Apps.Sys.AppStack;
+using ToSic.Eav.Data.Sys.ContentTypes;
+using ToSic.Sys.Utils;
 using static System.String;
 
 namespace ToSic.Sxc.Backend.Cms;
@@ -12,7 +15,7 @@ internal class LoadSettingsForContentType()
         // find all keys which may be necessary
         var settingsKeys = parameters.ContentTypes
             .SelectMany(ct =>
-                (ct.Metadata.DetailsOrNull?.AdditionalSettings ?? "").CsvToArrayWithoutEmpty()
+                (ct.DetailsOrNull()?.AdditionalSettings ?? "").CsvToArrayWithoutEmpty()
             )
             .Where(c => !IsNullOrWhiteSpace(c))
             // Only include settings which have the full path

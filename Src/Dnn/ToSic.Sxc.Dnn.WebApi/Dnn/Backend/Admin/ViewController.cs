@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using System.Web;
-using ToSic.Eav.WebApi.Adam;
-using ToSic.Eav.WebApi.Context;
-using ToSic.Eav.WebApi.Dto;
+﻿using System.Web;
+using ToSic.Eav.WebApi.Sys.Context;
+using ToSic.Eav.WebApi.Sys.Dto;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.Views;
@@ -13,7 +11,7 @@ using RealController = ToSic.Sxc.Backend.Admin.ViewControllerReal;
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
 [DnnLogExceptions]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ViewController() : DnnSxcControllerBase(RealController.LogSuffix), IViewController
 {
     private RealController Real => SysHlp.GetService<RealController>();
@@ -71,6 +69,6 @@ public class ViewController() : DnnSxcControllerBase(RealController.LogSuffix), 
         var allMods = new DnnPages(Log).AllModulesWithContent(PortalSettings.PortalId);
         Log.A($"Found {allMods.Count} modules");
 
-        return views.Select(vwb => new ViewDto().Init(vwb, blocks, allMods));
+        return views.Select(vwb => vwb.Init(blocks, allMods));
     }).Usage(appId, guid);
 }

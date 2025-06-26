@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <!-- generate xml docs -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1701;1702;CS1570;CS1572;CS1573;CS1574;CS1587;CS1591;CS1710;CS1711</NoWarn>
+  </PropertyGroup>
+</Project>

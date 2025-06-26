@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using RealController = ToSic.Sxc.Backend.Adam.AdamControllerReal<int>;
@@ -23,7 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam;
 [Route(OqtWebApiConstants.AppRootNoLanguage + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
 [Route(OqtWebApiConstants.AppRootPathOrLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
 [Route(OqtWebApiConstants.AppRootPathAndLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AdamController() : OqtStatefulControllerBase("Adam"), IAdamController<int>
 {
     private RealController Real => GetService<RealController>();

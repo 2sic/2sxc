@@ -2,8 +2,9 @@
 using System.Net;
 using System.Net.Mail;
 using DotNetNuke.Entities.Host;
-using ToSic.Eav.Context;
 using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Mail.Sys;
+using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Dnn.Services;
 

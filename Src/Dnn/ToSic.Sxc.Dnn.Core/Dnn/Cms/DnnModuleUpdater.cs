@@ -1,17 +1,18 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Internal.Work;
+using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Context;
+using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Data;
-using ToSic.Eav.Integration;
-using ToSic.Eav.Metadata;
+using ToSic.Eav.Metadata.Sys;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.Internal.Work;
-using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Apps.Sys.Work;
+using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Integration.Modules;
-using ToSic.Sxc.Internal;
 
 namespace ToSic.Sxc.Dnn.Cms;
 
@@ -34,7 +35,7 @@ internal class DnnModuleUpdater(
         // note: this is the correct zone, even if the module is shared from another portal, because the Site is prepared correctly
         var zoneId = site.ZoneId;
 
-        if (appId is Eav.Constants.AppIdEmpty or null)
+        if (appId is KnownAppsConstants.AppIdEmpty or null)
             UpdateInstanceSettingForAllLanguages(instance.Id, ModuleSettingNames.AppName, null, Log);
         else
         {
@@ -48,7 +49,7 @@ internal class DnnModuleUpdater(
             var appIdentity = new AppIdentity(zoneId, appId.Value);
 
             var templateGuid = workViews.New(appIdentity).GetAll()
-                .OrderByDescending(v => v.Metadata.HasType(Decorators.IsDefaultDecorator)) // first sort by IsDefaultDecorator DESC
+                .OrderByDescending(v => v.Metadata.HasType(KnownDecorators.IsDefaultDecorator)) // first sort by IsDefaultDecorator DESC
                 .ThenBy(v => v.Name) // than by Name ASC
                 .FirstOrDefault(t => !t.IsHidden)?.Guid;
 

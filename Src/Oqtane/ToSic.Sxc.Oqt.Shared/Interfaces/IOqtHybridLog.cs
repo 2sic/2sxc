@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Oqt.Shared.Interfaces;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IOqtHybridLog
 {
     /// <summary>

@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-Nullable.props" />
+
+  <PropertyGroup>
+    <AssemblyName>ToSic.Sxc.Web</AssemblyName>
+  </PropertyGroup>
+
+  <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\ToSic.Sxc.Adam\ToSic.Sxc.Adam.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Core\ToSic.Sxc.Core.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Engines\ToSic.Sxc.Engines.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Connect.Koi">
+      <HintPath>..\..\..\Dependencies\Koi\netstandard2.0\Connect.Koi.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http">
+      <!--<HintPath>..\..\..\Dependencies\System.Web\System.Web.Http.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>-->
+    </Reference>
+  </ItemGroup>
+
+</Project>

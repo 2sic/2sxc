@@ -1,16 +1,15 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
 using Oqtane.Shared;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using ToSic.Sxc.WebApi.Sys;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class AppAssetsControllerBase : OqtControllerBase
 {
     private string Route { get; }
@@ -21,12 +20,12 @@ public abstract class AppAssetsControllerBase : OqtControllerBase
     {
         internal LazySvc<OqtAssetsFileHelper> FileHelper { get; }
         public IWebHostEnvironment HostingEnvironment { get; }
-        public LazySvc<AppFolder> AppFolder { get; }
+        public LazySvc<AppFolderLookupForWebApi> AppFolder { get; }
         public SiteState SiteState { get; }
 
         public MyServices(
             IWebHostEnvironment hostingEnvironment,
-            LazySvc<AppFolder> appFolder,
+            LazySvc<AppFolderLookupForWebApi> appFolder,
             SiteState siteState,
             LazySvc<OqtAssetsFileHelper> fileHelper
         )

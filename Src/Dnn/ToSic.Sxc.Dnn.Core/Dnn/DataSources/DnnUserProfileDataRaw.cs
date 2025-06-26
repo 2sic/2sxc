@@ -2,14 +2,16 @@
 using System.Collections;
 using System.Collections.Immutable;
 using ToSic.Eav.Context;
+using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
+using ToSic.Eav.Data.Raw.Sys;
+using ToSic.Eav.Data.Sys;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Eav.Integration;
-using ToSic.Eav.Plumbing;
+using ToSic.Eav.Sys;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Dnn.Run;
 
@@ -33,8 +35,6 @@ namespace ToSic.Sxc.Dnn.DataSources;
 )]
 public class DnnUserProfile : CustomDataSourceAdvanced
 {
-    private readonly IDataFactory _dataFactory;
-
     #region Configuration-properties
 
     /// <summary>
@@ -93,11 +93,8 @@ public class DnnUserProfile : CustomDataSourceAdvanced
         public LazySvc<DnnSecurity> DnnSecurity { get; } = dnnSecurity;
     }
 
-    public DnnUserProfile(MyServices services, IDataFactory dataFactory) : base(services, "Dnn.Profile")
+    public DnnUserProfile(MyServices services) : base(services, "Dnn.Profile")
     {
-        ConnectLogs([
-            _dataFactory = dataFactory
-        ]);
         _services = services;
         ProvideOut(GetList);
     }
@@ -111,7 +108,7 @@ public class DnnUserProfile : CustomDataSourceAdvanced
         var l = Log.Fn<IImmutableList<IEntity>>();
         Configuration.Parse();
 
-        var realTenant = _services.Site.Id != Eav.Constants.NullId
+        var realTenant = _services.Site.Id != EavConstants.NullId
             ? _services.Site
             : _services.ZoneMapper.SiteOfApp(AppId);
         l.A($"realTenant {realTenant.Id}");
@@ -152,7 +149,7 @@ public class DnnUserProfile : CustomDataSourceAdvanced
             results.Add(dnnUserProfile);
         }
         l.A($"results: {results.Count}");
-        var userProfileDataFactory = _dataFactory.New(options: DnnUserProfileDataRaw.Options with { TypeName = ContentType?.NullIfNoValue() });
+        var userProfileDataFactory = DataFactory.SpawnNew(options: DnnUserProfileDataRaw.Options with { TypeName = ContentType?.NullIfNoValue() });
         return l.Return(userProfileDataFactory.Create(results), "ok");
     }
 
@@ -224,7 +221,7 @@ public class DnnUserProfileDataRaw : IRawEntity
     [PrivateApi]
     public IDictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>(Properties)
     {
-        { Eav.Data.Attributes.TitleNiceName, Name },
+        { AttributeNames.TitleNiceName, Name },
         { nameof(Name), Name },
     };
 

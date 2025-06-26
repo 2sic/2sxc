@@ -1,18 +1,15 @@
 ﻿using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Code.Internal.HotBuild;
-using ToSic.Sxc.Internal;
+using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Razor.DotNetOverrides;
+using ToSic.Sxc.Sys;
 
 namespace ToSic.Sxc.Razor
 {
     internal class HotBuildReferenceManager(
         RazorReferenceManager referenceManager,
-        Lazy<DependenciesLoader> dependenciesLoader,
+        LazySvc<DependenciesLoader> dependenciesLoader,
         AssemblyResolver assemblyResolver)
         : ServiceBase($"{SxcLogging.SxcLogName}.HbRefMgr",
             connect: [referenceManager, dependenciesLoader, assemblyResolver])
@@ -24,13 +21,16 @@ namespace ToSic.Sxc.Razor
             var additionalReferencePaths = new List<string>();
             try
             {
-                if (spec != null)
+                if (spec != null! /* paranoid */ )
                 {
                     // TODO: need to invalidate this cache (_referencedAssembliesCache, _assemblyResolver, ...) if there is change in Dependencies folder
                     var (dependencies, _) = dependenciesLoader.Value.TryGetOrFallback(spec);
-                    assemblyResolver.AddAssemblies(dependencies);
 
-                    if (dependencies != null) additionalReferencePaths.AddRange(dependencies.Select(dependency => dependency.Location));
+                    if (dependencies != null)
+                    {
+                        assemblyResolver.AddAssemblies(dependencies);
+                        additionalReferencePaths.AddRange(dependencies.Select(dependency => dependency.Location));
+                    }
                 }
 
                 if (!string.IsNullOrEmpty(appCodeFullPath) && File.Exists(appCodeFullPath))

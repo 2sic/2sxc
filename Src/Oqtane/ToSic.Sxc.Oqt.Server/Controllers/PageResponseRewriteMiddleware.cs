@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers;
 

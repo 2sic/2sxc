@@ -1,15 +1,14 @@
-﻿using System;
-using System.IO;
-using Oqtane.Models;
+﻿using Oqtane.Models;
 using Oqtane.Repository;
-using ToSic.Eav.Data;
-using ToSic.Eav.Helpers;
-using ToSic.Eav.Internal.Environment;
-using ToSic.Eav.Internal.Features;
+using ToSic.Eav.Data.ValueConverter.Sys;
+using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Lib.DI;
+using ToSic.Sxc.Adam.Sys.Security;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Server.Plumbing;
-using static ToSic.Eav.Internal.Features.BuiltInFeatures;
+using ToSic.Sys.Capabilities.Features;
+using ToSic.Sys.Utils;
+using static ToSic.Sys.Capabilities.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Oqt.Server.Data;
 
@@ -19,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.Data;
 [PrivateApi]
 internal class OqtValueConverter : ValueConverterBase
 {
-    private readonly LazySvc<IEavFeaturesService> _featuresLazy;
+    private readonly LazySvc<ISysFeaturesService> _featuresLazy;
     public LazySvc<IFileRepository> FileRepository { get; }
     public LazySvc<IFolderRepository> FolderRepository { get; }
     public LazySvc<ITenantResolver> TenantResolver { get; }
@@ -36,7 +35,7 @@ internal class OqtValueConverter : ValueConverterBase
         LazySvc<IPageRepository> pageRepository,
         LazySvc<IServerPaths> serverPaths,
         LazySvc<AliasResolver> aliasResolverLazy,
-        LazySvc<IEavFeaturesService> featuresLazy) : base("Oqt.ValCn")
+        LazySvc<ISysFeaturesService> featuresLazy) : base("Oqt.ValCn")
     {
         ConnectLogs([
             _featuresLazy = featuresLazy,
@@ -64,10 +63,12 @@ internal class OqtValueConverter : ValueConverterBase
     #endregion
 
     /// <inheritdoc />
-    public override string ToReference(string value) => TryToResolveOneLinkToInternalOqtCode(value);
+    public override string ToReference(string value)
+        => TryToResolveOneLinkToInternalOqtCode(value);
 
     /// <inheritdoc />
-    public override string ToValue(string reference, Guid itemGuid = default) => TryToResolveCodeToLink(itemGuid, reference);
+    public override string? ToValue(string? reference, Guid itemGuid = default)
+        => TryToResolveCodeToLink(itemGuid, reference);
 
     /// <summary>
     /// Will take a link like http://... to a file or page and try to return a DNN-style info like
@@ -160,7 +161,7 @@ internal class OqtValueConverter : ValueConverterBase
             if (!_featuresLazy.Value.IsEnabled(AdamRestrictLookupToEntity.Guid)) return result;
 
             // check if it's in this item. We won't check the field, just the item, so the field is ""
-            return !Sxc.Adam.Internal.Security.PathIsInItemAdam(itemGuid, "", pathInAdam)
+            return !AdamSecurity.PathIsInItemAdam(itemGuid, "", pathInAdam)
                 ? null
                 : result;
         }

@@ -1,0 +1,38 @@
+<Project>
+
+  <!--
+    *** This is critical for the Tests to run ***
+    Otherwise the unit tests don't know that they should use dependency injection - not sure why though.
+    -->
+  <PropertyGroup>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsTestProject>true</IsTestProject>
+    <IsPackable>false</IsPackable>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <Import Project="./TargetFrameworkAndCSharp.props" />
+
+  <!-- Set Default Namespace to ToSic.Sxc-->
+  <Import Project="./DefaultNamespace ToSic.Sxc.props" />
+
+  <!-- Lots of rules to disable generating Assembly Info (since we provide it through an object) -->
+  <Import Project="./GenerateAssemblyDisable.props" />
+
+  <!-- Disable some common warnings we don't care about-->
+  <Import Project="./ConfigurationsAndWarnings.props" />
+
+  <!-- Include C# files which contain the Assembly Info and some classes so that C# latest is supported (such as init-properties) -->
+  <Import Project="./IncludeCode/Compiler Features and API Hiding.props" />
+
+  <!-- Include most xUnit packages and more -->
+  <Import Project="./Tests/xUnit Test Framework.props" />
+
+</Project>

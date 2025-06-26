@@ -1,13 +1,15 @@
-﻿using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.Plumbing;
-using ToSic.Eav.Serialization;
-using ToSic.Sxc.Apps.Internal.Work;
+﻿using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Data.Sys.ContentTypes;
+using ToSic.Eav.Data.Sys.Entities;
+using ToSic.Eav.DataFormats.EavLight;
+using ToSic.Eav.Serialization.Sys.Options;
 using ToSic.Sxc.Backend.ImportExport;
-using ToSic.Sxc.Web.Internal.LightSpeed;
+using ToSic.Sxc.Web.Sys.LightSpeed;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.Views;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class ViewsBackend(
     GenWorkBasic<WorkViewsMod> workViewsMod,
     GenWorkPlus<WorkViews> workViews,
@@ -21,7 +23,7 @@ public class ViewsBackend(
         var l = Log.Fn<IEnumerable<ViewDetailsDto>>($"get all a#{appId}");
 
         var appViews = workViews.New(appId);
-        var contentTypes = appViews.AppWorkCtx.AppReader.ContentTypes.OfScope(Scopes.Default).ToList();
+        var contentTypes = appViews.AppWorkCtx.AppReader.ContentTypes.OfScope(ScopeConstants.Default).ToList();
 
         var viewList = appViews.GetAll().ToList();
         Log.A($"attribute list count:{contentTypes.Count}, template count:{viewList.Count}");
@@ -54,10 +56,10 @@ public class ViewsBackend(
                     Guid = view.Guid,
                     List = view.UseForList,
                     HasQuery = view.QueryRaw != null,
-                    Used = view.Entity.Parents().Count,
+                    Used = view.Entity.Parents().Count(),
                     IsShared = view.IsShared,
                     EditInfo = new(view.Entity),
-                    Metadata = ser?.CreateListOfSubEntities(view.Metadata, SubEntitySerialization.NeverSerializeChildren()),
+                    Metadata = ser?.SubConverter.CreateListOfSubEntities(view.Metadata, SubEntitySerialization.NeverSerializeChildren()),
                     Permissions = new() { Count = view.Entity.Metadata.Permissions.Count() },
                     Lightspeed = lightspeed,
                 };
@@ -74,7 +76,7 @@ public class ViewsBackend(
     /// <param name="staticName"></param>
     /// <param name="maybeEntity"></param>
     /// <returns></returns>
-    private static ViewContentTypeDto TypeSpecs(IEnumerable<IContentType> allCTs, string staticName, IEntity maybeEntity)
+    private static ViewContentTypeDto TypeSpecs(IEnumerable<IContentType> allCTs, string staticName, IEntity? maybeEntity)
     {
         var found = allCTs.FirstOrDefault(ct => ct.NameId == staticName);
         return new()

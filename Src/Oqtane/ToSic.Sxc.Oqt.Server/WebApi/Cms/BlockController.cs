@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using System;
-using ToSic.Eav.Apps.Internal.Ui;
-using ToSic.Eav.WebApi.Routing;
+using ToSic.Sxc.Apps.Sys.Ui;
 using ToSic.Sxc.Backend.Cms;
 using ToSic.Sxc.Backend.InPage;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -20,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms;
 [ValidateAntiForgeryToken]
 [ApiController]
 // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockController() : OqtStatefulControllerBase(RealController.LogSuffix), IBlockController
 {
     private RealController Real => GetService<RealController>();

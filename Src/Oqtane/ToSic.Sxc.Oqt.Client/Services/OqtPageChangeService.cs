@@ -1,8 +1,4 @@
 ﻿using Oqtane.Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.App;
 using ToSic.Sxc.Oqt.Shared.Helpers;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
@@ -10,7 +6,7 @@ using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Client.Services;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingService noCache)
 {
     /// <summary>
@@ -50,8 +46,14 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
                 .DistinctBy(url => url)
                 .Select(url => new
                 {
+                    id = "",
                     href = noCache.CacheBusting(url, renderId),
+                    bundle = "",
                     location = "body",
+                    integrity = "",
+                    crossorigin = "",
+                    type="",
+                    dataAttributes = new Dictionary<string, string>() { },
                 }));
         }
 
@@ -111,6 +113,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
                     type = script.Type ?? "", // bug in Oqtane, needs to be an empty string to skip loading script
                     //defer = script.HtmlAttributes.TryGetValue("defer", out var deferValue) ? deferValue : "",
                     //async = script.HtmlAttributes.TryGetValue("async", out var asyncValue) ? asyncValue : "",
+                    dataAttributes = new Dictionary<string, string>() { },
                 }));
 
             // 3. Inline JS code which was extracted from the template
@@ -121,11 +124,13 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
             {
                 id = string.IsNullOrWhiteSpace(inline.UniqueId) ? "" : inline.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
                 src = "",
+                bundle = "",
                 integrity = "",
                 crossorigin = "",
                 type = "text/javascript",
                 content = inline.Content,
-                location = "body"
+                location = "body",
+                dataAttributes = new Dictionary<string, string>() { },
             }));
         }
         #endregion

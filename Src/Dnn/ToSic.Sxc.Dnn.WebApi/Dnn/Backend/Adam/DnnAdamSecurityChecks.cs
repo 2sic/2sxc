@@ -1,8 +1,7 @@
-﻿using System.IO;
-using DotNetNuke.Entities.Host;
+﻿using DotNetNuke.Entities.Host;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
-using ToSic.Sxc.Adam.Internal;
+using ToSic.Sxc.Adam.Sys.Security;
 using IAsset = ToSic.Eav.Apps.Assets.IAsset;
 using IFile = ToSic.Eav.Apps.Assets.IFile;
 using IFolder = ToSic.Eav.Apps.Assets.IFolder;
@@ -27,7 +26,7 @@ internal class DnnAdamSecurityChecks(AdamSecurityChecksBase.MyServices services)
                && Host.AllowedExtensionWhitelist.IsAllowedExtension(extension.ToLowerInvariant());
     }
 
-    public override bool CanEditFolder(IAsset item)
+    public override bool CanEditFolder(IAsset? item)
     {
         var id = (item as IFolder)?.Id
                  ?? (item as IFile)?.ParentId

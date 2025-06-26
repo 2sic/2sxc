@@ -1,12 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Oqt.Shared;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class UrlParts
 {
     public const char QuerySeparator = '?';
@@ -115,7 +113,7 @@ public class UrlParts
     public bool IsRelative => Path.StartsWith(".") && !IsAbsolute && !string.IsNullOrEmpty(Domain);
 
 
-    public string ToLink(string format = null, bool suffix = true)
+    public string ToLink(string? format = null, bool suffix = true)
     {
         var endPart = Path + (suffix ? Suffix() : "");
         if (format == "/") return endPart;

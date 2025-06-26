@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Web.Internal.JsContext;
+﻿using ToSic.Sxc.Render.Sys.JsContext;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output;
 

@@ -1,11 +1,10 @@
 ﻿using ToSic.Eav.Persistence.Versions;
-using ToSic.Eav.WebApi.Cms;
-using ToSic.Eav.WebApi.Formats;
+using ToSic.Eav.WebApi.Sys.Cms;
 
 namespace ToSic.Sxc.Backend.Cms;
 
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class HistoryControllerReal(GenWorkDb<WorkEntityVersioning> versioning)
     : ServiceBase("Api.CmsHistoryRl", connect: [versioning]), IHistoryController
 {
@@ -15,9 +14,9 @@ public class HistoryControllerReal(GenWorkDb<WorkEntityVersioning> versioning)
         => versioning.New(appId: appId).VersionHistory(item.EntityId);
 
 
-    public bool Restore(int appId, int changeId, ItemIdentifier item)
+    public bool Restore(int appId, int transactionId, ItemIdentifier item)
     {
-        versioning.New(appId: appId).VersionRestore(item.EntityId, changeId);
+        versioning.New(appId: appId).VersionRestore(item.EntityId, transactionId);
         return true;
     }
 }

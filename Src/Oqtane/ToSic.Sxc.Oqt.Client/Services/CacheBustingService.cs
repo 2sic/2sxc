@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace ToSic.Sxc.Oqt.Client.Services
+﻿namespace ToSic.Sxc.Oqt.Client.Services
 {
     public class CacheBustingService
     {

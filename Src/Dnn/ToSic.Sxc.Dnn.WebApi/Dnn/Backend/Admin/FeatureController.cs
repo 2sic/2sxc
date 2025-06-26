@@ -1,7 +1,7 @@
-﻿using ToSic.Eav.Internal.Features;
-using ToSic.Eav.WebApi.Admin.Features;
+﻿using ToSic.Eav.WebApi.Sys.Admin.Features;
 using ToSic.Eav.WebApi.Sys.Licenses;
-using RealController = ToSic.Eav.WebApi.Admin.Features.FeatureControllerReal;
+using ToSic.Sys.Capabilities.Features;
+using RealController = ToSic.Eav.WebApi.Sys.Admin.Features.FeatureControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
 
@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 /// </remarks>
 [SupportedModules(DnnSupportedModuleNames)]
 [ValidateAntiForgeryToken]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class FeatureController() : DnnSxcControllerRoot(RealController.LogSuffix), IFeatureController
 {
     private RealController Real => SysHlp.GetService<RealController>();
@@ -30,5 +30,5 @@ public class FeatureController() : DnnSxcControllerRoot(RealController.LogSuffix
     /// </remarks>
     [HttpPost]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public bool SaveNew([FromBody] List<FeatureManagementChange> changes) => Real.SaveNew(changes);
+    public bool SaveNew([FromBody] List<FeatureStateChange> changes) => Real.SaveNew(changes);
 }

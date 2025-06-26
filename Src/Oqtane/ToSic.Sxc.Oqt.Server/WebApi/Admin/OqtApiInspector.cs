@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Reflection;
-using ToSic.Eav.WebApi.ApiExplorer;
+using ToSic.Eav.WebApi.Sys.ApiExplorer;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class OqtApiInspector() : ServiceBase(OqtConstants.OqtLogPrefix), IApiInspector
 {
     public bool IsBody(ParameterInfo paramInfo)

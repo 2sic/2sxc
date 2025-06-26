@@ -1,14 +1,15 @@
 ﻿using System.Text;
-using ToSic.Eav.Apps.Services;
-using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Eav.Internal.Features;
-using ToSic.Eav.Persistence.Logging;
-using ToSic.Eav.WebApi.ImportExport;
-using ToSic.Eav.WebApi.Infrastructure;
-using ToSic.Eav.WebApi.Sys;
+using ToSic.Eav.Apps.Sys.AppStack;
+using ToSic.Eav.Data.Sys.PropertyStack;
+using ToSic.Eav.Persistence.Sys.Logging;
+using ToSic.Eav.Sys;
+using ToSic.Eav.WebApi.Sys.ImportExport;
+using ToSic.Eav.WebApi.Sys.Install;
+using ToSic.Sxc.Apps.Sys.Installation;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Integration.Installation;
+using ToSic.Sxc.Sys.Integration.Installation;
+using ToSic.Sys.Capabilities.Features;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 #if NETFRAMEWORK
@@ -19,7 +20,7 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 
 namespace ToSic.Sxc.Backend.Sys;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class InstallControllerReal(
     LazySvc<IContextOfSite> context,
     LazySvc<IEnvironmentInstaller> envInstallerLazy,
@@ -29,7 +30,7 @@ public class InstallControllerReal(
     LazySvc<IFeaturesService> featureService,
     LazySvc<AppsBackend> appsBackend,
     LazySvc<AppDataStackService> appSettingsStack)
-    : ServiceBase($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl",
+    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
         connect:
         [
             context, envInstallerLazy, platformAppInstaller, impFromRemoteLazy, responseMaker, featureService,
@@ -65,7 +66,7 @@ public class InstallControllerReal(
                 guid = a.Guid,
                 version = a.Version,
             })
-            .ToList();
+            .ToListOpt();
 
         // Get list of allow/forbid rules for the App installer
         var settingsSources = appSettingsStack.Value
@@ -73,11 +74,11 @@ public class InstallControllerReal(
             .GetStack(AppStackConstants.Settings);
         var stack = new PropertyStack().Init(AppStackConstants.RootNameSettings, settingsSources);
 
-        var rules = stack.InternalGetPath(new PropReqSpecs("SiteSetup.AutoInstallApps", PropReqSpecs.EmptyDimensions, true, Log), null);
+        var rules = stack.InternalGetPath(new PropReqSpecs("SiteSetup.AutoInstallApps", PropReqSpecs.EmptyDimensions, true, Log), new());
         var ruleEntities = rules.Result as IEnumerable<IEntity>;    // note: Result is null if nothing found...
         var rulesFinal = ruleEntities?
             .Select(e => new SiteSetupAutoInstallAppsRule(e).GetRuleDto())
-            .ToList();
+            .ToListOpt();
 
         if (!featureService.Value.IsEnabled(BuiltInFeatures.AppAutoInstallerConfigurable.NameId))
         {
@@ -89,7 +90,7 @@ public class InstallControllerReal(
         {
             remoteUrl = url,
             installedApps = appsOfThisSite,
-            rules = rulesFinal
+            rules = rulesFinal,
         };
     }
 
@@ -98,20 +99,21 @@ public class InstallControllerReal(
     /// </summary>
     /// <param name="packageUrl"></param>
     /// <param name="container"></param>
+    /// <param name="newName"></param>
     /// <returns></returns>
-    public THttpResponseType RemotePackage(string packageUrl, IModule container)
+    public THttpResponseType RemotePackage(string packageUrl, IModule container, string? newName = null)
     {
         var l = Log.Fn<THttpResponseType>();
 
         var isApp = !container.IsContent;
 
-        Log.A("install package:" + packageUrl);
+        Log.A($"install package:'{packageUrl}', {nameof(newName)}:'{newName}'");
 
         var block = container.BlockIdentifier;
         var (success, messages) = impFromRemoteLazy.Value
-            .InstallPackage(block.ZoneId, block.AppId, isApp, packageUrl);
+            .InstallPackage(block.ZoneId, block.AppId, isApp, packageUrl, newName);
 
-        Log.A("install completed with success:" + success);
+        Log.A($"install completed with success:{success}");
 
         return success 
             ? l.ReturnAsOk(responseMaker.Ok()) 

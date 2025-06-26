@@ -2,12 +2,12 @@
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
-using ToSic.Eav.Context;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Internal;
+using ToSic.Sys.Users;
+using ToSic.Sys.Users.Permissions;
 
 namespace ToSic.Sxc.Dnn.Context;
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Server.Installation;

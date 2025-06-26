@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-Nullable.props" />
+
+  <PropertyGroup>
+    <AssemblyName>ToSic.Sxc.Apps</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.WebApi\ToSic.Eav.WebApi.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Core\ToSic.Sxc.Core.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Data\ToSic.Sxc.Data.csproj" />
+  </ItemGroup>
+
+</Project>

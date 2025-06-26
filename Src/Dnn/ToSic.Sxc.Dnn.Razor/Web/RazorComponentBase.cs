@@ -1,5 +1,7 @@
-﻿using ToSic.Sxc.Dnn;
+﻿using Custom.Razor.Sys;
+using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Razor;
+using ToSic.Sxc.Sys.ExecutionContext;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
 using ILog = ToSic.Lib.Logging.ILog;
 
@@ -11,7 +13,7 @@ namespace ToSic.Sxc.Web;
 /// It only contains internal wiring stuff, so not to be published
 /// </summary>
 [PrivateApi("internal class only!")]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHasLog, IDnnRazorCompatibility, ICompatibilityLevel
 {
     #region Constructor / Setup
@@ -21,8 +23,7 @@ public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHa
     /// For architecture of Composition over Inheritance.
     /// </summary>
     [PrivateApi]
-    internal DnnRazorHelper RzrHlp => _rzrHlp ??= new DnnRazorHelper().Init(this);
-    private DnnRazorHelper _rzrHlp;
+    internal DnnRazorHelper RzrHlp => field ??= new DnnRazorHelper().Init(this);
 
     /// <summary>
     /// Internal access to the underlying RenderPage.
@@ -40,14 +41,14 @@ public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHa
 
     /// <inheritdoc />
     [PrivateApi]
-    public ICodeApiService _CodeApiSvc { get; private set; }
+    internal IExecutionContext ExCtx { get; private set; }
 
     /// <inheritdoc />
     [PrivateApi]
-    public void ConnectToRoot(ICodeApiService codeRoot)
+    public void ConnectToRoot(IExecutionContext exCtx)
     {
-        RzrHlp.ConnectToRoot(codeRoot);
-        _CodeApiSvc = codeRoot;
+        RzrHlp.ConnectToRoot(exCtx);
+        ExCtx = exCtx;
     }
 
     /// <summary>
@@ -78,7 +79,6 @@ public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHa
 
     /// <inheritdoc />
     public string Path => VirtualPath;
-
 
     #endregion
 

@@ -1,13 +1,12 @@
 ﻿using DotNetNuke.Abstractions;
-using ToSic.Eav.Data;
-using ToSic.Eav.Helpers;
+using ToSic.Eav.Data.ValueConverter.Sys;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Images.Internal;
-using ToSic.Sxc.Integration.Paths;
+using ToSic.Sxc.Images.Sys;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Link.Sys;
+using ToSic.Sxc.Sys.Integration.Paths;
 
 namespace ToSic.Sxc.Dnn.Services;
 
@@ -22,10 +21,8 @@ internal class DnnLinkService(
     LazySvc<INavigationManager> navigationManager)
     : LinkServiceBase(imgLinker, linkPathsLazy, connect: [dnnValueConverterLazy, navigationManager])
 {
-    [PrivateApi] private IDnnContext Dnn => _dnn ??= _CodeApiSvc.GetService<IDnnContext>();
-    private IDnnContext _dnn;
-    [PrivateApi] private DnnValueConverter DnnValueConverter => _dnnValueConverter ??= dnnValueConverterLazy.Value as DnnValueConverter;
-    private DnnValueConverter _dnnValueConverter;
+    [PrivateApi] private IDnnContext Dnn => field ??= ExCtx.GetService<IDnnContext>();
+    [PrivateApi] private DnnValueConverter DnnValueConverter => field ??= dnnValueConverterLazy.Value as DnnValueConverter;
 
     protected override string ToApi(string api, string parameters = null) 
         => Api(path: CombineApiWithQueryString(api.TrimPrefixSlash(), parameters));
@@ -62,7 +59,7 @@ internal class DnnLinkService(
 
         var apiRoot = DnnJsApiService.GetApiRoots().AppApiRoot.TrimLastSlash();
 
-        var relativePath = $"{apiRoot}/app/{App.Folder}/{path}";    
+        var relativePath = $"{apiRoot}/app/{AppFolder}/{path}";    
 
         return relativePath;
     }

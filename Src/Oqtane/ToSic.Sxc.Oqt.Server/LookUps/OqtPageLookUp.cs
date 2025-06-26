@@ -1,11 +1,11 @@
-﻿using ToSic.Eav.LookUp;
-using ToSic.Sxc.Context.Internal;
+﻿using ToSic.Eav.LookUp.Sources;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Server.Context;
-using static ToSic.Sxc.LookUp.LookUpConstants;
+using static ToSic.Sxc.LookUp.Sys.LookUpConstants;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps;
 
-internal class OqtPageLookUp(ISxcContextResolver ctxResolver) : LookUpBase(SourcePage, "LookUp in Oqtane Page")
+internal class OqtPageLookUp(ISxcCurrentContextService ctxService) : LookUpBase(SourcePage, "LookUp in Oqtane Page")
 {
     protected Oqtane.Models.Page Page { get; set; }
 
@@ -13,7 +13,7 @@ internal class OqtPageLookUp(ISxcContextResolver ctxResolver) : LookUpBase(Sourc
     {
         if (_alreadyTried) return null;
         _alreadyTried = true;
-        var ctx = ctxResolver.BlockContextOrNull();
+        var ctx = ctxService.BlockContextOrNull();
         return ((OqtPage)ctx?.Page)?.GetContents();
     }
     private bool _alreadyTried;

@@ -1,9 +1,7 @@
 ﻿using System.Web;
-using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource.Internal.Query;
-using ToSic.Eav.Plumbing;
-using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Eav.WebApi.Sys.Admin.Query;
+using ToSic.Eav.WebApi.Sys.Dto;
 using RealController = ToSic.Sxc.Backend.Admin.Query.QueryControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
@@ -15,7 +13,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 [DnnLogExceptions]
 [ValidateAntiForgeryToken]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class QueryController() : DnnSxcControllerBase(RealController.LogSuffix, RealController.LogGroup,
     firstMessage: $"Query: {HttpContext.Current?.Request.Url.AbsoluteUri.After("/query/")}"), IQueryController
 {

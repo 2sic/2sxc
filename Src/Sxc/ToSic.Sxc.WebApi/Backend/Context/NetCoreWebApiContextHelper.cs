@@ -1,16 +1,14 @@
 ﻿#if NETCOREAPP
-using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using ToSic.Eav.Code;
-using ToSic.Eav.WebApi.Infrastructure;
+using ToSic.Eav.Apps.Sys;
 using ToSic.Lib.Coding;
 using ToSic.Sxc.Backend.Adam;
-using ToSic.Sxc.Blocks.Internal;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Internal;
-using ToSic.Sxc.Code.Internal.CodeRunHelpers;
-using ToSic.Sxc.Code.Internal.HotBuild;
-using ToSic.Sxc.Internal;
+using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Code.Sys.CodeRunHelpers;
+using ToSic.Sxc.Sys.ExecutionContext;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Backend.Context;
@@ -29,6 +27,8 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
 
     #region Initialize
 
+    internal new IExecutionContext? ExCtxOrNull => base.ExCtxOrNull;
+
     /// <summary>
     /// This will make sure that any services requiring the context can get it.
     /// It must usually be called from the base class which expects to use this.
@@ -38,14 +38,14 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
         if (_blockContextInitialized) return;
         _blockContextInitialized = true;
         var getBlock = _helper.GetService<IWebApiContextBuilder>();
-        CtxResolver = getBlock.PrepareContextResolverForApiRequest();
-        BlockOptional = CtxResolver.BlockOrNull();
+        CtxService = getBlock.PrepareContextResolverForApiRequest();
+        BlockOptional = CtxService.BlockOrNull();
     }
 
     private bool _blockContextInitialized;
 
-    private ISxcContextResolver CtxResolver { get; set; }
-    internal IBlock BlockOptional { get; private set; }
+    private ISxcCurrentContextService CtxService { get; set; } = null!;
+    internal IBlock? BlockOptional { get; private set; }
 
     public void OnActionExecutingEnd(ActionExecutingContext context)
     {
@@ -55,14 +55,14 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
         // Use the ServiceProvider of the current request to build DynamicCodeRoot
         // Note that BlockOptional was already retrieved in the base class
         var codeRoot = context.HttpContext.RequestServices
-            .Build<CodeApiServiceFactory>()
+            .Build<IExecutionContextFactory>()
             .New(_owner, BlockOptional, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel12);
         ConnectToRoot(codeRoot);
 
         AdamCode = codeRoot.GetService<AdamCode>();
 
         // In case SxcBlock was null, there is no instance, but we may still need the app
-        if (_CodeApiSvc.App == null)
+        if (ExCtx.GetApp() == null)
         {
             Log.A("DynCode.App is null");
             TryToAttachAppFromUrlParams(context);
@@ -70,13 +70,13 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
 
         // Ensure the Api knows what path it's on, in case it will
         // create instances of .cs files
-        if (context.HttpContext.Items.TryGetValue(CodeCompiler.SharedCodeRootPathKeyInCache, out var createInstancePath))
+        if (context.HttpContext.Items.TryGetValue(SourceCodeConstants.SharedCodeRootPathKeyInCache, out var createInstancePath))
             if (_owner is IGetCodePath withCodePath)
-                withCodePath.CreateInstancePath = createInstancePath as string;
+                withCodePath.CreateInstancePath = (createInstancePath as string)!;
     }
 
 
-    private void TryToAttachAppFromUrlParams(ActionExecutingContext context) => base.Log.Do(() =>
+    private void TryToAttachAppFromUrlParams(ActionExecutingContext context) => Log.Do(() =>
     {
         var found = false;
         try
@@ -87,14 +87,16 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
             if (routeAppPathObj == null) return "";
             var routeAppPath = routeAppPathObj.ToString();
 
-            var appId = CtxResolver.SetAppOrNull(routeAppPath)?.AppReader.AppId ?? Eav.Constants.NullId;
+            var appId = CtxService.SetAppOrNull(routeAppPath)
+                            ?.AppReaderRequired.AppId
+                        ?? Eav.Sys.EavConstants.NullId;
 
-            if (appId != Eav.Constants.NullId)
+            if (appId != Eav.Sys.EavConstants.NullId)
             {
                 // Look up if page publishing is enabled - if module context is not available, always false
                 base.Log.A($"AppId: {appId}");
-                var app = LoadAppOnly(appId, CtxResolver.Site().Site);
-                ((ICodeApiServiceInternal)_CodeApiSvc).AttachApp(app);
+                var app = LoadAppOnly(appId, CtxService.Site().Site);
+                ((IExCtxAttachApp)ExCtx).AttachApp(app);
                 found = true;
             }
         }
@@ -131,14 +133,14 @@ internal class NetCoreWebApiContextHelper: CodeHelperBase
 
     #region Adam
 
-    public AdamCode AdamCode { get; private set; }
+    public AdamCode AdamCode { get; private set; } = null!;
 
     public Sxc.Adam.IFile SaveInAdam(NoParamOrder noParamOrder = default,
-        Stream stream = null,
-        string fileName = null,
-        string contentType = null,
+        Stream? stream = null,
+        string? fileName = null,
+        string? contentType = null,
         Guid? guid = null,
-        string field = null,
+        string? field = null,
         string subFolder = "") =>
         AdamCode.SaveInAdam(
             stream: stream,

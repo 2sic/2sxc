@@ -1,0 +1,43 @@
+﻿using System.Collections.Specialized;
+using ToSic.Eav.LookUp.Sources;
+using ToSic.Lib.DI;
+using ToSic.Sxc.LookUp.Sys;
+using ToSic.Sxc.Web.Sys.Http;
+using ToSic.Sxc.Web.Sys.Parameters;
+
+namespace ToSic.Sxc.LookUp;
+
+/// <summary>
+/// LookUp provider for query string parameters.
+/// It handles the normal `key=value` query string parameters and also the special `OriginalParameters` query string parameter.
+/// </summary>
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public class QueryStringLookUp(LazySvc<IHttp> httpLazy) : LookUpBase(LookUpConstants.SourceQueryString, "LookUp in QueryString")
+{
+    private NameValueCollection? _source;
+    private NameValueCollection? _originalParams;
+
+
+    public override string Get(string key, string format)
+    {
+        _source ??= httpLazy.Value?.QueryStringParams ?? [];
+
+        // Special handling when having original parameters in query string.
+        var originalParametersQueryStringValue = _source[OriginalParameters.NameInUrlForOriginalParameters]!;
+        var overrideParam = GetOverrideParam(key, originalParametersQueryStringValue);
+
+        return !string.IsNullOrEmpty(overrideParam)
+            ? overrideParam!
+            : _source[key] ?? "";
+    }
+
+    private string? GetOverrideParam(string key, string originalParametersQueryStringValue)
+    {
+        if (string.IsNullOrEmpty(originalParametersQueryStringValue))
+            return string.Empty;
+
+        _originalParams ??= OriginalParameters.GetOverrideParams(originalParametersQueryStringValue);
+
+        return _originalParams[key];
+    }
+}

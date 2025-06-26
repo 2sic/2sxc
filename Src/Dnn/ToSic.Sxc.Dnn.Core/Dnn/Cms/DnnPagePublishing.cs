@@ -1,21 +1,19 @@
-﻿using System.Collections.Immutable;
-using DotNetNuke.Common.Utilities;
+﻿using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
-using ToSic.Eav.Apps.Internal.Work;
-using ToSic.Eav.Cms.Internal;
+using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Internal;
-using ToSic.Sxc.Blocks.Internal;
-using ToSic.Sxc.Cms.Internal.Publishing;
-using ToSic.Sxc.Context.Internal;
-using ToSic.Sxc.Data.Internal.Decorators;
+using ToSic.Eav.Sys;
+using ToSic.Sxc.Blocks.Sys.BlockBuilder;
+using ToSic.Sxc.Cms.Publishing.Sys;
+using ToSic.Sxc.Context.Sys;
+using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 
-using IEntity = ToSic.Eav.Data.IEntity;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.Dnn.Cms;
@@ -30,8 +28,8 @@ internal partial class DnnPagePublishing(
     {
         var possibleContextOfBlock = context as IContextOfBlock;
         var enabled = possibleContextOfBlock?.Publishing.ForceDraft ?? false;
-        var instanceId = possibleContextOfBlock?.Module.Id ?? Eav.Constants.IdNotInitialized;
-        var userId = (context.User as DnnUser)?.GetContents().UserID ?? Eav.Constants.IdNotInitialized;
+        var instanceId = possibleContextOfBlock?.Module.Id ?? EavConstants.IdNotInitialized;
+        var userId = (context.User as DnnUser)?.GetContents().UserID ?? EavConstants.IdNotInitialized;
         Log.A($"DoInsidePublishing(module:{instanceId}, user:{userId}, enabled:{enabled})");
 
         if (enabled)
@@ -105,7 +103,7 @@ internal partial class DnnPagePublishing(
                 var ids = list.Where(e => !e.IsPublished).Select(e => e.EntityId).ToList();
 
                 // publish BlockConfiguration as well - if there already is one
-                if (cb.Configuration != null)
+                if (cb.ConfigurationIsReady)
                 {
                     l.A($"add group id:{cb.Configuration.Id}");
                     ids.Add(cb.Configuration.Id);
@@ -114,7 +112,7 @@ internal partial class DnnPagePublishing(
                 l.A(Log.Try(() => $"will publish id⋮{ids.Count} ids:[{ string.Join(",", ids.Select(i => i.ToString()).ToArray()) }]"));
 
                 if (ids.Any())
-                    entPublish.New(cb.Context.AppReader).Publish(ids.ToArray());
+                    entPublish.New(cb.Context.AppReaderRequired).Publish(ids.ToArray());
                 else
                     l.A("no ids found, won\'t publish items");
             }
@@ -135,7 +133,7 @@ internal partial class DnnPagePublishing(
 
     private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, IDataSource data, string key)
     {
-        var cont = data.GetStream(key, nullIfNotFound: true)?.List.ToImmutableList(); //  data.Out.ContainsKey(key) ? data[key]?.List?.ToImmutableList() : null;
+        var cont = data.GetStream(key, nullIfNotFound: true)?.List.ToImmutableOpt();
         Log.A($"TryToAddStream(..., ..., key:{key}), found:{cont != null} add⋮{cont?.Count ?? 0}" );
         if (cont != null) list = list.Concat(cont);
         return list;

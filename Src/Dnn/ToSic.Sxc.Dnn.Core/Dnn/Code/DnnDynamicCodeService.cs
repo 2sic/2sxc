@@ -1,11 +1,12 @@
 ﻿using System.Web;
 using System.Web.UI;
-using ToSic.Eav.Context;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Services.Internal;
-using ToSic.Sxc.Web.Internal.PageService;
+using ToSic.Sxc.Services.Sys.DynamicCodeService;
+using ToSic.Sxc.Sys.Render.PageContext;
+using ToSic.Sxc.Web.Sys.PageService;
+using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Dnn.Code;
 
@@ -17,13 +18,13 @@ namespace ToSic.Sxc.Dnn.Code;
 internal class DnnDynamicCodeService: DynamicCodeService
 {
     public new class MyScopedServices(
-        LazySvc<PageServiceShared> pageServiceShared,
+        LazySvc<IPageServiceShared> pageServiceShared,
         LazySvc<PageChangeSummary> pageChangeSummary,
         LazySvc<DnnPageChanges> dnnPageChanges,
         LazySvc<DnnClientResources> dnnClientResources)
         : MyServicesBase(connect: [pageServiceShared, pageChangeSummary, dnnPageChanges, dnnClientResources])
     {
-        public LazySvc<PageServiceShared> PageServiceShared { get; } = pageServiceShared;
+        public LazySvc<IPageServiceShared> PageServiceShared { get; } = pageServiceShared;
         public LazySvc<PageChangeSummary> PageChangeSummary { get; } = pageChangeSummary;
         public LazySvc<DnnPageChanges> DnnPageChanges { get; } = dnnPageChanges;
         public LazySvc<DnnClientResources> DnnClientResources { get; } = dnnClientResources;
@@ -54,7 +55,9 @@ internal class DnnDynamicCodeService: DynamicCodeService
             user.IsContentAdmin
         );
         _scopedServices.DnnPageChanges.Value.Apply(Page, changes);
-        var dnnClientResources = _scopedServices.DnnClientResources.Value.Init(Page, false, null);
+
+        // #RemovedV20 #OldDnnAutoJQuery
+        var dnnClientResources = _scopedServices.DnnClientResources.Value.Init(Page, /*false,*/ null);
         dnnClientResources.AddEverything(changes?.Features);
         l.Done();
     }

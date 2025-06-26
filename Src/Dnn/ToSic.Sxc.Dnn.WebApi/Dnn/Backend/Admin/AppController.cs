@@ -1,9 +1,8 @@
 ﻿using System.Web;
 using ToSic.Eav.DataSources.Sys.Internal;
-using ToSic.Eav.ImportExport.Internal;
-using ToSic.Eav.WebApi.Admin;
-using ToSic.Eav.WebApi.Dto;
-using AppDto = ToSic.Eav.WebApi.Dto.AppDto;
+using ToSic.Eav.WebApi.Sys.Admin;
+using ToSic.Eav.WebApi.Sys.Dto;
+using AppDto = ToSic.Eav.WebApi.Sys.Dto.AppDto;
 using RealController = ToSic.Sxc.Backend.Admin.AppControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Admin;
@@ -13,7 +12,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab) 
 // we can't set this globally (only needed for imports)
 [DnnLogExceptions]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), IAppController<HttpResponseMessage>
 {
     private RealController Real => SysHlp.GetService<RealController>();
@@ -23,14 +22,16 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public List<AppDto> List(int zoneId) => Real.List(zoneId);
+    public ICollection<AppDto> List(int zoneId)
+        => Real.List(zoneId);
 
     /// <inheritdoc />
     [HttpGet]
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public List<AppDto> InheritableApps() => Real.InheritableApps();
+    public ICollection<AppDto> InheritableApps()
+        => Real.InheritableApps();
 
     /// <inheritdoc />
     [HttpDelete]
@@ -44,14 +45,14 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public void App(int zoneId, string name, int? inheritAppId = null, int templateId = 0) => Real.App(zoneId, name, inheritAppId, templateId);
+    public void App(int zoneId, string name, int? inheritAppId = null) => Real.App(zoneId, name, inheritAppId);
 
     /// <inheritdoc />
     [HttpGet]
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public List<SiteLanguageDto> Languages(int appId) => Real.Languages(appId);
+    public ICollection<SiteLanguageDto> Languages(int appId) => Real.Languages(appId);
 
     /// <inheritdoc />
     [HttpGet]
@@ -69,13 +70,13 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     /// <inheritdoc />
     [HttpGet]
     public HttpResponseMessage Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool assetsAdam, bool assetsSite, bool assetAdamDeleted = true)
-        => Real.Export(new AppExportSpecs(zoneId, appId, includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted));
+        => Real.Export(new(zoneId, appId, includeContentGroups, resetAppGuid, assetsAdam, assetsSite, assetAdamDeleted));
 
     /// <inheritdoc />
     [HttpGet]
     [ValidateAntiForgeryToken]
     public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withPortalFiles = false)
-        => Real.SaveData(new AppExportSpecs(zoneId, appId, includeContentGroups, resetAppGuid, WithSiteFiles: withPortalFiles));
+        => Real.SaveData(new(zoneId, appId, includeContentGroups, resetAppGuid, WithSiteFiles: withPortalFiles));
 
     /// <inheritdoc />
     [HttpGet]

@@ -1,14 +1,12 @@
-﻿using System.IO;
-using ToSic.Eav;
-using ToSic.Eav.Apps.Integration;
-using ToSic.Eav.Internal.Loaders;
-using ToSic.Eav.Persistence.Logging;
-using ToSic.Eav.Security;
+﻿using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.Persistence.File;
+using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Eav.Security.Files;
-using ToSic.Eav.WebApi.Adam;
-using ToSic.Eav.WebApi.Assets;
-using ToSic.Eav.WebApi.ImportExport;
+using ToSic.Eav.Sys;
+using ToSic.Eav.WebApi.Sys.ImportExport;
+using ToSic.Eav.WebApi.Sys.Security;
 using ToSic.Sxc.Backend.ImportExport;
+using ToSic.Sys.Users;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;
@@ -18,7 +16,7 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 
 namespace ToSic.Sxc.Backend.Admin;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DataControllerReal(
     ISite site,
     IAppPathsMicroSvc appPathSvc,
@@ -48,7 +46,7 @@ public class DataControllerReal(
         for (var i = 0; i < uploadInfo.Count; i++)
         {
             var (fileName, stream) = uploadInfo.GetStream(i);
-            streams.Add(new() { Name = fileName, Stream = stream });
+            streams.Add(new() { Name = fileName, Stream = stream! });
         }
         var result = importContent.New()
             .ImportJsonFiles(zoneId, appId, streams, context.Value.Site.DefaultCultureCode);
@@ -69,7 +67,7 @@ public class DataControllerReal(
         if (fileName != fileNameSafe) l.A($"File name sanitized:'{fileName}' => '{fileNameSafe}'");
 
         var appPaths = appPathSvc.Get(appWorkCtxSvc.Context(appId).AppReader, site);
-        var filePath = Path.Combine(appPaths.PhysicalPath, Constants.AppDataProtectedFolder, FsDataConstants.BundlesFolder, fileNameSafe);
+        var filePath = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppDataProtectedFolder, AppDataFoldersConstants.BundlesFolder, fileNameSafe);
 
         if (!File.Exists(filePath))
             return l.ReturnFalse($"File not found: {filePath}");

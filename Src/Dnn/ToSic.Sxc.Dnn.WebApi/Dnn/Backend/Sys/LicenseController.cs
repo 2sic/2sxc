@@ -1,12 +1,11 @@
 ﻿using System.Web;
-using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Sys.Licenses;
 using RealController = ToSic.Eav.WebApi.Sys.Licenses.LicenseControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Sys;
 
 [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class LicenseController() : DnnSxcControllerRoot("License"), ILicenseController
 {
     private RealController Real => SysHlp.GetService<RealController>();

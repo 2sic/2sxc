@@ -7,9 +7,8 @@ namespace ToSic.Sxc.Compatibility.Sxc;
 /// </summary>
 [Obsolete]
 [PrivateApi]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class SxcHelper(bool editAllowed, IConvertToEavLight innerConverter)
 {
-    public OldDataToDictionaryWrapper Serializer => _entityToDictionary ??= new(editAllowed, innerConverter);
-    private OldDataToDictionaryWrapper _entityToDictionary;
+    public OldDataToDictionaryWrapper Serializer => field ??= new(editAllowed, innerConverter);
 }

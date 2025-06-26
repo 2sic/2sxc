@@ -1,19 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Routing;
-using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
-using ToSic.Eav;
-using ToSic.Eav.Helpers;
-using ToSic.Eav.Plumbing;
+using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Sys;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Backend.Context;
-using ToSic.Sxc.Code.Internal.HotBuild;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Code.Sys.HotBuild;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Server.Code.Internal;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Polymorphism.Internal;
-using File = System.IO.File;
+using ToSic.Sys.Utils;
 using Log = ToSic.Lib.Logging.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
@@ -159,12 +156,12 @@ internal class AppApiControllerManager : IHasLog
 
         // Prepare / Get App State, while possibly also initializing the App...
         var ctxResolver = _webApiContextBuilder.PrepareContextResolverForApiRequest();
-        var appState = ctxResolver.SetAppOrGetBlock(appFolder)?.AppReader;
+        var appReader = ctxResolver.SetAppOrGetBlock(appFolder)?.AppReaderRequired;
 
         // Figure out the current edition
         var edition = FigureEdition(ctxResolver).TrimLastSlash();
 
-        var spec = new HotBuildSpec(appState?.AppId ?? Eav.Constants.AppIdEmpty, edition: edition, appState?.Specs.Name);
+        var spec = new HotBuildSpec(appReader?.AppId ?? KnownAppsConstants.AppIdEmpty, edition: edition, appReader?.Specs.Name);
 
         return l.ReturnAsOk(spec);
     }
@@ -173,18 +170,18 @@ internal class AppApiControllerManager : IHasLog
     /// Figure out the current edition for HotBuildSpec.
     /// </summary>
     /// <returns></returns>
-    private string FigureEdition(ISxcContextResolver ctxResolver)
+    private string FigureEdition(ISxcCurrentContextService ctxService)
     {
         var l = Log.Fn<string>(timer: true);
 
-        var block = ctxResolver.BlockOrNull();
+        var block = ctxService.BlockOrNull();
         var edition = block.NullOrGetWith(_polymorphism.UseViewEditionOrGet);
 
         return l.Return(edition);
     }
 
     private string GetAppCodePathFromWatcherFolders(IDictionary<string, bool> watcherFolders)
-        => watcherFolders.FirstOrDefault(x => x.Key.EndsWith(Constants.AppCode)).Key;
+        => watcherFolders.FirstOrDefault(x => x.Key.EndsWith(FolderConstants.AppCode)).Key;
 
     private bool AddController(Assembly assembly, string dllName = null)
     {

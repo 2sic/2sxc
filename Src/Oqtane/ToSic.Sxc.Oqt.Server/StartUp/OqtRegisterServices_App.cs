@@ -1,11 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.ImportExport.Internal;
-using ToSic.Eav.Internal.Environment;
-using ToSic.Eav.Security;
-using ToSic.Sxc.Adam.Internal;
+using ToSic.Eav.ImportExport.Integration;
+
+using ToSic.Eav.ImportExport.Sys.XmlExport;
+using ToSic.Sxc.Adam.Sys.FileSystem;
+using ToSic.Sxc.Adam.Sys.Paths;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Run;
+using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
 
@@ -31,8 +33,7 @@ internal static partial class OqtRegisterServices
     {
         // ADAM stuff
         services.TryAddTransient<IAdamPaths, OqtAdamPaths>();
-        services.TryAddTransient<IAdamFileSystem<int, int>, OqtAdamFileSystem>();
-        services.TryAddTransient<AdamManager, AdamManager<int, int>>();
+        services.TryAddTransient<IAdamFileSystem, OqtAdamFileSystem>();
         return services;
     }
 

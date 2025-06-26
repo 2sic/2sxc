@@ -1,17 +1,17 @@
-﻿using ToSic.Eav.Internal.Features;
-using ToSic.Eav.Internal.Requirements;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Metadata.Requirements.Sys;
 using ToSic.Sxc.Engines;
+using ToSic.Sys.Capabilities.SysFeatures;
+using ToSic.Sys.Requirements;
 
 namespace ToSic.Sxc.Dnn.Features;
 
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public class DnnRequirements(IRequirementsService requirements) : EngineRequirementsBase("Eng.DnnReq", connect: [requirements])
 {
     internal bool RequirementsMet() 
         => !RequirementsStatus().SafeAny();
 
-    private List<RequirementStatus> RequirementsStatus()
+    private ICollection<RequirementStatus> RequirementsStatus()
         => requirements.UnfulfilledRequirements([SysFeatureSuggestions.CSharp08]);
 
     internal RenderEngineResult GetMessageForRequirements()

@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-Nullable.props" />
+
+  <PropertyGroup>
+    <AssemblyName>ToSic.Sxc.Core</AssemblyName>
+  </PropertyGroup>
+
+  <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Context\ToSic.Eav.Context.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj" />
+  </ItemGroup>
+
+</Project>

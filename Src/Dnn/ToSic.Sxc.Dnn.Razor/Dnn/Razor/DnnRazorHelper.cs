@@ -1,9 +1,11 @@
 ﻿using System.Web.Hosting;
-using ToSic.Eav;
-using ToSic.Eav.Code.Help;
-using ToSic.Sxc.Code.Internal.CodeRunHelpers;
-using ToSic.Sxc.Data.Internal.Wrapper;
+using Custom.Razor.Sys;
+using ToSic.Sxc.Code.Sys.CodeRunHelpers;
+using ToSic.Sxc.Context.Sys;
+using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Dnn.Code;
+using ToSic.Sys.Code.Help;
+using ToSic.Sys.Exceptions;
 
 namespace ToSic.Sxc.Dnn.Razor;
 
@@ -37,7 +39,7 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
 
         // Only call the Page.ConnectToRoot, as it will call-back this objects ConnectToRoot
         // So don't call: ConnectToRoot(typedParent._DynCodeRoot);
-        Page.ConnectToRoot(typedParent._CodeApiSvc);
+        Page.ConnectToRoot(typedParent.ExCtx);
 
         Log.A($"{nameof(virtualPath)} for Render etc.:{virtualPath}");
     }
@@ -48,9 +50,8 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
 
     #region Html Helper
 
-    internal IHtmlHelper Html => _html ??= _CodeApiSvc.GetService<HtmlHelper>().Init(Page, this,
-        ((ICodeApiServiceInternal)_CodeApiSvc)._Block?.Context.User.IsSystemAdmin ?? false);
-    private IHtmlHelper _html;
+    internal IHtmlHelper Html => field
+        ??= ExCtx.GetService<HtmlHelper>().Init(Page, this, ExCtx.GetState<IContextOfBlock>()?.User.IsSystemAdmin ?? false);
 
     #endregion
 
@@ -74,9 +75,12 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
     {
         // ReSharper disable once ConvertTypeCheckToNullCheck
         if (Page is not IHasDnn)
-            throw new ExceptionWithHelp(new CodeHelp(name: "create-instance-cshtml-only-in-old-code",
-                detect: null,
-                uiMessage: "CreateInstance(*.cshtml) is not supported in Hybrid Razor. Use .cs files instead."));
+            throw new ExceptionWithHelp(new CodeHelp
+            {
+                Name = "create-instance-cshtml-only-in-old-code",
+                Detect = null,
+                UiMessage = "CreateInstance(*.cshtml) is not supported in Hybrid Razor. Use .cs files instead."
+            });
         var pageAsCode = WebPageBase.CreateInstanceFromVirtualPath(path);
         var pageAsRcb = pageAsCode as RazorComponentBase;
         pageAsRcb?.RzrHlp.ConfigurePage(Page, pageAsRcb.VirtualPath);
@@ -94,15 +98,15 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
 
     #region DynamicModel and Factory
 
-    private CodeDataWrapper CodeDataWrapper => _dynJacketFactory.Get(() => _CodeApiSvc.GetService<CodeDataWrapper>());
-    private readonly GetOnce<CodeDataWrapper> _dynJacketFactory = new();
+    private ICodeDataPoCoWrapperService CodeDataWrapper => _dynJacketFactory.Get(() => ExCtx.GetService<ICodeDataPoCoWrapperService>());
+    private readonly GetOnce<ICodeDataPoCoWrapperService> _dynJacketFactory = new();
 
     /// <inheritdoc cref="IRazor14{TModel,TServiceKit}.DynamicModel"/>
     public dynamic DynamicModel => _dynamicModel ??= CodeDataWrapper.FromDictionary(Page.PageData);
     private dynamic _dynamicModel;
 
     internal void SetDynamicModel(object data) =>
-        _dynamicModel = CodeDataWrapper.FromObject(data, WrapperSettings.Dyn(children: false, realObjectsToo: false));
+        _dynamicModel = CodeDataWrapper.DynamicFromObject(data, WrapperSettings.Dyn(children: false, realObjectsToo: false));
 
     #endregion
 }
