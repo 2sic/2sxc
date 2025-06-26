@@ -1,9 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Integration;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Images;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Startup;
 
 #pragma warning disable CA1822

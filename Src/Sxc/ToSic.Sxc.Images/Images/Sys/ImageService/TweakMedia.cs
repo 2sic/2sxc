@@ -1,5 +1,4 @@
 ﻿using ToSic.Sxc.Edit.Toolbar;
-using ToSic.Sxc.Images.Internal;
 using ToSic.Sys.Utils;
 using static System.StringComparer;
 

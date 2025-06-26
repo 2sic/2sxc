@@ -1,5 +1,4 @@
-﻿using ToSic.Sxc.Services.Internal;
-using ToSic.Sxc.Services.Mail.Sys;
+﻿using ToSic.Sxc.Services.Mail.Sys;
 
 namespace ToSic.Sxc.ServicesTests.Mail;
 

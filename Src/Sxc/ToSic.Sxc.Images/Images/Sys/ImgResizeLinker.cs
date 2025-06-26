@@ -8,7 +8,6 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Capabilities.Features;
