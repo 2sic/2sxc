@@ -1,9 +1,14 @@
-<dl>
-    <dt>v20.00.00</dt>
-    <dd>Part of module installation is the deletion of unneeded data. In an infrequent case, You could get a 
-    timeout exception. This is not a show-stopper. Simply reload the page so DNN can continue clean-up 
-    until all unnecessary data is deleted and the module is installed.</dd>
-</dl>
-<p></p>
-<p>Read the <a href="https://github.com/2sic/2sxc/releases" target="_blank">release notes on Github</a><br/>
+﻿<p>
+    <b>2sxc v20.00.00 - MoT Release ⚠️</b>
+    <br><br>
+    2sxc v20 cleans up a lot of old APIs, so it's called a <a href="https://go.2sxc.org/mot">MoT release</a> (Moment of Truth).
+    <br><br>
+    If you have old code, things may break and you will be guided to fix the issues.
+    <br><br>
+    Please read the release notes carefully, do backups, and test-upgrade on a copy before upgrading a live environment.
+    See the <a href="https://go.2sxc.org/v20">release blog</a> for more details.
+<p>
+<br>
+<p>
+    Also read the <a href="https://github.com/2sic/2sxc/releases" target="_blank">release notes on Github</a><br/>
 </p>
