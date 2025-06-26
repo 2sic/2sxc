@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.CmsService.Internal;
 using ToSic.Sxc.Services.DataServices;
@@ -11,8 +12,10 @@ using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Services.Page.Sys;
 using ToSic.Sxc.Services.Templates;
 using ToSic.Sxc.Services.User.Sys;
+using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Services;
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Startup;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class SxcServicesStartup
@@ -21,7 +24,7 @@ public static class SxcServicesStartup
     public static IServiceCollection AddSxcServices(this IServiceCollection services)
     {
         // new in v12.02 - PageService & Page Features
-        services.TryAddTransient<IPageService, PageService>();  // must be unique per module where it's used
+        services.TryAddTransient<Services.IPageService, PageService>();  // must be unique per module where it's used
 
         //services.AddObsoleteServicesAndKits();
 
@@ -45,7 +48,7 @@ public static class SxcServicesStartup
         // V15
         services.TryAddScoped<IModuleService, ModuleService>(); // Must be scoped & shared on the module
         services.TryAddTransient<ITurnOnService, TurnOnService>();
-        services.TryAddTransient<ICmsService, CmsService.Internal.CmsService>();
+        services.TryAddTransient<ICmsService, CmsService>();
         services.TryAddTransient<CmsServiceStringWysiwyg>();
         services.TryAddTransient<CmsServiceImageExtractor>();
         services.TryAddTransient<IDataService, DataService>();
@@ -111,6 +114,17 @@ public static class SxcServicesStartup
 
         return services;
     }
+
+#pragma warning disable CS0612 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
+    public static IServiceCollection AddSxcServicesObsolete(this IServiceCollection services)
+    {
+        // Obsolete version, needed to keep old Apps working which used this
+        services.TryAddTransient<Web.IPageService, WebPageServiceObsolete>();
+        return services;
+    }
+#pragma warning restore CS0618 // Type or member is obsolete
+#pragma warning restore CS0618 // Type or member is obsolete
 
 
 }
