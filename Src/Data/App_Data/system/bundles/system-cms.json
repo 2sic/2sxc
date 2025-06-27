@@ -6488,7 +6488,7 @@
             },
             {
               "Id": 130188,
-              "Version": 11,
+              "Version": 13,
               "Guid": "07958470-13f6-4e7d-b2a2-901517058e2a",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
@@ -6497,7 +6497,7 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v1(data, context) {\n  // skip if already set\n  if(context.cache.notFirstRun) return data.value;\n  context.cache.notFirstRun = true;\n\n  // new without name - set empty so it's still required\n  if(!data.Name) return '';\n\n  const hasQuery = data.Pipeline.length == 1;\n  const hasList = data.UseForList;\n  const hasContent = data.ContentTypeStaticName != '';\n  const key = (hasContent || hasList ? 'c' : '') + (hasList ? 'l' : '') + (hasQuery ? 'q':'');\n  if(key == '') return '-'; // default to No-Content if not set\n  return key;\n}"
+                    "en-us": "v2((data, context) => {\n  // skip if already set\n  if(context.cache.notFirstRun) {\n    // set useList if it contains an 'l', but is not 'clq' which is show all\n    const value = data.value[0];\n    const useList = value != 'clq' && value.indexOf('l') != -1;\n    // console.log('VarViewModel - debug value', data.value, useList);\n    return {\n      value: data.value,\n      fields: [\n        { name: 'UseForList', value: useList },\n      ]\n    };\n  }\n\n  // First-Run Scenario\n  context.cache.notFirstRun = true;\n\n  // new without name - set empty so it's still required\n  if(!data.Name)\n    return '';\n\n  const hasQuery = data.Pipeline.length == 1;\n  const hasList = data.UseForList;\n  const hasContent = data.ContentTypeStaticName != '';\n  const key = (hasContent || hasList ? 'c' : '') + (hasList ? 'l' : '') + (hasQuery ? 'q':'');\n  if(key == '')\n    return '-'; // default to No-Content if not set\n  return key;\n});"
                   },
                   "Notes": {
                     "en-us": ""
