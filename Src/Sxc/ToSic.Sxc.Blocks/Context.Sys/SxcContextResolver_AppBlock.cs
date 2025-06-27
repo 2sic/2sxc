@@ -23,10 +23,9 @@ partial class SxcCurrentContextService
 
 
         // If the app in the request matches the app in the context, everything is fine
-        // Note: Not sure if we should use AppReaderOrNull vs. AppReaderRequired here.
-        // ATM I'm guessing that in some cases the Module doesn't yet have an app, and if this code is run, then ...OrNull is better.
-        // For now 2025-06-13 2dm will try to use Required and see if it blows.
-        if (appId == moduleCtx.AppReaderRequired.AppId)
+        // This is necessary when you come from a module which doesn't have an app yet (all apps menu).
+        // Then you access an app, so the underlying AppReader is still null. 
+        if (appId == moduleCtx.AppReaderOrNull?.AppId)
             return l.Return(moduleCtx);
         
         // If the app in the request doesn't match the app in the context
