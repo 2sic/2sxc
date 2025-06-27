@@ -296,6 +296,42 @@
                 }
               },
               {
+                "Id": 165964,
+                "Version": 4,
+                "Guid": "8eb1bb44-b148-43aa-a758-537a5f0fc2d1",
+                "Type": {
+                  "Id": "4c88d78f-5f3e-4b66-95f2-6d63b7858847",
+                  "Name": "MetadataForDecorator"
+                },
+                "Attributes": {
+                  "String": {
+                    "DeleteWarning": {
+                      "en-us": ""
+                    },
+                    "TargetName": {
+                      "en-us": "*"
+                    },
+                    "Title": {
+                      "en-us": "Metadata for all Entities"
+                    }
+                  },
+                  "Number": {
+                    "Amount": {
+                      "en-us": 100
+                    },
+                    "TargetType": {
+                      "en-us": 4
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "32698880-1c2e-41ab-bcfc-420091d3263f"
+                }
+              },
+              {
                 "Id": 165965,
                 "Version": 3,
                 "Guid": "0408571a-dbc0-4081-9b66-d1fc7251974f",
@@ -364,42 +400,6 @@
                     },
                     "Title": {
                       "en-us": "Requires feature DataExportImportBundles"
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=41",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "32698880-1c2e-41ab-bcfc-420091d3263f"
-                }
-              },
-              {
-                "Id": 165964,
-                "Version": 4,
-                "Guid": "8eb1bb44-b148-43aa-a758-537a5f0fc2d1",
-                "Type": {
-                  "Id": "4c88d78f-5f3e-4b66-95f2-6d63b7858847",
-                  "Name": "MetadataForDecorator"
-                },
-                "Attributes": {
-                  "String": {
-                    "DeleteWarning": {
-                      "en-us": ""
-                    },
-                    "TargetName": {
-                      "en-us": "*"
-                    },
-                    "Title": {
-                      "en-us": "Metadata for all Entities"
-                    }
-                  },
-                  "Number": {
-                    "Amount": {
-                      "en-us": 100
-                    },
-                    "TargetType": {
-                      "en-us": 4
                     }
                   }
                 },

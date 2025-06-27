@@ -189,9 +189,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-dropdown"
                         },
@@ -204,15 +201,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -313,9 +302,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "empty-message"
                         },
@@ -328,15 +314,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -604,34 +582,6 @@
           },
           "Entities": [
             {
-              "Id": 171651,
-              "Version": 1,
-              "Guid": "c842ce13-f28b-4104-97d3-209bcf3a312a",
-              "Type": {
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
-                "Name": "UiFormula"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "v2((data, context) => {\n  return data.Mode == 'rich';\n});"
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Field.Settings.Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
               "Id": 167715,
               "Version": 2,
               "Guid": "75c5a65b-e2ce-455e-9f1e-1bcde7b63c74",
@@ -683,6 +633,34 @@
                   },
                   "Title": {
                     "en-us": "Setting Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 171651,
+              "Version": 1,
+              "Guid": "c842ce13-f28b-4104-97d3-209bcf3a312a",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  return data.Mode == 'rich';\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
                   }
                 },
                 "Boolean": {
