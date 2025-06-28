@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Razor.DotNetOverrides;
 internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogShouldNeverConnect
 #pragma warning restore CA1852 // Seal internal types
 {
-    private readonly object _cacheLock = new object();
+    private readonly object _cacheLock = new();
     private readonly Dictionary<string, CompiledViewDescriptor> _precompiledViews;
     private readonly ConcurrentDictionary<string, string> _normalizedPathCache;
     private readonly IFileProvider _fileProvider;
@@ -90,7 +90,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         _sourceAnalyzer = sourceAnalyzer;
         _env = env;
 
-        _normalizedPathCache = new ConcurrentDictionary<string, string>(StringComparer.Ordinal);
+        _normalizedPathCache = new(StringComparer.Ordinal);
 
         // This is our L0 cache, and is a durable store. Views migrate into the cache as they are requested
         // from either the set of known precompiled views, or by being compiled.
@@ -100,7 +100,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         // We do this because there's no good way to canonicalize paths on windows, and it will create
         // problems when deploying to linux. Rather than deal with these issues, we just don't support
         // views that differ only by case.
-        _precompiledViews = new Dictionary<string, CompiledViewDescriptor>(
+        _precompiledViews = new(
             precompiledViews.Count,
             StringComparer.OrdinalIgnoreCase);
 
@@ -184,7 +184,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
 
             // At this point, we've decided what to do - but we should create the cache entry and
             // release the lock first.
-            cacheEntryOptions = new MemoryCacheEntryOptions();
+            cacheEntryOptions = new();
 
             Debug.Assert(item.ExpirationTokens != null);
             for (var i = 0; i < item.ExpirationTokens.Count; i++)
@@ -192,7 +192,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
                 cacheEntryOptions.ExpirationTokens.Add(item.ExpirationTokens[i]);
             }
 
-            taskSource = new TaskCompletionSource<CompiledViewDescriptor>(creationOptions: TaskCreationOptions.RunContinuationsAsynchronously);
+            taskSource = new(creationOptions: TaskCreationOptions.RunContinuationsAsynchronously);
             if (item.SupportsCompilation)
             {
                 // We'll compile in just a sec, be patient.
@@ -249,7 +249,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         // based on checksums.
         if (precompiledView.Item == null || !ChecksumValidator.IsRecompilationSupported(precompiledView.Item))
         {
-            return new ViewCompilerWorkItem()
+            return new()
             {
                 // If we don't have a checksum for the primary source file we can't recompile.
                 SupportsCompilation = false,
@@ -274,7 +274,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         // We also need to create a new descriptor, because the original one doesn't have expiration tokens on
         // it. These will be used by the view location cache, which is like an L1 cache for views (this class is
         // the L2 cache).
-        item.Descriptor = new CompiledViewDescriptor()
+        item.Descriptor = new()
         {
             ExpirationTokens = item.ExpirationTokens,
             Item = precompiledView.Item,
@@ -299,12 +299,12 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
             // If the file doesn't exist, we can't do compilation right now - we still want to cache
             // the fact that we tried. This will allow us to re-trigger compilation if the view file
             // is added.
-            return new ViewCompilerWorkItem()
+            return new()
             {
                 // We don't have enough information to compile
                 SupportsCompilation = false,
 
-                Descriptor = new CompiledViewDescriptor()
+                Descriptor = new()
                 {
                     RelativePath = normalizedPath,
                     ExpirationTokens = expirationTokens,
@@ -321,7 +321,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
 
         GetChangeTokenFromAppCode(expirationTokens, normalizedPath);
 
-        return new ViewCompilerWorkItem()
+        return new()
         {
             SupportsCompilation = true,
 
@@ -409,7 +409,7 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         // Anything we compile from source will use Razor 2.1 and so should have the new metadata.
         var loader = new RazorCompiledItemLoader();
         var item = loader.LoadItems(assembly).Single();
-        return new CompiledViewDescriptor(item);
+        return new(item);
     }
 
     /// <summary>

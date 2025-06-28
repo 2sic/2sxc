@@ -17,19 +17,24 @@ internal class DnnApiInspector() : ServiceBase(DnnConstants.LogName), IApiInspec
         var httpMethods = new List<string>();
 
         var getAtt = methodInfo.GetCustomAttribute<HttpGetAttribute>();
-        if (getAtt != null) httpMethods.Add(getAtt.HttpMethods[0].Method);
+        if (getAtt != null)
+            httpMethods.Add(getAtt.HttpMethods[0].Method);
 
         var postAtt = methodInfo.GetCustomAttribute<HttpPostAttribute>();
-        if (postAtt != null) httpMethods.Add(postAtt.HttpMethods[0].Method);
+        if (postAtt != null)
+            httpMethods.Add(postAtt.HttpMethods[0].Method);
 
         var putAtt = methodInfo.GetCustomAttribute<HttpPutAttribute>();
-        if (putAtt != null) httpMethods.Add(putAtt.HttpMethods[0].Method);
+        if (putAtt != null)
+            httpMethods.Add(putAtt.HttpMethods[0].Method);
 
         var deleteAtt = methodInfo.GetCustomAttribute<HttpDeleteAttribute>();
-        if (deleteAtt != null) httpMethods.Add(deleteAtt.HttpMethods[0].Method);
+        if (deleteAtt != null)
+            httpMethods.Add(deleteAtt.HttpMethods[0].Method);
 
         var acceptVerbsAtt = methodInfo.GetCustomAttribute<AcceptVerbsAttribute>();
-        if (acceptVerbsAtt != null) httpMethods.AddRange(acceptVerbsAtt.HttpMethods.Select(m => m.Method));
+        if (acceptVerbsAtt != null)
+            httpMethods.AddRange(acceptVerbsAtt.HttpMethods.Select(m => m.Method));
 
         return httpMethods;
     }

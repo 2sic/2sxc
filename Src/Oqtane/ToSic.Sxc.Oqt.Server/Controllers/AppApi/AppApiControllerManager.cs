@@ -190,7 +190,8 @@ internal class AppApiControllerManager : IHasLog
         dllName ??= assembly.GetName().Name;
         l.A($"TryAdd ApplicationPart:'{dllName}'.");
 
-        if (_partManager.ApplicationParts.ToList() // ToList() prevents exception 'Collection was modified; enumeration operation may not execute'
+        if (_partManager.ApplicationParts
+            .ToList() // ToList() prevents exception 'Collection was modified; enumeration operation may not execute'
             .Any(a => a.Name.Equals($"{Path.GetFileNameWithoutExtension(dllName)}.dll")))
             return l.ReturnFalse($"OK, can't add ApplicationPart:'{dllName}' because it was already added before.");
 

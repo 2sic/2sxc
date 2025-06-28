@@ -1,4 +1,5 @@
-﻿using DotNetNuke.Common.Utilities;
+﻿using DotNetNuke.Collections;
+using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Controllers;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -65,6 +66,10 @@ partial class DnnEnvironmentInstaller
 
                 case "20.00.00":
                     MigrateSystemCustomFolder(version);
+                    break;
+
+                case "20.00.01":
+                    MigrateAppExtensionsFolder(version);
                     break;
 
                 case "21.00.00":
@@ -296,14 +301,83 @@ partial class DnnEnvironmentInstaller
             if (Directory.Exists(oldSystemCustomFolder))
             {
                 Helpers.DirectoryCopy(oldSystemCustomFolder, systemCustomFolder, true);
-                _installLogger.LogStep(version, $"{nameof(MigrateSystemCustomFolder)} - Old system custom folder migrated to new location: " + systemCustomFolder);
+                _installLogger.LogStep(version, $"{nameof(MigrateSystemCustomFolder)} - Old '{FolderConstants.FolderSystemCustom}' folder migrated to new location: " + systemCustomFolder);
             }
             else
-                _installLogger.LogStep(version, $"{nameof(MigrateSystemCustomFolder)} - Old system custom folder does not exist.");
+                _installLogger.LogStep(version, $"{nameof(MigrateSystemCustomFolder)} - Old '{FolderConstants.FolderSystemCustom}' folder does not exist.");
         }
         catch (Exception e)
         {
             _installLogger.LogStep(version, $"{nameof(MigrateSystemCustomFolder)} - Error during migration - " + e.Message);
+        }
+    }
+
+    // Migrate the 'system' (AppExtensions) folder
+    private void MigrateAppExtensionsFolder(string version)
+    {
+        try
+        {
+            var oldAppExtensionsFolder = Path.Combine(
+                OldSysFolderRootFullPath(version),
+                FolderConstants.FolderAppExtensions
+            );
+
+            var newAppExtensionsFolder = Path.Combine(
+                _globalConfiguration.Value.GlobalFolder(),
+                FolderConstants.FolderAppExtensions
+            );
+
+            if (Directory.Exists(oldAppExtensionsFolder))
+            {
+                Helpers.DirectoryCopy(oldAppExtensionsFolder, newAppExtensionsFolder, true);
+                _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolder)} - Old '{FolderConstants.FolderAppExtensions}' folder migrated to new location: " + newAppExtensionsFolder);
+
+                RenameAllOldDataSubfolders(version, newAppExtensionsFolder);
+            }
+            else
+                _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolder)} - Old '{FolderConstants.FolderAppExtensions}' folder does not exist.");
+        }
+        catch (Exception e)
+        {
+            _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolder)} - Error during migration - {e.Message}");
+        }
+    }
+
+    // Rename all old '.data' subfolders to 'App_Data' that are in appExtension subfolders in 'system' folder
+    private void RenameAllOldDataSubfolders(string version, string newAppExtensionsFolder)
+    {
+        _installLogger.LogStep(version, $"{nameof(RenameAllOldDataSubfolders)} - Start renaming in app extensions subfolders from '{FolderConstants.AppDataProtectedFolder}' to '{FolderConstants.AppDataProtectedFolder}'");
+
+        new DirectoryInfo(newAppExtensionsFolder).GetDirectories()
+            .SelectMany(appExtensionDirectory => appExtensionDirectory.GetDirectories(FolderConstants.FolderOldDotData))
+            .ForEach(oldDotDataDirectory => RenameOldDotDataToAppData(version, oldDotDataDirectory));
+
+        _installLogger.LogStep(version, $"{nameof(RenameAllOldDataSubfolders)} - Finish renaming in app extensions subfolders from '{FolderConstants.AppDataProtectedFolder}' to '{FolderConstants.AppDataProtectedFolder}'");
+    }
+
+    // Rename old '.data' folder to 'App_Data'
+    private void RenameOldDotDataToAppData(string version, DirectoryInfo oldDotDataDirectory)
+    {
+        var destDirName = Path.Combine(oldDotDataDirectory.Parent!.FullName, FolderConstants.AppDataProtectedFolder);
+        try
+        {
+            if (!Directory.Exists(destDirName))
+            {
+                oldDotDataDirectory.MoveTo(destDirName);
+                _installLogger.LogStep(version, $"{nameof(RenameOldDotDataToAppData)} - Renamed: '{oldDotDataDirectory.FullName}'");
+            }
+            else
+            {
+                // fallback strategy if directory already exists
+                Helpers.DirectoryCopy(oldDotDataDirectory.FullName, destDirName, true);
+                oldDotDataDirectory.Delete(true);
+                _installLogger.LogStep(version, $"{nameof(RenameOldDotDataToAppData)} - Coped and deleted: '{oldDotDataDirectory.FullName}'");
+            }
+            
+        }
+        catch (Exception ex)
+        {
+            _installLogger.LogStep(version, $"{nameof(RenameOldDotDataToAppData)} - Error during renaming: '{oldDotDataDirectory.FullName}' - {ex.Message}");
         }
     }
 
@@ -325,10 +399,10 @@ partial class DnnEnvironmentInstaller
             if (Directory.Exists(oldUpgradeFolder))
             {
                 Helpers.DirectoryCopy(oldUpgradeFolder, upgradeFolder, true);
-                _installLogger.LogStep(version, $"{nameof(MigrateUpgradeFolder)} - Old system upgrade folder migrated to new location: " + upgradeFolder);
+                _installLogger.LogStep(version, $"{nameof(MigrateUpgradeFolder)} - Old system '{upgrade}' folder migrated to new location: " + upgradeFolder);
             }
             else
-                _installLogger.LogStep(version, $"{nameof(MigrateUpgradeFolder)} - Old system upgrade folder does not exist.");
+                _installLogger.LogStep(version, $"{nameof(MigrateUpgradeFolder)} - Old system '{upgrade}' folder does not exist.");
         }
         catch (Exception e)
         {
@@ -339,7 +413,7 @@ partial class DnnEnvironmentInstaller
     private void DeleteObsoleteFolder(string version)
     {
         var oldSysFolderRootFullPath = HostingEnvironment.MapPath(DnnConstants.OldSysFolderRootVirtual).TrimLastSlash() + "_OBSOLETE";
-        _installLogger.LogStep(version, $"{nameof(DeleteObsoleteFolder)} - Attempting to delete old system folder: '{oldSysFolderRootFullPath}'."); 
+        _installLogger.LogStep(version, $"{nameof(DeleteObsoleteFolder)} - Attempting to delete old system folder: '{oldSysFolderRootFullPath}'.");
         try
         {
             if (Directory.Exists(oldSysFolderRootFullPath))

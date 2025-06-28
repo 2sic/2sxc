@@ -1128,7 +1128,7 @@
                           "en-us": "Title"
                         },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.Settings"
+                          "en-us": "System.Settings"
                         },
                         "Separator": {
                           "en-us": ","

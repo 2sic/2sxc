@@ -4,7 +4,6 @@ using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Cms.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Field;
-using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Images.Sys;
 
 namespace ToSic.Sxc.Adam.Sys;

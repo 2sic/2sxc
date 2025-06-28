@@ -51,8 +51,10 @@ public class SxcAppDataConfigProvider(LazySvc<ILookUpEngineResolver> getEngineLa
         // add module if it was not already added previously
         if (!existSources.HasSource(BlockInstanceConstants.InstanceLookupName))
         {
-            var modulePropertyAccess = new LookUpInDictionary(BlockInstanceConstants.InstanceLookupName);
-            modulePropertyAccess.Properties.Add(BlockInstanceConstants.ModuleIdKey, modId.ToString(CultureInfo.InvariantCulture));
+            var modulePropertyAccess = new LookUpInDictionary(BlockInstanceConstants.InstanceLookupName, new Dictionary<string, string>
+            {
+                [BlockInstanceConstants.ModuleIdKey] = modId.ToString(CultureInfo.InvariantCulture),
+            });
             newSources.Add(modulePropertyAccess);
         }
 

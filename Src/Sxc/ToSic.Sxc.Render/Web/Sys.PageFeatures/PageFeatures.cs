@@ -15,6 +15,9 @@ internal class PageFeatures(IPageFeaturesManager pfm) : IPageFeatures
         return realKeys;
     }
 
+    /// <summary>
+    /// Must be a real List, because it will be modified.
+    /// </summary>
     private List<PageFeatureFromSettings> FeaturesFromSettings { get; } = [];
 
     public void FeaturesFromSettingsAdd(PageFeatureFromSettings newFeature)

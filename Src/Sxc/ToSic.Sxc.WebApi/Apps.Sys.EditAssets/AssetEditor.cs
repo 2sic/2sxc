@@ -1,6 +1,5 @@
 ﻿using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Sys.Paths;
-using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sys.Users;
 

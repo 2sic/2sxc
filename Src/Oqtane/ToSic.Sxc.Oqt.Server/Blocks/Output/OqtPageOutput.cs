@@ -48,9 +48,11 @@ internal partial class OqtPageOutput(
         if (Features.Contains(SxcPageFeatures.JQuery)) 
             list.Add("//code.jquery.com/jquery-3.5.1.min.js");
 
-        if (AddJsCore) list.Add($"{OqtConstants.UiRoot}/{SxcPageFeatures.JsCore.UrlInDist}");
+        if (AddJsCore)
+            list.Add($"{OqtConstants.UiRoot}/{SxcPageFeatures.JsCore.UrlInDist}");
 
-        if (AddJsEdit) list.Add($"{OqtConstants.UiRoot}/{SxcPageFeatures.JsCmsInternal.UrlInDist}");
+        if (AddJsEdit)
+            list.Add($"{OqtConstants.UiRoot}/{SxcPageFeatures.JsCmsInternal.UrlInDist}");
 
         // New in 12.02
         if (Features.Contains(SxcPageFeatures.TurnOn))

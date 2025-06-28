@@ -8697,7 +8697,7 @@
                           "en-us": ""
                         },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.SettingsEntities"
+                          "en-us": "System.SettingsEntities"
                         },
                         "Separator": {
                           "en-us": ","
@@ -11405,8 +11405,7 @@
             }
           ]
         }
-      ],
-      "Entities": []
+      ]
     }
   ]
 }

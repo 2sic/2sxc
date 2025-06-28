@@ -77,10 +77,10 @@ public class AdvancedSettings : IHasPiggyBack
 
     private static List<Recipe> GetAllRecipesRecursive(IEnumerable<Recipe>? recipes)
     {
-        var list = new List<Recipe>();
         if (recipes.SafeNone())
-            return list;
+            return [];
 
+        var list = new List<Recipe>();
         foreach (var r in recipes)
         {
             list.Add(r);

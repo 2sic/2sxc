@@ -293,9 +293,6 @@
                         "DefaultValue": {
                           "en-us": "True"
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "boolean-default"
                         },
@@ -308,15 +305,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -395,9 +384,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "boolean-default"
                         },
@@ -410,15 +396,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },

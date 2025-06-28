@@ -37,11 +37,13 @@ internal class ItemToolbarV10(
         if (TargetAction != null! /* paranoid */)
         {
             var asUrl = new ObjectToUrl().Serialize(TargetAction);
-            if (!IsNullOrWhiteSpace(asUrl)) Rules.Add("params?" + asUrl);
+            if (!IsNullOrWhiteSpace(asUrl))
+                Rules.Add("params?" + asUrl);
         }
 
         // Add settings if we have any
-        if (Settings.HasValue()) Rules.Add($"settings?{Settings}");
+        if (Settings.HasValue())
+            Rules.Add($"settings?{Settings}");
 
         return JsonSerializer.Serialize(Rules, JsonOptions.SafeJsonForHtmlAttributes);
     }

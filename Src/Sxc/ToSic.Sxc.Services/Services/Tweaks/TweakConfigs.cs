@@ -8,8 +8,7 @@ internal class TweakConfigs
     }
 
     public TweakConfigs(TweakConfigs? original, TweakConfig? additional = default) : this(original?.List, additional)
-    {
-    }
+    { }
 
     private TweakConfigs(IEnumerable<TweakConfig>? tweaks, TweakConfig? additional = default)
     {

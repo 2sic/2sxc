@@ -11,7 +11,6 @@ using ToSic.Eav.Persistence.Sys.Logging;
 using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.WebApi.Sys.Helpers.Validation;
 using ToSic.Eav.WebApi.Sys.Security;
-using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Backend.ImportExport;
@@ -61,12 +60,12 @@ public class ViewsExportImport(
 
         if (!string.IsNullOrEmpty(view.Path))
         {
-            TryAddAsset(bundle, appPaths.ViewPath(view, PathTypes.PhysRelative), view.Path);
+            bundle = TryAddAsset(bundle, appPaths.ViewPath(view, PathTypes.PhysRelative), view.Path);
             var webPath = appIconHelpers.IconPathOrNull(appPaths, view, PathTypes.PhysRelative)?.ForwardSlash();
             if(webPath != null)
             {
                 var relativePath = webPath.Replace(appPaths.RelativePath.ForwardSlash(), "").TrimPrefixSlash();
-                TryAddAsset(bundle, webPath, relativePath);
+                bundle = TryAddAsset(bundle, webPath, relativePath);
             }
         }
 
@@ -78,13 +77,18 @@ public class ViewsExportImport(
             .RemoveNonFilenameCharacters()));
     }
 
-    private void TryAddAsset(BundleEntityWithAssets bundle, string webPath, string relativePath)
+    private BundleEntityWithAssets TryAddAsset(BundleEntityWithAssets bundle, string webPath, string relativePath)
     {
-        if (string.IsNullOrEmpty(webPath)) return;
+        if (string.IsNullOrEmpty(webPath))
+            return bundle;
         var realPath = serverPaths.FullAppPath(webPath);
         var jsonAssetMan = new JsonAssets();
-        var asset1 = jsonAssetMan.Get(realPath, relativePath);
-        bundle.Assets.Add(asset1);
+        var asset1 = jsonAssetMan.Get(realPath, relativePath, JsonAsset.StorageApp);
+        bundle = bundle with
+        {
+            Assets = bundle.Assets.Append(asset1).ToListOpt()
+        };
+        return bundle;
     }
 
         

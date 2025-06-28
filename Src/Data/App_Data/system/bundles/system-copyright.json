@@ -115,9 +115,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-dropdown"
                         },
@@ -131,15 +128,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -241,9 +230,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-default"
                         },
@@ -258,15 +244,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -361,9 +339,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "entity-default"
                         },
@@ -376,15 +351,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -431,12 +398,6 @@
                         "EntityType": {
                           "en-us": "\uD83D\uDDBACopyright"
                         },
-                        "Label": {
-                          "en-us": ""
-                        },
-                        "MoreFields": {
-                          "en-us": ""
-                        },
                         "Prefill": {
                           "en-us": ""
                         }
@@ -470,9 +431,9 @@
           },
           "Entities": [
             {
-              "Id": 182601,
-              "Version": 3,
-              "Guid": "ba8bd5b8-4585-4761-b329-2f97ed812602",
+              "Id": 182631,
+              "Version": 2,
+              "Guid": "2994546c-d5b8-4d7e-9240-ee852cb9ad24",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
                 "Name": "UiFormula"
@@ -480,7 +441,7 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v2((data) => { return data.CopyrightInfoType == 'simple'; });"
+                    "en-us": "v2((data) => { return data.CopyrightInfoType == 'advanced'; });"
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
@@ -498,9 +459,9 @@
               "Owner": "dnn:userid=41"
             },
             {
-              "Id": 182631,
-              "Version": 2,
-              "Guid": "2994546c-d5b8-4d7e-9240-ee852cb9ad24",
+              "Id": 182601,
+              "Version": 3,
+              "Guid": "ba8bd5b8-4585-4761-b329-2f97ed812602",
               "Type": {
                 "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
                 "Name": "UiFormula"
@@ -508,7 +469,7 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "v2((data) => { return data.CopyrightInfoType == 'advanced'; });"
+                    "en-us": "v2((data) => { return data.CopyrightInfoType == 'simple'; });"
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
@@ -605,9 +566,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-default"
                         },
@@ -622,15 +580,7 @@
                           "en-us": "example: John Doe 2023",
                           "de-de": "Beispiel: Erich Muster 2023"
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -723,9 +673,6 @@
                         "DefaultValue": {
                           "en-us": "copyright"
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-dropdown"
                         },
@@ -739,15 +686,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -848,9 +787,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "number-default"
                         },
@@ -864,15 +800,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -947,9 +875,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-default"
                         },
@@ -963,15 +888,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -1066,9 +983,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-default"
                         },
@@ -1081,15 +995,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },

@@ -26,27 +26,33 @@ partial class EditLoadBackend
         }
         else
         {
-            ent = jsonSerializer.ToJson(ConstructEmptyEntity(appId, bundle.Header!, appSysCtx), 0);
+            ent = jsonSerializer.ToJson(ConstructEmptyEntity(appId, bundle.Header!, appSysCtx), metadataDepth: 0);
 
             // only attach metadata, if no metadata already exists
             if (ent.For == null && bundle.Header?.For != null)
-                ent.For = bundle.Header.For;
+                ent = ent with { For = bundle.Header.For };
         }
 
         // new UI doesn't use this anymore, reset it
-        if (bundle.Header != null) bundle.Header.For = null;
+        if (bundle.Header != null)
+            bundle.Header.For = null;
 
         try
         {
             if (ent.For != null)
             {
-                var targetId = ent.For;
+                var eFor = ent.For;
                 // #TargetTypeIdInsteadOfTarget
-                var targetType = targetId.TargetType != 0
-                    ? targetId.TargetType
-                    : jsonSerializer.MetadataTargets.GetId(targetId.Target!);
-                ent.For.Title = appReader.FindTargetTitle(targetType,
-                    targetId.String ?? targetId.Guid?.ToString() ?? targetId.Number?.ToString());
+                var targetType = eFor.TargetType != 0
+                    ? eFor.TargetType
+                    : jsonSerializer.MetadataTargets.GetId(eFor.Target!);
+                ent = ent with
+                {
+                    For = eFor with
+                    {
+                        Title = appReader.FindTargetTitle(targetType, eFor.String ?? eFor.Guid?.ToString() ?? eFor.Number?.ToString()),
+                    }
+                };
             }
         }
         catch { /* ignore experimental */ }

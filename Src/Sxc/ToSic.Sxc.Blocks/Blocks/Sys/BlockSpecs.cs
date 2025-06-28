@@ -97,7 +97,7 @@ public record BlockSpecs : IBlock
         init;
     }
 
-    public IList<IDependentApp> DependentApps { get; } = [];
+    public List<IDependentApp> DependentApps { get; } = [];
 
     //List<IPageFeature> BlockFeatures(ILog? log = default);
     //public ILog? Log { get; }

@@ -47,8 +47,8 @@ public class ModuleInfo : IModule
         if (name != Content) return "";
         var versionsWithDot = SqlScriptVersions
             .Select(v => v.Replace('-', '.'))
+            .Append(EavSystemInfo.VersionString)
             .ToList();
-        versionsWithDot.Add(EavSystemInfo.VersionString);
         // remove duplicates in case the current version also has SQL scripts
         var versions = versionsWithDot.Distinct();
         return string.Join(',', versions);

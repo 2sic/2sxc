@@ -1,16 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav;
-using ToSic.Eav.Integration;
+using ToSic.Eav.Startup;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Backend;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Dnn.Startup;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Images;
 using ToSic.Sxc.Startup;
 
 

@@ -183,9 +183,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "empty-message"
                         },
@@ -198,15 +195,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -1691,9 +1680,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "empty-default"
                         },
@@ -1706,15 +1692,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -1787,9 +1765,6 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
-                        "Information": {
-                          "en-us": ""
-                        },
                         "InputType": {
                           "en-us": "string-dropdown-query"
                         },
@@ -1802,15 +1777,7 @@
                         "Placeholder": {
                           "en-us": ""
                         },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
                         "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -1872,9 +1839,6 @@
                     },
                     "Attributes": {
                       "String": {
-                        "EntityType": {
-                          "en-us": ""
-                        },
                         "Label": {
                           "en-us": "Name"
                         },
@@ -1900,9 +1864,6 @@
                       "Boolean": {
                         "AllowMultiValue": {
                           "en-us": true
-                        },
-                        "EnableCreate": {
-                          "en-us": false
                         },
                         "EnableEdit": {
                           "en-us": false

@@ -82,7 +82,7 @@ public interface IRenderResult
 
     bool CspEnabled { get; }
     bool CspEnforced { get; }
-    IList<CspParameters>? CspParameters { get; }
+    List<CspParameters>? CspParameters { get; }
 
     /// <summary>
     /// Errors such as not-activated features

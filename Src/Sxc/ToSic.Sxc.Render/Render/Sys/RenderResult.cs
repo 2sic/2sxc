@@ -68,7 +68,11 @@ public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize
 
     public bool CspEnabled { get; init; } = false;
     public bool CspEnforced { get; init; } = false;
-    public IList<CspParameters>? CspParameters { get; init; }
+
+    /// <summary>
+    /// CspParameter - for now, MUST be a real List, since it will be modified a few times
+    /// </summary>
+    public List<CspParameters>? CspParameters { get; init; }
 
     public List<string>? Errors { get; init; }
 

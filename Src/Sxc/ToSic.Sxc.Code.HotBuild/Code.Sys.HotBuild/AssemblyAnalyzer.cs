@@ -6,7 +6,8 @@ internal class AssemblyAnalyzer
 {
     public static List<string> TypeInformation(Assembly assembly)
     {
-        if (assembly == null) return ["no assembly"];
+        if (assembly == null)
+            return ["no assembly"];
 
         var result = new List<string>();
 

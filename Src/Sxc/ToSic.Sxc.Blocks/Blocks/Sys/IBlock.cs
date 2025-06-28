@@ -76,6 +76,9 @@ public interface IBlock: IAppIdentity //, IHasLog
     /// <summary>
     /// All the keys / features which were added in this block; in case the block should also modify its behavior.
     /// </summary>
+    /// <remarks>
+    /// Must be a real List, since it will be modified.
+    /// </remarks>
     [PrivateApi("WIP 13.x do get/set if toolbar/context are used")]
     List<string> BlockFeatureKeys { get; }
 
@@ -98,7 +101,11 @@ public interface IBlock: IAppIdentity //, IHasLog
     /// <summary>
     /// This list is only populated on the root builder. Child builders don't actually use this.
     /// </summary>
-    IList<IDependentApp> DependentApps { get; }
+    /// <remarks>
+    /// Must be a real List, because we will add things to it later.
+    /// In future, should be modified to be read only list, but only once rendering has been improved to pass the data around in a better way.
+    /// </remarks>
+    List<IDependentApp> DependentApps { get; }
 
 
     //List<IPageFeature> BlockFeatures(ILog? log = default);

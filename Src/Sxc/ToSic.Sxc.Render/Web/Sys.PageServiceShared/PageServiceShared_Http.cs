@@ -15,6 +15,9 @@ partial class PageServiceShared
     internal void AddToHttp(string name, string value) =>
         HttpHeaders.Add(new(name, value));
 
+    /// <summary>
+    /// Must be a real List, since it will be modified.
+    /// </summary>
     [PrivateApi]
     public List<HttpHeader> HttpHeaders { get; } = [];
 

@@ -431,89 +431,6 @@
                 "IsTitle": true,
                 "Metadata": [
                   {
-                    "Id": 41696,
-                    "Version": 5,
-                    "Guid": "3f7376b2-03a6-42d0-bd21-7fc16c8e4d48",
-                    "Type": {
-                      "Id": "@String",
-                      "Name": "@String"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "DropdownValues": {
-                          "*": ""
-                        },
-                        "InputType": {
-                          "*": ""
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=1"
-                  },
-                  {
-                    "Id": 41697,
-                    "Version": 1,
-                    "Guid": "5ba8c909-5716-45a0-8575-616f332655c5",
-                    "Type": {
-                      "Id": "@string-default",
-                      "Name": "@string-default"
-                    },
-                    "Attributes": {
-                      "Number": {
-                        "RowCount": {
-                          "*": 0
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=1"
-                  },
-                  {
-                    "Id": 45200,
-                    "Version": 4,
-                    "Guid": "8e5c63cb-aee2-4433-8139-e188ae15fa12",
-                    "Type": {
-                      "Id": "@string-dropdown-query",
-                      "Name": "@string-dropdown-query"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "Label": {
-                          "*": "Name"
-                        },
-                        "Query": {
-                          "*": "Eav.Queries.Global.ContentTypes"
-                        },
-                        "Separator": {
-                          "*": ","
-                        },
-                        "StreamName": {
-                          "*": "Default"
-                        },
-                        "UrlParameters": {
-                          "*": ""
-                        },
-                        "Value": {
-                          "*": "Name"
-                        }
-                      },
-                      "Boolean": {
-                        "AllowMultiValue": {
-                          "*": false
-                        },
-                        "EnableEdit": {
-                          "*": false
-                        },
-                        "EnableRemove": {
-                          "*": true
-                        },
-                        "EnableTextEntry": {
-                          "*": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=1"
-                  },
-                  {
                     "Id": 41690,
                     "Version": 10,
                     "Guid": "e061de25-75e8-4408-bf19-397b72347fca",
@@ -568,6 +485,89 @@
                         },
                         "VisibleInEditUI": {
                           "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=1"
+                  },
+                  {
+                    "Id": 41696,
+                    "Version": 5,
+                    "Guid": "3f7376b2-03a6-42d0-bd21-7fc16c8e4d48",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "*": ""
+                        },
+                        "InputType": {
+                          "*": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=1"
+                  },
+                  {
+                    "Id": 41697,
+                    "Version": 1,
+                    "Guid": "5ba8c909-5716-45a0-8575-616f332655c5",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {
+                      "Number": {
+                        "RowCount": {
+                          "*": 0
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=1"
+                  },
+                  {
+                    "Id": 45200,
+                    "Version": 4,
+                    "Guid": "8e5c63cb-aee2-4433-8139-e188ae15fa12",
+                    "Type": {
+                      "Id": "@string-dropdown-query",
+                      "Name": "@string-dropdown-query"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "Label": {
+                          "*": "Name"
+                        },
+                        "Query": {
+                          "*": "System.ContentTypes"
+                        },
+                        "Separator": {
+                          "*": ","
+                        },
+                        "StreamName": {
+                          "*": "Default"
+                        },
+                        "UrlParameters": {
+                          "*": ""
+                        },
+                        "Value": {
+                          "*": "Name"
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "*": false
+                        },
+                        "EnableEdit": {
+                          "*": false
+                        },
+                        "EnableRemove": {
+                          "*": true
+                        },
+                        "EnableTextEntry": {
+                          "*": true
                         }
                       }
                     },
@@ -2056,7 +2056,7 @@
                           "*": "Name"
                         },
                         "Query": {
-                          "*": "Eav.Queries.Global.Queries"
+                          "*": "System.Queries"
                         },
                         "Separator": {
                           "*": ","
@@ -2294,7 +2294,7 @@
                           "*": "Name"
                         },
                         "Query": {
-                          "*": "Eav.Queries.Global.QueryInfo"
+                          "*": "System.QueryInfo"
                         },
                         "Separator": {
                           "*": ","
@@ -2599,7 +2599,7 @@
                           "en-us": "Title"
                         },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.QueryInfo"
+                          "en-us": "System.QueryInfo"
                         },
                         "Separator": {
                           "en-us": ","
@@ -2738,7 +2738,7 @@
                           "en-us": ""
                         },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.QueryInfo"
+                          "en-us": "System.QueryInfo"
                         },
                         "Separator": {
                           "en-us": ","
@@ -5931,7 +5931,7 @@
                           "en-us": ""
                         },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.Queries"
+                          "en-us": "System.Queries"
                         },
                         "Separator": {
                           "en-us": ","
@@ -6221,7 +6221,7 @@
                           "en-us": ""
                         },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.QueryInfo"
+                          "en-us": "System.QueryInfo"
                         },
                         "Separator": {
                           "en-us": ","
@@ -6999,7 +6999,7 @@
                     "en-us": ""
                   },
                   "Query": {
-                    "en-us": "Eav.Queries.Global.Queries"
+                    "en-us": "System.Queries"
                   },
                   "QueryParameters": {
                     "en-us": ""
@@ -7085,7 +7085,7 @@
                     "en-us": ""
                   },
                   "Query": {
-                    "en-us": "Eav.Queries.Global.QueryInfo"
+                    "en-us": "System.QueryInfo"
                   },
                   "QueryParameters": {
                     "en-us": "QueryName=[Query]&StreamName=Default"
@@ -13563,7 +13563,7 @@
                     "en-us": ""
                   },
                   "Query": {
-                    "en-us": "Eav.Queries.Global.ContentTypes"
+                    "en-us": "System.ContentTypes"
                   },
                   "QueryParameters": {
                     "en-us": ""
@@ -16669,8 +16669,7 @@
             }
           ]
         }
-      ],
-      "Entities": []
+      ]
     }
   ]
 }

@@ -112,6 +112,11 @@ public partial class EditLoadBackend(
         var serializerForTypes = jsonSerializerGenerator.New().SetApp(appReader);
         serializerForTypes.ValueConvertHyperlinks = true;
         var usedTypes = UsedTypes(list, appWorkCtx);
+        var isSystemType = usedTypes.Any(t => t.AppId == KnownAppsConstants.PresetAppId);
+        l.A($"isSystemType: {isSystemType}");
+
+
+
         var serSettings = new JsonSerializationSettings
         {
             CtIncludeInherited = true,
@@ -120,7 +125,35 @@ public partial class EditLoadBackend(
 
         var jsonTypes = usedTypes
             .Select(t => serializerForTypes.ToPackage(t, serSettings))
-            .ToList();
+            .ToListOpt();
+
+        // Fix not-supported input-type names; map to correct name
+        jsonTypes = jsonTypes
+            .Select(jt =>
+            {
+                jt = jt with
+                {
+                    ContentType = jt.ContentType == null
+                        ? null
+                        : jt.ContentType with
+                        {
+                            Attributes = (jt.ContentType.Attributes ?? [])
+                            .Select(a => a with
+                            {
+                                // ensure that the input-type is set, otherwise it will be null
+                                InputType = InputTypes.MapInputTypeV10(a.InputType)
+                            })
+                            .ToListOpt(),
+                        }
+                };
+                return jt;
+            })
+            .ToListOpt();
+
+        // Old, non functional
+        // Fix not-supported input-type names; map to correct name
+        //foreach (var at in result.ContentTypes.SelectMany(jt => jt.AttributesSafe()))
+        //    at.InputType = InputTypes.MapInputTypeV10(at.InputType);
 
         result = result with
         {
@@ -134,16 +167,10 @@ public partial class EditLoadBackend(
                 .ToList(),
         };
 
-        var isSystemType = usedTypes.Any(t => t.AppId == KnownAppsConstants.PresetAppId);
-        l.A($"isSystemType: {isSystemType}");
-
         #endregion
 
         #region Input Types on ContentTypes and general definitions
 
-        // Fix not-supported input-type names; map to correct name
-        foreach (var at in result.ContentTypes.SelectMany(jt => jt.AttributesSafe()))
-            at.InputType = InputTypes.MapInputTypeV10(at.InputType);
 
         // load input-field configurations
         result = result with

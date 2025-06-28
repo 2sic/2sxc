@@ -2,7 +2,6 @@
 using ToSic.Eav.Metadata;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data.Sys.Factory;
-using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Images.Sys;
 
 namespace ToSic.Sxc.Data.Sys.Fields;

@@ -1,10 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Data.Build;
-using ToSic.Eav.DataSources;
-using ToSic.Eav.Integration;
-using ToSic.Eav.Repository.Efc;
+using ToSic.Eav.Startup;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sys.Capabilities.Platform;
 using ToSic.Testing.Shared.Platforms;

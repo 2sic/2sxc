@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Customizer;
 using ToSic.Sxc.Code.Sys.CodeApiService;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Code.Sys.SourceCode;
@@ -16,7 +18,7 @@ using ToSic.Sxc.Services.Sys.DynamicCodeService;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Code;
+namespace ToSic.Sxc.Startup;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class SxcCodeStartup
@@ -27,7 +29,7 @@ public static class SxcCodeStartup
         services.TryAddTransient<CodeErrorHelpService>();
         services.TryAddTransient<SourceAnalyzer>();
 
-        services.TryAddTransient<ICodeCustomizer, Customizer.Customizer>();
+        services.TryAddTransient<ICodeCustomizer, Customizer>();
 
         services.TryAddTransient<IExecutionContextFactory, ExecutionContextFactory>();
 

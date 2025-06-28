@@ -39,7 +39,7 @@ internal class RazorRenderer(
                 actionContext.HttpContext,
                 tempDataProvider),
             output,
-            new HtmlHelperOptions()
+            new()
         );
         await view.RenderAsync(viewContext);
         return l.ReturnAsOk(output.ToString());
