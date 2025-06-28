@@ -2459,7 +2459,7 @@
                     "en-us": ""
                   },
                   "Query": {
-                    "en-us": "Eav.Queries.Global.SettingsEntities"
+                    "en-us": "System.SettingsEntities"
                   },
                   "QueryParameters": {
                     "en-us": "ContentType=⚙️Image"
@@ -5885,7 +5885,7 @@
                           "en-us": "Name"
                         },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.ContentTypes"
+                          "en-us": "System.ContentTypes"
                         },
                         "Separator": {
                           "en-us": ","

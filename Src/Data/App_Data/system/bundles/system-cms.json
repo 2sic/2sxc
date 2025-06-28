@@ -2470,7 +2470,7 @@
                           "*": "Name"
                         },
                         "Query": {
-                          "*": "Eav.Queries.Global.ContentTypes"
+                          "*": "System.ContentTypes"
                         },
                         "Separator": {
                           "*": ","
@@ -2850,7 +2850,7 @@
                           "*": "Name"
                         },
                         "Query": {
-                          "*": "Eav.Queries.Global.ContentTypes"
+                          "*": "System.ContentTypes"
                         },
                         "Separator": {
                           "*": ","
@@ -3257,7 +3257,7 @@
                           "*": "Name"
                         },
                         "Query": {
-                          "*": "Eav.Queries.Global.ContentTypes"
+                          "*": "System.ContentTypes"
                         },
                         "Separator": {
                           "*": ","
@@ -3506,7 +3506,7 @@
                           "*": "Name"
                         },
                         "Query": {
-                          "*": "Eav.Queries.Global.ContentTypes"
+                          "*": "System.ContentTypes"
                         },
                         "Separator": {
                           "*": ","
@@ -4330,7 +4330,7 @@
                           "*": "Name"
                         },
                         "Query": {
-                          "*": "Eav.Queries.Global.QueryInfo"
+                          "*": "System.QueryInfo"
                         },
                         "Separator": {
                           "*": ","
@@ -5408,7 +5408,7 @@
                           "*": "Name"
                         },
                         "Query": {
-                          "*": "Eav.Queries.Global.ContentTypes"
+                          "*": "System.ContentTypes"
                         },
                         "Separator": {
                           "*": ","
@@ -5657,7 +5657,7 @@
                           "*": "Name"
                         },
                         "Query": {
-                          "*": "Eav.Queries.Global.ContentTypes"
+                          "*": "System.ContentTypes"
                         },
                         "Separator": {
                           "*": ","

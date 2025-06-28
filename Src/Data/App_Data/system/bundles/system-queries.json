@@ -1095,7 +1095,7 @@
             },
             {
               "Id": 169163,
-              "Version": 1,
+              "Version": 2,
               "Guid": "f61dbc48-f992-41c2-9d04-f6aa0d6342fa",
               "Type": {
                 "Id": "5e958dc6-2922-4d68-835c-7b9711538b12",
@@ -1104,7 +1104,7 @@
               "Attributes": {
                 "String": {
                   "Note": {
-                    "en-us": "<p>IMPORTANT: The test-values should not be changed - they must be [QueryString:QueryName]=Eav.Queries.Global.Apps and [QueryString:StreamName]=Default</p>"
+                    "en-us": "<p>IMPORTANT: The test-values should not be changed - they must be [QueryString:QueryName]=System.Apps and [QueryString:StreamName]=Default</p>"
                   },
                   "NoteType": {
                     "en-us": "warning"

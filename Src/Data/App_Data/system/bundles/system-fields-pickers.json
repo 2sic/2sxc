@@ -541,7 +541,7 @@
                           "*": "Name"
                         },
                         "Query": {
-                          "*": "Eav.Queries.Global.ContentTypes"
+                          "*": "System.ContentTypes"
                         },
                         "Separator": {
                           "*": ","
@@ -2056,7 +2056,7 @@
                           "*": "Name"
                         },
                         "Query": {
-                          "*": "Eav.Queries.Global.Queries"
+                          "*": "System.Queries"
                         },
                         "Separator": {
                           "*": ","
@@ -2294,7 +2294,7 @@
                           "*": "Name"
                         },
                         "Query": {
-                          "*": "Eav.Queries.Global.QueryInfo"
+                          "*": "System.QueryInfo"
                         },
                         "Separator": {
                           "*": ","
@@ -2599,7 +2599,7 @@
                           "en-us": "Title"
                         },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.QueryInfo"
+                          "en-us": "System.QueryInfo"
                         },
                         "Separator": {
                           "en-us": ","
@@ -2738,7 +2738,7 @@
                           "en-us": ""
                         },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.QueryInfo"
+                          "en-us": "System.QueryInfo"
                         },
                         "Separator": {
                           "en-us": ","
@@ -5931,7 +5931,7 @@
                           "en-us": ""
                         },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.Queries"
+                          "en-us": "System.Queries"
                         },
                         "Separator": {
                           "en-us": ","
@@ -6221,7 +6221,7 @@
                           "en-us": ""
                         },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.QueryInfo"
+                          "en-us": "System.QueryInfo"
                         },
                         "Separator": {
                           "en-us": ","
@@ -6999,7 +6999,7 @@
                     "en-us": ""
                   },
                   "Query": {
-                    "en-us": "Eav.Queries.Global.Queries"
+                    "en-us": "System.Queries"
                   },
                   "QueryParameters": {
                     "en-us": ""
@@ -7085,7 +7085,7 @@
                     "en-us": ""
                   },
                   "Query": {
-                    "en-us": "Eav.Queries.Global.QueryInfo"
+                    "en-us": "System.QueryInfo"
                   },
                   "QueryParameters": {
                     "en-us": "QueryName=[Query]&StreamName=Default"
@@ -13563,7 +13563,7 @@
                     "en-us": ""
                   },
                   "Query": {
-                    "en-us": "Eav.Queries.Global.ContentTypes"
+                    "en-us": "System.ContentTypes"
                   },
                   "QueryParameters": {
                     "en-us": ""

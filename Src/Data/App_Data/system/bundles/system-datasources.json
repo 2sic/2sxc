@@ -4064,12 +4064,12 @@
               {
                 "Name": "ZoneSwitch",
                 "Type": "String",
-                "InputType": "string-default",
+                "InputType": "string-dropdown-query",
                 "IsTitle": false,
                 "Metadata": [
                   {
                     "Id": 40469,
-                    "Version": 1,
+                    "Version": 6,
                     "Guid": "0d595197-1a7b-4ad8-b37a-c5963e1c8c5f",
                     "Type": {
                       "Id": "@string-default",
@@ -4079,46 +4079,6 @@
                       "Number": {
                         "RowCount": {
                           "*": 1
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=1"
-                  },
-                  {
-                    "Id": 43015,
-                    "Version": 2,
-                    "Guid": "01efbdf4-d530-4ee6-a7b5-aead2bd98f19",
-                    "Type": {
-                      "Id": "@string-dropdown-query",
-                      "Name": "@string-dropdown-query"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "Label": {
-                          "*": "TenantName"
-                        },
-                        "Query": {
-                          "*": "Eav.Queries.Global.Zones"
-                        },
-                        "Separator": {
-                          "*": ","
-                        },
-                        "StreamName": {
-                          "*": "Default"
-                        },
-                        "UrlParameters": {
-                          "*": ""
-                        },
-                        "Value": {
-                          "*": "Id"
-                        }
-                      },
-                      "Boolean": {
-                        "AllowMultiValue": {
-                          "*": false
-                        },
-                        "EnableTextEntry": {
-                          "*": true
                         }
                       }
                     },
@@ -4150,8 +4110,57 @@
                     "Owner": "dnn:userid=1"
                   },
                   {
+                    "Id": 43015,
+                    "Version": 3,
+                    "Guid": "01efbdf4-d530-4ee6-a7b5-aead2bd98f19",
+                    "Type": {
+                      "Id": "@string-dropdown-query",
+                      "Name": "@string-dropdown-query"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "Label": {
+                          "en-us": "TenantName"
+                        },
+                        "MoreFields": {
+                          "en-us": ""
+                        },
+                        "Query": {
+                          "en-us": "System.Zones"
+                        },
+                        "Separator": {
+                          "en-us": ","
+                        },
+                        "StreamName": {
+                          "en-us": "Default"
+                        },
+                        "UrlParameters": {
+                          "en-us": ""
+                        },
+                        "Value": {
+                          "en-us": "Id"
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=1"
+                  },
+                  {
                     "Id": 137119,
-                    "Version": 2,
+                    "Version": 4,
                     "Guid": "a4535811-8482-4ce8-9504-d8b408dcb025",
                     "Type": {
                       "Id": "@All",
@@ -4166,7 +4175,7 @@
                           "en-us": ""
                         },
                         "InputType": {
-                          "en-us": ""
+                          "en-us": "string-dropdown-query"
                         },
                         "Name": {
                           "en-us": "ZoneSwitch"
@@ -4219,7 +4228,7 @@
                 "Metadata": [
                   {
                     "Id": 40464,
-                    "Version": 5,
+                    "Version": 6,
                     "Guid": "4a0853f9-35e7-475d-be14-48de7d4c4e20",
                     "Type": {
                       "Id": "@All",
@@ -4296,7 +4305,7 @@
                   },
                   {
                     "Id": 43016,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "f92bfa04-f390-45fc-a1e2-210c168490ea",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -4307,8 +4316,11 @@
                         "Label": {
                           "en-us": "Name"
                         },
+                        "MoreFields": {
+                          "en-us": ""
+                        },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.Apps"
+                          "en-us": "System.Apps"
                         },
                         "Separator": {
                           "en-us": ","
@@ -6894,7 +6906,7 @@
                   },
                   {
                     "Id": 135466,
-                    "Version": 4,
+                    "Version": 5,
                     "Guid": "b935d46d-69b4-4f8e-986b-ecf95d96b67c",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -6905,8 +6917,11 @@
                         "Label": {
                           "en-us": "Name"
                         },
+                        "MoreFields": {
+                          "en-us": ""
+                        },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.ContentTypes"
+                          "en-us": "System.ContentTypes"
                         },
                         "Separator": {
                           "en-us": ","
@@ -8636,7 +8651,7 @@
                   },
                   {
                     "Id": 43018,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "11cd2452-30c6-4aff-871b-a9e7bd542ec5",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -8645,30 +8660,39 @@
                     "Attributes": {
                       "String": {
                         "Label": {
-                          "*": "Name"
+                          "en-us": "Name"
+                        },
+                        "MoreFields": {
+                          "en-us": ""
                         },
                         "Query": {
-                          "*": "Eav.Queries.Global.ContentTypes"
+                          "en-us": "System.ContentTypes"
                         },
                         "Separator": {
-                          "*": ","
+                          "en-us": ","
                         },
                         "StreamName": {
-                          "*": "Default"
+                          "en-us": "Default"
                         },
                         "UrlParameters": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "Value": {
-                          "*": "StaticName"
+                          "en-us": "StaticName"
                         }
                       },
                       "Boolean": {
                         "AllowMultiValue": {
-                          "*": false
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": false
                         },
                         "EnableTextEntry": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -9464,7 +9488,7 @@
                   },
                   {
                     "Id": 135537,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "3561aa76-6924-4aa1-b892-9dacafbc8628",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -9479,7 +9503,7 @@
                           "en-us": ""
                         },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.ContentTypes"
+                          "en-us": "System.ContentTypes"
                         },
                         "Separator": {
                           "en-us": ","
@@ -9795,7 +9819,7 @@
                   },
                   {
                     "Id": 135547,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "0195ce7d-feed-40b7-8c8f-ef8ec7abacbd",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -9806,8 +9830,11 @@
                         "Label": {
                           "en-us": "Name"
                         },
+                        "MoreFields": {
+                          "en-us": ""
+                        },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.ContentTypes"
+                          "en-us": "System.ContentTypes"
                         },
                         "Separator": {
                           "en-us": ","
@@ -10781,7 +10808,7 @@
                   },
                   {
                     "Id": 135474,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "131e7817-bdc1-4b52-9444-05df5614852c",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -10792,8 +10819,11 @@
                         "Label": {
                           "en-us": "Name"
                         },
+                        "MoreFields": {
+                          "en-us": ""
+                        },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.ContentTypes"
+                          "en-us": "System.ContentTypes"
                         },
                         "Separator": {
                           "en-us": ","
@@ -10915,7 +10945,7 @@
                   },
                   {
                     "Id": 135476,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "bb9ffe47-e7cb-4984-b6db-0382e3181dd4",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -10926,8 +10956,11 @@
                         "Label": {
                           "en-us": "Name"
                         },
+                        "MoreFields": {
+                          "en-us": ""
+                        },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.Attributes"
+                          "en-us": "System.Attributes"
                         },
                         "Separator": {
                           "en-us": ","
@@ -11432,7 +11465,7 @@
                   },
                   {
                     "Id": 63444,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "c42b372a-dc99-4d36-bb46-84d5597c495c",
                     "Type": {
                       "Id": "@entity-query",
@@ -11441,13 +11474,13 @@
                     "Attributes": {
                       "String": {
                         "Query": {
-                          "*": "Eav.Queries.Global.Queries"
+                          "en-us": "System.Queries"
                         },
                         "StreamName": {
-                          "*": "Default"
+                          "en-us": "Default"
                         },
                         "UrlParameters": {
-                          "*": ""
+                          "en-us": ""
                         }
                       }
                     },
@@ -12550,7 +12583,7 @@
                   },
                   {
                     "Id": 160753,
-                    "Version": 6,
+                    "Version": 7,
                     "Guid": "f7563905-dd8c-4d21-8ae4-26979fb5c78d",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -12561,8 +12594,11 @@
                         "Label": {
                           "en-us": "Name"
                         },
+                        "MoreFields": {
+                          "en-us": ""
+                        },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.Roles"
+                          "en-us": "System.Roles"
                         },
                         "Separator": {
                           "en-us": ","
@@ -12684,7 +12720,7 @@
                   },
                   {
                     "Id": 160755,
-                    "Version": 5,
+                    "Version": 6,
                     "Guid": "fc9cd5bc-accb-45c2-8324-0089a1766dc0",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -12695,8 +12731,11 @@
                         "Label": {
                           "en-us": "Name"
                         },
+                        "MoreFields": {
+                          "en-us": ""
+                        },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.Roles"
+                          "en-us": "System.Roles"
                         },
                         "Separator": {
                           "en-us": ","
@@ -14319,46 +14358,6 @@
                     "Owner": "dnn:userid=1"
                   },
                   {
-                    "Id": 42914,
-                    "Version": 7,
-                    "Guid": "c78c45c6-6f45-4b05-9ddf-ce0a80931389",
-                    "Type": {
-                      "Id": "@string-dropdown-query",
-                      "Name": "@string-dropdown-query"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "Label": {
-                          "*": "TenantName"
-                        },
-                        "Query": {
-                          "*": "Eav.Queries.Global.Zones"
-                        },
-                        "Separator": {
-                          "*": ","
-                        },
-                        "StreamName": {
-                          "*": "Default"
-                        },
-                        "UrlParameters": {
-                          "*": ""
-                        },
-                        "Value": {
-                          "*": "Id"
-                        }
-                      },
-                      "Boolean": {
-                        "AllowMultiValue": {
-                          "*": false
-                        },
-                        "EnableTextEntry": {
-                          "*": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=1"
-                  },
-                  {
                     "Id": 46341,
                     "Version": 1,
                     "Guid": "bea6c649-3b8d-4405-af3e-c074e26caeca",
@@ -14378,6 +14377,55 @@
                       "Number": {
                         "RowCount": {
                           "*": 1
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=1"
+                  },
+                  {
+                    "Id": 42914,
+                    "Version": 8,
+                    "Guid": "c78c45c6-6f45-4b05-9ddf-ce0a80931389",
+                    "Type": {
+                      "Id": "@string-dropdown-query",
+                      "Name": "@string-dropdown-query"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "Label": {
+                          "en-us": "TenantName"
+                        },
+                        "MoreFields": {
+                          "en-us": ""
+                        },
+                        "Query": {
+                          "en-us": "System.Zones"
+                        },
+                        "Separator": {
+                          "en-us": ","
+                        },
+                        "StreamName": {
+                          "en-us": "Default"
+                        },
+                        "UrlParameters": {
+                          "en-us": ""
+                        },
+                        "Value": {
+                          "en-us": "Id"
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": true
                         }
                       }
                     },
@@ -14607,7 +14655,7 @@
                   },
                   {
                     "Id": 43005,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "3b31ea46-619e-4cd9-9f9f-b02e84406d3c",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -14616,30 +14664,39 @@
                     "Attributes": {
                       "String": {
                         "Label": {
-                          "*": "Name"
+                          "en-us": "Name"
+                        },
+                        "MoreFields": {
+                          "en-us": ""
                         },
                         "Query": {
-                          "*": "Eav.Queries.Global.ContentTypes"
+                          "en-us": "System.ContentTypes"
                         },
                         "Separator": {
-                          "*": ","
+                          "en-us": ","
                         },
                         "StreamName": {
-                          "*": "Default"
+                          "en-us": "Default"
                         },
                         "UrlParameters": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "Value": {
-                          "*": "Name"
+                          "en-us": "Name"
                         }
                       },
                       "Boolean": {
                         "AllowMultiValue": {
-                          "*": false
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": false
                         },
                         "EnableTextEntry": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -14886,7 +14943,7 @@
                   },
                   {
                     "Id": 43009,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "219fe6a9-fde9-45ee-b971-5df7acb2916e",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -14895,30 +14952,39 @@
                     "Attributes": {
                       "String": {
                         "Label": {
-                          "*": "Name"
+                          "en-us": "Name"
+                        },
+                        "MoreFields": {
+                          "en-us": ""
                         },
                         "Query": {
-                          "*": "Eav.Queries.Global.Apps"
+                          "en-us": "System.Apps"
                         },
                         "Separator": {
-                          "*": ","
+                          "en-us": ","
                         },
                         "StreamName": {
-                          "*": "Default"
+                          "en-us": "Default"
                         },
                         "UrlParameters": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "Value": {
-                          "*": "Id"
+                          "en-us": "Id"
                         }
                       },
                       "Boolean": {
                         "AllowMultiValue": {
-                          "*": false
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": false
                         },
                         "EnableTextEntry": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -15243,7 +15309,7 @@
                   },
                   {
                     "Id": 43011,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "20d1d9d7-1bdf-4466-acb1-9081cc0023c3",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -15252,30 +15318,39 @@
                     "Attributes": {
                       "String": {
                         "Label": {
-                          "*": "Name"
+                          "en-us": "Name"
+                        },
+                        "MoreFields": {
+                          "en-us": ""
                         },
                         "Query": {
-                          "*": "Eav.Queries.Global.Queries"
+                          "en-us": "System.Queries"
                         },
                         "Separator": {
-                          "*": ","
+                          "en-us": ","
                         },
                         "StreamName": {
-                          "*": "Default"
+                          "en-us": "Default"
                         },
                         "UrlParameters": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "Value": {
-                          "*": "Name"
+                          "en-us": "Name"
                         }
                       },
                       "Boolean": {
                         "AllowMultiValue": {
-                          "*": false
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": false
                         },
                         "EnableTextEntry": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -15356,7 +15431,7 @@
                   },
                   {
                     "Id": 43012,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "0e3c3805-59b7-4d48-918d-7f7ba7111264",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -15365,30 +15440,39 @@
                     "Attributes": {
                       "String": {
                         "Label": {
-                          "*": "Name"
+                          "en-us": "Name"
+                        },
+                        "MoreFields": {
+                          "en-us": ""
                         },
                         "Query": {
-                          "*": "Eav.Queries.Global.QueryInfo"
+                          "en-us": "System.QueryInfo"
                         },
                         "Separator": {
-                          "*": ","
+                          "en-us": ","
                         },
                         "StreamName": {
-                          "*": "Default"
+                          "en-us": "Default"
                         },
                         "UrlParameters": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "Value": {
-                          "*": "Name"
+                          "en-us": "Name"
                         }
                       },
                       "Boolean": {
                         "AllowMultiValue": {
-                          "*": false
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": false
                         },
                         "EnableTextEntry": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -16554,7 +16638,7 @@
                   },
                   {
                     "Id": 160775,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "d0ff2328-ecbc-4176-bd1a-ac2075429325",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -16565,8 +16649,11 @@
                         "Label": {
                           "en-us": "Title"
                         },
+                        "MoreFields": {
+                          "en-us": ""
+                        },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.Users"
+                          "en-us": "System.Users"
                         },
                         "Separator": {
                           "en-us": ","
@@ -16688,7 +16775,7 @@
                   },
                   {
                     "Id": 160777,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "9d7780de-f4b6-43a3-ab78-22b98fcd51e8",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -16699,8 +16786,11 @@
                         "Label": {
                           "en-us": "Title"
                         },
+                        "MoreFields": {
+                          "en-us": ""
+                        },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.Users"
+                          "en-us": "System.Users"
                         },
                         "Separator": {
                           "en-us": ","
@@ -16822,7 +16912,7 @@
                   },
                   {
                     "Id": 160769,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "98b88c37-9ca3-4343-8109-dffb00b27777",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -16833,8 +16923,11 @@
                         "Label": {
                           "en-us": "Title"
                         },
+                        "MoreFields": {
+                          "en-us": ""
+                        },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.Roles"
+                          "en-us": "System.Roles"
                         },
                         "Separator": {
                           "en-us": ","
@@ -16956,7 +17049,7 @@
                   },
                   {
                     "Id": 160771,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "131caffa-31b2-4799-8b8c-723dc4f5fbce",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -16967,8 +17060,11 @@
                         "Label": {
                           "en-us": "Title"
                         },
+                        "MoreFields": {
+                          "en-us": ""
+                        },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.Roles"
+                          "en-us": "System.Roles"
                         },
                         "Separator": {
                           "en-us": ","
@@ -19680,7 +19776,7 @@
                   },
                   {
                     "Id": 169114,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "932c04ce-73c7-4027-912b-036138ae833e",
                     "Type": {
                       "Id": "@string-dropdown-query",
@@ -19691,8 +19787,11 @@
                         "Label": {
                           "en-us": "Title"
                         },
+                        "MoreFields": {
+                          "en-us": ""
+                        },
                         "Query": {
-                          "en-us": "Eav.Queries.Global.Settings"
+                          "en-us": "System.Settings"
                         },
                         "Separator": {
                           "en-us": ","
@@ -20405,8 +20504,7 @@
             }
           ]
         }
-      ],
-      "Entities": []
+      ]
     }
   ]
 }
