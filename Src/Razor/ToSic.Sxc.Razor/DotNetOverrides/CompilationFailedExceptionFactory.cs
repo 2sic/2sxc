@@ -30,20 +30,20 @@ internal static class CompilationFailedExceptionFactory
             razorError => razorError.Span.FilePath ?? codeDocument.Source.FilePath,
             StringComparer.Ordinal);
 
-        var failures = new List<CompilationFailure>();
-        foreach (var group in messageGroups)
-        {
-            var filePath = group.Key;
-            var fileContent = ReadContent(codeDocument, filePath);
-            var compilationFailure = new CompilationFailure(
-                filePath,
-                fileContent,
-                compiledContent: string.Empty,
-                messages: group.Select(parserError => CreateDiagnosticMessage(parserError, filePath)));
-            failures.Add(compilationFailure);
-        }
+        var failures = messageGroups.Select(group =>
+            {
+                var filePath = group.Key;
+                var fileContent = ReadContent(codeDocument, filePath);
+                return new CompilationFailure(
+                    filePath,
+                    fileContent,
+                    compiledContent: string.Empty,
+                    messages: group.Select(parserError => CreateDiagnosticMessage(parserError, filePath)));
 
-        return new CompilationFailedException(failures);
+            })
+            .ToList();
+
+        return new(failures);
     }
 
     public static CompilationFailedException Create(
@@ -56,41 +56,40 @@ internal static class CompilationFailedExceptionFactory
             .Where(diagnostic => diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error)
             .GroupBy(diagnostic => GetFilePath(codeDocument, diagnostic), StringComparer.Ordinal);
 
-        var failures = new List<CompilationFailure>();
-        foreach (var group in diagnosticGroups)
-        {
-            var sourceFilePath = group.Key;
-            string sourceFileContent;
-            if (string.Equals(assemblyName, sourceFilePath, StringComparison.Ordinal))
+        var failures = diagnosticGroups.Select(group =>
             {
-                // The error is in the generated code and does not have a mapping line pragma
-                sourceFileContent = compilationContent;
-                sourceFilePath = "Resources.GeneratedCodeFileName";
-            }
-            else
-            {
-                sourceFileContent = ReadContent(codeDocument, sourceFilePath);
-            }
+                var sourceFilePath = group.Key;
+                string sourceFileContent;
+                if (string.Equals(assemblyName, sourceFilePath, StringComparison.Ordinal))
+                {
+                    // The error is in the generated code and does not have a mapping line pragma
+                    sourceFileContent = compilationContent;
+                    sourceFilePath = "Resources.GeneratedCodeFileName";
+                }
+                else
+                {
+                    sourceFileContent = ReadContent(codeDocument, sourceFilePath);
+                }
 
-            string? additionalMessage = null;
-            if (group.Any(g =>
-                string.Equals(CS0234, g.Id, StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(CS0246, g.Id, StringComparison.OrdinalIgnoreCase)))
-            {
-                additionalMessage = "CopyRefAssembliesToPublishDirectory";
-            }
+                string? additionalMessage = null;
+                if (group.Any(g =>
+                        string.Equals(CS0234, g.Id, StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(CS0246, g.Id, StringComparison.OrdinalIgnoreCase)))
+                {
+                    additionalMessage = "CopyRefAssembliesToPublishDirectory";
+                }
 
-            var compilationFailure = new CompilationFailure(
-                sourceFilePath,
-                sourceFileContent,
-                compilationContent,
-                group.Select(GetDiagnosticMessage),
-                additionalMessage);
+                return new CompilationFailure(
+                    sourceFilePath,
+                    sourceFileContent,
+                    compilationContent,
+                    group.Select(GetDiagnosticMessage),
+                    additionalMessage);
 
-            failures.Add(compilationFailure);
-        }
+            })
+            .ToList();
 
-        return new CompilationFailedException(failures);
+        return new(failures);
     }
 
     private static string ReadContent(RazorCodeDocument codeDocument, string filePath)
@@ -109,7 +108,7 @@ internal static class CompilationFailedExceptionFactory
         {
             var contentChars = new char[sourceDocument.Length];
             sourceDocument.CopyTo(0, contentChars, 0, sourceDocument.Length);
-            return new string(contentChars);
+            return new(contentChars);
         }
 
         return string.Empty;
@@ -118,7 +117,7 @@ internal static class CompilationFailedExceptionFactory
     private static DiagnosticMessage GetDiagnosticMessage(Diagnostic diagnostic)
     {
         var mappedLineSpan = diagnostic.Location.GetMappedLineSpan();
-        return new DiagnosticMessage(
+        return new(
             diagnostic.GetMessage(CultureInfo.CurrentCulture),
             CSharpDiagnosticFormatter.Instance.Format(diagnostic, CultureInfo.CurrentCulture),
             mappedLineSpan.Path,
@@ -134,7 +133,7 @@ internal static class CompilationFailedExceptionFactory
     {
         var sourceSpan = razorDiagnostic.Span;
         var message = razorDiagnostic.GetMessage(CultureInfo.CurrentCulture);
-        return new DiagnosticMessage(
+        return new(
             message: message,
             formattedMessage: razorDiagnostic.ToString(),
             filePath: filePath,

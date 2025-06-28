@@ -5,7 +5,10 @@ namespace ToSic.Sxc.Web.Sys.PageServiceShared;
 
 partial class PageServiceShared
 {
-    public IList<HeadChange> Headers { get; } = new List<HeadChange>();
+    /// <summary>
+    /// Must be a real List, since it will be modified.
+    /// </summary>
+    public List<HeadChange> Headers { get; } = [];
 
     public IList<HeadChange> GetHeadChangesAndFlush(ILog log)
     {

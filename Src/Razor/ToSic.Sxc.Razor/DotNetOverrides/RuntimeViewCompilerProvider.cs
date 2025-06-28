@@ -32,7 +32,7 @@ internal sealed class RuntimeViewCompilerProvider : ServiceBase, IViewCompilerPr
     private readonly ILogger<RuntimeViewCompiler> _logger;
     private readonly Func<IViewCompiler> _createCompiler;
 
-    private object _initializeLock = new object();
+    private object _initializeLock = new();
     private bool _initialized;
     private IViewCompiler? _compiler;
 

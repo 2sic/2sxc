@@ -66,7 +66,7 @@ internal class DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver, Laz
         var additions = new List<ILookUp>();
         if (sources.HasSource(SourceModule))
         {
-            var original = sources.GetSource(SourceModule);
+            var original = sources.GetSource(SourceModule)!;
             var modAdditional = new LookUpInDictionary(SourceModule, new Dictionary<string, string>
             {
                 { KeyId, original.Get(OldDnnModuleId) }
@@ -78,7 +78,7 @@ internal class DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver, Laz
         if (sources.HasSource(OldDnnSiteSource))
             additions.Add(new LookUpInDictionary(SourceSite, new Dictionary<string, string>
             {
-                { KeyId, sources.GetSource(OldDnnSiteSource).Get(OldDnnSiteId) },
+                { KeyId, sources.GetSource(OldDnnSiteSource)!.Get(OldDnnSiteId) },
                 { KeyGuid, $"{DotNetNuke.Common.Globals.GetPortalSettings()?.GUID}" }
             }));
 
@@ -86,7 +86,7 @@ internal class DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver, Laz
         if (sources.HasSource(OldDnnPageSource))
             additions.Add(new LookUpInDictionary(SourcePage, new Dictionary<string, string>
             {
-                { KeyId, sources.GetSource(OldDnnPageSource).Get(OldDnnPageId) },
+                { KeyId, sources.GetSource(OldDnnPageSource)!.Get(OldDnnPageId) },
                 { KeyGuid, $"{DotNetNuke.Common.Globals.GetPortalSettings()?.ActiveTab?.UniqueId}" }
             }));
 

@@ -53,7 +53,8 @@ internal class ProblemSuggestions
 
     private static void AddWarning1601(IApp app, string appName, string nameId, Version version, List<ProblemReport> suggestions, string shortLink)
     {
-        if (app.NameId != nameId || app.Configuration.Version.CompareTo(version) != 0) return;
+        if (app.NameId != nameId || app.Configuration.Version.CompareTo(version) != 0)
+            return;
         suggestions.Add(new()
         {
             Scope = ProblemReport.ErrorScope.app,

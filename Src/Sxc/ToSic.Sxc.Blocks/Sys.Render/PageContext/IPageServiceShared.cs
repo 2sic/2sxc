@@ -20,7 +20,7 @@ public interface IPageServiceShared: IChangeQueue
     /// </summary>
     PageChangeModes ChangeMode { get; set; }
 
-    IList<HeadChange> Headers { get; }
+    List<HeadChange> Headers { get; }
     //int? HttpStatusCode { get; set; }
     //string HttpStatusMessage { get; set; }
     List<HttpHeader> HttpHeaders { get; }

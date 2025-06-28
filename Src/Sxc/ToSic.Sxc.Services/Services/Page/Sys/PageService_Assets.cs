@@ -26,7 +26,8 @@ partial class PageService
         if (whitelist)
         {
             var cspAttr = CspWhitelistAttribute();
-            if(cspAttr != null) attributes.Add(cspAttr.ToString());
+            if (cspAttr != null)
+                attributes.Add(cspAttr.ToString());
         }
 
         var result = string.Join(" ", attributes);

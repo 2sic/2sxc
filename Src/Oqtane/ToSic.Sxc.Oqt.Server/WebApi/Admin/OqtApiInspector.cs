@@ -21,19 +21,24 @@ public class OqtApiInspector() : ServiceBase(OqtConstants.OqtLogPrefix), IApiIns
         var httpMethods = new List<string>();
 
         var getAtt = methodInfo.GetCustomAttribute<HttpGetAttribute>();
-        if (getAtt != null) httpMethods.Add(getAtt.HttpMethods.First());
+        if (getAtt != null)
+            httpMethods.Add(getAtt.HttpMethods.First());
 
         var postAtt = methodInfo.GetCustomAttribute<HttpPostAttribute>();
-        if (postAtt != null) httpMethods.Add(postAtt.HttpMethods.First());
+        if (postAtt != null)
+            httpMethods.Add(postAtt.HttpMethods.First());
 
         var putAtt = methodInfo.GetCustomAttribute<HttpPutAttribute>();
-        if (putAtt != null) httpMethods.Add(putAtt.HttpMethods.First());
+        if (putAtt != null)
+            httpMethods.Add(putAtt.HttpMethods.First());
 
         var deleteAtt = methodInfo.GetCustomAttribute<HttpDeleteAttribute>();
-        if (deleteAtt != null) httpMethods.Add(deleteAtt.HttpMethods.First());
+        if (deleteAtt != null)
+            httpMethods.Add(deleteAtt.HttpMethods.First());
 
         var acceptVerbsAtt = methodInfo.GetCustomAttribute<AcceptVerbsAttribute>();
-        if (acceptVerbsAtt != null) httpMethods.AddRange(acceptVerbsAtt.HttpMethods);
+        if (acceptVerbsAtt != null)
+            httpMethods.AddRange(acceptVerbsAtt.HttpMethods);
 
         return httpMethods;
     }

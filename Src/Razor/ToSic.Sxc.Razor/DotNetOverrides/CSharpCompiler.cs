@@ -140,7 +140,7 @@ internal class CSharpCompiler
                     // There isn't a way to represent none in DebugInformationFormat.
                     // We'll set EmitPdb to false and let callers handle it by setting a null pdb-stream.
                     _emitPdb = false;
-                    return new EmitOptions();
+                    return new();
                 case "portable":
                     debugInformationFormat = DebugInformationFormat.PortablePdb;
                     break;

@@ -4,7 +4,10 @@ namespace ToSic.Sxc.Web.Sys.PageServiceShared;
 
 partial class PageServiceShared
 {
-    internal IList<PagePropertyChange> PropertyChanges { get; } = new List<PagePropertyChange>();
+    /// <summary>
+    /// Must be a real List, since it will be modified.
+    /// </summary>
+    internal List<PagePropertyChange> PropertyChanges { get; } = [];
 
     public IList<PagePropertyChange> GetPropertyChangesAndFlush(ILog log)
     {

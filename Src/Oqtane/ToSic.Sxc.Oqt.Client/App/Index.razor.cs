@@ -28,11 +28,12 @@ public partial class Index : ModuleProBase
 
     public override string RenderMode => RenderModes.Static;
 
-    public override List<Resource> Resources => [
+    public override List<Resource> Resources =>
+    [
         // Reload = true for Oqtane 6.0.0 or older (remove when dependency is updated to Oqtane 6.0.1)
-        new Resource { ResourceType = ResourceType.Script, Url = $"Modules/{OqtConstants.PackageName}/Module.js", Reload=IsOqtaneVersionLessThan601 },
-        new Resource { ResourceType = ResourceType.Script, Url = $"Modules/{OqtConstants.PackageName}/dist/turnOn/turn-on.js", Reload=IsOqtaneVersionLessThan601 },
-        ];
+        new Script($"Modules/{OqtConstants.PackageName}/Module.js"),
+        new Script($"Modules/{OqtConstants.PackageName}/dist/turnOn/turn-on.js"),
+    ];
 
     #endregion
 
