@@ -185,16 +185,16 @@ internal class HelpForRazorCompileErrors
     /// </summary>
     internal static CodeHelp DnnHelperModuleMissing = new()
     {
-        Name = "dnnhelper-module-missing-after-v20",
-        Detect = "error CS1061: 'DnnHelper<dynamic>' does not contain a definition for 'Module'",
+        Name = "dnnhelper-missing-after-v20",
+        Detect = "CS1061: 'DnnHelper<dynamic>' does not contain a definition for",
         UiMessage = """
 
-                    Your Razor code is trying to use 'Module', but this property is not available. In v20, APIs and base classes changed. Make sure your template inherits from the correct base class and check the docs for updated usage.
+                    Your Razor code is trying to use 'Module', 'Portal', etc, but this property is not available. In v20, APIs and base classes changed. Make sure your template inherits from the correct base class and check the docs for updated usage.
 
                     """,
         DetailsHtml = """
 
-                      The <code>Module</code> property is not available on <code>DnnHelper&lt;dynamic&gt;</code> in v20. This is likely because your template is missing the correct <code>@inherits</code> statement or is using an outdated API. 
+                      The <code>Module</code> or <code>Portal</code> or etc property is not available on <code>DnnHelper&lt;dynamic&gt;</code> in v20. This is likely because your template is missing the correct <code>@inherits</code> statement or is using an outdated API. 
                       <br>
                       <strong>Solution:</strong> <br>
                       Ensure your Razor file has the correct <code>@inherits</code> statement for v20. See the docs for more info.
