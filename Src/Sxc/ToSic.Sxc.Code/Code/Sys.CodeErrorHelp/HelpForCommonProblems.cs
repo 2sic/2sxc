@@ -81,6 +81,7 @@ internal class HelpForCommonProblems
         DynamicList,
         DynamicEntity,
         NoParamOrderUsed,
+        ..HelpForRazorCompileErrors.CompileUnknown,
     ];
 
     public static List<CodeHelp> HelpForRuntimeProblems =
