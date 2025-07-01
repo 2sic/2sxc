@@ -64,7 +64,7 @@ public static class UrlHelpers
         var allPairs = nvc.AllKeys
             .SelectMany(key =>
             {
-                var values = nvc.GetValues((string) key) ?? [];
+                var values = nvc.GetValues(key) ?? [];
                 var noValues = values.Length == 0;
                 if (!noValues)
                 {
@@ -128,7 +128,7 @@ public static class UrlHelpers
             .ToList()
             .ForEach(k =>
             {
-                var values = source.GetValues(k) ?? [null]; // catch null-values
+                var values = source.GetValues(k) ?? [null!]; // catch null-values
 
                 foreach (var v in values)
                 {

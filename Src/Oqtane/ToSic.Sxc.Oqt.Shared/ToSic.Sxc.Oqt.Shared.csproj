@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <RootNamespace>ToSic.Sxc.Oqt.Shared</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <AssemblyName>ToSic.Sxc.Oqtane.Shared</AssemblyName>
   </PropertyGroup>
 
