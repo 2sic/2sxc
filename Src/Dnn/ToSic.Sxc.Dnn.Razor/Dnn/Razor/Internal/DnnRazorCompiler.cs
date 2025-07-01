@@ -16,6 +16,8 @@ using ToSic.Sxc.Engines;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Caching.PiggyBack;
+using ToSic.Sys.Code.Help;
+using ToSic.Sys.Exceptions;
 
 namespace ToSic.Sxc.Dnn.Razor.Internal;
 
@@ -163,7 +165,8 @@ internal class DnnRazorCompiler(
             throw new InvalidOperationException($"The webpage found at '{templatePath}' was not created.");
 
         if (objectValue is not RazorComponentBase pageToInit)
-            throw new InvalidOperationException($"The webpage at '{templatePath}' must derive from RazorComponentBase.");
+            throw new ExceptionWithHelp(HelpForCommonProblems.AutoInheritsMissingAfterV20,
+                new InvalidOperationException($"The webpage at '{templatePath}' must derive from RazorComponentBase."));
 
         pageToInit.Context = HttpContextCurrent;
         pageToInit.VirtualPath = templatePath;
