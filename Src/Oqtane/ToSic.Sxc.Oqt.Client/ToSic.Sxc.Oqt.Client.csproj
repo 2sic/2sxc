@@ -2,6 +2,11 @@
 
   <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-NetCore.props" />
 
+
+  <PropertyGroup>
+    <RootNamespace>ToSic.Sxc.Oqt.Client</RootNamespace>
+  </PropertyGroup>
+
   <PropertyGroup>
     <RazorLangVersion>3.0</RazorLangVersion>
     <AssemblyName>ToSic.Sxc.Oqtane.Client</AssemblyName>
