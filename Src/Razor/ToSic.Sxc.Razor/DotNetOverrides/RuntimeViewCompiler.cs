@@ -594,7 +594,9 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         public CompiledViewDescriptor Descriptor { get; set; } = default!;
     }
 
+#pragma warning disable CS0108, CS0114
     private static partial class Log
+#pragma warning restore CS0108, CS0114
     {
         [LoggerMessage(1, LogLevel.Debug, "Compilation of the generated code for the Razor file at '{FilePath}' started.")]
         public static partial void GeneratedCodeToAssemblyCompilationStart(ILogger logger, string filePath);

@@ -1,24 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Options;
 using ToSic.Sxc.Razor.DotNetOverrides;
 
-namespace ToSic.Sxc.Razor
+namespace ToSic.Sxc.Razor;
+
+internal class RazorReferenceManagerEnhanced(ApplicationPartManager partManager, IOptions<MvcRazorRuntimeCompilationOptions> options) : RazorReferenceManager(partManager, options)
 {
-    internal class RazorReferenceManagerEnhanced(ApplicationPartManager partManager, IOptions<MvcRazorRuntimeCompilationOptions> options) : RazorReferenceManager(partManager, options)
+    // cache references for reuse;
+    [field: AllowNull, MaybeNull]
+    public override IReadOnlyList<MetadataReference> CompilationReferences => field ??= base.CompilationReferences;
+
+    public IReadOnlyList<MetadataReference> GetAdditionalCompilationReferences(IEnumerable<string> additionalReferencePaths)
     {
-        // cache references for reuse;
-        public override IReadOnlyList<MetadataReference> CompilationReferences => field ??= base.CompilationReferences;
+        if (additionalReferencePaths == null! /* paranoid */)
+            return CompilationReferences;
 
-        public IReadOnlyList<MetadataReference> GetAdditionalCompilationReferences(IEnumerable<string> additionalReferencePaths)
-        {
-            if (additionalReferencePaths == null) return CompilationReferences;
-
-            var additionalMetadataReferences = additionalReferencePaths
-                .Select(CreateMetadataReference)
-                .ToList();
-            return CompilationReferences.Concat(additionalMetadataReferences).ToList().AsReadOnly(); ;
-        }
+        var additionalMetadataReferences = additionalReferencePaths
+            .Select(CreateMetadataReference)
+            .ToList();
+        return CompilationReferences.Concat(additionalMetadataReferences).ToList().AsReadOnly(); ;
     }
 }

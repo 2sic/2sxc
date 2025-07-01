@@ -55,7 +55,8 @@ internal class RazorEngine(
         RazorView? page = null;
         try
         {
-            if (string.IsNullOrEmpty(TemplatePath)) return (null, null);
+            if (string.IsNullOrEmpty(TemplatePath))
+                return (null, null);
 
             var result = await razorRenderer.Value.RenderToStringAsync(
                 TemplatePath,

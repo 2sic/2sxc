@@ -19,9 +19,9 @@ internal class RazorRenderer(
         connect: [tempDataProvider, appCodeRazorCompiler]), IRazorRenderer
 {
 
-    public async Task<string> RenderToStringAsync<TModel>(string templatePath, TModel model, Action<RazorView>? configure = null, IApp? app = null, HotBuildSpec? hotBuildSpec = default)
+    public async Task<string> RenderToStringAsync<TModel>(string templatePath, TModel model, Action<RazorView> configure, IApp app, HotBuildSpec hotBuildSpec)
     {
-        var l = Log.Fn<string>($"{nameof(templatePath)}: '{templatePath}'; {nameof(app.PhysicalPath)}: '{app?.PhysicalPath}'; {hotBuildSpec}");
+        var l = Log.Fn<string>($"{nameof(templatePath)}: '{templatePath}'; {nameof(app.PhysicalPath)}: '{app.PhysicalPath}'; {hotBuildSpec}");
 
         var (view, actionContext) = await appCodeRazorCompiler.CompileView(templatePath, configure, app, hotBuildSpec);
 

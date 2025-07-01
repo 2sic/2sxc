@@ -7,5 +7,5 @@ namespace ToSic.Sxc.Razor;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IRazorRenderer
 {
-    Task<string> RenderToStringAsync<TModel>(string templatePath, TModel model, Action<RazorView>? configure = null, IApp? app = null, HotBuildSpec? hotBuildSpec = default);
+    Task<string> RenderToStringAsync<TModel>(string templatePath, TModel model, Action<RazorView> configure, IApp app, HotBuildSpec hotBuildSpec);
 }

@@ -30,7 +30,7 @@ internal class RazorCompiler(
             applicationPartManager, viewEngine, /* never! serviceProvider,*/ httpContextAccessor, actionContextAccessor, appCodeLoader, assemblyResolver, sourceAnalyzer
         ]), IRazorCompiler
 {
-    public async Task<(IView view, ActionContext context)> CompileView(string partialName, Action<RazorView>? configure = null, IApp? app = null, HotBuildSpec? spec = default)
+    public async Task<(IView view, ActionContext context)> CompileView(string partialName, Action<RazorView> configure, IApp app, HotBuildSpec spec)
     {
         var l = Log.Fn<(IView view, ActionContext context)>($"partialName:{partialName},appCodePath:{app}");
         var actionContext = actionContextAccessor.ActionContext ?? NewActionContext();
