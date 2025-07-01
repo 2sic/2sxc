@@ -12,7 +12,7 @@ public static class IHasKitExtensions
             // if it has the exact kit version, return it
             IHasKit<TServiceKit> { Kit: not null } withKit => withKit.Kit,
 
-            // Unexpected - but old fallback: just generate a new one
+            // Situation where the IHasKit would have a different version of the service kit...
             ICanGetService cgs => cgs.GetService<TServiceKit>(),
             
             _ => throw new($"GetKit: {exCtx.GetType().Name} doesn't implement IHasKit or IExCtxGetKit")

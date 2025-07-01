@@ -11,7 +11,8 @@ public class HtmlImgToPictureHelperTests(ExecutionContext executionContext, /*ne
     /// Swap the image service to one which doesn't know about the app (so it won't get settings etc.)
     /// </summary>
     private void InitCodeApiSvc()
-        => executionContext.ReplaceServiceInCache(imageSvc);
+        //=> executionContext.ReplaceServiceInCache(imageSvc);
+        => executionContext.ReplaceServiceInCache(executionContext.GetService<IImageService>(reuse: true));
 
     /// <summary>
     /// Must get service through executionContext, because the class is internal & it needs to have a parent CodeApiService for sub-dependencies

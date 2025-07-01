@@ -1,4 +1,5 @@
 ﻿
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Code.Internal;
@@ -22,7 +23,8 @@ internal class CmsServiceContainerHelper(
     private string? Classes { get; set; } = classes;
 
     [field: AllowNull, MaybeNull]
-    private ServiceKit14 ServiceKit => field ??= IHasKitExtensions.GetKit<ServiceKit14>(executionContext);
+    private IToolbarService Toolbar => field ??= executionContext.GetService<IToolbarService>(reuse: true);
+    
 
     public IHtmlTag Wrap(CmsProcessed result, bool defaultToolbar)
     {
@@ -59,10 +61,13 @@ internal class CmsServiceContainerHelper(
             return l.Return(tag, "no toolbar added");
 
         l.A("Will add toolbar");
-        tag = tag.Attr(ServiceKit.Toolbar.Empty().Edit(entityField.Parent, tweak: b => b
-            .Icon(EditFieldIcon)
-            .Parameters(ToolbarBuilder.BetaEditUiFieldsParamName, entityField.Name)
-        ));
+        if (Toolbar != null)
+            tag = tag.Attr(Toolbar.Empty()
+                .Edit(entityField.Parent, tweak: b => b
+                    .Icon(EditFieldIcon)
+                    .Parameters(ToolbarBuilder.BetaEditUiFieldsParamName, entityField.Name)
+                )
+            );
         return l.Return(tag, "added toolbar");
 
     }

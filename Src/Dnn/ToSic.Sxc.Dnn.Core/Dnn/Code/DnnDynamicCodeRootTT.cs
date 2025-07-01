@@ -12,6 +12,9 @@ internal class DnnExecutionContext<TModel, TServiceKit>(ExecutionContext.MyServi
     where TModel : class
     where TServiceKit : ServiceKit
 {
+
+    // TODO: WE CAN PROBABLY DROP THIS CLASS, IF WE ALWAYS USE GetService<IDnnContext>(reuse: true) INSTEAD OF DNN
+
     /// <summary>
     /// Dnn context with module, page, portal etc.
     /// </summary>

@@ -48,6 +48,7 @@ public partial class ExecutionContext
     #region Convert
 
     /// <inheritdoc />
+    [field: AllowNull, MaybeNull]
     public IConvertService Convert => field ??= Services.ConvertService.Value;
 
     #endregion

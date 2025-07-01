@@ -19,7 +19,12 @@ internal record CacheSpecs : ICacheSpecs
 
     internal required CacheKeySpecs KeySpecs { get; init; }
 
-    internal required IExecutionContext ExCtx { get; init; }
+    [field: AllowNull, MaybeNull]
+    internal required IExecutionContext ExCtx
+    {
+        get => field ?? throw new NullReferenceException($"{nameof(CacheSpecs)}.{nameof(ExCtx)} should never be null at runtime, only during unit tests. Avoid test on aspects which need this.");
+        init;
+    }
 
     internal required LazySvc<IAppReaderFactory> AppReaders { get; init; }
 

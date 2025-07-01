@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using ToSic.Sys.Performance;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Web.Sys.Url;
@@ -123,8 +124,7 @@ public class ObjectToUrl
         // Get all properties on the object
         var properties = objectList
             .Cast<object>()
-            .SelectMany(d => PropsOfOne(d, prefix)!)
-            .Where(d => d != null!)
+            .SelectMany(d => PropsOfOne(d, prefix))
             .ToList();
 
         // Concat all key/value pairs into a string separated by ampersand
@@ -134,21 +134,22 @@ public class ObjectToUrl
 
     // https://ole.michelsen.dk/blog/serialize-object-into-a-query-string-with-reflection/
     // https://stackoverflow.com/questions/6848296/how-do-i-serialize-an-object-into-query-string-format
-    private List<UrlValuePair>? PropsOfOne(object? data, string? prefix)
+    private IEnumerable<UrlValuePair> PropsOfOne(object? data, string? prefix)
     {
         // Case #1: Null, return that
         if (data == null)
-            return null;
+            return [];
 
         // Case #2: Already a string, return that
         if (data is string str)
             return str.HasValue()
                 ? [new(null, str, true)]
-                : null;
+                : [];
 
         // Case #3: It's an object or an array of objects (but not a string)
         // Get all properties on the object
-        var properties = data.GetType().GetProperties()
+        var properties = data.GetType()
+            .GetProperties()
             .Where(x => x.CanRead)
             .Select(x =>
             {
@@ -161,7 +162,7 @@ public class ObjectToUrl
             })
             .Where(x => x?.Value != null)
             .Cast<UrlValuePair>()
-            .ToList();
+            .ToListOpt();
 
         // Concat all key/value pairs into a string separated by ampersand
         return properties;

@@ -31,7 +31,7 @@ public class VerifyScenarioPatronsPerfectionist(VerifyPatronsHelper patronsHelpe
 
     // Our current test enables 6 packages, so the service should report so many active licenses
     [Fact] public void VerifyPackageOk() =>
-        patronsHelper.VerifyEnabledLicenses(16);
+        patronsHelper.VerifyEnabledLicenses(17); // 17 as of v20
 
     [Fact] public void VerifyPatronPerfectionistsActive() =>
         patronsHelper.VerifyPatronPerfectionistsActive(true);

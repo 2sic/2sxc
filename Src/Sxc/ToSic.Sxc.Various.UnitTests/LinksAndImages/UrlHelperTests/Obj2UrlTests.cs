@@ -27,7 +27,7 @@ public class Obj2UrlTests
     {
         var obj = new
         {
-            array = new int[] { 32, 16, 8 }
+            array = new[] { 32, 16, 8 }
         };
         Equal("array=32,16,8", O2uSerialize(obj));
     }
