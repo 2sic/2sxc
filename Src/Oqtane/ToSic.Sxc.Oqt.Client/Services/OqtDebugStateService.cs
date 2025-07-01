@@ -4,15 +4,9 @@ using ToSic.Sxc.Oqt.Shared.Interfaces;
 
 namespace ToSic.Sxc.Oqt.Client.Services;
 
-internal class OqtDebugStateService : IOqtDebugStateService
+internal class OqtDebugStateService(IJSRuntime jsRuntime) : IOqtDebugStateService
 {
     public const string DebugKey = "2sxcDebug";
-    private readonly IJSRuntime _jsRuntime;
-
-    public OqtDebugStateService(IJSRuntime jsRuntime)
-    {
-        _jsRuntime = jsRuntime;
-    }
 
     public bool IsDebugEnabled => _debug ??= false; 
 
@@ -31,14 +25,15 @@ internal class OqtDebugStateService : IOqtDebugStateService
     private async Task SaveState(string key, object value)
     {
         var json = JsonSerializer.Serialize(value);
-        await _jsRuntime.InvokeVoidAsync("sessionStorage.setItem", key, json);
+        await jsRuntime.InvokeVoidAsync("sessionStorage.setItem", key, json);
     }
 
-    private async ValueTask<T> GetState<T>(string key)
+    private async ValueTask<T> GetState<T>(string? key)
     {
-        var json = await _jsRuntime.InvokeAsync<string>("sessionStorage.getItem", key);
-        if (json is null) return default;
-        return JsonSerializer.Deserialize<T>(json);
+        var json = await jsRuntime.InvokeAsync<string?>("sessionStorage.getItem", key);
+        if (json is null)
+            return default!;
+        return JsonSerializer.Deserialize<T>(json)!;
     }
 
     public string Platform => "Client";

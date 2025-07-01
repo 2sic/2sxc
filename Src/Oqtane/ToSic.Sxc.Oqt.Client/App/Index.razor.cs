@@ -15,13 +15,14 @@ namespace ToSic.Sxc.Oqt.App;
 public partial class Index : ModuleProBase
 {
     #region Injected Services
-    [Inject] public IOqtSxcRenderService OqtSxcRenderService { get; set; }
-    [Inject] public OqtPageChangeService OqtPageChangeService { get; set; }
-    [Inject] public IJSRuntime JsRuntime { get; set; }
-    [Inject] public IOqtPageChangesOnServerService OqtPageChangesOnServerService { get; set; }
-    [Inject] public IOqtPrerenderService OqtPrerenderService { get; set; }
-    [Inject] public RenderSpecificLockManager RenderSpecificLockManager { get; set; }
-    [Inject] public IRenderInfoService RenderInfoService { get; set; }
+
+    [Inject] public IOqtSxcRenderService OqtSxcRenderService { get; set; } = null!;
+    [Inject] public OqtPageChangeService OqtPageChangeService { get; set; } = null!;
+    [Inject] public IJSRuntime JsRuntime { get; set; } = null!;
+    [Inject] public IOqtPageChangesOnServerService OqtPageChangesOnServerService { get; set; } = null!;
+    [Inject] public IOqtPrerenderService OqtPrerenderService { get; set; } = null!;
+    [Inject] public RenderSpecificLockManager RenderSpecificLockManager { get; set; } = null!;
+    [Inject] public IRenderInfoService RenderInfoService { get; set; } = null!;
     #endregion
 
     #region Oqtane Properties
@@ -41,8 +42,8 @@ public partial class Index : ModuleProBase
 
     protected string Content { get; private set; } = "";
 
-    private OqtViewResultsDto _viewResults;
-    private RenderParameters _renderedParameters;
+    private OqtViewResultsDto? _viewResults;
+    private RenderParameters? _renderedParameters;
     private bool _newDataArrived;
 
     #endregion
@@ -78,7 +79,7 @@ public partial class Index : ModuleProBase
     {
         await base.OnParametersSetAsync();
 
-        var @params = new RenderParameters()
+        var @params = new RenderParameters
         {
             AliasId = PageState.Alias.AliasId,
             PageId = PageState.Page.PageId,
@@ -99,7 +100,7 @@ public partial class Index : ModuleProBase
             // Still during change of PageState and ModuleState sometimes we get old ModuleId from older page, before we get correct ModuleId from new page.
             if (ShouldRenderSxcView(@params))
             {
-                Log($"Need to render");
+                Log("Need to render");
 
                 // Ensure that only one thread is rendering the module at a time.
                 // This prevents exception "Some Stream-Wirings were not created" #3291
@@ -118,12 +119,12 @@ public partial class Index : ModuleProBase
                             if (!RenderInfoService.IsSsrFraming(PageState.RenderMode)) // SSR First load on 2sxc page
                             {
                                 Log($"SSR First load on 2sxc page - {nameof(OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml)}");
-                                newContent = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(_viewResults, SiteState, newContent, Theme.Name);
+                                newContent = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(_viewResults, SiteState, newContent, Theme?.Name ?? "error");
                             }
                             else // SSR Partial load after starting on 2sxc page
                             {
                                 Log($"SSR Partial load after starting on 2sxc page - {nameof(OqtPageChangeService.AttachScriptsAndStylesDynamicallyWithTurnOn)}");
-                                newContent = OqtPageChangeService.AttachScriptsAndStylesDynamicallyWithTurnOn(_viewResults, SiteState, newContent, Theme.Name, ModuleState.RenderId);
+                                newContent = OqtPageChangeService.AttachScriptsAndStylesDynamicallyWithTurnOn(_viewResults, SiteState, newContent, Theme?.Name ?? "error", ModuleState.RenderId);
                             }
                         #endregion
 
@@ -162,7 +163,7 @@ public partial class Index : ModuleProBase
                 _newDataArrived = false;
 
                 #region HTML response, part 2 (Interactive)
-                Log($"2.1: NewDataArrived");
+                Log("2.1: NewDataArrived");
                 await OqtPageChangeService.AttachScriptsAndStylesForInteractiveRendering(_viewResults, SxcInterop, this);
                 #endregion
 
@@ -181,7 +182,7 @@ public partial class Index : ModuleProBase
             LogError(ex);
         }
     }
-    private DotNetObjectReference<Index> _dotNetObjectReference;
+    private DotNetObjectReference<Index>? _dotNetObjectReference;
 
     // This is called from JS to reload module content from blazor (instead of ajax that breaks blazor)
     // 2024-07-04 stv, looks that is not necessary anymore, we can probably remove it
@@ -193,7 +194,7 @@ public partial class Index : ModuleProBase
     [JSInvokable("ReloadModule")]
     public async Task ReloadModule()
     {
-        var @params = new RenderParameters()
+        var @params = new RenderParameters
         {
             AliasId = PageState.Alias.AliasId,
             PageId = PageState.Page.PageId,
@@ -205,7 +206,7 @@ public partial class Index : ModuleProBase
 
         try
         {
-            Log($"3: ReloadModule");
+            Log("3: ReloadModule");
             _viewResults = await RenderSxcView(@params);
 
             if (_viewResults != null)
@@ -215,7 +216,7 @@ public partial class Index : ModuleProBase
                 OqtPageChangeService.ProcessPageChanges(_viewResults, SiteState, this);
 
                 if (PageState.RenderMode == RenderModes.Static) // Static SSR
-                    newContent = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(_viewResults, SiteState, newContent, Theme.Name);
+                    newContent = OqtPageChangeService.AttachScriptsAndStylesStaticallyInHtml(_viewResults, SiteState, newContent, Theme?.Name ?? "error");
                 else // Interactive
                     await OqtPageChangeService.AttachScriptsAndStylesForInteractiveRendering(_viewResults, SxcInterop, this);
 
@@ -269,9 +270,9 @@ public partial class Index : ModuleProBase
     /// <summary>
     /// Prepare the html / headers for later rendering
     /// </summary>
-    private async Task<OqtViewResultsDto> RenderSxcView(RenderParameters @params)
+    private async Task<OqtViewResultsDto?> RenderSxcView(RenderParameters @params)
     {
-        Log($"Get html and other view resources from server");
+        Log("Get html and other view resources from server");
         var viewResults = await OqtSxcRenderService.RenderAsync(@params);
 
         if (!string.IsNullOrEmpty(viewResults?.ErrorMessage))
@@ -287,7 +288,7 @@ public partial class Index : ModuleProBase
     }
 
     #region Theme
-    private Theme Theme => PageState.Site.Themes.FirstOrDefault(theme => theme.Themes.Any(themeControl => themeControl.TypeName == ThemeType));
+    private Theme? Theme => PageState.Site.Themes.FirstOrDefault(theme => theme.Themes.Any(themeControl => themeControl.TypeName == ThemeType));
 
     private string ThemeType => PageState.Page.ThemeType ?? PageState.Site.DefaultThemeType;
 

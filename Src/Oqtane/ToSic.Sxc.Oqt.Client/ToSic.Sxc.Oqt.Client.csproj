@@ -2,6 +2,10 @@
 
   <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-NetCore.props" />
 
+  
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
   <PropertyGroup>
     <RootNamespace>ToSic.Sxc.Oqt.Client</RootNamespace>

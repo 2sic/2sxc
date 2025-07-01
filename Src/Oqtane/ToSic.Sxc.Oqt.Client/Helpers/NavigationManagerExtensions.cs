@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Oqt.Client;
 public static class NavigationManagerExtensions
 {
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public static bool TryGetQueryString<T>(this NavigationManager navManager, string key, out T value)
+    public static bool TryGetQueryString<T>(this NavigationManager navManager, string key, out T? value)
     {
         var uri = navManager.ToAbsoluteUri(navManager.Uri);
 
@@ -31,7 +31,7 @@ public static class NavigationManagerExtensions
 
             if (typeof(T) == typeof(string))
             {
-                value = (T)(object)valueFromQueryString.ToString();
+                value = (T?)(object?)valueFromQueryString;
                 return true;
             }
 
@@ -47,7 +47,7 @@ public static class NavigationManagerExtensions
     }
 
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public static bool TryGetValue(NameValueCollection collection, string key, out string value)
+    public static bool TryGetValue(NameValueCollection collection, string key, out string? value)
     {
         value = collection[key];
         return value != null;

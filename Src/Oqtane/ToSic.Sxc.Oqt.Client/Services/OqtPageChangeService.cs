@@ -29,8 +29,6 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
 
     public string AttachScriptsAndStylesDynamicallyWithTurnOn(OqtViewResultsDto viewResults, SiteState siteState, string content, string themeName, Guid renderId)
     {
-        if (viewResults == null) return content;
-
         var scripts = new List<object>();
         var links = new List<object>();
         var inlineScripts = new List<object>();
@@ -53,7 +51,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
                     integrity = "",
                     crossorigin = "",
                     type="",
-                    dataAttributes = new Dictionary<string, string>() { },
+                    dataAttributes = new Dictionary<string, string>(),
                 }));
         }
 
@@ -113,7 +111,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
                     type = script.Type ?? "", // bug in Oqtane, needs to be an empty string to skip loading script
                     //defer = script.HtmlAttributes.TryGetValue("defer", out var deferValue) ? deferValue : "",
                     //async = script.HtmlAttributes.TryGetValue("async", out var asyncValue) ? asyncValue : "",
-                    dataAttributes = new Dictionary<string, string>() { },
+                    dataAttributes = new Dictionary<string, string> { },
                 }));
 
             // 3. Inline JS code which was extracted from the template
@@ -130,7 +128,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
                 type = "text/javascript",
                 content = inline.Content,
                 location = "body",
-                dataAttributes = new Dictionary<string, string>() { },
+                dataAttributes = new Dictionary<string, string>(),
             }));
         }
         #endregion
@@ -163,12 +161,10 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
     {
         var logPrefix = $"{nameof(AttachScriptsAndStylesForInteractiveRendering)}(...) - ";
 
-        if (viewResults == null) return;
-
         // Add Context-Meta first, because it should be available when $2sxc loads
-        if (viewResults?.SxcContextMetaName != null)
+        if (viewResults.SxcContextMetaName != null)
         {
-            page?.Log($"2.2: Context-Meta");
+            page.Log($"2.2: Context-Meta");
             await sxcInterop.IncludeMeta("", "name", viewResults.SxcContextMetaName, viewResults.SxcContextMetaContents);
         }
 
@@ -180,14 +176,14 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
         if (viewResults.SxcScripts != null)
             foreach (var url in viewResults.SxcScripts.DistinctBy(url => url))
             {
-                page?.Log($"2.3: IncludeScript:{url}");
+                page.Log($"2.3: IncludeScript:{url}");
                 await sxcInterop.IncludeScript("", url, "", "", "", "head");
             }
 
         if (viewResults.SxcStyles != null)
             foreach (var url in viewResults.SxcStyles.DistinctBy(url => url))
             {
-                page?.Log($"2.4: IncludeCss:{url}");
+                page.Log($"2.4: IncludeCss:{url}");
                 await sxcInterop.IncludeLink("", "stylesheet", url, "text/css", "", "", "");
             }
 
@@ -197,7 +193,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
 
         if (viewResults.TemplateResources != null)
         {
-            page?.Log($"2.5: AttachScriptsAndStylesForInteractiveRendering");
+            page.Log($"2.5: AttachScriptsAndStylesForInteractiveRendering");
             // External resources = independent files (so not inline JS in the template)
             var externalResources = viewResults.TemplateResources.Where(r => r.IsExternal).ToArray();
 
@@ -221,7 +217,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
                 .ToArray();
 
             // Log CSS and then add to page
-            page?.Log($"{logPrefix}CSS: {css.Length}", css);
+            page.Log($"{logPrefix}CSS: {css.Length}", css);
             if (css.Any())
                 await sxcInterop.IncludeLinks(css);
 
@@ -245,7 +241,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
                 .ToArray();
 
             // Log scripts and then add to page
-            page?.Log($"{logPrefix}Scripts: {scripts.Length}", scripts);
+            page.Log($"{logPrefix}Scripts: {scripts.Length}", scripts);
             if (scripts.Any())
                 await sxcInterop.IncludeScriptsWithAttributes(scripts);
 
@@ -254,7 +250,7 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
                 .DistinctBy(r => r.Content)
                 .ToArray();
             // Log inline
-            page?.Log($"{logPrefix}Inline: {inlineResources.Length}", inlineResources);
+            page.Log($"{logPrefix}Inline: {inlineResources.Length}", inlineResources);
             foreach (var inline in inlineResources)
                 await sxcInterop.IncludeScript(string.IsNullOrWhiteSpace(inline.UniqueId) ? "" : inline.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
                     "",
@@ -277,22 +273,22 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
     /// <param name="page"></param>
     public string ProcessPageChanges(OqtViewResultsDto viewResults, SiteState siteState, ModuleProBase page)
     {
-        page?.Log($"1.3: ProcessPageChanges");
+        page.Log($"1.3: ProcessPageChanges");
 
-        if (viewResults?.PageProperties?.Any() ?? false)
+        if (viewResults.PageProperties?.Any() ?? false)
         {
-            page?.Log($"1.3.2: UpdatePageProperties title, keywords, description");
+            page.Log($"1.3.2: UpdatePageProperties title, keywords, description");
             UpdatePageProperties(siteState, viewResults, page);
         }
 
-        if (viewResults?.HeadChanges?.Any() ?? false)
+        if (viewResults.HeadChanges?.Any() ?? false)
         {
             page?.Log($"1.3.3: AddHeadChanges:{viewResults.HeadChanges.Count()}");
             siteState.Properties.HeadContent = HtmlHelper.AddHeadChanges(siteState.Properties.HeadContent, viewResults.HeadChanges);
         }
 
         // Add Context-Meta first, because it should be available when $2sxc loads
-        if (viewResults?.SxcContextMetaName != null)
+        if (viewResults.SxcContextMetaName != null)
         {
             page?.Log($"1.3.4: Context-Meta");
             siteState.Properties.HeadContent = HtmlHelper.AddOrUpdateMetaTagContent(siteState.Properties.HeadContent, viewResults.SxcContextMetaName, viewResults.SxcContextMetaContents, false);
@@ -308,12 +304,15 @@ public class OqtPageChangeService(IOqtTurnOnService turnOnService, CacheBustingS
         //    }
 
         page?.Log($"1.3.1: module html content set on page");
-        return viewResults?.FinalHtml;
+        return viewResults.FinalHtml;
     }
 
     private void UpdatePageProperties(SiteState siteState, OqtViewResultsDto viewResults, ModuleProBase page)
     {
         var logPrefix = $"{nameof(UpdatePageProperties)}(...) - ";
+
+        if (viewResults.PageProperties == null)
+            return;
 
         // Go through Page Properties
         foreach (var p in viewResults.PageProperties)
