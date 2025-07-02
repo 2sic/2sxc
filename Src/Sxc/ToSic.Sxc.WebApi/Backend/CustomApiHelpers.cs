@@ -3,7 +3,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
-using ToSic.Lib.Coding;
 
 namespace ToSic.Sxc.Backend;
 

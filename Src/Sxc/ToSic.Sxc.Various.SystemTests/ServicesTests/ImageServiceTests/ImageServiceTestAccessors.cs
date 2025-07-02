@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.Coding;
-using ToSic.Sxc.Images;
+﻿using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Services;
 

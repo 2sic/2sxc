@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.Coding;
-using ToSic.Sxc.Services;
+﻿using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.LinksAndImages.LinkHelperTests;
 

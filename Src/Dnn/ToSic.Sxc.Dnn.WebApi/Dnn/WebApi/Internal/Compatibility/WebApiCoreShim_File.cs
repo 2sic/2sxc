@@ -3,7 +3,6 @@ using System.Text;
 using System.Web;
 using System.Xml;
 using ToSic.Eav.WebApi.Sys;
-using ToSic.Lib.Coding;
 using ToSic.Sxc.Backend;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;

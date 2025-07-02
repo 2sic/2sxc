@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Services;
-
-namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
+﻿namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
 
 /// <summary>
 /// This is the helper class to compose other WebApi-classes of modern custom API Controllers. <br/>
