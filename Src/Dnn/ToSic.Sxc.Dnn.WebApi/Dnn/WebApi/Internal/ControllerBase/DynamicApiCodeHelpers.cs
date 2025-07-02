@@ -22,11 +22,11 @@ internal class DynamicApiCodeHelpers: CodeHelper
     {
         _owner = owner;
         this.LinkLog((owner as IHasLog)?.Log);
-        SysHlp = sysHlp;
+        _sysHlp = sysHlp;
     }
 
     private readonly DnnApiController _owner;
-    private readonly DnnWebApiHelper SysHlp;
+    private readonly DnnWebApiHelper _sysHlp;
 
     #region Init
 
@@ -40,8 +40,8 @@ internal class DynamicApiCodeHelpers: CodeHelper
         if (_blockContextInitialized)
             return;
         _blockContextInitialized = true;
-        SharedCurrentContextService = SysHlp.GetService<ISxcCurrentContextService>();
-        SharedCurrentContextService.AttachBlock(SysHlp.GetBlockAndContext(request));
+        SharedCurrentContextService = _sysHlp.GetService<ISxcCurrentContextService>();
+        SharedCurrentContextService.AttachBlock(_sysHlp.GetBlockAndContext(request));
     }
 
     private bool _blockContextInitialized;
@@ -52,21 +52,21 @@ internal class DynamicApiCodeHelpers: CodeHelper
         var request = controllerContext.Request;
         InitializeBlockContext(request);
 
-        // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
-        var block = SysHlp.GetBlockAndContext(request);
+        // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise, it's null
+        var block = _sysHlp.GetBlockAndContext(request);
         Log.A($"HasBlock: {block != null}");
 
-        var services = SysHlp.GetService<ApiControllerMyServices>().ConnectServices(Log);
+        var services = _sysHlp.GetService<ApiControllerMyServices>().ConnectServices(Log);
         var codeRoot = services.ExecutionContextFactory
             .New(_owner, block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel10);
 
-        SysHlp.ConnectToRoot(codeRoot);
+        _sysHlp.ConnectToRoot(codeRoot);
 
         AdamCode = codeRoot.GetService<AdamCode>();
 
         // In case SxcBlock was null, there is no instance, but we may still need the app
         var app = codeRoot.GetApp();
-        if (app == null)
+        if (app == null! /* Special: there are cases where it's null, even though the API doesn't show it */)
         {
             Log.A("DynCode.App is null");
             app = GetAppOrNullFromUrlParams(services, request);
@@ -85,7 +85,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
 
         // 16.02 - try to log more details about the current API call
         var currentPath = reqProperties.TryGetTyped(SourceCodeConstants.SharedCodeRootFullPathKeyInCache, out string p2) ? p2.AfterLast("/") : null;
-        SysHlp.WebApiLogging?.AddLogSpecs(block, app, currentPath, SysHlp.GetService<CodeInfosInScope>());
+        _sysHlp.WebApiLogging?.AddLogSpecs(block, app, currentPath, _sysHlp.GetService<CodeInfosInScope>());
 
 
         return (codeRoot, path);

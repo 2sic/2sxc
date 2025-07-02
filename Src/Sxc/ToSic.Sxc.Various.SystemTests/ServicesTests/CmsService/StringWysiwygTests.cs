@@ -1,30 +1,21 @@
 ﻿using ToSic.Eav.Data.Build;
 using ToSic.Sxc.Data.Sys.Factory;
-using ToSic.Sxc.Services;
+using ToSic.Sxc.Mocks;
 using ToSic.Sxc.Services.CmsService.Internal;
 using Xunit.Abstractions;
-using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
 
 namespace ToSic.Sxc.ServicesTests.CmsService;
 
 public class StringWysiwygTests(
-    ExecutionContext executionContext,
+    ExecutionContextMock executionContext,
     ContentTypeFactory contentTypeFactory,
     DataForCmsServiceTests dataForCmsTests,
     ICodeDataFactory cdf,
-    IImageService imageSvc, // needed to inject into CodeApiSvc
     ITestOutputHelper output
     )
+    // Needs fixture to load the Primary App
+    : IClassFixture<DoFixtureStartup<ScenarioBasic>>
 {
-    /// <summary>
-    /// Swap the image service to one which doesn't know about the app (so it won't get settings etc.)
-    /// </summary>
-    private void InitCodeApiSvc() => executionContext.ReplaceServiceInCache(imageSvc);
-
-    /// <summary>
-    /// Must get service through codeApiSvc, because the class is internal & it needs to have a parent CodeApiService for sub-dependencies
-    /// </summary>
-    private CmsServiceStringWysiwyg GetStringWysiwygParser() => executionContext.GetService<CmsServiceStringWysiwyg>();
 
     // TODO: needs a lot more tests, such as with / without paths, etc.
 
@@ -36,8 +27,8 @@ public class StringWysiwygTests(
     [Theory, MemberData(nameof(DataForImgConversionTest.ImageConversions), MemberType = typeof(DataForImgConversionTest))]
     public void ImageTagOnlyHasSameResultAsHtmlImgToPictureHelper(ImgConversionTest conversion)
     {
-        InitCodeApiSvc();
-        var parser = GetStringWysiwygParser();
+        // Must get service through codeApiSvc, because the class is internal & it needs to have a parent CodeApiService for sub-dependencies
+        var parser = executionContext.GetService<CmsServiceStringWysiwyg>();
 
         var ctWithHtmlField = contentTypeFactory.Create(typeof(MockHtmlContentType));
 
@@ -46,10 +37,16 @@ public class StringWysiwygTests(
 
         var data = dataForCmsTests.TstDataEntity("hello", conversion.Original, ctWithHtmlField);
         var typed = cdf.AsItem(data, new() { ItemIsStrict = true });
-        var field = typed.Field(nameof(MockHtmlContentType.SomeHtml));
+        var field = typed.Field(nameof(MockHtmlContentType.SomeHtml))!;
 
         var folder = DataForCmsServiceTests.GenerateFolderWithTestPng();
-        parser.Init(field, ctWithHtmlField, attribute, folder, false, null);
+
+        // These are necessary, as otherwise the test will automatically look up the "Content" settings for image resizing
+        // which would result in a different result.
+        // TODO: ALSO create a test which uses null, and expects the proper resized with default settings
+        var fakeEmptySettings = new object();
+
+        parser.Init(field, ctWithHtmlField, attribute, folder, false, fakeEmptySettings);
 
         var result = parser.HtmlForStringAndWysiwyg(conversion.Original);
 

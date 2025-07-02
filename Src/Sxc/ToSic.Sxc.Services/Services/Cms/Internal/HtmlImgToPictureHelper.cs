@@ -14,7 +14,7 @@ internal class HtmlImgToPictureHelper(CmsServiceImageExtractor imageExtractor)
         ??= ExCtx.GetService<IImageService>(reuse: true);
 
 
-    public IResponsivePicture ConvertImgToPicture(string originalImgTag, IFolder folder, object defaultImageSettings)
+    public IResponsivePicture ConvertImgToPicture(string originalImgTag, IFolder folder, object? defaultImageSettings)
     {
         var imgProps = imageExtractor.ExtractImageProperties(originalImgTag, folder);
 

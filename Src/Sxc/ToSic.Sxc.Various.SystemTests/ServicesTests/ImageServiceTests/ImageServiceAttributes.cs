@@ -4,6 +4,8 @@ namespace ToSic.Sxc.ServicesTests.ImageServiceTests;
 
 [Startup(typeof(StartupSxcCoreOnly))]
 public class ImageServiceAttributes(IImageService imgSvc)
+    // Needs fixture to load the Primary App
+    : IClassFixture<DoFixtureStartup<ScenarioBasic>>
 {
     /// <summary>
     /// 

@@ -36,7 +36,7 @@ internal class CmsContext(
     internal IBlock BlockInternal => _realBlock.Get(() => ExCtx.GetState<IBlock>())!;
     private readonly GetOnce<IBlock?> _realBlock = new();
 
-    internal IContextOfBlock? CtxBlockOrNull => _ctxBlock.Get(() => BlockInternal.Context);
+    internal IContextOfBlock? CtxBlockOrNull => _ctxBlock.Get(() => BlockInternal?.Context);
     private readonly GetOnce<IContextOfBlock?> _ctxBlock = new();
 
     internal IContextOfSite CtxSite => CtxBlockOrNull ?? siteCtxFallback;
