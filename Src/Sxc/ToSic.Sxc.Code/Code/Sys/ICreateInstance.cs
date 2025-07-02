@@ -20,7 +20,7 @@ public interface ICreateInstance: IGetCodePath
     /// <param name="throwOnError">throw errors if compiling fails, recommended</param>
     /// <returns>An object of the class in the file</returns>
     /// <remarks>
-    /// Note that the C# code which we are creating inherits from a standard base class such as <see cref="Code12"/> or <see cref="DynamicCode"/>
+    /// Note that the C# code which we are creating inherits from a standard base class such as `Code12` or `DynamicCode`
     /// then it will automatically be initialized to support App, AsDynamic etc.
     /// </remarks>
     dynamic? CreateInstance(string virtualPath,
