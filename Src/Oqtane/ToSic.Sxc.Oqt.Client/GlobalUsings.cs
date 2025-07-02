@@ -1,3 +1,3 @@
 // Global using directives
 
-global using ToSic.Lib.Documentation;
+global using Oqtane.Documentation;
