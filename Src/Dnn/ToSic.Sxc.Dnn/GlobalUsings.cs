@@ -1,6 +1,6 @@
 // Global using directives
 
 global using System;
-global using ToSic.Lib.DI;
-global using ToSic.Lib.Helpers;
-global using ToSic.Lib.Logging;
+global using ToSic.Sys.DI;
+global using ToSic.Sys.Helpers;
+global using ToSic.Sys.Logging;

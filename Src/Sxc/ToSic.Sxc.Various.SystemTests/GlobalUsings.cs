@@ -3,10 +3,10 @@
 global using ToSic.Eav.Testing;
 global using ToSic.Eav.Testing.Scenarios;
 global using ToSic.Lib;
-global using ToSic.Lib.Coding;
-global using ToSic.Lib.DI;
-global using ToSic.Lib.Logging;
-global using ToSic.Lib.Services;
-global using ToSic.Lib.Wrappers;
+global using ToSic.Sys.Coding;
+global using ToSic.Sys.DI;
+global using ToSic.Sys.Logging;
+global using ToSic.Sys.Services;
+global using ToSic.Sys.Wrappers;
 global using Xunit.DependencyInjection;
 global using static Xunit.Assert;

@@ -11,7 +11,8 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Sys.Integration.Installation;
 using ToSic.Sys.Capabilities.Features;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
-using ServiceBase = ToSic.Lib.Services.ServiceBase;
+using ServiceBase = ToSic.Sys.Services.ServiceBase;
+using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;
 #else
@@ -30,7 +31,7 @@ public class InstallControllerReal(
     LazySvc<IFeaturesService> featureService,
     LazySvc<AppsBackend> appsBackend,
     LazySvc<AppDataStackService> appSettingsStack)
-    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
+    : Services_ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
         connect:
         [
             context, envInstallerLazy, platformAppInstaller, impFromRemoteLazy, responseMaker, featureService,

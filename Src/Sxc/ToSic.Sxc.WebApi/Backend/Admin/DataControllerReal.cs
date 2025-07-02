@@ -7,7 +7,8 @@ using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Eav.WebApi.Sys.Security;
 using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sys.Users;
-using ServiceBase = ToSic.Lib.Services.ServiceBase;
+using ServiceBase = ToSic.Sys.Services.ServiceBase;
+using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;
 #else
@@ -25,7 +26,7 @@ public class DataControllerReal(
     LazySvc<ContentExportApi> contentExportLazy,
     Generator<ImportContent> importContent,
     LazySvc<IUser> userLazy)
-    : ServiceBase("Api.DtaCtlRl",
+    : Services_ServiceBase("Api.DtaCtlRl",
         connect: [site, appPathSvc, appWorkCtxSvc, context, contentExportLazy, importContent, userLazy])/*, IAdminDataController*/
 {
     public const string LogSuffix = "DataCtrl";

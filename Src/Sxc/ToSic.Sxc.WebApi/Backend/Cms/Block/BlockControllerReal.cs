@@ -2,7 +2,8 @@
 using ToSic.Sxc.Apps.Sys.Ui;
 using ToSic.Sxc.Backend.ContentBlocks;
 using ToSic.Sxc.Backend.InPage;
-using ServiceBase = ToSic.Lib.Services.ServiceBase;
+using ServiceBase = ToSic.Sys.Services.ServiceBase;
+using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 
 namespace ToSic.Sxc.Backend.Cms;
 
@@ -12,7 +13,7 @@ public class BlockControllerReal(
     LazySvc<ContentBlockBackend> blockBackend,
     LazySvc<AppViewPickerBackend> viewsBackend,
     LazySvc<WorkApps> workApps)
-    : ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [context, blockBackend, viewsBackend, workApps]),
+    : Services_ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl", connect: [context, blockBackend, viewsBackend, workApps]),
         IBlockController
 {
     public const string LogSuffix = "Block";

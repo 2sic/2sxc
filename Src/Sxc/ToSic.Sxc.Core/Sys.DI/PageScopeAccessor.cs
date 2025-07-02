@@ -1,5 +1,5 @@
 ﻿// ReSharper disable once CheckNamespace
-namespace ToSic.Lib.DI;
+namespace ToSic.Sys.DI;
 
 /// <summary>
 /// Special helper to get a ServiceProvider of the page scope, in scenarios where each module has an own scope. 

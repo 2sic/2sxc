@@ -6,7 +6,8 @@ using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sys.Users;
-using ServiceBase = ToSic.Lib.Services.ServiceBase;
+using ServiceBase = ToSic.Sys.Services.ServiceBase;
+using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;
@@ -25,7 +26,7 @@ public class TypeControllerReal(
     LazySvc<IUser> userLazy,
     IAppReaderFactory appReaders,
     Generator<ImportContent> importContent)
-    : ServiceBase("Api.TypesRl",
+    : Services_ServiceBase("Api.TypesRl",
         connect: [appReaders, context, ctApiLazy, contentExportLazy, userLazy, typeMod, importContent]), ITypeController
 {
     public const string LogSuffix = "Types";
