@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Caching;
-using ToSic.Lib.Memory;
 using ToSic.Sys.Caching;
+using ToSic.Sys.Memory;
 
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
 

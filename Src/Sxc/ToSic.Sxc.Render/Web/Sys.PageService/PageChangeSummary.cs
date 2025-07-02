@@ -9,7 +9,6 @@ using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Sys.PageServiceShared;
 using ToSic.Sys.Requirements;
 using static ToSic.Sxc.Render.Sys.Output.ClientAssetConstants;
-using ServiceBase = ToSic.Sys.Services.ServiceBase;
 using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 
 namespace ToSic.Sxc.Web.Sys.PageService;

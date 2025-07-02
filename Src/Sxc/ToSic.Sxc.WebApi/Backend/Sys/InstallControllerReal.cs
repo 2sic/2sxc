@@ -11,7 +11,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Sys.Integration.Installation;
 using ToSic.Sys.Capabilities.Features;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
-using ServiceBase = ToSic.Sys.Services.ServiceBase;
 using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;

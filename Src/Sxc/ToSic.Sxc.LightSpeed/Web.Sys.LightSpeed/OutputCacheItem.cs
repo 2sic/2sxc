@@ -1,6 +1,6 @@
-﻿using ToSic.Lib.Memory;
-using ToSic.Sxc.Render.Sys;
+﻿using ToSic.Sxc.Render.Sys;
 using ToSic.Sys.Caching;
+using ToSic.Sys.Memory;
 
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
@@ -9,13 +9,13 @@ public class OutputCacheItem(IRenderResult data): ICanEstimateSize, ITimestamped
 {
     public IRenderResult Data => data;
 
-#if NETFRAMEWORK
-    /// <summary>
-    /// This is only used in Dnn - might be solved with generics some time, but ATM this is just simpler
-    /// </summary>
-    public bool EnforcePre1025 = true;
+//#if NETFRAMEWORK
+//    /// <summary>
+//    /// This is only used in Dnn - might be solved with generics some time, but ATM this is just simpler
+//    /// </summary>
+//    public bool EnforcePre1025 = true;
 
-#endif
+//#endif
     public SizeEstimate EstimateSize(ILog? log = default) 
         => (data as ICanEstimateSize)?.EstimateSize(log)
            ?? new SizeEstimate(0, 0, Unknown: true);
