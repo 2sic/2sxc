@@ -4,8 +4,6 @@ using ToSic.Eav.DataSource.Internal.Catalog;
 using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.Services;
-using ToSic.Lib.DI;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;

@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.DI;
-using ToSic.Sxc.Oqt.Server.Plumbing;
+﻿using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks;

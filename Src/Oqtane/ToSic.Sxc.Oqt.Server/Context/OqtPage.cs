@@ -1,8 +1,6 @@
 ﻿using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
-using ToSic.Lib.DI;
-using ToSic.Lib.Wrappers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Internal;
 using ToSic.Sxc.Oqt.Server.Plumbing;

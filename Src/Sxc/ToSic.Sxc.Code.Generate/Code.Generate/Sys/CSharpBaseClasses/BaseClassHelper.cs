@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Logging;
-
-namespace ToSic.Sxc.Code.Generate.Sys.CSharpBaseClasses;
+﻿namespace ToSic.Sxc.Code.Generate.Sys.CSharpBaseClasses;
 
 internal class BaseClassHelper
 {

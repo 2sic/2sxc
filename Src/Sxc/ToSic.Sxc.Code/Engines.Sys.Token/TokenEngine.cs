@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.LookUp.Sys;
 using ToSic.Eav.LookUp.Sys.Engines;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;

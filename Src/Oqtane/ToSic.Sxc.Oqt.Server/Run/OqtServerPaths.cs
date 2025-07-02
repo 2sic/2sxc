@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Oqtane.Repository;
 using ToSic.Eav.Environment.Sys.ServerPaths;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sys.Utils;
 

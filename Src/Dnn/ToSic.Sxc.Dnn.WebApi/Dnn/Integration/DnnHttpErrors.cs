@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using ToSic.Lib.Exceptions;
+using ToSic.Eav.WebApi.Sys.Helpers.Http;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 
 namespace ToSic.Sxc.Dnn.Integration;

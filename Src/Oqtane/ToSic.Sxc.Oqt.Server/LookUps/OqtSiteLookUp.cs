@@ -1,7 +1,6 @@
 ﻿using Oqtane.Repository;
 using Oqtane.Shared;
 using ToSic.Eav.LookUp.Sources;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using static ToSic.Sxc.LookUp.Sys.LookUpConstants;
 

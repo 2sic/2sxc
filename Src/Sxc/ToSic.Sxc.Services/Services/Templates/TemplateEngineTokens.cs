@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.LookUp;
 using ToSic.Eav.LookUp.Sys.Engines;
-using ToSic.Lib.Wrappers;
 using ToSic.Sxc.Services.Template;
 
 namespace ToSic.Sxc.Services.Templates;

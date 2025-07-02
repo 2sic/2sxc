@@ -3,7 +3,6 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Eav.WebApi.Sys.Helpers.Json;
-using ToSic.Lib.Logging;
 
 // Special case: this should enforce json formatting
 // It's only needed in .net4x where the default is xml

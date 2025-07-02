@@ -1,7 +1,6 @@
 ﻿using System.Web;
 using ToSic.Eav.WebApi.Sys.Context;
 using ToSic.Eav.WebApi.Sys.Dto;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.Views;
 using ToSic.Sxc.Dnn.Backend.Context;

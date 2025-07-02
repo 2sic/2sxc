@@ -1,7 +1,5 @@
 ﻿using DotNetNuke.Entities.Modules;
 using System.Web.UI;
-using ToSic.Lib.DI;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Dnn.Features;

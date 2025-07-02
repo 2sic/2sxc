@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Context;
-using ToSic.Lib.Logging;
+﻿using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Context;
 
 namespace IntegrationSamples.SxcEdit01.Context
 {

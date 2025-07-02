@@ -1,6 +1,5 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Eav.Apps.Sys;
-using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Backend.Adam;
 using ToSic.Sxc.Code.Sys;

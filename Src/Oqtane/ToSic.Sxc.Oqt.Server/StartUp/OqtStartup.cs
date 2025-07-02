@@ -7,7 +7,6 @@ using Oqtane.Infrastructure;
 using ToSic.Eav;
 using ToSic.Eav.Startup;
 using ToSic.Eav.Sys;
-using ToSic.Lib.DI;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Backend;
 using ToSic.Sxc.Code.Sys.HotBuild;

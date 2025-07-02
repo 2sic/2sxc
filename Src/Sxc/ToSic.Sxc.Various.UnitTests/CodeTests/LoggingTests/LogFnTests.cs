@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Logging;
-
-namespace ToSic.Eav.Core.Tests.LogTests;
+﻿namespace ToSic.Eav.Core.Tests.LogTests;
 
 
 public class LogFnTests : LogTestBase

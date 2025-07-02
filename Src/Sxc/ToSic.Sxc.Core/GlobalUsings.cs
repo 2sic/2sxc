@@ -3,6 +3,8 @@
 global using System;
 global using System.Collections.Generic;
 global using ToSic.Lib.Coding;
+global using ToSic.Lib.DI;
 global using ToSic.Lib.Documentation;
 global using ToSic.Lib.Logging;
+global using ToSic.Lib.Services;
 global using static ToSic.Sxc.Sys.SxcLogging;

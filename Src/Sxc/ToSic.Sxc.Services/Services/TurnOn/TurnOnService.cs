@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.DI;
-using ToSic.Lib.Services;
-using ToSic.Razor.Blade;
+﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Services.Internal;
 using Attribute = ToSic.Razor.Markup.Attribute;
 

@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneMapper;
-using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Render.Sys.JsContext;
 

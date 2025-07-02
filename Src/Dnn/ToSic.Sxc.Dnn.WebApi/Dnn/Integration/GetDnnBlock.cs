@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Blocks.Sys;
+﻿using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using static ToSic.Sxc.Backend.SxcWebApiConstants;
 

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Environment.Sys.ServerPaths;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.Integration;
 using ToSic.Sxc.Sys.Integration.Installation;

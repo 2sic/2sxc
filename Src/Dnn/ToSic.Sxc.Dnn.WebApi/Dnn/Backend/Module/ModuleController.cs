@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Logging;
-
-namespace ToSic.Sxc.Dnn.Backend.Module;
+﻿namespace ToSic.Sxc.Dnn.Backend.Module;
 
 // support all modules now... 
 [SupportedModules(DnnSupportedModuleNames)]

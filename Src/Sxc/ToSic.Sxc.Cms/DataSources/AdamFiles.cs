@@ -2,7 +2,6 @@
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Lib.Helpers;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform

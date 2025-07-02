@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Sys.Html;
 

@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.DI;
-using ToSic.Sxc.Render.Sys;
+﻿using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.Output;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Services.Internal;

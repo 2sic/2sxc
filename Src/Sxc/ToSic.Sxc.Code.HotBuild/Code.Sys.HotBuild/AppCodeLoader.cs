@@ -1,8 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Sys;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Caching;

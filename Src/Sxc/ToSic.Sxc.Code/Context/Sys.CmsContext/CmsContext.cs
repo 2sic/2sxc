@@ -1,7 +1,5 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Lib.DI;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Context.Sys.Module;

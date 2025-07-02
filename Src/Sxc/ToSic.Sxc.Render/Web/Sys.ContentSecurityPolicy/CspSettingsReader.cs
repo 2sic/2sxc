@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Helpers;
-using ToSic.Lib.Services;
-using ToSic.Sys.Users;
+﻿using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 

@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Metadata;
 using ToSic.Eav.Metadata.Sys;
-using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Context.Internal;
 

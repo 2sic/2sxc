@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Services;
-
-namespace ToSic.Sxc.Blocks.Sys.BlockEditor;
+﻿namespace ToSic.Sxc.Blocks.Sys.BlockEditor;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockEditorSelector(LazySvc<BlockEditorForModule> blkEdtForMod, LazySvc<BlockEditorForEntity> blkEdtForEnt)

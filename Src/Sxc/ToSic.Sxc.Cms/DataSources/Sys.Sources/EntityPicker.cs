@@ -7,8 +7,6 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Internal;
 using ToSic.Eav.DataSource.Streams.Internal;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Lib.DI;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Users;

@@ -1,7 +1,5 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.WebApi.Sys.Helpers.Http;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Sys.ExecutionContext;
 

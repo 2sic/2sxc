@@ -1,7 +1,5 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Eav.Metadata;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Sys.ExecutionContext;

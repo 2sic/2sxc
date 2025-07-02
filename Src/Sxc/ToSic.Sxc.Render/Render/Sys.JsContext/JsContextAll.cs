@@ -1,8 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Data.Sys.Ancestors;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.Configuration;

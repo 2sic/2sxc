@@ -4,7 +4,6 @@ using System.Web.Hosting;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Sys.ApiExplorer;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Dnn.Compile;

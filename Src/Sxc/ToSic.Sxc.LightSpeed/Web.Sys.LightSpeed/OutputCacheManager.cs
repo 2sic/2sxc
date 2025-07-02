@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.DI;
-using ToSic.Lib.Services;
-using ToSic.Sys.Caching;
+﻿using ToSic.Sys.Caching;
 using ToSic.Sys.Capabilities.Features;
 
 namespace ToSic.Sxc.Web.Sys.LightSpeed;

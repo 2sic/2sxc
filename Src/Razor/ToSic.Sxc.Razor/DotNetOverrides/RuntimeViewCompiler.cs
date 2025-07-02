@@ -23,7 +23,6 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 using ToSic.Eav.Sys;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Context.Sys;

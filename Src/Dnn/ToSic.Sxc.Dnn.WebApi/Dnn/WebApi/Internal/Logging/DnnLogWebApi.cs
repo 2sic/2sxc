@@ -1,5 +1,4 @@
 ﻿using System.Web.Http.Filters;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.Dnn.WebApi.Internal;

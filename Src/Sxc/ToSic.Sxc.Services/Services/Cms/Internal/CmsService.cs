@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Data.Sys.ContentTypes;
-using ToSic.Lib.DI;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;

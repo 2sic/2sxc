@@ -1,7 +1,6 @@
 ﻿using Oqtane.Infrastructure;
 using Oqtane.Shared;
 using ToSic.Eav.DataSources.Sys;
-using ToSic.Lib.DI;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Oqt.Server.ToSic.Sxc.DataSources;

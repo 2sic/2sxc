@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.DI;
-using ToSic.Razor.Blade;
+﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images.Sys;

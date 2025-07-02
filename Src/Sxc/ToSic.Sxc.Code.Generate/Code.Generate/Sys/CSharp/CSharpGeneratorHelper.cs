@@ -1,6 +1,4 @@
 ﻿using System.Text;
-using ToSic.Lib.Logging;
-using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Code.Generate.Sys;
 

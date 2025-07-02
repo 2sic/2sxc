@@ -1,8 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
-using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.Backend.Sys;
 
 namespace ToSic.Sxc.Dnn.WebApi;

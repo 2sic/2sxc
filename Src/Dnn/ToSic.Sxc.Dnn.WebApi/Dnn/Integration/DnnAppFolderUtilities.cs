@@ -2,8 +2,6 @@
 using System.Web.Http.Routing;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Sys.Routing;
-using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.WebApi.Sys;

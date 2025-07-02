@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Services;
 using static ToSic.Sxc.Services.SecureDataService;
 #pragma warning disable xUnit1026

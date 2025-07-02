@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.Logging;
-using ToSic.Sxc.Code;
+﻿using ToSic.Sxc.Code;
 
 namespace ToSic.Eav.Core.Tests.LogTests;
 

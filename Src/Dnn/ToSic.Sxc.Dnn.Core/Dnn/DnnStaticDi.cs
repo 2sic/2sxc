@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Web;
-using ToSic.Lib.Helpers;
 
 namespace ToSic.Sxc.Dnn;
 

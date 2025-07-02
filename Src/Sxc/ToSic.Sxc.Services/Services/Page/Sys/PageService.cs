@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.DI;
-using ToSic.Razor.Blade;
+﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;

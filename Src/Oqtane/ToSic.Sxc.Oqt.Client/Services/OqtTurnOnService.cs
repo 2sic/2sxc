@@ -1,4 +1,4 @@
-﻿using ToSic.Lib.Coding;
+﻿using ToSic.Oqt.Coding;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 
 namespace ToSic.Sxc.Oqt.Client.Services;

@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using ToSic.Lib.DI;
+using ToSic.Oqt.Coding;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Services;

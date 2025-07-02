@@ -1,6 +1,4 @@
 ﻿using System.Net.Mail;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Services.Mail.Sys;

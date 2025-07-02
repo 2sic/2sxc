@@ -4,7 +4,6 @@ using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context;

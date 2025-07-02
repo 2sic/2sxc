@@ -1,7 +1,5 @@
 ﻿using Custom.Razor.Sys;
 using Microsoft.AspNetCore.Mvc.Razor;
-using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Engines;

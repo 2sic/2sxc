@@ -5,7 +5,6 @@ using Oqtane.Repository;
 using Oqtane.Security;
 using Oqtane.Shared;
 using System.Globalization;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Oqt.Server.Blocks;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Plumbing;

@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Services;
-
-namespace ToSic.Sxc.Edit.Toolbar;
+﻿namespace ToSic.Sxc.Edit.Toolbar;
 
 internal abstract class ItemToolbarBase(string logName) : ServiceBase($"{SxcLogName}.{logName}")
 {

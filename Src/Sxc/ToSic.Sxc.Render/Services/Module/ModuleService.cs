@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.Services;
-using ToSic.Razor.Blade;
+﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Services.OutputCache;
 
 namespace ToSic.Sxc.Services.Internal;
