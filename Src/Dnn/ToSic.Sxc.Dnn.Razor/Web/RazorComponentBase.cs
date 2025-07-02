@@ -2,8 +2,8 @@
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Sys.ExecutionContext;
-using IHasLog = ToSic.Lib.Logging.IHasLog;
-using ILog = ToSic.Lib.Logging.ILog;
+using IHasLog = ToSic.Sys.Logging.IHasLog;
+using ILog = ToSic.Sys.Logging.ILog;
 
 namespace ToSic.Sxc.Web;
 

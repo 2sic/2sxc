@@ -46,7 +46,7 @@
 @{
     // Create a log-object (optional) which is used to track what the code does
     // could also just be null
-    var log = new LogAdapter(new ToSic.Lib.Logging.Log("My.Log"));
+    var log = new LogAdapter(new Log("My.Log"));
 
     // Get the App execution context since our code here doesn't have it
     var dynCodeSvc = ServiceProvider.Build<IDynamicCodeService>();
