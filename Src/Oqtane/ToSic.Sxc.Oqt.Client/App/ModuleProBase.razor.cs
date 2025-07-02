@@ -5,7 +5,6 @@ using Oqtane.Modules;
 using Oqtane.Security;
 using Oqtane.Shared;
 using System.Collections.Concurrent;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Oqt.Client;
 using ToSic.Sxc.Oqt.Shared.Helpers;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
