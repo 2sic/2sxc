@@ -1,12 +1,14 @@
-﻿using ToSic.Sxc.Services;
+﻿using ToSic.Sxc.Mocks;
+using ToSic.Sxc.Services;
 using Xunit.Abstractions;
 
 namespace ToSic.Sxc.ServicesTests.ImageServiceTests;
 
 //// Start the test with a platform-info that has WebP support
 [Startup(typeof(StartupSxcWithDbPatronPerfectionist))]
-public class ImageServiceTagsImgPatronPerfectionist(IImageService imgSvc, ITestOutputHelper output)
-    : ImageServiceTagsImgBase(imgSvc, output), IClassFixture<DoFixtureStartup<ScenarioFullPatronsWithDb>>
+public class ImageServiceTagsImgPatronPerfectionist(ExecutionContextMock executionContext, ITestOutputHelper output)
+    : ImageServiceTagsImgBase(executionContext.GetService<IImageService>(), output),
+        IClassFixture<DoFixtureStartup<ScenarioFullPatronsWithDb>>
 {
     protected override bool TestModeImg => true;
 

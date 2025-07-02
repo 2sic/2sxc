@@ -1,12 +1,16 @@
-﻿using ToSic.Sxc.Services;
+﻿using ToSic.Sxc.Mocks;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.ServicesTests.ImageServiceTests;
 
-[Startup(typeof(StartupSxcCoreOnly))]
-public class ImageServiceAttributes(IImageService imgSvc)
+[Startup(typeof(StartupMockExecutionContext))]
+public class ImageServiceAttributes(ExecutionContextMock executionContext)
     // Needs fixture to load the Primary App
     : IClassFixture<DoFixtureStartup<ScenarioBasic>>
 {
+    //[field: AllowNull, MaybeNull]
+    private IImageService ImgSvc => field ??= executionContext.GetService<IImageService>(reuse: true);
+
     /// <summary>
     /// 
     /// </summary>
@@ -41,14 +45,14 @@ public class ImageServiceAttributes(IImageService imgSvc)
     {
         var recDic = new Dictionary<string, object> { { "class", test.OnRecipe } };
         var recipe = test.UseRecipe
-            ? imgSvc.Recipe(null, attributes: recDic)
+            ? ImgSvc.Recipe(null, attributes: recDic)
             : null;
         // Classic API
-        var pic = imgSvc.Picture("dummy.jpg", imgClass: test.OnCall, recipe: recipe);
+        var pic = ImgSvc.Picture("dummy.jpg", imgClass: test.OnCall, recipe: recipe);
         True(pic.Img.ToString().Contains(test.Expected), $"{test}: {pic.Img}");
 
         // New Tweak API
-        var picTweak = imgSvc.Picture("dummy.jpg", tweak: t => t.ImgClass(test.OnCall), recipe: recipe);
+        var picTweak = ImgSvc.Picture("dummy.jpg", tweak: t => t.ImgClass(test.OnCall), recipe: recipe);
         Equal(pic.Img.ToString(), picTweak.Img.ToString());//, $"Should be identical for tweak {test}");
     }
 
@@ -57,12 +61,12 @@ public class ImageServiceAttributes(IImageService imgSvc)
     [MemberData(nameof(TestDataPicClass))]
     public void TestClassPic(TestCase test)
     {
-        var pic = imgSvc.Picture("dummy.jpg", pictureClass: test.OnCall);
+        var pic = ImgSvc.Picture("dummy.jpg", pictureClass: test.OnCall);
         True(pic.ToString().Contains(test.Expected), $"{test}: {pic.Picture}");
         False(pic.Img.ToString().Contains(test.Expected), $"{test}: {pic.Img}");
 
         // New Tweak API
-        var picTweak = imgSvc.Picture("dummy.jpg", tweak: t => t.PictureClass(test.OnCall));
+        var picTweak = ImgSvc.Picture("dummy.jpg", tweak: t => t.PictureClass(test.OnCall));
         Equal(pic.ToString(), picTweak.ToString());//, $"Should be identical for tweak {test}");
     }
 
@@ -88,13 +92,13 @@ public class ImageServiceAttributes(IImageService imgSvc)
     {
         var callDic = new Dictionary<string, object> { { "style", test.OnCall} };
         var recipeDic = new Dictionary<string, object> { { "style", test.OnRecipe } };
-        var recipe = test.UseRecipe ? imgSvc.Recipe(null, attributes: recipeDic) : null;
-        var pic = imgSvc.Picture("dummy.jpg", imgAttributes: callDic, recipe: recipe);
+        var recipe = test.UseRecipe ? ImgSvc.Recipe(null, attributes: recipeDic) : null;
+        var pic = ImgSvc.Picture("dummy.jpg", imgAttributes: callDic, recipe: recipe);
         // True(pic.ToString().Contains(expected), name + ": " + pic);
         True(pic.Img.ToString().Contains(test.Expected), $"{test} (expected: {test.Expected}): {pic.Img}");
 
         // New Tweak API
-        var picTweak = imgSvc.Picture("dummy.jpg", tweak: t => t.ImgAttributes(callDic), recipe: recipe);
+        var picTweak = ImgSvc.Picture("dummy.jpg", tweak: t => t.ImgAttributes(callDic), recipe: recipe);
         Equal(pic.ToString(), picTweak.ToString());//, $"Should be identical for tweak {test}");
     }
 
@@ -106,12 +110,12 @@ public class ImageServiceAttributes(IImageService imgSvc)
         var callDic = new Dictionary<string, object> { { "style", test.OnCall } };
         //var recipeDic = new Dictionary<string, object> { { "style", test.OnRecipe } };
         //var recipe = test.UseRecipe ? imgSvc.Recipe(null, attributes: recipeDic) : null;
-        var pic = imgSvc.Picture("dummy.jpg", pictureAttributes: callDic);
+        var pic = ImgSvc.Picture("dummy.jpg", pictureAttributes: callDic);
         True(pic.ToString().Contains(test.Expected), $"{test} (expected '{test.Expected}'): {pic.Picture}");
         False(pic.Img.ToString().Contains(test.Expected), $"{test} (expected '{test.Expected}'): {pic.Img}");
 
         // New Tweak API
-        var picTweak = imgSvc.Picture("dummy.jpg", tweak: t => t.PictureAttributes(callDic));
+        var picTweak = ImgSvc.Picture("dummy.jpg", tweak: t => t.PictureAttributes(callDic));
         Equal(pic.ToString(), picTweak.ToString());//, $"Should be identical for tweak {test}");
     }
 
@@ -120,11 +124,11 @@ public class ImageServiceAttributes(IImageService imgSvc)
     private void ImageAttributes(object callDic)
     {
         const string expected = "style='some: 50px";
-        var pic = imgSvc.Picture("dummy.jpg", imgAttributes: callDic);
+        var pic = ImgSvc.Picture("dummy.jpg", imgAttributes: callDic);
         True(pic.Img.ToString().Contains(expected), $"expected: {expected}: {pic.Img}");
 
         // New Tweak API
-        var picTweak = imgSvc.Picture("dummy.jpg", tweak: t => t.ImgAttributes(callDic));
+        var picTweak = ImgSvc.Picture("dummy.jpg", tweak: t => t.ImgAttributes(callDic));
         Equal(pic.ToString(), picTweak.ToString());//, $"Should be identical for tweak {callDic}");
     }
 

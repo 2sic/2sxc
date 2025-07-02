@@ -1,12 +1,14 @@
-﻿using ToSic.Sxc.Services;
+﻿using ToSic.Sxc.Mocks;
+using ToSic.Sxc.Services;
 using Xunit.Abstractions;
 
 namespace ToSic.Sxc.ServicesTests.ImageServiceTests;
 
 // Start the test with a platform-info that has no patron
-[Startup(typeof(StartupSxcWithDbBasic))]
-public class ImageServiceTagsImgNoPatron(IImageService imgSvc, ITestOutputHelper output)
-    : ImageServiceTagsImgBase(imgSvc, output, new ScenarioBasic()), IClassFixture<DoFixtureStartup<ScenarioBasic>>
+[Startup(typeof(StartupMockExecutionContext))]
+public class ImageServiceTagsImgNoPatron(ExecutionContextMock executionContext, ITestOutputHelper output)
+    : ImageServiceTagsImgBase(executionContext.GetService<IImageService>(reuse: true), output, new ScenarioBasic()),
+        IClassFixture<DoFixtureStartup<ScenarioBasic>>
 {
     protected override bool TestModeImg => true;
 
