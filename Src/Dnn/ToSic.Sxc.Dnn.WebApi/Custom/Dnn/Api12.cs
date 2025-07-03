@@ -1,6 +1,7 @@
 ﻿using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
+using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Dnn;

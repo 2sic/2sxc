@@ -5,7 +5,7 @@ using System.Xml;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Backend;
 
-namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
+namespace ToSic.Sxc.Dnn.WebApi.Sys.Compatibility;
 
 partial class WebApiCoreShim
 {

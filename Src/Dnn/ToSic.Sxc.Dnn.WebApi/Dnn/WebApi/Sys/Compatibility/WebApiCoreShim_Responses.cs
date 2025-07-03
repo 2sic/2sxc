@@ -2,7 +2,7 @@
 
 // The commands here should help Dnn WebAPIs 
 
-namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
+namespace ToSic.Sxc.Dnn.WebApi.Sys.Compatibility;
 
 partial class WebApiCoreShim
 {

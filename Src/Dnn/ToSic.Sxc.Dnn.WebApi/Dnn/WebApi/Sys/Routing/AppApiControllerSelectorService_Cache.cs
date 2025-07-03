@@ -1,7 +1,7 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Sxc.Code.Sys.HotBuild;
 
-namespace ToSic.Sxc.Dnn.WebApi.Internal;
+namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
 internal partial class AppApiControllerSelectorService
 {

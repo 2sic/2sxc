@@ -1,18 +1,17 @@
-﻿using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
-using System.CodeDom.Compiler;
+﻿using System.CodeDom.Compiler;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Razor;
 using System.Web.Razor.Generator;
-using ToSic.Sxc.Code.Sys;
+using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sys.Caching;
 using ToSic.Sys.Locking;
 
-namespace ToSic.Sxc.Dnn.Razor.Internal
+namespace ToSic.Sxc.Dnn.Razor.Sys
 {
     /// <summary>
     /// This class is responsible for managing the compilation of Razor templates using Roslyn.

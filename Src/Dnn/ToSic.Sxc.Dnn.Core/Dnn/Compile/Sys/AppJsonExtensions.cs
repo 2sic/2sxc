@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps.Sys.AppJson;
 
-namespace ToSic.Sxc.Dnn.Compile.Internal;
+namespace ToSic.Sxc.Dnn.Compile.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

@@ -4,19 +4,18 @@ using System.Web;
 using System.Web.Compilation;
 using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
-using ToSic.Sxc.Dnn.Compile.Internal;
+using ToSic.Sxc.Dnn.Compile.Sys;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Caching.PiggyBack;
 using ToSic.Sys.Exceptions;
 
-namespace ToSic.Sxc.Dnn.Razor.Internal;
+namespace ToSic.Sxc.Dnn.Razor.Sys;
 
 /// <summary>
 /// The Razor compiler for Razor templates.

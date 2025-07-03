@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.WebApi.Sys.Logs;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Dnn.WebApi.Sys;
 using RealController = ToSic.Eav.WebApi.Sys.Logs.LogControllerReal;
 
 namespace ToSic.Sxc.Dnn.Backend.Sys;

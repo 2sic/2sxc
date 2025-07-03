@@ -3,7 +3,7 @@ using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 
-namespace ToSic.Sxc.Dnn.Compile.Internal;
+namespace ToSic.Sxc.Dnn.Compile.Sys;
 
 [PrivateApi]
 internal class CodeCompilerNetFull(

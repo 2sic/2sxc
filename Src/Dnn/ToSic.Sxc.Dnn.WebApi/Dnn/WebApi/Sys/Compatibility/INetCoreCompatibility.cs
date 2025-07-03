@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
+﻿namespace ToSic.Sxc.Dnn.WebApi.Sys.Compatibility;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface INetCoreCompatibility

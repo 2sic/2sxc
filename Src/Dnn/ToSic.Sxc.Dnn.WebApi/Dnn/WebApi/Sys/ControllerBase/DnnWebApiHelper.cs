@@ -4,7 +4,7 @@ using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Dnn.Integration;
 
-namespace ToSic.Sxc.Dnn.WebApi.Internal;
+namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
 internal class DnnWebApiHelper : CodeHelperBase
 {

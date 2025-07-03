@@ -3,7 +3,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 using ToSic.Sxc.Dnn.Backend.Sys;
 
-namespace ToSic.Sxc.Dnn.WebApi;
+namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
 /// <inheritdoc />
 /// <summary>

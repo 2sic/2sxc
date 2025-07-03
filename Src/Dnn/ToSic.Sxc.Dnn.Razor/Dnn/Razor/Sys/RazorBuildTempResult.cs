@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Dnn.Razor.Internal;
+﻿namespace ToSic.Sxc.Dnn.Razor.Sys;
 
 internal class RazorBuildTempResult<T>(T instance, bool usesHotBuild)
 {

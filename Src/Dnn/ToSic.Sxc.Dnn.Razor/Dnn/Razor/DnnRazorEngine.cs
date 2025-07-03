@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Dnn.Razor.Internal;
+using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Render.Sys.Specs;
 

@@ -13,7 +13,6 @@ global using ToSic.Sys.Data;
 global using ToSic.Sys.Logging;
 global using ToSic.Sys.Services;
 global using ToSic.Sys.Wrappers;
-global using ToSic.Sxc.Dnn.WebApi.Internal;
 global using ToSic.Sxc.WebApi;
 global using ToSic.Sys.Utils;
 global using static ToSic.Sxc.Dnn.DnnConstants;

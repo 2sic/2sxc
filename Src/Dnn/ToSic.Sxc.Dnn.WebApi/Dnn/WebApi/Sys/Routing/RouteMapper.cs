@@ -6,9 +6,9 @@ using ToSic.Sxc.Dnn.Backend.App;
 using ToSic.Sxc.Dnn.Backend.Cms;
 using ToSic.Sxc.Dnn.Backend.Module;
 using ToSic.Sxc.Dnn.Backend.Sys;
-using ToSic.Sxc.Dnn.Providers;
+using ToSic.Sxc.Dnn.WebApi.Sys.Providers;
 
-namespace ToSic.Sxc.Dnn.WebApi;
+namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
 // ReSharper disable once UnusedMember.Global
 [ShowApiWhenReleased(ShowApiMode.Never)]

@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Formatting;
 using System.Web.Http.Controllers;
 
-namespace ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
+namespace ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 
 /// <summary>
 /// Mark all base classes for custom WebApi controllers which should use the old Newtonsoft.

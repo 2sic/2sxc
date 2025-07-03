@@ -1,7 +1,7 @@
 ﻿using ToSic.Sxc.Dnn.Integration;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Dnn.WebApi.Internal;
+namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
 /// <summary>
 /// Note: normally dependencies are Constructor injected.

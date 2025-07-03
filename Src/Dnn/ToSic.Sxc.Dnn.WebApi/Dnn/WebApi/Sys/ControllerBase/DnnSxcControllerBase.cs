@@ -1,6 +1,6 @@
 ﻿using System.Web.Http.Controllers;
 
-namespace ToSic.Sxc.Dnn.WebApi.Internal;
+namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
 /// <summary>
 /// This class is the base class of 2sxc API access

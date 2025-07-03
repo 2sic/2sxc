@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.WebApi.Sys.Routing;
 
-namespace ToSic.Sxc.Dnn.WebApi;
+namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
 internal class Roots
 {

@@ -1,6 +1,6 @@
 ﻿using System.Web.Http.Controllers;
 
-namespace ToSic.Sxc.Dnn.WebApi.Internal;
+namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
 internal class HttpControllerDescriptorWithPaths(HttpControllerDescriptor descriptor, string folder, string fullPath)
 {

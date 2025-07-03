@@ -3,7 +3,7 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Code.Sys.SourceCode;
-using ToSic.Sxc.Dnn.Razor.Internal;
+using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Render.Sys;
 using static System.StringComparer;
 using static ToSic.Sxc.Sys.Configuration.SxcFeatures;

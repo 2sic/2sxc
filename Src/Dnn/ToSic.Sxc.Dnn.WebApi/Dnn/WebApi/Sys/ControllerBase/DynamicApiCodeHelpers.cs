@@ -10,7 +10,7 @@ using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.InfoSystem;
 using IApp = ToSic.Sxc.Apps.IApp;
 
-namespace ToSic.Sxc.Dnn.WebApi.Internal;
+namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
 internal class DynamicApiCodeHelpers: CodeHelper
 {

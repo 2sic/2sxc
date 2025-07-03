@@ -1,7 +1,7 @@
 ﻿using System.Web.Http.Filters;
 using ToSic.Sxc.Dnn.Run;
 
-namespace ToSic.Sxc.Dnn.WebApi.Internal;
+namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class DnnLogWebApi : ActionFilterAttribute

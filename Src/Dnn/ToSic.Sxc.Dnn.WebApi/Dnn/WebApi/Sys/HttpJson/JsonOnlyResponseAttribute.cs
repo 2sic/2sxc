@@ -6,7 +6,7 @@ using ToSic.Eav.WebApi.Sys.Helpers.Json;
 
 // Special case: this should enforce json formatting
 // It's only needed in .net4x where the default is xml
-namespace ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
+namespace ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]   // unclear if this needs to be public
 public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfiguration

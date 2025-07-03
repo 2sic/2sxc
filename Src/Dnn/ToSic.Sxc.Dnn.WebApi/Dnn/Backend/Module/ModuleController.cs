@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Dnn.Backend.Module;
+﻿using ToSic.Sxc.Dnn.WebApi.Sys;
+
+namespace ToSic.Sxc.Dnn.Backend.Module;
 
 // support all modules now... 
 [SupportedModules(DnnSupportedModuleNames)]

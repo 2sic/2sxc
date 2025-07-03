@@ -3,7 +3,7 @@ using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Oqt.Server.Code.Internal;
+namespace ToSic.Sxc.Oqt.Server.Code.Sys;
 
 [PrivateApi]
 internal class CodeCompilerNetCore(

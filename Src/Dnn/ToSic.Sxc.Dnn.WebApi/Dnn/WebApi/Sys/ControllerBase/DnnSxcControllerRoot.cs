@@ -1,8 +1,8 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Eav.WebApi.Sys;
-using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 
-namespace ToSic.Sxc.Dnn.WebApi.Internal;
+namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
 [DnnLogWebApi, JsonOnlyResponse]
 [PrivateApi("This controller is never used publicly, you can rename any time you want")]

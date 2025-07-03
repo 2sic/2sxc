@@ -5,7 +5,7 @@ using ToSic.Sys.Configuration;
 using ToSic.Sys.Locking;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Oqt.Server.Code.Internal;
+namespace ToSic.Sxc.Oqt.Server.Code.Sys;
 
 [PrivateApi]
 internal class AppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, Generator<Compiler> compiler, IGlobalConfiguration globalConfiguration, SourceCodeHasher sourceCodeHasher) : AppCodeCompiler(globalConfiguration, sourceCodeHasher, connect: [serverPaths, compiler, sourceCodeHasher])

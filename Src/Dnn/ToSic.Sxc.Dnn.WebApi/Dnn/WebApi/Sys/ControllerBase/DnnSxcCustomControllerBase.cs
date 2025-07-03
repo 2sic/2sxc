@@ -2,7 +2,7 @@
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Dnn.WebApi.Internal;
+namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
 /// <summary>
 /// This is the foundation for both the old SxcApiController and the new Dnn.ApiController.

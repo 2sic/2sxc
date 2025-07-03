@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Adam;
 
-namespace ToSic.Sxc.Dnn.WebApi.Internal.Compatibility;
+namespace ToSic.Sxc.Dnn.WebApi.Sys.Compatibility;
 
 /// <summary>
 /// </summary>
