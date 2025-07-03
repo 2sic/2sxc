@@ -381,11 +381,11 @@ internal partial class RuntimeViewCompiler : ServiceBase, IViewCompiler, ILogSho
         if (!appRelativePath.HasValue())
             return l.Return("", $"{nameof(appRelativePath)} is empty");
 
-        if (edition.HasValue() && Directory.Exists(Path.Combine(_env.ContentRootPath, appRelativePath.Backslash(), edition, FolderConstants.AppCode)))
-            return l.ReturnAndLog(Path.Combine(appRelativePath.Backslash(), edition, FolderConstants.AppCode));
+        if (edition.HasValue() && Directory.Exists(Path.Combine(_env.ContentRootPath, appRelativePath.Backslash(), edition, FolderConstants.AppCodeFolder)))
+            return l.ReturnAndLog(Path.Combine(appRelativePath.Backslash(), edition, FolderConstants.AppCodeFolder));
 
-        return l.ReturnAndLog((Directory.Exists(Path.Combine(_env.ContentRootPath, appRelativePath.Backslash(), FolderConstants.AppCode))
-            ? Path.Combine(appRelativePath.Backslash(), FolderConstants.AppCode)
+        return l.ReturnAndLog((Directory.Exists(Path.Combine(_env.ContentRootPath, appRelativePath.Backslash(), FolderConstants.AppCodeFolder))
+            ? Path.Combine(appRelativePath.Backslash(), FolderConstants.AppCodeFolder)
             : ""));
     }
 

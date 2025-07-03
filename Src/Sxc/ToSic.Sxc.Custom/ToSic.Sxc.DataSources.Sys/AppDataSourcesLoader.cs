@@ -48,7 +48,7 @@ internal class AppDataSourcesLoader(
 
             // 1. Get Custom Dynamic DataSources from 'AppCode' assembly
             var data = CreateDataSourceInfos(appId, LoadAppCodeDataSources(spec, out var cacheKey));
-            l.A($"Custom Dynamic DataSources in {FolderConstants.AppCode}:{data.Count}");
+            l.A($"Custom Dynamic DataSources in {FolderConstants.AppCodeFolder}:{data.Count}");
 
             // 2. Get Custom Dynamic DataSources from 'DataSources' folder
             var (physicalPath, relativePath) = GetAppDataSourceFolderPaths(appId);

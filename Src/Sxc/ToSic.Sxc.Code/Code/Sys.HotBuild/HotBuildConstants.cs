@@ -18,7 +18,7 @@ public class HotBuildConstants
         if (obj == null)
             return false;
         var ownType = obj.GetType();
-        return (ownType.Namespace ?? "").StartsWith(FolderConstants.AppCode)
-               || ownType.Assembly.FullName!.Contains(FolderConstants.AppCode);
+        return (ownType.Namespace ?? "").StartsWith(FolderConstants.AppCodeFolder)
+               || ownType.Assembly.FullName!.Contains(FolderConstants.AppCodeFolder);
     }
 }

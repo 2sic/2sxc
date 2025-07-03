@@ -6,7 +6,7 @@ using ToSic.Eav.Sys.Insights.HtmlHelpers;
 namespace ToSic.Sxc.Backend.Sys;
 
 internal class InsightsAppCodeOverview(IAppReaderFactory appReaders, IAppStateCacheService appStates, IAppsCatalog appsCatalog)
-    : InsightsProvider(new() { Name = Link, HelpCategory = FolderConstants.AppCode }, connect: [appReaders, appStates, appsCatalog])
+    : InsightsProvider(new() { Name = Link, HelpCategory = FolderConstants.AppCodeFolder }, connect: [appReaders, appStates, appsCatalog])
 {
     public static string Link => "AppCodeOverview";
 

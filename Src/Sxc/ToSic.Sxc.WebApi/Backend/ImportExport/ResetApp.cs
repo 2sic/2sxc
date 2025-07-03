@@ -58,7 +58,7 @@ public class ResetApp(
         //    return result;
         //}
 
-        var appDataFolder = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppDataProtectedFolder);
+        var appDataFolder = Path.Combine(appPaths.PhysicalPath, FolderConstants.DataFolderProtected);
         var filePath = Path.Combine(appDataFolder, FolderConstants.AppDataFile);
         if (!File.Exists(filePath))
         {
@@ -73,7 +73,7 @@ public class ResetApp(
         // 3. Optional reset SiteFiles
         if (withSiteFiles)
         {
-            var sourcePath = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppDataProtectedFolder);
+            var sourcePath = Path.Combine(appPaths.PhysicalPath, FolderConstants.DataFolderProtected);
 
             // Copy app global template files persisted in /App_Data/2sexyGlobal/ back to app [globalTemplatesRoot]
             var globalTemplatesStateFolder = Path.Combine(appDataFolder, FolderConstants.ZipFolderForGlobalAppStuff);

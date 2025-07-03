@@ -292,8 +292,8 @@ partial class DnnEnvironmentInstaller
         {
             var oldSystemCustomFolder = Path.Combine(
                 OldSysFolderRootFullPath(version),
-                FolderConstants.AppDataProtectedFolder,
-                FolderConstants.FolderSystemCustom
+                FolderConstants.DataFolderProtected,
+                FolderConstants.DataSubFolderSystemCustom
             );
 
             var systemCustomFolder = _globalConfiguration.Value.DataCustomFolder();
@@ -301,10 +301,10 @@ partial class DnnEnvironmentInstaller
             if (Directory.Exists(oldSystemCustomFolder))
             {
                 Helpers.DirectoryCopy(oldSystemCustomFolder, systemCustomFolder, true);
-                _installLogger.LogStep(version, $"{nameof(MigrateSystemCustomFolder)} - Old '{FolderConstants.FolderSystemCustom}' folder migrated to new location: " + systemCustomFolder);
+                _installLogger.LogStep(version, $"{nameof(MigrateSystemCustomFolder)} - Old '{FolderConstants.DataSubFolderSystemCustom}' folder migrated to new location: " + systemCustomFolder);
             }
             else
-                _installLogger.LogStep(version, $"{nameof(MigrateSystemCustomFolder)} - Old '{FolderConstants.FolderSystemCustom}' folder does not exist.");
+                _installLogger.LogStep(version, $"{nameof(MigrateSystemCustomFolder)} - Old '{FolderConstants.DataSubFolderSystemCustom}' folder does not exist.");
         }
         catch (Exception e)
         {
@@ -319,23 +319,23 @@ partial class DnnEnvironmentInstaller
         {
             var oldAppExtensionsFolder = Path.Combine(
                 OldSysFolderRootFullPath(version),
-                FolderConstants.FolderAppExtensions
+                FolderConstants.AppExtensionsFolder
             );
 
             var newAppExtensionsFolder = Path.Combine(
                 _globalConfiguration.Value.GlobalFolder(),
-                FolderConstants.FolderAppExtensions
+                FolderConstants.AppExtensionsFolder
             );
 
             if (Directory.Exists(oldAppExtensionsFolder))
             {
                 Helpers.DirectoryCopy(oldAppExtensionsFolder, newAppExtensionsFolder, true);
-                _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolder)} - Old '{FolderConstants.FolderAppExtensions}' folder migrated to new location: " + newAppExtensionsFolder);
+                _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolder)} - Old '{FolderConstants.AppExtensionsFolder}' folder migrated to new location: " + newAppExtensionsFolder);
 
                 RenameAllOldDataSubfolders(version, newAppExtensionsFolder);
             }
             else
-                _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolder)} - Old '{FolderConstants.FolderAppExtensions}' folder does not exist.");
+                _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolder)} - Old '{FolderConstants.AppExtensionsFolder}' folder does not exist.");
         }
         catch (Exception e)
         {
@@ -346,19 +346,19 @@ partial class DnnEnvironmentInstaller
     // Rename all old '.data' subfolders to 'App_Data' that are in appExtension subfolders in 'system' folder
     private void RenameAllOldDataSubfolders(string version, string newAppExtensionsFolder)
     {
-        _installLogger.LogStep(version, $"{nameof(RenameAllOldDataSubfolders)} - Start renaming in app extensions subfolders from '{FolderConstants.AppDataProtectedFolder}' to '{FolderConstants.AppDataProtectedFolder}'");
+        _installLogger.LogStep(version, $"{nameof(RenameAllOldDataSubfolders)} - Start renaming in app extensions subfolders from '{FolderConstants.DataFolderProtected}' to '{FolderConstants.DataFolderProtected}'");
 
         new DirectoryInfo(newAppExtensionsFolder).GetDirectories()
-            .SelectMany(appExtensionDirectory => appExtensionDirectory.GetDirectories(FolderConstants.FolderOldDotData))
+            .SelectMany(appExtensionDirectory => appExtensionDirectory.GetDirectories(FolderConstants.DataFolderOld))
             .ForEach(oldDotDataDirectory => RenameOldDotDataToAppData(version, oldDotDataDirectory));
 
-        _installLogger.LogStep(version, $"{nameof(RenameAllOldDataSubfolders)} - Finish renaming in app extensions subfolders from '{FolderConstants.AppDataProtectedFolder}' to '{FolderConstants.AppDataProtectedFolder}'");
+        _installLogger.LogStep(version, $"{nameof(RenameAllOldDataSubfolders)} - Finish renaming in app extensions subfolders from '{FolderConstants.DataFolderProtected}' to '{FolderConstants.DataFolderProtected}'");
     }
 
     // Rename old '.data' folder to 'App_Data'
     private void RenameOldDotDataToAppData(string version, DirectoryInfo oldDotDataDirectory)
     {
-        var destDirName = Path.Combine(oldDotDataDirectory.Parent!.FullName, FolderConstants.AppDataProtectedFolder);
+        var destDirName = Path.Combine(oldDotDataDirectory.Parent!.FullName, FolderConstants.DataFolderProtected);
         try
         {
             if (!Directory.Exists(destDirName))

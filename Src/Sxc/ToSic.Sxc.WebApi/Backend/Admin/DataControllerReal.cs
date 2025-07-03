@@ -67,7 +67,7 @@ public class DataControllerReal(
         if (fileName != fileNameSafe) l.A($"File name sanitized:'{fileName}' => '{fileNameSafe}'");
 
         var appPaths = appPathSvc.Get(appWorkCtxSvc.Context(appId).AppReader, site);
-        var filePath = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppDataProtectedFolder, AppDataFoldersConstants.BundlesFolder, fileNameSafe);
+        var filePath = Path.Combine(appPaths.PhysicalPath, FolderConstants.DataFolderProtected, AppDataFoldersConstants.BundlesFolder, fileNameSafe);
 
         if (!File.Exists(filePath))
             return l.ReturnFalse($"File not found: {filePath}");
