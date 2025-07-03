@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Adam.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class Folder<TFolderId, TFileId>(AdamManager adamManager)
-    : Eav.Apps.Assets.Internal.Folder<TFolderId, TFileId>, IFolder
+    : Eav.Apps.Assets.Sys.Folder<TFolderId, TFileId>, IFolder
 {
     protected AdamManager AdamManager { get; } = adamManager;
     protected IAdamFileSystem AdamFs { get; } = adamManager.AdamFs;

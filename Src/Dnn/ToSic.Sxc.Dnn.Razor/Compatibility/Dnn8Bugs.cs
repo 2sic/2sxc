@@ -16,6 +16,4 @@
 namespace Dnn.Modules.DynamicContentViewer.Helpers;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-class Dnn8Bugs
-{
-}
+class Dnn8Bugs;

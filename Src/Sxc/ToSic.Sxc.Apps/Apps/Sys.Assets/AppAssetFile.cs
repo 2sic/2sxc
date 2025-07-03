@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Apps.Assets;
-using ToSic.Eav.Apps.Assets.Internal;
+using ToSic.Eav.Apps.Assets.Sys;
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Data;
 using IAsset = ToSic.Sxc.Adam.IAsset;

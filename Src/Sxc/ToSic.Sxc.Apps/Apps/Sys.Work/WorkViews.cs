@@ -5,7 +5,6 @@ using ToSic.Eav.Data.Sys.ContentTypes;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.Data.Sys.ValueConverter;
 using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.DataSource.Internal.Query;
 using ToSic.Eav.DataSource.Sys.Query;
 using ToSic.Eav.Metadata.Sys;
 using ToSic.Sxc.Apps.Sys.Ui;

@@ -4,7 +4,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Sys.AppDataSources;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Eav.DataSource.VisualQuery.Internal;
+using ToSic.Eav.DataSource.VisualQuery.Sys;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
