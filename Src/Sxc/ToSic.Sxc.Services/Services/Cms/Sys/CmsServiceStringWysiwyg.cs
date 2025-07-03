@@ -2,12 +2,13 @@
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images.Sys;
+using ToSic.Sxc.Services.CmsService;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Sys.HtmlParsing;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Services.CmsService.Internal;
+namespace ToSic.Sxc.Services.Cms.Sys;
 
 internal class CmsServiceStringWysiwyg()
     : ServiceWithContext("Cms.StrWys", connect: [])

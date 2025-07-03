@@ -4,7 +4,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Web.Sys.HtmlParsing;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Services.CmsService.Internal;
+namespace ToSic.Sxc.Services.Cms.Sys;
 
 internal class CmsServiceImageExtractor() : ServiceBase("Sxc.ImgExt")
 {

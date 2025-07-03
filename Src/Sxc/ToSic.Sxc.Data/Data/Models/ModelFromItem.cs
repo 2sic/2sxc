@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data.Sys.Factory;
+﻿using ToSic.Sxc.Data.Models.Sys;
+using ToSic.Sxc.Data.Sys.Factory;
 
 namespace ToSic.Sxc.Data.Models;
 

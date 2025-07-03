@@ -1,5 +1,5 @@
 ﻿using ToSic.Sxc.Adam;
-using ToSic.Sxc.Services.CmsService.Internal;
+using ToSic.Sxc.Services.Cms.Sys;
 
 namespace ToSic.Sxc.ServicesTests.CmsService.ImageExtractor;
 

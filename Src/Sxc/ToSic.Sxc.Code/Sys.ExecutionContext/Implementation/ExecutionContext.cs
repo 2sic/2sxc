@@ -7,6 +7,7 @@ using ToSic.Sxc.Code.Sys.CodeApiService;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Sys.Factory;
+using ToSic.Sxc.Polymorphism.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 using ToSic.Sys.Caching.PiggyBack;
@@ -41,7 +42,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
         LazySvc<IConvertService> convertService,
         LazySvc<CodeCreateDataSourceSvc> dataSources,
         LazySvc<ICodeDataFactory> cdf,
-        Polymorphism.Internal.PolymorphConfigReader polymorphism)
+        PolymorphConfigReader polymorphism)
         : DependenciesBase(connect:
             [/* never! serviceProvider */ codeCompilerLazy, dataStackService, convertService, dataSources, cdf, polymorphism])
     {
@@ -51,7 +52,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
         internal IServiceProvider ServiceProvider { get; } = serviceProvider;
         public LazySvc<IClassCompiler> CodeCompilerLazy { get; } = codeCompilerLazy;
         public AppDataStackService DataStackService { get; } = dataStackService;
-        public Polymorphism.Internal.PolymorphConfigReader Polymorphism { get; } = polymorphism;
+        public PolymorphConfigReader Polymorphism { get; } = polymorphism;
     }
 
     [PrivateApi]

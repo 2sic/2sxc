@@ -1,5 +1,5 @@
 ﻿using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Data.Models.Sys;
 
 namespace ToSic.Sxc.DataTests.ModelTests;
 

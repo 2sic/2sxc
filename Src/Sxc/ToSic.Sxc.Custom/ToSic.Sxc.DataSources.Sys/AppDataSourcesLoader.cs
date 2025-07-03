@@ -9,7 +9,7 @@ using ToSic.Eav.Sys;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Context.Sys;
-using ToSic.Sxc.Polymorphism.Internal;
+using ToSic.Sxc.Polymorphism.Sys;
 using ToSic.Sys.Caching;
 using ToSic.Sys.Utils;
 

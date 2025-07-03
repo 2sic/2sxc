@@ -5,7 +5,7 @@ using ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Services.CmsService.Internal;
+namespace ToSic.Sxc.Services.Cms.Sys;
 
 internal class CmsServiceContainerHelper(
     IExecutionContext executionContext,

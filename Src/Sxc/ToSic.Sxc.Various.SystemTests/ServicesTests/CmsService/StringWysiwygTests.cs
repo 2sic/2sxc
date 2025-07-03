@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data.Build;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Mocks;
-using ToSic.Sxc.Services.CmsService.Internal;
+using ToSic.Sxc.Services.Cms.Sys;
 using Xunit.Abstractions;
 
 namespace ToSic.Sxc.ServicesTests.CmsService;

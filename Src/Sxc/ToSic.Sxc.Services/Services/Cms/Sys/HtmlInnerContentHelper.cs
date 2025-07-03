@@ -4,7 +4,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Services.CmsService.Internal;
+namespace ToSic.Sxc.Services.Cms.Sys;
 
 internal class HtmlInnerContentHelper()
     : ServiceWithContext("Cms.StrWys", connect: [])

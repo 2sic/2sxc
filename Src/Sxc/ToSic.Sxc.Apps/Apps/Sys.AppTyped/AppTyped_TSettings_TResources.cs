@@ -5,7 +5,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Apps.Internal;
+namespace ToSic.Sxc.Apps.Sys.AppTyped;
 
 internal class AppTyped<TSettings, TResources>(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> queryManager)
     : AppTyped(globalPaths, queryManager), IAppTyped<TSettings, TResources>

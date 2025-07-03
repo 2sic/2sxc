@@ -3,7 +3,7 @@ using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Web.Sys.Http;
 
-namespace ToSic.Sxc.Polymorphism.Internal;
+namespace ToSic.Sxc.Polymorphism.Sys;
 
 /// <summary>
 /// Mini service to read the polymorph config of the app

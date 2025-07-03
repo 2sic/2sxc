@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Services.CmsService.Internal;
+﻿namespace ToSic.Sxc.Services.Cms.Sys;
 
 internal class CmsProcessed(bool isProcessed, string? contents, string? classes)
 {

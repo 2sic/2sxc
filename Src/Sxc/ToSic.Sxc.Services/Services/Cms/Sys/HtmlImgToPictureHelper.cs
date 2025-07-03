@@ -1,10 +1,9 @@
-﻿
-using ToSic.Sxc.Adam;
+﻿using ToSic.Sxc.Adam;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Services.CmsService.Internal;
+namespace ToSic.Sxc.Services.Cms.Sys;
 
 internal class HtmlImgToPictureHelper(CmsServiceImageExtractor imageExtractor)
     : ServiceWithContext("Cms.StrWys", connect: [imageExtractor])

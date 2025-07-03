@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Sxc.Blocks.Sys.Views;
-using ToSic.Sxc.Polymorphism.Internal;
+using ToSic.Sxc.Polymorphism.Sys;
 
 namespace ToSic.Sxc.Engines;
 

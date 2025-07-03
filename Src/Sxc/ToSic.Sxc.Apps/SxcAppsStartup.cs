@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Apps.Sys.Api01;
+using ToSic.Sxc.Apps.Sys.AppTyped;
 using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Apps.Sys.Work;
 

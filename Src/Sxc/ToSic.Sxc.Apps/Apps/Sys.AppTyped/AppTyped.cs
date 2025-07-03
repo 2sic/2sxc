@@ -11,7 +11,7 @@ using ToSic.Sxc.Services.DataServices;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Apps.Internal;
+namespace ToSic.Sxc.Apps.Sys.AppTyped;
 
 // Wip, NOT PRODUCTION READY #IAppTyped
 // Goal is to use this instead of the App, to be a clean wrapper hiding the old App

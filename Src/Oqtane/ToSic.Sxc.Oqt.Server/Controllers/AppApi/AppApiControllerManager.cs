@@ -8,7 +8,7 @@ using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Oqt.Server.Code.Internal;
 using ToSic.Sxc.Oqt.Server.Plumbing;
-using ToSic.Sxc.Polymorphism.Internal;
+using ToSic.Sxc.Polymorphism.Sys;
 using ToSic.Sys.Utils;
 using Log = ToSic.Sys.Logging.Log;
 
@@ -20,14 +20,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 internal class AppApiControllerManager : IHasLog
 {
     public AppApiControllerManager(ApplicationPartManager partManager, ILogStore logStore, Generator<Compiler> compiler, IWebApiContextBuilder webApiContextBuilder, PolymorphConfigReader polymorphism,
-        AppCodeLoader appCodeLoader, AppApiFileSystemWatcher appApiFileSystemWatcher)
+        AppCodeLoader appCodeLoader)
     {
         _partManager = partManager;
         _compiler = compiler;
         _webApiContextBuilder = webApiContextBuilder;
         _polymorphism = polymorphism;
         _appCodeLoader = appCodeLoader;
-        _appApiFileSystemWatcher = appApiFileSystemWatcher;
         Log = new Log(HistoryLogName, null, "AppApiControllerManager");
         logStore.Add(HistoryLogGroup, Log);
     }
@@ -36,7 +35,6 @@ internal class AppApiControllerManager : IHasLog
     private readonly IWebApiContextBuilder _webApiContextBuilder;
     private readonly PolymorphConfigReader _polymorphism;
     private readonly AppCodeLoader _appCodeLoader;
-    private readonly AppApiFileSystemWatcher _appApiFileSystemWatcher; // keep it here, because we need one instance in App
 
     public ILog Log { get; }
 

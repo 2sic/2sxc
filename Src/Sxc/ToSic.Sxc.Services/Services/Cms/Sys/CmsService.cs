@@ -8,7 +8,7 @@ using ToSic.Sxc.Services.Tweaks;
 using ToSic.Sxc.Sys.ExecutionContext;
 using InputTypes = ToSic.Sxc.Data.Sys.InputTypes;
 
-namespace ToSic.Sxc.Services.CmsService.Internal;
+namespace ToSic.Sxc.Services.Cms.Sys;
 
 internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
     : ServiceWithContext($"{SxcLogName}.CmsSrv", connect: [stringWysiwyg]), ICmsService
