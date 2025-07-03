@@ -52,14 +52,15 @@ public sealed partial class CmsBlock : DataSourceBase
         LazySvc<IModule> moduleLazy,
         LazySvc<IDataSourcesService> dataSourceFactory,
         GenWorkPlus<WorkBlocks> appBlocks)
-        : MyServicesBase<DataSourceBase.MyServices>(parentServices, connect: [moduleLazy, dataSourceFactory, appBlocks])
+        : MyServicesBase(connect: [moduleLazy, dataSourceFactory, appBlocks])
     {
+        public DataSourceBase.MyServices ParentServices { get; } = parentServices;
         public GenWorkPlus<WorkBlocks> AppBlocks { get; } = appBlocks;
         public LazySvc<IModule> ModuleLazy { get; } = moduleLazy;
         public LazySvc<IDataSourcesService> DataSourceFactory { get; } = dataSourceFactory;
     }
 
-    public CmsBlock(MyServices services): base(services, $"SDS.CmsBks")
+    public CmsBlock(MyServices services): base(services.ParentServices, $"SDS.CmsBks", connect: [services])
     {
         _services = services;
 

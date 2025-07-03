@@ -85,14 +85,15 @@ public class DnnUserProfile : CustomDataSourceAdvanced
     #region Constructor / DI
 
     public new class MyServices(CustomDataSourceAdvanced.MyServices parentServices, ISite site, IZoneMapper zoneMapper, LazySvc<DnnSecurity> dnnSecurity)
-        : MyServicesBase<CustomDataSourceAdvanced.MyServices>(parentServices, connect: [site, zoneMapper, dnnSecurity])
+        : MyServicesBase(connect: [site, zoneMapper, dnnSecurity])
     {
+        public CustomDataSourceAdvanced.MyServices ParentServices { get; } = parentServices;
         public ISite Site { get; } = site;
         public IZoneMapper ZoneMapper { get; } = zoneMapper;
         public LazySvc<DnnSecurity> DnnSecurity { get; } = dnnSecurity;
     }
 
-    public DnnUserProfile(MyServices services) : base(services, "Dnn.Profile")
+    public DnnUserProfile(MyServices services) : base(services.ParentServices, "Dnn.Profile", connect: [services])
     {
         _services = services;
         ProvideOut(GetList);

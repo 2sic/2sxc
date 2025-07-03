@@ -24,8 +24,9 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.MyServices>
     /// </summary>
     [PrivateApi]
     public class MyServices(CustomDataSource.MyServices parentServices, ServiceKitLight16 kit)
-        : MyServicesBase<CustomDataSource.MyServices>(parentServices, connect: [kit])
+        : MyServicesBase(connect: [kit])
     {
+        public CustomDataSource.MyServices ParentServices { get; } = parentServices;
         public ServiceKitLight16 Kit { get; } = kit;
     }
 
