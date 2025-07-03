@@ -2,7 +2,6 @@
 
 global using ToSic.Eav.Testing;
 global using ToSic.Eav.Testing.Scenarios;
-global using ToSic.Lib;
 global using ToSic.Sys.Coding;
 global using ToSic.Sys.DI;
 global using ToSic.Sys.Logging;
