@@ -18,7 +18,7 @@ public static class SxcCoreStartup
         services.TryAddScoped<ILinkPaths, LinkPaths>();
 
         // Configuration Provider WIP
-        services.TryAddTransient<SxcImportExportEnvironmentBase.MyServices>();
+        services.TryAddTransient<SxcImportExportEnvironmentBase.Dependencies>();
 
         // Sxc StartUp Routines - MUST be AddTransient, not TryAddTransient so many start-ups can be registered
         // Add StartUp Registration of FeaturesCatalog

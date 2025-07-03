@@ -12,7 +12,7 @@ public class CodeDataServices(
     LazySvc<IScrub> scrub,
     LazySvc<ConvertForCodeService> forCode,
     LazySvc<IDataFactory> dataFactory)
-    : MyServicesBase(connect: [valueConverterLazy, scrub, forCode, dataFactory])
+    : DependenciesBase(connect: [valueConverterLazy, scrub, forCode, dataFactory])
 {
     /// <summary>
     /// The ValueConverter is used to parse links in the format like "file:72"

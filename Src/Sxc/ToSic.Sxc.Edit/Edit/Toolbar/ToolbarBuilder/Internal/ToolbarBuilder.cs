@@ -23,10 +23,10 @@ public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, ITo
 
     #region Constructors and Init
 
-    public class MyServices(
+    public class Dependencies(
         LazySvc<ToolbarButtonDecoratorHelper> toolbarButtonHelper,
         LazySvc<IAppsCatalog> appsCatalog)
-        : MyServicesBase(connect: [toolbarButtonHelper, appsCatalog])
+        : DependenciesBase(connect: [toolbarButtonHelper, appsCatalog])
     {
         internal LazySvc<ToolbarButtonDecoratorHelper> ToolbarButtonHelper { get; } = toolbarButtonHelper;
         public LazySvc<IAppsCatalog> AppsCatalog { get; } = appsCatalog;
@@ -36,10 +36,10 @@ public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, ITo
     /// Public constructor for DI
     /// </summary>
     /// <param name="services"></param>
-    public ToolbarBuilder(MyServices services) =>
+    public ToolbarBuilder(Dependencies services) =>
         Services = services.ConnectServices(Log);
 
-    protected MyServices Services { get; init; }
+    protected Dependencies Services { get; init; }
 
     public ILog Log { get; } = new Log(SxcLogName + ".TlbBld");
     

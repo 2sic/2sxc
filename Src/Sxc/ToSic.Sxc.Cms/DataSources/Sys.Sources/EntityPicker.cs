@@ -65,7 +65,7 @@ public class EntityPicker : DataSourceBase
         Generator<MultiPermissionsTypes> typePermissions,
         IUser user,
         IAppReaderFactory appReaders,
-        MyServices services
+        Dependencies services
     ) : base(services, "Api.EntPck", connect: [workEntities, appPermissions, typePermissions, ctxService, appReaders])
     {
         _workEntities = workEntities;

@@ -15,17 +15,17 @@ namespace ToSic.Sxc.Engines;
 /// </summary>
 [PrivateApi("used to be InternalApi_DoNotUse_MayChangeWithoutNotice, hidden in 17.08")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
+public abstract class EngineBase : ServiceBase<EngineBase.Dependencies>, IEngine
 {
     #region MyServices
 
-    public class MyServices(
+    public class Dependencies(
         IServerPaths serverPaths,
         IBlockResourceExtractor blockResourceExtractor,
         EngineCheckTemplate engineCheckTemplate,
         EnginePolymorphism enginePolymorphism,
         EngineAppRequirements engineAppRequirements)
-        : MyServicesBase(connect:
+        : DependenciesBase(connect:
             [serverPaths, blockResourceExtractor, engineCheckTemplate, engineAppRequirements, enginePolymorphism])
     {
         internal EngineAppRequirements EngineAppRequirements { get; } = engineAppRequirements;
@@ -49,7 +49,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
     /// <summary>
     /// Empty constructor, so it can be used in dependency injection
     /// </summary>
-    protected EngineBase(MyServices services, object[]? connect = default)
+    protected EngineBase(Dependencies services, object[]? connect = default)
         : base(services, $"{SxcLogName}.EngBas", connect: connect)
     { }
 

@@ -2,4 +2,4 @@
 
 namespace ToSic.Sxc.Services.Sys.DynamicCodeService;
 
-internal class DynamicCodeServiceUnknown(DynamicCodeService.MyServices services, WarnUseOfUnknown<DynamicCodeServiceUnknown> _) : DynamicCodeService(services);
+internal class DynamicCodeServiceUnknown(DynamicCodeService.Dependencies services, WarnUseOfUnknown<DynamicCodeServiceUnknown> _) : DynamicCodeService(services);

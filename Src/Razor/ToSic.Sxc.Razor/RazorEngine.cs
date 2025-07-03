@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Razor;
 [PrivateApi("used to be marked as internal, but it doesn't make sense to show in docs")]
 [EngineDefinition(Name = "Razor")]
 internal class RazorEngine(
-    EngineBase.MyServices services,
+    EngineBase.Dependencies services,
     LazySvc<IRazorRenderer> razorRenderer,
     LazySvc<IExecutionContextFactory> codeRootFactory,
     LazySvc<CodeErrorHelpService> errorHelp,

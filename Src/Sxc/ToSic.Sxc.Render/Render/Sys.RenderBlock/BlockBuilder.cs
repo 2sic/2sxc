@@ -17,10 +17,10 @@ namespace ToSic.Sxc.Render.Sys.RenderBlock;
 /// </summary>
 [PrivateApi("not sure yet what to call this, maybe BlockHost or something")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public partial class BlockBuilder(BlockBuilder.MyServices services)
-    : ServiceBase<BlockBuilder.MyServices>(services, "Sxc.BlkBld"), IBlockBuilder
+public partial class BlockBuilder(BlockBuilder.Dependencies services)
+    : ServiceBase<BlockBuilder.Dependencies>(services, "Sxc.BlkBld"), IBlockBuilder
 {
-    public class MyServices(
+    public class Dependencies(
         IEngineFactory engineFactory,
         Generator<IEnvironmentInstaller> envInstGen,
         Generator<IRenderingHelper> renderHelpGen,
@@ -28,7 +28,7 @@ public partial class BlockBuilder(BlockBuilder.MyServices services)
         LazySvc<ILicenseService> licenseService,
         IModuleService moduleService,
         CodeInfosInScope codeInfos)
-        : MyServicesBase(connect:
+        : DependenciesBase(connect:
             [engineFactory, envInstGen, renderHelpGen, pageChangeSummary, licenseService, moduleService, codeInfos])
     {
         public CodeInfosInScope CodeInfos { get; } = codeInfos;

@@ -13,7 +13,7 @@ internal class DnnRenderService : RenderService
     private readonly Generator<IContextOfBlock> _context;
 
     public DnnRenderService(
-        MyServices services,
+        Dependencies services,
         LazySvc<DnnPageChanges> dnnPageChanges,
         LazySvc<DnnClientResources> dnnClientResources,
         Generator<IContextOfBlock> context

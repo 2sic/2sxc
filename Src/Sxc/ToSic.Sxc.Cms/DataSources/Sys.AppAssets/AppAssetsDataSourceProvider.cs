@@ -12,11 +12,11 @@ namespace ToSic.Sxc.DataSources.Sys.AppAssets;
 /// Must be overriden in each platform.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.MyServices services)
-    : ServiceBase<AppAssetsDataSourceProvider.MyServices>(services, $"{SxcLogName}.AppFls")
+public class AppAssetsDataSourceProvider(AppAssetsDataSourceProvider.Dependencies services)
+    : ServiceBase<AppAssetsDataSourceProvider.Dependencies>(services, $"{SxcLogName}.AppFls")
 {
-    public class MyServices(IAppReaderFactory appReaders, IAppPathsMicroSvc appPathMicroSvc, Generator<AppFileManager> fileManagerGenerator)
-        : MyServicesBase(connect: [appReaders, appPathMicroSvc, fileManagerGenerator])
+    public class Dependencies(IAppReaderFactory appReaders, IAppPathsMicroSvc appPathMicroSvc, Generator<AppFileManager> fileManagerGenerator)
+        : DependenciesBase(connect: [appReaders, appPathMicroSvc, fileManagerGenerator])
     {
         /// <summary>
         /// Note that we will use Generators for safety, because in rare cases the dependencies could be re-used to create a sub-data-source

@@ -68,7 +68,7 @@ public static class StartupWebApi
 
         // js context / UI
         services.TryAddTransient<IUiContextBuilder, UiContextBuilderUnknown>();
-        services.TryAddTransient<UiContextBuilderBase.MyServices>();
+        services.TryAddTransient<UiContextBuilderBase.Dependencies>();
             
         // Helpers
         services.TryAddTransient<ImpExpHelpers>();
@@ -122,7 +122,7 @@ public static class StartupWebApi
         // Adam Controllers etc.
         services.TryAddTransient(typeof(HyperlinkBackend));
         services.TryAddTransient(typeof(AdamItemDtoMaker<,>));
-        services.TryAddTransient(typeof(AdamItemDtoMaker<,>.MyServices));
+        services.TryAddTransient(typeof(AdamItemDtoMaker<,>.Dependencies));
 
         // Default `int` implementation, the platform must specify a different type before this if it needs another identity type
         services.TryAddTransient<IAdamItemDtoMaker, AdamItemDtoMaker<TFolder, TFile>>();

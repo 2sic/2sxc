@@ -16,7 +16,7 @@ public static class SxcAppsStartup
     public static IServiceCollection AddSxcApps(this IServiceCollection services)
     {
         // App Dependencies
-        services.TryAddTransient<SxcAppBase.MyServices>();
+        services.TryAddTransient<SxcAppBase.Dependencies>();
 
         // Configuration objects
         services.TryAddTransient<GlobalPaths>();

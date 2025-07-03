@@ -28,7 +28,7 @@ public static class StartUpDnnWebApi
         services.TryAddTransient<DnnAppFolderUtilities>(); // v14.12-01
 
         // new v15
-        services.TryAddTransient<ApiControllerMyServices>();
+        services.TryAddTransient<ApiControllerDependencies>();
 
         // new v17
         services.TryAddTransient<AppApiControllerSelectorService>();

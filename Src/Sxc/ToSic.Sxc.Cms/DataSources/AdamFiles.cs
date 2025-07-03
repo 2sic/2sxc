@@ -66,7 +66,7 @@ public class AdamFiles : CustomDataSourceAdvanced
     #region Constructor
 
     [PrivateApi]
-    public AdamFiles(MyServices services, AdamDataSourceProvider<int, int> provider) : base(services, "CDS.Adam", connect: [provider])
+    public AdamFiles(Dependencies services, AdamDataSourceProvider<int, int> provider) : base(services, "CDS.Adam", connect: [provider])
     {
         _provider = provider;
 

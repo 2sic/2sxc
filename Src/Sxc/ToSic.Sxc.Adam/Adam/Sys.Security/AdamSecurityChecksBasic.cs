@@ -5,7 +5,7 @@
 /// 
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class AdamSecurityChecksBasic(AdamSecurityChecksBase.MyServices services)
+internal class AdamSecurityChecksBasic(AdamSecurityChecksBase.Dependencies services)
     : AdamSecurityChecksBase(services, LogScopes.Base)
 {
     /// <summary>

@@ -9,11 +9,11 @@ namespace ToSic.Sxc.Cms.Sites.Sys;
 /// Must be overriden in each platform.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class SitesDataSourceProvider(SitesDataSourceProvider.MyServices services, string logName)
-    : ServiceBase<SitesDataSourceProvider.MyServices>(services, logName)
+public abstract class SitesDataSourceProvider(SitesDataSourceProvider.Dependencies services, string logName)
+    : ServiceBase<SitesDataSourceProvider.Dependencies>(services, logName)
 {
-    public class MyServices(LazySvc<IZoneMapper> zoneMapperLazy, IAppsCatalog appsCatalog)
-        : MyServicesBase(connect: [zoneMapperLazy, appsCatalog])
+    public class Dependencies(LazySvc<IZoneMapper> zoneMapperLazy, IAppsCatalog appsCatalog)
+        : DependenciesBase(connect: [zoneMapperLazy, appsCatalog])
     {
         public LazySvc<IZoneMapper> ZoneMapperLazy { get; } = zoneMapperLazy;
         public IAppsCatalog AppsCatalog { get; } = appsCatalog;

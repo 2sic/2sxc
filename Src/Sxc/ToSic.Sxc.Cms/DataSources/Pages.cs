@@ -124,7 +124,7 @@ public class Pages: CustomDataSourceAdvanced
     #region Constructor
 
     [PrivateApi]
-    public Pages(MyServices services, PagesDataSourceProvider provider) : base(services, "CDS.Pages", connect: [provider])
+    public Pages(Dependencies services, PagesDataSourceProvider provider) : base(services, "CDS.Pages", connect: [provider])
     {
         _provider = provider;
 

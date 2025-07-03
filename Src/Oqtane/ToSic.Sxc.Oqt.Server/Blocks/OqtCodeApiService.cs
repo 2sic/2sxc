@@ -5,6 +5,6 @@ namespace ToSic.Sxc.Oqt.Server.Blocks;
 
 [PrivateApi]
 internal class OqtExecutionContext(
-    ExecutionContext.MyServices services,
+    ExecutionContext.Dependencies services,
     LazySvc<AliasResolver> aliasResolverLazy)
     : OqtExecutionContext<object, ServiceKit>(services, aliasResolverLazy);

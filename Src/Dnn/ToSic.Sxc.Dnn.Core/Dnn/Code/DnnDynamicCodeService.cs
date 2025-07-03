@@ -21,7 +21,7 @@ internal class DnnDynamicCodeService: DynamicCodeService
         LazySvc<PageChangeSummary> pageChangeSummary,
         LazySvc<DnnPageChanges> dnnPageChanges,
         LazySvc<DnnClientResources> dnnClientResources)
-        : MyServicesBase(connect: [pageServiceShared, pageChangeSummary, dnnPageChanges, dnnClientResources])
+        : DependenciesBase(connect: [pageServiceShared, pageChangeSummary, dnnPageChanges, dnnClientResources])
     {
         public LazySvc<IPageServiceShared> PageServiceShared { get; } = pageServiceShared;
         public LazySvc<PageChangeSummary> PageChangeSummary { get; } = pageChangeSummary;
@@ -29,7 +29,7 @@ internal class DnnDynamicCodeService: DynamicCodeService
         public LazySvc<DnnClientResources> DnnClientResources { get; } = dnnClientResources;
     }
 
-    public DnnDynamicCodeService(MyServices services) : base(services, $"{DnnConstants.LogName}.DynCdS")
+    public DnnDynamicCodeService(Dependencies services) : base(services, $"{DnnConstants.LogName}.DynCdS")
     {
         _scopedServices = ScopedServiceProvider.Build<MyScopedServices>().ConnectServices(Log);
         _user = services.User;

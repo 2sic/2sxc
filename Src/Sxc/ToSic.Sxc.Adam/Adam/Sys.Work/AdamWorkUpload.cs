@@ -4,7 +4,7 @@ using ToSic.Sys.Security.Permissions;
 namespace ToSic.Sxc.Adam.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public partial class AdamWorkUpload(AdamWorkBase.MyServices services)
+public partial class AdamWorkUpload(AdamWorkBase.Dependencies services)
     : AdamWorkBase(services, "Adm.TrnUpl")
 {
 

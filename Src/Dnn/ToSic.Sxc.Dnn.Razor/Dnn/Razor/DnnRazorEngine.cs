@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn.Razor;
 [EngineDefinition(Name = "Razor")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 // ReSharper disable once UnusedMember.Global
-internal partial class DnnRazorEngine(EngineBase.MyServices helpers, DnnRazorCompiler razorCompiler)
+internal partial class DnnRazorEngine(EngineBase.Dependencies helpers, DnnRazorCompiler razorCompiler)
     : EngineBase(helpers, connect: [razorCompiler]),
         IRazorEngine
         // #RemovedV20 #ModulePublish

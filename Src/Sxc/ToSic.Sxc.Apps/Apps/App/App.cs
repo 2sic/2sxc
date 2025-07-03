@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Apps;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
 public partial class App(
-    SxcAppBase.MyServices services,
+    SxcAppBase.Dependencies services,
     LazySvc<GlobalPaths> globalPaths,
     LazySvc<ICodeDataFactory> cdfLazy,
     LazySvc<CodeInfoService> codeChanges,

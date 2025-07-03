@@ -9,7 +9,7 @@ using ToSic.Sxc.Data.Sys.Factory;
 namespace ToSic.Sxc.Apps.Internal;
 
 internal class AppDataTyped(
-    Eav.DataSources.App.MyServices services,
+    Eav.DataSources.App.Dependencies services,
     LazySvc<SimpleDataEditService> dataController,
     LazySvc<IDataSourceCacheService> dsCacheSvc)
     : AppDataWithCrud(services, dataController, dsCacheSvc), IAppDataTyped

@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context;
 internal sealed class DnnUiContextBuilder(
     ISxcCurrentContextService ctxService,
     ExternalLinksService externalLinksService,
-    UiContextBuilderBase.MyServices deps)
+    UiContextBuilderBase.Dependencies deps)
     : UiContextBuilderBase(deps)
 {
     #region Constructor / DI

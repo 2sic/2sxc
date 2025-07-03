@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Data.Sys.Convert;
 [PrivateApi("Hide implementation; this was never public; the DataToDictionary was with empty constructor, but that's already polyfilled")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
-public class ConvertToEavLightWithCmsInfo(ConvertToEavLight.MyServices services) : ConvertToEavLight(services)
+public class ConvertToEavLightWithCmsInfo(ConvertToEavLight.Dependencies services) : ConvertToEavLight(services)
 {
     /// <summary>
     /// Determines if we should use edit-information

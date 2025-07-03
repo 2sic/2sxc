@@ -24,7 +24,7 @@ namespace ToSic.Sxc.DataSources;
 [PrivateApi("used to be Internal... till 16.01, then changed to private to hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 // ReSharper disable once PartialTypeWithSinglePart
-public partial class ContextData(DataSourceBase.MyServices services) : PassThrough(services, "Sxc.BlckDs")
+public partial class ContextData(DataSourceBase.Dependencies services) : PassThrough(services, "Sxc.BlckDs")
 {
     #region Constructor and Init
 

@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks;
 internal class OqtExecutionContext<TModel, TServiceKit> : ExecutionContext<TModel, TServiceKit> where TServiceKit : ServiceKit where TModel : class
 {
     private readonly LazySvc<AliasResolver> _aliasResolverLazy;
-    public OqtExecutionContext(MyServices services, LazySvc<AliasResolver> aliasResolverLazy) : base(services, OqtConstants.OqtLogPrefix)
+    public OqtExecutionContext(Dependencies services, LazySvc<AliasResolver> aliasResolverLazy) : base(services, OqtConstants.OqtLogPrefix)
     {
         ConnectLogs([
             _aliasResolverLazy = aliasResolverLazy

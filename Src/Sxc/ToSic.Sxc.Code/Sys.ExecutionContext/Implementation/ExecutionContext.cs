@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 /// </remarks>
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.MyServices>, IExecutionContext, IGetCodePath, IHasPiggyBack, ICanGetService
+public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.Dependencies>, IExecutionContext, IGetCodePath, IHasPiggyBack, ICanGetService
 {
     #region Constructor
 
@@ -34,7 +34,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.My
     /// Helper class to ensure if dependencies change, inheriting objects don't need to change their signature
     /// </summary>
     [PrivateApi]
-    public class MyServices(
+    public class Dependencies(
         IServiceProvider serviceProvider,
         LazySvc<IClassCompiler> codeCompilerLazy,
         AppDataStackService dataStackService,
@@ -42,7 +42,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.My
         LazySvc<CodeCreateDataSourceSvc> dataSources,
         LazySvc<ICodeDataFactory> cdf,
         Polymorphism.Internal.PolymorphConfigReader polymorphism)
-        : MyServicesBase(connect:
+        : DependenciesBase(connect:
             [/* never! serviceProvider */ codeCompilerLazy, dataStackService, convertService, dataSources, cdf, polymorphism])
     {
         public ICodeDataFactory Cdf => cdf.Value;
@@ -55,7 +55,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.My
     }
 
     [PrivateApi]
-    protected internal ExecutionContext(MyServices services, string logPrefix) : base(services, logPrefix + ".DynCdR")
+    protected internal ExecutionContext(Dependencies services, string logPrefix) : base(services, logPrefix + ".DynCdR")
     {
         // Prepare services which need to be attached to this dynamic code root
         CmsContext = GetService<ICmsContext>();

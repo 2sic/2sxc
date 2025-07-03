@@ -53,7 +53,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
         var block = _sysHlp.GetBlockAndContext(request);
         Log.A($"HasBlock: {block != null}");
 
-        var services = _sysHlp.GetService<ApiControllerMyServices>().ConnectServices(Log);
+        var services = _sysHlp.GetService<ApiControllerDependencies>().ConnectServices(Log);
         var codeRoot = services.ExecutionContextFactory
             .New(_owner, block, Log, compatibilityFallback: CompatibilityLevels.CompatibilityLevel10);
 
@@ -89,7 +89,7 @@ internal class DynamicApiCodeHelpers: CodeHelper
     }
 
 
-    private IApp GetAppOrNullFromUrlParams(ApiControllerMyServices services, HttpRequestMessage request)
+    private IApp GetAppOrNullFromUrlParams(ApiControllerDependencies services, HttpRequestMessage request)
     {
         var l = Log.Fn<IApp>();
         try

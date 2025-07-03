@@ -34,13 +34,13 @@ namespace ToSic.Sxc.Dnn.Razor.Internal;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 // ReSharper disable once UnusedMember.Global
 internal class DnnRazorCompiler(
-    EngineBase.MyServices helpers,
+    EngineBase.Dependencies helpers,
     IExecutionContextFactory exCtxFactory,
     LazySvc<CodeErrorHelpService> errorHelp,
     LazySvc<SourceAnalyzer> sourceAnalyzer,
     LazySvc<IRoslynBuildManager> roslynBuildManager,
     LazySvc<IAppJsonConfigurationService> appJson)
-    : ServiceBase<EngineBase.MyServices>(helpers, "Dnn.RzComp", connect: [exCtxFactory, errorHelp, sourceAnalyzer, roslynBuildManager, appJson])
+    : ServiceBase<EngineBase.Dependencies>(helpers, "Dnn.RzComp", connect: [exCtxFactory, errorHelp, sourceAnalyzer, roslynBuildManager, appJson])
 {
     protected HotBuildSpec HotBuildSpecs;
     [PrivateApi] protected IBlock Block;

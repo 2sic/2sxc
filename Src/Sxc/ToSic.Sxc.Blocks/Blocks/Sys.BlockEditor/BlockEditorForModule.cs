@@ -4,7 +4,7 @@ namespace ToSic.Sxc.Blocks.Sys.BlockEditor;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class BlockEditorForModule(
-    BlockEditorBase.MyServices services,
+    BlockEditorBase.Dependencies services,
     LazySvc<IPlatformModuleUpdater> platformModuleUpdater)
     : BlockEditorBase(services, connect: [platformModuleUpdater])
 {

@@ -5,7 +5,7 @@ using ToSic.Sxc.Cms.Sites.Sys;
 namespace ToSic.Sxc.DataSources;
 
 [PrivateApi]
-internal class DnnSitesDsProvider(SitesDataSourceProvider.MyServices services)
+internal class DnnSitesDsProvider(SitesDataSourceProvider.Dependencies services)
     : SitesDataSourceProvider(services, "Dnn.Sites")
 {
     public override List<SiteModel> GetSitesInternal()

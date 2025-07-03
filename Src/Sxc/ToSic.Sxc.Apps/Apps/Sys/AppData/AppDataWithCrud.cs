@@ -20,7 +20,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
 
     #region Constructor stuff
 
-    public AppDataWithCrud(MyServices services, LazySvc<SimpleDataEditService> dataController, LazySvc<IDataSourceCacheService> dsCacheSvc) : base(services)
+    public AppDataWithCrud(Dependencies services, LazySvc<SimpleDataEditService> dataController, LazySvc<IDataSourceCacheService> dsCacheSvc) : base(services)
     {
         ConnectLogs([
             DataController = dataController.SetInit(dc => dc.Init(ZoneId, AppId, false)),

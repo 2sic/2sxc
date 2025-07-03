@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Adam.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamWorkGet(AdamWorkBase.MyServices services)
+public class AdamWorkGet(AdamWorkBase.Dependencies services)
     : AdamWorkBase(services, "Adm.TrnFld")
 {
     public AdamFolderFileSet? ItemsInField(string subFolderName, bool autoCreate = false)

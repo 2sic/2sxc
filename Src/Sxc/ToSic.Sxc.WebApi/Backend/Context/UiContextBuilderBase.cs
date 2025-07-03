@@ -12,12 +12,12 @@ using static ToSic.Sys.Capabilities.Features.BuiltInFeatures;
 namespace ToSic.Sxc.Backend.Context;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
-    : ServiceBase<UiContextBuilderBase.MyServices>(services, SxcLogName + ".UiCtx"), IUiContextBuilder
+public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
+    : ServiceBase<UiContextBuilderBase.Dependencies>(services, SxcLogName + ".UiCtx"), IUiContextBuilder
 {
     #region Dependencies 
 
-    public class MyServices(
+    public class Dependencies(
         IContextOfSite siteCtx,
         LazySvc<ISysFeaturesService> features,
         LazySvc<IUiData> uiDataLazy,
@@ -25,7 +25,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.MyServices services)
         IAppPathsMicroSvc appPaths,
         LazySvc<GlobalPaths> globalPaths,
         IAppsCatalog appsCatalog
-    ) : MyServicesBase(connect: [siteCtx, features, uiDataLazy, appPaths, languagesBackend, globalPaths, appsCatalog])
+    ) : DependenciesBase(connect: [siteCtx, features, uiDataLazy, appPaths, languagesBackend, globalPaths, appsCatalog])
     {
         public LazySvc<GlobalPaths> GlobalPaths { get; } = globalPaths;
         public IAppPathsMicroSvc AppPaths { get; } = appPaths;

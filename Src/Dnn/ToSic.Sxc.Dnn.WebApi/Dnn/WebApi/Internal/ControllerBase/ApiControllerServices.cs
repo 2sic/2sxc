@@ -9,11 +9,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Internal;
 /// But for consistency, we're building a comparable structure here.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ApiControllerMyServices(
+public class ApiControllerDependencies(
     IExecutionContextFactory exCtxFactory,
     DnnAppFolderUtilities appFolderUtilities,
     LazySvc<Apps.App> appOverrideLazy)
-    : MyServicesBase(connect: [exCtxFactory, appFolderUtilities, appOverrideLazy])
+    : DependenciesBase(connect: [exCtxFactory, appFolderUtilities, appOverrideLazy])
 {
     public LazySvc<Apps.App> AppOverrideLazy { get; } = appOverrideLazy;
     public IExecutionContextFactory ExecutionContextFactory { get; } = exCtxFactory;

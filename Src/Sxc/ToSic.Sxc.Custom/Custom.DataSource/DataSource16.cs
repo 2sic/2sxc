@@ -23,10 +23,10 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.MyServices>
     /// This ensures that all users must have this in the constructor, so we can be sure we can add more dependencies as we need them.
     /// </summary>
     [PrivateApi]
-    public class MyServices(CustomDataSource.MyServices parentServices, ServiceKitLight16 kit)
-        : MyServicesBase(connect: [kit])
+    public class MyServices(CustomDataSource.Dependencies parentServices, ServiceKitLight16 kit)
+        : DependenciesBase(connect: [kit])
     {
-        public CustomDataSource.MyServices ParentServices { get; } = parentServices;
+        public CustomDataSource.Dependencies ParentServices { get; } = parentServices;
         public ServiceKitLight16 Kit { get; } = kit;
     }
 

@@ -8,7 +8,7 @@ using IFolder = ToSic.Eav.Apps.Assets.IFolder;
 
 namespace ToSic.Sxc.Dnn.Backend;
 
-internal class DnnAdamSecurityChecks(AdamSecurityChecksBase.MyServices services)
+internal class DnnAdamSecurityChecks(AdamSecurityChecksBase.Dependencies services)
     : AdamSecurityChecksBase(services, DnnConstants.LogName)
 {
     /// <summary>

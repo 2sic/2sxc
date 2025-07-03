@@ -26,13 +26,13 @@ public static class SxcCmsStartup
         services.TryAddTransient<PagesDataSourceProvider, PagesDataSourceProviderUnknown>();
         services.TryAddTransient<IUsersProvider, UsersProviderUnknown>();
         services.TryAddTransient<IUserRolesProvider, UserRolesProviderUnknown>();
-        services.TryAddTransient<SitesDataSourceProvider.MyServices>();
+        services.TryAddTransient<SitesDataSourceProvider.Dependencies>();
         services.TryAddTransient<SitesDataSourceProvider, SitesDataSourceProviderUnknown>();
 
         services.TryAddTransient<AppAssetsDataSourceProvider>();
-        services.TryAddTransient<AppAssetsDataSourceProvider.MyServices>();
+        services.TryAddTransient<AppAssetsDataSourceProvider.Dependencies>();
         services.TryAddTransient(typeof(AdamDataSourceProvider<,>));
-        services.TryAddTransient(typeof(AdamDataSourceProvider<,>.MyServices));
+        services.TryAddTransient(typeof(AdamDataSourceProvider<,>.Dependencies));
 
 
         return services;

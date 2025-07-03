@@ -17,14 +17,14 @@ namespace ToSic.Sxc.Adam.Sys.Manager;
 /// It's abstract, because there will be a typed implementation inheriting this
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamManager(AdamManager.MyServices services)
-    : ServiceBase<AdamManager.MyServices>(services, "Adm.Managr")
+public class AdamManager(AdamManager.Dependencies services)
+    : ServiceBase<AdamManager.Dependencies>(services, "Adm.Managr")
 {
     #region MyServices
 
-    public class MyServices(LazySvc<ICodeDataFactory> cdf, AdamConfiguration adamConfiguration,
+    public class Dependencies(LazySvc<ICodeDataFactory> cdf, AdamConfiguration adamConfiguration,
         LazySvc<IAdamFileSystem> adamFsLazy, Generator<AdamStorageOfField> fieldStorageGenerator, AdamGenericHelper adamGenericHelper)
-        : MyServicesBase(connect: [cdf, adamConfiguration, adamFsLazy, fieldStorageGenerator])
+        : DependenciesBase(connect: [cdf, adamConfiguration, adamFsLazy, fieldStorageGenerator])
     {
         public LazySvc<ICodeDataFactory> CdfIfNotProvided { get; } = cdf;
         public AdamConfiguration AdamConfiguration { get; } = adamConfiguration;

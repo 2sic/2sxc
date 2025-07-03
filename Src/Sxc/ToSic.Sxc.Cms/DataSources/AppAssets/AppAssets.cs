@@ -85,7 +85,7 @@ public class AppAssets: CustomDataSourceAdvanced
     #region Constructor
 
     [PrivateApi]
-    public AppAssets(MyServices services, AppAssetsDataSourceProvider appAssetsSource) : base(services, "CDS.AppFiles", connect: [appAssetsSource])
+    public AppAssets(Dependencies services, AppAssetsDataSourceProvider appAssetsSource) : base(services, "CDS.AppFiles", connect: [appAssetsSource])
     {
         _appAssetsSource = appAssetsSource;
 

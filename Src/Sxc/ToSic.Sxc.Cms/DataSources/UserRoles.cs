@@ -78,7 +78,7 @@ public class UserRoles : CustomDataSourceAdvanced
     /// Constructor to tell the system what out-streams we have
     /// </summary>
     [PrivateApi]
-    public UserRoles(MyServices services, IUserRolesProvider provider)
+    public UserRoles(Dependencies services, IUserRolesProvider provider)
         : base(services, "SDS.Roles", connect: [provider])
     {
         _provider = provider;

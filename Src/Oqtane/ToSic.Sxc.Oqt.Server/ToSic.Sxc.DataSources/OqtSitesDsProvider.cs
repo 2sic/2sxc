@@ -18,7 +18,7 @@ internal class OqtSitesDsProvider : SitesDataSourceProvider
 
     #region Constructor / DI
 
-    public OqtSitesDsProvider(MyServices services, IAliasRepository aliases, ISiteRepository sites, LazySvc<OqtCulture> oqtCulture)
+    public OqtSitesDsProvider(Dependencies services, IAliasRepository aliases, ISiteRepository sites, LazySvc<OqtCulture> oqtCulture)
         :base(services, "Oqt.Sites")
     {
         ConnectLogs([

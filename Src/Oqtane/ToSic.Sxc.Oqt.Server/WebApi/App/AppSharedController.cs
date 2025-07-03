@@ -11,5 +11,5 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 [Route(OqtWebApiConstants.SharedRootPathOrLang + "/{appName}/")]
 [Route(OqtWebApiConstants.SharedRootPathAndLang + "/{appName}/")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppSharedController(AppAssetsControllerBase.MyServices services)
+public class AppSharedController(AppAssetsControllerBase.Dependencies services)
     : AppAssetsControllerBase(services, OqtAssetsFileHelper.RouteShared, "Shared");
