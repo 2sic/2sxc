@@ -2,7 +2,7 @@
 using static ToSic.Sxc.Images.RecipeVariant;
 using static ToSic.Sxc.Sys.Plumbing.ParseObject;
 
-namespace ToSic.Sxc.Images;
+namespace ToSic.Sxc.Images.Sys.ResizeSettings;
 
 [PrivateApi("Internal stuff")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

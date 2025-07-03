@@ -1,6 +1,7 @@
 ﻿using ToSic.Razor.Markup;
 using ToSic.Sxc.Edit.Toolbar;
-using ToSic.Sxc.Edit.Toolbar.Internal;
+using ToSic.Sxc.Edit.Toolbar.Sys;
+using ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 
 
 namespace ToSic.Sxc.Edit.EditService;

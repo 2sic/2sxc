@@ -6,6 +6,7 @@ using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Eav.Metadata;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Images.Sys.ResizeSettings;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Capabilities.Features;
@@ -52,7 +53,7 @@ public class ImgResizeLinker(
         var l = (Debug ? Log : null).Fn<string?>($"{nameof(url)}:{url}");
 
         // Modern case - all settings have already been prepared, the other settings are ignored
-        if (settings is ResizeSettings resizeSettings)
+        if (settings is ResizeSettings.ResizeSettings resizeSettings)
         {
             var basic = ImageOnly(url, resizeSettings, field).Url;
             return l.Return(basic, "prepared:" + basic);
@@ -67,7 +68,7 @@ public class ImgResizeLinker(
         return l.Return(result, "built:" + result);
     }
         
-    internal OneResize ImageOnly(string? url, ResizeSettings settings, IHasMetadata? field)
+    internal OneResize ImageOnly(string? url, ResizeSettings.ResizeSettings settings, IHasMetadata? field)
     {
         var l = Log.Fn<OneResize>();
         var srcSetSettings = settings.Find(SrcSetType.Img, features.Value.IsEnabled(ImageServiceUseFactors), koi.Value.Framework);
@@ -75,7 +76,7 @@ public class ImgResizeLinker(
     }
         
 
-    internal string? SrcSet(string? url, ResizeSettings settings, SrcSetType srcSetType, IHasMetadata? field = null)
+    internal string? SrcSet(string? url, ResizeSettings.ResizeSettings settings, SrcSetType srcSetType, IHasMetadata? field = null)
     {
         var l = Log.Fn<string?>();
 
@@ -105,7 +106,7 @@ public class ImgResizeLinker(
 
 
 
-    private OneResize ConstructUrl(string? url, ResizeSettings resizeSettings, Recipe? srcSetSettings, IHasMetadata? fieldForMd, RecipeVariant? partDef = null)
+    private OneResize ConstructUrl(string? url, ResizeSettings.ResizeSettings resizeSettings, Recipe? srcSetSettings, IHasMetadata? fieldForMd, RecipeVariant? partDef = null)
     {
         var one = DimGen.ResizeDimensions(resizeSettings, srcSetSettings, partDef) with
         {

@@ -9,7 +9,7 @@ using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Json;
 using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Images;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Sys.ConvertService;
 using ToSic.Sxc.Services.Tweaks;
 using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
 

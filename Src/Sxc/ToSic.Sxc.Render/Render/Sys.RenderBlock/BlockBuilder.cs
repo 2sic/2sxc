@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Render.Sys.ModuleHtml;
 using ToSic.Sxc.Sys.Integration.Installation;
 using ToSic.Sxc.Web.Sys.PageService;
 using ToSic.Sys.Capabilities.Licenses;
@@ -26,10 +26,10 @@ public partial class BlockBuilder(BlockBuilder.Dependencies services)
         Generator<IRenderingHelper> renderHelpGen,
         LazySvc<PageChangeSummary> pageChangeSummary,
         LazySvc<ILicenseService> licenseService,
-        IModuleService moduleService,
+        IModuleHtmlService moduleHtmlService,
         CodeInfosInScope codeInfos)
         : DependenciesBase(connect:
-            [engineFactory, envInstGen, renderHelpGen, pageChangeSummary, licenseService, moduleService, codeInfos])
+            [engineFactory, envInstGen, renderHelpGen, pageChangeSummary, licenseService, moduleHtmlService, codeInfos])
     {
         public CodeInfosInScope CodeInfos { get; } = codeInfos;
         public IEngineFactory EngineFactory { get; } = engineFactory;
@@ -37,7 +37,7 @@ public partial class BlockBuilder(BlockBuilder.Dependencies services)
         public Generator<IRenderingHelper> RenderHelpGen { get; } = renderHelpGen;
         public LazySvc<PageChangeSummary> PageChangeSummary { get; } = pageChangeSummary;
         public LazySvc<ILicenseService> LicenseService { get; } = licenseService;
-        public IModuleService ModuleService { get; } = moduleService;
+        public IModuleHtmlService ModuleHtmlService { get; } = moduleHtmlService;
     }
 
     #region Constructor

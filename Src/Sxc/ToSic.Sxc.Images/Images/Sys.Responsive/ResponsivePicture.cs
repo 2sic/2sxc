@@ -1,13 +1,13 @@
-﻿
-using ToSic.Razor.Blade;
+﻿using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Images.Sys;
+using ToSic.Sxc.Images.Sys.ResizeSettings;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Images.Internal;
+namespace ToSic.Sxc.Images;
 
 /// <remarks>
 /// Must be public, otherwise it breaks in dynamic use :(

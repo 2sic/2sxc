@@ -3,7 +3,7 @@ using ToSic.Eav.Metadata;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys.CmsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal abstract class CmsContextPartBase<T>(CmsContext parent, T contents) : Wrapper<T>(contents), IHasMetadata

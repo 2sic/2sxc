@@ -4,7 +4,8 @@ using ToSic.Eav.ImportExport.Integration;
 using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context.Sys;
-using ToSic.Sxc.Internal;
+using ToSic.Sxc.Edit.Sys;
+
 using ToSic.Sxc.Render.Sys.JsContext;
 using ToSic.Sxc.Sys.Integration.Paths;
 using ToSic.Sxc.Web.Sys.Html;

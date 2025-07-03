@@ -18,7 +18,6 @@ global using ToSic.Sys.Data;
 global using ToSic.Sys.Logging;
 global using ToSic.Sys.Services;
 global using ToSic.Sxc.Apps.Sys.Work;
-global using ToSic.Sxc.Context.Internal;
 global using ToSic.Sxc.Context.Sys;
 global using ToSic.Sys.Performance;
 global using static ToSic.Sxc.Sys.SxcLogging;

@@ -7,6 +7,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys;
 using ToSic.Sxc.Data.Sys.CodeDataFactory;
 using ToSic.Sxc.Data.Sys.Factory;
+using ToSic.Sxc.Edit.Toolbar.Sys;
 using ToSic.Sxc.Services;
 
 // ReSharper disable once CheckNamespace
@@ -32,7 +33,7 @@ internal class OldDynamicEntityFeatures : IOldDynamicEntityFeatures
         if (cdf.CompatibilityLevel > CompatibilityLevels.MaxLevelForEntityDotToolbar)
             throw new("content.Toolbar is deprecated in the new RazorComponent. Use @Edit.TagToolbar(content) or @Edit.Toolbar(content) instead. See https://go.2sxc.org/EditToolbar");
 
-        var toolbar = new Edit.Toolbar.ItemToolbar(entity).ToolbarAsTag;
+        var toolbar = new ItemToolbar(entity).ToolbarAsTag;
         return new System.Web.HtmlString(toolbar);
 
     }

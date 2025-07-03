@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Context.Internal;
+﻿using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
 using static ToSic.Sxc.Services.Cache.CacheServiceConstants;

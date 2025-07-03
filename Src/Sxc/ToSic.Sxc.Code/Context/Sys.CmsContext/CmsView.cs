@@ -7,9 +7,10 @@ using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Sys.ExecutionContext;
+
 // ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys.CmsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CmsView(CmsContext parent, IBlock block) : CmsContextPartBase<IView>(parent, block.View!), ICmsView

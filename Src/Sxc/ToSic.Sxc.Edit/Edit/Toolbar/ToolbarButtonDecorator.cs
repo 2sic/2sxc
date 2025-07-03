@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Data.Sys.Entities;
-using ToSic.Sxc.Edit.Toolbar.Internal;
+using ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 
 namespace ToSic.Sxc.Edit.Toolbar;
 

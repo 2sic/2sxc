@@ -5,7 +5,7 @@ using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Render.Sys.RenderBlock;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 
 namespace ToSic.Sxc.Render.Sys;

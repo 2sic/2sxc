@@ -1,7 +1,7 @@
 ﻿using ToSic.Sxc.Render.Sys;
+using ToSic.Sxc.Render.Sys.ModuleHtml;
 using ToSic.Sxc.Render.Sys.Output;
 using ToSic.Sxc.Render.Sys.Specs;
-using ToSic.Sxc.Services.Internal;
 using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Sys.ClientAssets;
@@ -21,8 +21,8 @@ namespace ToSic.Sxc.Web.Sys.PageService;
 public class PageChangeSummary(
     LazySvc<IBlockResourceExtractor> resourceExtractor,
     LazySvc<RequirementsService> requirements,
-    IModuleService moduleService)
-    : Services_ServiceBase(SxcLogName + "PgChSm", connect: [requirements, resourceExtractor, moduleService])
+    IModuleHtmlService moduleHtmlService)
+    : Services_ServiceBase(SxcLogName + "PgChSm", connect: [requirements, resourceExtractor, moduleHtmlService])
 {
     /// <summary>
     /// Finalize the page and get all changes such as header modifications etc.
@@ -57,7 +57,7 @@ public class PageChangeSummary(
             .ToList();
 
         // New beta 2025-03-18 v19.03.03
-        var cacheSettings = moduleId != 0 ? ((ModuleService)moduleService).GetOutputCache(moduleId) : null;
+        var cacheSettings = moduleId != 0 ? ((ModuleHtmlService)moduleHtmlService).GetOutputCache(moduleId) : null;
 
         var csp = ((IPageServiceSharedInternal)pss).Csp;
         var result = new RenderResult

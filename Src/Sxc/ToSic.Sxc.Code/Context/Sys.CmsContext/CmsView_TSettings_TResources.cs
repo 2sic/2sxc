@@ -4,7 +4,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys.CmsContext;
 
 /// <summary>
 /// 

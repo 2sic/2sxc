@@ -4,7 +4,7 @@ using ToSic.Razor.Markup;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Typed;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys;
 
 partial record Parameters: ITyped
 {

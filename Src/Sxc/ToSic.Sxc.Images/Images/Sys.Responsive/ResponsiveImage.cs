@@ -2,7 +2,7 @@
 using ToSic.Sxc.Images.Sys;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Images.Internal;
+namespace ToSic.Sxc.Images;
 
 /// <remarks>
 /// Must be public, otherwise it breaks in dynamic use :(

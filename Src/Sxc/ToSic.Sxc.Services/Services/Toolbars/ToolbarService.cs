@@ -1,6 +1,7 @@
 ﻿using ToSic.Sxc.Edit.Toolbar;
-using ToSic.Sxc.Edit.Toolbar.Internal;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Edit.Toolbar.Sys.Rules;
+using ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services;

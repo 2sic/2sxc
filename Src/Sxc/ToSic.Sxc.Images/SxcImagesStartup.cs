@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Images;
-using ToSic.Sxc.Images.Internal;
 using ToSic.Sxc.Images.Sys;
+using ToSic.Sxc.Images.Sys.Metadata;
+using ToSic.Sxc.Images.Sys.ResizeSettings;
 using ToSic.Sxc.Services;
 
 // ReSharper disable once CheckNamespace

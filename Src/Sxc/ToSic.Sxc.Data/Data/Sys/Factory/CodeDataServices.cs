@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Sys.ValueConverter;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Sys.ConvertService;
 
 namespace ToSic.Sxc.Data.Sys.Factory;
 

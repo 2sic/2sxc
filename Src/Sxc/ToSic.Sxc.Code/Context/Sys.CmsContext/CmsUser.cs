@@ -3,7 +3,7 @@ using ToSic.Eav.Metadata.Sys;
 using ToSic.Sxc.Cms.Users;
 using ToSic.Sys.Users;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys.CmsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CmsUser(CmsContext parent, IUserModel userModel, IMetadataOfSource appReader)

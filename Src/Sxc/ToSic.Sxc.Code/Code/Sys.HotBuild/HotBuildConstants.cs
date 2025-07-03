@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Sys;
 
-namespace ToSic.Sxc.Code.Internal.HotBuild;
+namespace ToSic.Sxc.Code.Sys.HotBuild;
 
 // TODO: MAKE class INTERNAL AGAIN AFTER MOVING TO ToSic.Sxc.Custom
 

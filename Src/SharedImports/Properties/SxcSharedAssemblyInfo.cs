@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using static ToSic.Sxc.Internal.SxcSharedAssemblyInfo;
+using static ToSic.Sxc.Sys.SxcSharedAssemblyInfo;
 
 // Use the globally defined assembly version information in all projects
 // This file lies in the ToSic.Eav.Core project and is used as linked in other EAV projects
@@ -16,7 +16,7 @@ using static ToSic.Sxc.Internal.SxcSharedAssemblyInfo;
 
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Internal;
+namespace ToSic.Sxc.Sys;
 
 
 /// <summary>

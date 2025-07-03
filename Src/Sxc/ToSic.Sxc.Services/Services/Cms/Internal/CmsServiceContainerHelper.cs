@@ -1,7 +1,7 @@
 ﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Decorators;
-using ToSic.Sxc.Edit.Toolbar.Internal;
+using ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils;
 

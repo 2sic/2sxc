@@ -1,0 +1,12 @@
+﻿namespace ToSic.Sxc.Services.Sys;
+
+[PrivateApi("v14")]
+[ShowApiWhenReleased(ShowApiMode.Never)]
+public interface IHasKit<out TServiceKit> where TServiceKit : ServiceKit
+{
+    /// <summary>
+    /// The Service Kit containing all kinds of services which are commonly used.
+    /// The services on the Kit are context-aware, so they know what App is currently being used etc.
+    /// </summary>
+    TServiceKit Kit { get; }
+}

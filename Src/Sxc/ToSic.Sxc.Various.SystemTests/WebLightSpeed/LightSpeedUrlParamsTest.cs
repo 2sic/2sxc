@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using ToSic.Eav.Data.Build;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 using ToSic.Sxc.Web.Sys.Url;
 

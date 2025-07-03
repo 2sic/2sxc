@@ -3,7 +3,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Code.Internal;
+namespace ToSic.Sxc.Code.Sys.CodeApiService;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]

@@ -1,7 +1,7 @@
 ﻿
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Images;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.CmsService.Internal;

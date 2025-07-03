@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Images.Sys;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal static class ResizeSettingsExtensions
 {
-    internal static Recipe? Find(this ResizeSettings? resizeSettings, SrcSetType srcSetType, bool useFactors, string? cssFramework)
+    internal static Recipe? Find(this ResizeSettings.ResizeSettings? resizeSettings, SrcSetType srcSetType, bool useFactors, string? cssFramework)
     {
         if (resizeSettings == null)
             return null;

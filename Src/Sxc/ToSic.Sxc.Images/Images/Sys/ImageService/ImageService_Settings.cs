@@ -1,4 +1,5 @@
-﻿using ToSic.Sys.Utils;
+﻿using ToSic.Sxc.Images.Sys.ResizeSettings;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Images.Sys;
 
@@ -28,7 +29,7 @@ partial class ImageService
     /// Internal Get-Settings, with internal type.
     /// </summary>
     /// <returns>an internal settings record which could be further manipulated</returns>
-    internal ResizeSettings SettingsInternal(
+    internal ResizeSettings.ResizeSettings SettingsInternal(
         object? settings = default,
         NoParamOrder noParamOrder = default,
         Func<ITweakResize, ITweakResize>? tweak = default,

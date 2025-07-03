@@ -5,7 +5,7 @@ using ToSic.Sys.Utils;
 using static ToSic.Sxc.Images.Sys.ImageConstants;
 using static ToSic.Sxc.Sys.Plumbing.ParseObject;
 
-namespace ToSic.Sxc.Images;
+namespace ToSic.Sxc.Images.Sys.ResizeSettings;
 
 /// <summary>
 /// This merges predefined settings with custom specified parameters to create a stable resize-Parameters object for further use

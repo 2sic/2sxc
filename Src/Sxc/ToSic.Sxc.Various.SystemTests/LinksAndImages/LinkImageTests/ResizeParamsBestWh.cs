@@ -1,5 +1,6 @@
 ﻿using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Sys;
+using ToSic.Sxc.Images.Sys.ResizeSettings;
 using ToSic.Sys.GetByName;
 
 #pragma warning disable xUnit1026

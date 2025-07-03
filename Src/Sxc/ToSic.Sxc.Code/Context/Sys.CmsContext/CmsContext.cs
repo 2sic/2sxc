@@ -1,13 +1,12 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Context.Sys.Module;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys.CmsContext;
 
 /// <summary>
 /// Runtime context information, used in dynamic code. Help the code to detect what environment it's in, what page etc.

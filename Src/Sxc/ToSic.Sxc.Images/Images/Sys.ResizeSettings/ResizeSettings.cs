@@ -1,10 +1,9 @@
 ﻿using System.Collections.Specialized;
-using ToSic.Sxc.Images.Sys;
 using ToSic.Sys.Utils;
 using static ToSic.Sxc.Images.Sys.ImageConstants;
 using static ToSic.Sxc.Sys.Plumbing.ParseObject;
 
-namespace ToSic.Sxc.Images;
+namespace ToSic.Sxc.Images.Sys.ResizeSettings;
 
 [PrivateApi("Hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

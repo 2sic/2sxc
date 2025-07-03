@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Images;
+﻿namespace ToSic.Sxc.Images.Sys.ResizeSettings;
 
 /// <summary>
 /// This is not ready yet.

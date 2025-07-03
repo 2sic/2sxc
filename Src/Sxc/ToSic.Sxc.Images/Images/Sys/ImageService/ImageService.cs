@@ -1,6 +1,5 @@
-﻿using ToSic.Sxc.Images.Internal;
-using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Internal;
+﻿using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Sys;
 
 namespace ToSic.Sxc.Images.Sys;
 
