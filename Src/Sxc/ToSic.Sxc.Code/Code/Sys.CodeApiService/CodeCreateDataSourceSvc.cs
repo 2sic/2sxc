@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Internal.Catalog;
+using ToSic.Eav.DataSource.Sys.Catalog;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.Services;
 

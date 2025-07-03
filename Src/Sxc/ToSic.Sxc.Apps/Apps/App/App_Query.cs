@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ToSic.Eav.DataSource.Internal;
+using ToSic.Eav.DataSource.Sys;
+using ToSic.Eav.DataSource.Sys.Query;
 
 namespace ToSic.Sxc.Apps;
 
@@ -31,7 +33,7 @@ partial class App
     {
         // Try to find the local query, abort if not found
         // Not final implementation, but goal is to properly cascade from AppState to parent
-        if (Query.TryGetValue(name, out var value) && value is ToSic.Eav.DataSource.Internal.Query.Query query)
+        if (Query.TryGetValue(name, out var value) && value is Query query)
             return query;
 
         // Try to find query definition - while also checking parent apps
