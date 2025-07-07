@@ -19,7 +19,7 @@ partial class DnnEnvironmentInstaller
         // if upgrade has to run
         if (!OldFolderExists() && (new Version(version) <= new Version(20, 0, 0)))
         {
-            _installLogger.LogStep(version, "Upgrade skipped because clean Install detected (installation of everything until and including 20.00.00 has been done by 00.00.01.SqlDataProvider)", true);
+            _installLogger.LogStep(version, "Upgrade skipped because clean Install detected (installation of everything until and including 20.00.00 has been done by 00.00.01.SqlDataProvider)");
             _installLogger.LogVersionCompletedToPreventRerunningTheUpgrade(version);
             return version;
         }
@@ -60,16 +60,16 @@ partial class DnnEnvironmentInstaller
                 // case "15.02.00": // originally moved to here, but the Settings.Installation.LastVersionWithServerChanges had not been upgraded
                 //                  this results in no file being created for 15.02, so the "IsUpgradeComplete" always fails
                 case "15.02.00":    // Set to 15.04 because otherwise the log file is not created if you already have a 15.02+ (necessary to verify UpgradeComplete)
-                    MigrateOldDataFoldersAndRelated(version);
-                    DataTimelineCleaningDataAndChangeSchemaForCJson(version);
+                    MigrateOldDataFoldersAndRelatedV15_02_00(version);
+                    DataTimelineCleaningDataAndChangeSchemaForCJsonV15_02_00(version);
                     break;
 
                 case "20.00.00":
-                    MigrateSystemCustomFolder(version);
+                    MigrateSystemCustomFolderV20_00_00(version);
                     break;
 
                 case "20.00.01":
-                    MigrateAppExtensionsFolder(version);
+                    MigrateAppExtensionsFolderV20_00_01(version);
                     break;
 
                 case "21.00.00":
@@ -124,7 +124,7 @@ partial class DnnEnvironmentInstaller
     private string OldSysFolderRootFullPath(string version) => _oldSysFolderRootFullPath ??= GetOldSysFolder(version);
     private static string _oldSysFolderRootFullPath;
 
-    private void DataTimelineCleaningDataAndChangeSchemaForCJson(string version)
+    private void DataTimelineCleaningDataAndChangeSchemaForCJsonV15_02_00(string version)
     {
         // ToSic_EAV_DataTimeline cleaning data and change schema for CJson
         try
@@ -163,15 +163,15 @@ partial class DnnEnvironmentInstaller
             sqlCommand150000.CommandTimeout = 0; // disable sql execution command timeout on sql server
             sqlCommand150000.ExecuteNonQuery();
 
-            _installLogger.LogStep(version, $"{nameof(DataTimelineCleaningDataAndChangeSchemaForCJson)} - Data cleaning and schema change for CJson completed successfully.");
+            _installLogger.LogStep(version, $"{nameof(DataTimelineCleaningDataAndChangeSchemaForCJsonV15_02_00)} - Data cleaning and schema change for CJson completed successfully.");
         }
         catch (Exception e)
         {
-            _installLogger.LogStep(version, $"{nameof(DataTimelineCleaningDataAndChangeSchemaForCJson)} - Error during timeline data cleaning - {e.Message}");
+            _installLogger.LogStep(version, $"{nameof(DataTimelineCleaningDataAndChangeSchemaForCJsonV15_02_00)} - Error during timeline data cleaning - {e.Message}");
         }
     }
 
-    private void MigrateOldDataFoldersAndRelated(string version)
+    private void MigrateOldDataFoldersAndRelatedV15_02_00(string version)
     {
         try
         {
@@ -185,7 +185,7 @@ partial class DnnEnvironmentInstaller
             if (Directory.Exists(oldDataCustomFolder) && !Directory.Exists(dataCustomFolder))
             {
                 Directory.Move(oldDataCustomFolder, dataCustomFolder);
-                _installLogger.LogStep(version, $"{nameof(MigrateOldDataFoldersAndRelated)} - Old .data-custom folder migrated to new location: '{dataCustomFolder}'");
+                _installLogger.LogStep(version, $"{nameof(MigrateOldDataFoldersAndRelatedV15_02_00)} - Old .data-custom folder migrated to new location: '{dataCustomFolder}'");
             }
 
             // migrate old .databeta folder
@@ -194,12 +194,12 @@ partial class DnnEnvironmentInstaller
             if (Directory.Exists(oldDataBetaFolder) && !Directory.Exists(dataBetaFolder))
             {
                 Directory.Move(oldDataBetaFolder, dataBetaFolder);
-                _installLogger.LogStep(version, $"{nameof(MigrateOldDataFoldersAndRelated)} - Old .databeta folder migrated to new location: '{dataBetaFolder}'");
+                _installLogger.LogStep(version, $"{nameof(MigrateOldDataFoldersAndRelatedV15_02_00)} - Old .databeta folder migrated to new location: '{dataBetaFolder}'");
             }
         }
         catch (Exception e)
         {
-            _installLogger.LogStep(version, $"{nameof(MigrateOldDataFoldersAndRelated)} - Error during migration of old data folders - {e.Message}");
+            _installLogger.LogStep(version, $"{nameof(MigrateOldDataFoldersAndRelatedV15_02_00)} - Error during migration of old data folders - {e.Message}");
         }
     }
 
@@ -286,7 +286,7 @@ partial class DnnEnvironmentInstaller
             _installLogger.LogStep(version, $"{nameof(AddObsolete2SxcJs)} - Error during migration - {e.Message}.");
         }
     }
-    private void MigrateSystemCustomFolder(string version)
+    private void MigrateSystemCustomFolderV20_00_00(string version)
     {
         try
         {
@@ -301,19 +301,19 @@ partial class DnnEnvironmentInstaller
             if (Directory.Exists(oldSystemCustomFolder))
             {
                 Helpers.DirectoryCopy(oldSystemCustomFolder, systemCustomFolder, true);
-                _installLogger.LogStep(version, $"{nameof(MigrateSystemCustomFolder)} - Old '{FolderConstants.DataSubFolderSystemCustom}' folder migrated to new location: " + systemCustomFolder);
+                _installLogger.LogStep(version, $"{nameof(MigrateSystemCustomFolderV20_00_00)} - Old '{FolderConstants.DataSubFolderSystemCustom}' folder migrated to new location: " + systemCustomFolder);
             }
             else
-                _installLogger.LogStep(version, $"{nameof(MigrateSystemCustomFolder)} - Old '{FolderConstants.DataSubFolderSystemCustom}' folder does not exist.");
+                _installLogger.LogStep(version, $"{nameof(MigrateSystemCustomFolderV20_00_00)} - Old '{FolderConstants.DataSubFolderSystemCustom}' folder does not exist.");
         }
         catch (Exception e)
         {
-            _installLogger.LogStep(version, $"{nameof(MigrateSystemCustomFolder)} - Error during migration - " + e.Message);
+            _installLogger.LogStep(version, $"{nameof(MigrateSystemCustomFolderV20_00_00)} - Error during migration - " + e.Message);
         }
     }
 
     // Migrate the 'system' (AppExtensions) folder
-    private void MigrateAppExtensionsFolder(string version)
+    private void MigrateAppExtensionsFolderV20_00_01(string version)
     {
         try
         {
@@ -330,16 +330,16 @@ partial class DnnEnvironmentInstaller
             if (Directory.Exists(oldAppExtensionsFolder))
             {
                 Helpers.DirectoryCopy(oldAppExtensionsFolder, newAppExtensionsFolder, true);
-                _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolder)} - Old '{FolderConstants.AppExtensionsFolder}' folder migrated to new location: " + newAppExtensionsFolder);
+                _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolderV20_00_01)} - Old '{FolderConstants.AppExtensionsFolder}' folder migrated to new location: " + newAppExtensionsFolder);
 
                 RenameAllOldDataSubfolders(version, newAppExtensionsFolder);
             }
             else
-                _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolder)} - Old '{FolderConstants.AppExtensionsFolder}' folder does not exist.");
+                _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolderV20_00_01)} - Old '{FolderConstants.AppExtensionsFolder}' folder does not exist.");
         }
         catch (Exception e)
         {
-            _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolder)} - Error during migration - {e.Message}");
+            _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolderV20_00_01)} - Error during migration - {e.Message}");
         }
     }
 
