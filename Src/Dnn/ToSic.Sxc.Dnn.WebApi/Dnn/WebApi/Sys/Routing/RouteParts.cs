@@ -6,8 +6,8 @@ internal class Roots
 {
     public static RootId[] QueryRoots =
     [
-        new("qry-auto", AppRoots.AppAuto + "/" + AppParts.Query), 
-        new("qry-name", AppRoots.AppNamed + "/" + AppParts.Query)
+        new("qry-auto", $"{AppRoots.AppAuto}/{AppParts.Query}"), 
+        new("qry-name", $"{AppRoots.AppNamed}/{AppParts.Query}")
     ];
     public static RootId[] AppAutoAndNamed =
     [
@@ -23,7 +23,7 @@ internal class Roots
     ];
 
     public static RootId[] AppAutoNamedInclEditions = AppAutoAndNamed
-        .Concat(AppAutoAndNamed.Select(rid => new RootId(rid.Name + "-edition", rid.Path + "/" + ValueTokens.Edition)))
+        .Concat(AppAutoAndNamed.Select(rid => new RootId($"{rid.Name}-edition", $"{rid.Path}/{ValueTokens.Edition}")))
         .ToArray();
 }
 
@@ -36,7 +36,7 @@ internal struct RootId(string name, string path)
 
 internal class RouteParts
 {
-    public const string RouteApiControllerAction = "api/" + ValueTokens.SetControllerAction;
+    public const string RouteApiControllerAction = $"api/{ValueTokens.SetControllerAction}";
 }
 
 internal class ControllerNames
