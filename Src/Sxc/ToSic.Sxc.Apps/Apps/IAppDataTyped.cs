@@ -12,27 +12,29 @@ public interface IAppDataTyped: IDataSource
 {
     #region CRUD
 
-    /// <inheritdoc cref="ToSic.Eav.Apps.IAppData.Create(string, Dictionary{string, object}, string, ITarget)"/>
+    /// <inheritdoc cref="IAppData.Create(string, Dictionary{string, object}, string, ITarget)"/>
     IEntity Create(string contentTypeName, Dictionary<string, object> values, string? userName = null, ITarget? target = null);
 
-    /// <inheritdoc cref="ToSic.Eav.Apps.IAppData.Create(string, IEnumerable{Dictionary{string, object}}, string)"/>
+    /// <inheritdoc cref="IAppData.Create(string, IEnumerable{Dictionary{string, object}}, string)"/>
     IEnumerable<IEntity> Create(string contentTypeName, IEnumerable<Dictionary<string, object>> multiValues, string? userName = null);
 
-    /// <inheritdoc cref="ToSic.Eav.Apps.IAppData.Update"/>
+    /// <inheritdoc cref="IAppData.Update"/>
     void Update(int entityId, Dictionary<string, object> values, string? userName = null);
 
-    /// <inheritdoc cref="ToSic.Eav.Apps.IAppData.Delete"/>
+    /// <inheritdoc cref="IAppData.Delete"/>
     void Delete(int entityId, string? userName = null);
 
     #endregion
 
     #region ContentTypes
 
-    // Note: Implemented as a method, so later we can apply filters etc. as additional parameters
     /// <summary>
     /// All content types of the app.
     /// </summary>
-    /// <remarks>Added v17</remarks>
+    /// <remarks>
+    /// * Added v17
+    /// * Implemented as a method, so later we can apply filters etc. as additional parameters
+    /// </remarks>
     IEnumerable<IContentType> GetContentTypes();
 
     /// <summary>

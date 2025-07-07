@@ -30,10 +30,22 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
 
     #endregion
 
+    #region Get Content Type (added in v20 to better fix Mobius compatbility)
+
+    IContentType? IAppData.GetContentType(string name)
+        => AppReader.TryGetContentType(name);
+
+    IEnumerable<IContentType> IAppData.GetContentTypes()
+        => AppReader.ContentTypes;
+
+    #endregion
+
+    #region CRUD Data Operations
+
     /// <summary>
     /// Get a correctly instantiated instance of the simple data controller once needed.
     /// </summary>
-    /// <returns>An data controller to create, update and delete entities</returns>
+    /// <returns>A data controller to create, update and delete entities</returns>
     private LazySvc<SimpleDataEditService> DataController { get; }
 
     /// <inheritdoc />
@@ -51,13 +63,14 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
         // try to find it again (AppState.List contains also draft items)
         var created = AppReader.List.One(id)
             ?? throw new ArgumentException($"Can't find the freshly created entity with ID {id}, something is wrong.");
-        return l.Return(created, $"{created?.EntityId}/{created?.EntityGuid}");
+        return l.Return(created, $"{created.EntityId}/{created.EntityGuid}");
     }
 
     private static void ProvideOwnerInValues(IDictionary<string, object> values, string userIdentityToken)
     {
         // userIdentityToken is not simple 'userName' string, but 2sxc user IdentityToken structure (like 'dnn:user=N')
-        if (values.ContainsKey(AttributeNames.EntityFieldOwner)) return;
+        if (values.ContainsKey(AttributeNames.EntityFieldOwner))
+            return;
         values.Add(AttributeNames.EntityFieldOwner, userIdentityToken);
     }
 
@@ -77,7 +90,9 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
 
         var ids = DataController.Value.Create(contentTypeName, multiValues);
         FlushDataSnapshot();
-        var created = List.Where(e => ids.Contains(e.EntityId)).ToList();
+        var created = List
+            .Where(e => ids.Contains(e.EntityId))
+            .ToList();
         return l.Return(created, $"{created.Count}");
     }
 
@@ -114,6 +129,10 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
         Reset();
     }
 
+    #endregion
+
+    #region Get Metadata
+
     /// <inheritdoc />
     public IEnumerable<IEntity> GetMetadata<TKey>(int targetType, TKey key, string? contentTypeName = null)
         => AppReader.Metadata.GetMetadata(targetType, key, contentTypeName);
@@ -125,5 +144,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
     /// <inheritdoc />
     public IEnumerable<IEntity> GetCustomMetadata<TKey>(TKey key, string? contentTypeName = null)
         => AppReader.Metadata.GetMetadata(TargetTypes.Custom, key, contentTypeName);
+
+    #endregion
 
 }
