@@ -5,7 +5,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.GetByName;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys;
 
 /// <summary>
 /// This should provide cross-platform, neutral way to have page parameters in the Razor

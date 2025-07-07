@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.Helpers;
-using ToSic.Sxc.Render.Sys.Output;
+﻿using ToSic.Sxc.Render.Sys.Output;
 using ToSic.Sxc.Sys.Render.PageContext;
 
 namespace ToSic.Sxc.Render.Sys.ResourceExtractor;

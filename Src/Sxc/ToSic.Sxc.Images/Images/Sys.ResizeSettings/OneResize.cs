@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Images;
+﻿namespace ToSic.Sxc.Images.Sys.ResizeSettings;
 
 /// <summary>
 /// The final sizes to be used when resizing

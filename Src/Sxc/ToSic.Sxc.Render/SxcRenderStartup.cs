@@ -19,7 +19,7 @@ public static class SxcRenderStartup
     public static IServiceCollection AddSxcRender(this IServiceCollection services)
     {
         services.TryAddTransient<Services.IRenderService, RenderService>();  // new 12.05
-        services.TryAddTransient<RenderService.MyServices>();
+        services.TryAddTransient<RenderService.Dependencies>();
         services.TryAddTransient<SimpleRenderer>();
         services.TryAddTransient<InTextContentBlockRenderer>();
         
@@ -30,7 +30,7 @@ public static class SxcRenderStartup
 //#pragma warning restore CS0618
 //#endif
         services.TryAddTransient<IBlockBuilder, BlockBuilder>();
-        services.TryAddTransient<BlockBuilder.MyServices>();
+        services.TryAddTransient<BlockBuilder.Dependencies>();
 
         services.TryAddTransient<IRenderingHelper, RenderingHelper>();
 

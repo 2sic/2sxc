@@ -46,6 +46,30 @@ internal class HelpForCommonProblems
         UiMessage = "Many methods have optional parameters - these must be named, otherwise you see this error."
     };
 
+    public static CodeHelp AutoInheritsMissingAfterV20 = new()
+    {
+        Name = "auto-inherits-missing-after-v20",
+        Detect = "The webpage at",
+        UiMessage = """
+
+                    In v20, auto inheritance is removed. Make sure your template inherits from the correct base class and check the docs for updated usage.
+
+                    """,
+        DetailsHtml = """
+
+                      This is likely because your template is missing the correct <code>@inherits</code> statement.
+                      <br>
+                      <strong>Solution:</strong> <br>
+                      Ensure your Razor file has the correct <code>@inherits</code> statement for v20. See the docs for more info.
+                      <br>
+                      <code>@inherits ToSic.SexyContent.Razor.SexyContentWebPage</code>
+                      <br>
+                      See the docs for more info.
+
+                      """,
+        LinkCode = "brc-20-stop-auto-inherits",
+    };
+
     public static List<CodeHelp> HelpForInvalidCast =
     [
         IEntityOnEavNamespace
@@ -57,6 +81,7 @@ internal class HelpForCommonProblems
         DynamicList,
         DynamicEntity,
         NoParamOrderUsed,
+        ..HelpForRazorCompileErrors.CompileUnknown,
     ];
 
     public static List<CodeHelp> HelpForRuntimeProblems =

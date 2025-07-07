@@ -1,18 +1,35 @@
 ﻿using System.Diagnostics;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Services;
+using Xunit.Abstractions;
 using static ToSic.Sxc.Services.SecureDataService;
 #pragma warning disable xUnit1026
 
 namespace ToSic.Sxc.ServicesTests.SecureData;
 
-public class SecureDataTest(ISecureDataService sds)
+public class SecureDataTest(ISecureDataService sds, ITestOutputHelper output)
 {
     private ISecureDataService GetSecureDataService()
     {
         sds.Debug = true;
         return sds;
     }
+
+    //[Fact]
+    //public void TestEncryptGoogleApiKey()
+    //{
+    //    var svc = GetSecureDataService() as SecureDataService;
+
+    //    var newSecure = svc.Create(NewApiKeyV20);
+    //    output.WriteLine($"New: '{newSecure}'");
+
+    //    var secured = svc.Parse(SecuredApiKeyV19);
+    //    Equal(OriginalApiKeyV19, secured.Value);
+    //    Equal(SecuredApiKeyV19, svc.Create(OriginalApiKeyV19));
+    //}
+
+    private const string OriginalApiKeyV19 = "todo";
+    private const string SecuredApiKeyV19 = "secure:pycbhspVSBHE662IjdEfFG8rwwCdxN9jCQaMJK6/QfLl/JxaDhAk+6q1WU4BSXw4;iv:HUyYDwdMhsuiaxZo3TG4Zg==";
+    private const string NewApiKeyV20 = "todo";
 
     private const string TestGoogleApiKey = "Made-Up-Google-Maps-Key3423";
     private const string EncryptedApiKey = /*"secure:" +*/ "vOo8fn0SVDlt7GCtUrIpm120zrdufrR94WA3QsUUWiU=;iv:CQ7Rq+9p9CvWEtTeh8uhlA==";

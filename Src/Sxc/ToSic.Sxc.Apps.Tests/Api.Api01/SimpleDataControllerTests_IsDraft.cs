@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.Logging;
-using ToSic.Sxc.Apps.Sys.Api01;
+﻿using ToSic.Sxc.Apps.Sys.Api01;
 
 namespace ToSic.Eav.Apps.Tests.Api.Api01;
 

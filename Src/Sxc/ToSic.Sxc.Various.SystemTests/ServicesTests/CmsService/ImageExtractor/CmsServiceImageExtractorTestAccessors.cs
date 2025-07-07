@@ -1,5 +1,6 @@
 ﻿using ToSic.Sxc.Adam;
-using static ToSic.Sxc.Services.CmsService.Internal.CmsServiceImageExtractor;
+using ToSic.Sxc.Services.Cms.Sys;
+using static ToSic.Sxc.Services.Cms.Sys.CmsServiceImageExtractor;
 
 namespace ToSic.Sxc.ServicesTests.CmsService.ImageExtractor;
 
@@ -14,7 +15,7 @@ internal static class CmsServiceImageExtractorTestAccessors
     public static bool UseLightboxTac(string classAttribute)
         => UseLightbox(classAttribute);
 
-    public static ImagePropertiesExtracted ExtractImagePropertiesTac( this Services.CmsService.Internal.CmsServiceImageExtractor extractor, string imgTag, IFolder folder)
+    public static ImagePropertiesExtracted ExtractImagePropertiesTac( this CmsServiceImageExtractor extractor, string imgTag, IFolder folder)
         => extractor.ExtractImageProperties(imgTag, folder);
 
 }

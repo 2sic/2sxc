@@ -7,7 +7,7 @@ using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Eav.WebApi.Sys.Security;
 using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sys.Users;
-using ServiceBase = ToSic.Lib.Services.ServiceBase;
+using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;
 #else
@@ -25,7 +25,7 @@ public class DataControllerReal(
     LazySvc<ContentExportApi> contentExportLazy,
     Generator<ImportContent> importContent,
     LazySvc<IUser> userLazy)
-    : ServiceBase("Api.DtaCtlRl",
+    : Services_ServiceBase("Api.DtaCtlRl",
         connect: [site, appPathSvc, appWorkCtxSvc, context, contentExportLazy, importContent, userLazy])/*, IAdminDataController*/
 {
     public const string LogSuffix = "DataCtrl";
@@ -67,7 +67,7 @@ public class DataControllerReal(
         if (fileName != fileNameSafe) l.A($"File name sanitized:'{fileName}' => '{fileNameSafe}'");
 
         var appPaths = appPathSvc.Get(appWorkCtxSvc.Context(appId).AppReader, site);
-        var filePath = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppDataProtectedFolder, AppDataFoldersConstants.BundlesFolder, fileNameSafe);
+        var filePath = Path.Combine(appPaths.PhysicalPath, FolderConstants.DataFolderProtected, AppDataFoldersConstants.BundlesFolder, fileNameSafe);
 
         if (!File.Exists(filePath))
             return l.ReturnFalse($"File not found: {filePath}");

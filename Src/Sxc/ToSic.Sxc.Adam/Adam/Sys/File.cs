@@ -9,7 +9,7 @@ using ToSic.Sxc.Images.Sys;
 namespace ToSic.Sxc.Adam.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets.Internal.File<TFolderId, TFileId>,
+public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets.Sys.File<TFolderId, TFileId>,
 #if NETFRAMEWORK
 #pragma warning disable 618
     ToSic.SexyContent.Adam.AdamFile,

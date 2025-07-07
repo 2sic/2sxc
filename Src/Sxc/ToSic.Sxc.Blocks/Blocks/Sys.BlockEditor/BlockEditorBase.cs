@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Data.Sys.Entities;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Blocks.Sys.Work;
 
@@ -8,22 +7,22 @@ namespace ToSic.Sxc.Blocks.Sys.BlockEditor;
 // todo: create interface
 // todo: move some parts out into a BlockManagement
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.MyServices>
+public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBase.Dependencies>
 {
     #region DI and Construction
 
-    public class MyServices(
+    public class Dependencies(
         GenWorkPlus<WorkBlocks> appBlocks,
         GenWorkDb<WorkBlocksMod> workBlocksMod,
         GenWorkDb<WorkEntityPublish> publisher)
-        : MyServicesBase(connect: [workBlocksMod, appBlocks, publisher])
+        : DependenciesBase(connect: [workBlocksMod, appBlocks, publisher])
     {
         public GenWorkDb<WorkBlocksMod> WorkBlocksMod { get; } = workBlocksMod;
         public GenWorkDb<WorkEntityPublish> Publisher { get; } = publisher;
         public GenWorkPlus<WorkBlocks> AppBlocks { get; } = appBlocks;
     }
 
-    internal BlockEditorBase(MyServices services, object[] connect) : base(services, "CG.RefMan", connect: connect)
+    internal BlockEditorBase(Dependencies services, object[] connect) : base(services, "CG.RefMan", connect: connect)
     { }
 
     internal void Init(IBlock block) => Block = block;

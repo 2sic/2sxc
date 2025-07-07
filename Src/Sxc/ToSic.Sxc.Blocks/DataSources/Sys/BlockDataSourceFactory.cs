@@ -1,8 +1,7 @@
 ﻿using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Internal.Query;
+using ToSic.Eav.DataSource.Sys.Query;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.Services;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Sys;
 
 namespace ToSic.Sxc.DataSources.Sys;

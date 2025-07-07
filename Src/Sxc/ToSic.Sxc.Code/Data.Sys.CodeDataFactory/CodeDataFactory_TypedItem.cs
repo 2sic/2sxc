@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using ToSic.Eav.DataSource;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sxc.Data.Sys.Wrappers;

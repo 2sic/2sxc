@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys.Paths;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Apps.Sys.Assets;
 using ToSic.Sxc.Apps.Sys.Paths;
@@ -16,7 +15,7 @@ namespace ToSic.Sxc.Apps;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
 public partial class App(
-    SxcAppBase.MyServices services,
+    SxcAppBase.Dependencies services,
     LazySvc<GlobalPaths> globalPaths,
     LazySvc<ICodeDataFactory> cdfLazy,
     LazySvc<CodeInfoService> codeChanges,

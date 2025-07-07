@@ -2,22 +2,20 @@
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.Security.Files;
 using ToSic.Eav.WebApi.Sys.Helpers.Http;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Adam.Sys.Security;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.MyServices services, string logPrefix)
-    : ServiceBase<AdamSecurityChecksBase.MyServices>(services, $"{logPrefix}.TnScCk"), IAdamSecurityCheckService
+public abstract class AdamSecurityChecksBase(AdamSecurityChecksBase.Dependencies services, string logPrefix)
+    : ServiceBase<AdamSecurityChecksBase.Dependencies>(services, $"{logPrefix}.TnScCk"), IAdamSecurityCheckService
 {
 
     #region DI / Constructor
 
-    public class MyServices(Generator<AppPermissionCheck> appPermissionChecks)
-        : MyServicesBase(connect: [appPermissionChecks])
+    public class Dependencies(Generator<AppPermissionCheck> appPermissionChecks)
+        : DependenciesBase(connect: [appPermissionChecks])
     {
         public Generator<AppPermissionCheck> AppPermissionChecks { get; } = appPermissionChecks;
     }

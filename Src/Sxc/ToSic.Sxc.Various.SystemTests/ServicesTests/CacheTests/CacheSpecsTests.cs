@@ -1,24 +1,28 @@
-﻿using ToSic.Sxc.Context.Internal;
+﻿using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
 using static ToSic.Sxc.Services.Cache.CacheServiceConstants;
+using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
+
 #pragma warning disable xUnit1026
 
 namespace ToSic.Sxc.ServicesTests.CacheTests;
 
-[Startup(typeof(StartupSxcCoreOnly))]
-public class CacheSpecsTests(ICacheService svc)
+[Startup(typeof(/*StartupSxcCoreOnly*/StartupSxcWithDb))]
+public class CacheSpecsTests(ExecutionContext exCtx)
 {
     private static readonly string MainPrefix = $"{CacheKeyTests.FullDefaultPrefix.Replace("App:0", "App:-1")}Main{Sep}";
 
+    private ICacheService CacheSvc => exCtx.GetService<ICacheService>(reuse: true);
+
     private ICacheSpecs GetForMain(string name = "Main") =>
-        svc.CreateSpecsTac(name);
+        CacheSvc.CreateSpecsTac(name);
 
     [Fact]
     public void ShareKeyAcrossApps()
     {
         var expected = $"{CacheKeyTests.FullDefaultPrefix.Replace(Sep + "App:0", "")}Main";
-        var specs = svc.CreateSpecsTac("Main", shared: true);
+        var specs = CacheSvc.CreateSpecsTac("Main", shared: true);
         Equal(expected, specs.Key);
     }
 
@@ -26,7 +30,7 @@ public class CacheSpecsTests(ICacheService svc)
     public void VaryByCustom1CaseSensitive()
     {
         var expected = MainPrefix + "VaryByKey1=Value1";
-        var specs = svc.CreateSpecsTac("Main")
+        var specs = CacheSvc.CreateSpecsTac("Main")
             .VaryByTac("Key1", "Value1", caseSensitive: true);
         Equal(expected, specs.Key);
     }

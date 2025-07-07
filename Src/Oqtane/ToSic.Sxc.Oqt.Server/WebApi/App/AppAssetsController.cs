@@ -14,5 +14,5 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App;
 // Beta routes
 //[Route(WebApiConstants.WebApiStateRoot + "/assets/{appName}")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppAssetsController(AppAssetsControllerBase.MyServices services)
+public class AppAssetsController(AppAssetsControllerBase.Dependencies services)
     : AppAssetsControllerBase(services, OqtAssetsFileHelper.RouteAssets, "Assets");

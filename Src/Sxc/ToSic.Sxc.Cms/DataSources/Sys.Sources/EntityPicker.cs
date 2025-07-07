@@ -4,11 +4,9 @@ using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Internal;
-using ToSic.Eav.DataSource.Streams.Internal;
+using ToSic.Eav.DataSource.Sys;
+using ToSic.Eav.DataSource.Sys.Streams;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Lib.DI;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Security.Permissions;
 using ToSic.Sys.Users;
@@ -67,7 +65,7 @@ public class EntityPicker : DataSourceBase
         Generator<MultiPermissionsTypes> typePermissions,
         IUser user,
         IAppReaderFactory appReaders,
-        MyServices services
+        Dependencies services
     ) : base(services, "Api.EntPck", connect: [workEntities, appPermissions, typePermissions, ctxService, appReaders])
     {
         _workEntities = workEntities;

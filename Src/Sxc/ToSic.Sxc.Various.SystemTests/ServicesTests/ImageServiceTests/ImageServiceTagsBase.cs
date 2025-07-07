@@ -4,8 +4,10 @@ using Xunit.Abstractions;
 
 namespace ToSic.Sxc.ServicesTests.ImageServiceTests;
 
-public abstract class ImageServiceTagsBase(IImageService svc, ITestOutputHelper output, TestScenario? testScenario = default)
+public abstract class ImageServiceTagsBase(IImageService imgSvc, ITestOutputHelper output, TestScenario? testScenario = default)
 {
+    protected IImageService ImgSvc => imgSvc;
+
     protected const string ImgUrl = "/abc/def/test.jpg";
     protected const string Img120x24 = ImgUrl + "?w=120&amp;h=24";
     protected const string Img120x24x = Img120x24 + " 1x";
@@ -24,6 +26,11 @@ public abstract class ImageServiceTagsBase(IImageService svc, ITestOutputHelper 
     protected const string ImgTagJpgNone = "<img src='" + Img120x24 + "'>";
     protected const string ImgTagJpgNoneF05 = "<img src='" + ImgUrl + "?w=60&amp;h=12'>";
 
+    // These are necessary, as otherwise the test will automatically look up the "Content" settings for image resizing
+    // which would result in a different result.
+    // TODO: ALSO create a test which uses null, and expects the proper resized with default settings
+    object fakeEmptySettings = new object();
+
     #region Tests which both Img and Picture should do
 
     protected virtual bool TestModeImg => true;
@@ -32,7 +39,9 @@ public abstract class ImageServiceTagsBase(IImageService svc, ITestOutputHelper 
     public void UrlResized()
     {
         
-        var url = TestModeImg ? svc.Img(ImgUrl).Src : svc.Picture(ImgUrl).Src;
+        var url = TestModeImg
+            ? ImgSvc.Img(ImgUrl, settings: fakeEmptySettings).Src
+            : ImgSvc.Picture(ImgUrl, settings: fakeEmptySettings).Src;
         Equal(ImgUrl, url);
     }
 
@@ -42,8 +51,8 @@ public abstract class ImageServiceTagsBase(IImageService svc, ITestOutputHelper 
         const string imgAlt = "test-alt";
         
         var result = TestModeImg 
-            ? svc.Img(ImgUrl, imgAlt: imgAlt).ToString()
-            : svc.Picture(ImgUrl, imgAlt: imgAlt).Img.ToString();
+            ? ImgSvc.Img(ImgUrl, imgAlt: imgAlt, settings: fakeEmptySettings).ToString()
+            : ImgSvc.Picture(ImgUrl, imgAlt: imgAlt, settings: fakeEmptySettings).Img.ToString();
         Equal($"<img src='{ImgUrl}' alt='{imgAlt}'>", result);
     }
 
@@ -53,8 +62,8 @@ public abstract class ImageServiceTagsBase(IImageService svc, ITestOutputHelper 
         
         var cls = "class-dummy";
         var result = TestModeImg
-            ? svc.Img(ImgUrl, imgClass: cls).ToString()
-            : svc.Picture(ImgUrl, imgClass: cls).Img.ToString();
+            ? ImgSvc.Img(ImgUrl, imgClass: cls, settings: fakeEmptySettings).ToString()
+            : ImgSvc.Picture(ImgUrl, imgClass: cls, settings: fakeEmptySettings).Img.ToString();
         Equal($"<img src='{ImgUrl}' class='{cls}'>", result);
     }
 
@@ -65,8 +74,13 @@ public abstract class ImageServiceTagsBase(IImageService svc, ITestOutputHelper 
     {
         
         var rule = new Recipe(variants: variants);
-        var settings = svc.SettingsTac(width: 120, height: 24, recipe: inPicTag ? null : rule);
-        var pic = svc.Picture(link: ImgUrl, settings: settings, recipe: inPicTag ? rule : null);
+        var settings = ImgSvc.SettingsTac(
+            settings: fakeEmptySettings,
+            width: 120,
+            height: 24,
+            recipe: inPicTag ? null : rule
+        );
+        var pic = ImgSvc.Picture(link: ImgUrl, settings: settings, recipe: inPicTag ? rule : null);
 
         var expected = $"<picture>{expectedParts}<img src='{Img120x24}'></picture>";
         output.WriteLine($"Expected: '{expected}'");
@@ -85,10 +99,12 @@ public abstract class ImageServiceTagsBase(IImageService svc, ITestOutputHelper 
         {
             output.WriteLine($"Test: {test}");
 
-            
-            var settings = svc.SettingsTac(width: test.Set.Width, height: test.Set.Height,
+            var settings = ImgSvc.SettingsTac(
+                settings: fakeEmptySettings,
+                width: test.Set.Width,
+                height: test.Set.Height,
                 recipe: test.Set.SrcSetRule);
-            var pic = svc.Picture(link: ImgUrl, settings: settings, recipe: test.Pic.SrcSetRule).Sources;
+            var pic = ImgSvc.Picture(link: ImgUrl, settings: settings, recipe: test.Pic.SrcSetRule).Sources;
 
             output.WriteLine($"Expected: '{expected}'");
             output.WriteLine($"Actual  : '{pic}'");

@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Metadata;
 using ToSic.Sxc.Blocks.Sys;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys.CmsContext;
 
 internal class CmsBlock(IBlock block) : ICmsBlock
 {

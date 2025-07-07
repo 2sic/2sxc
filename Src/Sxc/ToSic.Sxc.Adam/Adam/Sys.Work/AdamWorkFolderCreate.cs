@@ -4,7 +4,7 @@ using ToSic.Sys.Security.Permissions;
 namespace ToSic.Sxc.Adam.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamWorkFolderCreate(AdamWorkBase.MyServices services)
+public class AdamWorkFolderCreate(AdamWorkBase.Dependencies services)
     : AdamWorkBase(services, "Adm.TrnFld")
 {
     public bool Create(string parentSubfolder, string newFolder)

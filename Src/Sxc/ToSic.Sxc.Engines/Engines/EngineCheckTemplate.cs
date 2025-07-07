@@ -1,8 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Context;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sys.Code.Help;
 using ToSic.Sys.Security.Permissions;

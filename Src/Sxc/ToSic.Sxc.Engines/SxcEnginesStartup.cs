@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Sxc.Engines;
+using ToSic.Sxc.Polymorphism.Sys;
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Engines;
+namespace ToSic.Sxc.Startup;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class SxcEnginesStartup
@@ -13,13 +15,13 @@ public static class SxcEnginesStartup
         services.TryAddTransient<EngineFactory>();
         services.TryAddTransient<IEngineFactory, EngineFactory>();
 
-        services.TryAddTransient<EngineBase.MyServices>();
+        services.TryAddTransient<EngineBase.Dependencies>();
         services.TryAddTransient<EngineCheckTemplate>();
         services.TryAddTransient<EnginePolymorphism>();
         services.TryAddTransient<EngineAppRequirements>();
 
         // Polymorphism
-        services.TryAddTransient<Polymorphism.Internal.PolymorphConfigReader>();
+        services.TryAddTransient<PolymorphConfigReader>();
 
         return services;
     }

@@ -32,11 +32,11 @@ public static class SxcBlocksStartup
         // Block Editors
         services.TryAddTransient<BlockEditorForEntity>();
         services.TryAddTransient<BlockEditorForModule>();
-        services.TryAddTransient<BlockEditorBase.MyServices>();
+        services.TryAddTransient<BlockEditorBase.Dependencies>();
 
         // Block functionality
         services.TryAddTransient<BlockDataSourceFactory>();
-        services.TryAddTransient<DataSources.CmsBlock.MyServices>(); // new v15
+        services.TryAddTransient<DataSources.CmsBlock.Dependencies>(); // new v15
 
         services.TryAddTransient<IAppDataConfigProvider, SxcAppDataConfigProvider>(); // new v17
 
@@ -47,7 +47,7 @@ public static class SxcBlocksStartup
 
         // Context stuff, which is explicitly scoped
         services.TryAddTransient<IContextOfApp, ContextOfApp>();
-        services.TryAddTransient<ContextOfApp.MyServices>();
+        services.TryAddTransient<ContextOfApp.Dependencies>();
         services.TryAddScoped<ISxcCurrentContextService, SxcCurrentContextService>();
         // must be the same instance, so it must get the original, scoped SxcContextResolver
         services.TryAddTransient<ISxcAppCurrentContextService>(sp => sp.GetRequiredService<ISxcCurrentContextService>());

@@ -1,7 +1,6 @@
 ﻿using Custom.Hybrid;
 using Oqtane.Repository;
 using Oqtane.Shared;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Images.Sys;
 using ToSic.Sxc.Oqt.Server.Plumbing;

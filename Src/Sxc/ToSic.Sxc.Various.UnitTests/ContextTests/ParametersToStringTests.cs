@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Context.Internal;
+﻿using ToSic.Sxc.Context.Sys;
 using static ToSic.Sxc.Tests.ContextTests.ParametersTestData;
 
 namespace ToSic.Sxc.Tests.ContextTests;

@@ -2,8 +2,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Assets;
-using ToSic.Lib.DI;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sys.Users;
 using ToSic.Sys.Utils;
 using MailMessage = System.Net.Mail.MailMessage;

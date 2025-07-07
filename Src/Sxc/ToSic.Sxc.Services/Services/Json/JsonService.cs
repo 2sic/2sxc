@@ -1,6 +1,4 @@
 ﻿using System.Text.Json;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.DynamicJacket;
 using ToSic.Sxc.Data.Sys.Wrappers;

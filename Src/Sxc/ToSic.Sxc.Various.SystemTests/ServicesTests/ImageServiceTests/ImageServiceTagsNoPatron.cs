@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Services;
+﻿using ToSic.Sxc.Mocks;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sys.Capabilities.Licenses;
 using ToSic.Sys.Capabilities.Platform;
@@ -12,9 +13,10 @@ namespace ToSic.Sxc.ServicesTests.ImageServiceTests;
 /// <summary>
 /// Run tests with Patrons not enabled.
 /// </summary>
-[Startup(typeof(StartupSxcWithDbBasic))]
-public class ImageServiceTagsNoPatron(IImageService svc, ITestOutputHelper output, IPlatformInfo platform, ILicenseService licenseSvc, IFeaturesService features)
-    : ImageServiceTagsBase(svc, output, new ScenarioBasic()), IClassFixture<DoFixtureStartup<ScenarioBasic>>
+[Startup(typeof(StartupMockExecutionContextNoPatron))]
+public class ImageServiceTagsNoPatron(ExecutionContextMock exCtxMock, ITestOutputHelper output, IPlatformInfo platform, ILicenseService licenseSvc, IFeaturesService features)
+    : ImageServiceTagsBase(exCtxMock.GetService<IImageService>(), output, new ScenarioBasic()),
+        IClassFixture<DoFixtureStartup<ScenarioBasic>>
 {
     [Fact]
     public void VerifyNotPatron() => Equal(platform.Name, new TestPlatformNotPatron().Name);

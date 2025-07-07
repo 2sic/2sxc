@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Sxc.Apps.Sys.Installation;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Oqt.Server.Code.Internal;
+using ToSic.Sxc.Oqt.Server.Code.Sys;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Server.Integration;

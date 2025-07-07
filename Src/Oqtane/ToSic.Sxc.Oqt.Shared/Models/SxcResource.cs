@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Oqt.Shared.Models;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class SxcResource: Resource
 {
-    public string UniqueId { get; set; }
+    public string? UniqueId { get; set; }
 
     ///// <summary>
     ///// For the contents of a script tag
@@ -23,18 +23,19 @@ public class SxcResource: Resource
     /// </remarks>
     public IDictionary<string, string>? HtmlAttributes
     {
-        get => _htmlAttributes;
+        get;
         set
         {
             // copy dictionary or null;
-            _htmlAttributes = value == null ? null : new Dictionary<string, string>(value, StringComparer.InvariantCultureIgnoreCase);
-                
+            field = value == null
+                ? null
+                : new Dictionary<string, string>(value, StringComparer.InvariantCultureIgnoreCase);
+
             // set additional html attribute properties that are explicitly supported by Oqtane.Models.Resource
             HtmlAttributesGetValueAndRemoveKey("integrity", value => Integrity = value);
             HtmlAttributesGetValueAndRemoveKey("crossorigin", value => CrossOrigin = value);
         }
     }
-    private IDictionary<string, string>? _htmlAttributes = null;
 
     /// <summary>
     /// Helper method used to set key value on static key-property,

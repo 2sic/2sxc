@@ -2,7 +2,6 @@
 using Custom.Hybrid;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Eav.Environment.Sys.ServerPaths;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Engines;
@@ -87,7 +86,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
             owner: this,
             helperSpecs: new(ExCtx, true, owner.Path),
             getRazorModel: () => _overridePageData ?? owner.Model,
-            getModelDic: () => (_overridePageData ?? owner.Model)?.ToDicInvariantInsensitive()
+            getModelDic: () => (_overridePageData ?? owner.Model)?.ToDicInvariantInsensitive()!
         );
 
     #endregion

@@ -1,9 +1,8 @@
-﻿using ToSic.Lib.DI;
-using ToSic.Razor.Blade;
+﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images.Sys;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Sys.Integration.Paths;
 using ToSic.Sxc.Web.Sys.Url;

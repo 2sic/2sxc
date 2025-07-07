@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Adam.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamWorkRename(AdamWorkBase.MyServices services)
+public class AdamWorkRename(AdamWorkBase.Dependencies services)
     : AdamWorkBase(services, "Adm.TrnRen")
 {
     public bool Rename(string parentSubfolder, bool isFolder, AdamAssetIdentifier folderId, AdamAssetIdentifier fileId, string newName)

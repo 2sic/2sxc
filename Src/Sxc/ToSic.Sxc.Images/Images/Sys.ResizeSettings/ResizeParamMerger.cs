@@ -1,12 +1,11 @@
 ﻿using ToSic.Eav.Apps.Sys;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils;
 using static ToSic.Sxc.Images.Sys.ImageConstants;
 using static ToSic.Sxc.Sys.Plumbing.ParseObject;
 
-namespace ToSic.Sxc.Images;
+namespace ToSic.Sxc.Images.Sys.ResizeSettings;
 
 /// <summary>
 /// This merges predefined settings with custom specified parameters to create a stable resize-Parameters object for further use

@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.Wrappers;
-using ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Data;
 
 namespace Custom.Data;
 

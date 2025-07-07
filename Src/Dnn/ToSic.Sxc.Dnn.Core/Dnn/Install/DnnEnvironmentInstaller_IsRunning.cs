@@ -1,6 +1,5 @@
 ﻿using DotNetNuke.Entities.Portals;
 using System.Web.Hosting;
-using ToSic.Lib.Helpers;
 using static ToSic.Sxc.Dnn.DnnSxcSettings.Installation;
 
 namespace ToSic.Sxc.Dnn.Install;

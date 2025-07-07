@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <RootNamespace>ToSic.Sxc.Oqt.Shared</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <AssemblyName>ToSic.Sxc.Oqtane.Shared</AssemblyName>
   </PropertyGroup>
 
@@ -19,10 +23,6 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" /><!-- from Oqtane.Shared.csproj -->
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="9.0.0" />
     <PackageReference Include="Oqtane.Shared" Version="6.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj" />
   </ItemGroup>
 
 </Project>

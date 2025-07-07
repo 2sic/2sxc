@@ -1,6 +1,7 @@
-﻿using ToSic.Lib.DI;
-using ToSic.Razor.Blade;
-using ToSic.Sxc.Services.Internal;
+﻿using ToSic.Razor.Blade;
+using ToSic.Sxc.Render.Sys.ModuleHtml;
+using ToSic.Sxc.Services.Sys;
+using ToSic.Sxc.Services.TurnOn.Sys;
 using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 
@@ -13,7 +14,7 @@ public partial class PageService(
     LazySvc<IContentSecurityPolicyService> cspServiceLazy,
     LazySvc<IHtmlTagsService> htmlTagsLazy,
     LazySvc<ITurnOnService> turnOn,
-    LazySvc<IModuleService> moduleService,
+    LazySvc<IModuleHtmlService> moduleService,
     LazySvc<IFeaturesService> featuresSvc)
     : ServiceWithContext("2sxc.PgeSrv",
             connect: [cspServiceLazy, htmlTagsLazy, moduleService, turnOn, pageServiceShared, featuresSvc]),

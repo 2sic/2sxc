@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using ToSic.Sxc.Polymorphism.Internal;
+using ToSic.Sxc.Polymorphism.Sys;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Render.Sys.JsContext;

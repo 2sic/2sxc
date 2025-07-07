@@ -6,7 +6,7 @@ using ToSic.Sxc.Code.Sys.CodeApiService;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Context.Internal;
+using ToSic.Sxc.Context.Sys.CmsContext;
 using ToSic.Sxc.Context.Sys.Module;
 using ToSic.Sxc.Context.Sys.Page;
 using ToSic.Sxc.Context.Sys.Platform;
@@ -34,14 +34,14 @@ public static class SxcCodeStartup
         services.TryAddTransient<IExecutionContextFactory, ExecutionContextFactory>();
 
         // Code / Dynamic Code
-        services.TryAddTransient<ExecutionContext.MyServices>();
+        services.TryAddTransient<ExecutionContext.Dependencies>();
 
         // Code Fallbacks if not registered by the platform
         services.TryAddTransient<ExecutionContext, ExecutionContextUnknown>();
         services.TryAddTransient(typeof(ExecutionContext<,>), typeof(ExecutionContextUnknown<,>));
 
         // v13 DynamicCodeService
-        services.TryAddTransient<DynamicCodeService.MyServices>();
+        services.TryAddTransient<DynamicCodeService.Dependencies>();
         services.TryAddTransient<DynamicCodeService.MyScopedServices>();  // new v15
         services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
         // note: unclear why this exists, since it will always have a real DynCode Service with the previous TryAdd

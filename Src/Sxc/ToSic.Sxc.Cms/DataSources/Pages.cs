@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Internal;
+
+using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Sxc.Cms.Pages;
 using ToSic.Sxc.Cms.Pages.Sys;
@@ -124,7 +125,7 @@ public class Pages: CustomDataSourceAdvanced
     #region Constructor
 
     [PrivateApi]
-    public Pages(MyServices services, PagesDataSourceProvider provider) : base(services, "CDS.Pages", connect: [provider])
+    public Pages(Dependencies services, PagesDataSourceProvider provider) : base(services, "CDS.Pages", connect: [provider])
     {
         _provider = provider;
 

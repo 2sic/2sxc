@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ToSic.Eav.Apps.AppReader.Sys;
-using ToSic.Eav.DataSource.Internal.Query;
-using ToSic.Lib.Helpers;
+using ToSic.Eav.DataSource.Sys.Query;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.Sys.Assets;
 using ToSic.Sxc.Apps.Sys.Paths;
@@ -9,10 +8,10 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.DataServices;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Apps.Internal;
+namespace ToSic.Sxc.Apps.Sys.AppTyped;
 
 // Wip, NOT PRODUCTION READY #IAppTyped
 // Goal is to use this instead of the App, to be a clean wrapper hiding the old App

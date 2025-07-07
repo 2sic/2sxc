@@ -29,7 +29,7 @@ partial class OqtRegisterServices
         // action filter instead of global option AllowEmptyInputInBodyModelBinding = true
         services.AddTransient<OptionalBodyFilter>();
 
-        services.TryAddTransient<AppAssetsControllerBase.MyServices>();
+        services.TryAddTransient<AppAssetsControllerBase.Dependencies>();
 
         // ViewController deps for AllModulesWithContent
         services.TryAddTransient<Pages.Pages>();

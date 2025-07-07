@@ -3,11 +3,12 @@ using ToSic.Eav.Data.Build;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Sys.Cms;
+using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
 
 namespace ToSic.Sxc.ServicesTests.CmsService;
 
-public class CmsServiceTests(ICodeDataFactory cdf, ICmsService cmsService, DataForCmsServiceTests dataForCmsTests, ContentTypeFactory contentTypeFactory)
+public class CmsServiceTests(ICodeDataFactory cdf, ExecutionContext exCtx, /*ICmsService cmsService,*/ DataForCmsServiceTests dataForCmsTests, ContentTypeFactory contentTypeFactory)
     : IClassFixture<DoFixtureStartup<ScenarioFullPatronsWithDb>>
 {
 #if NETCOREAPP
@@ -32,6 +33,7 @@ public class CmsServiceTests(ICodeDataFactory cdf, ICmsService cmsService, DataF
         var entity = dataForCmsTests.TstDataEntity(someTextValue, someHtmlValue, contentType);
         var dynamicEntity = DynEntStrict(entity);
         var dynamicField = dynamicEntity.Field(DataForCmsServiceTests.SomeHtmlField);
+        var cmsService = exCtx.GetService<ICmsService>();
         return cmsService.Html(dynamicField, container: container);
     }
 

@@ -2,6 +2,15 @@
 
   <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-NetCore.props" />
 
+  
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <RootNamespace>ToSic.Sxc.Oqt.Client</RootNamespace>
+  </PropertyGroup>
+
   <PropertyGroup>
     <RazorLangVersion>3.0</RazorLangVersion>
     <AssemblyName>ToSic.Sxc.Oqtane.Client</AssemblyName>
@@ -22,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj" />
     <!--<ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Client\Oqtane.Client.csproj" />-->
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj" />
   </ItemGroup>

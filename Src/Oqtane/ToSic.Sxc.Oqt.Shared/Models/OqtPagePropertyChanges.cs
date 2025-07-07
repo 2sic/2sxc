@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Documentation;
-
-namespace ToSic.Sxc.Oqt.Shared.Models;
+﻿namespace ToSic.Sxc.Oqt.Shared.Models;
 
 /// <summary>
 /// Used to transfer what / how page properties should change based on the Razor file

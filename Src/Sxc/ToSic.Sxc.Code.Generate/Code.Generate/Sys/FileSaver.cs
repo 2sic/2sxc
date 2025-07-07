@@ -1,8 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
-using ToSic.Lib.Logging;
-using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Code.Generate.Sys;
 

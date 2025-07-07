@@ -4,8 +4,6 @@ using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.WebApi.Sys.Helpers.Http;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Adam.Sys.Security;
 using ToSic.Sxc.Adam.Sys.Storage;
 using ToSic.Sxc.Code.Sys;
@@ -22,19 +20,19 @@ namespace ToSic.Sxc.Adam.Sys.Manager;
 /// It's abstract, because there will be a typed implementation inheriting this
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamContext(AdamContext.MyServices services)
-    : ServiceBase<AdamContext.MyServices>(services, "Adm.Ctx")
+public class AdamContext(AdamContext.Dependencies services)
+    : ServiceBase<AdamContext.Dependencies>(services, "Adm.Ctx")
 {
     #region Constructor and DI
 
-    public class MyServices(
+    public class Dependencies(
         Generator<MultiPermissionsTypes> typesPermissions,
         Generator<IAdamSecurityCheckService> adamSecurityGenerator,
         LazySvc<ISysFeaturesService> featuresSvc,
         LazySvc<AdamManager> adamManagerLazy,
         Generator<AdamStorageOfSite> siteStorageGen,
         Generator<AdamStorageOfField> fieldStorageGen)
-        : MyServicesBase(connect: [typesPermissions, adamSecurityGenerator, featuresSvc, adamManagerLazy, siteStorageGen, fieldStorageGen])
+        : DependenciesBase(connect: [typesPermissions, adamSecurityGenerator, featuresSvc, adamManagerLazy, siteStorageGen, fieldStorageGen])
     {
         public LazySvc<ISysFeaturesService> FeaturesSvc { get; } = featuresSvc;
         public LazySvc<AdamManager> AdamManagerLazy { get; } = adamManagerLazy;

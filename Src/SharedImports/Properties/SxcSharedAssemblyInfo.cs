@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using static ToSic.Sxc.Internal.SxcSharedAssemblyInfo;
+using static ToSic.Sxc.Sys.SxcSharedAssemblyInfo;
 
 // Use the globally defined assembly version information in all projects
 // This file lies in the ToSic.Eav.Core project and is used as linked in other EAV projects
@@ -16,7 +16,7 @@ using static ToSic.Sxc.Internal.SxcSharedAssemblyInfo;
 
 
 // ReSharper disable once CheckNamespace
-namespace ToSic.Sxc.Internal;
+namespace ToSic.Sxc.Sys;
 
 
 /// <summary>
@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Internal;
 //[ShowApiWhenReleased(ShowApiMode.Never)]
 internal static class SxcSharedAssemblyInfo
 {
-    public const string AssemblyVersion = "20.00.01";
+    public const string AssemblyVersion = "20.00.02";
     public const string Company = "2sic internet solutions GmbH, Switzerland";
     public const string SxcProduct = "2sxc CMS- and Meta-Module for Dnn and Oqtane";
     public const string SxcCopyright = "Copyright MIT © 2sic 2025";

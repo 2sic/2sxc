@@ -1,15 +1,20 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Sxc.Render.Sys.ModuleHtml;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
-using ToSic.Sxc.Services.CmsService.Internal;
+using ToSic.Sxc.Services.Cms.Sys;
 using ToSic.Sxc.Services.DataServices;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.GoogleMaps.Sys;
 using ToSic.Sxc.Services.Link.Sys;
 using ToSic.Sxc.Services.Mail.Sys;
 using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Services.Page.Sys;
+using ToSic.Sxc.Services.Sys;
+using ToSic.Sxc.Services.Sys.Cms;
+using ToSic.Sxc.Services.Sys.ConvertService;
 using ToSic.Sxc.Services.Templates;
+using ToSic.Sxc.Services.TurnOn.Sys;
 using ToSic.Sxc.Services.User.Sys;
 using ToSic.Sxc.Web;
 
@@ -40,7 +45,7 @@ public static class SxcServicesStartup
         services.TryAddTransient<IFeaturesService, FeaturesService>();  // New 13.01
 
         // V15
-        services.TryAddScoped<IModuleService, ModuleService>(); // Must be scoped & shared on the module
+        services.TryAddScoped<IModuleHtmlService, ModuleHtmlService>(); // Must be scoped & shared on the module
         services.TryAddTransient<ITurnOnService, TurnOnService>();
         services.TryAddTransient<ICmsService, CmsService>();
         services.TryAddTransient<CmsServiceStringWysiwyg>();

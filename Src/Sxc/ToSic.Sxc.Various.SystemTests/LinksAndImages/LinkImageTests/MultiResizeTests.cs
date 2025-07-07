@@ -1,5 +1,6 @@
 ﻿using ToSic.Sxc.Images;
 using ToSic.Sxc.Images.Sys;
+using ToSic.Sxc.Images.Sys.ResizeSettings;
 using static ToSic.Sxc.DataForImageTests.ResizeRecipesData;
 
 namespace ToSic.Sxc.LinksAndImages.LinkImageTests;

@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Data.Sys.Entities;
-using ToSic.Eav.DataSource.Internal.Query;
-using ToSic.Lib.Helpers;
+using ToSic.Eav.DataSource.Sys.Query;
 using ToSic.Sxc.Apps.Sys.Assets;
 using static ToSic.Sxc.Blocks.Sys.Views.ViewConstants;
 

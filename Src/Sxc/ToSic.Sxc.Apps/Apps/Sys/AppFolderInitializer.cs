@@ -37,14 +37,14 @@ public class AppFolderInitializer(IServerPaths serverPaths, IGlobalConfiguration
         contentFolder.Create();
 
         var appDataProtectedFolder =
-            new DirectoryInfo(Path.Combine(contentFolder.FullName, FolderConstants.AppDataProtectedFolder));
+            new DirectoryInfo(Path.Combine(contentFolder.FullName, FolderConstants.DataFolderProtected));
         appDataProtectedFolder.Create();
 
         var appJsonTemplateFilePath =
-            Path.Combine(globalConfiguration.AppDataTemplateFolder(), FolderConstants.AppJson);
-        if (File.Exists(appJsonTemplateFilePath) && !appDataProtectedFolder.GetFiles(FolderConstants.AppJson).Any())
+            Path.Combine(globalConfiguration.AppDataTemplateFolder(), FolderConstants.AppJsonFile);
+        if (File.Exists(appJsonTemplateFilePath) && !appDataProtectedFolder.GetFiles(FolderConstants.AppJsonFile).Any())
             File.Copy(appJsonTemplateFilePath,
-                Path.Combine(appDataProtectedFolder.FullName, FolderConstants.AppJson));
+                Path.Combine(appDataProtectedFolder.FullName, FolderConstants.AppJsonFile));
         l.Done("ok");
     }
 

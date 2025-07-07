@@ -1,6 +1,4 @@
 ﻿
-using ToSic.Lib.Services;
-
 namespace ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]

@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.DI;
-using ToSic.Sxc.Data.Sys.Factory;
+﻿using ToSic.Sxc.Data.Sys.Factory;
 
 namespace ToSic.Sxc.Data.Sys.Wrappers;
 

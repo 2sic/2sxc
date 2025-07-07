@@ -7,7 +7,8 @@ using ToSic.Sxc.Adam.Sys.Security;
 using ToSic.Sxc.Dnn.Backend;
 using ToSic.Sxc.Dnn.Backend.Admin;
 using ToSic.Sxc.Dnn.WebApi.Context;
-using ToSic.Sxc.Dnn.WebApi.Internal.HttpJson;
+using ToSic.Sxc.Dnn.WebApi.Sys;
+using ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 
 namespace ToSic.Sxc.Dnn.Integration;
 
@@ -28,7 +29,7 @@ public static class StartUpDnnWebApi
         services.TryAddTransient<DnnAppFolderUtilities>(); // v14.12-01
 
         // new v15
-        services.TryAddTransient<ApiControllerMyServices>();
+        services.TryAddTransient<ApiControllerDependencies>();
 
         // new v17
         services.TryAddTransient<AppApiControllerSelectorService>();

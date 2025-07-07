@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Sxc.Backend.ImportExport;
-using ServiceBase = ToSic.Lib.Services.ServiceBase;
+using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;
 #else
@@ -14,7 +14,7 @@ public class AppPartsControllerReal(
     LazySvc<IContextOfSite> context,
     LazySvc<ExportContent> exportContent,
     Generator<ImportContent> importContent)
-    : ServiceBase("Api.APartsRl", connect: [context, exportContent, importContent]), IAppPartsController
+    : Services_ServiceBase("Api.APartsRl", connect: [context, exportContent, importContent]), IAppPartsController
 {
     public const string LogSuffix = "AParts";
 

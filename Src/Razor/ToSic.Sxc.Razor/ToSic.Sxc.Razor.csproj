@@ -10,6 +10,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <RootNamespace>ToSic.Sxc.Razor</RootNamespace>
+  </PropertyGroup>
+
   <!-- Note: not sure what this is for... -->
   <PropertyGroup>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>

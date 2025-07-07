@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Apps.Internal;
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Apps.Sys.Api01;
+using ToSic.Sxc.Apps.Sys.AppTyped;
 using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Apps.Sys.Work;
 
@@ -16,7 +16,7 @@ public static class SxcAppsStartup
     public static IServiceCollection AddSxcApps(this IServiceCollection services)
     {
         // App Dependencies
-        services.TryAddTransient<SxcAppBase.MyServices>();
+        services.TryAddTransient<SxcAppBase.Dependencies>();
 
         // Configuration objects
         services.TryAddTransient<GlobalPaths>();

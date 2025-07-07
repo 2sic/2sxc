@@ -2,7 +2,7 @@
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Sys.Assets;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys.CmsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CmsViewFolder(CmsView cmsView, IApp app, bool shared) : AppAssetFolder

@@ -1,13 +1,11 @@
-﻿using ToSic.Lib.DI;
-using ToSic.Lib.Services;
-using ToSic.Razor.Blade;
+﻿using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Render.Sys.RenderBlock;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.Render.PageFeatures;
 
 namespace ToSic.Sxc.Render.Sys;
@@ -19,7 +17,7 @@ namespace ToSic.Sxc.Render.Sys;
 /// </summary>
 [PrivateApi("Hide Implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class RenderService(RenderService.MyServices services) : ServiceWithContext("Sxc.RndSvc", connect: [services]),
+public class RenderService(RenderService.Dependencies services) : ServiceWithContext("Sxc.RndSvc", connect: [services]),
     IRenderService
 // #RemoveBlocksIRenderService
 //#if NETFRAMEWORK
@@ -30,14 +28,14 @@ public class RenderService(RenderService.MyServices services) : ServiceWithConte
 {
     #region Constructor & ConnectToRoot
 
-    public class MyServices(
+    public class Dependencies(
         Generator<IEditService> editGenerator,
         LazySvc<IModuleAndBlockBuilder> builder,
         Generator<SimpleRenderer> simpleRenderer,
         Generator<InTextContentBlockRenderer> inTextRenderer,
         Generator<IBlockBuilder> blockBuilderGenerator,
         LazySvc<ILogStore> logStore)
-        : MyServicesBase(connect: [editGenerator, builder, simpleRenderer, inTextRenderer, logStore, blockBuilderGenerator])
+        : DependenciesBase(connect: [editGenerator, builder, simpleRenderer, inTextRenderer, logStore, blockBuilderGenerator])
     {
         public Generator<InTextContentBlockRenderer> InTextRenderer { get; } = inTextRenderer;
         public Generator<IBlockBuilder> BlockBuilderGenerator { get; } = blockBuilderGenerator;

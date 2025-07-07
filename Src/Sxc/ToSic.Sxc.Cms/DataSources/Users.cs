@@ -1,7 +1,8 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Data.Sys.Entities.Sources;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Internal;
+
+using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Services;
 using ToSic.Sxc.Cms.Users;
@@ -140,7 +141,7 @@ public class Users : CustomDataSourceAdvanced
     /// Constructor to tell the system what out-streams we have
     /// </summary>
     [PrivateApi]
-    public Users(MyServices services, IUsersProvider provider, IDataSourceGenerator<UserRoles> rolesGenerator)
+    public Users(Dependencies services, IUsersProvider provider, IDataSourceGenerator<UserRoles> rolesGenerator)
         : base(services, "SDS.Users", connect: [provider, rolesGenerator])
     {
         _provider = provider;

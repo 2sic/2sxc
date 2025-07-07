@@ -8,7 +8,4 @@ namespace ToSic.SexyContent.Razor;
 /// </summary>
 /// <typeparam name="T"></typeparam>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class SexyContentWebPage<T>:SexyContentWebPage
-{
-
-}
+public abstract class SexyContentWebPage<T>:SexyContentWebPage;

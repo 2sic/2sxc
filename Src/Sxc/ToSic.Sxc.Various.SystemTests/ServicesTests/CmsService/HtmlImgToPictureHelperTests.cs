@@ -1,35 +1,34 @@
-﻿using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.CmsService.Internal;
+﻿using ToSic.Sxc.Mocks;
+using ToSic.Sxc.Services.Cms.Sys;
 using Xunit.Abstractions;
-using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
 
 namespace ToSic.Sxc.ServicesTests.CmsService;
 
-public class HtmlImgToPictureHelperTests(ExecutionContext executionContext, /*needed to inject into CodeApiSvc*/ IImageService imageSvc, ITestOutputHelper output)
+public class HtmlImgToPictureHelperTests(ExecutionContextMock exCtxMock, ITestOutputHelper output)
+    // Needs fixture to load the Primary App
+    : IClassFixture<DoFixtureStartup<ScenarioBasic>>
 {
-    /// <summary>
-    /// Swap the image service to one which doesn't know about the app (so it won't get settings etc.)
-    /// </summary>
-    private void InitCodeApiSvc()
-        => executionContext.ReplaceServiceInCache(imageSvc);
-
     /// <summary>
     /// Must get service through executionContext, because the class is internal & it needs to have a parent CodeApiService for sub-dependencies
     /// </summary>
     private HtmlImgToPictureHelper GetHtmlImgToPictureHelper()
-        => executionContext.GetService<HtmlImgToPictureHelper>();
+        => exCtxMock.GetService<HtmlImgToPictureHelper>();
 
     // needs a lot more tests, such as with / without paths, etc.
     [Theory, MemberData(nameof(DataForImgConversionTest.ImageConversions), MemberType = typeof(DataForImgConversionTest))]
     public void Test(ImgConversionTest conversion)
     {
-        InitCodeApiSvc();
         var parser = GetHtmlImgToPictureHelper();
 
         var folder = DataForCmsServiceTests.GenerateFolderWithTestPng();
 
+        // These are necessary, as otherwise the test will automatically look up the "Content" settings for image resizing
+        // which would result in a different result.
+        // TODO: ALSO create a test which uses null, and expects the proper resized with default settings
+        var fakeEmptySettings = new object();
+
         var result = parser
-            .ConvertImgToPicture(conversion.Original, folder, null)
+            .ConvertImgToPicture(conversion.Original, folder, fakeEmptySettings)
             .ToString();
 
         NotNull(result);

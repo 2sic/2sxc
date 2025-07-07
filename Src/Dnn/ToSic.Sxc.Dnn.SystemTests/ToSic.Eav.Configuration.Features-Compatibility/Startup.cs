@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Startup;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sys.Capabilities.Platform;

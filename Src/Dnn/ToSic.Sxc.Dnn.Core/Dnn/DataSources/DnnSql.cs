@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.DataSource.Internal;
+﻿using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.DataSources;
 
@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Dnn.DataSources;
 public class DnnSql : Sql
 {
     [PrivateApi]
-    public DnnSql(MyServices services) : base(services)
+    public DnnSql(Dependencies services) : base(services)
     {
         ConnectionStringName = DnnSqlPlatformInfo.SiteSqlServer;
     }

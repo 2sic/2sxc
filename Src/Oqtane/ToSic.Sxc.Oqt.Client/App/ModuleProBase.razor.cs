@@ -5,8 +5,6 @@ using Oqtane.Modules;
 using Oqtane.Security;
 using Oqtane.Shared;
 using System.Collections.Concurrent;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc.Oqt.Client;
 using ToSic.Sxc.Oqt.Shared.Helpers;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
@@ -19,27 +17,26 @@ public abstract class ModuleProBase: ModuleBase, IOqtHybridLog
 {
     #region Injected Services
 
-    [Inject] public NavigationManager NavigationManager { get; set; }
-    [Inject] public IOqtDebugStateService OqtDebugStateService { get; set; }
-    [Inject] public IConfiguration Configuration { get; set; }
+    [Inject] public NavigationManager NavigationManager { get; set; } = null!;
+    [Inject] public IOqtDebugStateService OqtDebugStateService { get; set; } = null!;
+    [Inject] public IConfiguration Configuration { get; set; } = null!;
 
     #endregion
 
     #region Shared Variables
-    public bool IsSuperUser => _isSuperUser.Get(() => UserSecurity.IsAuthorized(PageState.User, RoleNames.Host));
-    private readonly GetOnce<bool> _isSuperUser = new();
+    public bool IsSuperUser => _isSuperUser ??= UserSecurity.IsAuthorized(PageState.User, RoleNames.Host);
+    private bool? _isSuperUser;
 
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    public bool IsAdmin => _isAdmin.Get(() => UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin));
-    private readonly GetOnce<bool> _isAdmin = new();
+    public bool IsAdmin => _isAdmin ??= UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin);
+    private bool? _isAdmin;
 
-    public SxcInterop SxcInterop;
+    public SxcInterop SxcInterop = null!;
     public bool IsSafeToRunJs;
     public readonly ConcurrentQueue<object[]> LogMessageQueue = new();
 
     public bool FirstRender = true;
 
-    internal static readonly bool IsOqtaneVersionLessThan601 = new Version(Oqtane.Shared.Constants.Version) < new Version("6.0.1"); // remove when dependency is updated to Oqtane 6.0.1
     #endregion
 
     protected override async Task OnParametersSetAsync()
@@ -88,7 +85,7 @@ public abstract class ModuleProBase: ModuleBase, IOqtHybridLog
     public void Log(params object[] message)
     {
         // If the url has a debug=true and we are the super-user
-        if (message == null || !message.Any() || !OqtDebugStateService.IsDebugEnabled || !IsSuperUser) return;
+        if (message == null! || !message.Any() || !OqtDebugStateService.IsDebugEnabled || !IsSuperUser) return;
 
         _logPrefix ??= $"2sxc:Page({PageState?.Page?.PageId}):Mod({ModuleState?.ModuleId}):Render({ModuleState?.RenderId}):";
         try
@@ -113,7 +110,7 @@ public abstract class ModuleProBase: ModuleBase, IOqtHybridLog
                         }
                         else
                             timeOut++;
-                    };
+                    }
 
                     // than log current message
                     ConsoleLog(message);
@@ -157,7 +154,7 @@ public abstract class ModuleProBase: ModuleBase, IOqtHybridLog
             if (IsSafeToRunJs)
                 JSRuntime.InvokeVoidAsync(ConsoleLogJs, "Error:", _logPrefix, errorMessage);
             else
-                LogMessageQueue.Enqueue(new List<object> { "Error:", _logPrefix, errorMessage }.ToArray());
+                LogMessageQueue.Enqueue(new List<object> { "Error:", _logPrefix ?? "", errorMessage }.ToArray());
 
             // log error to oqtane log if possible
             try
@@ -178,10 +175,10 @@ public abstract class ModuleProBase: ModuleBase, IOqtHybridLog
         
     private void ConsoleLog(object[] message)
     {
-        var data = new List<object> { _logPrefix }.Concat(message);
+        var data = new List<object?> { _logPrefix }.Concat(message);
         JSRuntime.InvokeVoidAsync(ConsoleLogJs, data.ToArray());
     } 
-    private string _logPrefix;
+    private string? _logPrefix;
     private const string ConsoleLogJs = "console.log";
     #endregion
 

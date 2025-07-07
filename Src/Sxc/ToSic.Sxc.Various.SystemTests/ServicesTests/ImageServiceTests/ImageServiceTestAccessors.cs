@@ -1,6 +1,5 @@
-﻿using ToSic.Lib.Coding;
-using ToSic.Sxc.Images;
-using ToSic.Sxc.Images.Internal;
+﻿using ToSic.Sxc.Images;
+using ToSic.Sxc.Images.Sys;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.ServicesTests.ImageServiceTests;

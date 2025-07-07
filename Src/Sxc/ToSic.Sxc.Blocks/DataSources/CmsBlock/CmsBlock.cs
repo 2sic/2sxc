@@ -1,10 +1,9 @@
 ﻿using System.Collections.Immutable;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Internal;
+
+using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Services;
-using ToSic.Lib.Helpers;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.Blocks.Sys.Work;
@@ -49,19 +48,20 @@ public sealed partial class CmsBlock : DataSourceBase
 
     #region Constructor
 
-    public new class MyServices(
-        DataSourceBase.MyServices parentServices,
+    public new class Dependencies(
+        DataSourceBase.Dependencies parentServices,
         LazySvc<IModule> moduleLazy,
         LazySvc<IDataSourcesService> dataSourceFactory,
         GenWorkPlus<WorkBlocks> appBlocks)
-        : MyServicesBase<DataSourceBase.MyServices>(parentServices, connect: [moduleLazy, dataSourceFactory, appBlocks])
+        : DependenciesBase(connect: [moduleLazy, dataSourceFactory, appBlocks])
     {
+        public DataSourceBase.Dependencies ParentServices { get; } = parentServices;
         public GenWorkPlus<WorkBlocks> AppBlocks { get; } = appBlocks;
         public LazySvc<IModule> ModuleLazy { get; } = moduleLazy;
         public LazySvc<IDataSourcesService> DataSourceFactory { get; } = dataSourceFactory;
     }
 
-    public CmsBlock(MyServices services): base(services, $"SDS.CmsBks")
+    public CmsBlock(Dependencies services): base(services.ParentServices, $"SDS.CmsBks", connect: [services])
     {
         _services = services;
 
@@ -69,7 +69,7 @@ public sealed partial class CmsBlock : DataSourceBase
         ProvideOut(GetHeader, ViewParts.StreamHeader);
         ProvideOut(GetHeader, ViewParts.StreamHeaderOld);
     }
-    private readonly MyServices _services;
+    private readonly Dependencies _services;
     #endregion
 
     public override IDataSourceLink Link => _link.Get(() => BreachExtensions.CreateEmptyLink(this)

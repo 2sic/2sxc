@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Internal;
+
+using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Cms.Users.Sys;
@@ -78,7 +79,7 @@ public class UserRoles : CustomDataSourceAdvanced
     /// Constructor to tell the system what out-streams we have
     /// </summary>
     [PrivateApi]
-    public UserRoles(MyServices services, IUserRolesProvider provider)
+    public UserRoles(Dependencies services, IUserRolesProvider provider)
         : base(services, "SDS.Roles", connect: [provider])
     {
         _provider = provider;

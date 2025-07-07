@@ -1,6 +1,4 @@
 ﻿using ToSic.Eav.Apps.Sys.AppStack;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
@@ -9,6 +7,7 @@ using ToSic.Sxc.Code.Sys.CodeApiService;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data.Sys.Factory;
+using ToSic.Sxc.Polymorphism.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 using ToSic.Sys.Caching.PiggyBack;
@@ -28,7 +27,7 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 /// </remarks>
 [PrivateApi("Was public till v17, and previously called DynamicCodeRoot")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.MyServices>, IExecutionContext, IGetCodePath, IHasPiggyBack, ICanGetService
+public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.Dependencies>, IExecutionContext, IGetCodePath, IHasPiggyBack, ICanGetService
 {
     #region Constructor
 
@@ -36,15 +35,15 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.My
     /// Helper class to ensure if dependencies change, inheriting objects don't need to change their signature
     /// </summary>
     [PrivateApi]
-    public class MyServices(
+    public class Dependencies(
         IServiceProvider serviceProvider,
         LazySvc<IClassCompiler> codeCompilerLazy,
         AppDataStackService dataStackService,
         LazySvc<IConvertService> convertService,
         LazySvc<CodeCreateDataSourceSvc> dataSources,
         LazySvc<ICodeDataFactory> cdf,
-        Polymorphism.Internal.PolymorphConfigReader polymorphism)
-        : MyServicesBase(connect:
+        PolymorphConfigReader polymorphism)
+        : DependenciesBase(connect:
             [/* never! serviceProvider */ codeCompilerLazy, dataStackService, convertService, dataSources, cdf, polymorphism])
     {
         public ICodeDataFactory Cdf => cdf.Value;
@@ -53,11 +52,11 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.My
         internal IServiceProvider ServiceProvider { get; } = serviceProvider;
         public LazySvc<IClassCompiler> CodeCompilerLazy { get; } = codeCompilerLazy;
         public AppDataStackService DataStackService { get; } = dataStackService;
-        public Polymorphism.Internal.PolymorphConfigReader Polymorphism { get; } = polymorphism;
+        public PolymorphConfigReader Polymorphism { get; } = polymorphism;
     }
 
     [PrivateApi]
-    protected internal ExecutionContext(MyServices services, string logPrefix) : base(services, logPrefix + ".DynCdR")
+    protected internal ExecutionContext(Dependencies services, string logPrefix) : base(services, logPrefix + ".DynCdR")
     {
         // Prepare services which need to be attached to this dynamic code root
         CmsContext = GetService<ICmsContext>();

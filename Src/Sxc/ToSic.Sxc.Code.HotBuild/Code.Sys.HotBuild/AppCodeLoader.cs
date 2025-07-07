@@ -1,8 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Sys;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Caching;
@@ -113,7 +111,7 @@ public class AppCodeLoader(
                 return l.Return(result, "inside lock, start");
 
             // Get paths
-            var (physicalPath, relativePath, physicalPathShared, relativePathShared) = GetAppPaths(FolderConstants.AppCode, spec);
+            var (physicalPath, relativePath, physicalPathShared, relativePathShared) = GetAppPaths(FolderConstants.AppCodeFolder, spec);
             logSummary.AddSpec("PhysicalPath", physicalPath);
             logSummary.AddSpec("RelativePath", relativePath);
             logSummary.AddSpec("PhysicalPathShared", physicalPathShared);
@@ -210,7 +208,7 @@ public class AppCodeLoader(
             return l.Return(folders, $"{nameof(appRootFolder)} doesn't exist");
 
         // 
-        var appRootAppCode = Path.Combine(appRootFolder, FolderConstants.AppCode);
+        var appRootAppCode = Path.Combine(appRootFolder, FolderConstants.AppCodeFolder);
         // Add to watcher list if it exists, otherwise exit, since we can't have subfolders
         if (!IfExistsThenAdd(appRootAppCode, true))
             return l.Return(folders, $"{nameof(appRootAppCode)} doesn't exist");

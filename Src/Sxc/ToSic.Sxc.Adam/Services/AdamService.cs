@@ -1,9 +1,9 @@
-﻿using ToSic.Eav.Data.ValueConverter.Sys;
+﻿using ToSic.Eav.Data.Sys.ValueConverter;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Sys;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Sys;
 
 namespace ToSic.Sxc.Services;
 

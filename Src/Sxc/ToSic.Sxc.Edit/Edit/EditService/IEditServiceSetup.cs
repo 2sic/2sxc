@@ -2,7 +2,7 @@
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Edit.Internal;
+namespace ToSic.Sxc.Edit.EditService;
 
 public interface IEditServiceSetup
 {

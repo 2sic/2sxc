@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Images.Internal;
-
-namespace ToSic.Sxc.Images.Sys;
+﻿namespace ToSic.Sxc.Images.Sys;
 
 [PrivateApi("Hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

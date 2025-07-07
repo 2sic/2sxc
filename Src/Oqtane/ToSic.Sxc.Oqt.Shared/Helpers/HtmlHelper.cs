@@ -86,9 +86,11 @@ public class HtmlHelper
         return match.Success ? (decode ? WebUtility.HtmlDecode(match.Groups[1].Value) : match.Groups[1].Value) : null;
     }
 
-    public static string AddOrUpdateMetaTagContent(string html, string name, string content, bool encode = true)
+    [return: NotNullIfNotNull(nameof(html))]
+    public static string? AddOrUpdateMetaTagContent(string? html, string name, string content, bool encode = true)
     {
-        if (name.IsNullOrEmpty()) return html;
+        if (name.IsNullOrEmpty())
+            return html;
         html ??= string.Empty;
 
         // Define a regex pattern to match the meta tag
@@ -102,7 +104,8 @@ public class HtmlHelper
         return html + $"<meta name=\"{WebUtility.HtmlEncode(name)}\" content='{(encode ? WebUtility.HtmlEncode(content) : content)}'>{Environment.NewLine}";
     }
 
-    public static string AddHeadChanges(string html, IEnumerable<OqtHeadChange> headChanges)
+    [return: NotNullIfNotNull(nameof(html))]
+    public static string? AddHeadChanges(string? html, IEnumerable<OqtHeadChange> headChanges)
     {
         if (headChanges == null! /* paranoid, should never happen */)
             return html;
@@ -117,19 +120,22 @@ public class HtmlHelper
         return html + str;
     }
 
-    public static string ManageStyleSheets(string html, OqtViewResultsDto viewResults, Alias alias, string themeName, string pageHtml = "")
+    [return: NotNullIfNotNull(nameof(html))]
+    public static string? ManageStyleSheets(string? html, OqtViewResultsDto viewResults, Alias alias, string themeName, string pageHtml = "")
     {
         if (viewResults == null! /* paranoid */)
             return html;
         html ??= string.Empty;
 
-        var list = viewResults.TemplateResources.Where(r => r.IsExternal && r.ResourceType == ResourceType.Stylesheet)
-            .Select(r => r.Url).ToList();
+        var list = (viewResults.TemplateResources ?? [])
+            .Where(r => r is { IsExternal: true, ResourceType: ResourceType.Stylesheet })
+            .Select(r => r.Url)
+            .ToList();
         var count = 0;
-        foreach (var url in viewResults.SxcStyles.Union(list))
+        foreach (var url in (viewResults.SxcStyles ?? []).Union(list))
         {
-            var src = url;
-            if (src.StartsWith("~"))
+            var src = url ?? "";
+            if (src.StartsWith('~'))
                 src = src.Replace("~", "/Themes/" + themeName + "/").Replace("//", "/");
             if (!src.Contains("://") && !string.IsNullOrEmpty(alias.BaseUrl) && !src.StartsWith(alias.BaseUrl))
                 src = alias.BaseUrl + src;
@@ -137,7 +143,7 @@ public class HtmlHelper
             {
                 ++count;
                 var assetHtml= "<link"
-                    + " id=\"app-stylesheet-" + ResourceLevel.Page.ToString().ToLower() + "-" + Timestamp + "-" + count.ToString("00") + "\""
+                    + " id=\"app-stylesheet-" + nameof(ResourceLevel.Page).ToLower() + "-" + Timestamp + "-" + count.ToString("00") + "\""
                     + " rel=\"stylesheet\" href=\"" + src + "\" type=\"text/css\"/>";
                 html = AddAssetWhenMissing(html, assetHtml);
             }
@@ -145,7 +151,8 @@ public class HtmlHelper
         return html;
     }
 
-    public static string ManageScripts(string html, OqtViewResultsDto viewResults, Alias alias, string pageHtml = "")
+    [return: NotNullIfNotNull(nameof(html))]
+    public static string? ManageScripts(string? html, OqtViewResultsDto? viewResults, Alias alias, string pageHtml = "")
     {
         // If no view result, exit early
         if (viewResults == null)
@@ -155,15 +162,15 @@ public class HtmlHelper
         html ??= string.Empty;
 
         // Extract external JS resources
-        var externalScripts = viewResults.TemplateResources
-            .Where(r => r.IsExternal && r.ResourceType == ResourceType.Script)
+        var externalScripts = (viewResults.TemplateResources ?? [])
+            .Where(r => r is { IsExternal: true, ResourceType: ResourceType.Script })
             .ToList();
 
         foreach (var sxcResource in externalScripts)
             html = AddScript(html, sxcResource, alias, pageHtml);
 
         var count = 0;
-        foreach (var url in viewResults.SxcScripts) 
+        foreach (var url in viewResults.SxcScripts ?? []) 
             html = url.IsNullOrEmpty()
                 ? html
                 : AddScript(html, new() { Url = url, Reload = false }, alias, pageHtml, ++count);
@@ -171,19 +178,22 @@ public class HtmlHelper
         return html;
     }
 
-    public static string ManageInlineScripts(string html, OqtViewResultsDto viewResults, Alias alias, string pageHtml = "")
+    [return: NotNullIfNotNull(nameof(html))]
+    public static string? ManageInlineScripts(string? html, OqtViewResultsDto? viewResults, Alias alias, string pageHtml = "")
     {
         if (viewResults == null)
             return html;
         html ??= string.Empty;
 
-        foreach (var sxcResource in viewResults.TemplateResources.Where(r => !r.IsExternal))
-            html = AddScript(html, sxcResource, alias, pageHtml);
+        if (viewResults.TemplateResources != null)
+            foreach (var sxcResource in viewResults.TemplateResources.Where(r => !r.IsExternal))
+                html = AddScript(html, sxcResource, alias, pageHtml);
 
         return html;
     }
 
-    private static string AddScript(string html, Resource resource, Alias alias, string pageHtml = "", int count = 0)
+    [return: NotNullIfNotNull(nameof(html))]
+    private static string? AddScript(string? html, Resource? resource, Alias alias, string pageHtml = "", int count = 0)
     {
         // If no resource, exit early
         if (resource == null)
@@ -203,13 +213,14 @@ public class HtmlHelper
         return html;
     }
 
-    private static string AddAssetWhenMissing(string html, string assetHtml)
+    [return: NotNullIfNotNull(nameof(html))]
+    private static string? AddAssetWhenMissing(string? html, string? assetHtml)
     {
         if (assetHtml.IsNullOrEmpty())
             return html;
         html ??= string.Empty;
 
-        if (!html.Contains(assetHtml, StringComparison.OrdinalIgnoreCase))
+        if (!html.Contains(assetHtml!, StringComparison.OrdinalIgnoreCase))
             html += assetHtml + Environment.NewLine;
 
         return html;
@@ -228,7 +239,9 @@ public class HtmlHelper
 
         var str = resource.Url.Contains("://")
             ? resource.Url
-            : alias.BaseUrl + (alias.BaseUrl.EndsWith('/') ? resource.Url.TrimStart('/') : resource.Url); // avoid "path//file.js" in URL
+            : alias.BaseUrl + (alias.BaseUrl.EndsWith('/')
+                ? resource.Url.TrimStart('/')
+                : resource.Url); // avoid "path//file.js" in URL
 
         return "<script" + 
             //" id=\"app-script-" + ResourceLevel.Page.ToString().ToLower() + "-" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + "-" + count.ToString("00") + "\"" +

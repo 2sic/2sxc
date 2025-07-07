@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Sys;
@@ -16,14 +14,14 @@ public abstract class AppAssetsControllerBase : OqtControllerBase
 
     #region Dependencies
 
-    public class MyServices : MyServicesBase
+    public class Dependencies : DependenciesBase
     {
         internal LazySvc<OqtAssetsFileHelper> FileHelper { get; }
         public IWebHostEnvironment HostingEnvironment { get; }
         public LazySvc<AppFolderLookupForWebApi> AppFolder { get; }
         public SiteState SiteState { get; }
 
-        public MyServices(
+        public Dependencies(
             IWebHostEnvironment hostingEnvironment,
             LazySvc<AppFolderLookupForWebApi> appFolder,
             SiteState siteState,
@@ -42,13 +40,13 @@ public abstract class AppAssetsControllerBase : OqtControllerBase
     #endregion
 
 
-    protected AppAssetsControllerBase(MyServices services, string route, string logSuffix): base(false, logSuffix)
+    protected AppAssetsControllerBase(Dependencies services, string route, string logSuffix): base(false, logSuffix)
     {
         Deps = services.ConnectServices(Log);
         Route = route;
     }
 
-    private MyServices Deps;
+    private Dependencies Deps;
 
     [HttpGet("{*filePath}")]
     public IActionResult GetFile([FromRoute] string appName, [FromRoute] string filePath)

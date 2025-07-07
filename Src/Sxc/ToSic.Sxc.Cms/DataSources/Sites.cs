@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Internal;
+
+using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Sxc.Cms.Sites;
 using ToSic.Sxc.Cms.Sites.Sys;
@@ -38,7 +39,7 @@ namespace ToSic.Sxc.DataSources;
 public class Sites: CustomDataSource
 {
     [PrivateApi]
-    public Sites(MyServices services, SitesDataSourceProvider sitesProvider) : base(services, logName: "CDS.Sites")
+    public Sites(Dependencies services, SitesDataSourceProvider sitesProvider) : base(services, logName: "CDS.Sites")
     {
         ConnectLogs([sitesProvider]);
         ProvideOutRaw(sitesProvider.GetSitesInternal, options: () => SiteModel.Options);

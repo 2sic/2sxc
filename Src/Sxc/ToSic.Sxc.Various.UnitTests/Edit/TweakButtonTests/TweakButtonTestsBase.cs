@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
 using ToSic.Sxc.Edit.Toolbar;
-using ToSic.Sxc.Edit.Toolbar.Internal;
+using ToSic.Sxc.Edit.Toolbar.Sys.TweakButton;
 
 namespace ToSic.Sxc.Tests.ServicesTests.ToolbarService;
 

@@ -1,11 +1,11 @@
 ﻿using System.Runtime.CompilerServices;
-using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Images.Sys;
+using ToSic.Sxc.Images.Sys.ResizeSettings;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.Render.PageFeatures;
@@ -13,7 +13,7 @@ using ToSic.Sxc.Web.Sys.Html;
 using ToSic.Sys.Utils;
 using static System.StringComparer;
 
-namespace ToSic.Sxc.Images.Internal;
+namespace ToSic.Sxc.Images;
 
 /// <remarks>
 /// Must be public, otherwise it breaks in dynamic use :(

@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Services;

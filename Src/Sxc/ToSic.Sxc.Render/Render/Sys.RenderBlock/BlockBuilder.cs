@@ -1,8 +1,6 @@
-﻿using ToSic.Lib.DI;
-using ToSic.Lib.Services;
-using ToSic.Sxc.Blocks.Sys;
+﻿using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Render.Sys.ModuleHtml;
 using ToSic.Sxc.Sys.Integration.Installation;
 using ToSic.Sxc.Web.Sys.PageService;
 using ToSic.Sys.Capabilities.Licenses;
@@ -19,19 +17,19 @@ namespace ToSic.Sxc.Render.Sys.RenderBlock;
 /// </summary>
 [PrivateApi("not sure yet what to call this, maybe BlockHost or something")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public partial class BlockBuilder(BlockBuilder.MyServices services)
-    : ServiceBase<BlockBuilder.MyServices>(services, "Sxc.BlkBld"), IBlockBuilder
+public partial class BlockBuilder(BlockBuilder.Dependencies services)
+    : ServiceBase<BlockBuilder.Dependencies>(services, "Sxc.BlkBld"), IBlockBuilder
 {
-    public class MyServices(
+    public class Dependencies(
         IEngineFactory engineFactory,
         Generator<IEnvironmentInstaller> envInstGen,
         Generator<IRenderingHelper> renderHelpGen,
         LazySvc<PageChangeSummary> pageChangeSummary,
         LazySvc<ILicenseService> licenseService,
-        IModuleService moduleService,
+        IModuleHtmlService moduleHtmlService,
         CodeInfosInScope codeInfos)
-        : MyServicesBase(connect:
-            [engineFactory, envInstGen, renderHelpGen, pageChangeSummary, licenseService, moduleService, codeInfos])
+        : DependenciesBase(connect:
+            [engineFactory, envInstGen, renderHelpGen, pageChangeSummary, licenseService, moduleHtmlService, codeInfos])
     {
         public CodeInfosInScope CodeInfos { get; } = codeInfos;
         public IEngineFactory EngineFactory { get; } = engineFactory;
@@ -39,7 +37,7 @@ public partial class BlockBuilder(BlockBuilder.MyServices services)
         public Generator<IRenderingHelper> RenderHelpGen { get; } = renderHelpGen;
         public LazySvc<PageChangeSummary> PageChangeSummary { get; } = pageChangeSummary;
         public LazySvc<ILicenseService> LicenseService { get; } = licenseService;
-        public IModuleService ModuleService { get; } = moduleService;
+        public IModuleHtmlService ModuleHtmlService { get; } = moduleHtmlService;
     }
 
     #region Constructor

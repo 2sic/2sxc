@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Images;
+﻿namespace ToSic.Sxc.Images.Sys.ResizeSettings;
 
 internal record TweakResize(ResizeSettings Settings): ITweakResize
 {

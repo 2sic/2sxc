@@ -1,5 +1,5 @@
-﻿using ToSic.Lib.Helpers;
-using ToSic.Sxc.Services;
+﻿using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Sys;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 
@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Sys.ExecutionContext;
 /// Both Dnn and Oqtane have their own version of this class, but the changes are minimal.
 /// </remarks>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExecutionContext<TModel, TServiceKit>(ExecutionContext.MyServices services, string logPrefix)
+public class ExecutionContext<TModel, TServiceKit>(ExecutionContext.Dependencies services, string logPrefix)
     : ExecutionContext(services, logPrefix), IExecutionContext<TModel, TServiceKit>
     where TModel : class
     where TServiceKit : ServiceKit

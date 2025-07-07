@@ -1,6 +1,5 @@
 ﻿using System.Collections.Specialized;
 using ToSic.Eav.LookUp.Sources;
-using ToSic.Lib.DI;
 using ToSic.Sxc.LookUp.Sys;
 using ToSic.Sxc.Web.Sys.Http;
 using ToSic.Sxc.Web.Sys.Parameters;

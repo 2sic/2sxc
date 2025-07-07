@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Lib.Services;
-using ToSic.Sxc.Internal;
+using ToSic.Sxc.Sys;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Code.Generate.Sys;

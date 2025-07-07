@@ -2,7 +2,7 @@
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneMapper;
-using ToSic.Eav.DataSource.Internal.Query;
+using ToSic.Eav.DataSource.Sys.Query;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Services;
 using ToSic.Eav.Sys;
@@ -22,11 +22,11 @@ namespace ToSic.Sxc.Apps.Sys;
 /// <param name="logName">must be null by default, because of DI</param>
 [PrivateApi("Hide implementation - was PublicApi_Stable_ForUseInYourCode till 16.09")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract partial class SxcAppBase(SxcAppBase.MyServices services, string? logName = default, object[]? connect = default)
-    : AppBase<SxcAppBase.MyServices>(services, logName ?? "Eav.App", connect: connect)
+public abstract partial class SxcAppBase(SxcAppBase.Dependencies services, string? logName = default, object[]? connect = default)
+    : AppBase<SxcAppBase.Dependencies>(services, logName ?? "Eav.App", connect: connect)
 {
     // ReSharper disable once InconsistentNaming
-    private readonly MyServices services = services;
+    private readonly Dependencies services = services;
 
     #region Constructor / DI
 
@@ -34,14 +34,14 @@ public abstract partial class SxcAppBase(SxcAppBase.MyServices services, string?
     /// Helper class, so inheriting stuff doesn't need to update the constructor all the time
     /// </summary>
     [PrivateApi]
-    public class MyServices(
+    public class Dependencies(
         IZoneMapper zoneMapper,
         ISite site,
         IAppReaderFactory appReaders,
         IDataSourcesService dataSourceFactory,
         LazySvc<QueryManager> queryManager,
         IAppDataConfigProvider dataConfigProvider)
-        : MyServicesBase(connect: [zoneMapper, site, appReaders, dataSourceFactory, queryManager, dataConfigProvider])
+        : DependenciesBase(connect: [zoneMapper, site, appReaders, dataSourceFactory, queryManager, dataConfigProvider])
     {
         public IAppDataConfigProvider DataConfigProvider { get; } = dataConfigProvider;
         public LazySvc<QueryManager> QueryManager { get; } = queryManager;

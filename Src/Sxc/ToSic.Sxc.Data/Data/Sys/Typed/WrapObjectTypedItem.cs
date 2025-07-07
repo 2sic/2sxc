@@ -1,10 +1,7 @@
 ﻿using System.Collections;
 using System.Text.Json.Serialization;
-using ToSic.Eav.Data.ValueConverter.Sys;
+using ToSic.Eav.Data.Sys.ValueConverter;
 using ToSic.Eav.Metadata.Sys;
-using ToSic.Lib.DI;
-using ToSic.Lib.Helpers;
-using ToSic.Lib.Wrappers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Data;
@@ -12,7 +9,7 @@ using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Json;
 using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Images;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Sys.ConvertService;
 using ToSic.Sxc.Services.Tweaks;
 using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
 

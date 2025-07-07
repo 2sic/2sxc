@@ -1,7 +1,7 @@
 ﻿using Custom.DataSource;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.DataSource.Internal.AppDataSources;
+using ToSic.Eav.DataSource.Sys.AppDataSources;
 using ToSic.Sxc.DataSources.Sys;
 using ToSic.Sxc.Services;
 
@@ -18,7 +18,7 @@ public static class SxcCustomStartup
         services.TryAddTransient<IAppDataSourcesLoader, AppDataSourcesLoader>();
 
         // v15 CustomDataSources - just the dependencies needed
-        services.TryAddTransient<DataSource16.MyServices>();
+        services.TryAddTransient<DataSource16.Dependencies>();
 
         // Kits for custom code only
         services.TryAddTransient<ServiceKitLight16>();

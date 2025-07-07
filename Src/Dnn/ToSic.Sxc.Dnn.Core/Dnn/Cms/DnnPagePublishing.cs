@@ -14,7 +14,7 @@ using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 
-using ServiceBase = ToSic.Lib.Services.ServiceBase;
+using ServiceBase = ToSic.Sys.Services.ServiceBase;
 
 namespace ToSic.Sxc.Dnn.Cms;
 

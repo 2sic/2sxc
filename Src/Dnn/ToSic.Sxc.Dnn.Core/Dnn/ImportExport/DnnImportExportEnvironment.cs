@@ -13,7 +13,7 @@ internal class DnnImportExportEnvironment : SxcImportExportEnvironmentBase
     /// <summary>
     /// DI Constructor
     /// </summary>
-    public DnnImportExportEnvironment(MyServices services) : base(services, "Dnn.ImExEn") { }
+    public DnnImportExportEnvironment(Dependencies services) : base(services, "Dnn.ImExEn") { }
 
     #endregion
 

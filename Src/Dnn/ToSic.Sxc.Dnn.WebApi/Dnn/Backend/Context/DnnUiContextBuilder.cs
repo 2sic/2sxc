@@ -3,7 +3,6 @@ using DotNetNuke.Entities.Portals;
 using System.Web;
 using ToSic.Eav.WebApi.Sys.Context;
 using ToSic.Eav.WebApi.Sys.Dto;
-using ToSic.Lib.Wrappers;
 using ToSic.Sxc.Backend.Context;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.Web;
@@ -14,7 +13,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context;
 internal sealed class DnnUiContextBuilder(
     ISxcCurrentContextService ctxService,
     ExternalLinksService externalLinksService,
-    UiContextBuilderBase.MyServices deps)
+    UiContextBuilderBase.Dependencies deps)
     : UiContextBuilderBase(deps)
 {
     #region Constructor / DI

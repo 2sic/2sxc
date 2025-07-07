@@ -1,5 +1,4 @@
 ﻿using Oqtane.Repository;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Cms.Sites.Sys;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sys.Utils;
@@ -19,7 +18,7 @@ internal class OqtSitesDsProvider : SitesDataSourceProvider
 
     #region Constructor / DI
 
-    public OqtSitesDsProvider(MyServices services, IAliasRepository aliases, ISiteRepository sites, LazySvc<OqtCulture> oqtCulture)
+    public OqtSitesDsProvider(Dependencies services, IAliasRepository aliases, ISiteRepository sites, LazySvc<OqtCulture> oqtCulture)
         :base(services, "Oqt.Sites")
     {
         ConnectLogs([

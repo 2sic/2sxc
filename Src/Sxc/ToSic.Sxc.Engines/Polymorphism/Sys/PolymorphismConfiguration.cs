@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Data.Sys.Entities;
 
-namespace ToSic.Sxc.Polymorphism.Internal;
+namespace ToSic.Sxc.Polymorphism.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class PolymorphismConfiguration(IEntity? entity) : EntityBasedType(entity!)

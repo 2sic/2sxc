@@ -5,7 +5,6 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.Site;
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Eav.Environment.Sys.ServerPaths;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Shared;

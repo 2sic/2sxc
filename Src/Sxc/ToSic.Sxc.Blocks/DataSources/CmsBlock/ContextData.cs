@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Internal.Query;
+using ToSic.Eav.DataSource.Sys.Query;
 using ToSic.Eav.DataSources;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks.Sys.Views;
 
 // 2025-06 removed for v20
@@ -25,7 +24,7 @@ namespace ToSic.Sxc.DataSources;
 [PrivateApi("used to be Internal... till 16.01, then changed to private to hide implementation")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 // ReSharper disable once PartialTypeWithSinglePart
-public partial class ContextData(DataSourceBase.MyServices services) : PassThrough(services, "Sxc.BlckDs")
+public partial class ContextData(DataSourceBase.Dependencies services) : PassThrough(services, "Sxc.BlckDs")
 {
     #region Constructor and Init
 

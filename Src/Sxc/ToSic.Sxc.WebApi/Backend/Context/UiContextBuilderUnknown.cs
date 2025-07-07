@@ -2,7 +2,7 @@
 
 internal sealed class UiContextBuilderUnknown: UiContextBuilderBase, IIsUnknown
 {
-    public UiContextBuilderUnknown(MyServices services, WarnUseOfUnknown<UiContextBuilderBase> _) : base(services)
+    public UiContextBuilderUnknown(Dependencies services, WarnUseOfUnknown<UiContextBuilderBase> _) : base(services)
     {
     }
 }

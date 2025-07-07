@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Services;
-
-#pragma warning disable CS9113 // Parameter is unread.
+﻿#pragma warning disable CS9113 // Parameter is unread.
 
 namespace ToSic.Sxc.Sys.Integration.Installation;
 

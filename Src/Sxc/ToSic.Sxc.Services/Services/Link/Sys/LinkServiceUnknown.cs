@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.DI;
-using ToSic.Lib.Services;
-using ToSic.Sxc.Images.Sys;
+﻿using ToSic.Sxc.Images.Sys;
 using ToSic.Sxc.Sys.Integration.Paths;
 using ToSic.Sys.Utils;
 

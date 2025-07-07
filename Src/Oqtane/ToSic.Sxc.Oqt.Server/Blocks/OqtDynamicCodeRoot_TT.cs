@@ -1,8 +1,8 @@
-﻿using ToSic.Lib.DI;
-using ToSic.Sxc.Blocks.Sys;
+﻿using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks;
@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks;
 internal class OqtExecutionContext<TModel, TServiceKit> : ExecutionContext<TModel, TServiceKit> where TServiceKit : ServiceKit where TModel : class
 {
     private readonly LazySvc<AliasResolver> _aliasResolverLazy;
-    public OqtExecutionContext(MyServices services, LazySvc<AliasResolver> aliasResolverLazy) : base(services, OqtConstants.OqtLogPrefix)
+    public OqtExecutionContext(Dependencies services, LazySvc<AliasResolver> aliasResolverLazy) : base(services, OqtConstants.OqtLogPrefix)
     {
         ConnectLogs([
             _aliasResolverLazy = aliasResolverLazy

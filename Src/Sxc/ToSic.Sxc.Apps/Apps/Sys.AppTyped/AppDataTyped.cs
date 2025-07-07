@@ -1,15 +1,14 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ToSic.Eav.Data.Sys.Entities;
-using ToSic.Eav.DataSource.Internal.Caching;
-using ToSic.Sxc.Apps.Sys;
+using ToSic.Eav.DataSource.Sys.Caching;
 using ToSic.Sxc.Apps.Sys.Api01;
-using ToSic.Sxc.Data.Internal;
+using ToSic.Sxc.Data.Models.Sys;
 using ToSic.Sxc.Data.Sys.Factory;
 
-namespace ToSic.Sxc.Apps.Internal;
+namespace ToSic.Sxc.Apps.Sys.AppTyped;
 
 internal class AppDataTyped(
-    Eav.DataSources.App.MyServices services,
+    Eav.DataSources.App.Dependencies services,
     LazySvc<SimpleDataEditService> dataController,
     LazySvc<IDataSourceCacheService> dsCacheSvc)
     : AppDataWithCrud(services, dataController, dsCacheSvc), IAppDataTyped

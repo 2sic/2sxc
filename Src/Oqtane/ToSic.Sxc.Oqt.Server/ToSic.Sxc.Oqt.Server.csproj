@@ -7,6 +7,10 @@
   <Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />
 
   <PropertyGroup>
+    <RootNamespace>ToSic.Sxc.Oqt.Server</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <AssemblyName>ToSic.Sxc.Oqtane.Server</AssemblyName>
     <!--2dm I think we need this to include DLLs-->

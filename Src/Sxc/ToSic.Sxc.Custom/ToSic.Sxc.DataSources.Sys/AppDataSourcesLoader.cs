@@ -2,16 +2,14 @@
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Internal.AppDataSources;
+using ToSic.Eav.DataSource.Sys.AppDataSources;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Eav.DataSource.VisualQuery.Internal;
+using ToSic.Eav.DataSource.VisualQuery.Sys;
 using ToSic.Eav.Sys;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Context.Sys;
-using ToSic.Sxc.Polymorphism.Internal;
+using ToSic.Sxc.Polymorphism.Sys;
 using ToSic.Sys.Caching;
 using ToSic.Sys.Utils;
 
@@ -50,7 +48,7 @@ internal class AppDataSourcesLoader(
 
             // 1. Get Custom Dynamic DataSources from 'AppCode' assembly
             var data = CreateDataSourceInfos(appId, LoadAppCodeDataSources(spec, out var cacheKey));
-            l.A($"Custom Dynamic DataSources in {FolderConstants.AppCode}:{data.Count}");
+            l.A($"Custom Dynamic DataSources in {FolderConstants.AppCodeFolder}:{data.Count}");
 
             // 2. Get Custom Dynamic DataSources from 'DataSources' folder
             var (physicalPath, relativePath) = GetAppDataSourceFolderPaths(appId);

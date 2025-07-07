@@ -1,5 +1,4 @@
 ﻿using Connect.Koi.Detectors;
-using ToSic.Lib.Services;
 
 #pragma warning disable CS9113 // Parameter is unread.
 

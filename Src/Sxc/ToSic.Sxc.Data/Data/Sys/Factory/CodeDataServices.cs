@@ -1,9 +1,7 @@
 ﻿using ToSic.Eav.Data.Build;
-using ToSic.Eav.Data.ValueConverter.Sys;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
+using ToSic.Eav.Data.Sys.ValueConverter;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Sys.ConvertService;
 
 namespace ToSic.Sxc.Data.Sys.Factory;
 
@@ -14,7 +12,7 @@ public class CodeDataServices(
     LazySvc<IScrub> scrub,
     LazySvc<ConvertForCodeService> forCode,
     LazySvc<IDataFactory> dataFactory)
-    : MyServicesBase(connect: [valueConverterLazy, scrub, forCode, dataFactory])
+    : DependenciesBase(connect: [valueConverterLazy, scrub, forCode, dataFactory])
 {
     /// <summary>
     /// The ValueConverter is used to parse links in the format like "file:72"

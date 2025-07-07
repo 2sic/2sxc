@@ -1,22 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using ToSic.Lib.Coding;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Razor;
-using IHasLog = ToSic.Lib.Logging.IHasLog;
-using ILog = ToSic.Lib.Logging.ILog;
+using IHasLog = ToSic.Sys.Logging.IHasLog;
+using ILog = ToSic.Sys.Logging.ILog;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Sys.ExecutionContext;
+using Logging_IHasLog = ToSic.Sys.Logging.IHasLog;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
 
 [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>, IHasCodeLog, IHasLog, ISetDynamicModel, IGetCodePath
+public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>, IHasCodeLog, Logging_IHasLog, ISetDynamicModel, IGetCodePath
 {
     #region Constructor / DI / SysHelp
 

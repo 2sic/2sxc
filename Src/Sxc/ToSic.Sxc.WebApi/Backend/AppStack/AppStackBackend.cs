@@ -2,8 +2,8 @@
 using ToSic.Eav.Context.Sys.ZoneCulture;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.Data.Sys.PropertyDump;
-using ToSic.Eav.DataSource.Internal.Query;
-using ToSic.Eav.DataSources.Sys.Internal;
+using ToSic.Eav.DataSource.Sys.Query;
+using ToSic.Eav.DataSources.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
 using static ToSic.Eav.Apps.Sys.AppStack.AppStackConstants;
 

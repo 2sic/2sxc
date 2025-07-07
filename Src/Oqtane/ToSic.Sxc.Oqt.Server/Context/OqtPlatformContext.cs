@@ -1,5 +1,4 @@
 ﻿using Oqtane.Infrastructure;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys.Platform;
 using ToSic.Sys.Capabilities.Platform;

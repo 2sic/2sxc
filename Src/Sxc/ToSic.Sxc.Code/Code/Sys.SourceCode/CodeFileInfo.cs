@@ -1,5 +1,5 @@
-﻿using ToSic.Lib;
-using ToSic.Sxc.Code.Sys.CodeErrorHelp;
+﻿using ToSic.Sxc.Code.Sys.CodeErrorHelp;
+using ToSic.Sys;
 using ToSic.Sys.Code.Help;
 
 namespace ToSic.Sxc.Code.Sys.SourceCode;
@@ -38,7 +38,7 @@ public class CodeFileInfo
     public bool AppCode { get; }
 
     // without base class
-    public static CodeFileInfo TemplateUnknown = new(LibConstants.Unknown, CodeFileTypes.Unknown, HelpForRazorCompileErrors.CompileUnknown);
+    public static CodeFileInfo TemplateUnknown = new(SysConstants.Unknown, CodeFileTypes.Unknown, HelpForRazorCompileErrors.CompileUnknown);
 
     // with some other base class
     public static CodeFileInfo TemplateOther = new("other", CodeFileTypes.Other, HelpForRazorCompileErrors.CompileUnknown);

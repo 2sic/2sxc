@@ -1,15 +1,13 @@
 ﻿using ToSic.Eav.Metadata;
-
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Images.Sys;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Utils;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
-namespace ToSic.Sxc.Images.Internal;
+namespace ToSic.Sxc.Images.Sys.Metadata;
 
 /// <summary>
 /// Small service to image metadata additional recommendations as configured.

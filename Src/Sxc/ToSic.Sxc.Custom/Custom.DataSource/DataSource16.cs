@@ -4,10 +4,9 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw.Sys;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Internal;
+
+using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSources;
-using ToSic.Lib.Helpers;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;
 
@@ -18,25 +17,44 @@ namespace Custom.DataSource;
 /// The Base Class for custom Dynamic DataSources in your App.
 /// </summary>
 [PublicApi]
-public abstract partial class DataSource16: ServiceBase<DataSource16.MyServices>, IDataSource, IAppIdentitySync
+public abstract partial class DataSource16: ServiceBase<DataSource16.Dependencies>, IDataSource, IAppIdentitySync
 {
     /// <summary>
-    /// Dependencies of DataSource15.
-    /// This ensures that all users must have this in the constructor, so we can be sure we can add more dependencies as we need them.
+    /// Dependencies of DataSource16.
     /// </summary>
-    [PrivateApi]
-    public class MyServices(CustomDataSource.MyServices parentServices, ServiceKitLight16 kit)
-        : MyServicesBase<CustomDataSource.MyServices>(parentServices, connect: [kit])
+    /// <remarks>
+    /// This ensures that all users must have this in the constructor, so we can be sure we can add more dependencies as we need them.
+    ///
+    /// Note that this used to be called `MyServices` and that term will still work, but it's deprecated as of v20.
+    ///
+    /// See [](xref:NetCode.Conventions.DependenciesClass).
+    /// </remarks>
+    [PublicApi]
+    [method: PrivateApi]
+    public class Dependencies(CustomDataSource.Dependencies parentServices, ServiceKitLight16 kit)
+        : DependenciesBase(connect: [kit])
     {
+        [PrivateApi]
+        public CustomDataSource.Dependencies ParentServices { get; } = parentServices;
+        [PrivateApi]
         public ServiceKitLight16 Kit { get; } = kit;
     }
+
+    /// <summary>
+    /// This is just for compatibility for any custom data sources which may have used the term `MyServices` since v16.
+    /// </summary>
+    /// <param name="parentServices"></param>
+    /// <param name="kit"></param>
+    [PrivateApi]
+    public class MyServices(CustomDataSource.Dependencies parentServices, ServiceKitLight16 kit)
+        : Dependencies(parentServices, kit);
 
     /// <summary>
     /// Constructor with the option to provide a log name.
     /// </summary>
     /// <param name="services">All the needed services - see [](xref:NetCode.Conventions.MyServices)</param>
     /// <param name="logName">Optional name for logging such as `My.JsonDS`</param>
-    protected DataSource16(MyServices services, string? logName = default): base(services, logName ?? "Cus.HybDs")
+    protected DataSource16(Dependencies services, string? logName = default): base(services, logName ?? "Cus.HybDs")
     {
         _inner = BreachExtensions.CustomDataSourceLight(services.ParentServices, this, logName: logName ?? "Cus.HybDs");
         _inner.BreachProvideOut(GetDefault);

@@ -1,7 +1,5 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Eav.Metadata;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -14,18 +12,18 @@ namespace ToSic.Sxc.DataSources;
 /// Must be overriden in each platform.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSourceProvider<TFolderId, TFileId>.MyServices>
+public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSourceProvider<TFolderId, TFileId>.Dependencies>
 {
     private IContextOfApp _context = null!;
 
-    public class MyServices(LazySvc<AdamContext> adamContext, ISxcAppCurrentContextService ctxService)
-        : MyServicesBase(connect: [adamContext, ctxService])
+    public class Dependencies(LazySvc<AdamContext> adamContext, ISxcAppCurrentContextService ctxService)
+        : DependenciesBase(connect: [adamContext, ctxService])
     {
         public LazySvc<AdamContext> AdamContext { get; } = adamContext;
         public ISxcAppCurrentContextService CtxService { get; } = ctxService;
     }
 
-    protected AdamDataSourceProvider(MyServices services) : base(services, $"{SxcLogName}.AdamDs")
+    protected AdamDataSourceProvider(Dependencies services) : base(services, $"{SxcLogName}.AdamDs")
     { }
 
     public AdamDataSourceProvider<TFolderId, TFileId> Configure(

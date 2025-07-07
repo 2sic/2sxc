@@ -1,7 +1,7 @@
 ﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Services.Tweaks;
 
-namespace ToSic.Sxc.Services.Internal;
+namespace ToSic.Sxc.Services.Sys.Cms;
 
 [PrivateApi("not published, use Item.Html() instead")]
 [ShowApiWhenReleased(ShowApiMode.Never)]

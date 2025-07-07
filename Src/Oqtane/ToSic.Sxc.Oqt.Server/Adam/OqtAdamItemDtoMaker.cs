@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam;
 
 // TODO: @STV - this doesn't seem to be used, as it's not even registered in DI
 // Pls find out why, and if we don't need it, remove
-internal class OqtAdamItemDtoMaker(AdamItemDtoMaker<int, int>.MyServices services)
+internal class OqtAdamItemDtoMaker(AdamItemDtoMaker<int, int>.Dependencies services)
     : AdamItemDtoMaker<int, int>(services)
 {
     public override AdamItemDto Create(IFile original)

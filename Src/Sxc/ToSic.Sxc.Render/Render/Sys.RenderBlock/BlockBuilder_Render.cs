@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.Helpers;
-using ToSic.Razor.Blade;
+﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Engines;
@@ -208,7 +207,7 @@ public partial class BlockBuilder
             // This is not ideal, because it actually changes what's in the DIV
             // We would rather add it to the end, but ATM that doesn't trigger turnOn in AJAX reload
             // Note: DNN implementation will ignore the module ID, but Oqtane needs it
-            var additionalTags = Services.ModuleService.GetMoreTagsAndFlush(Block.Context.Module.Id);
+            var additionalTags = Services.ModuleHtmlService.GetMoreTagsAndFlush(Block.Context.Module.Id);
 
             var bodyWithAddOns = additionalTags.Any()
                 ? body + "\n" + string.Join("\n", additionalTags.Select(t => t?.ToString()))

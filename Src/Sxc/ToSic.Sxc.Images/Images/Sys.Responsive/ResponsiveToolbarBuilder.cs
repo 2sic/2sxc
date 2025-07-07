@@ -1,12 +1,12 @@
 ﻿using ToSic.Eav.Data.Sys.Entities;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Adam.Sys.Security;
 using ToSic.Sxc.Edit.Toolbar;
-using ToSic.Sxc.Edit.Toolbar.Internal;
+using ToSic.Sxc.Edit.Toolbar.Sys;
 using ToSic.Sxc.Images.Sys;
+using ToSic.Sxc.Images.Sys.ResizeSettings;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Images.Internal;
+namespace ToSic.Sxc.Images;
 
 internal class ResponsiveToolbarBuilder(ILog parentLog) : HelperBase(parentLog, $"{SxcLogName}.ImgTlb")
 {

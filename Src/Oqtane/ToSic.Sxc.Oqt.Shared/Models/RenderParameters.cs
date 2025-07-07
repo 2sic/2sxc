@@ -1,12 +1,11 @@
-﻿namespace ToSic.Sxc.Oqt.Shared.Models
+﻿namespace ToSic.Sxc.Oqt.Shared.Models;
+
+public record RenderParameters
 {
-    public record RenderParameters
-    {
-        public int AliasId { get; init; }
-        public int PageId { get; init; }
-        public int ModuleId { get; init; }
-        public string Culture { get; init; }
-        public bool PreRender { get; init; }
-        public string OriginalParameters { get; init; }
-    }
+    public required int AliasId { get; init; }
+    public required int PageId { get; init; }
+    public required int ModuleId { get; init; }
+    public required string Culture { get; init; }
+    public required bool PreRender { get; init; }
+    public required string OriginalParameters { get; init; }
 }

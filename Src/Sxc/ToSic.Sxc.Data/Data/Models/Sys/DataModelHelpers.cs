@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Data.Sys.Factory;
 
-namespace ToSic.Sxc.Data.Models;
+namespace ToSic.Sxc.Data.Models.Sys;
 
 internal class DataModelHelpers
 {

@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Internal.Errors;
+using ToSic.Eav.DataSource.Sys.Errors;
 using ToSic.Sys.Exceptions;
 using ToSic.Sys.Users;
 using ToSic.Sys.Utils;

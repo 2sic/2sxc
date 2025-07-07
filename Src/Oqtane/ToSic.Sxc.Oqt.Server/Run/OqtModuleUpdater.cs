@@ -5,8 +5,6 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Sys.Work;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Sys;

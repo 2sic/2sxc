@@ -1,5 +1,4 @@
 ﻿using System.Web;
-using ToSic.Lib.Coding;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Render.Sys;
@@ -14,7 +13,7 @@ internal class DnnRenderService : RenderService
     private readonly Generator<IContextOfBlock> _context;
 
     public DnnRenderService(
-        MyServices services,
+        Dependencies services,
         LazySvc<DnnPageChanges> dnnPageChanges,
         LazySvc<DnnClientResources> dnnClientResources,
         Generator<IContextOfBlock> context

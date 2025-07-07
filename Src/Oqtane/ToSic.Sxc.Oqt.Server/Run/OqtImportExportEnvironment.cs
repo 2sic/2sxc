@@ -15,7 +15,7 @@ using IO = System.IO;
 namespace ToSic.Sxc.Oqt.Server.Run;
 
 internal class OqtImportExportEnvironment(
-    SxcImportExportEnvironmentBase.MyServices services,
+    SxcImportExportEnvironmentBase.Dependencies services,
     IServerPaths oqtServerPaths,
     IFileRepository oqtFileRepository,
     IFolderRepository oqtFolderRepository)

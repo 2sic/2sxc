@@ -1,7 +1,5 @@
 using System.Text;
 using ToSic.Eav.Data.Sys;
-using ToSic.Lib.Logging;
-using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Code.Generate.Sys;
 

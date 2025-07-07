@@ -1,8 +1,8 @@
 ﻿using System.Collections.Immutable;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Internal;
+
+using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc.Cms.Assets;
 using ToSic.Sxc.Cms.Assets.Sys;
 using ToSic.Sxc.DataSources.Sys.AppAssets;
@@ -86,7 +86,7 @@ public class AppAssets: CustomDataSourceAdvanced
     #region Constructor
 
     [PrivateApi]
-    public AppAssets(MyServices services, AppAssetsDataSourceProvider appAssetsSource) : base(services, "CDS.AppFiles", connect: [appAssetsSource])
+    public AppAssets(Dependencies services, AppAssetsDataSourceProvider appAssetsSource) : base(services, "CDS.AppFiles", connect: [appAssetsSource])
     {
         _appAssetsSource = appAssetsSource;
 

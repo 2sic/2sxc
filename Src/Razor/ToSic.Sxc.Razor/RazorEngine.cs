@@ -1,8 +1,5 @@
 ﻿using Custom.Razor.Sys;
 using Microsoft.AspNetCore.Mvc.Razor;
-using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Engines;
@@ -18,7 +15,7 @@ namespace ToSic.Sxc.Razor;
 [PrivateApi("used to be marked as internal, but it doesn't make sense to show in docs")]
 [EngineDefinition(Name = "Razor")]
 internal class RazorEngine(
-    EngineBase.MyServices services,
+    EngineBase.Dependencies services,
     LazySvc<IRazorRenderer> razorRenderer,
     LazySvc<IExecutionContextFactory> codeRootFactory,
     LazySvc<CodeErrorHelpService> errorHelp,
@@ -55,7 +52,8 @@ internal class RazorEngine(
         RazorView? page = null;
         try
         {
-            if (string.IsNullOrEmpty(TemplatePath)) return (null, null);
+            if (string.IsNullOrEmpty(TemplatePath))
+                return (null, null);
 
             var result = await razorRenderer.Value.RenderToStringAsync(
                 TemplatePath,

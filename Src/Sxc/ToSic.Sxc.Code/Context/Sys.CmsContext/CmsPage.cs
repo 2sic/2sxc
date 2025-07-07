@@ -1,8 +1,7 @@
 ﻿using ToSic.Eav.Metadata;
 using ToSic.Eav.Metadata.Sys;
-using ToSic.Lib.DI;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys.CmsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CmsPage(CmsContext parent, IMetadataOfSource appState, LazySvc<IPage> fallbackPage)

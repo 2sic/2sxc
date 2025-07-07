@@ -1,15 +1,12 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Lib.DI;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Context.Sys.Module;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys.CmsContext;
 
 /// <summary>
 /// Runtime context information, used in dynamic code. Help the code to detect what environment it's in, what page etc.
@@ -36,7 +33,7 @@ internal class CmsContext(
     internal IBlock BlockInternal => _realBlock.Get(() => ExCtx.GetState<IBlock>())!;
     private readonly GetOnce<IBlock?> _realBlock = new();
 
-    internal IContextOfBlock? CtxBlockOrNull => _ctxBlock.Get(() => BlockInternal.Context);
+    internal IContextOfBlock? CtxBlockOrNull => _ctxBlock.Get(() => BlockInternal?.Context);
     private readonly GetOnce<IContextOfBlock?> _ctxBlock = new();
 
     internal IContextOfSite CtxSite => CtxBlockOrNull ?? siteCtxFallback;

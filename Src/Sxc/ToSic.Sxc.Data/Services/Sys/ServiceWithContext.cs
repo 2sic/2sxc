@@ -1,7 +1,6 @@
-﻿using ToSic.Lib.Services;
-using ToSic.Sxc.Sys.ExecutionContext;
+﻿using ToSic.Sxc.Sys.ExecutionContext;
 
-namespace ToSic.Sxc.Services.Internal;
+namespace ToSic.Sxc.Services.Sys;
 
 /// <summary>
 /// Internal special base class for services which link to the dynamic code root

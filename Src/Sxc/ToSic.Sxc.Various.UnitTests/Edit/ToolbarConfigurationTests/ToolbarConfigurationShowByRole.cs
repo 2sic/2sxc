@@ -1,7 +1,7 @@
 ﻿
 using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Cms.Users.Sys;
-using ToSic.Sxc.Edit.Toolbar.Internal;
+using ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Edit.ToolbarConfigurationTests;

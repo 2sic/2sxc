@@ -3,7 +3,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Sys;
 
-namespace ToSic.Sxc.Context.Internal;
+namespace ToSic.Sxc.Context.Sys.CmsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class CmsSite(CmsContext parent, IAppReader appReader)

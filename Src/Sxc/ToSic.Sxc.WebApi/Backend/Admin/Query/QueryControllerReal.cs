@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Backend.Admin.Query;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class QueryControllerReal(
-    QueryControllerBase<QueryControllerReal>.MyServices services,
+    QueryControllerBase<QueryControllerReal>.Dependencies services,
     GenWorkPlus<WorkViews> workViews,
     ISxcCurrentContextService currentContextService,
     Generator<IAppDataConfigProvider> tokenEngineWithContext)

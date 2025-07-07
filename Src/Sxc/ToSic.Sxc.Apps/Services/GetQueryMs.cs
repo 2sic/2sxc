@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.DataSource.Internal.Query;
+﻿using ToSic.Eav.DataSource.Sys.Query;
 
 namespace ToSic.Sxc.Services.DataServices;
 

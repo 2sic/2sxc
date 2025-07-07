@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.DI;
-using ToSic.Sxc.Polymorphism.Internal;
+﻿using ToSic.Sxc.Polymorphism.Sys;
 
 namespace ToSic.Sxc.Polymorphism;
 

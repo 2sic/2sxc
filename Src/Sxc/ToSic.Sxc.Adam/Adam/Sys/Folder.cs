@@ -1,6 +1,5 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Metadata;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam.Sys.FileSystem;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Cms.Sys;
@@ -11,7 +10,7 @@ namespace ToSic.Sxc.Adam.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class Folder<TFolderId, TFileId>(AdamManager adamManager)
-    : Eav.Apps.Assets.Internal.Folder<TFolderId, TFileId>, IFolder
+    : Eav.Apps.Assets.Sys.Folder<TFolderId, TFileId>, IFolder
 {
     protected AdamManager AdamManager { get; } = adamManager;
     protected IAdamFileSystem AdamFs { get; } = adamManager.AdamFs;

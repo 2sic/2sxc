@@ -1,6 +1,6 @@
 ﻿using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Images.Internal;
+namespace ToSic.Sxc.Images;
 
 internal class LightboxHelpers
 {

@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Edit.Toolbar;
+using ToSic.Sxc.Images.Sys.ResizeSettings;
 using ToSic.Sys.Utils;
 using static System.StringComparer;
 
@@ -7,7 +8,7 @@ namespace ToSic.Sxc.Images.Sys;
 internal record TweakMedia(
     ImageService ImageSvc,
     ResponsiveSpecsOfTarget TargetSpecs,
-    ResizeSettings ResizeSettings,
+    ResizeSettings.ResizeSettings ResizeSettings,
     ImageDecoratorVirtual VDec,
     ImageSpecs Img,
     PictureSpecs Pic,
@@ -36,7 +37,7 @@ internal record TweakMedia(
     /// <inheritdoc />
     public ITweakMedia Resize(IResizeSettings settings, NoParamOrder noParamOrder = default, Func<ITweakResize, ITweakResize>? tweak = default)
     {
-        var retyped = settings as ResizeSettings ?? throw new ArgumentException(@"Can't properly convert to expected type", nameof(settings));
+        var retyped = settings as ResizeSettings.ResizeSettings ?? throw new ArgumentException(@"Can't properly convert to expected type", nameof(settings));
         var updated = (tweak?.Invoke(new TweakResize(retyped)) as TweakResize)?.Settings ?? retyped;
         return this with { ResizeSettings = updated };
     }

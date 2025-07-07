@@ -1,7 +1,5 @@
 ﻿using System.Text;
 using ToSic.Eav.Apps.Sys;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Render.Sys.RenderBlock;
 using ToSic.Sxc.Services;

@@ -1,13 +1,14 @@
 ﻿using ToSic.Sxc.Context;
-using ToSic.Sxc.Services.Internal;
+using ToSic.Sxc.Render.Sys.ModuleHtml;
+using ToSic.Sxc.Services.Sys;
 
 namespace ToSic.Sxc.Services.OutputCache;
 
 // Note 2dm 2025-06 - this doesn't seem to be in use anywhere!
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class OutputCacheService(IModuleService moduleService)
-    : ServiceWithContext("Sxc.OutCac", connect: [moduleService]), IOutputCacheService
+internal class OutputCacheService(IModuleHtmlService moduleHtmlService)
+    : ServiceWithContext("Sxc.OutCac", connect: [moduleHtmlService]), IOutputCacheService
 {
     public int ModuleId
     {
@@ -24,7 +25,7 @@ internal class OutputCacheService(IModuleService moduleService)
 
     public string Configure(OutputCacheSettings settings)
     {
-        ((ModuleService)moduleService).ConfigureOutputCache(ModuleId, settings);
+        ((ModuleHtmlService)moduleHtmlService).ConfigureOutputCache(ModuleId, settings);
         return "";
     }
 }

@@ -13,7 +13,7 @@ internal class OqtUiContextBuilder(
     IContextOfSite ctx,
     SiteState siteState,
     ExternalLinksService externalLinksService,
-    UiContextBuilderBase.MyServices deps)
+    UiContextBuilderBase.Dependencies deps)
     : UiContextBuilderBase(deps)
 {
     protected override ContextResourceWithApp GetSystem(Ctx flags)

@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Wrappers;
-
-namespace ToSic.Sxc.Data.Models;
+﻿namespace ToSic.Sxc.Data.Models;
 
 partial class ModelFromEntity: IMultiWrapper<IEntity>, IEquatable<IEntity>
 {

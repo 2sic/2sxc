@@ -2,8 +2,6 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneMapper;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
@@ -16,11 +14,11 @@ namespace ToSic.Sxc.Services.Sys.DynamicCodeService;
 /// Not sure how to get this to work, since normally we always start with a code-file, and here we don't have one!
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public partial class DynamicCodeService: ServiceBase<DynamicCodeService.MyServices>, IDynamicCodeService, ILogWasConnected
+public partial class DynamicCodeService: ServiceBase<DynamicCodeService.Dependencies>, IDynamicCodeService, ILogWasConnected
 {
     #region Constructor and Init
 
-    public class MyServices(
+    public class Dependencies(
         IServiceProvider serviceProvider,
         LazySvc<ILogStore> logStore,
         LazySvc<IUser> user,
@@ -28,7 +26,7 @@ public partial class DynamicCodeService: ServiceBase<DynamicCodeService.MyServic
         LazySvc<ISite> site,
         LazySvc<IZoneMapper> zoneMapper,
         LazySvc<IAppsCatalog> appsCatalog)
-        : MyServicesBase(connect: [/* never! serviceProvider */ logStore, user, site, zoneMapper, appsCatalog])
+        : DependenciesBase(connect: [/* never! serviceProvider */ logStore, user, site, zoneMapper, appsCatalog])
     {
         internal IServiceProvider ServiceProvider { get; } = serviceProvider;
         public LazySvc<ILogStore> LogStore { get; } = logStore;
@@ -42,15 +40,15 @@ public partial class DynamicCodeService: ServiceBase<DynamicCodeService.MyServic
         Generator<IExecutionContextFactory> codeRootGenerator,
         Generator<App> appGenerator,
         LazySvc<IModuleAndBlockBuilder> modAndBlockBuilder)
-        : MyServicesBase(connect: [codeRootGenerator, appGenerator, modAndBlockBuilder])
+        : DependenciesBase(connect: [codeRootGenerator, appGenerator, modAndBlockBuilder])
     {
         public Generator<App> AppGenerator { get; } = appGenerator;
         public Generator<IExecutionContextFactory> CodeRootGenerator { get; } = codeRootGenerator;
         public LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder { get; } = modAndBlockBuilder;
     }
 
-    public DynamicCodeService(MyServices services): this(services, $"{SxcLogName}.DCS") { }
-    protected DynamicCodeService(MyServices services, string logName): base(services, logName)
+    public DynamicCodeService(Dependencies services): this(services, $"{SxcLogName}.DCS") { }
+    protected DynamicCodeService(Dependencies services, string logName): base(services, logName)
     {
         ScopedServiceProvider = services.ServiceProvider.CreateScope().ServiceProvider;
         // Important: These generators must be built inside the scope, so they must be made here

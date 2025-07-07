@@ -9,5 +9,5 @@ namespace ToSic.Sxc.Razor;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public interface IRazorCompiler
 {
-    Task<(IView view, ActionContext context)> CompileView(string partialName, Action<RazorView>? configure = null, IApp? app = null, HotBuildSpec? spec = default);
+    Task<(IView view, ActionContext context)> CompileView(string partialName, Action<RazorView> configure, IApp app, HotBuildSpec spec);
 }

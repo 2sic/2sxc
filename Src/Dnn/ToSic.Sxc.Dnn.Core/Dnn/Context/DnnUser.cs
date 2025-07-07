@@ -2,8 +2,6 @@
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
-using ToSic.Lib.Helpers;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sys.Users;

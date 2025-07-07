@@ -10,12 +10,12 @@ using ToSic.Sys.Security.Permissions;
 namespace ToSic.Sxc.Backend.Adam;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TFileId>.MyServices services)
+public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TFileId>.Dependencies services)
     : ServiceWithSetup<AdamItemDtoMakerOptions>("Adm"), IAdamItemDtoMaker
 {
     #region Constructor / DI
 
-    public class MyServices(IAdamSecurityCheckService security)
+    public class Dependencies(IAdamSecurityCheckService security)
     {
         public IAdamSecurityCheckService Security { get; } = security;
     }

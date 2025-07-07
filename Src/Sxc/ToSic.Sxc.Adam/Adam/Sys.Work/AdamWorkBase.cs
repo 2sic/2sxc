@@ -1,20 +1,18 @@
 ﻿using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.WebApi.Sys.Helpers.Http;
-using ToSic.Lib.DI;
-using ToSic.Lib.Services;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Adam.Sys.Work;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class AdamWorkBase(AdamWorkBase.MyServices services, string logName)
-    : ServiceBase<AdamWorkBase.MyServices>(services, logName), IAdamWork
+public abstract class AdamWorkBase(AdamWorkBase.Dependencies services, string logName)
+    : ServiceBase<AdamWorkBase.Dependencies>(services, logName), IAdamWork
 {
     #region MyServices / Init
 
-    public class MyServices(LazySvc<AdamContext> adamContext, ISxcAppCurrentContextService ctxService, AdamGenericHelper adamGenericHelper)
-        : MyServicesBase(connect: [adamContext, ctxService, adamGenericHelper])
+    public class Dependencies(LazySvc<AdamContext> adamContext, ISxcAppCurrentContextService ctxService, AdamGenericHelper adamGenericHelper)
+        : DependenciesBase(connect: [adamContext, ctxService, adamGenericHelper])
     {
         public LazySvc<AdamContext> AdamContext { get; } = adamContext;
         public ISxcAppCurrentContextService CtxService { get; } = ctxService;

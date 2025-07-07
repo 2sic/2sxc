@@ -1,6 +1,4 @@
-﻿using ToSic.Lib.Logging;
-using ToSic.Lib.Services;
-using ToSic.Sxc.Cms.Users;
+﻿using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Cms.Users.Sys;
 
 // ReSharper disable once CheckNamespace

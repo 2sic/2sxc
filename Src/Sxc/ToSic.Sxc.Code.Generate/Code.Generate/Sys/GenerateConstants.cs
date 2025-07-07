@@ -25,5 +25,5 @@ public class GenerateConstants
     /// </summary>
     public const string PathPlaceholderEdition = "[target:edition]";
 
-    public const string PathToAppCode = $"{PathPlaceholderAppRoot}/{PathPlaceholderEdition}/{FolderConstants.AppCode}";
+    public const string PathToAppCode = $"{PathPlaceholderAppRoot}/{PathPlaceholderEdition}/{FolderConstants.AppCodeFolder}";
 }
