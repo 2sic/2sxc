@@ -37,17 +37,18 @@ public class RouteMapper : IServiceRouteMapper
     {
         _mapRouteManager = mapRouteManager;
 
-        // old API routes before 08.10
-        RegisterOldRoutesBefore0810();
+        // #DropOldPre8Routes
+        //// old API routes before 08.10
+        //RegisterOldRoutesBefore0810();
 
 
         #region new API routes after 08.10
 
         // ADAM routes
-        AddWD("adam-auto", AppRoots.AppAutoContent + "/" + ValueTokens.SetTypeGuidField, ControllerNames.Adam, AdamNamespace);
-        AddWD("adam2-auto", AppRoots.AppAutoContent + "/" + ValueTokens.SetTypeGuidFieldAction, ControllerNames.Adam, AdamNamespace);
-        AddWD("adam3-auto", AppRoots.AppAutoData + "/" + ValueTokens.SetTypeGuidField, ControllerNames.Adam, AdamNamespace); // new, v13
-        AddWD("adam4-auto", AppRoots.AppAutoData + "/" + ValueTokens.SetTypeGuidFieldAction, ControllerNames.Adam, AdamNamespace); // new, v13
+        AddWD("adam-auto", $"{AppRoots.AppAutoContent}/{ValueTokens.SetTypeGuidField}", ControllerNames.Adam, AdamNamespace);
+        AddWD("adam2-auto", $"{AppRoots.AppAutoContent}/{ValueTokens.SetTypeGuidFieldAction}", ControllerNames.Adam, AdamNamespace);
+        AddWD("adam3-auto", $"{AppRoots.AppAutoData}/{ValueTokens.SetTypeGuidField}", ControllerNames.Adam, AdamNamespace); // new, v13
+        AddWD("adam4-auto", $"{AppRoots.AppAutoData}/{ValueTokens.SetTypeGuidFieldAction}", ControllerNames.Adam, AdamNamespace); // new, v13
 
         // App Content routes - for GET/DELETE/PUT entities using REST
         // 1. Type and null or int-id
@@ -55,22 +56,22 @@ public class RouteMapper : IServiceRouteMapper
         var idNullOrNumber = ConstraintForIdEmptyOrNumber();
         foreach (var part in Roots.Content)
         {
-            AddWC("2sxc-" + part.Name,      $"{part.Path}/{ValueTokens.SetTypeAndId}", AppContentDefs, idNullOrNumber, StdNsWebApi);
-            AddWD("2sxc-guid-" + part.Name, $"{part.Path}/{ValueTokens.SetTypeAndGuid}",  ControllerNames.AppContent, StdNsWebApi);
+            AddWC($"2sxc-{part.Name}",      $"{part.Path}/{ValueTokens.SetTypeAndId}", AppContentDefs, idNullOrNumber, StdNsWebApi);
+            AddWD($"2sxc-guid-{part.Name}", $"{part.Path}/{ValueTokens.SetTypeAndGuid}",  ControllerNames.AppContent, StdNsWebApi);
         }
 
         // App-API routes - for the custom code API calls of an app
         foreach (var part in Roots.AppAutoNamedInclEditions)
-            AddNs("app-api" + part.Name, part.Path + "/" + RouteParts.RouteApiControllerAction, StdNsWebApi); // new, v08.10+
+            AddNs($"app-api{part.Name}", $"{part.Path}/{RouteParts.RouteApiControllerAction}", StdNsWebApi); // new, v08.10+
 
 
         // App-Query routes - to access designed queries
         // new routes, v08.10+
         foreach (var part in Roots.QueryRoots)
         {
-            AddWD("2sxc-auto-" + part.Name,        $"{part.Path}/{ValueTokens.Name}", ControllerNames.AppQuery, StdNsWebApi);
-            AddWD("2sxc-auto-slash" + part.Name,   $"{part.Path}/{ValueTokens.Name}/", ControllerNames.AppQuery, StdNsWebApi);
-            AddWD("2sxc-auto-stream" + part.Name,  $"{part.Path}/{ValueTokens.Name}/{ValueTokens.Stream}", ControllerNames.AppQuery, StdNsWebApi);
+            AddWD($"2sxc-auto-{part.Name}",        $"{part.Path}/{ValueTokens.Name}", ControllerNames.AppQuery, StdNsWebApi);
+            AddWD($"2sxc-auto-slash{part.Name}",   $"{part.Path}/{ValueTokens.Name}/", ControllerNames.AppQuery, StdNsWebApi);
+            AddWD($"2sxc-auto-stream{part.Name}",  $"{part.Path}/{ValueTokens.Name}/{ValueTokens.Stream}", ControllerNames.AppQuery, StdNsWebApi);
         }
         #endregion
 
@@ -83,14 +84,14 @@ public class RouteMapper : IServiceRouteMapper
             new { controller = "Insights", action = nameof(InsightsController.Details) }, [typeof(InsightsController).Namespace]);
 
         // /Sys/ Part 2: All others
-        AddTy("2sxc-sys",     Areas.Sys + "/" + ValueTokens.SetControllerAction,           typeof(InstallController));
-        AddTy("2sxc-cms",     Areas.Cms + "/" + ValueTokens.SetControllerAction,           typeof(BlockController));
-        AddTy("2sic-admin",   Areas.Admin + "/" + ValueTokens.SetControllerAction,         typeof(MetadataController));
+        AddTy("2sxc-sys", $"{Areas.Sys}/{ValueTokens.SetControllerAction}",           typeof(InstallController));
+        AddTy("2sxc-cms", $"{Areas.Cms}/{ValueTokens.SetControllerAction}",           typeof(BlockController));
+        AddTy("2sic-admin", $"{Areas.Admin}/{ValueTokens.SetControllerAction}",         typeof(MetadataController));
 
         #endregion
 
         // DNN: System calls to dnn - this is just for module delete
-        AddTy("dnn", "dnn/" + ValueTokens.SetControllerAction, typeof(ModuleController));
+        AddTy("dnn", $"dnn/{ValueTokens.SetControllerAction}", typeof(ModuleController));
 
 
         // Add custom service locator into the chain of service-locators
@@ -103,32 +104,30 @@ public class RouteMapper : IServiceRouteMapper
         GlobalConfiguration.Configuration.AddTabAndModuleInfoProvider(new ModifiedTabAndModuleInfoProvider());
     }
 
-    private void RegisterOldRoutesBefore0810()
-    {
-        // ADAM routes
-        var oldContentRoot = "app-content";
-        AddWD("adam-old-81", oldContentRoot + "/" + ValueTokens.SetTypeGuidField, ControllerNames.Adam, AdamNamespace);
-        AddWD("adam", oldContentRoot + "/" + ValueTokens.SetTypeGuidFieldAction, ControllerNames.Adam, AdamNamespace);
+    // #DropOldPre8Routes
+    //private void RegisterOldRoutesBefore0810()
+    //{
+    //    // ADAM routes
+    //    var oldContentRoot = "app-content";
+    //    AddWD("adam-old-81", $"{oldContentRoot}/{ValueTokens.SetTypeGuidField}", ControllerNames.Adam, AdamNamespace);
+    //    AddWD("adam", $"{oldContentRoot}/{ValueTokens.SetTypeGuidFieldAction}", ControllerNames.Adam, AdamNamespace);
 
-        // App Content routes - for GET/DELETE/PUT entities using REST
-        // 1. Type and null or int-id
-        // 2. Type and guid-id
-        var idNullOrNumber = ConstraintForIdEmptyOrNumber();
-        AddWC("app-content", $"{oldContentRoot}/{ValueTokens.SetTypeAndId}", AppContentDefs, idNullOrNumber, StdNsWebApi);
-        AddWD("app-content-guid", $"{oldContentRoot}/{ValueTokens.SetTypeAndGuid}", ControllerNames.AppContent, StdNsWebApi);
+    //    // App Content routes - for GET/DELETE/PUT entities using REST
+    //    // 1. Type and null or int-id
+    //    // 2. Type and guid-id
+    //    var idNullOrNumber = ConstraintForIdEmptyOrNumber();
+    //    AddWC("app-content", $"{oldContentRoot}/{ValueTokens.SetTypeAndId}", AppContentDefs, idNullOrNumber, StdNsWebApi);
+    //    AddWD("app-content-guid", $"{oldContentRoot}/{ValueTokens.SetTypeAndGuid}", ControllerNames.AppContent, StdNsWebApi);
 
-        // App-API routes - for the custom code API calls of an app
-        // these are the old routes, before 2sxc v08.10
-        AddWD(Mod2Sxc, "app-api-old-81", "app-api/" + ValueTokens.SetControllerAction, StdNsWebApi);
+    //    // App-API routes - for the custom code API calls of an app
+    //    // these are the old routes, before 2sxc v08.10
+    //    AddWD(Mod2Sxc, "app-api-old-81", $"app-api/{ValueTokens.SetControllerAction}", StdNsWebApi);
 
-        // App-Query routes - to access designed queries
-        // these are the old routes, before 2sxc v08.10
-        const string rootQueryPre0810 = "app-query";
-        AddWD("app-query-old-81", $"{rootQueryPre0810}/{ValueTokens.Name}", ControllerNames.AppQuery, StdNsWebApi);
-        // Note 2020-04-09 - this had "appname" instead of "apppath" in it - probably for 2 years! only 1 app (Manor) now had trouble, so I think this is not in use elsewhere
-        // 2020-11-12 will turn off for now - leave comment in till 2021-03
-        //AddWD("app-query-nomod-old-81", $"{rootQueryPre0810}/{Token.AppPath}/{Token.Name}", ControllerNames.AppQuery, StdNsWebApi); // keep for backward compatibility...
-    }
+    //    // App-Query routes - to access designed queries
+    //    // these are the old routes, before 2sxc v08.10
+    //    const string rootQueryPre0810 = "app-query";
+    //    AddWD("app-query-old-81", $"{rootQueryPre0810}/{ValueTokens.Name}", ControllerNames.AppQuery, StdNsWebApi);
+    //}
 
     /// <summary>
     /// Generate a constraint which only matches an ID parameter which is either empty or contains only digits.
