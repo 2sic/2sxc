@@ -6,20 +6,20 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 
 partial record ToolbarBuilder
 {
-    public IToolbarBuilder More(NoParamOrder noParamOrder = default, object? ui = default) =>
-        this.AddInternal([new ToolbarRuleCustom("more", ui: PrepareUi(ui))]);
+    public IToolbarBuilder More(NoParamOrder noParamOrder = default, object? ui = default)
+        => this.AddInternal([new ToolbarRuleCustom("more", ui: PrepareUi(ui))]);
 
-    public IToolbarBuilder For(object target) =>
-        Parameters(target);
+    public IToolbarBuilder For(object target)
+        => Parameters(target);
 
-    public IToolbarBuilder DetectDemo(ICanBeEntity root, NoParamOrder noParamOrder = default, string? message = default) =>
-        this with { Configuration = Configuration with { DemoCheckItem = root, DemoMessage = message } };
+    public IToolbarBuilder DetectDemo(ICanBeEntity root, NoParamOrder noParamOrder = default, string? message = default)
+        => this with { Configuration = Configuration with { DemoCheckItem = root, DemoMessage = message } };
 
-    public IToolbarBuilder Condition(bool condition) =>
-        this with { Configuration = Configuration with { Condition = condition } };
+    public IToolbarBuilder Condition(bool condition)
+        => this with { Configuration = Configuration with { Condition = condition } };
 
-    public IToolbarBuilder Condition(Func<bool> condition) =>
-        this with { Configuration = Configuration with { ConditionFunc = condition } };
+    public IToolbarBuilder Condition(Func<bool> condition)
+        => this with { Configuration = Configuration with { ConditionFunc = condition } };
 
     public IToolbarBuilder Audience(
         NoParamOrder protector = default,
@@ -55,9 +55,9 @@ partial record ToolbarBuilder
         // auto-add other UI params such as the previous group
         return name.StartsWith("-")
             // It's a remove-group rule
-            ? this.AddInternal([$"-group={name.Substring(1)}"])
+            ? this.AddInternal([new ToolbarRuleGeneric($"-group={name.Substring(1)}")])
             // It's an add group - set the current group and add the button-rule
             : (this with { Configuration = Configuration with { Group = name } })
-            .AddInternal([$"+group={name}"]);
+            .AddInternal([new ToolbarRuleGeneric($"+group={name}")]);
     }
 }

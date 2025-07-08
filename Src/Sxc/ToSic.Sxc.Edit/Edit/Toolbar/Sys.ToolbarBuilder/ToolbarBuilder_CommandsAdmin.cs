@@ -29,13 +29,14 @@ partial record ToolbarBuilder
         var uiTweaked = PrepareUi(ui, tweaks: tweaksInt?.UiMerge);
         TargetCheck(target);
         return this.AddInternal([
-            new ToolbarRuleCustom(
-                verb,
-                operation: ToolbarRuleOperation.Pick(operation, ToolbarRuleOps.OprAuto, tweaksInt?._condition),
-                ui: uiTweaked,
-                parameters: paramsTweaked,
-                operationCode: operation.HasValue() ? null : target as string)
-        ]);
+                new ToolbarRuleCustom(
+                    verb,
+                    operation: ToolbarRuleOperation.Pick(operation, ToolbarRuleOps.OprAuto, tweaksInt?._condition),
+                    ui: uiTweaked,
+                    parameters: paramsTweaked,
+                    operationCode: operation.HasValue() ? null : target as string)
+            ],
+            methodName: methodName);
     }
         
         

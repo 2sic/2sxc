@@ -82,7 +82,7 @@ partial record ToolbarBuilder
             contentType: contentType,
             propsKeep: propsKeep, propsSkip: propsSkip,
             decoHelper: Services.ToolbarButtonHelper.Value);
-        var builder = this.AddInternal([command]);
+        var builder = this.AddInternal([command], methodName: verb);
         return (command, builder);
     }
 
@@ -171,23 +171,27 @@ partial record ToolbarBuilder
         var finalTypes = GetMetadataTypeNames(target, contentTypes);
         var realContext = GenerateContext(target, context);
 
-        var mdsToAdd = finalTypes.Select(type =>
-        {
-            var parsForThis = pars.Parts?.TryGetValue(type, out var p) == true ? p : pars;
-            
-            return new ToolbarRuleMetadata(
-                target,
-                type,
-                operation: parsForThis.Operation,
-                ui: parsForThis.Ui,
-                parameters: parsForThis.Parameters,
-                context: realContext,
-                decoHelper: Services.ToolbarButtonHelper.Value
-            );
-        });
+        var mdsToAdd = finalTypes
+            .Select(ToolbarRuleBase (type) =>
+            {
+                var parsForThis = pars.Parts?.TryGetValue(type, out var p) == true
+                    ? p
+                    : pars;
+
+                return new ToolbarRuleMetadata(
+                    target,
+                    type,
+                    operation: parsForThis.Operation,
+                    ui: parsForThis.Ui,
+                    parameters: parsForThis.Parameters,
+                    context: realContext,
+                    decoHelper: Services.ToolbarButtonHelper.Value
+                );
+            })
+            .ToArray();
 
         // var builder = this as IToolbarBuilder;
-        return l.ReturnAsOk(this.AddInternal(mdsToAdd.Cast<object>().ToArray()));
+        return l.ReturnAsOk(this.AddInternal(mdsToAdd));
     }
 
     /// <inheritdoc />

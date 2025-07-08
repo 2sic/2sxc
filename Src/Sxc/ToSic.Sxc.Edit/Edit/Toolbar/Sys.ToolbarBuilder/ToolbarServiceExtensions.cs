@@ -13,30 +13,20 @@ internal static class ToolbarBuilderExtensions
     /// History
     /// * Added in 2sxc 13
     /// </remarks>
-    public static ToolbarBuilder AddInternal(this ToolbarBuilder original, object[] newRules, [CallerMemberName] string? cName = default)
+    public static ToolbarBuilder AddInternal(this ToolbarBuilder original, ToolbarRuleBase[] newRules, [CallerMemberName] string? methodName = default)
     {
-        var l = original.Log.Fn<ToolbarBuilder>(cName);
+        var l = original.Log.Fn<ToolbarBuilder>(methodName);
         if (!newRules.Any())
             return l.Return(original, "no new rules");
-
-        var typedNewRules = newRules
-            .Select(rule => rule switch
-            {
-                ToolbarRuleBase realRule => realRule,
-                string stringRule => new ToolbarRuleGeneric(stringRule),
-                _ => null!
-            })
-            .Where(r => r != null)
-            .ToList();
 
         // Create clone with all rules
         var clone = original with
         {
-            Rules = original.Rules.Concat(typedNewRules).ToList(),
+            Rules = original.Rules.Concat(newRules).ToList(),
         };
 
 
-        return l.Return(clone, $"clone with {typedNewRules.Count} new rules");
+        return l.Return(clone, $"clone with {newRules.Length} new rules");
     }
 
 }
