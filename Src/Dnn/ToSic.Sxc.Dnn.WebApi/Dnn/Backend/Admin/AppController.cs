@@ -39,7 +39,11 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public void App(int zoneId, int appId, bool fullDelete = true) => Real.App(zoneId, appId, fullDelete);
+    public void App(int zoneId, int appId, bool fullDelete = true)
+    {
+        SysHlp.PreventServerTimeout300();
+        Real.App(zoneId, appId, fullDelete);
+    }
 
     /// <inheritdoc />
     [HttpPost]
