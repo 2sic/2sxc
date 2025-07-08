@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Edit.Toolbar.Sys.Rules;
+﻿using System.Runtime.CompilerServices;
+using ToSic.Sxc.Edit.Toolbar.Sys.Rules;
 
 namespace ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 
@@ -12,32 +13,42 @@ internal static class ToolbarBuilderExtensions
     /// History
     /// * Added in 2sxc 13
     /// </remarks>
-    public static ToolbarBuilder AddInternal(this ToolbarBuilder original, object[] newRules)
+    public static ToolbarBuilder AddInternal(this ToolbarBuilder original, object[] newRules, [CallerMemberName] string? cName = default)
     {
-        var l = original.Log.Fn<ToolbarBuilder>();
-        if (newRules == null || !newRules.Any())
+        var l = original.Log.Fn<ToolbarBuilder>(cName);
+        if (!newRules.Any())
             return l.Return(original, "no new rules");
 
-        var mergeRules = new List<ToolbarRuleBase>(original.Rules);
-        foreach (var rule in newRules)
-            switch (rule)
+        //var mergeRules = new List<ToolbarRuleBase>(original.Rules);
+        //foreach (var rule in newRules)
+        //    switch (rule)
+        //    {
+        //        case ToolbarRuleBase realRule:
+        //            mergeRules.Add(realRule);
+        //            break;
+        //        case string stringRule:
+        //            mergeRules.Add(new ToolbarRuleGeneric(stringRule));
+        //            break;
+        //    }
+
+        var typedNewRules = newRules
+            .Select(rule => rule switch
             {
-                case ToolbarRuleBase realRule:
-                    mergeRules.Add(realRule);
-                    break;
-                case string stringRule:
-                    mergeRules.Add(new ToolbarRuleGeneric(stringRule));
-                    break;
-            }
+                ToolbarRuleBase realRule => realRule,
+                string stringRule => new ToolbarRuleGeneric(stringRule),
+                _ => null!
+            })
+            .Where(r => r != null)
+            .ToList();
 
         // Create clone with all rules
         var clone = original with
         {
-            Rules = mergeRules
+            Rules = original.Rules.Concat(typedNewRules).ToList(),
         };
 
 
-        return l.Return(clone, "clone");
+        return l.Return(clone, $"clone with {typedNewRules.Count} new rules");
     }
 
 }
