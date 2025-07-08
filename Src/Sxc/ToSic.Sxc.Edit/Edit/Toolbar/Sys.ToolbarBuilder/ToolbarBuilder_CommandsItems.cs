@@ -35,12 +35,17 @@ partial record ToolbarBuilder
         ITweakButton? initialButton = default,
         [CallerMemberName] string? methodName = default)
     {
-        var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, initial: initialButton,
-            ui: ui, parameters: parameters, prefill: prefill, filter: filter, methodName: methodName);
+        // process tweaks, but skip early to reduce calls if null
+        var tweaks = tweak == null
+            ? null
+            : RunTweaksOrErrorIfCombined(tweak: tweak, initial: initialButton, ui: ui, parameters: parameters, prefill: prefill, filter: filter, methodName: methodName);
 
-        var paramsString = Utils.PrepareParams(parameters, tweaks);
+        var paramsString = tweaks == null && parameters == null
+            ? null
+            : Utils.PrepareParams(parameters, tweaks);
+
         var parsWithPrefill = Utils.Prefill2Url.SerializeWithChild(paramsString, prefill, ToolbarConstants.RuleParamPrefixPrefill);
-        if (fields != default)
+        if (fields != null)
             parsWithPrefill = Utils.Filter2Url.SerializeWithChild(parsWithPrefill, new { fields });
 
         var tweaksInt = tweaks as ITweakButtonInternal;
@@ -48,7 +53,7 @@ partial record ToolbarBuilder
             ? tweaksInt.Named
                 .ToDictionary(
                     kvp => kvp.Key,
-                    kvp => PreCleanParams(tweak: kvp.Value, defOp: OprNone) as CleanedParams
+                    CleanedParams (kvp) => PreCleanParams(tweak: kvp.Value, defOp: OprNone)
                 )
             : null;
 

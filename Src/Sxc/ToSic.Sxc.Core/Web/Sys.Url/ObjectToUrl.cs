@@ -43,9 +43,14 @@ public class ObjectToUrl
     /// <returns></returns>
     public string? SerializeWithChild(object? main, object? child, string? childPrefix = null)
     {
-        var asString = Serialize(main);
+        // Exit early
+        if (main == null && child == null)
+            return null;
+
+        var asString = Serialize(main, prefix: null);
         if (child == null)
             return asString;
+
         childPrefix ??= ""; // null catch
         var prefillAddOn = "";
         if (child is string strPrefill)

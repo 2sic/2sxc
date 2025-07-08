@@ -19,18 +19,6 @@ internal static class ToolbarBuilderExtensions
         if (!newRules.Any())
             return l.Return(original, "no new rules");
 
-        //var mergeRules = new List<ToolbarRuleBase>(original.Rules);
-        //foreach (var rule in newRules)
-        //    switch (rule)
-        //    {
-        //        case ToolbarRuleBase realRule:
-        //            mergeRules.Add(realRule);
-        //            break;
-        //        case string stringRule:
-        //            mergeRules.Add(new ToolbarRuleGeneric(stringRule));
-        //            break;
-        //    }
-
         var typedNewRules = newRules
             .Select(rule => rule switch
             {

@@ -17,10 +17,16 @@ partial record ToolbarBuilder
         [CallerMemberName] string? methodName = default
     )
     {
-        var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters, methodName: methodName);
+        // process tweaks, but skip early to reduce calls if null
+        var tweaks = tweak == null
+            ? null
+            : RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters, methodName: methodName);
+        var paramsTweaked = tweaks == null && parameters == null
+            ? null
+            : Utils.PrepareParams(parameters, tweaks);
+
         var tweaksInt = tweaks as ITweakButtonInternal;
         var uiTweaked = PrepareUi(ui, tweaks: tweaksInt?.UiMerge);
-        var paramsTweaked = Utils.PrepareParams(parameters, tweaks);
         TargetCheck(target);
         return this.AddInternal([
             new ToolbarRuleCustom(

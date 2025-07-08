@@ -85,9 +85,9 @@ internal class ToolbarBuilderUtilities
     private string? MergeWithTweaks(string? previous, IEnumerable<object?>? tweaks = null)
     {
         // new v15 - add UI tweaks - must come last / after group
-        if (tweaks != null) 
-            previous = tweaks.Aggregate(previous, (prev, t) => Ui2Url.SerializeWithChild(prev, t));
-        return previous;
+        if (tweaks == null)
+            return previous;
 
+        return tweaks.Aggregate(previous, (prev, t) => Ui2Url.SerializeWithChild(prev, t));
     }
 }
