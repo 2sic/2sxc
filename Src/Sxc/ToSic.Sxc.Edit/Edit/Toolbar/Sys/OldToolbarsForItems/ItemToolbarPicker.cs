@@ -7,9 +7,11 @@ internal class ItemToolbarPicker
     internal static ItemToolbarBase ItemToolbar(IEntity? entity, string? actions = null, string? newType = null,
         object? prefill = null, object? settings = null, object? toolbar = null)
     {
+        // #DropRoutingToolbarBuilderThroughEditService v20
         // Case v13+ Toolbar Builder
-        if (toolbar is IToolbarBuilder toolbarBuilder)
-            return new ItemToolbarV14(toolbarBuilder, entity);
+        if (toolbar is IToolbarBuilder)
+            throw new($"Toolbar using old API provided a new {nameof(IToolbarBuilder)} - unexpected, pls contact iJungleboy to fix.");
+            //return new ItemToolbarV14(toolbarBuilder, entity);
 
         // Case 1 - use the simpler string format in V10.27
         var (isV10, _) = CheckIfParamsMeanV10(toolbar, settings, prefill);
