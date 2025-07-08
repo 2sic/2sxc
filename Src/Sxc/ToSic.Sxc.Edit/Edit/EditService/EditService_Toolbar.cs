@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Edit.EditService;
 
 partial class EditService
 {
-    private readonly string innerContentAttribute = "data-list-context";
+    private const string InnerContentAttribute = "data-list-context";
 
     /// <inheritdoc />
     public IRawHtmlString? Toolbar(
@@ -37,6 +37,7 @@ partial class EditService
     private IRawHtmlString? ToolbarInternal(
         bool inTag,
         object? target,
+        // ReSharper disable once UnusedParameter.Local
         NoParamOrder noParamOrder,
         string? actions,
         string? contentType,

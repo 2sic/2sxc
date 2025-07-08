@@ -36,7 +36,7 @@ partial class EditService
             type = contentType ?? AppConstants.ContentGroupRefTypeName,
         }, JsonOptions.SafeJsonForHtmlAttributes);
 
-        return HtmlAttribute.Create(innerContentAttribute, serialized);
+        return HtmlAttribute.Create(InnerContentAttribute, serialized);
     }
 
     // 2024-01-10 2dm disabled #WrapInContext - was for internal only, seems not to be used? Was created 2018? https://github.com/2sic/2sxc/issues/1479

@@ -43,9 +43,6 @@ internal class AppDataTyped(
     /// <inheritdoc />
     IEnumerable<T>? IAppDataTyped.GetAll<T>(NoParamOrder protector, string? typeName, bool nullIfNotFound)
     {
-        //var streamName = typeName ?? DataModelAnalyzer.GetStreamName<T>();
-        //var errStreamName = streamName;
-
         var streamNames = typeName == null
             ? DataModelAnalyzer.GetStreamNameList<T>()
             : ([typeName], typeName);
@@ -54,20 +51,11 @@ internal class AppDataTyped(
         IDataStream? list = null;
         foreach (var streamName2 in streamNames.List)
             list ??= GetStream(streamName2, nullIfNotFound: true);
-        
-
-        //// If we didn't find it, check if the stream name is *Model and try without that common suffix
-        //if (list == null && streamName.EndsWith("Model"))
-        //{
-        //    var shorterName = streamName.Substring(0, streamName.Length - 5);
-        //    errStreamName += "," + shorterName;
-        //    list = GetStream(shorterName, nullIfNotFound: true);
-        //}
 
         // If we didn't find anything yet, then we must now try to re-access the stream
         // but in a way which will throw an exception with the expected stream names
         if (list == null && !nullIfNotFound)
-            list = GetStream(/*errStreamName*/streamNames.Flat, nullIfNotFound: false);
+            list = GetStream(streamNames.Flat, nullIfNotFound: false);
 
         return list == null
             ? null
