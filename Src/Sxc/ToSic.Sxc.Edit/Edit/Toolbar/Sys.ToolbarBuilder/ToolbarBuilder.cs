@@ -65,11 +65,7 @@ public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, ITo
     internal ToolbarBuilderConfiguration Configuration { get; init; } = new();
 
     [field: AllowNull, MaybeNull]
-    private ToolbarBuilderUtilities Utils
-    {
-        get => field ??= new();
-        init;
-    }
+    private ToolbarBuilderUtilities Utils => field ??= new();
 
     internal List<ToolbarRuleBase> Rules { get; init; } = [];
 
@@ -112,7 +108,7 @@ public partial record ToolbarBuilder: HybridHtmlString, IEnumerable<string>, ITo
         // to not-hover by default. 
         // The rule must be added to the top of the list, so that any other settings will take precedence,
         // Including UI rules added to the toolbar itself
-        if (Configuration?.HtmlMode == ToolbarHtmlModes.Standalone)
+        if (Configuration.HtmlMode == ToolbarHtmlModes.Standalone)
         {
             var standaloneSettings = new ToolbarRuleSettings(show: "always", hover: "none");
             rulesToDeliver = [standaloneSettings, .. Rules];

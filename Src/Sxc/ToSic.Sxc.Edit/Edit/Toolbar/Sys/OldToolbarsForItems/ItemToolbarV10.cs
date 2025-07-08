@@ -21,12 +21,13 @@ internal class ItemToolbarV10(
     protected readonly EntityEditInfo TargetAction = new(entity) { contentType = newType, prefill = prefill };
 
     public override string ToolbarAsTag 
-        => ToolbarTagTemplate.Replace(ToolbarTagPlaceholder, ToolbarAttributes(JsonToolbarNodeName));
+        =>
+            ToolbarConstants.ToolbarTagTemplate.Replace(ToolbarConstants.ToolbarTagPlaceholder, ToolbarAttributes(ToolbarConstants.JsonToolbarNodeName));
 
-    protected override string? ToolbarJson => _toolbarJson.Get(ToolbarV10Json);
+    protected string? ToolbarJson => _toolbarJson.Get(ToolbarV10Json);
     private readonly GetOnce<string> _toolbarJson = new();
 
-    public override string ToolbarAsAttributes() => ToolbarAttributes(ToolbarAttributeName);
+    public override string ToolbarAsAttributes() => ToolbarAttributes(ToolbarConstants.ToolbarAttributeName);
 
     protected virtual string ToolbarAttributes(string tlbAttrName) => $" {HtmlAttribute.Create(tlbAttrName, ToolbarJson)} ";
 

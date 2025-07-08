@@ -2,6 +2,7 @@
 using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Sxc.Web.Sys.Html;
 using ToSic.Sys.Utils;
+using static ToSic.Sxc.Edit.Toolbar.Sys.ToolbarConstants;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ToSic.Sxc.Edit.Toolbar.Sys;
@@ -55,16 +56,16 @@ internal class ItemToolbar: ItemToolbarBase
 
     [JsonIgnore]
     public override string ToolbarAsTag
-        => ToolbarTagTemplate.Replace(ToolbarTagPlaceholder, $" {HtmlAttribute.Create(JsonToolbarNodeName, ToolbarJson )} {AttributeSettings()} ");
+        => ToolbarTagTemplate
+            .Replace(ToolbarTagPlaceholder, $" {HtmlAttribute.Create(JsonToolbarNodeName, ToolbarJson )} {AttributeSettings()} ");
 
-    protected override string ToolbarJson => ToolbarObjJson();
+    protected string ToolbarJson => ToolbarObjJson();
 
     private string AttributeSettings()
         => HtmlAttribute.Create(JsonSettingsNodeName, SettingsJson).ToString() ?? "";
 
     public override string ToolbarAsAttributes()
         => HtmlAttribute.Create(ToolbarAttributeName,
-            "{\"" + JsonToolbarNodeName + "\":" + ToolbarObjJson() + ",\"" + JsonSettingsNodeName + "\":" +
-            SettingsJson + "}").ToString() ?? "";
+            "{\"" + JsonToolbarNodeName + "\":" + ToolbarObjJson() + ",\"" + JsonSettingsNodeName + "\":" + SettingsJson + "}").ToString();
         
 }

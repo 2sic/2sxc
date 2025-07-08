@@ -9,7 +9,7 @@ internal class ItemToolbarPicker
     {
         // Case v13+ Toolbar Builder
         if (toolbar is IToolbarBuilder toolbarBuilder)
-            return new ItemToolbarV14(entity, toolbarBuilder);
+            return new ItemToolbarV14(toolbarBuilder, entity);
 
         // Case 1 - use the simpler string format in V10.27
         var (isV10, _) = CheckIfParamsMeanV10(toolbar, settings, prefill);

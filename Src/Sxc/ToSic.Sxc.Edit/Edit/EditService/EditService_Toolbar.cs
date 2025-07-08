@@ -20,7 +20,8 @@ partial class EditService
         object? prefill = null,
         object? settings = null,
         object? toolbar = null)
-        => ToolbarInternal(false, target, noParamOrder, actions, contentType, condition, prefill, settings, toolbar);
+        => ToolbarInternal(false, target, noParamOrder, actions, contentType, condition, prefill, settings, toolbar)
+            ?.Render(false);
 
     /// <inheritdoc/>
     public IRawHtmlString? TagToolbar(
@@ -32,9 +33,10 @@ partial class EditService
         object? prefill = null,
         object? settings = null,
         object? toolbar = null)
-        => ToolbarInternal(true, target, noParamOrder, actions, contentType, condition, prefill, settings, toolbar);
+        => ToolbarInternal(true, target, noParamOrder, actions, contentType, condition, prefill, settings, toolbar)
+            ?.Render(true);
 
-    private IRawHtmlString? ToolbarInternal(
+    private ItemToolbarBase? ToolbarInternal(
         bool inTag,
         object? target,
         // ReSharper disable once UnusedParameter.Local
@@ -46,7 +48,7 @@ partial class EditService
         object? settings,
         object? toolbar)
     {
-        var l = Log.Fn<IRawHtmlString>($"enabled:{Enabled}; inline{inTag}");
+        var l = Log.Fn<ItemToolbarBase?>($"enabled:{Enabled}; inline{inTag}");
 
         // new v17.08 - force-show for everyone
         var tlbConfig = (target as ToolbarBuilder)?.Configuration;
@@ -59,36 +61,23 @@ partial class EditService
             return l.ReturnNull("condition false");
 
         // New in v13: The first parameter can also be a ToolbarBuilder, in which case all other params are ignored
-        ItemToolbarBase itmToolbar;
         if (target is IToolbarBuilder tlbBuilder)
-        {
-            l.A("Using new modern Item-Toolbar, will ignore all other parameters.");
-            itmToolbar = new ItemToolbarV14(null, tlbBuilder);
-        }
-        else
-        {
-            // ensure that internally we always process it as an entity
-            var eTarget = target as IEntity
-                          ?? (target as ICanBeEntity)?.Entity;
-            if (target != null && eTarget == null)
-                l.W("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
-            if (toolbar is IToolbarBuilder tlbBuilder2)
-            {
-                l.A("Using new modern Item-Toolbar with an entity, will ignore all other parameters.");
-                itmToolbar = new ItemToolbarV14(eTarget, tlbBuilder2);
-            }
-            else
-            {
-                l.A("Using classic mode, with all parameters.");
-                itmToolbar = ItemToolbarPicker.ItemToolbar(eTarget, actions, contentType,
-                    prefill: prefill, settings: settings, toolbar: toolbar);
-            }
-        }
+            return l.Return(new ItemToolbarV14(tlbBuilder),
+                "Using new modern Item-Toolbar, will ignore all other parameters.");
+        
+        // ensure that internally we always process it as an entity
+        var eTarget = target as IEntity
+                      ?? (target as ICanBeEntity)?.Entity;
+        
+        if (target != null && eTarget == null)
+            l.W("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
 
-        var result = inTag
-            ? new(itmToolbar.ToolbarAsAttributes())
-            : new RawHtmlString(itmToolbar.ToolbarAsTag);
-        return l.Return(result, "ok");
+        if (toolbar is IToolbarBuilder tlbBuilder2)
+            return l.Return(new ItemToolbarV14(tlbBuilder2, eTarget),
+                "Using new modern Item-Toolbar with an entity, will ignore all other parameters.");
+        
+        return l.Return(ItemToolbarPicker.ItemToolbar(eTarget, actions, contentType,
+            prefill: prefill, settings: settings, toolbar: toolbar), "Using classic mode, with all parameters.");
     }
 
     private bool IsConditionOk(object? condition)

@@ -3,7 +3,6 @@ using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.Render.PageFeatures;
-using static ToSic.Sxc.Edit.Toolbar.Sys.ItemToolbarBase;
 using Attribute = ToSic.Razor.Markup.Attribute;
 
 namespace ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
@@ -35,7 +34,6 @@ partial record ToolbarBuilder
             ExCtx.GetService<IPageService>(reuse: true)
                 .Activate(SxcPageFeatures.ToolbarsInternal.NameId);
 
-
             finalToolbar = this with { Configuration = Configuration with { ShowForce = true } };
         }
 
@@ -43,21 +41,21 @@ partial record ToolbarBuilder
         if (ShouldSwitchToItemDemoMode())
             finalToolbar = CreateStandaloneItemDemoToolbar();       // Implement Demo-Mode with info-button only
 
-        return finalToolbar.Render(editSvc, enabled) ?? "";
+        // don't show toolbar if not enabled (or not for everyone)
+        if (!enabled)
+            return "";
+        return finalToolbar.Render(editSvc);
     }
 
     private (bool enabled, bool showNonAdmin) CheckShowConditions(IEditService? editSvc)
     {
         // Get initial enabled from the Edit Service
         var enabled = editSvc?.Enabled == true;
-        var config = Configuration;
-        if (config == null)
-            return (enabled, false);
 
         // Check force show for Everyone, because
         // 1. the configuration says so
         // 2. because the page-level Edit object says we're in demo mode
-        var showNonAdmins = config.ShowForEveryone == true;
+        var showNonAdmins = Configuration.ShowForEveryone == true;
         enabled = enabled || showNonAdmins;
 
         // Check if enabled for certain groups
@@ -65,7 +63,7 @@ partial record ToolbarBuilder
         {
             var user = ExCtx.GetState<ICmsContext>().User;
             var overrideShow = new ToolbarConfigurationShowHelper()
-                .OverrideShowBecauseOfRoles(config, user);
+                .OverrideShowBecauseOfRoles(Configuration, user);
             enabled = overrideShow ?? enabled;
             showNonAdmins = overrideShow ?? showNonAdmins;
         }
@@ -73,13 +71,11 @@ partial record ToolbarBuilder
         // If enabled, then still check if conditions would deny again
         // Check if conditions don't allow - in which case we return nothing.
         // Only test conditions if the toolbar would show - otherwise ignore
-        if (enabled)
-        {
-            if (config.Condition == false)
-                return (false, false);
-            if (config.ConditionFunc?.Invoke() == false)
-                return (false, false);
-        }
+        if (!enabled)
+            return (enabled, showNonAdmins);
+
+        if (Configuration.Condition == false || Configuration.ConditionFunc?.Invoke() == false)
+            return (false, false);
 
         return (enabled, showNonAdmins);
     }
@@ -87,24 +83,22 @@ partial record ToolbarBuilder
 
 
 
-    private string? Render(IEditService? edit, bool enabled)
+    private string Render(IEditService? edit)
     {
-        // don't show toolbar if not enabled (or not for everyone)
-        if (!enabled)
-            return ""; 
-
-        var mode = (Configuration?.HtmlMode ?? ToolbarHtmlModes.OnTag).ToLowerInvariant();
+        var mode = (Configuration.HtmlMode ?? ToolbarHtmlModes.OnTag).ToLowerInvariant();
         switch (mode)
         {
             // ReSharper disable AssignNullToNotNullAttribute
             case ToolbarHtmlModes.OnTag:
                 return edit == null
-                    ? new Attribute(ToolbarAttributeName, ErrRenderMessage).ToString() // add error
-                    : edit.TagToolbar(this)?.ToString();
+                    ? new Attribute(ToolbarConstants.ToolbarAttributeName, ErrRenderMessage).ToString() // add error
+                    //: edit.TagToolbar(this)?.ToString();
+                    : new ItemToolbarV14(this).Render(true).ToString();
             case ToolbarHtmlModes.Standalone:
                 return edit == null
-                    ? $"<!-- {ErrRenderMessage} -->"              // add error
-                    : edit.Toolbar(this)?.ToString();       // Show toolbar
+                    ? $"<!-- {ErrRenderMessage} -->" // add error
+                    //: edit.Toolbar(this)?.ToString();       // Show toolbar
+                    : new ItemToolbarV14(this).Render(false).ToString();
             // ReSharper restore AssignNullToNotNullAttribute
             case ToolbarHtmlModes.Json:
                 var rules = Rules
