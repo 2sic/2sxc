@@ -86,10 +86,10 @@ internal partial class SxcCurrentContextService(
 
     public IBlock SwapBlockView(IView newView)
     {
-        var specs = _block as BlockSpecs
-            ??throw new NullReferenceException("Block is not attached, cannot swap view.");
+        var blockSpecs = _block as BlockSpecs
+                    ?? throw new NullReferenceException("Block is not attached, cannot swap view.");
 
-        var newSpecs = specs with
+        var newSpecs = blockSpecs with
         {
             ViewOrNull = newView,
         };

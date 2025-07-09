@@ -17,7 +17,7 @@ public partial class ExecutionContext
 
         // Compile
         var compiler = Services.CodeCompilerLazy.Value;
-        var spec = new HotBuildSpec(App.AppId, _edition, App.Name);
+        var spec = new HotBuildSpec(App.AppId, _editionForHotBuild, App.Name);
         var instance = compiler.InstantiateClass(virtualPath, spec, className: name, relativePath: relativePath, throwOnError: throwOnError);
 
         if (instance == null)

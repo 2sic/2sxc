@@ -39,7 +39,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.Dependencies>, IEngine
 
     #region Constructor and DI
 
-    [PrivateApi] protected IView Template = null!;
+    [PrivateApi] protected IView View = null!;
     [PrivateApi] protected string TemplatePath = null!;
     [PrivateApi] protected string? Edition;
     [PrivateApi] protected IApp App = null!;
@@ -87,7 +87,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.Dependencies>, IEngine
 
         // All ok, set properties
         Block = block;
-        Template = view;
+        View = view;
         Edition = edition;
         TemplatePath = templatePath;
         App = Block.App;
@@ -131,7 +131,7 @@ public abstract class EngineBase : ServiceBase<EngineBase.Dependencies>, IEngine
         if (appReqProblems != null)
             return l.Return(appReqProblems, "error");
 
-        if (Template.ContentType != "" && Template.ContentItem == null && Block.Configuration.Content.All(e => e == null))
+        if (View.ContentType != "" && View.ContentItem == null && Block.Configuration.Content.All(e => e == null))
         {
             var result = new RenderEngineResult
             {

@@ -9,7 +9,6 @@ using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.CodeDataFactory;
 using ToSic.Sxc.Data.Sys.Factory;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sys.Users;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -28,10 +27,10 @@ public partial class ExecutionContext
 
         App = app;
 
-        _edition = Services.Polymorphism.UseViewEditionOrGet(Block?.View, ((IAppWithInternal)App).AppReader);
+        _editionForHotBuild = Services.Polymorphism.UseViewEditionOrGet(Block.View, ((IAppWithInternal)App).AppReader);
     }
 
-    private string? _edition;
+    private string? _editionForHotBuild;
 
     [PrivateApi]
     [Obsolete("Warning - avoid using this on the DynamicCode Root - always use the one on the AsC")]
