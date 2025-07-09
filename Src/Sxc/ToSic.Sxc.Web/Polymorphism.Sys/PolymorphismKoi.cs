@@ -1,4 +1,5 @@
 ﻿using Connect.Koi;
+using ToSic.Sys.Utils;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.Polymorphism.Sys;
@@ -15,10 +16,10 @@ public class PolymorphismKoi(ICss pageCss) : IPolymorphismResolver
     {
         var l = log.Fn<string>();
         if (!string.Equals(config.Parameters, ModeCssFramework, InvariantCultureIgnoreCase))
-            return l.ReturnNull("unknown param");
+            return l.Return(overrule, "unknown param");
         // Note: this is still using the global object which we want to get rid of
         // But to use DI, we must refactor Polymorphism
-        return l.ReturnAndLog(pageCss.Framework);
+        return l.ReturnAndLog(overrule.NullIfNoValue() ?? pageCss.Framework);
     }
 
     public bool IsViable() => true;
