@@ -206,4 +206,16 @@ public interface ITweakButton
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     ITweakButton Condition(bool value);
+
+
+    /// <summary>
+    /// Experimental for development, adding custom rules to the output.
+    /// </summary>
+    /// <param name="prefix">prefix like `dialog` etc.</param>
+    /// <param name="name"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    [PrivateApi]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    public ITweakButton Custom(string prefix, string name, object value);
 }

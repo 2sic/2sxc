@@ -167,6 +167,9 @@ internal class TweakButton: ITweakButton, ITweakButtonInternal
     public ITweakButton Prefill(string name, object value)
         => ParamObjInternal(name, value, ToolbarConstants.RuleParamPrefixPrefill);
 
+    public ITweakButton Custom(string prefix, string name, object value)
+        => ParamObjInternal(name, value, prefix + (prefix.EndsWith(":") ? "" : ":"));
+
     /// <summary>
     /// WIP trying to get Filter with an array of IDs to return [1,2,3] instead of Int32[]
     /// </summary>
