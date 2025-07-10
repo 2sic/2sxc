@@ -6,6 +6,12 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code;
 
+/// <summary>
+/// This API describes objects with a TypedApi.
+/// </summary>
+/// <remarks>
+/// This is usually only relevant when using the `ITypedApiService` which will get you a standalone object with this API.
+/// </remarks>
 [WorkInProgressApi("Still WIP v20")]
 public interface ITypedApi
 {
@@ -81,6 +87,7 @@ public interface ITypedApi
     /// </summary>
     ServiceKit16 Kit { get; }
 
+    /// <inheritdoc cref="IDynamicCodeDocs.Link"/>
     ILinkService Link { get; }
 
     #endregion

@@ -9,7 +9,7 @@ using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code.Sys.CodeApiService;
 
-internal class DynamicCode12Proxy(IExecutionContext exCtx, ICodeDynamicApiHelper apiHelper): IDynamicCode12
+internal class DynamicCodeStandalone(IExecutionContext exCtx, ICodeDynamicApiHelper apiHelper): IDynamicCode12
 {
     public ILog Log => exCtx.Log!;
 

@@ -9,7 +9,12 @@ using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Code;
 
-internal class TypedApiProxy(IExecutionContext exCtx, ICodeTypedApiHelper apiHelper) : ITypedApi, IHasLog
+/// <summary>
+/// Standalone object with the typical typed APIs - for use in the `ITypedApiService`
+/// </summary>
+/// <param name="exCtx"></param>
+/// <param name="apiHelper"></param>
+internal class TypedApiStandalone(IExecutionContext exCtx, ICodeTypedApiHelper apiHelper) : ITypedApi, IHasLog
 {
     public ILog Log => exCtx.Log!;
 

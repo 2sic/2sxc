@@ -27,7 +27,7 @@ partial class DynamicCodeService
         var codeRoot = ServicesScoped.CodeRootGenerator.New()
             .New(parentClassOrNull: null, cmsBlock, Log, CompatibilityLevels.CompatibilityLevel12);
 
-        var code12 = new DynamicCode12Proxy(codeRoot, ((ExecutionContext)codeRoot).DynamicApi);
+        var code12 = new DynamicCodeStandalone(codeRoot, ((ExecutionContext)codeRoot).DynamicApi);
         return l.ReturnAsOk(code12);
     }
 
@@ -46,7 +46,7 @@ partial class DynamicCodeService
             .New(parentClassOrNull: null, null, Log, CompatibilityLevels.CompatibilityLevel12);
         var app = App(zoneId: zoneId, appId: appId);
         ((IExCtxAttachApp)codeRoot).AttachApp(app);
-        var code12 = new DynamicCode12Proxy(codeRoot, ((ExecutionContext)codeRoot).DynamicApi);
+        var code12 = new DynamicCodeStandalone(codeRoot, ((ExecutionContext)codeRoot).DynamicApi);
         return l.ReturnAsOk(code12);
     }
 }
