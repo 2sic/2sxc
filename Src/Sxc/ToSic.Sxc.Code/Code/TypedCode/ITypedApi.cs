@@ -38,16 +38,41 @@ public interface ITypedApi
 
     IDataSource Data { get; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// The main Item belonging to this Template/Module.
+    /// This data is edited by the user directly on this specific module.
+    /// In some cases it can also be a pre-set item configured in the View to be used if the user has not added any data himself.
+    ///
+    /// If this view can have a list of items (more than one) then this contains the first item.
+    /// To get all the items, see <see cref="MyItems"/>
+    /// </summary>
     ITypedItem MyItem { get; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// List of all Items belonging to this Template/Module.
+    /// This data is edited by the user directly on this specific module.
+    /// In some cases it can also be a pre-set item configured in the View to be used if the user has not added any data himself.
+    ///
+    /// If this view is configured to only have one item, then this list will only contain one item.
+    /// Otherwise, it will have as many items as the editor added.
+    /// </summary>
     IEnumerable<ITypedItem> MyItems { get; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// The Header-Item belonging to this Template/Module.
+    /// This data is edited by the user directly on this specific module.
+    /// In some cases it can also be a pre-set item configured in the View to be used if the user has not added any data himself.
+    /// </summary>
     ITypedItem MyHeader { get; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// All the data which the current Template received, based on the View configuration.
+    /// There are a few common scenarios:
+    ///
+    /// 1. If it's a simple view, then this will just contain streams with the main Item(s) and Header
+    /// 1. If the view expects no data, it will just contain a `Default` stream containing no items
+    /// 1. If the view has a Query behind it, then MyData will have all the streams provided by the Query
+    /// </summary>
     IDataSource MyData { get; }
 
     #endregion
@@ -91,4 +116,73 @@ public interface ITypedApi
 
     /// <inheritdoc cref="IDynamicCodeDocs.AsEntity" />
     IEntity AsEntity(ICanBeEntity thing);
+
+    /// <summary>
+    /// Creates a typed object to read the original passed into this function.
+    /// This is usually used to process objects which the compiler can't know, such as anonymous objects returned from helper code etc.
+    /// 
+    /// If you have an array of such objects, use <see cref="AsTypedList"/>.
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertiesRequired), default `true`</param>
+    /// <returns></returns>
+    ITyped AsTyped(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default);
+
+    /// <summary>
+    /// Create a list
+    /// </summary>
+    /// <param name="list">List/Enumerable object containing a bunch of items to make typed</param>
+    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertiesRequired), default `true`</param>
+    /// <returns></returns>
+    IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default);
+
+    /// <summary>
+    /// Create a typed object which will provide all the properties of the things wrapped inside it.
+    /// The priority is first-object first, so if multiple items have the property, the first in the list will be returned.
+    /// </summary>
+    /// <param name="items">objects to stack together</param>
+    /// <returns></returns>
+    ITypedStack AsStack(params object[] items);
+
+    /// <summary>
+    /// Create a custom-typed object which will provide all the properties of the things wrapped inside it.
+    /// The priority is first-object first, so if multiple items have the property, the first in the list will be returned.
+    /// </summary>
+    /// <param name="items">objects to stack together</param>
+    /// <returns>Item of the custom type</returns>
+    /// <remarks>New in 17.07</remarks>
+    T AsStack<T>(params object[] items)
+        where T : class, ICanWrapData, new();
+
+    /// <summary>
+    /// Convert an Entity or TypedItem into a strongly typed object.
+    /// Typically, the type will be from your `AppCode.Data`.
+    /// </summary>
+    /// <typeparam name="T">the target type</typeparam>
+    /// <param name="source">the source object - an `IEntity` or `ITypedItem`</param>
+    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="mock">if `true` will return a fake when `source` is `null` - otherwise a wrapper item with empty-contents</param>
+    /// <returns></returns>
+    /// <remarks>
+    /// Released v17.05
+    /// </remarks>
+    T As<T>(object source, NoParamOrder protector = default, bool mock = false)
+        where T : class, ICanWrapData;
+
+    /// <summary>
+    /// Convert a list of Entities or TypedItems into a strongly typed list.
+    /// Typically, the type will be from your `AppCode.Data`.
+    /// </summary>
+    /// <typeparam name="T">the target type</typeparam>
+    /// <param name="source">the source object - a List/Enumerable of `IEntity` or `ITypedItem`</param>
+    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="nullIfNull">if `true` will return null when `source` is `null` - otherwise a wrapper item with empty-contents</param>
+    /// <returns></returns>
+    /// <remarks>
+    /// Release in v17.05
+    /// </remarks>
+    IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
+        where T : class, ICanWrapData;
 }

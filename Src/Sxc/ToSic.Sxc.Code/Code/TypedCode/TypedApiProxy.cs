@@ -3,6 +3,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
 
@@ -51,13 +52,43 @@ internal class TypedApiProxy(IExecutionContext exCtx, ICodeTypedApiHelper apiHel
 
     #endregion
 
+    [field: AllowNull, MaybeNull]
+    private ICodeDataFactory Cdf => field ??= exCtx.GetCdf();
 
     public ITypedItem? AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
-        => exCtx.GetCdf().AsItem(data, new() { ItemIsStrict = propsRequired ?? true, UseMock = mock == true });
+        => Cdf.AsItem(data, new() { ItemIsStrict = propsRequired ?? true, UseMock = mock == true });
 
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => exCtx.GetCdf().AsItems(list, new() { ItemIsStrict = propsRequired ?? true });
+        => Cdf.AsItems(list, new() { ItemIsStrict = propsRequired ?? true });
 
     public IEntity AsEntity(ICanBeEntity thing)
-        => exCtx.GetCdf().AsEntity(thing);
+        => Cdf.AsEntity(thing);
+
+    public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
+        => Cdf.AsTyped(original, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
+
+    public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
+        => Cdf.AsTypedList(list, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
+
+    public ITypedStack AsStack(params object[] items)
+        => Cdf.AsStack(items);
+
+    public T AsStack<T>(params object[] items)
+        where T : class, ICanWrapData, new()
+        => Cdf.AsStack<T>(items);
+
+    #region As / AsList WIP v17
+
+    /// <inheritdoc />
+    public T As<T>(object source, NoParamOrder protector = default, bool mock = false)
+        where T : class, ICanWrapData
+        => Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
+
+    /// <inheritdoc />
+    public IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
+        where T : class, ICanWrapData
+        => Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
+
+    #endregion
+
 }
