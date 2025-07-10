@@ -1,12 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Apps.Sys.AppTyped;
-using ToSic.Sxc.Blocks.Sys.BlockBuilder;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
-using ToSic.Sxc.Code.Sys.CodeApiService;
-using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.Sys.CodeApiServiceHelpers;
 using ToSic.Sxc.Sys.ExecutionContext;
 
@@ -21,24 +18,6 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
     : CodeApiServiceBase(services, logName ?? $"{SxcLogName}.TypeCS"),
         ITypedApiService
 {
-    #region Constructor and Init
-
-    public class ScopedDependencies(
-        Generator<IExecutionContextFactory> codeRootGenerator,
-        Generator<App> appGenerator,
-        Generator<IAppTyped> appTypedGenerator,
-        LazySvc<IModuleAndBlockBuilder> modAndBlockBuilder,
-        Generator<ICodeDataFactory> cdfGenerator)
-        : DependenciesBase(connect: [codeRootGenerator, appGenerator, modAndBlockBuilder, appTypedGenerator, cdfGenerator])
-    {
-        public Generator<App> AppGenerator { get; } = appGenerator;
-        public Generator<IAppTyped> AppTypedGenerator { get; } = appTypedGenerator;
-
-        public Generator<IExecutionContextFactory> CodeRootGenerator { get; } = codeRootGenerator;
-        //public LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder { get; } = modAndBlockBuilder;
-        public Generator<ICodeDataFactory> CdfGenerator { get; } = cdfGenerator;
-    }
-
     /// <summary>
     /// This is for all the services used here, or also for services needed in inherited classes which will need the same scoped objects.
     /// It's important to understand that everything in here will use the scoped service provider.
@@ -54,8 +33,6 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
 
     protected bool EditUiRequired;
 
-    #endregion
-
     #region App
 
     public IAppTyped App(NoParamOrder noParamOrder = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
@@ -63,14 +40,10 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
         var l = Log.Fn<IAppTyped>();
         MakeSureLogIsInHistory();
 
-        //var codeRoot = ServicesScoped.CodeRootGenerator.New()
-        //    .New(parentClassOrNull: null, blockOrNull: null, Log, CompatibilityLevels.CompatibilityLevel16);
         var app = GetApp(ServicesScoped.AppGenerator, zoneId: zoneId, appId: appId, site: site, withUnpublished: withUnpublished);
         var codeRoot = GetNewCodeRoot();
         ((IExCtxAttachApp)codeRoot).AttachApp(app);
 
-        //var appTyped = ServicesScoped.AppTypedGenerator.New();
-        //((AppTyped)appTyped).SetupForStandaloneUse((App)app, ServicesScoped.CdfGenerator.New());
         var appTyped = codeRoot.GetState<IAppTyped>();
         return l.ReturnAsOk(appTyped);
     }
@@ -85,9 +58,6 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
         var codeRoot = GetNewCodeRoot();
         ((IExCtxAttachApp)codeRoot).AttachApp(app);
         return l.ReturnAsOk(codeRoot.GetState<IAppTyped>());
-        //var appTyped = ServicesScoped.AppTypedGenerator.New();
-        //((AppTyped)appTyped).SetupForStandaloneUse((App)app, ServicesScoped.CdfGenerator.New());
-        //return l.ReturnAsOk(appTyped);
     }
 
     #endregion
@@ -98,31 +68,31 @@ public class TypedApiService(CodeApiServiceBase.Dependencies services, string? l
     /// <inheritdoc />
     public ITypedApi ApiOfApp(int appId) => OfAppInternal(appId: appId);
 
-    ///// <inheritdoc />
-    //public IDynamicCode12 OfApp(int zoneId, int appId) => OfAppInternal(zoneId: zoneId, appId: appId);
+    /// <inheritdoc />
+    public ITypedApi ApiOfApp(int zoneId, int appId) => OfAppInternal(zoneId: zoneId, appId: appId);
 
-    ///// <inheritdoc />
-    //public IDynamicCode12 OfApp(IAppIdentity appIdentity) => OfAppInternal(zoneId: appIdentity.ZoneId, appId: appIdentity.AppId);
+    /// <inheritdoc />
+    public ITypedApi ApiOfModule(int pageId, int moduleId)
+    {
+        var l = Log.Fn<ITypedApi>($"{pageId}, {moduleId}");
+        MakeSureLogIsInHistory();
+        ActivateEditUi();
+        var cmsBlock = ServicesScoped.ModAndBlockBuilder.Value.BuildBlock(pageId, moduleId);
+        var codeRoot = ServicesScoped.CodeRootGenerator.New()
+            .New(parentClassOrNull: null, cmsBlock, Log, CompatibilityLevels.CompatibilityLevel16);
 
-    ///// <inheritdoc />
-    //public IDynamicCode12 OfModule(int pageId, int moduleId)
-    //{
-    //    var l = Log.Fn<IDynamicCode12>($"{pageId}, {moduleId}");
-    //    MakeSureLogIsInHistory();
-    //    ActivateEditUi();
-    //    var cmsBlock = ServicesScoped.ModAndBlockBuilder.Value.BuildBlock(pageId, moduleId);
-    //    var codeRoot = ServicesScoped.CodeRootGenerator.New()
-    //        .New(parentClassOrNull: null, cmsBlock, Log, CompatibilityLevels.CompatibilityLevel12);
+        var code12 = new TypedApiProxy(codeRoot, ((ExecutionContext)codeRoot).TypedApi);
+        return l.ReturnAsOk(code12);
+    }
 
-    //    var code12 = new DynamicCode12Proxy(codeRoot, ((ExecutionContext)codeRoot).DynamicApi);
-    //    return l.ReturnAsOk(code12);
-    //}
+    /// <inheritdoc />
+    public ITypedApi ApiOfSite() => ApiOfApp(GetPrimaryAppIdentity(null));
 
-    ///// <inheritdoc />
-    //public IDynamicCode12 OfSite() => OfApp(GetPrimaryAppIdentity(null));
+    /// <inheritdoc />
+    public ITypedApi ApiOfSite(int siteId) => ApiOfApp(GetPrimaryAppIdentity(siteId));
 
-    ///// <inheritdoc />
-    //public IDynamicCode12 OfSite(int siteId) => OfApp(GetPrimaryAppIdentity(siteId));
+    private ITypedApi ApiOfApp(IAppIdentity appIdentity) => OfAppInternal(zoneId: appIdentity.ZoneId, appId: appIdentity.AppId);
+
 
     private ITypedApi OfAppInternal(int? zoneId = null, int? appId = null)
     {

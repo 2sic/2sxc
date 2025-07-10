@@ -1,14 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Blocks.Sys.BlockBuilder;
-using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.Sys.CodeApiServiceHelpers;
-using ToSic.Sxc.Sys.ExecutionContext;
-using ToSic.Sys.Users;
-using App = ToSic.Sxc.Apps.App;
 
 namespace ToSic.Sxc.Services.Sys.DynamicCodeService;
 
@@ -22,17 +15,6 @@ public partial class DynamicCodeService(CodeApiServiceBase.Dependencies services
         IDynamicCodeService
 {
     #region Constructor and Init
-
-    public class ScopedDependencies(
-        Generator<IExecutionContextFactory> codeRootGenerator,
-        Generator<App> appGenerator,
-        LazySvc<IModuleAndBlockBuilder> modAndBlockBuilder)
-        : DependenciesBase(connect: [codeRootGenerator, appGenerator, modAndBlockBuilder])
-    {
-        public Generator<App> AppGenerator { get; } = appGenerator;
-        public Generator<IExecutionContextFactory> CodeRootGenerator { get; } = codeRootGenerator;
-        public LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder { get; } = modAndBlockBuilder;
-    }
 
     /// <summary>
     /// This is for all the services used here, or also for services needed in inherited classes which will need the same scoped objects.

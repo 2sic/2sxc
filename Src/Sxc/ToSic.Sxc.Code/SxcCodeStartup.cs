@@ -44,11 +44,10 @@ public static class SxcCodeStartup
 
         // v13 DynamicCodeService
         services.TryAddTransient<CodeApiServiceBase.Dependencies>();
-        services.TryAddTransient<DynamicCodeService.ScopedDependencies>();  // new v15
+        services.TryAddTransient<CodeApiServiceBase.ScopedDependencies>();  // new v15
         services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
 
         // v20 TypedCodeService
-        services.TryAddTransient<TypedApiService.ScopedDependencies>();
         services.TryAddTransient<ITypedApiService, TypedApiService>();
 
 

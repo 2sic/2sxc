@@ -117,4 +117,16 @@ public interface ITypedApiService
 
     /// <inheritdoc />
     ITypedApi ApiOfApp(int appId);
+
+    /// <inheritdoc />
+    ITypedApi ApiOfApp(int zoneId, int appId);
+
+    /// <inheritdoc />
+    ITypedApi ApiOfSite();
+
+    /// <inheritdoc />
+    ITypedApi ApiOfSite(int siteId);
+
+    /// <inheritdoc />
+    ITypedApi ApiOfModule(int pageId, int moduleId);
 }

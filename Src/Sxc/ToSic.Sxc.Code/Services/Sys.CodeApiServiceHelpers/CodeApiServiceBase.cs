@@ -3,6 +3,8 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneMapper;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks.Sys.BlockBuilder;
+using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Services.Sys.CodeApiServiceHelpers;
@@ -26,6 +28,17 @@ public abstract class CodeApiServiceBase(CodeApiServiceBase.Dependencies service
         public LazySvc<ISite> Site { get; } = site;
         public LazySvc<IZoneMapper> ZoneMapper { get; } = zoneMapper;
         public LazySvc<IAppsCatalog> AppsCatalog { get; } = appsCatalog;
+    }
+
+    public class ScopedDependencies(
+        Generator<IExecutionContextFactory> codeRootGenerator,
+        Generator<App> appGenerator,
+        LazySvc<IModuleAndBlockBuilder> modAndBlockBuilder)
+        : DependenciesBase(connect: [codeRootGenerator, appGenerator, modAndBlockBuilder])
+    {
+        public Generator<App> AppGenerator { get; } = appGenerator;
+        public Generator<IExecutionContextFactory> CodeRootGenerator { get; } = codeRootGenerator;
+        public LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder { get; } = modAndBlockBuilder;
     }
 
     protected IApp GetApp(Generator<App> appGenerator, NoParamOrder noParamOrder = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
