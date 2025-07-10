@@ -150,7 +150,7 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
     ///// <inheritdoc />
     //public string Path => VirtualPath;
 
-    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpForRazor12.Compile12;
+    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpDbRazor.CompileRazorOrCode12;
 
     #endregion
 

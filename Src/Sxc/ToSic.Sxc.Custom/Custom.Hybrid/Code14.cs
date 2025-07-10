@@ -5,10 +5,12 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
+using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sys.Code.Help;
 
 
 namespace Custom.Hybrid;
@@ -26,7 +28,7 @@ namespace Custom.Hybrid;
 [PublicApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]   // #DocsButNotForIntellisense
 public abstract class Code14()
-    : CustomCodeBase("Sxc.Code14"), IHasCodeLog, IDynamicCode, IDynamicCode14<object, ServiceKit14>
+    : CustomCodeBase("Sxc.Code14"), IHasCodeLog, IDynamicCode, IDynamicCode14<object, ServiceKit14>, IHasCodeHelp
 {
 
     #region Constructor / Setup
@@ -166,5 +168,7 @@ public abstract class Code14()
 
     /// <inheritdoc cref="IDynamicCodeDocs.AsAdam" />
     public IFolder AsAdam(ICanBeEntity item, string fieldName) => CodeApi.AsAdam(item, fieldName);
+
+    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpDbRazor.CompileRazorOrCode14;
 
 }

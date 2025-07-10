@@ -140,7 +140,7 @@ public abstract class RazorTyped<TModel>()
     [PrivateApi("Not yet ready")]
     public new IDevTools DevTools => CodeHelper.DevTools;
 
-    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpForRazorTyped.Compile16;
+    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpDbRazor.Compile16;
 
     #endregion
 

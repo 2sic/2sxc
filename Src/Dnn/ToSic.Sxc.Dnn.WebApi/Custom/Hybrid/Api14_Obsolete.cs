@@ -8,7 +8,7 @@ namespace Custom.Hybrid;
 
 partial class Api14
 {
-    // Obsolete stuff - not supported any more in after V10 - show helpful error messages
+    // Obsolete stuff - not supported anymore in after V10 - show helpful error messages
 
     #region Shared Code Block between RazorComponent_Obsolete and ApiController_Obsolete
 
@@ -17,7 +17,7 @@ partial class Api14
     [PrivateApi]
     [Obsolete("throws error with fix-instructions. Use CreateSource<type> instead.")]
     public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
-        => HelpForRazor12.ExCreateSourceString();
+        => RazorExceptions.ExCreateSourceString();
 
     #endregion
 
@@ -26,18 +26,18 @@ partial class Api14
     //[PrivateApi]
     //[Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
     //public dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity)
-    //    => HelpForRazor12.ExAsDynamicInterfacesIEntity();
+    //    => RazorExceptions.ExAsDynamicInterfacesIEntity();
 
 
     //[PrivateApi]
     //[Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
     //public dynamic AsDynamic(KeyValuePair<int, ToSic.Eav.Interfaces.IEntity> entityKeyValuePair)
-    //    => HelpForRazor12.AsDynamicKvpInterfacesIEntity();
+    //    => RazorExceptions.AsDynamicKvpInterfacesIEntity();
 
     //[Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
     //[PrivateApi]
     //public IEnumerable<dynamic> AsDynamic(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities)
-    //    => HelpForRazor12.AsDynamicIEnumInterfacesIEntity();
+    //    => RazorExceptions.AsDynamicIEnumInterfacesIEntity();
 
 
     #endregion
@@ -46,7 +46,7 @@ partial class Api14
 
     [PrivateApi]
     [Obsolete("throws error with fix-instructions. Use AsDynamic(IEnumerable<IEntity>...)")]
-    public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => HelpForRazor12.ExAsDynamicKvp();
+    public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => RazorExceptions.ExAsDynamicKvp();
 
     #region Old AsDynamic with correct warnings
     /// <inheritdoc/>
@@ -72,20 +72,20 @@ partial class Api14
 
     [PrivateApi]
     [Obsolete("use Content.Presentation instead")]
-    public dynamic Presentation => HelpForRazor12.ExPresentation();
+    public dynamic Presentation => RazorExceptions.ExPresentation();
 
 
     [PrivateApi]
     [Obsolete("Use Header instead")]
-    public dynamic ListContent => HelpForRazor12.ExListContent();
+    public dynamic ListContent => RazorExceptions.ExListContent();
 
     [PrivateApi]
     [Obsolete("Use Header.Presentation instead")]
-    public dynamic ListPresentation => HelpForRazor12.ExListPresentation();
+    public dynamic ListPresentation => RazorExceptions.ExListPresentation();
 
     [PrivateApi]
     [Obsolete("This is an old way used to loop things - removed in RazorComponent")]
-    public IEnumerable<dynamic> List => HelpForRazor12.ExList();
+    public IEnumerable<dynamic> List => RazorExceptions.ExList();
 
     #endregion
 

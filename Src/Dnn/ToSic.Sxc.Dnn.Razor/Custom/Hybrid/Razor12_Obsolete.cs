@@ -1,14 +1,14 @@
-﻿using static ToSic.Sxc.Code.Sys.CodeErrorHelp.HelpForRazor12;
+﻿using static ToSic.Sxc.Code.Sys.CodeErrorHelp.RazorExceptions;
 
- // ReSharper disable once CheckNamespace
- namespace Custom.Hybrid; 
+// ReSharper disable once CheckNamespace
+namespace Custom.Hybrid; 
 
- // Important Note
- // The new hybrid implementation doesn't actually need this
- // But if we add these overloads in an inherited class, they will be preferred to the real working ones
- // which would result in errors on AsDynamic(some-object) even though it should just work
- partial class Razor12
- {
+// Important Note
+// The new hybrid implementation doesn't actually need this
+// But if we add these overloads in an inherited class, they will be preferred to the real working ones
+// which would result in errors on AsDynamic(some-object) even though it should just work
+partial class Razor12
+{
     // Obsolete stuff - not supported any more in RazorPage10 - maybe re-activate to show helpful error messages
 
     #region Shared Code Block between RazorComponent_Obsolete and ApiController_Obsolete
@@ -57,4 +57,4 @@
      [PrivateApi] public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => ExAsDynamicForList();
 
      #endregion
- }
+}
