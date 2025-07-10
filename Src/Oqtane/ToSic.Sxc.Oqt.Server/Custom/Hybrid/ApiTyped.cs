@@ -14,6 +14,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable once CheckNamespace
@@ -59,7 +60,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     // ReSharper disable once InconsistentNaming
     [PrivateApi] internal IExecutionContext ExCtxOrNull => CtxHlp.ExCtxOrNull;
 
-    /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public new TService GetService<TService>() where TService : class
         => CodeApi.GetService<TService>();
 
@@ -69,7 +70,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     //public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
     //    => CodeHelper.GetService<TService>(protector, typeName);
 
-    /// <inheritdoc cref="ITypedApi.Kit"/>
+    /// <inheritdoc cref="IHasKit{TServiceKit}.Kit"/>
     public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;
 
     [PrivateApi("Not yet ready")]
@@ -172,19 +173,19 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     #region MyContext & UniqueKey
 
-    /// <inheritdoc cref="IDynamicCode16.MyContext" />
+    /// <inheritdoc cref="ITypedApi.MyContext" />
     public ICmsContext MyContext => CodeApi.CmsContext;
 
-    /// <inheritdoc cref="IDynamicCode16.MyPage" />
+    /// <inheritdoc cref="ITypedApi.MyPage" />
     public ICmsPage MyPage => CodeApi.CmsContext.Page;
 
-    /// <inheritdoc cref="IDynamicCode16.MyUser" />
+    /// <inheritdoc cref="ITypedApi.MyUser" />
     public ICmsUser MyUser => CodeApi.CmsContext.User;
 
-    /// <inheritdoc cref="IDynamicCode16.MyView" />
+    /// <inheritdoc cref="ITypedApi.MyView" />
     public ICmsView MyView => CodeApi.CmsContext.View;
 
-    /// <inheritdoc cref="IDynamicCode16.UniqueKey" />
+    /// <inheritdoc cref="ITypedApi.UniqueKey" />
     public string UniqueKey => Kit.Key.UniqueKey;
 
     #endregion

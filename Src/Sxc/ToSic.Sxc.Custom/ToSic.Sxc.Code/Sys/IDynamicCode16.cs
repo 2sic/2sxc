@@ -39,13 +39,6 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     ///// <returns></returns>
     //TService GetService<TService>(NoParamOrder protector = default, string? typeName = default) where TService : class;
 
-    #region Kit
-
-    ///// <inheritdoc cref="IDynamicCodeKit{TServiceKit}.Kit"/>
-    //ServiceKit16 Kit { get; }
-
-    #endregion
-
     #region Moving Properties
 
     /// <inheritdoc cref="IDynamicCodeDocs.CmsContext" />

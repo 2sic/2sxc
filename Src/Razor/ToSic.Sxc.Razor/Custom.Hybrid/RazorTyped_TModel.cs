@@ -17,6 +17,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sys.Code.Help;
 
 // ReSharper disable once CheckNamespace
@@ -34,7 +35,7 @@ public abstract class RazorTyped<TModel>()
     [field: AllowNull, MaybeNull]
     internal ICodeTypedApiHelper CodeApi => field ??= RzrHlp.ExCtxRoot.GetTypedApi();
 
-    /// <inheritdoc cref="ITypedApi.Kit"/>
+    /// <inheritdoc cref="IHasKit{TServiceKit}.Kit"/>
     [field: AllowNull, MaybeNull]
     public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;
 
@@ -117,19 +118,19 @@ public abstract class RazorTyped<TModel>()
 
     #region MyContext & UniqueKey
 
-    /// <inheritdoc cref="IDynamicCode16.MyContext" />
+    /// <inheritdoc cref="ITypedApi.MyContext" />
     public ICmsContext MyContext => CodeApi.CmsContext;
 
-    /// <inheritdoc cref="IDynamicCode16.MyPage" />
+    /// <inheritdoc cref="ITypedApi.MyPage" />
     public ICmsPage MyPage => CodeApi.CmsContext.Page;
 
-    /// <inheritdoc cref="IDynamicCode16.MyUser" />
+    /// <inheritdoc cref="ITypedApi.MyUser" />
     public ICmsUser MyUser => CodeApi.CmsContext.User;
 
-    /// <inheritdoc cref="IDynamicCode16.MyView" />
+    /// <inheritdoc cref="ITypedApi.MyView" />
     public ICmsView MyView => CodeApi.CmsContext.View;
 
-    /// <inheritdoc cref="IDynamicCode16.UniqueKey" />
+    /// <inheritdoc cref="ITypedApi.UniqueKey" />
     public string UniqueKey => Kit.Key.UniqueKey;
 
     #endregion

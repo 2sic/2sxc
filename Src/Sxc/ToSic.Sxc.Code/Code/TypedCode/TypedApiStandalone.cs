@@ -2,6 +2,7 @@
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services;
@@ -19,10 +20,9 @@ internal class TypedApiStandalone(IExecutionContext exCtx, ICodeTypedApiHelper a
     public ILog Log => exCtx.Log!;
 
     public IAppTyped App => apiHelper.AppTyped;
-    
-    public IDataSource Data => apiHelper.Data;
 
     public ITypedStack AllResources => apiHelper.AllResources;
+
     public ITypedStack AllSettings => apiHelper.AllSettings;
 
 
@@ -96,4 +96,22 @@ internal class TypedApiStandalone(IExecutionContext exCtx, ICodeTypedApiHelper a
 
     #endregion
 
+    #region MyContext & UniqueKey
+
+    /// <inheritdoc cref="ITypedApi.MyContext" />
+    public ICmsContext MyContext => apiHelper.CmsContext;
+
+    /// <inheritdoc cref="ITypedApi.MyPage" />
+    public ICmsPage MyPage => apiHelper.CmsContext.Page;
+
+    /// <inheritdoc cref="ITypedApi.MyUser" />
+    public ICmsUser MyUser => apiHelper.CmsContext.User;
+
+    /// <inheritdoc cref="ITypedApi.MyView" />
+    public ICmsView MyView => apiHelper.CmsContext.View;
+
+    /// <inheritdoc cref="ITypedApi.UniqueKey" />
+    public string UniqueKey => Kit.Key.UniqueKey;
+
+    #endregion
 }

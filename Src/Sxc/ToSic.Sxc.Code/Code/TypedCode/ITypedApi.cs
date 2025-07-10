@@ -1,8 +1,10 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Sys;
 
 namespace ToSic.Sxc.Code;
 
@@ -43,8 +45,6 @@ public interface ITypedApi
     /// </summary>
     ITypedStack AllSettings { get; }
 
-    IDataSource Data { get; }
-
     /// <summary>
     /// The main Item belonging to this Template/Module.
     /// This data is edited by the user directly on this specific module.
@@ -82,13 +82,30 @@ public interface ITypedApi
     /// </summary>
     IDataSource MyData { get; }
 
-    /// <summary>
-    /// The Service Kit with all kinds of services for quick use.
-    /// </summary>
+    /// <inheritdoc cref="IHasKit{TServiceKit}"/>
     ServiceKit16 Kit { get; }
 
     /// <inheritdoc cref="IDynamicCodeDocs.Link"/>
     ILinkService Link { get; }
+
+    #endregion
+
+    #region MyContext / UniqueKey
+
+    /// <inheritdoc cref="IDynamicCodeDocs.CmsContext" />
+    ICmsContext MyContext { get; }
+
+    /// <inheritdoc cref="ICmsContext.Page" />
+    ICmsPage MyPage { get; }
+
+    /// <inheritdoc cref="ICmsContext.User" />
+    ICmsUser MyUser { get; }
+
+    /// <inheritdoc cref="ICmsContext.View" />
+    ICmsView MyView { get; }
+
+    /// <inheritdoc cref="IKeyService.UniqueKey"/>
+    string UniqueKey { get; }
 
     #endregion
 

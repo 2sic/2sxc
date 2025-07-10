@@ -8,6 +8,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.Help;
 using static System.StringComparer;
@@ -55,7 +56,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     //public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
     //    => CodeHelper.GetService<TService>(protector, typeName);
 
-    /// <inheritdoc cref="ITypedApi.Kit"/>
+    /// <inheritdoc cref="IHasKit{TServiceKit}.Kit"/>
     public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;
 
     internal TypedCode16Helper CodeHelper => field ??= CreateCodeHelper();
@@ -97,7 +98,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 
     #endregion
 
-    #region Link, Edit
+    #region Link
 
     /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     public ILinkService Link => CodeApi.Link;
@@ -140,19 +141,19 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 
     #region MyContext & UniqueKey
 
-    /// <inheritdoc cref="IDynamicCode16.MyContext" />
+    /// <inheritdoc cref="ITypedApi.MyContext" />
     public ICmsContext MyContext => CodeApi.CmsContext;
 
-    /// <inheritdoc cref="IDynamicCode16.MyPage" />
+    /// <inheritdoc cref="ITypedApi.MyPage" />
     public ICmsPage MyPage => CodeApi.CmsContext.Page;
 
-    /// <inheritdoc cref="IDynamicCode16.MyUser" />
+    /// <inheritdoc cref="ITypedApi.MyUser" />
     public ICmsUser MyUser => CodeApi.CmsContext.User;
 
-    /// <inheritdoc cref="IDynamicCode16.MyView" />
+    /// <inheritdoc cref="ITypedApi.MyView" />
     public ICmsView MyView => CodeApi.CmsContext.View;
 
-    /// <inheritdoc cref="IDynamicCode16.UniqueKey" />
+    /// <inheritdoc cref="ITypedApi.UniqueKey" />
     public string UniqueKey => Kit.Key.UniqueKey;
 
     #endregion

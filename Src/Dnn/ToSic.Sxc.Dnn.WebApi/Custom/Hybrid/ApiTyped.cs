@@ -52,8 +52,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     internal ICodeTypedApiHelper CodeApi => field
         ??= ExCtx.GetTypedApi();
 
-    /// <inheritdoc cref="IHasKit{TServiceKit}.Kit" />
-    /// <inheritdoc cref="ITypedApi.Kit"/>
+    /// <inheritdoc cref="IHasKit{TServiceKit}.Kit"/>
     public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
@@ -87,19 +86,19 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     #region MyContext & UniqueKey
 
-    /// <inheritdoc cref="IDynamicCode16.MyContext" />
+    /// <inheritdoc cref="ITypedApi.MyContext" />
     public ICmsContext MyContext => CodeApi.CmsContext;
 
-    /// <inheritdoc cref="IDynamicCode16.MyPage" />
+    /// <inheritdoc cref="ITypedApi.MyPage" />
     public ICmsPage MyPage => CodeApi.CmsContext.Page;
 
-    /// <inheritdoc cref="IDynamicCode16.MyUser" />
+    /// <inheritdoc cref="ITypedApi.MyUser" />
     public ICmsUser MyUser => CodeApi.CmsContext.User;
 
-    /// <inheritdoc cref="IDynamicCode16.MyView" />
+    /// <inheritdoc cref="ITypedApi.MyView" />
     public ICmsView MyView => CodeApi.CmsContext.View;
 
-    /// <inheritdoc cref="IDynamicCode16.UniqueKey" />
+    /// <inheritdoc cref="ITypedApi.UniqueKey" />
     public string UniqueKey => Kit.Key.UniqueKey;
 
     #endregion
