@@ -26,8 +26,11 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> 
     : ServiceWithContext(SxcLogName + ".AppTyp", connect: [globalPaths, queryManager]),
         IAppTyped
 {
-    protected App App => ExCtx.GetApp() as App
-                         ?? throw new($"Can't access {nameof(App)} - either null or can't convert");
+    [field: AllowNull, MaybeNull]
+    protected App App => field
+        ??= ExCtx.GetApp() as App
+            ?? throw new($"Can't access {nameof(App)} - either null or can't convert");
+
 
     /// <inheritdoc />
     int IZoneIdentity.ZoneId => App.ZoneId;
@@ -38,8 +41,12 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> 
     /// <inheritdoc />
     public string Name => App.Name;
 
+    /// <summary>
+    /// The CDF either comes from the ExecutionContext, or self-generated.
+    /// This is important for scenarios where the App is used on a theme, where there is no execution context.
+    /// </summary>
     [field: AllowNull, MaybeNull]
-    private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
+    protected ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
 
     /// <inheritdoc />
     [field: AllowNull, MaybeNull]
