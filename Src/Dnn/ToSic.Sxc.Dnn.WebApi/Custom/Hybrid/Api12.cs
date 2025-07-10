@@ -145,11 +145,11 @@ public abstract partial class Api12(string logSuffix) : DnnSxcCustomControllerBa
 
     string IGetCodePath.CreateInstancePath { get; set; }
 
-    private CodeHelper CodeHlp => field ??= GetService<CodeHelper>().Init(this);
+    private CompileCodeHelper CompileCodeHlp => field ??= GetService<CompileCodeHelper>().Init(this);
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
     public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => CodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
+        => CompileCodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
 
     #endregion
 

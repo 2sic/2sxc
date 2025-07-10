@@ -11,11 +11,11 @@ namespace ToSic.Sxc.Code.Sys.CodeRunHelpers;
 /// but when used in APIs it only provides the GetCode and CreateInstance methods.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class CodeHelper() : CodeHelperBase("Sxc.CdHlp")
+public class CompileCodeHelper() : CodeHelperBase("Sxc.CdHlp")
 {
     #region Setup
 
-    public CodeHelper Init(IGetCodePath parent)
+    public CompileCodeHelper Init(IGetCodePath parent)
     {
         _parent = parent;
         return this;

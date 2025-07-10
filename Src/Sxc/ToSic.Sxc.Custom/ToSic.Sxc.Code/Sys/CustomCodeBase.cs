@@ -23,8 +23,8 @@ public abstract class CustomCodeBase : ServiceWithContext, ICompatibilityLevel
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     [field: AllowNull, MaybeNull]
-    protected internal CodeHelper CodeHlp => field
-        ??= ExCtx.GetService<CodeHelper>().Init(this as IGetCodePath ?? throw new($"Can't cast to {nameof(IGetCodePath)}, but inheriting classes must implement it."));
+    protected internal CompileCodeHelper CompileCodeHlp => field
+        ??= ExCtx.GetService<CompileCodeHelper>().Init(this as IGetCodePath ?? throw new($"Can't cast to {nameof(IGetCodePath)}, but inheriting classes must implement it."));
 
 
     //[PrivateApi]

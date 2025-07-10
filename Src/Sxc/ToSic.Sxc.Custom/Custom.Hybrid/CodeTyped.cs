@@ -38,17 +38,18 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     protected CodeTyped() : base("Cst.CodeTy") { }
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
-    public new ICodeLog Log => CodeHlp.CodeLog;
+    public new ICodeLog Log => CompileCodeHlp.CodeLog;
 
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class
         => CodeApi().GetService<TService>();
 
-    [PrivateApi("WIP 17.06,x")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    // ReSharper disable once MethodOverloadWithOptionalParameter
-    public TService GetService<TService>(NoParamOrder protector = default, string? typeName = default) where TService : class
-        => CodeHelper.GetService<TService>(protector, typeName);
+    // #DropStrangeGetServiceWithTypeNameV20 - v20 removed again, not clear what this is for; wait & see, remove ca. 2025-Q3
+    //[PrivateApi("WIP 17.06,x")]
+    //[ShowApiWhenReleased(ShowApiMode.Never)]
+    //// ReSharper disable once MethodOverloadWithOptionalParameter
+    //public TService GetService<TService>(NoParamOrder protector = default, string? typeName = default) where TService : class
+    //    => CodeHelper.GetService<TService>(protector, typeName);
 
     [field: AllowNull, MaybeNull]
     private TypedCode16Helper CodeHelper
@@ -109,7 +110,7 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
     public dynamic? GetCode(string path, NoParamOrder noParamOrder = default, string? className = default)
-        => CodeHlp.GetCode(path: path, className: className);
+        => CompileCodeHlp.GetCode(path: path, className: className);
 
 
     #endregion

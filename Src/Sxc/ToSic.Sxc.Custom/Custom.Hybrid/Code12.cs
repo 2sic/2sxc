@@ -32,7 +32,7 @@ public abstract class Code12() : CustomCodeBase("Sxc.Code12"), IHasCodeLog, IDyn
     internal ICodeDynamicApiHelper CodeApi => field ??= ExCtx.GetDynamicApi();
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
-    public new ICodeLog Log => CodeHlp.CodeLog;
+    public new ICodeLog Log => CompileCodeHlp.CodeLog;
 
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
@@ -96,7 +96,7 @@ public abstract class Code12() : CustomCodeBase("Sxc.Code12"), IHasCodeLog, IDyn
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance" />
     public dynamic? CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string? name = null, string? relativePath = null, bool throwOnError = true) =>
-        CodeHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
+        CompileCodeHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
 
     #endregion
 

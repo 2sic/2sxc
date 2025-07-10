@@ -180,13 +180,13 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
 
     string IGetCodePath.CreateInstancePath { get; set; }
 
-    protected CodeHelper CodeHlp => _codeHlp ??= GetService<CodeHelper>().Init(this);
-    private CodeHelper _codeHlp;
+    protected CompileCodeHelper CompileCodeHlp => _compileCodeHlp ??= GetService<CompileCodeHelper>().Init(this);
+    private CompileCodeHelper _compileCodeHlp;
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
     [NonAction]
     public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => CodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
+        => CompileCodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
 
     #endregion
 

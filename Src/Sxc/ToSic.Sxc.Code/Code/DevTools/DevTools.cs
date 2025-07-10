@@ -3,7 +3,7 @@
 namespace ToSic.Sxc.Code;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class DevTools(CodeHelperSpecs specs, ILog parentLog) : HelperBase(parentLog, $"{SxcLogName}.DevTls"), IDevTools
+internal class DevTools(CompileCodeHelperSpecs specs, ILog parentLog) : HelperBase(parentLog, $"{SxcLogName}.DevTls"), IDevTools
 {
     private string RequireMsg(string requires, string but, string[] names) =>
         $"Partial Razor '{specs.CodeFileName}' requires {requires} of the following parameters, but {but} were provided: " +

@@ -63,10 +63,11 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     public new TService GetService<TService>() where TService : class
         => CodeApi.GetService<TService>();
 
-    [PrivateApi("WIP 17.06,x")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
-        => CodeHelper.GetService<TService>(protector, typeName);
+    // #DropStrangeGetServiceWithTypeNameV20 - v20 removed again, not clear what this is for; wait & see, remove ca. 2025-Q3
+    //[PrivateApi("WIP 17.06,x")]
+    //[ShowApiWhenReleased(ShowApiMode.Never)]
+    //public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
+    //    => CodeHelper.GetService<TService>(protector, typeName);
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
     public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;
@@ -115,9 +116,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     #region My... Stuff
 
-    private TypedCode16Helper CodeHelper => field ??= CreateCodeHelper();
-
-    private TypedCode16Helper CreateCodeHelper() => new(owner: this, helperSpecs: new(ExCtxOrNull, false, ((IGetCodePath)this).CreateInstancePath), getRazorModel: () => null, getModelDic: () => null);
+    private CodeHelperTypedData CodeHelper => field ??= new(helperSpecs: new(ExCtxOrNull, false, ((IGetCodePath)this).CreateInstancePath));
 
     public ITypedItem MyItem => CodeHelper.MyItem;
 
@@ -163,13 +162,13 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     #endregion
 
-    public ITypedRazorModel MyModel => CodeHelper.MyModel;
+    public ITypedRazorModel MyModel => throw new("MyModel isn't meant to work in WebApi"); // v20 CodeHelper.MyModel;
 
-    private CodeHelper CodeHlp => field ??= GetService<CodeHelper>().Init(this);
+    private CompileCodeHelper CompileCodeHlp => field ??= GetService<CompileCodeHelper>().Init(this);
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
     public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
-        => CodeHlp.CreateInstance(path /*relativePath: (this as IGetCodePath).CreateInstancePath*/, name: className);
+        => CompileCodeHlp.CreateInstance(path /*relativePath: (this as IGetCodePath).CreateInstancePath*/, name: className);
 
     #region MyContext & UniqueKey
 

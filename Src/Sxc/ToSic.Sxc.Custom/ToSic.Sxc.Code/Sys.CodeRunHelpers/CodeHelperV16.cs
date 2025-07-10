@@ -1,10 +1,4 @@
-﻿using ToSic.Eav.DataSource;
-using ToSic.Sxc.Code.Sys.CodeApi;
-using ToSic.Sxc.Code.Sys.HotBuild;
-using ToSic.Sxc.Data;
-using ToSic.Sxc.Data.Sys.Factory;
-using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Sys.ExecutionContext;
+﻿using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Code.Sys.CodeRunHelpers;
@@ -17,11 +11,9 @@ namespace ToSic.Sxc.Code.Sys.CodeRunHelpers;
 /// <param name="getRazorModel"></param>
 /// <param name="getModelDic"></param>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class TypedCode16Helper(object owner, CodeHelperSpecs helperSpecs, Func<object?> getRazorModel, Func<IDictionary<string, object>?> getModelDic)
-    : CodeHelperV00Base(helperSpecs, SxcLogName + ".TCd16H")
+public class TypedCode16Helper(object owner, CompileCodeHelperSpecs helperSpecs, Func<object?> getRazorModel, Func<IDictionary<string, object>?> getModelDic)
+    : CodeHelperTypedData(helperSpecs, SxcLogName + ".TCd16H")
 {
-    public bool DefaultStrict = true;
-
     // Note: we're passing in factory methods so they don't get processed unless needed
     // Reason is that we have 2 scenarios, which can throw errors if processed in the wrong scenario
     public object? RazorModel => _razorModel.Get(getRazorModel);
@@ -44,30 +36,8 @@ public class TypedCode16Helper(object owner, CodeHelperSpecs helperSpecs, Func<o
         }
     }
 
-    internal ContextData Data { get; } = (ContextData)helperSpecs.ExCtx.GetState<IDataSource>();
-
-    [field: AllowNull, MaybeNull]
-    private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
-
-    public ITypedItem MyItem => _myItem.Get(() => Cdf.AsItem(Data.MyItems.FirstOrDefault(), new() { ItemIsStrict = DefaultStrict })!)!;
-    private readonly GetOnce<ITypedItem> _myItem = new();
-
-    public IEnumerable<ITypedItem> MyItems => _myItems.Get(() =>
-        Cdf.EntitiesToItems(Data.MyItems, new() { ItemIsStrict = DefaultStrict, DropNullItems = true }))!;
-    private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new();
-
-    public ITypedItem MyHeader => _myHeader.Get(() => Cdf.AsItem(Data.MyHeaders.FirstOrDefault(), new() { ItemIsStrict = DefaultStrict })!)!;
-    private readonly GetOnce<ITypedItem> _myHeader = new();
-
     public ITypedRazorModel MyModel => _myModel.Get(() => new TypedRazorModel(Specs, MyModelDic, Specs.IsRazor, Specs.CodeFileName))!;
     private readonly GetOnce<ITypedRazorModel> _myModel = new();
-
-    [field: AllowNull, MaybeNull]
-    private ICodeTypedApiHelper TypedApiHelper => field ??= ExCtx.GetTypedApi();
-
-    public ITypedStack AllResources => TypedApiHelper.AllResources;
-
-    public ITypedStack AllSettings => TypedApiHelper.AllSettings;
 
     //public IDevTools DevTools => _devTools.Get(() => new DevTools(IsRazor, CodeFileName, Log));
     //private readonly GetOnce<IDevTools> _devTools = new GetOnce<IDevTools>();

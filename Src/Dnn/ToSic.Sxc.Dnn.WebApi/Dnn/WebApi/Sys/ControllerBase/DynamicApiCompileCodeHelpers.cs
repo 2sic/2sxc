@@ -12,10 +12,10 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys;
 
-internal class DynamicApiCodeHelpers: CodeHelper
+internal class DynamicApiCompileCodeHelpers: CompileCodeHelper
 {
 
-    public DynamicApiCodeHelpers(DnnApiController owner, DnnWebApiHelper sysHlp)
+    public DynamicApiCompileCodeHelpers(DnnApiController owner, DnnWebApiHelper sysHlp)
     {
         _owner = owner;
         this.LinkLog((owner as IHasLog)?.Log);

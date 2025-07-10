@@ -70,10 +70,11 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
 
-    [PrivateApi("WIP 17.06,x")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
-        => CodeHelper.GetService<TService>(protector, typeName);
+    // #DropStrangeGetServiceWithTypeNameV20 - v20 removed again, not clear what this is for; wait & see, remove ca. 2025-Q3
+    //[PrivateApi("WIP 17.06,x")]
+    //[ShowApiWhenReleased(ShowApiMode.Never)]
+    //public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
+    //    => CodeHelper.GetService<TService>(protector, typeName);
 
     /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     public ILinkService Link => CodeApi?.Link;
@@ -151,24 +152,24 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     #region CreateInstance
 
-    private CodeHelper CodeHlp => field ??= GetService<CodeHelper>().Init(this);
+    private CompileCodeHelper CompileCodeHlp => field ??= GetService<CompileCodeHelper>().Init(this);
 
     string IGetCodePath.CreateInstancePath { get; set; }
 
     /// <inheritdoc cref="IDynamicCode16.GetCode"/>
     public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
-        => CodeHlp.GetCode(path, className: className);
+        => CompileCodeHlp.GetCode(path, className: className);
 
     #endregion
 
     #region My... Stuff
 
-    private TypedCode16Helper CodeHelper => field ??= CreateCodeHelper();
+    private CodeHelperTypedData CodeHelper => field ??= CreateCodeHelper();
 
-    private TypedCode16Helper CreateCodeHelper()
+    private CodeHelperTypedData CreateCodeHelper()
     {
         // Create basic helper without any RazorModels, since that doesn't exist here
-        return new(owner: this, helperSpecs: new(ExCtx, false, ((IGetCodePath)this).CreateInstancePath), getRazorModel: () => null, getModelDic: () => null);
+        return new(/*owner: this,*/ helperSpecs: new(ExCtx, false, ((IGetCodePath)this).CreateInstancePath)/*, getRazorModel: () => null, getModelDic: () => null*/);
     }
 
     /// <inheritdoc />
@@ -220,7 +221,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     #endregion
 
     /// <inheritdoc />
-    public ITypedRazorModel MyModel => CodeHelper.MyModel;
+    public ITypedRazorModel MyModel => throw new("MyModel isn't meant to work in WebApi"); // v20 CodeHelper.MyModel;
 
 
     #region Net Core Compatibility Shims - Copy this entire section to WebApi Files

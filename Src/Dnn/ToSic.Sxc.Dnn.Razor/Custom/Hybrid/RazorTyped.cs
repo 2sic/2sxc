@@ -49,10 +49,11 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
-    [PrivateApi("WIP 17.06,x")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
-        => CodeHelper.GetService<TService>(protector, typeName);
+    // #DropStrangeGetServiceWithTypeNameV20 - v20 removed again, not clear what this is for; wait & see, remove ca. 2025-Q3
+    //[PrivateApi("WIP 17.06,x")]
+    //[ShowApiWhenReleased(ShowApiMode.Never)]
+    //public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
+    //    => CodeHelper.GetService<TService>(protector, typeName);
 
     /// <inheritdoc cref="IDynamicCode16.Kit"/>
     public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;

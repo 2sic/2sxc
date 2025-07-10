@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Apps;
+﻿using ToSic.Eav.DataSource;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Data;
 
@@ -35,12 +36,26 @@ public interface ITypedApi
     /// </summary>
     ITypedStack AllSettings { get; }
 
+    IDataSource Data { get; }
+
+    /// <inheritdoc />
+    ITypedItem MyItem { get; }
+
+    /// <inheritdoc />
+    IEnumerable<ITypedItem> MyItems { get; }
+
+    /// <inheritdoc />
+    ITypedItem MyHeader { get; }
+
+    /// <inheritdoc />
+    IDataSource MyData { get; }
+
     #endregion
 
     /// <summary>
     /// Convert something to a <see cref="ITypedItem"/>.
     /// This works for all kinds of <see cref="IEntity"/>s,
-    /// <see cref="IDynamicEntity"/>s as well as Lists/IEnumerables of those.
+    /// <see cref="IDynamicEntity"/>s as well as Lists/Enumerables of those.
     /// 
     /// Will always return a single item.
     /// If a list is provided, it will return the first item in the list.
