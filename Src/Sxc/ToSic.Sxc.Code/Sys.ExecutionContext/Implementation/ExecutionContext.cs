@@ -103,7 +103,7 @@ public abstract partial class ExecutionContext : ServiceBase<ExecutionContext.De
     /// <inheritdoc />
     internal IApp App { get; private set; } = null!;
 
-    /// <inheritdoc cref="IDynamicCode.Link" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     [field: AllowNull, MaybeNull]
     internal ILinkService Link => field ??= GetService<ILinkService>(reuse: true);
 

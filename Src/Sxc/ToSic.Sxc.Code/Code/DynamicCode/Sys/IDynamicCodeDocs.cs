@@ -10,14 +10,12 @@ using IFolder = ToSic.Sxc.Adam.IFolder;
 namespace ToSic.Sxc.Code.Sys;
 
 /// <summary>
-/// Dynamic code files like Razor or WebApis.
-/// Supports many properties like App, etc. to ensure that the dynamic code has everything you need. <br />
-/// Also provides many Conversions between <see cref="IEntity"/> and <see cref="IDynamicEntity"/>.
-/// Important for dynamic code files like Razor or WebApi. Note that there are many overloads to ensure that AsDynamic and AsEntity "just work" even if you give them the original data. 
+/// Just a class to hold the docs for other things.
+/// It's primary purpose is to make sure that the real code isn't referenced hundreds of times
 /// </summary>
-[PrivateApi("Was public till v17")]
+[PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // inherit from old namespace to ensure compatibility
+public interface IDynamicCodeDocs
 {
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     TService GetService<TService>() where TService : class;

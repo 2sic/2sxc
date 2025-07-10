@@ -20,7 +20,7 @@ public interface ICodeAnyApiHelper
 
     #region Context & Data
 
-    /// <inheritdoc cref="IDynamicCode.CmsContext" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CmsContext" />
     ICmsContext CmsContext { get; }
 
     /// <inheritdoc cref="Razor.Html5.Data" />

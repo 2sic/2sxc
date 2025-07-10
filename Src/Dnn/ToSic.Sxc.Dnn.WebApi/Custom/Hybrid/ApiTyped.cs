@@ -75,7 +75,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
         => CodeHelper.GetService<TService>(protector, typeName);
 
-    /// <inheritdoc cref="IDynamicCode.Link" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     public ILinkService Link => CodeApi?.Link;
 
     [PrivateApi("Not yet ready")]
@@ -106,22 +106,22 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     #region AsDynamic implementations + AsList - all killed in v16
 
-    ///// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
+    ///// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(string, string)" />
     //public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot.Cdf.AsDynamicFromJson(json, fallback);
 
-    ///// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
+    ///// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(IEntity)" />
     //public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.Cdf.AsDynamic(entity);
 
-    ///// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
+    ///// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(object)" />
     //public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.Cdf.AsDynamicInternal(dynamicEntity);
 
-    ///// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
+    ///// <inheritdoc cref="IDynamicCode12Docs.AsDynamic(object[])" />
     //public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.Cdf.MergeDynamic(entities);
 
-    ///// <inheritdoc cref="IDynamicCode.AsEntity" />
+    ///// <inheritdoc cref="IDynamicCodeDocs.AsEntity" />
     //public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.Cdf.AsEntity(dynamicEntity);
 
-    ///// <inheritdoc cref="IDynamicCode.AsList" />
+    ///// <inheritdoc cref="IDynamicCodeDocs.AsList" />
     //public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.Cdf.AsDynamicList(list);
 
     #endregion

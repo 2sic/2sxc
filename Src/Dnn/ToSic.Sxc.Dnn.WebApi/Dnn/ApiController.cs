@@ -50,10 +50,10 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel9Old;
 
-    /// <inheritdoc cref="IDynamicCode.App" />
+    /// <inheritdoc cref="IDynamicCodeDocs.App" />
     public IApp App => CodeApi.App;
 
-    /// <inheritdoc cref="IDynamicCode.Data" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     public IDataSource Data => CodeApi.Data;
 
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
@@ -63,16 +63,16 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
     public IDnnContext Dnn => (ExCtx as IHasDnn)?.Dnn;
 
     #region AsDynamic implementations
-    /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(string, string)" />
     public dynamic AsDynamic(string json, string fallback = default) => CodeApi.Cdf.Json2Jacket(json, fallback);
 
-    /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(IEntity)" />
     public dynamic AsDynamic(IEntity entity) => CodeApi.Cdf.CodeAsDyn(entity);
 
-    /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(object)" />
     public dynamic AsDynamic(object dynamicEntity) => CodeApi.Cdf.AsDynamicFromObject(dynamicEntity);
 
-    /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
+    /// <inheritdoc cref="IDynamicCode12Docs.AsDynamic(object[])" />
     public IEntity AsEntity(object dynamicEntity) => CodeApi.Cdf.AsEntity(dynamicEntity);
 
     #endregion
@@ -87,11 +87,11 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
 
     #region CreateSource implementations
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataSource, ILookUpEngine)" />
     public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
         => CodeApi.CreateSource<T>(inSource, configurationProvider);
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataStream)" />
     public T CreateSource<T>(IDataStream source) where T : IDataSource
         => CodeApi.CreateSource<T>(source);
 
@@ -99,10 +99,10 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
 
     #region Content, Presentation & List
 
-    /// <inheritdoc cref="IDynamicCode.Content" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Content" />
     public dynamic Content => CodeApi.Content;
 
-    /// <inheritdoc cref="IDynamicCode.Header" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Header" />
     public dynamic Header => CodeApi.Header;
 
 
@@ -110,7 +110,7 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
 
     #region Adam
 
-    /// <inheritdoc cref="IDynamicCode.AsAdam" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsAdam" />
     public IFolder AsAdam(ICanBeEntity item, string fieldName) => CodeApi.AsAdam(item, fieldName);
 
     public dynamic File(NoParamOrder noParamOrder = default, bool? download = null, string virtualPath = null,
@@ -126,17 +126,17 @@ public abstract class ApiController : DnnSxcCustomControllerBase,
 
     #region Link & Edit - added to API in 2sxc 10.01
 
-    /// <inheritdoc cref="IDynamicCode.Link" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     public ILinkService Link => CodeApi?.Link;
 
-    /// <inheritdoc cref="IDynamicCode.Edit" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Edit" />
     public IEditService Edit => CodeApi?.Edit;
 
     #endregion
 
     #region CmsContext
 
-    /// <inheritdoc cref="IDynamicCode.CmsContext" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CmsContext" />
     public ICmsContext CmsContext => CodeApi?.CmsContext;
     #endregion
 

@@ -40,15 +40,15 @@ public abstract class DynamicCode() : CustomCodeBase("Sxc.DynCod"), IHasCodeLog,
 
     #region App / Data / Content / Header
 
-    /// <inheritdoc cref="IDynamicCode.App" />
+    /// <inheritdoc cref="IDynamicCodeDocs.App" />
     public IApp App => CodeApi.App;
 
-    /// <inheritdoc cref="IDynamicCode.Data" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     public IDataSource Data => CodeApi.Data;
 
-    /// <inheritdoc cref="IDynamicCode.Content" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Content" />
     public dynamic? Content => CodeApi.Content;
-    /// <inheritdoc cref="IDynamicCode.Header" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Header" />
     public dynamic? Header => CodeApi.Header;
 
     #endregion
@@ -56,9 +56,9 @@ public abstract class DynamicCode() : CustomCodeBase("Sxc.DynCod"), IHasCodeLog,
 
     #region Link and Edit
 
-    /// <inheritdoc cref="IDynamicCode.Link" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     public ILinkService Link => CodeApi.Link;
-    /// <inheritdoc cref="IDynamicCode.Edit" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Edit" />
     public IEditService Edit => CodeApi.Edit;
 
     #endregion
@@ -77,7 +77,7 @@ public abstract class DynamicCode() : CustomCodeBase("Sxc.DynCod"), IHasCodeLog,
 
     #region Context, Settings, Resources
 
-    /// <inheritdoc cref="IDynamicCode.CmsContext" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CmsContext" />
     public ICmsContext CmsContext => CodeApi.CmsContext;
 
     #endregion CmsContext
@@ -93,7 +93,7 @@ public abstract class DynamicCode() : CustomCodeBase("Sxc.DynCod"), IHasCodeLog,
     /// <inheritdoc />
     public dynamic? AsDynamic(object dynamicEntity) => CodeApi.Cdf.AsDynamicFromObject(dynamicEntity);
 
-    /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
+    /// <inheritdoc cref="IDynamicCode12Docs.AsDynamic(object[])" />
     public dynamic? AsDynamic(params object[] entities) => CodeApi.Cdf.MergeDynamic(entities);
 
     /// <inheritdoc />

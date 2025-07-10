@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -10,7 +11,7 @@ using IFolder = ToSic.Sxc.Adam.IFolder;
 // Because we need them here as additional definition because of Razor problems with inherited interfaces
 #pragma warning disable CS0108, CS0114
 
-namespace ToSic.Sxc.Code.Sys;
+namespace ToSic.Sxc.Code;
 
 /// <summary>
 /// Interface for Dynamic Code with enhancements after v12. It extends <see cref="IDynamicCode"/>
@@ -20,9 +21,12 @@ namespace ToSic.Sxc.Code.Sys;
 /// Also provides many Conversions between <see cref="IEntity"/> and <see cref="IDynamicEntity"/>.
 /// Important for dynamic code files like Razor or WebApi. Note that there are many overloads to ensure that AsDynamic and AsEntity "just work" even if you give them the original data.
 /// </summary>
-[PrivateApi("Was public an on ToSic.Sxc.Code before, but now all docs should be on the object so it doesn't need to have the interface in the docs")]
+/// <remarks>
+/// This interface is only used by developers who use the <see cref="IDynamicCodeService"/> to retrieve the object which helps them access things such as the App.
+/// </remarks>
+[PublicApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IDynamicCode12 : IDynamicCode
+public interface IDynamicCode12 : IDynamicCode, ICreateInstance, ICompatibilityLevel, IHasLog
 {
     #region IDynamicCode Repeats - keep this in sync
     // **************************************************
@@ -41,39 +45,39 @@ public interface IDynamicCode12 : IDynamicCode
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     TService GetService<TService>() where TService : class;
 
-    /// <inheritdoc cref="IDynamicCode.App" />
+    /// <inheritdoc cref="IDynamicCodeDocs.App" />
     IApp App { get; }
 
-    /// <inheritdoc cref="IDynamicCode.Data" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     IDataSource Data { get; }
 
     #region Content and Header
 
-    /// <inheritdoc cref="IDynamicCode.Content" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Content" />
     dynamic? Content { get; }
 
-    /// <inheritdoc cref="IDynamicCode.Header" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Header" />
     dynamic? Header { get; }
 
     #endregion
 
     #region AsAdam, Linking, Edit
 
-    /// <inheritdoc cref="IDynamicCode.AsAdam" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsAdam" />
     IFolder AsAdam(ICanBeEntity item, string fieldName);
 
-    /// <inheritdoc cref="IDynamicCode.Link" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     ILinkService Link { get; }
 
 
-    /// <inheritdoc cref="IDynamicCode.Edit" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Edit" />
     IEditService Edit { get; }
 
     #endregion
 
     #region AsDynamic for Strings
 
-    /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(string, string)" />
 
     dynamic? AsDynamic(string json, string? fallback = default);
 
@@ -81,11 +85,11 @@ public interface IDynamicCode12 : IDynamicCode
 
     #region AsDynamic for Entities
 
-    /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(IEntity)" />
     dynamic? AsDynamic(IEntity entity);
 
 
-    /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(object)" />
     dynamic? AsDynamic(object dynamicEntity);
 
 
@@ -93,14 +97,14 @@ public interface IDynamicCode12 : IDynamicCode
 
     #region AsEntity
 
-    /// <inheritdoc cref="IDynamicCode.AsEntity" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsEntity" />
     IEntity AsEntity(object dynamicEntity);
 
     #endregion
 
     #region AsList
 
-    /// <inheritdoc cref="IDynamicCode.AsList" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsList" />
     IEnumerable<dynamic>? AsList(object list);
 
     #endregion
@@ -108,18 +112,18 @@ public interface IDynamicCode12 : IDynamicCode
 
     #region Create Data Sources
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataStream)" />
     T CreateSource<T>(IDataStream source) where T : IDataSource;
 
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataSource, ILookUpEngine)" />
     T CreateSource<T>(IDataSource? inSource = null, ILookUpEngine? configurationProvider = default) where T : IDataSource;
 
     #endregion
 
     #region Context
 
-    /// <inheritdoc cref="IDynamicCode.CmsContext" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CmsContext" />
     ICmsContext CmsContext { get; }
 
     #endregion
@@ -132,49 +136,23 @@ public interface IDynamicCode12 : IDynamicCode
 
     #region Stuff added by DynamicCode12
 
-    /// <summary>
-    /// Convert one or many Entities and Dynamic entities into an <see cref="IDynamicStack"/>
-    /// </summary>
-    /// <param name="entities">one or more source object</param>
-    /// <returns>a dynamic object for easier coding</returns>
-    /// <remarks>
-    /// New in 12.05
-    /// </remarks>
+    /// <inheritdoc cref="IDynamicCode12Docs.AsDynamic(object[])" />
     dynamic? AsDynamic(params object[] entities);
 
 
     #region Convert-Service
 
-    /// <summary>
-    /// Conversion helper for common data conversions in Razor and WebAPIs
-    /// </summary>
-    /// <remarks>
-    /// Added in 2sxc 12.05
-    /// </remarks>
+    /// <inheritdoc cref="IDynamicCode12Docs.Convert" />
     IConvertService Convert { get; }
 
     #endregion
 
     #region Resources and Settings
 
-    /// <summary>
-    /// Resources for this Scenario. This is a dynamic object based on the <see cref="IDynamicStack"/>.
-    ///
-    /// It will combine both the Resources of the View and the App. The View-Resources will have priority. In future it may also include some global Resources. 
-    /// 
-    /// 🪒 Use in Razor: `@Resources.CtaButtonLabel`
-    /// </summary>
-    /// <remarks>New in 12.03</remarks>
+    /// <inheritdoc cref="IDynamicCode12Docs.Resources" />
     dynamic? Resources { get; }
 
-    /// <summary>
-    /// Settings for this Scenario. This is a dynamic object based on the <see cref="IDynamicStack"/>.
-    /// 
-    /// It will combine both the Settings of the View and the App. The View-Settings will have priority. In future it may also include some global Settings. 
-    /// 
-    /// 🪒 Use in Razor: `@Settings.ItemsPerRow`
-    /// </summary>
-    /// <remarks>New in 12.03</remarks>
+    /// <inheritdoc cref="IDynamicCode12Docs.Settings" />
     dynamic? Settings { get; }
 
     #endregion

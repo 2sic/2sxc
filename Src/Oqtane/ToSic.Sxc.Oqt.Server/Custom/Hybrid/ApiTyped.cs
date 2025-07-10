@@ -78,7 +78,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     #region Link & Edit - added to API in 2sxc 10.01
 
-    /// <inheritdoc cref="IDynamicCode.Link" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     public ILinkService Link => CodeApi?.Link;
 
     #endregion

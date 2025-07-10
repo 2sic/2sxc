@@ -21,7 +21,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     TService GetService<TService>() where TService : class;
 
-    /// <inheritdoc cref="IDynamicCode.Link"/>
+    /// <inheritdoc cref="IDynamicCodeDocs.Link"/>
     ILinkService Link { get; }
 
     #endregion
@@ -45,7 +45,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
 
     #region Moving Properties
 
-    /// <inheritdoc cref="IDynamicCode.CmsContext" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CmsContext" />
     ICmsContext MyContext { get; }
         
     /// <inheritdoc cref="ICmsContext.Page" />
@@ -134,7 +134,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
     );
 
 
-    /// <inheritdoc cref="IDynamicCode.AsEntity" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsEntity" />
     IEntity AsEntity(ICanBeEntity thing);
 
     /// <summary>

@@ -49,7 +49,7 @@ public abstract class RazorTyped<TModel>()
 
     #region New App, Settings, Resources
 
-    /// <inheritdoc cref="IDynamicCode.Link" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     public ILinkService Link => CodeApi.Link;
 
     /// <inheritdoc />

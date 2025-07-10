@@ -103,7 +103,7 @@ public class ServiceKit14() : ServiceKit("Sxc.Kit14") // , IServiceKitForTypedDa
     public IJsonService Json => field ??= GetKitService<IJsonService>();
 
 
-    /// <inheritdoc cref="IDynamicCode.Link" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     [field: AllowNull, MaybeNull]
     public ILinkService Link => field ??= GetKitService<ILinkService>();
 

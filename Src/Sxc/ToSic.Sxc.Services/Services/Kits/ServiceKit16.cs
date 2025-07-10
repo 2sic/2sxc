@@ -69,7 +69,7 @@ public class ServiceKit16() : ServiceKit("Sxc.Kit16")
     [field: AllowNull, MaybeNull]
     public IJsonService Json => field ??= GetKitService<IJsonService>();
 
-    /// <inheritdoc cref="IDynamicCode.Link" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     [field: AllowNull, MaybeNull]
     public ILinkService Link => field ??= GetKitService<ILinkService>();
 

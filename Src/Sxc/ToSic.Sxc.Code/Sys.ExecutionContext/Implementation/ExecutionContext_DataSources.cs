@@ -28,11 +28,11 @@ public partial class ExecutionContext: IExCtxLookUpEngine
         ??= Services.DataSources.Value.Setup(App, () => LookUpForDataSources);
 
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataSource, ILookUpEngine)" />
     public T CreateSource<T>(IDataSource? inSource = null, ILookUpEngine? configurationProvider = default) where T : IDataSource 
         => DataSources.CreateDataSource<T>(false, attach: inSource, options: configurationProvider);
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataStream)" />
     public T CreateSource<T>(IDataStream source) where T : IDataSource
     {
         // if it has a source, then use this, otherwise it's null and then it uses the App-Default
