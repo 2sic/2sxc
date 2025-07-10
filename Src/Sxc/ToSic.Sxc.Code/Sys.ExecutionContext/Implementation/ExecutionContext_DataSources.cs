@@ -12,7 +12,7 @@ public partial class ExecutionContext: IExCtxLookUpEngine
     [PrivateApi]
     public ILookUpEngine LookUpForDataSources => _lookupEngine.Get(() =>
         // check if we have a block-context, in which case the lookups also know about the module
-        Block.Data?.Configuration?.LookUpEngine
+        Block?.Data?.Configuration?.LookUpEngine
         // otherwise try to fallback to the App configuration provider, which has a lot, but not the module-context
 #pragma warning disable CS0618 // Type or member is obsolete
         ?? App?.ConfigurationProvider
