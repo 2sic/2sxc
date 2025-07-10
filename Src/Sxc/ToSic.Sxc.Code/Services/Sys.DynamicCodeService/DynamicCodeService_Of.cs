@@ -1,15 +1,12 @@
 ﻿using ToSic.Eav.Apps;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApiService;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Services.Sys.DynamicCodeService;
 
-/// <summary>
-/// WIP - goal is to have a DI factory which creates DynamicCode objects for use in Skins and other external controls
-/// Not sure how to get this to work, since normally we always start with a code-file, and here we don't have one!
-/// </summary>
-public partial class DynamicCodeService
+partial class DynamicCodeService
 {
     /// <inheritdoc />
     public IDynamicCode12 OfApp(int appId) => OfAppInternal(appId: appId);
@@ -26,8 +23,8 @@ public partial class DynamicCodeService
         var l = Log.Fn<IDynamicCode12>($"{pageId}, {moduleId}");
         MakeSureLogIsInHistory();
         ActivateEditUi();
-        var cmsBlock = _myScopedServices.ModAndBlockBuilder.Value.BuildBlock(pageId, moduleId);
-        var codeRoot = _myScopedServices.CodeRootGenerator.New()
+        var cmsBlock = ServicesScoped.ModAndBlockBuilder.Value.BuildBlock(pageId, moduleId);
+        var codeRoot = ServicesScoped.CodeRootGenerator.New()
             .New(parentClassOrNull: null, cmsBlock, Log, CompatibilityLevels.CompatibilityLevel12);
 
         var code12 = new DynamicCode12Proxy(codeRoot, ((ExecutionContext)codeRoot).DynamicApi);
@@ -45,7 +42,7 @@ public partial class DynamicCodeService
         var l = Log.Fn<IDynamicCode12>();
         MakeSureLogIsInHistory();
         ActivateEditUi();
-        var codeRoot = _myScopedServices.CodeRootGenerator.New()
+        var codeRoot = ServicesScoped.CodeRootGenerator.New()
             .New(parentClassOrNull: null, null, Log, CompatibilityLevels.CompatibilityLevel12);
         var app = App(zoneId: zoneId, appId: appId);
         ((IExCtxAttachApp)codeRoot).AttachApp(app);

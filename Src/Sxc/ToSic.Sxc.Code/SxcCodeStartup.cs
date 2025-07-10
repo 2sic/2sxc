@@ -41,8 +41,8 @@ public static class SxcCodeStartup
         services.TryAddTransient(typeof(ExecutionContext<,>), typeof(ExecutionContextUnknown<,>));
 
         // v13 DynamicCodeService
-        services.TryAddTransient<DynamicCodeService.Dependencies>();
-        services.TryAddTransient<DynamicCodeService.MyScopedServices>();  // new v15
+        services.TryAddTransient<CodeApiServiceBase.Dependencies>();
+        services.TryAddTransient<DynamicCodeService.ScopedDependencies>();  // new v15
         services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
         // note: unclear why this exists, since it will always have a real DynCode Service with the previous TryAdd
         services.TryAddTransient<IDynamicCodeService, DynamicCodeServiceUnknown>();
