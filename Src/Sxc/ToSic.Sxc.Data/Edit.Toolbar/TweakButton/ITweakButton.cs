@@ -211,7 +211,7 @@ public interface ITweakButton
 
 
     /// <summary>
-    /// Experimental for development, adding custom rules to the output.
+    /// Experimental add custom rule. For internal development only. May change at any time.
     /// </summary>
     /// <param name="prefix">prefix like `dialog` etc.</param>
     /// <param name="name"></param>
@@ -219,7 +219,7 @@ public interface ITweakButton
     /// <returns></returns>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public ITweakButton Custom(string prefix, string name, object value);
+    public ITweakButton XCustom(string prefix, string name, object value);
 
 
     #region Internal Properties, not part of the public API
