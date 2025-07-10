@@ -6,6 +6,8 @@ using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 
+// TODO: SHOULD probably rename to ITypedCode16 or something
+
 namespace ToSic.Sxc.Code.Sys;
 
 /// <summary>
@@ -67,51 +69,20 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
 
     #region App, Resources, Settings
 
-    /// <summary>
-    /// The current App object (with strictly typed Settings/Resources).
-    /// Use it to access App properties such as `Path` or any data in the App.
-    /// </summary>
+    /// <inheritdoc cref="ITypedApi.App"/>
     IAppTyped App { get; }
 
-    /// <summary>
-    /// Stack of all Resources in the System, merging Resources of View, App, Site, Global etc.
-    /// Will retrieve values by priority, with View-Resources being top priority and Preset-Resources being the lowest.
-    ///
-    /// > [!TIP]
-    /// > If you know that Resources come from the App, you should prefer `App.Resources` instead.
-    /// > That is faster and helps people reading your code figure out where to change a value.
-    /// </summary>
+    /// <inheritdoc cref="ITypedApi.AllResources"/>
     ITypedStack AllResources { get; }
 
-    /// <summary>
-    /// Stack of all Settings in the System, merging Settings of View, App, Site, Global etc.
-    /// Will retrieve values by priority, with View-Settings being top priority and Preset-Settings being the lowest.
-    ///
-    /// > [!TIP]
-    /// > If you know that Settings come from the App, you should prefer `App.Settings` instead.
-    /// > That is faster and helps people reading your code figure out where to change a value.
-    /// </summary>
-    ITypedStack AllSettings{ get; }
+    /// <inheritdoc cref="ITypedApi.AllSettings"/>
+    ITypedStack AllSettings { get; }
 
     #endregion
 
     #region AsConversions
 
-    /// <summary>
-    /// Convert something to a <see cref="ITypedItem"/>.
-    /// This works for all kinds of <see cref="IEntity"/>s,
-    /// <see cref="IDynamicEntity"/>s as well as Lists/IEnumerables of those.
-    /// 
-    /// Will always return a single item.
-    /// If a list is provided, it will return the first item in the list.
-    /// If null was provided, it will return null.
-    /// </summary>
-    /// <param name="data">An original object which can be converted to a TypedItem, such as a <see cref="IEntity"/> .</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertiesRequired), default `true`</param>
-    /// <param name="mock">Specify that the data is fake/mock data, which should pretend to be an Item. Default is `false`</param>
-    /// <returns></returns>
-    /// <remarks>New in v16.02</remarks>
+    /// <inheritdoc cref="ITypedApi.AsItem"/>
     ITypedItem AsItem(
         object data,
         NoParamOrder noParamOrder = default,
@@ -119,14 +90,7 @@ public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IH
         bool? mock = default
     );
 
-    /// <summary>
-    /// Convert an object containing a list of Entities or similar to a list of <see cref="ITypedItem"/>s.
-    /// </summary>
-    /// <param name="list">The original list which is usually a list of <see cref="IEntity"/> objects.</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <param name="propsRequired">make the resulting object [strict](xref:NetCode.Conventions.PropertiesRequired), default `true`</param>
-    /// <returns></returns>
-    /// <remarks>New in v16.01</remarks>
+    /// <inheritdoc cref="ITypedApi.AsItems"/>
     IEnumerable<ITypedItem> AsItems(
         object list,
         NoParamOrder noParamOrder = default,

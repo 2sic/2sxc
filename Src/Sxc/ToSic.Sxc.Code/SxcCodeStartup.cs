@@ -14,7 +14,9 @@ using ToSic.Sxc.Data.Sys.CodeDataFactory;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Sys.CodeApiServiceHelpers;
 using ToSic.Sxc.Services.Sys.DynamicCodeService;
+using ToSic.Sxc.Services.Sys.TypedApiService;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable once CheckNamespace
@@ -44,8 +46,11 @@ public static class SxcCodeStartup
         services.TryAddTransient<CodeApiServiceBase.Dependencies>();
         services.TryAddTransient<DynamicCodeService.ScopedDependencies>();  // new v15
         services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
-        // note: unclear why this exists, since it will always have a real DynCode Service with the previous TryAdd
-        services.TryAddTransient<IDynamicCodeService, DynamicCodeServiceUnknown>();
+
+        // v20 TypedCodeService
+        services.TryAddTransient<TypedApiService.ScopedDependencies>();
+        services.TryAddTransient<ITypedApiService, TypedApiService>();
+
 
         //services.TryAddTransient<CodeDataFactory>();
         services.TryAddTransient<ICodeDataFactory, CodeDataFactory>();

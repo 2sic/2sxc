@@ -17,7 +17,7 @@ public partial class App
         return Cdf.AsDynamic(wrapped, new() { ItemIsStrict = propsRequired });
     }
 
-    internal void SetupAsConverter(ICodeDataFactory cdf) => cdfLazy.Inject(cdf);
+    internal void SetupCodeDataFactory(ICodeDataFactory cdf) => cdfLazy.Inject(cdf);
 
     /// <inheritdoc cref="Eav.ImportExport.Sys.Settings" />
     public dynamic? Settings => AppSettings == null ? null : _settings.Get(() => MakeDynProperty(AppSettings, propsRequired: false));
