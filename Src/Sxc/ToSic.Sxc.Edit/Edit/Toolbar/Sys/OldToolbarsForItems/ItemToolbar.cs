@@ -66,6 +66,6 @@ internal class ItemToolbar: ItemToolbarBase
 
     public override string ToolbarAsAttributes()
         => HtmlAttribute.Create(ToolbarAttributeName,
-            "{\"" + JsonToolbarNodeName + "\":" + ToolbarObjJson() + ",\"" + JsonSettingsNodeName + "\":" + SettingsJson + "}").ToString();
+            "{\"" + JsonToolbarNodeName + "\":" + ToolbarObjJson() + ",\"" + JsonSettingsNodeName + "\":" + SettingsJson + "}").ToString()!;
         
 }

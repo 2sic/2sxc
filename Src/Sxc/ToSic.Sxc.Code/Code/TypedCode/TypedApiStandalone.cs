@@ -73,7 +73,7 @@ internal class TypedApiStandalone(IExecutionContext exCtx, ICodeTypedApiHelper a
         => Cdf.AsTyped(original, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => Cdf.AsTypedList(list, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
+        => Cdf.AsTypedList(list, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true })!;
 
     public ITypedStack AsStack(params object[] items)
         => Cdf.AsStack(items);

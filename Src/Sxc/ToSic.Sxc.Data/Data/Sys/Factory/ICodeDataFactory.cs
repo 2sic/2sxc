@@ -18,6 +18,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// If the object is an entity-like thing, that will be converted.
     /// If it's a list of entity-like things, the first one will be converted.
     /// </summary>
+    [return: NotNullIfNotNull(nameof(source))]
     TCustom? AsCustom<TCustom>(object? source, NoParamOrder protector = default, bool mock = false)
         where TCustom : class, ICanWrapData;
 
@@ -34,6 +35,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     IEnumerable<TCustom> AsCustomList<TCustom>(object? source, NoParamOrder protector, bool nullIfNull)
         where TCustom : class, ICanWrapData;
 
+    [return: NotNullIfNotNull(nameof(data))]
     ITyped? AsTyped(object data, ConvertItemSettings settings, string? detailsMessage = default);
     IEnumerable<ITyped>? AsTypedList(object list, ConvertItemSettings settings);
     int CompatibilityLevel { get; }

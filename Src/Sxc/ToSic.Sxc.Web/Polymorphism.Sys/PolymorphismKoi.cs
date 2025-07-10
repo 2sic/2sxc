@@ -14,7 +14,7 @@ public class PolymorphismKoi(ICss pageCss) : IPolymorphismResolver
 
     public string? Edition(PolymorphismConfiguration config, string? overrule, ILog log)
     {
-        var l = log.Fn<string>();
+        var l = log.Fn<string?>();
         if (!string.Equals(config.Parameters, ModeCssFramework, InvariantCultureIgnoreCase))
             return l.Return(overrule, "unknown param");
         // Note: this is still using the global object which we want to get rid of

@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ToolbarButtonDecoratorHelper(IAppReaderFactory appReaders, ScopedCache<Dictionary<string, ToolbarButtonDecorator>> cache) : ServiceBase($"{SxcLogName}.TbdHlp", connect: [appReaders])
+public class ToolbarButtonDecoratorHelper(IAppReaderFactory appReaders, ScopedCache<Dictionary<string, ToolbarButtonDecorator?>> cache) : ServiceBase($"{SxcLogName}.TbdHlp", connect: [appReaders])
 {
     public IAppIdentity? MainAppIdentity { get; set; }
 
