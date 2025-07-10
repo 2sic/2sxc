@@ -41,9 +41,13 @@ internal class HelpForCommonProblems
     {
         Name = "Advanced APIs should use Parameter-Names and not Param-Order",
         // real error is ca. :error CS1503: Argument 2: cannot convert from 'bool' to 'ToSic.Lib.Coding.NoParamOrder' at System.Web.Compilation.AssemblyBuilder.Compile()
-        Detect = "to 'ToSic.Lib.Coding.NoParamOrder'",
+        Detect = "to 'ToSic.Sys.Coding.NoParamOrder'",
         LinkCode = "named-params",
-        UiMessage = "Many methods have optional parameters - these must be named, otherwise you see this error."
+        UiMessage = "Many methods have optional parameters - these must be named, otherwise you see this error.",
+        DetailsHtml = "Many methods have optional parameters - these must be named, otherwise you see this error. <br>" +
+                      "Example: <br>" +
+                      "<code>Kit.Page.AssetAttributes(true)</code> " +
+                      "should be <br><code>Kit.Page.AssetAttributes(optimize: true)</code>.",
     };
 
     public static CodeHelp AutoInheritsMissingAfterV20 = new()
