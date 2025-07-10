@@ -48,9 +48,8 @@ partial record ToolbarBuilder
         if (fields != null)
             parsWithPrefill = Utils.Filter2Url.SerializeWithChild(parsWithPrefill, new { fields });
 
-        var tweaksInt = tweaks as ITweakButtonInternal;
-        var namedParts = tweaksInt?.Named.Any() == true
-            ? tweaksInt.Named
+        var namedParts = tweaks?.Named.Any() == true
+            ? tweaks.Named
                 .ToDictionary(
                     kvp => kvp.Key,
                     CleanedParams (kvp) => PreCleanParams(tweak: kvp.Value, defOp: OprNone)
@@ -59,8 +58,8 @@ partial record ToolbarBuilder
 
         return new()
         {
-            Operation = ToolbarRuleOperation.Pick(operation, defOp, tweaksInt?._condition),
-            Ui = PrepareUi(ui, uiMerge, uiMergePrefix, tweaks: tweaksInt?.UiMerge),
+            Operation = ToolbarRuleOperation.Pick(operation, defOp, tweaks?.ConditionValue),
+            Ui = PrepareUi(ui, uiMerge, uiMergePrefix, tweaks: tweaks?.UiMerge),
             Parameters = Utils.Filter2Url.SerializeWithChild(parsWithPrefill, filter, ToolbarConstants.RuleParamPrefixFilter),
             Parts = namedParts
         };

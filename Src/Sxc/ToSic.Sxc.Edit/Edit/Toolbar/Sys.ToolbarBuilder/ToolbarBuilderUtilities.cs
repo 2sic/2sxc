@@ -43,7 +43,7 @@ internal class ToolbarBuilderUtilities
     public string? PrepareParams(object? parameters, ITweakButton? tweaks = null)
     {
         var strParams = Par2Url.Serialize(parameters);
-        return MergeWithTweaks(strParams, (tweaks as ITweakButtonInternal)?.ParamsMerge);
+        return MergeWithTweaks(strParams, tweaks?.ParamsMerge);
     }
 
     #endregion

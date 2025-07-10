@@ -14,23 +14,21 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys.TweakButton;
 /// so then the compiler will eval the resulting object, and it can't be internal.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class TweakButton: ITweakButton, ITweakButtonInternal
+internal class TweakButton: ITweakButton
 {
-    IImmutableList<object?> ITweakButtonInternal.UiMerge => _uiMerge;
-    IImmutableList<object?> ITweakButtonInternal.ParamsMerge => _paramsMerge;
-    IImmutableDictionary<string, Func<ITweakButton, ITweakButton>> ITweakButtonInternal.Named => _named;
+    public IImmutableList<object?> UiMerge { get; }
 
-    private readonly IImmutableDictionary<string, Func<ITweakButton, ITweakButton>> _named;
-    private readonly IImmutableList<object?> _paramsMerge;
-    private readonly IImmutableList<object?> _uiMerge;
+    public IImmutableList<object?> ParamsMerge { get; }
 
-    public bool? _condition { get; }
+    public IImmutableDictionary<string, Func<ITweakButton, ITweakButton>> Named { get; }
+
+    public bool? ConditionValue { get; }
 
     internal TweakButton()
     {
-        _uiMerge = ImmutableList.Create<object?>();
-        _paramsMerge = ImmutableList.Create<object?>();
-        _named = new Dictionary<string, Func<ITweakButton, ITweakButton>>().ToImmutableDictionary();
+        UiMerge = ImmutableList.Create<object?>();
+        ParamsMerge = ImmutableList.Create<object?>();
+        Named = new Dictionary<string, Func<ITweakButton, ITweakButton>>().ToImmutableDictionary();
     }
 
     private TweakButton(ITweakButton original,
@@ -40,11 +38,10 @@ internal class TweakButton: ITweakButton, ITweakButtonInternal
         Func<ITweakButton, ITweakButton>>? named = default,
         bool? condition = null)
     {
-        var origInternal = original as ITweakButtonInternal;
-        _uiMerge = ui ?? origInternal?.UiMerge ?? ImmutableList.Create<object?>();
-        _paramsMerge = parameters ?? origInternal?.ParamsMerge ?? ImmutableList.Create<object?>();
-        _named = named ?? origInternal?.Named ?? new Dictionary<string, Func<ITweakButton, ITweakButton>>().ToImmutableDictionary();
-        _condition = condition ?? origInternal?._condition;
+        UiMerge = ui ?? original?.UiMerge ?? ImmutableList.Create<object?>();
+        ParamsMerge = parameters ?? original?.ParamsMerge ?? ImmutableList.Create<object?>();
+        Named = named ?? original?.Named ?? new Dictionary<string, Func<ITweakButton, ITweakButton>>().ToImmutableDictionary();
+        ConditionValue = condition ?? original?.ConditionValue;
     }
 
     /// <summary>
@@ -114,7 +111,7 @@ internal class TweakButton: ITweakButton, ITweakButtonInternal
         => Ui(ToolbarConstants.RulePosition, value);
 
     public ITweakButton Ui(object? value)
-        => value == null ? this : new(this, _uiMerge.Add(value));
+        => value == null ? this : new(this, UiMerge.Add(value));
 
     public ITweakButton Ui(string name, object? value)
         => (value ?? name) == null ? this : Ui($"{name}={value}");
@@ -141,7 +138,7 @@ internal class TweakButton: ITweakButton, ITweakButtonInternal
             : ParamAddProcessed(new ObjectToUrl().SerializeChild($"{name}={ValueToString(value)}", prefix));
 
     private ITweakButton ParamAddProcessed(object? value)
-        => new TweakButton(this, parameters: _paramsMerge.Add(value));
+        => new TweakButton(this, parameters: ParamsMerge.Add(value));
 
     public ITweakButton Filter(object value)
         => ParamObjInternal(value, ToolbarConstants.RuleParamPrefixFilter);
@@ -198,7 +195,7 @@ internal class TweakButton: ITweakButton, ITweakButtonInternal
     /// <param name="tweak"></param>
     /// <returns></returns>
     public ITweakButton AddNamed(string name, Func<ITweakButton, ITweakButton>? tweak)
-        => tweak == null ? this : new(this, named: _named.Add(name, tweak));
+        => tweak == null ? this : new(this, named: Named.Add(name, tweak));
 
     #endregion
 

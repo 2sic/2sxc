@@ -25,13 +25,12 @@ partial record ToolbarBuilder
             ? null
             : Utils.PrepareParams(parameters, tweaks);
 
-        var tweaksInt = tweaks as ITweakButtonInternal;
-        var uiTweaked = PrepareUi(ui, tweaks: tweaksInt?.UiMerge);
+        var uiTweaked = PrepareUi(ui, tweaks: tweaks?.UiMerge);
         TargetCheck(target);
         return this.AddInternal([
                 new ToolbarRuleCustom(
                     verb,
-                    operation: ToolbarRuleOperation.Pick(operation, ToolbarRuleOps.OprAuto, tweaksInt?._condition),
+                    operation: ToolbarRuleOperation.Pick(operation, ToolbarRuleOps.OprAuto, tweaks?.ConditionValue),
                     ui: uiTweaked,
                     parameters: paramsTweaked,
                     operationCode: operation.HasValue() ? null : target as string)

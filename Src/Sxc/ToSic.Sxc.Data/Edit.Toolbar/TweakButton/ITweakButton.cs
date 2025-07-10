@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Edit.Toolbar;
+﻿using System.Collections.Immutable;
+
+namespace ToSic.Sxc.Edit.Toolbar;
 
 /// <summary>
 /// Experimental new API in v15.07 to improve how to configure the Ui of a button.
@@ -218,4 +220,44 @@ public interface ITweakButton
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public ITweakButton Custom(string prefix, string name, object value);
+
+
+    #region Internal Properties, not part of the public API
+
+    /// <summary>
+    /// List of changes to apply to the UI parameter
+    /// </summary>
+    [PrivateApi]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    internal IImmutableList<object?> UiMerge { get; }
+
+    [PrivateApi]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    internal IImmutableList<object?> ParamsMerge { get; }
+
+    [PrivateApi]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    internal bool? ConditionValue { get; }
+
+    /// <summary>
+    /// Named tweaks for situations where the tweak may be needed for multiple buttons,
+    /// each with a different tweak.
+    /// </summary>
+    internal IImmutableDictionary<string, Func<ITweakButton, ITweakButton>> Named { get; }
+
+    /// <summary>
+    /// Special internal add-rule, which is typically on the main toolbar,
+    /// but will then only be applied to buttons with exactly this name...?
+    ///
+    /// Used in image responsive to add notes to the buttons,
+    /// but different notes for e.g. Copyright etc.
+    ///
+    /// Not fully documented or standardized.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="tweak"></param>
+    /// <returns></returns>
+    internal ITweakButton AddNamed(string name, Func<ITweakButton, ITweakButton> tweak);
+
+    #endregion
 }
