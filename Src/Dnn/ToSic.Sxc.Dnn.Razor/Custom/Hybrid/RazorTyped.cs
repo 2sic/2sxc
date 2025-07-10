@@ -55,7 +55,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     //public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
     //    => CodeHelper.GetService<TService>(protector, typeName);
 
-    /// <inheritdoc cref="IDynamicCode16.Kit"/>
+    /// <inheritdoc cref="ITypedApi.Kit"/>
     public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;
 
     internal TypedCode16Helper CodeHelper => field ??= CreateCodeHelper();
@@ -110,10 +110,10 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     /// <inheritdoc />
     public new IAppTyped App => CodeApi.AppTyped;
 
-    /// <inheritdoc cref="IDynamicCode16.AllResources" />
+    /// <inheritdoc cref="ITypedApi.AllResources" />
     public ITypedStack AllResources => CodeHelper.AllResources;
 
-    /// <inheritdoc cref="IDynamicCode16.AllSettings" />
+    /// <inheritdoc cref="ITypedApi.AllSettings" />
     public ITypedStack AllSettings => CodeHelper.AllSettings;
 
     #endregion
@@ -159,31 +159,31 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 
     #region As Conversions
 
-    /// <inheritdoc cref="IDynamicCode16.AsItem" />
+    /// <inheritdoc cref="ITypedApi.AsItem" />
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
         => CodeApi.Cdf.AsItem(data, new() { ItemIsStrict = propsRequired ?? true, UseMock = mock == true });
 
-    /// <inheritdoc cref="IDynamicCode16.AsItems" />
+    /// <inheritdoc cref="ITypedApi.AsItems" />
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsItems(list, new() { ItemIsStrict = propsRequired ?? true });
 
-    /// <inheritdoc cref="IDynamicCode16.AsEntity" />
+    /// <inheritdoc cref="ITypedApi.AsEntity" />
     public IEntity AsEntity(ICanBeEntity thing)
         => CodeApi.Cdf.AsEntity(thing);
 
-    /// <inheritdoc cref="IDynamicCode16.AsTyped" />
+    /// <inheritdoc cref="ITypedApi.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsTyped(original, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
-    /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
+    /// <inheritdoc cref="ITypedApi.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsTypedList(list, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
-    /// <inheritdoc cref="IDynamicCode16.AsStack" />
+    /// <inheritdoc cref="ITypedApi.AsStack" />
     public ITypedStack AsStack(params object[] items)
         => CodeApi.Cdf.AsStack(items);
 
-    /// <inheritdoc cref="IDynamicCode16.AsStack{T}" />
+    /// <inheritdoc cref="ITypedApi.AsStack{T}" />
     public T AsStack<T>(params object[] items)
         where T : class, ICanWrapData, new()
         => CodeApi.Cdf.AsStack<T>(items);

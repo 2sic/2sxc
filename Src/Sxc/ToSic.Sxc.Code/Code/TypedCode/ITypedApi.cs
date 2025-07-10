@@ -2,6 +2,7 @@
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code;
 
@@ -74,6 +75,13 @@ public interface ITypedApi
     /// 1. If the view has a Query behind it, then MyData will have all the streams provided by the Query
     /// </summary>
     IDataSource MyData { get; }
+
+    /// <summary>
+    /// The Service Kit with all kinds of services for quick use.
+    /// </summary>
+    ServiceKit16 Kit { get; }
+
+    ILinkService Link { get; }
 
     #endregion
 
