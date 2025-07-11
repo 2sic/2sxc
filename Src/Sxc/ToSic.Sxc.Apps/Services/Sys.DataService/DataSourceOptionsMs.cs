@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.LookUp.Sys.Engines;
 
-namespace ToSic.Sxc.Services.DataServices;
+namespace ToSic.Sxc.Services.Sys.DataService;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class DataSourceOptionsMs(IAppIdentity? identity, Func<ILookUpEngine?>? getLookup)

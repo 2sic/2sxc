@@ -6,8 +6,9 @@ using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Data.Sys.Factory;
-using ToSic.Sxc.Services.DataServices;
+using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sxc.Services.Sys;
+using ToSic.Sxc.Services.Sys.DataService;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Apps.Sys.AppTyped;
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Apps.Sys.AppTyped;
 // - provide an instance of this on the CodeApiService
 // - use that instead
 
-internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> queryManager)
+internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager<TypedQuery>> queryManager)
     : ServiceWithContext(SxcLogName + ".AppTyp", connect: [globalPaths, queryManager]),
         IAppTyped
 {
@@ -54,11 +55,13 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> 
         .Setup(Cdf);
 
     /// <inheritdoc />
-    public IDataSource? GetQuery(string? name = default, NoParamOrder noParamOrder = default, IDataSourceLinkable? attach = default, object? parameters = default)
+    public ITypedQuery? GetQuery(string? name = default, NoParamOrder noParamOrder = default, IDataSourceLinkable? attach = default, object? parameters = default)
     {
         var opts = new DataSourceOptionsMs(this, () => App.ConfigurationProvider);
-        var queryMicroService = new GetQueryMs(queryManager, opts, Log);
-        return queryMicroService.GetQuery(name, noParamOrder, attach, parameters);
+        var queryMicroService = new GetQueryMs<TypedQuery>(queryManager, opts, Log);
+        var query = queryMicroService.GetQuery(name, noParamOrder, attach, parameters);
+        query?.Setup(Cdf);
+        return query;
     }
 
     /// <inheritdoc />

@@ -1,10 +1,11 @@
 ﻿using ToSic.Eav.DataSource.Sys.Query;
 using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Sys.Typed;
 
 namespace ToSic.Sxc.Apps.Sys.AppTyped;
 
-internal class AppTyped<TSettings, TResources>(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> queryManager)
+internal class AppTyped<TSettings, TResources>(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager<TypedQuery>> queryManager)
     : AppTyped(globalPaths, queryManager), IAppTyped<TSettings, TResources>
     where TSettings : class, ICanWrapData, new()
     where TResources : class, ICanWrapData, new()

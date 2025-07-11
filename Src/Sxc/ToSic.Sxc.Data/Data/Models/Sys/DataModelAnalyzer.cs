@@ -37,28 +37,28 @@ public class DataModelAnalyzer
     /// </summary>
     /// <typeparam name="TCustom"></typeparam>
     /// <returns></returns>
-    public static (List<string> List, string Flat) GetContentTypeNamesList<TCustom>() where TCustom : ICanWrapData
+    public static List<string> GetContentTypeNamesList<TCustom>() where TCustom : ICanWrapData
         => ContentTypeNamesList.Get<TCustom, ModelSourceAttribute>(a => UseSpecifiedNameOrDeriveFromType<TCustom>(a?.ContentTypes));
-    private static readonly ClassAttributeLookup<(List<string> List, string Flat)> ContentTypeNamesList = new();
+    private static readonly ClassAttributeLookup<List<string>> ContentTypeNamesList = new();
 
     /// <summary>
     /// Get the stream names of the current type.
     /// </summary>
     /// <typeparam name="TCustom"></typeparam>
     /// <returns></returns>
-    public static (List<string> List, string Flat) GetStreamNameList<TCustom>() where TCustom : ICanWrapData
+    public static List<string> GetStreamNameList<TCustom>() where TCustom : ICanWrapData
         => StreamNames.Get<TCustom, ModelSourceAttribute>(attribute => UseSpecifiedNameOrDeriveFromType<TCustom>(attribute?.Streams));
 
-    private static (List<string> List, string Flat) UseSpecifiedNameOrDeriveFromType<TCustom>(string? names)
+    private static List<string> UseSpecifiedNameOrDeriveFromType<TCustom>(string? names)
         where TCustom : ICanWrapData
     {
         var list = !string.IsNullOrWhiteSpace(names)
             ? names!.Split(',').Select(n => n.Trim()).ToList()
             : CreateListOfNameVariants(typeof(TCustom).Name, typeof(TCustom).IsInterface);
-        return (list, string.Join(",", list));
+        return list;
     }
 
-    private static readonly ClassAttributeLookup<(List<string> List, string Flat)> StreamNames = new();
+    private static readonly ClassAttributeLookup<List<string>> StreamNames = new();
 
     /// <summary>
     /// Take a class/interface name and create a list

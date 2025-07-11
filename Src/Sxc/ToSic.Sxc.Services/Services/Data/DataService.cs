@@ -5,6 +5,7 @@ using ToSic.Eav.DataSource.Sys.Query;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Eav.Services;
 using ToSic.Sxc.Services.Sys;
+using ToSic.Sxc.Services.Sys.DataService;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Users;
 
@@ -18,7 +19,7 @@ public partial class DataService(
     LazySvc<IDataSourcesService> dataSources,
     LazySvc<DataSourceCatalog> catalog,
     LazySvc<IAppsCatalog> appsCatalog,
-    LazySvc<QueryManager> queryManager,
+    LazySvc<QueryManager<Query>> queryManager,
     IUser user)
     : ServiceWithContext("Sxc.DatSvc", connect: [user, dataSources, catalog, appsCatalog, queryManager]), IDataService
 {
@@ -84,7 +85,7 @@ public partial class DataService(
         NoParamOrder noParamOrder = default,
         IDataSourceLinkable? attach = default,
         object? parameters = default)
-        => new GetQueryMs(queryManager, OptionsMs, Log).GetQuery(name, noParamOrder, attach, parameters);
+        => new GetQueryMs<Query>(queryManager, OptionsMs, Log).GetQuery(name, noParamOrder, attach, parameters);
 
     #endregion
 

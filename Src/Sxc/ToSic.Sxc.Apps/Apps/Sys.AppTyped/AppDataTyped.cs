@@ -1,8 +1,11 @@
+﻿using System.Collections;
 using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataSource.Sys.Caching;
 using ToSic.Sxc.Apps.Sys.Api01;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Models.Sys;
 using ToSic.Sxc.Data.Sys.Factory;
+using static ToSic.Eav.DataSource.DataSourceConstants;
 
 namespace ToSic.Sxc.Apps.Sys.AppTyped;
 
@@ -41,24 +44,36 @@ internal class AppDataTyped(
 
     /// <inheritdoc />
     IEnumerable<T>? IAppDataTyped.GetAll<T>(NoParamOrder protector, string? typeName, bool nullIfNotFound)
+        => GetAllShared<T>(this, CdfConnected, typeName, nullIfNotFound, false);
+
+    internal static IEnumerable<T>? GetAllShared<T>(DataSourceBase dataSource, ICodeDataFactory cdf, string? typeName, bool nullIfNotFound, bool useDefaultIfNameNotSetAndNotFound)
+        where T : class, ICanWrapData
     {
+        var autoUseDefault = typeName == null && useDefaultIfNameNotSetAndNotFound;
+
         var streamNames = typeName == null
             ? DataModelAnalyzer.GetStreamNameList<T>()
-            : ([typeName], typeName);
+            : autoUseDefault
+                ? [typeName, StreamDefaultName]
+                : [typeName];
 
         // Get the list - will be null if not found
         IDataStream? list = null;
-        foreach (var streamName2 in streamNames.List)
-            list ??= GetStream(streamName2, nullIfNotFound: true);
+        foreach (var name in streamNames)
+            list ??= dataSource.GetStream(name, nullIfNotFound: true);
+
+        // New for queries - which may use a type name but still expect to use the default stream
+        if (list == null && autoUseDefault)
+            list ??= dataSource.GetStream(StreamDefaultName, nullIfNotFound: true);
 
         // If we didn't find anything yet, then we must now try to re-access the stream
         // but in a way which will throw an exception with the expected stream names
         if (list == null && !nullIfNotFound)
-            list = GetStream(streamNames.Flat, nullIfNotFound: false);
+            list = dataSource.GetStream(string.Join(",", streamNames), nullIfNotFound: false);
 
         return list == null
             ? null
-            : CdfConnected.AsCustomList<T>(source: list, protector: protector, nullIfNull: nullIfNotFound);
+            : cdf.AsCustomList<T>(source: list, protector: default, nullIfNull: nullIfNotFound);
     }
 
     /// <inheritdoc />

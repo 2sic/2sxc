@@ -1,30 +1,30 @@
 ﻿using ToSic.Eav.DataSource.Sys.Query;
 
-namespace ToSic.Sxc.Services.DataServices;
+namespace ToSic.Sxc.Services.Sys.DataService;
 
 /// <summary>
 /// Get-Query Micro Service
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class GetQueryMs: ServiceBase
+internal class GetQueryMs<TQuery>: ServiceBase where TQuery : Query
 {
-    private readonly LazySvc<QueryManager> _queryManager;
+    private readonly LazySvc<QueryManager<TQuery>> _queryManager;
     private readonly DataSourceOptionsMs _optionsMs;
 
-    internal GetQueryMs(LazySvc<QueryManager> queryManager, DataSourceOptionsMs optionsMs, ILog parentLog): base(SxcLogName + ".DtGqMs")
+    internal GetQueryMs(LazySvc<QueryManager<TQuery>> queryManager, DataSourceOptionsMs optionsMs, ILog parentLog): base(SxcLogName + ".DtGqMs")
     {
         _queryManager = queryManager;
         _optionsMs = optionsMs;
         this.LinkLog(parentLog);
     }
 
-    public IDataSource? GetQuery(
+    public TQuery? GetQuery(
         string? name = default,
         NoParamOrder noParamOrder = default,
         IDataSourceLinkable? attach = default,
         object? parameters = default)
     {
-        var l = Log.Fn<IDataSource>($"{name}, {nameof(parameters)}: {(parameters == null ? "null" : "not null")}");
+        var l = Log.Fn<TQuery>($"{name}, {nameof(parameters)}: {(parameters == null ? "null" : "not null")}");
 
 
         // If no in-source was provided, make sure that we create one from the current app

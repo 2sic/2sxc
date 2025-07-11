@@ -29,7 +29,7 @@ public interface IAppTyped: IAppIdentity
     /// <param name="attach"></param>
     /// <param name="parameters"></param>
     /// <returns></returns>
-    IDataSource? GetQuery(
+    ITypedQuery? GetQuery(
         string? name = default,
         NoParamOrder noParamOrder = default,
         IDataSourceLinkable? attach = default,

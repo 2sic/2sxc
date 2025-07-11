@@ -81,11 +81,11 @@ partial class CodeDataFactory: IModelFactory
         var typeNames = DataModelAnalyzer.GetContentTypeNamesList<TCustom>();
         
         // Check all type names if they are `*` or match the data ContentType
-        if (typeNames.List.Any(t => t == ModelSourceAttribute.ForAnyContentType || item.Type.Is(t)))
+        if (typeNames.Any(t => t == ModelSourceAttribute.ForAnyContentType || item.Type.Is(t)))
             return AsCustom<TCustom>(item);
 
         throw new(
-            $"Item with ID {id} is not a '{typeNames.Flat}'. " +
+            $"Item with ID {id} is not a '{string.Join(",", typeNames)}'. " +
             $"This is probably a mistake, otherwise use '{nameof(skipTypeCheck)}: true' " +
             $"or apply an attribute [{nameof(ModelSourceAttribute)}({nameof(ModelSourceAttribute.ContentTypes)} = \"expected-type-name\")] to your model class. "
         );

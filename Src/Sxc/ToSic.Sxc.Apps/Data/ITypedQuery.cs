@@ -1,18 +1,16 @@
-﻿using ToSic.Sxc.Data;
-
-namespace ToSic.Sxc.Apps;
+﻿namespace ToSic.Sxc.Data;
 
 /// <summary>
-/// Data object of an App in **Typed** mode
+/// Resulting Query object of an App in **Typed** mode, with quick get-and-convert-helpers such as `GetAll` or `GetOne`
 /// </summary>
-/// <remarks>Added v17</remarks>
-[PublicApi]
-public interface IAppQueryTyped: IDataSource
+/// <remarks>Added v20</remarks>
+[WorkInProgressApi("Still WIP")]
+public interface ITypedQuery: IDataSource
 {
     #region GetAll, GetOne, GetMany WIP v17.02+
 
     /// <summary>
-    /// Get all data from the app of the specified type.
+    /// Get all data from the app of the specified type in a stream with the same name!.
     /// It will detect the expected Content-Type based on the name of the class used.
     /// 
     /// So in most cases you will not add any parameters except for the type parameter `T`.
@@ -24,7 +22,7 @@ public interface IAppQueryTyped: IDataSource
     /// <param name="nullIfNotFound">if set, will return null if the type doesn't exist - default is empty list.</param>
     /// <returns></returns>
     /// <remarks>
-    /// Released in v17.03.
+    /// WIP v20.00
     /// </remarks>
     IEnumerable<T>? GetAll<T>(NoParamOrder protector = default, string? typeName = default,
         bool nullIfNotFound = default)
