@@ -37,7 +37,7 @@ public class InstallController()
     [ValidateAntiForgeryToken] // Now with RVT as it's post now. Previously not, because this was a GET and could not include the RVT
     public HttpResponseMessage RemotePackage(string packageUrl, string newName = null)
     {
-        SysHlp.PreventServerTimeout300();
+        SysHlp.PreventServerTimeout600();
         // Make sure the Scoped ResponseMaker has this controller context
         SysHlp.SetupResponseMaker(this);
         return Real.RemotePackage(packageUrl, ((DnnModule)SysHlp.GetService<IModule>()).Init(ActiveModule), newName);
