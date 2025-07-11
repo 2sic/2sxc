@@ -145,7 +145,7 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     [ValidateAntiForgeryToken]
     public ImportResultDto Import(int zoneId, int appId)
     {
-        SysHlp.PreventServerTimeout300();
+        SysHlp.PreventServerTimeout600();
         return Real.Import(new(Request, HttpContext.Current.Request), zoneId, appId);
     }
 

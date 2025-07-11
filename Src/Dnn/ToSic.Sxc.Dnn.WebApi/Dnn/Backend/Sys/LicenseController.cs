@@ -26,7 +26,7 @@ public class LicenseController() : DnnSxcControllerRoot("License"), ILicenseCont
     [ValidateAntiForgeryToken]
     public LicenseFileResultDto Upload()
     {
-        SysHlp.PreventServerTimeout300();
+        SysHlp.PreventServerTimeout600();
         return Real.Upload(new(Request, HttpContext.Current.Request));
     }
 
@@ -34,7 +34,7 @@ public class LicenseController() : DnnSxcControllerRoot("License"), ILicenseCont
     [HttpGet]
     public LicenseFileResultDto Retrieve()
     {
-        SysHlp.PreventServerTimeout300();
+        SysHlp.PreventServerTimeout600();
         return Real.Retrieve();
     }
 }
