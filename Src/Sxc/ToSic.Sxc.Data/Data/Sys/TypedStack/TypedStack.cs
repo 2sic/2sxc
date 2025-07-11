@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.PropertyStack;
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Data.Options;
 using ToSic.Sxc.Data.Sys.Dynamic;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Stack;
@@ -61,7 +62,7 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
 
     #endregion
 
-    #region ITyped
+    #region ITyped Value Get Methods
 
     [PrivateApi]
     object? ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string? language)
@@ -117,13 +118,11 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
     [PrivateApi]
     string ITyped.ToString() => "test / debug: " + ToString();
 
-
-
     #endregion
 
     #region Add-Ons for ITypedStack
 
-    ITypedItem? /*ITypedStack*/ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required)
+    ITypedItem? /*ITypedStack*/ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required, GetRelatedOptions? options)
     {
         var findResult = _helper.TryGet(name);
         return IsErrStrict(findResult.Found, required, _helper.PropsRequired)
@@ -131,7 +130,7 @@ internal partial class TypedStack: IWrapper<IPropertyStack>, ITypedStack, IHasPr
             : Cdf.AsItem(findResult.Result!, new() { FirstIsRequired = required ?? true, ItemIsStrict = _helper.PropsRequired });
     }
 
-    IEnumerable<ITypedItem> /*ITypedStack*/ITypedItem.Children(string? field, NoParamOrder noParamOrder, string? type, bool? required)
+    IEnumerable<ITypedItem> /*ITypedStack*/ITypedItem.Children(string? field, NoParamOrder noParamOrder, string? type, bool? required, GetRelatedOptions? options)
     {
         var findResult = _helper.TryGet(field);
         return IsErrStrict(findResult.Found, required, _helper.PropsRequired)

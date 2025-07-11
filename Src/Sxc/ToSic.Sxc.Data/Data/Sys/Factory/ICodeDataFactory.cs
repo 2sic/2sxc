@@ -53,12 +53,6 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     bool Debug { get; set; }
 
     /// <summary>
-    /// Temporary workaround to allow forwarding the Block object without having to know the interface of it.
-    /// WIP to get dynamic data to keep the context of where it's from, without the API having to be typed.
-    /// </summary>
-    object? BlockAsObjectOrNull { get; }
-
-    /// <summary>
     /// List of dimensions for value lookup, incl. priorities etc. and null-trailing.
     /// lower case safe guaranteed. 
     /// </summary>

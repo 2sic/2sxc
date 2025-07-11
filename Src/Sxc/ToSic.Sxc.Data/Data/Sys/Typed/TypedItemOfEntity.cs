@@ -7,6 +7,7 @@ using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Data;
+using ToSic.Sxc.Data.Options;
 using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Data.Sys.Dynamic;
 using ToSic.Sxc.Data.Sys.Factory;
@@ -24,8 +25,10 @@ namespace ToSic.Sxc.Data.Sys.Typed;
 [JsonConverter(typeof(DynamicJsonConverter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity entity, ICodeDataFactory cdf, bool propsRequired)
+    // ReSharper disable RedundantExtendsListEntry
     : ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName, IWrapper<IEntity>,
         IEntityWrapper, IHasMetadata, IHasJsonSource
+    // ReSharper restore RedundantExtendsListEntry
 {
     #region Setup
 
@@ -45,31 +48,27 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
     IEntity IWrapper<IEntity>.GetContents() => Entity;
 
 
-    #region Helpers / Services
+    #region Private Helpers / Services
 
-    [PrivateApi]
+    [field: AllowNull, MaybeNull]
     private GetAndConvertHelper GetHelper => field ??= new(this, Cdf, propsRequired, childrenShouldBeDynamic: false, canDebug: this);
 
-    [PrivateApi]
-    private SubDataFactory SubDataFactory => field ??= new(Cdf, propsRequired, canDebug: this);
+    [field: AllowNull, MaybeNull]
+    private CodeDynHelper DynHelper => field ??= new(Entity, new(Cdf, propsRequired, canDebug: this));
 
-    [PrivateApi]
-    private CodeDynHelper DynHelper => field ??= new(Entity, SubDataFactory);
-
-    [PrivateApi]
+    [field: AllowNull, MaybeNull]
     private CodeItemHelper ItemHelper => field ??= new(GetHelper, this);
 
     #endregion
 
     #region Special Interface Implementations: IHasPropLookup, IJsonSource, ICanBeItem
 
-    [PrivateApi]
     IPropertyLookup IHasPropLookup.PropertyLookup => _propLookup ??= new(Entity, canDebug: this);
     private PropLookupWithPathEntity? _propLookup;
 
     // #RemoveBlocksIRenderService
     //[PrivateApi] object? ICanBeItem.TryGetBlock() => Cdf?.BlockAsObjectOrNull;
-    [PrivateApi] ITypedItem ICanBeItem.Item => this;
+    ITypedItem ICanBeItem.Item => this;
 
     #endregion
 
@@ -79,7 +78,6 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
     /// This is used by various equality comparison. 
     /// Since we define two object to be equal when they host the same contents, this determines the hash based on the contents
     /// </summary>
-    [PrivateApi]
     // ReSharper disable once NonReadonlyMemberInGetHashCode
     public override int GetHashCode() => GetWrappedHashCode(this);
 
@@ -93,13 +91,13 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
 
     IEnumerable<IDecorator<IEntity>> IHasDecorators<IEntity>.Decorators => (Entity as IEntityWrapper)?.Decorators ?? [];
 
-    IEntity? IMultiWrapper<IEntity>.RootContentsForEqualityCheck => (Entity as IEntityWrapper)?.RootContentsForEqualityCheck ?? Entity;
+    IEntity IMultiWrapper<IEntity>.RootContentsForEqualityCheck => (Entity as IEntityWrapper)?.RootContentsForEqualityCheck ?? Entity;
 
     #endregion
 
     #region Keys
 
-    [PrivateApi]
+
     public bool ContainsKey(string name) =>
         TypedHelpers.ContainsKey(name, Entity,
             (e, k) => e.Attributes.ContainsKey(k),
@@ -112,7 +110,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
     public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string? language = default)
         => ItemHelper.IsNotEmpty(name, noParamOrder, isBlank: default, language: language);
 
-    [PrivateApi]
+
     public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default)
         => FilterKeysIfPossible(noParamOrder, only, Entity?.Attributes.Keys);
 
@@ -120,65 +118,50 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
 
     #region ITyped
 
-    [PrivateApi]
     object? ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string? language)
         => ItemHelper.Get(name, noParamOrder, required, language: language);
 
-    [PrivateApi]
     TValue? ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue? fallback, bool? required, string? language)
         where TValue : default
         => ItemHelper.GetT(name, noParamOrder, fallback: fallback, required: required, language: language);
 
-    [PrivateApi]
     IRawHtmlString? ITyped.Attribute(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
         => ItemHelper.Attribute(name, noParamOrder, fallback, required);
 
-    [PrivateApi]
     [JsonIgnore]
     dynamic ITypedItem.Dyn => _dyn ??= dynOrNull ?? Cdf.AsDynamic(Entity, new() { ItemIsStrict = propsRequired });
     private object? _dyn;
 
-    [PrivateApi]
     DateTime ITyped.DateTime(string name, NoParamOrder noParamOrder, DateTime fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     string? ITyped.String(string name, NoParamOrder noParamOrder, string? fallback, bool? required, object? scrubHtml)
         => ItemHelper.String(name, noParamOrder, fallback, required, scrubHtml);
 
-    [PrivateApi]
     int ITyped.Int(string name, NoParamOrder noParamOrder, int fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     bool ITyped.Bool(string name, NoParamOrder noParamOrder, bool fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     long ITyped.Long(string name, NoParamOrder noParamOrder, long fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     float ITyped.Float(string name, NoParamOrder noParamOrder, float fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     decimal ITyped.Decimal(string name, NoParamOrder noParamOrder, decimal fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     double ITyped.Double(string name, NoParamOrder noParamOrder, double fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
-    [PrivateApi]
     string? ITyped.Url(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
         => ItemHelper.Url(name, noParamOrder, fallback, required);
 
 
 
-
-    [PrivateApi]
-    string? ITyped.ToString() => "test / debug: " + ToString();
+    string ITyped.ToString() => "test / debug: " + ToString();
 
     /// <summary>
     /// Get by name should never throw an error, as it's used to get null if not found.
@@ -189,18 +172,13 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
 
     #region Basic Props like Id, Guid, Title, Type, IsDemoItem
 
-    [PrivateApi]
     int ITypedItem.Id => Entity?.EntityId ?? 0;
 
-    [PrivateApi]
     Guid ITypedItem.Guid => Entity?.EntityGuid ?? Guid.Empty;
 
-    [PrivateApi]
     string? ITypedItem.Title => Entity?.GetBestTitle(Cdf.Dimensions);
 
-    [PrivateApi]
     IContentType ITypedItem.Type => Entity?.Type!;
-
     public bool IsDemoItem => _isDemoItem ??= Entity.IsDemoItemSafe();
     private bool? _isDemoItem;
 
@@ -208,9 +186,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
         
     #region ADAM
 
-    /// <inheritdoc />
-    [PrivateApi]
-    IFolder? ITypedItem.Folder(string name, NoParamOrder noParamOrder, bool? required)
+    IFolder ITypedItem.Folder(string name, NoParamOrder noParamOrder, bool? required)
         => IsErrStrictNameRequired(this, name, required, GetHelper.PropsRequired)
             ? throw ErrStrictForTyped(this, name)
             : _adamCache.Get(name, () => Cdf.Folder(Entity, name, ((ITypedItem)this).Field(name, required: false)));
@@ -234,7 +210,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
     #region Relationship properties Presentation, Metadata, Child, Children, Parents
 
     /// <inheritdoc />
-    [PrivateApi]
+
     [JsonIgnore] // prevent serialization as it's not a normal property
     ITypedItem? ITypedItem.Presentation => (DynHelper.Presentation as ICanBeItem)?.Item;
 
@@ -243,10 +219,10 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
     ITypedMetadata ITypedItem.Metadata => DynHelper.Metadata;
 
 
-    ITypedItem? ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string? type, string? field)
+    ITypedItem? ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string? type, string? field, GetRelatedOptions? options)
     {
         if (current != true)
-            return ((ITypedItem)this).Parents(type: type, field: field).FirstOrDefault();
+            return ((ITypedItem)this).Parents(type: type, field: field, options: options).FirstOrDefault();
             
         return (DynHelper.Parent as ICanBeItem)?.Item
                ?? throw new(
@@ -255,61 +231,66 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
                    $"Were you trying to use {nameof(ITypedItem.Parents)}(...)?");
     }
 
-    /// <inheritdoc />
-    [PrivateApi]
-    IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string? type, string? field)
-        => GetHelper.ParentsItems(entity: Entity, type: type, field: field);
+
+    IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string? type, string? field, GetRelatedOptions? options)
+        => GetHelper.ParentsItems(entity: Entity, type: type, field: field, options: options ?? new());
 
     bool ITypedItem.IsPublished => Entity.IsPublished;
 
     IPublishing ITypedItem.Publishing => _publishing.Get(() => new Publishing.Publishing(this, Cdf))!;
     private readonly GetOnce<IPublishing> _publishing = new();
 
-    /// <inheritdoc />
-    [PrivateApi]
-    IEnumerable<ITypedItem> ITypedItem.Children(string? field, NoParamOrder noParamOrder, string? type, bool? required)
+    
+    IEnumerable<ITypedItem> ITypedItem.Children(string? field, NoParamOrder noParamOrder, string? type, bool? required, GetRelatedOptions? options)
     {
         if (IsErrStrictNameOptional(this, field, required, GetHelper.PropsRequired))
             throw ErrStrictForTyped(this, field);
 
-        // Ability to get child/children using path
+        // Ability to get child/children using path such as Child.Grandchild.GreatGrandChild
         var dot = PropertyStack.PathSeparator.ToString();
         if (field!.Contains(dot))
         {
             var first = field.Before(dot);
             var rest = Text.After(field, dot);
+
+            // Verify it never starts / ends with a dot
             if (first.IsEmptyOrWs() || rest.IsEmptyOrWs())
                 throw new($"Got path '{field}' but either first or rest are empty");
-            // on the direct child, don't apply type filter, as the intermediate step could be anything
+
+            // Get first part of path without applying type filter, since that should only apply to the last returned level
             var child = ((ITypedItem)this).Child(first, required: required);
             
             // if the child is null, we must return a fake list which knows about this parent
-            return child == null 
-                ? Cdf.CreateEmptyChildList<ITypedItem>(Entity, field)
-                // On the next step, do forward the type filter, as the lowest node should check for that
-                : child.Children(rest, type: type, required: required);
+            // so any UI interactions trying to add children know about it
+            if (child == null)
+                return Cdf.CreateEmptyChildList<ITypedItem>(Entity, field);
+
+            // On the next step, do forward the type filter, as the lowest node should check for that
+            return child.Children(rest, type: type, required: required, options: options);
         }
 
         // Standard case: just get the direct children
-        var list = GetHelper.ChildrenItems(entity: Entity, field: field, type: type);
+        var list = GetHelper.ChildrenItems(entity: Entity, field: field, type: type, options ?? new());
         
         // Return list or special list if it's empty, as we need a special list which knows about this object being the parent
-        return list.Any() ? list : Cdf.CreateEmptyChildList<ITypedItem>(Entity, field);
+        return list.Any()
+            ? list
+            : Cdf.CreateEmptyChildList<ITypedItem>(Entity, field);
 
     }
 
     /// <inheritdoc />
-    [PrivateApi]
-    ITypedItem? ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required)
+
+    ITypedItem? ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required, GetRelatedOptions? options)
         => IsErrStrictNameRequired(this, name, required, GetHelper.PropsRequired)
             ? throw ErrStrictForTyped(this, name)
-            : ((ITypedItem)this).Children(name).FirstOrDefault();
+            : ((ITypedItem)this).Children(name, options: options).FirstOrDefault();
 
     #endregion
 
     #region Fields, Html, Picture
 
-    [PrivateApi]
+
     IField? ITypedItem.Field(string name, NoParamOrder noParamOrder, bool? required)
         => Cdf.Field(this, name, new() { FirstIsRequired = required ?? true, ItemIsStrict = propsRequired });
 
@@ -373,27 +354,37 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
     #region New Child<T> / Children<T> - disabled as ATM Kit is missing
 
     /// <inheritdoc />
-    T? ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required) where T : class => Cdf.AsCustom<T>(
-            source: ((ITypedItem)this).Child(name, required: required), protector: protector, mock: false
+    T? ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required, GetRelatedOptions? options)
+        where T : class
+        => Cdf.AsCustom<T>(
+            source: ((ITypedItem)this).Child(name, required: required, options: options),
+            protector: protector,
+            mock: false
         );
 
     /// <inheritdoc />
-    IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required)
+    IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required, GetRelatedOptions? options)
         => Cdf.AsCustomList<T>(
-            source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required),
+            source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required, options: options),
             protector: protector,
             nullIfNull: false
         );
 
     /// <inheritdoc />
-    T? ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field) where T : class => Cdf.AsCustom<T>(
-            source: ((ITypedItem)this).Parent(noParamOrder: protector, current: current, type: type ?? typeof(T).Name, field: field), protector: protector, mock: false
+    T? ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field, GetRelatedOptions? options)
+        where T : class
+        => Cdf.AsCustom<T>(
+            source: ((ITypedItem)this).Parent(noParamOrder: protector, current: current, type: type ?? typeof(T).Name, field: field, options: options),
+            protector: protector,
+            mock: false
         );
 
     /// <inheritdoc />
-    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field)
+    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field, GetRelatedOptions? options)
         => Cdf.AsCustomList<T>(
-            source: ((ITypedItem)this).Parents(noParamOrder: protector, field: field, type: type ?? typeof(T).Name), protector: protector, nullIfNull: false
+            source: ((ITypedItem)this).Parents(noParamOrder: protector, field: field, type: type ?? typeof(T).Name, options: options),
+            protector: protector,
+            nullIfNull: false
         );
 
 

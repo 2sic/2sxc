@@ -97,7 +97,7 @@ partial class CodeDataFactory
 
         if (settings.DropNullItems)
             result = result
-                .Where(e => e != null)
+                .Where(e => e != null! /* rare cases do have null */)
                 .ToList();
 
         // Ignore that some items could contain null, since the default behavior is no-nulls

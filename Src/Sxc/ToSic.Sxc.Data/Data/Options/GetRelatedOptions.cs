@@ -8,7 +8,7 @@
 /// <summary>
 /// WIP
 /// </summary>
-public record AsOptions
+public record GetRelatedOptions
 {
     public ProcessNull ProcessNull { get; set; }
 

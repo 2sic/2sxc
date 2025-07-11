@@ -6,6 +6,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Data;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Models;
+using ToSic.Sxc.Data.Options;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
@@ -232,20 +233,20 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     #region Children and Parents
 
     /// <inheritdoc />
-    public ITypedItem? Child(string name, NoParamOrder noParamOrder = default, bool? required = default)
-        => _item.Child(name, noParamOrder, required);
+    public ITypedItem? Child(string name, NoParamOrder noParamOrder = default, bool? required = default, GetRelatedOptions? options = default)
+        => _item.Child(name, noParamOrder, required, options: options);
 
     /// <inheritdoc />
-    public IEnumerable<ITypedItem> Children(string? field, NoParamOrder noParamOrder = default, string? type = default, bool? required = default)
-        => _item.Children(field, noParamOrder, type, required);
+    public IEnumerable<ITypedItem> Children(string? field, NoParamOrder noParamOrder = default, string? type = default, bool? required = default, GetRelatedOptions? options = default)
+        => _item.Children(field, noParamOrder, type, required, options);
 
     /// <inheritdoc />
-    public ITypedItem? Parent(NoParamOrder noParamOrder = default, bool? current = default, string? type = default, string? field = default)
-        => _item.Parent(noParamOrder, current, type, field);
+    public ITypedItem? Parent(NoParamOrder noParamOrder = default, bool? current = default, string? type = default, string? field = default, GetRelatedOptions? options = default)
+        => _item.Parent(noParamOrder, current, type, field, options: options);
 
     /// <inheritdoc />
-    public IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder = default, string? type = default, string? field = default)
-        => _item.Parents(noParamOrder, type, field);
+    public IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder = default, string? type = default, string? field = default, GetRelatedOptions? options = default)
+        => _item.Parents(noParamOrder, type, field, options: options);
 
     #endregion
 
@@ -303,27 +304,24 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     #region New Child<T> / Children<T>
 
     /// <inheritdoc />
-    public T? Child<T>(string name, NoParamOrder protector = default, bool? required = default)
+    public T? Child<T>(string name, NoParamOrder protector = default, bool? required = default, GetRelatedOptions? options = default)
         where T : class, ICanWrapData, new()
-        => _item.Child<T>(name, protector: protector, required: required);
+        => _item.Child<T>(name, protector: protector, required: required, options: options);
 
     /// <inheritdoc />
-    public IEnumerable<T> Children<T>(string? field, NoParamOrder protector = default,
-        string? type = default, bool? required = default)
+    public IEnumerable<T> Children<T>(string? field, NoParamOrder protector = default, string? type = default, bool? required = default, GetRelatedOptions? options = default)
         where T : class, ICanWrapData, new()
-        => _item.Children<T>(field: field, protector: protector, type: type, required: required);
+        => _item.Children<T>(field: field, protector: protector, type: type, required: required, options: options);
 
     /// <inheritdoc />
-    public T? Parent<T>(NoParamOrder protector = default, bool? current = default, string? type = default,
-        string? field = default)
+    public T? Parent<T>(NoParamOrder protector = default, bool? current = default, string? type = default, string? field = default, GetRelatedOptions? options = default)
         where T : class, ICanWrapData, new()
-        => _item.Parent<T>(protector: protector, current: current, type: type, field: field);
+        => _item.Parent<T>(protector: protector, current: current, type: type, field: field, options: options);
 
     /// <inheritdoc />
-    public IEnumerable<T> Parents<T>(NoParamOrder protector = default,
-        string? type = default, string? field = default)
+    public IEnumerable<T> Parents<T>(NoParamOrder protector = default, string? type = default, string? field = default, GetRelatedOptions? options = default)
         where T : class, ICanWrapData, new()
-        => _item.Parents<T>(protector: protector, type: type ?? typeof(T).Name, field: field);
+        => _item.Parents<T>(protector: protector, type: type ?? typeof(T).Name, field: field, options: options);
 
     /// <inheritdoc />
     public GpsCoordinates Gps(string name, NoParamOrder protector = default, bool? required = default)

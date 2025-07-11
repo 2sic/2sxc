@@ -20,10 +20,13 @@ public enum ProcessDraft
     /// </summary>
     NoDraft = 1,
 
-    /// <summary>
-    /// Prefer Draft means that if data exists as draft, that will be preferred (just like Auto for Editors).
-    /// </summary>
-    PreferDraft = 2,
+    ///// <summary>
+    ///// Prefer Draft means that if data exists as draft, that will be preferred (just like Auto for Editors).
+    ///// </summary>
+    //PreferDraft = 2,
+
+
+    //ToNull = 4,
 
     ///// <summary>
     ///// Prefer Published means that published data is preferred, but that draft is also used if no published data is available.
@@ -31,6 +34,6 @@ public enum ProcessDraft
     ///// <remarks>
     ///// This is probably never used, since there is no clear use case where this makes sense.
     ///// </remarks>
-    //PreferPublished,
+    //PreferPublished = 3,
 
 }

@@ -29,7 +29,7 @@ public enum ProcessNull
     /// Wrap means that a null value will be given to the typed item / custom item, so that it is wrapped.
     /// </summary>
     /// <remarks>
-    /// This is rarely a good idea, unless the object itself has special null-handling logic.
+    /// This is usually a bad idea, unless the object itself has special null-handling logic.
     /// </remarks>
     Wrap = 3,
 }
