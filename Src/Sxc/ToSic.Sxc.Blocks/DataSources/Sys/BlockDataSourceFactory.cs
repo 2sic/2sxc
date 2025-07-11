@@ -16,7 +16,7 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
         var view = block.View;
         var l = Log.Fn<IDataSource>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.Permissions.IsContentAdmin}, view:{view?.Name}");
 
-        // Get ModuleDataSource
+        l.A("Will get Default data source");
         var dsFactory = dataSourceFactory.Value;
         var initialSource = dsFactory.CreateDefault(new DataSourceOptions
         {
@@ -34,6 +34,7 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
             : null;
         l.A($"use query upstream:{viewDataSourceUpstream != null}");
 
+        l.A($"Will get ModuleDataSource, aka {nameof(ContextData)}");
         var contextDataSource = dsFactory.Create<ContextData>(attach: viewDataSourceUpstream,
             options: new DataSourceOptions
             {
@@ -45,6 +46,7 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
         // Take Publish-Properties from the View-Template
         if (view != null)
         {
+            l.A($"use query from  view, query#{view.Query?.Id}");
             // Note: Deprecated feature in v13, remove ca. 14 - should warn
             // #RemovedV20 #ModulePublish
 //            // TODO: #WarnDeprecated
@@ -58,7 +60,6 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
 //            }
 //#endif
 
-            l.A($"use template, & query#{view.Query?.Id}");
             // Append Streams of the Data-Query (this doesn't require a change of the viewDataSource itself)
             if (view.Query != null)
             {
