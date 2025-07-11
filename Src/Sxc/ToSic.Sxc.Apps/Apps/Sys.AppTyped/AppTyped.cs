@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using ToSic.Eav.Apps.AppReader.Sys;
+﻿using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.DataSource.Sys.Query;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.Sys.Assets;
@@ -58,7 +57,8 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> 
     public IDataSource? GetQuery(string? name = default, NoParamOrder noParamOrder = default, IDataSourceLinkable? attach = default, object? parameters = default)
     {
         var opts = new DataSourceOptionsMs(this, () => App.ConfigurationProvider);
-        return new GetQueryMs(queryManager, opts, Log).GetQuery(name, noParamOrder, attach, parameters);
+        var queryMicroService = new GetQueryMs(queryManager, opts, Log);
+        return queryMicroService.GetQuery(name, noParamOrder, attach, parameters);
     }
 
     /// <inheritdoc />
