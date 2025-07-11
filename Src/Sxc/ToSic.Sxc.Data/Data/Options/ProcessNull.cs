@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Data.Convert;
+﻿namespace ToSic.Sxc.Data.Options;
 
 // 2025-07-04 2dm - experimental ideas for more sophisticated options
 // on Children<T> etc. to choose which children can be shown.
@@ -8,7 +8,7 @@
 /// <summary>
 /// WIP
 /// </summary>
-public enum HandleNullOptions
+public enum ProcessNull
 {
     /// <summary>
     /// Auto means that nulls will be filtered out by default, so the list doesn't contain any null-values.

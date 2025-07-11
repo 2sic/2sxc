@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Data.Convert;
+﻿namespace ToSic.Sxc.Data.Options;
 
 // 2025-07-04 2dm - experimental ideas for more sophisticated options
 // on Children<T> etc. to choose which children can be shown.
@@ -8,7 +8,7 @@
 /// <summary>
 /// WIP
 /// </summary>
-public enum SelectPublishedOptions
+public enum ProcessDraft
 {
     /// <summary>
     /// Automatic (default) shows draft-data to the editors and published data to visitors. Draft-only data is skipped.

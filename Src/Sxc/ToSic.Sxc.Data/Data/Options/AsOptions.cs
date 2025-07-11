@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Data.Convert;
+﻿namespace ToSic.Sxc.Data.Options;
 
 // 2025-07-04 2dm - experimental ideas for more sophisticated options
 // on Children<T> etc. to choose which children can be shown.
@@ -8,7 +8,9 @@
 /// <summary>
 /// WIP
 /// </summary>
-public record ToTypedListOptions
+public record AsOptions
 {
-    public bool? AllowDrafts { get; set; }
+    public ProcessNull ProcessNull { get; set; }
+
+    public ProcessDraft ProcessDraft { get; set; }
 }
