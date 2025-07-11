@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Data.Sys.Entities;
-using ToSic.Eav.DataSource.Sys.Query;
-using ToSic.Sxc.Apps.Sys.AppTyped;
+﻿using ToSic.Eav.DataSource.Sys.Query;
 using ToSic.Sxc.Data.Sys.Factory;
 
 namespace ToSic.Sxc.Data.Sys.Typed;
@@ -8,35 +6,31 @@ namespace ToSic.Sxc.Data.Sys.Typed;
 internal class TypedQuery(DataSourceBase.Dependencies services, LazySvc<QueryBuilder> queryBuilder)
     : Query(services, queryBuilder), ITypedQuery
 {
-    #region Kit Attachments
+    #region Cdf Attachments and setup ToTypedHelper
 
-    internal TypedQuery Setup(ICodeDataFactory cdf)
+    internal TypedQuery Setup(ICodeDataFactory cdfConnected)
     {
-        CdfRequired = cdf;
+        ToTypedHelper = new(cdfConnected, this, Log);
         return this;
     }
 
     [field: AllowNull, MaybeNull]
-    private ICodeDataFactory CdfRequired
-    {
-        get => field ?? throw new(nameof(CdfRequired) + " not set");
-        set;
-    }
+    private DataSourceToTypedHelper ToTypedHelper { get => field ?? throw new($"{nameof(ToTypedHelper)} not set"); set; }
 
     #endregion
 
     /// <inheritdoc />
     IEnumerable<T>? ITypedQuery.GetAll<T>(NoParamOrder protector, string? typeName, bool nullIfNotFound)
-        => AppDataTyped.GetAllShared<T>(this, CdfRequired, typeName, nullIfNotFound, useDefaultIfNameNotSetAndNotFound: true);
+        => ToTypedHelper.GetAllShared<T>(typeName, nullIfNotFound, useDefaultIfNameNotSetAndNotFound: true);
 
     /// <inheritdoc />
     T? ITypedQuery.GetOne<T>(int id, NoParamOrder protector, bool skipTypeCheck)
         where T : class
-        => CdfRequired.GetOne<T>(() => List.One(id), id, skipTypeCheck);
+        => ToTypedHelper.GetOne<T>(id, protector, skipTypeCheck);
 
     /// <inheritdoc />
     T? ITypedQuery.GetOne<T>(Guid id, NoParamOrder protector, bool skipTypeCheck)
         where T : class
-        => CdfRequired.GetOne<T>(() => List.One(id), id, skipTypeCheck);
+        => ToTypedHelper.GetOne<T>(id, protector, skipTypeCheck);
 
 }
