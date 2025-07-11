@@ -29,8 +29,8 @@ internal class TypedQuery(DataSourceBase.Dependencies services, LazySvc<QueryBui
         => ToTypedHelper.GetOne<T>(id, protector, skipTypeCheck);
 
     /// <inheritdoc />
-    T? ITypedQuery.GetOne<T>(Guid id, NoParamOrder protector, bool skipTypeCheck)
+    T? ITypedQuery.GetOne<T>(Guid guid, NoParamOrder protector, bool skipTypeCheck)
         where T : class
-        => ToTypedHelper.GetOne<T>(id, protector, skipTypeCheck);
+        => ToTypedHelper.GetOne<T>(guid, protector, skipTypeCheck);
 
 }
