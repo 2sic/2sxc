@@ -115,9 +115,14 @@ public partial class SimpleDataEditService(
             })
             .ToList();
 
-        var ids = entSaver.Save(importEntity);
+        var ids = entSaver
+            .Save(importEntity);
 
-        return l.Return(ids, "ok");
+        var intIds = ids
+            .Select(i => i.Id)
+            .ToListOpt();
+
+        return l.Return(intIds, "ok");
     }
 
     private (IEntity Entity, EntitySavePublishing Publishing) BuildNewEntity(
