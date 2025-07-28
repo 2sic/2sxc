@@ -69,11 +69,10 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
 
-    // #DropStrangeGetServiceWithTypeNameV20 - v20 removed again, not clear what this is for; wait & see, remove ca. 2025-Q3
-    //[PrivateApi("WIP 17.06,x")]
-    //[ShowApiWhenReleased(ShowApiMode.Never)]
-    //public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
-    //    => CodeHelper.GetService<TService>(protector, typeName);
+    /// <inheritdoc cref="IDynamicCode16.GetService{TService}(NoParamOrder, string?)"/>
+    // ReSharper disable once MethodOverloadWithOptionalParameter
+    public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
+        => AppCodeGetNamedServiceHelper.GetService<TService>(owner: this, CodeHelper.Specs, typeName);
 
     /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     public ILinkService Link => CodeApi?.Link;
@@ -163,13 +162,8 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     #region My... Stuff
 
-    private CodeHelperTypedData CodeHelper => field ??= CreateCodeHelper();
-
-    private CodeHelperTypedData CreateCodeHelper()
-    {
-        // Create basic helper without any RazorModels, since that doesn't exist here
-        return new(/*owner: this,*/ helperSpecs: new(ExCtx, false, ((IGetCodePath)this).CreateInstancePath)/*, getRazorModel: () => null, getModelDic: () => null*/);
-    }
+    private CodeHelperTypedData CodeHelper => field
+        ??= new(helperSpecs: new(ExCtx, false, ((IGetCodePath)this).CreateInstancePath));
 
     /// <inheritdoc />
     public ITypedItem MyItem => CodeHelper.MyItem;
@@ -219,8 +213,8 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     #endregion
 
-    /// <inheritdoc />
-    public ITypedRazorModel MyModel => throw new("MyModel isn't meant to work in WebApi"); // v20 CodeHelper.MyModel;
+    [PrivateApi]
+    public ITypedRazorModel MyModel => throw new("MyModel isn't meant to work in WebApi");
 
 
     #region Net Core Compatibility Shims - Copy this entire section to WebApi Files

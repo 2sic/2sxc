@@ -50,11 +50,10 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
-    // #DropStrangeGetServiceWithTypeNameV20 - v20 removed again, not clear what this is for; wait & see, remove ca. 2025-Q3
-    //[PrivateApi("WIP 17.06,x")]
-    //[ShowApiWhenReleased(ShowApiMode.Never)]
-    //public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
-    //    => CodeHelper.GetService<TService>(protector, typeName);
+    /// <inheritdoc cref="IDynamicCode16.GetService{TService}(NoParamOrder, string?)"/>
+    // ReSharper disable once MethodOverloadWithOptionalParameter
+    public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
+        => AppCodeGetNamedServiceHelper.GetService<TService>(owner: this, CodeHelper.Specs, typeName);
 
     /// <inheritdoc cref="IHasKit{TServiceKit}.Kit"/>
     public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;
@@ -70,7 +69,6 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
 
     private TypedCode16Helper CreateCodeHelper() =>
         new(
-            owner: this,
             new(ExCtx, true, Path),
             getRazorModel: () => _overridePageData
                                  // the default/only value would be on a 0 key

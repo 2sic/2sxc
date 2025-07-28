@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
+using ToSic.Sxc.Code.Sys.CodeRunHelpers;
+using ToSic.Sxc.Engines;
 using ToSic.Sxc.Razor;
+using ToSic.Sxc.Sys.ExecutionContext;
 using IHasLog = ToSic.Sys.Logging.IHasLog;
 using ILog = ToSic.Sys.Logging.ILog;
-using ToSic.Sxc.Engines;
-using ToSic.Sxc.Sys.ExecutionContext;
 using Logging_IHasLog = ToSic.Sys.Logging.IHasLog;
 
 // ReSharper disable once CheckNamespace
@@ -44,14 +45,14 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
     #region GetService / Logs / DevTools
 
-    /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class
         => RzrHlp.ExCtxRoot.GetTypedApi().GetService<TService>();
 
-    [PrivateApi("WIP 17.06,x")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
+    /// <inheritdoc cref="IDynamicCode16.GetService{TService}(NoParamOrder, string?)"/>
+    // ReSharper disable once MethodOverloadWithOptionalParameter
     public TService GetService<TService>(NoParamOrder protector = default, string? typeName = default) where TService : class
-        => RzrHlp.CodeHelper.GetService<TService>(protector, typeName);
+        => AppCodeGetNamedServiceHelper.GetService<TService>(owner: this, RzrHlp.CodeHelper.Specs, typeName);
 
 
     /// <inheritdoc cref="IHasCodeLog.Log" />

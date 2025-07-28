@@ -64,11 +64,10 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     public new TService GetService<TService>() where TService : class
         => CodeApi.GetService<TService>();
 
-    // #DropStrangeGetServiceWithTypeNameV20 - v20 removed again, not clear what this is for; wait & see, remove ca. 2025-Q3
-    //[PrivateApi("WIP 17.06,x")]
-    //[ShowApiWhenReleased(ShowApiMode.Never)]
-    //public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
-    //    => CodeHelper.GetService<TService>(protector, typeName);
+    /// <inheritdoc cref="IDynamicCode16.GetService{TService}(NoParamOrder, string?)"/>
+    // ReSharper disable once MethodOverloadWithOptionalParameter
+    public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
+        => AppCodeGetNamedServiceHelper.GetService<TService>(owner: this, CodeHelper.Specs, typeName);
 
     /// <inheritdoc cref="IHasKit{TServiceKit}.Kit"/>
     public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;
@@ -117,7 +116,8 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     #region My... Stuff
 
-    private CodeHelperTypedData CodeHelper => field ??= new(helperSpecs: new(ExCtxOrNull, false, ((IGetCodePath)this).CreateInstancePath));
+    private CodeHelperTypedData CodeHelper => field
+        ??= new(helperSpecs: new(ExCtxOrNull, false, ((IGetCodePath)this).CreateInstancePath));
 
     public ITypedItem MyItem => CodeHelper.MyItem;
 

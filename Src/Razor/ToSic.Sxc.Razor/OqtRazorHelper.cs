@@ -83,7 +83,6 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
 
     private TypedCode16Helper CreateCodeHelper()
         => new(
-            owner: this,
             helperSpecs: new(ExCtx, true, owner.Path),
             getRazorModel: () => _overridePageData ?? owner.Model,
             getModelDic: () => (_overridePageData ?? owner.Model)?.ToDicInvariantInsensitive()!

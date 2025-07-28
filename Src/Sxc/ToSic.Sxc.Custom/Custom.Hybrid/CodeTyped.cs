@@ -45,16 +45,14 @@ public abstract class CodeTyped : CustomCodeBase, IHasCodeLog, IDynamicCode16
     public TService GetService<TService>() where TService : class
         => CodeApi().GetService<TService>();
 
-    // #DropStrangeGetServiceWithTypeNameV20 - v20 removed again, not clear what this is for; wait & see, remove ca. 2025-Q3
-    //[PrivateApi("WIP 17.06,x")]
-    //[ShowApiWhenReleased(ShowApiMode.Never)]
-    //// ReSharper disable once MethodOverloadWithOptionalParameter
-    //public TService GetService<TService>(NoParamOrder protector = default, string? typeName = default) where TService : class
-    //    => CodeHelper.GetService<TService>(protector, typeName);
+    /// <inheritdoc cref="IDynamicCode16.GetService{TService}(NoParamOrder, string?)"/>
+    // ReSharper disable once MethodOverloadWithOptionalParameter
+    public TService GetService<TService>(NoParamOrder protector = default, string? typeName = default) where TService : class
+        => AppCodeGetNamedServiceHelper.GetService<TService>(owner: this, CodeHelper.Specs, typeName);
 
     [field: AllowNull, MaybeNull]
     private TypedCode16Helper CodeHelper
-        => field ??= new(owner: this, helperSpecs: new(CodeRootOrError(), false, "c# code file"), getRazorModel: () => null, getModelDic: () => null);
+        => field ??= new(helperSpecs: new(CodeRootOrError(), false, "c# code file"), getRazorModel: () => null, getModelDic: () => null);
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]

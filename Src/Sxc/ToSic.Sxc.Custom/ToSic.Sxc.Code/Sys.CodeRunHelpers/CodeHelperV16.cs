@@ -1,17 +1,13 @@
-﻿using ToSic.Sxc.Code.Sys.HotBuild;
-using ToSic.Sys.Utils;
-
-namespace ToSic.Sxc.Code.Sys.CodeRunHelpers;
+﻿namespace ToSic.Sxc.Code.Sys.CodeRunHelpers;
 
 /// <summary>
 /// Code Helper for typed code v16+
 /// </summary>
-/// <param name="owner"></param>
 /// <param name="helperSpecs"></param>
 /// <param name="getRazorModel"></param>
 /// <param name="getModelDic"></param>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class TypedCode16Helper(object owner, CompileCodeHelperSpecs helperSpecs, Func<object?> getRazorModel, Func<IDictionary<string, object>?> getModelDic)
+public class TypedCode16Helper(CompileCodeHelperSpecs helperSpecs, Func<object?> getRazorModel, Func<IDictionary<string, object>?> getModelDic)
     : CodeHelperTypedData(helperSpecs, SxcLogName + ".TCd16H")
 {
     // Note: we're passing in factory methods so they don't get processed unless needed
@@ -38,27 +34,5 @@ public class TypedCode16Helper(object owner, CompileCodeHelperSpecs helperSpecs,
 
     public ITypedRazorModel MyModel => _myModel.Get(() => new TypedRazorModel(Specs, MyModelDic, Specs.IsRazor, Specs.CodeFileName))!;
     private readonly GetOnce<ITypedRazorModel> _myModel = new();
-
-    //public IDevTools DevTools => _devTools.Get(() => new DevTools(IsRazor, CodeFileName, Log));
-    //private readonly GetOnce<IDevTools> _devTools = new GetOnce<IDevTools>();
-
-    public TService GetService<TService>(NoParamOrder protector = default, string? typeName = default) where TService : class
-    {
-        if (typeName.IsEmptyOrWs())
-            return ExCtx.GetService<TService>();
-
-        var ownType = owner.GetType();
-        var assembly = ownType.Assembly;
-        // Note: don't check the Namespace property, as it may be empty
-        if (!HotBuildConstants.ObjectIsFromAppCode(owner))
-            throw Log.Ex(new Exception($"Type '{ownType.FullName}' is not in the 'AppCode' namespace / dll, so it can't be used to find other types."));
-
-        var type = assembly.FindControllerTypeByName(typeName);
-        
-        return type == null
-            ? throw Log.Ex(new Exception($"Type '{typeName}' not found in assembly '{assembly.FullName}'"))
-            : ExCtx.GetService<TService>(type: type);
-    }
-
 
 }

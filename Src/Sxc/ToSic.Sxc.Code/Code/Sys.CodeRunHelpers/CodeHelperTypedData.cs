@@ -40,7 +40,4 @@ public class CodeHelperTypedData(CompileCodeHelperSpecs helperSpecs, string? log
 
     public ITypedStack AllSettings => TypedApiHelper.AllSettings;
 
-    //public IDevTools DevTools => _devTools.Get(() => new DevTools(IsRazor, CodeFileName, Log));
-    //private readonly GetOnce<IDevTools> _devTools = new GetOnce<IDevTools>();
-    
 }
