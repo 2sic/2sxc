@@ -14,7 +14,7 @@ public abstract class CodeHelperV00Base(CompileCodeHelperSpecs helperSpecs, stri
 {
     protected IExecutionContext ExCtx => Specs.ExCtx;
 
-    protected CompileCodeHelperSpecs Specs { get; } = helperSpecs;
+    public CompileCodeHelperSpecs Specs { get; } = helperSpecs;
 
 
     public IDevTools DevTools => _devTools.Get(() => new DevTools(Specs, Log))!;
