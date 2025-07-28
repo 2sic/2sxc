@@ -158,7 +158,7 @@ public abstract partial class Api14(string logSuffix) : DnnSxcCustomControllerBa
     public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
         => CompileCodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
 
-    /// <inheritdoc cref="IDynamicCode16.GetCode"/>
+    /// <inheritdoc cref="ITypedCode16.GetCode"/>
     [PrivateApi("added in 16.05, but not sure if it should be public")]
     public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
         => CompileCodeHlp.GetCode(path: path, className: className);

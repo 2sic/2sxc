@@ -7,8 +7,6 @@ using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 // ReSharper disable MethodOverloadWithOptionalParameter
 
-// TODO: SHOULD probably rename to ITypedCode16 or something
-
 namespace ToSic.Sxc.Code.Sys;
 
 /// <summary>
@@ -17,7 +15,7 @@ namespace ToSic.Sxc.Code.Sys;
 /// </summary>
 [PrivateApi("Shouldn't be visible, as the real API is 100% visible on RazorPro, CodePro etc.")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IHasKit<ServiceKit16>
+public interface ITypedCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IHasKit<ServiceKit16>
 {
     #region Stuff basically inherited from v12/14
 

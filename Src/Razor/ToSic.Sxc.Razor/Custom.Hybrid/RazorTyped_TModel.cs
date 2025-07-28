@@ -28,7 +28,7 @@ namespace Custom.Hybrid;
 // ReSharper disable once UnusedMember.Global
 public abstract class RazorTyped<TModel>()
     : OqtRazorBase<TModel>(CompatibilityLevels.CompatibilityLevel16, "Oqt.Rzr16"), IHasCodeLog, IRazor,
-        ISetDynamicModel, IDynamicCode16, IHasCodeHelp
+        ISetDynamicModel, ITypedCode16, IHasCodeHelp
 {
     #region ServiceKit
 
@@ -112,7 +112,7 @@ public abstract class RazorTyped<TModel>()
     #endregion
 
 
-    /// <inheritdoc cref="IDynamicCode16.GetCode"/>
+    /// <inheritdoc cref="ITypedCode16.GetCode"/>
     public dynamic? GetCode(string path, NoParamOrder noParamOrder = default, string? className = default)
         => RzrHlp.GetCode(path, noParamOrder, className);
 

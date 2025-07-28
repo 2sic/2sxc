@@ -33,7 +33,7 @@ namespace Custom.Hybrid;
 [DnnLogExceptions]
 //[DefaultToNewtonsoftForHttpJson] - // !!! v16 should now default to normal
 [JsonFormatter]
-public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynamicWebApi, IDynamicCode16, IGetCodePath
+public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynamicWebApi, ITypedCode16, IGetCodePath
 {
     #region Setup
 
@@ -69,7 +69,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
 
-    /// <inheritdoc cref="IDynamicCode16.GetService{TService}(NoParamOrder, string?)"/>
+    /// <inheritdoc cref="ITypedCode16.GetService{TService}(NoParamOrder, string?)"/>
     // ReSharper disable once MethodOverloadWithOptionalParameter
     public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
         => AppCodeGetNamedServiceHelper.GetService<TService>(owner: this, CodeHelper.Specs, typeName);
@@ -154,7 +154,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     string IGetCodePath.CreateInstancePath { get; set; }
 
-    /// <inheritdoc cref="IDynamicCode16.GetCode"/>
+    /// <inheritdoc cref="ITypedCode16.GetCode"/>
     public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
         => CompileCodeHlp.GetCode(path, className: className);
 

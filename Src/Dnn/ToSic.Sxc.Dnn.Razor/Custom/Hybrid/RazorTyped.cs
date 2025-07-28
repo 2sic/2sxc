@@ -27,7 +27,7 @@ namespace Custom.Hybrid;
 /// Be aware of this since the APIs are very different - see [Typed Code](xref:NetCode.TypedCode.Index).
 /// </remarks>
 [PublicApi]
-public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IHasCodeHelp, IGetCodePath, ISetDynamicModel, ICanUseRoslynCompiler
+public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHasCodeHelp, IGetCodePath, ISetDynamicModel, ICanUseRoslynCompiler
 {
     #region Constructor, Setup, Helpers
 
@@ -50,7 +50,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => CodeApi.GetService<TService>();
 
-    /// <inheritdoc cref="IDynamicCode16.GetService{TService}(NoParamOrder, string?)"/>
+    /// <inheritdoc cref="ITypedCode16.GetService{TService}(NoParamOrder, string?)"/>
     // ReSharper disable once MethodOverloadWithOptionalParameter
     public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
         => AppCodeGetNamedServiceHelper.GetService<TService>(owner: this, CodeHelper.Specs, typeName);
@@ -90,7 +90,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, IDynamicCode16, IH
     /// <inheritdoc />
     public override IHtmlHelper Html => RzrHlp.Html;
 
-    /// <inheritdoc cref="IDynamicCode16.GetCode"/>
+    /// <inheritdoc cref="ITypedCode16.GetCode"/>
     public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
         => RzrHlp.GetCode(path, noParamOrder, className);
 

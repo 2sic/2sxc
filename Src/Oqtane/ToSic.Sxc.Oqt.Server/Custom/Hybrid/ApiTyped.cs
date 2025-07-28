@@ -27,7 +27,7 @@ namespace Custom.Hybrid;
 /// </summary>
 [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
 [JsonFormatter]
-public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(logSuffix), IDynamicWebApi, IHasCodeLog, IDynamicCode16
+public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(logSuffix), IDynamicWebApi, IHasCodeLog, ITypedCode16
 {
     #region setup
 
@@ -64,7 +64,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     public new TService GetService<TService>() where TService : class
         => CodeApi.GetService<TService>();
 
-    /// <inheritdoc cref="IDynamicCode16.GetService{TService}(NoParamOrder, string?)"/>
+    /// <inheritdoc cref="ITypedCode16.GetService{TService}(NoParamOrder, string?)"/>
     // ReSharper disable once MethodOverloadWithOptionalParameter
     public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
         => AppCodeGetNamedServiceHelper.GetService<TService>(owner: this, CodeHelper.Specs, typeName);
@@ -167,7 +167,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     private CompileCodeHelper CompileCodeHlp => field ??= GetService<CompileCodeHelper>().Init(this);
 
-    /// <inheritdoc cref="IDynamicCode16.GetCode"/>
+    /// <inheritdoc cref="ITypedCode16.GetCode"/>
     public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
         => CompileCodeHlp.CreateInstance(path /*relativePath: (this as IGetCodePath).CreateInstancePath*/, name: className);
 
