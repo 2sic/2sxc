@@ -7,7 +7,7 @@ public interface IEnvironmentInstaller: IHasLog
     /// Get upgrade messages to show to the user if the upgrade/install needs attention
     /// </summary>
     /// <returns></returns>
-    string UpgradeMessages();
+    string? UpgradeMessages();
 
     /// <summary>
     /// Manually trigger continue-update
