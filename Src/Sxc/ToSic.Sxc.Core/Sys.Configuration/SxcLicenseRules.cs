@@ -8,4 +8,9 @@ internal class SxcLicenseRules
     public static List<FeatureLicenseRule> ForPatronsSentinelDisabled = BuiltInLicenseRules.BuildRule(BuiltInLicenses.PatronSentinel, false);
     public static List<FeatureLicenseRule> ForPatronsSentinelEnabled = BuiltInLicenseRules.BuildRule(BuiltInLicenses.PatronSentinel, true);
 
+    public static List<FeatureLicenseRule> ForPatronsPerfectionistAndPerformance =
+    [
+        new(BuiltInLicenses.PatronPerfectionist, true),
+        new(BuiltInLicenses.PatronPerformance, true)
+    ];
 }
