@@ -109,7 +109,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     #region Advanced: Fields, Html
 
     /// <inheritdoc />
-    public IField? Field(string name) => Cdf.Field(TypedItem, name, new() { ItemIsStrict = _propsRequired });
+    public IField? Field(string name) => Cdf.Field(TypedItem, supportOldMetadata: true, name, new() { ItemIsStrict = _propsRequired });
 
     /// <inheritdoc/>
     [PrivateApi("Should not be documented here, as it should only be used on ITyped")]

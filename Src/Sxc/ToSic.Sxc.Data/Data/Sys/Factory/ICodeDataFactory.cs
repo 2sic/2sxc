@@ -114,7 +114,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
 
     IDynamicStack AsDynStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources);
     ITypedStack AsTypedStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources);
-    IField? Field(ITypedItem parent, string? name, ConvertItemSettings settings);
+    IField? Field(ITypedItem parent, bool supportOldMetadata, string? name, ConvertItemSettings settings);
     IEntity AsEntity(object thingToConvert);
     IEntity FakeEntity(int appId);
 

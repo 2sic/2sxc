@@ -288,7 +288,7 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
 
 
     IField? ITypedItem.Field(string name, NoParamOrder noParamOrder, bool? required)
-        => Cdf.Field(this, name, new() { FirstIsRequired = required ?? true, ItemIsStrict = propsRequired });
+        => Cdf.Field(this, supportOldMetadata: false, name, new() { FirstIsRequired = required ?? true, ItemIsStrict = propsRequired });
 
     IHtmlTag? ITypedItem.Html(
         string name,
