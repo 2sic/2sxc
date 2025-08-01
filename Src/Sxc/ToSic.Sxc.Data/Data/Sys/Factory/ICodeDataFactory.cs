@@ -11,7 +11,8 @@ namespace ToSic.Sxc.Data.Sys.Factory;
 
 public interface ICodeDataFactory: ICanGetService, IHasLog
 {
-    ITypedMetadata Metadata(IMetadata mdOf);
+    ITypedMetadata MetadataDynamic(IMetadata mdOf);
+    ITypedMetadata MetadataTyped(IMetadata mdOf);
 
     /// <summary>
     /// Convert an object to a custom type, if possible.

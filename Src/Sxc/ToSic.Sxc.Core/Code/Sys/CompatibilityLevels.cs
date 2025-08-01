@@ -13,11 +13,19 @@ public class CompatibilityLevels
 
     public const int CompatibilityLevel12 = 12;
 
+    /// <summary>
+    /// Typed code
+    /// </summary>
     public const int CompatibilityLevel16 = 16;
 
+    /// <summary>
+    /// Old, probably remove EOY 2025
+    /// </summary>
     public const int MaxLevelForAutoJQuery = CompatibilityLevel9Old;
     public const int MaxLevelForEntityDotToolbar = CompatibilityLevel9Old;
     public const int MaxLevelForEntityDotRender = CompatibilityLevel9Old;
+
+    public const int MinLevelForTyped = CompatibilityLevel16;
 
     //public const int MaxLevelForStaticRender = CompatibilityLevel10;
 }

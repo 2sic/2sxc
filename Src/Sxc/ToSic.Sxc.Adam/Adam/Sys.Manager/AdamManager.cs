@@ -4,6 +4,7 @@ using ToSic.Eav.Metadata;
 using ToSic.Sxc.Adam.Sys.FileSystem;
 using ToSic.Sxc.Adam.Sys.Paths;
 using ToSic.Sxc.Adam.Sys.Storage;
+using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
 
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Adam.Sys.Manager;
 public class AdamManager(AdamManager.Dependencies services)
     : ServiceBase<AdamManager.Dependencies>(services, "Adm.Managr")
 {
-    #region MyServices
+    #region Dependencies
 
     public class Dependencies(LazySvc<ICodeDataFactory> cdf, AdamConfiguration adamConfiguration,
         LazySvc<IAdamFileSystem> adamFsLazy, Generator<AdamStorageOfField> fieldStorageGenerator, AdamGenericHelper adamGenericHelper)
@@ -47,6 +48,8 @@ public class AdamManager(AdamManager.Dependencies services)
                   .Value;
         return l.Return(this, "ready");
     }
+
+    public bool UseTypedAssets => Cdf.CompatibilityLevel >= CompatibilityLevels.MinLevelForTyped;
 
     [field: AllowNull, MaybeNull]
     public IAdamFileSystem AdamFs => field ??= Services.AdamFsLazy.SetInit(f => f.Init(this)).Value;
@@ -117,11 +120,16 @@ public class AdamManager(AdamManager.Dependencies services)
     /// <summary>
     /// Get the first metadata entity of an item - or return a fake one instead
     /// </summary>
+    /// <remarks>
+    /// The metadata varies a bit, depending on whether it's typed or dynamic.
+    /// </remarks>
     internal ITypedMetadata CreateMetadata(string key, string title, Action<IMetadata>? mdInit = null)
     {
         var mdOf = AppWorkCtx.AppReader.Metadata.GetMetadataOf(TargetTypes.CmsItem, key, title: title);
         mdInit?.Invoke(mdOf);
-        return Cdf.Metadata(mdOf);
+        return UseTypedAssets
+            ? Cdf.MetadataTyped(mdOf)
+            : Cdf.MetadataDynamic(mdOf);
     }
 
     #endregion

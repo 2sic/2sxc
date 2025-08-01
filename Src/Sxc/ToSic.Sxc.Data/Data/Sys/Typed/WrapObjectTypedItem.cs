@@ -255,7 +255,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
         var mdOf = new Metadata<int>(0, 0, "virtual", mdEntities);
         // TODO: @2dm - this probably won't work yet, without an entity (null) #todoTyped
-        var metadata = Cdf.Metadata(mdOf);
+        var metadata = Cdf.MetadataTyped(mdOf);
         return metadata;
     }
 
