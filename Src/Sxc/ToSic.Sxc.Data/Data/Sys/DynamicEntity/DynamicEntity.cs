@@ -81,9 +81,13 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     [field: AllowNull, MaybeNull]
     internal CodeDynHelper DynHelper => field ??= new(Entity, SubDataFactory);
 
+    /// <summary>
+    /// TypedItem is only internal, for use in APIs which should only have one way to handle data.
+    /// Since DynamicEntity is an old API, we don't want to surface TypedItem in the public API.
+    /// </summary>
     [PrivateApi]
     [field: AllowNull, MaybeNull]
-    internal ITypedItem TypedItem => field ??= new TypedItemOfEntity(this, Entity, Cdf, _propsRequired);
+    internal ITypedItem TypedItem => field ??= new TypedItemOfEntity(Entity, Cdf, _propsRequired);
 
     /// <inheritdoc />
     public bool Debug { get; set; }

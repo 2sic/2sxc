@@ -186,7 +186,7 @@ internal class GetAndConvertHelper(
         return processed
             .Select(ITypedItem (e) => e == null && preserveNull
                 ? null!
-                : new TypedItemOfEntity(null, e!, Cdf, PropsRequired)
+                : new TypedItemOfEntity(e!, Cdf, PropsRequired)
             )
             .ToList();
     }
@@ -212,7 +212,7 @@ internal class GetAndConvertHelper(
             ProcessOptions(entities, options, Cdf.Services.User),
             field,
             parentEntity,
-            ITypedItem (e) => new TypedItemOfEntity(null, e, Cdf, PropsRequired),
+            ITypedItem (e) => new TypedItemOfEntity(e, Cdf, PropsRequired),
             options
         );
 

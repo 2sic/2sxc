@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Data.Sys.Typed;
 
 [JsonConverter(typeof(DynamicJsonConverter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity entity, ICodeDataFactory cdf, bool propsRequired)
+internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool propsRequired)
     // ReSharper disable RedundantExtendsListEntry
     : ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName, IWrapper<IEntity>,
         IEntityWrapper, IHasMetadata, IHasJsonSource
