@@ -239,8 +239,11 @@ internal class OqtAdamFileSystem(
 
     //public string GetUrl(string folderPath) => _adamPaths.Url(folderPath.ForwardSlash());
 
-    private IFolder OqtToAdam(Folder f) =>
-        new Folder<int, int>(AdamManager)
+    private IFolder OqtToAdam(Folder f)
+    {
+        var l = Log.Fn<Folder<int, int>>($"folderName: {f.Name}");
+
+        var typed = new Folder<int, int>(AdamManager)
         {
             Path = ((OqtAdamPaths)AdamPaths).Path(f.Path),
             SysId = f.FolderId,
@@ -250,31 +253,45 @@ internal class OqtAdamFileSystem(
             Name = f.Name,
             Created = f.CreatedOn,
             Modified = f.ModifiedOn,
-            Url = GetUrl(f.Path), // _adamPaths.Url(f.Path.ForwardSlash()),
+            Url = GetUrl(f.Path),
             PhysicalPath = AdamPaths.PhysicalPath(f.Path),
         };
+        if (AdamManager.UseTypedAssets)
+            return l.Return(typed, "typed");
+
+        var dyn = FolderDynamic<int, int>.Create(AdamManager, typed);
+        return l.Return(dyn, "dynamic");
+    }
 
 
+    private IFile OqtToAdam(File f)
+    {
+        var l = Log.Fn<File<int, int>>($"fileName: {f.Name}");
 
-    private IFile OqtToAdam(File f) =>
-        new File<int, int>(AdamManager)
-         {
-             FullName = f.Name,
-             Extension = f.Extension,
-             Size = f.Size,
-             SysId = f.FileId,
-             Folder = f.Folder.Name,
-             ParentSysId = f.FolderId,
+        var typed = new File<int, int>(AdamManager)
+        {
+            FullName = f.Name,
+            Extension = f.Extension,
+            Size = f.Size,
+            SysId = f.FileId,
+            Folder = f.Folder.Name,
+            ParentSysId = f.FolderId,
 
-             Path = ((OqtAdamPaths)AdamPaths).Path(f.Folder.Path),
+            Path = ((OqtAdamPaths)AdamPaths).Path(f.Folder.Path),
 
-             Created = f.CreatedOn,
-             Modified = f.ModifiedOn,
-             Name = Path.GetFileNameWithoutExtension(f.Name),
-             Url = AdamPaths.Url(Path.Combine(f.Folder.Path, f.Name).ForwardSlash()),
-             PhysicalPath = AdamPaths.PhysicalPath(Path.Combine(f.Folder.Path, f.Name)),
-         };
+            Created = f.CreatedOn,
+            Modified = f.ModifiedOn,
+            Name = Path.GetFileNameWithoutExtension(f.Name)!,
+            Url = AdamPaths.Url(Path.Combine(f.Folder.Path, f.Name!).ForwardSlash()),
+            PhysicalPath = AdamPaths.PhysicalPath(Path.Combine(f.Folder.Path, f.Name)),
+        };
+        if (AdamManager.UseTypedAssets)
+            return l.Return(typed, "typed");
 
+        var dyn = FileDynamic<int, int>.Create(AdamManager, typed);
+        return l.Return(dyn, "dynamic");
+
+    }
 
     #endregion
 }

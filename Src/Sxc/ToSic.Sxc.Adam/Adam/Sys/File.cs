@@ -9,16 +9,12 @@ using ToSic.Sxc.Images.Sys;
 namespace ToSic.Sxc.Adam.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets.Sys.File<TFolderId, TFileId>,
-#if NETFRAMEWORK
-#pragma warning disable 618
-    ToSic.SexyContent.Adam.AdamFile,
-#pragma warning restore 618
-#endif
-    IFile,
-    IHasLink
+public class File<TFolderId, TFileId>(AdamManager adamManager)
+    : Eav.Apps.Assets.Sys.File<TFolderId, TFileId>,
+        IFile,
+        IHasLink
 {
-    private AdamManager AdamManager { get; } = adamManager;
+    protected AdamManager AdamManager { get; } = adamManager;
 
     #region Metadata
 
@@ -26,13 +22,13 @@ public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets
     [JsonIgnore]
     [field: AllowNull, MaybeNull]
     public ITypedMetadata Metadata => field
-        ??= AdamManager.CreateMetadata(CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations);
+        ??= AdamManager.CreateMetadata(CmsMetadata.FilePrefix + SysId, FullName, AttachMdRecommendations);
 
     /// <summary>
     /// Attach metadata recommendations
     /// </summary>
     /// <param name="mdOf"></param>
-    private void AttachMdRecommendations(IMetadata mdOf)
+    protected void AttachMdRecommendations(IMetadata mdOf)
     {
         if (mdOf?.Target == null || Type != Classification.Image)
             return;
@@ -53,14 +49,6 @@ public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets
     public string? Url { get; set; }
 
     public string Type => Classification.TypeName(Extension);
-
-
-
-    public string FileName => FullName;
-
-    public DateTime CreatedOnDate => Created;
-
-    public int FileId => SysId as int? ?? 0;
 
 
     [PrivateApi]
