@@ -8,7 +8,6 @@ using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
 using ToSic.Sys.Performance;
-using static ToSic.Sys.Code.Infos.CodeInfoObsolete;
 using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Sys.Metadata;
@@ -93,17 +92,20 @@ internal partial class Metadata: ITypedItem
 
     #region Basic Props like Id, Guid, Title, Type
 
-    [PrivateApi]
-    int ITypedMetadata.EntityId => Cdf.CodeInfo.GetAndWarn(V16To18("IMetadata.EntityId", message: $"Use {nameof(ITypedItem.Id)} instead of {nameof(EntityId)}"), EntityId);
+    //[PrivateApi]
+    //int ITypedMetadata.EntityId => Cdf.CodeInfo.GetAndWarn(V16To18("IMetadata.EntityId", message: $"Use {nameof(ITypedItem.Id)} instead of {nameof(EntityId)}"), EntityId);
 
     [PrivateApi]
-    int ITypedItem.Id => EntityId;
+    int ITypedItem.Id => Entity.EntityId;
+    //int ITypedItem.Id => EntityId;
 
     [PrivateApi]
-    Guid ITypedItem.Guid => EntityGuid;
+    Guid ITypedItem.Guid => Entity.EntityGuid;
+    //Guid ITypedItem.Guid => EntityGuid;
 
     [PrivateApi]
-    string? ITypedItem.Title => EntityTitle;
+    string? ITypedItem.Title => Entity?.GetBestTitle(Cdf.Dimensions);
+    //string? ITypedItem.Title => EntityTitle;
 
     [PrivateApi]
     IContentType ITypedItem.Type => Entity?.Type!;

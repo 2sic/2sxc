@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Data;
 /// * Renamed in v20 to `ITypedMetadata` from `IMetadata` because it kept on causing confusions
 /// </remarks>
 [InternalApi_DoNotUse_MayChangeWithoutNotice("The name can change, but the APIs are safe to use.")]
-public interface ITypedMetadata: IHasMetadata, ITypedItem, ICanDebug, ISxcDynamicObject, IEntityWrapper
+public interface ITypedMetadata: IHasMetadata, ITypedItem, ICanDebug, /*ISxcDynamicObject,*/ IEntityWrapper
 {
     /// <summary>
     /// Ask if there is metadata of the type specified.
@@ -34,6 +34,24 @@ public interface ITypedMetadata: IHasMetadata, ITypedItem, ICanDebug, ISxcDynami
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
+    IEnumerable<IEntity> OfType(string type);
+
+    // TODO: REMOVE
+    ///// <summary>
+    ///// Old property for the ID of the first type.
+    ///// It was necessary to re-instate this because it's used in old Apps such as BlueImp Gallery.
+    ///// </summary>
+    //[PrivateApi]
+    //[ShowApiWhenReleased(ShowApiMode.Never)]
+    //int EntityId { get; }
+}
+
+public interface IMetadataDynamic : IHasMetadata, ICanDebug, ISxcDynamicObject, IEntityWrapper
+{
+    /// <inheritdoc cref="ITypedMetadata.HasType"/>
+    bool HasType(string type);
+
+    /// <inheritdoc cref="ITypedMetadata.OfType"/>
     IEnumerable<IEntity> OfType(string type);
 
     /// <summary>

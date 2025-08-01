@@ -39,7 +39,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     internal DynamicEntity(IEnumerable<IEntity> list, IEntity? parent, string? field, int? appIdOrNull, bool propsRequired, ICodeDataFactory cdf)
         : this(cdf, propsRequired,
             // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
-            list.FirstOrDefault() ?? cdf.PlaceHolderInBlock(appIdOrNull ?? 0, parent, field))
+            entity: list.FirstOrDefault() ?? cdf.PlaceHolderInBlock(appIdOrNull ?? 0, parent, field))
     {
         ListHelper = new(list, parent, field, () => Debug, propsRequired: propsRequired, cdf);
     }
@@ -148,7 +148,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     #region Metadata
 
     /// <inheritdoc />
-    public object Metadata => DynHelper.Metadata!;
+    public dynamic Metadata => DynHelper.Metadata!;
 
     /// <summary>
     /// Explicit implementation, so it's not really available on DynamicEntity, only when cast to IHasMetadata
