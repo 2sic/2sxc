@@ -36,11 +36,9 @@ public class File<TFolderId, TFileId>(AdamManager adamManager) : Eav.Apps.Assets
     {
         if (mdOf?.Target == null || Type != Classification.Image)
             return;
-        mdOf.Target.Recommendations = AdamManager
-                                          ?.Cdf
-                                          ?.GetService<IImageMetadataRecommendationsService>()
-                                          .GetImageRecommendations()
-                                      ?? [];
+        mdOf.Target.Recommendations = AdamManager.Cdf
+            .GetService<IImageMetadataRecommendationsService>()
+            .GetImageRecommendations();
     }
 
     IMetadata IHasMetadata.Metadata => (Metadata as IHasMetadata).Metadata;

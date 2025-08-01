@@ -7,6 +7,13 @@ using ToSic.Sxc.Data.Sys.Json;
 
 namespace ToSic.Sxc.Data.Sys.Metadata;
 
+// NOTE
+// Metadata is still a mix between dynamic and typed.
+// Reason is that certain objects such as File.Metadata are the same for both scenarios
+// and depending on the Razor version, it the code will either be working with the object
+// as dynamic or as typed.
+//
+// This is not ideal, and probably causes some "you are using old code" warnings after trying to serialize things.
 
 [PrivateApi("Hide implementation")]
 internal partial class Metadata(IMetadata metadata, ICodeDataFactory cdf)

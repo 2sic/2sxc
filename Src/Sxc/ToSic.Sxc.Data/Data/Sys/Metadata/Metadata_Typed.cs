@@ -117,12 +117,12 @@ internal partial class Metadata: ITypedItem
     [PrivateApi]
     [JsonIgnore]
     ITypedItem ITypedItem.Presentation
-        => throw new NotSupportedException($"You can't access the {nameof(Presentation)} of Metadata");
+        => throw new NotSupportedException($"You can't access the {nameof(ITypedItem.Presentation)} of Metadata");
 
     /// <inheritdoc />
     [JsonIgnore] // prevent serialization as it's not a normal property
     ITypedMetadata ITypedItem.Metadata
-        => throw new NotSupportedException($"You can't access the Metadata of Metadata in ITypedItem");
+        => throw new NotSupportedException($"You can't access the {nameof(ITypedItem.Metadata)} of Metadata");
 
     [PrivateApi]
     ITypedItem ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string? type, string? field, GetRelatedOptions? options)
