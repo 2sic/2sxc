@@ -17,17 +17,6 @@ namespace ToSic.Sxc.Data;
 public partial interface ITypedItem: ITyped, ICanBeEntity, ICanBeItem, IEquatable<ITypedItem>
 {
     /// <summary>
-    /// A dynamic accessor for properties, to quickly get values when you don't care about type safety.
-    /// This is _often_ (but not always) a <see cref="IDynamicEntity"/>.
-    ///
-    /// Example: `Dyn.FirstName` might just work - and return the first name or `null` if not found.
-    /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("This should be avoided")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    [JsonIgnore] // prevent serialization as it's not a normal property
-    dynamic Dyn { get; }
-
-    /// <summary>
     /// The presentation item or `null` if it doesn't exist.
     /// </summary>
     [JsonIgnore] // prevent serialization as it's not a normal property

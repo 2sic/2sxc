@@ -154,9 +154,6 @@ internal partial class TypedStack: ITypedItem
     IPublishing ITypedItem.Publishing => throw new NotImplementedException(NotImplementedError);
 
     [JsonIgnore] // prevent serialization as it's not a normal property
-    dynamic ITypedItem.Dyn => throw new NotImplementedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(TypedStack)} by design");
-
-    [JsonIgnore] // prevent serialization as it's not a normal property
     ITypedItem ITypedItem.Presentation => throw new NotImplementedException(NotImplementedError);
 
     [JsonIgnore] // prevent serialization as it's not a normal property

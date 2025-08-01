@@ -48,11 +48,6 @@ internal partial class Metadata: ITypedItem
     IRawHtmlString? ITyped.Attribute(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
         => ItemHelper.Attribute(name, noParamOrder, fallback, required);
 
-    [PrivateApi]
-    [JsonIgnore]
-    dynamic ITypedItem.Dyn => this;
-
-
     DateTime ITyped.DateTime(string name, NoParamOrder noParamOrder, DateTime fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 

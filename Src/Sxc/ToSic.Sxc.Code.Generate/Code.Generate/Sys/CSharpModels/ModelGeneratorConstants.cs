@@ -17,11 +17,11 @@ internal class ModelGeneratorConstants
         nameof(ITypedItem.Presentation),
         nameof(ITypedItem.IsPublished),
         nameof(ITypedItem.Publishing),
-        // nameof(ITypedItem.Dyn), - this one is explicitly implemented, so it's not available
         nameof(ITypedItem.IsDemoItem),
         nameof(ITypedItem.Entity),
         nameof(ITypedItem.Type),
         nameof(ITypedItem.Field),
+        // Using name directly for Html because otherwise we would need to reference RazorBlade assembly which we want to avoid just for this one property
         /*nameof(ITypedItem.Html)*/ "Html",
         nameof(ITypedItem.Picture),
         nameof(ITypedItem.Url),
@@ -29,6 +29,7 @@ internal class ModelGeneratorConstants
         nameof(ITypedItem.File),
         nameof(ITypedItem.Folder),
         nameof(ITypedItem.Gps),
+        // Using name directly for Attribute because otherwise we would need to reference RazorBlade assembly which we want to avoid just for this one property
         /*nameof(ITypedItem.Attribute)*/ "Attribute",
 
         nameof(ITypedItem.IsEmpty),

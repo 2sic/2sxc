@@ -128,10 +128,6 @@ internal class TypedItemOfEntity(/*DynamicEntity*/ object? dynOrNull, IEntity en
     IRawHtmlString? ITyped.Attribute(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
         => ItemHelper.Attribute(name, noParamOrder, fallback, required);
 
-    [JsonIgnore]
-    dynamic ITypedItem.Dyn => _dyn ??= dynOrNull ?? Cdf.AsDynamic(Entity, new() { ItemIsStrict = propsRequired });
-    private object? _dyn;
-
     DateTime ITyped.DateTime(string name, NoParamOrder noParamOrder, DateTime fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 

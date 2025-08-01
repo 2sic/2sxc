@@ -258,15 +258,6 @@ public partial class CustomItem: ITypedItem, ICanWrap<ITypedItem>, IHasPropLooku
     [JsonIgnore] // prevent serialization as it's not a normal property
     public IPublishing Publishing => _item.Publishing;
 
-    /// <summary>
-    /// Explicit, obsolete `Dyn` implementation, not to be used.
-    /// </summary>
-    [PrivateApi]
-    [Obsolete("Not available on Custom objects, use Get(...) to access any property.")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    [JsonIgnore] // prevent serialization as it's not a normal property
-    dynamic ITypedItem.Dyn => throw new NotSupportedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(CustomItem)} by design");
-
     /// <inheritdoc />
     [JsonIgnore] // prevent serialization as it's not a normal property
     public ITypedItem? Presentation => _item.Presentation;

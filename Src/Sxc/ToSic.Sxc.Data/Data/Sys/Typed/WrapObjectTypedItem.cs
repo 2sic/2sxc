@@ -32,12 +32,6 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     private ICodeDataFactory Cdf => _cdf.Value;
     private ILazyLike<ICodeDataFactory> _cdf = null!;
     private ICodeDataPoCoWrapperService Wrapper { get; set; } = null!;
-
-
-    [PrivateApi]
-    [JsonIgnore]
-    dynamic ITypedItem.Dyn => throw new NotSupportedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(ITypedStack)} by design");
-
     public TValue? Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue? fallback = default,
         bool? required = default, string? language = default)
         => PreWrap.TryGetTyped(name, noParamOrder, fallback, required: required);
