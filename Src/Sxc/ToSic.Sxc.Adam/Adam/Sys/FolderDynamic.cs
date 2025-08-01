@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Sxc.Adam.Sys.Manager;
+using ToSic.Sxc.Cms.Sys;
 
 namespace ToSic.Sxc.Adam.Sys;
 
@@ -9,7 +10,8 @@ public class FolderDynamic<TFolderId, TFileId>(AdamManager adamManager): Folder<
 {
 
     [JsonIgnore]
-    public new object Metadata => base.Metadata;
+    [field: AllowNull, MaybeNull]
+    public new object Metadata => field ??= AdamManager.CreateMetadataDynamic($"{CmsMetadata.FolderPrefix}{SysId}", Name);
 
     /// <summary>
     /// Create a dynamic folder from a typed folder.

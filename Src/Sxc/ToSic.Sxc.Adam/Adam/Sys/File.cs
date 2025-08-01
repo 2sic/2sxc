@@ -22,7 +22,7 @@ public class File<TFolderId, TFileId>(AdamManager adamManager)
     [JsonIgnore]
     [field: AllowNull, MaybeNull]
     public ITypedMetadata Metadata => field
-        ??= AdamManager.CreateMetadata(CmsMetadata.FilePrefix + SysId, FullName, AttachMdRecommendations);
+        ??= AdamManager.CreateMetadataTyped($"{CmsMetadata.FilePrefix}{SysId}", FullName, AttachMdRecommendations);
 
     /// <summary>
     /// Attach metadata recommendations

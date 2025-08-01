@@ -123,13 +123,20 @@ public class AdamManager(AdamManager.Dependencies services)
     /// <remarks>
     /// The metadata varies a bit, depending on whether it's typed or dynamic.
     /// </remarks>
-    internal ITypedMetadata CreateMetadata(string key, string title, Action<IMetadata>? mdInit = null)
+    internal ITypedMetadata CreateMetadataTyped(string key, string title, Action<IMetadata>? mdInit = null)
+        => Cdf.MetadataTyped(PrepareUnderlyingMetadata(key, title, mdInit));
+
+    /// <summary>
+    /// Same for dynamic metadata, but it will be treated as just an object, since the code will be in dynamic mode.
+    /// </summary>
+    internal object CreateMetadataDynamic(string key, string title, Action<IMetadata>? mdInit = null)
+        => Cdf.MetadataDynamic(PrepareUnderlyingMetadata(key, title, mdInit));
+
+    private IMetadata PrepareUnderlyingMetadata(string key, string title, Action<IMetadata>? mdInit)
     {
         var mdOf = AppWorkCtx.AppReader.Metadata.GetMetadataOf(TargetTypes.CmsItem, key, title: title);
         mdInit?.Invoke(mdOf);
-        return UseTypedAssets
-            ? Cdf.MetadataTyped(mdOf)
-            : Cdf.MetadataDynamic(mdOf);
+        return mdOf;
     }
 
     #endregion

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Sxc.Adam.Sys.Manager;
-using ToSic.Sxc.Data;
+using ToSic.Sxc.Cms.Sys;
 
 namespace ToSic.Sxc.Adam.Sys;
 
@@ -21,7 +21,9 @@ public class FileDynamic<TFolderId, TFileId>(AdamManager adamManager): File<TFol
     public int FileId => SysId as int? ?? 0;
 
     [JsonIgnore]
-    public new object Metadata => base.Metadata;
+    [field: AllowNull, MaybeNull]
+    public new object Metadata => field
+        ??= AdamManager.CreateMetadataDynamic($"{CmsMetadata.FilePrefix}{SysId}", FullName, AttachMdRecommendations);
 
     public static FileDynamic<TFolderId, TFileId> Create(AdamManager adamManager, File<TFolderId, TFileId> typed)
         => new(adamManager)
