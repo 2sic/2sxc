@@ -36,25 +36,25 @@ partial class Razor12
     #region AsDynamic<int, IEntity>
 
     [PrivateApi]
-     [Obsolete("throws error with fix-instructions. Use AsDynamic(IEnumerable<IEntity>...)")]
-     public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => ExAsDynamicKvp();
+    [Obsolete("throws error with fix-instructions. Use AsDynamic(IEnumerable<IEntity>...)")]
+    public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => ExAsDynamicKvp();
 
-     #endregion
+    #endregion
 
 
-     #endregion
+    #endregion
 
-     //[PrivateApi("this is the old signature, should still be supported")]
-     // we're not creating an error/overload here, because it may lead to signature issues 
-     // where two methods have almost the same signature
-     //public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate)
-     //    => throw new Exception($"ListPresentation {NotSupportedIn10}. Use Header.Presentation");
+    //[PrivateApi("this is the old signature, should still be supported")]
+    // we're not creating an error/overload here, because it may lead to signature issues 
+    // where two methods have almost the same signature
+    //public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate)
+    //    => throw new Exception($"ListPresentation {NotSupportedIn10}. Use Header.Presentation");
 
-     #region Old AsDynamic with correct warnings
+    #region Old AsDynamic with correct warnings
 
-     [PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataStream stream) => ExAsDynamicForList();
-     [PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataSource source) => ExAsDynamicForList();
-     [PrivateApi] public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => ExAsDynamicForList();
+    [PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataStream stream) => ExAsDynamicForList();
+    [PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataSource source) => ExAsDynamicForList();
+    [PrivateApi] public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => ExAsDynamicForList();
 
-     #endregion
+    #endregion
 }
