@@ -22,7 +22,7 @@ public class FileDynamic<TFolderId, TFileId>(AdamManager adamManager): File<TFol
 
     [JsonIgnore]
     [field: AllowNull, MaybeNull]
-    public new object Metadata => field
+    public new dynamic Metadata => field
         ??= AdamManager.CreateMetadataDynamic($"{CmsMetadata.FilePrefix}{SysId}", FullName, AttachMdRecommendations);
 
     public static FileDynamic<TFolderId, TFileId> Create(AdamManager adamManager, File<TFolderId, TFileId> typed)

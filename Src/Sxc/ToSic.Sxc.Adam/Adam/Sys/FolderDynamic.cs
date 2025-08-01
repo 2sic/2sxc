@@ -11,7 +11,7 @@ public class FolderDynamic<TFolderId, TFileId>(AdamManager adamManager): Folder<
 
     [JsonIgnore]
     [field: AllowNull, MaybeNull]
-    public new object Metadata => field ??= AdamManager.CreateMetadataDynamic($"{CmsMetadata.FolderPrefix}{SysId}", Name);
+    public new dynamic Metadata => field ??= AdamManager.CreateMetadataDynamic($"{CmsMetadata.FolderPrefix}{SysId}", Name);
 
     /// <summary>
     /// Create a dynamic folder from a typed folder.

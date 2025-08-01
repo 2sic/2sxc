@@ -212,7 +212,8 @@ internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool prop
 
     /// <inheritdoc />
     [JsonIgnore] // prevent serialization as it's not a normal property
-    ITypedMetadata ITypedItem.Metadata => DynHelper.Metadata;
+    ITypedMetadata ITypedItem.Metadata => _md.Get(() => ItemHelper.Helper.Cdf.MetadataTyped(Entity.Metadata))!;
+    private readonly GetOnce<ITypedMetadata?> _md = new();
 
 
     ITypedItem? ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string? type, string? field, GetRelatedOptions? options)
@@ -345,7 +346,7 @@ internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool prop
     #endregion
 
 
-    IMetadata IHasMetadata.Metadata => (DynHelper.Metadata as IHasMetadata)?.Metadata!;
+    IMetadata IHasMetadata.Metadata => (((ITypedItem)this).Metadata as IHasMetadata)?.Metadata!;
 
     #region New Child<T> / Children<T> - disabled as ATM Kit is missing
 

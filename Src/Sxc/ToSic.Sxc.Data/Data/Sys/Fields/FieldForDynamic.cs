@@ -29,5 +29,5 @@ public class FieldForDynamic(ITypedItem parent, string name, ICodeDataFactory cd
     /// Only dynamic code will actually inspect it and successfully use it.
     /// </remarks>
     public object Metadata => _dynMeta.Get(() => _cdf.MetadataDynamic(MetadataOfValue!))!;
-    private readonly GetOnce<ITypedMetadata> _dynMeta = new();
+    private readonly GetOnce<object> _dynMeta = new();
 }
