@@ -85,7 +85,8 @@ public class WorkBlocksMod(
         var intList = blockList
             .Where(b => b != null)
             .Select(b => b!.EntityId)
-            .ToListOpt();
+            .ToList(); // must be list, as it will be modified
+
         // add only if it's not already in the list (could happen if http requests are run again)
         if (!intList.Contains(entityId))
         {
