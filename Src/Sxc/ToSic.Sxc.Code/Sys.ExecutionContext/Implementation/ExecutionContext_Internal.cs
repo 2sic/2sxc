@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Apps;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
 using ToSic.Sxc.Adam.Sys.Manager;
 using ToSic.Sxc.Apps;
@@ -9,7 +10,6 @@ using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.CodeDataFactory;
 using ToSic.Sxc.Data.Sys.Factory;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sys.Users;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -23,25 +23,30 @@ public partial class ExecutionContext
     [PrivateApi]
     public void AttachApp(IApp app)
     {
-        if (app is App typedApp)
-            typedApp.SetupAsConverter(Cdf);
+        if (app is App appClassic)
+            appClassic.SetupCodeDataFactory(Cdf);
 
         App = app;
 
-        _edition = Services.Polymorphism.UseViewEditionOrGet(Block?.View, ((IAppWithInternal)App).AppReader);
+        _editionForHotBuild = Block == null
+            ? null
+            : Services.Polymorphism.UseViewEditionOrGet(Block.View, ((IAppWithInternal)App).AppReader);
     }
 
-    private string? _edition;
+    private string? _editionForHotBuild;
 
     [PrivateApi]
     [Obsolete("Warning - avoid using this on the DynamicCode Root - always use the one on the AsC")]
     public int CompatibilityLevel => Cdf.CompatibilityLevel;
 
-    [PrivateApi] public IBlock Block { get; private set; } = null!;
+    /// <summary>
+    /// The current block - can be null if the context only knows about the App, but not about the block.
+    /// </summary>
+    [PrivateApi] public IBlock? Block { get; private set; } = null!;
 
     [PrivateApi]
     [field: AllowNull, MaybeNull]
-    internal IAppTyped AppTyped => field ??= new Func<IAppTyped>(() => GetService<IAppTyped>(reuse: true))();
+    internal IAppTyped AppTyped => field ??= GetService<IAppTyped>(reuse: true);
 
     #region Kit Handling
 
@@ -134,10 +139,10 @@ public partial class ExecutionContext
             return (TState)((IAppWithInternal)App)?.AppReader!;
 
         if (typeof(TState) == typeof(IDataSource))
-            return (TState)Block.Data;
+            return (TState)(Block?.Data ?? throw new NullReferenceException($"{nameof(Block)} isn't available"));
 
         if (typeof(TState) == typeof(IBlock))
-            return (TState)Block;
+            return (TState)Block!;
 
         if (typeof(TState) == typeof(IContextOfBlock))
             return (TState)Block?.Context!;

@@ -6,10 +6,11 @@ namespace ToSic.Sxc.Dnn.Install;
 
 partial class DnnEnvironmentInstaller
 {
-    public string UpgradeMessages()
+    public string? UpgradeMessages()
     {
         // Upgrade success check - show message if upgrade did not run successfully
-        if (UpgradeComplete(false)) return null;
+        if (UpgradeComplete(false))
+            return null;
 
         return IsUpgradeRunning
             ? "It looks like an upgrade is currently running. Please wait for the operation to complete, the upgrade may take a few minutes."

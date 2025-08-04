@@ -3977,7 +3977,7 @@
                 "Metadata": [
                   {
                     "Id": 184158,
-                    "Version": 2,
+                    "Version": 4,
                     "Guid": "d71e3813-a895-4ff8-8093-3efa8e95925a",
                     "Type": {
                       "Id": "@All",
@@ -4037,7 +4037,7 @@
                   },
                   {
                     "Id": 184165,
-                    "Version": 1,
+                    "Version": 3,
                     "Guid": "a3baffa3-8a65-4a88-9c82-79b4a206fcab",
                     "Type": {
                       "Id": "@Boolean",
@@ -4046,13 +4046,13 @@
                     "Attributes": {
                       "String": {
                         "TitleFalse": {
-                          "en-us": ""
+                          "en-us": "When loading system data, never log details"
                         },
                         "TitleIndeterminate": {
-                          "en-us": ""
+                          "en-us": "When loading system data, use system defaults for details logging"
                         },
                         "TitleTrue": {
-                          "en-us": ""
+                          "en-us": "When loading system data, always log details"
                         }
                       }
                     },
@@ -4068,7 +4068,7 @@
                 "Metadata": [
                   {
                     "Id": 184159,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "3b7aac49-fa84-4f08-b95e-a6fbc4450b99",
                     "Type": {
                       "Id": "@All",
@@ -4128,7 +4128,7 @@
                   },
                   {
                     "Id": 184166,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "48809728-ec88-4cf1-878c-943b32bf5ab1",
                     "Type": {
                       "Id": "@Boolean",
@@ -4137,13 +4137,13 @@
                     "Attributes": {
                       "String": {
                         "TitleFalse": {
-                          "en-us": ""
+                          "en-us": "When loading system data, never log summaries"
                         },
                         "TitleIndeterminate": {
-                          "en-us": ""
+                          "en-us": "When loading system data, use system defaults for summary logging"
                         },
                         "TitleTrue": {
-                          "en-us": ""
+                          "en-us": "When loading system data, always log summaries"
                         }
                       }
                     },
@@ -4244,7 +4244,7 @@
                 "Metadata": [
                   {
                     "Id": 184162,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "9fa28f83-0698-4e8a-8f99-764c3582af61",
                     "Type": {
                       "Id": "@All",
@@ -4304,7 +4304,7 @@
                   },
                   {
                     "Id": 184168,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "445f45b3-91ad-4d4e-9c07-96451344f843",
                     "Type": {
                       "Id": "@Boolean",
@@ -4313,13 +4313,13 @@
                     "Attributes": {
                       "String": {
                         "TitleFalse": {
-                          "en-us": ""
+                          "en-us": "When loading app data, never log details"
                         },
                         "TitleIndeterminate": {
-                          "en-us": ""
+                          "en-us": "When loading app data, use system defaults for details logging"
                         },
                         "TitleTrue": {
-                          "en-us": ""
+                          "en-us": "When loading app data, always log details"
                         }
                       }
                     },
@@ -4335,7 +4335,7 @@
                 "Metadata": [
                   {
                     "Id": 184163,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "284af0f9-8096-4f5f-ad5c-884dd5b30bcd",
                     "Type": {
                       "Id": "@All",
@@ -4395,7 +4395,7 @@
                   },
                   {
                     "Id": 184169,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "20583cff-a36d-4f9b-8a3d-086e7e6a4d18",
                     "Type": {
                       "Id": "@Boolean",
@@ -4404,13 +4404,419 @@
                     "Attributes": {
                       "String": {
                         "TitleFalse": {
-                          "en-us": ""
+                          "en-us": "When loading app data, never log summary"
                         },
                         "TitleIndeterminate": {
-                          "en-us": ""
+                          "en-us": "When loading app data, use system defaults for summary logging"
                         },
                         "TitleTrue": {
+                          "en-us": "When loading app data, always log summary"
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "GroupImportData",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 184183,
+                    "Version": 2,
+                    "Guid": "bbe5ef42-dfe8-40c6-8303-988bb689f8ab",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
                           "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-default"
+                        },
+                        "Name": {
+                          "en-us": "Import Data Logging"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Determine how detailed data imports should be logged.&nbsp;</p>\n<p>Less logging makes it easier to get an overview, but harder to pinpoint specific issues.&nbsp;</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "unknown"
+                  },
+                  {
+                    "Id": 184186,
+                    "Version": 1,
+                    "Guid": "712ec2dd-0e32-42aa-aed1-ce3f211b957a",
+                    "Type": {
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "ImportDataDetails",
+                "Type": "Boolean",
+                "InputType": "boolean-tristate",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 184184,
+                    "Version": 2,
+                    "Guid": "b7f15112-61e5-4ed6-9251-b9d41b38123e",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "boolean-tristate"
+                        },
+                        "Name": {
+                          "en-us": "ImportDataDetails"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "unknown"
+                  },
+                  {
+                    "Id": 184185,
+                    "Version": 1,
+                    "Guid": "176a9e4d-2251-406d-aea8-c7efe0cb9563",
+                    "Type": {
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "TitleFalse": {
+                          "en-us": "When importing data, never log details"
+                        },
+                        "TitleIndeterminate": {
+                          "en-us": "When importing data, use system defaults to logs details"
+                        },
+                        "TitleTrue": {
+                          "en-us": "When importing data, always log details"
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              }
+            ]
+          },
+          "Entities": []
+        },
+        {
+          "ContentType": {
+            "Id": "e523fd1a-f9e3-4e73-826e-1433e8afca8a",
+            "Name": "\uD83E\uDD77SqlPerformance",
+            "Scope": "System",
+            "Metadata": [
+              {
+                "Id": 184192,
+                "Version": 1,
+                "Guid": "5bfa96bd-8802-4d15-9c18-2ff8b9751b1b",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": ""
+                    },
+                    "Label": {
+                      "en-us": "SQL Performance Settings"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "e523fd1a-f9e3-4e73-826e-1433e8afca8a"
+                }
+              }
+            ],
+            "Attributes": [
+              {
+                "Name": "RelationshipLoadChunkingGroup",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": true,
+                "Metadata": [
+                  {
+                    "Id": 184187,
+                    "Version": 1,
+                    "Guid": "8b151d6d-df02-4a00-a8ce-b3b3a4e5af88",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-default"
+                        },
+                        "Name": {
+                          "en-us": "Relationship Load Chunking"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Entity relationships are loaded in separate SQL requests. When there are many, they requested IDs will be chunked to avoid certain limits and timeouts, which may vary by SQL server edition.&nbsp;</p>\n<p>Larger numbers (assuming your SQL can handle it) will result in faster performance.</p>\n<p>The default for standard 2sxc is a very safe 1'000.</p>\n<p>The default for patrons performance is set to 25'000 but may change as with time.</p>\n<p>Leave the field empty or use 0 to use the default values. Numbers less than 10 will be ignored.&nbsp;</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "unknown"
+                  },
+                  {
+                    "Id": 184189,
+                    "Version": 1,
+                    "Guid": "0ac88d10-2d4a-4278-aabf-d32f65ae94b0",
+                    "Type": {
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "RelationshipLoadChunking",
+                "Type": "Number",
+                "InputType": "number-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 184194,
+                    "Version": 1,
+                    "Guid": "45eff176-b7c4-4d07-83c1-30fdb2111400",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "number-default"
+                        },
+                        "Name": {
+                          "en-us": "Relationship Load Chunking"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": "Recommended range is 5000 to 50000"
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "unknown"
+                  },
+                  {
+                    "Id": 184195,
+                    "Version": 1,
+                    "Guid": "a34c0f54-29b0-468f-9246-fbd8b8e0534a",
+                    "Type": {
+                      "Id": "@Number",
+                      "Name": "@Number"
+                    },
+                    "Attributes": {
+                      "Number": {
+                        "Decimals": {
+                          "en-us": 0
                         }
                       }
                     },

@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Code;
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class TypedRazorModel(
-    CodeHelperSpecs helperSpecs,
+    CompileCodeHelperSpecs helperSpecs,
     IDictionary<string, object> paramsDictionary,
 #pragma warning disable CS9113 // Parameter is unread.
     bool isRazor,

@@ -12,27 +12,29 @@ public interface IAppDataTyped: IDataSource
 {
     #region CRUD
 
-    /// <inheritdoc cref="ToSic.Eav.Apps.IAppData.Create(string, Dictionary{string, object}, string, ITarget)"/>
+    /// <inheritdoc cref="IAppData.Create(string, Dictionary{string, object}, string, ITarget)"/>
     IEntity Create(string contentTypeName, Dictionary<string, object> values, string? userName = null, ITarget? target = null);
 
-    /// <inheritdoc cref="ToSic.Eav.Apps.IAppData.Create(string, IEnumerable{Dictionary{string, object}}, string)"/>
+    /// <inheritdoc cref="IAppData.Create(string, IEnumerable{Dictionary{string, object}}, string)"/>
     IEnumerable<IEntity> Create(string contentTypeName, IEnumerable<Dictionary<string, object>> multiValues, string? userName = null);
 
-    /// <inheritdoc cref="ToSic.Eav.Apps.IAppData.Update"/>
+    /// <inheritdoc cref="IAppData.Update"/>
     void Update(int entityId, Dictionary<string, object> values, string? userName = null);
 
-    /// <inheritdoc cref="ToSic.Eav.Apps.IAppData.Delete"/>
+    /// <inheritdoc cref="IAppData.Delete"/>
     void Delete(int entityId, string? userName = null);
 
     #endregion
 
     #region ContentTypes
 
-    // Note: Implemented as a method, so later we can apply filters etc. as additional parameters
     /// <summary>
     /// All content types of the app.
     /// </summary>
-    /// <remarks>Added v17</remarks>
+    /// <remarks>
+    /// * Added v17
+    /// * Implemented as a method, so later we can apply filters etc. as additional parameters
+    /// </remarks>
     IEnumerable<IContentType> GetContentTypes();
 
     /// <summary>
@@ -66,9 +68,9 @@ public interface IAppDataTyped: IDataSource
         where T : class, ICanWrapData;
 
     /// <summary>
-    /// Get a single item from the app of the specified type.
+    /// Get a single item from the app with the specified ID.
     /// </summary>
-    /// <typeparam name="T">The type to get and convert to - usually inheriting `Custom.Data.CustomItem`</typeparam>
+    /// <typeparam name="T">The type to convert to - usually inheriting `Custom.Data.CustomItem` or `CustomModel`</typeparam>
     /// <param name="id">the ID as an int</param>
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="skipTypeCheck">allow get even if the Content-Type of the item with the ID doesn't match the type specified in the parameter T</param>
@@ -81,9 +83,9 @@ public interface IAppDataTyped: IDataSource
 
 
     /// <summary>
-    /// Get a single item from the app of the specified type.
+    /// Get a single item from the app with the specified GUID.
     /// </summary>
-    /// <typeparam name="T">The type to get and convert to - usually inheriting `Custom.Data.CustomItem`</typeparam>
+    /// <typeparam name="T">The type to convert to - usually inheriting `Custom.Data.CustomItem` or `CustomModel`</typeparam>
     /// <param name="id">the ID as GUID</param>
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="skipTypeCheck">allow get even if the Content-Type of the item with the ID doesn't match the type specified in the parameter T</param>

@@ -2,16 +2,21 @@
 using ToSic.Eav.Data.Sys.ValueConverter;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Services.Sys.ConvertService;
+using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Data.Sys.Factory;
 
+/// <summary>
+/// Helper services published by the CodeDataFactory for use in certain other objects which depend on it.
+/// </summary>
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CodeDataServices(
     LazySvc<IValueConverter> valueConverterLazy,
     LazySvc<IScrub> scrub,
     LazySvc<ConvertForCodeService> forCode,
-    LazySvc<IDataFactory> dataFactory)
+    LazySvc<IDataFactory> dataFactory,
+    LazySvc<IUser> userLazy)
     : DependenciesBase(connect: [valueConverterLazy, scrub, forCode, dataFactory])
 {
     /// <summary>
@@ -30,4 +35,9 @@ public class CodeDataServices(
     internal ConvertForCodeService ForCode => forCode.Value;
 
     internal IDataFactory DataFactory => dataFactory.Value;
+
+    /// <summary>
+    /// User information for detecting if draft data is allowed.
+    /// </summary>
+    internal IUser User => userLazy.Value;
 }

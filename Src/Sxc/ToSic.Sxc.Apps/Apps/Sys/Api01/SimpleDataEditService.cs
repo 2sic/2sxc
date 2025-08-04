@@ -73,7 +73,7 @@ public partial class SimpleDataEditService(
         if (site == null! /* paranoid */)
             return l.Return("", "site is null");
 
-        var usesLanguages = zoneMapper.CulturesEnabledWithState(site).Any(); // c => c.IsEnabled);
+        var usesLanguages = zoneMapper.CulturesEnabledWithState(site).Any();
         return l.Return(usesLanguages ? site.DefaultCultureCode : "", $"ok, usesLanguages:{usesLanguages}");
     }
         
@@ -90,14 +90,14 @@ public partial class SimpleDataEditService(
     /// </param>
     /// <param name="target"></param>
     /// <exception cref="ArgumentException">Content-type does not exist, or an attribute in attributes</exception>
-    public IEnumerable<int> Create(string contentTypeName, IEnumerable<Dictionary<string, object>>? multiValues, ITarget? target = null) 
+    public IEnumerable<int> Create(string contentTypeName, IEnumerable<Dictionary<string, object?>>? multiValues, ITarget? target = null) 
     {
         var list = multiValues?.ToListOpt();
         var l = Log.Fn<IEnumerable<int>>($"{contentTypeName}, items: {list?.Count()}, target: {target != null}");
         if (list == null)
             return l.Return([],"attributes were null");
 
-        // ensure the type really exists
+        // ensure the type really exists - will throw if not
         var type = _ctxWithDb.AppReader.GetContentType(contentTypeName);
 
         l.A($"Type {contentTypeName} found. Will build entities to save...");
@@ -115,14 +115,19 @@ public partial class SimpleDataEditService(
             })
             .ToList();
 
-        var ids = entSaver.Save(importEntity);
+        var ids = entSaver
+            .Save(importEntity);
 
-        return l.Return(ids, "ok");
+        var intIds = ids
+            .Select(i => i.Id)
+            .ToListOpt();
+
+        return l.Return(intIds, "ok");
     }
 
     private (IEntity Entity, EntitySavePublishing Publishing) BuildNewEntity(
         IContentType type,
-        Dictionary<string, object> values,
+        Dictionary<string, object?> values,
         ITarget? targetOrNull,
         bool? existingIsPublished) 
     {
@@ -132,24 +137,29 @@ public partial class SimpleDataEditService(
         // also ensure its case-insensitive...
         values = values.ToInvIgnoreCaseCopy();
 
-        if (!values.ContainsKey(AttributeNames.EntityFieldGuid))
+        Guid eGuid;
+        if (values.TryGetValue(AttributeNames.EntityFieldGuid, out var entityGuidString))
+        {
+            // Note: we want an error if this guid is wrong, because we can't just take a new one if we got one
+            // since upstream may later want to access the same entity
+            eGuid = Guid.Parse(entityGuidString?.ToString() ?? "");
+        }
+        else
         {
             l.A("Add new generated guid, as none was provided.");
-            values.Add(AttributeNames.EntityFieldGuid, Guid.NewGuid());
+            eGuid = Guid.NewGuid();
+            values.Add(AttributeNames.EntityFieldGuid, eGuid);
         }
+
 
         // Get owner form value dictionary (and remove it from attributes) because we need to provided it in entity constructor.
         string? owner = null;
-        if (values.ContainsKey(AttributeNames.EntityFieldOwner))
+        if (values.TryGetValue(AttributeNames.EntityFieldOwner, out var ownerObj))
         {
             l.A("Get owner, when is provided.");
-            owner = values[AttributeNames.EntityFieldOwner].ToString();
+            owner = ownerObj?.ToString();
             values.Remove(AttributeNames.EntityFieldOwner);
         }
-
-        // Find Guid from fields - a bit unclear why it's guaranteed to be here, probably was force-added before...
-        // A clearer implementation would be better
-        var eGuid = Guid.Parse(values[AttributeNames.EntityFieldGuid].ToString() ?? "");
 
         // Figure out publishing before converting to IAttribute
         var publishing = DetectPublishingOrError(type, values, existingIsPublished);
@@ -185,7 +195,7 @@ public partial class SimpleDataEditService(
     /// </param>
     /// <exception cref="ArgumentException">Attribute in attributes does not exit</exception>
     /// <exception cref="ArgumentNullException">Entity does not exist</exception>
-    public void Update(int entityId, Dictionary<string, object> values)
+    public void Update(int entityId, Dictionary<string, object?> values)
     {
         var l = Log.Fn($"update i:{entityId}");
         var original = _ctxWithDb.AppReader.List.FindRepoId(entityId)
@@ -212,7 +222,7 @@ public partial class SimpleDataEditService(
     public void Delete(Guid entityGuid) => entDelete.New(_ctxWithDb.AppReader).Delete(entityGuid);
 
 
-    private IDictionary<string, object?> ConvertRelationsToNullArray(IContentType contentType, IDictionary<string, object> values)
+    private IDictionary<string, object?> ConvertRelationsToNullArray(IContentType contentType, IDictionary<string, object?> values)
     {
         var l = Log.Fn<IDictionary<string, object?>>();
         // Find all attributes which are relationships
@@ -249,11 +259,13 @@ public partial class SimpleDataEditService(
                             return null;
                         case string strVal:
                             var parts = strVal.CsvToArrayWithoutEmpty();
-                            if (parts.Length == 0) return value;
+                            if (parts.Length == 0)
+                                return value;
 
                             // could be int/guid - must convert - must all be the same
                             if (int.TryParse(parts[0], out var intValue))
-                                return parts.Select(item => int.TryParse(item, out intValue) ? (int?)intValue : null)
+                                return parts
+                                    .Select(item => int.TryParse(item, out intValue) ? (int?)intValue : null)
                                     .ToList();
 
                             if (Guid.TryParse(parts[0], out var guidValue))
@@ -271,39 +283,41 @@ public partial class SimpleDataEditService(
     }
 
 
-    private IDictionary<string, IAttribute> BuildNewEntityValues(
-        IContentType contentType, IReadOnlyDictionary<string, IAttribute> attributes, string valuesLanguage)
+    private IDictionary<string, IAttribute> BuildNewEntityValues(IContentType contentType, IReadOnlyDictionary<string, IAttribute> attributes, string valuesLanguage)
     {
-        var l = Log.Fn<IDictionary<string, IAttribute>>($"..., ..., attributes: {attributes.Count}, {valuesLanguage}");
+        var l = Log.Fn<Dictionary<string, IAttribute>>($"..., ..., attributes: {attributes.Count}, {valuesLanguage}");
         if (attributes.SafeNone())
-            return l.Return(new Dictionary<string, IAttribute>(), "null/empty");
+            return l.Return(new(), "null/empty");
 
         var updated = attributes
             .Select(keyValuePair =>
             {
                 // Handle content-type attributes
                 var ctAttr = contentType[keyValuePair.Key];
-                if (ctAttr != null && keyValuePair.Value != null)
-                {
-                    attributes.TryGetValue(ctAttr.Name, out var attribute);
-                    var firstValue = keyValuePair.Value.Values?.FirstOrDefault();
-                    var firstValContents = firstValue?.ObjectContents;
-                    if (firstValContents == null)
-                        return null;
-                    var preConverted =
-                        builder.Value.PreConvertReferences(firstValContents, ctAttr.Type, true);
-                    var newAttribute = builder.Attribute.CreateOrUpdate(originalOrNull: attribute, name: ctAttr.Name,
-                        value: preConverted,
-                        type: ctAttr.Type, valueToReplace: firstValue, language: valuesLanguage);
-                    l.A($"Attribute '{keyValuePair.Key}' will become '{keyValuePair.Value}' ({ctAttr.Type})");
-                    return new
-                    {
-                        keyValuePair.Key,
-                        Attribute = newAttribute
-                    };
-                }
+                if (ctAttr == null || keyValuePair.Value == null)
+                    return null;
 
-                return null;
+                attributes.TryGetValue(ctAttr.Name, out var attribute);
+                var firstValue = keyValuePair.Value.Values?.FirstOrDefault();
+                var firstValContents = firstValue?.ObjectContents;
+                if (firstValContents == null)
+                    return null;
+                var preConverted =
+                    builder.Value.PreConvertReferences(firstValContents, ctAttr.Type, true);
+                var newAttribute = builder.Attribute.CreateOrUpdate(
+                    originalOrNull: attribute,
+                    name: ctAttr.Name,
+                    value: preConverted,
+                    type: ctAttr.Type,
+                    valueToReplace: firstValue,
+                    language: valuesLanguage);
+                l.A($"Attribute '{keyValuePair.Key}' will become '{keyValuePair.Value}' ({ctAttr.Type})");
+                return new
+                {
+                    keyValuePair.Key,
+                    Attribute = newAttribute
+                };
+
             })
             .Where(x => x != null)
             .ToDictionary(

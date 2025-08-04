@@ -33,7 +33,7 @@ namespace Custom.Hybrid;
 [DnnLogExceptions]
 //[DefaultToNewtonsoftForHttpJson] - // !!! v16 should now default to normal
 [JsonFormatter]
-public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynamicWebApi, IDynamicCode16, IGetCodePath
+public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynamicWebApi, ITypedCode16, IGetCodePath
 {
     #region Setup
 
@@ -52,8 +52,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     internal ICodeTypedApiHelper CodeApi => field
         ??= ExCtx.GetTypedApi();
 
-    /// <inheritdoc cref="IHasKit{TServiceKit}.Kit" />
-    /// <inheritdoc cref="IDynamicCode16.Kit"/>
+    /// <inheritdoc cref="IHasKit{TServiceKit}.Kit"/>
     public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;
 
     /// <inheritdoc cref="IHasCodeLog.Log" />
@@ -70,12 +69,12 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
 
-    [PrivateApi("WIP 17.06,x")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
+    /// <inheritdoc cref="ITypedCode16.GetService{TService}(NoParamOrder, string?)"/>
+    // ReSharper disable once MethodOverloadWithOptionalParameter
     public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
-        => CodeHelper.GetService<TService>(protector, typeName);
+        => AppCodeGetNamedServiceHelper.GetService<TService>(owner: this, CodeHelper.Specs, typeName);
 
-    /// <inheritdoc cref="IDynamicCode.Link" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     public ILinkService Link => CodeApi?.Link;
 
     [PrivateApi("Not yet ready")]
@@ -86,19 +85,19 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     #region MyContext & UniqueKey
 
-    /// <inheritdoc cref="IDynamicCode16.MyContext" />
+    /// <inheritdoc cref="ITypedApi.MyContext" />
     public ICmsContext MyContext => CodeApi.CmsContext;
 
-    /// <inheritdoc cref="IDynamicCode16.MyPage" />
+    /// <inheritdoc cref="ITypedApi.MyPage" />
     public ICmsPage MyPage => CodeApi.CmsContext.Page;
 
-    /// <inheritdoc cref="IDynamicCode16.MyUser" />
+    /// <inheritdoc cref="ITypedApi.MyUser" />
     public ICmsUser MyUser => CodeApi.CmsContext.User;
 
-    /// <inheritdoc cref="IDynamicCode16.MyView" />
+    /// <inheritdoc cref="ITypedApi.MyView" />
     public ICmsView MyView => CodeApi.CmsContext.View;
 
-    /// <inheritdoc cref="IDynamicCode16.UniqueKey" />
+    /// <inheritdoc cref="ITypedApi.UniqueKey" />
     public string UniqueKey => Kit.Key.UniqueKey;
 
     #endregion
@@ -106,22 +105,22 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     #region AsDynamic implementations + AsList - all killed in v16
 
-    ///// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
+    ///// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(string, string)" />
     //public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot.Cdf.AsDynamicFromJson(json, fallback);
 
-    ///// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
+    ///// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(IEntity)" />
     //public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.Cdf.AsDynamic(entity);
 
-    ///// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
+    ///// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(object)" />
     //public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.Cdf.AsDynamicInternal(dynamicEntity);
 
-    ///// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
+    ///// <inheritdoc cref="IDynamicCode12Docs.AsDynamic(object[])" />
     //public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.Cdf.MergeDynamic(entities);
 
-    ///// <inheritdoc cref="IDynamicCode.AsEntity" />
+    ///// <inheritdoc cref="IDynamicCodeDocs.AsEntity" />
     //public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.Cdf.AsEntity(dynamicEntity);
 
-    ///// <inheritdoc cref="IDynamicCode.AsList" />
+    ///// <inheritdoc cref="IDynamicCodeDocs.AsList" />
     //public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.Cdf.AsDynamicList(list);
 
     #endregion
@@ -140,10 +139,10 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     /// <inheritdoc />
     public IAppTyped App => CodeApi.AppTyped;
 
-    /// <inheritdoc cref="IDynamicCode16.AllResources" />
+    /// <inheritdoc cref="ITypedApi.AllResources" />
     public ITypedStack AllResources => CodeHelper.AllResources;
 
-    /// <inheritdoc cref="IDynamicCode16.AllSettings" />
+    /// <inheritdoc cref="ITypedApi.AllSettings" />
     public ITypedStack AllSettings => CodeHelper.AllSettings;
 
     #endregion
@@ -151,25 +150,20 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     #region CreateInstance
 
-    private CodeHelper CodeHlp => field ??= GetService<CodeHelper>().Init(this);
+    private CompileCodeHelper CompileCodeHlp => field ??= GetService<CompileCodeHelper>().Init(this);
 
     string IGetCodePath.CreateInstancePath { get; set; }
 
-    /// <inheritdoc cref="IDynamicCode16.GetCode"/>
+    /// <inheritdoc cref="ITypedCode16.GetCode"/>
     public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
-        => CodeHlp.GetCode(path, className: className);
+        => CompileCodeHlp.GetCode(path, className: className);
 
     #endregion
 
     #region My... Stuff
 
-    private TypedCode16Helper CodeHelper => field ??= CreateCodeHelper();
-
-    private TypedCode16Helper CreateCodeHelper()
-    {
-        // Create basic helper without any RazorModels, since that doesn't exist here
-        return new(owner: this, helperSpecs: new(ExCtx, false, ((IGetCodePath)this).CreateInstancePath), getRazorModel: () => null, getModelDic: () => null);
-    }
+    private CodeHelperTypedData CodeHelper => field
+        ??= new(helperSpecs: new(ExCtx, false, ((IGetCodePath)this).CreateInstancePath));
 
     /// <inheritdoc />
     public ITypedItem MyItem => CodeHelper.MyItem;
@@ -188,39 +182,39 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     #region As Conversions
 
-    /// <inheritdoc cref="IDynamicCode16.AsItem" />
+    /// <inheritdoc cref="ITypedApi.AsItem" />
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
         => CodeApi.Cdf.AsItem(data, new() { ItemIsStrict = propsRequired ?? true, UseMock = mock == true });
 
-    /// <inheritdoc cref="IDynamicCode16.AsItems" />
+    /// <inheritdoc cref="ITypedApi.AsItems" />
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsItems(list, new() { ItemIsStrict = propsRequired ?? true });
 
-    /// <inheritdoc cref="IDynamicCode16.AsEntity" />
+    /// <inheritdoc cref="ITypedApi.AsEntity" />
     public IEntity AsEntity(ICanBeEntity thing)
         => CodeApi.Cdf.AsEntity(thing);
 
-    /// <inheritdoc cref="IDynamicCode16.AsTyped" />
+    /// <inheritdoc cref="ITypedApi.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsTyped(original, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
-    /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
+    /// <inheritdoc cref="ITypedApi.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsTypedList(list, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
-    /// <inheritdoc cref="IDynamicCode16.AsStack" />
+    /// <inheritdoc cref="ITypedApi.AsStack" />
     public ITypedStack AsStack(params object[] items)
         => CodeApi.Cdf.AsStack(items);
 
-    /// <inheritdoc cref="IDynamicCode16.AsStack{T}" />
+    /// <inheritdoc cref="ITypedApi.AsStack{T}" />
     public T AsStack<T>(params object[] items)
         where T : class, ICanWrapData, new()
         => CodeApi.Cdf.AsStack<T>(items);
 
     #endregion
 
-    /// <inheritdoc />
-    public ITypedRazorModel MyModel => CodeHelper.MyModel;
+    [PrivateApi]
+    public ITypedRazorModel MyModel => throw new("MyModel isn't meant to work in WebApi");
 
 
     #region Net Core Compatibility Shims - Copy this entire section to WebApi Files

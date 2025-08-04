@@ -8,11 +8,11 @@ public class DataModelAnalyzerTests
 {
     private void AssertTypeName<T>(string name)
         where T : class, ICanWrapData =>
-        Equal(name, DataModelAnalyzerTestAccessors.GetContentTypeNamesTac<T>().Flat);
+        Equal(name, string.Join(",", DataModelAnalyzerTestAccessors.GetContentTypeNamesTac<T>()));
 
     private void AssertStreamNames<T>(string namesCsv)
         where T : class, ICanWrapData =>
-        Equal(namesCsv, DataModelAnalyzerTestAccessors.GetStreamNameListTac<T>().Flat);
+        Equal(namesCsv, string.Join(",", DataModelAnalyzerTestAccessors.GetStreamNameListTac<T>()));
 
     // ReSharper disable once ClassNeverInstantiated.Local
     // ReSharper disable once ArrangeTypeMemberModifiers

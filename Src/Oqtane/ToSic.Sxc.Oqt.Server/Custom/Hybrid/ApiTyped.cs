@@ -14,6 +14,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 // ReSharper disable once CheckNamespace
@@ -26,7 +27,7 @@ namespace Custom.Hybrid;
 /// </summary>
 [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
 [JsonFormatter]
-public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(logSuffix), IDynamicWebApi, IHasCodeLog, IDynamicCode16
+public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(logSuffix), IDynamicWebApi, IHasCodeLog, ITypedCode16
 {
     #region setup
 
@@ -59,16 +60,16 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     // ReSharper disable once InconsistentNaming
     [PrivateApi] internal IExecutionContext ExCtxOrNull => CtxHlp.ExCtxOrNull;
 
-    /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+    /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     public new TService GetService<TService>() where TService : class
         => CodeApi.GetService<TService>();
 
-    [PrivateApi("WIP 17.06,x")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
+    /// <inheritdoc cref="ITypedCode16.GetService{TService}(NoParamOrder, string?)"/>
+    // ReSharper disable once MethodOverloadWithOptionalParameter
     public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
-        => CodeHelper.GetService<TService>(protector, typeName);
+        => AppCodeGetNamedServiceHelper.GetService<TService>(owner: this, CodeHelper.Specs, typeName);
 
-    /// <inheritdoc cref="IDynamicCode16.Kit"/>
+    /// <inheritdoc cref="IHasKit{TServiceKit}.Kit"/>
     public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;
 
     [PrivateApi("Not yet ready")]
@@ -78,7 +79,7 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     #region Link & Edit - added to API in 2sxc 10.01
 
-    /// <inheritdoc cref="IDynamicCode.Link" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     public ILinkService Link => CodeApi?.Link;
 
     #endregion
@@ -105,19 +106,18 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
     /// <inheritdoc />
     public IAppTyped App => CodeApi?.AppTyped;
 
-    /// <inheritdoc cref="IDynamicCode16.AllResources" />
+    /// <inheritdoc cref="ITypedApi.AllResources" />
     public ITypedStack AllResources => CodeHelper.AllResources;
 
-    /// <inheritdoc cref="IDynamicCode16.AllSettings" />
+    /// <inheritdoc cref="ITypedApi.AllSettings" />
     public ITypedStack AllSettings => CodeHelper.AllSettings;
 
     #endregion
 
     #region My... Stuff
 
-    private TypedCode16Helper CodeHelper => field ??= CreateCodeHelper();
-
-    private TypedCode16Helper CreateCodeHelper() => new(owner: this, helperSpecs: new(ExCtxOrNull, false, ((IGetCodePath)this).CreateInstancePath), getRazorModel: () => null, getModelDic: () => null);
+    private CodeHelperTypedData CodeHelper => field
+        ??= new(helperSpecs: new(ExCtxOrNull, false, ((IGetCodePath)this).CreateInstancePath));
 
     public ITypedItem MyItem => CodeHelper.MyItem;
 
@@ -132,60 +132,60 @@ public abstract class ApiTyped(string logSuffix) : OqtStatefulControllerBase(log
 
     #region As Conversions
 
-    /// <inheritdoc cref="IDynamicCode16.AsItem" />
+    /// <inheritdoc cref="ITypedApi.AsItem" />
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
         => CodeApi.Cdf.AsItem(data, new() { ItemIsStrict = propsRequired ?? true, UseMock = mock == true });
 
-    /// <inheritdoc cref="IDynamicCode16.AsItems" />
+    /// <inheritdoc cref="ITypedApi.AsItems" />
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsItems(list, new() { ItemIsStrict = propsRequired ?? true });
 
-    /// <inheritdoc cref="IDynamicCode16.AsEntity" />
+    /// <inheritdoc cref="ITypedApi.AsEntity" />
     public IEntity AsEntity(ICanBeEntity thing)
         => CodeApi.Cdf.AsEntity(thing);
 
-    /// <inheritdoc cref="IDynamicCode16.AsTyped" />
+    /// <inheritdoc cref="ITypedApi.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsTyped(original, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
-    /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
+    /// <inheritdoc cref="ITypedApi.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsTypedList(list, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
-    /// <inheritdoc cref="IDynamicCode16.AsStack" />
+    /// <inheritdoc cref="ITypedApi.AsStack" />
     public ITypedStack AsStack(params object[] items)
         => CodeApi.Cdf.AsStack(items);
 
-    /// <inheritdoc cref="IDynamicCode16.AsStack{T}" />
+    /// <inheritdoc cref="ITypedApi.AsStack{T}" />
     public T AsStack<T>(params object[] items)
         where T : class, ICanWrapData, new()
         => CodeApi.Cdf.AsStack<T>(items);
 
     #endregion
 
-    public ITypedRazorModel MyModel => CodeHelper.MyModel;
+    public ITypedRazorModel MyModel => throw new("MyModel isn't meant to work in WebApi"); // v20 CodeHelper.MyModel;
 
-    private CodeHelper CodeHlp => field ??= GetService<CodeHelper>().Init(this);
+    private CompileCodeHelper CompileCodeHlp => field ??= GetService<CompileCodeHelper>().Init(this);
 
-    /// <inheritdoc cref="IDynamicCode16.GetCode"/>
+    /// <inheritdoc cref="ITypedCode16.GetCode"/>
     public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
-        => CodeHlp.CreateInstance(path /*relativePath: (this as IGetCodePath).CreateInstancePath*/, name: className);
+        => CompileCodeHlp.CreateInstance(path /*relativePath: (this as IGetCodePath).CreateInstancePath*/, name: className);
 
     #region MyContext & UniqueKey
 
-    /// <inheritdoc cref="IDynamicCode16.MyContext" />
+    /// <inheritdoc cref="ITypedApi.MyContext" />
     public ICmsContext MyContext => CodeApi.CmsContext;
 
-    /// <inheritdoc cref="IDynamicCode16.MyPage" />
+    /// <inheritdoc cref="ITypedApi.MyPage" />
     public ICmsPage MyPage => CodeApi.CmsContext.Page;
 
-    /// <inheritdoc cref="IDynamicCode16.MyUser" />
+    /// <inheritdoc cref="ITypedApi.MyUser" />
     public ICmsUser MyUser => CodeApi.CmsContext.User;
 
-    /// <inheritdoc cref="IDynamicCode16.MyView" />
+    /// <inheritdoc cref="ITypedApi.MyView" />
     public ICmsView MyView => CodeApi.CmsContext.View;
 
-    /// <inheritdoc cref="IDynamicCode16.UniqueKey" />
+    /// <inheritdoc cref="ITypedApi.UniqueKey" />
     public string UniqueKey => Kit.Key.UniqueKey;
 
     #endregion

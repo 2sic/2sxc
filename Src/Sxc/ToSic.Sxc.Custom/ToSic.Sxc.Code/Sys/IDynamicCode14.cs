@@ -44,39 +44,39 @@ public interface IDynamicCode14<out TModel, out TServiceKit> : /*ICompatibleToCo
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
     TService GetService<TService>() where TService : class;
 
-    /// <inheritdoc cref="IDynamicCode.App" />
+    /// <inheritdoc cref="IDynamicCodeDocs.App" />
     IApp App { get; }
 
-    /// <inheritdoc cref="IDynamicCode.Data" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     IDataSource Data { get; }
 
     #region Content and Header
 
-    /// <inheritdoc cref="IDynamicCode.Content" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Content" />
     dynamic? Content { get; }
 
-    /// <inheritdoc cref="IDynamicCode.Header" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Header" />
     dynamic? Header { get; }
 
     #endregion
 
     #region AsAdam, Linking, Edit
 
-    /// <inheritdoc cref="IDynamicCode.AsAdam" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsAdam" />
     IFolder AsAdam(ICanBeEntity item, string fieldName);
 
-    /// <inheritdoc cref="IDynamicCode.Link" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     ILinkService Link { get; }
 
 
-    /// <inheritdoc cref="IDynamicCode.Edit" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Edit" />
     IEditService Edit { get; }
 
     #endregion
 
     #region AsDynamic for Strings
 
-    /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(string, string)" />
 
     dynamic? AsDynamic(string json, string? fallback = default);
 
@@ -84,11 +84,11 @@ public interface IDynamicCode14<out TModel, out TServiceKit> : /*ICompatibleToCo
 
     #region AsDynamic for Entities
 
-    /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(IEntity)" />
     dynamic? AsDynamic(IEntity entity);
 
 
-    /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(object)" />
     dynamic? AsDynamic(object dynamicEntity);
 
 
@@ -96,14 +96,14 @@ public interface IDynamicCode14<out TModel, out TServiceKit> : /*ICompatibleToCo
 
     #region AsEntity
 
-    /// <inheritdoc cref="IDynamicCode.AsEntity" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsEntity" />
     IEntity AsEntity(object dynamicEntity);
 
     #endregion
 
     #region AsList
 
-    /// <inheritdoc cref="IDynamicCode.AsList" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsList" />
     IEnumerable<dynamic> AsList(object list);
 
     #endregion
@@ -111,18 +111,18 @@ public interface IDynamicCode14<out TModel, out TServiceKit> : /*ICompatibleToCo
 
     #region Create Data Sources
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataStream)" />
     T CreateSource<T>(IDataStream source) where T : IDataSource;
 
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataSource, ILookUpEngine)" />
     T CreateSource<T>(IDataSource? inSource = null, ILookUpEngine? configurationProvider = default) where T : IDataSource;
 
     #endregion
 
     #region Context
 
-    /// <inheritdoc cref="IDynamicCode.CmsContext" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CmsContext" />
     ICmsContext CmsContext { get; }
 
     #endregion
@@ -133,7 +133,7 @@ public interface IDynamicCode14<out TModel, out TServiceKit> : /*ICompatibleToCo
 
     #region Stuff added by DynamicCode12
 
-    /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
+    /// <inheritdoc cref="IDynamicCode12Docs.AsDynamic(object[])" />
     dynamic? AsDynamic(params object[] entities);
 
 
@@ -143,10 +143,10 @@ public interface IDynamicCode14<out TModel, out TServiceKit> : /*ICompatibleToCo
 
     #region Resources and Settings
 
-    /// <inheritdoc cref="IDynamicCode12.Resources" />
+    /// <inheritdoc cref="IDynamicCode12Docs.Resources" />
     dynamic? Resources { get; }
 
-    /// <inheritdoc cref="IDynamicCode12.Settings" />
+    /// <inheritdoc cref="IDynamicCode12Docs.Settings" />
     dynamic? Settings { get; }
 
     #endregion
@@ -161,7 +161,7 @@ public interface IDynamicCode14<out TModel, out TServiceKit> : /*ICompatibleToCo
 
     #endregion
 
-    /// <inheritdoc cref="IDynamicCode16.GetCode"/>
+    /// <inheritdoc cref="ITypedCode16.GetCode"/>
     [PrivateApi("added in 16.05, but not sure if it should be public")]
     dynamic? GetCode(string path, NoParamOrder noParamOrder = default, string? className = default);
 

@@ -12,6 +12,7 @@ using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sys.Code.InfoSystem;
+using ToSic.Sys.Users;
 
 namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
@@ -33,8 +34,6 @@ public partial class CodeDataFactory(
         ICodeDataFactory
 {
     public CodeInfoService CodeInfo => codeInfoSvc.Value;
-
-    public void SetCompatibilityLevel(int compatibilityLevel) => _priorityCompatibilityLevel = compatibilityLevel;
 
     public void SetFallbacks(ISite site, int? compatibility = default, object? adamManagerPrepared = default)
     {
@@ -58,11 +57,16 @@ public partial class CodeDataFactory(
             ?? _siteOrNull
             ?? throw new("Tried getting site from context or fallback, neither returned anything useful. ");
 
+    #region Compatibility Level
 
-    public int CompatibilityLevel => _priorityCompatibilityLevel ?? _compatibilityLevel;
-    private int? _priorityCompatibilityLevel;
+    public void SetCompatibilityLevel(int compatibilityLevel)
+        => _compatibilityLevelOverride = compatibilityLevel;
+
+    public int CompatibilityLevel => _compatibilityLevelOverride ?? _compatibilityLevel;
+    private int? _compatibilityLevelOverride;
     private int _compatibilityLevel = CompatibilityLevels.CompatibilityLevel10;
 
+    #endregion
 
     #region CodeDataServices
 
@@ -89,8 +93,6 @@ public partial class CodeDataFactory(
 
 
     public IBlock? BlockOrNull => ExCtxOrNull?.GetState<IBlock>();
-
-    public object? BlockAsObjectOrNull => BlockOrNull;
 
     #endregion
 

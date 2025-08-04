@@ -35,27 +35,31 @@ partial record ToolbarBuilder
         ITweakButton? initialButton = default,
         [CallerMemberName] string? methodName = default)
     {
-        var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, initial: initialButton,
-            ui: ui, parameters: parameters, prefill: prefill, filter: filter, methodName: methodName);
+        // process tweaks, but skip early to reduce calls if null
+        var tweaks = tweak == null
+            ? null
+            : RunTweaksOrErrorIfCombined(tweak: tweak, initial: initialButton, ui: ui, parameters: parameters, prefill: prefill, filter: filter, methodName: methodName);
 
-        var paramsString = Utils.PrepareParams(parameters, tweaks);
+        var paramsString = tweaks == null && parameters == null
+            ? null
+            : Utils.PrepareParams(parameters, tweaks);
+
         var parsWithPrefill = Utils.Prefill2Url.SerializeWithChild(paramsString, prefill, ToolbarConstants.RuleParamPrefixPrefill);
-        if (fields != default)
+        if (fields != null)
             parsWithPrefill = Utils.Filter2Url.SerializeWithChild(parsWithPrefill, new { fields });
 
-        var tweaksInt = tweaks as ITweakButtonInternal;
-        var namedParts = tweaksInt?.Named.Any() == true
-            ? tweaksInt.Named
+        var namedParts = tweaks?.Named.Any() == true
+            ? tweaks.Named
                 .ToDictionary(
                     kvp => kvp.Key,
-                    kvp => PreCleanParams(tweak: kvp.Value, defOp: OprNone) as CleanedParams
+                    CleanedParams (kvp) => PreCleanParams(tweak: kvp.Value, defOp: OprNone)
                 )
             : null;
 
         return new()
         {
-            Operation = ToolbarRuleOperation.Pick(operation, defOp, tweaksInt?._condition),
-            Ui = PrepareUi(ui, uiMerge, uiMergePrefix, tweaks: tweaksInt?.UiMerge),
+            Operation = ToolbarRuleOperation.Pick(operation, defOp, tweaks?.ConditionValue),
+            Ui = PrepareUi(ui, uiMerge, uiMergePrefix, tweaks: tweaks?.UiMerge),
             Parameters = Utils.Filter2Url.SerializeWithChild(parsWithPrefill, filter, ToolbarConstants.RuleParamPrefixFilter),
             Parts = namedParts
         };
@@ -77,7 +81,7 @@ partial record ToolbarBuilder
             contentType: contentType,
             propsKeep: propsKeep, propsSkip: propsSkip,
             decoHelper: Services.ToolbarButtonHelper.Value);
-        var builder = this.AddInternal([command]);
+        var builder = this.AddInternal([command], methodName: verb);
         return (command, builder);
     }
 
@@ -166,23 +170,27 @@ partial record ToolbarBuilder
         var finalTypes = GetMetadataTypeNames(target, contentTypes);
         var realContext = GenerateContext(target, context);
 
-        var mdsToAdd = finalTypes.Select(type =>
-        {
-            var parsForThis = pars.Parts?.TryGetValue(type, out var p) == true ? p : pars;
-            
-            return new ToolbarRuleMetadata(
-                target,
-                type,
-                operation: parsForThis.Operation,
-                ui: parsForThis.Ui,
-                parameters: parsForThis.Parameters,
-                context: realContext,
-                decoHelper: Services.ToolbarButtonHelper.Value
-            );
-        });
+        var mdsToAdd = finalTypes
+            .Select(ToolbarRuleBase (type) =>
+            {
+                var parsForThis = pars.Parts?.TryGetValue(type, out var p) == true
+                    ? p
+                    : pars;
+
+                return new ToolbarRuleMetadata(
+                    target,
+                    type,
+                    operation: parsForThis.Operation,
+                    ui: parsForThis.Ui,
+                    parameters: parsForThis.Parameters,
+                    context: realContext,
+                    decoHelper: Services.ToolbarButtonHelper.Value
+                );
+            })
+            .ToArray();
 
         // var builder = this as IToolbarBuilder;
-        return l.ReturnAsOk(this.AddInternal(mdsToAdd.Cast<object>().ToArray()));
+        return l.ReturnAsOk(this.AddInternal(mdsToAdd));
     }
 
     /// <inheritdoc />

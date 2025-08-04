@@ -56,8 +56,7 @@ internal class DnnWebApiHelper : CodeHelperBase
     /// <summary>
     ///  Extend Time so Web Server doesn't time out
     /// </summary>
-    public void PreventServerTimeout300() => HttpContext.Current.Server.ScriptTimeout = 300;
-
+    public void PreventServerTimeout600() => HttpContext.Current.Server.ScriptTimeout = 600;
 
     public IBlock GetBlockAndContext(HttpRequestMessage request) 
         => _blcCtx.Get(() => GetService<DnnGetBlock>().GetCmsBlock(request));

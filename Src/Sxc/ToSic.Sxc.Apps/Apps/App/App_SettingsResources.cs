@@ -17,13 +17,13 @@ public partial class App
         return Cdf.AsDynamic(wrapped, new() { ItemIsStrict = propsRequired });
     }
 
-    internal void SetupAsConverter(ICodeDataFactory cdf) => cdfLazy.Inject(cdf);
+    internal void SetupCodeDataFactory(ICodeDataFactory cdf) => cdfLazy.Inject(cdf);
 
     /// <inheritdoc cref="Eav.ImportExport.Sys.Settings" />
     public dynamic? Settings => AppSettings == null ? null : _settings.Get(() => MakeDynProperty(AppSettings, propsRequired: false));
     private readonly GetOnce<dynamic> _settings = new();
 
-    /// <inheritdoc cref="IDynamicCode12.Resources" />
+    /// <inheritdoc cref="IDynamicCode12Docs.Resources" />
     public dynamic? Resources => AppResources == null ? null : _res.Get(() => MakeDynProperty(AppResources, propsRequired: false));
     private readonly GetOnce<dynamic> _res = new();
 

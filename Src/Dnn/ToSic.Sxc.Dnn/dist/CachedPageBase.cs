@@ -1,9 +1,7 @@
 ﻿using System.Web;
 using System.Web.Caching;
-using DotNetNuke.Common.Extensions;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Framework;
-using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.ImportExport.Integration;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Render.Sys.JsContext;
@@ -53,12 +51,11 @@ public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to pre
         var pageId = GetPageId();
         var siteRoot = GetSiteRoot(pageId, siteId);
 
-        var sp = HttpContext.Current.GetScope().ServiceProvider;
-        var editUiResources = sp.GetService<EditUiResources>();
+        var editUiResources = GetService<EditUiResources>();
         var assets = editUiResources.GetResources(true, siteId, settings);
         l.A($"customHeaders: {assets.HtmlHead}");
 
-        var dnnJsApi = sp.GetService<IJsApiService>();
+        var dnnJsApi = GetService<IJsApiService>();
         var content = dnnJsApi.GetJsApiJson(pageId: pageId, siteRoot: siteRoot, rvt: null, withPublicKey: WithPublicKey());
         l.A($"JsApiJson: {content}");
 

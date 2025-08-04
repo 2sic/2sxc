@@ -22,19 +22,6 @@ public interface ISxcCurrentContextService: ICurrentContextService, ISxcAppCurre
     /// <returns>The current block or null</returns>
     IContextOfBlock? BlockContextOrNull();
 
-    ///// <summary>
-    ///// Return the block if known, or an app context if not
-    ///// </summary>
-    ///// <param name="appId"></param>
-    ///// <returns></returns>
-    //IContextOfApp GetBlockOrSetApp(int appId);
-
-    //IContextOfApp SetAppOrGetBlock(string nameOrPath);
-
-    //IContextOfApp SetAppOrNull(string nameOrPath);
-
-    //IContextOfApp AppNameRouteBlock(string nameOrPath);
-
     void AttachBlock(IBlock block);
 
     IBlock? BlockOrNull();

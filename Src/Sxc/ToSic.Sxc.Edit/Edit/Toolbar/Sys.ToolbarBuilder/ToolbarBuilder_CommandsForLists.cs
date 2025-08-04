@@ -26,7 +26,7 @@ partial record ToolbarBuilder
             parameters: pars.Parameters,
             propsKeep: KeysOfLists, 
             operation: pars.Operation);
-        return this.AddInternal([command]);
+        return this.AddInternal([command], methodName: methodName);
 
     }
 

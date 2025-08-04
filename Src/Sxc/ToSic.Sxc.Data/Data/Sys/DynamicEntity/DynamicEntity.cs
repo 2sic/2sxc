@@ -39,7 +39,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     internal DynamicEntity(IEnumerable<IEntity> list, IEntity? parent, string? field, int? appIdOrNull, bool propsRequired, ICodeDataFactory cdf)
         : this(cdf, propsRequired,
             // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
-            list.FirstOrDefault() ?? cdf.PlaceHolderInBlock(appIdOrNull ?? 0, parent, field))
+            entity: list.FirstOrDefault() ?? cdf.PlaceHolderInBlock(appIdOrNull ?? 0, parent, field))
     {
         ListHelper = new(list, parent, field, () => Debug, propsRequired: propsRequired, cdf);
     }
@@ -81,9 +81,13 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     [field: AllowNull, MaybeNull]
     internal CodeDynHelper DynHelper => field ??= new(Entity, SubDataFactory);
 
+    /// <summary>
+    /// TypedItem is only internal, for use in APIs which should only have one way to handle data.
+    /// Since DynamicEntity is an old API, we don't want to surface TypedItem in the public API.
+    /// </summary>
     [PrivateApi]
     [field: AllowNull, MaybeNull]
-    internal ITypedItem TypedItem => field ??= new TypedItemOfEntity(this, Entity, Cdf, _propsRequired);
+    internal ITypedItem TypedItem => field ??= new TypedItemOfEntity(Entity, Cdf, _propsRequired);
 
     /// <inheritdoc />
     public bool Debug { get; set; }
@@ -109,7 +113,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     #region Advanced: Fields, Html
 
     /// <inheritdoc />
-    public IField? Field(string name) => Cdf.Field(TypedItem, name, new() { ItemIsStrict = _propsRequired });
+    public IField? Field(string name) => Cdf.Field(TypedItem, supportOldMetadata: true, name, new() { ItemIsStrict = _propsRequired });
 
     /// <inheritdoc/>
     [PrivateApi("Should not be documented here, as it should only be used on ITyped")]
@@ -144,7 +148,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     #region Metadata
 
     /// <inheritdoc />
-    public ITypedMetadata Metadata => DynHelper.Metadata!;
+    public dynamic Metadata => DynHelper.Metadata!;
 
     /// <summary>
     /// Explicit implementation, so it's not really available on DynamicEntity, only when cast to IHasMetadata

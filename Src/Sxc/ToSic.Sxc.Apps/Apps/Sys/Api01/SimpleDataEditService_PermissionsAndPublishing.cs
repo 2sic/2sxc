@@ -6,9 +6,9 @@ namespace ToSic.Sxc.Apps.Sys.Api01;
 partial class SimpleDataEditService
 {
 
-    private EntitySavePublishing DetectPublishingOrError(IContentType contentType, IDictionary<string, object> values, bool? existingIsPublished)
+    private EntitySavePublishing DetectPublishingOrError(IContentType contentType, IDictionary<string, object?> values, bool? existingIsPublished)
     {
-        var l = Log.Fn<EntitySavePublishing?>($"..., ..., attributes: {values?.Count}");
+        var l = Log.Fn<EntitySavePublishing?>($"..., ..., attributes: {values.Count}");
 
         // First, ensure WritePublished or WriteDraft user permissions. 
         var allowed = GetWriteAndPublishAllowed(contentType);
@@ -28,7 +28,7 @@ partial class SimpleDataEditService
 
         // Find publishing instructions
         // Handle special "PublishState" attribute
-        var publishKvp = values!.FirstOrDefault(pair => pair.Key.EqualsInsensitive(SaveApiAttributes.SavePublishingState));
+        var publishKvp = values.FirstOrDefault(pair => pair.Key.EqualsInsensitive(SaveApiAttributes.SavePublishingState));
 
         // did it exist? must check _key_, because key-value-pairs don't have a null-default
         if (publishKvp.Key == default)

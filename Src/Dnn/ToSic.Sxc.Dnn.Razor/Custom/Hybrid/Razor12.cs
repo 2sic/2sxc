@@ -41,10 +41,10 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
 
     #region Link, Edit, Dnn, App, Data
 
-    /// <inheritdoc cref="IDynamicCode.Link" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     public ILinkService Link => CodeApi.Link;
 
-    /// <inheritdoc cref="IDynamicCode.Edit" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Edit" />
     public IEditService Edit => CodeApi.Edit;
 
     /// <inheritdoc cref="ICanGetService.GetService{TService}"/>
@@ -62,29 +62,29 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
 
     #region AsDynamic in many variations
 
-    /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(string, string)" />
     public dynamic AsDynamic(string json, string fallback = default) => CodeApi.Cdf.Json2Jacket(json, fallback);
 
-    /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(IEntity)" />
     public dynamic AsDynamic(IEntity entity) => CodeApi.Cdf.CodeAsDyn(entity);
 
-    /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(object)" />
     public dynamic AsDynamic(object dynamicEntity) => CodeApi.Cdf.AsDynamicFromObject(dynamicEntity);
 
-    /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
+    /// <inheritdoc cref="IDynamicCode12Docs.AsDynamic(object[])" />
     [PublicApi("Careful - still Experimental in 12.02")]
     public dynamic AsDynamic(params object[] entities) => CodeApi.Cdf.MergeDynamic(entities);
 
     #endregion
 
     #region AsEntity
-    /// <inheritdoc cref="IDynamicCode.AsEntity" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsEntity" />
     public IEntity AsEntity(object dynamicEntity) => CodeApi.Cdf.AsEntity(dynamicEntity);
     #endregion
 
     #region AsList
 
-    /// <inheritdoc cref="IDynamicCode.AsList" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsList" />
     public IEnumerable<dynamic> AsList(object list) => CodeApi.Cdf.CodeAsDynList(list);
 
     #endregion
@@ -99,11 +99,11 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
 
     #region Data Source Stuff
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataSource, ILookUpEngine)" />
     public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
         => CodeApi.CreateSource<T>(inSource, configurationProvider);
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataStream)" />
     public T CreateSource<T>(IDataStream source) where T : IDataSource
         => CodeApi.CreateSource<T>(source);
 
@@ -111,10 +111,10 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
 
     #region Content, Header, etc. and List
 
-    /// <inheritdoc cref="IDynamicCode.Content" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Content" />
     public dynamic Content => CodeApi.Content;
 
-    /// <inheritdoc cref="IDynamicCode.Header" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Header" />
     public dynamic Header => CodeApi.Header;
 
     #endregion
@@ -125,23 +125,23 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
 
     #region Adam 
 
-    /// <inheritdoc cref="IDynamicCode.AsAdam" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsAdam" />
     public IFolder AsAdam(ICanBeEntity item, string fieldName) => CodeApi.AsAdam(item, fieldName);
 
     #endregion
 
     #region v11 properties CmsContext
 
-    /// <inheritdoc cref="IDynamicCode.CmsContext" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CmsContext" />
     public ICmsContext CmsContext => CodeApi.CmsContext;
     #endregion
 
     #region v12 properties Resources, Settings, Path
 
-    /// <inheritdoc cref="IDynamicCode12.Resources" />
+    /// <inheritdoc cref="IDynamicCode12Docs.Resources" />
     public dynamic Resources => CodeApi.Resources;
 
-    /// <inheritdoc cref="IDynamicCode12.Settings" />
+    /// <inheritdoc cref="IDynamicCode12Docs.Settings" />
     public dynamic Settings => CodeApi.Settings;
 
     [PrivateApi("Not yet ready")]
@@ -150,7 +150,7 @@ public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHe
     ///// <inheritdoc />
     //public string Path => VirtualPath;
 
-    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpForRazor12.Compile12;
+    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpDbRazor.CompileRazorOrCode12;
 
     #endregion
 

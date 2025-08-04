@@ -66,19 +66,19 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
 
     #region App, Data, Settings, Resources, CmsContext
 
-    /// <inheritdoc cref="IDynamicCode.App" />
+    /// <inheritdoc cref="IDynamicCodeDocs.App" />
     public IApp App => CodeApi?.App;
 
-    /// <inheritdoc cref="IDynamicCode.Data" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     public IDataSource Data => CodeApi?.Data;
 
-    /// <inheritdoc cref="IDynamicCode12.Resources" />
+    /// <inheritdoc cref="IDynamicCode12Docs.Resources" />
     public dynamic Resources => CodeApi.Resources;
 
-    /// <inheritdoc cref="IDynamicCode12.Settings" />
+    /// <inheritdoc cref="IDynamicCode12Docs.Settings" />
     public dynamic Settings => CodeApi.Settings;
 
-    /// <inheritdoc cref="IDynamicCode.CmsContext" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CmsContext" />
     public ICmsContext CmsContext => CodeApi?.CmsContext;
 
 
@@ -87,23 +87,23 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
 
     #region AsDynamic / AsList implementations
 
-    /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(string, string)" />
     [NonAction]
     public dynamic AsDynamic(string json, string fallback = default) => CodeApi.Cdf.Json2Jacket(json, fallback);
 
-    /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(IEntity)" />
     [NonAction]
     public dynamic AsDynamic(IEntity entity) => CodeApi.Cdf.CodeAsDyn(entity);
 
-    /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(object)" />
     [NonAction]
     public dynamic AsDynamic(object dynamicEntity) => CodeApi.Cdf.AsDynamicFromObject(dynamicEntity);
 
-    /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
+    /// <inheritdoc cref="IDynamicCode12Docs.AsDynamic(object[])" />
     [NonAction]
     public dynamic AsDynamic(params object[] entities) => CodeApi.Cdf.MergeDynamic(entities);
 
-    /// <inheritdoc cref="IDynamicCode.AsList" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsList" />
     [NonAction]
     public IEnumerable<dynamic> AsList(object list) => CodeApi.Cdf.CodeAsDynList(list);
 
@@ -111,7 +111,7 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
 
     #region AsEntity
 
-    /// <inheritdoc cref="IDynamicCode.AsEntity" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsEntity" />
     public IEntity AsEntity(object dynamicEntity) => CodeApi?.Cdf.AsEntity(dynamicEntity);
 
     #endregion
@@ -124,12 +124,12 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
 
     #region CreateSource implementations
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataSource, ILookUpEngine)" />
     [NonAction]
     public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
         => CodeApi.CreateSource<T>(inSource, configurationProvider);
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataStream)" />
     [NonAction]
     public T CreateSource<T>(IDataStream source) where T : IDataSource
         => CodeApi.CreateSource<T>(source);
@@ -138,10 +138,10 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
 
     #region Content, Presentation & List
 
-    /// <inheritdoc cref="IDynamicCode.Content" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Content" />
     public new dynamic Content => CodeApi?.Content;
 
-    /// <inheritdoc cref="IDynamicCode.Header" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Header" />
     public dynamic Header => CodeApi?.Header;
 
 
@@ -149,7 +149,7 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
 
     #region Adam
 
-    /// <inheritdoc cref="IDynamicCode.AsAdam" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsAdam" />
     [NonAction]
     public IFolder AsAdam(ICanBeEntity item, string fieldName) => CodeApi?.AsAdam(item, fieldName);
 
@@ -168,10 +168,10 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
 
     #region Link & Edit - added to API in 2sxc 10.01
 
-    /// <inheritdoc cref="IDynamicCode.Link" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     public ILinkService Link => CodeApi?.Link;
 
-    /// <inheritdoc cref="IDynamicCode.Edit" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Edit" />
     public IEditService Edit => CodeApi?.Edit;
 
     #endregion
@@ -180,13 +180,13 @@ public abstract class Api12(string logSuffix) : OqtStatefulControllerBase(logSuf
 
     string IGetCodePath.CreateInstancePath { get; set; }
 
-    protected CodeHelper CodeHlp => _codeHlp ??= GetService<CodeHelper>().Init(this);
-    private CodeHelper _codeHlp;
+    protected CompileCodeHelper CompileCodeHlp => _compileCodeHlp ??= GetService<CompileCodeHelper>().Init(this);
+    private CompileCodeHelper _compileCodeHlp;
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
     [NonAction]
     public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => CodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
+        => CompileCodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
 
     #endregion
 

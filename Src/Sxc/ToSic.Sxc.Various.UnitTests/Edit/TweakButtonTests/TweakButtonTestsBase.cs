@@ -15,13 +15,13 @@ public class TweakButtonTestsBase
     /// <param name="expected"></param>
     /// <param name="tweak"></param>
     protected static void AssertUi(IEnumerable<string> expected, ITweakButton tweak)
-        => Equal(expected.ToList(), ((ITweakButtonInternal)tweak).UiMerge.ToList());
+        => Equal(expected.ToList(), tweak.UiMerge.ToList());
     
     protected static void AssertUi(IEnumerable<object> expected, ITweakButton tweak)
-        => Equal(expected.ToList(), ((ITweakButtonInternal)tweak).UiMerge.ToList());
+        => Equal(expected.ToList(), tweak.UiMerge.ToList());
 
     protected static void AssertUiJson(IEnumerable<object> expected, ITweakButton tweak)
-        => Equal(ToJson(expected), ToJson(((ITweakButtonInternal)tweak).UiMerge));
+        => Equal(ToJson(expected), ToJson(tweak.UiMerge));
 
     private static List<string> ToJson(IEnumerable<object> values)
         => values
@@ -30,16 +30,16 @@ public class TweakButtonTestsBase
 
     protected static void AssertParams(IEnumerable<string> expected, ITweakButton tweak)
     {
-        var parameters = ((ITweakButtonInternal)tweak).ParamsMerge;
+        var parameters = tweak.ParamsMerge;
         // Add trace of json objects for debugging
         Trace.WriteLine("expected:" + JsonSerializer.Serialize(expected));
         Trace.WriteLine("actual  :" + JsonSerializer.Serialize(parameters));
-        Equal(expected.ToList(), ((ITweakButtonInternal)tweak).ParamsMerge.ToList());
+        Equal(expected.ToList(), tweak.ParamsMerge.ToList());
     }
 
     protected static void AssertParams(IEnumerable<object> expected, ITweakButton tweak)
     {
-        var parameters = ((ITweakButtonInternal)tweak).ParamsMerge;
+        var parameters = tweak.ParamsMerge;
         // Add trace of json objects for debugging
         Trace.WriteLine("expected:" + JsonSerializer.Serialize(expected));
         Trace.WriteLine("actual  :" + JsonSerializer.Serialize(parameters));
@@ -47,6 +47,6 @@ public class TweakButtonTestsBase
     }
 
     protected static void AssertParamsJson(IEnumerable<object> expected, ITweakButton tweak)
-        => Equal(ToJson(expected), ToJson(((ITweakButtonInternal)tweak).ParamsMerge));
+        => Equal(ToJson(expected), ToJson(tweak.ParamsMerge));
 
 }

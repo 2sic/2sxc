@@ -3,11 +3,11 @@ using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Data;
+using ToSic.Sxc.Data.Options;
 using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
 using ToSic.Sys.Performance;
-using static ToSic.Sys.Code.Infos.CodeInfoObsolete;
 using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Sys.Metadata;
@@ -47,11 +47,6 @@ internal partial class Metadata: ITypedItem
     IRawHtmlString? ITyped.Attribute(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
         => ItemHelper.Attribute(name, noParamOrder, fallback, required);
 
-    [PrivateApi]
-    [JsonIgnore]
-    dynamic ITypedItem.Dyn => this;
-
-
     DateTime ITyped.DateTime(string name, NoParamOrder noParamOrder, DateTime fallback, bool? required)
         => ItemHelper.G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
 
@@ -79,7 +74,7 @@ internal partial class Metadata: ITypedItem
     string? ITyped.Url(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
         => ItemHelper.Url(name, noParamOrder, fallback, required);
 
-    string? ITyped.ToString() => "test / debug: " + ToString();
+    string ITyped.ToString() => "test / debug: " + ToString();
 
     #endregion
 
@@ -97,17 +92,20 @@ internal partial class Metadata: ITypedItem
 
     #region Basic Props like Id, Guid, Title, Type
 
-    [PrivateApi]
-    int ITypedMetadata.EntityId => Cdf.CodeInfo.GetAndWarn(V16To18("IMetadata.EntityId", message: $"Use {nameof(ITypedItem.Id)} instead of {nameof(EntityId)}"), EntityId);
+    //[PrivateApi]
+    //int ITypedMetadata.EntityId => Cdf.CodeInfo.GetAndWarn(V16To18("IMetadata.EntityId", message: $"Use {nameof(ITypedItem.Id)} instead of {nameof(EntityId)}"), EntityId);
 
     [PrivateApi]
-    int ITypedItem.Id => EntityId;
+    int ITypedItem.Id => Entity.EntityId;
+    //int ITypedItem.Id => EntityId;
 
     [PrivateApi]
-    Guid ITypedItem.Guid => EntityGuid;
+    Guid ITypedItem.Guid => Entity.EntityGuid;
+    //Guid ITypedItem.Guid => EntityGuid;
 
     [PrivateApi]
-    string? ITypedItem.Title => EntityTitle;
+    string? ITypedItem.Title => Entity?.GetBestTitle(Cdf.Dimensions);
+    //string? ITypedItem.Title => EntityTitle;
 
     [PrivateApi]
     IContentType ITypedItem.Type => Entity?.Type!;
@@ -121,20 +119,20 @@ internal partial class Metadata: ITypedItem
     [PrivateApi]
     [JsonIgnore]
     ITypedItem ITypedItem.Presentation
-        => throw new NotSupportedException($"You can't access the {nameof(Presentation)} of Metadata");
+        => throw new NotSupportedException($"You can't access the {nameof(ITypedItem.Presentation)} of Metadata");
 
     /// <inheritdoc />
     [JsonIgnore] // prevent serialization as it's not a normal property
     ITypedMetadata ITypedItem.Metadata
-        => throw new NotSupportedException($"You can't access the Metadata of Metadata in ITypedItem");
+        => throw new NotSupportedException($"You can't access the {nameof(ITypedItem.Metadata)} of Metadata");
 
     [PrivateApi]
-    ITypedItem ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string? type, string? field)
+    ITypedItem ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string? type, string? field, GetRelatedOptions? options)
         => throw new NotSupportedException($"You can't access the {nameof(ITypedItem.Parent)}() of Metadata as it usually does not make sense to do this");
 
     /// <inheritdoc />
     [PrivateApi]
-    IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string? type, string? field)
+    IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string? type, string? field, GetRelatedOptions? options)
     {
         // Protect & no Strict (as that's not really possible, since it's not a field)
 
@@ -162,7 +160,7 @@ internal partial class Metadata: ITypedItem
 
     /// <inheritdoc />
     [PrivateApi]
-    IEnumerable<ITypedItem> ITypedItem.Children(string? field, NoParamOrder noParamOrder, string? type, bool? required)
+    IEnumerable<ITypedItem> ITypedItem.Children(string? field, NoParamOrder noParamOrder, string? type, bool? required, GetRelatedOptions? options)
     {
         // Protect & Strict
         if (IsErrStrictNameOptional(this, field, required, GetHelper.PropsRequired))
@@ -193,37 +191,39 @@ internal partial class Metadata: ITypedItem
 
     /// <inheritdoc />
     [PrivateApi]
-    ITypedItem? ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required) 
-        => (this as ITypedItem).Children(name, noParamOrder: noParamOrder, required:required).FirstOrDefault();
+    ITypedItem? ITypedItem.Child(string name, NoParamOrder noParamOrder, bool? required, GetRelatedOptions? options)
+        => (this as ITypedItem)
+            .Children(name, noParamOrder: noParamOrder, required: required, options: options)
+            .FirstOrDefault();
 
     #endregion
 
     #region New Child<T> / Children<T> - disabled as ATM Kit is missing
 
     /// <inheritdoc />
-    T? ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required)
+    T? ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required, GetRelatedOptions? options)
         where T : class
-        => Cdf.AsCustom<T>(source: (this as ITypedItem).Child(name, required: required), protector: protector, mock: false);
+        => Cdf.AsCustom<T>(source: (this as ITypedItem).Child(name, required: required, options: options), protector: protector, mock: false);
 
     /// <inheritdoc />
-    IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required)
+    IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required, GetRelatedOptions? options)
         => Cdf.AsCustomList<T>(
-            source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required),
+            source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required, options: options),
             protector: protector,
             nullIfNull: false
         );
 
     /// <inheritdoc />
-    T? ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field)
+    T? ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field, GetRelatedOptions? options)
         where T : class
         => Cdf.AsCustom<T>(
-            source: (this as ITypedItem).Parent(noParamOrder: protector, current: current, type: type ?? typeof(T).Name, field: field), protector: protector, mock: false
+            source: (this as ITypedItem).Parent(noParamOrder: protector, current: current, type: type ?? typeof(T).Name, field: field, options: options), protector: protector, mock: false
         );
 
     /// <inheritdoc />
-    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field)
+    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field, GetRelatedOptions? options)
         => Cdf.AsCustomList<T>(
-            source: (this as ITypedItem).Parents(noParamOrder: protector, field: field, type: type ?? typeof(T).Name),
+            source: (this as ITypedItem).Parents(noParamOrder: protector, field: field, type: type ?? typeof(T).Name, options: options),
             protector: protector,
             nullIfNull: false
         );
@@ -234,7 +234,7 @@ internal partial class Metadata: ITypedItem
 
     [PrivateApi]
     IField? ITypedItem.Field(string name, NoParamOrder noParamOrder, bool? required)
-        => Cdf.Field(this, name, new() { FirstIsRequired = required ?? true, ItemIsStrict = GetHelper.PropsRequired });
+        => Cdf.Field(this, supportOldMetadata: false, name, new() { FirstIsRequired = required ?? true, ItemIsStrict = GetHelper.PropsRequired });
 
     IHtmlTag? ITypedItem.Html(
         string name,

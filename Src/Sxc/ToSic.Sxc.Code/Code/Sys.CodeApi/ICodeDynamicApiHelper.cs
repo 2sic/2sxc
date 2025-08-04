@@ -33,20 +33,20 @@ public interface ICodeDynamicApiHelper: ICodeAnyApiHelper, ICreateInstance
     #endregion
 
 
-    /// <inheritdoc cref="IDynamicCode.Edit" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Edit" />
     IEditService Edit { get; }
 
 
-    /// <inheritdoc cref="IDynamicCode.AsAdam" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsAdam" />
     IFolder AsAdam(ICanBeEntity item, string fieldName);
 
     #region Create Data Sources
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataStream)" />
     T CreateSource<T>(IDataStream source) where T : IDataSource;
 
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataSource, ILookUpEngine)" />
     T CreateSource<T>(IDataSource? inSource = null, ILookUpEngine? configurationProvider = default) where T : IDataSource;
 
     #endregion

@@ -3,7 +3,7 @@ using ToSic.Eav.Serialization.Sys;
 using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Utils;
-using static ToSic.Sxc.Edit.Toolbar.ToolbarButtonDecorator;
+using static ToSic.Sxc.Edit.Toolbar.Sys.ToolbarButtonDecorator;
 
 namespace ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 

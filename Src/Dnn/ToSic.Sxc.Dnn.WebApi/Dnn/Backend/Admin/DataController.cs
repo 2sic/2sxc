@@ -43,7 +43,7 @@ public class DataController() : DnnSxcControllerBase(DataControllerReal.LogSuffi
     [ValidateAntiForgeryToken]
     public ImportResultDto BundleImport(int zoneId, int appId)
     {
-        SysHlp.PreventServerTimeout300();
+        SysHlp.PreventServerTimeout600();
         return Real.BundleImport(new(Request, HttpContext.Current.Request), zoneId, appId);
     }
 

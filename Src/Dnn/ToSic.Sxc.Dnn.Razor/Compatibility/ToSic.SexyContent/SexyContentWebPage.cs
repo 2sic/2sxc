@@ -60,13 +60,13 @@ public abstract class SexyContentWebPage :
 
     #region Helpers linked through AppAndData Helpers
 
-    /// <inheritdoc cref="IDynamicCode.Link" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     public ILinkService Link => CodeApi.Link;
 
     [PrivateApi]
     public dynamic DynamicModel => throw new NotSupportedException($"{nameof(DynamicModel)} not implemented on {nameof(SexyContentWebPage)}. {RazorComponent.NotImplementedUseCustomBase}");
 
-    /// <inheritdoc cref="IDynamicCode.Edit" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Edit" />
     public IEditService Edit => CodeApi.Edit;
 
     public IDnnContext Dnn => (ExCtx as IHasDnn)?.Dnn;
@@ -190,12 +190,12 @@ public abstract class SexyContentWebPage :
     public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
         => new CodeApiServiceObsolete(ExCtx).CreateSource(typeName, inSource, configurationProvider);
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataSource, ILookUpEngine)" />
     [Obsolete("this is the old implementation with ILookUp Engine, don't think it was ever used publicly because people couldn't create these engines")]
     public T CreateSource<T>(IDataSource inSource = default, ILookUpEngine configurationProvider = default) where T : IDataSource
         => CodeApi.CreateSource<T>(inSource, configurationProvider);
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataStream)" />
     public T CreateSource<T>(IDataStream source) where T : IDataSource
         => CodeApi.CreateSource<T>(source);
 
@@ -203,7 +203,7 @@ public abstract class SexyContentWebPage :
 
 
     #region Content, Header, etc. and List
-    /// <inheritdoc cref="IDynamicCode.Content" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Content" />
     public dynamic Content => CodeApi.Content;
 
     [Obsolete("use Content.Presentation instead")]
@@ -231,7 +231,7 @@ public abstract class SexyContentWebPage :
     //public List<Element> List => field ??= new CodeApiServiceObsolete(ExCtx).ElementList;
 #pragma warning restore 618
 
-    /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsDynamic(string, string)" />
     public dynamic AsDynamic(string json, string fallback = WrapperConstants.EmptyJson)
         => throw new("The AsDynamic(string) is a new feature in 2sxc 10.20. To use it, change your template type to inherit from " 
                      + nameof(RazorComponent) + " see https://go.2sxc.org/RazorComponent");
@@ -265,14 +265,14 @@ public abstract class SexyContentWebPage :
 
     #region Adam 
 
-    /// <inheritdoc cref="IDynamicCode.AsAdam" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsAdam" />
     public IFolder AsAdam(ICanBeEntity item, string fieldName) => CodeApi.AsAdam(item, fieldName);
 
     #endregion
 
     #region CmsContext
 
-    /// <inheritdoc cref="IDynamicCode.CmsContext" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CmsContext" />
     public ICmsContext CmsContext => CodeApi.CmsContext;
 
     #endregion
@@ -288,6 +288,6 @@ public abstract class SexyContentWebPage :
     #endregion
 
     // Added this in v20 to show uses of GetBestValue; but much of it may not be applicable, in which case we should create a separate list for SexyContentWebPage and Dnn.RazorComponent
-    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpForRazor12.Compile12;
+    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpDbRazor.CompileRazorOrCode12;
 
 }

@@ -48,8 +48,9 @@ public partial interface IDynamicEntity:
     /// <remarks>
     /// * Added in v13
     /// * Changed type name to `IMetadata` from `IDynamicMetadata` in 16.02; same type, different type name
+    /// * Changed type to `dynamic` in v20 since we believe all use cases in the wild always use dynamic access.
     /// </remarks>
-    ITypedMetadata Metadata { get; }
+    dynamic Metadata { get; }
 
     #region Publishing / Draft Information
 

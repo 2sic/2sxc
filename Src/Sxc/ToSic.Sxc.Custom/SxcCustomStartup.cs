@@ -19,6 +19,7 @@ public static class SxcCustomStartup
 
         // v15 CustomDataSources - just the dependencies needed
         services.TryAddTransient<DataSource16.Dependencies>();
+        services.TryAddTransient<DataSource16.MyServices>();    // old name for compatibility
 
         // Kits for custom code only
         services.TryAddTransient<ServiceKitLight16>();

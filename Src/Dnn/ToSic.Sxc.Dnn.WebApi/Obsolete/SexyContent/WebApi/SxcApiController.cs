@@ -71,10 +71,10 @@ public abstract partial class SxcApiController() :
 
     [PrivateApi] public int CompatibilityLevel => CompatibilityLevels.CompatibilityLevel9Old;
 
-    /// <inheritdoc cref="IDynamicCode.App" />
+    /// <inheritdoc cref="IDynamicCodeDocs.App" />
     public IApp App => CodeApi.App;
 
-    /// <inheritdoc cref="IDynamicCode.Data" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Data" />
     public IDataSource Data => /*(IBlockDataSource)*/CodeApi.Data;
 
     // Explicit implementation of expected interface, but it should not work in the normal code
@@ -132,11 +132,11 @@ public abstract partial class SxcApiController() :
     public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
         => new CodeApiServiceObsolete(ExCtx).CreateSource(typeName, inSource, configurationProvider);
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataSource, ILookUpEngine)" />
     public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
         => CodeApi.CreateSource<T>(inSource, configurationProvider);
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataStream)" />
     public T CreateSource<T>(IDataStream source) where T : IDataSource 
         => CodeApi.CreateSource<T>(source);
 
@@ -174,7 +174,7 @@ public abstract partial class SxcApiController() :
 
     #region Adam
 
-    /// <inheritdoc cref="IDynamicCode.AsAdam" />
+    /// <inheritdoc cref="IDynamicCodeDocs.AsAdam" />
     public IFolder AsAdam(ICanBeEntity item, string fieldName) => CodeApi.AsAdam(item, fieldName);
 
     /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
@@ -188,25 +188,25 @@ public abstract partial class SxcApiController() :
 
     string IGetCodePath.CreateInstancePath { get; set; }
 
-    private CodeHelper CodeHlp => field ??= GetService<CodeHelper>().Init(this);
+    private CompileCodeHelper CompileCodeHlp => field ??= GetService<CompileCodeHelper>().Init(this);
 
     /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
     public dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
-        => CodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
+        => CompileCodeHlp.CreateInstance(virtualPath: virtualPath, name: name, throwOnError: throwOnError);
 
     #endregion
 
     #region Link & Edit - added in 2sxc 10.01
-    /// <inheritdoc cref="IDynamicCode.Link" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     public ILinkService Link => CodeApi?.Link!;
-    /// <inheritdoc cref="IDynamicCode.Edit" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Edit" />
     public IEditService Edit => CodeApi?.Edit!;
 
     #endregion
 
     #region CmsContext, Resources and Settings
 
-    /// <inheritdoc cref="IDynamicCode.CmsContext" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CmsContext" />
     public ICmsContext CmsContext => CodeApi.CmsContext;
 
     ///// <inheritdoc />

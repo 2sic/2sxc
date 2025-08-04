@@ -2,6 +2,9 @@
 
   <Import Project="../../SharedImports/CsProj.Props/AllImportsForRealCode-Nullable.props" />
 
+  <!-- Just used for string Before() etc. -->
+  <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
+
   <PropertyGroup>
     <AssemblyName>ToSic.Sxc.Engines</AssemblyName>
   </PropertyGroup>

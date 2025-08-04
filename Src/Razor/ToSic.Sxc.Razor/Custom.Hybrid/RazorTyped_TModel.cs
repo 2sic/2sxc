@@ -17,6 +17,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.Sys;
 using ToSic.Sys.Code.Help;
 
 // ReSharper disable once CheckNamespace
@@ -27,14 +28,14 @@ namespace Custom.Hybrid;
 // ReSharper disable once UnusedMember.Global
 public abstract class RazorTyped<TModel>()
     : OqtRazorBase<TModel>(CompatibilityLevels.CompatibilityLevel16, "Oqt.Rzr16"), IHasCodeLog, IRazor,
-        ISetDynamicModel, IDynamicCode16, IHasCodeHelp
+        ISetDynamicModel, ITypedCode16, IHasCodeHelp
 {
     #region ServiceKit
 
     [field: AllowNull, MaybeNull]
     internal ICodeTypedApiHelper CodeApi => field ??= RzrHlp.ExCtxRoot.GetTypedApi();
 
-    /// <inheritdoc cref="IDynamicCode16.Kit"/>
+    /// <inheritdoc cref="IHasKit{TServiceKit}.Kit"/>
     [field: AllowNull, MaybeNull]
     public ServiceKit16 Kit => field ??= CodeApi.ServiceKit16;
 
@@ -49,16 +50,16 @@ public abstract class RazorTyped<TModel>()
 
     #region New App, Settings, Resources
 
-    /// <inheritdoc cref="IDynamicCode.Link" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     public ILinkService Link => CodeApi.Link;
 
     /// <inheritdoc />
     public IAppTyped App => CodeApi.AppTyped;
 
-    /// <inheritdoc cref="IDynamicCode16.AllResources" />
+    /// <inheritdoc cref="ITypedApi.AllResources" />
     public ITypedStack AllResources => CodeHelper.AllResources;
 
-    /// <inheritdoc cref="IDynamicCode16.AllSettings" />
+    /// <inheritdoc cref="ITypedApi.AllSettings" />
     public ITypedStack AllSettings => CodeHelper.AllSettings;
 
     #endregion
@@ -79,31 +80,31 @@ public abstract class RazorTyped<TModel>()
 
     #region As Conversions
 
-    /// <inheritdoc cref="IDynamicCode16.AsItem" />
+    /// <inheritdoc cref="ITypedApi.AsItem" />
     public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
         => CodeApi.Cdf.AsItem(data, new() { ItemIsStrict = propsRequired ?? true, UseMock = mock == true })!;
 
-    /// <inheritdoc cref="IDynamicCode16.AsItems" />
+    /// <inheritdoc cref="ITypedApi.AsItems" />
     public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsItems(list, new() { ItemIsStrict = propsRequired ?? true });
 
-    /// <inheritdoc cref="IDynamicCode16.AsEntity" />
+    /// <inheritdoc cref="ITypedApi.AsEntity" />
     public IEntity AsEntity(ICanBeEntity thing)
         => CodeApi.Cdf.AsEntity(thing);
 
-    /// <inheritdoc cref="IDynamicCode16.AsTyped" />
+    /// <inheritdoc cref="ITypedApi.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsTyped(original, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true })!;
 
-    /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
+    /// <inheritdoc cref="ITypedApi.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsTypedList(list, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true })!;
 
-    /// <inheritdoc cref="IDynamicCode16.AsStack" />
+    /// <inheritdoc cref="ITypedApi.AsStack" />
     public ITypedStack AsStack(params object[] items)
         => CodeApi.Cdf.AsStack(items);
 
-    /// <inheritdoc cref="IDynamicCode16.AsStack{T}" />
+    /// <inheritdoc cref="ITypedApi.AsStack{T}" />
     public T AsStack<T>(params object[] items)
         where T : class, ICanWrapData, new()
         => CodeApi.Cdf.AsStack<T>(items);
@@ -111,25 +112,25 @@ public abstract class RazorTyped<TModel>()
     #endregion
 
 
-    /// <inheritdoc cref="IDynamicCode16.GetCode"/>
+    /// <inheritdoc cref="ITypedCode16.GetCode"/>
     public dynamic? GetCode(string path, NoParamOrder noParamOrder = default, string? className = default)
         => RzrHlp.GetCode(path, noParamOrder, className);
 
     #region MyContext & UniqueKey
 
-    /// <inheritdoc cref="IDynamicCode16.MyContext" />
+    /// <inheritdoc cref="ITypedApi.MyContext" />
     public ICmsContext MyContext => CodeApi.CmsContext;
 
-    /// <inheritdoc cref="IDynamicCode16.MyPage" />
+    /// <inheritdoc cref="ITypedApi.MyPage" />
     public ICmsPage MyPage => CodeApi.CmsContext.Page;
 
-    /// <inheritdoc cref="IDynamicCode16.MyUser" />
+    /// <inheritdoc cref="ITypedApi.MyUser" />
     public ICmsUser MyUser => CodeApi.CmsContext.User;
 
-    /// <inheritdoc cref="IDynamicCode16.MyView" />
+    /// <inheritdoc cref="ITypedApi.MyView" />
     public ICmsView MyView => CodeApi.CmsContext.View;
 
-    /// <inheritdoc cref="IDynamicCode16.UniqueKey" />
+    /// <inheritdoc cref="ITypedApi.UniqueKey" />
     public string UniqueKey => Kit.Key.UniqueKey;
 
     #endregion
@@ -139,7 +140,7 @@ public abstract class RazorTyped<TModel>()
     [PrivateApi("Not yet ready")]
     public new IDevTools DevTools => CodeHelper.DevTools;
 
-    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpForRazorTyped.Compile16;
+    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpDbRazor.Compile16;
 
     #endregion
 

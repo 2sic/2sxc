@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Metadata;
 
-namespace ToSic.Eav.Apps;
+namespace ToSic.Sxc.Apps;
 
 /// <summary>
 /// An App-DataSource which also provides direct commands to edit/update/delete data.
@@ -13,7 +13,7 @@ public interface IAppData: IDataSource, IMetadataSource
     /// </summary>
     /// <param name="contentTypeName">The type name</param>
     /// <param name="values">a dictionary of values to be stored</param>
-    /// <param name="userName">the current user name - will be logged as the author</param>
+    /// <param name="userName">the current username - will be logged as the author</param>
     /// <param name="target">information if this new item is to be metadata for something</param>
     /// <remarks>
     /// Changed in 2sxc 10.30 - now returns the id of the created items
@@ -25,7 +25,7 @@ public interface IAppData: IDataSource, IMetadataSource
     /// </summary>
     /// <param name="contentTypeName">The type name</param>
     /// <param name="multiValues">many dictionaries, each will become an own item when stored</param>
-    /// <param name="userName">the current user name - will be logged as the author</param>
+    /// <param name="userName">the current username - will be logged as the author</param>
     /// <remarks>
     /// You can't create items which are metadata with this, for that, please use the Create-one overload <br/>
     /// Changed in 2sxc 10.30 - now returns the id of the created items
@@ -37,25 +37,15 @@ public interface IAppData: IDataSource, IMetadataSource
     /// </summary>
     /// <param name="entityId">The item ID</param>
     /// <param name="values">a dictionary of values to be updated</param>
-    /// <param name="userName">the current user name - will be logged as the author of the change</param>
+    /// <param name="userName">the current username - will be logged as the author of the change</param>
     void Update(int entityId, Dictionary<string, object> values, string? userName = null);
 
     /// <summary>
     /// Delete an existing item
     /// </summary>
     /// <param name="entityId">The item ID</param>
-    /// <param name="userName">the current user name - will be logged as the author of the change</param>
+    /// <param name="userName">the current username - will be logged as the author of the change</param>
     void Delete(int entityId, string? userName = null);
-
-    // 2024-01-09 2dm Removed for v17.01 - should have been removed a long time ago
-    ///// <summary>
-    ///// Metadata is an important feature of apps. <br/>
-    ///// So the App DataSource automatically provides direct access to the metadata system.
-    ///// This allows users of the App to query metadata directly through this object. 
-    ///// </summary>
-    //[PrivateApi]
-    //[Obsolete("This shouldn't be available any more, will be removed ca. v14")]
-    //IMetadataSource Metadata { get; }
 
     /// <summary>
     /// Get metadata of TargetType.Custom - which is the most common way your code will need Metadata.
@@ -65,4 +55,24 @@ public interface IAppData: IDataSource, IMetadataSource
     /// <param name="contentTypeName">Optional name of Content-Type, if you only want items of a specific type</param>
     /// <returns></returns>
     IEnumerable<IEntity> GetCustomMetadata<TKey>(TKey key, string? contentTypeName = null);
+
+
+    /// <summary>
+    /// All content types of the app.
+    /// </summary>
+    /// <remarks>
+    /// * Added v20
+    /// * Implemented as a method, so later we can apply filters etc. as additional parameters
+    /// </remarks>
+    IEnumerable<IContentType> GetContentTypes();
+
+    /// <summary>
+    /// Get a single content type by name (display name or NameId).
+    /// </summary>
+    /// <param name="name">the name, either the normal name or the NameId which looks like a GUID</param>
+    /// <remarks>
+    /// Added v20
+    /// </remarks>
+    IContentType? GetContentType(string name);
+
 }

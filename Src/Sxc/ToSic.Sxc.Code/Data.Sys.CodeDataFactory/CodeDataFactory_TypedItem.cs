@@ -33,7 +33,7 @@ partial class CodeDataFactory
     public ITypedItem? AsItem(IEntity? entity, Factory.ConvertItemSettings settings)
         => entity == null
             ? null
-            : new TypedItemOfEntity(null, entity, this, propsRequired: settings.ItemIsStrict);
+            : new TypedItemOfEntity(entity, this, propsRequired: settings.ItemIsStrict);
 
     [field: AllowNull, MaybeNull]
     private LogFilter AsItemLogFilter
@@ -84,7 +84,7 @@ partial class CodeDataFactory
         ITypedItem? ToItemOrNullAndLog(IEntity? e, string typeName)
             => e == null
                 ? l.ReturnNull($"empty {typeName}")
-                : l.Return(new TypedItemOfEntity(null, e, this, propsRequired: settings.ItemIsStrict), typeName);
+                : l.Return(new TypedItemOfEntity(e, this, propsRequired: settings.ItemIsStrict), typeName);
     }
 
     public IEnumerable<ITypedItem> EntitiesToItems(IEnumerable<IEntity>? entities, Factory.ConvertItemSettings settings)
@@ -97,7 +97,7 @@ partial class CodeDataFactory
 
         if (settings.DropNullItems)
             result = result
-                .Where(e => e != null)
+                .Where(e => e != null! /* rare cases do have null */)
                 .ToList();
 
         // Ignore that some items could contain null, since the default behavior is no-nulls

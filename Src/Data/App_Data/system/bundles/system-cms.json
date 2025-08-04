@@ -8008,6 +8008,437 @@
             ]
           },
           "Entities": []
+        },
+        {
+          "ContentType": {
+            "Id": "b535b6aa-d0a1-40c1-b996-b7e8461efc0c",
+            "Name": "\uD83E\uDD77PolymorphismPreviewSettings",
+            "Scope": "System.Cms",
+            "Metadata": [
+              {
+                "Id": 184171,
+                "Version": 3,
+                "Guid": "3019e511-9198-47df-9d7e-28e3e93f9703",
+                "Type": {
+                  "Id": "ContentType",
+                  "Name": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": ""
+                    },
+                    "Label": {
+                      "en-us": "Polymorphism Preview Settings"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "b535b6aa-d0a1-40c1-b996-b7e8461efc0c"
+                }
+              }
+            ],
+            "Attributes": [
+              {
+                "Name": "Background",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 184180,
+                    "Version": 3,
+                    "Guid": "3ee5e316-5935-431c-b736-9682d93c8b9b",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-default"
+                        },
+                        "Name": {
+                          "en-us": "Background Info Regarding Polymorphism"
+                        },
+                        "Notes": {
+                          "en-us": "<h3>What is this Polymorphism thing?</h3>\n<p>Apps can have multiple editions of the code which generates the output. This is called&nbsp;<a href=\"http://go.2sxc.org/polymorphism\" target=\"_blank\" rel=\"noopener\">Polymorphism</a>.</p>\n<p>Some apps use polymorphism to detect the bootstrap version and show the appropriate output. Others use it so developers can create a&nbsp;<em>staging</em> edition of the code, while the editors and the general public see the<em> live</em> edition.&nbsp;</p>\n<p>But in some situations - such as a \"preview before release\" or if a developer needs to see what the general public sees, it's important to quickly switch editions - which is what this is for.&nbsp;</p>\n<h3>How does it work?</h3>\n<p>If you select a specific edition, it will set a cookie&nbsp;<em>specific to this App</em> which will tell the backend to prefer the edition you have selected here.&nbsp;</p>\n<p>Note that if that edition does not exist, it will still default to the standard edition, as is configured in each view.&nbsp;</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "unknown"
+                  },
+                  {
+                    "Id": 184182,
+                    "Version": 2,
+                    "Guid": "dfd04c70-ab0c-4222-9372-ddab8788e7f0",
+                    "Type": {
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "BackgroundInfoEnd",
+                "Type": "Empty",
+                "InputType": "empty-end",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 184181,
+                    "Version": 1,
+                    "Guid": "b41c241a-7ea1-4a87-b88f-9c9a2f61880d",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputType": {
+                          "*": "empty-end"
+                        },
+                        "Name": {
+                          "*": "BackgroundInfoEnd"
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "VisibleInEditUI": {
+                          "*": true
+                        }
+                      }
+                    },
+                    "Owner": "unknown"
+                  }
+                ]
+              },
+              {
+                "Name": "CurrentValues",
+                "Type": "Empty",
+                "InputType": "empty-message",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 184173,
+                    "Version": 7,
+                    "Guid": "46ed2ab3-27a3-4f55-b6aa-e88f25bc0cde",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-message"
+                        },
+                        "Name": {
+                          "en-us": "Current Values"
+                        },
+                        "Notes": {
+                          "en-us": "<p>You are currently making preview settings for:</p>\n<ul>\n<li>App: <strong>[AppId]</strong></li>\n<li>Cookie Name: <strong>[CookieId]</strong></li>\n<li>Edition in the cookie:&nbsp;<strong>[Edition]</strong></li>\n</ul>\n<p><em>If a view does not exist in this edition, it will load the view from the default location.</em></p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "450a2dbf-1dbf-45ad-afa3-19b7bb552fbe"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "unknown"
+                  }
+                ]
+              },
+              {
+                "Name": "Edition",
+                "Type": "String",
+                "InputType": "string-dropdown",
+                "IsTitle": true,
+                "Metadata": [
+                  {
+                    "Id": 184174,
+                    "Version": 5,
+                    "Guid": "d19efb20-028e-4893-b766-70496aa775e6",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-dropdown"
+                        },
+                        "Name": {
+                          "en-us": "Edition"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Pick any value - or use free text entry to specify another edition</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "55572d4e-a204-4a49-b460-193400a3e2e9"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "unknown"
+                  },
+                  {
+                    "Id": 184175,
+                    "Version": 3,
+                    "Guid": "ee3bd6e3-e14b-45bf-87db-3e5dbf159a08",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 184176,
+                    "Version": 3,
+                    "Guid": "5370bad1-c4d7-4bc0-be64-bfb022aeb631",
+                    "Type": {
+                      "Id": "@string-dropdown",
+                      "Name": "@string-dropdown"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ":Not configured (empty - usually recomended)\nlive:live edition\nstaging:staging edition\nbs5:bs5 edition (Bootstrap5)\nbs4:b4 edition (Bootstrap4)\nbs3:bs3 edition (Bootstrap3)\n"
+                        },
+                        "DropdownValuesFormat": {
+                          "en-us": "value-label"
+                        }
+                      },
+                      "Boolean": {
+                        "EnableTextEntry": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              }
+            ]
+          },
+          "Entities": [
+            {
+              "Id": 184177,
+              "Version": 5,
+              "Guid": "450a2dbf-1dbf-45ad-afa3-19b7bb552fbe",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  // Helper from https://stackoverflow.com/a/25490531/5044294\n  const getCookieValue = (name) => (\n    document.cookie.match('(^|;)\\\\s*' + name + '\\\\s*=\\\\s*([^;]+)')?.pop() || ''\n  )\n  const appId = context.app.appId;\n  const cookieId = `app-${appId}-edition`;\n  const editionFromCookie = getCookieValue(cookieId);\n  const result = data.default\n    .replace('[AppId]', appId)\n    .replace('[ZoneId]', context.app.zoneId)\n    .replace('[CookieId]', cookieId)\n    .replace('[Edition]', editionFromCookie || '(empty - use default)');\n  return result;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Notes"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Notes"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 184178,
+              "Version": 5,
+              "Guid": "55572d4e-a204-4a49-b460-193400a3e2e9",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  // Helper from https://stackoverflow.com/a/25490531/5044294\n  const getCookieValue = (name) => (\n    document.cookie.match('(^|;)\\\\s*' + name + '\\\\s*=\\\\s*([^;]+)')?.pop() || ''\n  )\n  const cookieName = `app-${context.app.appId}-edition`;\n\n  if (!context.cache.alreadyRun) {\n    context.cache.alreadyRun = true;\n    return {\n      value: getCookieValue(cookieName) ?? \"\"\n    };\n  }\n\n  const edition = data.value;\n\n  // Empty: flush cookie\n  if (data.value == '') {\n    console.log(`Will unset cookie ${cookieName}`);\n    document.cookie = `${cookieName}=flush; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;\n  }\n  else {\n    console.log(`Will set cookie ${cookieName}=${edition}`)\n    document.cookie = `${cookieName}=${edition}; path=/;`;\n  }\n  // don't return anything, as we won't change the value\n  // return data.value;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Value"
+                  },
+                  "Title": {
+                    "en-us": "Field.Value"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            }
+          ]
         }
       ]
     }

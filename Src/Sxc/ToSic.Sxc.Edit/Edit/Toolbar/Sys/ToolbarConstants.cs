@@ -25,4 +25,11 @@ public class ToolbarConstants
     public const string RuleParamPrefixPrefill = "prefill:";
     public const string RuleParamPrefixForm = "form:";
     public const string RuleParamPrefixFilter = "filter:";
+
+    public const string ToolbarAttributeName = "sxc-toolbar";
+    public const string JsonToolbarNodeName = "toolbar";
+    public const string JsonSettingsNodeName = "settings";
+
+    public const string ToolbarTagPlaceholder = "{contents}";
+    public const string ToolbarTagTemplate = "<ul class=\"sc-menu\" {contents} ></ul>";
 }

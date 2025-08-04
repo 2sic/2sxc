@@ -10,10 +10,10 @@ internal abstract class CodeAnyApiHelper(ExecutionContext exCtx) : ICodeAnyApiHe
 {
     protected ExecutionContext ExCtx = exCtx;
 
-    public IBlock Block => ExCtx.Block;
+    public IBlock Block => ExCtx.Block!; // If accessed, the code doing it must have the block
 
     public ICmsContext CmsContext => ExCtx.CmsContext;
-    public IDataSource Data => ExCtx.Block.Data;
+    public IDataSource Data => ExCtx.Block!.Data; // If accessed, it must be working
 
     public TService GetService<TService>(NoParamOrder protector = default, bool reuse = false, Type? type = default)
         where TService : class

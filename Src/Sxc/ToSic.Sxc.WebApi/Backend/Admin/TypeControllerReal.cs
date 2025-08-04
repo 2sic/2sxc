@@ -99,10 +99,10 @@ public class TypeControllerReal(
     /// Used to be GET ContentType/CreateGhost
     /// </summary>
     /// <param name="appId"></param>
-    /// <param name="sourceStaticName"></param>
+    /// <param name="sourceNameId"></param>
     /// <returns></returns>
-    public bool AddGhost(int appId, string sourceStaticName)
-        => typeMod.New(appId).CreateGhost(sourceStaticName);
+    public bool AddGhost(int appId, string sourceNameId)
+        => typeMod.New(appId).CreateGhost(sourceNameId);
 
 
     public void SetTitle(int appId, int contentTypeId, int attributeId)

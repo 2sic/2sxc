@@ -11,13 +11,15 @@ namespace ToSic.Sxc.Data.Sys.Factory;
 
 public interface ICodeDataFactory: ICanGetService, IHasLog
 {
-    ITypedMetadata Metadata(IMetadata mdOf);
+    object MetadataDynamic(IMetadata mdOf);
+    ITypedMetadata MetadataTyped(IMetadata mdOf);
 
     /// <summary>
     /// Convert an object to a custom type, if possible.
     /// If the object is an entity-like thing, that will be converted.
     /// If it's a list of entity-like things, the first one will be converted.
     /// </summary>
+    [return: NotNullIfNotNull(nameof(source))]
     TCustom? AsCustom<TCustom>(object? source, NoParamOrder protector = default, bool mock = false)
         where TCustom : class, ICanWrapData;
 
@@ -34,6 +36,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     IEnumerable<TCustom> AsCustomList<TCustom>(object? source, NoParamOrder protector, bool nullIfNull)
         where TCustom : class, ICanWrapData;
 
+    [return: NotNullIfNotNull(nameof(data))]
     ITyped? AsTyped(object data, ConvertItemSettings settings, string? detailsMessage = default);
     IEnumerable<ITyped>? AsTypedList(object list, ConvertItemSettings settings);
     int CompatibilityLevel { get; }
@@ -49,12 +52,6 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     List<string> SiteCultures { get; }
 
     bool Debug { get; set; }
-
-    /// <summary>
-    /// Temporary workaround to allow forwarding the Block object without having to know the interface of it.
-    /// WIP to get dynamic data to keep the context of where it's from, without the API having to be typed.
-    /// </summary>
-    object? BlockAsObjectOrNull { get; }
 
     /// <summary>
     /// List of dimensions for value lookup, incl. priorities etc. and null-trailing.
@@ -118,7 +115,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
 
     IDynamicStack AsDynStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources);
     ITypedStack AsTypedStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources);
-    IField? Field(ITypedItem parent, string? name, ConvertItemSettings settings);
+    IField? Field(ITypedItem parent, bool supportOldMetadata, string? name, ConvertItemSettings settings);
     IEntity AsEntity(object thingToConvert);
     IEntity FakeEntity(int appId);
 

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using ToSic.Eav.Apps.AppReader.Sys;
+﻿using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.DataSource.Sys.Query;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps.Sys.Assets;
@@ -7,8 +6,9 @@ using ToSic.Sxc.Apps.Sys.Paths;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Data.Sys.Factory;
-using ToSic.Sxc.Services.DataServices;
+using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sxc.Services.Sys;
+using ToSic.Sxc.Services.Sys.DataService;
 using ToSic.Sxc.Sys.ExecutionContext;
 
 namespace ToSic.Sxc.Apps.Sys.AppTyped;
@@ -22,12 +22,15 @@ namespace ToSic.Sxc.Apps.Sys.AppTyped;
 // - provide an instance of this on the CodeApiService
 // - use that instead
 
-internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> queryManager)
+internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager<TypedQuery>> queryManager)
     : ServiceWithContext(SxcLogName + ".AppTyp", connect: [globalPaths, queryManager]),
         IAppTyped
 {
-    protected App App => ExCtx.GetApp() as App
-                         ?? throw new($"Can't access {nameof(App)} - either null or can't convert");
+    [field: AllowNull, MaybeNull]
+    protected App App => field
+        ??= ExCtx.GetApp() as App
+            ?? throw new($"Can't access {nameof(App)} - either null or can't convert");
+
 
     /// <inheritdoc />
     int IZoneIdentity.ZoneId => App.ZoneId;
@@ -38,8 +41,12 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> 
     /// <inheritdoc />
     public string Name => App.Name;
 
+    /// <summary>
+    /// The CDF either comes from the ExecutionContext, or self-generated.
+    /// This is important for scenarios where the App is used on a theme, where there is no execution context.
+    /// </summary>
     [field: AllowNull, MaybeNull]
-    private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
+    protected ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
 
     /// <inheritdoc />
     [field: AllowNull, MaybeNull]
@@ -48,10 +55,13 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager> 
         .Setup(Cdf);
 
     /// <inheritdoc />
-    public IDataSource? GetQuery(string? name = default, NoParamOrder noParamOrder = default, IDataSourceLinkable? attach = default, object? parameters = default)
+    public ITypedQuery? GetQuery(string? name = default, NoParamOrder noParamOrder = default, IDataSourceLinkable? attach = default, object? parameters = default)
     {
         var opts = new DataSourceOptionsMs(this, () => App.ConfigurationProvider);
-        return new GetQueryMs(queryManager, opts, Log).GetQuery(name, noParamOrder, attach, parameters);
+        var queryMicroService = new GetQueryMs<TypedQuery>(queryManager, opts, Log);
+        var query = queryMicroService.GetQuery(name, noParamOrder, attach, parameters);
+        query?.Setup(Cdf);
+        return query;
     }
 
     /// <inheritdoc />

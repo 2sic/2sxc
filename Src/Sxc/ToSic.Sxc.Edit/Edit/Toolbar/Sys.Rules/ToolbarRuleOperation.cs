@@ -3,18 +3,6 @@ using static ToSic.Sxc.Edit.Toolbar.Sys.Rules.ToolbarRuleOps;
 
 namespace ToSic.Sxc.Edit.Toolbar.Sys.Rules;
 
-internal enum ToolbarRuleOps
-{
-    OprAdd = ToolbarRuleOperation.AddOperation,
-    OprAuto = ToolbarRuleOperation.AutoOperation,
-    OprModify = ToolbarRuleOperation.ModifyOperation,
-    OprRemove = ToolbarRuleOperation.RemoveOperation,
-    [PrivateApi]
-    OprUnknown = ToolbarRuleOperation.UnknownOperation,
-    [PrivateApi]
-    OprNone = ToolbarRuleOperation.NoOperation,
-}
-
 /// <summary>
 /// This is just a documentation class to show all possible values for a `operation` parameter.
 ///
@@ -80,20 +68,6 @@ internal class ToolbarRuleOperation
             { RemoveVerb, OprRemove },
         };
 
-    //internal static char FindInFlags(string flags, ToolbarRuleOperations defOp)
-    //{
-    //    if (!flags.HasValue()) return (char)defOp;
-
-    //    var parts = flags.Split(',');
-    //    foreach (var f in parts)
-    //    {
-    //        var maybeOp = Pick(f, OprUnknown);
-    //        if (maybeOp != (char)OprUnknown) return maybeOp;
-    //    }
-
-    //    return (char)defOp;
-    //}
-
     internal static char Pick(string? op, ToolbarRuleOps defOp, bool? condition = default)
         => condition == false
             ? SkipInclude
@@ -107,7 +81,6 @@ internal class ToolbarRuleOperation
 
         if (op.Length == 1 && Enum.IsDefined(typeof(ToolbarRuleOps), (int)op[0]))
             return op[0];
-
 
         if (ToolbarRuleOpSynonyms.TryGetValue(op, out var foundSyn))
             return (char)foundSyn;

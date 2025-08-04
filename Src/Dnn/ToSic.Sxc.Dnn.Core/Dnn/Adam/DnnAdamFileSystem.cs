@@ -220,40 +220,44 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem
 
     public string GetUrl(string folderPath) => AdamManager.Site.ContentPath + folderPath;
 
-    private /*Folder<int, int>*/IFolder DnnToAdam(IFolderInfo dnnFolderInfo)
+    private IFolder DnnToAdam(IFolderInfo dnnFolderInfo)
     {
         var l = Log.Fn<Folder<int, int>>($"folderName: {dnnFolderInfo.FolderName}");
 
         if (dnnFolderInfo == null)
             throw l.Done(new ArgumentNullException(nameof(dnnFolderInfo), ErrorDnnObjectNull));
 
-        var folder = new Folder<int, int>(AdamManager)
-        {
-            Path = dnnFolderInfo.FolderPath,
-            SysId = dnnFolderInfo.FolderID,
+        var typed = new Folder<int, int>(AdamManager)
+            {
+                Path = dnnFolderInfo.FolderPath,
+                SysId = dnnFolderInfo.FolderID,
 
-            ParentSysId = dnnFolderInfo.ParentID,
+                ParentSysId = dnnFolderInfo.ParentID,
 
-            Name = dnnFolderInfo.DisplayName,
-            Created = dnnFolderInfo.CreatedOnDate,
-            Modified = dnnFolderInfo.LastModifiedOnDate,
-            Url = GetUrl(dnnFolderInfo.FolderPath), // AdamManager.Site.ContentPath + dnnFolderInfo.FolderPath,
-            PhysicalPath = dnnFolderInfo.PhysicalPath,
-        };
-        return l.ReturnAsOk(folder);
+                Name = dnnFolderInfo.DisplayName,
+                Created = dnnFolderInfo.CreatedOnDate,
+                Modified = dnnFolderInfo.LastModifiedOnDate,
+                Url = GetUrl(dnnFolderInfo.FolderPath), // AdamManager.Site.ContentPath + dnnFolderInfo.FolderPath,
+                PhysicalPath = dnnFolderInfo.PhysicalPath,
+            };
+        if (AdamManager.UseTypedAssets)
+            return l.Return(typed, "typed");
+
+        var dyn = FolderDynamic<int, int>.Create(AdamManager, typed);
+        return l.Return(dyn, "dynamic");
     }
 
 
-    private /*File<int, int>*/IFile DnnToAdam(IFileInfo dnnFileInfo)
+    private IFile DnnToAdam(IFileInfo dnnFileInfo)
     {
         var l = Log.Fn<File<int, int>>($"fileName: {dnnFileInfo.FileName}");
             
         if (dnnFileInfo == null)
             throw l.Done(new ArgumentNullException(nameof(dnnFileInfo), ErrorDnnObjectNull));
 
-        return l.ReturnAsOk(new File<int, int>(AdamManager)
+        var typed = new File<int, int>(AdamManager)
         {
-            FullName = dnnFileInfo.FileName,
+            FullName = dnnFileInfo.FileName!,
             Extension = dnnFileInfo.Extension,
             Size = dnnFileInfo.Size,
             SysId = dnnFileInfo.FileId,
@@ -266,10 +270,15 @@ internal class DnnAdamFileSystem() : ServiceBase("Dnn.FilSys"), IAdamFileSystem
             Modified = dnnFileInfo.LastModifiedOnDate,
             Name = Path.GetFileNameWithoutExtension(dnnFileInfo.FileName),
             Url = dnnFileInfo.StorageLocation == 0
-                ? AdamManager.Site.ContentPath + dnnFileInfo.Folder + dnnFileInfo.FileName
+                ? $"{AdamManager.Site.ContentPath}{dnnFileInfo.Folder}{dnnFileInfo.FileName}"
                 : FileLinkClickController.Instance.GetFileLinkClick(dnnFileInfo),
             PhysicalPath = dnnFileInfo.PhysicalPath,
-        });
+        };
+        if (AdamManager.UseTypedAssets)
+            return l.Return(typed, "typed");
+
+        var dyn = FileDynamic<int, int>.Create(AdamManager, typed);
+        return l.Return(dyn, "dynamic");
     }
 
     #endregion

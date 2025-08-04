@@ -35,11 +35,6 @@ internal record ResponsiveSpecsOfTarget(
         => ImgDecoratorOrNull?.ResizeSettings?.NullIfNoValue()
            ?? FieldImgDecoratorOrNull?.ResizeSettings?.NullIfNoValue();
 
-    ///// <summary>
-    ///// The only reliable object which knows about the url - should never be null
-    ///// </summary>
-    //public IHasLink Link => HasLinkOrNull;
-
     internal static ResponsiveSpecsOfTarget ExtractSpecs(object? target)
     {
         // Handle null and already-typed scenarios

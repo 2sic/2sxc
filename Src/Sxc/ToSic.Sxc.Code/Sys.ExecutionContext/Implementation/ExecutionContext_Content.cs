@@ -8,12 +8,12 @@ public partial class ExecutionContext
 {
     #region basic properties like Content, Header
 
-    /// <inheritdoc cref="IDynamicCode.Content" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Content" />
     public object? Content => _contentGo.Get(() => TryToBuildFirstOfStream(StreamDefaultName));
     private readonly GetOnce<object?> _contentGo = new();
 
 
-    /// <inheritdoc cref="IDynamicCode.Header" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Header" />
     public object? Header => _header.Get(GetHeaderOrNull);
     private readonly GetOnce<object?> _header = new();
 
@@ -36,7 +36,7 @@ public partial class ExecutionContext
     private object? TryToBuildFirstOfStream(string sourceStream)
     {
         var l = Log.Fn<object>(sourceStream);
-        if (!Block.DataIsReady || !Block.ViewIsReady)
+        if (Block is not { DataIsReady: true } || !Block.ViewIsReady)
             return l.ReturnNull("no data/view");
         var data = Block.Data;
         if (!data.Out.ContainsKey(sourceStream))

@@ -19,11 +19,12 @@ partial class EditService
         string? apps = null,
         int max = 100)
     {
-        Log.A("ctx attribs - enabled:{Enabled}");
+        var l = Log.Fn<IRawHtmlString>("ctx attribs - enabled:{Enabled}");
         if (!Enabled)
             return null;
 
-        if (field == null) throw new("need parameter 'field'");
+        if (field == null)
+            throw new("need parameter 'field'");
 
         var serialized = JsonSerializer.Serialize(new
         {
@@ -36,34 +37,8 @@ partial class EditService
             type = contentType ?? AppConstants.ContentGroupRefTypeName,
         }, JsonOptions.SafeJsonForHtmlAttributes);
 
-        return HtmlAttribute.Create(innerContentAttribute, serialized);
+        return l.Return(HtmlAttribute.Create(InnerContentAttribute, serialized));
     }
-
-    // 2024-01-10 2dm disabled #WrapInContext - was for internal only, seems not to be used? Was created 2018? https://github.com/2sic/2sxc/issues/1479
-    ///// <inheritdoc/>
-    //[PrivateApi]
-    //public IRawHtmlString WrapInContext(object content,
-    //    NoParamOrder noParamOrder = default,
-    //    string tag = SxcUiConstants.DefaultContextTag,
-    //    bool full = false,
-    //    bool? enableEdit = null,
-    //    int instanceId = 0,
-    //    int contentBlockId = 0
-    //)
-    //{
-    //    var renderingHelper = _renderHelper.Value;
-
-    //    return new RawHtmlString(
-    //        renderingHelper.WrapInContext(content.ToString(),
-    //            instanceId: instanceId > 0
-    //                ? instanceId
-    //                : Block.ParentId,
-    //            contentBlockId: contentBlockId > 0
-    //                ? contentBlockId
-    //                : Block.ContentBlockId,
-    //            editContext: enableEdit ?? Enabled)
-    //    );
-    //}
 
     #endregion Context Attributes
 }

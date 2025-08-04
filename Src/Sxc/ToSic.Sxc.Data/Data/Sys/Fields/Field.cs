@@ -19,7 +19,6 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
     public object? Raw
     {
         get => _raw.Get(() => Parent.Get(Name, required: false));
-        // WIP 2023-10-28 2dm Experimental Setter #FieldSetExperimental
         // Reason is for special edge cases like in School-Sys where we must process
         // the string before using it for Cms.Html(...)
         set => _raw.Reset(value);
@@ -32,7 +31,6 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
     public object? Value
     {
         get => _value.Get(() => Url ?? Raw)!;
-        // WIP 2023-10-28 2dm Experimental Setter #FieldSetExperimental
         set => _value.Reset(value);
     }
     private readonly GetOnce<object?> _value = new();
@@ -41,24 +39,12 @@ public class Field(ITypedItem parent, string name, ICodeDataFactory cdf) : IFiel
     public string? Url
     {
         get => _url.Get(() => Parent.Url(Name))!;
-        // WIP 2023-10-28 2dm Experimental Setter #FieldSetExperimental
         set => _url.Reset(value);
     }
     private readonly GetOnce<string?> _url = new();
 
-    /// <summary>
-    /// The Dynamic metadata - probably used somewhere...?
-    /// 2023-08-14 v16.03 removed by 2dm as never used; KISS
-    /// ...but reactivated for some reason I don't know...
-    /// 2025-06 2dm: It appears we reactivated it, because various older apps had code like this:
-    /// `var altText = Text.First(post.Field("Image").Metadata.Description, post.Title);`
-    /// Apps include Blog v5.3.1, News 5.2.3, ImageHotspot 3.2.2
-    /// </summary>
-    public ITypedMetadata Metadata => _dynMeta.Get(() => cdf.Metadata(MetadataOfValue!))!;
-    private readonly GetOnce<ITypedMetadata> _dynMeta = new();
 
-
-    private IMetadata? MetadataOfValue => _itemMd.Get(() =>
+    protected IMetadata? MetadataOfValue => _itemMd.Get(() =>
     {
         // Check if string is valid, and also a valid reference like file:742
         if (Raw is not string rawString

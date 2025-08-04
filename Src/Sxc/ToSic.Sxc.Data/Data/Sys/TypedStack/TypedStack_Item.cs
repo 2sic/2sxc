@@ -2,6 +2,7 @@
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Data;
+using ToSic.Sxc.Data.Options;
 using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Tweaks;
@@ -118,36 +119,39 @@ internal partial class TypedStack: ITypedItem
     //IEnumerable<ITypedItem> ITypedItem.Children(string field, NoParamOrder noParamOrder, string type, bool? required)
     //    => (this as ITypedStack).Children(field, noParamOrder, type, required);
 
-    T? ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required) where T : class => Cdf.AsCustom<T>(
-            source: ((ITypedItem)this).Child(name, required: required), protector: protector, mock: false
+    T? ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required, GetRelatedOptions? options)
+        where T : class
+        => Cdf.AsCustom<T>(
+            source: ((ITypedItem)this).Child(name, required: required, options: options),
+            protector: protector,
+            mock: false
         );
 
-    IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required)
+    IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required, GetRelatedOptions? options)
         => Cdf.AsCustomList<T>(
-            source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required),
+            source: ((ITypedItem)this).Children(field: field, noParamOrder: protector, type: type, required: required, options: options),
             protector: protector,
             nullIfNull: false
         );
 
     #region Not implemented: Parents, Publishing, Dyn, Presentation, Metadata
 
-    ITypedItem ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string? type, string? field)
+    ITypedItem ITypedItem.Parent(NoParamOrder noParamOrder, bool? current, string? type, string? field, GetRelatedOptions? options)
         => throw new NotImplementedException(ParentNotImplemented);
 
-    IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string? type, string? field)
+    IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string? type, string? field, GetRelatedOptions? options)
         => throw new NotImplementedException(ParentNotImplemented);
 
-    T? ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field) where T : class => throw new NotImplementedException(ParentNotImplemented);
+    T? ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field, GetRelatedOptions? options)
+        where T : class
+        => throw new NotImplementedException(ParentNotImplemented);
 
-    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field)
+    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field, GetRelatedOptions? options)
         => throw new NotImplementedException(ParentNotImplemented);
 
     bool ITypedItem.IsPublished => throw new NotImplementedException(NotImplementedError);
 
     IPublishing ITypedItem.Publishing => throw new NotImplementedException(NotImplementedError);
-
-    [JsonIgnore] // prevent serialization as it's not a normal property
-    dynamic ITypedItem.Dyn => throw new NotImplementedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(TypedStack)} by design");
 
     [JsonIgnore] // prevent serialization as it's not a normal property
     ITypedItem ITypedItem.Presentation => throw new NotImplementedException(NotImplementedError);

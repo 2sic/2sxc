@@ -60,7 +60,7 @@ public class TypeController() : OqtStatefulControllerBase(RealController.LogSuff
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Host)]
-    public bool AddGhost(int appId, string sourceStaticName) => Real.AddGhost(appId, sourceStaticName);
+    public bool AddGhost(int appId, string sourceNameId) => Real.AddGhost(appId, sourceNameId);
 
 
     [HttpPost]

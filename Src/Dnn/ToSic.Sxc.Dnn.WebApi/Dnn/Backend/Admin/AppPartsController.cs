@@ -39,7 +39,7 @@ public class AppPartsController() : DnnSxcControllerRoot(RealController.LogSuffi
     [ValidateAntiForgeryToken]
     public ImportResultDto Import(int zoneId, int appId)
     {
-        SysHlp.PreventServerTimeout300();
+        SysHlp.PreventServerTimeout600();
         return Real.Import(uploadInfo: new(Request, HttpContext.Current.Request), zoneId: zoneId, appId: appId);
     }
 

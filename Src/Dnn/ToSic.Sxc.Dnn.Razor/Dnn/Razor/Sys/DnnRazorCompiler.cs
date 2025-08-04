@@ -161,7 +161,7 @@ internal class DnnRazorCompiler(
             throw new InvalidOperationException($"The webpage found at '{templatePath}' was not created.");
 
         if (objectValue is not RazorComponentBase pageToInit)
-            throw new ExceptionWithHelp(HelpForCommonProblems.AutoInheritsMissingAfterV20,
+            throw new ExceptionWithHelp(HelpDbRazor.AutoInheritsMissingAfterV20,
                 new InvalidOperationException($"The webpage at '{templatePath}' must derive from RazorComponentBase."));
 
         pageToInit.Context = HttpContextCurrent;

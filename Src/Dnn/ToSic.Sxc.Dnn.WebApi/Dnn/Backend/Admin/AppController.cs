@@ -39,7 +39,11 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public void App(int zoneId, int appId, bool fullDelete = true) => Real.App(zoneId, appId, fullDelete);
+    public void App(int zoneId, int appId, bool fullDelete = true)
+    {
+        SysHlp.PreventServerTimeout600();
+        Real.App(zoneId, appId, fullDelete);
+    }
 
     /// <inheritdoc />
     [HttpPost]
@@ -92,7 +96,7 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [ValidateAntiForgeryToken]
     public ImportResultDto Reset(int zoneId, int appId, bool withPortalFiles = false)
     {
-        SysHlp.PreventServerTimeout300();
+        SysHlp.PreventServerTimeout600();
         return Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage, withPortalFiles);
     }
 
@@ -102,7 +106,7 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [ValidateAntiForgeryToken]
     public ImportResultDto Import(int zoneId)
     {
-        SysHlp.PreventServerTimeout300();
+        SysHlp.PreventServerTimeout600();
         return Real.Import(new(Request, HttpContext.Current.Request), zoneId, HttpContext.Current.Request["Name"]);
     }
 
@@ -120,7 +124,7 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [ValidateAntiForgeryToken]
     public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppDto> pendingApps)
     {
-        SysHlp.PreventServerTimeout300();
+        SysHlp.PreventServerTimeout600();
         return Real.InstallPendingApps(zoneId, pendingApps);
     }
 }

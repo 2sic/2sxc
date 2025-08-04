@@ -170,10 +170,11 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
         {
             // If the feature is not enabled, return null so up-stream can handle defaults
             if (!_featuresSvc.Value.IsEnabled(BuiltInFeatures.LanguagesAdvancedFallback.Guid))
-                return null;
+                return l.ReturnNull("feature not enabled");
 
             var lc = LocaleController.Instance;
-            if (lc == null) return null;
+            if (lc == null)
+                return l.ReturnNull("no locale controller");
             var list = new List<string>();
 
             // Top priority is current and fallbacks of it
@@ -205,11 +206,13 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
             }
 
             // If the list is empty, return null so upstream can fallback
-            return list.Any() ? list : null;
+            return list.Any()
+                ? l.Return(list, $"got: {list.Count}")
+                : l.ReturnNull("no list");
         }
         catch
         {
-            return null;
+            return l.ReturnAsError(null);
         }
     }
 

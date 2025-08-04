@@ -77,18 +77,18 @@ public class CodeErrorHelpService: ServiceBase
         switch (ex)
         {
             // Check if we already wrapped it
-            case ExceptionWithHelp _:
+            case ExceptionWithHelp:
                 return null;
             //case NamedArgumentException nae:
             //    return new CodeHelp("named-parameters", null,
             //        Parameters.HelpLink,
             //        uiMessage: " ", detailsHtml: nae.Intro.Replace("\n", "<br>") + (nae.ParamNames.HasValue() ? $"<br>Param Names: <code>{nae.ParamNames}</code>": ""));
             case RuntimeBinderException _:
-                return FindHelp(ex, HelpForCommonProblems.HelpForRuntimeProblems);
+                return FindHelp(ex, HelpDbRazor.HelpForRuntimeProblems);
             case InvalidCastException _:
-                return FindHelp(ex, HelpForCommonProblems.HelpForInvalidCast);
+                return FindHelp(ex, HelpDbRazor.CompileInvalidCastExceptions);
             case HttpCompileException _:
-                return FindHelp(ex, HelpForCommonProblems.HelpForHttpCompile);
+                return FindHelp(ex, HelpDbRazor.HelpForHttpCompileExceptions);
             default:
                 return null;
         }

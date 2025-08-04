@@ -4,7 +4,7 @@ using ToSic.Sxc.Web.Sys.Html;
 
 namespace ToSic.Sxc.Edit.Toolbar.Sys;
 
-internal class ItemToolbarV14(IEntity? entity, IToolbarBuilder toolbar)
+internal class ItemToolbarV14(IToolbarBuilder toolbar, IEntity? entity = null)
     : ItemToolbarV10(entity, null, null, null, toolbar, "TlbV14")
 {
     public const string ContextAttributeName = "sxc-context";

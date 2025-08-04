@@ -97,12 +97,12 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     /// See https://docs.2sxc.org/basics/data/content-types/range-app-shared.html
     /// </summary>
     /// <param name="appId"></param>
-    /// <param name="sourceStaticName"></param>
+    /// <param name="sourceNameId"></param>
     /// <returns></returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public bool AddGhost(int appId, string sourceStaticName) => Real.AddGhost(appId, sourceStaticName);
+    public bool AddGhost(int appId, string sourceNameId) => Real.AddGhost(appId, sourceNameId);
 
 
     /// <summary>
@@ -145,7 +145,7 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     [ValidateAntiForgeryToken]
     public ImportResultDto Import(int zoneId, int appId)
     {
-        SysHlp.PreventServerTimeout300();
+        SysHlp.PreventServerTimeout600();
         return Real.Import(new(Request, HttpContext.Current.Request), zoneId, appId);
     }
 

@@ -1,8 +1,11 @@
 ﻿using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.ValueConverter;
+using ToSic.Sxc.Data.Options;
 using ToSic.Sxc.Data.Sys.Decorators;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Typed;
+using ToSic.Sys.Performance;
+using ToSic.Sys.Users;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Data.Sys.Dynamic;
@@ -79,10 +82,8 @@ internal class GetAndConvertHelper(
         if (_rawValCache.TryGetValue(cacheKey, out var cached))
             return l.Return(cached, "cached");
 
-        // use the standard dimensions or overload
-        var languages = language == null
-            ? Cdf.Dimensions
-            : GetFinalLanguagesList(language, Cdf.SiteCultures, Cdf.Dimensions);
+        // Figure out best order of languages to look up
+        var languages = LanguagePreprocessor.GetLookupLanguages(language, cdf);
 
         l.A($"cache-key: {cacheKey}, {nameof(languages)}:{languages.Length}");
 
@@ -114,42 +115,7 @@ internal class GetAndConvertHelper(
         return l.Return(final, "ok");
     }
 
-    /// <summary>
-    /// Full logic, as static, testable method
-    /// </summary>
-    /// <param name="language"></param>
-    /// <param name="possibleDims"></param>
-    /// <param name="defaultDims"></param>
-    /// <returns></returns>
-    internal static string?[] GetFinalLanguagesList(string language, List<string> possibleDims, string?[] defaultDims)
-    {
-        // if nothing specified, use default
-        if (language == null! /* paranoid */)
-            return defaultDims;
 
-        var languages = language.ToLowerInvariant()
-            .Split(',')
-            .Select(s => s.Trim())
-            .ToArray();
-
-        // expand language codes, e.g.
-        // - "en" should become "en-us" if available
-        // - "" should become null to signal fallback to default
-        var final = languages
-            .Select(l =>
-            {
-                if (l == "")
-                    return null;
-                // note: availableDims usually has a null-entry at the end
-                // note: both l and availableDims are lowerInvariant
-                var found = possibleDims.FirstOrDefault(ad => ad?.StartsWith(l) == true);
-                return found ?? "not-found";
-            })
-            .Where(s => s != "not-found")
-            .ToArray();
-
-        return final;
-    }
 
     private readonly Dictionary<string, TryGetResult> _rawValCache = new(InvariantCultureIgnoreCase);
 
@@ -175,14 +141,14 @@ internal class GetAndConvertHelper(
         {
             if (childrenShouldBeDynamic)
             {
-                l.A($"Convert entity list as DynamicEntity"); // {nameof(DynamicEntity)}");
+                l.A("Convert entity list as DynamicEntity");
                 var dynEnt = Cdf.AsDynamicFromEntities(children.ToArray(), new() { ItemIsStrict = PropsRequired }, parent: parent, field: field);
                 if (Debug)
                     dynEnt.Debug = true;
                 return l.Return(dynEnt, "ent-list, now dyn");
             }
             l.A($"Convert entity list as {nameof(ITypedItem)}");
-            var converted = AsChildrenItems(entities: children, field: field, parentEntity: parent);
+            var converted = AsChildrenItems(entities: children, field: field, parentEntity: parent, new());
 
             // if (Debug) converted.ForEach(c => c.Debug = true);
             return l.Return(converted, "ent-list, now dyn");
@@ -210,39 +176,87 @@ internal class GetAndConvertHelper(
             .Select(SubDataFactory.SubDynEntityOrNull)
             .ToList();
 
-    public List<ITypedItem> ParentsItems(IEntity entity, string? type, string? field)
-        => entity.Parents(type, field)
-            .Select(ITypedItem (e) => new TypedItemOfEntity(null, e, Cdf, PropsRequired))
+    public List<ITypedItem> ParentsItems(IEntity entity, string? type, string? field, GetRelatedOptions options)
+    {
+        var list = entity.Parents(type, field);
+        var processed = ProcessOptions(list, options, Cdf.Services.User);
+        
+        var preserveNull = options.ProcessNull == ProcessNull.Preserve;
+
+        return processed
+            .Select(ITypedItem (e) => e == null && preserveNull
+                ? null!
+                : new TypedItemOfEntity(e!, Cdf, PropsRequired)
+            )
             .ToList();
+    }
 
 
     public List<IDynamicEntity?> ChildrenDyn(IEntity entity, string? field, string? type)
         => AsChildrenDyn(entity.Children(field, type), field, parentEntity: entity);
 
-    public List<ITypedItem> ChildrenItems(IEntity entity, string field, string? type)
-        => AsChildrenItems(entity.Children(field, type), field, parentEntity: entity);
+    public List<ITypedItem> ChildrenItems(IEntity entity, string field, string? type, GetRelatedOptions options)
+        => AsChildrenItems(entity.Children(field, type), field, parentEntity: entity, options);
 
     private List<IDynamicEntity?> AsChildrenDyn(IEnumerable<IEntity?> entities, string? field, IEntity? parentEntity)
-        => AsChildrenOf(entities, field, parentEntity, SubDataFactory.SubDynEntityOrNull);
+        => AsChildrenOf(
+            ProcessOptions(entities, new(), Cdf.Services.User),
+            field,
+            parentEntity,
+            SubDataFactory.SubDynEntityOrNull,
+            new()
+        );
 
-    private List<ITypedItem> AsChildrenItems(IEnumerable<IEntity?> entities, string field, IEntity? parentEntity)
-        => AsChildrenOf(entities, field, parentEntity, ITypedItem (e) => new TypedItemOfEntity(null, e, Cdf, PropsRequired));
+    private List<ITypedItem> AsChildrenItems(IEnumerable<IEntity?> entities, string field, IEntity? parentEntity, GetRelatedOptions options)
+        => AsChildrenOf(
+            ProcessOptions(entities, options, Cdf.Services.User),
+            field,
+            parentEntity,
+            ITypedItem (e) => new TypedItemOfEntity(e, Cdf, PropsRequired),
+            options
+        );
 
-    private static List<T> AsChildrenOf<T>(IEnumerable<IEntity?> entities, string? fieldNameForWrapperInfo, IEntity? parentEntity, Func<IEntity, T> convert)
+    private static List<T> AsChildrenOf<T>(
+        IEnumerable<IEntity?> entities,
+        string? fieldNameForWrapperInfo,
+        IEntity? parentEntity,
+        Func<IEntity, T> convert,
+        GetRelatedOptions options)
         where T : class?, ICanBeEntity?
     {
+        var preserveNull = options.ProcessNull == ProcessNull.Preserve;
+
         var list = entities
-            // filter out nulls, as the razor code will usually not be able to handle them
-            // in future, we should maybe add a trigger to optionally allow nulls,
-            // in which case the result should then also be null
-            .Where(e => e != null)
-            .Select(IEntity (e, i) => EntityInBlockDecorator.Wrap(entity: e!, fieldName: fieldNameForWrapperInfo, index: i, parent: parentEntity))
-            .Select(convert)
+            .Select((e, i) =>
+            {
+                if (e == null && preserveNull)
+                    return null!;
+                var wrapped = EntityInBlockDecorator.Wrap(entity: e!, fieldName: fieldNameForWrapperInfo, index: i, parent: parentEntity);
+                var converted = convert(wrapped);
+                return converted;
+            })
             .ToList();
         return new ListTypedItems<T>(list, null);
     }
 
+    private static ICollection<IEntity?> ProcessOptions(IEnumerable<IEntity?> entities, GetRelatedOptions options, IUser user)
+    {
+        // 1. Check if we should remove drafts - default for non-admins
+        if (options.ProcessDraft == ProcessDraft.NoDraft ||
+            (options.ProcessDraft == ProcessDraft.Auto && !user.IsContentEditor))
+            entities = entities
+                .Where(e => e?.IsPublished == true);
+
+        // 2. filter out nulls, as the razor code will usually not be able to handle them
+        // in future, we should maybe add a trigger to optionally allow nulls,
+        // in which case the result should then also be null
+        var preserveNull = options.ProcessNull == ProcessNull.Preserve;
+        if (!preserveNull)
+            entities = entities
+                .Where(e => e != null);
+
+        return entities.ToListOpt();
+    }
+
     #endregion
-
-
 }

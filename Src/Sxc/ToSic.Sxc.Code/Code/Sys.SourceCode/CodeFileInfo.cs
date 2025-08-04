@@ -38,14 +38,14 @@ public class CodeFileInfo
     public bool AppCode { get; }
 
     // without base class
-    public static CodeFileInfo TemplateUnknown = new(SysConstants.Unknown, CodeFileTypes.Unknown, HelpForRazorCompileErrors.CompileUnknown);
+    public static CodeFileInfo TemplateUnknown = new(SysConstants.Unknown, CodeFileTypes.Unknown, HelpDbRazor.CompileVersionUnknown);
 
     // with some other base class
-    public static CodeFileInfo TemplateOther = new("other", CodeFileTypes.Other, HelpForRazorCompileErrors.CompileUnknown);
+    public static CodeFileInfo TemplateOther = new("other", CodeFileTypes.Other, HelpDbRazor.CompileVersionUnknown);
 
     public static CodeFileInfo CodeFileNotFound = new("", CodeFileTypes.FileNotFound, []);
 
-    public static CodeFileInfo CodeFileInheritsAppCode = new("AppCode.*", CodeFileTypes.V16, HelpForRazorTyped.Compile16, sourceCode: null);
+    public static CodeFileInfo CodeFileInheritsAppCode = new("AppCode.*", CodeFileTypes.V16, HelpDbRazor.Compile16, sourceCode: null);
     /// <summary>
     /// Template CodeFile objects for different types of files.
     /// They don't contain the source code, which would be added later if needed.
@@ -55,14 +55,14 @@ public class CodeFileInfo
         TemplateUnknown,
         TemplateOther,
         // cshtml
-        new("Custom.Hybrid.Razor12", CodeFileTypes.V12, HelpForRazor12.Compile12, sourceCode: null),
-        new("Custom.Hybrid.Razor14", CodeFileTypes.V14, HelpForRazor14.Compile14, sourceCode: null),
-        new("Custom.Hybrid.RazorTyped", CodeFileTypes.V16, HelpForRazorTyped.Compile16, sourceCode: null),
+        new("Custom.Hybrid.Razor12", CodeFileTypes.V12, HelpDbRazor.CompileRazorOrCode12, sourceCode: null),
+        new("Custom.Hybrid.Razor14", CodeFileTypes.V14, HelpDbRazor.CompileRazorOrCode14, sourceCode: null),
+        new("Custom.Hybrid.RazorTyped", CodeFileTypes.V16, HelpDbRazor.Compile16, sourceCode: null),
 
         // c#
-        new("Custom.Hybrid.Code12", CodeFileTypes.V12, HelpForRazor12.Compile12, sourceCode: null),
-        new("Custom.Hybrid.Code14", CodeFileTypes.V14, HelpForRazor14.Compile14, sourceCode: null),
-        new("Custom.Hybrid.CodeTyped", CodeFileTypes.V16, HelpForRazorTyped.Compile16, sourceCode: null),
+        new("Custom.Hybrid.Code12", CodeFileTypes.V12, HelpDbRazor.CompileRazorOrCode12, sourceCode: null),
+        new("Custom.Hybrid.Code14", CodeFileTypes.V14, HelpDbRazor.CompileRazorOrCode14, sourceCode: null),
+        new("Custom.Hybrid.CodeTyped", CodeFileTypes.V16, HelpDbRazor.Compile16, sourceCode: null),
     ];
 
     /// <summary>

@@ -4,6 +4,9 @@ namespace ToSic.Sxc.Data.Sys.CodeDataFactory;
 
 partial class CodeDataFactory
 {
-    public ITypedMetadata Metadata(IMetadata mdOf)
+    public object MetadataDynamic(IMetadata mdOf)
+        => new Metadata.MetadataDynamic(mdOf, this);
+
+    public ITypedMetadata MetadataTyped(IMetadata mdOf)
         => new Metadata.Metadata(mdOf, this);
 }

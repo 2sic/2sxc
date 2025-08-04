@@ -1,11 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Eav.Context.Sys.ZoneMapper;
-using ToSic.Sxc.Blocks.Sys.BlockBuilder;
-using ToSic.Sxc.Sys.ExecutionContext;
-using ToSic.Sys.Users;
-using App = ToSic.Sxc.Apps.App;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Services.Sys.CodeApiServiceHelpers;
 
 namespace ToSic.Sxc.Services.Sys.DynamicCodeService;
 
@@ -14,64 +10,22 @@ namespace ToSic.Sxc.Services.Sys.DynamicCodeService;
 /// Not sure how to get this to work, since normally we always start with a code-file, and here we don't have one!
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public partial class DynamicCodeService: ServiceBase<DynamicCodeService.Dependencies>, IDynamicCodeService, ILogWasConnected
+public partial class DynamicCodeService(CodeApiServiceBase.Dependencies services, string? logName = null /* must be nullable for DI */)
+    : CodeApiServiceBase(services, logName ?? $"{SxcLogName}.DCS"),
+        IDynamicCodeService
 {
     #region Constructor and Init
 
-    public class Dependencies(
-        IServiceProvider serviceProvider,
-        LazySvc<ILogStore> logStore,
-        LazySvc<IUser> user,
-        // Dependencies to get primary app
-        LazySvc<ISite> site,
-        LazySvc<IZoneMapper> zoneMapper,
-        LazySvc<IAppsCatalog> appsCatalog)
-        : DependenciesBase(connect: [/* never! serviceProvider */ logStore, user, site, zoneMapper, appsCatalog])
-    {
-        internal IServiceProvider ServiceProvider { get; } = serviceProvider;
-        public LazySvc<ILogStore> LogStore { get; } = logStore;
-        public LazySvc<IUser> User { get; } = user;
-        public LazySvc<ISite> Site { get; } = site;
-        public LazySvc<IZoneMapper> ZoneMapper { get; } = zoneMapper;
-        public LazySvc<IAppsCatalog> AppsCatalog { get; } = appsCatalog;
-    }
-
-    public class MyScopedServices(
-        Generator<IExecutionContextFactory> codeRootGenerator,
-        Generator<App> appGenerator,
-        LazySvc<IModuleAndBlockBuilder> modAndBlockBuilder)
-        : DependenciesBase(connect: [codeRootGenerator, appGenerator, modAndBlockBuilder])
-    {
-        public Generator<App> AppGenerator { get; } = appGenerator;
-        public Generator<IExecutionContextFactory> CodeRootGenerator { get; } = codeRootGenerator;
-        public LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder { get; } = modAndBlockBuilder;
-    }
-
-    public DynamicCodeService(Dependencies services): this(services, $"{SxcLogName}.DCS") { }
-    protected DynamicCodeService(Dependencies services, string logName): base(services, logName)
-    {
-        ScopedServiceProvider = services.ServiceProvider.CreateScope().ServiceProvider;
-        // Important: These generators must be built inside the scope, so they must be made here
-        // and NOT come from the constructor injection
-        // TODO: @2DM - put log in Build call?
-        _myScopedServices = ScopedServiceProvider.Build<MyScopedServices>().ConnectServices(Log);
-    }
-
     /// <summary>
-    /// This is for all the services used here, or also for services needed in inherited classes which will need the same scoped objects
+    /// This is for all the services used here, or also for services needed in inherited classes which will need the same scoped objects.
+    /// It's important to understand that everything in here will use the scoped service provider.
     /// </summary>
-    protected IServiceProvider ScopedServiceProvider { get; }
-    private readonly MyScopedServices _myScopedServices;
+    [field: AllowNull, MaybeNull]
+    protected IServiceProvider ScopedServiceProvider => field ??= Services.ServiceProvider.CreateScope().ServiceProvider;
 
-    public void LogWasConnected() => _logInitDone = true; // if we link it to a parent, we don't need to add own entry in log history
-    private bool _logInitDone;
+    [field: AllowNull, MaybeNull]
+    private ScopedDependencies ServicesScoped => field ??= ScopedServiceProvider.Build<ScopedDependencies>().ConnectServices(Log);
 
-    protected void MakeSureLogIsInHistory()
-    {
-        if (_logInitDone) return;
-        _logInitDone = true;
-        Services.LogStore.Value.Add("dynamic-code-service", Log);
-    }
 
     protected void ActivateEditUi() => EditUiRequired = true;
 
@@ -79,4 +33,20 @@ public partial class DynamicCodeService: ServiceBase<DynamicCodeService.Dependen
 
     #endregion
 
+    #region App
+
+    /// <inheritdoc />
+    public IApp App(NoParamOrder noParamOrder = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
+        => GetApp(ServicesScoped.AppGenerator, noParamOrder, zoneId, appId, site, withUnpublished);
+
+    /// <inheritdoc />
+    public IApp AppOfSite()
+        => GetAndInitApp(ServicesScoped.AppGenerator.New(), GetPrimaryAppIdentity(null), null);
+
+    /// <inheritdoc />
+    // ReSharper disable once MethodOverloadWithOptionalParameter
+    public IApp AppOfSite(NoParamOrder noParamOrder = default, int? siteId = null, ISite? overrideSite = null, bool? withUnpublished = null)
+        => GetAndInitApp(ServicesScoped.AppGenerator.New(), GetPrimaryAppIdentity(siteId, overrideSite), overrideSite, withUnpublished);
+
+    #endregion
 }

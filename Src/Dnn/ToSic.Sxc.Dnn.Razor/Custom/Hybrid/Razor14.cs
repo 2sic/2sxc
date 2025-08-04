@@ -53,10 +53,10 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
 
     #region Link, Edit
 
-    /// <inheritdoc cref="IDynamicCode.Link" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Link" />
     public ILinkService Link => CodeApi.Link;
 
-    /// <inheritdoc cref="IDynamicCode.Edit" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Edit" />
     public IEditService Edit => CodeApi.Edit;
 
     #endregion
@@ -64,7 +64,7 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
 
     #region CmsContext
 
-    /// <inheritdoc cref="IDynamicCode.CmsContext" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CmsContext" />
     public ICmsContext CmsContext => CodeApi.CmsContext;
 
     #endregion
@@ -72,10 +72,10 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
 
     #region Content, Header, etc. and List
 
-    /// <inheritdoc cref="IDynamicCode.Content" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Content" />
     public dynamic Content => CodeApi.Content;
 
-    /// <inheritdoc cref="IDynamicCode.Header" />
+    /// <inheritdoc cref="IDynamicCodeDocs.Header" />
     public dynamic Header => CodeApi.Header;
 
     /// <inheritdoc />
@@ -85,11 +85,11 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
 
     #region CreateSource Stuff
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataSource, ILookUpEngine)" />
     public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
         => CodeApi.CreateSource<T>(inSource, configurationProvider);
 
-    /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
+    /// <inheritdoc cref="IDynamicCodeDocs.CreateSource{T}(IDataStream)" />
     public T CreateSource<T>(IDataStream source) where T : IDataSource
         => CodeApi.CreateSource<T>(source);
 
@@ -102,7 +102,7 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
     [PrivateApi("Not yet ready")]
     public IDevTools DevTools => CodeApi.DevTools;
 
-    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpForRazor14.Compile14;
+    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpDbRazor.CompileRazorOrCode14;
 
     #endregion
 
@@ -114,7 +114,7 @@ public abstract partial class Razor14: RazorComponentBase, IRazor14<object, Serv
     public virtual dynamic CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string name = null, string relativePath = null, bool throwOnError = true)
         => RzrHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError: throwOnError);
 
-    /// <inheritdoc cref="IDynamicCode16.GetCode"/>
+    /// <inheritdoc cref="ITypedCode16.GetCode"/>
     [PrivateApi("added in 16.05, but not sure if it should be public")]
     public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
         => RzrHlp.GetCode(path, noParamOrder, className);

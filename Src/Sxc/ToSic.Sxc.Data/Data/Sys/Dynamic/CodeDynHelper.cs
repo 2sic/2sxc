@@ -15,8 +15,9 @@ internal class CodeDynHelper(IEntity entity, SubDataFactory subDataFactory)
     public IDynamicEntity? Presentation => _prs.Get(() => SubDataFactory.SubDynEntityOrNull(Entity.GetDecorator<EntityInBlockDecorator>()?.Presentation));
     private readonly GetOnce<IDynamicEntity?> _prs = new();
 
-    public ITypedMetadata Metadata => _md.Get(() => SubDataFactory.Cdf.Metadata(Entity.Metadata))!;
-    private readonly GetOnce<ITypedMetadata?> _md = new();
+    public object Metadata => _md.Get(() => SubDataFactory.Cdf.MetadataDynamic(Entity.Metadata))!;
+    private readonly GetOnce<object?> _md = new();
+
     public IDynamicEntity? Parent => _dp.Get(() => SubDataFactory.SubDynEntityOrNull(Entity.GetDecorator<EntityInBlockDecorator>()?.Parent));
     private readonly GetOnce<IDynamicEntity?> _dp = new();
 

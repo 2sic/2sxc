@@ -5,6 +5,7 @@ using ToSic.Eav.Metadata.Sys;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Cms.Data;
+using ToSic.Sxc.Data.Options;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Json;
 using ToSic.Sxc.Data.Sys.Wrappers;
@@ -31,12 +32,6 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
     private ICodeDataFactory Cdf => _cdf.Value;
     private ILazyLike<ICodeDataFactory> _cdf = null!;
     private ICodeDataPoCoWrapperService Wrapper { get; set; } = null!;
-
-
-    [PrivateApi]
-    [JsonIgnore]
-    dynamic ITypedItem.Dyn => throw new NotSupportedException($"{nameof(ITypedItem.Dyn)} is not supported on the {nameof(ITypedStack)} by design");
-
     public TValue? Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue? fallback = default,
         bool? required = default, string? language = default)
         => PreWrap.TryGetTyped(name, noParamOrder, fallback, required: required);
@@ -89,10 +84,10 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     #region Relationships - Child, Children, Parents, Presentation
 
-    public ITypedItem? Child(string name, NoParamOrder noParamOrder, bool? required)
+    public ITypedItem? Child(string name, NoParamOrder noParamOrder, bool? required, GetRelatedOptions? options)
         => CreateItemFromProperty(name);
 
-    public IEnumerable<ITypedItem> Children(string? field, NoParamOrder noParamOrder, string? type, bool? required)
+    public IEnumerable<ITypedItem> Children(string? field, NoParamOrder noParamOrder, string? type, bool? required, GetRelatedOptions? options)
     {
         var blank = Enumerable.Empty<ITypedItem>();
         var r = PreWrap.TryGetWrap(field);
@@ -118,18 +113,19 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
         return items;
     }
 
-    public ITypedItem Parent(NoParamOrder noParamOrder = default, bool? current = default, string? type = default, string? field = default)
+    public ITypedItem Parent(NoParamOrder noParamOrder = default, bool? current = default, string? type = default, string? field = default, GetRelatedOptions? options = default)
         => throw new NotSupportedException($"You can't access the {nameof(Parent)}() here");
 
 
     /// <summary>
-    /// The parents are "fake" so they behave just like children... but under the node "Parents".
+    /// The parents of Wrap-Object are "fake" so they behave just like children... but under the node "Parents".
     /// If "field" is specified, then it will assume another child-level under the node parents
     /// </summary>
-    public IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder, string? type, string? field)
+    public IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder, string? type, string? field, GetRelatedOptions? options)
     {
-        ITypedItem typed = this;
-        var items = typed.Children(nameof(ITypedItem.Parents), type: type).ToList();
+        var items = ((ITypedItem)this)
+            .Children(nameof(ITypedItem.Parents), type: type, options: options)
+            .ToList();
 
         if (!items.SafeAny() && !field.HasValue())
             // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
@@ -194,24 +190,34 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
     #region New Child<T> / Children<T> - disabled as ATM Kit is missing
 
-    T? ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required) where T : class => Cdf.AsCustom<T>(
-            source: (this as ITypedItem).Child(name, required: required), protector: protector, mock: false
+    T? ITypedItem.Child<T>(string name, NoParamOrder protector, bool? required, GetRelatedOptions? options)
+        where T : class
+        => Cdf.AsCustom<T>(
+            source: (this as ITypedItem).Child(name, required: required, options: options),
+            protector: protector,
+            mock: false
         );
 
-    IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required)
+    IEnumerable<T> ITypedItem.Children<T>(string? field, NoParamOrder protector, string? type, bool? required, GetRelatedOptions? options)
         => Cdf.AsCustomList<T>(
-            source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required),
+            source: (this as ITypedItem).Children(field: field, noParamOrder: protector, type: type, required: required, options: options),
             protector: protector,
             nullIfNull: false
         );
 
-    T? ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field) where T : class => Cdf.AsCustom<T>(
-            source: (this as ITypedItem).Parent(noParamOrder: protector, current: current, type: type ?? typeof(T).Name, field: field), protector: protector, mock: false
+    T? ITypedItem.Parent<T>(NoParamOrder protector, bool? current, string? type, string? field, GetRelatedOptions? options)
+        where T : class
+        => Cdf.AsCustom<T>(
+            source: (this as ITypedItem).Parent(noParamOrder: protector, current: current, type: type ?? typeof(T).Name, field: field, options: options),
+            protector: protector,
+            mock: false
         );
 
-    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field)
+    IEnumerable<T> ITypedItem.Parents<T>(NoParamOrder protector, string? type, string? field, GetRelatedOptions? options)
         => Cdf.AsCustomList<T>(
-            source: (this as ITypedItem).Parents(noParamOrder: protector, field: field, type: type ?? typeof(T).Name), protector: protector, nullIfNull: false
+            source: (this as ITypedItem).Parents(noParamOrder: protector, field: field, type: type ?? typeof(T).Name, options: options),
+            protector: protector,
+            nullIfNull: false
         );
 
     #endregion
@@ -249,7 +255,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
 
         var mdOf = new Metadata<int>(0, 0, "virtual", mdEntities);
         // TODO: @2dm - this probably won't work yet, without an entity (null) #todoTyped
-        var metadata = Cdf.Metadata(mdOf);
+        var metadata = Cdf.MetadataTyped(mdOf);
         return metadata;
     }
 
