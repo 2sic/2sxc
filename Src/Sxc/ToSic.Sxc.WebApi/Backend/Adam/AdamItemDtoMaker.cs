@@ -2,7 +2,6 @@
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Adam.Sys;
 using ToSic.Sxc.Adam.Sys.Manager;
-using ToSic.Sxc.Adam.Sys.Security;
 using ToSic.Sxc.Adam.Sys.Work;
 using ToSic.Sxc.Data;
 using ToSic.Sys.Security.Permissions;
@@ -15,12 +14,11 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
 {
     #region Constructor / DI
 
-    public class Dependencies(IAdamSecurityCheckService security)
-    {
-        public IAdamSecurityCheckService Security { get; } = security;
-    }
+    /// <summary>
+    /// ATM no dependencies...
+    /// </summary>
+    public class Dependencies;
 
-    private readonly IAdamSecurityCheckService _security = services.Security;
 
     [field: AllowNull, MaybeNull]
     public AdamContext AdamContext => field ??= Options.AdamContext!;
@@ -121,7 +119,7 @@ public class AdamItemDtoMaker<TFolderId, TFileId>(AdamItemDtoMaker<TFolderId, TF
 
     private bool CanEditFolder(Eav.Apps.Assets.IAsset original)
         => AdamContext.UseSiteRoot
-            ? _security.CanEditFolder(original)
+            ? AdamContext.Security.CanEditFolder(original)
             : ContextAllowsEdit;
 
     /// <summary>
