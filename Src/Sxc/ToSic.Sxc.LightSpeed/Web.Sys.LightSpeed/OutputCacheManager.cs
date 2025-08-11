@@ -21,7 +21,7 @@ internal class OutputCacheManager(MemoryCacheService memoryCacheService, LazySvc
         return id;
     }
 
-    public string Add(string cacheKey, OutputCacheItem data, int duration, List<ICanBeCacheDependency> apps, IList<string>? appPaths)
+    public string Add(string cacheKey, OutputCacheItem data, int duration, List<string> apps, IList<string>? appPaths)
     {
         var l = Log.Fn<string>($"key: {cacheKey}", timer: true);
 
@@ -33,11 +33,14 @@ internal class OutputCacheManager(MemoryCacheService memoryCacheService, LazySvc
         {
             // Never store 0, that's like never-expire
             //var expiration = new TimeSpan(0, 0, duration);
+            List<string> keys = [.. apps, MemoryCacheService.ExpandDependencyId(featuresDoNotConnect.Value)];
+            
+            l.A("Keys: " + string.Join(", ", keys));
 
             // experimental, maybe use as replacement... v17.09+
             var policyMaker = memoryCacheService.NewPolicyMaker()
                 .SetSlidingExpiration(duration)   // Never store 0, that's like never-expire
-                .WatchNotifyKeys([..apps, featuresDoNotConnect.Value]);
+                .WatchCacheKeys(keys);
 
             if (appPaths?.Any() == true)
                 policyMaker = policyMaker

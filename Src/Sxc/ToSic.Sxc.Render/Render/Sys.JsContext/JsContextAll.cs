@@ -91,7 +91,7 @@ public class JsContextAll(JsContextLanguage jsLangCtxSvc, IJsApiService jsApiSer
     }
 
     private List<IPageFeature> Features(IBlock block)
-        => _pageFeatures ??= BlockInfoHelpers.BlockFeatures(block, Log);
+        => _pageFeatures ??= BlockFeaturesHelpers.BlockFeatures(block, Log);
 
     private List<IPageFeature>? _pageFeatures;
 }

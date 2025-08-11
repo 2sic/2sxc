@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.JsContext;
 using ToSic.Sxc.Render.Sys.RenderBlock;
@@ -63,7 +64,10 @@ public static class SxcRenderStartup
         services.TryAddTransient<IPageFeaturesManager, PageFeaturesManager>();
         services.TryAddSingleton<PageFeaturesCatalog>();
 
+        // Info Helpers, mainly to ensure that Output-Caching information works
+        services.TryAddTransient<BlockCachingHelper>();
 
+        // Fallbacks
         services.AddSxcRenderFallback();
 
         return services;
