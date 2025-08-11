@@ -54,11 +54,16 @@ public partial class View : PortalModuleBase, IActionable
 
     #region Logging
 
-    private ILog Log => _log ??= new Log("Sxc.View"); // delay creating until first use to really just track our time
-    private ILog _log;
+    private ILog Log => field ??= new Log("Sxc.View"); // delay creating until first use to really just track our time
     private LogStoreEntry _logInStore;
 
-    protected ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"Module: '{ModuleConfiguration.ModuleTitle}'"));
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Time must be false, as it will be started/stopped as needed within the DoInTimer methods.
+    /// </remarks>
+    protected ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"Module: '{ModuleConfiguration.ModuleTitle}'", timer: false));
     private readonly GetOnce<ILogCall> _logTimer = new();
 
     #endregion
@@ -86,7 +91,7 @@ public partial class View : PortalModuleBase, IActionable
 
             try
             {
-                if (OutputCache?.Existing != null)
+                if (OutputCache.Existing != null)
                 {
                     checkPortalIsReady = false;
                     // #RemovedV20 #OldDnnAutoJQuery
@@ -138,7 +143,7 @@ public partial class View : PortalModuleBase, IActionable
         LogTimer.DoInTimer(() =>
         {
             // #lightspeed
-            if (OutputCache?.Existing != null)
+            if (OutputCache.Existing != null)
                 l.A("Lightspeed hit - will use cached");
 
             IRenderResult renderResult = null;
@@ -149,9 +154,9 @@ public partial class View : PortalModuleBase, IActionable
                 TryCatchAndLogToDnn(() =>
                 {
                     // Try to build the html and everything
-                    renderResult = OutputCache?.Existing?.Data;
+                    renderResult = OutputCache.Existing?.Data;
 
-                    var useLightspeed = OutputCache?.IsEnabled ?? false;
+                    var useLightspeed = OutputCache.IsEnabled; // ?? false;
                     finalMessage = !useLightspeed ? "" : renderResult != null ? "⚡⚡" : "⚡⏳";
 
                     // Generate Render Result if not already provided by cache
@@ -191,7 +196,7 @@ public partial class View : PortalModuleBase, IActionable
                     var lLightSpeed = Log.Fn(message: "Lightspeed", timer: true);
                     
                     // #RemovedV20 #OldDnnAutoJQuery
-                    OutputCache?.Save(renderResult/*, _enforcePre1025JQueryLoading*/);
+                    OutputCache.Save(renderResult/*, _enforcePre1025JQueryLoading*/);
                     lLightSpeed.Done();
 
                     return true; // dummy result for TryCatchAndLogToDnn
