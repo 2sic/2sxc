@@ -18,7 +18,7 @@ public class UserService(LazySvc<IContextOfSite> context, LazySvc<IUsersProvider
     {
         var l = Log.Fn<IUserModel>();
         var user = context.Value.User;
-        if (user == null || user.IsAnonymous)
+        if (user == null! /* paranoid */ || user.IsAnonymous)
             return l.Return(UserConstants.AnonymousUser, "no user/anonymous");
 
         var model = GetUser(user.Id);
