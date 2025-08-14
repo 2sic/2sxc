@@ -1,4 +1,5 @@
-﻿using ToSic.Sys.Caching;
+﻿using ToSic.Sxc.Cms.Users;
+using ToSic.Sys.Caching;
 using ToSic.Sys.Memory;
 
 namespace ToSic.Sxc.Services.Cache.Sys;
@@ -7,7 +8,7 @@ namespace ToSic.Sxc.Services.Cache.Sys;
 /// Internal configuration to know what we're varying by.
 /// This is used to determine which parameters will be used to pre-check the cache.
 /// </summary>
-public record CacheSpecsVaryBy: ICanEstimateSize, ITimestamped
+public record CacheSpecsConfig: ICanEstimateSize, ITimestamped
 {
     public bool ByPage { get; init; }
     public bool ByModule { get; init; }
@@ -21,7 +22,10 @@ public record CacheSpecsVaryBy: ICanEstimateSize, ITimestamped
 
     public ByNamed? ByModel { get; init; }
 
-    public CacheSpecsVaryBy Updated(string name, string? keys, bool caseSensitive) =>
+    public UserElevation MinDisabledElevation { get; init; }
+    public UserElevation MaxDisabledElevation { get; init; }
+
+    public CacheSpecsConfig Updated(string name, string? keys, bool caseSensitive) =>
         name switch
         {
             CacheSpecConstants.ByModule => this with { ByModule = true },

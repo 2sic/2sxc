@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Context;
+﻿using ToSic.Sxc.Cms.Users;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Services.Cache.Sys;
 using ToSic.Sys.Caching.Policies;
 
@@ -47,7 +48,7 @@ public interface ICacheSpecs
     /// 
     /// WIP v20.00-05: This is a work in progress, and the implementation may change in future versions.
     /// </remarks>
-    public ICacheSpecs Disable();
+    public ICacheSpecs Disable(NoParamOrder protector = default, UserElevation minElevation = default, UserElevation maxElevation = default);
 
     /// <summary>
     /// Disable caching for this data, so it will not be cached. Rarely used. 
@@ -120,7 +121,7 @@ public interface ICacheSpecs
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    internal CacheSpecsVaryBy VaryByList { get; }
+    internal CacheSpecsConfig ConfigList { get; }
 
     /// <summary>
     /// Vary the cache by a specific name and value.

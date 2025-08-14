@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Services.Cache.Sys;
@@ -45,11 +46,43 @@ internal record CacheSpecs : ICacheSpecs
 
     public required bool IsEnabled { get; init; }
 
-    public ICacheSpecs Disable()
-        => this with { IsEnabled = false };
+    public ICacheSpecs Disable(NoParamOrder protector = default, UserElevation minElevation = default, UserElevation maxElevation = default)
+    {
+        // if for all, or not specified, then disable
+        if (minElevation == default && maxElevation == default)
+            return AllDisabled();
+
+        // if no user, then disable
+        var user = ExCtx.GetState<ICmsContext>()?.User;
+        if (user == null)
+            return AllDisabled();
+
+        // if user elevation is in range, then disable
+        var elevation = user.GetElevation();
+        var isDisabled = elevation.IsForAllOrInRange(minElevation, maxElevation);
+
+        return this with
+        {
+            IsEnabled = !isDisabled,
+            ConfigList = ConfigList with
+            {
+                MinDisabledElevation = minElevation > UserElevation.Unknown ? minElevation : ConfigList.MinDisabledElevation,
+                MaxDisabledElevation = maxElevation > UserElevation.Unknown ? maxElevation : ConfigList.MaxDisabledElevation
+            }
+        };
+
+        ICacheSpecs AllDisabled() => this with { IsEnabled = false, ConfigList = ConfigList with { MinDisabledElevation = UserElevation.Unknown, MaxDisabledElevation = UserElevation.Unknown } };
+    }
 
     public ICacheSpecs Enable()
-        => this with { IsEnabled = true };
+        => this with
+        {
+            IsEnabled = true,
+            ConfigList = ConfigList with
+            {
+                MinDisabledElevation = UserElevation.Unknown, MaxDisabledElevation = UserElevation.Unknown
+            }
+        };
 
     #endregion
 
@@ -127,12 +160,12 @@ internal record CacheSpecs : ICacheSpecs
         var newSpecs = this with
         {
             KeySpecs = KeySpecs with { Key = null! /* requires reset */, VaryByDic = newDic },
-            VaryByList = VaryByList.Updated(name, keysForRestore, caseSensitive),
+            ConfigList = ConfigList.Updated(name, keysForRestore, caseSensitive),
         };
         return newSpecs;
     }
 
-    public CacheSpecsVaryBy VaryByList { get; init; } = new();
+    public CacheSpecsConfig ConfigList { get; init; } = new();
 
     #endregion
 
