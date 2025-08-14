@@ -25,6 +25,9 @@ partial class PageService
         keys ??= [];
         var l = Log.Fn<string>($"{nameof(keys)}: '{string.Join(",", keys)}'");
 
+        // WIP #PartialCaching
+        Listeners.Activate(keys);
+
         // 1. Try to add manual resources from WebResources
         // This must happen in the IPageService which is per-module
         // The PageServiceShared cannot do this, because it doesn't have the WebResources which vary by module
@@ -86,6 +89,9 @@ partial class PageService
             l.A("Found html and everything, will register");
             // all ok so far
             PageServiceShared.PageFeatures.FeaturesFromSettingsAdd(pageFeature);
+
+            // Wip #PartialCaching
+            Listeners.AddPageFeature(pageFeature);
         }
 
         // drop keys which were already taken care of
@@ -101,4 +107,10 @@ partial class PageService
 
     private DynamicStack Settings => _settings.Get(() => (ExCtx.GetState<IDynamicStack>(ExecutionContextStateNames.Settings) as DynamicStack)!)!;
     private readonly GetOnce<DynamicStack> _settings = new();
+
+    #region Experimental Listeners
+
+    public PageChangeListenerManagerWip Listeners { get; } = new();
+
+    #endregion
 }

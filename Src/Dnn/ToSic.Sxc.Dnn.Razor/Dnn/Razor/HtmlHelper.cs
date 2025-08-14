@@ -72,18 +72,17 @@ internal class HtmlHelper(
 
         var cached = cacheHelper.TryGetFromCache();
         if (cached != null)
-            return l.Return(new HtmlString(cached), "Returning cached result");
+        {
+            cacheHelper.ProcessListener(cached);
+            return l.Return(new HtmlString(cached.Html), "Returning cached result");
+        }
 
         try
         {
             // Prepare the specs for the partial rendering - these may get changed by the Razor at runtime
             var partialSpecs = new RenderPartialSpecsWithCaching { CacheSpecs = cacheHelper.CacheSpecsRawWithModel.Disable() }; // Start with disabled, as that's the default, and then enable it if needed
 
-            renderSpecs = renderSpecs with
-            {
-                // Data = data,
-                PartialSpecs = partialSpecs,
-            };
+            renderSpecs = renderSpecs with { PartialSpecs = partialSpecs };
 
             // This will get a HelperResult object, which is often not executed yet
             var result = RenderWithRoslynOrClassic(relativePath, normalizedPath, renderSpecs);

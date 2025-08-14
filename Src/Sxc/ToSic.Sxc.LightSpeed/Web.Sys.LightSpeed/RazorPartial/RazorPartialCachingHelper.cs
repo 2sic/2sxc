@@ -5,6 +5,7 @@ using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.Cache.Sys;
+using ToSic.Sxc.Services.Page.Sys;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.ExecutionContext;
 
@@ -63,30 +64,38 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
     /// Try to get the data from the cache.
     /// </summary>
     /// <returns></returns>
-    public string? TryGetFromCache()
+    public IRenderResult? TryGetFromCache()
     {
-        var l = Log.Fn<string?>();
+        var l = Log.Fn<IRenderResult?>();
         if (!IsEnabled)
             return l.ReturnNull("feature not enabled");
+
 
         // Check if it's disabled for this elevation, in which case we should not pick it up
         var config = CacheSpecsConfig;
         if (config == null)
-            return l.ReturnNull("no config");
+            return AttachListenerAndExit("no config");
         var user = exCtx.GetState<ICmsContext>().User;
         var elevation = user.GetElevation();
         if (elevation.IsForAllOrInRange(config.MinDisabledElevation, config.MaxDisabledElevation))
-            return l.ReturnNull($"user elevation '{elevation.ToString()}' in cache-disabled range {config.MinDisabledElevation.ToString()} and {config.MaxDisabledElevation.ToString()}, ignore cache.");
+            return AttachListenerAndExit($"user elevation '{elevation.ToString()}' in cache-disabled range {config.MinDisabledElevation.ToString()} and {config.MaxDisabledElevation.ToString()}, ignore cache.");
 
         var specsBasedOnSettings = GetSpecsBasedOnSettings();
         if (specsBasedOnSettings == null)
-            return l.ReturnNull("no settings");
+            return AttachListenerAndExit("no settings");
 
         var cached = CacheSvc.Get<OutputCacheItem>(specsBasedOnSettings);
         return cached == null
-            ? l.ReturnNull("not cached") :
+            ? AttachListenerAndExit("not cached") :
             // If we have a cached result, return it
-            l.Return(cached.Data.Html, "is cached");
+            l.Return(cached.Data, "is cached");
+
+        IRenderResult? AttachListenerAndExit(string message)
+        {
+            // WIP if it is enabled, we should attach a listener
+            Listener = PageService.Listeners.CreateListener();
+            return l.ReturnNull(message);
+        }
     }
 
     public bool SaveToCache(string html, ICacheSpecs partialSpecs)
@@ -96,7 +105,21 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
             return l.ReturnFalse("no partial caching");
 
         l.A($"Add to cache");
-        CacheSvc.Set(partialSpecs, new OutputCacheItem(new RenderResult { AppId = appId, Html = html, IsPartial = true }));
+        CacheSvc.Set(partialSpecs, new OutputCacheItem(new RenderResult
+        {
+            AppId = appId,
+            Html = html,
+            IsPartial = true,
+            // Features = Listener?.PageFeatures,
+            PartialActivateWip = Listener?.Activate,
+        }));
+
+        // detach listener if it exists, so it doesn't get saved to cache
+        if (Listener != null)
+        {
+            l.A("detaching listener");
+            PageService.Listeners.RemoveListener(Listener);
+        }
 
         // also add the configuration to the cache, so it can decide which specs to use next time
         var storedConfig = CacheSpecsConfig;
@@ -109,4 +132,28 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
         CacheSvc.Set(configSpecs, partialSpecs.GetConfig());
         return l.ReturnTrue("Saved to cache, config updated");
     }
+
+    #region WIP Listener
+
+    [field: AllowNull, MaybeNull]
+    public Services.Page.Sys.PageService PageService =>
+        field ??= (Services.Page.Sys.PageService)exCtx.GetService<Services.IPageService>(reuse: true);
+    public PageChangeListenerWip? Listener { get; set; }
+
+
+    public bool ProcessListener(IRenderResult cached)
+    {
+        var l = Log.Fn<bool>();
+
+        var data = (RenderResult)cached;
+        if (data.PartialActivateWip?.Any() == true)
+        {
+            var ps = exCtx.GetService<Services.IPageService>(reuse: true);
+            ps.Activate(data.PartialActivateWip.ToArray());
+        }
+
+        return l.ReturnTrue("activated");
+    }
+
+    #endregion
 }
