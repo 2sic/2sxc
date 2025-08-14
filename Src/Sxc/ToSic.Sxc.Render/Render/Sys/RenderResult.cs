@@ -82,6 +82,11 @@ public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize
     public OutputCacheSettings? OutputCacheSettings { get; init; }
 
     /// <summary>
+    /// Determine if this is just a partial render result, meaning it should be treated differently by the cache.
+    /// </summary>
+    public bool IsPartial { get; init; }
+
+    /// <summary>
     /// Cache information to report size etc. when needed
     /// </summary>
     SizeEstimate ICanEstimateSize.EstimateSize(ILog? log)

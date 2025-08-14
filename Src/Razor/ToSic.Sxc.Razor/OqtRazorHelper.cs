@@ -5,6 +5,7 @@ using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Engines.Sys;
+using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils;
 
@@ -74,7 +75,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
 
     private object? _overridePageData;
 
-    public void SetDynamicModel(ViewDataWithModel viewData)
+    public void SetDynamicModel(RenderSpecs viewData)
     {
         var l = Log.Fn();
         _overridePageData = viewData.Data;

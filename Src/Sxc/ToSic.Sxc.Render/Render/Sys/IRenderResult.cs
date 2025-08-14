@@ -99,4 +99,8 @@ public interface IRenderResult
     /// </summary>
     public OutputCacheSettings? OutputCacheSettings { get; init; }
 
+    /// <summary>
+    /// Determine if this is just a partial render result, meaning it should be treated differently by the cache.
+    /// </summary>
+    public bool IsPartial { get; }
 }

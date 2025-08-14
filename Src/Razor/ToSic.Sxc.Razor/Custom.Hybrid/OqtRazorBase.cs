@@ -7,6 +7,7 @@ using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Engines.Sys;
 using ToSic.Sxc.Razor;
+using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.ExecutionContext;
 using IHasLog = ToSic.Sys.Logging.IHasLog;
 using ILog = ToSic.Sys.Logging.ILog;
@@ -89,7 +90,7 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
     #region Dynamic Model
 
-    void ISetDynamicModel.SetDynamicModel(ViewDataWithModel viewData) => RzrHlp.SetDynamicModel(viewData);
+    void ISetDynamicModel.SetDynamicModel(RenderSpecs viewData) => RzrHlp.SetDynamicModel(viewData);
 
     #endregion
 

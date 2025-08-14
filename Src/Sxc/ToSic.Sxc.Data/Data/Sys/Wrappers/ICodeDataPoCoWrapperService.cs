@@ -15,7 +15,7 @@ public interface ICodeDataPoCoWrapperService
     /// <param name="settings"></param>
     /// <returns></returns>
     /*WrapObjectDynamic*/
-    object DynamicFromObject(object data, WrapperSettings settings);
+    object DynamicFromObject(object? data, WrapperSettings settings);
     ITyped TypedFromObject(object data, WrapperSettings settings);
     ITypedItem TypedItemFromObject(object? data, WrapperSettings settings, ILazyLike<ICodeDataFactory>? cdf1 = default);
 

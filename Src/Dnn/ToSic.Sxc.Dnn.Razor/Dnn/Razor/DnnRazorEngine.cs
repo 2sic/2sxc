@@ -1,5 +1,4 @@
 ﻿using System.Configuration;
-using ToSic.Razor.Html5;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Engines;
@@ -11,6 +10,12 @@ namespace ToSic.Sxc.Dnn.Razor;
 /// <summary>
 /// The razor engine, which compiles / runs engine templates
 /// </summary>
+/// <remarks>
+/// This is the glue-ware to the "Engine". It just ensures API compatibility with the core Engine.
+/// Internally it will use the DnnRazorCompiler to compile and run the Razor templates.
+///
+/// It also manages the EntryRazorComponent, which is the main Razor component for this engine.
+/// </remarks>
 [PrivateApi("used to be InternalApi_DoNotUse_MayChangeWithoutNotice till v16.09")]
 [EngineDefinition(Name = "Razor")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -52,19 +57,18 @@ internal partial class DnnRazorEngine(EngineBase.Dependencies helpers, DnnRazorC
     [PrivateApi]
     protected override (string, List<Exception>?) RenderEntryRazor(RenderSpecs specs)
     {
-        var (writer, exceptions) = RenderImplementation(EntryRazorComponent, specs);
+        var (writer, exceptions) = DnnRenderImplementation(EntryRazorComponent, specs);
         return (writer.ToString(), exceptions);
     }
 
-    private (TextWriter writer, List<Exception> exceptions) RenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
+    private (TextWriter writer, List<Exception> exceptions) DnnRenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
     {
         ILogCall<(TextWriter writer, List<Exception> exceptions)> l = Log.Fn<(TextWriter, List<Exception>)>();
         var writer = new StringWriter();
-        var dataForDynamicModel = new ViewDataWithModel { Data = specs.Data, AlwaysCache = false };
-        var result = razorCompiler.Render(webpage, writer, dataForDynamicModel);
+        var result = razorCompiler.Render(webpage, writer, specs);
 
         // Experimental
-        l.A($"Experimental: {nameof(dataForDynamicModel.AlwaysCache)}: {dataForDynamicModel.AlwaysCache}");
+        l.A($"Experimental: {nameof(specs.PartialCaching.AlwaysCache)}: {specs.PartialCaching.AlwaysCache}");
 
         return l.ReturnAsOk(result);
     }

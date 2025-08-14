@@ -168,7 +168,7 @@ internal class LightSpeed(
 
 
     private string CacheKey => _key.Get(() => Log.Quick(()
-        => OutputCacheManager.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, UrlParams.Extension, CurrentCulture)
+        => OutputCacheKeys.ModuleKey(_pageId, _moduleId, UserIdOrAnon, ViewKey, UrlParams.Extension, CurrentCulture)
     ))!;
     private readonly GetOnce<string> _key = new();
 

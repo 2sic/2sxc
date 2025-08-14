@@ -1,12 +1,15 @@
 ﻿using System.Web;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Render.Sys;
+using ToSic.Sxc.Render.Sys.Specs;
+using ToSic.Sxc.Sys.Configuration;
+using ToSic.Sxc.Web.Sys.LightSpeed;
 using static System.StringComparer;
-using static ToSic.Sxc.Sys.Configuration.SxcFeatures;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Dnn.Razor;
@@ -19,8 +22,9 @@ internal class HtmlHelper(
     LazySvc<CodeErrorHelpService> codeErrService,
     LazySvc<IFeaturesService> featureSvc,
     LazySvc<SourceAnalyzer> codeAnalysis,
-    Generator<IRenderingHelper> renderingHelperGenerator)
-    : ServiceBase("Dnn.HtmHlp", connect: [codeErrService, featureSvc, codeAnalysis, renderingHelperGenerator]), IHtmlHelper
+    Generator<IRenderingHelper> renderingHelperGenerator,
+    LazySvc<OutputCacheManager> outputCacheManager)
+    : ServiceBase("Dnn.HtmHlp", connect: [codeErrService, featureSvc, codeAnalysis, renderingHelperGenerator, outputCacheManager]), IHtmlHelper
 {
     public HtmlHelper Init(RazorComponentBase page, DnnRazorHelper helper, bool isSystemAdmin)
     {
@@ -38,7 +42,7 @@ internal class HtmlHelper(
     {
         switch (stringHtml)
         {
-            case null: return new HtmlString(string.Empty);
+            case null: return new HtmlString("");
             case string s: return new HtmlString(s);
             case IHtmlString h: return h;
         }
@@ -51,72 +55,128 @@ internal class HtmlHelper(
     /// <summary>
     /// This should duplicate the way .net core does RenderPage - and should become the standard way of doing it in 2sxc
     /// </summary>
-    /// <param name="path"></param>
+    /// <param name="relativePath"></param>
     /// <param name="data"></param>
     /// <returns></returns>
-    public IHtmlString Partial(string path, object data = default)
+    public IHtmlString Partial(string relativePath, object data = default)
     {
+        // Figure out the real path, and make sure it's lower case
+        // so the ID in a cache remains the same no matter how it was called
+        var normalizedPath = _page.NormalizePath(relativePath).ToLowerInvariant();
+
+        var l = Log.Fn<IHtmlString>($"{nameof(relativePath)}: '{relativePath}', {nameof(normalizedPath)}: '{normalizedPath}', {nameof(data)}: {data != null}");
+
+        var appId = _page.ExCtx.GetAppId();
+        var cacheKey = OutputCacheKeys.PartialKey(appId, normalizedPath);
+        var cached = outputCacheManager.Value.Get(cacheKey);
+        if (cached != null)
+        {
+            // If we have a cached result, return it
+            l.A("Returning cached result");
+            return l.Return(new HtmlString(cached.Data.Html));
+        }
+
         try
         {
             // This will get a HelperResult object, which is often not executed yet
-            var result = RenderWithRoslynOrClassic(path, data);
+            var result = RenderWithRoslynOrClassic(relativePath, normalizedPath, data);
 
             // In case we should throw a nice error, we must get the HTML now, to possibly cause the error and show an alternate message
+            // This will also not allow partial caching
             if (!ThrowPartialError)
-                return result;
+                return l.Return(result.Result);
 
-            var wrappedResult = new HelperResult(writer =>
+            // Experimental - try to simplify returned html string - see old code below
+            try
             {
-                try
-                {
-                    result.WriteTo(writer);
-                }
-                catch (Exception renderException)
-                {
-                    var nice = TryToLogAndReWrapError(renderException, path, true);
-                    writer.WriteLine(nice);
-                }
-            });
-            return wrappedResult;
+                var asString = result.Result.ToHtmlString();
+
+                l.A($"Experimental: {nameof(result.CachingSpecs.AlwaysCache)}: {result.CachingSpecs.AlwaysCache}");
+
+                if (!featureSvc.Value.IsEnabled(SxcFeatures.LightSpeedOutputCachePartials.NameId) || !result.CachingSpecs.AlwaysCache)
+                    return l.Return(new HtmlString(asString), "no partial caching");
+
+                l.A($"Dummy add to cache");
+                outputCacheManager.Value.Add(
+                    cacheKey,
+                    new(new RenderResult { AppId = appId, Html = asString, IsPartial = true }),
+                    duration: 300,
+                    apps: [],
+                    appPaths: null
+                );
+                return l.Return(new HtmlString(asString), "with partial caching");
+            }
+            catch (Exception renderException)
+            {
+                var nice = TryToLogAndReWrapError(renderException, relativePath, true);
+                return l.Return(new HtmlString(nice), "error");
+            }
+
+            // 2025-08-14 old code before - remove ca. 2025-Q4
+            //var wrappedResult = new HelperResult(writer =>
+            //{
+            //    try
+            //    {
+            //        result.Result.WriteTo(writer);
+            //    }
+            //    catch (Exception renderException)
+            //    {
+            //        var nice = TryToLogAndReWrapError(renderException, relativePath, true);
+            //        writer.WriteLine(nice);
+            //    }
+            //});
+            //return l.Return(wrappedResult);
         }
         catch (Exception compileException)
         {
             // Ensure our error paths exist, to only report this in the system-logs once
             _errorPaths ??= new(InvariantCultureIgnoreCase);
-            var isFirstOccurrence = !_errorPaths.Contains(path);
-            _errorPaths.Add(path);
+            var isFirstOccurrence = !_errorPaths.Contains(relativePath);
+            _errorPaths.Add(relativePath);
 
             // Report if first time
-            var nice = TryToLogAndReWrapError(compileException, path, isFirstOccurrence, "Special exception handling - only show message");
+            var nice = TryToLogAndReWrapError(compileException, relativePath, isFirstOccurrence, "Special exception handling - only show message");
             var htmlError = Tag.Custom(nice);
-            return htmlError;
+            return l.Return(htmlError);
         }
     }
 
     /// <summary>
     /// Determine if we should use Roslyn or the classic way of rendering and do it.
     /// </summary>
-    /// <param name="path"></param>
+    /// <param name="relativePath"></param>
+    /// <param name="normalizedPath"></param>
     /// <param name="data"></param>
     /// <returns></returns>
-    private HelperResult RenderWithRoslynOrClassic(string path, object data)
+    private (bool UseRoslyn, HelperResult Result, RenderPartialCachingSpecs CachingSpecs) RenderWithRoslynOrClassic(string relativePath, string normalizedPath, object data)
     {
         var useRoslyn = _page is ICanUseRoslynCompiler;
-        var l = Log.Fn<HelperResult>($"{nameof(useRoslyn)}: {useRoslyn}");
+        var l = Log.Fn<(bool, HelperResult, RenderPartialCachingSpecs?)>($"{nameof(useRoslyn)}: {useRoslyn}");
 
         // We can use Roslyn
         // Classic setup without Roslyn, use the built-in RenderPage
-        if (useRoslyn)
+        if (!useRoslyn)
+            return l.Return((false, _page.BaseRenderPage(relativePath, data), null), $"default render {(data == null ? "no" : "with")} data");
+
+        // Try to compile with Roslyn
+        // Will exit if the child has an old base class which would expect PageData["..."] properties
+        // Because that would be empty https://github.com/2sic/2sxc/issues/3260
+        var renderSpecs = new RenderSpecs { Data = data };
+        var preparations = DnnRazorCompiler.PrepareForRoslyn(_page, normalizedPath, data);
+
+        // Exit if we don't use HotBuild, because then we must revert back to classic render
+        // Reason is that otherwise the PageData property - used on very old classes - would not be populated
+        // Doing this from our compiler is super-hard, because it would use a lot of internal Microsoft APIs
+        if (preparations.SubPage.UsesHotBuild)
         {
-            // Try to compile with Roslyn
-            // Will exit if the child has an old base class which would expect PageData["..."] properties
-            // Because that would be empty https://github.com/2sic/2sxc/issues/3260
-            var probablyHotBuild = DnnRazorCompiler.RenderSubPage(_page, path, data);
-            if (probablyHotBuild.UsesHotBuild)
-                return l.Return(probablyHotBuild.Instance, "used HotBuild");
-            l.A("Tried to use Roslyn, but detected old base class so will do fallback because of PageData");
+            var probablyHotBuild = DnnRazorCompiler.ExecuteWithRoslyn(preparations, _page, renderSpecs);
+            
+            //if (probablyHotBuild.UsesHotBuild)
+            return l.Return((true, probablyHotBuild.Instance, renderSpecs.PartialCaching), "used HotBuild");
         }
-        return l.Return(_page.BaseRenderPage(path, data), $"default render {(data == null ? "no" : "with")} data");
+
+        l.A("Tried to use Roslyn, but detected old base class so will use classic Razor Engine so PageData continues to work.");
+        return l.Return((false,_page.BaseRenderPage(relativePath, data), null), $"default render {(data == null ? "no" : "with")} data");
     }
 
 
@@ -124,8 +184,10 @@ internal class HtmlHelper(
     private string TryToLogAndReWrapError(Exception renderException, string path, bool reportToDnn, string additionalLog = null)
     {
         // Important to know: Once this fires, the page will stop rendering more templates
-        if (reportToDnn) _page.Log?.GetContents().Ex(renderException);
-        if (additionalLog != null) _page.Log?.GetContents().A(additionalLog);
+        if (reportToDnn)
+            _page.Log.GetContents().Ex(renderException);
+        if (additionalLog != null)
+            _page.Log.GetContents().A(additionalLog);
 
         // If it's a compile issue, try to find explicit help for that
         var pathOfPage = _page.NormalizePath(path);
@@ -135,7 +197,7 @@ internal class HtmlHelper(
 
         // Show a nice / ugly error depending on user permissions
         // Note that if anything breaks here, it will just use the normal error - but for what breaks in here
-        // Note that if withHelp already has help, it won't be extended any more
+        // Note that if withHelp already has help, it won't be extended anymore
         exWithHelp = codeErrService.Value.AddHelpIfKnownError(exWithHelp, _page);
         var block = _page.ExCtx.GetState<IBlock>();
         var renderHelper = renderingHelperGenerator.New().Init(block);
@@ -147,7 +209,7 @@ internal class HtmlHelper(
     private HashSet<string> _errorPaths;
 
     private bool ThrowPartialError => _throwPartialError.Get(()
-        => featureSvc.Value.IsEnabled(RazorThrowPartial.NameId) ||
-           _isSystemAdmin && featureSvc.Value.IsEnabled(RenderThrowPartialSystemAdmin.NameId));
+        => featureSvc.Value.IsEnabled(SxcFeatures.RazorThrowPartial.NameId) ||
+           _isSystemAdmin && featureSvc.Value.IsEnabled(SxcFeatures.RenderThrowPartialSystemAdmin.NameId));
     private readonly GetOnce<bool> _throwPartialError = new();
 }
