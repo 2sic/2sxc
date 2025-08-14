@@ -8,6 +8,7 @@ using ToSic.Sxc.Services.Cache.Sys;
 using ToSic.Sxc.Services.Page.Sys;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.ExecutionContext;
+using ToSic.Sxc.Sys.Render.PageFeatures;
 
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
@@ -110,7 +111,7 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
             AppId = appId,
             Html = html,
             IsPartial = true,
-            // Features = Listener?.PageFeatures,
+            Features = Listener?.PageFeatures,
             PartialActivateWip = Listener?.Activate,
         }));
 
@@ -146,12 +147,17 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
         var l = Log.Fn<bool>();
 
         var data = (RenderResult)cached;
+        var ps = PageService;
+        var psShared = ps.PageServiceShared;
         if (data.PartialActivateWip?.Any() == true)
-        {
-            var ps = exCtx.GetService<Services.IPageService>(reuse: true);
             ps.Activate(data.PartialActivateWip.ToArray());
-        }
+            // ps.Activate(data.PartialActivateWip.ToArray());
 
+        //foreach (var dataFeature in (data.Features ?? []).Where(f => f is PageFeatureFromSettings).Cast<PageFeatureFromSettings>())
+        //{
+        //    psShared.PageFeatures.FeaturesFromSettingsAdd(dataFeature);
+        //}
+        
         return l.ReturnTrue("activated");
     }
 

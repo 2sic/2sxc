@@ -26,7 +26,8 @@ partial class PageService
         var l = Log.Fn<string>($"{nameof(keys)}: '{string.Join(",", keys)}'");
 
         // WIP #PartialCaching
-        Listeners.Activate(keys);
+        if (true)
+            Listeners.Activate(keys);
 
         // 1. Try to add manual resources from WebResources
         // This must happen in the IPageService which is per-module
@@ -41,6 +42,10 @@ partial class PageService
 
         l.A($"Remaining keys: {string.Join(",", keys)}");
         var added = PageServiceShared.Activate(keys);
+
+        // WIP #PartialCaching
+        if (false)
+            Listeners.Activate(keys);
 
         // also add to this specific module, as we need a few module-level features to activate in case...
         ExCtxOrNull?.GetState<IBlock>()?.BlockFeatureKeys.AddRange(added);
