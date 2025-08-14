@@ -40,7 +40,17 @@ internal record CacheSpecs : ICacheSpecs
 
     #endregion
 
+    #region Enabled / disabled
 
+    public required bool IsEnabled { get; init; }
+
+    public ICacheSpecs Disable()
+        => this with { IsEnabled = false };
+
+    public ICacheSpecs Enable()
+        => this with { IsEnabled = true };
+
+    #endregion
 
 
     #region Time Absolute / Sliding
@@ -76,6 +86,7 @@ internal record CacheSpecs : ICacheSpecs
     public ICacheSpecs WatchAppData(NoParamOrder protector = default)
         => this with { PolicyMaker = PolicyMaker.WatchNotifyKeys([AppReader.GetCache()]) };
 
+    [field: AllowNull, MaybeNull]
     private IAppReader AppReader => field ??= ExCtx.GetState<IAppReader>();
 
     public ICacheSpecs WatchAppFolder(NoParamOrder protector = default, bool? withSubfolders = true)

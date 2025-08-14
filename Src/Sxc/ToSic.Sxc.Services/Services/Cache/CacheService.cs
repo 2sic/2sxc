@@ -49,11 +49,17 @@ internal class CacheService(
     public ICacheSpecs CreateSpecs(string key, NoParamOrder protector = default, string? regionName = default, bool? shared = default)
     {
         var l = Log.Fn<ICacheSpecs>($"Key: {key} / Segment: {regionName}");
-        var keySpecs = new CacheKeySpecs(shared == true ? CacheKeySpecs.NoApp : AppId, key, regionName);
+        var keySpecs = new CacheKeySpecs
+        {
+            AppId = shared == true ? CacheKeySpecs.NoApp : AppId,
+            Main = key,
+            RegionName = regionName,
+        };
         var specs = new CacheSpecs
         {
             AppPathsLazy = appPathsLazy,
             AppReaders = appReaders,
+            IsEnabled = true,
             ExCtx = ExCtx,
             KeySpecs = keySpecs,
             PolicyMaker = cache.NewPolicyMaker(),
@@ -64,14 +70,8 @@ internal class CacheService(
     public bool Contains(ICacheSpecs specs)
         => IsEnabled && cache.Contains(specs.Key);
 
-    //public bool Contains(string key)
-    //    => cache.Contains(new CacheKeySpecs(AppId, key).Key);
-
     public bool Contains<T>(ICacheSpecs specs)
         => IsEnabled && cache.TryGet<T>(specs.Key, out _);
-
-    //public bool Contains<T>(string key)
-    //    => cache.TryGet<T>(new CacheKeySpecs(AppId, key).Key, out _);
 
     public T? Get<T>(ICacheSpecs specs, NoParamOrder protector = default, T? fallback = default) 
         => IsEnabled ? cache.Get(specs.Key, fallback) : fallback;
@@ -83,7 +83,7 @@ internal class CacheService(
         if (cache.TryGet(specs.Key, out T? value))
             return value;
         
-        if (generate == null)
+        if (generate == null || !specs.IsEnabled)
             return default;
         var newValue = generate();
 
@@ -113,7 +113,7 @@ internal class CacheService(
 
     public void Set<T>(ICacheSpecs specs, T value, NoParamOrder protector = default)
     {
-        if (!IsEnabled)
+        if (!IsEnabled || !specs.IsEnabled)
             return;
         cache.Set(specs.Key, value, specs.PolicyMaker);
     }

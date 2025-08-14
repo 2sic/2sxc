@@ -31,6 +31,33 @@ public interface ICacheSpecs
     internal IPolicyMaker PolicyMaker { get; }
 
     /// <summary>
+    /// Determine if caching is enabled. Default is `true`.
+    /// </summary>
+    [WorkInProgressApi("wip v20.00-05")]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    bool IsEnabled { get; }
+
+    /// <summary>
+    /// Disable caching for this data, so it will not be cached. Rarely used. 
+    /// </summary>
+    /// <returns></returns>
+    /// <remarks>
+    /// This rarely makes sense, since it's better to just not add something to the cache in the first place.
+    /// 
+    /// WIP v20.00-05: This is a work in progress, and the implementation may change in future versions.
+    /// </remarks>
+    public ICacheSpecs Disable();
+
+    /// <summary>
+    /// Disable caching for this data, so it will not be cached. Rarely used. 
+    /// </summary>
+    /// <returns></returns>
+    /// <remarks>
+    /// WIP v20.00-05: This is a work in progress, and the implementation may change in future versions.
+    /// </remarks>
+    public ICacheSpecs Enable();
+
+    /// <summary>
     /// Set absolute expiration, alternative is sliding expiration.
     /// If neither are set, a sliding expiration of 1 hour will be used.
     /// </summary>
