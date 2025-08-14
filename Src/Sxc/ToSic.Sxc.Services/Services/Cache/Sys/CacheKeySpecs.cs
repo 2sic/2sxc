@@ -1,11 +1,10 @@
 ﻿using System.Text;
-
 using ToSic.Sys.Utils;
 using static ToSic.Sxc.Services.Cache.CacheServiceConstants;
 
 namespace ToSic.Sxc.Services.Cache;
 
-internal record CacheKeySpecs
+public record CacheKeySpecs
 {
     public required int AppId { get; init; }
 
@@ -26,7 +25,11 @@ internal record CacheKeySpecs
     /// Generate the final key for these specs.
     /// </summary>
     [field: AllowNull, MaybeNull]
-    public string Key => field ??= GetKey(this);
+    public string Key
+    {
+        get => field ??= GetKey(this);
+        init;
+    }
 
     /// <summary>
     /// Override the ToString method to return the key.

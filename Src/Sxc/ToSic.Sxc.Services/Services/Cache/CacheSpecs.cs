@@ -4,6 +4,7 @@ using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
+using ToSic.Sxc.Services.Cache.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Caching.Policies;
@@ -119,8 +120,15 @@ internal record CacheSpecs : ICacheSpecs
         {
             [varyByKey] = valueToUse
         };
-        return this with { KeySpecs = KeySpecs with { VaryByDic = newDic } };
+
+        return this with
+        {
+            KeySpecs = KeySpecs with { VaryByDic = newDic },
+            VaryByList = VaryByList.Updated(name),
+        };
     }
+
+    public CacheSpecsVaryBy VaryByList { get; init; } = new();
 
     #endregion
 
@@ -167,7 +175,7 @@ internal record CacheSpecs : ICacheSpecs
 
     /// <inheritdoc />
     public ICacheSpecs VaryByModule(int id)
-        => VaryBy("Module", id);
+        => VaryBy(CacheSpecConstants.ByModule, id);
 
     ///// <inheritdoc />
     //public ICacheSpecs VaryByModule(ICmsModule module)
@@ -179,7 +187,7 @@ internal record CacheSpecs : ICacheSpecs
 
     /// <inheritdoc />
     public ICacheSpecs VaryByPage(int id)
-        => VaryBy("Page", id);
+        => VaryBy(CacheSpecConstants.ByPage, id);
 
     ///// <inheritdoc />
     //public ICacheSpecs VaryByPage(ICmsPage page)
@@ -191,7 +199,7 @@ internal record CacheSpecs : ICacheSpecs
 
     /// <inheritdoc />
     public ICacheSpecs VaryByUser(int id)
-        => VaryBy("User", id);
+        => VaryBy(CacheSpecConstants.ByUser, id);
 
     ///// <inheritdoc />
     //public ICacheSpecs VaryByUser(ICmsUser user)

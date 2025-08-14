@@ -26,7 +26,8 @@ public class LightSpeedStats(MemoryCacheService memoryCacheService) : ServiceBas
 
     private List<OutputCacheItem> All => _all.Get(() => MemoryCache.Default
         .Where(pair => pair.Key.StartsWith(OutputCacheKeys.GlobalCacheKeyModuleRoot) || pair.Key.StartsWith(OutputCacheKeys.GlobalCacheKeyPartialRoot))
-        .Select(pair => (OutputCacheItem)pair.Value)
+        .Select(pair => (pair.Value as OutputCacheItem)!)
+        .Where(p => p != null!)
         .ToList()
     )!;
     private readonly GetOnce<List<OutputCacheItem>> _all = new();

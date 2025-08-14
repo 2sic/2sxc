@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Context;
+using ToSic.Sxc.Services.Cache.Sys;
 using ToSic.Sys.Caching.Policies;
 
 namespace ToSic.Sxc.Services.Cache;
@@ -116,6 +117,10 @@ public interface ICacheSpecs
     /// <param name="caseSensitive"></param>
     /// <returns></returns>
     ICacheSpecs VaryBy(string name, string value, NoParamOrder protector = default, bool caseSensitive = false);
+
+    [PrivateApi]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    internal CacheSpecsVaryBy VaryByList { get; }
 
     /// <summary>
     /// Vary the cache by a specific name and value.

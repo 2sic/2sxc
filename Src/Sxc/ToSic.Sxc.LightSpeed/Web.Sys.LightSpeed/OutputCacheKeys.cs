@@ -27,6 +27,19 @@ public class OutputCacheKeys
             id += $"-c:{currentCulture}";
         return id;
     }
+    public static string PartialSettingsKey(int appId, string path /*, int moduleId, int? userId, string? viewKey, string? suffix,  string? currentCulture */)
+    {
+        var id = $"{GlobalCacheKeyPartialRoot}Settings.a:{appId}-p:{path}";
+        //if (userId.HasValue)
+        //    id += $"-u:{userId.Value}";
+        //if (viewKey != null)
+        //    id += $"-v:{viewKey}";
+        //if (suffix != null)
+        //    id += $"-s:{suffix}";
+        //if (currentCulture != null)
+        //    id += $"-c:{currentCulture}";
+        return id;
+    }
 
     public static string PartialKey(int appId, string path /*, int moduleId, int? userId, string? viewKey, string? suffix,  string? currentCulture */)
     {
