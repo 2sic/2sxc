@@ -93,10 +93,6 @@ internal class DnnRazorCompiler(
         ILogCall<(TextWriter writer, List<Exception> exceptions)> l = Log.Fn<(TextWriter, List<Exception>)>();
         var writer = new StringWriter();
         var result = Render(webpage, writer, specs);
-
-        // Experimental - specs.PartialCaching can change if set by the component
-        l.A($"Experimental: {nameof(specs.PartialCaching.AlwaysCache)}: {specs.PartialCaching.AlwaysCache}");
-
         return l.ReturnAsOk(result);
     }
 

@@ -13,7 +13,7 @@ public class CacheKeyTests
     [InlineData("")]
     //[ExpectedException(typeof(ArgumentException))]
     public void MainKeyBad(string main)
-        => Throws<ArgumentException>(() => Equal(FullDefaultPrefix + main, new CacheKeySpecs(0, main).Key));
+        => Throws<ArgumentException>(() => Equal(FullDefaultPrefix + main, new CacheKeySpecs { AppId = 0, Main = main }.Key));
 
     [Theory]
     [InlineData(Sep + "App:0", 0, "zero")]
@@ -21,7 +21,7 @@ public class CacheKeyTests
     [InlineData(Sep + "App:42", 42, "42")]
     [InlineData("", CacheKeySpecs.NoApp, "no app")]
     public void MainKeyAppIds(string expectedReplace, int appId, string message)
-        => Equal(FullDefaultPrefix.Replace(Sep + "App:0", expectedReplace) + "Test", new CacheKeySpecs(appId, "Test").Key);//, message);
+        => Equal(FullDefaultPrefix.Replace(Sep + "App:0", expectedReplace) + "Test", new CacheKeySpecs { AppId = appId, Main = "Test" }.Key);
 
 
 
@@ -30,7 +30,7 @@ public class CacheKeyTests
     [InlineData("A\nB")]
     [Theory]
     public void MainKeyOnly(string main)
-        => Equal( FullDefaultPrefix + main, new CacheKeySpecs(0, main).Key);
+        => Equal( FullDefaultPrefix + main, new CacheKeySpecs{ AppId = 0, Main = main }.Key);
 
     private const string FullSegmentPrefix = $"{DefaultPrefix}{Sep}App:0{Sep}{SegmentPrefix}";
 
@@ -39,7 +39,7 @@ public class CacheKeyTests
     [InlineData($"MySegment{Sep}Main", "Main", "MySegment")]
     [Theory]
     public void MainAndSegment(string expected, string main, string segment)
-        => Equal( FullSegmentPrefix + expected, new CacheKeySpecs(0, main, segment).Key);
+        => Equal( FullSegmentPrefix + expected, new CacheKeySpecs { AppId = 0, Main = main, RegionName = segment }.Key);
 
 
     [Fact]

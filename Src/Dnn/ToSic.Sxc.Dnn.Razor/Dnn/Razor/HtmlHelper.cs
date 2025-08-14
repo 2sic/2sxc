@@ -1,4 +1,5 @@
 ﻿using System.Web;
+using ToSic.Eav.DataSource.Sys.Caching;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
@@ -7,6 +8,7 @@ using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
+using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 using static System.StringComparer;
@@ -36,6 +38,8 @@ internal class HtmlHelper(
     private RazorComponentBase _page;
     private DnnRazorHelper _helper;
     private bool _isSystemAdmin;
+
+    private ICacheService CacheServiceFromExCtx => field ??= _page.ExCtx.GetService<ICacheService>();
 
     /// <inheritdoc/>
     public IHtmlString Raw(object stringHtml)
@@ -67,8 +71,10 @@ internal class HtmlHelper(
         var l = Log.Fn<IHtmlString>($"{nameof(relativePath)}: '{relativePath}', {nameof(normalizedPath)}: '{normalizedPath}', {nameof(data)}: {data != null}");
 
         var appId = _page.ExCtx.GetAppId();
-        var cacheKey = OutputCacheKeys.PartialKey(appId, normalizedPath);
-        var cached = outputCacheManager.Value.Get(cacheKey);
+        var cacheKeyString = OutputCacheKeys.PartialKey(appId, normalizedPath);
+        var cacheSpecs = CacheServiceFromExCtx.CreateSpecs("***" + cacheKeyString); // "***" is to override normal key generation for now
+        var cached = CacheServiceFromExCtx.Get<OutputCacheItem>(cacheSpecs);
+        //var cached = outputCacheManager.Value.Get(cacheKey);
         if (cached != null)
         {
             // If we have a cached result, return it
@@ -78,8 +84,11 @@ internal class HtmlHelper(
 
         try
         {
+            // Prepare the specs for the partial rendering - these may get changed by the Razor at runtime
+            var partialSpecs = new RenderPartialSpecsWithCaching { CacheSpecs = cacheSpecs.Disable() }; // Start with disabled, as that's the default, and then enable it if needed
+
             // This will get a HelperResult object, which is often not executed yet
-            var result = RenderWithRoslynOrClassic(relativePath, normalizedPath, data);
+            var result = RenderWithRoslynOrClassic(relativePath, normalizedPath, data, partialSpecs);
 
             // In case we should throw a nice error, we must get the HTML now, to possibly cause the error and show an alternate message
             // This will also not allow partial caching
@@ -91,19 +100,12 @@ internal class HtmlHelper(
             {
                 var asString = result.Result.ToHtmlString();
 
-                l.A($"Experimental: {nameof(result.CachingSpecs.AlwaysCache)}: {result.CachingSpecs.AlwaysCache}");
-
-                if (!featureSvc.Value.IsEnabled(SxcFeatures.LightSpeedOutputCachePartials.NameId) || !result.CachingSpecs.AlwaysCache)
+                if (!featureSvc.Value.IsEnabled(SxcFeatures.LightSpeedOutputCachePartials.NameId) || !partialSpecs.CacheSpecs.IsEnabled)
                     return l.Return(new HtmlString(asString), "no partial caching");
 
-                l.A($"Dummy add to cache");
-                outputCacheManager.Value.Add(
-                    cacheKey,
-                    new(new RenderResult { AppId = appId, Html = asString, IsPartial = true }),
-                    duration: 300,
-                    apps: [],
-                    appPaths: null
-                );
+                l.A($"Add to cache");
+                cacheSpecs.SetSlidingExpiration(new(0, 5, 0));
+                CacheServiceFromExCtx.Set(partialSpecs.CacheSpecs, new OutputCacheItem(new RenderResult { AppId = appId, Html = asString, IsPartial = true }));
                 return l.Return(new HtmlString(asString), "with partial caching");
             }
             catch (Exception renderException)
@@ -147,11 +149,13 @@ internal class HtmlHelper(
     /// <param name="relativePath"></param>
     /// <param name="normalizedPath"></param>
     /// <param name="data"></param>
+    /// <param name="partialCacheSpecs"></param>
     /// <returns></returns>
-    private (bool UseRoslyn, HelperResult Result, RenderPartialCachingSpecs CachingSpecs) RenderWithRoslynOrClassic(string relativePath, string normalizedPath, object data)
+    private (bool UseRoslyn, HelperResult Result, RenderPartialSpecs CachingSpecs) RenderWithRoslynOrClassic(
+        string relativePath, string normalizedPath, object data, RenderPartialSpecsWithCaching partialCacheSpecs)
     {
         var useRoslyn = _page is ICanUseRoslynCompiler;
-        var l = Log.Fn<(bool, HelperResult, RenderPartialCachingSpecs?)>($"{nameof(useRoslyn)}: {useRoslyn}");
+        var l = Log.Fn<(bool, HelperResult, RenderPartialSpecs?)>($"{nameof(useRoslyn)}: {useRoslyn}");
 
         // We can use Roslyn
         // Classic setup without Roslyn, use the built-in RenderPage
@@ -161,7 +165,11 @@ internal class HtmlHelper(
         // Try to compile with Roslyn
         // Will exit if the child has an old base class which would expect PageData["..."] properties
         // Because that would be empty https://github.com/2sic/2sxc/issues/3260
-        var renderSpecs = new RenderSpecs { Data = data };
+        var renderSpecs = new RenderSpecs
+        {
+            Data = data,
+            PartialSpecs = partialCacheSpecs,
+        };
         var preparations = DnnRazorCompiler.PrepareForRoslyn(_page, normalizedPath, data);
 
         // Exit if we don't use HotBuild, because then we must revert back to classic render
@@ -172,7 +180,7 @@ internal class HtmlHelper(
             var probablyHotBuild = DnnRazorCompiler.ExecuteWithRoslyn(preparations, _page, renderSpecs);
             
             //if (probablyHotBuild.UsesHotBuild)
-            return l.Return((true, probablyHotBuild.Instance, renderSpecs.PartialCaching), "used HotBuild");
+            return l.Return((true, probablyHotBuild.Instance, renderSpecs.PartialSpecs), "used HotBuild");
         }
 
         l.A("Tried to use Roslyn, but detected old base class so will use classic Razor Engine so PageData continues to work.");

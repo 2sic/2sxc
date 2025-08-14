@@ -30,7 +30,7 @@ public class OutputCacheKeys
 
     public static string PartialKey(int appId, string path /*, int moduleId, int? userId, string? viewKey, string? suffix,  string? currentCulture */)
     {
-        var id = $"{GlobalCacheKeyModuleRoot}a:{appId}-p:{path}";
+        var id = $"{GlobalCacheKeyPartialRoot}a:{appId}-p:{path}";
         //if (userId.HasValue)
         //    id += $"-u:{userId.Value}";
         //if (viewKey != null)

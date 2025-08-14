@@ -36,5 +36,5 @@ public class RenderSpecs
     /// This is currently done this way because we're not sure how else to get this information back to the engine,
     /// because the Razor View engine is a bit internal and can't just change the return signature.
     /// </remarks>
-    public RenderPartialCachingSpecs PartialCaching { get; init; } = new();
+    public RenderPartialSpecs PartialSpecs { get; init; } = new();
 }

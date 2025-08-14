@@ -1,4 +1,6 @@
-﻿using ToSic.Sxc.Render.Sys.Specs;
+﻿using ToSic.Sxc.Dnn.Razor.Sys;
+using ToSic.Sxc.Render.Sys.Specs;
+using ToSic.Sxc.Services.Cache;
 
 namespace ToSic.Sxc.Custom.Hybrid;
 
@@ -9,10 +11,24 @@ public class RazorConfigurationTemp(RenderSpecs renderSpecs)
     // It is currently empty and serves as a temporary structure for potential future use.
     // The class may be expanded with properties and methods as needed in the future.
 
-    public string TestSet(bool alwaysCache)
+    public string PartCaching(Func<ICacheSpecs, ICacheSpecs> config)
     {
-        if (renderSpecs != null)
-            renderSpecs.PartialCaching.AlwaysCache = alwaysCache;
+        if (config == null)
+            return "";
+
+        var parent = (RenderPartialSpecsWithCaching)renderSpecs.PartialSpecs;
+
+        // On first use, enable caching since it was off at first
+        if (!_cachingWasCalled)
+        {
+            parent.CacheSpecs = parent.CacheSpecs.Enable();
+            _cachingWasCalled = true;
+        }
+
+        var updated = config(parent.CacheSpecs);
+        parent.CacheSpecs = updated;
         return null;
     }
+
+    private bool _cachingWasCalled;
 }

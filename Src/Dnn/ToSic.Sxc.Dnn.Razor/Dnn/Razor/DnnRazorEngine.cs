@@ -66,10 +66,6 @@ internal partial class DnnRazorEngine(EngineBase.Dependencies helpers, DnnRazorC
         ILogCall<(TextWriter writer, List<Exception> exceptions)> l = Log.Fn<(TextWriter, List<Exception>)>();
         var writer = new StringWriter();
         var result = razorCompiler.Render(webpage, writer, specs);
-
-        // Experimental
-        l.A($"Experimental: {nameof(specs.PartialCaching.AlwaysCache)}: {specs.PartialCaching.AlwaysCache}");
-
         return l.ReturnAsOk(result);
     }
 
