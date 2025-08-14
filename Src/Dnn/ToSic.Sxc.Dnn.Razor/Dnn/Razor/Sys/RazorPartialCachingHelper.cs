@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using ToSic.Sxc.Code.Sys.CodeApi;
+﻿using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.Cache.Sys;
@@ -36,24 +35,35 @@ internal class RazorPartialCachingHelper(string normalizedPath, IExecutionContex
     /// Cache specs prepared for the current partial rendering - contains the path.
     /// </summary>
     // [field: AllowNull, MaybeNull]
-    public ICacheSpecs CacheSpecs => field
+    public ICacheSpecs CacheSpecsRaw => field
         ??= CacheSvc.CreateSpecs("***" + OutputCacheKeys.PartialKey(AppId, normalizedPath));
 
     // [field: AllowNull, MaybeNull]
     private ICacheSpecs SettingsSpecs => field
         ??= CacheSvc.CreateSpecs("***" + OutputCacheKeys.PartialSettingsKey(AppId, normalizedPath));
 
-    private ICacheSpecs GetSpecsBasedOnSettings()
+    private ICacheSpecs? GetSpecsBasedOnSettings()
     {
-        var foundation = CacheSpecs;
+        var foundation = CacheSpecsRaw;
         var setting = CacheSvc.Get<CacheSpecsVaryBy>(SettingsSpecs);
         if (setting == null)
-            return foundation;
+            return null;
+
+        _specsWereInCache = true;
 
         if (setting.ByUser)
             foundation = foundation.VaryByUser();
+
+        if (setting.ByModule)
+            foundation = foundation.VaryByModule();
+
+        if (setting.ByPage)
+            foundation = foundation.VaryByPage();
+
         return foundation;
     }
+
+    private bool _specsWereInCache;
 
     /// <summary>
     /// Try to get the data from the cache.
@@ -65,7 +75,11 @@ internal class RazorPartialCachingHelper(string normalizedPath, IExecutionContex
         if (!IsEnabled)
             return l.ReturnNull("feature not enabled");
 
-        var cached = CacheSvc.Get<OutputCacheItem>(CacheSpecs);
+        var specsBasedOnSettings = GetSpecsBasedOnSettings();
+        if (specsBasedOnSettings == null)
+            return l.ReturnNull("no settings");
+
+        var cached = CacheSvc.Get<OutputCacheItem>(specsBasedOnSettings);
         return cached == null
             ? l.ReturnNull("not cached") :
             // If we have a cached result, return it
@@ -82,11 +96,11 @@ internal class RazorPartialCachingHelper(string normalizedPath, IExecutionContex
         CacheSvc.Set(partialSpecs, new OutputCacheItem(new RenderResult { AppId = AppId, Html = html, IsPartial = true }));
 
         // also add the configuration to the cache, so it can decide which specs to use next time
-        var configSpecs = SettingsSpecs
-            .MergePolicy(partialSpecs);
-        // partialSpecs.SwapKeyInternal(key => key with { Key = null!, Main = "***" + OutputCacheKeys.PartialSettingsKey(AppId, normalizedPath) });
-        var debugKey = configSpecs.Key;
-        CacheSvc.Set(configSpecs, partialSpecs.GetVaryByList());
+        if (!_specsWereInCache)
+        {
+            var configSpecs = SettingsSpecs.MergePolicy(partialSpecs);
+            CacheSvc.Set(configSpecs, partialSpecs.GetVaryByList());
+        }
 
         return l.ReturnTrue("Saved to cache");
     }

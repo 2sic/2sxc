@@ -4,13 +4,15 @@
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class CacheSpecsExtensions
 {
-    //[ShowApiWhenReleased(ShowApiMode.Never)]
-    //public static ICacheSpecs SwapKeyInternal(this ICacheSpecs specs, Func<CacheKeySpecs, CacheKeySpecs> modifier)
-    //{
-    //    var typed = (CacheSpecs)specs;
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    public static ICacheSpecs SwapKeyInternal(this ICacheSpecs specs, Func<CacheKeySpecs, CacheKeySpecs> modifier)
+    {
+        var typed = (CacheSpecs)specs;
 
-    //    return typed with { KeySpecs = modifier(typed.KeySpecs) };
-    //}
+        return typed with { KeySpecs = modifier(typed.KeySpecs) };
+    }
+
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static ICacheSpecs MergePolicy(this ICacheSpecs specs, ICacheSpecs specsWithPolicy)
     {
         var typed = (CacheSpecs)specs;
@@ -22,6 +24,7 @@ public static class CacheSpecsExtensions
     /// </summary>
     /// <param name="specs"></param>
     /// <returns></returns>
+    [ShowApiWhenReleased(ShowApiMode.Never)]
     public static CacheSpecsVaryBy GetVaryByList(this ICacheSpecs specs)
         => ((CacheSpecs)specs).VaryByList;
 }

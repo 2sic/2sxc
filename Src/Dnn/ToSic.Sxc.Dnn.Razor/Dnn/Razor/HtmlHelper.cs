@@ -75,7 +75,7 @@ internal class HtmlHelper(
         try
         {
             // Prepare the specs for the partial rendering - these may get changed by the Razor at runtime
-            var partialSpecs = new RenderPartialSpecsWithCaching { CacheSpecs = cacheHelper.CacheSpecs.Disable() }; // Start with disabled, as that's the default, and then enable it if needed
+            var partialSpecs = new RenderPartialSpecsWithCaching { CacheSpecs = cacheHelper.CacheSpecsRaw.Disable() }; // Start with disabled, as that's the default, and then enable it if needed
 
             // This will get a HelperResult object, which is often not executed yet
             var result = RenderWithRoslynOrClassic(relativePath, normalizedPath, data, partialSpecs);

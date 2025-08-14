@@ -112,8 +112,8 @@ internal record CacheSpecs : ICacheSpecs
 
     public ICacheSpecs VaryBy(string name, string value, NoParamOrder protector = default, bool caseSensitive = false)
     {
-        name = "VaryBy" + name;
-        var varyByKey = caseSensitive ? name : name.ToLowerInvariant();
+        var varyByName = "VaryBy" + name;
+        var varyByKey = caseSensitive ? varyByName : varyByName.ToLowerInvariant();
         var valueToUse = caseSensitive ? value : value.ToLowerInvariant();
 
         var newDic = new Dictionary<string, string>(KeySpecs.VaryByDic ?? [], StringComparer.InvariantCultureIgnoreCase)
@@ -121,11 +121,12 @@ internal record CacheSpecs : ICacheSpecs
             [varyByKey] = valueToUse
         };
 
-        return this with
+        var newSpecs = this with
         {
-            KeySpecs = KeySpecs with { VaryByDic = newDic },
+            KeySpecs = KeySpecs with { Key = null! /* requires reset */, VaryByDic = newDic },
             VaryByList = VaryByList.Updated(name),
         };
+        return newSpecs;
     }
 
     public CacheSpecsVaryBy VaryByList { get; init; } = new();
