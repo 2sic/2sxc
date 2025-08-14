@@ -36,9 +36,13 @@ internal class HtmlHelper(
     /// <inheritdoc/>
     public IHtmlString Raw(object stringHtml)
     {
-        if (stringHtml == null) return new HtmlString(string.Empty);
-        if (stringHtml is string s) return new HtmlString(s);
-        if (stringHtml is IHtmlString h) return h;
+        switch (stringHtml)
+        {
+            case null: return new HtmlString(string.Empty);
+            case string s: return new HtmlString(s);
+            case IHtmlString h: return h;
+        }
+
         var ex = new ArgumentException($@"Html.Raw does not support type '{stringHtml.GetType().Name}'.", nameof(stringHtml));
         _helper.Add(ex);
         throw ex;
@@ -98,7 +102,7 @@ internal class HtmlHelper(
     private HelperResult RenderWithRoslynOrClassic(string path, object data)
     {
         var useRoslyn = _page is ICanUseRoslynCompiler;
-        var l = (this as IHasLog).Log.Fn<HelperResult>($"{nameof(useRoslyn)}: {useRoslyn}");
+        var l = Log.Fn<HelperResult>($"{nameof(useRoslyn)}: {useRoslyn}");
 
         // We can use Roslyn
         // Classic setup without Roslyn, use the built-in RenderPage

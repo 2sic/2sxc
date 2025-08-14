@@ -8,6 +8,14 @@ public class RenderSpecs
 {
     public object? Data { get; init; }
     public bool UseLightspeed { get; init; }
-    public RenderEngineResult? RenderEngineResult { get; init; } // errors from dnn requirements check (like c# 8.0)
-    public bool IncludeAllAssetsInOqtane { get; init; } // override default behavior in Oqtane
+
+    /// <summary>
+    /// Would contain errors from dnn requirements check (like c# 8.0)
+    /// </summary>
+    public RenderEngineResult? RenderEngineResult { get; init; }
+
+    /// <summary>
+    /// Override default behavior in Oqtane
+    /// </summary>
+    public bool IncludeAllAssetsInOqtane { get; init; }
 }
