@@ -1,12 +1,12 @@
-﻿using ToSic.Sxc.Code.Sys.CodeApi;
+﻿using System.Diagnostics.CodeAnalysis;
 using ToSic.Sxc.Render.Sys;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.Cache.Sys;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.ExecutionContext;
-using ToSic.Sxc.Web.Sys.LightSpeed;
 
-namespace ToSic.Sxc.Dnn.Razor.Sys;
+namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
 /// <summary>
 /// Helper to manage Razor partial caching.
@@ -15,13 +15,8 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 /// <param name="exCtx"></param>
 /// <param name="featureSvc"></param>
 /// <param name="parentLog"></param>
-internal class RazorPartialCachingHelper(string normalizedPath, IExecutionContext exCtx, IFeaturesService featureSvc, ILog parentLog) : HelperBase(parentLog, "Rzr.Cache")
+public class RazorPartialCachingHelper(int appId, string normalizedPath, IExecutionContext exCtx, IFeaturesService featureSvc, ILog parentLog) : HelperBase(parentLog, "Rzr.Cache")
 {
-    /// <summary>
-    /// App Id
-    /// </summary>
-    private int AppId => _appId ??= exCtx.GetAppId();
-    private int? _appId;
 
     private bool IsEnabled => _isEnabled ??= featureSvc.IsEnabled(SxcFeatures.LightSpeedOutputCachePartials.NameId);
     private bool? _isEnabled;
@@ -29,18 +24,20 @@ internal class RazorPartialCachingHelper(string normalizedPath, IExecutionContex
     /// <summary>
     /// Underlying cache service, taken from the execution context so it knows more about the current request.
     /// </summary>
+    [field: AllowNull, MaybeNull]
     private ICacheService CacheSvc => field ??= exCtx.GetService<ICacheService>();
 
     /// <summary>
     /// Cache specs prepared for the current partial rendering - contains the path.
     /// </summary>
     // [field: AllowNull, MaybeNull]
+    [field: AllowNull, MaybeNull]
     public ICacheSpecs CacheSpecsRaw => field
-        ??= CacheSvc.CreateSpecs("***" + OutputCacheKeys.PartialKey(AppId, normalizedPath));
+        ??= CacheSvc.CreateSpecs("***" + OutputCacheKeys.PartialKey(appId, normalizedPath));
 
-    // [field: AllowNull, MaybeNull]
+    [field: AllowNull, MaybeNull]
     private ICacheSpecs SettingsSpecs => field
-        ??= CacheSvc.CreateSpecs("***" + OutputCacheKeys.PartialSettingsKey(AppId, normalizedPath));
+        ??= CacheSvc.CreateSpecs("***" + OutputCacheKeys.PartialSettingsKey(appId, normalizedPath));
 
     private ICacheSpecs? GetSpecsBasedOnSettings()
     {
@@ -63,7 +60,7 @@ internal class RazorPartialCachingHelper(string normalizedPath, IExecutionContex
     /// <returns></returns>
     public string? TryGetFromCache()
     {
-        var l = Log.Fn<string>();
+        var l = Log.Fn<string?>();
         if (!IsEnabled)
             return l.ReturnNull("feature not enabled");
 
@@ -85,7 +82,7 @@ internal class RazorPartialCachingHelper(string normalizedPath, IExecutionContex
             return l.ReturnFalse("no partial caching");
 
         l.A($"Add to cache");
-        CacheSvc.Set(partialSpecs, new OutputCacheItem(new RenderResult { AppId = AppId, Html = html, IsPartial = true }));
+        CacheSvc.Set(partialSpecs, new OutputCacheItem(new RenderResult { AppId = appId, Html = html, IsPartial = true }));
 
         // also add the configuration to the cache, so it can decide which specs to use next time
         if (!_specsWereInCache)

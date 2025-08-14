@@ -22,9 +22,8 @@ internal class HtmlHelper(
     LazySvc<CodeErrorHelpService> codeErrService,
     LazySvc<IFeaturesService> featureSvc,
     LazySvc<SourceAnalyzer> codeAnalysis,
-    Generator<IRenderingHelper> renderingHelperGenerator,
-    LazySvc<OutputCacheManager> outputCacheManager)
-    : ServiceBase("Dnn.HtmHlp", connect: [codeErrService, featureSvc, codeAnalysis, renderingHelperGenerator, outputCacheManager]), IHtmlHelper
+    Generator<IRenderingHelper> renderingHelperGenerator)
+    : ServiceBase("Dnn.HtmHlp", connect: [codeErrService, featureSvc, codeAnalysis, renderingHelperGenerator]), IHtmlHelper
 {
     public HtmlHelper Init(RazorComponentBase page, DnnRazorHelper helper, bool isSystemAdmin)
     {
@@ -45,11 +44,12 @@ internal class HtmlHelper(
             case null: return new HtmlString("");
             case string s: return new HtmlString(s);
             case IHtmlString h: return h;
+            default:
+                var ex = new ArgumentException($@"Html.Raw does not support type '{stringHtml.GetType().Name}'.", nameof(stringHtml));
+                _helper.Add(ex);
+                throw ex;
         }
 
-        var ex = new ArgumentException($@"Html.Raw does not support type '{stringHtml.GetType().Name}'.", nameof(stringHtml));
-        _helper.Add(ex);
-        throw ex;
     }
 
     /// <summary>
@@ -66,7 +66,7 @@ internal class HtmlHelper(
 
         var l = Log.Fn<IHtmlString>($"{nameof(relativePath)}: '{relativePath}', {nameof(normalizedPath)}: '{normalizedPath}', {nameof(data)}: {data != null}");
 
-        var cacheHelper = new RazorPartialCachingHelper(normalizedPath, _page.ExCtx, featureSvc.Value, Log);
+        var cacheHelper = new RazorPartialCachingHelper(_page.ExCtx.GetAppId(), normalizedPath, _page.ExCtx, featureSvc.Value, Log);
 
         var cached = cacheHelper.TryGetFromCache();
         if (cached != null)
@@ -100,21 +100,6 @@ internal class HtmlHelper(
                 var nice = TryToLogAndReWrapError(renderException, relativePath, true);
                 return l.Return(new HtmlString(nice), "error");
             }
-
-            // 2025-08-14 old code before - remove ca. 2025-Q4
-            //var wrappedResult = new HelperResult(writer =>
-            //{
-            //    try
-            //    {
-            //        result.Result.WriteTo(writer);
-            //    }
-            //    catch (Exception renderException)
-            //    {
-            //        var nice = TryToLogAndReWrapError(renderException, relativePath, true);
-            //        writer.WriteLine(nice);
-            //    }
-            //});
-            //return l.Return(wrappedResult);
         }
         catch (Exception compileException)
         {

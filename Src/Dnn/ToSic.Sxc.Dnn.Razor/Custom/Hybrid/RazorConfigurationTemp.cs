@@ -1,6 +1,7 @@
 ﻿using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Services.Cache;
+using ToSic.Sxc.Web.Sys.LightSpeed;
 
 namespace ToSic.Sxc.Custom.Hybrid;
 

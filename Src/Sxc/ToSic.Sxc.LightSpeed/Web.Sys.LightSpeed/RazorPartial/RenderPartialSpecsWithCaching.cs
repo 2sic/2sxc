@@ -1,8 +1,9 @@
 ﻿using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Services.Cache;
 
-namespace ToSic.Sxc.Dnn.Razor.Sys;
-internal record RenderPartialSpecsWithCaching: RenderPartialSpecs
+namespace ToSic.Sxc.Web.Sys.LightSpeed;
+
+public record RenderPartialSpecsWithCaching: RenderPartialSpecs
 {
     /// <summary>
     /// Cache Specs for the partial render.

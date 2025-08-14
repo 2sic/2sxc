@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ToSic.Sxc.Blocks\ToSic.Sxc.Blocks.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Render\ToSic.Sxc.Render.csproj" />
+    <ProjectReference Include="..\ToSic.Sxc.Services\ToSic.Sxc.Services.csproj" />
   </ItemGroup>
 
 
