@@ -10,8 +10,6 @@ public record CacheKeySpecs
 
     public required string Main { get; init; }
 
-    public string? OverridePrefix { get; init; }
-
     public string? RegionName { get; init; }
 
     public Dictionary<string, string>? VaryByDic { get; init; }
@@ -47,15 +45,8 @@ public record CacheKeySpecs
         if (string.IsNullOrWhiteSpace(keySpecs.Main))
             throw new ArgumentException("Key must not be empty", nameof(keySpecs.Main));
 
-        // Experimental / temp for internal use only, to specify a key without the normal prefix
-        if (keySpecs.Main.StartsWith("***"))
-            return keySpecs.Main.TrimStart('*');
-
         // Prevent accidental adding of the prefix/segment multiple times
-        var prefix = keySpecs.OverridePrefix?.Trim() ?? DefaultPrefix;
-        var mainKey = keySpecs.Main.StartsWith(prefix)
-            ? keySpecs.Main
-            : $"{prefix}{(keySpecs.AppId == NoApp ? "" : Sep + "App:" + keySpecs.AppId)}{Sep}{SegmentPrefix}{keySpecs.RegionName.NullIfNoValue() ?? DefaultSegment}{Sep}{keySpecs.Main}";
+        var mainKey = GetBestKeyBase(keySpecs);
 
         // If no additional keys are specified, exit early.
         if (keySpecs.VaryByDic == null || keySpecs.VaryByDic.Count == 0)
@@ -68,6 +59,20 @@ public record CacheKeySpecs
 
         // Combine and return.
         return $"{mainKey}{varyBy}";
+    }
+
+    private static string GetBestKeyBase(CacheKeySpecs keySpecs)
+    {
+        // Prevent accidental adding of the prefix/segment multiple times
+        if (keySpecs.Main.StartsWith(DefaultPrefix))
+            return keySpecs.Main;
+
+        var isMagicOverride = keySpecs.Main.StartsWith("***");
+        var prefix = isMagicOverride
+            ? keySpecs.Main.TrimStart('*')
+            : $"{DefaultPrefix}{(keySpecs.AppId == NoApp ? "" : Sep + "App:" + keySpecs.AppId)}{Sep}{SegmentPrefix}{keySpecs.RegionName.NullIfNoValue() ?? DefaultSegment}";
+
+        return prefix;
     }
 
     /// <summary>
