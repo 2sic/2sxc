@@ -1,7 +1,9 @@
 ﻿using System.Configuration;
+using ToSic.Razor.Html5;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Engines.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
 
 namespace ToSic.Sxc.Dnn.Razor;
@@ -58,7 +60,12 @@ internal partial class DnnRazorEngine(EngineBase.Dependencies helpers, DnnRazorC
     {
         ILogCall<(TextWriter writer, List<Exception> exceptions)> l = Log.Fn<(TextWriter, List<Exception>)>();
         var writer = new StringWriter();
-        var result = razorCompiler.Render(webpage, writer, specs.Data);
+        var dataForDynamicModel = new ViewDataWithModel { Data = specs.Data, AlwaysCache = false };
+        var result = razorCompiler.Render(webpage, writer, dataForDynamicModel);
+
+        // Experimental
+        l.A($"Experimental: {nameof(dataForDynamicModel.AlwaysCache)}: {dataForDynamicModel.AlwaysCache}");
+
         return l.ReturnAsOk(result);
     }
 

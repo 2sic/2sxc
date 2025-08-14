@@ -3,6 +3,7 @@ using System.Runtime.ExceptionServices;
 using System.Web;
 using System.Web.Compilation;
 using ToSic.Eav.Apps.Sys.AppJson;
+using ToSic.Razor.Html5;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Code.Sys.HotBuild;
@@ -10,6 +11,7 @@ using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Compile.Sys;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Engines.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Caching.PiggyBack;
@@ -57,13 +59,13 @@ internal class DnnRazorCompiler(
     private readonly GetOnce<HttpContextBase> _httpContext = new();
 
     [PrivateApi]
-    internal (TextWriter writer, List<Exception> exceptions) Render(RazorComponentBase page, TextWriter writer, object data)
+    internal (TextWriter writer, List<Exception> exceptions) Render(RazorComponentBase page, TextWriter writer, ViewDataWithModel viewDataWithModel)
     {
         var l = Log.Fn<(TextWriter writer, List<Exception> exception)>(message: "will render into TextWriter");
         try
         {
-            if (data != null && page is ISetDynamicModel setDyn)
-                setDyn.SetDynamicModel(data);
+            if (page is ISetDynamicModel setDyn)
+                setDyn.SetDynamicModel(viewDataWithModel);
         }
         catch (Exception e)
         {
@@ -72,7 +74,7 @@ internal class DnnRazorCompiler(
 
         try
         {
-            var webPageContext = new WebPageContext(HttpContextCurrent, page, data);
+            var webPageContext = new WebPageContext(HttpContextCurrent, page, viewDataWithModel.Data);
             page.ExecutePageHierarchy(webPageContext, writer, page);
         }
         catch (Exception maybeIEntityCast)
@@ -91,7 +93,12 @@ internal class DnnRazorCompiler(
     {
         ILogCall<(TextWriter writer, List<Exception> exceptions)> l = Log.Fn<(TextWriter, List<Exception>)>();
         var writer = new StringWriter();
-        var result = Render(webpage, writer, specs.Data);
+        var dataForDynamicModel = new ViewDataWithModel { Data = specs.Data, AlwaysCache = false };
+        var result = Render(webpage, writer, dataForDynamicModel);
+
+        // Experimental
+        l.A($"Experimental: {nameof(dataForDynamicModel.AlwaysCache)}: {dataForDynamicModel.AlwaysCache}");
+
         return l.ReturnAsOk(result);
     }
 
@@ -199,6 +206,7 @@ internal class DnnRazorCompiler(
     internal static RazorBuildTempResult<HelperResult> RenderSubPage(RazorComponentBase parent, string templatePath, object data)
     {
         var l = (parent as IHasLog).Log.Fn<RazorBuildTempResult<HelperResult>>();
+
         // Find the RazorEngine which MUST be on the CodeApiService PiggyBack, or throw an error
         var razorEngine = parent.ExCtx.PiggyBack.GetOrGenerate(nameof(DnnRazorCompiler), DnnRazorCompiler () => null)
                           ?? throw l.Ex(new Exception($"Error finding {nameof(DnnRazorCompiler)}. This is very unexpected."));
@@ -215,7 +223,8 @@ internal class DnnRazorCompiler(
         if (!subPage.UsesHotBuild)
             return l.Return(new(null, false), "exit, not HotBuild");
 
-        var (writer, exceptions) = razorEngine.RenderImplementation(subPage.Instance, new() { Data = data });
+        var renderSpecs = new RenderSpecs { Data = data };
+        var (writer, exceptions) = razorEngine.RenderImplementation(subPage.Instance, renderSpecs);
 
         // Log any exceptions which may have occurred
         if (exceptions.SafeAny())

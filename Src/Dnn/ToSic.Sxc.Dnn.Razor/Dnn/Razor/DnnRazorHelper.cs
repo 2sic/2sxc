@@ -4,6 +4,8 @@ using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Engines;
+using ToSic.Sxc.Engines.Sys;
 using ToSic.Sys.Code.Help;
 using ToSic.Sys.Exceptions;
 
@@ -105,8 +107,12 @@ internal class DnnRazorHelper() : RazorHelperBase("Sxc.RzrHlp")
     public dynamic DynamicModel => _dynamicModel ??= CodeDataWrapper.FromDictionary(Page.PageData);
     private dynamic _dynamicModel;
 
-    internal void SetDynamicModel(object data) =>
-        _dynamicModel = CodeDataWrapper.DynamicFromObject(data, WrapperSettings.Dyn(children: false, realObjectsToo: false));
+    internal void SetDynamicModel(ViewDataWithModel viewData)
+    {
+        var l = Log.Fn();
+        _dynamicModel = CodeDataWrapper.DynamicFromObject(viewData.Data, WrapperSettings.Dyn(children: false, realObjectsToo: false));
+        l.Done();
+    }
 
     #endregion
 }

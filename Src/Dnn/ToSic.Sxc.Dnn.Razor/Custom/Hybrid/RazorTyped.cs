@@ -1,13 +1,15 @@
-﻿using Custom.Razor.Sys;
+﻿using System.Diagnostics.CodeAnalysis;
+using Custom.Razor.Sys;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
+using ToSic.Sxc.Custom.Hybrid;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Engines.Sys;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.Help;
@@ -63,8 +65,16 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
     /// <inheritdoc cref="CodeTyped.Customize"/>
     protected ICodeCustomizer Customize => field ??= CodeApi.GetService<ICodeCustomizer>(reuse: true);
 
-    void ISetDynamicModel.SetDynamicModel(object data) => _overridePageData = data;
+    void ISetDynamicModel.SetDynamicModel(ViewDataWithModel viewData)
+    {
+        _viewDataAndFeedback = viewData;
 
+        // Only overwrite if data is not null
+        if (viewData.Data != null)
+            _overridePageData = viewData.Data;
+    }
+
+    private ViewDataWithModel _viewDataAndFeedback;
     private object _overridePageData;
 
     private TypedCode16Helper CreateCodeHelper() =>
@@ -219,4 +229,13 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
 
     #endregion
 
+
+    #region Experimental Configuration
+
+    [PrivateApi("not yet public or final, WIP v20.00.0x")]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    // [field: AllowNull, MaybeNull]
+    public RazorConfigurationTemp Configuration => field ??= new(_viewDataAndFeedback);
+
+    #endregion
 }
