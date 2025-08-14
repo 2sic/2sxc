@@ -27,4 +27,9 @@ public static class CacheSpecsExtensions
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public static CacheSpecsVaryBy GetVaryByList(this ICacheSpecs specs)
         => ((CacheSpecs)specs).VaryByList;
+
+
+    public static ICacheSpecs AttachModel(this ICacheSpecs specs, IDictionary<string, object?>? model)
+        => ((CacheSpecs)specs) with { Model = model };
+
 }

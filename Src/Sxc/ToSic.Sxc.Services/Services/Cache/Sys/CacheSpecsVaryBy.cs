@@ -17,11 +17,9 @@ public record CacheSpecsVaryBy: ICanEstimateSize, ITimestamped
     /// this must be tracked in addition to the list page parameters, because even if the parameters are empty, it must still be
     /// activated on re-checking the cache.
     /// </summary>
-    public bool ByPageParameters { get; init; }
+    public ByNamed? ByPageParameters { get; init; }
 
-    public string? PageParameters { get; init; }
-
-    public bool ByPageParametersCaseSensitive { get; init; }
+    public ByNamed? ByModel { get; init; }
 
     public CacheSpecsVaryBy Updated(string name, string? keys, bool caseSensitive) =>
         name switch
@@ -29,13 +27,15 @@ public record CacheSpecsVaryBy: ICanEstimateSize, ITimestamped
             CacheSpecConstants.ByModule => this with { ByModule = true },
             CacheSpecConstants.ByPage => this with { ByPage = true },
             CacheSpecConstants.ByUser => this with { ByUser = true },
-            CacheSpecConstants.ByPageParameters => this with { ByPageParameters = true, PageParameters = keys, ByPageParametersCaseSensitive = caseSensitive },
+            CacheSpecConstants.ByPageParameters => this with { ByPageParameters = new() { Names = keys, CaseSensitive = caseSensitive } },
+            CacheSpecConstants.ByModel => this with { ByModel = new() { Names = keys, CaseSensitive = caseSensitive} }, // Model is like parameters
             _ => this
         };
 
     public SizeEstimate EstimateSize(ILog? log = default) => new(
         sizeof(bool) * 3 // ByPage, ByModule, ByUser
-        + (PageParameters?.Length ?? 0) // ByParameters
+        + (ByPageParameters?.Names?.Length ?? 0) // ByParameters
+        + (ByModel?.Names?.Length ?? 0) // ByModel
     );
 
     long ITimestamped.CacheTimestamp { get; } = DateTime.Now.Ticks;
@@ -56,9 +56,18 @@ public record CacheSpecsVaryBy: ICanEstimateSize, ITimestamped
         if (ByPage)
             cacheSpecs = cacheSpecs.VaryByPage();
 
-        if (ByPageParameters)
-            cacheSpecs = cacheSpecs.VaryByPageParameters(PageParameters, caseSensitive: ByPageParametersCaseSensitive);
+        if (ByPageParameters != null)
+            cacheSpecs = cacheSpecs.VaryByPageParameters(ByPageParameters.Names, caseSensitive: ByPageParameters.CaseSensitive);
+
+        if (ByModel != null)
+            cacheSpecs = cacheSpecs.VaryByModel(ByModel.Names, caseSensitive: ByModel.CaseSensitive);
 
         return cacheSpecs;
+    }
+
+    public record ByNamed
+    {
+        public required string? Names { get; init; }
+        public required bool CaseSensitive { get; init; }
     }
 }

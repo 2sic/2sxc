@@ -157,6 +157,12 @@ internal record CacheSpecs : ICacheSpecs
             .OrderBy(p => p.Key, comparer: StringComparer.InvariantCultureIgnoreCase)
             .ToList();
 
+        return VaryByParamsListKvp(all, varyByName, names, caseSensitive);
+    }
+
+    private ICacheSpecs VaryByParamsListKvp(List<KeyValuePair<string, string>> all, string varyByName, string? names,
+        bool caseSensitive)
+    {
         var nvc = all
             .Where(pair => pair.Value.HasValue())
             .Aggregate(new NameValueCollection(),
@@ -169,6 +175,32 @@ internal record CacheSpecs : ICacheSpecs
         var asUrl = nvc.NvcToString();
         return VaryByInternal(varyByName, asUrl, caseSensitive: caseSensitive, keysForRestore: names);
     }
+
+    #endregion
+
+    #region VaryByModel Experimental
+
+    internal IDictionary<string, object?>? Model { get; init; }
+
+    public ICacheSpecs VaryByModel(string? names = default, NoParamOrder protector = default, bool caseSensitive = false)
+    {
+        if (Model == null)
+            throw new InvalidOperationException("VaryByModel is not supported in this context, as Model is null. Ensure the model is set before calling this method.");
+
+        var nameList = names.CsvToArrayWithoutEmpty();
+        if (!nameList.Any())
+            return this;
+
+        var all = Model
+            .Where(pair => nameList.Any(n => n.EqualsInsensitive(pair.Key)))
+            .Select(p => new KeyValuePair<string, string?>(p.Key, p.Value?.ToString()))
+            .OrderBy(p => p.Key, comparer: StringComparer.InvariantCultureIgnoreCase)
+            .ToList();
+
+        return VaryByParamsListKvp(all!, CacheSpecConstants.ByModel, names, caseSensitive);
+    }
+
+
 
     #endregion
 

@@ -215,4 +215,17 @@ public interface ICacheSpecs
 
     #endregion
 
+    #region Vary By Model EXPERIMENTAL
+
+    /// <summary>
+    /// Vary the cache by values in the model, so that each sample has its own cache. Used in Partial-Caching only. WORK-IN-PROGRESS!
+    /// </summary>
+    /// <param name="names">Names of one or more parameters, comma-separated</param>
+    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="caseSensitive">Determines if the value should be treated case-sensitive, default is `false`</param>
+    /// <returns></returns>
+    [WorkInProgressApi("WIP v20.01")]
+    ICacheSpecs VaryByModel(string? names = default, NoParamOrder protector = default, bool caseSensitive = false);
+
+    #endregion
 }

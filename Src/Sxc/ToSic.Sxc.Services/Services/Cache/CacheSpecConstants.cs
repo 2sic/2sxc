@@ -10,4 +10,6 @@ internal class CacheSpecConstants
     public const string ByParameters = "Parameters";
 
     public const string ByUser = "User";
+
+    public const string ByModel = "Model";
 }

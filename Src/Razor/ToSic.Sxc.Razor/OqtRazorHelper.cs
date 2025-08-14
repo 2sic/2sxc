@@ -73,12 +73,15 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
     public dynamic DynamicModel => field ??= owner.GetService<ICodeDataPoCoWrapperService>()
         .DynamicFromObject(_overridePageData ?? owner.Model!, WrapperSettings.Dyn(false, false));
 
+    private RenderSpecs? _renderSpecs;
     private object? _overridePageData;
 
-    public void SetDynamicModel(RenderSpecs viewData)
+    // TODO: DON'T think this is called in Oqtane - maybe document how it works, or remove it?
+    public void SetDynamicModel(RenderSpecs renderSpecs)
     {
         var l = Log.Fn();
-        _overridePageData = viewData.Data;
+        _renderSpecs = renderSpecs;
+        _overridePageData = renderSpecs.Data;
         l.Done();
     }
 
@@ -90,7 +93,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
         => new(
             helperSpecs: new(ExCtx, true, owner.Path),
             getRazorModel: () => _overridePageData ?? owner.Model,
-            getModelDic: () => (_overridePageData ?? owner.Model)?.ToDicInvariantInsensitive()!
+            getModelDic: () => (_renderSpecs?.DataDic ?? owner.Model?.ToDicInvariantInsensitive())!
         );
 
     #endregion

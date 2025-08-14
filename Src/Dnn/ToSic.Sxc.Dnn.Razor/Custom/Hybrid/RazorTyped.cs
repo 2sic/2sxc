@@ -82,7 +82,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
             getRazorModel: () => _overridePageData
                                  // the default/only value would be on a 0 key
                                  ?? (PageData?.TryGetValue(0, out var zeroData) ?? false ? zeroData as object : null),
-            () => _overridePageData?.ToDicInvariantInsensitive()
+            () => _renderSpecs?.DataDic
                   ?? PageData?
                       .Where(pair => pair.Key is string)
                       .ToDictionary(pair => pair.Key.ToString(), pair => pair.Value, InvariantCultureIgnoreCase)

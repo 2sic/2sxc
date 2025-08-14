@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Web.Sys.LightSpeed;
 /// <param name="exCtx"></param>
 /// <param name="featureSvc"></param>
 /// <param name="parentLog"></param>
-public class RazorPartialCachingHelper(int appId, string normalizedPath, IExecutionContext exCtx, IFeaturesService featureSvc, ILog parentLog) : HelperBase(parentLog, "Rzr.Cache")
+public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictionary<string, object?>? model, IExecutionContext exCtx, IFeaturesService featureSvc, ILog parentLog) : HelperBase(parentLog, "Rzr.Cache")
 {
 
     private bool IsEnabled => _isEnabled ??= featureSvc.IsEnabled(SxcFeatures.LightSpeedOutputCachePartials.NameId);
@@ -32,8 +32,11 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IExecut
     /// </summary>
     // [field: AllowNull, MaybeNull]
     [field: AllowNull, MaybeNull]
-    public ICacheSpecs CacheSpecsRaw => field
-        ??= CacheSvc.CreateSpecs("***" + OutputCacheKeys.PartialKey(appId, normalizedPath));
+    public ICacheSpecs CacheSpecsRawWithModel => field
+        ??= CacheSvc.CreateSpecs("***" + OutputCacheKeys.PartialKey(appId, normalizedPath))
+            .AttachModel(model);
+
+    
 
     [field: AllowNull, MaybeNull]
     private ICacheSpecs SettingsSpecs => field
@@ -46,7 +49,7 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IExecut
         if (setting == null)
             return l.ReturnNull("settings for partial not in cache");
 
-        var foundation = setting.Restore(CacheSpecsRaw);
+        var foundation = setting.Restore(CacheSpecsRawWithModel);
         _specsWereInCache = true;
 
         return l.Return(foundation, $"CacheKey to look for: '{foundation.Key}'");

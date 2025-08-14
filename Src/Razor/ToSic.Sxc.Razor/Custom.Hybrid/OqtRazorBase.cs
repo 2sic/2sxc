@@ -90,7 +90,7 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
     #region Dynamic Model
 
-    void ISetDynamicModel.SetDynamicModel(RenderSpecs viewData) => RzrHlp.SetDynamicModel(viewData);
+    void ISetDynamicModel.SetDynamicModel(RenderSpecs renderSpecs) => RzrHlp.SetDynamicModel(renderSpecs);
 
     #endregion
 

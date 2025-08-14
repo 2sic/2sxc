@@ -66,7 +66,9 @@ internal class HtmlHelper(
 
         var l = Log.Fn<IHtmlString>($"{nameof(relativePath)}: '{relativePath}', {nameof(normalizedPath)}: '{normalizedPath}', {nameof(data)}: {data != null}");
 
-        var cacheHelper = new RazorPartialCachingHelper(_page.ExCtx.GetAppId(), normalizedPath, _page.ExCtx, featureSvc.Value, Log);
+        var renderSpecs = new RenderSpecs { Data = data };
+
+        var cacheHelper = new RazorPartialCachingHelper(_page.ExCtx.GetAppId(), normalizedPath, renderSpecs.DataDic, _page.ExCtx, featureSvc.Value, Log);
 
         var cached = cacheHelper.TryGetFromCache();
         if (cached != null)
@@ -75,20 +77,26 @@ internal class HtmlHelper(
         try
         {
             // Prepare the specs for the partial rendering - these may get changed by the Razor at runtime
-            var partialSpecs = new RenderPartialSpecsWithCaching { CacheSpecs = cacheHelper.CacheSpecsRaw.Disable() }; // Start with disabled, as that's the default, and then enable it if needed
+            var partialSpecs = new RenderPartialSpecsWithCaching { CacheSpecs = cacheHelper.CacheSpecsRawWithModel.Disable() }; // Start with disabled, as that's the default, and then enable it if needed
+
+            renderSpecs = renderSpecs with
+            {
+                // Data = data,
+                PartialSpecs = partialSpecs,
+            };
 
             // This will get a HelperResult object, which is often not executed yet
-            var result = RenderWithRoslynOrClassic(relativePath, normalizedPath, data, partialSpecs);
+            var result = RenderWithRoslynOrClassic(relativePath, normalizedPath, renderSpecs);
 
             // In case we should throw a nice error, we must get the HTML now, to possibly cause the error and show an alternate message
             // This will also not allow partial caching
             if (!ThrowPartialError)
-                return l.Return(result.Result);
+                return l.Return(result);
 
             // Experimental - try to simplify returned html string - see old code below
             try
             {
-                var asString = result.Result.ToHtmlString();
+                var asString = result.ToHtmlString();
 
                 // add to cache if needed / enabled
                 cacheHelper.SaveToCache(asString, partialSpecs.CacheSpecs);
@@ -120,29 +128,22 @@ internal class HtmlHelper(
     /// </summary>
     /// <param name="relativePath"></param>
     /// <param name="normalizedPath"></param>
-    /// <param name="data"></param>
-    /// <param name="partialCacheSpecs"></param>
+    /// <param name="renderSpecs"></param>
     /// <returns></returns>
-    private (bool UseRoslyn, HelperResult Result, RenderPartialSpecs CachingSpecs) RenderWithRoslynOrClassic(
-        string relativePath, string normalizedPath, object data, RenderPartialSpecsWithCaching partialCacheSpecs)
+    private HelperResult RenderWithRoslynOrClassic(string relativePath, string normalizedPath, RenderSpecs renderSpecs)
     {
         var useRoslyn = _page is ICanUseRoslynCompiler;
-        var l = Log.Fn<(bool, HelperResult, RenderPartialSpecs?)>($"{nameof(useRoslyn)}: {useRoslyn}");
+        var l = Log.Fn<HelperResult>($"{nameof(useRoslyn)}: {useRoslyn}");
 
         // We can use Roslyn
         // Classic setup without Roslyn, use the built-in RenderPage
         if (!useRoslyn)
-            return l.Return((false, _page.BaseRenderPage(relativePath, data), null), $"default render {(data == null ? "no" : "with")} data");
+            return l.Return(_page.BaseRenderPage(relativePath, renderSpecs.Data), $"default render {(renderSpecs.Data == null ? "no" : "with")} data");
 
         // Try to compile with Roslyn
         // Will exit if the child has an old base class which would expect PageData["..."] properties
         // Because that would be empty https://github.com/2sic/2sxc/issues/3260
-        var renderSpecs = new RenderSpecs
-        {
-            Data = data,
-            PartialSpecs = partialCacheSpecs,
-        };
-        var preparations = DnnRazorCompiler.PrepareForRoslyn(_page, normalizedPath, data);
+        var preparations = DnnRazorCompiler.PrepareForRoslyn(_page, normalizedPath, renderSpecs.Data);
 
         // Exit if we don't use HotBuild, because then we must revert back to classic render
         // Reason is that otherwise the PageData property - used on very old classes - would not be populated
@@ -152,11 +153,11 @@ internal class HtmlHelper(
             var probablyHotBuild = DnnRazorCompiler.ExecuteWithRoslyn(preparations, _page, renderSpecs);
             
             //if (probablyHotBuild.UsesHotBuild)
-            return l.Return((true, probablyHotBuild.Instance, renderSpecs.PartialSpecs), "used HotBuild");
+            return l.Return(probablyHotBuild.Instance, "used HotBuild");
         }
 
         l.A("Tried to use Roslyn, but detected old base class so will use classic Razor Engine so PageData continues to work.");
-        return l.Return((false,_page.BaseRenderPage(relativePath, data), null), $"default render {(data == null ? "no" : "with")} data");
+        return l.Return(_page.BaseRenderPage(relativePath, renderSpecs.Data), $"default render {(renderSpecs.Data == null ? "no" : "with")} data");
     }
 
 

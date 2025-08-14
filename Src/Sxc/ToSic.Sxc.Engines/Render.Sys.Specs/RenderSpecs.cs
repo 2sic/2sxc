@@ -1,15 +1,19 @@
 ﻿using ToSic.Sxc.Engines;
+using ToSic.Sys.Data;
 
 namespace ToSic.Sxc.Render.Sys.Specs;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class RenderSpecs
+public record RenderSpecs
 {
     /// <summary>
     /// The data / view model to be used in the Razor file.
     /// </summary>
     public object? Data { get; init; }
+
+    public IDictionary<string, object?>? DataDic => _dataDic.Get(() => Data?.ToDicInvariantInsensitive());
+    private readonly GetOnce<IDictionary<string, object?>?> _dataDic = new();
 
     /// <summary>
     /// Info if LightSpeed should be used for rendering - ATM just used for the statistics in the UI.
