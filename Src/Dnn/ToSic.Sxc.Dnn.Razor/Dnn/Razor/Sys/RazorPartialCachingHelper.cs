@@ -44,23 +44,15 @@ internal class RazorPartialCachingHelper(string normalizedPath, IExecutionContex
 
     private ICacheSpecs? GetSpecsBasedOnSettings()
     {
-        var foundation = CacheSpecsRaw;
+        var l = Log.Fn<ICacheSpecs?>();
         var setting = CacheSvc.Get<CacheSpecsVaryBy>(SettingsSpecs);
         if (setting == null)
-            return null;
+            return l.ReturnNull("settings for partial not in cache");
 
+        var foundation = setting.Restore(CacheSpecsRaw);
         _specsWereInCache = true;
 
-        if (setting.ByUser)
-            foundation = foundation.VaryByUser();
-
-        if (setting.ByModule)
-            foundation = foundation.VaryByModule();
-
-        if (setting.ByPage)
-            foundation = foundation.VaryByPage();
-
-        return foundation;
+        return l.Return(foundation, $"CacheKey to look for: '{foundation.Key}'");
     }
 
     private bool _specsWereInCache;

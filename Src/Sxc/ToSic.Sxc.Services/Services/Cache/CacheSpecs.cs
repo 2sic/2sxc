@@ -111,6 +111,9 @@ internal record CacheSpecs : ICacheSpecs
     //    => Next(value, "", caseSensitive: caseSensitive);
 
     public ICacheSpecs VaryBy(string name, string value, NoParamOrder protector = default, bool caseSensitive = false)
+        => VaryByInternal(name, value, protector, caseSensitive);
+
+    private ICacheSpecs VaryByInternal(string name, string value, NoParamOrder protector = default, bool caseSensitive = false, string? keysForRestore = null)
     {
         var varyByName = "VaryBy" + name;
         var varyByKey = caseSensitive ? varyByName : varyByName.ToLowerInvariant();
@@ -124,7 +127,7 @@ internal record CacheSpecs : ICacheSpecs
         var newSpecs = this with
         {
             KeySpecs = KeySpecs with { Key = null! /* requires reset */, VaryByDic = newDic },
-            VaryByList = VaryByList.Updated(name),
+            VaryByList = VaryByList.Updated(name, keysForRestore, caseSensitive),
         };
         return newSpecs;
     }
@@ -137,14 +140,15 @@ internal record CacheSpecs : ICacheSpecs
 
     /// <inheritdoc />
     public ICacheSpecs VaryByPageParameters(string? names = default, NoParamOrder protector = default, bool caseSensitive = false)
-        => VaryByParamsInternal("PageParameters",
-            ExCtx.GetState<ICmsContext>().Page.Parameters ?? new Parameters { Nvc = [] }, names,
+        => VaryByParamsInternal(CacheSpecConstants.ByPageParameters,
+            ExCtx.GetState<ICmsContext>().Page.Parameters ?? new Parameters { Nvc = [] },
+            names,
             caseSensitive: caseSensitive
         );
 
     /// <inheritdoc />
     public ICacheSpecs VaryByParameters(IParameters parameters, NoParamOrder protector = default, string? names = default, bool caseSensitive = false)
-        => VaryByParamsInternal("Parameters", parameters, names, caseSensitive: caseSensitive);
+        => VaryByParamsInternal(CacheSpecConstants.ByParameters, parameters, names, caseSensitive: caseSensitive);
 
     private ICacheSpecs VaryByParamsInternal(string varyByName, IParameters parameters, string? names, bool caseSensitive = false)
     {
@@ -163,7 +167,7 @@ internal record CacheSpecs : ICacheSpecs
                 });
 
         var asUrl = nvc.NvcToString();
-        return VaryBy(varyByName, asUrl, caseSensitive: caseSensitive);
+        return VaryByInternal(varyByName, asUrl, caseSensitive: caseSensitive, keysForRestore: names);
     }
 
     #endregion
@@ -172,7 +176,7 @@ internal record CacheSpecs : ICacheSpecs
 
     /// <inheritdoc />
     public ICacheSpecs VaryBy(string name, int value) =>
-        VaryBy(name, value.ToString(), caseSensitive: false);
+        VaryByInternal(name, value.ToString(), caseSensitive: false);
 
     /// <inheritdoc />
     public ICacheSpecs VaryByModule(int id)

@@ -5,5 +5,9 @@ internal class CacheSpecConstants
 
     public const string ByPage = "Page";
 
+    public const string ByPageParameters = "PageParameters";
+
+    public const string ByParameters = "Parameters";
+
     public const string ByUser = "User";
 }
