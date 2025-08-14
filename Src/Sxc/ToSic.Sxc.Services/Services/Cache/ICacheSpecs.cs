@@ -72,13 +72,15 @@ public interface ICacheSpecs
     /// <summary>
     /// Set sliding expiration, alternative is absolute expiration.
     /// </summary>
-    /// <param name="slidingExpiration"></param>
+    /// <param name="timeSpan"></param>
+    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="seconds">time in seconds - if specified, takes precedence - new v20.01</param>
     /// <returns></returns>
     /// <remarks>
     /// If neither absolute nor sliding are set, a sliding expiration of 1 hour will be used.
     /// Setting both is invalid and will throw an exception.
     /// </remarks>
-    ICacheSpecs SetSlidingExpiration(TimeSpan slidingExpiration);
+    ICacheSpecs SetSlidingExpiration(TimeSpan? timeSpan = default, NoParamOrder protector = default, int? seconds = null);
 
     /// <summary>
     /// Depend on the app data, so if any data changes, the cache will be invalidated.

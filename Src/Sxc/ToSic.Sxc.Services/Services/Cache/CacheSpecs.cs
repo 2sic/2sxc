@@ -58,8 +58,11 @@ internal record CacheSpecs : ICacheSpecs
     public ICacheSpecs SetAbsoluteExpiration(DateTimeOffset absoluteExpiration) 
         => this with { PolicyMaker = PolicyMaker.SetAbsoluteExpiration(absoluteExpiration) };
 
-    public ICacheSpecs SetSlidingExpiration(TimeSpan slidingExpiration)
-        => this with { PolicyMaker = PolicyMaker.SetSlidingExpiration(slidingExpiration) };
+    public ICacheSpecs SetSlidingExpiration(TimeSpan? timeSpan = null, NoParamOrder protector = default, int? seconds = null)
+        => seconds == null
+            ? this with { PolicyMaker = PolicyMaker.SetSlidingExpiration(timeSpan ?? throw new ArgumentException("no time specified")) }
+            : this with { PolicyMaker = PolicyMaker.SetSlidingExpiration(seconds.Value) };
+           
 
     #endregion
 

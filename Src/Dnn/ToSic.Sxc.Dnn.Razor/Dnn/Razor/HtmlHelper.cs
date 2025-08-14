@@ -1,5 +1,4 @@
 ﻿using System.Web;
-using ToSic.Eav.DataSource.Sys.Caching;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
@@ -8,7 +7,6 @@ using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
-using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 using static System.StringComparer;
@@ -39,8 +37,6 @@ internal class HtmlHelper(
     private DnnRazorHelper _helper;
     private bool _isSystemAdmin;
 
-    private ICacheService CacheServiceFromExCtx => field ??= _page.ExCtx.GetService<ICacheService>();
-
     /// <inheritdoc/>
     public IHtmlString Raw(object stringHtml)
     {
@@ -70,22 +66,16 @@ internal class HtmlHelper(
 
         var l = Log.Fn<IHtmlString>($"{nameof(relativePath)}: '{relativePath}', {nameof(normalizedPath)}: '{normalizedPath}', {nameof(data)}: {data != null}");
 
-        var appId = _page.ExCtx.GetAppId();
-        var cacheKeyString = OutputCacheKeys.PartialKey(appId, normalizedPath);
-        var cacheSpecs = CacheServiceFromExCtx.CreateSpecs("***" + cacheKeyString); // "***" is to override normal key generation for now
-        var cached = CacheServiceFromExCtx.Get<OutputCacheItem>(cacheSpecs);
-        //var cached = outputCacheManager.Value.Get(cacheKey);
+        var cacheHelper = new RazorPartialCachingHelper(normalizedPath, _page.ExCtx, featureSvc.Value, Log);
+
+        var cached = cacheHelper.TryGetFromCache();
         if (cached != null)
-        {
-            // If we have a cached result, return it
-            l.A("Returning cached result");
-            return l.Return(new HtmlString(cached.Data.Html));
-        }
+            return l.Return(new HtmlString(cached), "Returning cached result");
 
         try
         {
             // Prepare the specs for the partial rendering - these may get changed by the Razor at runtime
-            var partialSpecs = new RenderPartialSpecsWithCaching { CacheSpecs = cacheSpecs.Disable() }; // Start with disabled, as that's the default, and then enable it if needed
+            var partialSpecs = new RenderPartialSpecsWithCaching { CacheSpecs = cacheHelper.CacheSpecs.Disable() }; // Start with disabled, as that's the default, and then enable it if needed
 
             // This will get a HelperResult object, which is often not executed yet
             var result = RenderWithRoslynOrClassic(relativePath, normalizedPath, data, partialSpecs);
@@ -100,12 +90,9 @@ internal class HtmlHelper(
             {
                 var asString = result.Result.ToHtmlString();
 
-                if (!featureSvc.Value.IsEnabled(SxcFeatures.LightSpeedOutputCachePartials.NameId) || !partialSpecs.CacheSpecs.IsEnabled)
-                    return l.Return(new HtmlString(asString), "no partial caching");
+                // add to cache if needed / enabled
+                cacheHelper.SaveToCache(asString, partialSpecs.CacheSpecs);
 
-                l.A($"Add to cache");
-                cacheSpecs.SetSlidingExpiration(new(0, 5, 0));
-                CacheServiceFromExCtx.Set(partialSpecs.CacheSpecs, new OutputCacheItem(new RenderResult { AppId = appId, Html = asString, IsPartial = true }));
                 return l.Return(new HtmlString(asString), "with partial caching");
             }
             catch (Exception renderException)
