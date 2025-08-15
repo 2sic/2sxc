@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Services.Cache.Sys;
 /// Internal configuration to know what we're varying by.
 /// This is used to determine which parameters will be used to pre-check the cache.
 /// </summary>
-public record CacheSpecsConfig: ICanEstimateSize, ITimestamped
+public record CacheConfig: ICanEstimateSize, ITimestamped
 {
     public bool ByPage { get; init; }
     public bool ByModule { get; init; }
@@ -18,14 +18,14 @@ public record CacheSpecsConfig: ICanEstimateSize, ITimestamped
     /// this must be tracked in addition to the list page parameters, because even if the parameters are empty, it must still be
     /// activated on re-checking the cache.
     /// </summary>
-    public ByNamed? ByPageParameters { get; init; }
+    public CacheConfigByNamed? ByPageParameters { get; init; }
 
-    public ByNamed? ByModel { get; init; }
+    public CacheConfigByNamed? ByModel { get; init; }
 
     public UserElevation MinDisabledElevation { get; init; }
     public UserElevation MaxDisabledElevation { get; init; }
 
-    public CacheSpecsConfig Updated(string name, string? keys, bool caseSensitive) =>
+    public CacheConfig Updated(string name, string? keys, bool caseSensitive) =>
         name switch
         {
             CacheSpecConstants.ByModule => this with { ByModule = true },
@@ -69,9 +69,5 @@ public record CacheSpecsConfig: ICanEstimateSize, ITimestamped
         return cacheSpecs;
     }
 
-    public record ByNamed
-    {
-        public required string? Names { get; init; }
-        public required bool CaseSensitive { get; init; }
-    }
+
 }

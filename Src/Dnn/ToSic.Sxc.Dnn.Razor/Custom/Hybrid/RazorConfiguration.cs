@@ -1,22 +1,29 @@
-﻿using ToSic.Sxc.Dnn.Razor.Sys;
-using ToSic.Sxc.Render.Sys.Specs;
+﻿using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Web.Sys.LightSpeed;
 
 namespace ToSic.Sxc.Custom.Hybrid;
 
-[PrivateApi("not yet public or final, WIP v20.00.0x")]
-public class RazorConfigurationTemp(RenderSpecs renderSpecs)
+[PrivateApi("not yet public or final, WIP v20.00.0x, will have to create interface")]
+public class RazorConfiguration(RenderSpecs renderSpecs)
 {
     // This class is a placeholder for future Razor configuration settings.
     // It is currently empty and serves as a temporary structure for potential future use.
     // The class may be expanded with properties and methods as needed in the future.
 
-    public string PartCaching(Func<ICacheSpecs, ICacheSpecs> config)
+    public string OutputPartial(NoParamOrder protector = default, Func<ICacheSpecs, ICacheSpecs> cache = default)
     {
-        if (config == null)
-            return "";
+        if (cache != null)
+            RunOutputPartialCache(cache);
 
+        // Here future options will be added if needed.
+
+        // Return nothing, so that Razor doesn't output anything.
+        return null;
+    }
+
+    private void RunOutputPartialCache(Func<ICacheSpecs, ICacheSpecs> cache)
+    {
         var parent = (RenderPartialSpecsWithCaching)renderSpecs.PartialSpecs;
 
         // On first use, enable caching since it was off at first
@@ -26,10 +33,10 @@ public class RazorConfigurationTemp(RenderSpecs renderSpecs)
             _cachingWasCalled = true;
         }
 
-        var updated = config(parent.CacheSpecs);
+        var updated = cache(parent.CacheSpecs);
         parent.CacheSpecs = updated;
-        return null;
     }
 
     private bool _cachingWasCalled;
+
 }

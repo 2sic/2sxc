@@ -1,8 +1,11 @@
 ﻿using ToSic.Razor.Blade;
+using ToSic.Razor.Html5;
+using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.ModuleHtml;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.TurnOn.Sys;
 using ToSic.Sxc.Sys.Render.PageContext;
+using ToSic.Sxc.Sys.Render.PageFeatures;
 using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 
 namespace ToSic.Sxc.Services.Page.Sys;
@@ -37,5 +40,22 @@ public partial class PageService(
     {
         cspServiceLazy.Value.Add(name, values);
         return "";
+    }
+
+
+    public void ReplaceCachedChanges(RenderResult renderResult)
+    {
+        var l = Log.Fn();
+        if (renderResult.PartialActivateWip?.Any() == true)
+            Activate(renderResult.PartialActivateWip.ToArray());
+
+        if (renderResult.FeaturesFromResources is {} list)
+            foreach (var ffs in list)
+                if (ffs is PageFeatureFromSettings typed)
+                    PageServiceShared.PageFeatures.FeaturesFromSettingsAdd(typed with { AlreadyProcessed = false }); // must create a clone, because it will be modified once added which would change the cached original
+
+        foreach (var tagSet in renderResult.PartialModuleTags ?? [])
+            moduleService.Value.AddTag(tagSet.Tag, moduleId: ModuleId, noDuplicates: tagSet.NoDuplicates);
+        l.Done();
     }
 }

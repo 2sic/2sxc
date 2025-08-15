@@ -15,11 +15,13 @@ partial class PageService
     /// <inheritdoc />
     public string AddToHead(string html)
     {
-        if (string.IsNullOrWhiteSpace(html)) return "";
+        if (string.IsNullOrWhiteSpace(html))
+            return "";
         AddToHead(Tag.Custom(html));
         return "";
     }
 
     /// <inheritdoc />
-    public string AddMeta(string name, string content) => AddToHead(htmlTagsLazy.Value.Meta().Name(name).Content(content));
+    public string AddMeta(string name, string content)
+        => AddToHead(htmlTagsLazy.Value.Meta().Name(name).Content(content));
 }

@@ -164,7 +164,7 @@ internal record CacheSpecs : ICacheSpecs
         return newSpecs;
     }
 
-    public CacheSpecsConfig ConfigList { get; init; } = new();
+    public CacheConfig ConfigList { get; init; } = new();
 
     #endregion
 

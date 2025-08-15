@@ -95,7 +95,7 @@ public class ContentBlockBackend(
 
         l.A("3. Add manual resources (fancybox etc.)");
         // First get all the parts out of HTML, as the configuration is still stored as plain HTML
-        var mergedFeatures  = string.Join("\n", (result.FeaturesFromSettings?.Select(mc => mc.Html) ?? []));
+        var mergedFeatures  = string.Join("\n", (result.FeaturesFromResources?.Select(mc => mc.Html) ?? []));
 
         l.A("4.1. Process optimizers");
         var renderResult = optimizerLazy.Value.Process(mergedFeatures, new(extractAll: true));

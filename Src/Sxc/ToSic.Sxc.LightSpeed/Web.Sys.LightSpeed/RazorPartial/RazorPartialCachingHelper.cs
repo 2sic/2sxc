@@ -5,7 +5,6 @@ using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.Cache.Sys;
-using ToSic.Sxc.Services.Page.Sys;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.ExecutionContext;
 
@@ -45,8 +44,8 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
     private ICacheSpecs SettingsSpecs => field
         ??= CacheSvc.CreateSpecs(CacheSpecConstants.PrefixForDontPrefix + OutputCacheKeys.PartialSettingsKey(appId, normalizedPath));
 
-    private CacheSpecsConfig? CacheSpecsConfig => _cacheSpecsConfig.Get(() => CacheSvc.Get<CacheSpecsConfig>(SettingsSpecs));
-    private readonly GetOnce<CacheSpecsConfig?> _cacheSpecsConfig = new();
+    private CacheConfig? CacheSpecsConfig => _cacheSpecsConfig.Get(() => CacheSvc.Get<CacheConfig>(SettingsSpecs));
+    private readonly GetOnce<CacheConfig?> _cacheSpecsConfig = new();
 
     private ICacheSpecs? GetSpecsBasedOnSettings()
     {
@@ -93,7 +92,7 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
         IRenderResult? AttachListenerAndExit(string message)
         {
             // WIP if it is enabled, we should attach a listener
-            Listener = PageService.Listeners.CreateListener();
+            Listener = PageService.Listeners.CreateRenderListener();
             return l.ReturnNull(message);
         }
     }
@@ -105,13 +104,13 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
             return l.ReturnFalse("no partial caching");
 
         l.A($"Add to cache");
-        CacheSvc.Set(partialSpecs, new OutputCacheItem(new RenderResult
+        CacheSvc.Set(partialSpecs, new OutputCacheItem((Listener ?? new RenderResult()) with 
         {
             AppId = appId,
             Html = html,
             IsPartial = true,
-            Features = Listener?.PageFeatures,
-            PartialActivateWip = Listener?.Activate,
+            //Features = Listener?.Features,
+            //PartialActivateWip = Listener?.PartialActivateWip,
         }));
 
         // detach listener if it exists, so it doesn't get saved to cache
@@ -138,25 +137,13 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
     [field: AllowNull, MaybeNull]
     public Services.Page.Sys.PageService PageService =>
         field ??= (Services.Page.Sys.PageService)exCtx.GetService<Services.IPageService>(reuse: true);
-    public PageChangeListenerWip? Listener { get; set; }
+    public RenderResult? Listener { get; set; }
 
 
     public bool ProcessListener(IRenderResult cached)
     {
         var l = Log.Fn<bool>();
-
-        var data = (RenderResult)cached;
-        var ps = PageService;
-        var psShared = ps.PageServiceShared;
-        if (data.PartialActivateWip?.Any() == true)
-            ps.Activate(data.PartialActivateWip.ToArray());
-            // ps.Activate(data.PartialActivateWip.ToArray());
-
-        //foreach (var dataFeature in (data.Features ?? []).Where(f => f is PageFeatureFromSettings).Cast<PageFeatureFromSettings>())
-        //{
-        //    psShared.PageFeatures.FeaturesFromSettingsAdd(dataFeature);
-        //}
-        
+        PageService.ReplaceCachedChanges((RenderResult)cached);
         return l.ReturnTrue("activated");
     }
 

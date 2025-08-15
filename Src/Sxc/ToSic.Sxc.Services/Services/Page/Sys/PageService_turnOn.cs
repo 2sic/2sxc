@@ -28,14 +28,22 @@ partial class PageService
         // then generate the turn-on and add to module state
         var tag = turnOn.Value.Run(runOrSpecs, require: require, data: data, args: args, addContext: addContext);
 
+        var reallyNoDuplicates = noDuplicates == true;
+
         // In the Oqtane Interactive Server, the Dependency Injection (DI) session scope is bound to the first HTTP request of the user's browser session,
         // and it does not change during subsequent SignalR communications (until a full page reload).
         // As a result, scoped services have the same instance for all 2sxc module instances across all pages during a user's browser session.
         // To prevent conflicts, we need to add the ModuleId to the ModuleService to scope its functionality to each module rendering.
         // Note: in DNN, the ModuleId will be ignored.
-        moduleService.Value.AddTag(tag, moduleId: ExCtx.GetState<ICmsContext>().Module.Id, noDuplicates: noDuplicates == true);
+        var added = moduleService.Value.AddTag(tag, moduleId: ModuleId, noDuplicates: reallyNoDuplicates);
+
+        if (added != null)
+            Listeners.AddPartialModuleTag(added, reallyNoDuplicates);
 
         // Then return empty string for usage as @Kit.Page.TurnOn(...)
-        return l.ReturnAsOk(null);
+        return l.ReturnNull("ok");
     }
+
+    private int ModuleId => _moduleId ??= ExCtx.GetState<ICmsContext>().Module.Id;
+    private int? _moduleId;
 }

@@ -36,5 +36,8 @@ public interface IModuleHtmlService: IHasLog
     /// <remarks>
     /// The .net Framework implementation (DNN) will ignore the ModuleId.
     /// </remarks>
-    void AddTag(IHtmlTag tag, int moduleId, string? nameId = null, bool noDuplicates = false);
+    /// <returns>
+    /// The same tag if it was added, or null if it was not added due to duplication.
+    /// </returns>
+    IHtmlTag? AddTag(IHtmlTag tag, int moduleId, string? nameId = null, bool noDuplicates = false);
 }

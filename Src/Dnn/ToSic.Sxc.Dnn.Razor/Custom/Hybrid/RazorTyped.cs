@@ -9,6 +9,7 @@ using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Engines.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
+using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.Help;
@@ -234,7 +235,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
     [PrivateApi("not yet public or final, WIP v20.00.0x")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     // [field: AllowNull, MaybeNull]
-    public RazorConfigurationTemp Configuration => field ??= new(_renderSpecs);
+    public RazorConfiguration Configuration => field ??= new(_renderSpecs);
 
     #endregion
 }

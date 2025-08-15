@@ -26,7 +26,8 @@ partial class PageService
         var l = Log.Fn<string>($"{nameof(keys)}: '{string.Join(",", keys)}'");
 
         // WIP #PartialCaching
-        if (true)
+        var doFirst = false;
+        if (doFirst)
             Listeners.Activate(keys);
 
         // 1. Try to add manual resources from WebResources
@@ -44,8 +45,8 @@ partial class PageService
         var added = PageServiceShared.Activate(keys);
 
         // WIP #PartialCaching
-        if (false)
-            Listeners.Activate(keys);
+        if (!doFirst)
+            Listeners.Activate(added.ToArray());
 
         // also add to this specific module, as we need a few module-level features to activate in case...
         ExCtxOrNull?.GetState<IBlock>()?.BlockFeatureKeys.AddRange(added);
@@ -62,15 +63,9 @@ partial class PageService
         var l = Log.Fn<string>();
 
         // Check condition - default is true - so if it's false, this overload was called
-        if (!condition)
-            return l.ReturnNull("condition false");
-            
-        // Todo: unclear what to do with the parameter protector
-        // Maybe must check the parameter protector, because we're not sure if the user may be calling this overload with a feature name
-        // Reason is we're not 100% sure it takes the simple overload vs. this one if 
-        // only one string is given, but ATM that's the case.
-
-        return l.Return(Activate(features), "condition true, added");
+        return !condition
+            ? l.ReturnNull("condition false")
+            : l.Return(Activate(features), "condition true, added");
     }
 
     private string[] AddResourcesFromSettings(string[] keys)
@@ -96,7 +91,7 @@ partial class PageService
             PageServiceShared.PageFeatures.FeaturesFromSettingsAdd(pageFeature);
 
             // Wip #PartialCaching
-            Listeners.AddPageFeature(pageFeature);
+            Listeners.AddResource(pageFeature);
         }
 
         // drop keys which were already taken care of

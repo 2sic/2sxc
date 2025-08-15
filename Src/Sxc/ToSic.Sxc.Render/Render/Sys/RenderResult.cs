@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+﻿using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Services.OutputCache;
 using ToSic.Sxc.Sys.Render.PageContext;
@@ -13,18 +13,24 @@ using ToSic.Sys.Memory;
 namespace ToSic.Sxc.Render.Sys;
 
 [PrivateApi]
-[EditorBrowsable(EditorBrowsableState.Never)]
+[ShowApiWhenReleased(ShowApiMode.Never)]
 public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize
 {
     #region HybridHtmlString / HybridHtmlRecord
 
-    protected override string ToHtmlString() => Html!;
+    protected override string ToHtmlString()
+    {
+        return Html!;
+    }
 
     /// <summary>
     /// Return a string for the recommended way in ASP.net to render it, which just uses a &lt;%= theRenderResult %&gt;
     /// </summary>
     /// <returns></returns>
-    public override string ToString() => Html!;
+    public override string ToString()
+    {
+        return Html!;
+    }
 
     #endregion
 
@@ -50,7 +56,7 @@ public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize
     public IList<HeadChange>? HeadChanges { get; init; }
 
     /// <inheritdoc />
-    public IList<IPageFeature>? FeaturesFromSettings { get; init; }
+    public IList<IPageFeature>? FeaturesFromResources { get; init; }
 
     /// <inheritdoc />
     public int? HttpStatusCode { get; init; }
@@ -91,7 +97,7 @@ public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize
         try
         {
             var size = Html?.Length ?? 0;
-            var known = new SizeEstimate(size, 300, Unknown: true);
+            var known = new SizeEstimate(size, 300, true);
             if (Errors != null)
                 known += estimator.Estimate(Errors);
             return l.Return(known);
@@ -108,4 +114,6 @@ public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize
     public bool IsPartial { get; init; }
 
     public List<string>? PartialActivateWip { get; init; }
+
+    public List<(IHtmlTag Tag, bool NoDuplicates)>? PartialModuleTags { get; init; }
 }

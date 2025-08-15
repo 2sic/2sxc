@@ -54,7 +54,7 @@ public interface IRenderResult
     /// <summary>
     /// Features which are defined in the SystemSettings and wer requested by the code and should be enabled.
     /// </summary>
-    IList<IPageFeature>? FeaturesFromSettings { get; }
+    IList<IPageFeature>? FeaturesFromResources { get; }
 
     /// <summary>
     /// List of HttpHeaders to add to the response in format "key:value"

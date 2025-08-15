@@ -32,7 +32,7 @@ internal class DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generat
 
         var headChanges = ApplyToHead(dnnPage, renderResult.HeadChanges);
 
-        var manualChanges = ManualFeatures(dnnPage, renderResult.FeaturesFromSettings);
+        var resourceFeatures = ResourceFeatures(dnnPage, renderResult.FeaturesFromResources);
 
         try{
             var httpHeaderChanges = ApplyHttpHeaders(page, renderResult);
@@ -43,7 +43,7 @@ internal class DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generat
         l.A("Will apply Header Status-Code changes if needed");
         ApplyHttpStatus(page, renderResult);
 
-        count += headChanges + manualChanges;
+        count += headChanges + resourceFeatures;
         return l.Return(count, $"Applied {count} changes");
     }
 
@@ -74,13 +74,14 @@ internal class DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generat
         return l.Return(count, $"{count}");
     }
 
-    private int ManualFeatures(DnnHtmlPage dnnPage, IList<IPageFeature> feats)
+    private static int ResourceFeatures(DnnHtmlPage dnnPage, IList<IPageFeature> feats)
     {
         // New in 12.04 - Add features which have HTML only
         // In the page the code would be like this (v14):
         // Kit.Page.Activate("fancybox4");
         // This will add a header for the sources of these features
-        foreach (var f in feats) dnnPage.AddToHead(Tag.Custom(f.Html));
+        foreach (var f in feats)
+            dnnPage.AddToHead(Tag.Custom(f.Html));
         return feats.Count;
     }
 

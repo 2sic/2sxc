@@ -63,7 +63,7 @@ public class PageChangeSummary(
         var result = new RenderResult
         {
             Assets = assets,
-            FeaturesFromSettings = rest,
+            FeaturesFromResources = rest,
             Features = features,
             HeadChanges = pss.GetHeadChangesAndFlush(Log),
             PageChanges = pss.GetPropertyChangesAndFlush(Log),

@@ -1,44 +1,44 @@
-﻿using ToSic.Sxc.Sys.Render.PageFeatures;
+﻿using ToSic.Razor.Blade;
+using ToSic.Sxc.Render.Sys;
+using ToSic.Sxc.Sys.Render.PageFeatures;
 
 namespace ToSic.Sxc.Services.Page.Sys;
-public class PageChangeListenerWip
-{
-    public List<string> Activate{ get; } = [];
-
-    public List<IPageFeature> PageFeatures { get; } = [];
-
-}
 
 public class PageChangeListenerManagerWip
 {
-    public List<PageChangeListenerWip> Listeners = [];
+    public List<RenderResult> RenderListeners = [];
 
-    public PageChangeListenerWip CreateListener()
+    public RenderResult CreateRenderListener()
     {
-        var listener = new PageChangeListenerWip();
-        Listeners.Add(listener);
+        var listener = new RenderResult
+        {
+            Features = [],
+            FeaturesFromResources = [],
+            PartialActivateWip = [],
+            PartialModuleTags = [],
+        };
+        RenderListeners.Add(listener);
         return listener;
     }
 
-    public void AddListener(PageChangeListenerWip listener)
-    {
-        Listeners.Add(listener);
-    }
-
-    public void RemoveListener(PageChangeListenerWip listener)
-    {
-        Listeners.Remove(listener);
-    }
+    public void RemoveListener(RenderResult listener)
+        => RenderListeners.Remove(listener);
 
     public void Activate(string[] keys)
     {
-        foreach (var listener in Listeners)
-            listener.Activate.AddRange(keys);
+        foreach (var renderListener in RenderListeners)
+            renderListener.PartialActivateWip!.AddRange(keys);
     }
 
-    public void AddPageFeature(IPageFeature feature)
+    public void AddResource(PageFeatureFromSettings feature)
     {
-        foreach (var listener in Listeners)
-            listener.PageFeatures.Add(feature);
+        foreach (var renderListener in RenderListeners)
+            renderListener.FeaturesFromResources!.Add(feature with { }); // clone to avoid modifying the original, which is cached
+    }
+
+    public void AddPartialModuleTag(IHtmlTag tag, bool noDuplicates)
+    {
+        foreach (var renderListener in RenderListeners)
+            renderListener.PartialModuleTags!.Add((tag, noDuplicates));
     }
 }

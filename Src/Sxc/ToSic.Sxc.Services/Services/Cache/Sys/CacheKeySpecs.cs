@@ -4,6 +4,10 @@ using static ToSic.Sxc.Services.Cache.Sys.CacheServiceConstants;
 
 namespace ToSic.Sxc.Services.Cache.Sys;
 
+/// <summary>
+/// Note: Internal
+/// </summary>
+[PrivateApi]
 public record CacheKeySpecs
 {
     public required int AppId { get; init; }
@@ -43,7 +47,7 @@ public record CacheKeySpecs
     {
         // Make sure the Main key (prefix) is not empty
         if (string.IsNullOrWhiteSpace(keySpecs.Main))
-            throw new ArgumentException("Key must not be empty", nameof(keySpecs.Main));
+            throw new ArgumentException(@"Key must not be empty", nameof(keySpecs.Main));
 
         // Prevent accidental adding of the prefix/segment multiple times
         var mainKey = GetBestKeyBase(keySpecs);
