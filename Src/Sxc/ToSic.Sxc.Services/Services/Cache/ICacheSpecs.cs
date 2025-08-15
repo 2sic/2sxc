@@ -225,6 +225,12 @@ public interface ICacheSpecs
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="caseSensitive">Determines if the value should be treated case-sensitive, default is `false`</param>
     /// <returns></returns>
+    /// <remarks>
+    /// This is only meant for partial razor caching, since that would have a model available.
+    /// If used elsewhere, it will be ignored.
+    /// 
+    /// WIP v20.01
+    /// </remarks>
     [WorkInProgressApi("WIP v20.01")]
     ICacheSpecs VaryByModel(string? names = default, NoParamOrder protector = default, bool caseSensitive = false);
 

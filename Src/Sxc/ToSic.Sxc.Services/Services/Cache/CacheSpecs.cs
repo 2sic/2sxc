@@ -218,7 +218,13 @@ internal record CacheSpecs : ICacheSpecs
     public ICacheSpecs VaryByModel(string? names = default, NoParamOrder protector = default, bool caseSensitive = false)
     {
         if (Model == null)
+        {
+            // fail silently
+            return this;
+
+            // Future: option to have aggressive mode or logging - in which case we would use the ExCtx etc. to log this message
             throw new InvalidOperationException("VaryByModel is not supported in this context, as Model is null. Ensure the model is set before calling this method.");
+        }
 
         var nameList = names.CsvToArrayWithoutEmpty();
         if (!nameList.Any())
