@@ -1,7 +1,8 @@
 ﻿using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
-using static ToSic.Sxc.Services.Cache.CacheServiceConstants;
+using ToSic.Sxc.Services.Cache.Sys;
+using static ToSic.Sxc.Services.Cache.Sys.CacheServiceConstants;
 using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
 
 #pragma warning disable xUnit1026

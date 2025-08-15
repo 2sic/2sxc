@@ -1,8 +1,8 @@
 ﻿using System.Text;
 using ToSic.Sys.Utils;
-using static ToSic.Sxc.Services.Cache.CacheServiceConstants;
+using static ToSic.Sxc.Services.Cache.Sys.CacheServiceConstants;
 
-namespace ToSic.Sxc.Services.Cache;
+namespace ToSic.Sxc.Services.Cache.Sys;
 
 public record CacheKeySpecs
 {
@@ -67,7 +67,7 @@ public record CacheKeySpecs
         if (keySpecs.Main.StartsWith(DefaultPrefix))
             return keySpecs.Main;
 
-        var isMagicOverride = keySpecs.Main.StartsWith("***");
+        var isMagicOverride = keySpecs.Main.StartsWith(CacheSpecConstants.PrefixForDontPrefix);
         var prefix = isMagicOverride
             ? keySpecs.Main.TrimStart('*')
             : $"{DefaultPrefix}{(keySpecs.AppId == NoApp ? "" : Sep + "App:" + keySpecs.AppId)}{Sep}{SegmentPrefix}{keySpecs.RegionName.NullIfNoValue() ?? DefaultSegment}";

@@ -46,7 +46,7 @@ public interface ICacheSpecs
     /// <remarks>
     /// This rarely makes sense, since it's better to just not add something to the cache in the first place.
     /// 
-    /// WIP v20.00-05: This is a work in progress, and the implementation may change in future versions.
+    /// WIP v20.01: This is a work in progress, and the implementation may change in future versions.
     /// </remarks>
     public ICacheSpecs Disable(NoParamOrder protector = default, UserElevation minElevation = default, UserElevation maxElevation = default);
 
@@ -55,7 +55,7 @@ public interface ICacheSpecs
     /// </summary>
     /// <returns></returns>
     /// <remarks>
-    /// WIP v20.00-05: This is a work in progress, and the implementation may change in future versions.
+    /// WIP v20.01: This is a work in progress, and the implementation may change in future versions.
     /// </remarks>
     public ICacheSpecs Enable();
 

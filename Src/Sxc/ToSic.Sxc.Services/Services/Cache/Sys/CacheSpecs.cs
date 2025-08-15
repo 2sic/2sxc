@@ -5,13 +5,12 @@ using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
-using ToSic.Sxc.Services.Cache.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Caching.Policies;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Services.Cache;
+namespace ToSic.Sxc.Services.Cache.Sys;
 
 internal record CacheSpecs : ICacheSpecs
 {

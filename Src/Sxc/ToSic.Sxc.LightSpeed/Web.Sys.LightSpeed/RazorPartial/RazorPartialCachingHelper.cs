@@ -8,7 +8,6 @@ using ToSic.Sxc.Services.Cache.Sys;
 using ToSic.Sxc.Services.Page.Sys;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.ExecutionContext;
-using ToSic.Sxc.Sys.Render.PageFeatures;
 
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
@@ -37,14 +36,14 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
     // [field: AllowNull, MaybeNull]
     [field: AllowNull, MaybeNull]
     public ICacheSpecs CacheSpecsRawWithModel => field
-        ??= CacheSvc.CreateSpecs("***" + OutputCacheKeys.PartialKey(appId, normalizedPath))
+        ??= CacheSvc.CreateSpecs(CacheSpecConstants.PrefixForDontPrefix + OutputCacheKeys.PartialKey(appId, normalizedPath))
             .AttachModel(model);
 
     
 
     [field: AllowNull, MaybeNull]
     private ICacheSpecs SettingsSpecs => field
-        ??= CacheSvc.CreateSpecs("***" + OutputCacheKeys.PartialSettingsKey(appId, normalizedPath));
+        ??= CacheSvc.CreateSpecs(CacheSpecConstants.PrefixForDontPrefix + OutputCacheKeys.PartialSettingsKey(appId, normalizedPath));
 
     private CacheSpecsConfig? CacheSpecsConfig => _cacheSpecsConfig.Get(() => CacheSvc.Get<CacheSpecsConfig>(SettingsSpecs));
     private readonly GetOnce<CacheSpecsConfig?> _cacheSpecsConfig = new();

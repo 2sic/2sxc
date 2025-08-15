@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Services.Cache;
+﻿namespace ToSic.Sxc.Services.Cache.Sys;
 
 internal class CacheServiceConstants
 {

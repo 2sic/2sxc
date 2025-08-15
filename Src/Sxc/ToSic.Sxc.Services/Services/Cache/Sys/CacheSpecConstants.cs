@@ -1,5 +1,5 @@
-﻿namespace ToSic.Sxc.Services.Cache;
-internal class CacheSpecConstants
+﻿namespace ToSic.Sxc.Services.Cache.Sys;
+public class CacheSpecConstants
 {
     public const string ByModule = "Module";
 
@@ -12,4 +12,6 @@ internal class CacheSpecConstants
     public const string ByUser = "User";
 
     public const string ByModel = "Model";
+
+    public const string PrefixForDontPrefix = "***";
 }

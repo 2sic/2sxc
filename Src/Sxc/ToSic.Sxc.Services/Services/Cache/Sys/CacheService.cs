@@ -6,7 +6,7 @@ using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Caching;
 using ToSic.Sys.Capabilities.Features;
 
-namespace ToSic.Sxc.Services.Cache;
+namespace ToSic.Sxc.Services.Cache.Sys;
 
 /// <summary>
 /// WIP thoughts...
