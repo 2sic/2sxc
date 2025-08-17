@@ -76,7 +76,7 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
             return AttachListenerAndExit("no config");
         var user = exCtx.GetState<ICmsContext>().User;
         var elevation = user.GetElevation();
-        if (elevation.IsForAllOrInRange(config.MinDisabledElevation, config.MaxDisabledElevation))
+        if (!elevation.IsForAllOrInRange(config.MinDisabledElevation, config.MaxDisabledElevation))
             return AttachListenerAndExit($"user elevation '{elevation.ToString()}' in cache-disabled range {config.MinDisabledElevation.ToString()} and {config.MaxDisabledElevation.ToString()}, ignore cache.");
 
         var specsBasedOnSettings = GetSpecsBasedOnSettings();
