@@ -97,43 +97,47 @@ public class PageChangeSummary(
     {
         var l = Log.Fn<(List<ClientAsset> newAssets, List<IPageFeature> rest)>($"{featuresFromSettings.Count}");
         var newAssets = new List<ClientAsset>();
-        foreach (var settingFeature in featuresFromSettings)
-        {
-            var autoOpt = settingFeature.AutoOptimize;
-            var extracted = resourceExtractor.Value.Process(
-                settingFeature.Html ?? "",
-                new(
-                    css: new(autoOpt, AddToBottom, CssDefaultPriority, false, false),
-                    js: new(autoOpt, AddToBottom, JsDefaultPriority, autoOpt, autoOpt)
-                )
-            );
-            l.A($"Feature: {settingFeature.Name} - assets extracted: {extracted.Assets.Count}");
-            if (!extracted.Assets.Any())
-                continue;
+        var withUpdatedHtml = featuresFromSettings
+            .Select(settingFeature =>
+            {
+                var autoOpt = settingFeature.AutoOptimize;
+                var extracted = resourceExtractor.Value.Process(
+                    settingFeature.Html ?? "",
+                    new(
+                        css: new(autoOpt, AddToBottom, CssDefaultPriority, false, false),
+                        js: new(autoOpt, AddToBottom, JsDefaultPriority, autoOpt, autoOpt)
+                    )
+                );
+                l.A($"Feature: {settingFeature.Name} - assets extracted: {extracted.Assets.Count}");
+                if (!extracted.Assets.Any())
+                    return settingFeature;
 
-            //// todo: If the original settings say we should auto-optimize, do this here
-            //if (settingFeature.AutoOptimize)
-            //    extracted.Assets.ForEach(a =>
-            //    {
-            //        if (!a.IsJs) return;
-            //        a.HtmlAttributes["defer"] = "test-defer";
-            //        a.HtmlAttributes["async"] = "test-async";
-            //    });
+                //// todo: If the original settings say we should auto-optimize, do this here
+                //if (settingFeature.AutoOptimize)
+                //    extracted.Assets.ForEach(a =>
+                //    {
+                //        if (!a.IsJs) return;
+                //        a.HtmlAttributes["defer"] = "test-defer";
+                //        a.HtmlAttributes["async"] = "test-async";
+                //    });
 
-            // All resources from the settings are seen as safe
-            // older code till 2025-03-17, not functional
-            //extracted.Assets.ForEach(a => a.WhitelistInCsp = true);
-            var assetsWithWhitelisting = extracted.Assets
-                .Select(a => a with { WhitelistInCsp = true });
+                // All resources from the settings are seen as safe
+                // older code till 2025-03-17, not functional
+                //extracted.Assets.ForEach(a => a.WhitelistInCsp = true);
+                var assetsWithWhitelisting = extracted.Assets
+                    .Select(a => a with { WhitelistInCsp = true });
 
-            newAssets.AddRange(assetsWithWhitelisting);
+                newAssets.AddRange(assetsWithWhitelisting);
 
-            // Reset the HTML to what's left after extracting the resources, except for Oqtane where we will keep it all
-            if (!specs.IncludeAllAssetsInOqtane)
-                settingFeature.Html = extracted.Html;
-        }
+                // Reset the HTML to what's left after extracting the resources, except for Oqtane where we will keep it all
+                if (!specs.IncludeAllAssetsInOqtane)
+                    return settingFeature with { Html = extracted.Html };
+                return settingFeature;
+            })
+            .ToList();
 
-        var featsLeft = featuresFromSettings
+
+        var featsLeft = withUpdatedHtml
             .Where(f => !string.IsNullOrWhiteSpace(f.Html))
             .Cast<IPageFeature>()
             .ToList();

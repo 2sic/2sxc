@@ -19,6 +19,7 @@ internal class PageFeatures(IPageFeaturesManager pfm) : IPageFeatures
     /// Must be a real List, because it will be modified.
     /// </summary>
     private List<PageFeatureFromSettings> FeaturesFromSettings { get; } = [];
+    private List<PageFeatureFromSettings> FeaturesFromSettingsProcessed { get; } = [];
 
     public void FeaturesFromSettingsAdd(PageFeatureFromSettings newFeature)
         => FeaturesFromSettings.Add(newFeature);
@@ -34,17 +35,22 @@ internal class PageFeatures(IPageFeaturesManager pfm) : IPageFeatures
         var l = log.Fn<List<PageFeatureFromSettings>>();
         // Filter out the ones which were already added in a previous round
         var newFeatures = FeaturesFromSettings
-            // Put duplicates together
-            .GroupBy(f => f.NameId)
-            // Only process the groups which have none that were already processed
-            .Where(g => g.All(f => !f.AlreadyProcessed )) // only keep the groups which only have false
-            // Keep only one of the group to then process
-            .Select(g => g.First())
+            // 2025-08-17 2dm changed detection of already-processed because it resulted in changing the original object which caused problems in caching
+            .Where(f => !FeaturesFromSettingsProcessed.Any(p => ReferenceEquals(p, f))) // only keep the groups which only have false
             .ToList();
 
         // Mark the new ones as processed now, so they won't be processed in the future, except for Oqtane where we will keep it all
         if (!specs.IncludeAllAssetsInOqtane)
-            newFeatures.ForEach(f => f.AlreadyProcessed = true);
+            FeaturesFromSettingsProcessed.AddRange(newFeatures);
+
+        newFeatures = newFeatures
+            // Put duplicates together
+            .GroupBy(f => f.NameId)
+            // Only process the groups which have none that were already processed (old before 2025-08-17)
+            //.Where(g => g.All(f => !f.AlreadyProcessed )) // only keep the groups which only have false
+            // Keep only one of the group to then process
+            .Select(g => g.First())
+            .ToList();
 
         return l.Return(newFeatures, $"{newFeatures.Count}");
     }
