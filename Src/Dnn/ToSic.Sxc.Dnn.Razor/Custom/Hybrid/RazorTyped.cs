@@ -235,7 +235,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
     [PrivateApi("not yet public or final, WIP v20.00.0x")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     // [field: AllowNull, MaybeNull]
-    public RazorConfiguration Configuration => field ??= new(_renderSpecs);
+    public RazorConfiguration Configuration => field ??= new(_renderSpecs, RzrHlp.Log);
 
     #endregion
 }
