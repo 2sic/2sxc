@@ -58,13 +58,13 @@ internal class DnnRazorCompiler(
     private readonly GetOnce<HttpContextBase> _httpContext = new();
 
     [PrivateApi]
-    internal (TextWriter writer, List<Exception> exceptions) Render(RazorComponentBase page, TextWriter writer, RenderSpecs viewDataWithModel)
+    internal (TextWriter writer, List<Exception> exceptions) Render(RazorComponentBase page, TextWriter writer, RenderSpecs renderSpecs)
     {
         var l = Log.Fn<(TextWriter writer, List<Exception> exception)>(message: "will render into TextWriter");
         try
         {
             if (page is ISetDynamicModel setDyn)
-                setDyn.SetDynamicModel(viewDataWithModel);
+                setDyn.SetDynamicModel(renderSpecs);
         }
         catch (Exception e)
         {
@@ -73,7 +73,7 @@ internal class DnnRazorCompiler(
 
         try
         {
-            var webPageContext = new WebPageContext(HttpContextCurrent, page, viewDataWithModel.Data);
+            var webPageContext = new WebPageContext(HttpContextCurrent, page, renderSpecs.Data);
             page.ExecutePageHierarchy(webPageContext, writer, page);
         }
         catch (Exception maybeIEntityCast)

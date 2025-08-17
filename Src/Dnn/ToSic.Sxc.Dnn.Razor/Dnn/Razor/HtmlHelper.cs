@@ -137,7 +137,7 @@ internal class HtmlHelper(
         // We can use Roslyn
         // Classic setup without Roslyn, use the built-in RenderPage
         if (!useRoslyn)
-            return l.Return(_page.BaseRenderPage(relativePath, renderSpecs.Data), $"default render {(renderSpecs.Data == null ? "no" : "with")} data");
+            return l.Return(_page.BaseRenderPage(relativePath, renderSpecs), $"default render {(renderSpecs.Data == null ? "no" : "with")} data");
 
         // Try to compile with Roslyn
         // Will exit if the child has an old base class which would expect PageData["..."] properties
@@ -156,7 +156,7 @@ internal class HtmlHelper(
         }
 
         l.A("Tried to use Roslyn, but detected old base class so will use classic Razor Engine so PageData continues to work.");
-        return l.Return(_page.BaseRenderPage(relativePath, renderSpecs.Data), $"default render {(renderSpecs.Data == null ? "no" : "with")} data");
+        return l.Return(_page.BaseRenderPage(relativePath, renderSpecs), $"default render {(renderSpecs.Data == null ? "no" : "with")} data");
     }
 
 
