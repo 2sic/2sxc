@@ -38,7 +38,7 @@ partial class OqtPageOutput
         return resources;
     }
 
-    private List<ClientAsset> GetAssetsFromManualFeatures(IList<IPageFeature> manualFeatures)
+    private List<ClientAsset> GetAssetsFromManualFeatures(IList<PageFeatureFromSettings> manualFeatures)
     {
         var assets = new List<ClientAsset>();
         foreach (var manualFeature in manualFeatures)

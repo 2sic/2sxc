@@ -56,7 +56,7 @@ public record RenderResult : HybridHtmlString, IRenderResult, ICanEstimateSize
     public IList<HeadChange>? HeadChanges { get; init; }
 
     /// <inheritdoc />
-    public IList<IPageFeature>? FeaturesFromResources { get; init; }
+    public IList<PageFeatureFromSettings>? FeaturesFromResources { get; init; }
 
     /// <inheritdoc />
     public int? HttpStatusCode { get; init; }

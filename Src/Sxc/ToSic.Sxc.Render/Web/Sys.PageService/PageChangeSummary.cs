@@ -93,9 +93,9 @@ public class PageChangeSummary(
 
 
 
-    private (List<ClientAsset> newAssets, List<IPageFeature> rest) ConvertSettingsAssetsIntoReal(List<PageFeatureFromSettings> featuresFromSettings, RenderSpecs specs)
+    private (List<ClientAsset> newAssets, List<PageFeatureFromSettings> rest) ConvertSettingsAssetsIntoReal(List<PageFeatureFromSettings> featuresFromSettings, RenderSpecs specs)
     {
-        var l = Log.Fn<(List<ClientAsset> newAssets, List<IPageFeature> rest)>($"{featuresFromSettings.Count}");
+        var l = Log.Fn<(List<ClientAsset> newAssets, List<PageFeatureFromSettings> rest)>($"{featuresFromSettings.Count}");
         var newAssets = new List<ClientAsset>();
         var withUpdatedHtml = featuresFromSettings
             .Select(settingFeature =>
@@ -139,7 +139,7 @@ public class PageChangeSummary(
 
         var featsLeft = withUpdatedHtml
             .Where(f => !string.IsNullOrWhiteSpace(f.Html))
-            .Cast<IPageFeature>()
+            //.Cast<IPageFeature>()
             .ToList();
 
         return l.Return((newAssets, featsLeft), $"New: {newAssets.Count}; Rest: {featsLeft.Count}");

@@ -7,6 +7,8 @@ using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
 
 namespace ToSic.Sxc.Render.Sys;
 
+// TODO: Probably remove this interface, as using the record directly is probably better.
+
 /// <summary>
 /// Contains everything which results from a render of a Block
 /// Incl. all the features that are activated, page changes etc.
@@ -54,7 +56,7 @@ public interface IRenderResult
     /// <summary>
     /// Features which are defined in the SystemSettings and wer requested by the code and should be enabled.
     /// </summary>
-    IList<IPageFeature>? FeaturesFromResources { get; }
+    IList<PageFeatureFromSettings>? FeaturesFromResources { get; }
 
     /// <summary>
     /// List of HttpHeaders to add to the response in format "key:value"
