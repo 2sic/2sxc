@@ -33,5 +33,12 @@ public interface IPageServiceShared: IChangeQueue
     /// <returns>The keys it just activated (after trim/filter for empty)</returns>
     IEnumerable<string> Activate(params string[] keys);
     //IList<PagePropertyChange> GetPropertyChangesAndFlush(ILog log);
-    void Add(IHtmlTag tag, string? identifier = null);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="tag"></param>
+    /// <param name="identifier"></param>
+    /// <returns>The thing added to the head - or null if nothing added because tag was null</returns>
+    HeadChange? Add(IHtmlTag tag, string? identifier = null);
 }

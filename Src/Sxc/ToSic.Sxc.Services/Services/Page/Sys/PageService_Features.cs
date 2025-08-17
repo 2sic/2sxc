@@ -108,9 +108,4 @@ partial class PageService
     private DynamicStack Settings => _settings.Get(() => (ExCtx.GetState<IDynamicStack>(ExecutionContextStateNames.Settings) as DynamicStack)!)!;
     private readonly GetOnce<DynamicStack> _settings = new();
 
-    #region Experimental Listeners
-
-    public PageChangeListenerManagerWip Listeners { get; } = new();
-
-    #endregion
 }

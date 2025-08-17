@@ -8,7 +8,9 @@ partial class PageService
     /// <inheritdoc />
     public string AddToHead(IHtmlTag tag)
     {
-        PageServiceShared.Add(tag);
+        var added = PageServiceShared.Add(tag);
+        if (added != null)
+            Listeners.AddToHead(added.Value); // no duplicates, because this is a new tag
         return "";
     }
 

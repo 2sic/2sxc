@@ -109,8 +109,6 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
             AppId = appId,
             Html = html,
             IsPartial = true,
-            //Features = Listener?.Features,
-            //PartialActivateWip = Listener?.PartialActivateWip,
         }));
 
         // detach listener if it exists, so it doesn't get saved to cache
@@ -143,7 +141,7 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
     public bool ProcessListener(IRenderResult cached)
     {
         var l = Log.Fn<bool>();
-        PageService.ReplaceCachedChanges((RenderResult)cached);
+        PageService.ReplayCachedChanges((RenderResult)cached);
         return l.ReturnTrue("activated");
     }
 

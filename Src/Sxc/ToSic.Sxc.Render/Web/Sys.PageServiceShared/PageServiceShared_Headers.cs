@@ -19,16 +19,18 @@ partial class PageServiceShared
     }
 
 
-    public void Add(IHtmlTag? tag, string? identifier = null)
+    public HeadChange? Add(IHtmlTag? tag, string? identifier = null)
     {
         if (tag == null)
-            return;
-        Headers.Add(new()
+            return null;
+        var headChange = new HeadChange
         {
             ChangeMode = GetMode(PageChangeModes.Append),
             Tag = tag,
             ReplacementIdentifier = identifier,
-        });
+        };
+        Headers.Add(headChange);
+        return headChange;
     }
 
 }

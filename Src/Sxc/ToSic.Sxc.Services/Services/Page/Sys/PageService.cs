@@ -40,6 +40,17 @@ public partial class PageService(
         return "";
     }
 
+    #region Experimental Listeners
+
+    /// <summary>
+    /// Listeners are added / removed through the depth of render-in-render,
+    /// so that certain segments can detect what was modified for them and things underneath.
+    /// This is to cache changes for replace later on without re-running the razor render.
+    /// </summary>
+    public PageChangeListenerManagerWip Listeners { get; } = new();
+
+    #endregion
+
     /// <summary>
     /// Re-apply cached changes from a render result.
     /// </summary>
@@ -47,7 +58,7 @@ public partial class PageService(
     /// <remarks>
     /// It's implemented on the PageService because it needs some private properties/methods.
     /// </remarks>
-    public void ReplaceCachedChanges(RenderResult renderResult)
+    public void ReplayCachedChanges(RenderResult renderResult)
     {
         var l = Log.Fn();
         if (renderResult.PartialActivateWip?.Any() == true)
@@ -58,6 +69,10 @@ public partial class PageService(
 
         foreach (var tagSet in renderResult.PartialModuleTags ?? [])
             moduleService.Value.AddTag(tagSet.Tag, moduleId: ModuleId, noDuplicates: tagSet.NoDuplicates);
+
+        if (renderResult.HeadChanges != null)
+            pageServiceShared.Headers.AddRange(renderResult.HeadChanges);
+
         l.Done();
     }
 }
