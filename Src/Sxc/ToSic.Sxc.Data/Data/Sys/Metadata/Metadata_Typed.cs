@@ -234,7 +234,7 @@ internal partial class Metadata: ITypedItem
 
     [PrivateApi]
     IField? ITypedItem.Field(string name, NoParamOrder noParamOrder, bool? required)
-        => Cdf.Field(this, supportOldMetadata: false, name, new() { FirstIsRequired = required ?? true, ItemIsStrict = GetHelper.PropsRequired });
+        => Cdf.Field(this, supportOldMetadata: false, name, new() { EntryPropIsRequired = required ?? true, ItemIsStrict = GetHelper.PropsRequired });
 
     IHtmlTag? ITypedItem.Html(
         string name,

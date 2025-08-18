@@ -11,7 +11,7 @@ partial class CodeDataFactory
     {
         if (name.IsEmptyOrWs())
         {
-            if (!settings.FirstIsRequired)
+            if (!settings.EntryPropIsRequired)
                 return null; // name is optional, so no error
             throw new ArgumentNullException(nameof(name), @"Field name must not be null or empty.");
         }
@@ -31,7 +31,7 @@ partial class CodeDataFactory
             // throw new NotImplementedException("Path support on this method is not yet supported. Ask iJungleboy");
         }
 
-        return IsErrStrictNameRequired(parent, name, settings.FirstIsRequired, settings.ItemIsStrict)
+        return IsErrStrictNameRequired(parent, name, settings.EntryPropIsRequired, settings.ItemIsStrict)
             ? throw ErrStrictForTyped(parent, name)
             : supportOldMetadata
                 ? new FieldForDynamic(parent, name, this)

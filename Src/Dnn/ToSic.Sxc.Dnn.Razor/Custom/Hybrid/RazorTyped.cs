@@ -77,12 +77,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
 
     private RenderSpecs GetRenderSpecs()
     {
-        if (_renderSpecs != null)
-            return _renderSpecs;
-
-        // diagnose PageData
-        _renderSpecs = PageData.Values.FirstOrDefault(value => value is RenderSpecs) as RenderSpecs;
-        return _renderSpecs;
+        return _renderSpecs ??= PageData.Values.FirstOrDefault(value => value is RenderSpecs) as RenderSpecs;
     }
     private object _overridePageData;
 
@@ -191,11 +186,11 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
 
     /// <inheritdoc cref="ITypedApi.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => CodeApi.Cdf.AsTyped(original, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
+        => CodeApi.Cdf.AsTyped(original, new() { EntryPropIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="ITypedApi.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => CodeApi.Cdf.AsTypedList(list, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
+        => CodeApi.Cdf.AsTypedList(list, new() { EntryPropIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="ITypedApi.AsStack" />
     public ITypedStack AsStack(params object[] items)

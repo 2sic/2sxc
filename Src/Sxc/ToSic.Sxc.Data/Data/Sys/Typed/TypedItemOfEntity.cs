@@ -289,7 +289,7 @@ internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool prop
 
 
     IField? ITypedItem.Field(string name, NoParamOrder noParamOrder, bool? required)
-        => Cdf.Field(this, supportOldMetadata: false, name, new() { FirstIsRequired = required ?? true, ItemIsStrict = propsRequired });
+        => Cdf.Field(this, supportOldMetadata: false, name, new() { EntryPropIsRequired = required ?? true, ItemIsStrict = propsRequired });
 
     IHtmlTag? ITypedItem.Html(
         string name,
