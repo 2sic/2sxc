@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Custom.Hybrid;
 public interface IRazorConfiguration
 {
     /// <summary>
-    /// Configure output of Razor partials - especially caching.
+    /// Configure output of Razor partials - especially caching. Note that for caching only, the shorter <see cref="PartialCache"/> is recommended and will also apply defaults.
     /// </summary>
     /// <param name="protector"></param>
     /// <param name="cache"></param>
@@ -18,5 +18,5 @@ public interface IRazorConfiguration
     /// </remarks>
     string Partial(NoParamOrder protector = default, Func<ICacheSpecs, ICacheSpecs> cache = default);
 
-    string PartialCache(NoParamOrder protector = default, int? sliding = null, string watch = null, string varyBy = null, string url = null, string model = null);
+    string PartialCache(NoParamOrder protector = default, bool useDefaults = true, int? sliding = null, string watch = null, string varyBy = null, string url = null, string model = null);
 }

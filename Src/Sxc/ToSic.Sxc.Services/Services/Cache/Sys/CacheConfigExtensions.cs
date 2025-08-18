@@ -9,8 +9,8 @@ public static class CacheConfigExtensions
             CacheSpecConstants.ByModule => config with { ByModule = true },
             CacheSpecConstants.ByPage => config with { ByPage = true },
             CacheSpecConstants.ByUser => config with { ByUser = true },
-            CacheSpecConstants.ByPageParameters => config with { ByPageParameters = new() { Names = keys, CaseSensitive = caseSensitive } },
-            CacheSpecConstants.ByModel => config with { ByModel = new() { Names = keys, CaseSensitive = caseSensitive } }, // Model is like parameters
+            CacheSpecConstants.ByPageParameters when !string.IsNullOrWhiteSpace(keys) => config with { ByPageParameters = new() { Names = keys, CaseSensitive = caseSensitive } },
+            CacheSpecConstants.ByModel when !string.IsNullOrWhiteSpace(keys) => config with { ByModel = new() { Names = keys, CaseSensitive = caseSensitive } },
             _ => config
         };
 

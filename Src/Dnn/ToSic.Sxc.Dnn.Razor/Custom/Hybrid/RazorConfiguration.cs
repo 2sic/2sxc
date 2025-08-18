@@ -31,14 +31,33 @@ public class RazorConfiguration(RenderSpecs renderSpecs, ILog parentLog): Helper
         return null;
     }
 
-    public string PartialCache(NoParamOrder protector = default, int? sliding = null, string watch = null, string varyBy = null, string url = null, string model = null)
+    public string PartialCache(NoParamOrder protector = default, bool useDefaults = true, int? sliding = null, string watch = null, string varyBy = null, string url = null, string model = null)
     {
-        var config = new CacheConfig(protector, sliding, watch, varyBy, url, model);
+        var config = new CacheConfig(
+            sliding: sliding ?? (useDefaults ? DefaultSliding : null),
+            watch: watch ?? (useDefaults ? DefaultWatch : null),
+            varyBy: varyBy ?? (useDefaults ? DefaultVaryBy : null),
+            url: url ?? (useDefaults ? DefaultUrl : null),
+            model: model ?? (useDefaults ? DefaultModel : null)
+        );
 
         Parent.CacheSpecs = config.RestoreAll(Parent.CacheSpecs);
 
         return null;
     }
+
+    /// <summary>
+    /// Default value for sliding cache duration in seconds (5 minutes). Used as fallback when `useDefaults` is true.
+    /// </summary>
+    public const int DefaultSliding = 300;
+
+    public const string DefaultWatch = "data,folder";
+
+    public const string DefaultVaryBy = "page,module,user";
+
+    public const string DefaultUrl = "";
+
+    public const string DefaultModel = "";
 
     private RenderPartialSpecsWithCaching Parent
     {

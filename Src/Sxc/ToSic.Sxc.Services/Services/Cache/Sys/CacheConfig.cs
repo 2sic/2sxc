@@ -46,10 +46,10 @@ public record CacheConfig(): ICanEstimateSize, ITimestamped
                     throw new ArgumentException($@"Unknown {nameof(varyBy)} part '{varyPart}'", nameof(varyBy));
             }
 
-        if (url != null)
+        if (!string.IsNullOrWhiteSpace(url))
             ByPageParameters = new() { CaseSensitive = false, Names = url};
 
-        if (model != null)
+        if (!string.IsNullOrWhiteSpace(model))
             ByModel = new() { CaseSensitive = false, Names = model };
     }
 
