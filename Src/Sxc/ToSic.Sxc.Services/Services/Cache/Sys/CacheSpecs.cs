@@ -63,21 +63,21 @@ internal record CacheSpecs : ICacheSpecs
         return this with
         {
             IsEnabled = !isDisabled,
-            ConfigList = ConfigList with
+            Configuration = Configuration with
             {
-                MinDisabledElevation = minElevation > UserElevation.Unknown ? minElevation : ConfigList.MinDisabledElevation,
-                MaxDisabledElevation = maxElevation > UserElevation.Unknown ? maxElevation : ConfigList.MaxDisabledElevation
+                MinDisabledElevation = minElevation > UserElevation.Unknown ? minElevation : Configuration.MinDisabledElevation,
+                MaxDisabledElevation = maxElevation > UserElevation.Unknown ? maxElevation : Configuration.MaxDisabledElevation
             }
         };
 
-        ICacheSpecs AllDisabled() => this with { IsEnabled = false, ConfigList = ConfigList with { MinDisabledElevation = UserElevation.Unknown, MaxDisabledElevation = UserElevation.Unknown } };
+        ICacheSpecs AllDisabled() => this with { IsEnabled = false, Configuration = Configuration with { MinDisabledElevation = UserElevation.Unknown, MaxDisabledElevation = UserElevation.Unknown } };
     }
 
     public ICacheSpecs Enable()
         => this with
         {
             IsEnabled = true,
-            ConfigList = ConfigList with
+            Configuration = Configuration with
             {
                 MinDisabledElevation = UserElevation.Unknown, MaxDisabledElevation = UserElevation.Unknown
             }
@@ -91,10 +91,19 @@ internal record CacheSpecs : ICacheSpecs
     public ICacheSpecs SetAbsoluteExpiration(DateTimeOffset absoluteExpiration) 
         => this with { PolicyMaker = PolicyMaker.SetAbsoluteExpiration(absoluteExpiration) };
 
-    public ICacheSpecs SetSlidingExpiration(TimeSpan? timeSpan = null, NoParamOrder protector = default, int? seconds = null)
+    public ICacheSpecs SetSlidingExpiration(TimeSpan? timeSpan = null, NoParamOrder protector = default,
+        int? seconds = null)
         => seconds == null
-            ? this with { PolicyMaker = PolicyMaker.SetSlidingExpiration(timeSpan ?? throw new ArgumentException("no time specified")) }
-            : this with { PolicyMaker = PolicyMaker.SetSlidingExpiration(seconds.Value) };
+            ? this with
+            {
+                PolicyMaker = PolicyMaker.SetSlidingExpiration(timeSpan ?? throw new ArgumentException("no time specified")),
+                Configuration = Configuration with { Sliding = (int)timeSpan.Value.TotalSeconds }
+            }
+            : this with
+            {
+                PolicyMaker = PolicyMaker.SetSlidingExpiration(seconds.Value),
+                Configuration = Configuration with { Sliding = seconds.Value }
+            };
            
 
     #endregion
@@ -120,7 +129,11 @@ internal record CacheSpecs : ICacheSpecs
 
 
     public ICacheSpecs WatchAppData(NoParamOrder protector = default)
-        => this with { PolicyMaker = PolicyMaker.WatchNotifyKeys([AppReader.GetCache()]) };
+        => this with
+        {
+            PolicyMaker = PolicyMaker.WatchNotifyKeys([AppReader.GetCache()]),
+            Configuration = Configuration with { WatchAppData = true, }
+        };
 
     [field: AllowNull, MaybeNull]
     private IAppReader AppReader => field ??= ExCtx.GetState<IAppReader>();
@@ -133,7 +146,8 @@ internal record CacheSpecs : ICacheSpecs
             PolicyMaker = PolicyMaker.WatchFolders(new Dictionary<string, bool>
             {
                 [appPaths.PhysicalPath] = withSubfolders ?? true
-            })
+            }),
+            Configuration = Configuration with { WatchAppFolder = true, }
         };
     }
 
@@ -159,12 +173,12 @@ internal record CacheSpecs : ICacheSpecs
         var newSpecs = this with
         {
             KeySpecs = KeySpecs with { Key = null! /* requires reset */, VaryByDic = newDic },
-            ConfigList = ConfigList.Updated(name, keysForRestore, caseSensitive),
+            Configuration = Configuration.Updated(name, keysForRestore, caseSensitive),
         };
         return newSpecs;
     }
 
-    public CacheConfig ConfigList { get; init; } = new();
+    public CacheConfig Configuration { get; init; } = new();
 
     #endregion
 
@@ -227,10 +241,8 @@ internal record CacheSpecs : ICacheSpecs
         if (Model == null)
         {
             // fail silently
-            return this;
-
             // Future: option to have aggressive mode or logging - in which case we would use the ExCtx etc. to log this message
-            throw new InvalidOperationException("VaryByModel is not supported in this context, as Model is null. Ensure the model is set before calling this method.");
+            return this;
         }
 
         var nameList = names.CsvToArrayWithoutEmpty();
@@ -238,7 +250,10 @@ internal record CacheSpecs : ICacheSpecs
             return this;
 
         var all = Model
-            .Where(pair => nameList.Any(n => n.EqualsInsensitive(pair.Key)))
+            .Where(pair => nameList.Any(n
+                => n.EqualsInsensitive(pair.Key)                    // contains key
+                   && pair.Value?.GetType().IsValueType == true     // is simple value, allowing use in cache key
+            ))
             .Select(p => new KeyValuePair<string, string?>(p.Key, p.Value?.ToString()))
             .OrderBy(p => p.Key, comparer: StringComparer.InvariantCultureIgnoreCase)
             .ToList();

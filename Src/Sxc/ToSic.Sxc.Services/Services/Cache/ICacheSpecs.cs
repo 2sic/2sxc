@@ -121,7 +121,7 @@ public interface ICacheSpecs
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    internal CacheConfig ConfigList { get; }
+    internal CacheConfig Configuration { get; }
 
     /// <summary>
     /// Vary the cache by a specific name and value.

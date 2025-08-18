@@ -1,6 +1,7 @@
 ﻿using ToSic.Sxc.Cms.Users;
 using ToSic.Sys.Caching;
 using ToSic.Sys.Memory;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.Cache.Sys;
 
@@ -8,8 +9,54 @@ namespace ToSic.Sxc.Services.Cache.Sys;
 /// Internal configuration to know what we're varying by.
 /// This is used to determine which parameters will be used to pre-check the cache.
 /// </summary>
-public record CacheConfig: ICanEstimateSize, ITimestamped
+public record CacheConfig(): ICanEstimateSize, ITimestamped
 {
+    public CacheConfig(NoParamOrder protector = default, int? sliding = null, string? watch = null, string? varyBy = null, string? url = null, string? model = null): this()
+    {
+        if (sliding != null)
+            Sliding = sliding.Value;
+
+        foreach (var part in watch.CsvToArrayWithoutEmpty())
+            switch (part.ToLowerInvariant())
+            {
+                case "data" or "appdata":
+                    WatchAppData = true;
+                    break;
+                // ReSharper disable once StringLiteralTypo
+                case "folder" or "appfolder":
+                    WatchAppFolder = true;
+                    break;
+                default:
+                    throw new ArgumentException($@"Unknown {nameof(watch)} part '{part}'", nameof(watch));
+            }
+
+        foreach (var varyPart in varyBy.CsvToArrayWithoutEmpty())
+            switch (varyPart.ToLowerInvariant())
+            {
+                case "page":
+                    ByPage = true;
+                    break;
+                case "user":
+                    ByUser = true;
+                    break;
+                case "module":
+                    ByModule = true;
+                    break;
+                default:
+                    throw new ArgumentException($@"Unknown {nameof(varyBy)} part '{varyPart}'", nameof(varyBy));
+            }
+
+        if (url != null)
+            ByPageParameters = new() { CaseSensitive = false, Names = url};
+
+        if (model != null)
+            ByModel = new() { CaseSensitive = false, Names = model };
+    }
+
+    public bool WatchAppData { get; init; }
+    public bool WatchAppFolder { get; init; }
+    public int Sliding { get; init; }
+
     public bool ByPage { get; init; }
     public bool ByModule { get; init; }
     public bool ByUser { get; init; }
@@ -25,49 +72,12 @@ public record CacheConfig: ICanEstimateSize, ITimestamped
     public UserElevation MinDisabledElevation { get; init; }
     public UserElevation MaxDisabledElevation { get; init; }
 
-    public CacheConfig Updated(string name, string? keys, bool caseSensitive) =>
-        name switch
-        {
-            CacheSpecConstants.ByModule => this with { ByModule = true },
-            CacheSpecConstants.ByPage => this with { ByPage = true },
-            CacheSpecConstants.ByUser => this with { ByUser = true },
-            CacheSpecConstants.ByPageParameters => this with { ByPageParameters = new() { Names = keys, CaseSensitive = caseSensitive } },
-            CacheSpecConstants.ByModel => this with { ByModel = new() { Names = keys, CaseSensitive = caseSensitive} }, // Model is like parameters
-            _ => this
-        };
-
-    public SizeEstimate EstimateSize(ILog? log = default) => new(
+    SizeEstimate ICanEstimateSize.EstimateSize(ILog? log) => new(
         sizeof(bool) * 3 // ByPage, ByModule, ByUser
         + (ByPageParameters?.Names?.Length ?? 0) // ByParameters
         + (ByModel?.Names?.Length ?? 0) // ByModel
     );
 
     long ITimestamped.CacheTimestamp { get; } = DateTime.Now.Ticks;
-
-    /// <summary>
-    /// Restore a cache specs to apply the same logic as was stored here.
-    /// </summary>
-    /// <param name="cacheSpecs"></param>
-    /// <returns></returns>
-    public ICacheSpecs Restore(ICacheSpecs cacheSpecs)
-    {
-        if (ByUser)
-            cacheSpecs = cacheSpecs.VaryByUser();
-
-        if (ByModule)
-            cacheSpecs = cacheSpecs.VaryByModule();
-
-        if (ByPage)
-            cacheSpecs = cacheSpecs.VaryByPage();
-
-        if (ByPageParameters != null)
-            cacheSpecs = cacheSpecs.VaryByPageParameters(ByPageParameters.Names, caseSensitive: ByPageParameters.CaseSensitive);
-
-        if (ByModel != null)
-            cacheSpecs = cacheSpecs.VaryByModel(ByModel.Names, caseSensitive: ByModel.CaseSensitive);
-
-        return cacheSpecs;
-    }
-
 
 }

@@ -61,7 +61,7 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
         if (config == null)
             return l.ReturnNull("settings for partial not in cache");
 
-        var foundation = config.Restore(CacheSpecsRawWithModel);
+        var foundation = config.RestoreBy(CacheSpecsRawWithModel);
 
         return l.Return(foundation, $"CacheKey to look for: '{foundation.Key}'");
     }
@@ -83,7 +83,7 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
             return AttachListenerAndExit("no config");
         var user = exCtx.GetState<ICmsContext>().User;
         var elevation = user.GetElevation();
-        if (!elevation.IsForAllOrInRange(config.MinDisabledElevation, config.MaxDisabledElevation))
+        if (!elevation.IsForAllOrInRangeOfConfig(config))
             return AttachListenerAndExit($"user elevation '{elevation.ToString()}' in cache-disabled range {config.MinDisabledElevation.ToString()} and {config.MaxDisabledElevation.ToString()}, ignore cache.");
 
         var specsBasedOnSettings = GetSpecsBasedOnSettings();
@@ -104,7 +104,7 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
         }
     }
 
-    public bool SaveToCacheIfEnabled(string html) //, ICacheSpecs partialSpecs)
+    public bool SaveToCacheIfEnabled(string html)
     {
         var l = Log.Fn<bool>();
         var partialSpecs = RenderPartialSpecsForRazor.CacheSpecs;

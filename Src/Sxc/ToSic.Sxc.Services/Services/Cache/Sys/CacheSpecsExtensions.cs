@@ -26,7 +26,7 @@ public static class CacheSpecsExtensions
     /// <returns></returns>
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public static CacheConfig GetConfig(this ICacheSpecs specs)
-        => ((CacheSpecs)specs).ConfigList;
+        => ((CacheSpecs)specs).Configuration;
 
 
     public static ICacheSpecs AttachModel(this ICacheSpecs specs, IDictionary<string, object?>? model)
