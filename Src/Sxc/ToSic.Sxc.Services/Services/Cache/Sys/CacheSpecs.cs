@@ -170,6 +170,7 @@ internal record CacheSpecs : ICacheSpecs
 
     #region Vary-By Custom User, QueryString, etc.
 
+    // INTERNAL!
     /// <inheritdoc />
     public ICacheSpecs VaryByPageParameters(string? names = default, NoParamOrder protector = default, bool caseSensitive = false)
         => VaryByParamsInternal(CacheSpecConstants.ByPageParameters,
@@ -178,7 +179,14 @@ internal record CacheSpecs : ICacheSpecs
             caseSensitive: caseSensitive
         );
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Vary by Parameters is an overload we only use in testing.
+    /// </summary>
+    /// <param name="parameters"></param>
+    /// <param name="protector"></param>
+    /// <param name="names"></param>
+    /// <param name="caseSensitive"></param>
+    /// <returns></returns>
     public ICacheSpecs VaryByParameters(IParameters parameters, NoParamOrder protector = default, string? names = default, bool caseSensitive = false)
         => VaryByParamsInternal(CacheSpecConstants.ByParameters, parameters, names, caseSensitive: caseSensitive);
 

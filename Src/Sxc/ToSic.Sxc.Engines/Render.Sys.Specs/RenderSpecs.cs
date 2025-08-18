@@ -12,6 +12,10 @@ public record RenderSpecs
     /// </summary>
     public object? Data { get; init; }
 
+    /// <summary>
+    /// Data is used as dictionary in various cases - for MyModel and cache checking.
+    /// This is done here / early to avoid having to convert it in every place where it's used.
+    /// </summary>
     public IDictionary<string, object?>? DataDic => _dataDic.Get(() => Data?.ToDicInvariantInsensitive());
     private readonly GetOnce<IDictionary<string, object?>?> _dataDic = new();
 

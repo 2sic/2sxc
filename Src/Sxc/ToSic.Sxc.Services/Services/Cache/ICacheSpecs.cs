@@ -212,7 +212,10 @@ public interface ICacheSpecs
     /// <param name="names">Names of one or more parameters, comma-separated</param>
     /// <param name="caseSensitive">Determines if the value should be treated case-sensitive, default is `false`</param>
     /// <returns></returns>
-    ICacheSpecs VaryByParameters(IParameters parameters, NoParamOrder protector = default, string? names = default, bool caseSensitive = false);
+    /// <remarks>
+    /// 2025-08-18 v20.00-05 made internal; testing only. - as it cannot make sense - since the parameters won't be available during following cache-checks
+    /// </remarks>
+    internal ICacheSpecs VaryByParameters(IParameters parameters, NoParamOrder protector = default, string? names = default, bool caseSensitive = false);
 
     #endregion
 
