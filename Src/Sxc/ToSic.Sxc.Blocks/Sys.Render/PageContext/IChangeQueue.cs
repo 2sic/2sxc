@@ -25,5 +25,5 @@ public interface IChangeQueue
     /// </summary>
     string? HttpStatusMessage { get; set; }
 
-    public string Queue(PageProperties property, string? value, PageChangeModes change, string? token);
+    public PagePropertyChange Queue(PageProperties property, string? value, PageChangeModes change, string? token);
 }

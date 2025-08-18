@@ -5,6 +5,7 @@ using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.TurnOn.Sys;
 using ToSic.Sxc.Sys.Render.PageContext;
 using ToSic.Sxc.Web.Sys.ContentSecurityPolicy;
+using ToSic.Sxc.Web.Sys.PageServiceShared;
 
 namespace ToSic.Sxc.Services.Page.Sys;
 
@@ -72,6 +73,9 @@ public partial class PageService(
 
         if (renderResult.HeadChanges != null)
             pageServiceShared.Headers.AddRange(renderResult.HeadChanges);
+
+        if (renderResult.PageChanges != null)
+            ((PageServiceShared)PageServiceShared).PropertyChanges.AddRange(renderResult.PageChanges);
 
         l.Done();
     }

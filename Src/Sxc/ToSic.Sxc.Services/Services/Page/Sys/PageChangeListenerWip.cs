@@ -18,6 +18,7 @@ public class PageChangeListenerManagerWip
             PartialActivateWip = [],
             PartialModuleTags = [],
             HeadChanges = [],
+            PageChanges = [],
         };
         RenderListeners.Add(listener);
         return listener;
@@ -48,5 +49,12 @@ public class PageChangeListenerManagerWip
     {
         foreach (var renderListener in RenderListeners)
             renderListener.HeadChanges!.Add(headChange);
+    }
+
+    public void AddToPageChangeQueue(PagePropertyChange result)
+    {
+        foreach (var renderListener in RenderListeners)
+            renderListener.PageChanges!.Add(result);
+
     }
 }
