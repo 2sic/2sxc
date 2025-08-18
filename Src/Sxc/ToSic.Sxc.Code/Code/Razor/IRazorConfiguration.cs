@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Services.Cache;
 
-namespace ToSic.Sxc.Custom.Hybrid;
+namespace ToSic.Sxc.Code.Razor;
 
 /// <summary>
 /// Configure Razor - for example output caching.
@@ -16,7 +16,7 @@ public interface IRazorConfiguration
     /// <remarks>
     /// Will only hav an effect if the feature [LightSpeedOutputCachePartials](https://patrons.2sxc.org/features/feat/LightSpeedOutputCachePartials) is enabled.
     /// </remarks>
-    string Partial(NoParamOrder protector = default, Func<ICacheSpecs, ICacheSpecs> cache = default);
+    string? Partial(NoParamOrder protector = default, Func<ICacheSpecs, ICacheSpecs>? cache = default);
 
-    string PartialCache(NoParamOrder protector = default, bool useDefaults = true, int? sliding = null, string watch = null, string varyBy = null, string url = null, string model = null);
+    string? PartialCache(NoParamOrder protector = default, bool useDefaults = true, int? sliding = null, string? watch = null, string? varyBy = null, string? url = null, string? model = null);
 }

@@ -1,9 +1,9 @@
 ﻿using Custom.Razor.Sys;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code.Razor;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
-using ToSic.Sxc.Custom.Hybrid;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Razor.Sys;
@@ -236,7 +236,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
 
     #region Experimental Configuration
 
-    [PrivateApi("not yet public or final, WIP v20.00.0x")]
+    [WorkInProgressApi("not yet public or final, WIP v20.00.0x")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     // [field: AllowNull, MaybeNull]
     public IRazorConfiguration Configuration => field ??= new RazorConfiguration(GetRenderSpecs(), RzrHlp.Log);

@@ -1,9 +1,9 @@
-﻿using ToSic.Sxc.Render.Sys.Specs;
+﻿using ToSic.Sxc.Code.Razor.Sys;
+using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.Cache.Sys;
-using ToSic.Sxc.Web.Sys.LightSpeed;
 
-namespace ToSic.Sxc.Custom.Hybrid;
+namespace ToSic.Sxc.Code.Razor;
 
 [PrivateApi("not yet public or final, WIP v20.00.0x, will have to create interface")]
 public class RazorConfiguration(RenderSpecs renderSpecs, ILog parentLog): HelperBase(parentLog, "Rzr.Config"), IRazorConfiguration
@@ -12,7 +12,7 @@ public class RazorConfiguration(RenderSpecs renderSpecs, ILog parentLog): Helper
     // It is currently empty and serves as a temporary structure for potential future use.
     // The class may be expanded with properties and methods as needed in the future.
 
-    public string Partial(NoParamOrder protector = default, Func<ICacheSpecs, ICacheSpecs> cache = default)
+    public string? Partial(NoParamOrder protector = default, Func<ICacheSpecs, ICacheSpecs>? cache = default)
     {
         if (cache != null)
             try
@@ -31,7 +31,7 @@ public class RazorConfiguration(RenderSpecs renderSpecs, ILog parentLog): Helper
         return null;
     }
 
-    public string PartialCache(NoParamOrder protector = default, bool useDefaults = true, int? sliding = null, string watch = null, string varyBy = null, string url = null, string model = null)
+    public string? PartialCache(NoParamOrder protector = default, bool useDefaults = true, int? sliding = null, string? watch = null, string? varyBy = null, string? url = null, string? model = null)
     {
         var config = new CacheConfig(
             sliding: sliding ?? (useDefaults ? DefaultSliding : null),
@@ -59,6 +59,7 @@ public class RazorConfiguration(RenderSpecs renderSpecs, ILog parentLog): Helper
 
     public const string DefaultModel = "";
 
+    [field: AllowNull, MaybeNull]
     private RenderPartialSpecsWithCaching Parent
     {
         get
