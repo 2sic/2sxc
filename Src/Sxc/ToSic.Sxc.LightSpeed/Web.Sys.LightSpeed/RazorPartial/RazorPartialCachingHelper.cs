@@ -38,7 +38,14 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
         ??= CacheSvc.CreateSpecs(CacheSpecConstants.PrefixForDontPrefix + OutputCacheKeys.PartialKey(appId, normalizedPath))
             .AttachModel(model);
 
-    
+    /// <summary>
+    /// The specs for the partial rendering - these may get changed by the Razor at runtime, so create once and keep it mutable.
+    /// </summary>
+    [field: AllowNull, MaybeNull]
+    public RenderPartialSpecsWithCaching RenderPartialSpecsForRazor => field ??= new()
+    {
+        CacheSpecs = CacheSpecsRawWithModel.Disable(),
+    };
 
     [field: AllowNull, MaybeNull]
     private ICacheSpecs SettingsSpecs => field
@@ -97,9 +104,10 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
         }
     }
 
-    public bool SaveToCache(string html, ICacheSpecs partialSpecs)
+    public bool SaveToCacheIfEnabled(string html) //, ICacheSpecs partialSpecs)
     {
         var l = Log.Fn<bool>();
+        var partialSpecs = RenderPartialSpecsForRazor.CacheSpecs;
         if (!IsEnabled || !partialSpecs.IsEnabled)
             return l.ReturnFalse("no partial caching");
 

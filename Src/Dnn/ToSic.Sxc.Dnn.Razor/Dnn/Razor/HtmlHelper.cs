@@ -1,15 +1,11 @@
 ﻿using System.Web;
-using ToSic.Razor.Blade;
-using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Render.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
-using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Web.Sys.LightSpeed;
-using static System.StringComparer;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Dnn.Razor;
@@ -29,12 +25,12 @@ internal class HtmlHelper(
     {
         _page = page;
         _helper = helper;
-        _isSystemAdmin = isSystemAdmin;
+        _errorHelper = new(page, isSystemAdmin, helper, featureSvc, codeAnalysis, codeErrService, renderingHelperGenerator);
         return this;
     }
     private RazorComponentBase _page;
     private DnnRazorHelper _helper;
-    private bool _isSystemAdmin;
+    private HtmlHelperErrorHelper _errorHelper;
 
     /// <inheritdoc/>
     public IHtmlString Raw(object stringHtml)
@@ -49,7 +45,6 @@ internal class HtmlHelper(
                 _helper.Add(ex);
                 throw ex;
         }
-
     }
 
     /// <summary>
@@ -66,6 +61,8 @@ internal class HtmlHelper(
 
         var l = Log.Fn<IHtmlString>($"{nameof(relativePath)}: '{relativePath}', {nameof(normalizedPath)}: '{normalizedPath}', {nameof(data)}: {data != null}");
 
+        // Prepare RenderSpecs with data, since it may be needed to check if caching is relevant
+        // Do it like this, to avoid multiple conversions of the same data
         var renderSpecs = new RenderSpecs { Data = data };
 
         var cacheHelper = new RazorPartialCachingHelper(_page.ExCtx.GetAppId(), normalizedPath, renderSpecs.DataDic, _page.ExCtx, featureSvc.Value, Log);
@@ -79,46 +76,49 @@ internal class HtmlHelper(
 
         try
         {
-            // Prepare the specs for the partial rendering - these may get changed by the Razor at runtime
-            var partialSpecs = new RenderPartialSpecsWithCaching { CacheSpecs = cacheHelper.CacheSpecsRawWithModel.Disable() }; // Start with disabled, as that's the default, and then enable it if needed
-
-            renderSpecs = renderSpecs with { PartialSpecs = partialSpecs };
+            // Attach any specs which the cshtml may need and possibly modify to configure caching
+            renderSpecs = renderSpecs with { PartialSpecs = cacheHelper.RenderPartialSpecsForRazor };
 
             // This will get a HelperResult object, which is often not executed yet
             var result = RenderWithRoslynOrClassic(relativePath, normalizedPath, renderSpecs);
 
             // In case we should throw a nice error, we must get the HTML now, to possibly cause the error and show an alternate message
             // This will also not allow partial caching
-            if (!ThrowPartialError)
+            if (!_errorHelper.ThrowPartialError)
                 return l.Return(result);
 
-            // Experimental - try to simplify returned html string - see old code below
-            try
+            // We want to capture the rendering of the result, so we can show nice errors and cache the result if needed.
+            // We must create another render result, to delay our work.
+            // Otherwise, the Razor-Engine may do some strange things and not show anything at all (instead of the error)
+            var wrappedResult = new HelperResult(writer =>
             {
-                var asString = result.ToHtmlString();
+                try
+                {
+                    var asString = result.ToHtmlString();
+                    writer.Write(asString); // Use Write instead of WriteLine, to not introduce any extra lines/whitespace
 
-                // add to cache if needed / enabled
-                cacheHelper.SaveToCache(asString, partialSpecs.CacheSpecs);
-
-                return l.Return(new HtmlString(asString), "with partial caching");
-            }
-            catch (Exception renderException)
-            {
-                var nice = TryToLogAndReWrapError(renderException, relativePath, true);
-                return l.Return(new HtmlString(nice), "error");
-            }
+                    // Add to cache - should only run if no exceptions were thrown
+                    cacheHelper.SaveToCacheIfEnabled(asString);
+                }
+                catch (Exception renderException)
+                {
+                    var nice = _errorHelper.TryToLogAndReWrapError(renderException, relativePath, true);
+                    writer.WriteLine(nice);
+                }
+            });
+            return wrappedResult;
         }
         catch (Exception compileException)
         {
             // Ensure our error paths exist, to only report this in the system-logs once
-            _errorPaths ??= new(InvariantCultureIgnoreCase);
-            var isFirstOccurrence = !_errorPaths.Contains(relativePath);
-            _errorPaths.Add(relativePath);
+            //_errorPaths ??= new(InvariantCultureIgnoreCase);
+            var isFirstOccurrence = !_errorHelper.ErrorPaths.Contains(relativePath);
+            _errorHelper.ErrorPaths.Add(relativePath);
 
             // Report if first time
-            var nice = TryToLogAndReWrapError(compileException, relativePath, isFirstOccurrence, "Special exception handling - only show message");
-            var htmlError = Tag.Custom(nice);
-            return l.Return(htmlError);
+            var nice = _errorHelper.TryToLogAndReWrapError(compileException, relativePath, isFirstOccurrence, "Special exception handling - only show message");
+            var htmlError = new HtmlString(nice);
+            return l.Return(htmlError, "compile error");
         }
     }
 
@@ -159,37 +159,4 @@ internal class HtmlHelper(
         return l.Return(_page.BaseRenderPage(relativePath, renderSpecs), $"default render {(renderSpecs.Data == null ? "no" : "with")} data");
     }
 
-
-
-    private string TryToLogAndReWrapError(Exception renderException, string path, bool reportToDnn, string additionalLog = null)
-    {
-        // Important to know: Once this fires, the page will stop rendering more templates
-        if (reportToDnn)
-            _page.Log.GetContents().Ex(renderException);
-        if (additionalLog != null)
-            _page.Log.GetContents().A(additionalLog);
-
-        // If it's a compile issue, try to find explicit help for that
-        var pathOfPage = _page.NormalizePath(path);
-        var razorType =codeAnalysis.Value.TypeOfVirtualPath(pathOfPage);
-        var exWithHelp = codeErrService.Value.AddHelpForCompileProblems(renderException, razorType);
-
-
-        // Show a nice / ugly error depending on user permissions
-        // Note that if anything breaks here, it will just use the normal error - but for what breaks in here
-        // Note that if withHelp already has help, it won't be extended anymore
-        exWithHelp = codeErrService.Value.AddHelpIfKnownError(exWithHelp, _page);
-        var block = _page.ExCtx.GetState<IBlock>();
-        var renderHelper = renderingHelperGenerator.New().Init(block);
-        var nice = renderHelper.DesignErrorMessage([exWithHelp], true);
-        _helper.Add(exWithHelp);
-        return nice;
-    }
-
-    private HashSet<string> _errorPaths;
-
-    private bool ThrowPartialError => _throwPartialError.Get(()
-        => featureSvc.Value.IsEnabled(SxcFeatures.RazorThrowPartial.NameId) ||
-           _isSystemAdmin && featureSvc.Value.IsEnabled(SxcFeatures.RenderThrowPartialSystemAdmin.NameId));
-    private readonly GetOnce<bool> _throwPartialError = new();
 }
