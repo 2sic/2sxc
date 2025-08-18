@@ -16,7 +16,7 @@ public class CodeDataPoCoWrapperService(
     /*DynamicFromDictionary<TKey, TValue>*/object ICodeDataPoCoWrapperService.FromDictionary<TKey, TValue>(IDictionary<TKey, TValue> original)
         => new DynamicFromDictionary<TKey, TValue>(original, this);
 
-    public object DynamicFromObject(object data, WrapperSettings settings)
+    public object DynamicFromObject(object? data, WrapperSettings settings)
     {
         var preWrap = new PreWrapObject(data, settings, this);
         return new WrapObjectDynamic(preWrap, this);

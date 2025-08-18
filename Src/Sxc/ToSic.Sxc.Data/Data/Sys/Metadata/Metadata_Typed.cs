@@ -137,7 +137,7 @@ internal partial class Metadata: ITypedItem
         // Protect & no Strict (as that's not really possible, since it's not a field)
 
         // Exit if no metadata items available to get parents from
-        var mdEntities = _metadata.ToList();
+        var mdEntities = metadata.ToList();
         if (!mdEntities.Any())
             return [];
 
@@ -167,7 +167,7 @@ internal partial class Metadata: ITypedItem
             throw ErrStrict(field);
 
         // Exit if no metadata items available to get children from
-        var mdEntities = _metadata.ToList();
+        var mdEntities = metadata.ToList();
         if (!mdEntities.Any())
             return [];
 

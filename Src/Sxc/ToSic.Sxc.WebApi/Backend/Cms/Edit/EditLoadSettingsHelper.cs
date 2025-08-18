@@ -29,7 +29,7 @@ public class EditLoadSettingsHelper(
         var l = Log.Fn<EditSettingsDto>();
         var allInputTypes = jsonTypes
             .SelectMany(ct => ct.AttributesSafe()
-                .Select(at => at.InputType)
+                .Select(at => at.InputType! /* never null here, only on very old imports */)
             )
             .Distinct()
             .ToList();

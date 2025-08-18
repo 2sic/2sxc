@@ -49,7 +49,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
     private LazySvc<SimpleDataEditService> DataController { get; }
 
     /// <inheritdoc />
-    public IEntity Create(string contentTypeName, Dictionary<string, object> values, string? userName = default, ITarget? target = default)
+    public IEntity Create(string contentTypeName, Dictionary<string, object?> values, string? userName = default, ITarget? target = default)
     {
         var l = Log.Fn<IEntity>(contentTypeName);
         // Ensure case insensitive
@@ -57,7 +57,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
 
         if (!string.IsNullOrEmpty(userName))
             ProvideOwnerInValues(values, userName!); // userName should be in 2sxc user IdentityToken format (like 'dnn:user=N')
-        var ids = DataController.Value.Create(contentTypeName, new List<Dictionary<string, object>> { values }, target);
+        var ids = DataController.Value.Create(contentTypeName, new List<Dictionary<string, object?>> { values! }, target);
         var id = ids.FirstOrDefault();
         FlushDataSnapshot();
         // try to find it again (AppState.List contains also draft items)
@@ -66,7 +66,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
         return l.Return(created, $"{created.EntityId}/{created.EntityGuid}");
     }
 
-    private static void ProvideOwnerInValues(IDictionary<string, object> values, string userIdentityToken)
+    private static void ProvideOwnerInValues(IDictionary<string, object?> values, string userIdentityToken)
     {
         // userIdentityToken is not simple 'userName' string, but 2sxc user IdentityToken structure (like 'dnn:user=N')
         if (values.ContainsKey(AttributeNames.EntityFieldOwner))
@@ -75,7 +75,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
     }
 
     /// <inheritdoc />
-    public IEnumerable<IEntity> Create(string contentTypeName, IEnumerable<Dictionary<string, object>> multiValues, string? userName = default)
+    public IEnumerable<IEntity> Create(string contentTypeName, IEnumerable<Dictionary<string, object?>> multiValues, string? userName = default)
     {
         var valueList = multiValues.ToListOpt();
         var l = Log.Fn<IEnumerable<IEntity>>($"app create many ({valueList.Count}) new entities of type:{contentTypeName}");
@@ -97,7 +97,7 @@ internal class AppDataWithCrud : Eav.DataSources.App, IAppData
     }
 
     /// <inheritdoc />
-    public void Update(int entityId, Dictionary<string, object> values, string? userName = default)
+    public void Update(int entityId, Dictionary<string, object?> values, string? userName = default)
     {
         var l = Log.Fn($"app update i:{entityId}");
         // FYI: userName is not used (to change owner of updated entity).

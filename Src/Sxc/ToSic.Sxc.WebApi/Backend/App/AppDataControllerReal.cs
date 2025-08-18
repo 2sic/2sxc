@@ -57,7 +57,7 @@ public class AppDataControllerReal(LazySvc<AppContent> appContentLazy)
     #region Create
 
     /// <inheritdoc />
-    public IDictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object> newContentItem, int? id = null,
+    public IDictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object?> newContentItem, int? id = null,
         string? appPath = null)
         => appContentLazy.Value.Init(appPath)
             .CreateOrUpdate(contentType, newContentItem, id, appPath);

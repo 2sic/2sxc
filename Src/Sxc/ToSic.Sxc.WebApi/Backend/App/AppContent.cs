@@ -98,7 +98,7 @@ public class AppContent(
     #region CreateOrUpdate
 
 
-    public IDictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object> newContentItem, int? id = null, string? appPath = null)
+    public IDictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object?> newContentItem, int? id = null, string? appPath = null)
     {
         Log.A($"create or update type:{contentType}, id:{id}, path:{appPath}");
 
@@ -133,7 +133,7 @@ public class AppContent(
             var metadata = GetMetadata(rawValuesCaseInsensitive);
             Log.A($"metadata: {metadata}");
 
-            var ids = dataController.Create(contentType, new List<Dictionary<string, object>> { cleanedNewItem }, metadata);
+            var ids = dataController.Create(contentType, new List<Dictionary<string, object?>> { cleanedNewItem! }, metadata);
             id = ids.FirstOrDefault();
 
             Log.A($"new entity id: {id}");
@@ -141,7 +141,7 @@ public class AppContent(
             var added = AddParentRelationship(rawValuesCaseInsensitive!, id.Value);
         }
         else
-            dataController.Update(id.Value, cleanedNewItem);
+            dataController.Update(id.Value, cleanedNewItem!);
 
         return InitEavAndSerializer(AppReader.AppId, Context.Permissions.IsContentAdmin, null)
             .Convert(AppReader.List.One(id.Value)!)!;
@@ -180,7 +180,7 @@ public class AppContent(
         return l.ReturnTrue($"new ParentRelationship p:{parentGuid},f:{field},i:{index}");
     }
 
-    private Target? GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive)
+    private Target? GetMetadata(Dictionary<string, object?> newContentItemCaseInsensitive)
     {
         var l = Log.Fn<Target>($"count: {newContentItemCaseInsensitive.Count}");
         if (!newContentItemCaseInsensitive.Keys.Contains(AttributeNames.JsonKeyMetadataFor))

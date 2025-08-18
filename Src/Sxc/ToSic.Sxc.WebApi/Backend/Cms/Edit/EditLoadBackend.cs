@@ -141,7 +141,7 @@ public partial class EditLoadBackend(
                             .Select(a => a with
                             {
                                 // ensure that the input-type is set, otherwise it will be null
-                                InputType = InputTypes.MapInputTypeV10(a.InputType)
+                                InputType = InputTypes.MapInputTypeV10(a.InputType! /* it can't really be null, only in very old imports, and this is not an import */)
                             })
                             .ToListOpt(),
                         }

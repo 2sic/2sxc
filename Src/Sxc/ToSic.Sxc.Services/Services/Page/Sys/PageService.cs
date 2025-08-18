@@ -72,7 +72,7 @@ public partial class PageService(
             moduleService.Value.AddTag(tagSet.Tag, moduleId: ModuleId, noDuplicates: tagSet.NoDuplicates);
 
         if (renderResult.HeadChanges != null)
-            pageServiceShared.Headers.AddRange(renderResult.HeadChanges);
+            PageServiceShared.Headers.AddRange(renderResult.HeadChanges);
 
         if (renderResult.PageChanges != null)
             ((PageServiceShared)PageServiceShared).PropertyChanges.AddRange(renderResult.PageChanges);

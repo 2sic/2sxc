@@ -83,7 +83,7 @@ internal class GetAndConvertHelper(
             return l.Return(cached, "cached");
 
         // Figure out best order of languages to look up
-        var languages = LanguagePreprocessor.GetLookupLanguages(language, cdf);
+        var languages = LanguagePreprocessor.GetLookupLanguages(language, Cdf);
 
         l.A($"cache-key: {cacheKey}, {nameof(languages)}:{languages.Length}");
 
