@@ -1,7 +1,6 @@
 ﻿using Custom.Razor.Sys;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Razor;
-using ToSic.Sxc.Engines.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.ExecutionContext;
 using IHasLog = ToSic.Sys.Logging.IHasLog;
@@ -37,10 +36,11 @@ public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHa
         var data = renderSpecs.Data;
         var l = (this as IHasLog).Log.Fn<HelperResult>($"{nameof(path)}: '{path}', {nameof(data)}: {data != null}; partialSpecs: {renderSpecs.PartialSpecs}");
 
+        // Do the proper RenderPage of the base class, and also pass in the RenderSpecs
+        // because they might be used to communicate caching settings back.
         return data == null
-            ? l.Return(base.RenderPage(path), "default render, no data")
-            // TODO: VERIFY / handle conversion from 'object' to 'params object[]'
-            : l.Return(base.RenderPage(path, data), "default render with data");
+            ? l.Return(base.RenderPage(path, new { }, renderSpecs), "default render, no data")
+            : l.Return(base.RenderPage(path, data, renderSpecs), "default render with data");
     }
 
     /// <inheritdoc />

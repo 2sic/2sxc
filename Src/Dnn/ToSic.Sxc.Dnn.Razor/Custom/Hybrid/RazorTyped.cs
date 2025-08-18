@@ -9,7 +9,6 @@ using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Razor.Sys;
 using ToSic.Sxc.Engines.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
-using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.Help;
@@ -75,6 +74,16 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
     }
 
     private RenderSpecs _renderSpecs;
+
+    private RenderSpecs GetRenderSpecs()
+    {
+        if (_renderSpecs != null)
+            return _renderSpecs;
+
+        // diagnose PageData
+        _renderSpecs = PageData.Values.FirstOrDefault(value => value is RenderSpecs) as RenderSpecs;
+        return _renderSpecs;
+    }
     private object _overridePageData;
 
     private TypedCode16Helper CreateCodeHelper() =>
@@ -83,7 +92,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
             getRazorModel: () => _overridePageData
                                  // the default/only value would be on a 0 key
                                  ?? (PageData?.TryGetValue(0, out var zeroData) ?? false ? zeroData as object : null),
-            () => _renderSpecs?.DataDic
+            () => GetRenderSpecs()?.DataDic
                   ?? PageData?
                       .Where(pair => pair.Key is string)
                       .ToDictionary(pair => pair.Key.ToString(), pair => pair.Value, InvariantCultureIgnoreCase)
@@ -235,7 +244,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
     [PrivateApi("not yet public or final, WIP v20.00.0x")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     // [field: AllowNull, MaybeNull]
-    public RazorConfiguration Configuration => field ??= new(_renderSpecs, RzrHlp.Log);
+    public RazorConfiguration Configuration => field ??= new(GetRenderSpecs(), RzrHlp.Log);
 
     #endregion
 }
