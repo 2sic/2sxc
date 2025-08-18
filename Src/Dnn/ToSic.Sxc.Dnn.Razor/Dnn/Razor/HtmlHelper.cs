@@ -70,7 +70,7 @@ internal class HtmlHelper(
         var cached = cacheHelper.TryGetFromCache();
         if (cached != null)
         {
-            cacheHelper.ProcessListener(cached);
+            cacheHelper.PageService.ReplayCachedChanges((RenderResult)cached);
             return l.Return(new HtmlString(cached.Html), "Returning cached result");
         }
 

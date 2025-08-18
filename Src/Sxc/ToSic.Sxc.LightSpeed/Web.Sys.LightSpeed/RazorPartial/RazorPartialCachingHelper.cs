@@ -146,12 +146,12 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
     public RenderResult? Listener { get; set; }
 
 
-    public bool ProcessListener(IRenderResult cached)
-    {
-        var l = Log.Fn<bool>();
-        PageService.ReplayCachedChanges((RenderResult)cached);
-        return l.ReturnTrue("activated");
-    }
+    //public bool ReplayCachedChanges(IRenderResult cached)
+    //{
+    //    var l = Log.Fn<bool>();
+    //    PageService.ReplayCachedChanges((RenderResult)cached);
+    //    return l.ReturnTrue("activated");
+    //}
 
     #endregion
 }
