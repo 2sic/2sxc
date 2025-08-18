@@ -38,3 +38,12 @@ GO
 
 DROP TABLE IF EXISTS [dbo].[TsDynDataTransaction]
 GO
+
+DELETE FROM ModuleDefinition WHERE ModuleDefinitionName LIKE 'ToSic.Sxc.Oqt.%, ToSic.Sxc.Oqtane.Client'
+GO
+
+DELETE FROM __EFMigrationsHistory WHERE MigrationId LIKE 'ToSic.Sxc.%'
+GO
+
+DELETE FROM Setting WHERE SettingName IN ('TsDynDataZone', 'TsDynDataApp', 'TsDynDataContentGroup', 'TsDynDataPreview', 'EavZone', 'EavApp', 'EavContentGroup', 'EavPreview')
+GO
