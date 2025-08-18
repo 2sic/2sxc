@@ -15,8 +15,6 @@ namespace ToSic.Sxc.WebApi;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class SecureEndpointAttribute : ActionFilterAttribute
 {
-    private const string MediaType = "application/json";
-
     [PrivateApi]
     public SecureEndpointAttribute()
     {
@@ -28,54 +26,54 @@ public class SecureEndpointAttribute : ActionFilterAttribute
     {
         var request = context.HttpContext.Request;
 
-        if (request.Method == HttpMethods.Post && request.ContentType == MediaType)
+        if (request.Method != HttpMethods.Post || request.ContentType != SecureEndpointShared.MediaJson)
         {
-            var jsonString = await GetRequestContentStream(request);
-            if (string.IsNullOrEmpty(jsonString))
-            {
-                context.Result = new BadRequestObjectResult("Request content is empty.");
-                return;
-            }
+            await base.OnActionExecutionAsync(context, next);
+            return;
+        }
 
-            // Deserializes the JSON string to an EncryptedData object and performs a "EncryptedData" check.
-            // If encrypted data is missing, sets the request content stream to the original JSON string and returns.
-            var encryptedData = JsonSerializer.Deserialize<EncryptedData>(jsonString, JsonOptions.SafeJsonForHtmlAttributes);
-            if (encryptedData == null || (encryptedData.Data is null && encryptedData.Key is null && encryptedData.Iv is null && encryptedData.Version == 1))
-            {
-                //SetRequestContentStream(request, jsonString);
-                return;
-            }
+        var jsonString = await GetRequestContentStream(request);
+        if (string.IsNullOrEmpty(jsonString))
+        {
+            context.Result = new BadRequestObjectResult(SecureEndpointShared.ErrorIfBodyIsEmpty);
+            return;
+        }
 
-            // Currently, only POST payloads can be encrypted. 
-            // Try to determine the POST parameter dynamically by finding a parameter 
-            // that has the FromBody attribute on it or a parameter that is not a value type.
-            var parameter = context.ActionDescriptor.Parameters
-                .FirstOrDefault(p => p.BindingInfo?.BindingSource == BindingSource.Body || !p.ParameterType.IsValueType);
-            if (parameter == null)
-            {
-                context.Result = new BadRequestObjectResult("No parameter found for action.");
-                return;
-            }
+        var encryptedData = SecureEndpointShared.TestAndGetEncryptedData(jsonString);
+        if (encryptedData == null)
+            return;
 
-            try
-            {
-                // Decrypt data
-                var decryptedData = Decrypt(context.HttpContext.RequestServices, encryptedData);
+        // Currently, only POST payloads can be encrypted. 
+        // Try to determine the POST parameter dynamically by finding a parameter 
+        // that has the FromBody attribute on it or a parameter that is not a value type.
+        // We need the final type because we will deserialize the decrypted data into it.
+        var parameter = context.ActionDescriptor.Parameters
+            .FirstOrDefault(p => p.BindingInfo?.BindingSource == BindingSource.Body || !p.ParameterType.IsValueType);
+        if (parameter == null)
+        {
+            context.Result = new BadRequestObjectResult("No parameter found for action.");
+            return;
+        }
 
-                // Validate that decrypted data is valid JSON
-                var formData = JsonSerializer.Deserialize(decryptedData, parameter.ParameterType, JsonOptions.SafeJsonForHtmlAttributes);
+        try
+        {
+            // Decrypt data
+            var decryptedData = Decrypt(context.HttpContext.RequestServices, encryptedData);
 
-                // Replace the request content with the deserialized object
-                context.ActionArguments[parameter.Name] = formData;
+            // Validate that decrypted data is valid JSON
+            var formData = JsonSerializer.Deserialize(decryptedData, parameter.ParameterType,
+                JsonOptions.SafeJsonForHtmlAttributes);
 
-                SetRequestContentStream(request, decryptedData);
-            }
-            catch (JsonException)
-            {
-                // Handle invalid JSON format
-                context.Result = new BadRequestObjectResult("Exception in decryption.");
-                return;
-            }
+            // Replace the request content with the deserialized object
+            context.ActionArguments[parameter.Name] = formData;
+
+            SetRequestContentStream(request, decryptedData);
+        }
+        catch (JsonException)
+        {
+            // Handle invalid JSON format
+            context.Result = new BadRequestObjectResult("Exception in decryption.");
+            return;
         }
 
         await base.OnActionExecutionAsync(context, next);
@@ -106,7 +104,7 @@ public class SecureEndpointAttribute : ActionFilterAttribute
         var newStream = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
         request.Body = newStream;
         request.Body.Position = 0;
-        request.ContentType = MediaType;
+        request.ContentType = SecureEndpointShared.MediaJson;
     }
 
     /// <summary>
