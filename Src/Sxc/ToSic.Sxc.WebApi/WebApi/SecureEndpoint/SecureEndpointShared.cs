@@ -29,3 +29,19 @@ internal class SecureEndpointShared
     }
 
 }
+
+
+/// <remarks>
+/// If the data is encrypted, it would need to be required. But because we're test-deserializing this to do duck-checking, it cannot be required.
+/// See also <see cref="EncryptedData"/>
+/// </remarks>
+public class EncryptedDataRaw
+{
+    public int Version { get; init; } = 1;
+
+    public string? Data { get; init; }
+
+    public string? Key { get; init; }
+
+    public string? Iv { get; init; }
+}
