@@ -1,9 +1,8 @@
-﻿using ToSic.Sxc.Code.Razor.Sys;
-using ToSic.Sxc.Render.Sys.Specs;
+﻿using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.Cache.Sys;
 
-namespace ToSic.Sxc.Code.Razor;
+namespace ToSic.Sxc.Code.Razor.Sys;
 
 [PrivateApi("not yet public or final, WIP v20.00.0x, will have to create interface")]
 public class RazorConfiguration(RenderSpecs renderSpecs, ILog parentLog): HelperBase(parentLog, "Rzr.Config"), IRazorConfiguration
