@@ -81,3 +81,19 @@ public record CacheConfig(): ICanEstimateSize, ITimestamped
     long ITimestamped.CacheTimestamp { get; } = DateTime.Now.Ticks;
 
 }
+
+// TODO: Unfinished work
+// Try to find a way to best describe multiple configuration per elevations.
+// Then this would become the official configuration.
+// Challenges include how to best keep a simple API to set this
+// and how to best check for the best possible configuration for the current user.
+public record CacheConfigPerElevation: ICanEstimateSize
+{
+    public bool IsEnabled { get; init; }
+    public UserElevation Min { get; init; }
+    public UserElevation Max { get; init; }
+    public int Seconds { get; init; }
+
+    SizeEstimate ICanEstimateSize.EstimateSize(ILog? log)
+        => new(sizeof(bool) + sizeof(int) * 3);
+}
