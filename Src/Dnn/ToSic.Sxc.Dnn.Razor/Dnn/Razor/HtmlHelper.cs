@@ -32,6 +32,8 @@ internal class HtmlHelper(
     private DnnRazorHelper _helper;
     private HtmlHelperErrorHelper _errorHelper;
 
+    private HtmlHelperTimeKeeper TimeKeeper { get; } = new();
+
     /// <inheritdoc/>
     public IHtmlString Raw(object stringHtml)
         => stringHtml switch
@@ -54,7 +56,8 @@ internal class HtmlHelper(
         // so the ID in a cache remains the same no matter how it was called
         var normalizedPath = _page.NormalizePath(relativePath).ToLowerInvariant();
 
-        var l = Log.Fn<IHtmlString>($"{nameof(relativePath)}: '{relativePath}', {nameof(normalizedPath)}: '{normalizedPath}', {nameof(data)}: {data != null}");
+        var l = Log.Fn<IHtmlString>($"{nameof(relativePath)}: '{relativePath}', {nameof(normalizedPath)}: '{normalizedPath}', {nameof(data)}: {data != null}", timer: true);
+        var fullTime = TimeKeeper.Start(normalizedPath);
 
         // Prepare RenderSpecs with data, since it may be needed to check if caching is relevant
         // Do it like this, to avoid multiple conversions of the same data
@@ -89,9 +92,11 @@ internal class HtmlHelper(
             {
                 try
                 {
+                    fullTime.Start();
                     var asString = result.ToHtmlString();
                     writer.Write(asString); // Use Write instead of WriteLine, to not introduce any extra lines/whitespace
-
+                    fullTime.Stop();
+                    l.A($"Done rendering {normalizedPath}; Length: {asString.Length}; accumulated time for this partial: {fullTime.ElapsedMilliseconds}ms");
                     // Add to cache - should only run if no exceptions were thrown
                     cacheHelper.SaveToCacheIfEnabled(asString);
                 }
@@ -101,7 +106,8 @@ internal class HtmlHelper(
                     writer.WriteLine(nice);
                 }
             });
-            return l.Return(wrappedResult, $"will add to cache: {cacheHelper.WillAddToCache}");
+            fullTime.Stop();
+            return l.Return(wrappedResult, $"will add to cache: {cacheHelper.WillAddToCache}; accumulated time: {fullTime.ElapsedMilliseconds}ms");
         }
         catch (Exception compileException)
         {
