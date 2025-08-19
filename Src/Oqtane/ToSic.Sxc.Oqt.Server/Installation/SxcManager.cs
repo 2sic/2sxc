@@ -132,19 +132,31 @@ public class SxcManager(
 
     private bool ApplyMigrationIfNeeded(Tenant tenant, string migrationId)
     {
+        var fileName = $"{migrationId}.sql";
+        var script = sql.GetScriptFromAssembly(GetType().Assembly, fileName);
+
+        if (string.IsNullOrEmpty(script))
+        {
+            LogWarn($"2sxc {EavSystemInfo.VersionString} install: SQL script '{migrationId}.sql' do not exists as embedded resource in assembly. Skipping.");
+            return true;
+        }
+        
         if (Exists(sql, tenant, CheckMigrationHistory(migrationId)))
         {
-            LogInfo($"2sxc {EavSystemInfo.VersionString} install: Migration for version '{migrationId}' already present in history. Skipping SQL script '{migrationId}.sql'.");
+            LogWarn($"2sxc {EavSystemInfo.VersionString} install: Migration for version '{migrationId}' already present in history. Skipping SQL script '{migrationId}.sql'.");
             return true;
         }
 
-        var ok = sql.ExecuteScript(tenant, GetType().Assembly, $"{migrationId}.sql");
-        if (!ok)
+        try
+        {
+            sql.ExecuteScript(tenant, script);
+            LogInfo($"2sxc {EavSystemInfo.VersionString} install: SQL script '{migrationId}.sql' executed successfully.");
+        }
+        catch
         {
             LogError($"2sxc {EavSystemInfo.VersionString} install ERROR: SQL script '{migrationId}.sql' failed.");
             return false;
         }
-        LogInfo($"2sxc {EavSystemInfo.VersionString} install: SQL script '{migrationId}.sql' executed successfully.");
 
         var affected = sql.ExecuteNonQuery(tenant, RegisterInMigrationHistory(migrationId));
         if (affected <= 0)
