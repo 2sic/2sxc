@@ -18,16 +18,16 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[TsDynDataApp](
-	[AppId] [int] IDENTITY(1,1) NOT NULL,
-	[ZoneId] [int] NOT NULL,
-	[Name] [nvarchar](255) NOT NULL,
-	[SysSettings] [nvarchar](max) NULL,
-	[TransCreatedId] [int] NULL,
-	[TransModifiedId] [int] NULL,
-	[TransDeletedId] [int] NULL,
+    [AppId] [int] IDENTITY(1,1) NOT NULL,
+    [ZoneId] [int] NOT NULL,
+    [Name] [nvarchar](255) NOT NULL,
+    [SysSettings] [nvarchar](max) NULL,
+    [TransCreatedId] [int] NULL,
+    [TransModifiedId] [int] NULL,
+    [TransDeletedId] [int] NULL,
  CONSTRAINT [PK_TsDynDataApp] PRIMARY KEY CLUSTERED 
 (
-	[AppId] ASC
+    [AppId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
@@ -37,20 +37,20 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[TsDynDataAttribute](
-	[AttributeId] [int] IDENTITY(1,1) NOT NULL,
-	[StaticName] [nvarchar](50) NOT NULL,
-	[Type] [nvarchar](50) NOT NULL,
-	[TransCreatedId] [int] NOT NULL,
-	[TransDeletedId] [int] NULL,
-	[Guid] [uniqueidentifier] NULL,
-	[SysSettings] [nvarchar](max) NULL,
-	[ContentTypeId] [int] NOT NULL,
-	[SortOrder] [int] NOT NULL,
-	[IsTitle] [bit] NOT NULL,
-	[TransModifiedId] [int] NULL,
+    [AttributeId] [int] IDENTITY(1,1) NOT NULL,
+    [StaticName] [nvarchar](50) NOT NULL,
+    [Type] [nvarchar](50) NOT NULL,
+    [TransCreatedId] [int] NOT NULL,
+    [TransDeletedId] [int] NULL,
+    [Guid] [uniqueidentifier] NULL,
+    [SysSettings] [nvarchar](max) NULL,
+    [ContentTypeId] [int] NOT NULL,
+    [SortOrder] [int] NOT NULL,
+    [IsTitle] [bit] NOT NULL,
+    [TransModifiedId] [int] NULL,
  CONSTRAINT [PK_TsDynDataAttribute] PRIMARY KEY CLUSTERED 
 (
-	[AttributeId] ASC
+    [AttributeId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
@@ -60,10 +60,10 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[TsDynDataAttributeType](
-	[Type] [nvarchar](50) NOT NULL,
+    [Type] [nvarchar](50) NOT NULL,
  CONSTRAINT [PK_TsDynDataAttributeType] PRIMARY KEY CLUSTERED 
 (
-	[Type] ASC
+    [Type] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -73,21 +73,21 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[TsDynDataContentType](
-	[ContentTypeId] [int] IDENTITY(1,1) NOT NULL,
-	[StaticName] [nvarchar](150) NULL,
-	[Name] [nvarchar](150) NULL,
-	[Scope] [nvarchar](50) NULL,
-	[TransCreatedId] [int] NOT NULL,
-	[TransDeletedId] [int] NULL,
-	[AppId] [int] NOT NULL,
-	[InheritContentTypeId] [int] NULL,
-	[IsGlobal] [bit] NOT NULL,
-	[Json] [nvarchar](max) NULL,
-	[SysSettings] [nvarchar](max) NULL,
-	[TransModifiedId] [int] NULL,
+    [ContentTypeId] [int] IDENTITY(1,1) NOT NULL,
+    [StaticName] [nvarchar](150) NULL,
+    [Name] [nvarchar](150) NULL,
+    [Scope] [nvarchar](50) NULL,
+    [TransCreatedId] [int] NOT NULL,
+    [TransDeletedId] [int] NULL,
+    [AppId] [int] NOT NULL,
+    [InheritContentTypeId] [int] NULL,
+    [IsGlobal] [bit] NOT NULL,
+    [Json] [nvarchar](max) NULL,
+    [SysSettings] [nvarchar](max) NULL,
+    [TransModifiedId] [int] NULL,
  CONSTRAINT [PK_TsDynDataContentType] PRIMARY KEY CLUSTERED 
 (
-	[ContentTypeId] ASC
+    [ContentTypeId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
@@ -97,16 +97,16 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[TsDynDataDimension](
-	[DimensionId] [int] IDENTITY(1,1) NOT NULL,
-	[Parent] [int] NULL,
-	[Name] [nvarchar](100) NOT NULL,
-	[SystemKey] [nvarchar](100) NULL,
-	[ExternalKey] [nvarchar](100) NULL,
-	[Active] [bit] NOT NULL,
-	[ZoneId] [int] NOT NULL,
+    [DimensionId] [int] IDENTITY(1,1) NOT NULL,
+    [Parent] [int] NULL,
+    [Name] [nvarchar](100) NOT NULL,
+    [SystemKey] [nvarchar](100) NULL,
+    [ExternalKey] [nvarchar](100) NULL,
+    [Active] [bit] NOT NULL,
+    [ZoneId] [int] NOT NULL,
  CONSTRAINT [PK_TsDynDataDimension] PRIMARY KEY CLUSTERED 
 (
-	[DimensionId] ASC
+    [DimensionId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -116,26 +116,26 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[TsDynDataEntity](
-	[EntityId] [int] IDENTITY(1,1) NOT NULL,
-	[EntityGuid] [uniqueidentifier] NOT NULL,
-	[ContentTypeId] [int] NOT NULL,
-	[TargetTypeId] [int] NOT NULL,
-	[KeyNumber] [int] NULL,
-	[KeyGuid] [uniqueidentifier] NULL,
-	[KeyString] [nvarchar](100) NULL,
-	[TransCreatedId] [int] NOT NULL,
-	[TransDeletedId] [int] NULL,
-	[IsPublished] [bit] NOT NULL,
-	[PublishedEntityId] [int] NULL,
-	[TransModifiedId] [int] NOT NULL,
-	[Owner] [nvarchar](250) NULL,
-	[Json] [nvarchar](max) NULL,
-	[Version] [int] NOT NULL,
-	[AppId] [int] NOT NULL,
-	[ContentType] [nvarchar](250) NULL,
+    [EntityId] [int] IDENTITY(1,1) NOT NULL,
+    [EntityGuid] [uniqueidentifier] NOT NULL,
+    [ContentTypeId] [int] NOT NULL,
+    [TargetTypeId] [int] NOT NULL,
+    [KeyNumber] [int] NULL,
+    [KeyGuid] [uniqueidentifier] NULL,
+    [KeyString] [nvarchar](100) NULL,
+    [TransCreatedId] [int] NOT NULL,
+    [TransDeletedId] [int] NULL,
+    [IsPublished] [bit] NOT NULL,
+    [PublishedEntityId] [int] NULL,
+    [TransModifiedId] [int] NOT NULL,
+    [Owner] [nvarchar](250) NULL,
+    [Json] [nvarchar](max) NULL,
+    [Version] [int] NOT NULL,
+    [AppId] [int] NOT NULL,
+    [ContentType] [nvarchar](250) NULL,
  CONSTRAINT [PK_TsDynDataEntity] PRIMARY KEY CLUSTERED 
 (
-	[EntityId] ASC
+    [EntityId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
@@ -145,18 +145,18 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[TsDynDataHistory](
-	[HistoryId] [int] IDENTITY(1,1) NOT NULL,
-	[SourceTable] [nvarchar](250) NOT NULL,
-	[SourceId] [int] NULL,
-	[SourceGuid] [uniqueidentifier] NULL,
-	[Operation] [nchar](1) NOT NULL,
-	[Timestamp] [datetime] NOT NULL,
-	[TransactionId] [int] NULL,
-	[Json] [nvarchar](max) NULL,
-	[CJson] [varbinary](max) NULL,
+    [HistoryId] [int] IDENTITY(1,1) NOT NULL,
+    [SourceTable] [nvarchar](250) NOT NULL,
+    [SourceId] [int] NULL,
+    [SourceGuid] [uniqueidentifier] NULL,
+    [Operation] [nchar](1) NOT NULL,
+    [Timestamp] [datetime] NOT NULL,
+    [TransactionId] [int] NULL,
+    [Json] [nvarchar](max) NULL,
+    [CJson] [varbinary](max) NULL,
  CONSTRAINT [PK_TsDynDataHistory] PRIMARY KEY CLUSTERED 
 (
-	[HistoryId] ASC
+    [HistoryId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
@@ -166,15 +166,15 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[TsDynDataRelationship](
-	[AttributeId] [int] NOT NULL,
-	[ParentEntityId] [int] NOT NULL,
-	[ChildEntityId] [int] NULL,
-	[SortOrder] [int] NOT NULL,
+    [AttributeId] [int] NOT NULL,
+    [ParentEntityId] [int] NOT NULL,
+    [ChildEntityId] [int] NULL,
+    [SortOrder] [int] NOT NULL,
  CONSTRAINT [PK_TsDynDataRelationship] PRIMARY KEY CLUSTERED 
 (
-	[AttributeId] ASC,
-	[ParentEntityId] ASC,
-	[SortOrder] ASC
+    [AttributeId] ASC,
+    [ParentEntityId] ASC,
+    [SortOrder] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -184,12 +184,12 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[TsDynDataTargetType](
-	[TargetTypeId] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [nvarchar](50) NOT NULL,
-	[Description] [nvarchar](max) NOT NULL,
+    [TargetTypeId] [int] IDENTITY(1,1) NOT NULL,
+    [Name] [nvarchar](50) NOT NULL,
+    [Description] [nvarchar](max) NOT NULL,
  CONSTRAINT [PK_TsDynDataTargetType] PRIMARY KEY CLUSTERED 
 (
-	[TargetTypeId] ASC
+    [TargetTypeId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
@@ -199,12 +199,12 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[TsDynDataTransaction](
-	[TransactionId] [int] IDENTITY(1,1) NOT NULL,
-	[Timestamp] [datetime] NOT NULL,
-	[User] [nvarchar](255) NULL,
+    [TransactionId] [int] IDENTITY(1,1) NOT NULL,
+    [Timestamp] [datetime] NOT NULL,
+    [User] [nvarchar](255) NULL,
  CONSTRAINT [PK_TsDynDataTransaction] PRIMARY KEY CLUSTERED 
 (
-	[TransactionId] ASC
+    [TransactionId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -214,13 +214,13 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[TsDynDataValue](
-	[ValueId] [int] IDENTITY(1,1) NOT NULL,
-	[EntityId] [int] NOT NULL,
-	[AttributeId] [int] NOT NULL,
-	[Value] [nvarchar](max) NOT NULL,
+    [ValueId] [int] IDENTITY(1,1) NOT NULL,
+    [EntityId] [int] NOT NULL,
+    [AttributeId] [int] NOT NULL,
+    [Value] [nvarchar](max) NOT NULL,
  CONSTRAINT [PK_TsDynDataValue] PRIMARY KEY CLUSTERED 
 (
-	[ValueId] ASC
+    [ValueId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
@@ -230,13 +230,13 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[TsDynDataValueDimension](
-	[ValueId] [int] NOT NULL,
-	[DimensionId] [int] NOT NULL,
-	[ReadOnly] [bit] NOT NULL,
+    [ValueId] [int] NOT NULL,
+    [DimensionId] [int] NOT NULL,
+    [ReadOnly] [bit] NOT NULL,
  CONSTRAINT [PK_TsDynDataValueDimension] PRIMARY KEY CLUSTERED 
 (
-	[ValueId] ASC,
-	[DimensionId] ASC
+    [ValueId] ASC,
+    [DimensionId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -246,14 +246,14 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[TsDynDataZone](
-	[ZoneId] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [nvarchar](255) NOT NULL,
-	[TransCreatedId] [int] NULL,
-	[TransModifiedId] [int] NULL,
-	[TransDeletedId] [int] NULL,
+    [ZoneId] [int] IDENTITY(1,1) NOT NULL,
+    [Name] [nvarchar](255) NOT NULL,
+    [TransCreatedId] [int] NULL,
+    [TransModifiedId] [int] NULL,
+    [TransDeletedId] [int] NULL,
  CONSTRAINT [PK_TsDynDataZone] PRIMARY KEY CLUSTERED 
 (
-	[ZoneId] ASC
+    [ZoneId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -407,165 +407,165 @@ GO
 /****** Object:  Index [UQ_TsDynDataApp_Name_ZoneId]    Script Date: 15.5.2025. 13:42:08 ******/
 ALTER TABLE [dbo].[TsDynDataApp] ADD  CONSTRAINT [UQ_TsDynDataApp_Name_ZoneId] UNIQUE NONCLUSTERED 
 (
-	[Name] ASC,
-	[ZoneId] ASC
+    [Name] ASC,
+    [ZoneId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataApp_TransCreatedId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataApp_TransCreatedId] ON [dbo].[TsDynDataApp]
 (
-	[TransCreatedId] ASC
+    [TransCreatedId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataApp_TransDeletedId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataApp_TransDeletedId] ON [dbo].[TsDynDataApp]
 (
-	[TransDeletedId] ASC
+    [TransDeletedId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataApp_TransModifiedId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataApp_TransModifiedId] ON [dbo].[TsDynDataApp]
 (
-	[TransModifiedId] ASC
+    [TransModifiedId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataApp_ZoneId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataApp_ZoneId] ON [dbo].[TsDynDataApp]
 (
-	[ZoneId] ASC
+    [ZoneId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataAttribute_AttributeId_StaticName]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataAttribute_AttributeId_StaticName] ON [dbo].[TsDynDataAttribute]
 (
-	[AttributeId] ASC
+    [AttributeId] ASC
 )
 INCLUDE([StaticName]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataAttribute_ContentTypeId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataAttribute_ContentTypeId] ON [dbo].[TsDynDataAttribute]
 (
-	[ContentTypeId] ASC
+    [ContentTypeId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataAttribute_TransCreatedId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataAttribute_TransCreatedId] ON [dbo].[TsDynDataAttribute]
 (
-	[TransCreatedId] ASC
+    [TransCreatedId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataAttribute_TransDeletedId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataAttribute_TransDeletedId] ON [dbo].[TsDynDataAttribute]
 (
-	[TransDeletedId] ASC
+    [TransDeletedId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataAttribute_TransModifiedId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataAttribute_TransModifiedId] ON [dbo].[TsDynDataAttribute]
 (
-	[TransModifiedId] ASC
+    [TransModifiedId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataContentType_AppId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataContentType_AppId] ON [dbo].[TsDynDataContentType]
 (
-	[AppId] ASC
+    [AppId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataContentType_TransCreatedId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataContentType_TransCreatedId] ON [dbo].[TsDynDataContentType]
 (
-	[TransCreatedId] ASC
+    [TransCreatedId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataContentType_TransDeletedId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataContentType_TransDeletedId] ON [dbo].[TsDynDataContentType]
 (
-	[TransDeletedId] ASC
+    [TransDeletedId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataContentType_TransModifiedId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataContentType_TransModifiedId] ON [dbo].[TsDynDataContentType]
 (
-	[TransModifiedId] ASC
+    [TransModifiedId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataDimension_ZoneId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataDimension_ZoneId] ON [dbo].[TsDynDataDimension]
 (
-	[ZoneId] ASC
+    [ZoneId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataEntity_AppId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataEntity_AppId] ON [dbo].[TsDynDataEntity]
 (
-	[AppId] ASC
+    [AppId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataEntity_ContentTypeId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataEntity_ContentTypeId] ON [dbo].[TsDynDataEntity]
 (
-	[ContentTypeId] ASC
+    [ContentTypeId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataEntity_KeyNumber]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataEntity_KeyNumber] ON [dbo].[TsDynDataEntity]
 (
-	[KeyNumber] ASC
+    [KeyNumber] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataEntity_TargetTypeId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataEntity_TargetTypeId] ON [dbo].[TsDynDataEntity]
 (
-	[TargetTypeId] ASC
+    [TargetTypeId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataEntity_TransCreatedId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataEntity_TransCreatedId] ON [dbo].[TsDynDataEntity]
 (
-	[TransCreatedId] ASC
+    [TransCreatedId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataEntity_TransDeletedId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataEntity_TransDeletedId] ON [dbo].[TsDynDataEntity]
 (
-	[TransDeletedId] ASC
+    [TransDeletedId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataEntity_TransModifiedId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataEntity_TransModifiedId] ON [dbo].[TsDynDataEntity]
 (
-	[TransModifiedId] ASC
+    [TransModifiedId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataHistory_SourceGuid]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataHistory_SourceGuid] ON [dbo].[TsDynDataHistory]
 (
-	[SourceGuid] ASC
+    [SourceGuid] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataHistory_SourceId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataHistory_SourceId] ON [dbo].[TsDynDataHistory]
 (
-	[SourceId] ASC
+    [SourceId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataHistory_TransactionId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataHistory_TransactionId] ON [dbo].[TsDynDataHistory]
 (
-	[TransactionId] ASC
+    [TransactionId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataRelationship_ChildEntityId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataRelationship_ChildEntityId] ON [dbo].[TsDynDataRelationship]
 (
-	[ChildEntityId] ASC
+    [ChildEntityId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataRelationship_ParentEntityId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataRelationship_ParentEntityId] ON [dbo].[TsDynDataRelationship]
 (
-	[ParentEntityId] ASC
+    [ParentEntityId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 SET ANSI_PADDING ON
@@ -573,53 +573,53 @@ GO
 /****** Object:  Index [IX_TsDynDataTargetType_Name]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataTargetType_Name] ON [dbo].[TsDynDataTargetType]
 (
-	[Name] ASC
+    [Name] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataValue_AttributeId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataValue_AttributeId] ON [dbo].[TsDynDataValue]
 (
-	[AttributeId] ASC
+    [AttributeId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataValue_AttributeId_EntityId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataValue_AttributeId_EntityId] ON [dbo].[TsDynDataValue]
 (
-	[AttributeId] ASC,
-	[EntityId] ASC
+    [AttributeId] ASC,
+    [EntityId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataValue_EntityId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataValue_EntityId] ON [dbo].[TsDynDataValue]
 (
-	[EntityId] ASC
+    [EntityId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataValue_EntityId_AttributeId_ValueId_Include_Value]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataValue_EntityId_AttributeId_ValueId_Include_Value] ON [dbo].[TsDynDataValue]
 (
-	[EntityId] ASC,
-	[AttributeId] ASC,
-	[ValueId] ASC
+    [EntityId] ASC,
+    [AttributeId] ASC,
+    [ValueId] ASC
 )
 INCLUDE([Value]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataZone_TransCreatedId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataZone_TransCreatedId] ON [dbo].[TsDynDataZone]
 (
-	[TransCreatedId] ASC
+    [TransCreatedId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataZone_TransDeletedId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataZone_TransDeletedId] ON [dbo].[TsDynDataZone]
 (
-	[TransDeletedId] ASC
+    [TransDeletedId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_TsDynDataZone_TransModifiedId]    Script Date: 15.5.2025. 13:42:08 ******/
 CREATE NONCLUSTERED INDEX [IX_TsDynDataZone_TransModifiedId] ON [dbo].[TsDynDataZone]
 (
-	[TransModifiedId] ASC
+    [TransModifiedId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[TsDynDataAttribute] ADD  CONSTRAINT [DF_TsDynDataAttribute_ContentTypeId]  DEFAULT ((0)) FOR [ContentTypeId]
@@ -811,3 +811,68 @@ REFERENCES [dbo].[TsDynDataTransaction] ([TransactionId])
 GO
 ALTER TABLE [dbo].[TsDynDataZone] CHECK CONSTRAINT [FK_TsDynDataZone_TsDynDataTransactionModified]
 GO
+
+
+
+-- Insert rows into __EFMigrationsHistory to mark specific migrations as already applied,
+-- preventing Oqtane from running unnecessary or redundant upgrade migrations.
+-- This install script ensure that database schema 20.00.05 is up-to-date so older migrations
+-- are not required for clean install case.
+
+IF NOT EXISTS (SELECT 1 FROM __EFMigrationsHistory WHERE MigrationId = 'ToSic.Sxc.Install')
+    INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion, AppliedDate, AppliedVersion)
+    VALUES ('ToSic.Sxc.Install', '20.00.05', SYSDATETIME(), '6.1.5');
+GO
+
+IF NOT EXISTS (SELECT 1 FROM __EFMigrationsHistory WHERE MigrationId = 'ToSic.Sxc.12.00.00')
+    INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion, AppliedDate, AppliedVersion)
+    VALUES ('ToSic.Sxc.12.00.00', '20.00.05', SYSDATETIME(), '6.1.5');
+GO
+
+IF NOT EXISTS (SELECT 1 FROM __EFMigrationsHistory WHERE MigrationId = 'ToSic.Sxc.12.05.00')
+    INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion, AppliedDate, AppliedVersion)
+    VALUES ('ToSic.Sxc.12.05.00', '20.00.05', SYSDATETIME(), '6.1.5');
+GO
+
+IF NOT EXISTS (SELECT 1 FROM __EFMigrationsHistory WHERE MigrationId = 'ToSic.Sxc.13.00.00')
+    INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion, AppliedDate, AppliedVersion)
+    VALUES ('ToSic.Sxc.13.00.00', '20.00.05', SYSDATETIME(), '6.1.5');
+GO
+
+IF NOT EXISTS (SELECT 1 FROM __EFMigrationsHistory WHERE MigrationId = 'ToSic.Sxc.13.01.00')
+    INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion, AppliedDate, AppliedVersion)
+    VALUES ('ToSic.Sxc.13.01.00', '20.00.05', SYSDATETIME(), '6.1.5');
+GO
+
+IF NOT EXISTS (SELECT 1 FROM __EFMigrationsHistory WHERE MigrationId = 'ToSic.Sxc.15.00.00')
+    INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion, AppliedDate, AppliedVersion)
+    VALUES ('ToSic.Sxc.15.00.00', '20.00.05', SYSDATETIME(), '6.1.5');
+GO
+
+IF NOT EXISTS (SELECT 1 FROM __EFMigrationsHistory WHERE MigrationId = 'ToSic.Sxc.16.07.01')
+    INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion, AppliedDate, AppliedVersion)
+    VALUES ('ToSic.Sxc.16.07.01', '20.00.05', SYSDATETIME(), '6.1.5');
+GO
+
+IF NOT EXISTS (SELECT 1 FROM __EFMigrationsHistory WHERE MigrationId = 'ToSic.Sxc.18.03.00')
+    INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion, AppliedDate, AppliedVersion)
+    VALUES ('ToSic.Sxc.18.03.00', '20.00.05', SYSDATETIME(), '6.1.5');
+GO
+
+IF NOT EXISTS (SELECT 1 FROM __EFMigrationsHistory WHERE MigrationId = 'ToSic.Sxc.19.00.00')
+    INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion, AppliedDate, AppliedVersion)
+    VALUES ('ToSic.Sxc.19.00.00', '20.00.05', SYSDATETIME(), '6.1.5');
+GO
+
+IF NOT EXISTS (SELECT 1 FROM __EFMigrationsHistory WHERE MigrationId = 'ToSic.Sxc.20.00.00')
+    INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion, AppliedDate, AppliedVersion)
+    VALUES ('ToSic.Sxc.20.00.00', '20.00.05', SYSDATETIME(), '6.1.5');
+GO
+
+IF NOT EXISTS (SELECT 1 FROM __EFMigrationsHistory WHERE MigrationId = 'ToSic.Sxc.20.00.04')
+    INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion, AppliedDate, AppliedVersion)
+    VALUES ('ToSic.Sxc.20.00.04', '20.00.05', SYSDATETIME(), '6.1.5');
+GO
+
+
+
