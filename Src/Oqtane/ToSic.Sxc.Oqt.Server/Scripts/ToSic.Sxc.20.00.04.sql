@@ -1,4 +1,31 @@
--- Script to drop all tables and stored procedures in the old ToSIC EAV schema
+-- =====================================================================
+-- Update legacy SettingName values (Eav*) to new names (TsDynData*)
+-- =====================================================================
+
+UPDATE Setting
+SET SettingName = 'TsDynDataZoneId'
+WHERE SettingName = 'EavZone';
+GO
+
+UPDATE Setting
+SET SettingName = 'TsDynDataApp'
+WHERE SettingName = 'EavApp';
+GO
+
+UPDATE Setting
+SET SettingName = 'TsDynDataContentGroup'
+WHERE SettingName = 'EavContentGroup';
+GO
+
+UPDATE Setting
+SET SettingName = 'TsDynDataPreview'
+WHERE SettingName = 'EavPreview';
+GO
+
+
+-- =====================================================================
+-- Drop all tables and stored procedures in the old ToSIC EAV schema
+-- =====================================================================
 
 -- Stored procedures (no dependencies)
 DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_LogToTimeline];
