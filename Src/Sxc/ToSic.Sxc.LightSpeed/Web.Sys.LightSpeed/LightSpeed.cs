@@ -205,7 +205,7 @@ internal class LightSpeed(
 
             // This is a bit unclear - it seems that only if dependent apps are registered, will the cache be treated as valid...?
             // compare cache time-stamps
-            var dependentApp = result.Data?.DependentApps?.FirstOrDefault();
+            var dependentApp = result.Data.DependentApps?.FirstOrDefault();
             return dependentApp == null
                 ? l.ReturnNull("no dep app")
                 : l.Return(result, "found");
@@ -218,10 +218,10 @@ internal class LightSpeed(
     }
 
 
-    public bool IsEnabled => _enabled.Get(GetIsEnabled);
+    public bool IsEnabled => _enabled.Get(GetLightSpeedIsEnabled);
     private readonly GetOnce<bool> _enabled = new();
 
-    private bool GetIsEnabled()
+    private bool GetLightSpeedIsEnabled()
     {
         var l = Log.Fn<bool>();
 
@@ -244,14 +244,19 @@ internal class LightSpeed(
             if (!feat)
                 return l.ReturnFalse("disabled, feature");
 
-            l.A("before app config check");
+            var appMaybeEnabled = AppConfig.IsEnabledNullable;
+            l.A("before app config deny check");
+            if (appMaybeEnabled == false)
+                return l.ReturnFalse("disabled, app explicit");
 
-            if (!AppConfig.IsEnabled)
-                return l.ReturnFalse("disabled, app not enabled");
+            var viewMaybeEnabled = ViewConfigOrNull?.IsEnabledNullable;
+            l.A("before view config deny check");
+            if (viewMaybeEnabled == false)
+                return l.ReturnFalse("disabled, view explicit");
 
-            l.A("before view config check");
-            if (ViewConfigOrNull?.IsEnabledNullable == false)
-                return l.ReturnFalse("disabled at view explicit");
+            l.A("before view/app is enabled check - either should be true");
+            if (appMaybeEnabled != true && viewMaybeEnabled != true)
+                return l.ReturnFalse($"disabled, neither app '{appMaybeEnabled}' nor view '{viewMaybeEnabled}' enabled");
 
             l.A("before url params check");
             if (!UrlParams.CachingAllowed)

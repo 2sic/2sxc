@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Sxc.Blocks.Sys;
-using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
 internal class LightSpeedConfigHelper(ILog? parentLog) : HelperBase(parentLog, "Sxc.LsCnRd")
@@ -13,12 +12,18 @@ internal class LightSpeedConfigHelper(ILog? parentLog) : HelperBase(parentLog, "
         return l.Return(decoFromPiggyBack, $"has decorator: {decoFromPiggyBack.Entity != null!}");
     }
 
-    public LightSpeedDecorator? ViewConfigOrNull(IBlock? block) =>
-        block?.ViewIsReady != true
-            ? null
-            : block.View.Metadata
+    public LightSpeedDecorator? ViewConfigOrNull(IBlock? block)
+    {
+        var l = Log.Fn<LightSpeedDecorator?>();
+        if (block?.ViewIsReady != true)
+            return l.ReturnNull("view not ready");
+            
+        var md = block.View.Metadata
                 .OfType(LightSpeedDecorator.TypeNameId)
-                .FirstOrDefault()
-                .NullOrGetWith(viewLs => new LightSpeedDecorator(viewLs));
-
+                .FirstOrDefault();
+        
+        return md == null
+            ? l.ReturnNull($"no view metadata for LightSpeedDecorator; view: {block.View.Id}")
+            : l.Return(new(md), $"entity: {md.EntityId}; view: {block.View.Id}");
+    }
 }
