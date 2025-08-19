@@ -63,7 +63,7 @@ public partial class View : PortalModuleBase, IActionable
     /// <remarks>
     /// Time must be false, as it will be started/stopped as needed within the DoInTimer methods.
     /// </remarks>
-    protected ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"Module: '{ModuleConfiguration.ModuleTitle}'", timer: false));
+    protected ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"Module Title: '{ModuleConfiguration.ModuleTitle}'", timer: false));
     private readonly GetOnce<ILogCall> _logTimer = new();
 
     #endregion
@@ -206,6 +206,9 @@ public partial class View : PortalModuleBase, IActionable
             if (IsError && !headersAndScriptsAdded)
                 _dnnClientResources?.AddEverything(renderResult?.Features);
         });
+
+        // Mini workaround: We must briefly start the timer again, so that the Done() call will stop and propagate the value to the proper place
+        LogTimer.Timer.Start();
         LogTimer.Done(IsError ? "⚠️" : finalMessage);
         l.Done();
     }
