@@ -5,6 +5,7 @@ using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys;
 using ToSic.Eav.Context.Sys.ZoneMapper;
+using ToSic.Sxc.Cms;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sys.Locking;
 
@@ -13,11 +14,6 @@ namespace ToSic.Sxc.Dnn.Run;
 internal class DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCreatorLazy, IAppsCatalog appsCatalog)
     : ZoneMapperBase(appsCatalog, "DNN.ZoneMp", connect: [site, zoneCreatorLazy])
 {
-    /// <summary>
-    /// This is the name of the setting in the PortalSettings pointing to the zone of this portal
-    /// </summary>
-    private const string PortalSettingZoneId = "TsDynDataZoneId";
-
     /// <inheritdoc />
     /// <summary>
     /// Will get the EAV ZoneId for the current tenant
@@ -58,7 +54,7 @@ internal class DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCre
     private static int? GetExistingZoneId(int siteId)
     {
         var portalSettings = PortalController.Instance.GetPortalSettings(siteId);
-        if (portalSettings.TryGetValue(PortalSettingZoneId, out var value) && int.TryParse(value, out var zoneId))
+        if (portalSettings.TryGetValue(SiteSettingNames.SiteKeyForZoneId, out var value) && int.TryParse(value, out var zoneId))
             return zoneId;
         return null;
     }
@@ -67,7 +63,7 @@ internal class DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCre
     {
         var portalInfo = new PortalSettings(siteId);
         var newZoneId = zoneCreatorLazy.Value.Create($"{portalInfo.PortalName} (Portal {siteId})");
-        PortalController.UpdatePortalSetting(siteId, PortalSettingZoneId, newZoneId.ToString());
+        PortalController.UpdatePortalSetting(siteId, SiteSettingNames.SiteKeyForZoneId, newZoneId.ToString());
         return newZoneId;
     }
 
@@ -82,7 +78,7 @@ internal class DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCre
             .Select(p =>
             {
                 var pSettings = portalController.GetPortalSettings(p.PortalID);
-                if (!pSettings.TryGetValue(PortalSettingZoneId, out var portalZoneId)) return null;
+                if (!pSettings.TryGetValue(SiteSettingNames.SiteKeyForZoneId, out var portalZoneId)) return null;
                 if (!int.TryParse(portalZoneId, out var zid)) return null;
                 return zid == zoneId ? new PortalSettings(p) : null;
             })

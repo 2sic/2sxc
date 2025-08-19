@@ -9,8 +9,6 @@ public static class OqtConstants
     // used as PackageID in nupkg, oqtane module PackageName, wwwroot/Modules/PackageName, namespace in module.js, etc...
     public const string PackageName = "ToSic.Sxc.Oqtane";
 
-    public const string SiteKeyForZoneId = "EavZone";
-
     public const string AppRoot = "2sxc";
 
     public const string AppRootPublicBase = AppRoot + "\\{0}";
