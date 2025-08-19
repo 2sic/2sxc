@@ -162,7 +162,7 @@ public class CacheSpecsTests(ExecutionContext exCtx)
     public void TestCacheKeys()
     {
         var key = "TestKey";
-        var previousKey = new CacheKeySpecs(-1, key).Key;
+        var previousKey = new CacheKeySpecs { AppId = 1, Main = key }.Key;
 
         var spec = GetForMain(key);
         Equal(previousKey, spec.Key);
