@@ -34,18 +34,13 @@ internal class HtmlHelper(
 
     /// <inheritdoc/>
     public IHtmlString Raw(object stringHtml)
-    {
-        switch (stringHtml)
+        => stringHtml switch
         {
-            case null: return new HtmlString("");
-            case string s: return new HtmlString(s);
-            case IHtmlString h: return h;
-            default:
-                var ex = new ArgumentException($@"Html.Raw does not support type '{stringHtml.GetType().Name}'.", nameof(stringHtml));
-                _helper.Add(ex);
-                throw ex;
-        }
-    }
+            null => new HtmlString(""),
+            string s => new HtmlString(s),
+            IHtmlString h => h,
+            _ => throw _helper.Add(new ArgumentException($@"Html.Raw does not support type '{stringHtml.GetType().Name}'.", nameof(stringHtml)))
+        };
 
     /// <summary>
     /// This should duplicate the way .net core does RenderPage - and should become the standard way of doing it in 2sxc
@@ -106,7 +101,7 @@ internal class HtmlHelper(
                     writer.WriteLine(nice);
                 }
             });
-            return wrappedResult;
+            return l.Return(wrappedResult, $"will add to cache: {cacheHelper.WillAddToCache}");
         }
         catch (Exception compileException)
         {
