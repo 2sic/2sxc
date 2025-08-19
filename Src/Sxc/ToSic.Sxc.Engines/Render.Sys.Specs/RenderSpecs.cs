@@ -7,6 +7,8 @@ namespace ToSic.Sxc.Render.Sys.Specs;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public record RenderSpecs
 {
+    //public RenderSpecs() { }
+
     /// <summary>
     /// The data / view model to be used in the Razor file.
     /// </summary>

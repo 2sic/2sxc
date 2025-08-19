@@ -61,7 +61,7 @@ internal partial class DnnRazorEngine(EngineBase.Dependencies helpers, DnnRazorC
         return (writer.ToString(), exceptions);
     }
 
-    private (TextWriter writer, List<Exception> exceptions) DnnRenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
+    private (TextWriter writer, List<Exception>? exceptions) DnnRenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
     {
         ILogCall<(TextWriter writer, List<Exception> exceptions)> l = Log.Fn<(TextWriter, List<Exception>)>();
         var writer = new StringWriter();

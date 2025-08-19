@@ -18,9 +18,9 @@ partial class DnnRazorEngine
     //    l.Done();
     //}
 
-    public override RenderEngineResult Render(RenderSpecs specs)
-    {
-        var l = Log.Fn<RenderEngineResult>();
+    //public override RenderEngineResult Render(RenderSpecs specs)
+    //{
+    //    var l = Log.Fn<RenderEngineResult>();
 
         // #RemovedV20 #ModulePublish
         // 2025-06 removed for v20
@@ -28,8 +28,8 @@ partial class DnnRazorEngine
 //#pragma warning disable CS0618
 //        CustomizeData();
 //#pragma warning restore CS0618
-        return l.Return(base.Render(specs));
-    }
+    //    return l.Return(base.Render(specs));
+    //}
 
     // #RemovedV20 #ModulePublish
     //#pragma warning disable CS0618 // Type or member is obsolete
