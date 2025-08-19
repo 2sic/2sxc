@@ -19,11 +19,11 @@ public record CacheConfig(): ICanEstimateSize, ITimestamped
         foreach (var part in watch.CsvToArrayWithoutEmpty())
             switch (part.ToLowerInvariant())
             {
-                case "data" or "appdata":
+                case "data":
                     WatchAppData = true;
                     break;
                 // ReSharper disable once StringLiteralTypo
-                case "folder" or "appfolder":
+                case "folder":
                     WatchAppFolder = true;
                     break;
                 default:

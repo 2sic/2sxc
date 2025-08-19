@@ -105,11 +105,13 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
         }
     }
 
+    public bool WillAddToCache => IsEnabled && RenderPartialSpecsForRazor.CacheSpecs.IsEnabled;
+
     public bool SaveToCacheIfEnabled(string html)
     {
         var l = Log.Fn<bool>();
         var partialSpecs = RenderPartialSpecsForRazor.CacheSpecs;
-        if (!IsEnabled || !partialSpecs.IsEnabled)
+        if (!WillAddToCache)
             return l.ReturnFalse("no partial caching");
 
         l.A($"Add to cache");

@@ -12,8 +12,15 @@ using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.Cache.Sys;
 
-internal record CacheSpecs : ICacheSpecs
+internal record CacheSpecs : HelperRecordBase, ICacheSpecs
 {
+    /// <summary>
+    /// Not primary constructor, because we don't want parentLog to become a property.
+    /// </summary>
+    /// <param name="parentLog"></param>
+    public CacheSpecs(ILog parentLog) : base(parentLog, "Sxc.ChKySp")
+    { }
+
     #region Internal Bits to make it work
 
     internal required CacheKeySpecs KeySpecs { get; init; }
@@ -238,29 +245,43 @@ internal record CacheSpecs : ICacheSpecs
 
     public ICacheSpecs VaryByModel(string? names = default, NoParamOrder protector = default, bool caseSensitive = false)
     {
+        var l = Log.Fn<ICacheSpecs>(names);
         if (Model == null)
         {
             // fail silently
             // Future: option to have aggressive mode or logging - in which case we would use the ExCtx etc. to log this message
-            return this;
+            return l.Return(this, "no model, unchanged");
         }
 
         var nameList = names.CsvToArrayWithoutEmpty();
         if (!nameList.Any())
-            return this;
+            return l.Return(this, "no keys, unchanged");
 
         var all = Model
             .Where(pair => nameList.Any(n
                 => n.EqualsInsensitive(pair.Key)                    // contains key
-                   && pair.Value?.GetType().IsValueType == true     // is simple value, allowing use in cache key
+                   && IsUsefulForCacheKey(pair.Value)     // is simple value, allowing use in cache key
             ))
             .Select(p => new KeyValuePair<string, string?>(p.Key, p.Value?.ToString()))
             .OrderBy(p => p.Key, comparer: StringComparer.InvariantCultureIgnoreCase)
             .ToList();
 
-        return VaryByParamsListKvp(all!, CacheSpecConstants.ByModel, names, caseSensitive);
+        var fresh = VaryByParamsListKvp(all!, CacheSpecConstants.ByModel, names, caseSensitive);
+        return l.Return(fresh, $"updated; Model had {Model.Count}; used: {all.Count}");
     }
 
+    private static bool IsUsefulForCacheKey(object? value)
+    {
+        if (value == null)
+            return false;
+        var type = value.GetType().UnboxIfNullable();
+        return type.IsValueType
+               || type.IsPrimitive
+               || type == typeof(string)
+               || type == typeof(DateTime)
+               || type == typeof(Guid)
+               || type.IsNumeric();
+    }
 
 
     #endregion

@@ -30,6 +30,9 @@ public static class CacheSpecsExtensions
 
 
     public static ICacheSpecs AttachModel(this ICacheSpecs specs, IDictionary<string, object?>? model)
-        => ((CacheSpecs)specs) with { Model = model };
-
+    {
+        var typed = (CacheSpecs)specs;
+        var l = typed.Log.Fn<ICacheSpecs>($"hasModel: {model != null}; count: {model?.Count}");
+        return l.ReturnAsOk(typed with { Model = model });
+    }
 }

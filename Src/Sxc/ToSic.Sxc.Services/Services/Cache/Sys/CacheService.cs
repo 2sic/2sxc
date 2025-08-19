@@ -55,7 +55,7 @@ internal class CacheService(
             Main = key,
             RegionName = regionName,
         };
-        var specs = new CacheSpecs
+        var specs = new CacheSpecs(Log)
         {
             AppPathsLazy = appPathsLazy,
             AppReaders = appReaders,
