@@ -18,5 +18,5 @@ public interface IRazorConfiguration
     /// </remarks>
     string? Partial(NoParamOrder protector = default, Func<ICacheSpecs, ICacheSpecs>? cache = default);
 
-    string? PartialCache(NoParamOrder protector = default, bool useDefaults = true, int? sliding = null, string? watch = null, string? varyBy = null, string? url = null, string? model = null);
+    string? PartialCache(NoParamOrder protector = default, int? sliding = null, string? watch = null, string? varyBy = null, string? url = null, string? model = null);
 }

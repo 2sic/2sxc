@@ -13,7 +13,7 @@ public class RazorConfiguration(RenderSpecs renderSpecs, ILog parentLog): Helper
 
     public string? Partial(NoParamOrder protector = default, Func<ICacheSpecs, ICacheSpecs>? cache = default)
     {
-        if (cache != null)
+        if (cache != null && Parent != null)
             try
             {
                 var updated = cache(Parent.CacheSpecs);
@@ -30,19 +30,23 @@ public class RazorConfiguration(RenderSpecs renderSpecs, ILog parentLog): Helper
         return null;
     }
 
-    public string? PartialCache(NoParamOrder protector = default, bool useDefaults = true, int? sliding = null, string? watch = null, string? varyBy = null, string? url = null, string? model = null)
+    public string? PartialCache(NoParamOrder protector = default, int? sliding = null, string? watch = null, string? varyBy = null, string? url = null, string? model = null)
     {
+        if (Parent == null)
+            return null;
+
+        var l = Log.Fn<string?>($"{nameof(sliding)}: '{sliding}', {nameof(watch)}: '{watch}', {nameof(varyBy)}: '{varyBy}', {nameof(url)}: '{url}', {nameof(model)}: '{model}'");
         var config = new CacheConfig(
-            sliding: sliding ?? (useDefaults ? DefaultSliding : null),
-            watch: watch ?? (useDefaults ? DefaultWatch : null),
-            varyBy: varyBy ?? (useDefaults ? DefaultVaryBy : null),
-            url: url ?? (useDefaults ? DefaultUrl : null),
-            model: model ?? (useDefaults ? DefaultModel : null)
+            sliding: sliding,// ?? (useDefaults ? DefaultSliding : null),
+            watch: watch, // ?? (useDefaults ? DefaultWatch : null),
+            varyBy: varyBy, // ?? (useDefaults ? DefaultVaryBy : null),
+            url: url, // ?? (useDefaults ? DefaultUrl : null),
+            model: model // ?? (useDefaults ? DefaultModel : null)
         );
 
         Parent.CacheSpecs = config.RestoreAll(Parent.CacheSpecs);
 
-        return null;
+        return l.ReturnNull();
     }
 
     /// <summary>
@@ -59,12 +63,17 @@ public class RazorConfiguration(RenderSpecs renderSpecs, ILog parentLog): Helper
     public const string DefaultModel = "";
 
     [field: AllowNull, MaybeNull]
-    private RenderPartialSpecsWithCaching Parent
+    private RenderPartialSpecsWithCaching? Parent
     {
         get
         {
             if (field is not null)
                 return field;
+
+            // paranoid, on main entry razor it doesn't exist ATM 2025-08-19
+            if (renderSpecs?.PartialSpecs == null)
+                return null;
+
             field = (RenderPartialSpecsWithCaching)renderSpecs.PartialSpecs;
             // On first use, enable caching since it was off at first
             field.CacheSpecs = field.CacheSpecs.Enable();
