@@ -74,7 +74,9 @@ public record CacheKeySpecs
         var isMagicOverride = keySpecs.Main.StartsWith(CacheSpecConstants.PrefixForDontPrefix);
         var prefix = isMagicOverride
             ? keySpecs.Main.TrimStart('*')
-            : $"{DefaultPrefix}{(keySpecs.AppId == NoApp ? "" : Sep + "App:" + keySpecs.AppId)}{Sep}{SegmentPrefix}{keySpecs.RegionName.NullIfNoValue() ?? DefaultSegment}";
+            : DefaultPrefix +
+              (keySpecs.AppId == NoApp ? "" : Sep + "App:" + keySpecs.AppId) +
+              $"{Sep}{SegmentPrefix}{keySpecs.RegionName.NullIfNoValue() ?? DefaultSegment}{Sep}{keySpecs.Main}";
 
         return prefix;
     }
