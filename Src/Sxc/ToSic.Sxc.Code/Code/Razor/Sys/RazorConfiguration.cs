@@ -71,13 +71,12 @@ public class RazorConfiguration(RenderSpecs renderSpecs, ILog parentLog): Helper
                 return field;
 
             // paranoid, on main entry razor it doesn't exist ATM 2025-08-19
-            if (renderSpecs?.PartialSpecs == null)
+            if (renderSpecs?.PartialSpecs is not RenderPartialSpecsWithCaching typed)
                 return null;
 
-            field = (RenderPartialSpecsWithCaching)renderSpecs.PartialSpecs;
             // On first use, enable caching since it was off at first
-            field.CacheSpecs = field.CacheSpecs.Enable();
-            return field;
+            typed.CacheSpecs = typed.CacheSpecs.Enable();
+            return field = typed;
         }
     }
 }
