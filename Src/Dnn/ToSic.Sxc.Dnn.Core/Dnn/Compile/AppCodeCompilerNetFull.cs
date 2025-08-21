@@ -109,7 +109,7 @@ internal class AppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironm
                 GenerateInMemory = false,
                 GenerateExecutable = false,
                 IncludeDebugInformation = true,
-                CompilerOptions = $"/optimize- /warnaserror- {DnnRoslynConstants.CompilerOptionLanguageVersion} {DnnRoslynConstants.DefaultDisableWarnings}",
+                CompilerOptions = DnnRoslynConstants.CompilerOptions,
             };
 
         // Add all referenced assemblies

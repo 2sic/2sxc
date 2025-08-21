@@ -288,8 +288,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
                 GenerateInMemory = true,
                 IncludeDebugInformation = true,
                 TreatWarningsAsErrors = false,
-
-                CompilerOptions = $"{DnnRoslynConstants.CompilerOptionLanguageVersion} {DnnRoslynConstants.DefaultDisableWarnings}",
+                CompilerOptions = DnnRoslynConstants.CompilerOptions,
             };
             return compilerParameters;
         }
@@ -309,7 +308,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
                 GenerateInMemory = true,
                 IncludeDebugInformation = true,
                 TreatWarningsAsErrors = false,
-                CompilerOptions = $"{DnnRoslynConstants.CompilerOptionLanguageVersion} {DnnRoslynConstants.DefaultDisableWarnings}",
+                CompilerOptions = DnnRoslynConstants.CompilerOptions,
             };
             lTimer.Done();
 

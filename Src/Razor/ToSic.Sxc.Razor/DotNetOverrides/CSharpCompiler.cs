@@ -221,7 +221,7 @@ internal class CSharpCompiler
         if (string.IsNullOrEmpty(dependencyContextOptions.LanguageVersion))
         {
             // If the user does not specify a LanguageVersion, assume CSharp 8.0. This matches the language version Razor 3.0 targets by default.
-            parseOptions = parseOptions.WithLanguageVersion(LanguageVersion.CSharp8);
+            parseOptions = parseOptions.WithLanguageVersion(LanguageVersion);
         }
         else if (LanguageVersionFacts.TryParse(dependencyContextOptions.LanguageVersion, out var languageVersion))
         {
@@ -234,4 +234,10 @@ internal class CSharpCompiler
 
         return parseOptions;
     }
+
+    /// <summary>
+    /// Specifies the C# language version to use during Roslyn compilation.
+    /// The "Preview" version allows the use of the latest language features.
+    /// </summary>
+    private static readonly LanguageVersion LanguageVersion = Enum.TryParse<LanguageVersion>(RoslynConstants.LanguageVersion, out var languageVersion) ? languageVersion : LanguageVersion.Default;
 }
