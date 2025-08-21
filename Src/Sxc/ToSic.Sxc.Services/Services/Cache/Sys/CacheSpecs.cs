@@ -21,9 +21,6 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
 
     internal required CacheContextTools CacheContextTools { get; init; }
 
-    [field: AllowNull, MaybeNull]
-    internal CacheConfigToPolicyMaker C2Pm => field ??= new(CacheContextTools);
-
     internal required CacheKeySpecs KeySpecs { get; init; }
 
     public CacheKeyConfig KeyConfiguration { get; init; } = new();
@@ -35,7 +32,7 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
     public IPolicyMaker PolicyMaker
     {
         // Recreate whenever it is null or was reset previously
-        get => field ??= C2Pm.ReplayConfig(CacheContextTools.BasePolicyMaker, KeyConfiguration, WriteConfiguration);
+        get => field ??= new CacheConfigToPolicyMaker(CacheContextTools).ReplayConfig(CacheContextTools.BasePolicyMaker, KeyConfiguration, WriteConfiguration);
         internal init;
     }
 
@@ -55,7 +52,8 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
     public ICacheSpecs Disable(NoParamOrder protector = default, UserElevation minElevation = default, UserElevation maxElevation = default)
     {
         // If not specified, for all, or within the lowest and highest elevation, then disable
-        if (minElevation is UserElevation.Unknown or UserElevation.Any or UserElevation.Anonymous && maxElevation is UserElevation.Unknown or UserElevation.Any or UserElevation.SystemAdmin)
+        if (minElevation is UserElevation.Unknown or UserElevation.Any or UserElevation.Anonymous
+            && maxElevation is UserElevation.Unknown or UserElevation.Any or UserElevation.SystemAdmin)
             return AllDisabled();
 
         // Create a list of all elevations which should be disabled

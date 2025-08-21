@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Services.Cache.Sys;
 /// <summary>
 /// Converts cache configuration to cache-policy maker.
 /// </summary>
-internal class CacheConfigToPolicyMaker(CacheContextTools CacheContextTools)
+internal class CacheConfigToPolicyMaker(CacheContextTools cacheContextTools)
 {
     internal IPolicyMaker ReplayConfig(IPolicyMaker policyMaker, CacheKeyConfig keyConfig, CacheWriteConfig writeConfig)
     {
@@ -18,7 +18,6 @@ internal class CacheConfigToPolicyMaker(CacheContextTools CacheContextTools)
         policyMaker = ApplyWatchAppData(policyMaker, writeConfig);
         policyMaker = ApplyWatchAppFolder(policyMaker, writeConfig);
 
-
         return policyMaker;
     }
 
@@ -26,23 +25,23 @@ internal class CacheConfigToPolicyMaker(CacheContextTools CacheContextTools)
 
     private IPolicyMaker ApplyWatchAppData(IPolicyMaker policyMaker, CacheWriteConfig keyConfig)
     {
-        return policyMaker.WatchNotifyKeys([CacheContextTools.AppReader.GetCache()]);
+        return policyMaker.WatchNotifyKeys([cacheContextTools.AppReader.GetCache()]);
     }
 
     private IPolicyMaker ApplyWatchAppFolder(IPolicyMaker policyMaker, CacheWriteConfig keyConfig)
     {
         if (!keyConfig.WatchAppFolder)
             return policyMaker;
-        var appPaths = CacheContextTools.AppPathsLazy.New().Get(CacheContextTools.AppReader, CacheContextTools.Site);
+        var appPaths = cacheContextTools.AppPathsLazy.New().Get(cacheContextTools.AppReader, cacheContextTools.Site);
         return policyMaker.WatchFolders(new Dictionary<string, bool>
         {
             [appPaths.PhysicalPath] = keyConfig.WatchAppSubfolders
         });
     }
 
-    internal IPolicyMaker ApplySlidingExpiration(IPolicyMaker policyMaker, CacheKeyConfig keyConfig)
+    private IPolicyMaker ApplySlidingExpiration(IPolicyMaker policyMaker, CacheKeyConfig keyConfig)
     {
-        var slidingAny = keyConfig.SecondsFor(CacheContextTools.UserElevation);
+        var slidingAny = keyConfig.SecondsFor(cacheContextTools.UserElevation);
         return slidingAny > 0
             ? policyMaker.SetSlidingExpiration(slidingAny)
             : policyMaker;
