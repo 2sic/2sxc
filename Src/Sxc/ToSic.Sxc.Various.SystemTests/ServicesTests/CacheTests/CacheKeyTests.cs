@@ -53,7 +53,7 @@ public class CacheKeyTests
             { "A", "AVal" },
             { "C", "CVal" }
         };
-        var resultDic1 = CacheKeySpecs.GetVaryByOfDic(dic);
+        var resultDic1 = CacheKeyGenerator.GetVaryByOfDic(dic);
         Equal(expected, resultDic1);
 
         var dic2 = new Dictionary<string, string>
@@ -62,7 +62,7 @@ public class CacheKeyTests
             { "A", "AVal" },
             { "B", "BVal" }
         };
-        var resultDic2 = CacheKeySpecs.GetVaryByOfDic(dic2);
+        var resultDic2 = CacheKeyGenerator.GetVaryByOfDic(dic2);
         Equal(expected, resultDic2);
         Equal(resultDic1, resultDic2);
 

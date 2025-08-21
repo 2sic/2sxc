@@ -49,11 +49,11 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
     };
 
     [field: AllowNull, MaybeNull]
-    private ICacheSpecs SettingsSpecs => field
+    private ICacheSpecs CacheSpecsForSettings => field
         ??= CacheSvc.CreateSpecs(CacheSpecConstants.PrefixForDontPrefix + OutputCacheKeys.PartialSettingsKey(appId, normalizedPath));
 
-    private CacheConfig? CacheSpecsConfig => _cacheSpecsConfig.Get(() => CacheSvc.Get<CacheConfig>(SettingsSpecs));
-    private readonly GetOnce<CacheConfig?> _cacheSpecsConfig = new();
+    private CacheKeyConfig? CacheSpecsConfig => _cacheSpecsConfig.Get(() => CacheSvc.Get<CacheKeyConfig>(CacheSpecsForSettings));
+    private readonly GetOnce<CacheKeyConfig?> _cacheSpecsConfig = new();
 
     private ICacheSpecs? GetSpecsBasedOnSettings()
     {
@@ -84,8 +84,8 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
             return AttachListenerAndExit("no config");
         var user = exCtx.GetState<ICmsContext>().User;
         var elevation = user.GetElevation();
-        if (!elevation.IsForAllOrInRangeOfConfig(config))
-            return AttachListenerAndExit($"user elevation '{elevation.ToString()}' in cache-disabled range {config.MinDisabledElevation.ToString()} and {config.MaxDisabledElevation.ToString()}, ignore cache.");
+        if (!config.IsEnabledFor(elevation))
+            return AttachListenerAndExit($"user elevation '{elevation.ToString()}' not enabled, ignore cache.");
 
         var specsBasedOnSettings = GetSpecsBasedOnSettings();
         if (specsBasedOnSettings == null)
@@ -105,17 +105,17 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
         }
     }
 
-    public bool WillAddToCache => IsEnabled && RenderPartialSpecsForRazor.CacheSpecs.IsEnabled;
+    public bool IsFullyEnabled => IsEnabled && RenderPartialSpecsForRazor.CacheSpecs.IsEnabled;
 
     public bool SaveToCacheIfEnabled(string html)
     {
         var l = Log.Fn<bool>();
-        var partialSpecs = RenderPartialSpecsForRazor.CacheSpecs;
-        if (!WillAddToCache)
+        var partialRenderSpecs = RenderPartialSpecsForRazor.CacheSpecs;
+        if (!IsFullyEnabled)
             return l.ReturnFalse("no partial caching");
 
         l.A($"Add to cache");
-        CacheSvc.Set(partialSpecs, new OutputCacheItem((Listener ?? new RenderResult()) with 
+        CacheSvc.Set(partialRenderSpecs, new OutputCacheItem((Listener ?? new RenderResult()) with 
         {
             AppId = appId,
             Html = html,
@@ -131,13 +131,15 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
 
         // also add the configuration to the cache, so it can decide which specs to use next time
         var storedConfig = CacheSpecsConfig;
-        var newConfig = partialSpecs.GetConfig();
+        var newConfig = partialRenderSpecs.GetConfig();
         if (storedConfig == newConfig)
             return l.ReturnTrue("Saved to cache; config unchanged"); // only update cached config if it changed
 
-        // If the config changed, we need to merge it with the existing config
-        var configSpecs = SettingsSpecs.MergePolicy(partialSpecs);
-        CacheSvc.Set(configSpecs, partialSpecs.GetConfig());
+        // If the config changed, we need to
+        // - create fresh settings specs which will be persisted with the same policy as the data we just saved
+        // - save the config for the settings
+        var newCacheSpecsForSettings = CacheSpecsForSettings.WithPolicyOf(partialRenderSpecs);
+        CacheSvc.Set(newCacheSpecsForSettings, newConfig);
         return l.ReturnTrue("Saved to cache, config updated");
     }
 
@@ -147,14 +149,6 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
     public Services.Page.Sys.PageService PageService =>
         field ??= (Services.Page.Sys.PageService)exCtx.GetService<Services.IPageService>(reuse: true);
     public RenderResult? Listener { get; set; }
-
-
-    //public bool ReplayCachedChanges(IRenderResult cached)
-    //{
-    //    var l = Log.Fn<bool>();
-    //    PageService.ReplayCachedChanges((RenderResult)cached);
-    //    return l.ReturnTrue("activated");
-    //}
 
     #endregion
 }

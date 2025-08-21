@@ -107,7 +107,7 @@ internal class HtmlHelper(
                 }
             });
             fullTime.Stop();
-            return l.Return(wrappedResult, $"will add to cache: {cacheHelper.WillAddToCache}; accumulated time: {fullTime.ElapsedMilliseconds}ms");
+            return l.Return(wrappedResult, $"will add to cache: {cacheHelper.IsFullyEnabled}; accumulated time: {fullTime.ElapsedMilliseconds}ms");
         }
         catch (Exception compileException)
         {

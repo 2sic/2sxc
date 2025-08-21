@@ -3,7 +3,7 @@
 /// <summary>
 /// Describes a cache configuration for named parameters.
 /// </summary>
-public record CacheConfigByNamed
+public record CacheKeyConfigNamed
 {
     public required string? Names { get; init; }
     public required bool CaseSensitive { get; init; }

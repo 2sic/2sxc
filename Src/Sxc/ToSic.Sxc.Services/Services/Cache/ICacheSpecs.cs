@@ -121,7 +121,7 @@ public interface ICacheSpecs
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    internal CacheConfig Configuration { get; }
+    internal CacheKeyConfig KeyConfiguration { get; }
 
     /// <summary>
     /// Vary the cache by a specific name and value.
@@ -138,11 +138,11 @@ public interface ICacheSpecs
     /// </summary>
     ICacheSpecs VaryByModule();
 
-    /// <summary>
-    /// Vary the cache by module, so that each module has its own cache.
-    /// </summary>
-    /// <param name="id">Module id to use</param>
-    ICacheSpecs VaryByModule(int id);
+    ///// <summary>
+    ///// Vary the cache by module, so that each module has its own cache.
+    ///// </summary>
+    ///// <param name="id">Module id to use</param>
+    //ICacheSpecs VaryByModule(int id);
 
     // Note: I don't think there is great value in providing ICms... overloads, so comment out to prevent next person from creating them again
     ///// <summary>
@@ -157,13 +157,13 @@ public interface ICacheSpecs
     /// <returns></returns>
     ICacheSpecs VaryByPage();
 
-    /// <summary>
-    /// Vary the cache by page, so that each page has its own cache.
-    /// By default, it will take the current page, but you can optionally specify a custom page or ID.
-    /// </summary>
-    /// <param name="id">page id to use</param>
-    /// <returns></returns>
-    ICacheSpecs VaryByPage(int id);
+    ///// <summary>
+    ///// Vary the cache by page, so that each page has its own cache.
+    ///// By default, it will take the current page, but you can optionally specify a custom page or ID.
+    ///// </summary>
+    ///// <param name="id">page id to use</param>
+    ///// <returns></returns>
+    //ICacheSpecs VaryByPage(int id);
 
     // Note: I don't think there is great value in providing ICms... overloads, so comment out to prevent next person from creating them again
     ///// <summary>
@@ -180,12 +180,12 @@ public interface ICacheSpecs
     /// <returns></returns>
     ICacheSpecs VaryByUser();
 
-    /// <summary>
-    /// Vary the cache by user, so that each user has its own cache.
-    /// </summary>
-    /// <param name="id">User id to use</param>
-    /// <returns></returns>
-    ICacheSpecs VaryByUser(int id);
+    ///// <summary>
+    ///// Vary the cache by user, so that each user has its own cache.
+    ///// </summary>
+    ///// <param name="id">User id to use</param>
+    ///// <returns></returns>
+    //ICacheSpecs VaryByUser(int id);
 
     // Note: I don't think there is great value in providing ICms... overloads, so comment out to prevent next person from creating them again
     ///// <summary>

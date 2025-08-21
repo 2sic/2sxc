@@ -55,14 +55,17 @@ internal class CacheService(
             Main = key,
             RegionName = regionName,
         };
-        var specs = new CacheSpecs(Log)
+        var cacheContextTools = new CacheContextTools
         {
             AppPathsLazy = appPathsLazy,
-            AppReaders = appReaders,
-            IsEnabled = true,
             ExCtx = ExCtx,
+            BasePolicyMaker = cache.NewPolicyMaker(),
+        };
+        var specs = new CacheSpecs(Log)
+        {
+            CacheContextTools = cacheContextTools,
+            IsEnabled = true,
             KeySpecs = keySpecs,
-            PolicyMaker = cache.NewPolicyMaker(),
         };
         return l.Return(specs);
     }

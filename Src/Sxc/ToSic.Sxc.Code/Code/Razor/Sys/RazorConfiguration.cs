@@ -36,33 +36,14 @@ public class RazorConfiguration(RenderSpecs renderSpecs, ILog parentLog): Helper
             return null;
 
         var l = Log.Fn<string?>($"{nameof(sliding)}: '{sliding}', {nameof(watch)}: '{watch}', {nameof(varyBy)}: '{varyBy}', {nameof(url)}: '{url}', {nameof(model)}: '{model}'");
-        var config = new CacheConfig(
-            sliding: sliding,// ?? (useDefaults ? DefaultSliding : null),
-            watch: watch, // ?? (useDefaults ? DefaultWatch : null),
-            varyBy: varyBy, // ?? (useDefaults ? DefaultVaryBy : null),
-            url: url, // ?? (useDefaults ? DefaultUrl : null),
-            model: model // ?? (useDefaults ? DefaultModel : null)
-        );
+        var config = new CacheKeyConfig(sliding: sliding, varyBy: varyBy, url: url, model: model);
+        var writeConfig = new CacheWriteConfig(watch: watch);
 
-        Parent.CacheSpecs = config.RestoreAll(Parent.CacheSpecs);
+        Parent.CacheSpecs = Parent.CacheSpecs.RestoreAll(config, writeConfig);
 
         return l.ReturnNull();
     }
 
-    /// <summary>
-    /// Default value for sliding cache duration in seconds (5 minutes). Used as fallback when `useDefaults` is true.
-    /// </summary>
-    public const int DefaultSliding = 300;
-
-    public const string DefaultWatch = "data,folder";
-
-    public const string DefaultVaryBy = "page,module,user";
-
-    public const string DefaultUrl = "";
-
-    public const string DefaultModel = "";
-
-    [field: AllowNull, MaybeNull]
     private RenderPartialSpecsWithCaching? Parent
     {
         get

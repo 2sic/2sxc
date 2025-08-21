@@ -1,8 +1,4 @@
-﻿using System.Text;
-using ToSic.Sys.Utils;
-using static ToSic.Sxc.Services.Cache.Sys.CacheServiceConstants;
-
-namespace ToSic.Sxc.Services.Cache.Sys;
+﻿namespace ToSic.Sxc.Services.Cache.Sys;
 
 /// <summary>
 /// Note: Internal
@@ -29,7 +25,7 @@ public record CacheKeySpecs
     [field: AllowNull, MaybeNull]
     public string Key
     {
-        get => field ??= GetKey(this);
+        get => field ??= CacheKeyGenerator.GetKey(this);
         init;
     }
 
@@ -39,62 +35,21 @@ public record CacheKeySpecs
     /// <returns></returns>
     public override string ToString() => Key;
 
-    /// <summary>
-    /// Generate the key according to specs.
-    /// </summary>
-    /// <exception cref="ArgumentException"></exception>
-    private static string GetKey(CacheKeySpecs keySpecs)
+    public CacheKeySpecs VaryBy(string name, string value, bool caseSensitive)
     {
-        // Make sure the Main key (prefix) is not empty
-        if (string.IsNullOrWhiteSpace(keySpecs.Main))
-            throw new ArgumentException(@"Key must not be empty", nameof(keySpecs.Main));
+        var varyByName = "VaryBy" + name;
+        var varyByKey = caseSensitive ? varyByName : varyByName.ToLowerInvariant();
+        var valueToUse = caseSensitive ? value : value.ToLowerInvariant();
 
-        // Prevent accidental adding of the prefix/segment multiple times
-        var mainKey = GetBestKeyBase(keySpecs);
+        var newDic = new Dictionary<string, string>(VaryByDic ?? [], StringComparer.InvariantCultureIgnoreCase)
+        {
+            [varyByKey] = valueToUse
+        };
 
-        // If no additional keys are specified, exit early.
-        if (keySpecs.VaryByDic == null || keySpecs.VaryByDic.Count == 0)
-            return mainKey;
-
-        // If there are no new keys, or they are already in the main key, exit early.
-        var varyBy = GetVaryByOfDic(keySpecs.VaryByDic);
-        if (string.IsNullOrWhiteSpace(varyBy) || mainKey.EndsWith(varyBy))
-            return mainKey;
-
-        // Combine and return.
-        return $"{mainKey}{varyBy}";
-    }
-
-    private static string GetBestKeyBase(CacheKeySpecs keySpecs)
-    {
-        // Prevent accidental adding of the prefix/segment multiple times
-        if (keySpecs.Main.StartsWith(DefaultPrefix))
-            return keySpecs.Main;
-
-        var isMagicOverride = keySpecs.Main.StartsWith(CacheSpecConstants.PrefixForDontPrefix);
-        var prefix = isMagicOverride
-            ? keySpecs.Main.TrimStart('*')
-            : DefaultPrefix +
-              (keySpecs.AppId == NoApp ? "" : Sep + "App:" + keySpecs.AppId) +
-              $"{Sep}{SegmentPrefix}{keySpecs.RegionName.NullIfNoValue() ?? DefaultSegment}{Sep}{keySpecs.Main}";
-
-        return prefix;
-    }
-
-    /// <summary>
-    /// Generate string containing all parameters which should be included in the cache key.
-    /// </summary>
-    internal static string GetVaryByOfDic(Dictionary<string, string> dic)
-    {
-        // Keys must be ordered A-Z so that they are the same, no mater the order of adding
-        var ordered = dic
-            .OrderBy(p => p.Key, comparer: StringComparer.InvariantCultureIgnoreCase)
-            .ThenBy(p => p.Value, comparer: StringComparer.InvariantCultureIgnoreCase)
-            .ToList();
-
-        var sb = new StringBuilder();
-        foreach (var pair in ordered)
-            sb.Append($"{Sep}{pair.Key}={pair.Value}");
-        return sb.ToString();
+        return this with
+        {
+            Key = null! /* requires reset */,
+            VaryByDic = newDic
+        };
     }
 }

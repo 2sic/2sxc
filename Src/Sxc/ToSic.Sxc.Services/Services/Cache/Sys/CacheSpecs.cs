@@ -1,11 +1,7 @@
 ﻿using System.Collections.Specialized;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.AppReader.Sys;
-using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Context.Sys;
-using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Caching.Policies;
 using ToSic.Sys.Utils;
@@ -23,21 +19,25 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
 
     #region Internal Bits to make it work
 
-    internal required CacheKeySpecs KeySpecs { get; init; }
+    internal required CacheContextTools CacheContextTools { get; init; }
 
     [field: AllowNull, MaybeNull]
-    internal required IExecutionContext ExCtx
-    {
-        get => field ?? throw new NullReferenceException($"{nameof(CacheSpecs)}.{nameof(ExCtx)} should never be null at runtime, only during unit tests. Avoid test on aspects which need this.");
-        init;
-    }
+    internal CacheConfigToPolicyMaker C2Pm => field ??= new(CacheContextTools);
 
-    internal required LazySvc<IAppReaderFactory> AppReaders { get; init; }
+    internal required CacheKeySpecs KeySpecs { get; init; }
 
-    internal required Generator<IAppPathsMicroSvc> AppPathsLazy { get; init; }
+    public CacheKeyConfig KeyConfiguration { get; init; } = new();
+
+    public CacheWriteConfig WriteConfiguration { get; init; } = new();
 
     // Note: actually internal...
-    public required IPolicyMaker PolicyMaker { get; internal init; }
+    [field: AllowNull, MaybeNull]
+    public IPolicyMaker PolicyMaker
+    {
+        // Recreate whenever it is null or was reset previously
+        get => field ??= C2Pm.ReplayConfig(CacheContextTools.BasePolicyMaker, KeyConfiguration, WriteConfiguration);
+        internal init;
+    }
 
     #endregion
 
@@ -54,39 +54,52 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
 
     public ICacheSpecs Disable(NoParamOrder protector = default, UserElevation minElevation = default, UserElevation maxElevation = default)
     {
-        // if for all, or not specified, then disable
-        if (minElevation == default && maxElevation == default)
+        // If not specified, for all, or within the lowest and highest elevation, then disable
+        if (minElevation is UserElevation.Unknown or UserElevation.Any or UserElevation.Anonymous && maxElevation is UserElevation.Unknown or UserElevation.Any or UserElevation.SystemAdmin)
             return AllDisabled();
 
-        // if no user, then disable
-        var user = ExCtx.GetState<ICmsContext>()?.User;
-        if (user == null)
-            return AllDisabled();
+        // Create a list of all elevations which should be disabled
+        var listToDisable = Enum.GetValues(typeof(UserElevation))
+            .Cast<UserElevation>()
+            .Where(e => e <= minElevation && e >= maxElevation)
+            .ToList();
+
+        var toUpdate = new Dictionary<UserElevation, int>(KeyConfiguration.ForElevation);
+        foreach (var elevation in listToDisable)
+        {
+            toUpdate[elevation] = CacheKeyConfig.Disabled;
+        }
 
         // if user elevation is in range, then disable
-        var elevation = user.GetElevation();
-        var isDisabled = elevation.IsForAllOrInRange(minElevation, maxElevation);
+        var userElevation = CacheContextTools.UserElevation;
+        var isDisabled = userElevation.IsForAllOrInRange(minElevation, maxElevation);
 
         return this with
         {
             IsEnabled = !isDisabled,
-            Configuration = Configuration with
+            KeyConfiguration = KeyConfiguration with
             {
-                MinDisabledElevation = minElevation > UserElevation.Unknown ? minElevation : Configuration.MinDisabledElevation,
-                MaxDisabledElevation = maxElevation > UserElevation.Unknown ? maxElevation : Configuration.MaxDisabledElevation
+                ForElevation = toUpdate,
             }
         };
 
-        ICacheSpecs AllDisabled() => this with { IsEnabled = false, Configuration = Configuration with { MinDisabledElevation = UserElevation.Unknown, MaxDisabledElevation = UserElevation.Unknown } };
+        ICacheSpecs AllDisabled() => this with
+        {
+            IsEnabled = false,
+            KeyConfiguration = KeyConfiguration with
+            {
+                ForElevation = new() { [UserElevation.Any] = CacheKeyConfig.Disabled },
+            }
+        };
     }
 
     public ICacheSpecs Enable()
         => this with
         {
             IsEnabled = true,
-            Configuration = Configuration with
+            KeyConfiguration = KeyConfiguration with
             {
-                MinDisabledElevation = UserElevation.Unknown, MaxDisabledElevation = UserElevation.Unknown
+                ForElevation = new() { [UserElevation.Any] = 0 },
             }
         };
 
@@ -96,67 +109,61 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
     #region Time Absolute / Sliding
 
     public ICacheSpecs SetAbsoluteExpiration(DateTimeOffset absoluteExpiration) 
-        => this with { PolicyMaker = PolicyMaker.SetAbsoluteExpiration(absoluteExpiration) };
+        => this with
+        {
+            WriteConfiguration = WriteConfiguration with { AbsoluteExpiration = absoluteExpiration },
+            PolicyMaker = null!,
+        };
 
-    public ICacheSpecs SetSlidingExpiration(TimeSpan? timeSpan = null, NoParamOrder protector = default,
-        int? seconds = null)
-        => seconds == null
-            ? this with
-            {
-                PolicyMaker = PolicyMaker.SetSlidingExpiration(timeSpan ?? throw new ArgumentException("no time specified")),
-                Configuration = Configuration with { Sliding = (int)timeSpan.Value.TotalSeconds }
-            }
-            : this with
-            {
-                PolicyMaker = PolicyMaker.SetSlidingExpiration(seconds.Value),
-                Configuration = Configuration with { Sliding = seconds.Value }
-            };
-           
+    public ICacheSpecs SetSlidingExpiration(TimeSpan? timeSpan = null, NoParamOrder protector = default, int? seconds = null)
+    {
+        var newConfig = seconds == null
+            ? KeyConfiguration.SetElevation(UserElevation.Any, (int)(timeSpan ?? throw new ArgumentException("no time specified")).TotalSeconds)
+            : KeyConfiguration.SetElevation(UserElevation.Any, seconds.Value);
+
+        return this with
+        {
+            KeyConfiguration = newConfig,
+            PolicyMaker = null!,
+        };
+
+    }
 
     #endregion
 
     #region Watch Files / Folders - not yet on the interface, since the standard for paths is not final (eg. full path, relative path, etc.)
 
-    public ICacheSpecs WatchFile(string filePath)
-        => this with { PolicyMaker = PolicyMaker.WatchFiles([filePath]) };
+    //public ICacheSpecs WatchFile(string filePath)
+    //    => this with { PolicyMaker = PolicyMaker.WatchFiles([filePath]) };
 
-    public ICacheSpecs WatchFiles(IEnumerable<string> filePaths)
-        => this with { PolicyMaker = PolicyMaker.WatchFiles([..filePaths]) };
+    //public ICacheSpecs WatchFiles(IEnumerable<string> filePaths)
+    //    => this with { PolicyMaker = PolicyMaker.WatchFiles([..filePaths]) };
 
-    public ICacheSpecs WatchFolder(string folderPath, bool watchSubfolders = false)
-        => this with { PolicyMaker = PolicyMaker.WatchFolders(new Dictionary<string, bool> { { folderPath, watchSubfolders } }) };
+    //public ICacheSpecs WatchFolder(string folderPath, bool watchSubfolders = false)
+    //    => this with { PolicyMaker = PolicyMaker.WatchFolders(new Dictionary<string, bool> { { folderPath, watchSubfolders } }) };
 
-    public ICacheSpecs WatchFolders(IDictionary<string, bool> folderPaths)
-        => this with { PolicyMaker = PolicyMaker.WatchFolders(folderPaths) };
+    //public ICacheSpecs WatchFolders(IDictionary<string, bool> folderPaths)
+    //    => this with { PolicyMaker = PolicyMaker.WatchFolders(folderPaths) };
+
+    //public ICacheSpecs WatchCacheKeys(IEnumerable<string> cacheKeys)
+    //    => this with { PolicyMaker = PolicyMaker.WatchCacheKeys(cacheKeys) };
 
     #endregion
 
-    public ICacheSpecs WatchCacheKeys(IEnumerable<string> cacheKeys)
-        => this with { PolicyMaker = PolicyMaker.WatchCacheKeys(cacheKeys) };
 
-
-    public ICacheSpecs WatchAppData(NoParamOrder protector = default)
-        => this with
+    public ICacheSpecs WatchAppData(NoParamOrder protector = default) =>
+        this with
         {
-            PolicyMaker = PolicyMaker.WatchNotifyKeys([AppReader.GetCache()]),
-            Configuration = Configuration with { WatchAppData = true, }
+            PolicyMaker = null!,
+            WriteConfiguration = WriteConfiguration with { WatchAppData = true, },
         };
 
-    [field: AllowNull, MaybeNull]
-    private IAppReader AppReader => field ??= ExCtx.GetState<IAppReader>();
-
-    public ICacheSpecs WatchAppFolder(NoParamOrder protector = default, bool? withSubfolders = true)
-    {
-        var appPaths = AppPathsLazy.New().Get(AppReader, ExCtx.GetState<IContextOfBlock>()?.Site);
-        return this with
+    public ICacheSpecs WatchAppFolder(NoParamOrder protector = default, bool? withSubfolders = default) =>
+        this with
         {
-            PolicyMaker = PolicyMaker.WatchFolders(new Dictionary<string, bool>
-            {
-                [appPaths.PhysicalPath] = withSubfolders ?? true
-            }),
-            Configuration = Configuration with { WatchAppFolder = true, }
+            PolicyMaker = null!,
+            WriteConfiguration = WriteConfiguration with { WatchAppFolder = true, WatchAppSubfolders = withSubfolders ?? true },
         };
-    }
 
     #region Vary By Value
 
@@ -166,26 +173,12 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
     public ICacheSpecs VaryBy(string name, string value, NoParamOrder protector = default, bool caseSensitive = false)
         => VaryByInternal(name, value, protector, caseSensitive);
 
-    private ICacheSpecs VaryByInternal(string name, string value, NoParamOrder protector = default, bool caseSensitive = false, string? keysForRestore = null)
-    {
-        var varyByName = "VaryBy" + name;
-        var varyByKey = caseSensitive ? varyByName : varyByName.ToLowerInvariant();
-        var valueToUse = caseSensitive ? value : value.ToLowerInvariant();
-
-        var newDic = new Dictionary<string, string>(KeySpecs.VaryByDic ?? [], StringComparer.InvariantCultureIgnoreCase)
+    private ICacheSpecs VaryByInternal(string name, string value, NoParamOrder protector = default, bool caseSensitive = false, string? keysForRestore = null) =>
+        this with
         {
-            [varyByKey] = valueToUse
+            KeySpecs = KeySpecs.VaryBy(name, value, caseSensitive),
+            KeyConfiguration = KeyConfiguration.Updated(name, keysForRestore, caseSensitive),
         };
-
-        var newSpecs = this with
-        {
-            KeySpecs = KeySpecs with { Key = null! /* requires reset */, VaryByDic = newDic },
-            Configuration = Configuration.Updated(name, keysForRestore, caseSensitive),
-        };
-        return newSpecs;
-    }
-
-    public CacheConfig Configuration { get; init; } = new();
 
     #endregion
 
@@ -195,7 +188,7 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
     /// <inheritdoc />
     public ICacheSpecs VaryByPageParameters(string? names = default, NoParamOrder protector = default, bool caseSensitive = false)
         => VaryByParamsInternal(CacheSpecConstants.ByPageParameters,
-            ExCtx.GetState<ICmsContext>().Page.Parameters ?? new Parameters { Nvc = [] },
+            CacheContextTools.Page.Parameters ?? new Parameters { Nvc = [] },
             names,
             caseSensitive: caseSensitive
         );
@@ -292,9 +285,9 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
     public ICacheSpecs VaryBy(string name, int value) =>
         VaryByInternal(name, value.ToString(), caseSensitive: false);
 
-    /// <inheritdoc />
-    public ICacheSpecs VaryByModule(int id)
-        => VaryBy(CacheSpecConstants.ByModule, id);
+    ///// <inheritdoc />
+    //public ICacheSpecs VaryByModule(int id)
+    //    => VaryBy(CacheSpecConstants.ByModule, id);
 
     ///// <inheritdoc />
     //public ICacheSpecs VaryByModule(ICmsModule module)
@@ -302,11 +295,11 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
 
     /// <inheritdoc />
     public ICacheSpecs VaryByModule()
-        => VaryByModule(ExCtx.GetState<ICmsContext>()?.Module.Id ?? -1);
+        => VaryBy(CacheSpecConstants.ByModule, CacheContextTools.Module?.Id ?? -1);
 
-    /// <inheritdoc />
-    public ICacheSpecs VaryByPage(int id)
-        => VaryBy(CacheSpecConstants.ByPage, id);
+    ///// <inheritdoc />
+    //public ICacheSpecs VaryByPage(int id)
+    //    => VaryBy(CacheSpecConstants.ByPage, id);
 
     ///// <inheritdoc />
     //public ICacheSpecs VaryByPage(ICmsPage page)
@@ -314,11 +307,11 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
 
     /// <inheritdoc />
     public ICacheSpecs VaryByPage()
-        => VaryByPage(ExCtx.GetState<ICmsContext>()?.Page.Id ?? -1);
+        => VaryBy(CacheSpecConstants.ByPage, CacheContextTools.Page?.Id ?? -1);
 
-    /// <inheritdoc />
-    public ICacheSpecs VaryByUser(int id)
-        => VaryBy(CacheSpecConstants.ByUser, id);
+    ///// <inheritdoc />
+    //public ICacheSpecs VaryByUser(int id)
+    //    => VaryBy(CacheSpecConstants.ByUser, id);
 
     ///// <inheritdoc />
     //public ICacheSpecs VaryByUser(ICmsUser user)
@@ -326,7 +319,7 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
 
     /// <inheritdoc />
     public ICacheSpecs VaryByUser()
-        => VaryByUser(ExCtx.GetState<ICmsContext>()?.User?.Id ?? -1);
+        => VaryBy(CacheSpecConstants.ByUser, CacheContextTools.User?.Id ?? -1);
 
     #endregion
 
