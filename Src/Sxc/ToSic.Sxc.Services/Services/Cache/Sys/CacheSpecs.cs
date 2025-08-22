@@ -1,8 +1,5 @@
-﻿using System.Collections.Specialized;
-using ToSic.Sxc.Cms.Users;
+﻿using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Context.Sys;
-using ToSic.Sxc.Web.Sys.Url;
 using ToSic.Sys.Caching.Policies;
 using ToSic.Sys.Utils;
 
@@ -19,9 +16,12 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
 
     #region Internal Bits to make it work
 
-    internal required CacheContextTools CacheContextTools { get; init; }
+    //internal required CacheContextTools CacheContextTools { get; init; }
 
-    internal required CacheKeySpecs KeySpecs { get; init; }
+    [field: AllowNull, MaybeNull]
+    internal required CacheConfigToPolicyMaker CacheConfigToPolicyMaker { get; init; }
+
+    //internal required CacheKeySpecs KeySpecs { get; init; }
 
     public CacheKeyConfig KeyConfiguration { get; init; } = new();
 
@@ -32,7 +32,7 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
     public IPolicyMaker PolicyMaker
     {
         // Recreate whenever it is null or was reset previously
-        get => field ??= new CacheConfigToPolicyMaker(CacheContextTools).ReplayConfig(CacheContextTools.BasePolicyMaker, KeyConfiguration, WriteConfiguration);
+        get => field ??= CacheConfigToPolicyMaker.ReplayConfigToPolicy(KeyConfiguration, WriteConfiguration);
         internal init;
     }
 
@@ -41,7 +41,12 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
     #region Keys
 
     /// <inheritdoc />
-    public string Key => KeySpecs.Key;
+    [field: AllowNull, MaybeNull]
+    public string Key
+    {
+        get => field ??= CacheConfigToPolicyMaker.ReplayConfigToKeySpecs(KeyConfiguration, WriteConfiguration).FinalKey;
+        internal init;
+    }
 
     #endregion
 
@@ -69,7 +74,7 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
         }
 
         // if user elevation is in range, then disable
-        var userElevation = CacheContextTools.UserElevation;
+        var userElevation = CacheConfigToPolicyMaker.CacheContextTools.UserElevation;
         var isDisabled = userElevation.IsForAllOrInRange(minElevation, maxElevation);
 
         return this with
@@ -115,13 +120,10 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
 
     public ICacheSpecs SetSlidingExpiration(TimeSpan? timeSpan = null, NoParamOrder protector = default, int? seconds = null)
     {
-        var newConfig = seconds == null
-            ? KeyConfiguration.SetElevation(UserElevation.Any, (int)(timeSpan ?? throw new ArgumentException("no time specified")).TotalSeconds)
-            : KeyConfiguration.SetElevation(UserElevation.Any, seconds.Value);
-
+        var finalSeconds = seconds ?? (int)(timeSpan ?? throw new ArgumentException("no time specified")).TotalSeconds;
         return this with
         {
-            KeyConfiguration = newConfig,
+            KeyConfiguration = KeyConfiguration.SetElevation(UserElevation.Any, finalSeconds),
             PolicyMaker = null!,
         };
 
@@ -148,6 +150,7 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
 
     #endregion
 
+    #region Watch App Data / Folder
 
     public ICacheSpecs WatchAppData(NoParamOrder protector = default) =>
         this with
@@ -162,6 +165,8 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
             PolicyMaker = null!,
             WriteConfiguration = WriteConfiguration with { WatchAppFolder = true, WatchAppSubfolders = withSubfolders ?? true },
         };
+    
+    #endregion
 
     #region Vary By Value
 
@@ -169,27 +174,43 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
     //    => Next(value, "", caseSensitive: caseSensitive);
 
     public ICacheSpecs VaryBy(string name, string value, NoParamOrder protector = default, bool caseSensitive = false)
-        => VaryByInternal(name, value, protector, caseSensitive);
-
-    private ICacheSpecs VaryByInternal(string name, string value, NoParamOrder protector = default, bool caseSensitive = false, string? keysForRestore = null) =>
-        this with
+    {
+        return this with
         {
-            KeySpecs = KeySpecs.VaryBy(name, value, caseSensitive),
-            KeyConfiguration = KeyConfiguration.Updated(name, keysForRestore, caseSensitive),
+            Key = null!, // reset key so it will be re-calculated
+            WriteConfiguration = WriteConfiguration with
+            {
+                AdditionalValues = [.. WriteConfiguration.AdditionalValues, (name, value, caseSensitive)]
+            }
         };
+
+        //return VaryByInternal(name, value, protector, caseSensitive);
+    }
+
+    //private ICacheSpecs VaryByInternal(string name, string value, NoParamOrder protector = default, bool caseSensitive = false, string? keysForRestore = null) =>
+    //    this with
+    //    {
+    //        Key = null!, // reset key so it will be re-calculated
+    //        KeySpecs = KeySpecs.WithUpdatedVaryBy(name, value, caseSensitive),
+    //        KeyConfiguration = KeyConfiguration.Updated(name, keysForRestore, caseSensitive),
+    //    };
 
     #endregion
 
     #region Vary-By Custom User, QueryString, etc.
 
-    // INTERNAL!
     /// <inheritdoc />
     public ICacheSpecs VaryByPageParameters(string? names = default, NoParamOrder protector = default, bool caseSensitive = false)
-        => VaryByParamsInternal(CacheSpecConstants.ByPageParameters,
-            CacheContextTools.Page.Parameters ?? new Parameters { Nvc = [] },
-            names,
-            caseSensitive: caseSensitive
-        );
+    {
+        return this with
+        {
+            Key = null!, // reset key so it will be re-calculated
+            KeyConfiguration = KeyConfiguration.Updated(CacheSpecConstants.ByPageParameters, names, caseSensitive),
+        };
+        //var parameters = CacheContextTools.Page.Parameters ?? new Parameters { Nvc = [] };
+        //var asUrl = CacheVaryByHelper.VaryByParameters(parameters, names);
+        //return VaryByInternal(CacheSpecConstants.ByPageParameters, asUrl, caseSensitive: caseSensitive, keysForRestore: names);
+    }
 
     /// <summary>
     /// Vary by Parameters is an overload we only use in testing.
@@ -200,78 +221,51 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
     /// <param name="caseSensitive"></param>
     /// <returns></returns>
     public ICacheSpecs VaryByParameters(IParameters parameters, NoParamOrder protector = default, string? names = default, bool caseSensitive = false)
-        => VaryByParamsInternal(CacheSpecConstants.ByParameters, parameters, names, caseSensitive: caseSensitive);
-
-    private ICacheSpecs VaryByParamsInternal(string varyByName, IParameters parameters, string? names, bool caseSensitive = false)
     {
-        var all = parameters
-            .Filter(names)
-            .OrderBy(p => p.Key, comparer: StringComparer.InvariantCultureIgnoreCase)
-            .ToList();
+        if (!names.HasValue())
+            return this;
 
-        return VaryByParamsListKvp(all, varyByName, names, caseSensitive);
-    }
+        return this with
+        {
+            Key = null!, // reset key so it will be re-calculated
+            WriteConfiguration = WriteConfiguration with
+            {
+                AdditionalParameters = [..WriteConfiguration.AdditionalParameters, (parameters, names, caseSensitive)]
+            },
+        };
 
-    private ICacheSpecs VaryByParamsListKvp(List<KeyValuePair<string, string>> all, string varyByName, string? names,
-        bool caseSensitive)
-    {
-        var nvc = all
-            .Where(pair => pair.Value.HasValue())
-            .Aggregate(new NameValueCollection(),
-                (seed, pair) =>
-                {
-                    seed.Add(pair.Key, pair.Value);
-                    return seed;
-                });
-
-        var asUrl = nvc.NvcToString();
-        return VaryByInternal(varyByName, asUrl, caseSensitive: caseSensitive, keysForRestore: names);
+        //var asUrl = CacheVaryByHelper.VaryByParameters(parameters, names);
+        //return VaryByInternal(CacheSpecConstants.ByParameters, asUrl, caseSensitive: caseSensitive, keysForRestore: names);
     }
 
     #endregion
 
     #region VaryByModel Experimental
 
-    internal IDictionary<string, object?>? Model { get; init; }
-
     public ICacheSpecs VaryByModel(string? names = default, NoParamOrder protector = default, bool caseSensitive = false)
     {
-        var l = Log.Fn<ICacheSpecs>(names);
-        if (Model == null)
-        {
-            // fail silently
-            // Future: option to have aggressive mode or logging - in which case we would use the ExCtx etc. to log this message
-            return l.Return(this, "no model, unchanged");
-        }
-
-        var nameList = names.CsvToArrayWithoutEmpty();
-        if (!nameList.Any())
-            return l.Return(this, "no keys, unchanged");
-
-        var all = Model
-            .Where(pair => nameList.Any(n
-                => n.EqualsInsensitive(pair.Key)                    // contains key
-                   && IsUsefulForCacheKey(pair.Value)     // is simple value, allowing use in cache key
-            ))
-            .Select(p => new KeyValuePair<string, string?>(p.Key, p.Value?.ToString()))
-            .OrderBy(p => p.Key, comparer: StringComparer.InvariantCultureIgnoreCase)
-            .ToList();
-
-        var fresh = VaryByParamsListKvp(all!, CacheSpecConstants.ByModel, names, caseSensitive);
-        return l.Return(fresh, $"updated; Model had {Model.Count}; used: {all.Count}");
-    }
-
-    private static bool IsUsefulForCacheKey(object? value)
-    {
-        if (value == null)
-            return false;
-        var type = value.GetType().UnboxIfNullable();
-        return type.IsValueType
-               || type.IsPrimitive
-               || type == typeof(string)
-               || type == typeof(DateTime)
-               || type == typeof(Guid)
-               || type.IsNumeric();
+        return !names.HasValue()
+            ? this
+            : this with
+            {
+                Key = null!, // reset key so it will be re-calculated
+                KeyConfiguration = KeyConfiguration.Updated(CacheSpecConstants.ByModel, names, caseSensitive),
+            };
+        //var l = Log.Fn<ICacheSpecs>($"{nameof(names)}: '{names}', {nameof(caseSensitive)}: {caseSensitive}");
+        //var model = CacheContextTools.Model;
+        //if (model == null)
+        //{
+        //    // fail silently
+        //    // Future: option to have aggressive mode or logging - in which case we would use the ExCtx etc. to log this message
+        //    return l.Return(this, "no model, unchanged");
+        //}
+        //var nameList = names.CsvToArrayWithoutEmpty();
+        //if (!nameList.Any())
+        //    return l.Return(this, "no keys, unchanged");
+        //var all = CacheVaryByModelHelper.VaryByModelExtract(model, nameList);
+        //var asUrl = CacheVaryByHelper.VaryByToUrl(all);
+        //var fresh = VaryByInternal(CacheSpecConstants.ByModel, asUrl, caseSensitive: caseSensitive, keysForRestore: names);
+        //return l.Return(fresh, $"updated; Model had {model.Count}; used: {all.Count}");
     }
 
 
@@ -280,8 +274,8 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
     #region VaryBy Int, Page, Module, User
 
     /// <inheritdoc />
-    public ICacheSpecs VaryBy(string name, int value) =>
-        VaryByInternal(name, value.ToString(), caseSensitive: false);
+    public ICacheSpecs VaryBy(string name, int value)
+        => VaryBy(name, value.ToString(), caseSensitive: false);
 
     ///// <inheritdoc />
     //public ICacheSpecs VaryByModule(int id)
@@ -293,7 +287,14 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
 
     /// <inheritdoc />
     public ICacheSpecs VaryByModule()
-        => VaryBy(CacheSpecConstants.ByModule, CacheContextTools.Module?.Id ?? -1);
+    {
+        return this with
+        {
+            Key = null!, // reset key so it will be re-calculated
+            KeyConfiguration = KeyConfiguration with { ByModule = true }
+        };
+        //return VaryBy(CacheSpecConstants.ByModule, CacheContextTools.Module?.Id ?? -1);
+    }
 
     ///// <inheritdoc />
     //public ICacheSpecs VaryByPage(int id)
@@ -305,7 +306,14 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
 
     /// <inheritdoc />
     public ICacheSpecs VaryByPage()
-        => VaryBy(CacheSpecConstants.ByPage, CacheContextTools.Page?.Id ?? -1);
+    {
+        return this with
+        {
+            Key = null!, // reset key so it will be re-calculated
+            KeyConfiguration = KeyConfiguration with { ByPage = true }
+        };
+        //return VaryBy(CacheSpecConstants.ByPage, CacheContextTools.Page?.Id ?? -1);
+    }
 
     ///// <inheritdoc />
     //public ICacheSpecs VaryByUser(int id)
@@ -317,7 +325,14 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
 
     /// <inheritdoc />
     public ICacheSpecs VaryByUser()
-        => VaryBy(CacheSpecConstants.ByUser, CacheContextTools.User?.Id ?? -1);
+    {
+        return this with
+        {
+            Key = null!, // reset key so it will be re-calculated
+            KeyConfiguration = KeyConfiguration with { ByUser = true }
+        };
+        //return VaryBy(CacheSpecConstants.ByUser, CacheContextTools.User?.Id ?? -1);
+    }
 
     #endregion
 

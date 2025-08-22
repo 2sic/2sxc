@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Services.Cache.Sys;
 /// <summary>
 /// Converts cache configuration to cache-policy maker.
 /// </summary>
-internal class CacheContextTools
+internal record CacheContextTools
 {
     #region Internal Bits to make it work
 
@@ -31,6 +31,10 @@ internal class CacheContextTools
 
     // Note: actually internal...
     public required IPolicyMaker BasePolicyMaker { get; internal init; }
+
+    internal IDictionary<string, object?>? Model { get; init; }
+
+    internal required CacheKeySpecs KeySpecs { get; init; }
 
     #endregion
 

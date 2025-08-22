@@ -1,4 +1,5 @@
-﻿using ToSic.Sys.Utils;
+﻿using ToSic.Sxc.Context;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.Cache.Sys;
 public record CacheWriteConfig
@@ -27,4 +28,8 @@ public record CacheWriteConfig
     public DateTimeOffset AbsoluteExpiration { get; init; }
 
     public int SlidingExpirationSeconds { get; init; }
+
+    public List<(IParameters Parameters, string Names, bool CaseSensitive)> AdditionalParameters = [];
+
+    public List<(string Name, string Value, bool CaseSensitive)> AdditionalValues = [];
 }

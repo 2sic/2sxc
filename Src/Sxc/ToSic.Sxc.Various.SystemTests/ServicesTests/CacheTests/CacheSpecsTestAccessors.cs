@@ -21,9 +21,15 @@ internal static class CacheSpecsTestAccessors
         if (shared == null)
             almost = almost with
             {
-                KeySpecs = almost.KeySpecs with
+                CacheConfigToPolicyMaker = almost.CacheConfigToPolicyMaker with
                 {
-                    AppId = shared == null ? -1 : CacheKeySpecs.NoApp,
+                    CacheContextTools = almost.CacheConfigToPolicyMaker.CacheContextTools with
+                    {
+                        KeySpecs = almost.CacheConfigToPolicyMaker.CacheContextTools.KeySpecs with
+                        {
+                            AppId = shared == null ? -1 : CacheKeySpecs.NoApp,
+                        }
+                    }
                 }
             };
         return almost;

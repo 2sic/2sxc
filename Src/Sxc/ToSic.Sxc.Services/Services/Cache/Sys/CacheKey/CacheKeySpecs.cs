@@ -23,7 +23,7 @@ public record CacheKeySpecs
     /// Generate the final key for these specs.
     /// </summary>
     [field: AllowNull, MaybeNull]
-    public string Key
+    public string FinalKey
     {
         get => field ??= CacheKeyGenerator.GetKey(this);
         init;
@@ -33,9 +33,9 @@ public record CacheKeySpecs
     /// Override the ToString method to return the key.
     /// </summary>
     /// <returns></returns>
-    public override string ToString() => Key;
+    public override string ToString() => FinalKey;
 
-    public CacheKeySpecs VaryBy(string name, string value, bool caseSensitive)
+    public CacheKeySpecs WithUpdatedVaryBy(string name, string value, bool caseSensitive)
     {
         var varyByName = "VaryBy" + name;
         var varyByKey = caseSensitive ? varyByName : varyByName.ToLowerInvariant();
@@ -48,7 +48,7 @@ public record CacheKeySpecs
 
         return this with
         {
-            Key = null! /* requires reset */,
+            FinalKey = null! /* requires reset */,
             VaryByDic = newDic
         };
     }

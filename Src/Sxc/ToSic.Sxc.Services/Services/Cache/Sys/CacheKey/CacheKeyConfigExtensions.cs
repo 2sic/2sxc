@@ -29,9 +29,17 @@ public static class CacheKeyConfigExtensions
 
     public static ICacheSpecs RestoreAll(this ICacheSpecs cacheSpecs, CacheKeyConfig keyConfig, CacheWriteConfig writeConfig)
     {
-        cacheSpecs = cacheSpecs.RestoreConditionsAndWatch(keyConfig, writeConfig);
-        cacheSpecs = keyConfig.RestoreBy(cacheSpecs);
-        return cacheSpecs;
+        var specs = (CacheSpecs)cacheSpecs;
+        return specs with
+        {
+            KeyConfiguration = keyConfig,
+            WriteConfiguration = writeConfig,
+            Key = null!,
+            PolicyMaker = null!,
+        };
+        //cacheSpecs = cacheSpecs.RestoreConditionsAndWatch(keyConfig, writeConfig);
+        //cacheSpecs = keyConfig.RestoreBy(cacheSpecs);
+        //return cacheSpecs;
     }
 
     public static ICacheSpecs RestoreConditionsAndWatch(this ICacheSpecs cacheSpecs, CacheKeyConfig keyConfig, CacheWriteConfig writeConfig)
@@ -53,21 +61,26 @@ public static class CacheKeyConfigExtensions
     /// <returns></returns>
     public static ICacheSpecs RestoreBy(this CacheKeyConfig keyConfig, ICacheSpecs cacheSpecs)
     {
-        if (keyConfig.ByUser)
-            cacheSpecs = cacheSpecs.VaryByUser();
+        var specs = (CacheSpecs)cacheSpecs;
+        return specs with
+        {
+            KeyConfiguration = keyConfig,
+        };
+        //if (keyConfig.ByUser)
+        //    cacheSpecs = cacheSpecs.VaryByUser();
 
-        if (keyConfig.ByModule)
-            cacheSpecs = cacheSpecs.VaryByModule();
+        //if (keyConfig.ByModule)
+        //    cacheSpecs = cacheSpecs.VaryByModule();
 
-        if (keyConfig.ByPage)
-            cacheSpecs = cacheSpecs.VaryByPage();
+        //if (keyConfig.ByPage)
+        //    cacheSpecs = cacheSpecs.VaryByPage();
 
-        if (keyConfig.ByPageParameters != null)
-            cacheSpecs = cacheSpecs.VaryByPageParameters(keyConfig.ByPageParameters.Names, caseSensitive: keyConfig.ByPageParameters.CaseSensitive);
+        //if (keyConfig.ByPageParameters != null)
+        //    cacheSpecs = cacheSpecs.VaryByPageParameters(keyConfig.ByPageParameters.Names, caseSensitive: keyConfig.ByPageParameters.CaseSensitive);
 
-        if (keyConfig.ByModel != null)
-            cacheSpecs = cacheSpecs.VaryByModel(keyConfig.ByModel.Names, caseSensitive: keyConfig.ByModel.CaseSensitive);
+        //if (keyConfig.ByModel != null)
+        //    cacheSpecs = cacheSpecs.VaryByModel(keyConfig.ByModel.Names, caseSensitive: keyConfig.ByModel.CaseSensitive);
 
-        return cacheSpecs;
+        //return cacheSpecs;
     }
 }

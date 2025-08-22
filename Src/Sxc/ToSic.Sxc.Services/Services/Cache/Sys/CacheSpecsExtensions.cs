@@ -33,6 +33,15 @@ public static class CacheSpecsExtensions
     {
         var typed = (CacheSpecs)specs;
         var l = typed.Log.Fn<ICacheSpecs>($"hasModel: {model != null}; count: {model?.Count}");
-        return l.ReturnAsOk(typed with { Model = model });
+        return l.ReturnAsOk(typed with
+        {
+            CacheConfigToPolicyMaker = typed.CacheConfigToPolicyMaker with
+            {
+                CacheContextTools = typed.CacheConfigToPolicyMaker.CacheContextTools with
+                {
+                    Model = model
+                }
+            }
+        });
     }
 }

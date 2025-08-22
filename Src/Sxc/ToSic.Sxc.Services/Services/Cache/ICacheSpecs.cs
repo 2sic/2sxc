@@ -213,9 +213,10 @@ public interface ICacheSpecs
     /// <param name="caseSensitive">Determines if the value should be treated case-sensitive, default is `false`</param>
     /// <returns></returns>
     /// <remarks>
-    /// 2025-08-18 v20.00-05 made internal; testing only. - as it cannot make sense - since the parameters won't be available during following cache-checks
+    /// This only makes sense when using with the CacheService, but not in output caching.
+    /// Reason is that in output caching, the pre-flight would not have access to the parameters object and would never result in a cache hit.
     /// </remarks>
-    internal ICacheSpecs VaryByParameters(IParameters parameters, NoParamOrder protector = default, string? names = default, bool caseSensitive = false);
+    ICacheSpecs VaryByParameters(IParameters parameters, NoParamOrder protector = default, string? names = default, bool caseSensitive = false);
 
     #endregion
 

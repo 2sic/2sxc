@@ -60,12 +60,14 @@ internal class CacheService(
             AppPathsLazy = appPathsLazy,
             ExCtx = ExCtx,
             BasePolicyMaker = cache.NewPolicyMaker(),
+            KeySpecs = keySpecs,
         };
         var specs = new CacheSpecs(Log)
         {
-            CacheContextTools = cacheContextTools,
+            //CacheContextTools = cacheContextTools,
+            CacheConfigToPolicyMaker = new(Log) { CacheContextTools = cacheContextTools },
             IsEnabled = true,
-            KeySpecs = keySpecs,
+            //KeySpecs = keySpecs,
         };
         return l.Return(specs);
     }
