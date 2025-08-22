@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Services.Cache.Sys;
+﻿using ToSic.Sys.Utils;
+
+namespace ToSic.Sxc.Services.Cache.Sys;
 public static class CacheKeyConfigExtensions
 {
     public static CacheKeyConfig Updated(this CacheKeyConfig keyConfig, string name, string? keys, bool caseSensitive) =>
@@ -7,10 +9,22 @@ public static class CacheKeyConfigExtensions
             CacheSpecConstants.ByModule => keyConfig with { ByModule = true },
             CacheSpecConstants.ByPage => keyConfig with { ByPage = true },
             CacheSpecConstants.ByUser => keyConfig with { ByUser = true },
-            CacheSpecConstants.ByPageParameters when !string.IsNullOrWhiteSpace(keys) => keyConfig with { ByPageParameters = new() { Names = keys, CaseSensitive = caseSensitive } },
-            CacheSpecConstants.ByModel when !string.IsNullOrWhiteSpace(keys) => keyConfig with { ByModel = new() { Names = keys, CaseSensitive = caseSensitive } },
+            CacheSpecConstants.ByPageParameters when !string.IsNullOrWhiteSpace(keys) => keyConfig with { ByPageParameters = Update(keyConfig.ByPageParameters, keys, caseSensitive) },
+            CacheSpecConstants.ByModel when !string.IsNullOrWhiteSpace(keys) => keyConfig with { ByModel = Update(keyConfig.ByModel, keys, caseSensitive) },
             _ => keyConfig
         };
+
+    private static CacheKeyConfigNamed Update(CacheKeyConfigNamed? original, string? newNames, bool caseSensitive)
+    {
+        // merge previous names with new names, ensure no duplicates, order alphabetically
+        var names = (original?.Names + "," + newNames).ToLowerInvariant()
+            .CsvToArrayWithoutEmpty()
+            .OrderBy(s => s)
+            .Distinct()
+            .ToArray();
+        
+        return new() { Names = string.Join(",", names), CaseSensitive = caseSensitive };
+    }
 
 
     public static ICacheSpecs RestoreAll(this ICacheSpecs cacheSpecs, CacheKeyConfig keyConfig, CacheWriteConfig writeConfig)
