@@ -13,11 +13,12 @@ namespace ToSic.Sxc.Services.Cache.Sys.CacheKey;
 public record CacheKeyConfig(): ICanEstimateSize
 {
     public const int Disabled = -1;
+    public const int EnabledWithoutTime = 0;
 
     public CacheKeyConfig(NoParamOrder protector = default, int? sliding = null, string? varyBy = null, string? url = null, string? model = null): this()
     {
         if (sliding != null)
-            ForElevation = new() { [UserElevation.Any] = sliding.Value };
+            ForElevation = new() { [UserElevation.All] = sliding.Value };
 
         foreach (var varyPart in (varyBy?.ToLowerInvariant()).CsvToArrayWithoutEmpty())
             switch (varyPart)

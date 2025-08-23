@@ -42,7 +42,7 @@ public interface ICacheSpecs
 
     public ICacheSpecs Disable();
 
-    public ICacheSpecs DisableFor(UserElevation userElevation);
+    public ICacheSpecs Disable(UserElevation elevation);
 
     /// <summary>
     /// Disable caching for this data, so it will not be cached. Rarely used. 
@@ -53,7 +53,7 @@ public interface ICacheSpecs
     /// 
     /// WIP v20.01: This is a work in progress, and the implementation may change in future versions.
     /// </remarks>
-    public ICacheSpecs Disable(NoParamOrder protector = default, UserElevation minElevation = default, UserElevation maxElevation = default);
+    public ICacheSpecs Disable(UserElevation minElevation, UserElevation maxElevation);
 
     /// <summary>
     /// Disable caching for this data, so it will not be cached. Rarely used. 

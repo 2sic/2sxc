@@ -12,14 +12,9 @@ public enum UserElevation
     Unknown = 0,
 
     /// <summary>
-    /// All elevations. This is used to set something which will apply to everybody.
-    /// </summary>
-    All = 1,
-
-    /// <summary>
     /// Any elevation. This is used to set something which is applied to all which are not specified differently.
     /// </summary>
-    Any = All + 1,
+    All = 1,
 
     /// <summary>
     /// Anonymous users (not logged in).
@@ -36,16 +31,17 @@ public enum UserElevation
     // EditDraft = 4,
 
     // Create = 5,
+    ContentDraft = 50,
 
     /// <summary>
     /// Users with edit content-rights or higher.
     /// </summary>
-    ContentEdit = 60,
+    ContentEdit = ContentDraft + 1,
 
     /// <summary>
     /// Users with content admin rights or higher.
     /// </summary>
-    ContentAdmin = 70,
+    ContentAdmin = ContentEdit + 1,
 
     /// <summary>
     /// Site admins - can do everything on a site.
@@ -55,5 +51,5 @@ public enum UserElevation
     /// <summary>
     /// System admins - can do everything on the entire system.
     /// </summary>
-    SystemAdmin = 99,
+    SystemAdmin = 90,
 }

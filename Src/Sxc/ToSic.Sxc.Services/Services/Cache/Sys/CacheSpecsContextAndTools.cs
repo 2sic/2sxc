@@ -90,7 +90,7 @@ internal record CacheSpecsContextAndTools : HelperRecordBase
 
     private IPolicyMaker ApplySlidingExpiration(IPolicyMaker policyMaker, CacheKeyConfig keyConfig)
     {
-        var slidingAny = keyConfig.SecondsFor(UserElevation);
+        var slidingAny = keyConfig.ForElevation.SecondsFor(UserElevation);
         return slidingAny > 0
             ? policyMaker.SetSlidingExpiration(slidingAny)
             : policyMaker;

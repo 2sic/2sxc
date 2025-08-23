@@ -86,7 +86,7 @@ public class RazorPartialCachingHelper(int appId, string normalizedPath, IDictio
             return AttachListenerAndExit("no config");
         var user = exCtx.GetState<ICmsContext>().User;
         var elevation = user.GetElevation();
-        if (!config.IsEnabledFor(elevation))
+        if (!config.ForElevation.IsEnabledFor(elevation))
             return AttachListenerAndExit($"user elevation '{elevation.ToString()}' not enabled, ignore cache.");
 
         var specsBasedOnSettings = GetSpecsBasedOnSettings();

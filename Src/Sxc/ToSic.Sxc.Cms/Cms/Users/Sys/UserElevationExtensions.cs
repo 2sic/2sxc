@@ -29,6 +29,6 @@ public static class UserElevationExtensions
         => elevation <= maximum;
 
     public static bool IsForAllOrInRange(this UserElevation user, UserElevation minimum, UserElevation maximum)
-        => (minimum <= UserElevation.Any || user.IsAtLeast(minimum)) &&
-           (maximum <= UserElevation.Any || user.IsAtMost(maximum));
+        => (minimum <= UserElevation.All || user.IsAtLeast(minimum)) &&
+           (maximum <= UserElevation.All || user.IsAtMost(maximum));
 }

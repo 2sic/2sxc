@@ -65,7 +65,10 @@ internal class CacheService(
                 BasePolicyMaker = cache.NewPolicyMaker(),
                 BaseKeyParts = keySpecs,
             },
-            IsEnabled = true,
+            KeyConfig = new()
+            {
+                ForElevation = ForElevationExtensions.ResetAll(0),
+            },
         };
         return l.Return(specs);
     }

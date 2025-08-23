@@ -1,5 +1,4 @@
 ﻿using ToSic.Sxc.Cms.Users;
-using ToSic.Sxc.Cms.Users.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 using ToSic.Sys.Caching.Policies;
@@ -19,7 +18,6 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
 
     #region Internal Bits to make it work
 
-    [field: AllowNull, MaybeNull]
     internal required CacheSpecsContextAndTools CacheSpecsContextAndTools { get; init; }
 
     public CacheKeyConfig KeyConfig { get; init; } = new();
@@ -60,38 +58,22 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
 
     #region Enabled / disabled
 
-    public required bool IsEnabled { get; init; }
+    public bool IsEnabled => KeyConfig.ForElevation.IsEnabledFor(CacheSpecsContextAndTools.UserElevation);
 
     public ICacheSpecs Disable() =>
-        this with
+        WithChanges(KeyConfig with { ForElevation = ForElevationExtensions.ResetAll(CacheKeyConfig.Disabled), });
+
+    public ICacheSpecs Disable(UserElevation elevation) =>
+        WithChanges(KeyConfig with
         {
-            IsEnabled = false,
-            KeyConfig = KeyConfig with
-            {
-                ForElevation = new()
-                {
-                    [UserElevation.All] = CacheKeyConfig.Disabled,
-                    [UserElevation.Any] = CacheKeyConfig.Disabled,
-                },
-            }
-        };
+            ForElevation = KeyConfig.ForElevation.SetForOneOrAll(elevation, CacheKeyConfig.Disabled),
+        });
 
-    public ICacheSpecs DisableFor(UserElevation userElevation)
+    public ICacheSpecs Disable(UserElevation minElevation, UserElevation maxElevation)
     {
         // If not specified, for all, or within the lowest and highest elevation, then disable
-        return userElevation is UserElevation.Unknown or UserElevation.All
-            ? Disable()
-            : this with
-            {
-                KeyConfig = KeyConfig.SetElevation(userElevation, CacheKeyConfig.Disabled),
-            };
-    }
-
-    public ICacheSpecs Disable(NoParamOrder protector = default, UserElevation minElevation = default, UserElevation maxElevation = default)
-    {
-        // If not specified, for all, or within the lowest and highest elevation, then disable
-        if (minElevation is UserElevation.Unknown or UserElevation.Any or UserElevation.Anonymous
-            && maxElevation is UserElevation.Unknown or UserElevation.Any or UserElevation.SystemAdmin)
+        if (minElevation is UserElevation.Unknown or UserElevation.All or UserElevation.Anonymous
+            && maxElevation is UserElevation.Unknown or UserElevation.All or UserElevation.SystemAdmin)
             return Disable();
 
         // Create a list of all elevations which should be disabled
@@ -106,52 +88,28 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
             toUpdate[elevation] = CacheKeyConfig.Disabled;
         }
 
-        // if user elevation is in range, then disable
-        var userElevation = CacheSpecsContextAndTools.UserElevation;
-        var isDisabled = userElevation.IsForAllOrInRange(minElevation, maxElevation);
-
-        return this with
-        {
-            IsEnabled = !isDisabled,
-            KeyConfig = KeyConfig with
-            {
-                ForElevation = toUpdate,
-            }
-        };
+        return WithChanges(KeyConfig with { ForElevation = toUpdate, });
     }
 
     public ICacheSpecs Enable()
-        => this with
-        {
-            IsEnabled = true,
-            KeyConfig = KeyConfig with
-            {
-                ForElevation = new() { [UserElevation.Any] = 0 },
-            }
-        };
+        => WithChanges(KeyConfig with { ForElevation = ForElevationExtensions.ResetAll(CacheKeyConfig.EnabledWithoutTime), });
 
     #endregion
 
 
     #region Time Absolute / Sliding
 
-    public ICacheSpecs SetAbsoluteExpiration(DateTimeOffset absoluteExpiration) 
-        => this with
-        {
-            WriteConfig = WriteConfig with { AbsoluteExpiration = absoluteExpiration },
-            PolicyMaker = null!,
-        };
+    public ICacheSpecs SetAbsoluteExpiration(DateTimeOffset absoluteExpiration)
+        => WithChanges(writeConfig: WriteConfig with { AbsoluteExpiration = absoluteExpiration });
 
-    public ICacheSpecs SetSlidingExpiration(TimeSpan? timeSpan = null, NoParamOrder protector = default, int? seconds = null)
-    {
-        var finalSeconds = seconds ?? (int)(timeSpan ?? throw new ArgumentException("no time specified")).TotalSeconds;
-        return this with
+    public ICacheSpecs SetSlidingExpiration(TimeSpan? timeSpan = null, NoParamOrder protector = default, int? seconds = null) =>
+        WithChanges(keyConfig: KeyConfig with
         {
-            KeyConfig = KeyConfig.SetElevation(UserElevation.Any, finalSeconds),
-            PolicyMaker = null!,
-        };
-
-    }
+            ForElevation = KeyConfig.ForElevation.SetOne(
+                UserElevation.All,
+                seconds ?? (int)(timeSpan ?? throw new ArgumentException("no time specified")).TotalSeconds
+            ),
+        });
 
     #endregion
 
