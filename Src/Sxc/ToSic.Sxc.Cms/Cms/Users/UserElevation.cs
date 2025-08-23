@@ -1,18 +1,31 @@
-﻿using ToSic.Sxc.Context;
-using ToSic.Sys.Users;
-using ToSic.Sys.Wrappers;
-
-namespace ToSic.Sxc.Cms.Users;
+﻿namespace ToSic.Sxc.Cms.Users;
 
 [WorkInProgressApi("v20.01")]
 public enum UserElevation
 {
+    /// <summary>
+    /// Unknown state - should not be used, but is the default in case something is not specified.
+    /// </summary>
     Unknown = 0,
 
-    Any = 1,
+    /// <summary>
+    /// All elevations. This is used to set something which will apply to everybody.
+    /// </summary>
+    All = 1,
 
+    /// <summary>
+    /// Any elevation. This is used to set something which is applied to all which are not specified differently.
+    /// </summary>
+    Any = All + 1,
+
+    /// <summary>
+    /// Anonymous users (not logged in).
+    /// </summary>
     Anonymous = 10,
 
+    /// <summary>
+    /// Users with view rights - usually all logged-in users.
+    /// </summary>
     View = 20,
 
     // CreateDraft = 3,
@@ -21,40 +34,23 @@ public enum UserElevation
 
     // Create = 5,
 
+    /// <summary>
+    /// Users with edit content-rights or higher.
+    /// </summary>
     ContentEdit = 60,
 
+    /// <summary>
+    /// Users with content admin rights or higher.
+    /// </summary>
     ContentAdmin = 70,
 
+    /// <summary>
+    /// Site admins - can do everything on a site.
+    /// </summary>
     SiteAdmin = 80,
 
+    /// <summary>
+    /// System admins - can do everything on the entire system.
+    /// </summary>
     SystemAdmin = 99,
-}
-
-public static class UserElevationExtensions
-{
-    public static UserElevation GetElevation(this IUser user)
-    {
-        if (user.IsAnonymous) return UserElevation.Anonymous;
-        if (user.IsSystemAdmin) return UserElevation.SystemAdmin;
-        if (user.IsSiteAdmin) return UserElevation.SiteAdmin;
-        if (user.IsContentAdmin) return UserElevation.ContentAdmin;
-        if (user.IsContentEditor) return UserElevation.ContentEdit;
-        return UserElevation.View;
-    }
-
-    public static UserElevation GetElevation(this ICmsUser user)
-    {
-        var underlyingUser = ((Wrapper<IUser>)user).GetContents()!;
-        return underlyingUser.GetElevation();
-    }
-
-    private static bool IsAtLeast(this UserElevation elevation, UserElevation minimum)
-        => elevation >= minimum;
-
-    private static bool IsAtMost(this UserElevation elevation, UserElevation maximum)
-        => elevation <= maximum;
-
-    public static bool IsForAllOrInRange(this UserElevation user, UserElevation minimum, UserElevation maximum)
-        => (minimum <= UserElevation.Any || user.IsAtLeast(minimum)) &&
-           (maximum <= UserElevation.Any || user.IsAtMost(maximum));
 }
