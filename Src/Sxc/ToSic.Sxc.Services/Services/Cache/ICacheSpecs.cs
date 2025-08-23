@@ -1,6 +1,7 @@
 ﻿using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Services.Cache.Sys;
+using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 using ToSic.Sys.Caching.Policies;
 
 namespace ToSic.Sxc.Services.Cache;
@@ -38,6 +39,10 @@ public interface ICacheSpecs
     [WorkInProgressApi("wip v20.00-05")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     bool IsEnabled { get; }
+
+    public ICacheSpecs Disable();
+
+    public ICacheSpecs DisableFor(UserElevation userElevation);
 
     /// <summary>
     /// Disable caching for this data, so it will not be cached. Rarely used. 
@@ -121,7 +126,7 @@ public interface ICacheSpecs
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    internal CacheKeyConfig KeyConfiguration { get; }
+    internal CacheKeyConfig KeyConfig { get; }
 
     /// <summary>
     /// Vary the cache by a specific name and value.

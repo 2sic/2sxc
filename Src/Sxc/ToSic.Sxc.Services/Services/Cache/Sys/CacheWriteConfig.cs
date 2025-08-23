@@ -2,6 +2,14 @@
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.Cache.Sys;
+
+/// <summary>
+/// Cache configuration information which is only relevant when writing to the cache.
+/// This information is either
+/// - not relevant for retrieving from the cache
+/// - too complex / changing to be serialized
+/// - would cause trouble if also cached, since it might change fairly randomly
+/// </summary>
 public record CacheWriteConfig
 {
     public CacheWriteConfig(NoParamOrder protector = default, string? watch = null)

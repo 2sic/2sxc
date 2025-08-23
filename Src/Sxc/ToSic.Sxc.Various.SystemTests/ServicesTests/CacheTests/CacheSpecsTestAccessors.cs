@@ -2,6 +2,7 @@
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.Cache.Sys;
+using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 
 namespace ToSic.Sxc.ServicesTests.CacheTests;
 
@@ -21,14 +22,11 @@ internal static class CacheSpecsTestAccessors
         if (shared == null)
             almost = almost with
             {
-                CacheConfigToPolicyMaker = almost.CacheConfigToPolicyMaker with
+                CacheSpecsContextAndTools = almost.CacheSpecsContextAndTools with
                 {
-                    CacheContextTools = almost.CacheConfigToPolicyMaker.CacheContextTools with
+                    BaseKeyParts = almost.CacheSpecsContextAndTools.BaseKeyParts with
                     {
-                        KeySpecs = almost.CacheConfigToPolicyMaker.CacheContextTools.KeySpecs with
-                        {
-                            AppId = shared == null ? -1 : CacheKeySpecs.NoApp,
-                        }
+                        AppId = shared == null ? -1 : CacheKeyParts.NoApp,
                     }
                 }
             };

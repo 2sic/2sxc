@@ -2,34 +2,33 @@
 using ToSic.Sys.Utils;
 using static ToSic.Sxc.Services.Cache.Sys.CacheServiceConstants;
 
-namespace ToSic.Sxc.Services.Cache.Sys;
+namespace ToSic.Sxc.Services.Cache.Sys.CacheKey;
 
 /// <summary>
 /// Functions to generate the final cache key based on the specifications.
 /// </summary>
 [PrivateApi]
-public class CacheKeyGenerator
+public static class CacheKeyPartsExtensions
 {
-
     /// <summary>
     /// Generate the key according to specs.
     /// </summary>
     /// <exception cref="ArgumentException"></exception>
-    internal static string GetKey(CacheKeySpecs keySpecs)
+    internal static string GetKey(this CacheKeyParts keyParts)
     {
         // Make sure the Main key (prefix) is not empty
-        if (string.IsNullOrWhiteSpace(keySpecs.Main))
-            throw new ArgumentException(@"Key must not be empty", nameof(keySpecs.Main));
+        if (string.IsNullOrWhiteSpace(keyParts.Main))
+            throw new ArgumentException(@"Key must not be empty", nameof(keyParts.Main));
 
         // Prevent accidental adding of the prefix/segment multiple times
-        var mainKey = GetBestKeyBase(keySpecs);
+        var mainKey = GetBestKeyBase(keyParts);
 
         // If no additional keys are specified, exit early.
-        if (keySpecs.VaryByDic == null || keySpecs.VaryByDic.Count == 0)
+        if (keyParts.VaryByDic == null || keyParts.VaryByDic.Count == 0)
             return mainKey;
 
         // If there are no new keys, or they are already in the main key, exit early.
-        var varyBy = GetVaryByOfDic(keySpecs.VaryByDic);
+        var varyBy = GetVaryByOfDic(keyParts.VaryByDic);
         if (string.IsNullOrWhiteSpace(varyBy) || mainKey.EndsWith(varyBy))
             return mainKey;
 
@@ -37,18 +36,18 @@ public class CacheKeyGenerator
         return $"{mainKey}{varyBy}";
     }
 
-    private static string GetBestKeyBase(CacheKeySpecs keySpecs)
+    private static string GetBestKeyBase(CacheKeyParts keyParts)
     {
         // Prevent accidental adding of the prefix/segment multiple times
-        if (keySpecs.Main.StartsWith(DefaultPrefix))
-            return keySpecs.Main;
+        if (keyParts.Main.StartsWith(DefaultPrefix))
+            return keyParts.Main;
 
-        var isMagicOverride = keySpecs.Main.StartsWith(CacheSpecConstants.PrefixForDontPrefix);
+        var isMagicOverride = keyParts.Main.StartsWith(CacheSpecConstants.PrefixForDontPrefix);
         var prefix = isMagicOverride
-            ? keySpecs.Main.TrimStart('*')
+            ? keyParts.Main.TrimStart('*')
             : DefaultPrefix +
-              (keySpecs.AppId == CacheKeySpecs.NoApp ? "" : Sep + "App:" + keySpecs.AppId) +
-              $"{Sep}{SegmentPrefix}{keySpecs.RegionName.NullIfNoValue() ?? DefaultSegment}{Sep}{keySpecs.Main}";
+              (keyParts.AppId == CacheKeyParts.NoApp ? "" : Sep + "App:" + keyParts.AppId) +
+              $"{Sep}{SegmentPrefix}{keyParts.RegionName.NullIfNoValue() ?? DefaultSegment}{Sep}{keyParts.Main}";
 
         return prefix;
     }

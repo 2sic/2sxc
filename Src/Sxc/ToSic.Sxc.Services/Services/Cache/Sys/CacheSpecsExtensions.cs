@@ -1,24 +1,15 @@
-﻿namespace ToSic.Sxc.Services.Cache.Sys;
+﻿using ToSic.Sxc.Services.Cache.Sys.CacheKey;
+
+namespace ToSic.Sxc.Services.Cache.Sys;
 
 [PrivateApi]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public static class CacheSpecsExtensions
 {
-    //[ShowApiWhenReleased(ShowApiMode.Never)]
-    //public static ICacheSpecs SwapKeyInternal(this ICacheSpecs specs, Func<CacheKeySpecs, CacheKeySpecs> modifier)
-    //{
-    //    var typed = (CacheSpecs)specs;
-
-    //    return typed with { KeySpecs = modifier(typed.KeySpecs) };
-    //}
-
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    public static ICacheSpecs WithPolicyOf(this ICacheSpecs specs, ICacheSpecs specsWithPolicy)
-    {
-        var typed = (CacheSpecs)specs;
+    public static ICacheSpecs WithPolicyOf(this ICacheSpecs specs, ICacheSpecs specsWithPolicy) => 
+        (CacheSpecs)specs with { PolicyMaker = specsWithPolicy.PolicyMaker };
 
-        return typed with { PolicyMaker = specsWithPolicy.PolicyMaker };
-    }
     /// <summary>
     /// Give access to internal VaryByList.
     /// </summary>
@@ -26,7 +17,7 @@ public static class CacheSpecsExtensions
     /// <returns></returns>
     [ShowApiWhenReleased(ShowApiMode.Never)]
     public static CacheKeyConfig GetConfig(this ICacheSpecs specs)
-        => ((CacheSpecs)specs).KeyConfiguration;
+        => ((CacheSpecs)specs).KeyConfig;
 
 
     public static ICacheSpecs AttachModel(this ICacheSpecs specs, IDictionary<string, object?>? model)
@@ -35,12 +26,9 @@ public static class CacheSpecsExtensions
         var l = typed.Log.Fn<ICacheSpecs>($"hasModel: {model != null}; count: {model?.Count}");
         return l.ReturnAsOk(typed with
         {
-            CacheConfigToPolicyMaker = typed.CacheConfigToPolicyMaker with
+            CacheSpecsContextAndTools = typed.CacheSpecsContextAndTools with
             {
-                CacheContextTools = typed.CacheConfigToPolicyMaker.CacheContextTools with
-                {
-                    Model = model
-                }
+                Model = model
             }
         });
     }

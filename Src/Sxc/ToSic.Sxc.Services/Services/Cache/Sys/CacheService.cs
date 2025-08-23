@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -49,25 +50,22 @@ internal class CacheService(
     public ICacheSpecs CreateSpecs(string key, NoParamOrder protector = default, string? regionName = default, bool? shared = default)
     {
         var l = Log.Fn<ICacheSpecs>($"Key: {key} / Segment: {regionName}");
-        var keySpecs = new CacheKeySpecs
+        var keySpecs = new CacheKeyParts
         {
-            AppId = shared == true ? CacheKeySpecs.NoApp : AppId,
+            AppId = shared == true ? CacheKeyParts.NoApp : AppId,
             Main = key,
             RegionName = regionName,
         };
-        var cacheContextTools = new CacheContextTools
-        {
-            AppPathsLazy = appPathsLazy,
-            ExCtx = ExCtx,
-            BasePolicyMaker = cache.NewPolicyMaker(),
-            KeySpecs = keySpecs,
-        };
         var specs = new CacheSpecs(Log)
         {
-            //CacheContextTools = cacheContextTools,
-            CacheConfigToPolicyMaker = new(Log) { CacheContextTools = cacheContextTools },
+            CacheSpecsContextAndTools = new(Log)
+            {
+                AppPathsLazy = appPathsLazy,
+                ExCtx = ExCtx,
+                BasePolicyMaker = cache.NewPolicyMaker(),
+                BaseKeyParts = keySpecs,
+            },
             IsEnabled = true,
-            //KeySpecs = keySpecs,
         };
         return l.Return(specs);
     }

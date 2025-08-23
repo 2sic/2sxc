@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Cms.Users;
 
-namespace ToSic.Sxc.Services.Cache.Sys;
+namespace ToSic.Sxc.Services.Cache.Sys.CacheKey;
 public static class CacheKeyConfigForElevationExtensions
 {
     public static int GetSlidingAny(this CacheKeyConfig keyConfig)

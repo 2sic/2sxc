@@ -1,5 +1,6 @@
 ﻿using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.Cache.Sys;
+using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 using static ToSic.Sxc.Services.Cache.Sys.CacheServiceConstants;
 #pragma warning disable xUnit1026
 
@@ -14,15 +15,15 @@ public class CacheKeyTests
     [InlineData("")]
     //[ExpectedException(typeof(ArgumentException))]
     public void MainKeyBad(string main)
-        => Throws<ArgumentException>(() => Equal(FullDefaultPrefix + main, new CacheKeySpecs { AppId = 0, Main = main }.FinalKey));
+        => Throws<ArgumentException>(() => Equal(FullDefaultPrefix + main, new CacheKeyParts { AppId = 0, Main = main }.GetKey()));
 
     [Theory]
     [InlineData(Sep + "App:0", 0, "zero")]
     [InlineData(Sep + "App:27", 27, "27")]
     [InlineData(Sep + "App:42", 42, "42")]
-    [InlineData("", CacheKeySpecs.NoApp, "no app")]
+    [InlineData("", CacheKeyParts.NoApp, "no app")]
     public void MainKeyAppIds(string expectedReplace, int appId, string message)
-        => Equal(FullDefaultPrefix.Replace(Sep + "App:0", expectedReplace) + "Test", new CacheKeySpecs { AppId = appId, Main = "Test" }.FinalKey);
+        => Equal(FullDefaultPrefix.Replace(Sep + "App:0", expectedReplace) + "Test", new CacheKeyParts { AppId = appId, Main = "Test" }.GetKey());
 
 
 
@@ -31,7 +32,7 @@ public class CacheKeyTests
     [InlineData("A\nB")]
     [Theory]
     public void MainKeyOnly(string main)
-        => Equal( FullDefaultPrefix + main, new CacheKeySpecs{ AppId = 0, Main = main }.FinalKey);
+        => Equal( FullDefaultPrefix + main, new CacheKeyParts{ AppId = 0, Main = main }.GetKey());
 
     private const string FullSegmentPrefix = $"{DefaultPrefix}{Sep}App:0{Sep}{SegmentPrefix}";
 
@@ -40,7 +41,7 @@ public class CacheKeyTests
     [InlineData($"MySegment{Sep}Main", "Main", "MySegment")]
     [Theory]
     public void MainAndSegment(string expected, string main, string segment)
-        => Equal( FullSegmentPrefix + expected, new CacheKeySpecs { AppId = 0, Main = main, RegionName = segment }.FinalKey);
+        => Equal( FullSegmentPrefix + expected, new CacheKeyParts { AppId = 0, Main = main, RegionName = segment }.GetKey());
 
 
     [Fact]
@@ -53,7 +54,7 @@ public class CacheKeyTests
             { "A", "AVal" },
             { "C", "CVal" }
         };
-        var resultDic1 = CacheKeyGenerator.GetVaryByOfDic(dic);
+        var resultDic1 = CacheKeyPartsExtensions.GetVaryByOfDic(dic);
         Equal(expected, resultDic1);
 
         var dic2 = new Dictionary<string, string>
@@ -62,7 +63,7 @@ public class CacheKeyTests
             { "A", "AVal" },
             { "B", "BVal" }
         };
-        var resultDic2 = CacheKeyGenerator.GetVaryByOfDic(dic2);
+        var resultDic2 = CacheKeyPartsExtensions.GetVaryByOfDic(dic2);
         Equal(expected, resultDic2);
         Equal(resultDic1, resultDic2);
 

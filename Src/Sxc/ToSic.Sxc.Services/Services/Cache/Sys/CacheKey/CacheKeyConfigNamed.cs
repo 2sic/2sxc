@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Services.Cache.Sys;
+﻿namespace ToSic.Sxc.Services.Cache.Sys.CacheKey;
 
 /// <summary>
 /// Describes a cache configuration for named parameters.

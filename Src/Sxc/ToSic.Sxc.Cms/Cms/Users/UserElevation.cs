@@ -1,5 +1,8 @@
 ﻿namespace ToSic.Sxc.Cms.Users;
 
+/// <summary>
+/// Describes the elevation of a user, which is a simplified way to describe permissions.
+/// </summary>
 [WorkInProgressApi("v20.01")]
 public enum UserElevation
 {

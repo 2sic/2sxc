@@ -2,6 +2,7 @@
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
 using ToSic.Sxc.Services.Cache.Sys;
+using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 using static ToSic.Sxc.Services.Cache.Sys.CacheServiceConstants;
 using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
 
@@ -162,7 +163,7 @@ public class CacheSpecsTests(ExecutionContext exCtx)
     public void TestCacheKeys()
     {
         var key = "TestKey";
-        var previousKey = new CacheKeySpecs { AppId = -1, Main = key }.FinalKey;
+        var previousKey = new CacheKeyParts { AppId = -1, Main = key }.GetKey();
 
         var spec = GetForMain(key);
         Equal(previousKey, spec.Key);

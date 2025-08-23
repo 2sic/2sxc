@@ -2,7 +2,7 @@
 using ToSic.Sys.Memory;
 using ToSic.Sys.Utils;
 
-namespace ToSic.Sxc.Services.Cache.Sys;
+namespace ToSic.Sxc.Services.Cache.Sys.CacheKey;
 
 /// <summary>
 /// Internal configuration for the cache which will be relevant to the final key.
@@ -19,8 +19,8 @@ public record CacheKeyConfig(): ICanEstimateSize
         if (sliding != null)
             ForElevation = new() { [UserElevation.Any] = sliding.Value };
 
-        foreach (var varyPart in varyBy.CsvToArrayWithoutEmpty())
-            switch (varyPart.ToLowerInvariant())
+        foreach (var varyPart in (varyBy?.ToLowerInvariant()).CsvToArrayWithoutEmpty())
+            switch (varyPart)
             {
                 case "page":
                     ByPage = true;
@@ -36,10 +36,18 @@ public record CacheKeyConfig(): ICanEstimateSize
             }
 
         if (!string.IsNullOrWhiteSpace(url))
-            ByPageParameters = new() { CaseSensitive = false, Names = url};
+            ByPageParameters = new()
+            {
+                CaseSensitive = false,
+                Names = url
+            };
 
         if (!string.IsNullOrWhiteSpace(model))
-            ByModel = new() { CaseSensitive = false, Names = model };
+            ByModel = new()
+            {
+                CaseSensitive = false,
+                Names = model
+            };
     }
 
 

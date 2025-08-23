@@ -2,7 +2,7 @@
 using ToSic.Sys.Users;
 using ToSic.Sys.Wrappers;
 
-namespace ToSic.Sxc.Cms.Users;
+namespace ToSic.Sxc.Cms.Users.Sys;
 
 public static class UserElevationExtensions
 {
