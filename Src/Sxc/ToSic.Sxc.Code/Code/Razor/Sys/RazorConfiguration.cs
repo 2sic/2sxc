@@ -13,7 +13,6 @@ public class RazorConfiguration(RenderSpecs renderSpecs, ILog parentLog): Helper
     // The class may be expanded with properties and methods as needed in the future.
 
     public string? PartialCache(NoParamOrder protector = default,
-        int? sliding = null, // legacy name
         int? seconds = null,
         string? watch = null,
         string? varyBy = null,
@@ -24,8 +23,6 @@ public class RazorConfiguration(RenderSpecs renderSpecs, ILog parentLog): Helper
         if (Parent == null)
             return null;
 
-        // temp!
-        seconds ??= sliding;
         var l = Log.Fn<string?>($"{nameof(seconds)}: '{seconds}', {nameof(watch)}: '{watch}', {nameof(varyBy)}: '{varyBy}', {nameof(url)}: '{url}', {nameof(model)}: '{model}'");
         if (seconds != null || watch != null || varyBy != null || url != null || model != null)
         {
