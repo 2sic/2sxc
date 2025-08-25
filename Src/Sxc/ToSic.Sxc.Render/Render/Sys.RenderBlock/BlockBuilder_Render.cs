@@ -31,7 +31,7 @@ public partial class BlockBuilder
             // Caching only allowed if no errors, no exceptions, and the content-block is real (no preview etc.)
             var canCache = !isErr
                            && exceptionsOrNull.SafeNone()
-                           && Block.ContentGroupExists
+                           && Block.ConfigurationIsReady
                            && (Block.ContentGroupExists || Block.Configuration.PreviewViewEntity != null);
 
             // The change summary should only happen at top-level
@@ -91,7 +91,8 @@ public partial class BlockBuilder
             // This way first the top block does this, later on inner-child blocks
             // will also do it (since this same code is called for them when they render).
             // Later on we'll collect the result.
-            BlockInfoHelpers.PushAppDependenciesToRoot(Block);
+
+            Services.BlockCachingHelper.PushAppDependenciesToRoot(Block);
 
             // do pre-check to see if system is stable & ready
             var (body, err) = GenerateErrorMsgIfInstallationNotOk();
@@ -197,7 +198,7 @@ public partial class BlockBuilder
             var addJsApiOnly = false;
             if (!addEditCtx && Block.BlockFeatureKeys.Any())
             {
-                var features = BlockInfoHelpers.BlockFeatures(Block, Log);
+                var features = BlockFeaturesHelpers.BlockFeatures(Block, Log);
                 addEditCtx = features.Contains(SxcPageFeatures.ContextModule);
                 addJsApiOnly = features.Contains(SxcPageFeatures.JsApiOnModule);
             }

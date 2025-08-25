@@ -3,25 +3,9 @@ using ToSic.Sys.Capabilities.Features;
 
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
-internal class OutputCacheManager(MemoryCacheService memoryCacheService, LazySvc<ISysFeaturesService> featuresDoNotConnect) : ServiceBase(SxcLogName + ".OutputCacheManager", connect: [memoryCacheService])
+public class OutputCacheManager(MemoryCacheService memoryCacheService, LazySvc<ISysFeaturesService> featuresDoNotConnect) : ServiceBase(SxcLogName + ".OutputCacheManager", connect: [memoryCacheService])
 {
-    internal const string GlobalCacheRoot = "Sxc-LightSpeed.Module.";
-
-    internal static string Id(int moduleId, int pageId, int? userId, string? view, string? suffix, string? currentCulture)
-    {
-        var id = $"{GlobalCacheRoot}p:{pageId}-m:{moduleId}";
-        if (userId.HasValue)
-            id += $"-u:{userId.Value}";
-        if (view != null)
-            id += $"-v:{view}";
-        if (suffix != null)
-            id += $"-s:{suffix}";
-        if (currentCulture != null)
-            id += $"-c:{currentCulture}";
-        return id;
-    }
-
-    public string Add(string cacheKey, OutputCacheItem data, int duration, List<ICanBeCacheDependency> apps, IList<string>? appPaths)
+    public string Add(string cacheKey, OutputCacheItem data, int duration, List<string> apps, IList<string>? appPaths)
     {
         var l = Log.Fn<string>($"key: {cacheKey}", timer: true);
 
@@ -33,11 +17,14 @@ internal class OutputCacheManager(MemoryCacheService memoryCacheService, LazySvc
         {
             // Never store 0, that's like never-expire
             //var expiration = new TimeSpan(0, 0, duration);
+            List<string> keys = [.. apps, MemoryCacheService.ExpandDependencyId(featuresDoNotConnect.Value)];
+            
+            l.A("Keys: " + string.Join(", ", keys));
 
             // experimental, maybe use as replacement... v17.09+
             var policyMaker = memoryCacheService.NewPolicyMaker()
                 .SetSlidingExpiration(duration)   // Never store 0, that's like never-expire
-                .WatchNotifyKeys([..apps, featuresDoNotConnect.Value]);
+                .WatchCacheKeys(keys);
 
             if (appPaths?.Any() == true)
                 policyMaker = policyMaker

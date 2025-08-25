@@ -46,11 +46,13 @@ internal class DnnUser(LazySvc<DnnSecurity> dnnSecurity)
     private static List<int> BuildRoleList()
     {
         var psCurrent = PortalSettings.Current;
-        if (psCurrent == null) return [];
+        if (psCurrent == null)
+            return [];
 
         var portalId = psCurrent.PortalId;
         var user = psCurrent.UserInfo;
-        if (user == null) return [];
+        if (user == null)
+            return [];
 
         var rc = new DotNetNuke.Security.Roles.RoleController();
         return user.Roles
@@ -64,10 +66,10 @@ internal class DnnUser(LazySvc<DnnSecurity> dnnSecurity)
 
     public bool IsAnonymous => Id == -1;
 
-    public string Username => DnnUserInfo?.Username;
+    public string Username => DnnUserInfo?.Username ?? "";
 
-    public string Name => DnnUserInfo?.DisplayName;
+    public string Name => DnnUserInfo?.DisplayName ?? "";
 
-    public string Email => DnnUserInfo?.Email;
+    public string Email => DnnUserInfo?.Email ?? "";
 
 }

@@ -196,11 +196,11 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     /// <inheritdoc cref="ITypedApi.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => CodeApi.Cdf.AsTyped(original, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
+        => CodeApi.Cdf.AsTyped(original, new() { EntryPropIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="ITypedApi.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => CodeApi.Cdf.AsTypedList(list, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
+        => CodeApi.Cdf.AsTypedList(list, new() { EntryPropIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="ITypedApi.AsStack" />
     public ITypedStack AsStack(params object[] items)

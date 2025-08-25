@@ -1,0 +1,36 @@
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+GO
+
+-- =====================================================================
+-- Switch default value from GETDATE() to GETUTCDATE() on [dbo].[TsDynDataTransaction].[Timestamp] if the current default uses GETDATE()
+-- =====================================================================
+
+DECLARE @Definition nvarchar(max);
+
+SELECT @Definition = dc.definition
+FROM sys.default_constraints dc
+         JOIN sys.columns c ON c.default_object_id = dc.object_id
+         JOIN sys.tables t ON t.object_id = c.object_id
+         JOIN sys.schemas s ON s.schema_id = t.schema_id
+WHERE s.name = 'dbo'
+  AND t.name = 'TsDynDataTransaction'
+  AND c.name = 'Timestamp'
+  AND dc.name = 'DF_TsDynDataTransaction_Timestamp';
+
+IF @Definition IS NOT NULL AND UPPER(REPLACE(@Definition, ' ', '')) LIKE '%GETDATE()%'
+    BEGIN
+        ALTER TABLE [dbo].[TsDynDataTransaction]
+            DROP CONSTRAINT [DF_TsDynDataTransaction_Timestamp];
+
+        ALTER TABLE [dbo].[TsDynDataTransaction]
+            ADD CONSTRAINT [DF_TsDynDataTransaction_Timestamp]
+                DEFAULT (GETUTCDATE()) FOR [Timestamp];
+    END
+GO

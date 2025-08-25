@@ -22,7 +22,7 @@ public record PageFeature : IPageFeature
     /// </summary>
     public string Name { get; init; } = "";
 
-    public string? Html { get; set; } // TODO: INIT!
+    public string? Html { get; init; }
 
     /// <summary>
     /// Nice description of the feature.

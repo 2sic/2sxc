@@ -1,6 +1,7 @@
 ﻿using Custom.Razor.Sys;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Razor;
+using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.ExecutionContext;
 using IHasLog = ToSic.Sys.Logging.IHasLog;
 using ILog = ToSic.Sys.Logging.ILog;
@@ -30,13 +31,16 @@ public abstract class RazorComponentBase : WebPageBase, IRazor, IHasCodeLog, IHa
     /// This is needed by the render helper to provide the default behavior
     /// if we are not using Roslyn
     /// </summary>
-    internal HelperResult BaseRenderPage(string path, object data = null)
+    internal virtual HelperResult BaseRenderPage(string path, RenderSpecs renderSpecs)
     {
-        var l = (this as IHasLog).Log.Fn<HelperResult>($"{nameof(path)}: '{path}', {nameof(data)}: {data != null}");
-        // TODO: VERIFY / handle conversion from 'object' to 'params object[]'
+        var data = renderSpecs.Data;
+        var l = (this as IHasLog).Log.Fn<HelperResult>($"{nameof(path)}: '{path}', {nameof(data)}: {data != null}; partialSpecs: {renderSpecs.PartialSpecs}");
+
+        // Do the proper RenderPage of the base class, and also pass in the RenderSpecs
+        // because they might be used to communicate caching settings back.
         return data == null
-            ? l.Return(base.RenderPage(path), "default render, no data")
-            : l.Return(base.RenderPage(path, data), "default render with data");
+            ? l.Return(base.RenderPage(path, new { }, renderSpecs), "default render, no data")
+            : l.Return(base.RenderPage(path, data, renderSpecs), "default render with data");
     }
 
     /// <inheritdoc />

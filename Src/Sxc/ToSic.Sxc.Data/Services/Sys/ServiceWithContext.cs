@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Services.Sys;
 // #NoEditorBrowsableBecauseOfInheritance
 //[ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
-public abstract class ServiceWithContext(string logName, NoParamOrder protect = default, /*bool errorIfNotConnected = false,*/ object[]? connect = default)
+public abstract class ServiceWithContext(string logName, NoParamOrder protect = default, object[]? connect = default)
     : ServiceBase(logName, protect: protect, connect: connect), INeedsExecutionContext, ICanDebug
 {
     /// <summary>

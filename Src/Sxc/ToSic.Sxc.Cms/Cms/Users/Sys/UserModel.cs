@@ -80,7 +80,7 @@ public record UserModel : IRawEntity, IHasIdentityNameId, IUserModel
     public bool IsContentEditor { get; init; }
     public bool IsSiteDeveloper => IsSystemAdmin;
 
-    public bool IsAnonymous { get; init; }
+    public bool IsAnonymous { get; init; } = true;  // Default is true, everything else is default false.
 
     ///// <summary>
     ///// Ignore, just included for IUser compatibility

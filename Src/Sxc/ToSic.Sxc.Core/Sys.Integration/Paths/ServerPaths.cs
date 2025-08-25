@@ -46,7 +46,8 @@ internal class ServerPaths: ServerPathsBase
     }
     private readonly LazySvc<IValueConverter> _valueConverterLazy;
 
-    protected string MapContentPath(string virtualPath) => HostingEnvironment.MapPath(virtualPath);
+    private string MapContentPath(string virtualPath)
+        => HostingEnvironment.MapPath(virtualPath) ?? "error mapping path.";
 
     protected override string? FullPathOfReference(int id)
     {

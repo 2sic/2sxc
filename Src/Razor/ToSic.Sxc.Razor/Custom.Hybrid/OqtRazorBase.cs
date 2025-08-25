@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc.Razor.Internal;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
-using ToSic.Sxc.Engines;
+using ToSic.Sxc.Engines.Sys;
 using ToSic.Sxc.Razor;
+using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.ExecutionContext;
 using IHasLog = ToSic.Sys.Logging.IHasLog;
 using ILog = ToSic.Sys.Logging.ILog;
@@ -88,7 +90,7 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
     #region Dynamic Model
 
-    void ISetDynamicModel.SetDynamicModel(object data) => RzrHlp.SetDynamicModel(data);
+    void ISetDynamicModel.SetDynamicModel(RenderSpecs renderSpecs) => RzrHlp.SetDynamicModel(renderSpecs);
 
     #endregion
 
@@ -98,6 +100,7 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
     /// <inheritdoc cref="ICreateInstance.CreateInstancePath"/>
     [PrivateApi]
+    [field: AllowNull, MaybeNull]
     // Note: The path for CreateInstance / GetCode - unsure if this is actually used anywhere on this object
     string IGetCodePath.CreateInstancePath
     {

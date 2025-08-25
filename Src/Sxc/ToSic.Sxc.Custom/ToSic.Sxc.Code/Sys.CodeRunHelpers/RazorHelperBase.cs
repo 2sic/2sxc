@@ -9,8 +9,11 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
 {
     public List<Exception>? ExceptionsOrNull { get; private set; }
 
-    public void Add(Exception ex)
-        => (ExceptionsOrNull ??= []).Add(ex);
+    public Exception Add(Exception ex)
+    {
+        (ExceptionsOrNull ??= []).Add(ex);
+        return ex;
+    }
 
     /// <summary>
     /// 

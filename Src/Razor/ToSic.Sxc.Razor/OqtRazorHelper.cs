@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Data.Sys.Wrappers;
-using ToSic.Sxc.Engines;
+using ToSic.Sxc.Engines.Sys;
+using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Utils;
 
@@ -28,7 +29,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
     {
         get
         {
-            // 2026-06-23 2dm - original code, looks buggy because it would often return null, which should never happen IMHO
+            // 2026-05-23 2dm - original code, looks buggy because it would often return null, which should never happen IMHO
             //// Child razor page will have _dynCode == null, so it is provided via ViewData from parent razor page.
             //if (_dynCode != null || owner.ViewData?[DynCode] is not IExecutionContext cdRt)
             //    return _dynCode;
@@ -37,7 +38,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
                 return _exCtx;
             
             // Child razor page will have _dynCode == null, so it is provided via ViewData from parent razor page.
-            // changed 2026-06-23 2dm to throw if null, because I don't think it's correct
+            // changed 2025-06-23 2dm to throw if null, because I don't think it's correct
             // If I'm wrong, pls discuss.
             if (owner.ViewData?[DynCode] is not IExecutionContext cdRt)
                 throw new InvalidOperationException(
@@ -62,7 +63,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
         return value;
     }
 
-    internal new IExecutionContext ExCtx => base.ExCtxOrNull ?? ExCtxRoot!;
+    internal new IExecutionContext ExCtx => ExCtxOrNull ?? ExCtxRoot!;
 
     #endregion
 
@@ -72,10 +73,17 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
     public dynamic DynamicModel => field ??= owner.GetService<ICodeDataPoCoWrapperService>()
         .DynamicFromObject(_overridePageData ?? owner.Model!, WrapperSettings.Dyn(false, false));
 
+    private RenderSpecs? _renderSpecs;
     private object? _overridePageData;
 
-    public void SetDynamicModel(object data)
-        => _overridePageData = data;
+    // TODO: DON'T think this is called in Oqtane - maybe document how it works, or remove it?
+    public void SetDynamicModel(RenderSpecs renderSpecs)
+    {
+        var l = Log.Fn();
+        _renderSpecs = renderSpecs;
+        _overridePageData = renderSpecs.Data;
+        l.Done();
+    }
 
     [field: AllowNull, MaybeNull]
     public TypedCode16Helper CodeHelper
@@ -85,7 +93,7 @@ internal class OqtRazorHelper<TModel>(OqtRazorBase<TModel> owner) : RazorHelperB
         => new(
             helperSpecs: new(ExCtx, true, owner.Path),
             getRazorModel: () => _overridePageData ?? owner.Model,
-            getModelDic: () => (_overridePageData ?? owner.Model)?.ToDicInvariantInsensitive()!
+            getModelDic: () => (_renderSpecs?.DataDic ?? owner.Model?.ToDicInvariantInsensitive())!
         );
 
     #endregion

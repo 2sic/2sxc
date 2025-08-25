@@ -102,6 +102,20 @@ public interface ICmsUser: IUserModel, IHasMetadata
     new bool IsContentAdmin { get; }
 
     /// <summary>
+    /// Information if the current user is Site Content Editor.
+    /// </summary>
+    /// <example>
+    /// 🪒 Use in Dynamic Razor: `CmsContext.User.IsContentEditor`  
+    /// 🪒 Use in Typed Razor: `MyUser.IsContentEditor`
+    /// </example>
+    /// <remarks>
+    /// Basically this means a user has Edit permissions, may not be able to publish the content they created.
+    /// 
+    /// History: Added in 2sxc 20.01 for new feature in DNN 10
+    /// </remarks>
+    new bool IsContentEditor { get; }
+
+    /// <summary>
     /// Information if the current user is System Administrator.
     /// </summary>
     /// <example>

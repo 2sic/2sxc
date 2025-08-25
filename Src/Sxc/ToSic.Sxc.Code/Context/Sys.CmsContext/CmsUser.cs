@@ -9,7 +9,6 @@ namespace ToSic.Sxc.Context.Sys.CmsContext;
 internal class CmsUser(CmsContext parent, IUserModel userModel, IMetadataOfSource appReader)
     : CmsContextPartBase<IUser>(parent, parent.CtxSite.User), ICmsUser
 {
-    //public string Email => IsAnonymous ? "" : GetContents().Email;
     public string Email => userModel.Email ?? ""; // TODO: not sure if defaulting to empty string is good, as it's probably different from the IUserModel
 
 

@@ -6,7 +6,7 @@ using ToSic.Sxc.Services.OutputCache;
 namespace ToSic.Sxc.Web.Sys.LightSpeed;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class LightSpeedDecorator(IEntity? entity) : EntityBasedType(entity!), IOutputCacheSettings
+public class LightSpeedDecorator(IEntity? entity) : EntityBasedType(entity!), IOutputCacheSettings
 {
     /// <summary>
     /// Nice name. If it ever changes, remember to also update UI as it has references to it.

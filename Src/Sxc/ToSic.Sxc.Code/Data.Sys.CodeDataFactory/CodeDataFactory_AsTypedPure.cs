@@ -11,7 +11,7 @@ partial class CodeDataFactory
     {
         var l = Log.Fn<ITyped>();
 
-        if (AsTypedPreflightReturnNull(data, NameOfAsTyped, settings.FirstIsRequired, detailsMessage))
+        if (AsTypedPreflightReturnNull(data, NameOfAsTyped, settings.EntryPropIsRequired, detailsMessage))
             return l.ReturnNull();
 
         if (data is ITyped alreadyTyped)
@@ -30,7 +30,7 @@ partial class CodeDataFactory
     {
         var l = Log.Fn<IEnumerable<ITyped>>();
 
-        if (AsTypedPreflightReturnNull(list, NameOfAsTypedList, settings.FirstIsRequired))
+        if (AsTypedPreflightReturnNull(list, NameOfAsTypedList, settings.EntryPropIsRequired))
             return l.ReturnNull();
 
         if (list is IEnumerable<ITyped> alreadyTyped)

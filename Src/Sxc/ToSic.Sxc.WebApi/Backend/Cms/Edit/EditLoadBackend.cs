@@ -141,7 +141,7 @@ public partial class EditLoadBackend(
                             .Select(a => a with
                             {
                                 // ensure that the input-type is set, otherwise it will be null
-                                InputType = InputTypes.MapInputTypeV10(a.InputType)
+                                InputType = InputTypes.MapInputTypeV10(a.InputType! /* it can't really be null, only in very old imports, and this is not an import */)
                             })
                             .ToListOpt(),
                         }
@@ -184,9 +184,8 @@ public partial class EditLoadBackend(
         result = result with
         {
             Context = contextBuilder.InitApp(context.AppReaderRequired)
-                .Get(
-                    Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features |
-                    (isSystemType ? Ctx.FeaturesForSystemTypes : Ctx.Features), CtxEnable.EditUi),
+                .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.UserRoles | Ctx.Features |
+                     (isSystemType ? Ctx.FeaturesForSystemTypes : Ctx.Features), CtxEnable.EditUi),
 
             // Load settings for the front-end
             Settings = loadSettings.GetSettings(context, usedTypes, result.ContentTypes, appWorkCtx),

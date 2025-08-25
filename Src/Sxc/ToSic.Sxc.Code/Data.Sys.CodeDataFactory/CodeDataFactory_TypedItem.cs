@@ -163,8 +163,8 @@ partial class CodeDataFactory
         IEnumerable<ITypedItem> FallbackOrErrorAndLog(string fallbackMsg, string exMsg)
             => fallback != null
                 ? l.Return(fallback, fallbackMsg + ", fallback")
-                : settings.FirstIsRequired
-                    ? throw l.Done(new ArgumentException($@"Conversion with {nameof(AsItems)} failed, {nameof(settings.FirstIsRequired)}=true. {exMsg}", nameof(list)))
+                : settings.EntryPropIsRequired
+                    ? throw l.Done(new ArgumentException($@"Conversion with {nameof(AsItems)} failed, {nameof(settings.EntryPropIsRequired)}=true. {exMsg}", nameof(list)))
                     : l.Return([], "no fallback, not required, empty list");
     }
 

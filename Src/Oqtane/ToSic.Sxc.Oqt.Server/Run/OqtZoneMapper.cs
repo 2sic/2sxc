@@ -5,6 +5,7 @@ using ToSic.Eav.Apps.Sys.Work;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys;
 using ToSic.Eav.Context.Sys.ZoneMapper;
+using ToSic.Sxc.Cms;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Shared;
 
@@ -35,12 +36,12 @@ internal class OqtZoneMapper(
         settingRepository.AddSetting(new()
         {
             CreatedBy = "2sxc", 
-            CreatedOn = DateTime.Now, 
+            CreatedOn = DateTime.UtcNow, 
             EntityId = tenantId, 
             EntityName = EntityNames.Site,
             ModifiedBy = "2sxc",
-            ModifiedOn = DateTime.Now,
-            SettingName = OqtConstants.SiteKeyForZoneId,
+            ModifiedOn = DateTime.UtcNow,
+            SettingName = SiteSettingNames.SiteKeyForZoneId,
             SettingValue = zoneId.ToString()
         });
         return zoneId;
@@ -50,7 +51,7 @@ internal class OqtZoneMapper(
     {
         var c = settingRepository.GetSettings(EntityNames.Site, tenantId).ToList();
 
-        var zoneSetting = c.FirstOrDefault(s => s.SettingName == OqtConstants.SiteKeyForZoneId);
+        var zoneSetting = c.FirstOrDefault(s => s.SettingName == SiteSettingNames.SiteKeyForZoneId);
         if (zoneSetting != null)
         {
             if (!int.TryParse(zoneSetting.SettingValue, out var zId))

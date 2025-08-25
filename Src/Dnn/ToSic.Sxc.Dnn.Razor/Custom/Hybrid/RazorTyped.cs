@@ -1,13 +1,15 @@
 ﻿using Custom.Razor.Sys;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code.Sys;
+using ToSic.Sxc.Code.Razor;
+using ToSic.Sxc.Code.Razor.Sys;
 using ToSic.Sxc.Code.Sys.CodeApi;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Code.Sys.CodeRunHelpers;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn.Razor;
 using ToSic.Sxc.Dnn.Razor.Sys;
-using ToSic.Sxc.Engines;
+using ToSic.Sxc.Engines.Sys;
+using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Code.Help;
@@ -63,8 +65,21 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
     /// <inheritdoc cref="CodeTyped.Customize"/>
     protected ICodeCustomizer Customize => field ??= CodeApi.GetService<ICodeCustomizer>(reuse: true);
 
-    void ISetDynamicModel.SetDynamicModel(object data) => _overridePageData = data;
+    void ISetDynamicModel.SetDynamicModel(RenderSpecs viewData)
+    {
+        _renderSpecs = viewData;
 
+        // Only overwrite if data is not null
+        if (viewData.Data != null)
+            _overridePageData = viewData.Data;
+    }
+
+    private RenderSpecs _renderSpecs;
+
+    private RenderSpecs GetRenderSpecs()
+    {
+        return _renderSpecs ??= PageData.Values.FirstOrDefault(value => value is RenderSpecs) as RenderSpecs;
+    }
     private object _overridePageData;
 
     private TypedCode16Helper CreateCodeHelper() =>
@@ -73,7 +88,7 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
             getRazorModel: () => _overridePageData
                                  // the default/only value would be on a 0 key
                                  ?? (PageData?.TryGetValue(0, out var zeroData) ?? false ? zeroData as object : null),
-            () => _overridePageData?.ToDicInvariantInsensitive()
+            () => GetRenderSpecs()?.DataDic
                   ?? PageData?
                       .Where(pair => pair.Key is string)
                       .ToDictionary(pair => pair.Key.ToString(), pair => pair.Value, InvariantCultureIgnoreCase)
@@ -172,11 +187,11 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
 
     /// <inheritdoc cref="ITypedApi.AsTyped" />
     public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => CodeApi.Cdf.AsTyped(original, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
+        => CodeApi.Cdf.AsTyped(original, new() { EntryPropIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="ITypedApi.AsTypedList" />
     public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
-        => CodeApi.Cdf.AsTypedList(list, new() { FirstIsRequired = false, ItemIsStrict = propsRequired ?? true });
+        => CodeApi.Cdf.AsTypedList(list, new() { EntryPropIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="ITypedApi.AsStack" />
     public ITypedStack AsStack(params object[] items)
@@ -219,4 +234,13 @@ public abstract class RazorTyped: RazorComponentBase, IRazor, ITypedCode16, IHas
 
     #endregion
 
+
+    #region Experimental Configuration
+
+    [WorkInProgressApi("not yet public or final, WIP v20.00.0x")]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    // [field: AllowNull, MaybeNull]
+    public IRazorConfiguration Configuration => field ??= new RazorConfiguration(GetRenderSpecs(), RzrHlp.Log);
+
+    #endregion
 }

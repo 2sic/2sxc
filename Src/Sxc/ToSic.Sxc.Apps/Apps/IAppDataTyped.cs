@@ -13,13 +13,13 @@ public interface IAppDataTyped: IDataSource
     #region CRUD
 
     /// <inheritdoc cref="IAppData.Create(string, Dictionary{string, object}, string, ITarget)"/>
-    IEntity Create(string contentTypeName, Dictionary<string, object> values, string? userName = null, ITarget? target = null);
+    IEntity Create(string contentTypeName, Dictionary<string, object?> values, string? userName = null, ITarget? target = null);
 
     /// <inheritdoc cref="IAppData.Create(string, IEnumerable{Dictionary{string, object}}, string)"/>
-    IEnumerable<IEntity> Create(string contentTypeName, IEnumerable<Dictionary<string, object>> multiValues, string? userName = null);
+    IEnumerable<IEntity> Create(string contentTypeName, IEnumerable<Dictionary<string, object?>> multiValues, string? userName = null);
 
     /// <inheritdoc cref="IAppData.Update"/>
-    void Update(int entityId, Dictionary<string, object> values, string? userName = null);
+    void Update(int entityId, Dictionary<string, object?> values, string? userName = null);
 
     /// <inheritdoc cref="IAppData.Delete"/>
     void Delete(int entityId, string? userName = null);

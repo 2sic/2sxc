@@ -51,13 +51,14 @@ public abstract class ModuleProBase: ModuleBase, IOqtHybridLog
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
-        if (firstRender)
+        FirstRender = firstRender;
+
+        // Only enable JS after the page is interactive (not during prerender)
+        if (!IsSafeToRunJs && !IsPrerendering())
         {
-            SxcInterop = new(JSRuntime);
-            // now we are safe to have SxcInterop and run js
+            SxcInterop ??= new(JSRuntime);
             IsSafeToRunJs = true;
         }
-        FirstRender = firstRender;
     }
 
     /// <summary>

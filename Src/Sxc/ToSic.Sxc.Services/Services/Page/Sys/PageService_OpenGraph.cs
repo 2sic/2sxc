@@ -5,6 +5,7 @@ namespace ToSic.Sxc.Services.Page.Sys;
 partial class PageService
 {
     /// <inheritdoc />
-    public string AddOpenGraph(string property, string content) => AddToHead(new MetaOg(property, content));
+    public string AddOpenGraph(string property, string content)
+        => AddToHead(new MetaOg(property, content));
 
 }

@@ -30,8 +30,8 @@ public class InputTypes
         { "string-wysiwyg-adv", InputTypeWysiwyg },
     };
 
-    public static string MapInputTypeV10(string original) =>
-        InputTypeMap.TryGetValue(original, out var result)
+    public static string MapInputTypeV10(string original)
+        => InputTypeMap.TryGetValue(original, out var result)
             ? result
             : original;
 }

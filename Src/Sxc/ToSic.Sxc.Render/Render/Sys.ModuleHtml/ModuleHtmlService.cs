@@ -24,10 +24,10 @@ internal class ModuleHtmlService() : ServiceBase(SxcLogName + ".ModSvc"), IModul
     private readonly Dictionary<int, ModuleTags> _moduleTags = new();
 
     /// <inheritdoc />
-    public void AddTag(IHtmlTag tag, int moduleId, string? nameId = null, bool noDuplicates = false)
+    public IHtmlTag? AddTag(IHtmlTag tag, int moduleId, string? nameId = null, bool noDuplicates = false)
     {
-        if (tag is null)
-            return;
+        //if (tag is null)
+        //    return;
         nameId ??= tag.ToString();
 
 #if NETFRAMEWORK
@@ -36,9 +36,10 @@ internal class ModuleHtmlService() : ServiceBase(SxcLogName + ".ModSvc"), IModul
 #endif
         var moduleServiceData = GetOrCreateModuleData(moduleId);
         if (noDuplicates && moduleServiceData.ExistingKeys.Contains(nameId))
-            return;
+            return null;
         moduleServiceData.ExistingKeys.Add(nameId);
         moduleServiceData.MoreTags.Add(tag);
+        return tag;
     }
 
     /// <inheritdoc />

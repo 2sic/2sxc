@@ -18,7 +18,7 @@ public interface IAppData: IDataSource, IMetadataSource
     /// <remarks>
     /// Changed in 2sxc 10.30 - now returns the id of the created items
     /// </remarks>
-    IEntity Create(string contentTypeName, Dictionary<string, object> values, string? userName = null, ITarget? target = null);
+    IEntity Create(string contentTypeName, Dictionary<string, object?> values, string? userName = null, ITarget? target = null);
 
     /// <summary>
     /// Create a bunch of new entities in one single call (much faster, because cache doesn't need to repopulate in the meantime).
@@ -30,7 +30,7 @@ public interface IAppData: IDataSource, IMetadataSource
     /// You can't create items which are metadata with this, for that, please use the Create-one overload <br/>
     /// Changed in 2sxc 10.30 - now returns the id of the created items
     /// </remarks>
-    IEnumerable<IEntity> Create(string contentTypeName, IEnumerable<Dictionary<string, object>> multiValues, string? userName = null);
+    IEnumerable<IEntity> Create(string contentTypeName, IEnumerable<Dictionary<string, object?>> multiValues, string? userName = null);
 
     /// <summary>
     /// Update an existing item.
@@ -38,7 +38,7 @@ public interface IAppData: IDataSource, IMetadataSource
     /// <param name="entityId">The item ID</param>
     /// <param name="values">a dictionary of values to be updated</param>
     /// <param name="userName">the current username - will be logged as the author of the change</param>
-    void Update(int entityId, Dictionary<string, object> values, string? userName = null);
+    void Update(int entityId, Dictionary<string, object?> values, string? userName = null);
 
     /// <summary>
     /// Delete an existing item

@@ -29,8 +29,8 @@ namespace ToSic.Sxc.Oqt.Server.Code.Sys
             var encoding = Encoding.UTF8;
 
             var options = CSharpParseOptions.Default
-                .WithLanguageVersion(LanguageVersion.Latest)
-                .WithPreprocessorSymbols("OQTANE", "NETCOREAPP", "NET5_0");
+                .WithLanguageVersion(OqtRoslynConstants.LanguageVersion)
+                .WithPreprocessorSymbols(OqtRoslynConstants.PreprocessorSymbols);
 
             var syntaxTrees = new List<SyntaxTree>();
             var embeddedTexts = new List<EmbeddedText>();
@@ -96,8 +96,8 @@ namespace ToSic.Sxc.Oqt.Server.Code.Sys
             var encoding = Encoding.UTF8;
 
             var options = CSharpParseOptions.Default
-                .WithLanguageVersion(LanguageVersion.Latest)
-                .WithPreprocessorSymbols("OQTANE", "NETCOREAPP", "NET5_0");
+                .WithLanguageVersion(OqtRoslynConstants.LanguageVersion)
+                .WithPreprocessorSymbols(OqtRoslynConstants.PreprocessorSymbols);
 
             var syntaxTrees = new List<SyntaxTree>();
             var embeddedTexts = new List<EmbeddedText>();

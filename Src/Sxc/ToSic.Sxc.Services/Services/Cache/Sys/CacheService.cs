@@ -1,12 +1,13 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Sys.Configuration;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Caching;
 using ToSic.Sys.Capabilities.Features;
 
-namespace ToSic.Sxc.Services.Cache;
+namespace ToSic.Sxc.Services.Cache.Sys;
 
 /// <summary>
 /// WIP thoughts...
@@ -49,14 +50,25 @@ internal class CacheService(
     public ICacheSpecs CreateSpecs(string key, NoParamOrder protector = default, string? regionName = default, bool? shared = default)
     {
         var l = Log.Fn<ICacheSpecs>($"Key: {key} / Segment: {regionName}");
-        var keySpecs = new CacheKeySpecs(shared == true ? CacheKeySpecs.NoApp : AppId, key, regionName);
-        var specs = new CacheSpecs
+        var keySpecs = new CacheKeyParts
         {
-            AppPathsLazy = appPathsLazy,
-            AppReaders = appReaders,
-            ExCtx = ExCtx,
-            KeySpecs = keySpecs,
-            PolicyMaker = cache.NewPolicyMaker(),
+            AppId = shared == true ? CacheKeyParts.NoApp : AppId,
+            Main = key,
+            RegionName = regionName,
+        };
+        var specs = new CacheSpecs(Log)
+        {
+            CacheSpecsContextAndTools = new(Log)
+            {
+                AppPathsLazy = appPathsLazy,
+                ExCtx = ExCtx,
+                BasePolicyMaker = cache.NewPolicyMaker(),
+                BaseKeyParts = keySpecs,
+            },
+            KeyConfig = new()
+            {
+                ForElevation = ForElevationExtensions.ResetAll(0),
+            },
         };
         return l.Return(specs);
     }
@@ -64,14 +76,8 @@ internal class CacheService(
     public bool Contains(ICacheSpecs specs)
         => IsEnabled && cache.Contains(specs.Key);
 
-    //public bool Contains(string key)
-    //    => cache.Contains(new CacheKeySpecs(AppId, key).Key);
-
     public bool Contains<T>(ICacheSpecs specs)
         => IsEnabled && cache.TryGet<T>(specs.Key, out _);
-
-    //public bool Contains<T>(string key)
-    //    => cache.TryGet<T>(new CacheKeySpecs(AppId, key).Key, out _);
 
     public T? Get<T>(ICacheSpecs specs, NoParamOrder protector = default, T? fallback = default) 
         => IsEnabled ? cache.Get(specs.Key, fallback) : fallback;
@@ -83,7 +89,7 @@ internal class CacheService(
         if (cache.TryGet(specs.Key, out T? value))
             return value;
         
-        if (generate == null)
+        if (generate == null || !specs.IsEnabled)
             return default;
         var newValue = generate();
 
@@ -113,7 +119,7 @@ internal class CacheService(
 
     public void Set<T>(ICacheSpecs specs, T value, NoParamOrder protector = default)
     {
-        if (!IsEnabled)
+        if (!IsEnabled || !specs.IsEnabled)
             return;
         cache.Set(specs.Key, value, specs.PolicyMaker);
     }

@@ -28,6 +28,18 @@ public partial class SxcFeatures
         LicenseRules = SxcLicenseRules.ForPatronsPerfectionistAndPerformance,
     };
 
+    public static readonly Feature LightSpeedOutputCachePartials = new()
+    {
+        NameId = nameof(LightSpeedOutputCachePartials),
+        Guid = new("1f01d566-1877-40a3-93f2-5485a1718a36"),
+        Name = "LightSpeed Output Cache - Partials",
+        IsPublic = false,
+        Ui = false,
+        Description = "High-Performance OutputCache - Caching partial razor views.",
+        Security = FeaturesCatalogRules.Security0Neutral,
+        LicenseRules = SxcLicenseRules.ForPatronsPerfectionistAndPerformance,
+    };
+
     public static readonly Feature SmartDataCache = new()
     {
         NameId = nameof(SmartDataCache),

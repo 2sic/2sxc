@@ -27,7 +27,7 @@ internal partial class Metadata(IMetadata metadata, ICodeDataFactory cdf)
     private readonly bool _propsRequired = false;
 
     [field: AllowNull, MaybeNull]
-    public IEntity Entity => field ??= metadata.FirstOrDefault() ?? cdf.PlaceHolderInBlock(/*appIdOrNull ?? 0*/KnownAppsConstants.TransientAppId, /*parent*/ null, /*fieldName*/ null);
+    public IEntity Entity => field ??= metadata.FirstOrDefault() ?? Cdf.PlaceHolderInBlock(KnownAppsConstants.TransientAppId, parent: null, fieldName: null);
 
     /// <summary>
     /// TypedItem is only internal, for use in APIs which should only have one way to handle data.
@@ -44,11 +44,11 @@ internal partial class Metadata(IMetadata metadata, ICodeDataFactory cdf)
     /// <inheritdoc />
     public bool Debug { get; set; }
 
-    private ICodeDataFactory Cdf = cdf;
+    private ICodeDataFactory Cdf { get; }= cdf;
 
     [PrivateApi]
     [field: AllowNull, MaybeNull]
-    internal GetAndConvertHelper GetHelper => field ??= new(this, cdf, _propsRequired, childrenShouldBeDynamic: true, canDebug: this);
+    internal GetAndConvertHelper GetHelper => field ??= new(this, Cdf, _propsRequired, childrenShouldBeDynamic: true, canDebug: this);
 
     [PrivateApi]
     public IEntity? RootContentsForEqualityCheck => field
@@ -69,17 +69,13 @@ internal partial class Metadata(IMetadata metadata, ICodeDataFactory cdf)
     [field: AllowNull, MaybeNull]
     private CodeItemHelper ItemHelper => field ??= new(GetHelper, this);
 
-    [PrivateApi("Hide this")]
-    private readonly IMetadata _metadata = metadata;
-
-
-    IMetadata IHasMetadata.Metadata => _metadata;
+    IMetadata IHasMetadata.Metadata => metadata;
 
 
 
-    public /*override*/ bool HasType(string type) => _metadata.HasType(type);
+    public /*override*/ bool HasType(string type) => metadata.HasType(type);
 
-    public /*override*/ IEnumerable<IEntity> OfType(string type) => _metadata.OfType(type);
+    public /*override*/ IEnumerable<IEntity> OfType(string type) => metadata.OfType(type);
 
     #region Properties from the interfaces which are not really supported
 

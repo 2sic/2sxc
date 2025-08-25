@@ -41,7 +41,7 @@ internal class SettingsHelper(ISettingRepository settingRepository)
             //_settingRepository.DeleteSetting(settingId: delete.SettingId); // can't use in Oqt 3.0.1+ because of change in signature
             // workaround code that works in Oqt 2.3.1+
             delete.SettingValue = string.Empty;
-            delete.ModifiedOn = DateTime.Now;
+            delete.ModifiedOn = DateTime.UtcNow;
             delete.ModifiedBy = WipConstants.SettingsChangeUserId;
             settingRepository.UpdateSetting(delete);
         }
@@ -56,7 +56,7 @@ internal class SettingsHelper(ISettingRepository settingRepository)
         if (update != null)
         {
             update.SettingValue = settingValue;
-            update.ModifiedOn = DateTime.Now;
+            update.ModifiedOn = DateTime.UtcNow;
             update.ModifiedBy = WipConstants.SettingsChangeUserId;
             settingRepository.UpdateSetting(update);
         }
@@ -64,10 +64,10 @@ internal class SettingsHelper(ISettingRepository settingRepository)
             settingRepository.AddSetting(new()
             {
                 CreatedBy = WipConstants.SettingsChangeUserId,
-                CreatedOn = DateTime.Now,
+                CreatedOn = DateTime.UtcNow,
                 EntityName = EntityNames.Module,
                 EntityId = entityId, 
-                ModifiedOn = DateTime.Now, 
+                ModifiedOn = DateTime.UtcNow, 
                 ModifiedBy = WipConstants.SettingsChangeUserId,
                 SettingName = settingName, 
                 SettingValue = settingValue

@@ -1,7 +1,8 @@
 ﻿using ToSic.Sxc.Context.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.Cache;
-using static ToSic.Sxc.Services.Cache.CacheServiceConstants;
+using ToSic.Sxc.Services.Cache.Sys.CacheKey;
+using static ToSic.Sxc.Services.Cache.Sys.CacheServiceConstants;
 using ExecutionContext = ToSic.Sxc.Sys.ExecutionContext.ExecutionContext;
 
 #pragma warning disable xUnit1026
@@ -138,8 +139,11 @@ public class CacheSpecsTests(ExecutionContext exCtx)
         Equal(expected, specs.Key);
     }
 
-    [Fact]
-    public void VaryByParametersBlankSameAsNone()
+    [Theory]
+    [InlineData(null, true)]
+    [InlineData("", false)]
+    [InlineData("*", true)]
+    public void VaryByParametersBlankSameAsNone(string? namesAll, bool shouldMatch)
     {
         var expected = MainPrefix + "VaryByParameters=A=AVal&C=CVal".ToLowerInvariant();
         var pars = new Parameters
@@ -152,16 +156,19 @@ public class CacheSpecsTests(ExecutionContext exCtx)
             }
         };
         var specsFiltered = GetForMain().VaryByParametersTac(pars, names: "A,c");
-        var specsAll = GetForMain().VaryByParametersTac(pars);
+        var specsAll = GetForMain().VaryByParametersTac(pars, names: namesAll);
         Equal(expected, specsFiltered.Key);
-        Equal(specsFiltered.Key, specsAll.Key);
+        if (shouldMatch)
+            Equal(expected, specsAll.Key);
+        else
+            NotEqual(expected, specsAll.Key);
     }
 
     [Fact]
     public void TestCacheKeys()
     {
         var key = "TestKey";
-        var previousKey = new CacheKeySpecs(-1, key).Key;
+        var previousKey = new CacheKeyParts { AppId = -1, Main = key }.GetKey();
 
         var spec = GetForMain(key);
         Equal(previousKey, spec.Key);

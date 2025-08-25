@@ -27,11 +27,13 @@ public partial class BlockBuilder(BlockBuilder.Dependencies services)
         LazySvc<PageChangeSummary> pageChangeSummary,
         LazySvc<ILicenseService> licenseService,
         IModuleHtmlService moduleHtmlService,
-        CodeInfosInScope codeInfos)
+        CodeInfosInScope codeInfos,
+        BlockCachingHelper blockCachingHelper)
         : DependenciesBase(connect:
-            [engineFactory, envInstGen, renderHelpGen, pageChangeSummary, licenseService, moduleHtmlService, codeInfos])
+            [engineFactory, envInstGen, renderHelpGen, pageChangeSummary, licenseService, moduleHtmlService, codeInfos, blockCachingHelper])
     {
         public CodeInfosInScope CodeInfos { get; } = codeInfos;
+        public BlockCachingHelper BlockCachingHelper { get; } = blockCachingHelper;
         public IEngineFactory EngineFactory { get; } = engineFactory;
         public Generator<IEnvironmentInstaller> EnvInstGen { get; } = envInstGen;
         public Generator<IRenderingHelper> RenderHelpGen { get; } = renderHelpGen;

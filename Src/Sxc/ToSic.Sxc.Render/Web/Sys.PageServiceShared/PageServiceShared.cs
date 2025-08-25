@@ -28,19 +28,10 @@ public partial class PageServiceShared(IPageFeatures pageFeatures, IFeaturesServ
 
     [PrivateApi("not final yet")]
     protected PageChangeModes GetMode(PageChangeModes modeForAuto)
-    {
-        switch (ChangeMode)
+        => ChangeMode switch
         {
-            case PageChangeModes.Default:
-            case PageChangeModes.Auto:
-                return modeForAuto;
-            case PageChangeModes.Replace:
-            case PageChangeModes.Append:
-            case PageChangeModes.Prepend:
-                return ChangeMode;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(ChangeMode), ChangeMode, null);
-        }
-    }
-
+            PageChangeModes.Default or PageChangeModes.Auto => modeForAuto,
+            PageChangeModes.Replace or PageChangeModes.Append or PageChangeModes.Prepend => ChangeMode,
+            _ => throw new ArgumentOutOfRangeException(nameof(ChangeMode), ChangeMode, null)
+        };
 }

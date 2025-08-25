@@ -25,6 +25,11 @@ partial class PageService
         keys ??= [];
         var l = Log.Fn<string>($"{nameof(keys)}: '{string.Join(",", keys)}'");
 
+        // WIP #PartialCaching
+        var doFirst = false;
+        if (doFirst)
+            Listeners.Activate(keys);
+
         // 1. Try to add manual resources from WebResources
         // This must happen in the IPageService which is per-module
         // The PageServiceShared cannot do this, because it doesn't have the WebResources which vary by module
@@ -38,6 +43,10 @@ partial class PageService
 
         l.A($"Remaining keys: {string.Join(",", keys)}");
         var added = PageServiceShared.Activate(keys);
+
+        // WIP #PartialCaching
+        if (!doFirst)
+            Listeners.Activate(added.ToArray());
 
         // also add to this specific module, as we need a few module-level features to activate in case...
         ExCtxOrNull?.GetState<IBlock>()?.BlockFeatureKeys.AddRange(added);
@@ -54,15 +63,9 @@ partial class PageService
         var l = Log.Fn<string>();
 
         // Check condition - default is true - so if it's false, this overload was called
-        if (!condition)
-            return l.ReturnNull("condition false");
-            
-        // Todo: unclear what to do with the parameter protector
-        // Maybe must check the parameter protector, because we're not sure if the user may be calling this overload with a feature name
-        // Reason is we're not 100% sure it takes the simple overload vs. this one if 
-        // only one string is given, but ATM that's the case.
-
-        return l.Return(Activate(features), "condition true, added");
+        return !condition
+            ? l.ReturnNull("condition false")
+            : l.Return(Activate(features), "condition true, added");
     }
 
     private string[] AddResourcesFromSettings(string[] keys)
@@ -86,6 +89,9 @@ partial class PageService
             l.A("Found html and everything, will register");
             // all ok so far
             PageServiceShared.PageFeatures.FeaturesFromSettingsAdd(pageFeature);
+
+            // Wip #PartialCaching
+            Listeners.AddResource(pageFeature);
         }
 
         // drop keys which were already taken care of
@@ -101,4 +107,5 @@ partial class PageService
 
     private DynamicStack Settings => _settings.Get(() => (ExCtx.GetState<IDynamicStack>(ExecutionContextStateNames.Settings) as DynamicStack)!)!;
     private readonly GetOnce<DynamicStack> _settings = new();
+
 }

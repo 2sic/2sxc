@@ -32,7 +32,7 @@ public class TypedCode16Helper(CompileCodeHelperSpecs helperSpecs, Func<object?>
         }
     }
 
-    public ITypedRazorModel MyModel => _myModel.Get(() => new TypedRazorModel(Specs, MyModelDic, Specs.IsRazor, Specs.CodeFileName))!;
+    public ITypedRazorModel MyModel => _myModel.Get(() => new TypedRazorModel(Specs, MyModelDic))!;
     private readonly GetOnce<ITypedRazorModel> _myModel = new();
 
 }

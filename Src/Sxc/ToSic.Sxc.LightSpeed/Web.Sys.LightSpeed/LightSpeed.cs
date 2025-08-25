@@ -1,12 +1,9 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.AppReader.Sys;
-using ToSic.Eav.Apps.Sys.Paths;
+﻿using System.Diagnostics.CodeAnalysis;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Context.Sys.ZoneCulture;
-using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Render.Sys;
-using ToSic.Sys.Caching;
 using ToSic.Sys.Capabilities.Features;
 using ToSic.Sys.Utils;
 using static ToSic.Sxc.Sys.Configuration.SxcFeatures;
@@ -16,13 +13,13 @@ namespace ToSic.Sxc.Web.Sys.LightSpeed;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class LightSpeed(
     ISysFeaturesService features,
-    LazySvc<IAppsCatalog> appsCatalog,
-    LazySvc<IAppReaderFactory> appReadersLazy,
-    Generator<IAppPathsMicroSvc> appPathsLazy,
     LazySvc<ISite> site,
     LazySvc<OutputCacheManager> outputCacheManager
-) : ServiceBase(SxcLogName + ".Lights", connect: [features, appsCatalog, appReadersLazy, appPathsLazy, outputCacheManager]), IOutputCache
+) : ServiceBase(SxcLogName + ".Lights", connect: [features, outputCacheManager]), IOutputCache
 {
+    [field: AllowNull, MaybeNull]
+    private LightSpeedConfigHelper LsConfigHelper => field ??= new(Log);
+
     public IOutputCache Init(int moduleId, int pageId, IBlock block)
     {
         var l = Log.Fn<IOutputCache>($"mod: {moduleId}");
@@ -54,7 +51,8 @@ internal class LightSpeed(
     //        => AddToLightSpeed(data, cacheData => cacheData.EnforcePre1025 = enforcePre1025);
     //#endif
 
-    public bool AddToLightSpeed(IRenderResult? data, Action<OutputCacheItem>? doOtherStuff = null)
+    // #RemovedV20 #OldDnnAutoJQuery
+    public bool AddToLightSpeed(IRenderResult? data/*, Action<OutputCacheItem>? doOtherStuff = null*/)
     {
         var l = Log.Fn<bool>(timer: true);
 
@@ -78,30 +76,17 @@ internal class LightSpeed(
         }
 
         // Figure out dependent apps
-        List<IAppReader> dependentAppsStates;
         try
         {
-            // get dependent appStates
-            dependentAppsStates = data.DependentApps
-                .Select(da => appReadersLazy.Value.Get(da.AppId))
-                .ToList();
-            l.A($"{nameof(dependentAppsStates)} count {dependentAppsStates.Count}");
+            l.A($"{nameof(data.DependentApps)} count {data.DependentApps.Count}");
 
             // when dependent apps have disabled caching, parent app should not cache also 
-            if (!IsEnabledOnDependentApps(dependentAppsStates))
+            if (!IsEnabledOnDependentApps(data.DependentApps))
                 return l.ReturnFalse("disabled in dependent app");
 
             // respect primary app (of site) as dependent app to ensure cache invalidation when primary app is changed
-            var appState = AppReaderOrNull;
-            if (appState == null)
+            if (AppReaderOrNull == null)
                 return l.ReturnFalse("no app");
-
-            if (appState.ZoneId >= 0)
-            {
-                l.A("dependentAppsStates add");
-                var primary = appsCatalog.Value.PrimaryAppIdentity(appState.ZoneId);
-                dependentAppsStates.Add(appReadersLazy.Value.Get(primary));
-            }
 
             l.A($"Found {data.DependentApps.Count} apps: " +
                 string.Join(",", data.DependentApps.Select(da => da.AppId)));
@@ -116,7 +101,8 @@ internal class LightSpeed(
         try
         {
             var cacheItem = new OutputCacheItem(data);
-            doOtherStuff?.Invoke(cacheItem);
+            // #RemovedV20 #OldDnnAutoJQuery
+            //doOtherStuff?.Invoke(cacheItem);
 
             var duration = Duration;
             // only add if we really have a duration; -1 is disabled, 0 is not set...
@@ -124,7 +110,7 @@ internal class LightSpeed(
                 return l.ReturnFalse($"not added as duration is {duration}");
 
             var appPathsToMonitor = features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
-                ? _appPaths.Get(() => AppPaths(dependentAppsStates))
+                ? data.DependentApps.SelectMany(da => da.PathsToMonitor).ToList()
                 : null;
             l.A($"{nameof(appPathsToMonitor)} done");
 
@@ -135,7 +121,7 @@ internal class LightSpeed(
                     CacheKey,
                     cacheItem,
                     duration,
-                    dependentAppsStates.Select(r => r.GetCache()).Cast<ICanBeCacheDependency>().ToList(),
+                    data.DependentApps.SelectMany(r => r.CacheKeys).ToList(),
                     appPathsToMonitor
                 )
             );
@@ -152,50 +138,16 @@ internal class LightSpeed(
     /// <summary>
     /// find if caching is enabled on all dependent apps
     /// </summary>
-    private bool IsEnabledOnDependentApps(List<IAppReader> appStates)
+    private bool IsEnabledOnDependentApps(List<IDependentApp> dependentApps)
     {
         var l = Log.Fn<bool>(timer: true);
-        var appWhereNotEnabled = appStates
-            .FirstOrDefault(appState => !GetLightSpeedConfigOfApp(appState).IsEnabled);
+        var appWhereNotEnabled = dependentApps
+            .FirstOrDefault(dependentApp => !dependentApp.IsEnabled);
 
         return appWhereNotEnabled != null
             ? l.ReturnFalse($"Can't cache; caching disabled on dependent app {appWhereNotEnabled.AppId}")
             : l.ReturnTrue("ok");
-
-        // old code before 2025-03-17 - remove old code if all ok by 2025-Q3
-        //foreach (var appState in appStates.Where(appState => !GetLightSpeedConfig(appState).IsEnabled))
-        //    return l.ReturnFalse($"Can't cache; caching disabled on dependent app {appState.AppId}");
-        //return l.ReturnTrue("ok");
     }
-
-    /// <summary>
-    /// Get physical paths for parent app and all dependent apps (portal and shared)
-    /// </summary>
-    /// <remarks>
-    /// Note: The App Paths are only the apps in /2sxc (global and per portal)
-    /// ADAM folders are not monitored
-    /// </remarks>
-    /// <returns>list of paths to monitor</returns>
-    private IList<string>? AppPaths(List<IAppReader> dependentApps)
-    {
-        if (_block?.AppOrNull is not SxcAppBase app)
-            return null;
-        if (dependentApps.SafeNone())
-            return null;
-
-        var paths = new List<string>();
-        foreach (var appState in dependentApps)
-        {
-            var appPaths = appPathsLazy.New().Get(appState, site.Value);
-            if (Directory.Exists(appPaths.PhysicalPath))
-                paths.Add(appPaths.PhysicalPath);
-            if (Directory.Exists(appPaths.PhysicalPathShared))
-                paths.Add(appPaths.PhysicalPathShared);
-        }
-
-        return paths;
-    }
-    private readonly GetOnce<IList<string>?> _appPaths = new();
 
     private int Duration => _duration ??= _block!.Context.User switch
     {
@@ -216,7 +168,7 @@ internal class LightSpeed(
 
 
     private string CacheKey => _key.Get(() => Log.Quick(()
-        => OutputCacheManager.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, UrlParams.Extension, CurrentCulture)
+        => OutputCacheKeys.ModuleKey(_pageId, _moduleId, UserIdOrAnon, ViewKey, UrlParams.Extension, CurrentCulture)
     ))!;
     private readonly GetOnce<string> _key = new();
 
@@ -253,7 +205,7 @@ internal class LightSpeed(
 
             // This is a bit unclear - it seems that only if dependent apps are registered, will the cache be treated as valid...?
             // compare cache time-stamps
-            var dependentApp = result.Data?.DependentApps?.FirstOrDefault();
+            var dependentApp = result.Data.DependentApps?.FirstOrDefault();
             return dependentApp == null
                 ? l.ReturnNull("no dep app")
                 : l.Return(result, "found");
@@ -266,10 +218,10 @@ internal class LightSpeed(
     }
 
 
-    public bool IsEnabled => _enabled.Get(GetIsEnabled);
+    public bool IsEnabled => _enabled.Get(GetLightSpeedIsEnabled);
     private readonly GetOnce<bool> _enabled = new();
 
-    private bool GetIsEnabled()
+    private bool GetLightSpeedIsEnabled()
     {
         var l = Log.Fn<bool>();
 
@@ -292,14 +244,19 @@ internal class LightSpeed(
             if (!feat)
                 return l.ReturnFalse("disabled, feature");
 
-            l.A("before app config check");
+            var appMaybeEnabled = AppConfig.IsEnabledNullable;
+            l.A("before app config deny check");
+            if (appMaybeEnabled == false)
+                return l.ReturnFalse("disabled, app explicit");
 
-            if (!AppConfig.IsEnabled)
-                return l.ReturnFalse("disabled, app not enabled");
+            var viewMaybeEnabled = ViewConfigOrNull?.IsEnabledNullable;
+            l.A("before view config deny check");
+            if (viewMaybeEnabled == false)
+                return l.ReturnFalse("disabled, view explicit");
 
-            l.A("before view config check");
-            if (ViewConfigOrNull?.IsEnabledNullable == false)
-                return l.ReturnFalse("disabled at view explicit");
+            l.A("before view/app is enabled check - either should be true");
+            if (appMaybeEnabled != true && viewMaybeEnabled != true)
+                return l.ReturnFalse($"disabled, neither app '{appMaybeEnabled}' nor view '{viewMaybeEnabled}' enabled");
 
             l.A("before url params check");
             if (!UrlParams.CachingAllowed)
@@ -318,28 +275,14 @@ internal class LightSpeed(
     /// <summary>
     /// Lightspeed Configuration at App Level
     /// </summary>
-    private LightSpeedDecorator AppConfig => _lsd.Get(() => GetLightSpeedConfigOfApp(AppReaderOrNull))!;
+    private LightSpeedDecorator AppConfig => _lsd.Get(() => LsConfigHelper.GetLightSpeedConfigOfApp(AppReaderOrNull))!;
     private readonly GetOnce<LightSpeedDecorator> _lsd = new();
 
     /// <summary>
     /// Lightspeed Configuration at View Level
     /// </summary>
-    private LightSpeedDecorator? ViewConfigOrNull => _viewConfig.Get(() =>
-        _block?.ViewIsReady != true
-            ? null
-            : _block.View.Metadata
-                .OfType(LightSpeedDecorator.TypeNameId)
-                .FirstOrDefault()
-                .NullOrGetWith(viewLs => new LightSpeedDecorator(viewLs))
-    );
+    private LightSpeedDecorator? ViewConfigOrNull => _viewConfig.Get(() => LsConfigHelper.ViewConfigOrNull(_block));
     private readonly GetOnce<LightSpeedDecorator?> _viewConfig = new();
-
-    private LightSpeedDecorator GetLightSpeedConfigOfApp(IAppReader? appReader)
-    {
-        var l = Log.Fn<LightSpeedDecorator>();
-        var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(appReader/*, Log*/);
-        return l.Return(decoFromPiggyBack, $"has decorator: {decoFromPiggyBack.Entity != null!}");
-    }
 
     private OutputCacheManager OutCacheMan => outputCacheManager.Value;
 

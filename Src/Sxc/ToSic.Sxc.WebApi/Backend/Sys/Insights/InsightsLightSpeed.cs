@@ -28,15 +28,15 @@ internal class InsightsLightSpeed(LightSpeedStats lightSpeedStats, IAppReaderFac
             var totalMemory = 0L;
             foreach (var cacheItem in countStats)
             {
-                var appSpecs = appReader.Get(cacheItem.Key).Specs;
+                var appSpecs = (cacheItem.Key != 0) ? appReader.Get(cacheItem.Key).Specs : null;
                 msg += InsightsHtmlTable.RowFields([
                     ++count,
-                    SpecialField.Right(appSpecs.ZoneId),
+                    SpecialField.Right(appSpecs?.ZoneId ?? 0),
                     SpecialField.Right(cacheItem.Key),
-                    appSpecs.Name,
+                    appSpecs?.Name ?? "unknown",
                     SpecialField.Right(cacheItem.Value),
                     SpecialField.Right(sizeStats.TryGetValue(cacheItem.Key, out var size) ? ByteToKByte(size) : EavConstants.NullNameId),
-                    appSpecs.NameId
+                    appSpecs?.NameId ?? "unknown"
                 ]);
                 totalItems += cacheItem.Value;
                 totalMemory += size;

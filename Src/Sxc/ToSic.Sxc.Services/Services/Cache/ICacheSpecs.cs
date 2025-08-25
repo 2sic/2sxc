@@ -1,4 +1,6 @@
-﻿using ToSic.Sxc.Context;
+﻿using ToSic.Sxc.Cms.Users;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 using ToSic.Sys.Caching.Policies;
 
 namespace ToSic.Sxc.Services.Cache;
@@ -11,6 +13,7 @@ namespace ToSic.Sxc.Services.Cache;
 /// <remarks>
 /// * Introduced as experimental in v17.09
 /// * Released in 19.01
+/// * Enhancing with Enable/Disable in v20.01, especially with various user elevations.
 /// </remarks>
 [PublicApi]
 public interface ICacheSpecs
@@ -31,6 +34,40 @@ public interface ICacheSpecs
     internal IPolicyMaker PolicyMaker { get; }
 
     /// <summary>
+    /// Determine if caching is enabled. Default is `true`.
+    /// </summary>
+    /// <remarks>
+    /// Internally it will determine if the previously set rules match the current user elevation.
+    /// </remarks>
+    [WorkInProgressApi("wip v20.00-05")]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    bool IsEnabled { get; }
+
+    public ICacheSpecs Disable();
+
+    public ICacheSpecs Disable(UserElevation elevation);
+
+    /// <summary>
+    /// Disable caching for this data, so it will not be cached. Rarely used. 
+    /// </summary>
+    /// <returns></returns>
+    /// <remarks>
+    /// This rarely makes sense, since it's better to just not add something to the cache in the first place.
+    /// 
+    /// WIP v20.01: This is a work in progress, and the implementation may change in future versions.
+    /// </remarks>
+    public ICacheSpecs Disable(UserElevation minElevation, UserElevation maxElevation);
+
+    /// <summary>
+    /// Disable caching for this data, so it will not be cached. Rarely used. 
+    /// </summary>
+    /// <returns></returns>
+    /// <remarks>
+    /// WIP v20.01: This is a work in progress, and the implementation may change in future versions.
+    /// </remarks>
+    public ICacheSpecs Enable();
+
+    /// <summary>
     /// Set absolute expiration, alternative is sliding expiration.
     /// If neither are set, a sliding expiration of 1 hour will be used.
     /// </summary>
@@ -45,13 +82,15 @@ public interface ICacheSpecs
     /// <summary>
     /// Set sliding expiration, alternative is absolute expiration.
     /// </summary>
-    /// <param name="slidingExpiration"></param>
+    /// <param name="timeSpan"></param>
+    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="seconds">time in seconds - if specified, takes precedence - new v20.01</param>
     /// <returns></returns>
     /// <remarks>
     /// If neither absolute nor sliding are set, a sliding expiration of 1 hour will be used.
     /// Setting both is invalid and will throw an exception.
     /// </remarks>
-    ICacheSpecs SetSlidingExpiration(TimeSpan slidingExpiration);
+    ICacheSpecs SetSlidingExpiration(TimeSpan? timeSpan = default, NoParamOrder protector = default, int? seconds = null);
 
     /// <summary>
     /// Depend on the app data, so if any data changes, the cache will be invalidated.
@@ -88,6 +127,10 @@ public interface ICacheSpecs
     /// <returns></returns>
     ICacheSpecs VaryBy(string name, string value, NoParamOrder protector = default, bool caseSensitive = false);
 
+    [PrivateApi]
+    [ShowApiWhenReleased(ShowApiMode.Never)]
+    internal CacheKeyConfig KeyConfig { get; }
+
     /// <summary>
     /// Vary the cache by a specific name and value.
     /// All cache items where this value is the same, will be considered the same.
@@ -103,11 +146,11 @@ public interface ICacheSpecs
     /// </summary>
     ICacheSpecs VaryByModule();
 
-    /// <summary>
-    /// Vary the cache by module, so that each module has its own cache.
-    /// </summary>
-    /// <param name="id">Module id to use</param>
-    ICacheSpecs VaryByModule(int id);
+    ///// <summary>
+    ///// Vary the cache by module, so that each module has its own cache.
+    ///// </summary>
+    ///// <param name="id">Module id to use</param>
+    //ICacheSpecs VaryByModule(int id);
 
     // Note: I don't think there is great value in providing ICms... overloads, so comment out to prevent next person from creating them again
     ///// <summary>
@@ -122,13 +165,13 @@ public interface ICacheSpecs
     /// <returns></returns>
     ICacheSpecs VaryByPage();
 
-    /// <summary>
-    /// Vary the cache by page, so that each page has its own cache.
-    /// By default, it will take the current page, but you can optionally specify a custom page or ID.
-    /// </summary>
-    /// <param name="id">page id to use</param>
-    /// <returns></returns>
-    ICacheSpecs VaryByPage(int id);
+    ///// <summary>
+    ///// Vary the cache by page, so that each page has its own cache.
+    ///// By default, it will take the current page, but you can optionally specify a custom page or ID.
+    ///// </summary>
+    ///// <param name="id">page id to use</param>
+    ///// <returns></returns>
+    //ICacheSpecs VaryByPage(int id);
 
     // Note: I don't think there is great value in providing ICms... overloads, so comment out to prevent next person from creating them again
     ///// <summary>
@@ -145,12 +188,12 @@ public interface ICacheSpecs
     /// <returns></returns>
     ICacheSpecs VaryByUser();
 
-    /// <summary>
-    /// Vary the cache by user, so that each user has its own cache.
-    /// </summary>
-    /// <param name="id">User id to use</param>
-    /// <returns></returns>
-    ICacheSpecs VaryByUser(int id);
+    ///// <summary>
+    ///// Vary the cache by user, so that each user has its own cache.
+    ///// </summary>
+    ///// <param name="id">User id to use</param>
+    ///// <returns></returns>
+    //ICacheSpecs VaryByUser(int id);
 
     // Note: I don't think there is great value in providing ICms... overloads, so comment out to prevent next person from creating them again
     ///// <summary>
@@ -177,8 +220,31 @@ public interface ICacheSpecs
     /// <param name="names">Names of one or more parameters, comma-separated</param>
     /// <param name="caseSensitive">Determines if the value should be treated case-sensitive, default is `false`</param>
     /// <returns></returns>
+    /// <remarks>
+    /// This only makes sense when using with the CacheService, but not in output caching.
+    /// Reason is that in output caching, the pre-flight would not have access to the parameters object and would never result in a cache hit.
+    /// </remarks>
     ICacheSpecs VaryByParameters(IParameters parameters, NoParamOrder protector = default, string? names = default, bool caseSensitive = false);
 
     #endregion
 
+    #region Vary By Model EXPERIMENTAL
+
+    /// <summary>
+    /// Vary the cache by values in the model, so that each sample has its own cache. Used in Partial-Caching only. WORK-IN-PROGRESS!
+    /// </summary>
+    /// <param name="names">Names of one or more parameters, comma-separated</param>
+    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="caseSensitive">Determines if the value should be treated case-sensitive, default is `false`</param>
+    /// <returns></returns>
+    /// <remarks>
+    /// This is only meant for partial razor caching, since that would have a model available.
+    /// If used elsewhere, it will be ignored.
+    /// 
+    /// WIP v20.01
+    /// </remarks>
+    [WorkInProgressApi("WIP v20.01")]
+    ICacheSpecs VaryByModel(string? names = default, NoParamOrder protector = default, bool caseSensitive = false);
+
+    #endregion
 }

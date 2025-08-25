@@ -71,9 +71,7 @@
   <ItemGroup>
     <!-- stv - SQL scripts have to be included as embedded resources -->
     <!-- to be executed as part of oqtane installation or upgrade procedure -->
-    <EmbeddedResource Include="Scripts\ToSic.Sxc.0.0.1.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.12.00.00.sql" />
-    <EmbeddedResource Include="Scripts\ToSic.Sxc.12.02.01.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.12.05.00.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.13.00.00.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.13.01.00.sql" />
@@ -82,22 +80,23 @@
     <EmbeddedResource Include="Scripts\ToSic.Sxc.18.03.00.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.19.00.00.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.20.00.00.sql" />
+    <EmbeddedResource Include="Scripts\ToSic.Sxc.20.00.05.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.Install.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.Uninstall.sql" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.0" /><!-- from Oqtane.Server.csproj -->
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.0" /><!-- from Oqtane.Server.csproj -->
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0" /><!-- from Oqtane.Server.csproj -->
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.5" /><!-- from Oqtane.Server.csproj -->
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.5" /><!-- from Oqtane.Server.csproj -->
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.5" /><!-- from Oqtane.Server.csproj -->
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" /><!-- from Oqtane.Server.csproj -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" /><!-- from Oqtane.Database.SqlServer.csproj -->
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.0" /><!-- from Oqtane.Server.csproj -->
-    <PackageReference Include="Oqtane.Client" Version="6.0.1" />
-    <PackageReference Include="Oqtane.Server" Version="6.0.1" />
-    <PackageReference Include="Oqtane.Shared" Version="6.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.5" /><!-- from Oqtane.Server.csproj -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.5" /><!-- from Oqtane.Database.SqlServer.csproj -->
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.5" /><!-- from Oqtane.Server.csproj -->
+    <PackageReference Include="Oqtane.Client" Version="6.1.3" />
+    <PackageReference Include="Oqtane.Server" Version="6.1.3" />
+    <PackageReference Include="Oqtane.Shared" Version="6.1.3" />
     <PackageReference Include="ToSic.Imageflow.Oqtane" Version="1.12.0" />
   </ItemGroup>
 

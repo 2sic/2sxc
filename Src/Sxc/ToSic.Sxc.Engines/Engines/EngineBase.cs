@@ -131,20 +131,20 @@ public abstract class EngineBase : ServiceBase<EngineBase.Dependencies>, IEngine
         if (appReqProblems != null)
             return l.Return(appReqProblems, "error");
 
-        if (View.ContentType != "" && View.ContentItem == null && Block.Configuration.Content.All(e => e == null))
-        {
-            var result = new RenderEngineResult
-            {
-                Html = EngineMessages.ToolbarForEmptyTemplate,
-                ActivateJsApi = false,
-                Assets = [],
-                ErrorCode = null,
-                ExceptionsOrNull = null, // changed from [], // TODO: NOT SURE If this is correct, I think it should be null?
-            };
-            return l.Return(result, "error");
-        }
 
-        return l.ReturnNull("all ok");
+        if (View.ContentType == "" || View.ContentItem != null || Block.Configuration.Content.Any(e => e != null))
+            return l.ReturnNull("all ok");
+
+        var result = new RenderEngineResult
+        {
+            Html = EngineMessages.ToolbarForEmptyTemplate,
+            ActivateJsApi = false,
+            Assets = [],
+            ErrorCode = null,
+            ExceptionsOrNull = null, // should be null, to indicate no exceptions
+        };
+        return l.Return(result, "error");
+
     }
 
 }

@@ -10,6 +10,7 @@ using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sxc.Dnn.Compile.Sys;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Engines.Sys;
 using ToSic.Sxc.Render.Sys.Specs;
 using ToSic.Sxc.Sys.ExecutionContext;
 using ToSic.Sys.Caching.PiggyBack;
@@ -57,13 +58,13 @@ internal class DnnRazorCompiler(
     private readonly GetOnce<HttpContextBase> _httpContext = new();
 
     [PrivateApi]
-    internal (TextWriter writer, List<Exception> exceptions) Render(RazorComponentBase page, TextWriter writer, object data)
+    internal (TextWriter writer, List<Exception> exceptions) Render(RazorComponentBase page, TextWriter writer, RenderSpecs renderSpecs)
     {
         var l = Log.Fn<(TextWriter writer, List<Exception> exception)>(message: "will render into TextWriter");
         try
         {
-            if (data != null && page is ISetDynamicModel setDyn)
-                setDyn.SetDynamicModel(data);
+            if (page is ISetDynamicModel setDyn)
+                setDyn.SetDynamicModel(renderSpecs);
         }
         catch (Exception e)
         {
@@ -72,7 +73,7 @@ internal class DnnRazorCompiler(
 
         try
         {
-            var webPageContext = new WebPageContext(HttpContextCurrent, page, data);
+            var webPageContext = new WebPageContext(HttpContextCurrent, page, renderSpecs.Data);
             page.ExecutePageHierarchy(webPageContext, writer, page);
         }
         catch (Exception maybeIEntityCast)
@@ -91,7 +92,7 @@ internal class DnnRazorCompiler(
     {
         ILogCall<(TextWriter writer, List<Exception> exceptions)> l = Log.Fn<(TextWriter, List<Exception>)>();
         var writer = new StringWriter();
-        var result = Render(webpage, writer, specs.Data);
+        var result = Render(webpage, writer, specs);
         return l.ReturnAsOk(result);
     }
 
@@ -196,18 +197,50 @@ internal class DnnRazorCompiler(
 
     #region Helpers for Rendering Sub-Components
 
-    internal static RazorBuildTempResult<HelperResult> RenderSubPage(RazorComponentBase parent, string templatePath, object data)
+    internal record PrepToExecute(
+        string BestPath,
+        RazorBuildTempResult<RazorComponentBase> SubPage,
+        DnnRazorCompiler Compiler);
+
+    internal static PrepToExecute PrepareForRoslyn(RazorComponentBase parent, string templatePath, object data)
+    {
+        var l = (parent as IHasLog).Log.Fn<PrepToExecute>();
+
+        // Find the RazorEngine which MUST be on the CodeApiService PiggyBack, or throw an error
+        var razorCompiler = parent.ExCtx.PiggyBack.GetOrGenerate(nameof(DnnRazorCompiler), DnnRazorCompiler () => null)
+                            ?? throw l.Ex(new Exception($"Error finding {nameof(DnnRazorCompiler)}. This is very unexpected."));
+
+        var subPage = razorCompiler.InitWebpage(templatePath, true);
+
+        return l.Return(new(templatePath, subPage, razorCompiler));
+
+    }
+
+    internal static RazorBuildTempResult<HelperResult> ExecuteWithRoslyn(PrepToExecute preparations, RazorComponentBase parent, RenderSpecs renderSpecs)
     {
         var l = (parent as IHasLog).Log.Fn<RazorBuildTempResult<HelperResult>>();
+
+        var (writer, exceptions) = preparations.Compiler.RenderImplementation(preparations.SubPage.Instance, renderSpecs);
+
+        // Log any exceptions which may have occurred
+        if (exceptions.SafeAny())
+            exceptions.ForEach(e => l.Ex(e));
+
+        return l.ReturnAsOk(new(new(w => w.Write(writer)), true));
+    }
+    internal static RazorBuildTempResult<HelperResult> RenderPartialWithRoslyn(RazorComponentBase parent, string templatePath, object data, RenderSpecs renderSpecs)
+    {
+        var l = (parent as IHasLog).Log.Fn<RazorBuildTempResult<HelperResult>>();
+
         // Find the RazorEngine which MUST be on the CodeApiService PiggyBack, or throw an error
-        var razorEngine = parent.ExCtx.PiggyBack.GetOrGenerate(nameof(DnnRazorCompiler), DnnRazorCompiler () => null)
+        var razorCompiler = parent.ExCtx.PiggyBack.GetOrGenerate(nameof(DnnRazorCompiler), DnnRazorCompiler () => null)
                           ?? throw l.Ex(new Exception($"Error finding {nameof(DnnRazorCompiler)}. This is very unexpected."));
 
         // Figure out the real path, and make sure it's lower case
         // so the ID in a cache remains the same no matter how it was called
         var path = parent.NormalizePath(templatePath).ToLowerInvariant();
 
-        var subPage = razorEngine.InitWebpage(path, true);
+        var subPage = razorCompiler.InitWebpage(path, true);
 
         // Exit if we don't use HotBuild, because then we must revert back to classic render
         // Reason is that otherwise the PageData property - used on very old classes - would not be populated
@@ -215,7 +248,7 @@ internal class DnnRazorCompiler(
         if (!subPage.UsesHotBuild)
             return l.Return(new(null, false), "exit, not HotBuild");
 
-        var (writer, exceptions) = razorEngine.RenderImplementation(subPage.Instance, new() { Data = data });
+        var (writer, exceptions) = razorCompiler.RenderImplementation(subPage.Instance, renderSpecs);
 
         // Log any exceptions which may have occurred
         if (exceptions.SafeAny())
