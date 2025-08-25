@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Render.Sys.JsContext;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class JsContextAll(JsContextLanguage jsLangCtxSvc, IJsApiService jsApiService, CodeInfosInScope codeWarnings, IAppJsonConfigurationService appJson, LazySvc<IFeaturesService> featuresSvc)
-    : ServiceBase("Sxc.CliInf", connect: [jsLangCtxSvc, jsApiService, codeWarnings])
+    : ServiceBase("Sxc.CliInf", connect: [jsLangCtxSvc, jsApiService, appJson, codeWarnings])
 {
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public JsContextEnvironment? Environment;

@@ -15,10 +15,10 @@ public record CacheKeyConfig(): ICanEstimateSize
     public const int Disabled = -1;
     public const int EnabledWithoutTime = 0;
 
-    public CacheKeyConfig(NoParamOrder protector = default, int? sliding = null, string? varyBy = null, string? url = null, string? model = null): this()
+    public CacheKeyConfig(NoParamOrder protector = default, int? seconds = null, string? varyBy = null, string? url = null, string? model = null): this()
     {
-        if (sliding != null)
-            ForElevation = new() { [UserElevation.All] = sliding.Value };
+        if (seconds != null)
+            ForElevation = new() { [UserElevation.All] = seconds.Value };
 
         foreach (var varyPart in (varyBy?.ToLowerInvariant()).CsvToArrayWithoutEmpty())
             switch (varyPart)

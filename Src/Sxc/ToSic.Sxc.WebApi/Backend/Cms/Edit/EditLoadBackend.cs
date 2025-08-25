@@ -184,9 +184,8 @@ public partial class EditLoadBackend(
         result = result with
         {
             Context = contextBuilder.InitApp(context.AppReaderRequired)
-                .Get(
-                    Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features |
-                    (isSystemType ? Ctx.FeaturesForSystemTypes : Ctx.Features), CtxEnable.EditUi),
+                .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.UserRoles | Ctx.Features |
+                     (isSystemType ? Ctx.FeaturesForSystemTypes : Ctx.Features), CtxEnable.EditUi),
 
             // Load settings for the front-end
             Settings = loadSettings.GetSettings(context, usedTypes, result.ContentTypes, appWorkCtx),

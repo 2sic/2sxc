@@ -6,6 +6,7 @@ using ToSic.Eav.WebApi.Sys.Cms;
 using ToSic.Eav.WebApi.Sys.Languages;
 using ToSic.Sxc.Apps.Sys.Assets;
 using ToSic.Sxc.Apps.Sys.Paths;
+using ToSic.Sxc.Services;
 using ToSic.Sys.Capabilities.Features;
 using static ToSic.Sys.Capabilities.Features.BuiltInFeatures;
 
@@ -24,8 +25,9 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
         LazySvc<LanguagesBackend> languagesBackend,
         IAppPathsMicroSvc appPaths,
         LazySvc<GlobalPaths> globalPaths,
-        IAppsCatalog appsCatalog
-    ) : DependenciesBase(connect: [siteCtx, features, uiDataLazy, appPaths, languagesBackend, globalPaths, appsCatalog])
+        IAppsCatalog appsCatalog,
+        LazySvc<IUserService> usersSvc
+    ) : DependenciesBase(connect: [siteCtx, features, uiDataLazy, appPaths, languagesBackend, globalPaths, appsCatalog, usersSvc])
     {
         public LazySvc<GlobalPaths> GlobalPaths { get; } = globalPaths;
         public IAppPathsMicroSvc AppPaths { get; } = appPaths;
@@ -34,6 +36,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
         public LazySvc<ISysFeaturesService> Features { get; } = features;
         public LazySvc<IUiData> UiDataLazy { get; } = uiDataLazy;
         public IAppsCatalog AppsCatalog { get; } = appsCatalog;
+        public IUserService UsersSvc => usersSvc.Value;
     }
 
     #endregion
@@ -215,6 +218,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
             IsContentAdmin = user.IsContentAdmin,
             Name = user.Name,
             Username = user.Username,
+            Roles = flags.HasFlag(Ctx.UserRoles) ? Services.UsersSvc.GetCurrentUser().Roles.Select(r => r.Name).ToListOpt() : [],
         };
         return userDto;
     }
