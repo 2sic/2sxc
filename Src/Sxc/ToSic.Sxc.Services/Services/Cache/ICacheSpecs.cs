@@ -1,6 +1,5 @@
 ﻿using ToSic.Sxc.Cms.Users;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Services.Cache.Sys;
 using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 using ToSic.Sys.Caching.Policies;
 
@@ -14,6 +13,7 @@ namespace ToSic.Sxc.Services.Cache;
 /// <remarks>
 /// * Introduced as experimental in v17.09
 /// * Released in 19.01
+/// * Enhancing with Enable/Disable in v20.01, especially with various user elevations.
 /// </remarks>
 [PublicApi]
 public interface ICacheSpecs
@@ -36,6 +36,9 @@ public interface ICacheSpecs
     /// <summary>
     /// Determine if caching is enabled. Default is `true`.
     /// </summary>
+    /// <remarks>
+    /// Internally it will determine if the previously set rules match the current user elevation.
+    /// </remarks>
     [WorkInProgressApi("wip v20.00-05")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     bool IsEnabled { get; }

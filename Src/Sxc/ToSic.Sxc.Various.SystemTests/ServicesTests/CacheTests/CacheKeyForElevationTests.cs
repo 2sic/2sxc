@@ -103,4 +103,20 @@ public class CacheKeyForElevationTests
         AllMatchIsEnabledFor(dic, [elevation], forOne);
         AllMatchIsEnabledFor(dic, UserElevations.Where(e => e != elevation), forRest);
     }
+
+    [Fact]
+    public void DisableRangeEditToSysAdmin()
+    {
+        var dic = ForElevationExtensions.ResetAll(OneMinute)
+            .SetRange(UserElevation.ContentEdit, UserElevation.SystemAdmin, CacheKeyConfig.Disabled);
+        AllMatchIsEnabledFor(dic, UserElevations.Where(e => e < UserElevation.ContentEdit), true);
+        AllMatchIsEnabledFor(dic, UserElevations.Where(e => e >= UserElevation.ContentEdit), false);
+    }
+
+    [Fact]
+    public void DisableRangeInvalid() =>
+        Throws<ArgumentOutOfRangeException>(() =>
+            ForElevationExtensions.ResetAll(OneMinute)
+                .SetRange(UserElevation.ContentEdit, UserElevation.Anonymous, CacheKeyConfig.Disabled)
+        );
 }

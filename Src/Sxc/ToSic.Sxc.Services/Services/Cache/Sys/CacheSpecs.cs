@@ -64,35 +64,19 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
         WithChanges(KeyConfig with { ForElevation = ForElevationExtensions.ResetAll(CacheKeyConfig.Disabled), });
 
     public ICacheSpecs Disable(UserElevation elevation) =>
-        WithChanges(KeyConfig with
-        {
-            ForElevation = KeyConfig.ForElevation.SetForOneOrAll(elevation, CacheKeyConfig.Disabled),
-        });
+        WithChanges(KeyConfig with { ForElevation = KeyConfig.ForElevation.SetForOneOrAll(elevation, CacheKeyConfig.Disabled), });
 
-    public ICacheSpecs Disable(UserElevation minElevation, UserElevation maxElevation)
-    {
-        // If not specified, for all, or within the lowest and highest elevation, then disable
-        if (minElevation is UserElevation.Unknown or UserElevation.All or UserElevation.Anonymous
-            && maxElevation is UserElevation.Unknown or UserElevation.All or UserElevation.SystemAdmin)
-            return Disable();
-
-        // Create a list of all elevations which should be disabled
-        var listToDisable = Enum.GetValues(typeof(UserElevation))
-            .Cast<UserElevation>()
-            .Where(e => e <= minElevation && e >= maxElevation)
-            .ToList();
-
-        var toUpdate = new Dictionary<UserElevation, int>(KeyConfig.ForElevation);
-        foreach (var elevation in listToDisable)
-        {
-            toUpdate[elevation] = CacheKeyConfig.Disabled;
-        }
-
-        return WithChanges(KeyConfig with { ForElevation = toUpdate, });
-    }
+    public ICacheSpecs Disable(UserElevation minElevation, UserElevation maxElevation) =>
+        WithChanges(KeyConfig with { ForElevation = KeyConfig.ForElevation.SetRange(minElevation, maxElevation, CacheKeyConfig.Disabled), });
 
     public ICacheSpecs Enable()
         => WithChanges(KeyConfig with { ForElevation = ForElevationExtensions.ResetAll(CacheKeyConfig.EnabledWithoutTime), });
+
+    public ICacheSpecs Enable(UserElevation elevation) =>
+        WithChanges(KeyConfig with { ForElevation = KeyConfig.ForElevation.SetForOneOrAll(elevation, CacheKeyConfig.EnabledWithoutTime), });
+
+    public ICacheSpecs Enable(UserElevation minElevation, UserElevation maxElevation) =>
+        WithChanges(KeyConfig with { ForElevation = KeyConfig.ForElevation.SetRange(minElevation, maxElevation, CacheKeyConfig.EnabledWithoutTime), });
 
     #endregion
 

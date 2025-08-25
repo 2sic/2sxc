@@ -21,6 +21,29 @@ public static class ForElevationExtensions
             [elevation] = seconds
         };
 
+    public static Dictionary<UserElevation, int> SetRange(this IDictionary<UserElevation, int> dic, UserElevation minElevation, UserElevation maxElevation, int seconds)
+    {
+        // If not specified, for all, or within the lowest and highest elevation, then disable
+        if (minElevation is UserElevation.Unknown or UserElevation.All or UserElevation.Anonymous
+            && maxElevation is UserElevation.Unknown or UserElevation.All or UserElevation.SystemAdmin)
+            return ResetAll(CacheKeyConfig.Disabled);
+
+        if (minElevation > maxElevation)
+            throw new ArgumentOutOfRangeException($"The {nameof(minElevation)} must be lower or equal to the {nameof(maxElevation)}");
+
+        // Create a list of all elevations which should be disabled
+        var listToDisable = Enum.GetValues(typeof(UserElevation))
+            .Cast<UserElevation>()
+            .Where(e => e >= minElevation && e <= maxElevation)
+            .ToList();
+
+        var toUpdate = new Dictionary<UserElevation, int>(dic);
+        foreach (var elevation in listToDisable)
+            toUpdate[elevation] = CacheKeyConfig.Disabled;
+
+        return toUpdate;
+    }
+
     public static bool IsEnabledFor(this IDictionary<UserElevation, int> dic, UserElevation elevation) =>
         IsEnabledForExact(dic, elevation)
         ?? IsEnabledForExact(dic, UserElevation.All)
