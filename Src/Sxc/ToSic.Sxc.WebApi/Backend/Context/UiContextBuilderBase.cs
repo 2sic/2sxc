@@ -215,6 +215,7 @@ public class UiContextBuilderBase(UiContextBuilderBase.Dependencies services)
             IsSystemAdmin = user.IsSystemAdmin,
             IsAnonymous = user.IsAnonymous,
             IsSiteAdmin = user.IsSiteAdmin,
+            IsContentEditor = user.IsContentEditor,
             IsContentAdmin = user.IsContentAdmin,
             Name = user.Name,
             Username = user.Username,
