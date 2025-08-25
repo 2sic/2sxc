@@ -12,35 +12,39 @@ public class RazorConfiguration(RenderSpecs renderSpecs, ILog parentLog): Helper
     // It is currently empty and serves as a temporary structure for potential future use.
     // The class may be expanded with properties and methods as needed in the future.
 
-    public string? Partial(NoParamOrder protector = default, Func<ICacheSpecs, ICacheSpecs>? cache = default)
+    public string? PartialCache(NoParamOrder protector = default,
+        int? sliding = null, // legacy name
+        int? seconds = null,
+        string? watch = null,
+        string? varyBy = null,
+        string? url = null,
+        string? model = null,
+        Func<ICacheSpecs, ICacheSpecs>? tweak = default)
     {
-        if (cache != null && Parent != null)
+        if (Parent == null)
+            return null;
+
+        // temp!
+        seconds ??= sliding;
+        var l = Log.Fn<string?>($"{nameof(seconds)}: '{seconds}', {nameof(watch)}: '{watch}', {nameof(varyBy)}: '{varyBy}', {nameof(url)}: '{url}', {nameof(model)}: '{model}'");
+        if (seconds != null || watch != null || varyBy != null || url != null || model != null)
+        {
+            l.A("Set aspects using values");
+            var config = new CacheKeyConfig(seconds: seconds, varyBy: varyBy, url: url, model: model);
+            var writeConfig = new CacheWriteConfig(watch: watch);
+            Parent.CacheSpecs = Parent.CacheSpecs.RestoreAll(config, writeConfig);
+        }
+
+        if (tweak != null)
             try
             {
-                var updated = cache(Parent.CacheSpecs);
-                Parent.CacheSpecs = updated;
+                l.A("Set aspects using function");
+                Parent.CacheSpecs = tweak(Parent.CacheSpecs);
             }
             catch (Exception ex)
             {
                 Log.Ex(ex);
             }
-
-        // Here future options will be added if needed.
-
-        // Return nothing, so that Razor doesn't output anything.
-        return null;
-    }
-
-    public string? PartialCache(NoParamOrder protector = default, int? sliding = null, string? watch = null, string? varyBy = null, string? url = null, string? model = null)
-    {
-        if (Parent == null)
-            return null;
-
-        var l = Log.Fn<string?>($"{nameof(sliding)}: '{sliding}', {nameof(watch)}: '{watch}', {nameof(varyBy)}: '{varyBy}', {nameof(url)}: '{url}', {nameof(model)}: '{model}'");
-        var config = new CacheKeyConfig(sliding: sliding, varyBy: varyBy, url: url, model: model);
-        var writeConfig = new CacheWriteConfig(watch: watch);
-
-        Parent.CacheSpecs = Parent.CacheSpecs.RestoreAll(config, writeConfig);
 
         return l.ReturnNull();
     }

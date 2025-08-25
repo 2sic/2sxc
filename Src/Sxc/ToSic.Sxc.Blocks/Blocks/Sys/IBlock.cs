@@ -12,12 +12,8 @@ namespace ToSic.Sxc.Blocks.Sys;
 /// </summary>
 [InternalApi_DoNotUse_MayChangeWithoutNotice]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public interface IBlock: IAppIdentity //, IHasLog
+public interface IBlock: IAppIdentity
 {
-
-    //// WIP
-    //IEntity? Entity { get; }
-
     public bool IsInnerBlock { get; }
 
     /// <summary>
@@ -103,11 +99,7 @@ public interface IBlock: IAppIdentity //, IHasLog
     /// </summary>
     /// <remarks>
     /// Must be a real List, because we will add things to it later.
-    /// In future, should be modified to be read only list, but only once rendering has been improved to pass the data around in a better way.
+    /// In the future, should be modified to be read only list, but only once rendering has been improved to pass the data around in a better way.
     /// </remarks>
     List<IDependentApp> DependentApps { get; }
-
-
-    //List<IPageFeature> BlockFeatures(ILog? log = default);
-    //BlockSpecs SwapView(IView value);
 }
