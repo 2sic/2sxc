@@ -56,10 +56,15 @@
               <name>20.00.00.SqlDataProvider</name>
               <version>20.00.00</version>
             </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>20.00.05.SqlDataProvider</name>
+              <version>20.00.05</version>
+            </script>
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>20.00.00</version>
+              <version>20.00.05</version>
             </script>
           </scripts>
         </component>
