@@ -113,7 +113,7 @@ internal record CacheSpecsContextAndTools : HelperRecordBase
         }
 
         foreach (var add in writeConfig.AdditionalValues)
-            keySpecs = keySpecs.WithUpdatedVaryBy(add.Name, add.Value, caseSensitive: false);
+            keySpecs = keySpecs.WithUpdatedVaryBy(add.Name, add.Value, caseSensitive: add.CaseSensitive);
 
         if (keyConfig.ByModel is { } byModel)
             keySpecs = ReplayByModel(keySpecs, byModel.Names, caseSensitive: byModel.CaseSensitive);

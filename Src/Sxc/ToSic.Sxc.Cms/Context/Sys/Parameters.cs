@@ -184,7 +184,7 @@ public partial record Parameters : IParameters
     public IParameters Filter(string? names)
     {
         // Only exit early if null. If empty string, basically drop the list.
-        if (names == null)
+        if (names is null or "*")
             return this;
 
         if (names.IsEmptyOrWs())

@@ -37,7 +37,7 @@ public record CacheWriteConfig
 
     public int SlidingExpirationSeconds { get; init; }
 
-    public List<(IParameters Parameters, string Names, bool CaseSensitive)> AdditionalParameters = [];
+    public List<(IParameters Parameters, string? Names, bool CaseSensitive)> AdditionalParameters = [];
 
     public List<(string Name, string Value, bool CaseSensitive)> AdditionalValues = [];
 }

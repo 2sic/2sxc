@@ -2,7 +2,6 @@
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Services.Cache.Sys.CacheKey;
 using ToSic.Sys.Caching.Policies;
-using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Services.Cache.Sys;
 
@@ -154,9 +153,7 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
     /// <param name="caseSensitive"></param>
     /// <returns></returns>
     public ICacheSpecs VaryByParameters(IParameters parameters, NoParamOrder protector = default, string? names = default, bool caseSensitive = false) =>
-        !names.HasValue()
-            ? this
-            : WithChanges(writeConfig: WriteConfig with
+        WithChanges(writeConfig: WriteConfig with
             {
                 AdditionalParameters = [..WriteConfig.AdditionalParameters, (parameters, names, caseSensitive)]
             });
@@ -166,9 +163,7 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
     #region VaryByModel Experimental
 
     public ICacheSpecs VaryByModel(string? names = default, NoParamOrder protector = default, bool caseSensitive = false) =>
-        !names.HasValue()
-            ? this
-            : WithChanges(KeyConfig with
+        WithChanges(KeyConfig with
             {
                 ByModel = CacheKeyConfigExtensions.Update(KeyConfig.ByModel, names, caseSensitive)
             });
