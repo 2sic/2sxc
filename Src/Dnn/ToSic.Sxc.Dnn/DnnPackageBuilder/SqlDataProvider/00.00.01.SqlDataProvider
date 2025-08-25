@@ -44,10 +44,10 @@ IF (
 )
 RETURN;
 
--- special case to handle clean install of Install.SqlDataProvider for v20.00.00 db, after 2sxc Packaga rename
-PRINT N'Clean install 00.00.01.SqlDataProvider (actually Install.SqlDataProvider for v20.00.00)';
+-- special case to handle clean install of Install.SqlDataProvider for v20.00.05 db, after 2sxc Packaga rename
+PRINT N'Clean install 00.00.01.SqlDataProvider (actually Install.SqlDataProvider for v20.00.05)';
 
--- Start of install procedure which replaces all install scripts and code updates until and including version 20.00.00 -------------------------------------------------
+-- Start of install procedure which replaces all install scripts and code updates until and including version 20.00.05 -------------------------------------------------
 
 /****** Object:  Table [dbo].[TsDynDataApp]    Script Date: 15.5.2025. 13:42:07 ******/
 SET ANSI_NULLS ON;
@@ -677,7 +677,7 @@ ALTER TABLE [dbo].[TsDynDataEntity] ADD  CONSTRAINT [DF_TsDynDataEntity_IsPublis
 
 ALTER TABLE [dbo].[TsDynDataHistory] ADD  CONSTRAINT [DF_TsDynDataHistory_Operation]  DEFAULT (N'I') FOR [Operation];
 
-ALTER TABLE [dbo].[TsDynDataTransaction] ADD  CONSTRAINT [DF_TsDynDataTransaction_Timestamp]  DEFAULT (getdate()) FOR [Timestamp];
+ALTER TABLE [dbo].[TsDynDataTransaction] ADD  CONSTRAINT [DF_TsDynDataTransaction_Timestamp]  DEFAULT (getutcdate()) FOR [Timestamp];
 
 ALTER TABLE [dbo].[TsDynDataValueDimension] ADD  CONSTRAINT [DF_TsDynDataValueDimension_ReadOnly]  DEFAULT ((0)) FOR [ReadOnly];
 

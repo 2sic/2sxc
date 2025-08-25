@@ -10,7 +10,7 @@
 -- Set session language to english to ensure DateTime format is correct (all following insert statements in this script expect that)
 SET LANGUAGE English
 
--- Start of install procedure which replaces all install scripts and code updates until and including version 20.00.00 -------------------------------------------------
+-- Start of install procedure which replaces all install scripts and code updates until and including version 20.00.05 -------------------------------------------------
 
 /****** Object:  Table [dbo].[TsDynDataApp]    Script Date: 15.5.2025. 13:42:07 ******/
 SET ANSI_NULLS ON
@@ -640,7 +640,7 @@ ALTER TABLE [dbo].[TsDynDataEntity] ADD  CONSTRAINT [DF_TsDynDataEntity_IsPublis
 GO
 ALTER TABLE [dbo].[TsDynDataHistory] ADD  CONSTRAINT [DF_TsDynDataHistory_Operation]  DEFAULT (N'I') FOR [Operation]
 GO
-ALTER TABLE [dbo].[TsDynDataTransaction] ADD  CONSTRAINT [DF_TsDynDataTransaction_Timestamp]  DEFAULT (getdate()) FOR [Timestamp]
+ALTER TABLE [dbo].[TsDynDataTransaction] ADD  CONSTRAINT [DF_TsDynDataTransaction_Timestamp]  DEFAULT (getutcdate()) FOR [Timestamp]
 GO
 ALTER TABLE [dbo].[TsDynDataValueDimension] ADD  CONSTRAINT [DF_TsDynDataValueDimension_ReadOnly]  DEFAULT ((0)) FOR [ReadOnly]
 GO
@@ -869,9 +869,9 @@ IF NOT EXISTS (SELECT 1 FROM __EFMigrationsHistory WHERE MigrationId = 'ToSic.Sx
     VALUES ('ToSic.Sxc.20.00.00', '20.00.05', SYSDATETIME(), '6.1.5');
 GO
 
-IF NOT EXISTS (SELECT 1 FROM __EFMigrationsHistory WHERE MigrationId = 'ToSic.Sxc.20.00.04')
+IF NOT EXISTS (SELECT 1 FROM __EFMigrationsHistory WHERE MigrationId = 'ToSic.Sxc.20.00.05')
     INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion, AppliedDate, AppliedVersion)
-    VALUES ('ToSic.Sxc.20.00.04', '20.00.05', SYSDATETIME(), '6.1.5');
+    VALUES ('ToSic.Sxc.20.00.05', '20.00.05', SYSDATETIME(), '6.1.5');
 GO
 
 
