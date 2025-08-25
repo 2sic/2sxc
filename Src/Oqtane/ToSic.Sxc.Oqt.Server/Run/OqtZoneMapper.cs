@@ -36,11 +36,11 @@ internal class OqtZoneMapper(
         settingRepository.AddSetting(new()
         {
             CreatedBy = "2sxc", 
-            CreatedOn = DateTime.Now, 
+            CreatedOn = DateTime.UtcNow, 
             EntityId = tenantId, 
             EntityName = EntityNames.Site,
             ModifiedBy = "2sxc",
-            ModifiedOn = DateTime.Now,
+            ModifiedOn = DateTime.UtcNow,
             SettingName = SiteSettingNames.SiteKeyForZoneId,
             SettingValue = zoneId.ToString()
         });
