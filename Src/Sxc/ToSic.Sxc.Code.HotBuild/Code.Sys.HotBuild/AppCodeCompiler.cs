@@ -1,11 +1,16 @@
 ﻿using System.Reflection;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sys.Configuration;
+using ToSic.Sys.Locking;
 
 namespace ToSic.Sxc.Code.Sys.HotBuild;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, SourceCodeHasher sourceCodeHasher, object[]? connect = default) : ServiceBase("Sxc.MyApCd", connect: connect)
+public abstract class AppCodeCompiler(
+    IGlobalConfiguration globalConfiguration,
+    SourceCodeHasher sourceCodeHasher,
+    object[]? connect = default)
+    : ServiceBase("Sxc.MyApCd", connect: connect)
 {
     protected const string AppCodeDll = "AppCode.dll";
 
@@ -132,5 +137,41 @@ public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, 
         l.A($"AssemblyFilePath: '{assemblyFilePath}'");
 
         return l.ReturnAsOk(assemblyFilePath);
+    }
+
+    protected readonly TryLockTryDo LockAppCodeAssemblyProvider = new();
+
+    protected static bool ShouldGenerate(string assemblyPath)
+        => !File.Exists(assemblyPath) || new FileInfo(assemblyPath).Length == 0 || IsFileLocked(assemblyPath);
+
+    protected static bool IsFileLocked(string filePath)
+    {
+        try
+        {
+            var fileInfo = new FileInfo(filePath);
+
+            // Check if the file is read-only
+            if (fileInfo.IsReadOnly)
+                return true;
+
+            // Try to open the file with FileShare.None to check if it is locked
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.None);
+            return !stream.CanRead;
+        }
+        catch (IOException)
+        {
+            // If an IOException is thrown, the file is locked
+            return true;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            // If an UnauthorizedAccessException is thrown, the file is locked
+            return true;
+        }
+        catch (Exception)
+        {
+            // Handle any other exceptions that might occur
+            return true;
+        }
     }
 }

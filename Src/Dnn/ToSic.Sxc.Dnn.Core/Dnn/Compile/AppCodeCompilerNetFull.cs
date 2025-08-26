@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using System.CodeDom.Compiler;
 using System.Reflection;
+using System.Text;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
@@ -10,68 +11,73 @@ using ToSic.Sys.Configuration;
 namespace ToSic.Sxc.Code;
 
 [PrivateApi]
-internal class AppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironment, IReferencedAssembliesProvider referencedAssembliesProvider, IGlobalConfiguration globalConfiguration, SourceCodeHasher sourceCodeHasher)
+internal class AppCodeCompilerNetFull(
+    IHostingEnvironmentWrapper hostingEnvironment,
+    IReferencedAssembliesProvider referencedAssembliesProvider,
+    IGlobalConfiguration globalConfiguration,
+    SourceCodeHasher sourceCodeHasher)
     : AppCodeCompiler(globalConfiguration, sourceCodeHasher, connect: [hostingEnvironment, referencedAssembliesProvider, sourceCodeHasher])
 {
-
     public override AssemblyResult GetAppCode(string relativePath, HotBuildSpecWithSharedSuffix spec)
     {
-        var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {spec}");
+        var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {spec}", timer: true);
 
         try
         {
-            // store it, so we can provide it to _referencedAssembliesProvider.Locations()
-            _relativePath = relativePath;
-            _spec = spec;
-
-            // Get all C# files in the folder
+            // Resolve source files
             var sourceRootPath = NormalizeFullPath(hostingEnvironment.MapPath(relativePath));
-            var sourceFiles = GetSourceFiles(sourceRootPath); // stv# this iterator can calculate hash, so we can iterate file once
+            var sourceFiles = GetSourceFiles(sourceRootPath);
             if (sourceFiles.Length == 0)
                 return l.ReturnAsOk(new());
 
+            // Target locations
             var (symbolsPath, assemblyPath) = GetAssemblyLocations(spec, sourceRootPath);
+            var dllName = Path.GetFileName(assemblyPath);
 
-            var results = File.Exists(assemblyPath)
-                ? new(new TempFileCollection()) { PathToAssembly = assemblyPath, CompiledAssembly = Assembly.LoadFrom(assemblyPath) }
-                : GetCompiledAssemblyFromFolder(sourceFiles, assemblyPath);
+            // Build or reuse compiled assembly
+            var result = LockAppCodeAssemblyProvider.Call(
+                conditionToGenerate: () => ShouldGenerate(assemblyPath),
+                generator: () => GetCompiledAssemblyFromFolder(sourceFiles, assemblyPath, relativePath, spec),
+                cacheOrFallback: () => new(new TempFileCollection())
+                {
+                    PathToAssembly = assemblyPath,
+                    CompiledAssembly = Assembly.LoadFrom(assemblyPath)
+                }
+            );
+
+            var compilerResults = result.Result;
 
             var dicInfos = new Dictionary<string, string>
             {
-                //["DllName"] = dllName,
+                ["DllName"] = dllName,
                 ["Files"] = sourceFiles.Length.ToString(),
-                ["Errors"] = results.Errors.HasErrors.ToString(),
-                // ["Assembly"] = assemblyResult.Assembly?.FullName ?? "null",
+                ["Errors"] = compilerResults.Errors.HasErrors.ToString(),
+                ["Assembly"] = compilerResults.CompiledAssembly?.FullName ?? "null",
                 ["AssemblyPath"] = assemblyPath,
                 ["SymbolsPath"] = symbolsPath,
             };
 
-            // Compile ok
-            if (!results.Errors.HasErrors)
+            // Success
+            if (!compilerResults.Errors.HasErrors)
             {
-                LogAllTypes(results.CompiledAssembly);
-                return l.ReturnAsOk(new(assembly: results.CompiledAssembly)
+                LogAllTypes(compilerResults.CompiledAssembly);
+                return l.ReturnAsOk(new(assembly: compilerResults.CompiledAssembly)
                 {
                     AssemblyLocations = [symbolsPath, assemblyPath],
                     Infos = dicInfos,
                 });
             }
 
-            // Compile error case
-            var errors = "";
-            foreach (var msg in results.Errors.Cast<CompilerError>().Where(error => !error.IsWarning).ToList()
-                .Select(error => $"Error ({error.ErrorNumber}): {error.ErrorText} in '{error.FileName}' (Line: {error.Line}, Column: {error.Column})."))
+            // Errors and warnings
+            var errorsSb = new StringBuilder();
+            foreach (CompilerError ce in compilerResults.Errors)
             {
-                l.E(msg);
-                errors += $"{msg}\n";
-            }
-            foreach (var msg in results.Errors.Cast<CompilerError>().Where(error => error.IsWarning).ToList()
-                .Select(warning => $"Warning ({warning.ErrorNumber}): {warning.ErrorText} in '{warning.FileName}' (Line: {warning.Line}, Column: {warning.Column})."))
-            {
-                l.W(msg);
-                errors += $"{msg}\n";
+                var msg = $"{(ce.IsWarning ? "Warning" : "Error")} ({ce.ErrorNumber}): {ce.ErrorText} in '{ce.FileName}' (Line: {ce.Line}, Column: {ce.Column}).";
+                if (ce.IsWarning) l.W(msg); else l.E(msg);
+                errorsSb.AppendLine(msg);
             }
 
+            var errors = errorsSb.ToString();
             return l.ReturnAsError(new()
             {
                 ErrorMessages = errors,
@@ -85,37 +91,26 @@ internal class AppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironm
             return l.ReturnAsError(new() { ErrorMessages = errorMessage, });
         }
     }
-    private string _relativePath;
-    private HotBuildSpec _spec;
 
-    //// Loads the content of a file to a byte array.
-    //private static byte[] LoadFile(string filename)
-    //{
-    //    using var fs = new FileStream(filename, FileMode.Open);
-    //    {
-    //        var buffer = new byte[(int)fs.Length];
-    //        fs.Read(buffer, 0, buffer.Length);
-    //        return buffer;
-    //    }
-    //}
 
-    private CompilerResults GetCompiledAssemblyFromFolder(string[] sourceFiles, string assemblyFilePath)
+
+    private CompilerResults GetCompiledAssemblyFromFolder(string[] sourceFiles, string assemblyFilePath, string relativePath, HotBuildSpec spec)
     {
         var l = Log.Fn<CompilerResults>($"{nameof(sourceFiles)}: {sourceFiles.Length}; {nameof(assemblyFilePath)}: '{assemblyFilePath}'", timer: true);
 
-        // need to save dll so latter can be loaded by roslyn compiler
+        // Save to disk so it can be loaded by runtime
         var parameters = new CompilerParameters(null, assemblyFilePath)
-            {
-                GenerateInMemory = false,
-                GenerateExecutable = false,
-                IncludeDebugInformation = true,
-                CompilerOptions = DnnRoslynConstants.CompilerOptions,
-            };
+        {
+            GenerateInMemory = false,
+            GenerateExecutable = false,
+            IncludeDebugInformation = true,
+            CompilerOptions = DnnRoslynConstants.CompilerOptions,
+        };
 
-        // Add all referenced assemblies
-        parameters.ReferencedAssemblies.AddRange(referencedAssembliesProvider.Locations(_relativePath, _spec).ToArray());
+        // Referenced assemblies
+        parameters.ReferencedAssemblies.AddRange(referencedAssembliesProvider.Locations(relativePath, spec).ToArray());
 
-        var codeProvider = new CSharpCodeProvider();
+        using var codeProvider = new CSharpCodeProvider();
         var compilerResults = codeProvider.CompileAssemblyFromFile(parameters, sourceFiles);
 
         return compilerResults.Errors.HasErrors
