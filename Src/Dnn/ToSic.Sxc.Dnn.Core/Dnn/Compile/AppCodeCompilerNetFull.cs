@@ -69,20 +69,12 @@ internal class AppCodeCompilerNetFull(
             }
 
             // Errors and warnings
-            var errorsSb = new StringBuilder();
-            foreach (CompilerError ce in compilerResults.Errors)
-            {
-                var msg = $"{(ce.IsWarning ? "Warning" : "Error")} ({ce.ErrorNumber}): {ce.ErrorText} in '{ce.FileName}' (Line: {ce.Line}, Column: {ce.Column}).";
-                if (ce.IsWarning) l.W(msg); else l.E(msg);
-                errorsSb.AppendLine(msg);
-            }
-
-            var errors = errorsSb.ToString();
+            var errorMessages = GetErrorMessages(compilerResults, l);
             return l.ReturnAsError(new()
             {
-                ErrorMessages = errors,
+                ErrorMessages = errorMessages,
                 Infos = dicInfos,
-            }, errors);
+            }, errorMessages);
         }
         catch (Exception ex)
         {
@@ -92,7 +84,27 @@ internal class AppCodeCompilerNetFull(
         }
     }
 
-
+    private static string GetErrorMessages(CompilerResults compilerResults, ILogCall<AssemblyResult> l)
+    {
+        // first return all errors and then all warnings
+        var errorsSb = new StringBuilder();
+        var warningsSb = new StringBuilder();
+        foreach (CompilerError ce in compilerResults.Errors)
+        {
+            var msg = $"{(ce.IsWarning ? "Warning" : "Error")} ({ce.ErrorNumber}): {ce.ErrorText} in '{ce.FileName}' (Line: {ce.Line}, Column: {ce.Column}).";
+            if (ce.IsWarning)
+            {
+                l.W(msg);
+                warningsSb.AppendLine(msg);
+            } else
+            { 
+                l.E(msg);
+                errorsSb.AppendLine(msg);
+            }
+        }
+        var errors = errorsSb.Append(warningsSb).ToString();
+        return errors;
+    }
 
     private CompilerResults GetCompiledAssemblyFromFolder(string[] sourceFiles, string assemblyFilePath, string relativePath, HotBuildSpec spec)
     {
