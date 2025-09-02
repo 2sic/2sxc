@@ -43,8 +43,8 @@ public class EditSaveBackend(
     {
         var l = Log.Fn<Dictionary<Guid, int>>($"save started with a#{_appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
 
-        var validator = new SaveDataValidator(package, Log);
         // perform some basic validation checks
+        var validator = new SaveDataValidator(package, Log);
         var containsOnlyExpectedNodesException = validator.ContainsOnlyExpectedNodes();
         if (containsOnlyExpectedNodesException != null)
             throw containsOnlyExpectedNodesException;
@@ -82,8 +82,13 @@ public class EditSaveBackend(
         #endregion
 
 
-        var items = package.Items
-            .Where(i => !i.Header.IsEmpty)
+        var itemsToProcess = package.Items
+            .Where(i => !i.Header.IsEmpty && i.Header.EditInfo?.ReadOnly != true)
+            .ToList();
+
+        l.A($"items to process: {itemsToProcess.Count} of {package.Items.Count}");
+
+        var items = itemsToProcess
             .Select(i =>
             {
                 var ent = ser.Deserialize(i.Entity, false, false);
@@ -125,16 +130,18 @@ public class EditSaveBackend(
 
         l.A("items to save generated, all data tests passed");
 
-        var result = pagePublishing.SaveInPagePublishing(
-            ctxService.BlockOrNull(),
-            _appId,
-            items,
-            partOfPage,
-            forceSaveAsDraft => DoSave(appEntities, items, package.DraftShouldBranch || forceSaveAsDraft),
-            permCheck
-        );
+        var result = items.Any()
+            ? pagePublishing.SaveInPagePublishing(
+                ctxService.BlockOrNull(),
+                _appId,
+                items,
+                partOfPage,
+                forceSaveAsDraft => DoSave(appEntities, items, package.DraftShouldBranch || forceSaveAsDraft),
+                permCheck
+            )
+            : [];
 
-        return l.Return(result);
+        return l.Return(result, $"returning: {result.Count}");
     }
 
 
