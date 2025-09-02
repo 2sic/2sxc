@@ -141,18 +141,30 @@ public abstract class AppCodeCompiler(
 
     protected readonly TryLockTryDo LockAppCodeAssemblyProvider = new();
 
-    protected static bool ShouldGenerate(string assemblyPath)
-        => !File.Exists(assemblyPath) || new FileInfo(assemblyPath).Length == 0 || IsFileLocked(assemblyPath);
-
-    protected static bool IsFileLocked(string filePath)
+    protected bool ShouldGenerate(string assemblyPath)
     {
+        var l = Log.Fn<bool>(assemblyPath);
+        if (!File.Exists(assemblyPath))
+            return l.ReturnTrue("file doesn't exist");
+
+        var fileInfo = new FileInfo(assemblyPath);
+        if (fileInfo.Length == 0)
+            return l.ReturnTrue("file empty");
+
+        var isLocked = IsFileLocked(fileInfo, assemblyPath);
+        return isLocked
+            ? l.ReturnTrue("locked - not sure why this would want to regenerate - ask STV")
+            : l.ReturnFalse("all ok, not locked");
+    }
+
+    private bool IsFileLocked(FileInfo fileInfo, string filePath)
+    {
+        var l = Log.Fn<bool>($"{filePath}");
         try
         {
-            var fileInfo = new FileInfo(filePath);
-
             // Check if the file is read-only
             if (fileInfo.IsReadOnly)
-                return true;
+                return l.ReturnTrue("read only");
 
             // Try to open the file with FileShare.None to check if it is locked
             using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.None);
@@ -161,17 +173,17 @@ public abstract class AppCodeCompiler(
         catch (IOException)
         {
             // If an IOException is thrown, the file is locked
-            return true;
+            return l.ReturnTrue(nameof(IOException));
         }
         catch (UnauthorizedAccessException)
         {
             // If an UnauthorizedAccessException is thrown, the file is locked
-            return true;
+            return l.ReturnTrue(nameof(UnauthorizedAccessException));
         }
         catch (Exception)
         {
             // Handle any other exceptions that might occur
-            return true;
+            return l.ReturnTrue($"{nameof(Exception)} other");
         }
     }
 }

@@ -18,34 +18,71 @@ internal class AppCodeCompilerNetFull(
     SourceCodeHasher sourceCodeHasher)
     : AppCodeCompiler(globalConfiguration, sourceCodeHasher, connect: [hostingEnvironment, referencedAssembliesProvider, sourceCodeHasher])
 {
+    /// <summary>
+    /// Get the App Code. The code is segmented into many smaller try/catch blocks to better identify where errors happen.
+    /// </summary>
+    /// <param name="relativePath"></param>
+    /// <param name="spec"></param>
+    /// <returns></returns>
     public override AssemblyResult GetAppCode(string relativePath, HotBuildSpecWithSharedSuffix spec)
     {
         var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {spec}", timer: true);
 
+        // Step 1: Get source files
+        string sourceRootPath;
+        string[] sourceFiles;
         try
         {
             // Resolve source files
-            var sourceRootPath = NormalizeFullPath(hostingEnvironment.MapPath(relativePath));
-            var sourceFiles = GetSourceFiles(sourceRootPath);
+            sourceRootPath = NormalizeFullPath(hostingEnvironment.MapPath(relativePath));
+            sourceFiles = GetSourceFiles(sourceRootPath);
             if (sourceFiles.Length == 0)
-                return l.ReturnAsOk(new());
+                return l.Return(new(), "no source files");
 
+        }
+        catch (Exception ex)
+        {
+            return ReturnAsError(ex, phaseName: "get names and files");
+        }
+
+        // Step 2: Get target paths
+        string symbolsPath, assemblyPath, dllName;
+        try
+        {
             // Target locations
-            var (symbolsPath, assemblyPath) = GetAssemblyLocations(spec, sourceRootPath);
-            var dllName = Path.GetFileName(assemblyPath);
+            (symbolsPath, assemblyPath) = GetAssemblyLocations(spec, sourceRootPath);
+            dllName = Path.GetFileName(assemblyPath);
+        }
+        catch (Exception ex)
+        {
+            return ReturnAsError(ex, phaseName: "get paths");
+        }
 
+        // Step 3: Compile
+        CompilerResults compilerResults;
+        try
+        {
             // Build or reuse compiled assembly
             var result = LockAppCodeAssemblyProvider.Call(
                 conditionToGenerate: () => ShouldGenerate(assemblyPath),
-                generator: () => GetCompiledAssemblyFromFolder(sourceFiles, assemblyPath, relativePath, spec),
-                cacheOrFallback: () => new(new TempFileCollection())
+                generator: () => CompileAssemblyFromAppCodeFolder(sourceFiles, assemblyPath, relativePath, spec),
+                cacheOrFallback: () => new(new())
                 {
                     PathToAssembly = assemblyPath,
                     CompiledAssembly = Assembly.LoadFrom(assemblyPath)
                 }
             );
 
-            var compilerResults = result.Result;
+            compilerResults = result.Result;
+        }
+        catch (Exception ex)
+        {
+            return ReturnAsError(ex, phaseName: "compile");
+        }
+
+        // Step 4: Return results, log and handle errors
+        try
+        {
 
             var dicInfos = new Dictionary<string, string>
             {
@@ -78,9 +115,14 @@ internal class AppCodeCompilerNetFull(
         }
         catch (Exception ex)
         {
+            return ReturnAsError(ex, phaseName: "final");
+        }
+
+        AssemblyResult ReturnAsError(Exception ex, string phaseName)
+        {
             l.Ex(ex);
-            var errorMessage = $"Error: Can't compile '{AppCodeDll}' in {Path.GetFileName(relativePath)}. Details are logged into insights. {ex.Message}";
-            return l.ReturnAsError(new() { ErrorMessages = errorMessage, });
+            var errorMessage = $"Error in phase '{phaseName}': Can't compile '{AppCodeDll}' in {Path.GetFileName(relativePath)}. Details are logged into insights. {ex.Message}";
+            return l.ReturnAsError(new() { ErrorMessages = errorMessage, }, $"in phase: {phaseName}");
         }
     }
 
@@ -106,7 +148,7 @@ internal class AppCodeCompilerNetFull(
         return errors;
     }
 
-    private CompilerResults GetCompiledAssemblyFromFolder(string[] sourceFiles, string assemblyFilePath, string relativePath, HotBuildSpec spec)
+    private CompilerResults CompileAssemblyFromAppCodeFolder(string[] sourceFiles, string assemblyFilePath, string relativePath, HotBuildSpec spec)
     {
         var l = Log.Fn<CompilerResults>($"{nameof(sourceFiles)}: {sourceFiles.Length}; {nameof(assemblyFilePath)}: '{assemblyFilePath}'", timer: true);
 
