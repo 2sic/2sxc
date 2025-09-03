@@ -168,7 +168,8 @@ public abstract class AppCodeCompiler(
 
             // Try to open the file with FileShare.None to check if it is locked
             using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.None);
-            return !stream.CanRead;
+            var isLocked = !stream.CanRead;
+            return l.Return(isLocked, $"{isLocked}");
         }
         catch (IOException)
         {
