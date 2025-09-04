@@ -60,6 +60,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
             // ReSharper disable once InvertIf
             if (!generated)
             {
+                // 2025-09-04 2dm: I can see that !generated seems to happen on AJAX calls, but it doesn't seem to be a problem
                 l.E("Object was not generated - additional logs to better find root cause next time this happens");
                 l.A($"result: {result}");
                 l.A($"message: {message}");
