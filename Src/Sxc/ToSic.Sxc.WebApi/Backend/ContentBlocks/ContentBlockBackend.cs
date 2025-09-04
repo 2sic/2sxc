@@ -31,6 +31,8 @@ public class ContentBlockBackend(
         connect: [workViews, multiPermissionsApp, publishing, workBlocksMod, ctxService, optimizerLazy, blockEditorSelectorLazy, appWorkCtxService, entityBlockGenerator, blockBuilderGenerator])
 {
 
+    private const bool DebugDetails = true;
+
     public IRenderResult NewBlockAndRender(int parentId, string field, int index, string app = "", Guid? guid = null)
     {
         var block = ctxService.BlockRequired();
@@ -68,7 +70,7 @@ public class ContentBlockBackend(
 
     public AjaxRenderDto RenderForAjax(int templateId, string lang, string root, string edition)
     {
-        var l = Log.Fn<AjaxRenderDto>();
+        var l = Log.Fn<AjaxRenderDto>($"{nameof(templateId)}: {templateId}; {nameof(lang)}: {lang}; {nameof(root)}: {root}; {nameof(edition)}: {edition}");
         l.A("1. Get Render result");
         var result = RenderToResult(templateId, lang, edition);
 
@@ -76,7 +78,10 @@ public class ContentBlockBackend(
         var resources = new List<AjaxResourceDto>();
         var ver = EavSystemInfo.VersionWithStartUpBuild;
         if (result.Features?.Contains(SxcPageFeatures.TurnOn) == true)
-            resources.Add(new() { Url = UrlHelpers.QuickAddUrlParameter(root.SuffixSlash() + SxcPageFeatures.TurnOn.UrlInDist, "v", ver) });
+            resources.Add(new()
+            {
+                Url = UrlHelpers.QuickAddUrlParameter(root.SuffixSlash() + SxcPageFeatures.TurnOn.UrlInDist, "v", ver)
+            });
 
         l.A("2.2. Add JS & CSS which were stripped before");
         resources.AddRange(result.Assets
@@ -95,7 +100,7 @@ public class ContentBlockBackend(
 
         l.A("3. Add manual resources (fancybox etc.)");
         // First get all the parts out of HTML, as the configuration is still stored as plain HTML
-        var mergedFeatures  = string.Join("\n", (result.FeaturesFromResources?.Select(mc => mc.Html) ?? []));
+        var mergedFeatures  = string.Join("\n", result.FeaturesFromResources?.Select(mc => mc.Html) ?? []);
 
         l.A("4.1. Process optimizers");
         var renderResult = optimizerLazy.Value.Process(mergedFeatures, new(extractAll: true));
@@ -104,12 +109,32 @@ public class ContentBlockBackend(
             l.A("Warning: Rest after extraction should be empty - not handled ATM");
 
         l.A("4.2. Add more resources based on processed");
-        resources.AddRange(renderResult.Assets.Select(asset => new AjaxResourceDto
+        resources.AddRange(renderResult.Assets
+            .Select(asset => new AjaxResourceDto
+            {
+                Url = asset.Url,
+                Type = asset.IsJs ? "js" : "css",
+                Attributes = asset.HtmlAttributes,
+            })
+        );
+
+        if (DebugDetails)
         {
-            Url = asset.Url,
-            Type = asset.IsJs ? "js" : "css",
-            Attributes = asset.HtmlAttributes,
-        }));
+            l.A("5. Debug details");
+            foreach (var ajaxResourceDto in resources)
+            {
+                l.A($"Url: {ajaxResourceDto.Url}");
+            }
+        }
+
+        // Undo Dnn CDF ~/ prefix which is added in the process in the background while rendering,
+        // to fix a CDF issue where paths with a space need "~/" to work and not be replaced with %20 
+        // and contain spaces: https://github.com/2sic/2sxc/issues/1566
+        // This is hacky, since we're first patching it and here unpatching it again
+        // but it's really difficult to get the other place to know that we're in the ajax call.
+        resources = resources
+            .Select(res => res with { Url = res.Url != null ? res.Url.TrimStart('~') : res.Url })
+            .ToList();
 
         return l.ReturnAsOk(new()
         {

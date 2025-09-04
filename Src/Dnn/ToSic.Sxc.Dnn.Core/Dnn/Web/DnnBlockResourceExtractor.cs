@@ -8,7 +8,9 @@ namespace ToSic.Sxc.Dnn.Web;
 internal class DnnBlockResourceExtractor(IPageServiceShared pageServiceShared)
     : BlockResourceExtractor(pageServiceShared)
 {
-    protected override ClientAssetsExtractSettings Settings => _settings.Get(() => new(
+    private const bool DebugDetails = true;
+
+    protected override ClientAssetsExtractSettings DefaultSettings => _settings.Get(() => new(
         extractAll: false,
         cssPriority: (int)FileOrder.Css.DefaultPriority,
         jsPriority: (int)FileOrder.Js.DefaultPriority));
@@ -21,7 +23,7 @@ internal class DnnBlockResourceExtractor(IPageServiceShared pageServiceShared)
         var include2SxcJs = false;
             
         // Handle Client Dependency injection
-        html = ExtractExternalScripts(html, ref include2SxcJs, settings);
+        html = ExtractExternalScripts(html, ref include2SxcJs, settings, logDetails: DebugDetails); // 2025-09-04 2dm having some difficulties, want to log details
 
         // Handle Scripts
         html = ExtractStyles(html, settings);

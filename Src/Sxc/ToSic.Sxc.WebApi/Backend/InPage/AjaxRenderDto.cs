@@ -7,10 +7,8 @@ public class AjaxRenderDto
     public required IEnumerable<AjaxResourceDto> Resources { get; init; }
 }
 
-public class AjaxResourceDto
+public record AjaxResourceDto
 {
-    //public string Id { get; init; }
-
     public string? Url { get; init; }
 
     /// <summary>

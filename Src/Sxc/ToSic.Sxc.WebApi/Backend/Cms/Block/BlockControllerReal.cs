@@ -92,10 +92,8 @@ public class BlockControllerReal(
 
     /// <inheritdoc />
     public AjaxRenderDto Render(int templateId, string lang, string edition)
-    {
-        Log.A($"render template:{templateId}, lang:{lang}");
-        return Backend.RenderForAjax(templateId, lang, _moduleRoot, edition);
-    }
+        => Backend.RenderForAjax(templateId, lang, _moduleRoot, edition);
+
     public BlockControllerReal Set(string moduleRoot)
     {
         _moduleRoot = moduleRoot;

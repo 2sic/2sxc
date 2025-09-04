@@ -7,9 +7,9 @@ namespace ToSic.Sxc.Render.Sys.ResourceExtractor;
 
 public abstract partial class BlockResourceExtractor
 {
-    protected string ExtractExternalScripts(string renderedTemplate, ref bool include2SxcJs, ClientAssetsExtractSettings settings)
+    protected string ExtractExternalScripts(string renderedTemplate, ref bool include2SxcJs, ClientAssetsExtractSettings settings, bool logDetails = false)
     {
-        var l = Log.Fn<string>();
+        var l = Log.Fn<string>(logDetails ? renderedTemplate : null);
 
         var scriptMatches = RegexUtil.ScriptSrcDetection.Value.Matches(renderedTemplate);
         var scriptMatchesToRemove = new List<Match>();
@@ -17,11 +17,15 @@ public abstract partial class BlockResourceExtractor
         l.A($"Found {scriptMatches.Count} external scripts");
         foreach (var match in scriptMatches.Cast<Match>())
         {
-            var url = FixUrlWithSpaces(match.Groups[RegexUtil.SrcKey].Value);
+            var before = match.Groups[RegexUtil.SrcKey].Value;
+            var url = FixUrlWithSpaces(before);
+            if (logDetails)
+                l.A($"Url: '{url}' (before: '{before}'");
 
             // always remove 2sxc JS requests from template and ensure it's added the standard way
             if (Is2SxcApiJs(url))
             {
+                if (logDetails) l.A($"Found 2sxc api.js url, will ensure it's added the standard way: {url}");
                 include2SxcJs = true;
                 scriptMatchesToRemove.Add(match);
                 continue;
@@ -29,7 +33,9 @@ public abstract partial class BlockResourceExtractor
 
             // Also get the ID (new in v12)
             var idMatches = RegexUtil.IdDetection.Value.Match(match.Value);
-            var id = idMatches.Success ? idMatches.Groups["Id"].Value : null;
+            var id = idMatches.Success
+                ? idMatches.Groups["Id"].Value
+                : null;
 
             // todo: ATM the priority and type is only detected in the Regex which expects "enable-optimizations"
             // ...so to improve this code, we would have to use 2 regexs - one for detecting "enable-optimizations" 
@@ -66,7 +72,8 @@ public abstract partial class BlockResourceExtractor
 
         // remove in reverse order, so that the indexes don't change as we remove scripts in the HTML
         scriptMatchesToRemove.Reverse();
-        scriptMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
+        renderedTemplate = scriptMatchesToRemove
+            .Aggregate(renderedTemplate, (current, p) => current.Remove(p.Index, p.Length));
         return l.Return(renderedTemplate);
     }
 
@@ -88,7 +95,7 @@ public abstract partial class BlockResourceExtractor
     private int GetPriority(Match optMatch, int defaultPriority)
     {
         var priorityString = (optMatch.Groups[RegexUtil.PriorityKey]?.Value ?? "true").ToLowerInvariant();
-        var priority = priorityString == "true" || priorityString == ""
+        var priority = priorityString is "true" or ""
             ? defaultPriority
             : int.Parse(priorityString);
         return priority;

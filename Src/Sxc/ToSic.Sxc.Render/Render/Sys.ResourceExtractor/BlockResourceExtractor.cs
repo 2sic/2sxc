@@ -28,7 +28,7 @@ public abstract partial class BlockResourceExtractor(IPageServiceShared pageServ
 
     #region Settings
 
-    protected virtual ClientAssetsExtractSettings Settings => _settings.Get(() => new(
+    protected virtual ClientAssetsExtractSettings DefaultSettings => _settings.Get(() => new(
         extractAll: false
     ))!;
     private readonly GetOnce<ClientAssetsExtractSettings> _settings = new();
@@ -41,7 +41,7 @@ public abstract partial class BlockResourceExtractor(IPageServiceShared pageServ
     protected List<ClientAsset> Assets { get; set; } = [];
 
     public RenderEngineResult Process(string html)
-        => Process(html, Settings);
+        => Process(html, DefaultSettings);
 
     /// <summary>
     /// Run the sequence to extract assets
@@ -115,9 +115,10 @@ public abstract partial class BlockResourceExtractor(IPageServiceShared pageServ
     /// </remarks>
     /// <param name="url"></param>
     /// <returns></returns>
-    private static bool Is2SxcApiJs(string url) => url.ToLowerInvariant()
-        .ForwardSlash()
-        .Contains("/js/2sxc.api");
+    private static bool Is2SxcApiJs(string url)
+        => url.ToLowerInvariant()
+            .ForwardSlash()
+            .Contains("/js/2sxc.api");
 
     /// <summary>
     /// Because of an issue with spaces, prepend tilde to urls that start at root
@@ -126,8 +127,10 @@ public abstract partial class BlockResourceExtractor(IPageServiceShared pageServ
     /// <returns></returns>
     private string FixUrlWithSpaces(string url)
     {
-        if (!url.Contains(" ")) return url;
-        if (!url.StartsWith("/") || url.StartsWith("//")) return url;
+        if (!url.Contains(" "))
+            return url;
+        if (!url.StartsWith("/") || url.StartsWith("//"))
+            return url;
         return "~" + url;
     }
 
