@@ -6,6 +6,7 @@ using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sys.Configuration;
+using ToSic.Sys.Locking;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Code;
@@ -63,15 +64,22 @@ internal class AppCodeCompilerNetFull(
         try
         {
             // Build or reuse compiled assembly
-            var result = LockAppCodeAssemblyProvider.Call(
+            var assemblyLock = CompileAssemblyLocks.Get(assemblyPath);
+            var lockManager = new TryLockTryDo(assemblyLock);
+            var result = lockManager.Call(
                 conditionToGenerate: () => ShouldGenerate(assemblyPath),
                 generator: () => CompileAssemblyFromAppCodeFolder(sourceFiles, assemblyPath, relativePath, spec),
-                cacheOrFallback: () => new(new())
+                cacheOrFallback: () =>
                 {
-                    PathToAssembly = assemblyPath,
-                    CompiledAssembly = Assembly.LoadFrom(assemblyPath)
-                }
-            );
+                    var l2 = l.Fn<CompilerResults>($"load from path: '{assemblyPath}'");
+                    var compiledAssembly = Assembly.LoadFrom(assemblyPath);
+                    var result = new CompilerResults(new())
+                    {
+                        PathToAssembly = assemblyPath,
+                        CompiledAssembly = compiledAssembly,
+                    };
+                    return l2.Return(result, "used cached assembly with Assembly.LoadFrom(...)");
+                });
 
             compilerResults = result.Result;
         }

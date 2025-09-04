@@ -139,22 +139,24 @@ public abstract class AppCodeCompiler(
         return l.ReturnAsOk(assemblyFilePath);
     }
 
+    protected static readonly NamedLocks CompileAssemblyLocks = new();
     protected readonly TryLockTryDo LockAppCodeAssemblyProvider = new();
 
     protected bool ShouldGenerate(string assemblyPath)
     {
         var l = Log.Fn<bool>(assemblyPath);
         if (!File.Exists(assemblyPath))
-            return l.ReturnTrue("file doesn't exist");
+            return l.ReturnTrue("should generate, file doesn't exist");
 
         var fileInfo = new FileInfo(assemblyPath);
         if (fileInfo.Length == 0)
-            return l.ReturnTrue("file empty");
+            return l.ReturnTrue("should generate, file empty");
 
         var isLocked = IsFileLocked(fileInfo, assemblyPath);
         return isLocked
-            ? l.ReturnTrue("locked - not sure why this would want to regenerate - ask STV")
-            : l.ReturnFalse("all ok, not locked");
+            //? l.ReturnTrue("exists and locked, should generate; - not sure why this would want to regenerate - ask STV")
+            ? l.ReturnFalse("exists and locked, should MAYBE NOT generate; - not sure why this would want to regenerate - ask STV")
+            : l.ReturnFalse("Just load existing. File exists and is not locked.");
     }
 
     private bool IsFileLocked(FileInfo fileInfo, string filePath)
