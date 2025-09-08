@@ -237,6 +237,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.DataSource", "..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.LookUp", "..\..\eav-server\ToSic.Eav.LookUp\ToSic.Eav.LookUp.csproj", "{3ADABC34-DDE6-A2CB-77E8-49E888529E11}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.WebApi.Tests", "..\..\eav-server\ToSic.Eav.WebApi.Tests\ToSic.Eav.WebApi.Tests.csproj", "{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -696,6 +698,12 @@ Global
 		{3ADABC34-DDE6-A2CB-77E8-49E888529E11}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3ADABC34-DDE6-A2CB-77E8-49E888529E11}.Testing|Any CPU.ActiveCfg = Testing|Any CPU
 		{3ADABC34-DDE6-A2CB-77E8-49E888529E11}.Testing|Any CPU.Build.0 = Testing|Any CPU
+		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Testing|Any CPU.ActiveCfg = Testing|Any CPU
+		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7}.Testing|Any CPU.Build.0 = Testing|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -812,9 +820,10 @@ Global
 		{13515640-4870-4679-A7D1-185884ED26AF} = {2DBCC960-1C0B-494F-9E21-8707A1D344C3}
 		{F036E03A-2A87-FC19-74E3-CCB015E2D619} = {6D320108-78ED-40E6-83F7-9CD423471DB3}
 		{3ADABC34-DDE6-A2CB-77E8-49E888529E11} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{286F6C95-62FF-CCAB-EF67-DB6AADFB49E7} = {55799BAC-652D-4A04-96AC-FCD790A38260}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 	EndGlobalSection
 EndGlobal

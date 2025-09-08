@@ -18,7 +18,7 @@ public class AppDataController() : DnnSxcControllerBase(RealController.LogSuffix
     [HttpGet]
     [AllowAnonymous]   // will check security internally, so assume no requirements
     public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string appPath = default, [FromUri(Name = ODataSelectParamName)] string oDataSelect = default)
-        => Real.GetEntities(contentType, appPath, oDataSelect: oDataSelect);
+        => Real.GetEntities(contentType, appPath, oDataSelect: oDataSelect, uri: Request.RequestUri);
 
     #endregion
 
@@ -28,12 +28,12 @@ public class AppDataController() : DnnSxcControllerBase(RealController.LogSuffix
     [HttpGet]
     [AllowAnonymous] // will check security internally, so assume no requirements
     public IDictionary<string, object> GetOne(string contentType, string guid, string appPath = default, [FromUri(Name = ODataSelectParamName)] string oDataSelect = default) // this will handle Guid
-        => Real.GetOne(contentType, guid, appPath, oDataSelect: oDataSelect);
+        => Real.GetOne(contentType, guid, appPath, oDataSelect: oDataSelect, uri: Request.RequestUri);
 
     [HttpGet]
     [AllowAnonymous] // will check security internally, so assume no requirements
     public IDictionary<string, object> GetOne(string contentType, int id, string appPath = default, [FromUri(Name = ODataSelectParamName)] string oDataSelect = default) // this will handle int id
-        => Real.GetOne(contentType, id.ToString(), appPath, oDataSelect: oDataSelect);
+        => Real.GetOne(contentType, id.ToString(), appPath, oDataSelect: oDataSelect, uri: Request.RequestUri);
 
     #endregion
 
