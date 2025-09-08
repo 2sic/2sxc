@@ -8,6 +8,7 @@ using ToSic.Eav.Data.Sys.Entities;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Metadata.Targets;
+using ToSic.Eav.WebApi.Sys.Admin.Odata;
 using ToSic.Eav.WebApi.Sys.Admin.Query;
 using ToSic.Eav.WebApi.Sys.App;
 using ToSic.Eav.WebApi.Sys.Entities;
@@ -236,7 +237,7 @@ public class AppContent(
             if (uri is not null)
                 converter.AddSelectFields([.. oDataSelect.CsvToArrayWithoutEmpty()]);
             else
-                converter.AddSelectFields([.. QueryODataParams.GetSelectedProperties(QueryODataParams.ODataParse(uri).SelectAndExpand)]);
+                converter.AddSelectFields([.. CoreSystemQueryOptionsParser.GetSelectedProperties(CoreSystemQueryOptionsParser.Parse(uri).SelectAndExpand)]);
         }
 
         return l.Return(ser);
