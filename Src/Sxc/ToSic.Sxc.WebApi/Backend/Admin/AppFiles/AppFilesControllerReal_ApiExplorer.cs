@@ -70,8 +70,7 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
         return l.Return(appCodeApiControllerFiles, $"ok, count:{appCodeApiControllerFiles.Count}");
     }
 
-    private ICollection<string> ApiControllerFilesInAppCode(string mask, string appPath, string edition,
-        Assembly? appCodeAssembly)
+    private ICollection<string> ApiControllerFilesInAppCode(string mask, string appPath, string edition, Assembly? appCodeAssembly)
     {
         var l = Log.Fn<ICollection<string>>(
             $"list ApiController files, {nameof(mask)}:'{mask}', {nameof(appPath)}:'{appPath}', {nameof(edition)}:'{edition}', has appCode assembly:{appCodeAssembly != null}");
@@ -101,16 +100,13 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
         }
 
         // try to collect all files, ignoring long paths errors and similar etc.
-        var files = new List<FileInfo>(); // List that will hold the files and sub-files in path
-        var folders = new List<DirectoryInfo>(); // List that hold directories that cannot be accessed
         var di = new DirectoryInfo(fullPath);
-        FullDirList(di, mask, folders, files, SearchOption.AllDirectories);
-        l.A($"{nameof(FullDirList)}:'{fullPath}', files:{files.Count}, folders:{folders.Count}");
+        var (_, files) = FullDirList(di, mask, withSubfolders: true); // List that will hold the files and sub-files in path
 
         // ApiController files with subfolders, when has its type in AppCode assembly
-        var apiControllerFilesInAppCode = files.Where(f =>
-                OptionalCheckForControllerTypeInAppCodeAssembly(Path.GetFileNameWithoutExtension(f.Name),
-                    appCodeAssembly))
+        var filesAfterCheck = files
+            .Where(f => CheckForControllerTypeInAppCodeAssembly(Path.GetFileNameWithoutExtension(f.Name), appCodeAssembly));
+        var apiControllerFilesInAppCode = filesAfterCheck
             .Select(f => f.FullName)
             .Select(p => EnsurePathMayBeAccessed(p, appPath, user.IsSystemAdmin)) // do another security check
             .Select(x => x.Replace(appPath + "\\", "")) // truncate / remove internal server root path
@@ -120,15 +116,13 @@ partial class AppFilesControllerReal : Eav.WebApi.Sys.Admin.IAppExplorerControll
         return l.Return(apiControllerFilesInAppCode, $"ok, count:{apiControllerFilesInAppCode.Count}");
     }
 
-    private bool OptionalCheckForControllerTypeInAppCodeAssembly(string controllerTypeName, Assembly appCodeAssembly)
+    private bool CheckForControllerTypeInAppCodeAssembly(string controllerTypeName, Assembly appCodeAssembly)
     {
-        var l = Log.Fn<bool>(
-            $"{nameof(OptionalCheckForControllerTypeInAppCodeAssembly)}({nameof(controllerTypeName)}:'{controllerTypeName}', has appCode assembly:{appCodeAssembly != null})");
+        var l = Log.Fn<bool>($"({nameof(controllerTypeName)}:'{controllerTypeName}'");
 
-        // check if it is controller type
-        if (controllerTypeName.EndsWith(EavConstants.ApiControllerSuffix, StringComparison.OrdinalIgnoreCase))
-            return l.ReturnTrue($"'{controllerTypeName}' is not controller type");
-
-        return l.ReturnAndLog(appCodeAssembly?.FindControllerTypeByName(controllerTypeName) != null);
+        // Check if name ends with "Controller" - if not, then no need to look in assembly
+        return controllerTypeName.EndsWith(EavConstants.ApiControllerSuffix, StringComparison.OrdinalIgnoreCase)
+            ? l.ReturnTrue($"'{controllerTypeName}' does not end with '{EavConstants.ApiControllerSuffix}'")
+            : l.ReturnAndLog(appCodeAssembly.FindControllerTypeByName(controllerTypeName) != null);
     }
 }

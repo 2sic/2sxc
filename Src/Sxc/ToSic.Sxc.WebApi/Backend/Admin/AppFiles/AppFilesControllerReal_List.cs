@@ -4,8 +4,7 @@ namespace ToSic.Sxc.Backend.Admin.AppFiles;
 
 partial class AppFilesControllerReal
 {
-    public ICollection<string> All(int appId, bool global, string? path = null, string mask = "*.*",
-        bool withSubfolders = false, bool returnFolders = false)
+    public ICollection<string> All(int appId, bool global, string? path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
     {
         var l = Log.Fn<ICollection<string>>(
             $"list a#{appId}, {nameof(global)}:{global}, {nameof(path)}:'{path}', {nameof(mask)}:'{mask}', withSub:{withSubfolders}, {nameof(returnFolders)}:{returnFolders}"
@@ -30,17 +29,11 @@ partial class AppFilesControllerReal
         if (!Directory.Exists(fullPath))
             return l.Return([], "directory doesn't exist");
 
-        var opt = withSubfolders
-            ? SearchOption.AllDirectories
-            : SearchOption.TopDirectoryOnly;
-
         // try to collect all files, ignoring long paths errors and similar etc.
-        var files = new List<FileInfo>();           // List that will hold the files and sub-files in path
-        var folders = new List<DirectoryInfo>();    // List that hold directories that cannot be accessed
         var di = new DirectoryInfo(fullPath);
-        FullDirList(di, mask, folders, files, opt);
-        l.A($"{nameof(FullDirList)} files:{files.Count}, folders:{folders.Count}");
+        var (folders, files) = FullDirList(di, mask, withSubfolders); // List that hold directories that cannot be accessed
 
+        // List that will hold the files and sub-files in path
         // return folders or files (depending on setting) with/without subfolders
         var all = (returnFolders
             ? folders.Select(f => f.FullName)

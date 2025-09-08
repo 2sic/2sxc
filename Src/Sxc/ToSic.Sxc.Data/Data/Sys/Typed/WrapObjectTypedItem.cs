@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Text.Json.Serialization;
+using ToSic.Eav.Data.Sys.Entities.Sources;
 using ToSic.Eav.Data.Sys.ValueConverter;
 using ToSic.Eav.Metadata.Sys;
 using ToSic.Razor.Blade;
@@ -12,6 +13,7 @@ using ToSic.Sxc.Data.Sys.Wrappers;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services.Sys.ConvertService;
 using ToSic.Sxc.Services.Tweaks;
+using ToSic.Sys.Performance;
 using static ToSic.Sxc.Data.Sys.Typed.TypedHelpers;
 
 namespace ToSic.Sxc.Data.Sys.Typed;
@@ -253,7 +255,7 @@ public class WrapObjectTypedItem(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCod
             })
             .ToList();
 
-        var mdOf = new Metadata<int>(0, 0, "virtual", mdEntities);
+        var mdOf = new Metadata<int>(0, 0, "virtual", source: MetadataProvider.Create(mdEntities));
         // TODO: @2dm - this probably won't work yet, without an entity (null) #todoTyped
         var metadata = Cdf.MetadataTyped(mdOf);
         return metadata;

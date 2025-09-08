@@ -2,15 +2,18 @@
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sys.Configuration;
-using ToSic.Sys.Locking;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Oqt.Server.Code.Sys;
 
 [PrivateApi]
-internal class AppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, Generator<Compiler> compiler, IGlobalConfiguration globalConfiguration, SourceCodeHasher sourceCodeHasher) : AppCodeCompiler(globalConfiguration, sourceCodeHasher, connect: [serverPaths, compiler, sourceCodeHasher])
+internal class AppCodeCompilerNetCore(
+    LazySvc<IServerPaths> serverPaths,
+    Generator<Compiler> compiler,
+    IGlobalConfiguration globalConfiguration,
+    SourceCodeHasher sourceCodeHasher)
+    : AppCodeCompiler(globalConfiguration, sourceCodeHasher, connect: [serverPaths, compiler, sourceCodeHasher])
 {
-    private readonly TryLockTryDo _lockAppCodeAssemblyProvider = new();
 
     public override AssemblyResult GetAppCode(string virtualPath, HotBuildSpecWithSharedSuffix spec)
     {
@@ -26,8 +29,8 @@ internal class AppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, Generat
             var (symbolsPath, assemblyPath) = GetAssemblyLocations(spec, sourceRootPath);
             var dllName = Path.GetFileName(assemblyPath);
 
-            var result = _lockAppCodeAssemblyProvider.Call(
-                conditionToGenerate: () => !File.Exists(assemblyPath) || new FileInfo(assemblyPath).Length == 0 || IsFileLocked(assemblyPath),
+            var result = LockAppCodeAssemblyProvider.Call(
+                conditionToGenerate: () => ShouldGenerate(assemblyPath),
                 generator: () => compiler.New().GetCompiledAssemblyFromFolder(sourceFiles, assemblyPath, symbolsPath, dllName, spec),
                 cacheOrFallback: () => new AssemblyResult(assembly: new SimpleUnloadableAssemblyLoadContext().LoadFromAssemblyPath(assemblyPath))
             );
@@ -44,58 +47,29 @@ internal class AppCodeCompilerNetCore(LazySvc<IServerPaths> serverPaths, Generat
                 ["SymbolsPath"] = symbolsPath,
             };
 
-            if (!assemblyResult.ErrorMessages.IsEmpty())
-                return l.ReturnAsError(new()
-                {
-                    ErrorMessages = assemblyResult.ErrorMessages,
-                    Infos = dicInfos,
-                }, assemblyResult.ErrorMessages);
-
-            // Compile ok
-            LogAllTypes(assemblyResult.Assembly);
-            return l.ReturnAsOk(new(assemblyResult.Assembly)
+            // Success
+            if (assemblyResult.ErrorMessages.IsEmpty())
             {
-                AssemblyLocations = [symbolsPath, assemblyPath],
-                Infos = dicInfos,
-            });
+                LogAllTypes(assemblyResult.Assembly);
+                return l.ReturnAsOk(new(assemblyResult.Assembly)
+                {
+                    AssemblyLocations = [symbolsPath, assemblyPath],
+                    Infos = dicInfos,
+                });
+            }
 
+            // Errors and warnings
+            return l.ReturnAsError(new()
+            {
+                ErrorMessages = assemblyResult.ErrorMessages,
+                Infos = dicInfos,
+            }, assemblyResult.ErrorMessages);
         }
         catch (Exception ex)
         {
             l.Ex(ex);
             var errorMessage = $"Error: Can't compile '{AppCodeDll}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. {ex.Message}";
-            return l.ReturnAsError(new() { ErrorMessages = errorMessage, }, "error");
-        }
-    }
-
-    private static bool IsFileLocked(string filePath)
-    {
-        try
-        {
-            var fileInfo = new FileInfo(filePath);
-
-            // Check if the file is read-only
-            if (fileInfo.IsReadOnly)
-                return true;
-
-            // Try to open the file with FileShare.None to check if it is locked
-            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.None);
-            return !stream.CanRead;
-        }
-        catch (IOException)
-        {
-            // If an IOException is thrown, the file is locked
-            return true;
-        }
-        catch (UnauthorizedAccessException)
-        {
-            // If an UnauthorizedAccessException is thrown, the file is locked
-            return true;
-        }
-        catch (Exception)
-        {
-            // Handle any other exceptions that might occur
-            return true;
+            return l.ReturnAsError(new() { ErrorMessages = errorMessage, });
         }
     }
 }

@@ -1,121 +1,178 @@
 ﻿using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using System.CodeDom.Compiler;
 using System.Reflection;
+using System.Text;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
 using ToSic.Sys.Configuration;
+using ToSic.Sys.Locking;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Code;
 
 [PrivateApi]
-internal class AppCodeCompilerNetFull(IHostingEnvironmentWrapper hostingEnvironment, IReferencedAssembliesProvider referencedAssembliesProvider, IGlobalConfiguration globalConfiguration, SourceCodeHasher sourceCodeHasher)
+internal class AppCodeCompilerNetFull(
+    IHostingEnvironmentWrapper hostingEnvironment,
+    IReferencedAssembliesProvider referencedAssembliesProvider,
+    IGlobalConfiguration globalConfiguration,
+    SourceCodeHasher sourceCodeHasher)
     : AppCodeCompiler(globalConfiguration, sourceCodeHasher, connect: [hostingEnvironment, referencedAssembliesProvider, sourceCodeHasher])
 {
-
+    /// <summary>
+    /// Get the App Code. The code is segmented into many smaller try/catch blocks to better identify where errors happen.
+    /// </summary>
+    /// <param name="relativePath"></param>
+    /// <param name="spec"></param>
+    /// <returns></returns>
     public override AssemblyResult GetAppCode(string relativePath, HotBuildSpecWithSharedSuffix spec)
     {
-        var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {spec}");
+        var l = Log.Fn<AssemblyResult>($"{nameof(relativePath)}: '{relativePath}'; {spec}", timer: true);
 
+        // Step 1: Get source files
+        string sourceRootPath;
+        string[] sourceFiles;
         try
         {
-            // store it, so we can provide it to _referencedAssembliesProvider.Locations()
-            _relativePath = relativePath;
-            _spec = spec;
-
-            // Get all C# files in the folder
-            var sourceRootPath = NormalizeFullPath(hostingEnvironment.MapPath(relativePath));
-            var sourceFiles = GetSourceFiles(sourceRootPath); // stv# this iterator can calculate hash, so we can iterate file once
+            // Resolve source files
+            sourceRootPath = NormalizeFullPath(hostingEnvironment.MapPath(relativePath));
+            sourceFiles = GetSourceFiles(sourceRootPath);
             if (sourceFiles.Length == 0)
-                return l.ReturnAsOk(new());
+                return l.Return(new(), "no source files");
 
-            var (symbolsPath, assemblyPath) = GetAssemblyLocations(spec, sourceRootPath);
+        }
+        catch (Exception ex)
+        {
+            return ReturnAsError(ex, phaseName: "get names and files");
+        }
 
-            var results = File.Exists(assemblyPath)
-                ? new(new TempFileCollection()) { PathToAssembly = assemblyPath, CompiledAssembly = Assembly.LoadFrom(assemblyPath) }
-                : GetCompiledAssemblyFromFolder(sourceFiles, assemblyPath);
+        // Step 2: Get target paths
+        string symbolsPath, assemblyPath, dllName;
+        try
+        {
+            // Target locations
+            (symbolsPath, assemblyPath) = GetAssemblyLocations(spec, sourceRootPath);
+            dllName = Path.GetFileName(assemblyPath);
+        }
+        catch (Exception ex)
+        {
+            return ReturnAsError(ex, phaseName: "get paths");
+        }
+
+        // Step 3: Compile
+        CompilerResults compilerResults;
+        try
+        {
+            // Build or reuse compiled assembly
+            var assemblyLock = CompileAssemblyLocks.Get(assemblyPath);
+            var lockManager = new TryLockTryDo(assemblyLock);
+            var result = lockManager.Call(
+                conditionToGenerate: () => ShouldGenerate(assemblyPath),
+                generator: () => CompileAssemblyFromAppCodeFolder(sourceFiles, assemblyPath, relativePath, spec),
+                cacheOrFallback: () =>
+                {
+                    var l2 = l.Fn<CompilerResults>($"load from path: '{assemblyPath}'");
+                    var compiledAssembly = Assembly.LoadFrom(assemblyPath);
+                    var result = new CompilerResults(new())
+                    {
+                        PathToAssembly = assemblyPath,
+                        CompiledAssembly = compiledAssembly,
+                    };
+                    return l2.Return(result, "used cached assembly with Assembly.LoadFrom(...)");
+                });
+
+            compilerResults = result.Result;
+        }
+        catch (Exception ex)
+        {
+            return ReturnAsError(ex, phaseName: "compile");
+        }
+
+        // Step 4: Return results, log and handle errors
+        try
+        {
 
             var dicInfos = new Dictionary<string, string>
             {
-                //["DllName"] = dllName,
+                ["DllName"] = dllName,
                 ["Files"] = sourceFiles.Length.ToString(),
-                ["Errors"] = results.Errors.HasErrors.ToString(),
-                // ["Assembly"] = assemblyResult.Assembly?.FullName ?? "null",
+                ["Errors"] = compilerResults.Errors.HasErrors.ToString(),
+                ["Assembly"] = compilerResults.CompiledAssembly?.FullName ?? "null",
                 ["AssemblyPath"] = assemblyPath,
                 ["SymbolsPath"] = symbolsPath,
             };
 
-            // Compile ok
-            if (!results.Errors.HasErrors)
+            // Success
+            if (!compilerResults.Errors.HasErrors)
             {
-                LogAllTypes(results.CompiledAssembly);
-                return l.ReturnAsOk(new(assembly: results.CompiledAssembly)
+                LogAllTypes(compilerResults.CompiledAssembly);
+                return l.ReturnAsOk(new(assembly: compilerResults.CompiledAssembly)
                 {
                     AssemblyLocations = [symbolsPath, assemblyPath],
                     Infos = dicInfos,
                 });
             }
 
-            // Compile error case
-            var errors = "";
-            foreach (var msg in results.Errors.Cast<CompilerError>().Where(error => !error.IsWarning).ToList()
-                .Select(error => $"Error ({error.ErrorNumber}): {error.ErrorText} in '{error.FileName}' (Line: {error.Line}, Column: {error.Column})."))
-            {
-                l.E(msg);
-                errors += $"{msg}\n";
-            }
-            foreach (var msg in results.Errors.Cast<CompilerError>().Where(error => error.IsWarning).ToList()
-                .Select(warning => $"Warning ({warning.ErrorNumber}): {warning.ErrorText} in '{warning.FileName}' (Line: {warning.Line}, Column: {warning.Column})."))
-            {
-                l.W(msg);
-                errors += $"{msg}\n";
-            }
-
+            // Errors and warnings
+            var errorMessages = GetErrorMessages(compilerResults, l);
             return l.ReturnAsError(new()
             {
-                ErrorMessages = errors,
+                ErrorMessages = errorMessages,
                 Infos = dicInfos,
-            }, errors);
+            }, errorMessages);
         }
         catch (Exception ex)
         {
+            return ReturnAsError(ex, phaseName: "final");
+        }
+
+        AssemblyResult ReturnAsError(Exception ex, string phaseName)
+        {
             l.Ex(ex);
-            var errorMessage = $"Error: Can't compile '{AppCodeDll}' in {Path.GetFileName(relativePath)}. Details are logged into insights. {ex.Message}";
-            return l.ReturnAsError(new() { ErrorMessages = errorMessage, });
+            var errorMessage = $"Error in phase '{phaseName}': Can't compile '{AppCodeDll}' in {Path.GetFileName(relativePath)}. Details are logged into insights. {ex.Message}";
+            return l.ReturnAsError(new() { ErrorMessages = errorMessage, }, $"in phase: {phaseName}");
         }
     }
-    private string _relativePath;
-    private HotBuildSpec _spec;
 
-    //// Loads the content of a file to a byte array.
-    //private static byte[] LoadFile(string filename)
-    //{
-    //    using var fs = new FileStream(filename, FileMode.Open);
-    //    {
-    //        var buffer = new byte[(int)fs.Length];
-    //        fs.Read(buffer, 0, buffer.Length);
-    //        return buffer;
-    //    }
-    //}
+    private static string GetErrorMessages(CompilerResults compilerResults, ILogCall<AssemblyResult> l)
+    {
+        // first return all errors and then all warnings
+        var errorsSb = new StringBuilder();
+        var warningsSb = new StringBuilder();
+        foreach (CompilerError ce in compilerResults.Errors)
+        {
+            var msg = $"{(ce.IsWarning ? "Warning" : "Error")} ({ce.ErrorNumber}): {ce.ErrorText} in '{ce.FileName}' (Line: {ce.Line}, Column: {ce.Column}).";
+            if (ce.IsWarning)
+            {
+                l.W(msg);
+                warningsSb.AppendLine(msg);
+            } else
+            { 
+                l.E(msg);
+                errorsSb.AppendLine(msg);
+            }
+        }
+        var errors = errorsSb.Append(warningsSb).ToString();
+        return errors;
+    }
 
-    private CompilerResults GetCompiledAssemblyFromFolder(string[] sourceFiles, string assemblyFilePath)
+    private CompilerResults CompileAssemblyFromAppCodeFolder(string[] sourceFiles, string assemblyFilePath, string relativePath, HotBuildSpec spec)
     {
         var l = Log.Fn<CompilerResults>($"{nameof(sourceFiles)}: {sourceFiles.Length}; {nameof(assemblyFilePath)}: '{assemblyFilePath}'", timer: true);
 
-        // need to save dll so latter can be loaded by roslyn compiler
+        // Save to disk so it can be loaded by runtime
         var parameters = new CompilerParameters(null, assemblyFilePath)
-            {
-                GenerateInMemory = false,
-                GenerateExecutable = false,
-                IncludeDebugInformation = true,
-                CompilerOptions = DnnRoslynConstants.CompilerOptions,
-            };
+        {
+            GenerateInMemory = false,
+            GenerateExecutable = false,
+            IncludeDebugInformation = true,
+            CompilerOptions = DnnRoslynConstants.CompilerOptions,
+        };
 
-        // Add all referenced assemblies
-        parameters.ReferencedAssemblies.AddRange(referencedAssembliesProvider.Locations(_relativePath, _spec).ToArray());
+        // Referenced assemblies
+        parameters.ReferencedAssemblies.AddRange(referencedAssembliesProvider.Locations(relativePath, spec).ToArray());
 
-        var codeProvider = new CSharpCodeProvider();
+        using var codeProvider = new CSharpCodeProvider();
         var compilerResults = codeProvider.CompileAssemblyFromFile(parameters, sourceFiles);
 
         return compilerResults.Errors.HasErrors

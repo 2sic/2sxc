@@ -1,11 +1,16 @@
 ﻿using System.Reflection;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sys.Configuration;
+using ToSic.Sys.Locking;
 
 namespace ToSic.Sxc.Code.Sys.HotBuild;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, SourceCodeHasher sourceCodeHasher, object[]? connect = default) : ServiceBase("Sxc.MyApCd", connect: connect)
+public abstract class AppCodeCompiler(
+    IGlobalConfiguration globalConfiguration,
+    SourceCodeHasher sourceCodeHasher,
+    object[]? connect = default)
+    : ServiceBase("Sxc.MyApCd", connect: connect)
 {
     protected const string AppCodeDll = "AppCode.dll";
 
@@ -132,5 +137,58 @@ public abstract class AppCodeCompiler(IGlobalConfiguration globalConfiguration, 
         l.A($"AssemblyFilePath: '{assemblyFilePath}'");
 
         return l.ReturnAsOk(assemblyFilePath);
+    }
+
+    protected static readonly NamedLocks CompileAssemblyLocks = new();
+    protected readonly TryLockTryDo LockAppCodeAssemblyProvider = new();
+
+    protected bool ShouldGenerate(string assemblyPath)
+    {
+        var l = Log.Fn<bool>(assemblyPath);
+        if (!File.Exists(assemblyPath))
+            return l.ReturnTrue("should generate, file doesn't exist");
+
+        var fileInfo = new FileInfo(assemblyPath);
+        if (fileInfo.Length == 0)
+            return l.ReturnTrue("should generate, file empty");
+
+        var isLocked = IsFileLocked(fileInfo, assemblyPath);
+        return isLocked
+            //? l.ReturnTrue("exists and locked, should generate; - not sure why this would want to regenerate - ask STV")
+            ? l.ReturnFalse("exists and locked, should MAYBE NOT generate; - not sure why this would want to regenerate - ask STV")
+            : l.ReturnFalse("Just load existing. File exists and is not locked.");
+    }
+
+    private bool IsFileLocked(FileInfo fileInfo, string filePath)
+    {
+        var l = Log.Fn<bool>($"{filePath}");
+        try
+        {
+            // Check if the file is read-only
+            if (fileInfo.IsReadOnly)
+                return l.ReturnTrue("read only");
+
+            // Try to open the file with FileShare.None to check if it is locked
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.None);
+            var isLocked = !stream.CanRead;
+            // Experimental early close, because I'm not sure if automatic disposal happens fast enough
+            stream.Close();
+            return l.Return(isLocked, $"{nameof(isLocked)}: {isLocked}");
+        }
+        catch (IOException)
+        {
+            // If an IOException is thrown, the file is locked
+            return l.ReturnTrue(nameof(IOException));
+        }
+        catch (UnauthorizedAccessException)
+        {
+            // If an UnauthorizedAccessException is thrown, the file is locked
+            return l.ReturnTrue(nameof(UnauthorizedAccessException));
+        }
+        catch (Exception)
+        {
+            // Handle any other exceptions that might occur
+            return l.ReturnTrue($"{nameof(Exception)} other");
+        }
     }
 }

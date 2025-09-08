@@ -19,7 +19,8 @@ public partial class View : PortalModuleBase, IActionable
 
     public View()
     {
-        if (_loggedToBootLog) return;
+        if (_loggedToBootLog)
+            return;
         _loggedToBootLog = true;
         BootLog.Log.A("Dnn: First moment where View was used.");
     }
@@ -40,15 +41,8 @@ public partial class View : PortalModuleBase, IActionable
     /// Block needs to self-initialize when first requested, because it's used in the Actions-Menu builder
     /// which runs before page-load
     /// </summary>
-    private IBlock Block => _blockGetOnce.Get(GetBlock);
+    private IBlock Block => _blockGetOnce.Get(Log, () => GetService<IModuleAndBlockBuilder>().BuildBlock(ModuleConfiguration, null), timer: true);
     private readonly GetOnce<IBlock> _blockGetOnce = new();
-
-    private IBlock GetBlock()
-    {
-        var l = Log.Fn<IBlock>(timer: true);
-        var block = GetService<IModuleAndBlockBuilder>().BuildBlock(ModuleConfiguration, null);
-        return l.Return(block);
-    }
 
     private IBlockBuilder BlockBuilder => field ??= GetService<IBlockBuilder>().Setup(Block);
 
