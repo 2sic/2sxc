@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.WebApi.Sys.App;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -29,8 +30,8 @@ public class AppDataController() : OqtStatefulControllerBase(RealController.LogS
     /// <inheritdoc />
     [HttpGet("{contentType}")]
     [AllowAnonymous]   // will check security internally, so assume no requirements
-    public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string appPath = default, [FromQuery(Name = ODataSelectParamName)] string oDataSelect = default)
-        => Real.GetEntities(contentType, appPath, oDataSelect: oDataSelect);
+    public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string appPath = default, [FromQuery] IDictionary<string, string> queryParams = null)
+        => Real.GetEntities(contentType, appPath, new Uri(Request.GetDisplayUrl()));
 
     #endregion
 
@@ -40,8 +41,8 @@ public class AppDataController() : OqtStatefulControllerBase(RealController.LogS
     /// <inheritdoc />
     [HttpGet("{contentType}/{id}")]
     [AllowAnonymous] // will check security internally, so assume no requirements
-    public IDictionary<string, object> GetOne(string contentType, string id, string appPath = default, [FromQuery(Name = ODataSelectParamName)] string oDataSelect = default) 
-        => Real.GetOne(contentType, id, appPath, oDataSelect: oDataSelect);
+    public IDictionary<string, object> GetOne(string contentType, string id, string appPath = default, [FromQuery] IDictionary<string, string> queryParams = null) 
+        => Real.GetOne(contentType, id, appPath, new Uri(Request.GetDisplayUrl()));
 
     #endregion
 

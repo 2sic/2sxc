@@ -1,11 +1,15 @@
 ﻿using System.Net;
 using ToSic.Eav.Apps.Sys.Permissions;
 using ToSic.Eav.DataFormats.EavLight;
+using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Sys.Query;
+using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp.Sys.Engines;
+using ToSic.Eav.Services;
 using ToSic.Eav.WebApi.Sys.Admin.App;
 using ToSic.Eav.WebApi.Sys.Admin.Query;
 using ToSic.Sxc.Data.Sys.Convert;
+using ToSic.Sys.OData;
 using ToSic.Sys.Security.Permissions;
 
 namespace ToSic.Sxc.Backend.App;
@@ -20,7 +24,8 @@ public class AppQueryControllerReal(
     IConvertToEavLight dataConverter,
     Generator<AppPermissionCheck> appPermissionCheck,
     LazySvc<QueryManager> queryManager,
-    LazySvc<ILookUpEngineResolver> lookupResolver)
+    LazySvc<ILookUpEngineResolver> lookupResolver,
+    IDataSourcesService dataSourcesService)
     : ServiceBase("Sxc.ApiApQ",
         connect: [lookupResolver, ctxService, dataConverter, appPermissionCheck, queryManager]), IAppQueryController
 {
@@ -30,8 +35,7 @@ public class AppQueryControllerReal(
 
     #region In-Container-Context Queries
 
-    public IDictionary<string, IEnumerable<EavLightEntity>> Query(string name, int? appId, string? stream = null,
-        bool includeGuid = false)
+    public IDictionary<string, IEnumerable<EavLightEntity>> Query(string name, int? appId, string? stream = null, bool includeGuid = false)
         => QueryPost(name, null, appId, stream, includeGuid);
 
     public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(string name, QueryParametersDtoFromClient? more, int? appId, string? stream = null, bool includeGuid = false)
@@ -127,13 +131,21 @@ public class AppQueryControllerReal(
         if (stream == AllStreams)
             stream = null;
 
-
         // New v17 experimental with special fields
-        var extraParams = new QueryODataParams(query.Configuration);
+        var systemQueryOptions = new QueryODataParams(query.Configuration).SystemQueryOptions;
         if (dataConverter is ConvertToEavLight serializerWithOData)
-            serializerWithOData.AddSelectFields(extraParams.SelectFields);
+            serializerWithOData.AddSelectFields(systemQueryOptions.Select.ToListOpt());
 
-        var result = dataConverter.Convert(query, stream?.Split(','), more?.Guids);
+        // v20 support OData filtering, sorting...
+        IDataSource filteredSource = query;
+        if (systemQueryOptions.RawAllSystem.Any())
+        {
+            var oDataQuery = UriQueryParser.Parse(systemQueryOptions);
+            var engine = new ODataQueryEngine(dataSourcesService);
+            filteredSource = engine.BuildFilteredAndSorted(query, oDataQuery);
+        }
+
+        var result = dataConverter.Convert(filteredSource, stream?.Split(','), more?.Guids);
         return l.Return(result);
     }
 }
