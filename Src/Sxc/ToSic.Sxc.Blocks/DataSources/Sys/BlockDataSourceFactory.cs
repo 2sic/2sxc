@@ -11,7 +11,7 @@ public class BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFacto
     : ServiceBase("Sxc.BDsFct", connect: [dataSourceFactory, queryLazy])
 {
 
-    internal IDataSource GetContextDataSource(BlockSpecs block, ILookUpEngine? configLookUp)
+    internal IDataSource GetContextDataSourceFromView(BlockSpecs block, ILookUpEngine? configLookUp)
     {
         var view = block.View;
         var l = Log.Fn<IDataSource>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.Permissions.IsContentAdmin}, view:{view?.Name}");

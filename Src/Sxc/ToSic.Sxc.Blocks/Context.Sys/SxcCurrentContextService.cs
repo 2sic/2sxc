@@ -95,7 +95,7 @@ internal partial class SxcCurrentContextService(
         };
         newSpecs = newSpecs with
         {
-            Data = bdsFactoryLazy.Value.GetContextDataSource(newSpecs, newSpecs.AppOrNull?.ConfigurationProvider)
+            Data = bdsFactoryLazy.Value.GetContextDataSourceFromView(newSpecs, newSpecs.AppOrNull?.ConfigurationProvider)
         };
         _block = newSpecs;
         return _block;

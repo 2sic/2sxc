@@ -92,7 +92,7 @@ public class BlockGeneratorHelpers(GenWorkPlus<WorkViews> workViews, GenWorkPlus
     internal IDataSource GetData(BlockSpecs specs)
     {
         //var l = Log.Fn<IDataSource>($"About to load data source with possible app configuration provider. App is probably null: {specs.AppOrNull.Show()}");
-        var dataSource = bdsFactoryLazy.Value.GetContextDataSource(specs, specs.AppOrNull?.ConfigurationProvider);
+        var dataSource = bdsFactoryLazy.Value.GetContextDataSourceFromView(specs, specs.AppOrNull?.ConfigurationProvider);
         //return l.Return(dataSource);
         return dataSource;
     }
