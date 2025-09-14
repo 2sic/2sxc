@@ -37,17 +37,23 @@ public class AppQueryControllerReal(
     public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(string name, QueryParametersDtoFromClient? more, int? appId, string? stream = null, bool includeGuid = false)
     {
         var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
-        var appCtx = appId != null ? ctxService.GetExistingAppOrSet(appId.Value) : ctxService.BlockContextRequired();
+        var appCtx = appId != null
+            ? ctxService.GetExistingAppOrSet(appId.Value)
+            : ctxService.BlockContextRequired();
 
         // If the appId wasn't specified or == to the Block-AppId, then also include block info to enable more data-sources like CmsBlock
-        var maybeBlock = appId == null || appId == appCtx.AppReaderRequired.AppId ? ctxService.BlockOrNull() : null;
+        var maybeBlock = appId == null || appId == appCtx.AppReaderRequired.AppId
+            ? ctxService.BlockOrNull()
+            : null;
 
         // If no app available from context, check if an app-id was supplied in url
         // Note that it may only be an app from the current portal
         // and security checks will run internally
         //var app = _app.New().InitWithOptionalBlock(appCtx.AppStateReader.AppId, maybeBlock);
 
-        var blockLookupOrNull = maybeBlock?.Data?.Configuration?.LookUpEngine;
+        var blockLookupOrNull = maybeBlock is { DataIsReady: true, ViewIsReady: true }
+            ? maybeBlock.Data.Configuration.LookUpEngine
+            : null;
 
         var result = BuildQueryAndRun(appCtx.AppReaderRequired, name, stream, includeGuid, appCtx, more, blockLookupOrNull);
         return l.Return(result);
