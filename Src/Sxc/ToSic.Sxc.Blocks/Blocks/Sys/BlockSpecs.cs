@@ -51,21 +51,20 @@ public record BlockSpecs : IBlock
     private readonly BlockConfiguration? _configuration;
     public bool ConfigurationIsReady => _configuration != null;
 
-    /// <summary>
-    /// The app this block is running in
-    /// </summary>
-    public IApp App => AppOrNull
-                       ?? throw new($"App and Data are missing and can't be accessed. Code running early on must first check for .{nameof(DataIsReady)} or use {nameof(AppOrNull)}");
-    public bool DataIsReady => AppOrNull != null;
+    /// <inheritdoc />
+    public IApp App => AppOrNull ?? throw new($"App (and Data) are missing and can't be accessed. Code running early on must first check for {nameof(DataIsReady)} or use {nameof(AppOrNull)}");
+    
+    /// <inheritdoc />
+    public bool DataIsReady => AppOrNull != null && ViewIsReady;
+
+    /// <inheritdoc />
     public IApp? AppOrNull { get; init; }
 
-    /// <summary>
-    /// The DataSource which delivers data for this block (will be used by the Engine together with the View)
-    /// </summary>
+    /// <inheritdoc />
     [field: AllowNull, MaybeNull]
     public IDataSource Data
     {
-        get => field ?? throw new NullReferenceException($"Can't access {nameof(Data)}, it was never properly initialized.");// ??= GetData();
+        get => field ?? throw new NullReferenceException($"Can't access {nameof(Data)}, it was never properly initialized.");
         set;
     } = null!;
 
@@ -98,9 +97,6 @@ public record BlockSpecs : IBlock
     }
 
     public List<IDependentApp> DependentApps { get; } = [];
-
-    //List<IPageFeature> BlockFeatures(ILog? log = default);
-    //public ILog? Log { get; }
 
     /// <summary>
     /// Must override ToString, otherwise any ToString() will result in properties being accessed, which throw because they are not available yet.

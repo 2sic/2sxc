@@ -49,9 +49,7 @@ public class AppQueryControllerReal(
         // If no app available from context, check if an app-id was supplied in url
         // Note that it may only be an app from the current portal
         // and security checks will run internally
-        //var app = _app.New().InitWithOptionalBlock(appCtx.AppStateReader.AppId, maybeBlock);
-
-        var blockLookupOrNull = maybeBlock is { DataIsReady: true, ViewIsReady: true }
+        var blockLookupOrNull = maybeBlock is { DataIsReady: true }
             ? maybeBlock.Data.Configuration.LookUpEngine
             : null;
 
