@@ -319,23 +319,23 @@ partial class DnnEnvironmentInstaller
         {
             var oldAppExtensionsFolder = Path.Combine(
                 OldSysFolderRootFullPath(version),
-                FolderConstants.AppExtensionsFolder
+                FolderConstants.AppExtensionsLegacyFolder
             );
 
             var newAppExtensionsFolder = Path.Combine(
                 _globalConfiguration.Value.GlobalFolder(),
-                FolderConstants.AppExtensionsFolder
+                FolderConstants.AppExtensionsLegacyFolder
             );
 
             if (Directory.Exists(oldAppExtensionsFolder))
             {
                 Helpers.DirectoryCopy(oldAppExtensionsFolder, newAppExtensionsFolder, true);
-                _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolderV20_00_01)} - Old '{FolderConstants.AppExtensionsFolder}' folder migrated to new location: " + newAppExtensionsFolder);
+                _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolderV20_00_01)} - Old '{FolderConstants.AppExtensionsLegacyFolder}' folder migrated to new location: " + newAppExtensionsFolder);
 
                 RenameAllOldDataSubfolders(version, newAppExtensionsFolder);
             }
             else
-                _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolderV20_00_01)} - Old '{FolderConstants.AppExtensionsFolder}' folder does not exist.");
+                _installLogger.LogStep(version, $"{nameof(MigrateAppExtensionsFolderV20_00_01)} - Old '{FolderConstants.AppExtensionsLegacyFolder}' folder does not exist.");
         }
         catch (Exception e)
         {
