@@ -90,6 +90,9 @@ public interface IBlock: IAppIdentity
     [PrivateApi]
     public IBlock RootBlock { get; }
 
+    /// <summary>
+    /// Data is ready when both App and View are available - and then the Data was also initialized.
+    /// </summary>
     bool DataIsReady { get; }
     bool ConfigurationIsReady { get; }
     IApp? AppOrNull { get; }

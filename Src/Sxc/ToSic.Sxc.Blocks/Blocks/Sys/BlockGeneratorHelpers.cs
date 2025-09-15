@@ -83,18 +83,10 @@ public class BlockGeneratorHelpers(GenWorkPlus<WorkViews> workViews, GenWorkPlus
         // Do this after adding view, as it requires the view to continue
         specs = specs with
         {
-            Data = GetData(specs),
+            Data = bdsFactoryLazy.Value.GetContextDataSourceFromView(specs, specs.AppOrNull?.ConfigurationProvider),
         };
 
         return l.Return(specs, $"ok a:{specs.AppId} , container: {specs.ParentId}, content-group:{config.Id}");
-    }
-
-    internal IDataSource GetData(BlockSpecs specs)
-    {
-        //var l = Log.Fn<IDataSource>($"About to load data source with possible app configuration provider. App is probably null: {specs.AppOrNull.Show()}");
-        var dataSource = bdsFactoryLazy.Value.GetContextDataSourceFromView(specs, specs.AppOrNull?.ConfigurationProvider);
-        //return l.Return(dataSource);
-        return dataSource;
     }
 
 }

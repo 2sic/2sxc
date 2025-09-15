@@ -93,6 +93,8 @@ internal partial class SxcCurrentContextService(
         {
             ViewOrNull = newView,
         };
+
+        // This call must be after set-view, since it needs the view to get the data-source
         newSpecs = newSpecs with
         {
             Data = bdsFactoryLazy.Value.GetContextDataSourceFromView(newSpecs, newSpecs.AppOrNull?.ConfigurationProvider)

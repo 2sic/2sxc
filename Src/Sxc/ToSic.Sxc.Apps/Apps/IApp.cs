@@ -25,7 +25,7 @@ public interface IApp:
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    [Obsolete("Don't use any more?? note: 2026-06 2dm not sure if this is really deprecated, used to say: use NameId instead, will be removed ca. v14")]
+    [Obsolete("Don't use any more?? note: 2025-06 2dm not sure if this is really deprecated, used to say: use NameId instead, will be removed ca. v14")]
     // TODO: MARK as #Deprecated and log access
     ILookUpEngine ConfigurationProvider { get; }
 
