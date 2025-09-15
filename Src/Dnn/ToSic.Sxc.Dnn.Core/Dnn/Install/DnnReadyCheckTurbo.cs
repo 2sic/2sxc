@@ -48,7 +48,7 @@ internal class DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitial
             return l.ReturnFalse("skip, shared");
 
         // If the block is referencing data, then also check that the app folder exists
-        if (block.DataIsReady)
+        if (block.AppIsReady)
         {
             l.A("Will check if site is ready and app folder exists");
             EnsureSiteIsConfiguredAndTemplateFolderExists(module, block);
