@@ -1,7 +1,8 @@
-﻿using System.Web.Hosting;
-using DotNetNuke.Entities.Modules;
+﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Localization;
+using System.Web;
+using System.Web.Hosting;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context.Sys.Site;
 using ToSic.Eav.Context.Sys.ZoneCulture;
@@ -120,23 +121,6 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
 
 
     public override string CurrentCultureCode => _currentCulture.Get(GetCurrentCultureCode);
-    //    .GetM(Log, l =>
-    //{
-    //    // First check if we know more about the site
-    //    var portal = UnwrappedSite;
-    //    if (portal == null) return (null, "no portal");
-    //    var aliasCulture = portal.PortalAlias?.CultureCode ?? "";
-
-    //    if (aliasCulture.HasValue())
-    //    {
-    //        var aliasCult = aliasCulture.ToLowerInvariant();
-    //        return (aliasCult, $"{nameof(portal.PortalAlias)}: {aliasCult}");
-    //    }
-
-    //    // if alias is unknown, then we might be in search mode or something
-    //    var result = portal.CultureCode?.ToLowerInvariant();
-    //    return (result, $"Portal.CultureCode: {result}");
-    //});
     private readonly GetOnce<string> _currentCulture = new();
 
     private string GetCurrentCultureCode()
@@ -144,7 +128,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
         var l = Log.Fn<string>();
         // First check if we know more about the site
         var portal = UnwrappedSite;
-        if (portal == null)
+        if (portal == null /* paranoid */)
             return l.ReturnNull("no portal");
         var aliasCulture = portal.PortalAlias?.CultureCode ?? "";
 
@@ -178,8 +162,13 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
             var list = new List<string>();
 
             // Top priority is current and fallbacks of it
-            // TODO: verify it uses the one of the current Alias...
-            var current = lc.GetCurrentLocale(Id);
+            // 2025-09-15 2dm: Dnn seems to do something wrong during WebApi calls.
+            // Internally it wants to prefer the `language` querystring param,
+            // but if it doesn't have it, then in a WebApi call it seems to not correctly take the current portal alias culture.
+            // So we can't use `GetCurrentLocale` but need to use `GetLocaleOrCurrent` with the current culture code.
+            var current = !string.IsNullOrEmpty(HttpContext.Current.Request.QueryString["language"])
+                ? lc.GetCurrentLocale(Id) // This will use the querystring param if available, or work in Razor, but not in WebApi
+                : lc.GetLocaleOrCurrent(Id, CurrentCultureCode); // This will use the current culture code, which is more stable
             if (current != null)
             {
                 var currentCode = current.Code;
@@ -220,25 +209,25 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
 
     // ReSharper disable once InheritdocInvalidUsage
     /// <inheritdoc />
-    public override int Id => UnwrappedSite?.PortalId ?? EavConstants.NullId;
+    public override int Id
+        => UnwrappedSite?.PortalId ?? EavConstants.NullId;
 
     /// <inheritdoc />
-    public override string Name => UnwrappedSite.PortalName;
+    public override string Name
+        => UnwrappedSite.PortalName;
 
     public override string Url
     {
         get
         {
-            if (_url != null) return _url;
+            if (field != null)
+                return field;
             // PortalAlias in DNN is without protocol, so we need to add it from current request for consistency
             // also without trailing slash
             var parts = new UrlParts(LinkPaths.GetCurrentRequestUrl());
-            _url = $"{parts.Protocol}{UrlRoot}";
-            return _url;
+            return field = $"{parts.Protocol}{UrlRoot}";
         }
     }
-
-    private string _url;
 
     /// <summary>
     /// 
@@ -257,28 +246,33 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     private string _urlRoot;
 
     [PrivateApi]
-    public override string AppsRootPhysical => Path.Combine(UnwrappedSite.HomeDirectory, AppConstants.AppsRootFolder);
+    public override string AppsRootPhysical
+        => Path.Combine(UnwrappedSite.HomeDirectory, AppConstants.AppsRootFolder);
 
 
     [PrivateApi]
-    public override string AppAssetsLinkTemplate => AppsRootPhysical + "/" + AppConstants.AppFolderPlaceholder;
+    public override string AppAssetsLinkTemplate
+        => AppsRootPhysical + "/" + AppConstants.AppFolderPlaceholder;
         
     [PrivateApi]
-    public override string AppsRootPhysicalFull => HostingEnvironment.MapPath(AppsRootPhysical);
+    public override string AppsRootPhysicalFull
+        => HostingEnvironment.MapPath(AppsRootPhysical);
 
     /// <inheritdoc />
-    public override string ContentPath => UnwrappedSite.HomeDirectory;
+    public override string ContentPath
+        => UnwrappedSite.HomeDirectory;
 
     public override int ZoneId
     {
         get { 
-            if(_zoneId != null) return _zoneId.Value;
+            if(_zoneId != null)
+                return _zoneId.Value;
             // check if id is negative; 0 is a valid tenant id
-            if (Id < 0) return (_zoneId = EavConstants.NullId).Value;
+            if (Id < 0)
+                return (_zoneId = EavConstants.NullId).Value;
             _zoneId = _zoneMapperLazy.Value.GetZoneId(Id);
             return _zoneId.Value;
         }
     }
-
     private int? _zoneId;
 }
