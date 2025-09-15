@@ -2,6 +2,7 @@
 using ToSic.Eav.DataSource;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Apps.Sys.Work;
 using ToSic.Sxc.Blocks.Sys.Work;
 using ToSic.Sxc.DataSources.Sys;
@@ -83,7 +84,7 @@ public class BlockGeneratorHelpers(GenWorkPlus<WorkViews> workViews, GenWorkPlus
         // Do this after adding view, as it requires the view to continue
         specs = specs with
         {
-            Data = bdsFactoryLazy.Value.GetContextDataSourceFromView(specs, specs.AppOrNull?.ConfigurationProvider),
+            Data = bdsFactoryLazy.Value.GetContextDataSourceFromView(specs, specs.AppOrNull.TryGetAppLookUpEngineOrNull()),
         };
 
         return l.Return(specs, $"ok a:{specs.AppId} , container: {specs.ParentId}, content-group:{config.Id}");

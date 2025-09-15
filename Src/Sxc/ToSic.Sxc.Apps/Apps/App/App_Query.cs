@@ -20,9 +20,9 @@ partial class App
             if (field != null)
                 return field;
 
-            if (ConfigurationProvider == null)
+            if (AppDataConfig.LookUpEngine == null)
                 throw new("Can't use app-queries, because the necessary configuration provider hasn't been initialized. Call InitData first.");
-            return field = Services.QueryManager.Value.AllQueries(this, ConfigurationProvider);
+            return field = Services.QueryManager.Value.AllQueries(this, AppDataConfig.LookUpEngine);
         }
     }
 
@@ -35,7 +35,7 @@ partial class App
             return query;
 
         // Try to find query definition - while also checking parent apps
-        var qEntity = Services.QueryManager.Value.GetQuery(AppReaderInt, name, ConfigurationProvider, recurseParents: 3);
+        var qEntity = Services.QueryManager.Value.GetQuery(AppReaderInt, name, AppDataConfig.LookUpEngine, recurseParents: 3);
 
         return qEntity ?? throw new((DataSourceConstantsInternal.IsGlobalQuery(name) ? "Global " : "") + "Query not Found!");
     }

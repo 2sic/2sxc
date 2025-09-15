@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Context;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Blocks.Sys;
 using ToSic.Sxc.Blocks.Sys.Views;
 using ToSic.Sxc.DataSources.Sys;
@@ -97,7 +98,7 @@ internal partial class SxcCurrentContextService(
         // This call must be after set-view, since it needs the view to get the data-source
         newSpecs = newSpecs with
         {
-            Data = bdsFactoryLazy.Value.GetContextDataSourceFromView(newSpecs, newSpecs.AppOrNull?.ConfigurationProvider)
+            Data = bdsFactoryLazy.Value.GetContextDataSourceFromView(newSpecs, newSpecs.AppOrNull.TryGetAppLookUpEngineOrNull())
         };
         _block = newSpecs;
         return _block;

@@ -23,11 +23,10 @@ public interface IApp:
 
     #region Experimental / new
 
-    [PrivateApi]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
-    [Obsolete("Don't use any more?? note: 2025-06 2dm not sure if this is really deprecated, used to say: use NameId instead, will be removed ca. v14")]
-    // TODO: MARK as #Deprecated and log access
-    ILookUpEngine ConfigurationProvider { get; }
+    // #DropAppConfigurationProvider
+    // [ShowApiWhenReleased(ShowApiMode.Never)]
+    // [Obsolete("Don't use any more?? note: 2025-06 2dm not sure if this is really deprecated, used to say: use NameId instead, will be removed ca. v14")]
+    //ILookUpEngine ConfigurationProvider { get; }
 
     #endregion
 
