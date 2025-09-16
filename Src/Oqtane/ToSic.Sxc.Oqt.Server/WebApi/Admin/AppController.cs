@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
 [Route(OqtWebApiConstants.ApiRootPathAndLang + $"/{AreaRoutes.Admin}")]
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppController() : OqtStatefulControllerBase(RealController.LogSuffix)/*, IAppController<IActionResult>*/
+public class AppController() : OqtStatefulControllerBase(RealController.LogSuffix), IAppController<IActionResult>
 {
     private RealController Real => GetService<RealController>();
 
