@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.Text.Json;
+using System.Web;
 using ToSic.Eav.DataSources.Sys;
 using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.Dto;
@@ -127,4 +128,21 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
         SysHlp.PreventServerTimeout600();
         return Real.InstallPendingApps(zoneId, pendingApps);
     }
+
+    /// <inheritdoc />
+    [HttpGet]
+    [ValidateAntiForgeryToken]
+    [SupportedModules(DnnSupportedModuleNames)]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [JsonFormatter(Casing = Casing.Camel)]
+    public ExtensionsResultDto Extensions(int appId) => Real.Extensions(appId);
+
+    /// <inheritdoc />
+    [HttpPut]
+    [ValidateAntiForgeryToken]
+    [SupportedModules(DnnSupportedModuleNames)]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [JsonFormatter(Casing = Casing.Camel)]
+    public bool Extensions([FromUri] int zoneId, [FromUri] int appId, [FromUri] string name, [FromBody] JsonElement configuration)
+        => Real.Extensions(zoneId, appId, name, configuration);
 }
