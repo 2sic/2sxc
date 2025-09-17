@@ -1,5 +1,6 @@
-﻿using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
+using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using System.CodeDom.Compiler;
+using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 using ToSic.Sxc.Code.Sys.HotBuild;
@@ -19,6 +20,9 @@ internal class AppCodeCompilerNetFull(
     SourceCodeHasher sourceCodeHasher)
     : AppCodeCompiler(globalConfiguration, sourceCodeHasher, connect: [hostingEnvironment, referencedAssembliesProvider, sourceCodeHasher])
 {
+    private const int LoadRetryDelayMs = 100;
+    private const int LoadRetryTimeoutMs = 3000;
+
     /// <summary>
     /// Get the App Code. The code is segmented into many smaller try/catch blocks to better identify where errors happen.
     /// </summary>
@@ -63,23 +67,15 @@ internal class AppCodeCompilerNetFull(
         CompilerResults compilerResults;
         try
         {
-            // Build or reuse compiled assembly
+            // Build or reuse compiled assembly. Always lock around the filesystem access to avoid
+            // overlapping readers while the compiler is still writing or an anti-virus temporarily
+            // blocks the file.
             var assemblyLock = CompileAssemblyLocks.Get(assemblyPath);
             var lockManager = new TryLockTryDo(assemblyLock);
             var result = lockManager.Call(
                 conditionToGenerate: () => ShouldGenerate(assemblyPath),
                 generator: () => CompileAssemblyFromAppCodeFolder(sourceFiles, assemblyPath, relativePath, spec),
-                cacheOrFallback: () =>
-                {
-                    var l2 = l.Fn<CompilerResults>($"load from path: '{assemblyPath}'");
-                    var compiledAssembly = Assembly.LoadFrom(assemblyPath);
-                    var result = new CompilerResults(new())
-                    {
-                        PathToAssembly = assemblyPath,
-                        CompiledAssembly = compiledAssembly,
-                    };
-                    return l2.Return(result, "used cached assembly with Assembly.LoadFrom(...)");
-                });
+                cacheOrFallback: () => LoadCachedAssemblyWithRetry(assemblyPath, l));
 
             compilerResults = result.Result;
         }
@@ -179,4 +175,52 @@ internal class AppCodeCompilerNetFull(
             ? l.ReturnAsError(compilerResults)
             : l.ReturnAsOk(compilerResults);
     }
+
+    private static CompilerResults LoadCachedAssemblyWithRetry(string assemblyPath, ILogCall<AssemblyResult> parentLog)
+    {
+        var l = parentLog.Fn<CompilerResults>($"load from path: '{assemblyPath}'");
+        var stopwatch = Stopwatch.StartNew();
+        var attempt = 0;
+        Exception? lastError = null;
+
+        while (stopwatch.ElapsedMilliseconds <= LoadRetryTimeoutMs)
+        {
+            attempt++;
+            try
+            {
+                using (new FileStream(assemblyPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    // Successfully opened; dispose immediately and proceed to load
+                }
+
+                var compiledAssembly = Assembly.LoadFrom(assemblyPath);
+                var result = new CompilerResults(new())
+                {
+                    PathToAssembly = assemblyPath,
+                    CompiledAssembly = compiledAssembly,
+                };
+
+                return l.Return(result,
+                    $"loaded cached assembly on attempt {attempt} after {stopwatch.ElapsedMilliseconds}ms");
+            }
+            catch (Exception ex) when (IsTransientLoadException(ex))
+            {
+                lastError = ex;
+                l.A($"attempt {attempt} failed ({ex.GetType().Name}: {ex.Message}). retry in {LoadRetryDelayMs}ms");
+                Thread.Sleep(LoadRetryDelayMs);
+            }
+        }
+
+        var elapsed = stopwatch.ElapsedMilliseconds;
+        var message =
+            $"failed to load cached assembly after {attempt} attempts in {elapsed}ms (last: {lastError?.GetType().Name}: {lastError?.Message})";
+        l.E(message);
+        throw new IOException(message, lastError);
+    }
+
+    private static bool IsTransientLoadException(Exception ex)
+        => ex is FileNotFoundException
+            or IOException
+            or UnauthorizedAccessException
+            or BadImageFormatException;
 }
