@@ -1,8 +1,19 @@
 namespace ToSic.Sxc.Oqt.Server.Context;
 
-internal interface IOqtTenantContext
+internal interface IOqtTenantIdentityProvider
 {
-    bool TryGet(out OqtTenantContextInfo context);
+    bool TryGetIdentity(out OqtTenantIdentity identity);
 
-    OqtTenantContextInfo GetRequired();
+    OqtTenantIdentity GetIdentity();
+}
+
+internal interface IOqtTenantConnectionProvider
+{
+    bool TryGetConnection(out OqtTenantContextInfo context);
+
+    OqtTenantContextInfo GetConnection();
+}
+
+internal interface IOqtTenantContext : IOqtTenantIdentityProvider, IOqtTenantConnectionProvider
+{
 }

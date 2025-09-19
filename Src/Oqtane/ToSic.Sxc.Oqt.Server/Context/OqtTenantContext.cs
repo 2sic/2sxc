@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Extensions.Configuration;
 using Oqtane.Infrastructure;
 using ToSic.Sxc.Oqt.Shared;
@@ -17,7 +18,7 @@ internal class OqtTenantContext : ServiceBase, IOqtTenantContext
         ConnectLogs([tenantManager]);
     }
 
-    public bool TryGet(out OqtTenantContextInfo context)
+    public bool TryGetConnection(out OqtTenantContextInfo context)
     {
         var l = Log.Fn<bool>();
         context = default;
@@ -38,9 +39,27 @@ internal class OqtTenantContext : ServiceBase, IOqtTenantContext
         return l.ReturnTrue($"tenant:{tenant.TenantId}, site:{alias.SiteId}");
     }
 
-    public OqtTenantContextInfo GetRequired()
+    public OqtTenantContextInfo GetConnection()
     {
-        if (TryGet(out var context)) return context;
+        if (TryGetConnection(out var context)) return context;
+        throw new InvalidOperationException("Unable to resolve Oqtane tenant context for the current execution scope.");
+    }
+
+    public bool TryGetIdentity(out OqtTenantIdentity identity)
+    {
+        if (TryGetConnection(out var context))
+        {
+            identity = context.Identity;
+            return true;
+        }
+
+        identity = default;
+        return false;
+    }
+
+    public OqtTenantIdentity GetIdentity()
+    {
+        if (TryGetIdentity(out var identity)) return identity;
         throw new InvalidOperationException("Unable to resolve Oqtane tenant context for the current execution scope.");
     }
 

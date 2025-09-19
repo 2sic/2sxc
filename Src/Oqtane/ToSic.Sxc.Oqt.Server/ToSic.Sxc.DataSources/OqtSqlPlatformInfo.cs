@@ -8,14 +8,14 @@ namespace ToSic.Sxc.Oqt.Server.ToSic.Sxc.DataSources;
 
 internal class OqtSqlPlatformInfo(
     LazySvc<IConfigManager> configManager,
-    LazySvc<IOqtTenantContext> tenantContext) : SqlPlatformInfo
+    LazySvc<IOqtTenantConnectionProvider> tenantConnections) : SqlPlatformInfo
 {
     public override string DefaultConnectionStringName => SettingKeys.ConnectionStringKey;
 
     public override string FindConnectionString(string name)
     {
-        var tenantInfoProvider = tenantContext.Value;
-        if (tenantInfoProvider.TryGet(out var tenantContextInfo) && !string.IsNullOrWhiteSpace(tenantContextInfo.ConnectionString))
+        var connectionProvider = tenantConnections.Value;
+        if (connectionProvider.TryGetConnection(out var tenantContextInfo) && !string.IsNullOrWhiteSpace(tenantContextInfo.ConnectionString))
         {
             if (name.EqualsInsensitive(DefaultConnectionStringName) || name.EqualsInsensitive(tenantContextInfo.ConnectionStringName))
                 return tenantContextInfo.ConnectionString;
