@@ -26,6 +26,11 @@ Visit [2sxc Blogs](https://2sxc.org/en/blog) for news, updates, articles.
 1. 2sxc WebApi - contains the WebApi - also as part of the DNN infrastructure
 1. 2sxc - the root project - containing installation / bundling and dependency injection for runtime
 
+## Docs highlights
+
+- Oqtane: Multi-database (per-tenant/site) configuration — see [Configuration.MultiDatabase.md](Src/Oqtane/ToSic.Sxc.Oqt.Server/Docs/Configuration.MultiDatabase.md)
+- Spec Quickstart for this feature — see [specs/001-2sxc-oqtane-multi/quickstart.md](specs/001-2sxc-oqtane-multi/quickstart.md)
+
 ## More Git Repos
 
 This is just one repo of 2sxc - the full software also has another ca. 3 for

@@ -14,7 +14,8 @@ namespace ToSic.Sxc.Web.Sys.LightSpeed;
 internal class LightSpeed(
     ISysFeaturesService features,
     LazySvc<ISite> site,
-    LazySvc<OutputCacheManager> outputCacheManager
+    LazySvc<OutputCacheManager> outputCacheManager,
+    LazySvc<ICacheKeyScopeProvider> scopeProvider
 ) : ServiceBase(SxcLogName + ".Lights", connect: [features, outputCacheManager]), IOutputCache
 {
     [field: AllowNull, MaybeNull]
@@ -167,9 +168,12 @@ internal class LightSpeed(
     private readonly GetOnce<string> _currentCulture = new();
 
 
-    private string CacheKey => _key.Get(() => Log.Quick(()
-        => OutputCacheKeys.ModuleKey(_pageId, _moduleId, UserIdOrAnon, ViewKey, UrlParams.Extension, CurrentCulture)
-    ))!;
+    private string CacheKey => _key.Get(() => Log.Quick(() =>
+    {
+        var baseKey = OutputCacheKeys.ModuleKey(_pageId, _moduleId, UserIdOrAnon, ViewKey, UrlParams.Extension, CurrentCulture);
+        var scope = scopeProvider.Value.BuildScopeSegment();
+        return scope == null ? baseKey : $"{baseKey}-x:{scope}";
+    }))!;
     private readonly GetOnce<string> _key = new();
 
     private int? UserIdOrAnon => _userId.Get(() => _block?.Context.User.IsAnonymous == false ? _block.Context.User.Id : null);

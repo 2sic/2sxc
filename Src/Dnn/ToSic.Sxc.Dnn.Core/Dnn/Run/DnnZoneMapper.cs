@@ -14,6 +14,8 @@ namespace ToSic.Sxc.Dnn.Run;
 internal class DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCreatorLazy, IAppsCatalog appsCatalog)
     : ZoneMapperBase(appsCatalog, "DNN.ZoneMp", connect: [site, zoneCreatorLazy])
 {
+    private const int TenantId = 1; // DNN only has one tenant, so always 1
+
     /// <inheritdoc />
     /// <summary>
     /// Will get the EAV ZoneId for the current tenant
@@ -62,7 +64,8 @@ internal class DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCre
     private int CreateNewZone(int siteId)
     {
         var portalInfo = new PortalSettings(siteId);
-        var newZoneId = zoneCreatorLazy.Value.Create($"{portalInfo.PortalName} (Portal {siteId})");
+        var dnnSite = ((DnnSite)site.New()).TryInitPortal(portalInfo, Log);
+        var newZoneId = zoneCreatorLazy.Value.Create(TenantId, siteId,$"{portalInfo.PortalName} (Portal {siteId})", dnnSite.AppsRootPhysical, dnnSite.SharedAppsRootRelative());
         PortalController.UpdatePortalSetting(siteId, SiteSettingNames.SiteKeyForZoneId, newZoneId.ToString());
         return newZoneId;
     }

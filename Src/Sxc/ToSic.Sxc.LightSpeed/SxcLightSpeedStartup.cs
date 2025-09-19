@@ -14,6 +14,8 @@ public static class SxcLightSpeedStartup
         // v13 LightSpeed
         services.TryAddTransient<IOutputCache, LightSpeed>();
         services.TryAddTransient<LightSpeedStats>();
+        // Default no-op scope provider, platforms can override
+        services.TryAddTransient<ICacheKeyScopeProvider, NoopCacheKeyScopeProvider>();
 
         return services;
     }

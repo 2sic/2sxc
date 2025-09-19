@@ -1,0 +1,69 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "test oqtane server tests",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"test",
+				"A:\\2sxc\\2sxc\\Src\\Oqtane\\ToSic.Sxc.Oqt.Server.Tests\\ToSic.Sxc.Oqt.Server.Tests.csproj",
+				"-c",
+				"Debug",
+				"--no-build"
+			],
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "test"
+		},
+		{
+			"label": "build & test oqtane server",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"test",
+				"A:\\2sxc\\2sxc\\Src\\Oqtane\\ToSic.Sxc.Oqt.Server.Tests\\ToSic.Sxc.Oqt.Server.Tests.csproj",
+				"-c",
+				"Debug",
+				"--no-build"
+			],
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "test"
+		},
+		{
+			"label": "test oqt server after named connections",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"test",
+				"A:\\2sxc\\2sxc\\Src\\Oqtane\\ToSic.Sxc.Oqt.Server.Tests\\ToSic.Sxc.Oqt.Server.Tests.csproj",
+				"-c",
+				"Debug",
+				"--no-build"
+			],
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "test"
+		},
+		{
+			"label": "run tests after single-tenant additions",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"test",
+				"A:\\2sxc\\2sxc\\Src\\Oqtane\\ToSic.Sxc.Oqt.Server.Tests\\ToSic.Sxc.Oqt.Server.Tests.csproj",
+				"-c",
+				"Debug",
+				"--no-build"
+			],
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "test"
+		}
+	]
+}

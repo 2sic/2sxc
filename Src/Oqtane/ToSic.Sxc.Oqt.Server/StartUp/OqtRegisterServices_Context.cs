@@ -8,6 +8,10 @@ using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Render.Sys.JsContext;
 using ToSic.Sys.Users;
+using ToSic.Sxc.Oqt.Shared.Interfaces;
+using ToSic.Sxc.Oqt.Server.Caching;
+using ToSic.Sxc.Oqt.Server.Data;
+using ToSic.Sxc.Web.Sys.LightSpeed;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
 
@@ -23,6 +27,12 @@ partial class OqtRegisterServices
         services.TryAddScoped<ISite, OqtSite>();
         services.TryAddScoped<IPage, OqtPage>();
         services.TryAddScoped<IUser, OqtUser>();
+
+        // Composite Tenant/Site context for cross-tenant scoping
+        services.TryAddScoped<ITenantSiteContext, OqtTenantSiteContext>();
+        services.TryAddScoped<IConnectionSelector, OqtConnectionSelector>();
+        services.TryAddSingleton<ICacheKeyBuilder, OqtCacheKeyBuilder>();
+    services.TryAddTransient<ICacheKeyScopeProvider, OqtCacheKeyScopeProvider>();
 
         services.TryAddTransient<IModule, OqtModule>();
 

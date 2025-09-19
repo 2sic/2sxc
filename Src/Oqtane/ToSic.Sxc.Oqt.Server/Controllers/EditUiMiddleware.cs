@@ -5,10 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Oqtane.Repository;
 using System.Text;
 using ToSic.Sxc.Oqt.Server.Blocks.Output;
+using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Render.Sys.JsContext;
 using ToSic.Sxc.Web.Sys.EditUi;
 using ToSic.Sys.Caching;
+using Microsoft.Extensions.Logging;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers;
 
@@ -24,6 +26,19 @@ internal class EditUiMiddleware
 
         var key = CacheKey(virtualPath);
         var memoryCacheService = sp.GetService<MemoryCacheService>();
+        // Enhance cache-key with tenant/site scope when available to avoid cross-tenant bleed
+        var keyBuilder = sp.GetService<ICacheKeyBuilder>();
+        var tenantSite = sp.GetService<ITenantSiteContext>();
+        if (keyBuilder != null && tenantSite != null)
+            key = keyBuilder.Build("EditUi", [virtualPath], tenantSite.Current);
+
+        // Enrich logs with TenantId/SiteId (no secrets)
+        var logger = sp.GetService<ILogger<EditUiMiddleware>>();
+        using var _scope = logger?.BeginScope(new Dictionary<string, object>
+        {
+            ["TenantId"] = tenantSite?.Current.TenantId ?? 0,
+            ["SiteId"] = tenantSite?.Current.SiteId ?? 0,
+        });
         if (!memoryCacheService.TryGet<string>(key, out var html))
         {
             var path = Path.Combine(env.WebRootPath, virtualPath);
