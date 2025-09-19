@@ -21,6 +21,7 @@ partial class OqtRegisterServices
     {
         // Context: Things which are relevant for determining the context
         services.TryAddScoped<ISite, OqtSite>();
+        services.TryAddScoped<IOqtTenantContext, OqtTenantContext>();
         services.TryAddScoped<IPage, OqtPage>();
         services.TryAddScoped<IUser, OqtUser>();
 
