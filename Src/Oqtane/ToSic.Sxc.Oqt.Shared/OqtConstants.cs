@@ -13,6 +13,8 @@ public static class OqtConstants
 
     public const string AppRootPublicBase = AppRoot + "\\{0}";
 
+    public const string AppRootTenantSiteBase = AppRoot + "\\Tenants\\{0}\\Sites\\{1}";
+
     public const string SharedAppFolder =  "Shared";
 
     public const string ContentSubfolder = "Content";
@@ -32,6 +34,8 @@ public static class OqtConstants
 
     // Logging constants
     public const string OqtLogPrefix = "Oqt";
+
+    public const int MasterTenantId = 1;
         
     // Special Oqtane constants missing in Oqtane
     public const string EntityIdParam = "entityid";

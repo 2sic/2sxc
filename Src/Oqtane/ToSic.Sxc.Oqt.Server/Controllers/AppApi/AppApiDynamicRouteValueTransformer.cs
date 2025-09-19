@@ -71,7 +71,7 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
                             $"Error: missing required 'alias' route value.", "Not Found");
             }
 
-            var aliasPart = OqtServerPaths.GetAppRootWithSiteId(alias.SiteId);
+            var aliasPart = OqtServerPaths.GetAppRoot(alias.TenantId, alias.SiteId);
 
             #endregion
 

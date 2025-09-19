@@ -22,12 +22,23 @@ internal class OqtServerPaths(IWebHostEnvironment hostingEnvironment, LazySvc<IF
     protected override string FullPathOfReference(int id)
         => fileRepository.Value.GetFilePath(id);
 
+    public static string GetAppRoot(int tenantId, int siteId)
+        => tenantId == OqtConstants.MasterTenantId
+            ? string.Format(OqtConstants.AppRootPublicBase, siteId)
+            : string.Format(OqtConstants.AppRootTenantSiteBase, tenantId, siteId);
+
     public static string GetAppRootWithSiteId(int siteId)
-        => string.Format(OqtConstants.AppRootPublicBase, siteId);
+        => GetAppRoot(OqtConstants.MasterTenantId, siteId);
+
+    public static string GetAppPath(int tenantId, int siteId, string appFolder)
+        => Path.Combine(GetAppRoot(tenantId, siteId), appFolder);
 
     public static string GetAppPath(int siteId, string appFolder)
-        => Path.Combine(GetAppRootWithSiteId(siteId), appFolder);
+        => GetAppPath(OqtConstants.MasterTenantId, siteId, appFolder);
+
+    public static string GetAppApiPath(int tenantId, int siteId, string appFolder, string apiPath)
+        => Path.Combine(GetAppPath(tenantId, siteId, appFolder), apiPath);
 
     public static string GetAppApiPath(int siteId, string appFolder, string apiPath)
-        => Path.Combine(GetAppPath(siteId, appFolder), apiPath);
+        => GetAppApiPath(OqtConstants.MasterTenantId, siteId, appFolder, apiPath);
 }

@@ -2,6 +2,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.StaticFiles;
 using Oqtane.Models;
 using Oqtane.Shared;
+using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sys.Utils;
 
@@ -83,7 +84,7 @@ public class OqtAssetsFileHelper() : ServiceBase(OqtConstants.OqtLogPrefix + ".F
         => Path.Combine(contentRootPath, string.Format(OqtConstants.ContentRootPublicBase, alias.TenantId, alias.SiteId), "adam", appName, filePath).Backslash();
 
     private static string SxcPath(string contentRootPath, Alias alias, string appName, string filePath)
-        => Path.Combine(contentRootPath, string.Format(OqtConstants.AppRootPublicBase, alias.SiteId), appName, filePath).Backslash();
+        => Path.Combine(contentRootPath, OqtServerPaths.GetAppRoot(alias.TenantId, alias.SiteId), appName, filePath).Backslash();
 
     private static string SharedPath(string contentRootPath, string appName, string filePath)
         => Path.Combine(contentRootPath, string.Format(OqtConstants.AppRootPublicBase, "Shared"), appName, filePath).Backslash();
