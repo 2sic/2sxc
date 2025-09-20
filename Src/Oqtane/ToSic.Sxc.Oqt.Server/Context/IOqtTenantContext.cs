@@ -1,10 +1,12 @@
+using ToSic.Sxc.Oqt.Shared;
+
 namespace ToSic.Sxc.Oqt.Server.Context;
 
 internal interface IOqtTenantIdentityProvider
 {
-    bool TryGetIdentity(out OqtTenantIdentity identity);
+    bool TryGetIdentity(out OqtTenantSiteIdentity identity);
 
-    OqtTenantIdentity GetIdentity();
+    OqtTenantSiteIdentity GetIdentity();
 }
 
 internal interface IOqtTenantConnectionProvider

@@ -45,7 +45,7 @@ internal class OqtTenantContext : ServiceBase, IOqtTenantContext
         throw new InvalidOperationException("Unable to resolve Oqtane tenant context for the current execution scope.");
     }
 
-    public bool TryGetIdentity(out OqtTenantIdentity identity)
+    public bool TryGetIdentity(out OqtTenantSiteIdentity identity)
     {
         if (TryGetConnection(out var context))
         {
@@ -57,7 +57,7 @@ internal class OqtTenantContext : ServiceBase, IOqtTenantContext
         return false;
     }
 
-    public OqtTenantIdentity GetIdentity()
+    public OqtTenantSiteIdentity GetIdentity()
     {
         if (TryGetIdentity(out var identity)) return identity;
         throw new InvalidOperationException("Unable to resolve Oqtane tenant context for the current execution scope.");
