@@ -183,11 +183,13 @@ internal class AppCodeCompilerNetFull(
         var attempt = 0;
         Exception? lastError = null;
 
+        // Try for a maximum of 3 seconds to load the assembly, with a short delay between attempts
         while (stopwatch.ElapsedMilliseconds <= LoadRetryTimeoutMs)
         {
             attempt++;
             try
             {
+                l.A($"attempt {attempt} to load cached assembly");
                 using (new FileStream(assemblyPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     // Successfully opened; dispose immediately and proceed to load
@@ -203,17 +205,26 @@ internal class AppCodeCompilerNetFull(
                 return l.Return(result,
                     $"loaded cached assembly on attempt {attempt} after {stopwatch.ElapsedMilliseconds}ms");
             }
+            // Catch various likely transient exceptions - maybe if the antivirus is scanning the file, or it's still being written
             catch (Exception ex) when (IsTransientLoadException(ex))
             {
                 lastError = ex;
-                l.A($"attempt {attempt} failed ({ex.GetType().Name}: {ex.Message}). retry in {LoadRetryDelayMs}ms");
-                Thread.Sleep(LoadRetryDelayMs);
+                // add a bit of random to avoid collisions
+                var delay = LoadRetryDelayMs + new Random().Next(0, 100);
+                l.A($"attempt {attempt} failed ({ex.GetType().Name}: {ex.Message}). retry in {delay}ms");
+                Thread.Sleep(delay);
+            }
+            // Log any other unexpected exceptions and behave as if non-catching
+            catch (Exception ex)
+            {
+                l.A($"non-transient error on {nameof(attempt)} {attempt}, giving up");
+                l.Ex(ex);
+                throw;
             }
         }
 
         var elapsed = stopwatch.ElapsedMilliseconds;
-        var message =
-            $"failed to load cached assembly after {attempt} attempts in {elapsed}ms (last: {lastError?.GetType().Name}: {lastError?.Message})";
+        var message = $"failed to load cached assembly after {attempt} attempts in {elapsed}ms (last: {lastError?.GetType().Name}: {lastError?.Message})";
         l.E(message);
         throw new IOException(message, lastError);
     }
