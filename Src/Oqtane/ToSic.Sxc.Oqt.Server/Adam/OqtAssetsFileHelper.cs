@@ -84,7 +84,10 @@ public class OqtAssetsFileHelper() : ServiceBase(OqtConstants.OqtLogPrefix + ".F
         => Path.Combine(contentRootPath, string.Format(OqtConstants.ContentRootPublicBase, alias.TenantId, alias.SiteId), "adam", appName, filePath).Backslash();
 
     private static string SxcPath(string contentRootPath, Alias alias, string appName, string filePath)
-        => Path.Combine(contentRootPath, OqtServerPaths.GetAppRoot(alias.TenantId, alias.SiteId), appName, filePath).Backslash();
+    {
+        var identity = new OqtTenantSiteIdentity(alias.TenantId, alias.SiteId);
+        return Path.Combine(contentRootPath, OqtServerPaths.GetAppRoot(identity), appName, filePath).Backslash();
+    }
 
     private static string SharedPath(string contentRootPath, string appName, string filePath)
         => Path.Combine(contentRootPath, string.Format(OqtConstants.AppRootPublicBase, "Shared"), appName, filePath).Backslash();

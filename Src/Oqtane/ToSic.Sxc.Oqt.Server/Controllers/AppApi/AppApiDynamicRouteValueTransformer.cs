@@ -71,7 +71,8 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
                             $"Error: missing required 'alias' route value.", "Not Found");
             }
 
-            var aliasPart = OqtServerPaths.GetAppRoot(alias.TenantId, alias.SiteId);
+            var tenantIdentity = new OqtTenantSiteIdentity(alias.TenantId, alias.SiteId);
+            var aliasPart = OqtServerPaths.GetAppRoot(tenantIdentity);
 
             #endregion
 
@@ -114,7 +115,7 @@ internal class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
             var controllerFolder = Path.Combine(aliasPart, appFolder, edition.Backslash(), "api");
             l.A($"Controller Folder: {controllerFolder}");
 
-            var tenantSiteKey = $"{alias.TenantId}-{alias.SiteId}";
+            var tenantSiteKey = $"{tenantIdentity.TenantId}-{tenantIdentity.SiteId}";
             var area = $"{tenantSiteKey}/{OqtConstants.ApiAppLinkPart}/{appFolder}/{edition}api";
             l.A($"Area: {area}");
             values.Add("area", area);

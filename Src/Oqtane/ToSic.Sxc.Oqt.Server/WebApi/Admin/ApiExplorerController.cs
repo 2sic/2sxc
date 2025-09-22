@@ -11,6 +11,7 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
+using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Polymorphism.Sys;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Sys;
@@ -44,10 +45,15 @@ public class ApiExplorerController() : OqtStatefulControllerBase(RealController.
 
     private Assembly GetCompiledAssembly(string path)
     {
-        // get path from root
-        var siteId = GetService<SiteState>()?.Alias?.SiteId ?? GetService<AliasResolver>().Alias.SiteId;
+        var aliasResolver = GetService<AliasResolver>();
+        var alias = GetService<SiteState>()?.Alias ?? aliasResolver.Alias;
+        if (alias == null)
+            throw new("Unable to resolve alias for current request.");
+
+        var identity = new OqtTenantSiteIdentity(alias.TenantId, alias.SiteId);
+
         var appFolder = GetService<AppFolderLookupForWebApi>().GetAppFolder();
-        var pathFromRoot = OqtServerPaths.GetAppApiPath(siteId, appFolder, path);
+        var pathFromRoot = OqtServerPaths.GetAppApiPath(identity, appFolder, path);
 
         // Figure out the current edition
         var blockOrNull = CtxHlp.BlockOptional;
