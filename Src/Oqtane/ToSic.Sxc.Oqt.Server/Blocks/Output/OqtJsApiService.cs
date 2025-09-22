@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Plumbing;
+using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Render.Sys.JsContext;
@@ -16,14 +18,17 @@ internal class OqtJsApiService(
     IHttpContextAccessor http,
     JsApiCacheService jsApiCache,
     AliasResolver aliasResolver,
+    IOqtTenantIdentityProvider tenantIdentity,
     RsaCryptographyService rsaCryptographyService)
-    : ServiceBase("OqtJsApi", connect: [antiForgery, http, jsApiCache, aliasResolver, rsaCryptographyService]), IJsApiService
+    : ServiceBase("OqtJsApi", connect: [antiForgery, http, jsApiCache, aliasResolver, tenantIdentity, rsaCryptographyService]), IJsApiService
 {
     public string GetJsApiJson(int? pageId = null, string siteRoot = null, string rvt = null, bool withPublicKey = false) 
         => JsonSerializer.Serialize(GetJsApi(pageId, siteRoot, rvt, withPublicKey));
 
     public JsApi GetJsApi(int? pageId = null, string siteRoot = null, string rvt = null, bool withPublicKey = false)
     {
+        var cacheScope = ResolveCacheScope();
+
         return jsApiCache.JsApiJson(
             platform: PlatformType.Oqtane.ToString(),
             pageId: pageId ?? -1,
@@ -35,13 +40,26 @@ internal class OqtJsApiService(
             rvt: RvtFn,
             withPublicKey: withPublicKey,
             secureEndpointPublicKey: SecureEndpointPrimaryKeyFn,
-            dialogQuery: null);
+            dialogQuery: null,
+            cacheScope: cacheScope);
 
         string SiteRootFn() => siteRoot.IsEmpty() ? OqtPageOutput.GetSiteRoot(aliasResolver.Alias) : siteRoot;
         string ApiRootFn() => SiteRootFn() + OqtWebApiConstants.ApiRootNoLanguage + "/";
         string UiRootFn() => OqtConstants.UiRoot + "/";
         string RvtFn() => rvt.IsEmpty() && http?.HttpContext != null ? antiForgery.GetAndStoreTokens(http.HttpContext).RequestToken : rvt;
         string SecureEndpointPrimaryKeyFn() => rsaCryptographyService.PublicKey;
+    }
+
+    private string ResolveCacheScope()
+    {
+        if (tenantIdentity.TryGetIdentity(out var identity) && identity.IsValid)
+            return $"{identity.TenantId}-{identity.SiteId}";
+
+        var alias = aliasResolver.Alias;
+        if (alias != null)
+            return $"{alias.TenantId}-{alias.SiteId}";
+
+        return null;
     }
 
 }

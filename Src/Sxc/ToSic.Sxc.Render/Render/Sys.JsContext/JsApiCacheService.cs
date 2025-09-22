@@ -24,11 +24,12 @@ public class JsApiCacheService(IHttp http) : ServiceBase("JsApi", connect: [http
         Func<string> rvt,
         bool withPublicKey,
         Func<string> secureEndpointPublicKey,
-        string? dialogQuery = null // these are any platform specific url query params to the dialog; can be null
+        string? dialogQuery = null,
+        string? cacheScope = null // optional composite key to scope caching (eg. tenant/site)
     )
     {
-        // Minor hack: if with secure endpoint, use negative page-id for cache
-        var cacheKey = withPublicKey ? -pageId : pageId;
+        var scopeKey = string.IsNullOrWhiteSpace(cacheScope) ? "default" : cacheScope;
+        var cacheKey = $"{scopeKey}|{pageId}|{(withPublicKey ? "pk" : "np" )}";
 
         if (Cache.TryGetValue(cacheKey, out var jsApi))
             return jsApi;
@@ -52,11 +53,11 @@ public class JsApiCacheService(IHttp http) : ServiceBase("JsApi", connect: [http
     }
 
     [field: AllowNull, MaybeNull]
-    private ConcurrentDictionary<int, JsApi> Cache => field ??= GetCache();
+    private ConcurrentDictionary<string, JsApi> Cache => field ??= GetCache();
 
-    private ConcurrentDictionary<int, JsApi> GetCache()
+    private ConcurrentDictionary<string, JsApi> GetCache()
     {
-        if (http.Current.Items[JsApiKey] is ConcurrentDictionary<int, JsApi> cache)
+        if (http.Current.Items[JsApiKey] is ConcurrentDictionary<string, JsApi> cache)
             return cache;
         cache = new();
         http.Current.Items[JsApiKey] = cache;

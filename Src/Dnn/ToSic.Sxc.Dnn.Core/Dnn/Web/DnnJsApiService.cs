@@ -34,7 +34,8 @@ internal class DnnJsApiService(JsApiCacheService jsApiCache, RsaCryptographyServ
             rvt: AntiForgeryToken,
             withPublicKey: withPublicKey,
             secureEndpointPublicKey: () => rsaCryptographyService.PublicKey,
-            dialogQuery: $"{PortalIdParamName}={PortalSettings.Current.PortalId}"
+            dialogQuery: $"{PortalIdParamName}={PortalSettings.Current.PortalId}",
+            cacheScope: PortalSettings.Current.PortalId.ToString()
         );
 
         string SiteRootFn() => siteRoot ?? ServicesFramework.GetServiceFrameworkRoot();
