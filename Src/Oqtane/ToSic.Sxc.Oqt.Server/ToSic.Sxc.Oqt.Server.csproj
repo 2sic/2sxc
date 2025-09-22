@@ -67,6 +67,9 @@
     <Compile Remove="StartUp\SxcRazorPage_CreateInstance.cs" />
     <Compile Remove="StartUp\SxcRazorPage_IDynamicCode.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Apps\Caching\OqtPerTenantAppsCache.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <!-- stv - SQL scripts have to be included as embedded resources -->

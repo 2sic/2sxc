@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Environment.Sys.ServerPaths;
 using ToSic.Sxc.Apps.Sys.Installation;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Oqt.Server.Apps.Caching;
 using ToSic.Sxc.Oqt.Server.Code.Sys;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Installation;
@@ -58,6 +60,13 @@ partial class OqtRegisterServices
         // 2025-03-07 2dm disabled as not needed any more https://github.com/2sic/2sxc/issues/3594
         // Special Key generator for security implementation, which doesn't exist in .net standard
         // services.TryAddTransient<Rfc2898Generator, Rfc2898NetCoreGenerator>();
+
+        // Provide tenant key from AliasResolver (develop branch)
+        services.TryAddScoped<ITenantKeyProvider, TenantKeyProvider>();
+
+        // Replace EAV singleton with per-tenant cache
+        services.TryAddSingleton<IAppsCache, OqtPerTenantAppsCache>();
+        //services.Replace(ServiceDescriptor.Singleton<IAppsCache, OqtPerTenantAppsCache>());
 
         return services;
     }
