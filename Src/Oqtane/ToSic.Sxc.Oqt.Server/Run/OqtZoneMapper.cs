@@ -21,23 +21,23 @@ internal class OqtZoneMapper(
     : ZoneMapperBase(appsCat, $"{OqtConstants.OqtLogPrefix}.ZoneMp",
         connect: [siteRepository, settingRepository, site, zoneCreatorLazy, oqtCulture])
 {
-    public override int GetZoneId(int tenantId)
+    public override int GetZoneId(int siteId)
     {
         // additional protection against invalid portalId which may come from bad configs and execute in search-index mode
         // see https://github.com/2sic/2sxc/issues/1054
-        if (tenantId < 0)
-            throw new("Can't get zone for invalid portal ID: " + tenantId);
+        if (siteId < 0)
+            throw new("Can't get zone for invalid site ID: " + siteId);
 
-        if (HasZoneId(tenantId, out var i)) return i;
+        if (HasZoneId(siteId, out var i)) return i;
 
         // Create new zone automatically
-        var portalSettings = siteRepository.GetSite(tenantId);
-        var zoneId = zoneCreatorLazy.Value.Create(portalSettings.Name + " (Site " + tenantId + ")");
+        var portalSettings = siteRepository.GetSite(siteId);
+        var zoneId = zoneCreatorLazy.Value.Create(portalSettings.Name + " (Site " + siteId + ")");
         settingRepository.AddSetting(new()
         {
-            CreatedBy = "2sxc", 
-            CreatedOn = DateTime.UtcNow, 
-            EntityId = tenantId, 
+            CreatedBy = "2sxc",
+            CreatedOn = DateTime.UtcNow,
+            EntityId = siteId,
             EntityName = EntityNames.Site,
             ModifiedBy = "2sxc",
             ModifiedOn = DateTime.UtcNow,
@@ -46,10 +46,10 @@ internal class OqtZoneMapper(
         });
         return zoneId;
     }
-
-    private bool HasZoneId(int tenantId, out int i)
+    
+    private bool HasZoneId(int siteId, out int i)
     {
-        var c = settingRepository.GetSettings(EntityNames.Site, tenantId).ToList();
+        var c = settingRepository.GetSettings(EntityNames.Site, siteId).ToList();
 
         var zoneSetting = c.FirstOrDefault(s => s.SettingName == SiteSettingNames.SiteKeyForZoneId);
         if (zoneSetting != null)
