@@ -56,15 +56,8 @@ public interface IBlock: IAppIdentity
 
     [PrivateApi("might rename this some time")]
     bool IsContentApp { get; }
-    #endregion
 
-    ///// <summary>
-    ///// The BlockBuilder.
-    ///// Must be stored on this object, but the type is in another project so here it's untyped.
-    ///// Access to this must go through the extension method `GetBlockBuilder()`
-    ///// </summary>
-    //[PrivateApi("naming not final")]
-    //object BlockBuilder { get; }
+    #endregion
 
     [PrivateApi("naming not final")]
     bool ContentGroupExists { get; }
@@ -90,8 +83,18 @@ public interface IBlock: IAppIdentity
     [PrivateApi]
     public IBlock RootBlock { get; }
 
+    /// <summary>
+    /// The App is ready when it was added. Other parts (View, Data) may still be missing.
+    /// </summary>
+    bool AppIsReady { get; }
+
+    /// <summary>
+    /// Data is ready when both App and View are available - and then the Data was also initialized.
+    /// </summary>
     bool DataIsReady { get; }
+
     bool ConfigurationIsReady { get; }
+
     IApp? AppOrNull { get; }
 
     /// <summary>
@@ -102,4 +105,5 @@ public interface IBlock: IAppIdentity
     /// In the future, should be modified to be read only list, but only once rendering has been improved to pass the data around in a better way.
     /// </remarks>
     List<IDependentApp> DependentApps { get; }
+
 }

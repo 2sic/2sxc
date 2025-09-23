@@ -98,7 +98,7 @@ public class TokenEngine(
         var specs = new SxcAppDataConfigSpecs { BlockForLookupOrNull = Block };
         var appDataConfig = tokenEngineWithContext.New().GetDataConfiguration((Block.App as SxcAppBase)!, specs);
 
-        var lookUpEngine = new LookUpEngine(appDataConfig.Configuration, Log, sources: [
+        var lookUpEngine = new LookUpEngine(appDataConfig.LookUpEngine, Log, sources: [
             new LookUpForTokenTemplate(ViewParts.ListContentLower, _dynamicApiSvc.Header, CultureInfo),
             new LookUpForTokenTemplate(ViewParts.ContentLower, _dynamicApiSvc.Content, CultureInfo),
         ]);

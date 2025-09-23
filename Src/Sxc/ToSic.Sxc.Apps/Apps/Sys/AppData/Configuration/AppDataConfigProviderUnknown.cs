@@ -6,5 +6,6 @@ namespace ToSic.Sxc.Apps.Sys;
 
 internal class AppDataConfigProviderUnknown(WarnUseOfUnknown<AppDataConfigProviderUnknown> _) : IAppDataConfigProvider
 {
-    public IAppDataConfiguration GetDataConfiguration(SxcAppBase app, AppDataConfigSpecs specs) => new AppDataConfiguration(new LookUpEngine(app.Log));
+    public IAppDataConfiguration GetDataConfiguration(SxcAppBase app, AppDataConfigSpecs specs)
+        => new AppDataConfiguration(new LookUpEngine(app.Log));
 }

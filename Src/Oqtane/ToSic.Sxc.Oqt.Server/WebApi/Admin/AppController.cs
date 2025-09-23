@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using System.Text.Json;
 using ToSic.Eav.DataSources.Sys;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
+using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Admin.AppControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
@@ -125,4 +127,18 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
         HotReloadEnabledCheck.Check();
         return Real.InstallPendingApps(zoneId, pendingApps);
     }
+
+    /// <inheritdoc />
+    [HttpGet]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = RoleNames.Admin)]
+    public ExtensionsResultDto Extensions(int appId)
+        => Real.Extensions(appId);
+
+    /// <inheritdoc />
+    [HttpPut("{name}")]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = RoleNames.Admin)]
+    public bool Extensions(int zoneId, int appId, string name, [FromBody] JsonElement configuration)
+        => Real.Extensions(zoneId, appId, name, configuration);
 }

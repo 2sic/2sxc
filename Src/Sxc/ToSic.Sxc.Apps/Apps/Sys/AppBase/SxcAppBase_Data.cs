@@ -4,18 +4,18 @@ namespace ToSic.Sxc.Apps.Sys;
 
 partial class SxcAppBase
 {
-    [PrivateApi]
-    public ILookUpEngine ConfigurationProvider => _configurationProvider.Get(() => AppDataConfig.Configuration)!;
-    private readonly GetOnce<ILookUpEngine> _configurationProvider = new();
+    // #DropAppConfigurationProvider
+    //[PrivateApi]
+    //public ILookUpEngine ConfigurationProvider => AppDataConfig.LookUpEngine;
 
-    private IAppDataConfiguration AppDataConfig => _appDataConfigOnce.Get(() =>
+    protected internal IAppDataConfiguration AppDataConfig => _appDataConfigOnce.Get(() =>
     {
         // New v17
         var config = Services.DataConfigProvider.GetDataConfiguration(this, _dataConfigSpecs);
 
         // needed to initialize data - must always happen a bit later because the show-draft info isn't available when creating the first App-object.
         // todo: later this should be moved to initialization of this object
-        Log.A($"init data drafts:{config.ShowDrafts}, hasConf:{config.Configuration != null}");
+        Log.A($"init data drafts:{config.ShowDrafts}, hasConf:{config.LookUpEngine}");
         return config;
 
     })!;
@@ -36,7 +36,8 @@ partial class SxcAppBase
         where TResult : class, IDataSource
     {
         var l = Log.Fn<TResult>();
-        if (ConfigurationProvider == null)
+        var dataConfig = AppDataConfig;
+        if (dataConfig.LookUpEngine == null) // note: as of 2025-09, I believe this can never be null.
             throw new("Cannot provide Data for the object App as crucial information is missing. " +
                       "Please call InitData first to provide this data.");
 
@@ -45,8 +46,8 @@ partial class SxcAppBase
             new DataSourceOptions
             {
                 AppIdentityOrReader = this,
-                LookUp = ConfigurationProvider,
-                ShowDrafts = AppDataConfig?.ShowDrafts
+                LookUp = dataConfig.LookUpEngine,
+                ShowDrafts = dataConfig.ShowDrafts
             });
         var appDataWithCreate = Services.DataSourceFactory.Create<TDataSource>(attach: initialSource) as TResult;
 

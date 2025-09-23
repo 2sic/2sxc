@@ -19,5 +19,5 @@ public interface IAppDataConfiguration
     /// <summary>
     /// Configuration used to query data - will deliver url-parameters and other important configuration values.
     /// </summary>
-    ILookUpEngine Configuration { get; }
+    ILookUpEngine LookUpEngine { get; }
 }

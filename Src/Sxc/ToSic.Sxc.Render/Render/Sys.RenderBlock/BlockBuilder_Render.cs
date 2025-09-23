@@ -105,7 +105,7 @@ public partial class BlockBuilder
             // If the body is still empty, it can be that there is nothing yet (empty block)
             // or that something is wrong.
             // Check if the content-group exists - sometimes the Content-Group it's missing if a site is being imported and the data isn't in yet
-            if (body == null && Block is { ConfigurationIsReady: true, DataIsReady: false })
+            if (body == null && Block is { ConfigurationIsReady: true, AppIsReady: false })
             {
                 l.A("content-block is missing data - will show error or just stop if not-admin-user");
                 var blockId = Block.Configuration.BlockIdentifierOrNull;

@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp.Sys.Engines;
+using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Code.Sys;
 using ToSic.Sxc.Code.Sys.CodeApiService;
 
@@ -13,9 +14,9 @@ public partial class ExecutionContext: IExCtxLookUpEngine
     public ILookUpEngine LookUpForDataSources => _lookupEngine.Get(() =>
         // check if we have a block-context, in which case the lookups also know about the module
         Block?.Data?.Configuration?.LookUpEngine
-        // otherwise try to fallback to the App configuration provider, which has a lot, but not the module-context
+        // otherwise try to fall back to the App configuration provider, which has a lot, but not the module-context
 #pragma warning disable CS0618 // Type or member is obsolete
-        ?? App?.ConfigurationProvider
+        ?? App.TryGetAppLookUpEngineOrNull()
 #pragma warning restore CS0618 // Type or member is obsolete
         // show explanation what went wrong
         ?? throw new("Tried to get Lookups for creating data-sources; neither module-context nor app is known.")

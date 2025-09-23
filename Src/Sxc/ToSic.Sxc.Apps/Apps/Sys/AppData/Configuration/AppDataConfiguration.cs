@@ -3,10 +3,7 @@
 namespace ToSic.Sxc.Apps.Sys;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppDataConfiguration(ILookUpEngine configuration, bool? showDrafts = null) : IAppDataConfiguration
-{
-    public bool? ShowDrafts { get; } = showDrafts;
-
-
-    public ILookUpEngine Configuration { get; } = configuration;
-}
+public record AppDataConfiguration(
+    ILookUpEngine LookUpEngine,
+    bool? ShowDrafts = null
+) : IAppDataConfiguration;

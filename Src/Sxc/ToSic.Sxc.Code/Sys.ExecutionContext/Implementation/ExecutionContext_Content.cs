@@ -36,7 +36,7 @@ public partial class ExecutionContext
     private object? TryToBuildFirstOfStream(string sourceStream)
     {
         var l = Log.Fn<object>(sourceStream);
-        if (Block is not { DataIsReady: true } || !Block.ViewIsReady)
+        if (Block is not { DataIsReady: true })
             return l.ReturnNull("no data/view");
         var data = Block.Data;
         if (!data.Out.ContainsKey(sourceStream))

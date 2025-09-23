@@ -57,7 +57,7 @@ internal class AppTyped(LazySvc<GlobalPaths> globalPaths, LazySvc<QueryManager<T
     /// <inheritdoc />
     public ITypedQuery? GetQuery(string? name = default, NoParamOrder noParamOrder = default, IDataSourceLinkable? attach = default, object? parameters = default)
     {
-        var opts = new DataSourceOptionsMs(this, () => App.ConfigurationProvider);
+        var opts = new DataSourceOptionsMs(this, () => App.AppDataConfig.LookUpEngine);
         var queryMicroService = new GetQueryMs<TypedQuery>(queryManager, opts, Log);
         var query = queryMicroService.GetQuery(name, noParamOrder, attach, parameters);
         query?.Setup(Cdf);

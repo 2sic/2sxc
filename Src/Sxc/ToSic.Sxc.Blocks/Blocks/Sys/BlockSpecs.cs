@@ -49,25 +49,27 @@ public record BlockSpecs : IBlock
     }
 
     private readonly BlockConfiguration? _configuration;
+    private IBlock? _rootBlock;
     public bool ConfigurationIsReady => _configuration != null;
 
-    /// <summary>
-    /// The app this block is running in
-    /// </summary>
-    public IApp App => AppOrNull
-                       ?? throw new($"App and Data are missing and can't be accessed. Code running early on must first check for .{nameof(DataIsReady)} or use {nameof(AppOrNull)}");
-    public bool DataIsReady => AppOrNull != null;
+    /// <inheritdoc />
+    public IApp App => AppOrNull ?? throw new($"App (and Data) are missing and can't be accessed. Code running early on must first check for {nameof(AppIsReady)} or use {nameof(AppOrNull)}");
+    
+    /// <inheritdoc />
+    public bool AppIsReady => AppOrNull != null;
+
+    /// <inheritdoc />
     public IApp? AppOrNull { get; init; }
 
-    /// <summary>
-    /// The DataSource which delivers data for this block (will be used by the Engine together with the View)
-    /// </summary>
-    [field: AllowNull, MaybeNull]
+    /// <inheritdoc />
     public IDataSource Data
     {
-        get => field ?? throw new NullReferenceException($"Can't access {nameof(Data)}, it was never properly initialized.");// ??= GetData();
-        set;
-    } = null!;
+        get => _data ?? throw new NullReferenceException($"Can't access {nameof(Data)}, it was never properly initialized.");
+        set => _data = value;
+    }
+    private IDataSource? _data;
+
+    public bool DataIsReady => _data != null;
 
     public required bool IsContentApp { get; init; }
 
@@ -90,17 +92,13 @@ public record BlockSpecs : IBlock
     /// The root block of this block - can be the same as `this`.
     /// </summary>
     [PrivateApi]
-    [field: AllowNull, MaybeNull]
     public IBlock RootBlock
     {
-        get => field ?? this; // never store the result, as the fallback should still return me-object in future if never set.
-        init;
+        get => _rootBlock ?? this; // never store the result, as the fallback should still return me-object in future if never set.
+        init => _rootBlock = value;
     }
 
     public List<IDependentApp> DependentApps { get; } = [];
-
-    //List<IPageFeature> BlockFeatures(ILog? log = default);
-    //public ILog? Log { get; }
 
     /// <summary>
     /// Must override ToString, otherwise any ToString() will result in properties being accessed, which throw because they are not available yet.
