@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Environment.Sys.ServerPaths;
@@ -12,11 +13,13 @@ using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.Services;
+using ToSic.Sxc.Oqt.Server.Configuration;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Sys.Integration.Installation;
 using ToSic.Sxc.Sys.Integration.Paths;
 using ToSic.Sxc.Web.Sys.Http;
 using ToSic.Sys.Capabilities.Platform;
+using ToSic.Sys.Configuration;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp;
 
@@ -62,12 +65,12 @@ partial class OqtRegisterServices
         // services.TryAddTransient<Rfc2898Generator, Rfc2898NetCoreGenerator>();
 
         // Provide tenant key from AliasResolver (develop branch)
-        services.TryAddScoped<ITenantKeyProvider, TenantKeyProvider>();
+        services.TryAddScoped<ITenantIdProvider, TenantIdProvider>();
 
         // Replace EAV singleton with per-tenant cache
         services.TryAddSingleton<IAppsCache, OqtPerTenantAppsCache>();
-        //services.Replace(ServiceDescriptor.Singleton<IAppsCache, OqtPerTenantAppsCache>());
-
+        //services.AddSingleton<IAppsCacheSwitchable, OqtPerTenantAppsCache>();
+        
         return services;
     }
         
@@ -92,6 +95,21 @@ partial class OqtRegisterServices
         services.AddScoped<IOqtSxcRenderService, OqtSxcRenderService>();
         services.AddScoped<IRenderInfoService, RenderInfoService>();
         services.AddScoped<IOqtTurnOnService, OqtTurnOnService>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Replace default IGlobalConfiguration with OqtGlobalConfiguration which resolves ConnectionString per tenant.
+    /// </summary>
+    private static IServiceCollection AddOqtGlobalConfiguration(this IServiceCollection services)
+    {
+        // Ensure HttpContextAccessor exists (Oqtane has it, but add TryAdd just in case)
+        services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        // Global Configuration
+        services.TryAddTransient<IGlobalConfiguration, OqtGlobalConfiguration>();
+        // Replace any existing registration for IGlobalConfiguration
+        //services.Replace(ServiceDescriptor.Singleton<IGlobalConfiguration, OqtGlobalConfiguration>());
 
         return services;
     }

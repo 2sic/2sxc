@@ -11,6 +11,7 @@ internal static partial class OqtRegisterServices
         services
             .AddOqtanePlumbing()                        // Helpers to make State work etc.
             .AddSxcOqtPathsAndPlatform()                // Paths and PlatformInfo
+            .AddOqtGlobalConfiguration()                // Global config override (per-tenant ConnectionString)
             .AddSxcOqtContext()                         // Context objects like ISite etc.
             .AddSxcOqtAppPermissionsAndImportExport()   // App stuff
             .AddOqtaneLookUpsAndSources()               // Lookups / LookUp Engine

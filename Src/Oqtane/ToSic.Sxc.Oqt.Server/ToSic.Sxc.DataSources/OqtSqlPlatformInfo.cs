@@ -10,7 +10,12 @@ internal class OqtSqlPlatformInfo(
     LazySvc<IConfigManager> configManager,
     LazySvc<IOqtTenantContext> tenantContext) : SqlPlatformInfo
 {
-    public override string DefaultConnectionStringName => SettingKeys.ConnectionStringKey;
+    // Make the default connection-string name tenant-aware.
+    // If the current tenant has a named connection, use that; otherwise fall back to Oqtane default.
+    public override string DefaultConnectionStringName
+        => tenantContext.Value.TryGet(out var ctx) && !string.IsNullOrWhiteSpace(ctx.ConnectionStringName)
+            ? ctx.ConnectionStringName
+            : SettingKeys.ConnectionStringKey;
 
     public override string FindConnectionString(string name)
     {
@@ -21,7 +26,7 @@ internal class OqtSqlPlatformInfo(
                 return tenantContextInfo.ConnectionString;
         }
 
-        if (name.EqualsInsensitive(DefaultConnectionStringName))
+        if (name.EqualsInsensitive(SettingKeys.ConnectionStringKey))
         {
             var fallback = configManager.Value.GetConnectionString();
             if (!string.IsNullOrWhiteSpace(fallback))

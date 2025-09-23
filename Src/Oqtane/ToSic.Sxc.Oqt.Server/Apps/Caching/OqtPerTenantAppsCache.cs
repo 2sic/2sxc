@@ -1,11 +1,11 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Oqtane.Infrastructure;
 using System.Collections.Concurrent;
-using System.Collections.ObjectModel;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Caching;
 using ToSic.Eav.Apps.Sys.Loaders;
-using ToSic.Eav.Persistence.Sys.AppState;
-using ToSic.Sxc.Oqt.Server.Context;
 
 namespace ToSic.Sxc.Oqt.Server.Apps.Caching;
 
@@ -13,19 +13,19 @@ namespace ToSic.Sxc.Oqt.Server.Apps.Caching;
 /// Multi-tenant AppsCache isolating state per Oqtane tenant (keyed by TenantId).
 /// No static fields; each tenant bucket holds independent Zones/App caches.
 /// </summary>
-internal sealed class OqtPerTenantAppsCache(ITenantKeyProvider keyProvider)
+internal sealed class OqtPerTenantAppsCache(IHttpContextAccessor httpContextAccessor)
     : AppsCacheBase, IAppsCacheSwitchable
 {
     private sealed class Bucket
     {
+        public readonly object Lock = new();
         public volatile IReadOnlyDictionary<int, Zone>? ZonesCache;
-        public readonly object ZonesLoadLock = new();
         public readonly Dictionary<string, IAppStateCache> AppCaches = new();
     }
 
-    private readonly ConcurrentDictionary<string, Bucket> _buckets = new(StringComparer.Ordinal);
+    private readonly ConcurrentDictionary<int, Bucket> _buckets = new();
 
-    private Bucket Current => _buckets.GetOrAdd(keyProvider.GetKey(), _ => new Bucket());
+    private Bucket Current => _buckets.GetOrAdd(GetBucketKey(), _ => new Bucket());
 
     public override string NameId => "OqtPerTenantCache";
     public override bool IsViable() => true;
@@ -36,7 +36,7 @@ internal sealed class OqtPerTenantAppsCache(ITenantKeyProvider keyProvider)
         var b = Current;
         if (b.ZonesCache != null) return b.ZonesCache;
 
-        lock (b.ZonesLoadLock)
+        lock (b.Lock)
         {
             b.ZonesCache ??= LoadZones(tools);
             return b.ZonesCache;
@@ -59,4 +59,23 @@ internal sealed class OqtPerTenantAppsCache(ITenantKeyProvider keyProvider)
         => Current.AppCaches.Remove(key);
 
     public override void PurgeZones() => Current.ZonesCache = null;
+
+    // Build a per-request tenant key without injecting scoped services.
+    private int GetBucketKey()
+    {
+        var ctx = httpContextAccessor.HttpContext;
+        if (ctx?.RequestServices == null) return 1;
+
+        // Prefer TenantManager if available
+        var tenantManager = ctx.RequestServices.GetService<ITenantManager>();
+        var tenantId = tenantManager?.GetTenant()?.TenantId;
+        if (tenantId.HasValue) return tenantId.Value;
+
+        // Fallback to alias (in case TenantManager is not available)
+        var aliasAccessor = ctx.RequestServices.GetService<IAliasAccessor>();
+        var aliasTenantId = aliasAccessor?.Alias?.TenantId;
+        if (aliasTenantId.HasValue) return aliasTenantId.Value;
+
+        return 1;
+    }
 }
