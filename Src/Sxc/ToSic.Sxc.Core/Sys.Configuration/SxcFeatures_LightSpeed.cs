@@ -52,4 +52,15 @@ public partial class SxcFeatures
         LicenseRules = BuiltInFeatures.ForPatronPerformanceAutoEnabled,
     };
 
+    public static readonly Feature RazorCacheCompiledToDisk = new()
+    {
+        NameId = nameof(RazorCacheCompiledToDisk),
+        Guid = new("d022bf2e-0e0c-4c61-b653-c2be0213e323"),
+        Name = "Razor - Cache Compiled Razor to Disk",
+        IsPublic = false,
+        Ui = false,
+        Description = "Cache compiled razor for faster restart and code less accessed.",
+        Security = FeaturesCatalogRules.Security0Neutral,
+        LicenseRules = BuiltInFeatures.ForPatronPerformanceNotEnabled,
+    };
 }
