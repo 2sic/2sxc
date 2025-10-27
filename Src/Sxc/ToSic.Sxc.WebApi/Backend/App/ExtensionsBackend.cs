@@ -138,7 +138,7 @@ public class ExtensionsBackend(
             // Extract using EAV Zip implementation - enforce no folder entries and code-file restrictions
             try
             {
-                new Zipping(l).ExtractZipStream(zipStream, targetRoot, allowCodeImport: true);
+                new Zipping(l).ExtractZipStream(zipStream, targetRoot, allowCodeImport: true, ignoreFolderEntries: true);
             }
             catch (Exception ex)
             {
