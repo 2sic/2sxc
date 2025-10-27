@@ -38,6 +38,6 @@ public class WorkAppsRemove(
         // now really delete the files - if the DB didn't end up throwing an error
         // ...but only if it's a full-delete
         if (fullDelete && !string.IsNullOrEmpty(folder) && Directory.Exists(physPath))
-            ZipImport.TryToDeleteDirectory(physPath, Log);
+            Zipping.TryToDeleteDirectory(physPath, Log);
     }
 }
