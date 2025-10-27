@@ -147,4 +147,23 @@ public class AppControllerReal(
 
     public bool Extensions(int zoneId, int appId, string name, JsonElement configuration)
         => extensionsBackendLazy.Value.SaveExtension(zoneId, appId, name, configuration);
+
+    /// <summary>
+    /// Install an extension ZIP into /extensions/{folder}.
+    /// If 'folder' is omitted, the uploaded zip filename (without extension) is used.
+    /// </summary>
+    public bool InstallExtensionZip(HttpUploadedFile uploadInfo, int zoneId, int appId, string? folder = null, bool overwrite = false)
+    {
+        var l = Log.Fn<bool>($"z:{zoneId}, a:{appId}, folder:{folder}, overwrite:{overwrite}");
+
+        if (!uploadInfo.HasFiles())
+            return l.ReturnFalse("no file uploaded");
+
+        var (fileName, stream) = uploadInfo.GetStream(0);
+        if (stream == null!)
+            throw new NullReferenceException("File Stream is null, upload canceled");
+
+        var ok = extensionsBackendLazy.Value.InstallExtensionZip(zoneId, appId, stream, folder, overwrite, originalFileName: fileName);
+        return l.ReturnAsOk(ok);
+    }
 }

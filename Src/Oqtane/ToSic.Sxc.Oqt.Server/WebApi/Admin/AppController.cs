@@ -141,4 +141,15 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     [Authorize(Roles = RoleNames.Admin)]
     public bool Extensions(int zoneId, int appId, string name, [FromBody] JsonElement configuration)
         => Real.Extensions(zoneId, appId, name, configuration);
+
+    // New: install extension ZIP (multipart/form-data)
+    [HttpPost("extensions/upload")]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = RoleNames.Admin)]
+    public bool ExtensionsInstall([FromQuery] int zoneId, [FromQuery] int appId, [FromQuery] string? folder = null, [FromQuery] bool overwrite = false)
+    {
+        // Ensure that Hot Reload is not enabled or try to disable it.
+        HotReloadEnabledCheck.Check();
+        return Real.InstallExtensionZip(new(Request), zoneId, appId, folder, overwrite);
+    }
 }
