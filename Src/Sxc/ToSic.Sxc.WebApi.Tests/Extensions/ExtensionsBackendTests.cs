@@ -135,7 +135,7 @@ public class ExtensionsBackendTests
         }
         ms.Position = 0;
 
-        var ok = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms, preferredFolderName: null, overwrite: false, originalZipFileName: "color-picker.zip");
+        var ok = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms, name: null, overwrite: false, originalZipFileName: "color-picker.zip");
         Assert.True(ok);
 
         var result = ctx.Backend.GetExtensions(42);
@@ -159,7 +159,7 @@ public class ExtensionsBackendTests
         }
         ms.Position = 0;
 
-        var ok = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms, preferredFolderName: "bad", overwrite: false, originalZipFileName: "bad.zip");
+        var ok = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms, name: "bad", overwrite: false, originalZipFileName: "bad.zip");
         Assert.False(ok);
     }
 
@@ -177,19 +177,19 @@ public class ExtensionsBackendTests
                 w.Write("{}\n");
         }
         ms1.Position = 0;
-        var ok1 = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms1, preferredFolderName: null, overwrite: false, originalZipFileName: "dup.zip");
+        var ok1 = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms1, name: null, overwrite: false, originalZipFileName: "dup.zip");
         Assert.True(ok1);
 
         // Try installing again without overwrite should fail
         using var ms2 = new MemoryStream(ms1.ToArray());
         ms2.Position = 0;
-        var ok2 = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms2, preferredFolderName: null, overwrite: false, originalZipFileName: "dup.zip");
+        var ok2 = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms2, name: null, overwrite: false, originalZipFileName: "dup.zip");
         Assert.False(ok2);
 
         // With overwrite should succeed
         using var ms3 = new MemoryStream(ms1.ToArray());
         ms3.Position = 0;
-        var ok3 = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms3, preferredFolderName: null, overwrite: true, originalZipFileName: "dup.zip");
+        var ok3 = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms3, name: null, overwrite: true, originalZipFileName: "dup.zip");
         Assert.True(ok3);
     }
 

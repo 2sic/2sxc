@@ -93,9 +93,9 @@ public class ExtensionsBackend(
     /// <summary>
     /// Install an extension provided as a ZIP stream into /extensions/{folder}.
     /// </summary>
-    public bool InstallExtensionZip(int zoneId, int appId, Stream zipStream, string? preferredFolderName = null, bool overwrite = false, string? originalZipFileName = null)
+    public bool InstallExtensionZip(int zoneId, int appId, Stream zipStream, string? name = null, bool overwrite = false, string? originalZipFileName = null)
     {
-        var l = Log.Fn<bool>($"z:{zoneId}, a:{appId}, overwrite:{overwrite}, pref:'{preferredFolderName}', ofn:'{originalZipFileName}'");
+        var l = Log.Fn<bool>($"z:{zoneId}, a:{appId}, overwrite:{overwrite}, pref:'{name}', ofn:'{originalZipFileName}'");
         try
         {
             var appReader = appReadersLazy.Value.Get(appId);
@@ -105,8 +105,8 @@ public class ExtensionsBackend(
             Directory.CreateDirectory(extensionsRoot);
 
             // Resolve folderName: prefer explicit, else use zip file name (base name, no extension)
-            var folderName = !string.IsNullOrWhiteSpace(preferredFolderName)
-                ? preferredFolderName.Trim()
+            var folderName = !string.IsNullOrWhiteSpace(name)
+                ? name.Trim()
                 : DeriveFolderNameFromZipFileName(originalZipFileName);
 
             if (string.IsNullOrWhiteSpace(folderName))
