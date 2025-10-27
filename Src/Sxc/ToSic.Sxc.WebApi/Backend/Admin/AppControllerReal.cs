@@ -163,7 +163,7 @@ public class AppControllerReal(
         if (stream == null!)
             throw new NullReferenceException("File Stream is null, upload canceled");
 
-        var ok = extensionsBackendLazy.Value.InstallExtensionZip(zoneId, appId, stream, folder, overwrite, originalFileName: fileName);
+        var ok = extensionsBackendLazy.Value.InstallExtensionZip(zoneId, appId, stream, folder, overwrite, originalZipFileName: fileName);
         return l.ReturnAsOk(ok);
     }
 }

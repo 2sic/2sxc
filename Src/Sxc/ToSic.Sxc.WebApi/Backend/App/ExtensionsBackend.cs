@@ -2,10 +2,10 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.ImportExport.Sys.Zip;
+using ToSic.Eav.Security.Files;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Services;
-using ToSic.Eav.Security.Files;
-using System.IO.Compression;
 
 namespace ToSic.Sxc.Backend.App;
 
@@ -92,16 +92,10 @@ public class ExtensionsBackend(
 
     /// <summary>
     /// Install an extension provided as a ZIP stream into /extensions/{folder}.
-    /// FolderName resolution:
-    /// - Use preferredFolderName if provided.
-    /// - Otherwise derive from originalFileName (zip filename without extension).
-    /// Extraction:
-    /// - Always extract under the resolved folderName.
-    /// - If the ZIP contains a single top-level folder, that segment is stripped.
     /// </summary>
-    public bool InstallExtensionZip(int zoneId, int appId, Stream zipStream, string? preferredFolderName = null, bool overwrite = false, string? originalFileName = null)
+    public bool InstallExtensionZip(int zoneId, int appId, Stream zipStream, string? preferredFolderName = null, bool overwrite = false, string? originalZipFileName = null)
     {
-        var l = Log.Fn<bool>($"z:{zoneId}, a:{appId}, overwrite:{overwrite}, pref:'{preferredFolderName}', ofn:'{originalFileName}'");
+        var l = Log.Fn<bool>($"z:{zoneId}, a:{appId}, overwrite:{overwrite}, pref:'{preferredFolderName}', ofn:'{originalZipFileName}'");
         try
         {
             var appReader = appReadersLazy.Value.Get(appId);
@@ -110,14 +104,10 @@ public class ExtensionsBackend(
             var extensionsRoot = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppExtensionsFolder);
             Directory.CreateDirectory(extensionsRoot);
 
-            using var archive = new ZipArchive(zipStream, ZipArchiveMode.Read, leaveOpen: true);
-            if (archive.Entries.Count == 0)
-                return l.ReturnFalse("empty zip");
-
             // Resolve folderName: prefer explicit, else use zip file name (base name, no extension)
             var folderName = !string.IsNullOrWhiteSpace(preferredFolderName)
                 ? preferredFolderName.Trim()
-                : DeriveFolderNameFromFile(originalFileName);
+                : DeriveFolderNameFromZipFileName(originalZipFileName);
 
             if (string.IsNullOrWhiteSpace(folderName))
                 return l.ReturnFalse("no folder name - provide 'folder' or upload with a valid filename");
@@ -134,7 +124,7 @@ public class ExtensionsBackend(
                     return l.ReturnFalse("target exists - set overwrite to true");
                 try
                 {
-                    Directory.Delete(targetRoot, recursive: true);
+                    Zipping.TryToDeleteDirectory(targetRoot, l);
                 }
                 catch (Exception exDel)
                 {
@@ -142,98 +132,34 @@ public class ExtensionsBackend(
                     return l.ReturnFalse("failed to delete existing target");
                 }
             }
+
             Directory.CreateDirectory(targetRoot);
 
-            // If zip has a single top-level folder, we will strip that segment on extraction
-            var topLevel = GetSingleTopLevelFolder(archive);
-
-            foreach (var entry in archive.Entries)
+            // Extract using EAV Zip implementation - enforce no folder entries and code-file restrictions
+            try
             {
-                if (string.IsNullOrEmpty(entry.FullName)) continue;
-
-                var normalized = NormalizeZipPath(entry.FullName);
-                if (string.IsNullOrEmpty(normalized)) continue;
-
-                var segments = normalized.Split('/');
-                if (segments.Length == 0) continue;
-
-                // Remove the top-level folder segment, if there is exactly one
-                if (!string.IsNullOrWhiteSpace(topLevel) && segments[0].Equals(topLevel, StringComparison.Ordinal))
-                    segments = segments.Skip(1).ToArray();
-
-                if (segments.Length == 0) continue; // was just a folder entry at root
-
-                // Safety: forbid traversal anywhere
-                if (segments.Any(s => s == ".." || s.Contains("..")))
-                    return l.ReturnFalse("zip contains illegal traversal path");
-
-                var lastSegment = segments[segments.Length - 1];
-                if (lastSegment.StartsWith(".", StringComparison.Ordinal))
-                    continue;
-
-                var relativePath = string.Join(Path.DirectorySeparatorChar.ToString(), segments);
-                var destinationPath = Path.Combine(targetRoot, relativePath);
-                var fullPath = Path.GetFullPath(destinationPath);
-
-                // Must remain under targetRoot
-                if (!fullPath.StartsWith(Path.GetFullPath(targetRoot), StringComparison.OrdinalIgnoreCase))
-                    return l.ReturnFalse("zip path escapes target folder");
-
-                // Directory entry?
-                if (string.IsNullOrEmpty(entry.Name))
-                {
-                    Directory.CreateDirectory(fullPath);
-                    continue;
-                }
-
-                Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!);
-                using var inStream = entry.Open();
-                using var outStream = File.Create(fullPath);
-                inStream.CopyTo(outStream);
+                new Zipping(l).ExtractZipStream(zipStream, targetRoot, allowCodeImport: true);
+            }
+            catch (Exception ex)
+            {
+                l.Ex(ex);
+                return l.ReturnFalse("invalid zip or not allowed");
             }
 
             return l.ReturnTrue($"installed '{folderName}'");
         }
         catch (Exception ex)
         {
-            Log.Ex(ex);
+            l.Ex(ex);
             return l.ReturnFalse("error");
         }
     }
 
-    private static string NormalizeZipPath(string path)
-        => path.Replace('\\', '/').Trim().Trim('/');
-
-    private static string? DeriveFolderNameFromFile(string? originalFileName)
+    private static string? DeriveFolderNameFromZipFileName(string? originalFileName)
     {
         if (string.IsNullOrWhiteSpace(originalFileName)) return null;
-
         var baseName = Path.GetFileNameWithoutExtension(originalFileName.Trim());
         return string.IsNullOrWhiteSpace(baseName) ? null : baseName;
-    }
-
-    /// <summary>
-    /// If all entries share exactly one first path-segment, return it; else empty string.
-    /// </summary>
-    private static string GetSingleTopLevelFolder(ZipArchive archive)
-    {
-        var firstSegments = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var e in archive.Entries)
-        {
-            if (string.IsNullOrEmpty(e.FullName)) continue;
-
-            var norm = NormalizeZipPath(e.FullName);
-            if (string.IsNullOrEmpty(norm)) continue;
-
-            var seg = norm.Split('/')[0];
-            if (string.IsNullOrEmpty(seg)) continue;
-
-            firstSegments.Add(seg);
-            if (firstSegments.Count > 1) return string.Empty;
-        }
-        return firstSegments.Count == 1
-            ? firstSegments.First()
-            : string.Empty;
     }
 
     private static bool IsValidFolderName(string name)

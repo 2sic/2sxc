@@ -123,47 +123,25 @@ public class ExtensionsBackendTests
         using var ms = new MemoryStream();
         using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
         {
-            var e1 = zip.CreateEntry("color-picker/App_Data/extension.json");
+            var e1 = zip.CreateEntry("App_Data/extension.json");
             using (var es = e1.Open())
             using (var w = new StreamWriter(es, new UTF8Encoding(false)))
-                w.Write("""{ \"id\":\"color-picker\", \"enabled\": true }""");
+                w.Write("{ \"id\":\"color-picker\", \"enabled\": true }");
 
-            var e2 = zip.CreateEntry("color-picker/dist/script.js");
+            var e2 = zip.CreateEntry("dist/script.js");
             using (var es = e2.Open())
             using (var w = new StreamWriter(es, new UTF8Encoding(false)))
                 w.Write("console.log('ok');");
         }
         ms.Position = 0;
 
-        var ok = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms, preferredFolderName: null, overwrite: false, originalFileName: "color-picker.zip");
+        var ok = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms, preferredFolderName: null, overwrite: false, originalZipFileName: "color-picker.zip");
         Assert.True(ok);
 
         var result = ctx.Backend.GetExtensions(42);
         Assert.Contains(result.Extensions, e => e.Folder == "color-picker");
         var cfg = result.Extensions.First(e => e.Folder == "color-picker").Configuration;
         Assert.NotNull(cfg);
-    }
-
-    [Fact]
-    public void InstallZip_Flat_UsesZipFilename_WhenNoPreferredFolder()
-    {
-        using var ctx = TestContext.Create();
-
-        using var ms = new MemoryStream();
-        using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
-        {
-            var e1 = zip.CreateEntry("App_Data/extension.json");
-            using var es = e1.Open();
-            using var w = new StreamWriter(es, new UTF8Encoding(false));
-            w.Write("""{ \"id\":\"flat\", \"enabled\": true }""");
-        }
-        ms.Position = 0;
-
-        var ok = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms, preferredFolderName: null, overwrite: false, originalFileName: "flat.zip");
-        Assert.True(ok);
-
-        var result = ctx.Backend.GetExtensions(42);
-        Assert.Contains(result.Extensions, e => e.Folder == "flat");
     }
 
     [Fact]
@@ -176,12 +154,12 @@ public class ExtensionsBackendTests
         {
             var e1 = zip.CreateEntry("bad/../../outside.txt");
             using var es = e1.Open();
-            using var w = new StreamWriter(es, new UTF8Encoding(false));
-            w.Write("nope");
+            using (var w = new StreamWriter(es, new UTF8Encoding(false)))
+                w.Write("nope");
         }
         ms.Position = 0;
 
-        var ok = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms, preferredFolderName: "bad", overwrite: false, originalFileName: "bad.zip");
+        var ok = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms, preferredFolderName: "bad", overwrite: false, originalZipFileName: "bad.zip");
         Assert.False(ok);
     }
 
@@ -193,25 +171,25 @@ public class ExtensionsBackendTests
         using var ms1 = new MemoryStream();
         using (var zip = new ZipArchive(ms1, ZipArchiveMode.Create, leaveOpen: true))
         {
-            var e1 = zip.CreateEntry("dup/App_Data/extension.json");
+            var e1 = zip.CreateEntry("App_Data/extension.json");
             using (var es = e1.Open())
             using (var w = new StreamWriter(es, new UTF8Encoding(false)))
                 w.Write("{}\n");
         }
         ms1.Position = 0;
-        var ok1 = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms1, preferredFolderName: null, overwrite: false, originalFileName: "dup.zip");
+        var ok1 = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms1, preferredFolderName: null, overwrite: false, originalZipFileName: "dup.zip");
         Assert.True(ok1);
 
         // Try installing again without overwrite should fail
         using var ms2 = new MemoryStream(ms1.ToArray());
         ms2.Position = 0;
-        var ok2 = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms2, preferredFolderName: null, overwrite: false, originalFileName: "dup.zip");
+        var ok2 = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms2, preferredFolderName: null, overwrite: false, originalZipFileName: "dup.zip");
         Assert.False(ok2);
 
         // With overwrite should succeed
         using var ms3 = new MemoryStream(ms1.ToArray());
         ms3.Position = 0;
-        var ok3 = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms3, preferredFolderName: null, overwrite: true, originalFileName: "dup.zip");
+        var ok3 = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms3, preferredFolderName: null, overwrite: true, originalZipFileName: "dup.zip");
         Assert.True(ok3);
     }
 

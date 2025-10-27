@@ -6,7 +6,6 @@ using ToSic.Eav.DataSources.Sys;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
-using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.Backend.Admin.AppControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin;
@@ -143,10 +142,10 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
         => Real.Extensions(zoneId, appId, name, configuration);
 
     // New: install extension ZIP (multipart/form-data)
-    [HttpPost("extensions/upload")]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool ExtensionsInstall([FromQuery] int zoneId, [FromQuery] int appId, [FromQuery] string? folder = null, [FromQuery] bool overwrite = false)
+    public bool InstallExtension([FromQuery] int zoneId, [FromQuery] int appId, [FromQuery] string? folder = null, [FromQuery] bool overwrite = false)
     {
         // Ensure that Hot Reload is not enabled or try to disable it.
         HotReloadEnabledCheck.Check();
