@@ -166,9 +166,9 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
             // Internally it wants to prefer the `language` querystring param,
             // but if it doesn't have it, then in a WebApi call it seems to not correctly take the current portal alias culture.
             // So we can't use `GetCurrentLocale` but need to use `GetLocaleOrCurrent` with the current culture code.
-            var current = !string.IsNullOrEmpty(HttpContext.Current.Request.QueryString["language"])
-                ? lc.GetCurrentLocale(Id) // This will use the querystring param if available, or work in Razor, but not in WebApi
-                : lc.GetLocaleOrCurrent(Id, CurrentCultureCode); // This will use the current culture code, which is more stable
+            var langParam = HttpContext.Current?.Request?.QueryString?["language"];
+            var effectiveCode = string.IsNullOrEmpty(langParam) ? CurrentCultureCode : langParam;
+            var current = lc.GetLocaleOrCurrent(Id, effectiveCode);
             if (current != null)
             {
                 var currentCode = current.Code;
