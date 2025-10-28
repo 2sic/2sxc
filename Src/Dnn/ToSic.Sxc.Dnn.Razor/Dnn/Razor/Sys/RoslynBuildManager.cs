@@ -1,10 +1,11 @@
-﻿using System.CodeDom.Compiler;
+﻿using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
+using System.CodeDom.Compiler;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Razor;
 using System.Web.Razor.Generator;
-using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sxc.Dnn.Compile;
@@ -21,13 +22,14 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
         LazySvc<AppCodeLoader> appCodeLoader,
         AssemblyResolver assemblyResolver,
         IReferencedAssembliesProvider referencedAssembliesProvider,
-        MemoryCacheService memoryCacheService)
-        : ServiceBase("Dnn.RoslynBuildManager", connect: [assemblyCacheManager, appCodeLoader, assemblyResolver, referencedAssembliesProvider, memoryCacheService]),
+        MemoryCacheService memoryCacheService,
+        IAssemblyDiskCacheService diskCacheService)
+        : ServiceBase("Dnn.RoslynBuildManager", connect: [assemblyCacheManager, appCodeLoader, assemblyResolver, referencedAssembliesProvider, memoryCacheService, diskCacheService]),
             IRoslynBuildManager
     {
         private static readonly NamedLocks CompileAssemblyLocks = new();
 
-        private const string DefaultNamespace = "RazorHost";
+        internal const string DefaultNamespace = "RazorHost";
 
         // TODO: THIS IS PROBABLY Wrong, but not important for now
         // It's wrong, because the web.config gives the default to be a very old 2sxc base class
@@ -52,9 +54,50 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
             // ATM it appears that sometimes it returns null, but I don't know why
             // I believe it's mostly on first startup or something
             var (result, generated, message) = new TryLockTryDo(lockObject).Call(
-                conditionToGenerate: () => assemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath)?.MainType == null,
+                conditionToGenerate: () =>
+                {
+                    // Check memory cache first
+                    var memoryResult = assemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath);
+                    if (memoryResult?.MainType != null)
+                        return false; // Found in memory cache - no need to generate
+
+                    // Memory cache miss - try disk cache
+                    l.A("Memory cache miss - checking disk cache");
+                    var contentHash = diskCacheService.ComputeContentHash(codeFileInfo.SourceCode);
+                    var appCodeHash = GetAppCodeHash(spec);
+                    ReferencedAssemblies(codeFileInfo, spec);
+                    var diskResult = diskCacheService.TryLoadFromCache(spec, codeFileInfo.RelativePath, contentHash, appCodeHash);
+
+                    if (diskResult != null)
+                    {
+                        l.A($"Disk cache hit for template: {codeFileInfo.RelativePath}");
+                        // Add to memory cache for faster subsequent access
+                        diskResult.CacheDependencyId = AssemblyCacheManager.KeyTemplate(codeFileInfo.FullPath);
+                        assemblyCacheManager.Add(
+                            cacheKey: diskResult.CacheDependencyId,
+                            data: diskResult,
+                            slidingDuration: CacheConstants.DurationRazorAndCode,
+                            filePaths: [codeFileInfo.FullPath]
+                        );
+                        return false; // Found in disk cache - no need to generate
+                    }
+
+                    l.A("Disk cache miss - will compile template");
+                    return true; // Not found anywhere - need to generate
+                },
                 generator: () => CompileCodeFile(codeFileInfo, className, spec),
-                cacheOrFallback: () => assemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath)
+                cacheOrFallback: () =>
+                {
+                    // Try memory cache first
+                    var memoryResult = assemblyCacheManager.TryGetTemplate(codeFileInfo.FullPath);
+                    if (memoryResult != null)
+                        return memoryResult;
+
+                    // Fallback to disk cache (if available during race condition)
+                    var contentHash = diskCacheService.ComputeContentHash(codeFileInfo.SourceCode);
+                    var appCodeHash = GetAppCodeHash(spec);
+                    return diskCacheService.TryLoadFromCache(spec, codeFileInfo.RelativePath, contentHash, appCodeHash);
+                }
             );
 
             // ReSharper disable once InvertIf
@@ -78,36 +121,26 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
         {
             var l = Log.Fn<AssemblyResult>($"{codeFileInfo}; {spec};", timer: true);
 
-            // Initialize the list of referenced assemblies with the default ones
-            var referencedAssemblies = referencedAssembliesProvider.Locations(codeFileInfo.RelativePath, spec);
+            var (referencedAssemblies, appCodeAssemblyResult, appCodeAssembly) = ReferencedAssemblies(codeFileInfo, spec);
 
-            // Roslyn compiler need reference to location of dll, when dll is not in bin folder
-            // get assembly - try to get from cache, otherwise compile
-            var lTimer = Log.Fn("Timer AppCodeLoader", timer: true);
-            var (appCodeAssemblyResult, _) = appCodeLoader.Value.GetAppCode(spec);
-
-            // Add the latest assembly to the .net assembly resolver (singleton)
-            assemblyResolver.AddAssembly(appCodeAssemblyResult?.Assembly);
-
-            var appCodeAssembly = appCodeAssemblyResult?.Assembly;
-            if (appCodeAssembly != null)
-            {
-                var assemblyLocation = appCodeAssembly.Location;
-                referencedAssemblies.Add(assemblyLocation);
-                l.A($"Added reference to AppCode assembly: {assemblyLocation}");
-            }
-            lTimer.Done();
+            // Pre-compute disk cache output path for this compile
+            var normalizedPathForCache = CacheKey.NormalizePath(codeFileInfo.RelativePath);
+            var preContentHash = diskCacheService.ComputeContentHash(codeFileInfo.SourceCode);
+            var preAppCodeHash = GetAppCodeHash(spec);
+            var cacheDir = diskCacheService.GetCacheDirectoryPath();
+            var outputAssemblyPath = new CacheKey(spec.AppId, spec.Edition, normalizedPathForCache, preContentHash, preAppCodeHash).GetFilePath(cacheDir);
+            Directory.CreateDirectory(Path.GetDirectoryName(outputAssemblyPath));
 
             // Compile the template
-            lTimer = Log.Fn("timer for Compile", timer: true);
+            var lTimer = Log.Fn("timer for Compile", timer: true);
             var pathLowerCase = codeFileInfo.RelativePath.ToLowerInvariant();
             var isCshtml = pathLowerCase.EndsWith(SourceCodeConstants.CsHtmlFileExtension);
             if (isCshtml) className = GetSafeClassName(codeFileInfo.FullPath);
-            l.A($"Compiling template. Class: {className}");
+            l.A($"Compiling template. Class: {className}; Output: {outputAssemblyPath}");
 
             var (generatedAssembly, errors) = isCshtml
-                ? CompileRazor(codeFileInfo.SourceCode, referencedAssemblies, className, DefaultNamespace, codeFileInfo.FullPath)
-                : CompileCSharpCode(codeFileInfo.SourceCode, referencedAssemblies);
+                ? CompileRazor(codeFileInfo.SourceCode, referencedAssemblies, className, DefaultNamespace, codeFileInfo.FullPath, outputAssemblyPath)
+                : CompileCSharpCode(codeFileInfo.SourceCode, referencedAssemblies, outputAssemblyPath);
 
             if (generatedAssembly == null)
                 throw l.Ex(new Exception(
@@ -123,7 +156,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
             lTimer = Log.Fn("timer for ChangeMonitors", timer: true);
 
             // directly attach a type to the cache
-            var mainType = FindMainType(generatedAssembly, className, isCshtml);
+            var mainType = FindMainType(generatedAssembly, className, isCshtml, Log);
             l.A($"Main type: {mainType}");
 
             var assemblyResult = new AssemblyResult(generatedAssembly)
@@ -147,12 +180,42 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
                 );
             lTimer.Done();
 
+            // Save to disk cache after memory cache
+            lTimer = Log.Fn("timer for DiskCache", timer: true);
+            diskCacheService.TrySaveToCache(spec, codeFileInfo.RelativePath, preContentHash, preAppCodeHash, assemblyResult);
+            lTimer.Done();
+
             return l.ReturnAsOk(assemblyResult);
         }
 
-        private Type FindMainType(Assembly generatedAssembly, string className, bool isCshtml)
+        internal (List<string>, AssemblyResult, Assembly) ReferencedAssemblies(CodeFileInfo codeFileInfo, HotBuildSpec spec)
         {
-            var l = Log.Fn<Type>($"{nameof(className)}: '{className}'; {nameof(isCshtml)}: {isCshtml}", timer: true);
+            var lTimer = Log.Fn("Timer AppCodeLoader", timer: true);
+
+            // Initialize the list of referenced assemblies with the default ones
+            var referencedAssemblies = referencedAssembliesProvider.Locations(codeFileInfo.RelativePath, spec);
+
+            // Roslyn compiler need reference to location of dll, when dll is not in bin folder
+            // get assembly - try to get from cache, otherwise compile
+            var (appCodeAssemblyResult, _) = appCodeLoader.Value.GetAppCode(spec);
+
+            // Add the latest assembly to the .net assembly resolver (singleton)
+            assemblyResolver.AddAssembly(appCodeAssemblyResult?.Assembly);
+
+            var appCodeAssembly = appCodeAssemblyResult?.Assembly;
+            if (appCodeAssembly != null)
+            {
+                var assemblyLocation = appCodeAssembly.Location;
+                referencedAssemblies.Add(assemblyLocation);
+                lTimer.A($"Added reference to AppCode assembly: {assemblyLocation}");
+            }
+            lTimer.Done();
+            return (referencedAssemblies, appCodeAssemblyResult, appCodeAssembly);
+        }
+
+        internal static Type FindMainType(Assembly generatedAssembly, string className, bool isCshtml, ILog log)
+        {
+            var l = log.Fn<Type>($"{nameof(className)}: '{className}'; {nameof(isCshtml)}: {isCshtml}", timer: true);
             if (generatedAssembly == null) return l.ReturnAsError(null, "generatedAssembly is null, so type is null");
 
             var mainType = generatedAssembly.GetType(isCshtml ? $"{DefaultNamespace}.{className}" : className, false, true);
@@ -194,7 +257,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
             return relativePath.Substring(0, pos).Backslash();
         }
 
-        private string GetSafeClassName(string templateFullPath)
+        internal static string GetSafeClassName(string templateFullPath)
         {
             if (!string.IsNullOrWhiteSpace(templateFullPath))
                 return "RazorView" + GetSafeString(Path.GetFileNameWithoutExtension(templateFullPath));
@@ -220,7 +283,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
         /// Compiles the Razor into an assembly.
         /// </summary>
         /// <returns>The compiled assembly.</returns>
-        private (Assembly Assembly, List<CompilerError> Errors) CompileRazor(string sourceCode, List<string> referencedAssemblies, string className, string defaultNamespace, string sourceFileName)
+        private (Assembly Assembly, List<CompilerError> Errors) CompileRazor(string sourceCode, List<string> referencedAssemblies, string className, string defaultNamespace, string sourceFileName, string? outputAssemblyPath = null)
         {
             var l = Log.Fn<(Assembly, List<CompilerError>)>(timer: true, parameters: $"{nameof(sourceCode)}: {sourceCode.Length} chars");
 
@@ -240,7 +303,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
             // Compile the template into an assembly
             var compiler = GetCSharpCodeProvider();
             lTimer = Log.Fn("Compile", timer: true);
-            var compilerParameters = RazorCompilerParameters(referencedAssemblies);
+            var compilerParameters = RazorCompilerParameters(referencedAssemblies, outputAssemblyPath);
             var compilerResults = compiler.CompileAssemblyFromDom(compilerParameters, razorResults.GeneratedCode);
             lTimer.Done();
 
@@ -282,15 +345,25 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
         private const int CSharpCodeProviderCacheMinutes = 5;   // basic idea is that at startup, there is usually more to compile, after a while it's not so important any more.
 
 
-        private static CompilerParameters RazorCompilerParameters(List<string> referencedAssemblies)
+        private static CompilerParameters RazorCompilerParameters(List<string> referencedAssemblies, string? outputAssemblyPath = null)
         {
             var compilerParameters = new CompilerParameters([.. referencedAssemblies])
             {
-                GenerateInMemory = true,
+                GenerateInMemory = string.IsNullOrEmpty(outputAssemblyPath),
                 IncludeDebugInformation = true,
                 TreatWarningsAsErrors = false,
                 CompilerOptions = DnnRoslynConstants.CompilerOptions,
             };
+
+            if (!string.IsNullOrEmpty(outputAssemblyPath))
+            {
+                var outDir = Path.GetDirectoryName(outputAssemblyPath);
+                if (!Directory.Exists(outDir)) Directory.CreateDirectory(outDir);
+                compilerParameters.OutputAssembly = outputAssemblyPath;
+                // ensure pdbs end up next to dll
+                compilerParameters.TempFiles = new TempFileCollection(outDir, false);
+            }
+
             return compilerParameters;
         }
 
@@ -299,18 +372,25 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
         /// Compiles the C# code into an assembly.
         /// </summary>
         /// <returns>The compiled assembly.</returns>
-        private (Assembly Assembly, List<CompilerError> Errors) CompileCSharpCode(string csharpCode, List<string> referencedAssemblies)
+        private (Assembly Assembly, List<CompilerError> Errors) CompileCSharpCode(string csharpCode, List<string> referencedAssemblies, string? outputAssemblyPath = null)
         {
             var l = Log.Fn<(Assembly, List<CompilerError>)>(timer: true, parameters: $"C# code content length: {csharpCode.Length}");
 
             var lTimer = Log.Fn("Compiler Params", timer: true);
             var compilerParameters = new CompilerParameters([.. referencedAssemblies])
             {
-                GenerateInMemory = true,
+                GenerateInMemory = string.IsNullOrEmpty(outputAssemblyPath),
                 IncludeDebugInformation = true,
                 TreatWarningsAsErrors = false,
                 CompilerOptions = DnnRoslynConstants.CompilerOptions,
             };
+            if (!string.IsNullOrEmpty(outputAssemblyPath))
+            {
+                var outDir = Path.GetDirectoryName(outputAssemblyPath);
+                if (!Directory.Exists(outDir)) Directory.CreateDirectory(outDir);
+                compilerParameters.OutputAssembly = outputAssemblyPath;
+                compilerParameters.TempFiles = new TempFileCollection(outDir, false);
+            }
             lTimer.Done();
 
             // Compile the C# code into an assembly
@@ -370,6 +450,50 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
             {
                 l.Ex(ex);
                 return l.ReturnAsError(baseClass, "error");
+            }
+        }
+
+        /// <summary>
+        /// Gets the hash of the AppCode assembly for cache invalidation.
+        /// Used by disk cache to detect AppCode changes and invalidate affected template caches.
+        /// </summary>
+        /// <param name="spec">Hot build specification containing app and edition info</param>
+        /// <returns>Hash string representing the AppCode assembly; empty string if no AppCode</returns>
+        /// <remarks>
+        /// Uses assembly full name (includes version) as hash source.
+        /// </remarks>
+        public string GetAppCodeHash(HotBuildSpec spec)
+        {
+            var l = Log.Fn<string>($"{spec}");
+
+            try
+            {
+                // Get AppCode assembly from cache/compiler
+                var (appCodeAssemblyResult, _) = appCodeLoader.Value.GetAppCode(spec);
+                var appCodeAssembly = appCodeAssemblyResult?.Assembly;
+
+                if (appCodeAssembly == null)
+                {
+                    l.A("No AppCode assembly - returning empty hash");
+                    return l.Return(string.Empty, "no-appcode");
+                }
+
+                // Use assembly full name as hash source (includes version info)
+                var assemblyFullName = appCodeAssembly.FullName ?? string.Empty;
+                l.A($"AppCode assembly: {assemblyFullName}");
+
+                // Compute SHA256 hash of assembly full name
+                using var sha256 = SHA256.Create();
+                var bytes = System.Text.Encoding.UTF8.GetBytes(assemblyFullName);
+                var hashBytes = sha256.ComputeHash(bytes);
+                var hash = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
+
+                return l.Return(hash, $"hash computed from assembly name");
+            }
+            catch (Exception ex)
+            {
+                l.Ex(ex);
+                return l.Return(string.Empty, "error");
             }
         }
 
