@@ -136,7 +136,7 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     public ExtensionsResultDto Extensions(int appId) => Real.Extensions(appId);
 
     /// <inheritdoc />
-    [HttpPut]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
