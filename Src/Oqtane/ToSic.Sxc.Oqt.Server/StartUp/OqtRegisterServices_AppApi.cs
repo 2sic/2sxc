@@ -19,6 +19,9 @@ partial class OqtRegisterServices
         services.TryAddTransient<IClassCompiler, CodeCompilerNetCore>();
         services.TryAddTransient<AppCodeCompiler, AppCodeCompilerNetCore>();
 
+        // Shared assembly disk cache infrastructure (for both Razor and AppCode)
+        services.TryAddTransient<AssemblyDiskCache>();
+
         services.AddSingleton<IActionDescriptorChangeProvider>(AppApiActionDescriptorChangeProvider.Instance);
         services.AddSingleton(AppApiActionDescriptorChangeProvider.Instance);
         services.AddSingleton<AppApiFileSystemWatcher>();

@@ -83,7 +83,6 @@ internal static class StartUpDnnCore
         // New v14
         services.TryAddTransient(typeof(ExecutionContext<,>), typeof(DnnExecutionContext<,>));
 
-
         // ADAM
         services.TryAddTransient<IAdamFileSystem, DnnAdamFileSystem>();
 
@@ -143,13 +142,16 @@ internal static class StartUpDnnCore
         services.TryAddTransient<DnnReadyCheckTurbo>();
         //services.TryAddScoped<CodeRootFactory, DnnCodeRootFactory>();
 
-        // v17
+        // v17 - Assembly compilation and caching infrastructure
         services.TryAddSingleton<IHostingEnvironmentWrapper, HostingEnvironmentWrapper>();
         services.TryAddTransient<IReferencedAssembliesProvider, ReferencedAssembliesProvider>();
         services.TryAddTransient<AppCodeCompiler, AppCodeCompilerNetFull>();
-
+        
         //v17.01
         services.TryAddTransient<DnnRequirements>();
+
+        // v20.03 - Shared assembly disk cache infrastructure (for both Razor and AppCode)
+        services.TryAddTransient<AssemblyDiskCache>();
 
         return services;
     }

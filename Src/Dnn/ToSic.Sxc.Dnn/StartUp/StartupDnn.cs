@@ -59,11 +59,12 @@ public class StartupDnn : IServiceRouteMapper
 
         globalConfig.ConnectionString(connectionString);
 
-        globalConfig.GlobalFolder(HostingEnvironment.MapPath(DnnConstants.SysFolderRootVirtual));
+        globalConfig.GlobalFolder(HostingEnvironment.MapPath(DnnConstants.SysFolderRootVirtual)!);
         globalConfig.AssetsVirtualUrl(DnnConstants.SysFolderRootVirtual + "assets/");
         globalConfig.SharedAppsFolder("~/Portals/_default/" + AppConstants.AppsRootFolder + "/");
-        globalConfig.TempAssemblyFolder(HostingEnvironment.MapPath($"~/{FolderConstants.DataFolderProtected}/{FolderConstants.TempAssemblyFolder}/")); // ".../App_Data/2sxc.bin"
-        globalConfig.CryptoFolder(HostingEnvironment.MapPath($"~/{FolderConstants.DataFolderProtected}/{FolderConstants.CryptoFolder}/")!);
+        globalConfig.TempAssemblyFolder(HostingEnvironment.MapPath($"~/{FolderConstants.DataFolderProtected}/{FolderConstants.TempAssemblyFolder}/")!); // ".../App_Data/2sxc.bin"
+        globalConfig.CshtmlAssemblyFolder(HostingEnvironment.MapPath($"~/{FolderConstants.DataFolderProtected}/{FolderConstants.CshtmlAssemblyFolder}/")!); // ".../App_Data/2sxc.bin.cshtml"
+        globalConfig.CryptoFolder(HostingEnvironment.MapPath($"~/{FolderConstants.DataFolderProtected}/{FolderConstants.CryptoFolder}/")!); // ".../App_Data/2sxc.crypto"
 
         var sxcSysLoader = transientSp.Build<BootCoordinator>();
         sxcSysLoader.StartUp();

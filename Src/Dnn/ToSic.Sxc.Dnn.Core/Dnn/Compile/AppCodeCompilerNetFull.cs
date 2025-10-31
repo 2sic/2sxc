@@ -1,6 +1,5 @@
 using Microsoft.CodeDom.Providers.DotNetCompilerPlatform;
 using System.CodeDom.Compiler;
-using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 using ToSic.Sxc.Code.Sys.HotBuild;
@@ -17,8 +16,9 @@ internal class AppCodeCompilerNetFull(
     IHostingEnvironmentWrapper hostingEnvironment,
     IReferencedAssembliesProvider referencedAssembliesProvider,
     IGlobalConfiguration globalConfiguration,
-    SourceCodeHasher sourceCodeHasher)
-    : AppCodeCompiler(globalConfiguration, sourceCodeHasher, connect: [hostingEnvironment, referencedAssembliesProvider, sourceCodeHasher])
+    SourceCodeHasher sourceCodeHasher,
+    AssemblyDiskCache diskCache)
+    : AppCodeCompiler(globalConfiguration, sourceCodeHasher, connect: [hostingEnvironment, referencedAssembliesProvider, sourceCodeHasher, diskCache])
 {
     private const int LoadRetryDelayMs = 100;
     private const int LoadRetryTimeoutMs = 3000;
@@ -176,62 +176,23 @@ internal class AppCodeCompilerNetFull(
             : l.ReturnAsOk(compilerResults);
     }
 
-    private static CompilerResults LoadCachedAssemblyWithRetry(string assemblyPath, ILogCall<AssemblyResult> parentLog)
+    private CompilerResults LoadCachedAssemblyWithRetry(string assemblyPath, ILogCall<AssemblyResult> parentLog)
     {
         var l = parentLog.Fn<CompilerResults>($"load from path: '{assemblyPath}'");
-        var stopwatch = Stopwatch.StartNew();
-        var attempt = 0;
-        Exception? lastError = null;
 
-        // Try for a maximum of 3 seconds to load the assembly, with a short delay between attempts
-        while (stopwatch.ElapsedMilliseconds <= LoadRetryTimeoutMs)
+        // Use shared AssemblyDiskCache.LoadWithRetry instead of manual retry logic
+        var assembly = diskCache.LoadWithRetry(
+            assemblyPath,
+            loadAssembly: Assembly.LoadFrom,
+            retryDelayMs: LoadRetryDelayMs,
+            timeoutMs: LoadRetryTimeoutMs);
+
+        var result = new CompilerResults(new())
         {
-            attempt++;
-            try
-            {
-                l.A($"attempt {attempt} to load cached assembly");
-                using (new FileStream(assemblyPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                {
-                    // Successfully opened; dispose immediately and proceed to load
-                }
+            PathToAssembly = assemblyPath,
+            CompiledAssembly = assembly,
+        };
 
-                var compiledAssembly = Assembly.LoadFrom(assemblyPath);
-                var result = new CompilerResults(new())
-                {
-                    PathToAssembly = assemblyPath,
-                    CompiledAssembly = compiledAssembly,
-                };
-
-                return l.Return(result,
-                    $"loaded cached assembly on attempt {attempt} after {stopwatch.ElapsedMilliseconds}ms");
-            }
-            // Catch various likely transient exceptions - maybe if the antivirus is scanning the file, or it's still being written
-            catch (Exception ex) when (IsTransientLoadException(ex))
-            {
-                lastError = ex;
-                // add a bit of random to avoid collisions
-                var delay = LoadRetryDelayMs + new Random().Next(0, 100);
-                l.A($"attempt {attempt} failed ({ex.GetType().Name}: {ex.Message}). retry in {delay}ms");
-                Thread.Sleep(delay);
-            }
-            // Log any other unexpected exceptions and behave as if non-catching
-            catch (Exception ex)
-            {
-                l.A($"non-transient error on {nameof(attempt)} {attempt}, giving up");
-                l.Ex(ex);
-                throw;
-            }
-        }
-
-        var elapsed = stopwatch.ElapsedMilliseconds;
-        var message = $"failed to load cached assembly after {attempt} attempts in {elapsed}ms (last: {lastError?.GetType().Name}: {lastError?.Message})";
-        l.E(message);
-        throw new IOException(message, lastError);
+        return l.Return(result, $"loaded cached assembly");
     }
-
-    private static bool IsTransientLoadException(Exception ex)
-        => ex is FileNotFoundException
-            or IOException
-            or UnauthorizedAccessException
-            or BadImageFormatException;
 }
