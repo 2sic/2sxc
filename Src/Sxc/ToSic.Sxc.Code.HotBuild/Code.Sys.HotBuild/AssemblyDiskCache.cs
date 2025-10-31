@@ -10,7 +10,6 @@ namespace ToSic.Sxc.Code.Sys.HotBuild;
 /// Platform-neutral implementation with configurable assembly loading.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
-[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 public class AssemblyDiskCache(NoParamOrder protector = default, object[]? connect = default)
     : ServiceBase("Sxc.AsmDskCch", connect: connect)
 {
