@@ -14,7 +14,8 @@ public class EditControllerReal(
 {
     public const string LogSuffix = "Edit";
 
-    public EditLoadDto Load(List<ItemIdentifier> items, int appId) => loadBackend.Value.Load(appId, items);
+    public EditLoadDto Load(List<ItemIdentifier> items, int appId)
+        => loadBackend.Value.Load(appId, items);
 
     public Dictionary<Guid, int> Save(EditSaveDto package, int appId, bool partOfPage)
         => saveBackendLazy.Value.Init(appId).Save(package, partOfPage);
