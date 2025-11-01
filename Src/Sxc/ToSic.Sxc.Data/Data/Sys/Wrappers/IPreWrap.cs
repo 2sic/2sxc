@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
+using ToSic.Eav.Data.Sys.PropertyLookup;
 using ToSic.Sxc.Data.Sys.Json;
 using ToSic.Sxc.Data.Sys.Typed;
 

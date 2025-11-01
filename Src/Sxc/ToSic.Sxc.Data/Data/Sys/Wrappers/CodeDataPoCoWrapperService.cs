@@ -1,4 +1,5 @@
 ﻿using System.Dynamic;
+using ToSic.Eav.Data.Sys.PropertyLookup;
 using ToSic.Sxc.Data.Sys.Dynamic;
 using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Data.Sys.Typed;

@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Data.Sys;
 using ToSic.Eav.Data.Sys.Entities;
+using ToSic.Eav.Data.Sys.PropertyLookup;
 using ToSic.Eav.Data.Sys.PropertyStack;
 using ToSic.Eav.Metadata;
 using ToSic.Razor.Blade;

@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Data.Sys.PropertyLookup;
 using ToSic.Eav.Data.Sys.PropertyStack;
 using ToSic.Sxc.Data.Sys.Json;
 using ToSic.Sxc.Data.Sys.Typed;

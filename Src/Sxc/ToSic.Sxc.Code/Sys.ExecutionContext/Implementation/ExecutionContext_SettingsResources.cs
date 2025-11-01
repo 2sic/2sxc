@@ -2,7 +2,7 @@
 using ToSic.Sxc.Apps.Sys;
 using ToSic.Sxc.Data;
 using static ToSic.Eav.Apps.Sys.AppStack.AppStackConstants;
-using SettingsSources = System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, ToSic.Eav.Data.IPropertyLookup>>;
+using SettingsSources = System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, ToSic.Eav.Data.Sys.PropertyLookup.IPropertyLookup>>;
 
 namespace ToSic.Sxc.Sys.ExecutionContext;
 

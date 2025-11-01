@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using ToSic.Eav.Data.Sys;
+using ToSic.Eav.Data.Sys.PropertyLookup;
 using ToSic.Eav.Sys;
 
 namespace ToSic.Sxc.Data.Sys.CodeDataFactory;

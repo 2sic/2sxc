@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Data.Sys.Wrappers;
+﻿using ToSic.Eav.Data.Sys.PropertyLookup;
+using ToSic.Sxc.Data.Sys.Wrappers;
 
 namespace ToSic.Sxc.Data.Sys.DynamicJacket;
 

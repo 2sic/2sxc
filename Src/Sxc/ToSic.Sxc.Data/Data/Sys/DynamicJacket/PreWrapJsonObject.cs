@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Nodes;
 using ToSic.Eav.Data.Sys.PropertyDump;
+using ToSic.Eav.Data.Sys.PropertyLookup;
 using ToSic.Eav.Data.Sys.PropertyStack;
 using ToSic.Sxc.Data.Sys.Typed;
 
