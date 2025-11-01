@@ -251,6 +251,10 @@
             <assembly>
               <name>ToSic.Sys.Features.dll</name>
             </assembly>
+            <!-- needed for DNN OData support new v20.09 - code may be moved to another DLL -->
+            <assembly>
+              <name>ToSic.Sys.OData.dll</name>
+            </assembly>
             <assembly>
               <name>ToSic.Sys.Security.dll</name>
             </assembly>
