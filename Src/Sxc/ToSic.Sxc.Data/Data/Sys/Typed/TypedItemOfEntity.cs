@@ -232,7 +232,7 @@ internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool prop
 
 
     IEnumerable<ITypedItem> ITypedItem.Parents(NoParamOrder noParamOrder, string? type, string? field, GetRelatedOptions? options)
-        => GetHelper.ParentsItems(entity: Entity, type: type, field: field, options: options ?? new());
+        => GetHelper.Converter.ParentsItems(entity: Entity, type: type, field: field, options: options ?? new());
 
     bool ITypedItem.IsPublished => Entity.IsPublished;
 
@@ -269,7 +269,7 @@ internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool prop
         }
 
         // Standard case: just get the direct children
-        var list = GetHelper.ChildrenItems(entity: Entity, field: field, type: type, options ?? new());
+        var list = GetHelper.Converter.ChildrenItems(entity: Entity, field: field, type: type, options ?? new());
         
         // Return list or special list if it's empty, as we need a special list which knows about this object being the parent
         return list.Any()

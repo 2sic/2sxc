@@ -168,11 +168,11 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
 
     /// <inheritdoc />
     public List<IDynamicEntity?> Parents(string? type = null, string? field = null)
-        => GetHelper.ParentsDyn(entity: Entity!, type: type, field: field);
+        => GetHelper.Converter.ParentsDyn(entity: Entity!, type: type, field: field);
 
     /// <inheritdoc />
     public List<IDynamicEntity?> Children(string? field = null, string? type = null)
-        => GetHelper.ChildrenDyn(Entity!, field: field, type: type);
+        => GetHelper.Converter.ChildrenDyn(Entity!, field: field, type: type);
 
     #endregion
 
