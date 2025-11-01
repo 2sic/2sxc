@@ -16,7 +16,8 @@ internal class GetAndConvertHelper(
     ICodeDataFactory cdf,
     bool propsRequired,
     bool childrenShouldBeDynamic,
-    ICanDebug canDebug)
+    ICanDebug canDebug,
+    IValueOverrider? overrider = default)
 {
     #region Setup and Log
 
@@ -45,7 +46,7 @@ internal class GetAndConvertHelper(
     public object? Get(string name, NoParamOrder noParamOrder = default, string? language = null, bool convertLinks = true, bool? debug = null)
     {
         _debug = debug;
-        var result = GetInternal(name, language, convertLinks).Result;
+        var result = GetInternal(name, language: language, lookupLink: convertLinks).Result;
         _debug = null;
 
         return result;
@@ -63,12 +64,20 @@ internal class GetAndConvertHelper(
     #region Get Values
 
     public TryGetResult TryGet(string field, string? language)
-        => GetInternal(field, language, lookupLink: false);
+        => GetInternal(field, language: language, lookupLink: false);
 
     public TryGetResult TryGet(string? field)
         => GetInternal(field, lookupLink: false);
 
-    public TryGetResult GetInternal(string? field, string? language = null, bool lookupLink = true)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="field"></param>
+    /// <param name="language"></param>
+    /// <param name="lookupLink"></param>
+    /// <param name="sourceOverrider">Optional helper for templating scenarios, which can replace the source with something else - typically for replacing "file:72" with something from a template</param>
+    /// <returns></returns>
+    public TryGetResult GetInternal(string? field, bool lookupLink, string? language = null, IValueOverrider? sourceOverrider = null)
     {
         var logOrNull = LogOrNull.SubLogOrNull("GnC.GetInt", Debug);
         var l = logOrNull.Fn<TryGetResult>($"Type: {Parent.GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookupLink)}:{lookupLink}");
@@ -98,12 +107,12 @@ internal class GetAndConvertHelper(
         var resultSet = Parent.PropertyLookup.FindPropertyInternal(specs, path);
 
         // check Entity is null (in cases where null-objects are asked for properties)
-        if (resultSet == null)
+        if (resultSet == null! /* paranoid */)
             return l.Return(new(false, null), "result null");
 
         l.A($"Result... IsFinal: {resultSet.IsFinal}, Source Name: {resultSet.Name}, SourceIndex: {resultSet.SourceIndex}, FieldType: {resultSet.ValueType}");
 
-        var result = ValueAutoConverted(resultSet, lookupLink, field, logOrNull);
+        var result = ValueAutoConverted(resultSet, lookupLink, field, sourceOverrider, logOrNull);
 
         // cache result, but only if using default languages
         l.A("add to cache");
@@ -119,21 +128,27 @@ internal class GetAndConvertHelper(
 
     private readonly Dictionary<string, TryGetResult> _rawValCache = new(InvariantCultureIgnoreCase);
 
-    private object? ValueAutoConverted(PropReqResult original, bool lookupLink, string field, ILog? logOrNull)
+    private object? ValueAutoConverted(PropReqResult original, bool lookupLink, string field, IValueOverrider? sourceOverrider, ILog? logOrNull)
     {
         var l = logOrNull.Fn<object?>($"..., {nameof(lookupLink)}: {lookupLink}, {nameof(field)}: {field}");
         var value = original.Result;
         var parent = original.Source as IEntity;
+
         // New mechanism to not use resolve-hyperlink
-        if (lookupLink && value is string strResult
-                       && original.ValueType == ValueTypesWithState.Hyperlink
-                       && ValueConverterBase.CouldBeReference(strResult))
+        if (lookupLink && value is string strMaybeLink && original.ValueType == ValueTypesWithState.Hyperlink)
         {
-            l.A("Try to convert value");
-            // ReSharper disable once ConstantNullCoalescingCondition - paranoid
-            value = Cdf.Services.ValueConverter.ToValue(strResult, parent?.EntityGuid ?? Guid.Empty) ?? value;
-            return l.Return(value, "link-conversion");
+            var strMaybeReference = sourceOverrider != null
+                ? sourceOverrider.String(field, strMaybeLink)
+                : strMaybeLink;
+            if (ValueConverterBase.CouldBeReference(strMaybeReference))
+            {
+                l.A("Try to convert value");
+                // ReSharper disable once ConstantNullCoalescingCondition - paranoid
+                value = Cdf.Services.ValueConverter.ToValue(strMaybeReference, parent?.EntityGuid ?? Guid.Empty) ?? value;
+                return l.Return(value, "link-conversion");
+            }
         }
+
 
         // note 2021-06-07 previously in created sub-entities with modified language-list; I think this is wrong
         // Note 2021-06-08 if the parent is _not_ an IEntity, this will throw an error. Could happen in the DynamicStack, but that should never have such children
@@ -158,11 +173,16 @@ internal class GetAndConvertHelper(
         if (canDebug.Debug)
             try
             {
-                    
                 var finalPath = string.Join(" > ", original.Path?.Parts?.ToArray() ?? []);
                 l.A($"Debug path: {finalPath}");
             }
             catch {/* ignore */}
+
+        if (value is string strResult && sourceOverrider != null)
+        {
+            var maybeOverride = sourceOverrider.String(field, strResult);
+            return l.Return(maybeOverride, "parsed");
+        }
 
         return l.Return(value, "unmodified");
     }

@@ -108,6 +108,31 @@ internal record TweakMedia(
 
     #endregion
 
+    #region TweakInput - attempted in v20.09 but doesn't work - reason is we would have to pass the tweak very, very deep into the system which we stopped
+
+    ///// <summary>
+    ///// Reuse the existing TweakInput to store input tweaks
+    ///// </summary>
+    //private TweakInput<string>? TweakInput { get; init; }
+
+    //[PublicApi]
+    //public ITweakMedia Input(string replace, NoParamOrder protector = default)
+    //    => this with { TweakInput = (TweakInput ?? new TweakInput<string>()).CloneWith(_ => replace) };
+
+    //[PublicApi]
+    //public ITweakMedia Input(Func<string> func, NoParamOrder protector = default)
+    //    => this with { TweakInput = (TweakInput ?? new TweakInput<string>()).CloneWith(_ => func()) };
+
+    //[PublicApi]
+    //public ITweakMedia Input(Func<string, string> func, NoParamOrder protector = default)
+    //    => this with { TweakInput = (TweakInput ?? new TweakInput<string>()).CloneWith(tv => func(tv.Value!)) };
+
+    //[PublicApi]
+    //public ITweakMedia Process(Func<ITweakData<string>, string> func, NoParamOrder protector = default)
+    //    => this with { TweakInput = (TweakInput ?? new TweakInput<string>()).CloneWith(func) };
+
+    #endregion
+
     internal static IDictionary<string, object?>? CreateAttribDic(object? attributes, string name)
         => attributes switch
         {

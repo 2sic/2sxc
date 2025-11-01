@@ -2,7 +2,9 @@
 using ToSic.Eav.LookUp.Sources;
 using ToSic.Eav.LookUp.Sys.Engines;
 using ToSic.Sxc.Blocks.Sys;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.Sys.Factory;
+using ToSic.Sxc.Data.Sys.Typed;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.Template;
 using ToSic.Sxc.Sys.ExecutionContext;
@@ -108,4 +110,37 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : 
 
     #endregion
 
+    #region Create Templated Entity
+
+    public ITypedItem ParseAsItem(ICanBeEntity original, NoParamOrder protector = default, bool allowHtml = false, ITemplateEngine? parser = null, IEnumerable<ILookUp>? sources = null)
+    {
+        var entity = original.Entity;
+        if (entity == null)
+            throw new ArgumentException(@"The original item must have an entity", nameof(original));
+
+        parser ??= Empty(sources: sources);
+
+        var templated = new TypedItemOfEntityWithOverrides(entity, Cdf, true, new ValueTemplateParser(parser));
+        return templated;
+    }
+
+    public T ParseAs<T>(ICanBeEntity original, NoParamOrder protector = default, bool allowHtml = false, ITemplateEngine? parser = null, IEnumerable<ILookUp>? sources = null)
+        where T : class, ICanWrapData
+    {
+        var templated = ParseAsItem(original, protector, allowHtml, parser, sources);
+        return Cdf.AsCustom<T>(source: templated);
+    }
+
+
+    private class ValueTemplateParser(ITemplateEngine? parser, bool allowHtml = false) : IValueOverrider
+    {
+        public string? String(string name, string? originalValue)
+            => originalValue == null || parser == null
+                ? null
+                : parser.Parse(originalValue, allowHtml: allowHtml);
+    }
+    #endregion
+
+
 }
+

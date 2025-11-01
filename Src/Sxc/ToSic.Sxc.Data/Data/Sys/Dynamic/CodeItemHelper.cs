@@ -74,10 +74,10 @@ internal class CodeItemHelper(GetAndConvertHelper helper, ITyped data)
     }
 
 
-    public string? Url(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
+    public string? Url(string name, NoParamOrder noParamOrder, string? fallback, bool? required, IValueOverrider? sourceOverrider = null)
     {
         // TODO: STRICT
-        var url = Helper.GetInternal(name, lookupLink: true).Result as string;
+        var url = Helper.GetInternal(name, lookupLink: true, sourceOverrider: sourceOverrider).Result as string;
         return Tags.SafeUrl(url).ToString();
     }
 

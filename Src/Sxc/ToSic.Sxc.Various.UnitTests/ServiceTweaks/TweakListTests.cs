@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Services.Tweaks;
+using ToSic.Sxc.Services.Tweaks.Sys;
 
 namespace ToSic.Sxc.Tests.ServiceTweaks;
 
@@ -18,8 +19,8 @@ public class TweakListTests
     [Fact]
     public void CloneHasSameTweaks()
     {
-        var tw = new TweakConfigs(null, new("test"));
-        tw = new(tw, new("test2"));
+        var tw = new TweakConfigs(null, new((string)"test"));
+        tw = new((TweakConfigs?)tw, new((string)"test2"));
         var tw2 = new TweakConfigs(tw);
         NotSame(tw, tw2);
         Equal(tw.List.Count, tw2.List.Count);

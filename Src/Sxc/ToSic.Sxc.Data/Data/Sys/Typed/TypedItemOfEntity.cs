@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Data.Sys.Typed;
 
 [JsonConverter(typeof(DynamicJsonConverter))]
 [ShowApiWhenReleased(ShowApiMode.Never)]
-internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool propsRequired)
+internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool propsRequired, IValueOverrider? overrider = default)
     // ReSharper disable RedundantExtendsListEntry
     : ITypedItem, IHasPropLookup, ICanDebug, ICanBeItem, ICanGetByName, IWrapper<IEntity>,
         IEntityWrapper, IHasMetadata, IHasJsonSource
@@ -51,13 +51,14 @@ internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool prop
     #region Private Helpers / Services
 
     [field: AllowNull, MaybeNull]
-    private GetAndConvertHelper GetHelper => field ??= new(this, Cdf, propsRequired, childrenShouldBeDynamic: false, canDebug: this);
+    private GetAndConvertHelper GetHelper => field ??= new(this, Cdf, propsRequired, childrenShouldBeDynamic: false, canDebug: this, overrider: overrider);
 
     [field: AllowNull, MaybeNull]
     private CodeDynHelper DynHelper => field ??= new(Entity, new(Cdf, propsRequired, canDebug: this));
 
     [field: AllowNull, MaybeNull]
     private CodeItemHelper ItemHelper => field ??= new(GetHelper, this);
+    protected internal CodeItemHelper ItemHelperForDescendants => ItemHelper;
 
     #endregion
 
@@ -180,7 +181,7 @@ internal class TypedItemOfEntity(IEntity entity, ICodeDataFactory cdf, bool prop
 
     #endregion
         
-    #region ADAM
+    #region ADAM - Folder and File
 
     IFolder ITypedItem.Folder(string name, NoParamOrder noParamOrder, bool? required)
         => IsErrStrictNameRequired(this, name, required, GetHelper.PropsRequired)

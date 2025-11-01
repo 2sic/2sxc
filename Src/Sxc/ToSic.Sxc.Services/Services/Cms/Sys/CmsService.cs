@@ -5,6 +5,7 @@ using ToSic.Sxc.Data.Sys.Factory;
 using ToSic.Sxc.Services.Sys;
 using ToSic.Sxc.Services.Sys.Cms;
 using ToSic.Sxc.Services.Tweaks;
+using ToSic.Sxc.Services.Tweaks.Sys;
 using ToSic.Sxc.Sys.ExecutionContext;
 using InputTypes = ToSic.Sxc.Data.Sys.InputTypes;
 
@@ -100,7 +101,7 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
         try
         {
             var tweakHtml = (TweakInput<string>)tweak(new TweakInput<string>());
-            var valueTweak = tweakHtml.Preprocess(value);
+            var valueTweak = tweakHtml.Tweaks.Preprocess(value);
             return l.Return(valueTweak.Value, "tweaked");
         }
         catch (Exception e)

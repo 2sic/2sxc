@@ -1,4 +1,4 @@
-﻿namespace ToSic.Sxc.Services.Tweaks;
+﻿namespace ToSic.Sxc.Services.Tweaks.Sys;
 
 /// <summary>
 /// Container for a value (data) to tweak.

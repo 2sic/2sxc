@@ -89,7 +89,8 @@ public interface ITemplateService
     /// Quick parse a template using the default engine, and optional sources.
     /// </summary>
     /// <param name="template"></param>
-    /// <param name="protector"></param>
+    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="allowHtml">allow adding html to the string - if false (default) will html encode anything found for safety before replacing something</param>
     /// <param name="sources"></param>
     /// <returns></returns>
     string Parse(string template, NoParamOrder protector = default, bool allowHtml = false, IEnumerable<ILookUp>? sources = default);
@@ -105,4 +106,24 @@ public interface ITemplateService
     /// Added v17.09
     /// </remarks>
     ILookUp MergeSources(string name, IEnumerable<ILookUp> sources);
+
+    /// <summary>
+    /// Take an entity, TypedItem or similar object, and return a TypedItem which will run its values through the parser.
+    /// The result can be used as an ITypedItem, or converted to custom 
+    /// </summary>
+    /// <param name="original"></param>
+    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="allowHtml">allow adding html to the string - if false (default) will html encode anything found for safety before replacing something</param>
+    /// <param name="parser">A prepared parser - takes preference over `sources`</param>
+    /// <param name="sources">A list of sources to create a parser</param>
+    /// <returns></returns>
+    /// <remarks>
+    /// WIP v20.09
+    ///
+    /// If neither parser nor sources are provided, an empty parser will be used, resulting in no changes to the original values.
+    /// </remarks>
+    ITypedItem ParseAsItem(ICanBeEntity original, NoParamOrder protector = default, bool allowHtml = false, ITemplateEngine? parser = null, IEnumerable<ILookUp>? sources = null);
+
+    T ParseAs<T>(ICanBeEntity original, NoParamOrder protector = default, bool allowHtml = false, ITemplateEngine? parser = null, IEnumerable<ILookUp>? sources = null)
+        where T : class, ICanWrapData;
 }

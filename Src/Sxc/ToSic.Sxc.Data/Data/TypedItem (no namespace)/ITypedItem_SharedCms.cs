@@ -101,7 +101,7 @@ partial interface ITypedItem
     /// - string containing variants
     /// - Rule object
     /// 
-    /// TODO: DOCS not quite ready
+    /// TO DO: DOCS for this not quite ready
     /// </param>
     /// <returns>
     /// * A <see cref="IResponsivePicture"/> object which can be rendered directly. See [](xref:NetCode.Images.Index)
