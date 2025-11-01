@@ -124,7 +124,7 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : 
 
         parser ??= Empty(sources: sources);
 
-        var templated = new TypedItemOfEntity(entity, Cdf, true, overrider: new ValueTemplateParser(parser));
+        var templated = new TypedItemOfEntity(entity, Cdf, true, overrider: new ValueTemplateParser(parser, null));
         return templated;
     }
 
@@ -140,8 +140,32 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : 
     }
 
 
-    private class ValueTemplateParser(ITemplateEngine? parser, bool allowHtml = false) : IValueOverrider
+    private class ValueTemplateParser(ITemplateEngine? parser, ILookUp? overrides, bool allowHtml = false) : IValueOverrider
     {
+        #region Experiment - but decided for now that it's too much compute for something which is extremely rarely used, and can be done with an if-statement in the code
+        //public object? OverrideRaw(string name)
+        //{
+        //    if (overrides == null)
+        //        return null;
+        //    var found = overrides.Get(name);
+        //    return string.IsNullOrEmpty(found) ? null : found;
+        //}
+
+        //public T? OverrideRaw<T>(string name)
+        //{
+        //    if (overrides == null)
+        //        return default;
+        //    if (overrides is IWrapper<IEntity> entityLookUp)
+        //    {
+        //        var entity = entityLookUp.GetContents();
+        //        if (entity != null)
+        //            return entity.Get<T>(name);
+        //    }
+        //    var found = overrides.Get(name);
+        //    return found.ConvertOrDefault<T>();
+        //}
+        #endregion
+
         public string? ProcessString(string name, string? originalValue)
             => originalValue == null || parser == null
                 ? null

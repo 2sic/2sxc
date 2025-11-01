@@ -27,7 +27,7 @@ internal class CodeDynHelper(IEntity entity, SubDataFactory subDataFactory)
 
     public static bool TryGetMemberAndRespectStrict(GetAndConvertHelper helper, GetMemberBinder binder, out object? result)
     {
-        var findResult = helper.GetInternal(binder.Name, lookupLink: true);
+        var findResult = helper.TryGet(binder.Name, lookupLink: true);
         // ReSharper disable once ExplicitCallerInfoArgument
         if (!findResult.Found && helper.PropsRequired)
             throw TypedHelpers.ErrStrict(binder.Name, cName: ".");

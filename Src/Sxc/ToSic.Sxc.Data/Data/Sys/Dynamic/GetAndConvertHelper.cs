@@ -10,6 +10,7 @@ using static System.StringComparer;
 
 namespace ToSic.Sxc.Data.Sys.Dynamic;
 
+/// <param name="overrider">Optional helper for templating scenarios, which can replace the source with something else - typically for replacing "file:72" with something from a template</param>
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal class GetAndConvertHelper(
     IHasPropLookup parent,
@@ -40,13 +41,13 @@ internal class GetAndConvertHelper(
 
     #region Get Implementations 1:1 - names must be identical with caller, so the exceptions have the right names
 
-    public object? Get(string name) => GetInternal(name, lookupLink: true).Result;
+    public object? Get(string name) => TryGet(name, lookupLink: true).Result;
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
     public object? Get(string name, NoParamOrder noParamOrder = default, string? language = null, bool convertLinks = true, bool? debug = null)
     {
         _debug = debug;
-        var result = GetInternal(name, language: language, lookupLink: convertLinks).Result;
+        var result = TryGet(name, language: language, lookupLink: convertLinks).Result;
         _debug = null;
 
         return result;
@@ -61,13 +62,7 @@ internal class GetAndConvertHelper(
 
     #endregion
 
-    #region Get Values
-
-    public TryGetResult TryGet(string field, string? language)
-        => GetInternal(field, language: language, lookupLink: false);
-
-    public TryGetResult TryGet(string? field)
-        => GetInternal(field, lookupLink: false);
+    #region Try-Get Values
 
     /// <summary>
     /// 
@@ -75,9 +70,8 @@ internal class GetAndConvertHelper(
     /// <param name="field"></param>
     /// <param name="language"></param>
     /// <param name="lookupLink"></param>
-    /// <param name="sourceOverrider">Optional helper for templating scenarios, which can replace the source with something else - typically for replacing "file:72" with something from a template</param>
     /// <returns></returns>
-    public TryGetResult GetInternal(string? field, bool lookupLink, string? language = null)
+    public TryGetResult TryGet(string? field, string? language = null, bool lookupLink = false)
     {
         var logOrNull = LogOrNull.SubLogOrNull("GnC.GetInt", Debug);
         var l = logOrNull.Fn<TryGetResult>($"Type: {Parent.GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookupLink)}:{lookupLink}");
@@ -134,7 +128,7 @@ internal class GetAndConvertHelper(
         var value = original.Result;
         var parent = original.Source as IEntity;
 
-        // New mechanism to not use resolve-hyperlink
+        // If it's a reference like "file:72", try to convert it
         if (lookupLink && value is string strMaybeLink && original.ValueType == ValueTypesWithState.Hyperlink)
         {
             var strMaybeReference = overrider != null

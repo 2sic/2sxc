@@ -77,7 +77,7 @@ internal class CodeItemHelper(GetAndConvertHelper helper, ITyped data)
     public string? Url(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
     {
         // TODO: STRICT
-        var url = Helper.GetInternal(name, lookupLink: true).Result as string;
+        var url = Helper.TryGet(name, lookupLink: true).Result as string;
         return Tags.SafeUrl(url).ToString();
     }
 
