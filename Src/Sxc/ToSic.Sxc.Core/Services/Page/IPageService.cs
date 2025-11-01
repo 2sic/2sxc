@@ -155,4 +155,8 @@ public partial interface IPageService
 
     #endregion
 
+    /// <summary>
+    /// List of all feature keys which were ever added. Will never be cleared.
+    /// </summary>
+    internal List<string> FeatureKeysAdded { get; }
 }

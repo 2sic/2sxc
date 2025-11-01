@@ -42,7 +42,7 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     internal ResizeSettings Settings => Tweaker.ResizeSettings;
 
     private OneResize ThisResize => _thisResize.Get(() => { 
-        var t = ImgService.ImgLinker.ImageOnly(Target.Link.Url, Settings, Target.HasMdOrNull);
+        var t = ImgService.ImgLinker.ImgResizeSettings(Target.Link.Url, Settings, Target.HasMdOrNull, overrideFramework: ImgService.OverrideCssFramework);
         Log.A(ImgService.Debug, $"{nameof(ThisResize)}: " + t.Dump());
         return t;
     })!;
@@ -133,7 +133,7 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
             : original.Attr(LightboxHelpers.Attribute);
 
         var lsSettings = ImgService.SettingsInternal(LightboxHelpers.SettingsName);
-        var lsUrl = ImgService.ImgLinker.ImageOnly(Target.Link?.Url, settings: lsSettings, Target.HasMdOrNull).Url;
+        var lsUrl = ImgService.ImgLinker.ImgResizeSettings(Target.Link.Url, settings: lsSettings, Target.HasMdOrNull, overrideFramework: ImgService.OverrideCssFramework).Url;
         
         // Add Lightbox caption and src
         var caption = Alt + description;
@@ -280,7 +280,7 @@ public abstract record ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
         var l = (ImgService.Debug ? Log : null).Fn<string?>($"{nameof(isEnabled)}: {isEnabled}, {nameof(hasVariants)}: {hasVariants}");
         return isEnabled && hasVariants
             ? l.Return(ImgService.ImgLinker.SrcSet(Target.Link.Url!, Settings, SrcSetType.Img,
-                Target.HasMdOrNull))
+                Target.HasMdOrNull, overrideFramework: ImgService.OverrideCssFramework))
             : l.ReturnNull();
     }
 

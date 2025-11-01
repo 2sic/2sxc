@@ -67,8 +67,8 @@ public record ResponsivePicture: ResponsiveBase, IResponsivePicture
                 // We must copy the settings, because we change them and this shouldn't affect anything else
                 var formatSettings = new ResizeSettings(resizeSettings, format: resizeFormat != defFormat ? resizeFormat.Format : null);
                 var srcSet = useMultiSrcSet
-                    ? ImgService.ImgLinker.SrcSet(url, formatSettings, SrcSetType.Source, Target.HasMdOrNull)
-                    : ImgService.ImgLinker.ImageOnly(url, formatSettings, Target.HasMdOrNull).Url;
+                    ? ImgService.ImgLinker.SrcSet(url, formatSettings, SrcSetType.Source, Target.HasMdOrNull, overrideFramework: ImgService.OverrideCssFramework)
+                    : ImgService.ImgLinker.ImgResizeSettings(url, formatSettings, Target.HasMdOrNull, overrideFramework: ImgService.OverrideCssFramework).Url;
                 var source = ToSic.Razor.Blade.Tag.Source().Type(resizeFormat.MimeType).Srcset(srcSet);
                 if (!string.IsNullOrEmpty(Sizes)) source.Sizes(Sizes);
                 return source;

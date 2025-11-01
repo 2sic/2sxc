@@ -8,10 +8,10 @@ namespace ToSic.Sxc.Web.Sys.PageFeatures;
 internal class PageFeatures(IPageFeaturesManager pfm) : IPageFeatures
 {
     /// <inheritdoc />
-    public IEnumerable<string> Activate(params string[] keys)
+    public IEnumerable<string> Activate(string[] keys)
     {
         var realKeys = keys.TrimmedAndWithoutEmpty();
-        FeatureKeys.AddRange(realKeys);
+        FeatureKeysRecent.AddRange(realKeys);
         return realKeys;
     }
 
@@ -19,6 +19,7 @@ internal class PageFeatures(IPageFeaturesManager pfm) : IPageFeatures
     /// Must be a real List, because it will be modified.
     /// </summary>
     private List<PageFeatureFromSettings> FeaturesFromSettings { get; } = [];
+
     private List<PageFeatureFromSettings> FeaturesFromSettingsProcessed { get; } = [];
 
     public void FeaturesFromSettingsAdd(PageFeatureFromSettings newFeature)
@@ -55,14 +56,19 @@ internal class PageFeatures(IPageFeaturesManager pfm) : IPageFeatures
         return l.Return(newFeatures, $"{newFeatures.Count}");
     }
 
-    private List<string> FeatureKeys { get; } = [];
+    /// <summary>
+    /// The recently added feature keys.
+    /// Will be flushed regularly, as each module will make sure that it's added to the page.
+    /// </summary>
+    private List<string> FeatureKeysRecent { get; } = [];
+
 
 
     public List<IPageFeature> GetFeaturesWithDependentsAndFlush(ILog log)
     {
         var l = log.Fn<List<IPageFeature>>();
-        var unfolded = GetWithDependents([.. FeatureKeys], log);
-        FeatureKeys.Clear();
+        var unfolded = GetWithDependents([.. FeatureKeysRecent], log);
+        FeatureKeysRecent.Clear();
         return l.Return(unfolded);
     }
 
@@ -73,5 +79,4 @@ internal class PageFeatures(IPageFeaturesManager pfm) : IPageFeatures
         var unfolded = pfm.GetWithDependents(features);
         return l.Return(unfolded, $"Got unfolded features {unfolded.Count}");
     }
-
 }

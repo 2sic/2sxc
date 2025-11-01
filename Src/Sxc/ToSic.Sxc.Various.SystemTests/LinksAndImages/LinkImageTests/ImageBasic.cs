@@ -100,7 +100,7 @@ public class ImageBasic(LinkImageTestHelper helper)// : LinkImageTestBase
     public void ErrorHeightAndAspectRatio()
     {
         var linker = helper.GetLinker();
-        Throws<ArgumentOutOfRangeException>(() => linker.Image("test.jpg", height: 200, aspectRatio: 1));
+        Throws<ArgumentOutOfRangeException>(() => linker.ImageUrl("test.jpg", height: 200, aspectRatio: 1));
     }
 
 

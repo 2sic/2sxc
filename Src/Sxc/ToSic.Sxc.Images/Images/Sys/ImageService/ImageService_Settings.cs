@@ -1,5 +1,6 @@
 ﻿using ToSic.Sxc.Images.Sys.ResizeSettings;
 using ToSic.Sys.Utils;
+using static Connect.Koi.CssFrameworks;
 
 namespace ToSic.Sxc.Images.Sys;
 
@@ -26,7 +27,7 @@ partial class ImageService
         parameters: parameters, recipe: recipe);
 
     /// <summary>
-    /// Internal Get-Settings, with internal type.
+    /// Internal Get-Settings, with class result (not interface).
     /// </summary>
     /// <returns>an internal settings record which could be further manipulated</returns>
     internal ResizeSettings.ResizeSettings SettingsInternal(
@@ -107,4 +108,29 @@ partial class ImageService
     )
         => new(recipe, name: name, width: width, variants: variants, attributes: attributes, recipes: recipes, 
             setWidth: setWidth, setHeight: setHeight, forTag: forTag, forFactor: forFactor, forCss: forCss);
+
+    internal string? OverrideCssFramework
+    {
+        get
+        {
+            // If Koi knows the framework, then no need to check features
+            if (!imgLinker.Koi.IsUnknown)
+                return null;
+
+            // Get list of features, and only re-check if the count changed
+            var fka = PageService.FeatureKeysAdded;
+            if (fka.Count == _lastCheckCount)
+                return field;
+            _lastCheckCount = fka.Count;
+
+            // Determine framework override
+            // Note that BootstrapX is more of a test flag, so check it first
+            return field = fka.Contains("BootstrapX") ? "bsX"
+                : fka.Contains(nameof(Bootstrap6)) ? Bootstrap6
+                : fka.Contains(nameof(Bootstrap5)) ? Bootstrap5
+                : null;
+        }
+    }
+
+    private int _lastCheckCount;
 }
