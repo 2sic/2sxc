@@ -112,7 +112,11 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : 
 
     #region Create Templated Entity
 
-    public ITypedItem ParseAsItem(ICanBeEntity original, NoParamOrder protector = default, bool allowHtml = false, ITemplateEngine? parser = null, IEnumerable<ILookUp>? sources = null)
+    public ITypedItem ParseAsItem(ICanBeEntity original, NoParamOrder protector = default,
+        bool allowHtml = false,
+        ITemplateEngine? parser = null,
+        IEnumerable<ILookUp>? sources = null
+    )
     {
         var entity = original.Entity;
         if (entity == null)
@@ -120,11 +124,15 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : 
 
         parser ??= Empty(sources: sources);
 
-        var templated = new TypedItemOfEntityWithOverrides(entity, Cdf, true, new ValueTemplateParser(parser));
+        var templated = new TypedItemOfEntity(entity, Cdf, true, overrider: new ValueTemplateParser(parser));
         return templated;
     }
 
-    public T ParseAs<T>(ICanBeEntity original, NoParamOrder protector = default, bool allowHtml = false, ITemplateEngine? parser = null, IEnumerable<ILookUp>? sources = null)
+    public T ParseAs<T>(ICanBeEntity original, NoParamOrder protector = default,
+        bool allowHtml = false,
+        ITemplateEngine? parser = null,
+        IEnumerable<ILookUp>? sources = null
+    )
         where T : class, ICanWrapData
     {
         var templated = ParseAsItem(original, protector, allowHtml, parser, sources);
@@ -134,7 +142,7 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : 
 
     private class ValueTemplateParser(ITemplateEngine? parser, bool allowHtml = false) : IValueOverrider
     {
-        public string? String(string name, string? originalValue)
+        public string? ProcessString(string name, string? originalValue)
             => originalValue == null || parser == null
                 ? null
                 : parser.Parse(originalValue, allowHtml: allowHtml);

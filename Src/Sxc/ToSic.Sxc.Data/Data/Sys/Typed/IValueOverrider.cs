@@ -8,5 +8,5 @@ internal interface IValueOverrider
     /// <param name="name"></param>
     /// <param name="originalValue"></param>
     /// <returns></returns>
-    string? String(string name, string? originalValue);
+    string? ProcessString(string name, string? originalValue);
 }

@@ -77,7 +77,7 @@ internal class GetAndConvertHelper(
     /// <param name="lookupLink"></param>
     /// <param name="sourceOverrider">Optional helper for templating scenarios, which can replace the source with something else - typically for replacing "file:72" with something from a template</param>
     /// <returns></returns>
-    public TryGetResult GetInternal(string? field, bool lookupLink, string? language = null, IValueOverrider? sourceOverrider = null)
+    public TryGetResult GetInternal(string? field, bool lookupLink, string? language = null)
     {
         var logOrNull = LogOrNull.SubLogOrNull("GnC.GetInt", Debug);
         var l = logOrNull.Fn<TryGetResult>($"Type: {Parent.GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookupLink)}:{lookupLink}");
@@ -112,7 +112,7 @@ internal class GetAndConvertHelper(
 
         l.A($"Result... IsFinal: {resultSet.IsFinal}, Source Name: {resultSet.Name}, SourceIndex: {resultSet.SourceIndex}, FieldType: {resultSet.ValueType}");
 
-        var result = ValueAutoConverted(resultSet, lookupLink, field, sourceOverrider, logOrNull);
+        var result = ValueAutoConverted(resultSet, lookupLink, field, logOrNull);
 
         // cache result, but only if using default languages
         l.A("add to cache");
@@ -128,7 +128,7 @@ internal class GetAndConvertHelper(
 
     private readonly Dictionary<string, TryGetResult> _rawValCache = new(InvariantCultureIgnoreCase);
 
-    private object? ValueAutoConverted(PropReqResult original, bool lookupLink, string field, IValueOverrider? sourceOverrider, ILog? logOrNull)
+    private object? ValueAutoConverted(PropReqResult original, bool lookupLink, string field, ILog? logOrNull)
     {
         var l = logOrNull.Fn<object?>($"..., {nameof(lookupLink)}: {lookupLink}, {nameof(field)}: {field}");
         var value = original.Result;
@@ -137,8 +137,8 @@ internal class GetAndConvertHelper(
         // New mechanism to not use resolve-hyperlink
         if (lookupLink && value is string strMaybeLink && original.ValueType == ValueTypesWithState.Hyperlink)
         {
-            var strMaybeReference = sourceOverrider != null
-                ? sourceOverrider.String(field, strMaybeLink)
+            var strMaybeReference = overrider != null
+                ? overrider.ProcessString(field, strMaybeLink)
                 : strMaybeLink;
             if (ValueConverterBase.CouldBeReference(strMaybeReference))
             {
@@ -178,9 +178,9 @@ internal class GetAndConvertHelper(
             }
             catch {/* ignore */}
 
-        if (value is string strResult && sourceOverrider != null)
+        if (value is string strResult && overrider != null)
         {
-            var maybeOverride = sourceOverrider.String(field, strResult);
+            var maybeOverride = overrider.ProcessString(field, strResult);
             return l.Return(maybeOverride, "parsed");
         }
 
