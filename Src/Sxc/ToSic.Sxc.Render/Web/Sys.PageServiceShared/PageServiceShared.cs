@@ -14,7 +14,12 @@ public partial class PageServiceShared(IPageFeatures pageFeatures, IFeaturesServ
     : IPageServiceShared, IPageServiceSharedInternal, IChangeQueue
 {
     internal readonly IFeaturesService FeaturesService = featuresService;
+
+    /// <summary>
+    /// The current page features
+    /// </summary>
     public IPageFeatures PageFeatures { get; } = pageFeatures;
+
     public CspOfModule Csp { get; } = csp;
 
     [field: AllowNull, MaybeNull]
