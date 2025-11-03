@@ -308,7 +308,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
             // Compile the template into an assembly
             var compiler = GetCSharpCodeProvider();
             lTimer = Log.Fn("Compile", timer: true);
-            var compilerParameters = RazorCompilerParameters(referencedAssemblies, outputAssemblyPath);
+            var compilerParameters = RoslynCompilerParameters(referencedAssemblies, outputAssemblyPath);
             var compilerResults = compiler.CompileAssemblyFromDom(compilerParameters, razorResults.GeneratedCode);
             lTimer.Done();
 
@@ -350,7 +350,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
         private const int CSharpCodeProviderCacheMinutes = 5;   // basic idea is that at startup, there is usually more to compile, after a while it's not so important any more.
 
 
-        private CompilerParameters RazorCompilerParameters(List<string> referencedAssemblies, string? outputAssemblyPath = null)
+        private CompilerParameters RoslynCompilerParameters(List<string> referencedAssemblies, string? outputAssemblyPath = null)
         {
             var compilerParameters = new CompilerParameters([.. referencedAssemblies])
             {
@@ -365,13 +365,12 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
                 var outDir = Path.GetDirectoryName(outputAssemblyPath);
                 if (!Directory.Exists(outDir)) Directory.CreateDirectory(outDir);
                 compilerParameters.OutputAssembly = outputAssemblyPath;
-                // ensure pdbs end up next to dll
-                compilerParameters.TempFiles = new TempFileCollection(outDir, false);
+                // Prevents pollution of the main cache directory with .cs, .cmdline, .err, .out, .tmp files
+                compilerParameters.TempFiles = new TempFileCollection(EnsureTempDir(outDir));
             }
 
             return compilerParameters;
         }
-
 
         /// <summary>
         /// Compiles the C# code into an assembly.
@@ -382,20 +381,7 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
             var l = Log.Fn<(Assembly, List<CompilerError>)>(timer: true, parameters: $"C# code content length: {csharpCode.Length}");
 
             var lTimer = Log.Fn("Compiler Params", timer: true);
-            var compilerParameters = new CompilerParameters([.. referencedAssemblies])
-            {
-                GenerateInMemory = !diskCacheService.IsEnabled() && string.IsNullOrEmpty(outputAssemblyPath),
-                IncludeDebugInformation = true,
-                TreatWarningsAsErrors = false,
-                CompilerOptions = DnnRoslynConstants.CompilerOptions,
-            };
-            if (diskCacheService.IsEnabled() && !string.IsNullOrEmpty(outputAssemblyPath))
-            {
-                var outDir = Path.GetDirectoryName(outputAssemblyPath);
-                if (!Directory.Exists(outDir)) Directory.CreateDirectory(outDir);
-                compilerParameters.OutputAssembly = outputAssemblyPath;
-                compilerParameters.TempFiles = new TempFileCollection(outDir, false);
-            }
+            var compilerParameters = RoslynCompilerParameters(referencedAssemblies, outputAssemblyPath);
             lTimer.Done();
 
             // Compile the C# code into an assembly
@@ -538,6 +524,18 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
 
             var engine = new RazorTemplateEngine(host);
             return l.ReturnAsOk(engine);
+        }
+
+        /// <summary>
+        /// Use temp directory for compilation artifacts.
+        /// </summary>
+        /// <param name="outDir"></param>
+        /// <returns></returns>
+        private static string EnsureTempDir(string outDir)
+        {
+            var tempDir = Path.Combine(outDir, "temp");
+            if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
+            return tempDir;
         }
     }
 }
