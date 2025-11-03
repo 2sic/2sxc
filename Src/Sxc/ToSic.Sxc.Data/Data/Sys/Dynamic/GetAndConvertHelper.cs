@@ -112,7 +112,7 @@ internal class GetAndConvertHelper(
         return l.Return(final, "ok");
     }
 
-    private readonly Dictionary<string, TryGetResult> _rawValCache = new(InvariantCultureIgnoreCase);
+    private readonly Dictionary<string, TryGetResult> _rawValCache = new();
 
     #endregion
 }
