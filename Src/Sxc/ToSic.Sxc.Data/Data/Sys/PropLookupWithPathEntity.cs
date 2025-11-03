@@ -20,7 +20,7 @@ internal class PropLookupWithPathEntity(IEntity entity, ICanDebug canDebug) :
         if (!specs.Field.HasValue())
             return l.Return(PropReqResult.Null(path), "no path");
 
-        path = path.KeepOrNew().Add("DynEnt", specs.Field);
+        path = path.Add("DynEnt", specs.Field);
         var isPath = specs.Field.Contains(PropertyStack.PathSeparator.ToString());
         var propRequest = !isPath
             ? Entity.FindPropertyInternal(specs, path)
