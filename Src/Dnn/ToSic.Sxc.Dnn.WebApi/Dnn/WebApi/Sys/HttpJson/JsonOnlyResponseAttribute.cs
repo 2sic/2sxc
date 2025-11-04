@@ -1,6 +1,9 @@
 ﻿using System.Net.Http.Formatting;
+using System.Web;
 using System.Web.Http.Controllers;
+using System.Web.Http.Dependencies;
 using System.Web.Http.Filters;
+using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Eav.WebApi.Sys.Helpers.Json;
 
@@ -32,7 +35,6 @@ public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfi
             l.A("Will remove the default XmlFormatter");
             formatters.Remove(formatters.XmlFormatter);
 
-
             // Get JsonFormatterAttribute from controller - would mark the controller to use System.Text.Json
             var customAttributes = GetCustomAttributes(controllerDescriptor.ControllerType);
             var jsonFormatterAttribute = customAttributes.OfType<JsonFormatterAttribute>().FirstOrDefault();
@@ -57,7 +59,7 @@ public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfi
             if (!formatters.OfType<SystemTextJsonMediaTypeFormatter>().Any())
             {
                 l.A($"Will add {nameof(SystemTextJsonMediaTypeFormatter)}");
-                formatters.Insert(0, SystemTextJsonMediaTypeFormatterFactory(jsonFormatterAttribute, controllerDescriptor));
+                formatters.Insert(0, SystemTextJsonMediaTypeFormatterFactory(controllerDescriptor, jsonFormatterAttribute));
             }
             else
                 l.A($"It has a {nameof(SystemTextJsonMediaTypeFormatter)}, so won't add.");
@@ -84,28 +86,24 @@ public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfi
         var testThrow = false;
         try
         {
+            var controllerDescriptor = context.ControllerContext.ControllerDescriptor;
+
             // Get JsonFormatterAttribute from action **Method**
-            var jsonFormatterAttributeOnAction = context.ActionDescriptor.GetCustomAttributes<JsonFormatterAttribute>()
-                .FirstOrDefault();
-            // Nothing to do when JsonFormatterAttribute is missing on action method
+            var jsonFormatterAttributeOnAction = context.ActionDescriptor.GetCustomAttributes<JsonFormatterAttribute>().FirstOrDefault();
             if (jsonFormatterAttributeOnAction == null)
             {
-                l.Done($"No custom {nameof(JsonFormatterAttribute)} on method, will leave serializers intact.");
-                return;
-            }
+                l.A($"{nameof(JsonFormatterAttribute)} is missing on action method.");
 
-            l.A($"Method has custom {nameof(JsonFormatterAttribute)}");
-
-            // For older apis we need to leave (when JsonFormatterAttribute is missing on action method)
-            var controllerDescriptor = context.ControllerContext.ControllerDescriptor;
-            var controllerHasDefaultToOld = GetCustomAttributes(controllerDescriptor.ControllerType)
-                .OfType<DefaultToNewtonsoftForHttpJsonAttribute>().Any();
-            if (controllerHasDefaultToOld)
-            {
-                l.Done(
-                    $"Controller has {nameof(DefaultToNewtonsoftForHttpJsonAttribute)}, will exit leaving old serializers.");
-                return;
+                // For older apis we need to leave (when JsonFormatterAttribute is missing on action method)
+                var controllerHasDefaultToOld = GetCustomAttributes(controllerDescriptor.ControllerType).OfType<DefaultToNewtonsoftForHttpJsonAttribute>().Any();
+                if (controllerHasDefaultToOld)
+                {
+                    l.Done($"Controller has {nameof(DefaultToNewtonsoftForHttpJsonAttribute)}, will exit leaving old serializers.");
+                    return;
+                }
             }
+            else
+                l.A($"Method has custom {nameof(JsonFormatterAttribute)}");
 
             var formatters = controllerDescriptor.Configuration.Formatters;
             l.A($"Found {formatters.Count} formatters");
@@ -119,9 +117,7 @@ public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfi
             if (!formatters.OfType<SystemTextJsonMediaTypeFormatter>().Any())
             {
                 l.A($"Will add {nameof(SystemTextJsonMediaTypeFormatter)} since none were found");
-                formatters.Insert(0,
-                    SystemTextJsonMediaTypeFormatterFactory(jsonFormatterAttributeOnAction, controllerDescriptor,
-                        context));
+                formatters.Insert(0, SystemTextJsonMediaTypeFormatterFactory(controllerDescriptor, jsonFormatterAttributeOnAction));
             }
 
             // Test throwing an exception
@@ -138,10 +134,29 @@ public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfi
         }
     }
 
-    private static SystemTextJsonMediaTypeFormatter SystemTextJsonMediaTypeFormatterFactory(JsonFormatterAttribute jsonFormatterAttribute, HttpControllerDescriptor controllerDescriptor, HttpActionContext context = null)
+    private static SystemTextJsonMediaTypeFormatter SystemTextJsonMediaTypeFormatterFactory(
+        HttpControllerDescriptor controllerDescriptor,
+        JsonFormatterAttribute jsonFormatterAttribute = null)
     {
+        // Get the service provider from the current request scope
+        // This ensures all services (including EavJsonConverterFactory and its dependencies) use the current request's culture
+        IServiceProvider serviceProvider = null;
+        
+        // Try to get request-scoped service provider from HttpContext
+        var httpContext = HttpContext.Current;
+        if (httpContext != null)
+        {
+            var scope = httpContext.Items[typeof(IServiceScope)] as IServiceScope;
+            serviceProvider = scope?.ServiceProvider;
+        }
+        
+        // Fallback to controller's dependency resolver if no scoped provider available
+        serviceProvider ??= new DependencyResolverServiceProvider(controllerDescriptor.Configuration.DependencyResolver);
+
         // Build Eav to Json converters for api v15
-        var eavJsonConverterFactory = GetEavJsonConverterFactory(jsonFormatterAttribute?.EntityFormat, controllerDescriptor);
+        // Important: Get the factory from the request-scoped service provider
+        // This ensures it gets fresh IConvertToEavLight with the current request's culture from IZoneCultureResolver
+        var eavJsonConverterFactory = GetEavJsonConverterFactory(jsonFormatterAttribute?.EntityFormat, serviceProvider);
 
         var jsonSerializerOptions = JsonOptions.UnsafeJsonWithoutEncodingHtmlOptionsFactory(eavJsonConverterFactory);
 
@@ -150,13 +165,16 @@ public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfi
         return new() { JsonSerializerOptions = jsonSerializerOptions };
     }
 
-    private static EavJsonConverterFactory GetEavJsonConverterFactory(EntityFormat? entityFormat, HttpControllerDescriptor controllerDescriptor)
+    private static EavJsonConverterFactory GetEavJsonConverterFactory(EntityFormat? entityFormat, IServiceProvider serviceProvider)
     {
         switch (entityFormat)
         {
             case null:
             case EntityFormat.Light:
-                return controllerDescriptor.Configuration.DependencyResolver.GetService(typeof(EavJsonConverterFactory)) as EavJsonConverterFactory;
+                // Build the factory from the request-scoped service provider
+                // This is the key change - it ensures the factory and all its dependencies
+                // (including IConvertToEavLight and IZoneCultureResolver) are request-scoped
+                return serviceProvider.Build<EavJsonConverterFactory>();
             case EntityFormat.None:
             default:
                 return null;
@@ -178,5 +196,13 @@ public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfi
             logStore.Add("webapi-serialization-errors", log);
         }
         catch { /* ignore */ }
+    }
+
+    /// <summary>
+    /// Helper class to wrap DependencyResolver as IServiceProvider for compatibility
+    /// </summary>
+    private class DependencyResolverServiceProvider(IDependencyResolver resolver) : IServiceProvider
+    {
+        public object GetService(Type serviceType) => resolver.GetService(serviceType);
     }
 }
