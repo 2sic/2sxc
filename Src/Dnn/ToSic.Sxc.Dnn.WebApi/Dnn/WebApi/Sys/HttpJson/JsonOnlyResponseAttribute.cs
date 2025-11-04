@@ -1,9 +1,6 @@
 ﻿using System.Net.Http.Formatting;
-using System.Web;
 using System.Web.Http.Controllers;
-using System.Web.Http.Dependencies;
 using System.Web.Http.Filters;
-using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Eav.WebApi.Sys.Helpers.Json;
 
@@ -138,20 +135,9 @@ public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfi
         HttpControllerDescriptor controllerDescriptor,
         JsonFormatterAttribute jsonFormatterAttribute = null)
     {
-        // Get the service provider from the current request scope
+        // Get the service provider from the current request scope using DnnStaticDi helper
         // This ensures all services (including EavJsonConverterFactory and its dependencies) use the current request's culture
-        IServiceProvider serviceProvider = null;
-        
-        // Try to get request-scoped service provider from HttpContext
-        var httpContext = HttpContext.Current;
-        if (httpContext != null)
-        {
-            var scope = httpContext.Items[typeof(IServiceScope)] as IServiceScope;
-            serviceProvider = scope?.ServiceProvider;
-        }
-        
-        // Fallback to controller's dependency resolver if no scoped provider available
-        serviceProvider ??= new DependencyResolverServiceProvider(controllerDescriptor.Configuration.DependencyResolver);
+        var serviceProvider = DnnStaticDi.GetPageScopedServiceProvider();
 
         // Build Eav to Json converters for api v15
         // Important: Get the factory from the request-scoped service provider
@@ -196,13 +182,5 @@ public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfi
             logStore.Add("webapi-serialization-errors", log);
         }
         catch { /* ignore */ }
-    }
-
-    /// <summary>
-    /// Helper class to wrap DependencyResolver as IServiceProvider for compatibility
-    /// </summary>
-    private class DependencyResolverServiceProvider(IDependencyResolver resolver) : IServiceProvider
-    {
-        public object GetService(Type serviceType) => resolver.GetService(serviceType);
     }
 }
