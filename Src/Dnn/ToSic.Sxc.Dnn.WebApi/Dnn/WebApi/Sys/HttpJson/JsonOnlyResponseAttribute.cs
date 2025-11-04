@@ -3,6 +3,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using ToSic.Eav.Serialization.Sys.Json;
 using ToSic.Eav.WebApi.Sys.Helpers.Json;
+using ToSic.Sys.Logging;
 
 // Special case: this should enforce json formatting
 // It's only needed in .net4x where the default is xml
@@ -50,16 +51,10 @@ public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfi
             // Remove default JsonMediaTypeFormatter (Newtonsoft)
             var newtonSoftFormatters = formatters.OfType<JsonMediaTypeFormatter>().ToList();
             l.A($"Will remove {newtonSoftFormatters.Count} NewtonSoft formatters");
-            newtonSoftFormatters.ForEach(f => controllerSettings.Formatters.Remove(f));
+            newtonSoftFormatters.ForEach(f => formatters.Remove(f));
 
             // Add SystemTextJsonMediaTypeFormatter with JsonSerializerOptions based on JsonFormatterAttribute from controller
-            if (!formatters.OfType<SystemTextJsonMediaTypeFormatter>().Any())
-            {
-                l.A($"Will add {nameof(SystemTextJsonMediaTypeFormatter)}");
-                formatters.Insert(0, SystemTextJsonMediaTypeFormatterFactory(controllerDescriptor, jsonFormatterAttribute));
-            }
-            else
-                l.A($"It has a {nameof(SystemTextJsonMediaTypeFormatter)}, so won't add.");
+            HandleStjFormaters(formatters, jsonFormatterAttribute, log);
 
             // Test throwing an exception
             // usually in debugging you will move the execution cursor to here to generate errors for specific requests
@@ -90,32 +85,23 @@ public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfi
             if (jsonFormatterAttributeOnAction == null)
             {
                 l.A($"{nameof(JsonFormatterAttribute)} is missing on action method.");
-
-                // For older apis we need to leave (when JsonFormatterAttribute is missing on action method)
-                var controllerHasDefaultToOld = GetCustomAttributes(controllerDescriptor.ControllerType).OfType<DefaultToNewtonsoftForHttpJsonAttribute>().Any();
-                if (controllerHasDefaultToOld)
-                {
-                    l.Done($"Controller has {nameof(DefaultToNewtonsoftForHttpJsonAttribute)}, will exit leaving old serializers.");
-                    return;
-                }
+                //return;
             }
             else
                 l.A($"Method has custom {nameof(JsonFormatterAttribute)}");
 
+            // For older apis we need to leave (when JsonFormatterAttribute is missing on action method)
+            var controllerHasDefaultToOld = GetCustomAttributes(controllerDescriptor.ControllerType).OfType<DefaultToNewtonsoftForHttpJsonAttribute>().Any();
+            if (controllerHasDefaultToOld)
+            {
+                l.Done($"Controller has {nameof(DefaultToNewtonsoftForHttpJsonAttribute)}, will exit leaving old serializers.");
+                return;
+            }
+
             var formatters = controllerDescriptor.Configuration.Formatters;
             l.A($"Found {formatters.Count} formatters");
 
-            // Remove default SystemTextJsonMediaTypeFormatter with JsonSerializerOptions based on JsonFormatterAttribute from controller
-            var formattersToRemove = formatters.OfType<SystemTextJsonMediaTypeFormatter>().ToList();
-            l.A($"Will remove {formattersToRemove.Count} of type {nameof(SystemTextJsonMediaTypeFormatter)}");
-            formattersToRemove.ForEach(f => formatters.Remove(f));
-
-            // Add SystemTextJson JsonMediaTypeFormatter with JsonSerializerOptions based on JsonFormatterAttribute from action method
-            if (!formatters.OfType<SystemTextJsonMediaTypeFormatter>().Any())
-            {
-                l.A($"Will add {nameof(SystemTextJsonMediaTypeFormatter)} since none were found");
-                formatters.Insert(0, SystemTextJsonMediaTypeFormatterFactory(controllerDescriptor, jsonFormatterAttributeOnAction));
-            }
+            HandleStjFormaters(formatters, jsonFormatterAttributeOnAction, log);
 
             // Test throwing an exception
             // usually in debugging you will move the execution cursor to here to generate errors for specific requests
@@ -131,9 +117,46 @@ public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfi
         }
     }
 
-    private static SystemTextJsonMediaTypeFormatter SystemTextJsonMediaTypeFormatterFactory(
-        HttpControllerDescriptor controllerDescriptor,
-        JsonFormatterAttribute jsonFormatterAttribute = null)
+    private void HandleStjFormaters(MediaTypeFormatterCollection formatters, JsonFormatterAttribute jsonFormatterAttributeOnAction, ILog parentLog)
+    {
+        const string systemTextJsonMediaTypeFormatterName = "System.Net.Http.Formatting.SystemTextJsonMediaTypeFormatter";
+        var l = parentLog.Fn();
+        // Remove default SystemTextJsonMediaTypeFormatter with JsonSerializerOptions based on JsonFormatterAttribute from controller
+        var formattersToRemove = formatters.OfType<SystemTextJsonMediaTypeFormatter>().ToList();
+        l.A($"Will remove {formattersToRemove.Count} of type {nameof(SystemTextJsonMediaTypeFormatter)}");
+        formattersToRemove.ForEach(f => formatters.Remove(f));
+
+        var tracersToRemove = formatters.Where(f => f.ToString() == systemTextJsonMediaTypeFormatterName).ToList();
+        l.A($"Will remove {tracersToRemove.Count} of type {nameof(MediaTypeFormatter)}");
+        tracersToRemove.ForEach(f => formatters.Remove(f));
+
+        // Unwrap tracers to get inner SystemTextJsonMediaTypeFormatter instances using reflection
+        var unwrappedFormatters = tracersToRemove
+            .Select(tracer =>
+            {
+                // MediaTypeFormatterTracer has an InnerFormatter property that contains the actual formatter
+                var innerFormatterProperty = tracer.GetType().GetProperty("InnerFormatter");
+                return innerFormatterProperty?.GetValue(tracer) as SystemTextJsonMediaTypeFormatter;
+            })
+            .Where(f => f != null)
+            .ToList();
+
+        l.A($"Unwrapped {unwrappedFormatters.Count} {nameof(SystemTextJsonMediaTypeFormatter)} from tracers");
+        formattersToRemove.AddRange(unwrappedFormatters);
+
+        // Add SystemTextJson JsonMediaTypeFormatter with JsonSerializerOptions based on JsonFormatterAttribute from action method
+        if (!formatters.OfType<SystemTextJsonMediaTypeFormatter>().Any())
+        {
+            l.A($"Will add {nameof(SystemTextJsonMediaTypeFormatter)} since none were found");
+            formatters.Insert(0, SystemTextJsonMediaTypeFormatterFactory(jsonFormatterAttributeOnAction, formattersToRemove, tracersToRemove));
+        }
+        else
+            l.A($"It has a {nameof(SystemTextJsonMediaTypeFormatter)}, so won't add.");
+
+        l.Done();
+    }
+
+    private static SystemTextJsonMediaTypeFormatter SystemTextJsonMediaTypeFormatterFactory(JsonFormatterAttribute jsonFormatterAttribute = null, List<SystemTextJsonMediaTypeFormatter> formattersToRemove = null)
     {
         // Get the service provider from the current request scope using DnnStaticDi helper
         // This ensures all services (including EavJsonConverterFactory and its dependencies) use the current request's culture
@@ -146,7 +169,7 @@ public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfi
 
         var jsonSerializerOptions = JsonOptions.UnsafeJsonWithoutEncodingHtmlOptionsFactory(eavJsonConverterFactory);
 
-        JsonFormatterHelpers.SetCasing(jsonFormatterAttribute?.Casing ?? Casing.Unspecified, jsonSerializerOptions);
+        JsonFormatterHelpers.SetCasing(jsonFormatterAttribute?.Casing ?? ExtractCasingFromFormatters(formattersToRemove) ?? Casing.Unspecified, jsonSerializerOptions);
 
         return new() { JsonSerializerOptions = jsonSerializerOptions };
     }
@@ -167,6 +190,20 @@ public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfi
         }
     }
 
+    private static Casing? ExtractCasingFromFormatters(List<SystemTextJsonMediaTypeFormatter> formattersToRemove = null)
+    {
+        if (formattersToRemove is not { Count: > 0 })
+            return Casing.Unspecified;
+
+        foreach (var formatter in formattersToRemove)
+        {
+            var options = formatter.JsonSerializerOptions;
+            if (options?.PropertyNamingPolicy != null)
+                return JsonFormatterHelpers.GetCasing(options);
+        }
+
+        return Casing.Unspecified;
+    }
 
     /// <summary>
     /// since it's really hard to debug attribute/serialization issues, try to log this problem
