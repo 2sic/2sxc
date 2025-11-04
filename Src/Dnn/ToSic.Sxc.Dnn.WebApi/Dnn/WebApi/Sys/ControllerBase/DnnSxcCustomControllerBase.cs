@@ -52,9 +52,9 @@ public abstract class DnnSxcCustomControllerBase(string logSuffix, string insigh
     /// Note: Probably almost never used, except by 2sic. Must determine if we just remove it
     /// </summary>
     [Obsolete("Deprecated in v13.03 - doesn't serve a purpose any more. Will just remain to avoid breaking public uses of this property.")]
-    // ReSharper disable once UnassignedGetOnlyAutoProperty
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
+    // ReSharper disable once UnassignedGetOnlyAutoProperty
     protected virtual string HistoryLogName { get; }
 
     #endregion
