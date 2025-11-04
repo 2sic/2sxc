@@ -148,7 +148,7 @@ public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfi
         if (!formatters.OfType<SystemTextJsonMediaTypeFormatter>().Any())
         {
             l.A($"Will add {nameof(SystemTextJsonMediaTypeFormatter)} since none were found");
-            formatters.Insert(0, SystemTextJsonMediaTypeFormatterFactory(jsonFormatterAttributeOnAction, formattersToRemove, tracersToRemove));
+            formatters.Insert(0, SystemTextJsonMediaTypeFormatterFactory(jsonFormatterAttributeOnAction, formattersToRemove));
         }
         else
             l.A($"It has a {nameof(SystemTextJsonMediaTypeFormatter)}, so won't add.");
