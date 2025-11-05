@@ -5,15 +5,12 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Eav.Apps.Sys.Paths;
-using ToSic.Eav.Data.Sys.Entities.Sources;
-using ToSic.Eav.ImportExport.Json.Sys;
-using ToSic.Eav.Serialization.Sys;
+using ToSic.Eav.ImportExport.Sys.Zip;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Users;
 using EavJsonSerializer = ToSic.Eav.ImportExport.Json.Sys.JsonSerializer;
-using System.Xml.Linq;
 
 
 #if NETFRAMEWORK
@@ -55,7 +52,7 @@ public class ExportExtension(
 
         if (!Directory.Exists(extensionPath))
             throw l.Ex(new DirectoryNotFoundException($"Extension folder not found: {name}"));
-        l.A(($"extension '{name}' folder found: '{extensionPath}'"));
+        l.A($"extension '{name}' folder found: '{extensionPath}'");
 
         var extensionDataPath = Path.Combine(extensionPath, FolderConstants.DataFolderProtected);
         var extensionJsonPath = Path.Combine(extensionDataPath, FolderConstants.AppExtensionJsonFile);
@@ -68,7 +65,7 @@ public class ExportExtension(
         var extensionJsonText = File.ReadAllText(extensionJsonPath);
         var extensionJson = JsonNode.Parse(extensionJsonText) as JsonObject
             ?? throw l.Ex(new InvalidOperationException("extension.json is not a valid JSON object"));
-        l.A($"extension.json parsed: {extensionJsonText.Length}");
+        l.A($"extension.json parsed: {extensionJsonText.Length} chars");
         l.A($"\n{extensionJson}\n");
 
         var modifiedJson = ModifyExtensionJson(extensionJson, appId, extensionDataPath, l);
@@ -77,43 +74,13 @@ public class ExportExtension(
         // 3. Collect files to include
         var filesToInclude = CollectFilesToInclude(extensionPath, extensionDataPath, modifiedJson, appPaths, name, l);
 
-        // 4. Create ZIP with modified extension.json and lock file
-        using var memoryStream = new MemoryStream();
-        using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
-        {
-            // Add all collected files
-            foreach (var (sourcePath, zipPath) in filesToInclude)
-            {
-                var entry = archive.CreateEntry(zipPath, CompressionLevel.Optimal);
-                using var entryStream = entry.Open();
-                using var fileStream = File.OpenRead(sourcePath);
-                fileStream.CopyTo(entryStream);
-            }
-
-            // Add modified extension.json
-            var modifiedJsonPath = $"extensions/{name}/App_Data/extension.json";
-            var jsonEntry = archive.CreateEntry(modifiedJsonPath, CompressionLevel.Optimal);
-            using (var entryStream = jsonEntry.Open())
-            using (var writer = new StreamWriter(entryStream, new UTF8Encoding(false)))
-            {
-                writer.Write(modifiedJson.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
-            }
-
-            // Create and add lock file
-            var lockData = CreateLockFile(filesToInclude, modifiedJson, l);
-            var lockPath = $"extensions/{name}/App_Data/extension.lock.json";
-            var lockEntry = archive.CreateEntry(lockPath, CompressionLevel.Optimal);
-            using (var entryStream = lockEntry.Open())
-            using (var writer = new StreamWriter(entryStream, new UTF8Encoding(false)))
-            {
-                writer.Write(System.Text.Json.JsonSerializer.Serialize(lockData, new JsonSerializerOptions { WriteIndented = true }));
-            }
-        }
-
-        memoryStream.Position = 0;
-        var fileBytes = memoryStream.ToArray();
+        // 4. Create ZIP using Zipping helper
         var version = modifiedJson["version"]?.GetValue<string>() ?? "1.0.0";
         var fileName = $"{name}_{version}.zip";
+        
+        using var memoryStream = CreateZipArchive(filesToInclude, modifiedJson, name, l);
+        memoryStream.Position = 0;
+        var fileBytes = memoryStream.ToArray();
         var mimeType = MimeTypeConstants.FallbackType;
 
         l.A($"Created ZIP with {filesToInclude.Count} files, size: {fileBytes.Length} bytes");
@@ -123,6 +90,40 @@ public class ExportExtension(
 #else
         return l.ReturnAsOk(new FileContentResult(fileBytes, mimeType) { FileDownloadName = fileName });
 #endif
+    }
+
+    private MemoryStream CreateZipArchive(
+        List<(string sourcePath, string zipPath)> filesToInclude, 
+        JsonObject modifiedJson, 
+        string extensionName,
+        ILog parentLog)
+    {
+        var l = parentLog.Fn<MemoryStream>($"files:{filesToInclude.Count}, ext:{extensionName}");
+
+        var memoryStream = new MemoryStream();
+        using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+        {
+            var zipping = new Zipping(l);
+            
+            // Add collected files using helper
+            zipping.AddFiles(archive, filesToInclude);
+            l.A($"Added {filesToInclude.Count} files to ZIP");
+
+            // Add modified extension.json
+            var modifiedJsonPath = $"extensions/{extensionName}/App_Data/extension.json";
+            var modifiedJsonText = modifiedJson.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+            zipping.AddTextEntry(archive, modifiedJsonPath, modifiedJsonText, new UTF8Encoding(false));
+            l.A("Added modified extension.json to ZIP");
+
+            // Create and add lock file
+            var lockData = CreateLockFile(filesToInclude, modifiedJson, l);
+            var lockPath = $"extensions/{extensionName}/App_Data/extension.lock.json";
+            var lockJson = JsonSerializer.Serialize(lockData, new JsonSerializerOptions { WriteIndented = true });
+            zipping.AddTextEntry(archive, lockPath, lockJson, new UTF8Encoding(false));
+            l.A("Added lock file to ZIP");
+        }
+
+        return l.ReturnAsOk(memoryStream);
     }
 
     private JsonObject ModifyExtensionJson(JsonObject json, int appId, string extensionDataPath, ILog parentLog)
@@ -173,6 +174,7 @@ public class ExportExtension(
             }
 
             json["releases"] = newReleases;
+            l.A($"Expanded {newReleases.Count} releases");
         }
 
         return l.ReturnAsOk(json);
@@ -281,10 +283,10 @@ public class ExportExtension(
 
             var zipPath = Path.Combine(baseZipPath, relativePath).Replace("\\", "/");
             files.Add((file, zipPath));
-            l.A($"Add file '{file}'");
+            l.A($"Add file '{file}' to ZIP as '{zipPath}'");
         }
 
-        l.Done($"Added {files.Count} files");
+        l.Done($"Added {files.Count} files to collection");
     }
 
     private object CreateLockFile(List<(string sourcePath, string zipPath)> files, JsonObject extensionJson, ILog parentLog)
@@ -310,10 +312,9 @@ public class ExportExtension(
             hash = jsonHash
         });
 
-        foreach (var fileEntry in fileList) 
-            l.A($"File: {fileEntry.file}, Hash: {fileEntry.hash}");
+        l.A($"Lock file created with {fileList.Count} entries");
 
-        return l.ReturnAsOk( new
+        return l.ReturnAsOk(new
         {
             version,
             files = fileList
