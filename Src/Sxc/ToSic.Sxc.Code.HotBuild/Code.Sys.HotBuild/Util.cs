@@ -12,6 +12,10 @@ public class Util(IGlobalConfiguration globalConfiguration)
     private const string Dll = ".dll";
     private static bool Cleaned { get; set; }
     private static readonly object CleaningLock = new();
+    private static readonly HashSet<string> EphemeralExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".cmdline", ".err", ".out", ".tmp", ".cs"
+    };
 
     public void CleanTempAssemblyFolder()
     {
@@ -28,95 +32,90 @@ public class Util(IGlobalConfiguration globalConfiguration)
             // Clean Razor compiled templates folder (2sxc.bin.cshtml)
             CleanAssemblyFolder(globalConfiguration.CshtmlAssemblyFolder(), "Razor (2sxc.bin.cshtml)");
 
+            // Clean ephemeral compiler artifacts from "2sxc.bin.cshtml\temp" folder
+            CleanAssemblyFolder(Path.Combine(globalConfiguration.CshtmlAssemblyFolder(), "temp"), "roslyn compiler temp Folder");
+
             Cleaned = true;
         }
     }
 
     /// <summary>
-    /// Cleans a specific assembly folder by removing old/orphaned DLL files.
+    /// Cleans a specific assembly folder by removing old/orphaned DLL files and ephemeral compiler artifacts.
+    /// Keeps corresponding .pdb files for debugging.
     /// </summary>
-    /// <param name="folderPath">Path to the folder to clean</param>
-    /// <param name="folderDescription">Description for logging purposes</param>
     private void CleanAssemblyFolder(string folderPath, string folderDescription)
     {
-        if (Directory.Exists(folderPath))
+        if (string.IsNullOrEmpty(folderPath))
+            return;
+
+        if (!Directory.Exists(folderPath))
         {
-            // *** Step 1. delete all files without Hash
-            var filesWithoutHashToDelete = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly)
-                .Where(file => GetFilePrefix(file) == null);
+            Directory.CreateDirectory(folderPath);
+            return; // nothing else to do first run
+        }
 
-            foreach(var file in filesWithoutHashToDelete)
+        // Step 1: Remove ephemeral Roslyn temp files (*.cmdline, *.err, *.out, *.tmp, *.cs) but KEEP .pdb
+        foreach (var file in Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly))
+        {
+            var ext = Path.GetExtension(file);
+
+            if (!EphemeralExtensions.Contains(ext))
+                continue;
+
+            try { File.Delete(file); } catch { /* ignore */ }
+        }
+
+        // Step 2: Retention of DLL/PDB groups by prefix/hash; keep newest recent dll+pdb, remove older ones
+        const int retentionDays = 28;
+        var now = DateTime.Now;
+
+        // Group dlls by prefix (without trailing hash) and choose which to keep
+        var dllFiles = Directory.GetFiles(folderPath, "*" + Dll, SearchOption.TopDirectoryOnly)
+            .Select(f => new FileInfo(f))
+            .GroupBy(fi => GetFilePrefix(fi.Name));
+
+        foreach (var group in dllFiles)
+        {
+            // Skip files which didn't match pattern
+            if (group.Key == null)
+                continue;
+            
+            // Sort files in the group by LastWriteTime descending (latest first)
+            var ordered = group.OrderByDescending(f => f.LastWriteTime).ToList();
+            
+            // Find the first which is still within retention window
+            var keep = ordered.FirstOrDefault(f => (now - f.LastWriteTime).TotalDays < retentionDays) ?? ordered.First();
+
+            // Keep the latest file, delete the rest.
+            foreach (var old in ordered.Where(f => f.FullName != keep.FullName))
             {
-                try
-                {
-                    File.Delete(file);
-                }
-                catch
-                {
-                    // sink
-                }
-            }
-
-            // *** Step 2. Keep only the latest file for each group of files with the same prefix ***
-            const int retentionDays = 28;
-            var currentDateTime = DateTime.Now;
-
-            // Group files by their prefix (excluding the hash part if valid)
-            var groupedFiles = Directory.GetFiles(folderPath, "*" + Dll, SearchOption.TopDirectoryOnly)
-                .Select(f => new FileInfo(f))
-                .GroupBy(fileInfo => GetFilePrefix(fileInfo.Name));
-
-            foreach (var group in groupedFiles)
-            {
-                // Sort files in the group by LastWriteTime descending (latest first)
-                var filesInGroup = group.OrderByDescending(f => f.LastWriteTime).ToList();
-
-                // Find the latest file if it's less than 28 days old.
-                var keepFile = filesInGroup.FirstOrDefault(f => (currentDateTime - f.LastWriteTime).TotalDays < retentionDays);
-
-                // Keep the latest file, delete the rest.
-                var filesToDelete = filesInGroup.Where(f => f != keepFile);
-                foreach (var fileInfo in filesToDelete)
-                {
-                    try
-                    {
-                        File.Delete(fileInfo.FullName);
-                    }
-                    catch
-                    {
-                        // sink
-                    }
-                }
+                try { File.Delete(old.FullName); } catch { /* ignore */ }
+                // Also delete matching pdb for removed dll
+                var pdb = Path.ChangeExtension(old.FullName, ".pdb");
+                if (File.Exists(pdb)) try { File.Delete(pdb); } catch { /* ignore */ }
             }
         }
-        else
+        // Remove orphaned pdbs without matching dll
+        foreach (var pdb in Directory.GetFiles(folderPath, "*.pdb", SearchOption.TopDirectoryOnly))
         {
-            // Ensure folder exists to preserve dlls
-            Directory.CreateDirectory(folderPath);
+            var dll = Path.ChangeExtension(pdb, ".dll");
+            if (!File.Exists(dll)) try { File.Delete(pdb); } catch { /* ignore */ }
         }
     }
 
     // Helper method to extract the prefix from the filename, validating the hash part
     private static string? GetFilePrefix(string fileName)
     {
-        if (Path.GetExtension(fileName) != Dll)
-            return null;
-
+        if (Path.GetExtension(fileName) != Dll) return null;
         var nameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
         var lastDashIndex = nameWithoutExtension.LastIndexOf('-');
-
-        // Validate the potential hash using a regex (e.g., 64-character hexadecimal)
-        if (lastDashIndex >= 0 && IsValidHash(nameWithoutExtension.Substring(lastDashIndex + 1)))
-            // Valid hash found, return the prefix without the hash
-            return nameWithoutExtension.Substring(0, lastDashIndex);
-
-        // No hyphen found or valid hash
-        return null;
+        if (lastDashIndex < 0) return null;
+        var hashCandidate = nameWithoutExtension.Substring(lastDashIndex + 1);
+        return IsValidHash(hashCandidate) ? nameWithoutExtension.Substring(0, lastDashIndex) : null;
     }
 
     private static bool IsValidHash(string input)
     {
-        // Pattern to match SHA256 hash format (64 hex chars) or 6-char truncated hash (used by CacheKey)
         const string hashPattern = @"^[a-fA-F0-9]{64}$|^[a-fA-F0-9]{6}$";
         return Regex.IsMatch(input, hashPattern);
     }
