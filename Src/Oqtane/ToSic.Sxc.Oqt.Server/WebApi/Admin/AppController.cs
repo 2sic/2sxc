@@ -151,4 +151,11 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
         HotReloadEnabledCheck.Check();
         return Real.InstallExtensionZip(new(Request), zoneId, appId, name, overwrite);
     }
+
+    /// <inheritdoc />
+    [HttpGet]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = RoleNames.Admin)]
+    public IActionResult Download([FromQuery] int zoneId, [FromQuery] int appId, [FromQuery] string name)
+        => Real.Download(zoneId, appId, name);
 }

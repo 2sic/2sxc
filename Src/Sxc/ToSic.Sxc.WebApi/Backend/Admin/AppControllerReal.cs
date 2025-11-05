@@ -40,12 +40,14 @@ public class AppControllerReal(
     LazySvc<AppStackBackend> appStackBackendLazy,
     LazySvc<IJsonService> json,
     IGlobalConfiguration globalConfiguration,
-    LazySvc<ExtensionsBackend> extensionsBackendLazy)
+    LazySvc<ExtensionsBackend> extensionsBackendLazy,
+    LazySvc<ExportExtension> exportExtensionLazy)
     : Services_ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
         connect:
         [
             appsBackendLazy, workAppsRemove, exportAppLazy, importAppLazy, appBuilderLazy, resetAppLazy,
-            systemManagerLazy, languagesBackendLazy, appReadersLazy, appStackBackendLazy, json, globalConfiguration, extensionsBackendLazy
+            systemManagerLazy, languagesBackendLazy, appReadersLazy, appStackBackendLazy, json, globalConfiguration, extensionsBackendLazy,
+            exportExtensionLazy
         ])
 {
     public const string LogSuffix = "AppCon";
@@ -166,4 +168,14 @@ public class AppControllerReal(
         var ok = extensionsBackendLazy.Value.InstallExtensionZip(zoneId, appId, stream, name, overwrite, originalZipFileName: fileName);
         return l.ReturnAsOk(ok);
     }
+
+    /// <summary>
+    /// Export an extension as a ZIP file
+    /// </summary>
+    /// <param name="zoneId"></param>
+    /// <param name="appId"></param>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    public THttpResponseType Download(int zoneId, int appId, string name)
+        => exportExtensionLazy.Value.Export(zoneId, appId, name) as THttpResponseType;
 }

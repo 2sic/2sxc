@@ -162,7 +162,7 @@ public class ExtensionsBackend(
         return string.IsNullOrWhiteSpace(baseName) ? null : baseName;
     }
 
-    private static bool IsValidFolderName(string name)
+    internal static bool IsValidFolderName(string name)
     {
         if (string.IsNullOrWhiteSpace(name)) return false;
 

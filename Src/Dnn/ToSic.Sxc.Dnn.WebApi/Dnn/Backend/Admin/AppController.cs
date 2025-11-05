@@ -60,8 +60,8 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
 
     /// <inheritdoc />
     [HttpGet]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public AppExportInfoDto Statistics(int zoneId, int appId) => Real.Statistics(zoneId, appId);
 
 
@@ -84,15 +84,15 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
 
     /// <inheritdoc />
     [HttpGet]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
         => Real.GetStack(appId, part, key, view);
 
     /// <inheritdoc />
     [HttpPost]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
     [ValidateAntiForgeryToken]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
     public ImportResultDto Reset(int zoneId, int appId, bool withPortalFiles = false)
     {
         SysHlp.PreventServerTimeout600();
@@ -101,8 +101,8 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
 
     /// <inheritdoc />
     [HttpPost]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public ImportResultDto Import(int zoneId)
     {
         SysHlp.PreventServerTimeout600();
@@ -119,15 +119,15 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
 
     /// <inheritdoc />
     [HttpPost]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppDto> pendingApps)
     {
         SysHlp.PreventServerTimeout600();
         return Real.InstallPendingApps(zoneId, pendingApps);
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc />q
     [HttpGet]
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
@@ -151,4 +151,12 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public bool InstallExtension([FromUri] int zoneId, [FromUri] int appId, [FromUri] string name = null, [FromUri] bool overwrite = false)
         => Real.InstallExtensionZip(new(Request, HttpContext.Current.Request), zoneId, appId, name, overwrite);
+
+    /// <inheritdoc />
+    [HttpGet]
+    //[ValidateAntiForgeryToken]
+    //[SupportedModules(DnnSupportedModuleNames)]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    public HttpResponseMessage Download([FromUri] int zoneId, [FromUri] int appId, [FromUri] string name)
+        => Real.Download(zoneId, appId, name);
 }
