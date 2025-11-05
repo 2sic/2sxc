@@ -126,7 +126,7 @@ public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfi
         l.A($"Will remove {formattersToRemove.Count} of type {nameof(SystemTextJsonMediaTypeFormatter)}");
         formattersToRemove.ForEach(f => formatters.Remove(f));
 
-        var tracersToRemove = formatters.Where(f => f.ToString() == systemTextJsonMediaTypeFormatterName).ToList();
+        var tracersToRemove = formatters.Where(f => f != null && f.ToString() == systemTextJsonMediaTypeFormatterName).ToList();
         l.A($"Will remove {tracersToRemove.Count} of type {nameof(MediaTypeFormatter)}");
         tracersToRemove.ForEach(f => formatters.Remove(f));
 
