@@ -36,7 +36,8 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     [HttpGet]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false) => Real.List(appId, scope, withStatistics);
+    public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
+        => Real.List(appId, scope, withStatistics);
 
 
     /// <summary>
@@ -46,7 +47,8 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     [HttpGet]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public ScopesDto Scopes(int appId) => Real.Scopes(appId);
+    public ScopesDto Scopes(int appId)
+        => Real.Scopes(appId);
 
 
     /// <summary>
@@ -73,7 +75,8 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     [HttpDelete]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public bool Delete(int appId, string staticName) => Real.Delete(appId, staticName);
+    public bool Delete(int appId, string staticName)
+        => Real.Delete(appId, staticName);
 
 
     /// <summary>
@@ -89,7 +92,8 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     // 2019-11-15 2dm special change: item to be Dictionary<string, object> because in DNN 9.4
     // it causes problems when a content-type has metadata, where a value then is a deeper object
     // in future, the JS front-end should send something clearer and not the whole object
-    public bool Save(int appId, Dictionary<string, object> item) => Real.Save(appId, item);
+    public bool Save(int appId, Dictionary<string, object> item)
+        => Real.Save(appId, item);
 
 
     /// <summary>
@@ -102,7 +106,8 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     [HttpPost]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public bool AddGhost(int appId, string sourceNameId) => Real.AddGhost(appId, sourceNameId);
+    public bool AddGhost(int appId, string sourceNameId)
+        => Real.AddGhost(appId, sourceNameId);
 
 
     /// <summary>
@@ -114,7 +119,8 @@ public class TypeController() : DnnSxcControllerBase(RealController.LogSuffix), 
     [HttpPost]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public void SetTitle(int appId, int contentTypeId, int attributeId) => Real.SetTitle(appId, contentTypeId, attributeId);
+    public void SetTitle(int appId, int contentTypeId, int attributeId)
+        => Real.SetTitle(appId, contentTypeId, attributeId);
 
 
     /// <summary>

@@ -19,5 +19,6 @@ public class LogController() : DnnSxcControllerRoot(RealController.LogSuffix), I
 
     /// <inheritdoc />
     [HttpGet]
-    public string EnableDebug(int duration = 1) => Real.EnableDebug(DnnLogging.ActivateForDuration, duration);
+    public string EnableDebug(int duration = 1)
+        => Real.EnableDebug(DnnLogging.ActivateForDuration, duration);
 }

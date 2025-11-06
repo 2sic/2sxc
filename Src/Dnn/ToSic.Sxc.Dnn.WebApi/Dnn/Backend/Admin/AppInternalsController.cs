@@ -18,5 +18,6 @@ public class AppInternalsController() : DnnSxcControllerBase(RealController.LogS
     [HttpGet]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public AppInternalsDto Get(int appId) => Real.Get(appId);
+    public AppInternalsDto Get(int appId)
+        => Real.Get(appId);
 }

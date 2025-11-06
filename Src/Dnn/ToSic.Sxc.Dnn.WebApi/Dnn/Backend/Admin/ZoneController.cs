@@ -17,13 +17,16 @@ public class ZoneController() : DnnSxcControllerBase(RealController.LogSuffix), 
 
     /// <inheritdoc />
     [HttpGet]
-    public IList<SiteLanguageDto> GetLanguages() => Real.GetLanguages();
+    public IList<SiteLanguageDto> GetLanguages()
+        => Real.GetLanguages();
 
     /// <inheritdoc />
     [HttpGet]
-    public void SwitchLanguage(string cultureCode, bool enable) => Real.SwitchLanguage(cultureCode, enable);
+    public void SwitchLanguage(string cultureCode, bool enable)
+        => Real.SwitchLanguage(cultureCode, enable);
 
     /// <inheritdoc />
     [HttpGet]
-    public SystemInfoSetDto GetSystemInfo() => Real.GetSystemInfo();
+    public SystemInfoSetDto GetSystemInfo()
+        => Real.GetSystemInfo();
 }

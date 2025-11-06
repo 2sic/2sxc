@@ -16,14 +16,16 @@ public class AppQueryController() : DnnSxcControllerBase(RealController.LogSuffi
     // 'content-type' header is missing (or in GET request) on the endpoint that has [FromBody] in signature
 
     [HttpGet]
-    public IDictionary<string, IEnumerable<EavLightEntity>> Query([FromUri] string name,
+    public IDictionary<string, IEnumerable<EavLightEntity>> Query(
+        [FromUri] string name,
         [FromUri] int? appId = null,
         [FromUri] string stream = null,
         [FromUri] bool includeGuid = false
     ) => Real.Query(name, appId, stream, includeGuid);
 
     [HttpPost]
-    public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost([FromUri] string name,
+    public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost
+    ([FromUri] string name,
         [FromBody] QueryParametersDtoFromClient more,
         [FromUri] int? appId = null,
         [FromUri] string stream = null,

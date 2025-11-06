@@ -6,9 +6,7 @@ namespace ToSic.Sxc.Dnn.Backend.Admin;
 internal class DnnApiInspector() : ServiceBase(DnnConstants.LogName), IApiInspector
 {
     public bool IsBody(ParameterInfo paramInfo)
-    {
-        return paramInfo.CustomAttributes.Any(ca => ca.AttributeType == typeof(FromBodyAttribute));
-    }
+        => paramInfo.CustomAttributes.Any(ca => ca.AttributeType == typeof(FromBodyAttribute));
 
 
     public List<string> GetHttpVerbs(MethodInfo methodInfo)

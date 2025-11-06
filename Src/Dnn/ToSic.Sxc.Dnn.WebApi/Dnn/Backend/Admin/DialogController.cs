@@ -22,5 +22,6 @@ public class DialogController() : DnnSxcControllerBase(RealController.LogSuffix)
     private RealController Real => SysHlp.GetService<RealController>();
 
     [HttpGet]
-    public DialogContextStandaloneDto Settings(int appId) => Real.Settings(appId);
+    public DialogContextStandaloneDto Settings(int appId)
+        => Real.Settings(appId);
 }
