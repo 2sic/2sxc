@@ -1,11 +1,13 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.ImportExport.Sys.Zip;
 using ToSic.Eav.Security.Files;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Services;
+using ToSic.Sys.Configuration;
 
 namespace ToSic.Sxc.Backend.App;
 
@@ -14,8 +16,9 @@ public class ExtensionsBackend(
     LazySvc<IAppReaderFactory> appReadersLazy,
     ISite site,
     IAppPathsMicroSvc appPathSvc,
-    LazySvc<IJsonService> jsonLazy)
- : ServiceBase("Bck.Exts", connect: [appReadersLazy, site, appPathSvc, jsonLazy])
+    LazySvc<IJsonService> jsonLazy,
+    IGlobalConfiguration globalConfiguration)
+    : ServiceBase("Bck.Exts", connect: [appReadersLazy, site, appPathSvc, jsonLazy, globalConfiguration])
 {
     public ExtensionsResultDto GetExtensions(int appId)
     {
@@ -92,58 +95,101 @@ public class ExtensionsBackend(
 
     /// <summary>
     /// Install an extension provided as a ZIP stream into /extensions/{folder}.
+    /// Expected zip layout: extensions/{extensionName}/App_Data/extension.json + assets.
+    /// If name not provided, derive from zip filename or use the single subfolder under 'extensions'.
     /// </summary>
     public bool InstallExtensionZip(int zoneId, int appId, Stream zipStream, string? name = null, bool overwrite = false, string? originalZipFileName = null)
     {
         var l = Log.Fn<bool>($"z:{zoneId}, a:{appId}, overwrite:{overwrite}, pref:'{name}', ofn:'{originalZipFileName}'");
+        string? tempDir = null;
         try
         {
             var appReader = appReadersLazy.Value.Get(appId);
             var appPaths = appPathSvc.Get(appReader, site);
-
             var extensionsRoot = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppExtensionsFolder);
             Directory.CreateDirectory(extensionsRoot);
 
-            // Resolve folderName: prefer explicit, else use zip file name (base name, no extension)
-            var folderName = !string.IsNullOrWhiteSpace(name)
-                ? name.Trim()
-                : DeriveFolderNameFromZipFileName(originalZipFileName);
+            // Use configured temporary folder root (same pattern as app import)
+            tempDir = Path.Combine(globalConfiguration.TemporaryFolder(), Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempDir);
 
-            if (string.IsNullOrWhiteSpace(folderName))
-                return l.ReturnFalse("no folder name - provide 'folder' or upload with a valid filename");
-
-            if (!IsValidFolderName(folderName))
-                return l.ReturnFalse($"invalid folder name:'{folderName}'");
-
-            var targetRoot = Path.Combine(extensionsRoot, folderName);
-
-            // Handle existing folder according to overwrite flag
-            if (Directory.Exists(targetRoot))
-            {
-                if (!overwrite)
-                    return l.ReturnFalse("target exists - set overwrite to true");
-                try
-                {
-                    Zipping.TryToDeleteDirectory(targetRoot, l);
-                }
-                catch (Exception exDel)
-                {
-                    Log.Ex(exDel);
-                    return l.ReturnFalse("failed to delete existing target");
-                }
-            }
-
-            Directory.CreateDirectory(targetRoot);
-
-            // Extract using EAV Zip implementation - enforce no folder entries and code-file restrictions
+            // Extract entire zip to temp; allowCodeImport:true so front-end assets (.js/.css) are not blocked.
             try
             {
-                new Zipping(l).ExtractZipStream(zipStream, targetRoot, allowCodeImport: true, ignoreFolderEntries: true);
+                new Zipping(l).ExtractZipStream(zipStream, tempDir, allowCodeImport: true);
             }
             catch (Exception ex)
             {
                 l.Ex(ex);
-                return l.ReturnFalse("invalid zip or not allowed");
+                return l.ReturnFalse("invalid zip");
+            }
+
+            // Locate top-level 'extensions' directory
+            var extensionsDir = Path.Combine(tempDir, "extensions");
+            if (!Directory.Exists(extensionsDir))
+                return l.ReturnFalse("zip missing top-level 'extensions' folder");
+
+            var candidates = Directory.GetDirectories(extensionsDir, "*", SearchOption.TopDirectoryOnly);
+            if (candidates.Length == 0)
+                return l.ReturnFalse("'extensions' folder empty");
+
+            // Determine source extension directory
+            string? resolvedName = null;
+            string? sourcePath = null;
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                var preferred = Path.Combine(extensionsDir, name.Trim());
+                if (Directory.Exists(preferred))
+                {
+                    resolvedName = name.Trim();
+                    sourcePath = preferred;
+                }
+            }
+            if (sourcePath == null && candidates.Length == 1)
+            {
+                sourcePath = candidates[0];
+                resolvedName = Path.GetFileName(sourcePath);
+            }
+            if (sourcePath == null)
+            {
+                var derived = DeriveFolderNameFromZipFileName(originalZipFileName);
+                if (!string.IsNullOrWhiteSpace(derived))
+                {
+                    var derivedPath = Path.Combine(extensionsDir, derived);
+                    if (Directory.Exists(derivedPath))
+                    {
+                        sourcePath = derivedPath;
+                        resolvedName = derived;
+                    }
+                }
+            }
+            if (sourcePath == null)
+                return l.ReturnFalse("could not determine extension subfolder – specify 'name'");
+
+            // Final folder name
+            var folderName = !string.IsNullOrWhiteSpace(name) ? name!.Trim() : resolvedName!;
+            if (!IsValidFolderName(folderName))
+                return l.ReturnFalse($"invalid folder name:'{folderName}'");
+
+            var targetRoot = Path.Combine(extensionsRoot, folderName);
+            if (Directory.Exists(targetRoot))
+            {
+                if (!overwrite) return l.ReturnFalse("target exists - set overwrite");
+                try { Zipping.TryToDeleteDirectory(targetRoot, l); } catch { /* ignore */ }
+            }
+            Directory.CreateDirectory(targetRoot);
+
+            // Copy contents
+            CopyDirectory(sourcePath, targetRoot, l);
+
+            // Ensure App_Data/extension.json exists (create empty object if missing)
+            var appData = Path.Combine(targetRoot, FolderConstants.DataFolderProtected);
+            Directory.CreateDirectory(appData);
+            var extJson = Path.Combine(appData, FolderConstants.AppExtensionJsonFile);
+            if (!File.Exists(extJson))
+            {
+                try { File.WriteAllText(extJson, "{}", new UTF8Encoding(false)); } catch { /* ignore */ }
             }
 
             return l.ReturnTrue($"installed '{folderName}'");
@@ -153,13 +199,50 @@ public class ExtensionsBackend(
             l.Ex(ex);
             return l.ReturnFalse("error");
         }
+        finally
+        {
+            if (tempDir != null)
+            {
+                try { Zipping.TryToDeleteDirectory(tempDir, l); } catch { /* ignore */ }
+            }
+        }
+    }
+
+    private static void CopyDirectory(string source, string target, ILog l)
+    {
+        foreach (var dir in Directory.GetDirectories(source, "*", SearchOption.AllDirectories))
+        {
+            var rel = dir.Substring(source.Length).TrimStart(Path.DirectorySeparatorChar);
+            Directory.CreateDirectory(Path.Combine(target, rel));
+        }
+        foreach (var file in Directory.GetFiles(source, "*", SearchOption.AllDirectories))
+        {
+            var rel = file.Substring(source.Length).TrimStart(Path.DirectorySeparatorChar);
+            var dest = Path.Combine(target, rel);
+            Directory.CreateDirectory(Path.GetDirectoryName(dest)!);
+            File.Copy(file, dest, overwrite: true);
+        }
     }
 
     private static string? DeriveFolderNameFromZipFileName(string? originalFileName)
     {
-        if (string.IsNullOrWhiteSpace(originalFileName)) return null;
-        var baseName = Path.GetFileNameWithoutExtension(originalFileName.Trim());
-        return string.IsNullOrWhiteSpace(baseName) ? null : baseName;
+        if (string.IsNullOrWhiteSpace(originalFileName))
+            return null;
+
+        var baseName = Path.GetFileNameWithoutExtension(originalFileName!.Trim());
+        if (string.IsNullOrWhiteSpace(baseName))
+            return null;
+
+        // Remove trailing duplicate indicator like " (1)" or " (23)"
+        baseName = Regex.Replace(baseName, @"\s\(\d+\)$", string.Empty);
+
+        // If pattern ends with _<version> (e.g. _00.00.01) strip the version part
+        // Version pattern: one underscore + n.n.n (digits sections)
+        var match = Regex.Match(baseName, @"^(?<name>.+)_(?<version>\d+\.\d+\.\d+)$");
+        if (match.Success)
+            return match.Groups["name"].Value;
+
+        return baseName;
     }
 
     internal static bool IsValidFolderName(string name)
