@@ -1,5 +1,4 @@
 using System.IO.Compression;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -9,6 +8,7 @@ using ToSic.Eav.ImportExport.Sys.Zip;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Services;
+using ToSic.Sys.Security.Encryption;
 using ToSic.Sys.Users;
 using EavJsonSerializer = ToSic.Eav.ImportExport.Json.Sys.JsonSerializer;
 
@@ -58,18 +58,18 @@ public class ExportExtension(
         var extensionJsonPath = Path.Combine(extensionDataPath, FolderConstants.AppExtensionJsonFile);
 
         if (!File.Exists(extensionJsonPath))
-            throw l.Ex(new FileNotFoundException($"extension.json not found in extension: {name}"));
-        l.A($"extension.json found: '{extensionJsonPath}'");
+            throw l.Ex(new FileNotFoundException($"{FolderConstants.AppExtensionJsonFile} not found in extension: {name}"));
+        l.A($"{FolderConstants.AppExtensionJsonFile} found: '{extensionJsonPath}'");
 
         // 2. Read and modify extension.json
-        var extensionJsonText = File.ReadAllText(extensionJsonPath);
-        var extensionJson = JsonNode.Parse(extensionJsonText) as JsonObject
-            ?? throw l.Ex(new InvalidOperationException("extension.json is not a valid JSON object"));
-        l.A($"extension.json parsed: {extensionJsonText.Length} chars");
-        l.A($"\n{extensionJson}\n");
+
+        var extensionJson = JsonNode.Parse(File.ReadAllText(extensionJsonPath)) as JsonObject
+            ?? throw l.Ex(new InvalidOperationException($"{FolderConstants.AppExtensionJsonFile} is not a valid JSON object"));
+        l.A($"{FolderConstants.AppExtensionJsonFile} parsed");
+        l.A($"\n{extensionJson.ToJsonString()}\n");
 
         var modifiedJson = ModifyExtensionJson(extensionJson, appId, extensionDataPath, l);
-        l.A($"\n{modifiedJson}\n");
+        l.A($"\n{modifiedJson.ToJsonString()}\n");
 
         // 3. Collect files to include
         var filesToInclude = CollectFilesToInclude(extensionPath, extensionDataPath, modifiedJson, appPaths, name, l);
@@ -111,7 +111,7 @@ public class ExportExtension(
 
             // Add modified extension.json
             var modifiedJsonPath = $"{FolderConstants.AppExtensionsFolder}/{extensionName}/{FolderConstants.DataFolderProtected}/{FolderConstants.AppExtensionJsonFile}";
-            var modifiedJsonText = modifiedJson.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+            var modifiedJsonText = modifiedJson.ToJsonString();
             zipping.AddTextEntry(archive, modifiedJsonPath, modifiedJsonText, new UTF8Encoding(false));
             l.A($"Added modified {FolderConstants.AppExtensionJsonFile} to ZIP");
 
@@ -195,7 +195,7 @@ public class ExportExtension(
         var files = new List<(string, string)>();
 
         // 1. Always include /extensions/[name] folder (except App_Data which we handle separately)
-        AddDirectoryFiles(extensionPath, extensionPath, $"{FolderConstants.AppExtensionsFolder}/{extensionName}", files, exclude: new[] { FolderConstants.DataFolderProtected }, l);
+        AddDirectoryFiles(extensionPath, extensionPath, $"{FolderConstants.AppExtensionsFolder}/{extensionName}", files, exclude: new[] { $"{FolderConstants.DataFolderProtected}\\{FolderConstants.AppExtensionJsonFile}" }, l);
 
         // 2. Check for hasAppCode setting
         var hasAppCode = extensionJson.TryGetPropertyValue("hasAppCode", out var hasAppCodeNode) && hasAppCodeNode?.GetValue<bool>() == true;
@@ -275,7 +275,7 @@ public class ExportExtension(
                 : file;
             
             // Check exclusions
-            if (exclude != null && exclude.Any(ex => relativePath.StartsWith(ex, StringComparison.OrdinalIgnoreCase)))
+            if (exclude != null && exclude.Any(f => relativePath.StartsWith(f, StringComparison.OrdinalIgnoreCase)))
             {
                 l.A($"Excluding: {relativePath}");
                 continue;
@@ -300,16 +300,14 @@ public class ExportExtension(
         var fileList = files.Select(f => new
         {
             file = "/" + f.zipPath,
-            hash = ComputeFileHash(f.sourcePath)
+            hash = Sha256.Hash(File.ReadAllText(f.sourcePath))
         }).ToList();
 
         // Also add the modified extension.json hash
-        var jsonBytes = Encoding.UTF8.GetBytes(extensionJson.ToJsonString());
-        var jsonHash = ComputeHash(jsonBytes);
         fileList.Add(new
         {
             file = $"/{FolderConstants.AppExtensionsFolder}/{Path.GetFileName(Path.GetDirectoryName(files.FirstOrDefault().zipPath) ?? "")}/{FolderConstants.DataFolderProtected}/{FolderConstants.AppExtensionJsonFile}",
-            hash = jsonHash
+            hash = Sha256.Hash(extensionJson.ToJsonString())
         });
 
         l.A($"{FolderConstants.AppExtensionLockJsonFile} lock file created with {fileList.Count} entries");
@@ -319,25 +317,5 @@ public class ExportExtension(
             version,
             files = fileList
         });
-    }
-
-    private string ComputeFileHash(string filePath)
-    {
-        using var stream = File.OpenRead(filePath);
-        return ComputeHash(stream);
-    }
-
-    private string ComputeHash(Stream stream)
-    {
-        using var sha256 = SHA256.Create();
-        var hashBytes = sha256.ComputeHash(stream);
-        return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
-    }
-
-    private string ComputeHash(byte[] bytes)
-    {
-        using var sha256 = SHA256.Create();
-        var hashBytes = sha256.ComputeHash(bytes);
-        return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
     }
 }

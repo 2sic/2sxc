@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -8,6 +9,7 @@ using ToSic.Eav.Security.Files;
 using ToSic.Eav.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Configuration;
+using ToSic.Sys.Security.Encryption;
 
 namespace ToSic.Sxc.Backend.App;
 
@@ -309,7 +311,7 @@ public class ExtensionsBackend(
                     return new(false, $"hash missing for: {rel}", null);
                 var full = Path.Combine(sourcePath, rel.Replace('/', Path.DirectorySeparatorChar));
                 if (!File.Exists(full)) return new(false, $"file for hash missing: {rel}", null);
-                var actualHash = ComputeSha256(full);
+                var actualHash = Sha256.Hash(File.ReadAllText(full));
                 if (!string.Equals(actualHash, expected, StringComparison.OrdinalIgnoreCase))
                     return new(false, $"hash mismatch: {rel}", null);
             }
@@ -321,14 +323,6 @@ public class ExtensionsBackend(
             l.Ex(ex);
             return new(false, "lock parse error", null);
         }
-    }
-
-    private static string ComputeSha256(string filePath)
-    {
-        using var sha = System.Security.Cryptography.SHA256.Create();
-        using var stream = File.OpenRead(filePath);
-        var hash = sha.ComputeHash(stream);
-        return BitConverter.ToString(hash).Replace("-", string.Empty).ToLowerInvariant();
     }
 
     private static void CopyDirectory(string source, string target, ILog l, HashSet<string>? allowedFiles)
