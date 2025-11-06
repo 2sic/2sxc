@@ -110,17 +110,17 @@ public class ExportExtension(
             l.A($"Added {filesToInclude.Count} files to ZIP");
 
             // Add modified extension.json
-            var modifiedJsonPath = $"extensions/{extensionName}/App_Data/extension.json";
+            var modifiedJsonPath = $"{FolderConstants.AppExtensionsFolder}/{extensionName}/{FolderConstants.DataFolderProtected}/{FolderConstants.AppExtensionJsonFile}";
             var modifiedJsonText = modifiedJson.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
             zipping.AddTextEntry(archive, modifiedJsonPath, modifiedJsonText, new UTF8Encoding(false));
-            l.A("Added modified extension.json to ZIP");
+            l.A($"Added modified {FolderConstants.AppExtensionJsonFile} to ZIP");
 
             // Create and add lock file
             var lockData = CreateLockFile(filesToInclude, modifiedJson, l);
-            var lockPath = $"extensions/{extensionName}/App_Data/extension.lock.json";
+            var lockPath = $"{FolderConstants.AppExtensionsFolder}/{extensionName}/{FolderConstants.DataFolderProtected}/{FolderConstants.AppExtensionLockJsonFile}";
             var lockJson = JsonSerializer.Serialize(lockData, new JsonSerializerOptions { WriteIndented = true });
             zipping.AddTextEntry(archive, lockPath, lockJson, new UTF8Encoding(false));
-            l.A("Added lock file to ZIP");
+            l.A($"Added {FolderConstants.AppExtensionLockJsonFile} lock file to ZIP");
         }
 
         return l.ReturnAsOk(memoryStream);
@@ -130,7 +130,7 @@ public class ExportExtension(
     {
         var l = parentLog.Fn<JsonObject>();
 
-        l.A("Modifying extension.json");
+        l.A($"Modifying {FolderConstants.AppExtensionJsonFile}");
         
         // Set isInstalled to true
         json["isInstalled"] = true;
@@ -195,16 +195,16 @@ public class ExportExtension(
         var files = new List<(string, string)>();
 
         // 1. Always include /extensions/[name] folder (except App_Data which we handle separately)
-        AddDirectoryFiles(extensionPath, extensionPath, $"extensions/{extensionName}", files, exclude: new[] { FolderConstants.DataFolderProtected }, l);
+        AddDirectoryFiles(extensionPath, extensionPath, $"{FolderConstants.AppExtensionsFolder}/{extensionName}", files, exclude: new[] { FolderConstants.DataFolderProtected }, l);
 
         // 2. Check for hasAppCode setting
         var hasAppCode = extensionJson.TryGetPropertyValue("hasAppCode", out var hasAppCodeNode) && hasAppCodeNode?.GetValue<bool>() == true;
         if (hasAppCode)
         {
-            l.A("Extension has AppCode, including AppCode/Extensions folder");
+            l.A($"Extension has AppCode, including AppCode/{FolderConstants.AppExtensionsFolder} folder");
             var appCodeExtPath = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, extensionName);
             if (Directory.Exists(appCodeExtPath)) 
-                AddDirectoryFiles(appCodeExtPath, appCodeExtPath, $"AppCode/Extensions/{extensionName}", files, parentLog: l);
+                AddDirectoryFiles(appCodeExtPath, appCodeExtPath, $"AppCode/{FolderConstants.AppExtensionsFolder}/{extensionName}", files, parentLog: l);
         }
 
         // 3. Check for data-bundles
@@ -292,7 +292,7 @@ public class ExportExtension(
     private object CreateLockFile(List<(string sourcePath, string zipPath)> files, JsonObject extensionJson, ILog parentLog)
     {
         var l = parentLog.Fn<object>();
-        l.A("Creating lock file");
+        l.A($"Creating {FolderConstants.AppExtensionLockJsonFile} file");
 
         var version = extensionJson["version"]?.GetValue<string>() ?? "1.0.0";
         l.A($"{nameof(version)}:{version}");
@@ -308,11 +308,11 @@ public class ExportExtension(
         var jsonHash = ComputeHash(jsonBytes);
         fileList.Add(new
         {
-            file = $"/extensions/{Path.GetFileName(Path.GetDirectoryName(files.FirstOrDefault().zipPath) ?? "")}/App_Data/extension.json",
+            file = $"/{FolderConstants.AppExtensionsFolder}/{Path.GetFileName(Path.GetDirectoryName(files.FirstOrDefault().zipPath) ?? "")}/{FolderConstants.DataFolderProtected}/{FolderConstants.AppExtensionJsonFile}",
             hash = jsonHash
         });
 
-        l.A($"Lock file created with {fileList.Count} entries");
+        l.A($"{FolderConstants.AppExtensionLockJsonFile} lock file created with {fileList.Count} entries");
 
         return l.ReturnAsOk(new
         {
