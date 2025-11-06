@@ -154,9 +154,10 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
 
     /// <inheritdoc />
     [HttpGet]
-    [ValidateAntiForgeryToken]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    // Note: since this is a GET download, there is no ValidateAntiForgeryToken and no header with the module names
+    //[ValidateAntiForgeryToken]
+    //[SupportedModules(DnnSupportedModuleNames)]
+    [DnnAuthorize(StaticRoles = "Administrators")]
     public HttpResponseMessage Download([FromUri] int zoneId, [FromUri] int appId, [FromUri] string name)
         => Real.Download(zoneId, appId, name);
 }
