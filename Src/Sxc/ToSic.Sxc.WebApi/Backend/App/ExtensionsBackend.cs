@@ -242,21 +242,16 @@ public class ExtensionsBackend(
 
                 if (item.ValueKind == JsonValueKind.Object)
                 {
-                    // Prefer "file" as per spec, fallback to legacy "path"
                     if (!item.TryGetProperty("file", out var f) || f.ValueKind != JsonValueKind.String)
                         return new(false, "lock entry missing file", null);
 
                     file = f.GetString();
+
                     if (item.TryGetProperty("hash", out var h) && h.ValueKind == JsonValueKind.String)
                         hash = h.GetString();
                     else
                         return new(false, "lock entry missing hash", null);
                 }
-                //else if (item.ValueKind == JsonValueKind.String)
-                //{
-                //    // Legacy: just a string path (no hash)
-                //    file = item.GetString();
-                //}
                 else
                 {
                     return new(false, "invalid lock entry", null);
@@ -264,6 +259,9 @@ public class ExtensionsBackend(
 
                 if (string.IsNullOrWhiteSpace(file))
                     return new(false, "empty file in lock", null);
+
+                if (string.IsNullOrWhiteSpace(hash))
+                    return new(false, "empty hash in lock", null);
 
                 // Normalize: slashes, trim, remove leading '/', remove optional 'extensions/' + extFolderName prefix
                 file = file!.Replace('\\', '/').Trim();
@@ -276,17 +274,17 @@ public class ExtensionsBackend(
                     else
                         file = afterExt; // tolerate missing folder name in path
                 }
+
                 // basic traversal protection
                 if (file.StartsWith("..") || file.Contains("/../"))
                     return new(false, "illegal path in lock", null);
 
-                // Ensure we keep App_Data prefix casing
+                // Trim hash
+                hash = hash!.Trim();
+
+                // Add to allowed
                 allowed.Add(file);
-                if (!string.IsNullOrWhiteSpace(hash))
-                {
-                    var hex = hash!.Trim();
-                    expectedWithHash[file] = hex;
-                }
+                expectedWithHash[file] = hash;
             }
 
             // Gather actual files under source (relative)
