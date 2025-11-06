@@ -125,13 +125,13 @@ public class ExtensionsBackend(
             }
 
             // Locate top-level 'extensions' directory
-            var extensionsDir = Path.Combine(tempDir, "extensions");
+            var extensionsDir = Path.Combine(tempDir, FolderConstants.AppExtensionsFolder);
             if (!Directory.Exists(extensionsDir))
-                return l.ReturnFalse("zip missing top-level 'extensions' folder");
+                return l.ReturnFalse($"zip missing top-level '{FolderConstants.AppExtensionsFolder}' folder");
 
             var candidates = Directory.GetDirectories(extensionsDir, "*", SearchOption.TopDirectoryOnly);
             if (candidates.Length == 0)
-                return l.ReturnFalse("'extensions' folder empty");
+                return l.ReturnFalse($"'{FolderConstants.AppExtensionsFolder}' folder empty");
 
             // Determine source extension directory
             string? resolvedName = null;
@@ -172,6 +172,15 @@ public class ExtensionsBackend(
             if (!IsValidFolderName(folderName))
                 return l.ReturnFalse($"invalid folder name:'{folderName}'");
 
+            // Mandatory lock file validation
+            var lockFilePath = Path.Combine(sourcePath, FolderConstants.DataFolderProtected, FolderConstants.AppExtensionLockJsonFile);
+            if (!File.Exists(lockFilePath))
+                return l.ReturnFalse($"missing {FolderConstants.AppExtensionLockJsonFile}");
+
+            var lockValidation = ValidateLockFile(lockFilePath, sourcePath, l);
+            if (!lockValidation.Success)
+                return l.ReturnFalse(lockValidation.Error ?? "lock validation failed");
+
             var targetRoot = Path.Combine(extensionsRoot, folderName);
             if (Directory.Exists(targetRoot))
             {
@@ -180,8 +189,8 @@ public class ExtensionsBackend(
             }
             Directory.CreateDirectory(targetRoot);
 
-            // Copy contents
-            CopyDirectory(sourcePath, targetRoot, l);
+            // Copy contents (only allowed & verified files)
+            CopyDirectory(sourcePath, targetRoot, l, lockValidation.AllowedFiles);
 
             // Ensure App_Data/extension.json exists (create empty object if missing)
             var appData = Path.Combine(targetRoot, FolderConstants.DataFolderProtected);
@@ -208,19 +217,140 @@ public class ExtensionsBackend(
         }
     }
 
-    private static void CopyDirectory(string source, string target, ILog l)
+    private sealed record LockValidationResult(bool Success, string? Error, HashSet<string>? AllowedFiles);
+
+    private static LockValidationResult ValidateLockFile(string lockFilePath, string sourcePath, ILog l)
     {
-        foreach (var dir in Directory.GetDirectories(source, "*", SearchOption.AllDirectories))
+        try
         {
-            var rel = dir.Substring(source.Length).TrimStart(Path.DirectorySeparatorChar);
-            Directory.CreateDirectory(Path.Combine(target, rel));
+            var json = File.ReadAllText(lockFilePath);
+            using var doc = JsonDocument.Parse(json);
+            var root = doc.RootElement;
+            if (!root.TryGetProperty("files", out var filesProp) || filesProp.ValueKind != JsonValueKind.Array)
+                return new(false, "lock missing files array", null);
+
+            var extFolderName = Path.GetFileName(sourcePath);
+            var allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var expectedWithHash = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var item in filesProp.EnumerateArray())
+            {
+                string? file = null;
+                string? hash = null;
+
+                if (item.ValueKind == JsonValueKind.Object)
+                {
+                    // Prefer "file" as per spec, fallback to legacy "path"
+                    if (!item.TryGetProperty("file", out var f) || f.ValueKind != JsonValueKind.String)
+                        return new(false, "lock entry missing file", null);
+
+                    file = f.GetString();
+                    if (item.TryGetProperty("hash", out var h) && h.ValueKind == JsonValueKind.String)
+                        hash = h.GetString();
+                    else
+                        return new(false, "lock entry missing hash", null);
+                }
+                //else if (item.ValueKind == JsonValueKind.String)
+                //{
+                //    // Legacy: just a string path (no hash)
+                //    file = item.GetString();
+                //}
+                else
+                {
+                    return new(false, "invalid lock entry", null);
+                }
+
+                if (string.IsNullOrWhiteSpace(file))
+                    return new(false, "empty file in lock", null);
+
+                // Normalize: slashes, trim, remove leading '/', remove optional 'extensions/' + extFolderName prefix
+                file = file!.Replace('\\', '/').Trim();
+                file = file.TrimStart('/');
+                if (file.StartsWith("extensions/", StringComparison.OrdinalIgnoreCase))
+                {
+                    var afterExt = file.Substring("extensions/".Length);
+                    if (afterExt.StartsWith(extFolderName + "/", StringComparison.OrdinalIgnoreCase))
+                        file = afterExt.Substring(extFolderName.Length + 1);
+                    else
+                        file = afterExt; // tolerate missing folder name in path
+                }
+                // basic traversal protection
+                if (file.StartsWith("..") || file.Contains("/../"))
+                    return new(false, "illegal path in lock", null);
+
+                // Ensure we keep App_Data prefix casing
+                allowed.Add(file);
+                if (!string.IsNullOrWhiteSpace(hash))
+                {
+                    var hex = hash!.Trim();
+                    expectedWithHash[file] = hex;
+                }
+            }
+
+            // Gather actual files under source (relative)
+            var lockFileName = FolderConstants.AppExtensionLockJsonFile;
+            var actualFiles = Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories)
+                .Select(f => f.Substring(sourcePath.Length).TrimStart(Path.DirectorySeparatorChar).Replace(Path.DirectorySeparatorChar, '/'))
+                .Where(f => !string.Equals(Path.GetFileName(f), lockFileName, StringComparison.OrdinalIgnoreCase))
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            // Check for missing files
+            var missing = allowed.Where(a => !actualFiles.Contains(a)).ToList();
+            if (missing.Any()) return new(false, $"missing files: {string.Join(",", missing)}", null);
+
+            // Check for extra files
+            var extras = actualFiles.Where(a => !allowed.Contains(a)).ToList();
+            if (extras.Any()) return new(false, $"unexpected files: {string.Join(",", extras)}", null);
+
+            // Hash verification (all entries required to have a hash)
+            foreach (var rel in allowed)
+            {
+                if (!expectedWithHash.TryGetValue(rel, out var expected))
+                    return new(false, $"hash missing for: {rel}", null);
+                var full = Path.Combine(sourcePath, rel.Replace('/', Path.DirectorySeparatorChar));
+                if (!File.Exists(full)) return new(false, $"file for hash missing: {rel}", null);
+                var actualHash = ComputeSha256(full);
+                if (!string.Equals(actualHash, expected, StringComparison.OrdinalIgnoreCase))
+                    return new(false, $"hash mismatch: {rel}", null);
+            }
+
+            return new(true, null, allowed);
         }
-        foreach (var file in Directory.GetFiles(source, "*", SearchOption.AllDirectories))
+        catch (Exception ex)
         {
-            var rel = file.Substring(source.Length).TrimStart(Path.DirectorySeparatorChar);
-            var dest = Path.Combine(target, rel);
-            Directory.CreateDirectory(Path.GetDirectoryName(dest)!);
-            File.Copy(file, dest, overwrite: true);
+            l.Ex(ex);
+            return new(false, "lock parse error", null);
+        }
+    }
+
+    private static string ComputeSha256(string filePath)
+    {
+        using var sha = System.Security.Cryptography.SHA256.Create();
+        using var stream = File.OpenRead(filePath);
+        var hash = sha.ComputeHash(stream);
+        return BitConverter.ToString(hash).Replace("-", string.Empty).ToLowerInvariant();
+    }
+
+    private static void CopyDirectory(string source, string target, ILog l, HashSet<string>? allowedFiles)
+    {
+        var sourceLen = source.Length;
+        var allFiles = Directory.GetFiles(source, "*", SearchOption.AllDirectories);
+        foreach (var file in allFiles)
+        {
+            var rel = file.Substring(sourceLen).TrimStart(Path.DirectorySeparatorChar).Replace(Path.DirectorySeparatorChar, '/');
+            if (string.Equals(rel, FolderConstants.AppExtensionLockJsonFile, StringComparison.OrdinalIgnoreCase)) continue; // skip lock itself (will copy at end)
+            if (allowedFiles != null && !allowedFiles.Contains(rel)) continue; // shouldn't happen after validation
+            var destFull = Path.Combine(target, rel.Replace('/', Path.DirectorySeparatorChar));
+            Directory.CreateDirectory(Path.GetDirectoryName(destFull)!);
+            File.Copy(file, destFull, overwrite: true);
+        }
+
+        // Copy lock file
+        var lockPath = Path.Combine(source, FolderConstants.AppExtensionLockJsonFile);
+        if (File.Exists(lockPath))
+        {
+            var destLock = Path.Combine(target, FolderConstants.AppExtensionLockJsonFile);
+            try { File.Copy(lockPath, destLock, overwrite: true); } catch { /* ignore */ }
         }
     }
 
