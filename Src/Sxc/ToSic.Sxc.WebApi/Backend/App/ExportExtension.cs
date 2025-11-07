@@ -11,9 +11,6 @@ using ToSic.Sxc.Services;
 using ToSic.Sys.Security.Encryption;
 using ToSic.Sys.Users;
 using EavJsonSerializer = ToSic.Eav.ImportExport.Json.Sys.JsonSerializer;
-using ToSic.Sxc.Data;
-
-
 
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;
@@ -32,7 +29,8 @@ public class ExportExtension(
     LazySvc<IJsonService> jsonLazy,
     IUser user,
     IResponseMaker responseMaker,
-    Generator<EavJsonSerializer> jsonSerializerGenerator)
+    Generator<EavJsonSerializer> jsonSerializerGenerator,
+    LazySvc<ContentExportApi> contentExport)
     : ServiceBase("Bck.ExtExp", connect: [appReadersLazy, site, appPathSvc, jsonLazy, user, responseMaker, jsonSerializerGenerator])
 {
     public THttpResponseType Export(int zoneId, int appId, string name)
@@ -64,7 +62,6 @@ public class ExportExtension(
         l.A($"{FolderConstants.AppExtensionJsonFile} found: '{extensionJsonPath}'");
 
         // 2. Read and modify extension.json
-
         var extensionJson = JsonNode.Parse(File.ReadAllText(extensionJsonPath)) as JsonObject
             ?? throw l.Ex(new InvalidOperationException($"{FolderConstants.AppExtensionJsonFile} is not a valid JSON object"));
         l.A($"{FolderConstants.AppExtensionJsonFile} parsed");
@@ -74,13 +71,46 @@ public class ExportExtension(
         l.A($"\n{modifiedJson.ToJsonString()}\n");
 
         // 3. Collect files to include
-        var filesToInclude = CollectFilesToInclude(extensionPath, extensionDataPath, modifiedJson, appPaths, name, l);
+        var filesToInclude = CollectFilesToInclude(extensionPath, modifiedJson, appPaths, name, l);
 
-        // 4. Create ZIP using Zipping helper
+        // 4. Handle data bundles
+        var bundles = new List<(string sourcePath, string zipPath, string content)>();
+        var hasDataBundles = extensionJson.TryGetPropertyValue("hasDataBundles", out var hasAppCodeNode)
+                             && hasAppCodeNode?.GetValue<bool>() == true;
+        if (hasDataBundles && modifiedJson.TryGetPropertyValue("bundles", out var bundlesNode))
+        {
+            // Convert bundlesNode to JsonArray, handling both string and array cases
+            JsonArray bundlesArray;
+            switch (bundlesNode)
+            {
+                case JsonValue jsonValue when jsonValue.TryGetValue<string>(out var singleBundle):
+                    // Single bundle as string - convert to array
+                    bundlesArray = new JsonArray { singleBundle };
+                    l.A($"Single bundle found, converted to array: {singleBundle}");
+                    break;
+                case JsonArray existingArray:
+                    // Already an array
+                    bundlesArray = existingArray;
+                    break;
+                default:
+                    // Unexpected type
+                    l.A($"Unexpected bundles type: {bundlesNode?.GetType().Name}, skipping");
+                    bundlesArray = new JsonArray();
+                    break;
+            }
+
+            if (bundlesArray.Count > 0)
+            {
+                l.A($"Exporting {bundlesArray.Count} data bundles");
+                bundles = ExportDataBundles(bundlesArray, extensionDataPath, name, appId, l);
+            }
+        }
+
+        // 5. Create ZIP using Zipping helper
         var version = modifiedJson["version"]?.GetValue<string>() ?? "1.0.0";
         var fileName = $"{name}_{version}.zip";
         
-        using var memoryStream = CreateZipArchive(filesToInclude, modifiedJson, name, l);
+        using var memoryStream = CreateZipArchive(filesToInclude, bundles, modifiedJson, name, l);
         memoryStream.Position = 0;
         var fileBytes = memoryStream.ToArray();
         var mimeType = MimeTypeConstants.FallbackType;
@@ -95,7 +125,8 @@ public class ExportExtension(
     }
 
     private MemoryStream CreateZipArchive(
-        List<(string sourcePath, string zipPath)> filesToInclude, 
+        List<(string sourcePath, string zipPath)> filesToInclude,
+        List<(string sourcePath, string zipPath, string contenet)> bundles,
         JsonObject modifiedJson, 
         string extensionName,
         ILog parentLog)
@@ -117,8 +148,15 @@ public class ExportExtension(
             zipping.AddTextEntry(archive, modifiedJsonPath, modifiedJsonText, new UTF8Encoding(false));
             l.A($"Added modified {FolderConstants.AppExtensionJsonFile} to ZIP");
 
+            // Handle data bundles
+            foreach (var (sourcePath, zipPath, content) in bundles)
+            {
+                zipping.AddTextEntry(archive, zipPath, content, new UTF8Encoding(false));
+                l.A($"Added data bundle to ZIP: {zipPath}");
+            }
+
             // Create and add lock file
-            var lockData = CreateLockFile(filesToInclude, modifiedJson, l);
+            var lockData = CreateLockFile(filesToInclude, bundles, modifiedJson, l);
             var lockPath = $"{FolderConstants.AppExtensionsFolder}/{extensionName}/{FolderConstants.DataFolderProtected}/{FolderConstants.AppExtensionLockJsonFile}";
             var lockJson = JsonSerializer.Serialize(lockData, new JsonSerializerOptions { WriteIndented = true });
             zipping.AddTextEntry(archive, lockPath, lockJson, new UTF8Encoding(false));
@@ -183,8 +221,7 @@ public class ExportExtension(
     }
 
     private List<(string sourcePath, string zipPath)> CollectFilesToInclude(
-        string extensionPath, 
-        string extensionDataPath,
+        string extensionPath,
         JsonObject extensionJson,
         IAppPaths appPaths,
         string extensionName,
@@ -209,23 +246,17 @@ public class ExportExtension(
                 AddDirectoryFiles(appCodeExtPath, appCodeExtPath, $"AppCode/{FolderConstants.AppExtensionsFolder}/{extensionName}", files, parentLog: l);
         }
 
-        // 3. Check for data-bundles
-        if (extensionJson.TryGetPropertyValue("data-bundles", out var bundlesNode) && bundlesNode is JsonArray { Count: > 0 } bundles)
-        {
-            l.A($"Extension has {bundles.Count} data bundles");
-            ExportDataBundles(bundles, extensionDataPath, extensionName, files, l);
-        }
-
         l.A($"Collected {files.Count} files");
         return l.ReturnAsOk(files);
     }
 
-    private void ExportDataBundles(JsonArray bundles, string extensionDataPath, string extensionName, List<(string, string)> files, ILog parentLog)
+    private List<(string, string, string)> ExportDataBundles(JsonArray bundles, string extensionDataPath, string extensionName, int appId, ILog parentLog)
     {
-        var l = parentLog.Fn();
-
+        var l = parentLog.Fn<List<(string, string, string)>>();
+        
+        var bundlesExport = contentExport.Value.Init(appId);
+        var files = new List<(string, string, string)>();
         var bundlesDir = Path.Combine(extensionDataPath, "system", "bundles");
-        Directory.CreateDirectory(bundlesDir);
 
         foreach (var bundleRef in bundles)
         {
@@ -237,23 +268,13 @@ public class ExportExtension(
             }
 
             // Export bundle entity as JSON
-            var bundlePath = Path.Combine(bundlesDir, $"{guid}.json");
-            
-            // Note: This is simplified - you may need to use proper entity export logic
-            // For now, we'll create a placeholder that should be replaced with actual bundle export
-            var bundleJson = new JsonObject
-            {
-                ["_guid"] = guid.ToString(),
-                ["_note"] = "Bundle export not yet fully implemented - needs entity serialization"
-            };
-            
-            File.WriteAllText(bundlePath, bundleJson.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
-            
-            var zipPath = $"extensions/{extensionName}/App_Data/system/bundles/{guid}.json";
-            files.Add((bundlePath, zipPath));
+            var (export, fileContent) = bundlesExport.CreateBundleExport(guid, 2);
+            var bundlePath = Path.Combine(bundlesDir, export.FileName);
+            var zipPath = $"extensions/{extensionName}/App_Data/system/bundles/{export.FileName}";
+            files.Add((bundlePath, zipPath, fileContent));
         }
 
-        l.Done();
+        return l.ReturnAsOk(files);
     }
 
     private void AddDirectoryFiles(string sourcePath, string baseSourcePath, string baseZipPath, List<(string, string)> files, string[]? exclude = null, ILog? parentLog = null)
@@ -291,7 +312,7 @@ public class ExportExtension(
         l.Done($"Added {files.Count} files to collection");
     }
 
-    private object CreateLockFile(List<(string sourcePath, string zipPath)> files, JsonObject extensionJson, ILog parentLog)
+    private object CreateLockFile(List<(string sourcePath, string zipPath)> files, List<(string sourcePath, string zipPath, string contenet)> bundles, JsonObject extensionJson, ILog parentLog)
     {
         var l = parentLog.Fn<object>();
         l.A($"Creating {FolderConstants.AppExtensionLockJsonFile} file");
@@ -304,6 +325,15 @@ public class ExportExtension(
             file = "/" + f.zipPath,
             hash = Sha256.Hash(File.ReadAllText(f.sourcePath))
         }).ToList();
+
+        // Include bundles
+        fileList.AddRange(
+            bundles.Select(b => new
+            {
+                file = "/" + b.zipPath,
+                hash = Sha256.Hash(b.contenet)
+            }).ToList()
+            );
 
         // Also add the modified extension.json hash
         fileList.Add(new
