@@ -6,7 +6,6 @@ using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.ImportExport.Sys.Zip;
 using ToSic.Eav.Security.Files;
 using ToSic.Eav.Sys;
-using ToSic.Razor.Html5;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Configuration;
 using ToSic.Sys.Security.Encryption;
@@ -166,17 +165,24 @@ public class ExtensionsBackend(
             if (!lockValidation.Success)
                 return l.ReturnFalse(lockValidation.Error ?? $"{FolderConstants.AppExtensionLockJsonFile} validation failed");
 
-
+            // TODO: upgrade scenario?
             var targetRoot = Path.Combine(extensionsRoot, folderName);
             if (Directory.Exists(targetRoot))
             {
                 if (!overwrite) return l.ReturnFalse("target exists - set overwrite");
                 try { Zipping.TryToDeleteDirectory(targetRoot, l); } catch { /* ignore */ }
             }
-            Directory.CreateDirectory(targetRoot);
+
+            // delete AppCode/extensions/[name]
+            var appCodeExtensionDirectory = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, folderName);
+            if (Directory.Exists(appCodeExtensionDirectory))
+            {
+                if (!overwrite) return l.ReturnFalse("target exists - set overwrite");
+                try { Zipping.TryToDeleteDirectory(appCodeExtensionDirectory, l); } catch { /* ignore */ }
+            }
 
             // Copy contents (only allowed & verified files)
-            CopyDirectory(sourcePath, targetRoot, l, lockValidation.AllowedFiles);
+            CopyDirectory(tempDir, appPaths.PhysicalPath, l, lockValidation.AllowedFiles);
 
             // Ensure App_Data/extension.json exists (create empty object if missing)
             var appData = Path.Combine(targetRoot, FolderConstants.DataFolderProtected);
@@ -292,6 +298,7 @@ public class ExtensionsBackend(
             if (!root.TryGetProperty("files", out var filesProp) || filesProp.ValueKind != JsonValueKind.Array)
                 return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionLockJsonFile} missing 'files' array", null));
 
+            var extractionPath = Directory.GetParent(Directory.GetParent(sourcePath)!.FullName)!.FullName;
             var extFolderName = Path.GetFileName(sourcePath);
             var allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             var expectedWithHash = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -323,16 +330,7 @@ public class ExtensionsBackend(
                     return l.ReturnAsError(new(false, $"empty 'hash' in {FolderConstants.AppExtensionLockJsonFile}", null));
 
                 // Normalize: slashes, trim, remove leading '/', remove optional 'extensions/' + extFolderName prefix
-                file = file!.Replace('\\', '/').Trim();
-                file = file.TrimStart('/');
-                if (file.StartsWith("extensions/", StringComparison.OrdinalIgnoreCase))
-                {
-                    var afterExt = file.Substring("extensions/".Length);
-                    if (afterExt.StartsWith(extFolderName + "/", StringComparison.OrdinalIgnoreCase))
-                        file = afterExt.Substring(extFolderName.Length + 1);
-                    else
-                        file = afterExt; // tolerate missing folder name in path
-                }
+                file = file!.Replace('\\', '/').Trim().TrimStart('/');
 
                 // basic traversal protection
                 if (file.StartsWith("..") || file.Contains("/../"))
@@ -349,8 +347,8 @@ public class ExtensionsBackend(
 
             // Gather actual files under source (relative)
             var lockFileName = FolderConstants.AppExtensionLockJsonFile;
-            var actualFiles = Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories)
-                .Select(f => f.Substring(sourcePath.Length).TrimStart(Path.DirectorySeparatorChar).Replace(Path.DirectorySeparatorChar, '/'))
+            var actualFiles = Directory.GetFiles(extractionPath, "*", SearchOption.AllDirectories)
+                .Select(f => f.Substring(extractionPath.Length).TrimStart(Path.DirectorySeparatorChar).Replace(Path.DirectorySeparatorChar, '/'))
                 .Where(f => !string.Equals(Path.GetFileName(f), lockFileName, StringComparison.OrdinalIgnoreCase))
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
@@ -370,7 +368,7 @@ public class ExtensionsBackend(
                 if (!expectedWithHash.TryGetValue(rel, out var expected))
                     return l.ReturnAsError(new(false, $"hash missing for:{rel}", null));
 
-                var full = Path.Combine(sourcePath, rel.Replace('/', Path.DirectorySeparatorChar));
+                var full = Path.Combine(extractionPath, rel.Replace('/', Path.DirectorySeparatorChar));
                 if (!File.Exists(full))
                     return l.ReturnAsError(new(false, $"file for hash missing:{rel}", null));
 

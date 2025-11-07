@@ -149,7 +149,7 @@ public class AppController() : DnnSxcControllerBase(RealController.LogSuffix), I
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public bool InstallExtension([FromUri] int zoneId, [FromUri] int appId, [FromUri] string name = null, [FromUri] bool overwrite = false)
+    public bool InstallExtension([FromUri] int zoneId, [FromUri] int appId, [FromUri] string name = null, [FromUri] bool overwrite = true)
         => Real.InstallExtensionZip(new(Request, HttpContext.Current.Request), zoneId, appId, name, overwrite);
 
     /// <inheritdoc />
