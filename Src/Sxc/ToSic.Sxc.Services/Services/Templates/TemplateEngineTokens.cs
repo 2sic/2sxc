@@ -13,7 +13,7 @@ internal class TemplateEngineTokens(ILookUpEngine original): ITemplateEngine, IW
     /// it's important to use depth 0 to prevent things such as query-string parameters providing new tokens
     /// otherwise you could have a [QueryString:Id] but the url being ?id=[page:id] or of course worse
     /// </summary>
-    private const int MaxDepth = 0;
+    internal const int MaxDepth = 0;
 
     IEnumerable<ILookUp> ITemplateEngine.GetSources(NoParamOrder protector, int depth)
     {
@@ -35,7 +35,7 @@ internal class TemplateEngineTokens(ILookUpEngine original): ITemplateEngine, IW
     string ITemplateEngine.Parse(string template)
         => ((ITemplateEngine)this).Parse(template, protector: default, sources: null);
 
-    string ITemplateEngine.Parse(string template, NoParamOrder protector, bool allowHtml, IEnumerable<ILookUp>? sources)
+    string ITemplateEngine.Parse(string template, NoParamOrder protector, bool allowHtml, IEnumerable<ILookUp>? sources, int recursions)
     {
         var dic = new Dictionary<string, string>
         {

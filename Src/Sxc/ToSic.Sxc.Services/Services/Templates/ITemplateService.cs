@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.LookUp;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services.Template;
+using ToSic.Sxc.Services.Templates;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Services;
@@ -86,17 +87,6 @@ public interface ITemplateService
     ILookUp CreateSource(string name, Func<string, string, string> getter);
 
     /// <summary>
-    /// Quick parse a template using the default engine, and optional sources.
-    /// </summary>
-    /// <param name="template"></param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
-    /// <param name="allowHtml">allow adding html to the string - if false (default) will html encode anything found for safety before replacing something</param>
-    /// <param name="sources"></param>
-    /// <returns></returns>
-    string Parse(string template, NoParamOrder protector = default, bool allowHtml = false, IEnumerable<ILookUp>? sources = default);
-
-
-    /// <summary>
     /// Merge multiple sources into one.
     /// </summary>
     /// <param name="name"></param>
@@ -108,6 +98,22 @@ public interface ITemplateService
     ILookUp MergeSources(string name, IEnumerable<ILookUp> sources);
 
     /// <summary>
+    /// Quick parse a template using the default engine, and optional sources.
+    /// </summary>
+    /// <param name="template"></param>
+    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="allowHtml">allow adding html to the string - if false (default) will html encode anything found for safety before replacing something</param>
+    /// <param name="sources"></param>
+    /// <param name="recursions">
+    /// Recursion depth for tokens-in-tokens.
+    /// Could leak unexpected information, if a token contains user provided data or url-parameters so _use with caution_.
+    /// Defaults to `0`, added v20.09
+    /// </param>
+    /// <returns></returns>
+    string Parse(string template, NoParamOrder protector = default, bool allowHtml = false, IEnumerable<ILookUp>? sources = default, int recursions = TemplateEngineTokens.MaxDepth);
+
+
+    /// <summary>
     /// Take an entity, TypedItem or similar object, and return a TypedItem which will run its values through the parser.
     /// </summary>
     /// <param name="original"></param>
@@ -115,13 +121,18 @@ public interface ITemplateService
     /// <param name="allowHtml">allow adding html to the string - if false (default) will html encode anything found for safety before replacing something</param>
     /// <param name="parser">A prepared parser - takes preference over `sources`</param>
     /// <param name="sources">A list of sources to create a parser</param>
+    /// <param name="recursions">
+    /// Recursion depth for tokens-in-tokens.
+    /// Could leak unexpected information, if a token contains user provided data or url-parameters so _use with caution_.
+    /// Defaults to `0` for safety.
+    /// </param>
     /// <returns>An ITypedItem to be used with `.String("name")` etc.</returns>
     /// <remarks>
     /// WIP v20.09
     ///
     /// If neither parser nor sources are provided, an empty parser will be used, resulting in no changes to the original values.
     /// </remarks>
-    ITypedItem ParseAsItem(ICanBeEntity original, NoParamOrder protector = default, bool allowHtml = false, ITemplateEngine? parser = null, IEnumerable<ILookUp>? sources = null);
+    ITypedItem ParseAsItem(ICanBeEntity original, NoParamOrder protector = default, bool allowHtml = false, ITemplateEngine? parser = null, IEnumerable<ILookUp>? sources = null, int recursions = TemplateEngineTokens.MaxDepth);
 
     /// <summary>
     /// Take an entity, TypedItem or similar object, and return a type `T` which will run its values through the parser.
@@ -131,12 +142,17 @@ public interface ITemplateService
     /// <param name="allowHtml">allow adding html to the string - if false (default) will html encode anything found for safety before replacing something</param>
     /// <param name="parser">A prepared parser - takes preference over `sources`</param>
     /// <param name="sources">A list of sources to create a parser</param>
+    /// <param name="recursions">
+    /// Recursion depth for tokens-in-tokens.
+    /// Could leak unexpected information, if a token contains user provided data or url-parameters so _use with caution_.
+    /// Defaults to `0` for safety.
+    /// </param>
     /// <returns>A TypedItem of specified type `T`</returns>
     /// <remarks>
     /// WIP v20.09
     ///
     /// If neither parser nor sources are provided, an empty parser will be used, resulting in no changes to the original values.
     /// </remarks>
-    T ParseAs<T>(ICanBeEntity original, NoParamOrder protector = default, bool allowHtml = false, ITemplateEngine? parser = null, IEnumerable<ILookUp>? sources = null)
+    T ParseAs<T>(ICanBeEntity original, NoParamOrder protector = default, bool allowHtml = false, ITemplateEngine? parser = null, IEnumerable<ILookUp>? sources = null, int recursions = TemplateEngineTokens.MaxDepth)
         where T : class, ICanWrapData;
 }

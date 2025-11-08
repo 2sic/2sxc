@@ -66,8 +66,8 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : 
     private ITemplateEngine Engine => field ??= Default();
 
 
-    string ITemplateService.Parse(string template, NoParamOrder protector, bool allowHtml, IEnumerable<ILookUp>? sources)
-        => Engine.Parse(template, protector, allowHtml: allowHtml, sources: sources);
+    string ITemplateService.Parse(string template, NoParamOrder protector, bool allowHtml, IEnumerable<ILookUp>? sources, int recursions)
+        => Engine.Parse(template, protector, allowHtml: allowHtml, sources: sources, recursions: recursions);
 
     #endregion
 
@@ -112,10 +112,11 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : 
 
     #region Create Templated Entity
 
-    public ITypedItem ParseAsItem(ICanBeEntity original, NoParamOrder protector = default,
-        bool allowHtml = false,
-        ITemplateEngine? parser = null,
-        IEnumerable<ILookUp>? sources = null
+    ITypedItem ITemplateService.ParseAsItem(ICanBeEntity original, NoParamOrder protector,
+        bool allowHtml,
+        ITemplateEngine? parser, 
+        IEnumerable<ILookUp>? sources,
+        int recursions
     )
     {
         var entity = original.Entity;
@@ -128,14 +129,14 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : 
         return templated;
     }
 
-    public T ParseAs<T>(ICanBeEntity original, NoParamOrder protector = default,
-        bool allowHtml = false,
-        ITemplateEngine? parser = null,
-        IEnumerable<ILookUp>? sources = null
+    T ITemplateService.ParseAs<T>(ICanBeEntity original, NoParamOrder protector,
+        bool allowHtml,
+        ITemplateEngine? parser,
+        IEnumerable<ILookUp>? sources,
+        int recursions
     )
-        where T : class, ICanWrapData
     {
-        var templated = ParseAsItem(original, protector, allowHtml, parser, sources);
+        var templated = ((ITemplateService)this).ParseAsItem(original, protector, allowHtml, parser, sources, recursions: recursions);
         return Cdf.AsCustom<T>(source: templated);
     }
 
