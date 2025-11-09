@@ -85,7 +85,8 @@ public class ExtensionsBackend(
         try
         {
             Directory.CreateDirectory(appData);
-            var json = configuration.GetRawText();
+            using var jsonDoc = JsonDocument.Parse(configuration.GetRawText());
+            var json = JsonSerializer.Serialize(jsonDoc, new JsonSerializerOptions { WriteIndented = true }); // configuration.GetRawText();
             File.WriteAllText(jsonPath, json, new UTF8Encoding(false));
             return l.ReturnTrue("saved");
         }
