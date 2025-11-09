@@ -120,7 +120,7 @@ public class ExtensionsBackend(
             // Extract entire zip to temp; allowCodeImport:true so front-end assets (.js/.css) are not blocked.
             try
             {
-                new Zipping(l).ExtractZipStream(zipStream, tempDir, allowCodeImport: true);
+                new Zipping(Log).ExtractZipStream(zipStream, tempDir, allowCodeImport: true);
             }
             catch (Exception ex)
             {
@@ -190,7 +190,7 @@ public class ExtensionsBackend(
             var extJson = Path.Combine(appData, FolderConstants.AppExtensionJsonFile);
             if (!File.Exists(extJson))
             {
-                try { File.WriteAllText(extJson, "{}", new UTF8Encoding(false)); } catch { /* ignore */ }
+                try { File.WriteAllText(extJson, @"{}", new UTF8Encoding(false)); } catch { /* ignore */ }
             }
 
             return l.ReturnTrue($"installed '{folderName}'");

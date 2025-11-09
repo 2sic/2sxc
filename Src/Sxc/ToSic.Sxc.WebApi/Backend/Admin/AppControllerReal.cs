@@ -5,7 +5,6 @@ using ToSic.Eav.ImportExport.Sys;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Eav.WebApi.Sys.Languages;
-using ToSic.Eav.WebApi.Sys.Dto;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Backend.AppStack;
 using ToSic.Sxc.Backend.ImportExport;
@@ -177,5 +176,5 @@ public class AppControllerReal(
     /// <param name="name"></param>
     /// <returns></returns>
     public THttpResponseType Download(int zoneId, int appId, string name)
-        => exportExtensionLazy.Value.Export(zoneId, appId, name) as THttpResponseType;
+        => exportExtensionLazy.Value.Export(zoneId, appId, name);
 }

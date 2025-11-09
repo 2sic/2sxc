@@ -13,6 +13,8 @@ using ToSic.Sys.Coding; // NoParamOrder
 using ToSic.Sys.DI;
 using ToSic.Sys.Logging; // ILog
 using System.IO.Compression;
+using Tests.ToSic.ToSxc.WebApi.Extensions;
+using static Xunit.Assert;
 
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
@@ -34,29 +36,29 @@ public class ExtensionsBackendTests
         using var configDoc = JsonDocument.Parse(configJson);
         var configElem = configDoc.RootElement;
 
-        var saved = ctx.Backend.SaveExtension(zoneId: 1, appId: 42, name: "foo", configuration: configElem);
-        Assert.True(saved);
+        var saved = ctx.Backend.SaveExtensionTac(zoneId: 1, appId: 42, name: "foo", configuration: configElem);
+        True(saved);
 
         // also create another extension folder without a config file
         var barFolder = Path.Combine(ctx.TempRoot, FolderConstants.AppExtensionsFolder, "bar");
         Directory.CreateDirectory(barFolder);
 
-        var result = ctx.Backend.GetExtensions(42);
-        Assert.NotNull(result);
-        Assert.NotNull(result.Extensions);
+        var result = ctx.Backend.GetExtensionsTac(42);
+        NotNull(result);
+        NotNull(result.Extensions);
 
         var foo = result.Extensions.FirstOrDefault(e => e.Folder == "foo");
-        Assert.NotNull(foo);
-        Assert.NotNull(foo!.Configuration);
+        NotNull(foo);
+        NotNull(foo!.Configuration);
 
         var jsonSvc = ctx.JsonSvc;
         var expectedJson = jsonSvc.ToJson(config);
         var actualJson = jsonSvc.ToJson(foo.Configuration!);
-        Assert.Equal(expectedJson, actualJson);
+        Equal(expectedJson, actualJson);
 
         var bar = result.Extensions.FirstOrDefault(e => e.Folder == "bar");
-        Assert.NotNull(bar);
-        Assert.NotNull(bar!.Configuration);
+        NotNull(bar);
+        NotNull(bar!.Configuration);
     }
 
     [Fact]
@@ -74,19 +76,19 @@ public class ExtensionsBackendTests
         using var cfgDoc = JsonDocument.Parse(SampleSimpleJson);
         var cfgElem = cfgDoc.RootElement;
 
-        var saved = ctx.Backend.SaveExtension(zoneId: 1, appId: 1, name: folder, configuration: cfgElem);
-        Assert.True(saved);
+        var saved = ctx.Backend.SaveExtensionTac(zoneId: 1, appId: 1, name: folder, configuration: cfgElem);
+        True(saved);
 
-        var result = ctx.Backend.GetExtensions(1);
-        Assert.NotNull(result);
+        var result = ctx.Backend.GetExtensionsTac(1);
+        NotNull(result);
         var item = result.Extensions.FirstOrDefault(e => e.Folder == folder);
-        Assert.NotNull(item);
-        Assert.NotNull(item!.Configuration);
+        NotNull(item);
+        NotNull(item!.Configuration);
 
         // Normalize both to minified JSON and compare
         var expected = ctx.JsonSvc.ToJson(ctx.JsonSvc.ToObject(SampleSimpleJson)!);
         var actual = ctx.JsonSvc.ToJson(item.Configuration!);
-        Assert.Equal(expected, actual);
+        Equal(expected, actual);
     }
 
     [Fact]
@@ -103,16 +105,16 @@ public class ExtensionsBackendTests
         // Write pretty JSON as it might come from source control
         File.WriteAllText(jsonPath, ComplexFeatureJson, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
 
-        var result = ctx.Backend.GetExtensions(99);
-        Assert.NotNull(result);
+        var result = ctx.Backend.GetExtensionsTac(99);
+        NotNull(result);
         var item = result.Extensions.FirstOrDefault(e => e.Folder == complexFeatureExtension);
-        Assert.NotNull(item);
-        Assert.NotNull(item!.Configuration);
+        NotNull(item);
+        NotNull(item!.Configuration);
 
         // Normalize both to minified JSON and compare
         var expected = ctx.JsonSvc.ToJson(ctx.JsonSvc.ToObject(ComplexFeatureJson)!);
         var actual = ctx.JsonSvc.ToJson(item.Configuration!);
-        Assert.Equal(expected, actual);
+        Equal(expected, actual);
     }
 
     [Fact]
@@ -135,13 +137,13 @@ public class ExtensionsBackendTests
         }
         ms.Position = 0;
 
-        var ok = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms, name: null, overwrite: false, originalZipFileName: "color-picker.zip");
-        Assert.True(ok);
+        var ok = ctx.Backend.InstallExtensionZipTac(zoneId: 1, appId: 42, zipStream: ms, name: null, overwrite: false, originalZipFileName: "color-picker.zip");
+        True(ok);
 
-        var result = ctx.Backend.GetExtensions(42);
-        Assert.Contains(result.Extensions, e => e.Folder == "color-picker");
+        var result = ctx.Backend.GetExtensionsTac(42);
+        Contains(result.Extensions, e => e.Folder == "color-picker");
         var cfg = result.Extensions.First(e => e.Folder == "color-picker").Configuration;
-        Assert.NotNull(cfg);
+        NotNull(cfg);
     }
 
     [Fact]
@@ -159,8 +161,8 @@ public class ExtensionsBackendTests
         }
         ms.Position = 0;
 
-        var ok = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms, name: "bad", overwrite: false, originalZipFileName: "bad.zip");
-        Assert.False(ok);
+        var ok = ctx.Backend.InstallExtensionZipTac(zoneId: 1, appId: 42, zipStream: ms, name: "bad", overwrite: false, originalZipFileName: "bad.zip");
+        False(ok);
     }
 
     [Fact]
@@ -177,20 +179,20 @@ public class ExtensionsBackendTests
                 w.Write("{}\n");
         }
         ms1.Position = 0;
-        var ok1 = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms1, name: null, overwrite: false, originalZipFileName: "dup.zip");
-        Assert.True(ok1);
+        var ok1 = ctx.Backend.InstallExtensionZipTac(zoneId: 1, appId: 42, zipStream: ms1, name: null, overwrite: false, originalZipFileName: "dup.zip");
+        True(ok1);
 
         // Try installing again without overwrite should fail
         using var ms2 = new MemoryStream(ms1.ToArray());
         ms2.Position = 0;
-        var ok2 = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms2, name: null, overwrite: false, originalZipFileName: "dup.zip");
-        Assert.False(ok2);
+        var ok2 = ctx.Backend.InstallExtensionZipTac(zoneId: 1, appId: 42, zipStream: ms2, name: null, overwrite: false, originalZipFileName: "dup.zip");
+        False(ok2);
 
         // With overwrite should succeed
         using var ms3 = new MemoryStream(ms1.ToArray());
         ms3.Position = 0;
-        var ok3 = ctx.Backend.InstallExtensionZip(zoneId: 1, appId: 42, zipStream: ms3, name: null, overwrite: true, originalZipFileName: "dup.zip");
-        Assert.True(ok3);
+        var ok3 = ctx.Backend.InstallExtensionZipTac(zoneId: 1, appId: 42, zipStream: ms3, name: null, overwrite: true, originalZipFileName: "dup.zip");
+        True(ok3);
     }
 
     private sealed class TestContext : IDisposable
