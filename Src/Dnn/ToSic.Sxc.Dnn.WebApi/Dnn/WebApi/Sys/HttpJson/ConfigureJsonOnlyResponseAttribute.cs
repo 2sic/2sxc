@@ -22,6 +22,11 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
     private bool IsDebugEnabled()
         => new DebugRequestParser(LogDetails ? Log : null).IsDebugEnabled();
 
+    // Keys for per-request storage (avoid header mutation)
+    private const string MarkerKey = "2sxc.JsonFormatter.Configured";
+    private const string DebugFlagKey = "2sxc.DebugEnabled";
+    private const string ManagerKey = "2sxc.JsonFormatter.Manager";
+
     /// <summary>
     /// This will just run once - I think for every controller...
     /// </summary>
@@ -36,7 +41,8 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
 
         try
         {
-            if (IsDebugEnabled())
+            var debugEnabled = IsDebugEnabled(); // no request context here
+            if (debugEnabled)
                 DnnJsonFormattersManager.DumpFormattersToLog(Log, "init-before", controllerSettings.Formatters);
 
             var formattersManager = new DnnJsonFormattersManager(Log);
@@ -45,7 +51,7 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
                 GetCustomAttributes(controllerDescriptor.ControllerType)
             );
 
-            if (IsDebugEnabled())
+            if (debugEnabled)
                 DnnJsonFormattersManager.DumpFormattersToLog(Log, "init-after", controllerSettings.Formatters);
 
             // Test throwing an exception. Usually in debugging you will move the execution cursor to here to generate errors for specific requests
@@ -67,26 +73,47 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
 
     public override void OnActionExecuting(HttpActionContext context)
     {
+        // Log = new Log("Dnn.Attr"); // new log for each run
         PlaceLogInHistory(Log);
         var l = Log.Fn($"{nameof(context.Request.RequestUri)}:{context.Request?.RequestUri}");
 
         try
         {
-            if (IsDebugEnabled())
+            var request = context.Request;
+            var props = request?.Properties;
+
+            // Cache debug-flag per request
+            bool debugEnabled;
+            if (props != null && props.TryGetValue(DebugFlagKey, out var dbgObj) && dbgObj is bool dbgBool)
+                debugEnabled = dbgBool;
+            else
+            {
+                debugEnabled = IsDebugEnabled();
+                if (props != null)
+                    props[DebugFlagKey] = debugEnabled;
+            }
+
+            if (debugEnabled)
                 DnnJsonFormattersManager.DumpFormattersToLog(Log, "action-before", context.ControllerContext.ControllerDescriptor.Configuration.Formatters);
 
             if (SkipOnMultipleExecutionsOnTheSameRequest(context, l))
                 return; // ensure we only configure once per request
 
-            var formattersManager = new DnnJsonFormattersManager(Log);
-            formattersManager.ReconfigureActionWithContextAwareSerializer(
+            // Re-use manager instance per request if possible to avoid repeated allocations
+            var mgr = props != null && props.TryGetValue(ManagerKey, out var mgrObj) && mgrObj is DnnJsonFormattersManager existing
+                ? existing
+                : new DnnJsonFormattersManager(Log);
+            if (props != null && !props.ContainsKey(ManagerKey))
+                props[ManagerKey] = mgr;
+
+            mgr.ReconfigureActionWithContextAwareSerializer(
                 context.ControllerContext.ControllerDescriptor,
                 context.ActionDescriptor
                     .GetCustomAttributes<JsonFormatterAttribute>()
                     .FirstOrDefault()
             );
 
-            if (IsDebugEnabled())
+            if (debugEnabled)
                 DnnJsonFormattersManager.DumpFormattersToLog(Log, "action-after", context.ControllerContext.ControllerDescriptor.Configuration.Formatters);
 
             // Test throwing an exception. Usually in debugging you will move the execution cursor to here to generate errors for specific requests
@@ -107,29 +134,19 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
 
     private static bool SkipOnMultipleExecutionsOnTheSameRequest(HttpActionContext context, ILogCall l)
     {
-        // Mark request so we can detect multiple executions on the same request and skip reconfiguration
-        const string markerHeader = "X-2sxc-JsonFormatter-Configured";
-        var headers = context.Request?.Headers;
-        if (headers != null)
+        // Use Request.Properties to mark rather than mutating headers (faster & avoids client-side confusion)
+        var props = context.Request?.Properties;
+        if (props != null)
         {
-            if (headers.Contains(markerHeader))
+            if (props.TryGetValue(MarkerKey, out var existing) && existing is int cnt)
             {
-                // increase marker value with count - for debugging
-                var existingCount = 0;
-                var existingValue = headers.GetValues(markerHeader)?.FirstOrDefault();
-                if (!string.IsNullOrEmpty(existingValue) && int.TryParse(existingValue, out var parsed))
-                    existingCount = parsed;
-                existingCount++;
-
-                headers.Remove(markerHeader);
-                headers.Add(markerHeader, existingCount.ToString());
-
-                l.A($"Formatter configuration already ran for this request - skipping (count:{existingCount})");
+                cnt++;
+                props[MarkerKey] = cnt;
+                l.A($"Formatter configuration already ran for this request - skipping (count:{cnt})");
                 return true;
             }
-            headers.Add(markerHeader, "1");
+            props[MarkerKey] = 1; // first time
         }
-
         return false;
     }
 
@@ -143,7 +160,7 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
     }
     private ILogStore _logStore;
 
-    public ILog Log => field ??= new Log("Dnn.Attr");
+    public ILog Log { get; private set; } = new Log("Dnn.Attr");
 
     private TService GetService<TService>() where TService : class
         => _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);

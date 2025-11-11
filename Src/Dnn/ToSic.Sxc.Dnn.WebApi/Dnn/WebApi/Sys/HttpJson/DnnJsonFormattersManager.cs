@@ -15,7 +15,7 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
     /// </summary>
     private const string SystemTextJsonMediaTypeFormatterName = "System.Net.Http.Formatting.SystemTextJsonMediaTypeFormatter";
 
-    private bool IsTraceEnabled()
+    private bool IsDebugEnabled()
         => new DebugRequestParser(LogDetails ? Log : null).IsDebugEnabled();
 
     internal static void DumpFormattersToLog(ILog log, string phase, MediaTypeFormatterCollection formatters)
@@ -46,14 +46,7 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
                     if (innerProp != null)
                     {
                         var inner = innerProp.GetValue(f) as MediaTypeFormatter;
-                        if (inner != null)
-                        {
-                            info += $" -> inner: {inner.GetType().FullName}";
-                        }
-                        else
-                        {
-                            info += " -> inner: null";
-                        }
+                        info += inner != null ? $" -> inner: {inner.GetType().FullName}" : " -> inner: null";
                     }
                 }
                 catch { /* ignore reflection errors */ }
@@ -113,7 +106,7 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
     {
         var l = Log.Fn();
 
-        if (IsTraceEnabled())
+        if (IsDebugEnabled())
             DumpFormattersToLog(Log, "before-controller", formatters);
 
         // Remove the XML formatter
@@ -143,7 +136,7 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
         {
             l.Done($"Has {nameof(DefaultToNewtonsoftForHttpJsonAttribute)} and no custom {nameof(JsonFormatterAttribute)} will leave serializers intact.");
 
-            if (IsTraceEnabled())
+            if (IsDebugEnabled())
                 DumpFormattersToLog(Log, "after-controller-skip", formatters);
 
             return;
@@ -152,29 +145,29 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
         // For newer apis we need to use System.Text.Json, but generated per request
         // because of DI dependencies for EavJsonConvertors in new generated JsonOptions
 
-        // Remove default JsonMediaTypeFormatter (Newtonsoft)
-        var newtonSoftFormatters = formatters
-            .OfType<JsonMediaTypeFormatter>()
-            .ToList();
-
-        l.A($"Will remove {newtonSoftFormatters.Count} NewtonSoft formatters");
-        foreach (var f in newtonSoftFormatters)
-            try
-            {
-                formatters.Remove(f);
-            }
-            catch (Exception ex)
-            {
-                l.E("Newtonsoft remove failed");
-                l.Ex(ex);
-            }
+        // Remove default JsonMediaTypeFormatter (Newtonsoft) with a single rebuild pass
+        try
+        {
+            var keep = new List<MediaTypeFormatter>(formatters.Count);
+            foreach (var f in formatters)
+                if (f is not JsonMediaTypeFormatter)
+                    keep.Add(f);
+            formatters.Clear();
+            foreach (var f in keep)
+                formatters.Add(f);
+        }
+        catch (Exception ex)
+        {
+            l.E("Newtonsoft remove (rebuild) failed");
+            l.Ex(ex);
+        }
 
         // Add SystemTextJsonMediaTypeFormatter with JsonSerializerOptions based on JsonFormatterAttribute from controller
         ReplaceJsonFormatterWithNewInstance(formatters, jsonFormatterAttribute);
 
         EnsureNoNulls(formatters);
 
-        if (IsTraceEnabled())
+        if (IsDebugEnabled())
             DumpFormattersToLog(Log, "after-controller", formatters);
 
         l.Done();
@@ -202,14 +195,14 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
         var formatters = controllerDescriptor.Configuration.Formatters;
         l.A($"Found {formatters.Count} formatters");
         
-        if (IsTraceEnabled())
+        if (IsDebugEnabled())
             DumpFormattersToLog(Log, "before-action", formatters);
 
         ReplaceJsonFormatterWithNewInstance(formatters, jsonFormatterAttributeOnAction);
 
         EnsureNoNulls(formatters);
 
-        if (IsTraceEnabled())
+        if (IsDebugEnabled())
             DumpFormattersToLog(Log, "after-action", formatters);
 
         l.Done();
@@ -222,68 +215,54 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
 
         // 2025-11-08 2dm - creating a list to avoid multiple enumeration of formatters
         // since I sometimes observed a single error after restart "Collection was modified; enumeration operation may not execute."
+        // Defensive: copy once to avoid collection-modified exceptions
         var formattersListCopy = formatters.ToList();
 
-        // Remove default SystemTextJsonMediaTypeFormatter with JsonSerializerOptions based on JsonFormatterAttribute from controller
-        var formattersToRemove = formattersListCopy
-            .OfType<SystemTextJsonMediaTypeFormatter>()
-            .ToList();
-
-        l.A($"Will remove {formattersToRemove.Count} of type {nameof(SystemTextJsonMediaTypeFormatter)}");
-        foreach (var f in formattersToRemove)
-            try
+        // Collect formatters to remove (STJ and tracer-like) in one pass
+        var toKeep = new List<MediaTypeFormatter>(formattersListCopy.Count);
+        var removedForCasingMedia = new List<MediaTypeFormatter>(); // all removed items
+        var removedStj = new List<SystemTextJsonMediaTypeFormatter>(); // only STJ for casing helper
+        foreach (var f in formattersListCopy)
+        {
+            if (f is SystemTextJsonMediaTypeFormatter stj)
             {
-                formatters.Remove(f);
+                removedForCasingMedia.Add(stj);
+                removedStj.Add(stj);
+                continue;
             }
-            catch (Exception ex)
-            {
-                l.E("Remove SystemTextJson failed");
-                l.Ex(ex);
-            }
+            
+            // Tracers seem to be wrapped formatters which can also do trace-logging.
+            // We noticed that these are prepared
 
-        // Tracers seem to be wrapped formatters which can also do trace-logging.
-        // We noticed that these are prepared
-        var tracersToRemove = formattersListCopy
-            .Where(f => f?.ToString() == SystemTextJsonMediaTypeFormatterName)
-            .ToList();
-
-        l.A($"Will remove {tracersToRemove.Count} of type {nameof(MediaTypeFormatter)}");
-        foreach (var f in tracersToRemove)
-            try
+            // Detect tracer by ToString match
+            if (f != null && f.ToString() == SystemTextJsonMediaTypeFormatterName)
             {
-                formatters.Remove(f);
-            }
-            catch (Exception ex)
-            {
-                l.E("Remove tracer failed");
-                l.Ex(ex);
-            }
-
-        // Unwrap tracers to get inner SystemTextJsonMediaTypeFormatter instances using reflection
-        var unwrappedFormatters = tracersToRemove
-            .Select(tracer =>
-            {
+                removedForCasingMedia.Add(f);
+                // Try unwrap actual inner STJ if present
                 try
                 {
-                    // MediaTypeFormatterTracer has an InnerFormatter property that contains the actual formatter
-                    var innerFormatterProperty = tracer.GetType().GetProperty("InnerFormatter");
-                    return innerFormatterProperty?.GetValue(tracer) as SystemTextJsonMediaTypeFormatter;
+                    var innerProp = f.GetType().GetProperty("InnerFormatter");
+                    var inner = innerProp?.GetValue(f) as SystemTextJsonMediaTypeFormatter;
+                    if (inner != null)
+                    {
+                        removedForCasingMedia.Add(inner);
+                        removedStj.Add(inner);
+                    }
                 }
                 catch (Exception ex)
                 {
                     l.E("Failed to unwrap tracer");
                     l.Ex(ex);
-                    return null;
                 }
-            })
-            .Where(f => f != null)
-            .ToList();
+                continue;
+            }
 
-        l.A($"Unwrapped {unwrappedFormatters.Count} {nameof(SystemTextJsonMediaTypeFormatter)} from tracers");
-        formattersToRemove.AddRange(unwrappedFormatters);
+            toKeep.Add(f);
+        }
 
-        // Add SystemTextJson JsonMediaTypeFormatter with JsonSerializerOptions based on JsonFormatterAttribute from action method
-        if (!formatters.OfType<SystemTextJsonMediaTypeFormatter>().Any())
+        // If no STJ present after removal, add new one configured by factory
+        var hasStj = toKeep.Any(x => x is SystemTextJsonMediaTypeFormatter);
+        if (!hasStj)
         {
             l.A($"Will add {nameof(SystemTextJsonMediaTypeFormatter)} since none were found");
             MediaTypeFormatter newFactory = null;
@@ -294,7 +273,7 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
                     // This ensures all services (including EavJsonConverterFactory and its dependencies) use the current request's culture
                     DnnStaticDi.GetPageScopedServiceProvider(),
                     jsonFormatterAttributeOnAction,
-                    () => JsonFormatterCasingHelpersForDnn.ExtractCasingFromFormatters(formattersToRemove),
+                    () => JsonFormatterCasingHelpersForDnn.ExtractCasingFromFormatters(removedStj),
                     jsonSerializerOptions => new SystemTextJsonMediaTypeFormatter { JsonSerializerOptions = jsonSerializerOptions }
                 );
             }
@@ -304,25 +283,28 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
                 l.Ex(ex);
             }
 
-            if (newFactory == null)
-            {
-                l.A("CreateNewFormatterFactory returned NULL - will not insert");
-            }
+            if (newFactory != null)
+                toKeep.Insert(0, newFactory);
             else
-            {
-                try
-                {
-                    formatters.Insert(0, newFactory);
-                }
-                catch (Exception ex)
-                {
-                    l.E("Insert new formatter failed");
-                    l.Ex(ex);
-                }
-            }
+                l.A("CreateNewFormatterFactory returned NULL - will not insert");
         }
         else
+        {
             l.A($"It has a {nameof(SystemTextJsonMediaTypeFormatter)}, so won't add.");
+        }
+
+        // Rebuild collection once to avoid multiple Remove calls
+        try
+        {
+            formatters.Clear();
+            foreach (var f in toKeep)
+                formatters.Add(f);
+        }
+        catch (Exception ex)
+        {
+            l.E("Rebuild formatters failed");
+            l.Ex(ex);
+        }
 
         l.Done();
     }
