@@ -16,7 +16,7 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
     private const string SystemTextJsonMediaTypeFormatterName = "System.Net.Http.Formatting.SystemTextJsonMediaTypeFormatter";
 
     private bool IsDebugEnabled()
-        => new DebugRequestParser(LogDetails ? Log : null).IsDebugEnabled();
+        => new GlobalDebugParser(LogDetails ? Log : null).IsDebugEnabled();
 
     internal static void DumpFormattersToLog(ILog log, string phase, MediaTypeFormatterCollection formatters)
     {

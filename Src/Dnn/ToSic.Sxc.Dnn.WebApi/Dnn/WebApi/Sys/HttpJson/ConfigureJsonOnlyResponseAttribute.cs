@@ -20,7 +20,7 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
     // ReSharper restore ConvertToConstant.Local
 
     private bool IsDebugEnabled()
-        => new DebugRequestParser(LogDetails ? Log : null).IsDebugEnabled();
+        => new GlobalDebugParser(LogDetails ? Log : null).IsDebugEnabled();
 
     // Keys for per-request storage (avoid header mutation)
     private const string MarkerKey = "2sxc.JsonFormatter.Configured";
