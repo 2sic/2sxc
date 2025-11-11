@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using System.Web.Http.Controllers;
+﻿using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
@@ -113,9 +112,9 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
                 .GetCustomAttributes<JsonFormatterAttribute>()
                 .FirstOrDefault();
 
-            var perRequestConfiguration = CreatePerRequestConfiguration(context, dnnJsonFormattersManager, jsonFormatterAttributeOnAction);
+            var perRequestConfiguration = PerRequestConfigurationHelper.CreatePerRequestConfiguration(context, dnnJsonFormattersManager, jsonFormatterAttributeOnAction);
 
-            ApplyPerRequestConfiguration(context, perRequestConfiguration);
+            PerRequestConfigurationHelper.ApplyPerRequestConfiguration(context, perRequestConfiguration);
 
             if (debugEnabled && perRequestConfiguration != null)
                 DnnJsonFormattersManager.DumpFormattersToLog(Log, "action-after", perRequestConfiguration.Formatters);
@@ -203,43 +202,4 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
         => _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
     // Must cache it, to be really sure we use the same ServiceProvider in the same request
     private readonly GetOnce<IServiceProvider> _serviceProvider = new();
-
-    private static HttpConfiguration CreatePerRequestConfiguration(
-        HttpActionContext context,
-        DnnJsonFormattersManager manager,
-        JsonFormatterAttribute? jsonFormatterAttributeOnAction)
-    {
-        var originalConfig = context.ControllerContext.Configuration
-            ?? throw new InvalidOperationException("Controller configuration is not available.");
-
-        var controllerSettings = new HttpControllerSettings(originalConfig);
-
-        manager.ReconfigureActionWithContextAwareSerializer(
-            context.ControllerContext.ControllerDescriptor,
-            controllerSettings.Formatters,
-            jsonFormatterAttributeOnAction);
-
-        return ApplyControllerSettingsAccessor.Value(controllerSettings, originalConfig);
-    }
-
-    // Cached reflection bridge to Web API’s internal HttpConfiguration.ApplyControllerSettings
-    // so we can spin up per-request clones of the controller configuration without touching shared state 
-    private static readonly Lazy<Func<HttpControllerSettings, HttpConfiguration, HttpConfiguration>> ApplyControllerSettingsAccessor
-        = new(() =>
-        {
-            var method = typeof(HttpConfiguration)
-                .GetMethod("ApplyControllerSettings", BindingFlags.NonPublic | BindingFlags.Static);
-            if (method == null)
-                throw new InvalidOperationException("Unable to locate HttpConfiguration.ApplyControllerSettings");
-            return (Func<HttpControllerSettings, HttpConfiguration, HttpConfiguration>)method
-                .CreateDelegate(typeof(Func<HttpControllerSettings, HttpConfiguration, HttpConfiguration>));
-        });
-
-    private static void ApplyPerRequestConfiguration(HttpActionContext context, HttpConfiguration configuration)
-    {
-        if (configuration == null)
-            return;
-        context.ControllerContext.Configuration = configuration;
-        context.Request?.SetConfiguration(configuration);
-    }
 }
