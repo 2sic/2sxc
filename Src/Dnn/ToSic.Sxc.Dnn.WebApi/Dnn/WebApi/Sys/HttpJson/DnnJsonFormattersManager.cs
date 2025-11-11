@@ -187,12 +187,11 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
             if (f != null && f.ToString() == SystemTextJsonMediaTypeFormatterName)
             {
                 removedForCasingMedia.Add(f);
-                // Try unwrap actual inner STJ if present
+                // Try to unwrap actual inner STJ if present
                 try
                 {
                     var innerProp = f.GetType().GetProperty("InnerFormatter");
-                    var inner = innerProp?.GetValue(f) as SystemTextJsonMediaTypeFormatter;
-                    if (inner != null)
+                    if (innerProp?.GetValue(f) is SystemTextJsonMediaTypeFormatter inner)
                     {
                         removedForCasingMedia.Add(inner);
                         removedStj.Add(inner);

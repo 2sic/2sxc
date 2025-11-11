@@ -17,19 +17,27 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfiguration, IHasLog
 {
     // For debugging
+
+    // turn on if we ever need to debug stuff again, but avoid this in production, unless really, really necessaryE
+#if DEBUG
+    private static readonly bool LogAnything = true;
+#else
+    private static readonly bool LogAnything = false; 
+#endif
+
     // ReSharper disable ConvertToConstant.Local
     private static readonly bool LogDetails = false;
     private static readonly bool TestThrowInitialize = false;
     private static readonly bool TestThrowOnActionExecuting = false;
     // ReSharper restore ConvertToConstant.Local
-    public ILog Log { get; } = new Log("Api.JsnAttr");
+
+    public ILog? Log { get; } = LogAnything ? new Log("Api.JsnAttr") : null;
 
     private bool IsDebugEnabled()
         => new GlobalDebugParser(LogDetails ? Log : null).IsDebugEnabled();
 
     // Keys for per-request storage (avoid header mutation)
     private const string DebugFlagKey = "2sxc.DebugEnabled";
-    private const string ManagerKey = "2sxc.JsonFormatter.Manager";
 
     /// <summary>
     /// This will just run once for every controller.
@@ -123,9 +131,8 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
                 .GetCustomAttributes<JsonFormatterAttribute>()
                 .FirstOrDefault();
 
-            var perRequestConfiguration = PerRequestConfigurationHelper.CreatePerRequestConfiguration(context, dnnJsonFormattersManager, jsonFormatterAttributeOnAction);
-
-            PerRequestConfigurationHelper.ApplyPerRequestConfiguration(context, perRequestConfiguration);
+            var perRequestConfiguration = PerRequestConfigurationHelper
+                .CreateAndApplyPerRequestConfiguration(context, dnnJsonFormattersManager, jsonFormatterAttributeOnAction);
 
             if (debugEnabled && perRequestConfiguration != null)
                 DnnJsonFormattersDebug.DumpFormattersToLog(Log, "action-after", perRequestConfiguration.Formatters);
@@ -162,7 +169,10 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
     /// since it's really hard to debug attribute/serialization issues, try to log this problem
     /// </summary>
     private void PlaceLogInHistory(ILog log)
-        => GetService<ILogStore>()?.Add("webapi-serialization", log);
+    {
+        if (LogAnything)
+            GetService<ILogStore>()?.Add("webapi-serialization", log);
+    }
 
     // Do NOT CACHE the ServiceProvider, as this attribute seems to be long-lived and shared between requests
     private TService GetService<TService>() where TService : class
