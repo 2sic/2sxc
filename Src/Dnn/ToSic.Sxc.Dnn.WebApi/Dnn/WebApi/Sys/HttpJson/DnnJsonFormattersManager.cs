@@ -102,6 +102,7 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
         }
     }
 
+    // This creates a controller-specific configuration
     internal void ReconfigureControllerWithBestSerializers(MediaTypeFormatterCollection formatters, Attribute[] customAttributes)
     {
         var l = Log.Fn();
@@ -173,7 +174,10 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
         l.Done();
     }
 
-    internal void ReconfigureActionWithContextAwareSerializer(HttpControllerDescriptor controllerDescriptor, JsonFormatterAttribute? jsonFormatterAttributeOnAction)
+    internal void ReconfigureActionWithContextAwareSerializer(
+        HttpControllerDescriptor controllerDescriptor,
+        MediaTypeFormatterCollection formatters,
+        JsonFormatterAttribute? jsonFormatterAttributeOnAction)
     {
         var l = Log.Fn();
 
@@ -192,9 +196,14 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
             return;
         }
 
-        var formatters = controllerDescriptor.Configuration.Formatters;
+        if (formatters == null)
+        {
+            l.Done("Formatters collection is null - nothing to reconfigure");
+            return;
+        }
+
         l.A($"Found {formatters.Count} formatters");
-        
+
         if (IsDebugEnabled())
             DumpFormattersToLog(Log, "before-action", formatters);
 
