@@ -9,12 +9,17 @@ internal class DnnJsonFormattersDebug
         var l = log.Fn($"dump:{phase}");
         try
         {
+            // Intro
             l.A($"Dumping formatters ({formatters?.Count ?? -1}) at {phase}");
+
+            // If nothing, exit early
             if (formatters == null)
             {
                 l.A("Formatters collection is NULL");
                 return;
             }
+
+            // Show each formatter
             for (var i = 0; i < formatters.Count; i++)
             {
                 var f = formatters[i];
@@ -24,7 +29,7 @@ internal class DnnJsonFormattersDebug
                     continue;
                 }
                 var type = f.GetType();
-                var info = $"[{i}] {type.FullName}";
+                var info = $"[{i}] {type.FullName} ({f.GetHashCode()})";
                 // Try to unwrap common tracer pattern
                 try
                 {

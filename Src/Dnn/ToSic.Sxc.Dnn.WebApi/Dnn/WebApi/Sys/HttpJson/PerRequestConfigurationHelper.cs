@@ -5,6 +5,32 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 
 internal class PerRequestConfigurationHelper
 {
+    private const string MarkerKey = "2sxc.JsonFormatter.Configured";
+
+    /// <summary>
+    /// Ensure we only configure once per request
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="l"></param>
+    /// <returns></returns>
+    internal static bool SkipOnMultipleExecutionsOnTheSameRequest(HttpActionContext context, ILogCall l)
+    {
+        // Use Request.Properties to mark rather than mutating headers (faster & avoids client-side confusion)
+        var props = context.Request?.Properties;
+        if (props != null)
+        {
+            if (props.TryGetTyped(MarkerKey, out int cnt))
+            {
+                cnt++;
+                props[MarkerKey] = cnt;
+                l.A($"Formatter configuration already ran for this request - skipping (count:{cnt})");
+                return true;
+            }
+            props[MarkerKey] = 1; // first time
+        }
+        return false;
+    }
+
     internal static HttpConfiguration CreatePerRequestConfiguration(
         HttpActionContext context,
         DnnJsonFormattersManager manager,

@@ -25,15 +25,14 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
     public ILog Log { get; } = new Log("Api.JsnAttr");
 
     private bool IsDebugEnabled()
-        => true || new GlobalDebugParser(LogDetails ? Log : null).IsDebugEnabled();
+        => new GlobalDebugParser(LogDetails ? Log : null).IsDebugEnabled();
 
     // Keys for per-request storage (avoid header mutation)
-    private const string MarkerKey = "2sxc.JsonFormatter.Configured";
     private const string DebugFlagKey = "2sxc.DebugEnabled";
     private const string ManagerKey = "2sxc.JsonFormatter.Manager";
 
     /// <summary>
-    /// This will just run once - I think for every controller...
+    /// This will just run once for every controller.
     /// </summary>
     /// <param name="controllerSettings"></param>
     /// <param name="controllerDescriptor"></param>
@@ -95,19 +94,30 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
 
         try
         {
+            // Ensure we only configure once per request (probably not necessary anymore)
+            if (PerRequestConfigurationHelper.SkipOnMultipleExecutionsOnTheSameRequest(context, l))
+            {
+                l.Done("exit early, repeat on same request");
+                return; 
+            }
+
             var requestProperties = context.Request?.Properties;
 
             // Cache debug-flag per request
             var debugEnabled = GetCachedDebugEnabled(requestProperties);
 
-            if (debugEnabled)
-                DnnJsonFormattersDebug.DumpFormattersToLog(Log, "action-before", context.ControllerContext.ControllerDescriptor.Configuration.Formatters);
+            var oldFormatters = context.ControllerContext.ControllerDescriptor.Configuration.Formatters;
+            if (oldFormatters == null)
+            {
+                l.Done("formatters are null, unexpected");
+                return;
+            }
 
-            if (SkipOnMultipleExecutionsOnTheSameRequest(context, l))
-                return; // ensure we only configure once per request
+            if (debugEnabled)
+                DnnJsonFormattersDebug.DumpFormattersToLog(Log, "action-before", oldFormatters);
 
             // Re-use manager instance per request if possible to avoid repeated allocations
-            var dnnJsonFormattersManager = GetCachedDnnJsonFormattersManager(requestProperties);
+            var dnnJsonFormattersManager = new DnnJsonFormattersManager(Log);
 
             var jsonFormatterAttributeOnAction = context.ActionDescriptor
                 .GetCustomAttributes<JsonFormatterAttribute>()
@@ -120,6 +130,8 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
             if (debugEnabled && perRequestConfiguration != null)
                 DnnJsonFormattersDebug.DumpFormattersToLog(Log, "action-after", perRequestConfiguration.Formatters);
 
+            l.Done();
+
             // Test throwing an exception. Usually in debugging you will move the execution cursor to here to generate errors for specific requests
             if (TestThrowOnActionExecuting)
                 throw new($"Test Exception in {nameof(OnActionExecuting)}");
@@ -130,62 +142,21 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
             l.Ex(ex);
             throw;
         }
-        finally
-        {
-            l.Done();
-        }
     }
 
     // Cache debug-flag per request
     private bool GetCachedDebugEnabled(IDictionary<string, object> requestProperties)
     {
-        bool debugEnabled;
-        if (requestProperties?.TryGetValue(DebugFlagKey, out var dbgObj) == true
-            && dbgObj is bool dbgBool)
-        {
-            debugEnabled = dbgBool;
-        }
-        else
-        {
-            debugEnabled = IsDebugEnabled();
-            if (requestProperties != null)
-                requestProperties[DebugFlagKey] = debugEnabled;
-        }
+        if (requestProperties?.TryGetTyped(DebugFlagKey, out bool dbgBool) == true)
+            return dbgBool;
+
+        var debugEnabled = IsDebugEnabled();
+        if (requestProperties != null)
+            requestProperties[DebugFlagKey] = debugEnabled;
 
         return debugEnabled;
     }
 
-    // Re-use manager instance per request if possible to avoid repeated allocations
-    private DnnJsonFormattersManager GetCachedDnnJsonFormattersManager(IDictionary<string, object> requestProperties)
-    {
-        var dnnJsonFormattersManager =
-            requestProperties?.TryGetValue(ManagerKey, out var mgrObj) == true
-            && mgrObj is DnnJsonFormattersManager existing
-                ? existing
-                : new DnnJsonFormattersManager(Log);
-        if (requestProperties != null && !requestProperties.ContainsKey(ManagerKey))
-            requestProperties[ManagerKey] = dnnJsonFormattersManager;
-        return dnnJsonFormattersManager;
-    }
-
-    // Ensure we only configure once per request
-    private static bool SkipOnMultipleExecutionsOnTheSameRequest(HttpActionContext context, ILogCall l)
-    {
-        // Use Request.Properties to mark rather than mutating headers (faster & avoids client-side confusion)
-        var props = context.Request?.Properties;
-        if (props != null)
-        {
-            if (props.TryGetValue(MarkerKey, out var existing) && existing is int cnt)
-            {
-                cnt++;
-                props[MarkerKey] = cnt;
-                l.A($"Formatter configuration already ran for this request - skipping (count:{cnt})");
-                return true;
-            }
-            props[MarkerKey] = 1; // first time
-        }
-        return false;
-    }
 
     /// <summary>
     /// since it's really hard to debug attribute/serialization issues, try to log this problem

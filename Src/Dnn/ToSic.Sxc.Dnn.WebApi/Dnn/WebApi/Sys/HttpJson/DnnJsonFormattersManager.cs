@@ -24,9 +24,6 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
         var l = Log.Fn<object>();
         try
         {
-            if (formatters == null)
-                return l.ReturnNull("Formatters is null - nothing to sanitize");
-
             if (formatters.All(f => f != null))
                 return l.ReturnNull("No null formatters found");
 
@@ -36,9 +33,7 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
                 .ToList();
 
             formatters.Clear();
-
-            foreach (var f in safe)
-                formatters.Add(f);
+            formatters.AddRange(safe);
 
             return l.ReturnNull($"Sanitized formatters count: {formatters.Count}");
         }
@@ -46,10 +41,6 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
         {
             l.Ex(ex);
             return l.ReturnNull("Exception during EnsureNoNulls");
-        }
-        finally
-        {
-            l.Done();
         }
     }
 
@@ -65,7 +56,7 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
         l.A("Will remove the default XmlFormatter");
         try
         {
-            if (formatters?.XmlFormatter != null)
+            if (formatters.XmlFormatter != null)
                 formatters.Remove(formatters.XmlFormatter);
         }
         catch (Exception ex)
@@ -86,10 +77,10 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
 
         if (keepOldNewtonsoft && jsonFormatterAttribute == null)
         {
-            l.Done($"Has {nameof(DefaultToNewtonsoftForHttpJsonAttribute)} and no custom {nameof(JsonFormatterAttribute)} will leave serializers intact.");
-
             if (IsDebugEnabled())
                 DumpFormattersToLog(Log, "after-controller-skip", formatters);
+
+            l.Done($"Has {nameof(DefaultToNewtonsoftForHttpJsonAttribute)} and no custom {nameof(JsonFormatterAttribute)} will leave serializers intact.");
 
             return;
         }
@@ -100,13 +91,11 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
         // Remove default JsonMediaTypeFormatter (Newtonsoft) with a single rebuild pass
         try
         {
-            var keep = new List<MediaTypeFormatter>(formatters.Count);
-            foreach (var f in formatters)
-                if (f is not JsonMediaTypeFormatter)
-                    keep.Add(f);
+            var keep = formatters
+                .Where(f => f is not JsonMediaTypeFormatter)
+                .ToList();
             formatters.Clear();
-            foreach (var f in keep)
-                formatters.Add(f);
+            formatters.AddRange(keep);
         }
         catch (Exception ex)
         {

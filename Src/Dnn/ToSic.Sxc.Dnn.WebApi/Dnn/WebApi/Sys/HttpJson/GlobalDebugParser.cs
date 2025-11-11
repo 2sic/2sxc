@@ -14,7 +14,7 @@ internal class GlobalDebugParser(ILog parentLog) : HelperBase(parentLog, "Dnn.Db
 
     // Global state cached in-memory for fast checks (not user-bound)
     private static bool? _globalDebug;
-    private static readonly object _globalLock = new object();
+    private static readonly object GlobalLock = new();
 
     // Determines whether tracing is enabled for the given HttpContext.
     // Precedence: explicit query toggle -> cached host-setting -> default(false)
@@ -101,7 +101,7 @@ internal class GlobalDebugParser(ILog parentLog) : HelperBase(parentLog, "Dnn.Db
         if (_globalDebug.HasValue)
             return _globalDebug.Value;
 
-        lock (_globalLock)
+        lock (GlobalLock)
         {
             if (_globalDebug.HasValue)
                 return _globalDebug.Value;
@@ -137,7 +137,7 @@ internal class GlobalDebugParser(ILog parentLog) : HelperBase(parentLog, "Dnn.Db
     // Set global forced debug & persist in HostSettings; returns persistence success
     private static void SetGlobalDebug(bool enable, out bool persistedOk)
     {
-        lock (_globalLock)
+        lock (GlobalLock)
         {
             _globalDebug = enable;
             persistedOk = TryPersistHostSetting(enable);
