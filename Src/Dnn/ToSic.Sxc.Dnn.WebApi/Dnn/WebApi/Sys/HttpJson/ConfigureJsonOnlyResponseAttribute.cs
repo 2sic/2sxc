@@ -22,9 +22,10 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
     private static readonly bool TestThrowInitialize = false;
     private static readonly bool TestThrowOnActionExecuting = false;
     // ReSharper restore ConvertToConstant.Local
-    
+    public ILog Log { get; } = new Log("Api.JsnAttr");
+
     private bool IsDebugEnabled()
-        => new GlobalDebugParser(LogDetails ? Log : null).IsDebugEnabled();
+        => true || new GlobalDebugParser(LogDetails ? Log : null).IsDebugEnabled();
 
     // Keys for per-request storage (avoid header mutation)
     private const string MarkerKey = "2sxc.JsonFormatter.Configured";
@@ -46,14 +47,14 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
         // Create an independent log for this operation - don't use a class-level log because it would grow too much
         // add to insights-history for analytic
         PlaceLogInHistory(Log);
-        var l = Log.Fn($"{nameof(controllerDescriptor)}:{controllerDescriptor.ControllerType.FullName}");
+        var l = Log.Fn($"{nameof(controllerDescriptor)}: {controllerDescriptor.ControllerType.FullName}");
 
         try
         {
             var debugEnabled = IsDebugEnabled(); // no request context here
 
             if (debugEnabled)
-                DnnJsonFormattersManager.DumpFormattersToLog(Log, "init-before", controllerSettings.Formatters);
+                DnnJsonFormattersDebug.DumpFormattersToLog(Log, "init-before", controllerSettings.Formatters);
 
             // This creates a controller-specific configuration
             var formattersManager = new DnnJsonFormattersManager(Log);
@@ -63,7 +64,7 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
             );
 
             if (debugEnabled)
-                DnnJsonFormattersManager.DumpFormattersToLog(Log, "init-after", controllerSettings.Formatters);
+                DnnJsonFormattersDebug.DumpFormattersToLog(Log, "init-after", controllerSettings.Formatters);
 
             // Test throwing an exception. Usually in debugging you will move the execution cursor to here to generate errors for specific requests
             if (TestThrowInitialize)
@@ -100,7 +101,7 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
             var debugEnabled = GetCachedDebugEnabled(requestProperties);
 
             if (debugEnabled)
-                DnnJsonFormattersManager.DumpFormattersToLog(Log, "action-before", context.ControllerContext.ControllerDescriptor.Configuration.Formatters);
+                DnnJsonFormattersDebug.DumpFormattersToLog(Log, "action-before", context.ControllerContext.ControllerDescriptor.Configuration.Formatters);
 
             if (SkipOnMultipleExecutionsOnTheSameRequest(context, l))
                 return; // ensure we only configure once per request
@@ -117,7 +118,7 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
             PerRequestConfigurationHelper.ApplyPerRequestConfiguration(context, perRequestConfiguration);
 
             if (debugEnabled && perRequestConfiguration != null)
-                DnnJsonFormattersManager.DumpFormattersToLog(Log, "action-after", perRequestConfiguration.Formatters);
+                DnnJsonFormattersDebug.DumpFormattersToLog(Log, "action-after", perRequestConfiguration.Formatters);
 
             // Test throwing an exception. Usually in debugging you will move the execution cursor to here to generate errors for specific requests
             if (TestThrowOnActionExecuting)
@@ -190,16 +191,10 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
     /// since it's really hard to debug attribute/serialization issues, try to log this problem
     /// </summary>
     private void PlaceLogInHistory(ILog log)
-    {
-        _logStore ??= GetService<ILogStore>();
-        _logStore?.Add("webapi-serialization", log);
-    }
-    private ILogStore _logStore;
+        => GetService<ILogStore>()?.Add("webapi-serialization", log);
 
-    public ILog Log { get; private set; } = new Log("Dnn.Attr");
-
+    // Do NOT CACHE the ServiceProvider, as this attribute seems to be long-lived and shared between requests
     private TService GetService<TService>() where TService : class
-        => _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
-    // Must cache it, to be really sure we use the same ServiceProvider in the same request
-    private readonly GetOnce<IServiceProvider> _serviceProvider = new();
+        => DnnStaticDi.GetPageScopedServiceProvider().Build<TService>(Log);
 }
+

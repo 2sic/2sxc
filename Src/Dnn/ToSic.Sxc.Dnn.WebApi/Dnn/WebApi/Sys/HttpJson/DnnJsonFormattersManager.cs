@@ -1,14 +1,14 @@
 ﻿using System.Net.Http.Formatting;
 using System.Web.Http.Controllers;
 using ToSic.Sxc.WebApi.Sys.ActionFilters;
+using static ToSic.Sxc.Dnn.WebApi.Sys.HttpJson.DnnJsonFormattersDebug;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys.HttpJson;
 internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "Dnn.JFManager")
 {
     // For debugging
-    // ReSharper disable ConvertToConstant.Local
+    // ReSharper disable once ConvertToConstant.Local
     private static readonly bool LogDetails = false;
-    // ReSharper restore ConvertToConstant.Local
 
     /// <summary>
     /// Name used in the Tracer wrapper around SystemTextJsonMediaTypeFormatter
@@ -18,67 +18,17 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
     private bool IsDebugEnabled()
         => new GlobalDebugParser(LogDetails ? Log : null).IsDebugEnabled();
 
-    internal static void DumpFormattersToLog(ILog log, string phase, MediaTypeFormatterCollection formatters)
-    {
-        var l = log.Fn($"dump:{phase}");
-        try
-        {
-            l.A($"Dumping formatters ({formatters?.Count ?? -1}) at {phase}");
-            if (formatters == null)
-            {
-                l.A("Formatters collection is NULL");
-                return;
-            }
-            for (var i = 0; i < formatters.Count; i++)
-            {
-                var f = formatters[i];
-                if (f == null)
-                {
-                    l.A($"[{i}] NULL formatter");
-                    continue;
-                }
-                var type = f.GetType();
-                var info = $"[{i}] {type.FullName}";
-                // Try unwrap common tracer pattern
-                try
-                {
-                    var innerProp = type.GetProperty("InnerFormatter");
-                    if (innerProp != null)
-                    {
-                        var inner = innerProp.GetValue(f) as MediaTypeFormatter;
-                        info += inner != null ? $" -> inner: {inner.GetType().FullName}" : " -> inner: null";
-                    }
-                }
-                catch { /* ignore reflection errors */ }
-                l.A(info);
-            }
-        }
-        catch (Exception ex)
-        {
-            l.Ex(ex);
-        }
-        finally
-        {
-            l.Done();
-        }
-    }
 
-    private void EnsureNoNulls(MediaTypeFormatterCollection formatters)
+    private object EnsureNoNulls(MediaTypeFormatterCollection formatters)
     {
-        var l = Log.Fn();
+        var l = Log.Fn<object>();
         try
         {
             if (formatters == null)
-            {
-                l.A("Formatters is null - nothing to sanitize");
-                return;
-            }
+                return l.ReturnNull("Formatters is null - nothing to sanitize");
 
             if (formatters.All(f => f != null))
-            {
-                l.A("No null formatters found");
-                return;
-            }
+                return l.ReturnNull("No null formatters found");
 
             l.A("Null formatter(s) detected - will rebuild collection without nulls");
             var safe = formatters
@@ -90,11 +40,12 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
             foreach (var f in safe)
                 formatters.Add(f);
 
-            l.A($"Sanitized formatters count: {formatters.Count}");
+            return l.ReturnNull($"Sanitized formatters count: {formatters.Count}");
         }
         catch (Exception ex)
         {
             l.Ex(ex);
+            return l.ReturnNull("Exception during EnsureNoNulls");
         }
         finally
         {
