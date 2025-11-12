@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using System.Text.Json;
 using ToSic.Eav.DataSources.Sys;
 using ToSic.Eav.ImportExport.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -126,36 +125,4 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
         HotReloadEnabledCheck.Check();
         return Real.InstallPendingApps(zoneId, pendingApps);
     }
-
-    /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Admin)]
-    public ExtensionsResultDto Extensions(int appId)
-        => Real.Extensions(appId);
-
-    /// <inheritdoc />
-    [HttpPut("{name}")]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Admin)]
-    public bool Extensions(int zoneId, int appId, string name, [FromBody] JsonElement configuration)
-        => Real.Extensions(zoneId, appId, name, configuration);
-
-    /// <inheritdoc />
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Admin)]
-    public bool InstallExtension([FromQuery] int zoneId, [FromQuery] int appId, [FromQuery] bool overwrite = true)
-    {
-        // Ensure that Hot Reload is not enabled or try to disable it.
-        HotReloadEnabledCheck.Check();
-        return Real.InstallExtensionZip(new(Request), zoneId, appId, overwrite);
-    }
-
-    /// <inheritdoc />
-    [HttpGet]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Admin)]
-    public IActionResult Download([FromQuery] int zoneId, [FromQuery] int appId, [FromQuery] string name)
-        => Real.Download(zoneId, appId, name);
 }

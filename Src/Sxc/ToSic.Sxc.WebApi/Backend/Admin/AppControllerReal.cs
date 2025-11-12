@@ -11,7 +11,6 @@ using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Configuration;
 using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
-using System.Text.Json;
 
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;
@@ -38,15 +37,12 @@ public class AppControllerReal(
     LazySvc<IAppReaderFactory> appReadersLazy,
     LazySvc<AppStackBackend> appStackBackendLazy,
     LazySvc<IJsonService> json,
-    IGlobalConfiguration globalConfiguration,
-    LazySvc<ExtensionsBackend> extensionsBackendLazy,
-    LazySvc<ExportExtension> exportExtensionLazy)
+    IGlobalConfiguration globalConfiguration)
     : Services_ServiceBase($"{EavLogs.WebApi}.{LogSuffix}Rl",
         connect:
         [
             appsBackendLazy, workAppsRemove, exportAppLazy, importAppLazy, appBuilderLazy, resetAppLazy,
-            systemManagerLazy, languagesBackendLazy, appReadersLazy, appStackBackendLazy, json, globalConfiguration, extensionsBackendLazy,
-            exportExtensionLazy
+            systemManagerLazy, languagesBackendLazy, appReadersLazy, appStackBackendLazy, json, globalConfiguration
         ])
 {
     public const string LogSuffix = "AppCon";
@@ -141,39 +137,4 @@ public class AppControllerReal(
         var result = importAppLazy.Value.InstallPendingApps(zoneId, pendingApps);
         return l.ReturnAsOk(result);
     }
-
-    // Extensions
-    public ExtensionsResultDto Extensions(int appId)
-        => extensionsBackendLazy.Value.GetExtensions(appId);
-
-    public bool Extensions(int zoneId, int appId, string name, JsonElement configuration)
-        => extensionsBackendLazy.Value.SaveExtension(zoneId, appId, name, configuration);
-
-    /// <summary>
-    /// Install an extension ZIP into /extensions.
-    /// </summary>
-    public bool InstallExtensionZip(HttpUploadedFile uploadInfo, int zoneId, int appId, bool overwrite = false)
-    {
-        var l = Log.Fn<bool>($"z:{zoneId}, a:{appId}, overwrite:{overwrite}");
-
-        if (!uploadInfo.HasFiles())
-            return l.ReturnFalse("no file uploaded");
-
-        var (fileName, stream) = uploadInfo.GetStream(0);
-        if (stream == null!)
-            throw new NullReferenceException("File Stream is null, upload canceled");
-
-        var ok = extensionsBackendLazy.Value.InstallExtensionZip(zoneId, appId, stream, overwrite, originalZipFileName: fileName);
-        return l.ReturnAsOk(ok);
-    }
-
-    /// <summary>
-    /// Export an extension as a ZIP file
-    /// </summary>
-    /// <param name="zoneId"></param>
-    /// <param name="appId"></param>
-    /// <param name="name"></param>
-    /// <returns></returns>
-    public THttpResponseType Download(int zoneId, int appId, string name)
-        => exportExtensionLazy.Value.Export(zoneId, appId, name);
 }
