@@ -221,7 +221,7 @@ public class ExtensionsBackend(
 
         if (!string.IsNullOrWhiteSpace(name))
         {
-            var preferred = Path.Combine(extensionsDir, name.Trim());
+            var preferred = Path.Combine(extensionsDir, name!.Trim());
             if (Directory.Exists(preferred))
             {
                 resolvedName = name.Trim();
@@ -257,7 +257,7 @@ public class ExtensionsBackend(
         string? Error
     );
 
-    private static ValidationResult ValidateExtensionJsonFile(string extensionJsonFilePath, string sourcePath, ILog parentLog)
+    private static ValidationResult ValidateExtensionJsonFile(string extensionJsonFilePath, string sourcePath, ILog? parentLog)
     {
         var l = parentLog.Fn<ValidationResult>();
 
@@ -287,7 +287,7 @@ public class ExtensionsBackend(
         HashSet<string>? AllowedFiles
         ) : ValidationResult(Success, Error);
 
-    private static LockValidationResult ValidateLockFile(string lockFilePath, string sourcePath, ILog parentLog)
+    private static LockValidationResult ValidateLockFile(string lockFilePath, string sourcePath, ILog? parentLog)
     {
         var l = parentLog.Fn<LockValidationResult>();
 
@@ -388,7 +388,7 @@ public class ExtensionsBackend(
     }
 
 
-    private static void CopyDirectory(string source, string target, ILog parentLog, HashSet<string>? allowedFiles)
+    private static void CopyDirectory(string source, string target, ILog? parentLog, HashSet<string>? allowedFiles)
     {
         var l = parentLog.Fn();
 

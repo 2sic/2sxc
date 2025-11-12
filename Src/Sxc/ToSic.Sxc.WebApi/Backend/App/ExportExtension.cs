@@ -85,7 +85,7 @@ public class ExportExtension(
             {
                 case JsonValue jsonValue when jsonValue.TryGetValue<string>(out var singleBundle):
                     // Single bundle as string - convert to array
-                    bundlesArray = new JsonArray { singleBundle };
+                    bundlesArray = [singleBundle];
                     l.A($"Single bundle found, converted to array: {singleBundle}");
                     break;
                 case JsonArray existingArray:
@@ -95,7 +95,7 @@ public class ExportExtension(
                 default:
                     // Unexpected type
                     l.A($"Unexpected bundles type: {bundlesNode?.GetType().Name}, skipping");
-                    bundlesArray = new JsonArray();
+                    bundlesArray = [];
                     break;
             }
 
@@ -113,7 +113,7 @@ public class ExportExtension(
         using var memoryStream = CreateZipArchive(filesToInclude, bundles, modifiedJson, name, l);
         memoryStream.Position = 0;
         var fileBytes = memoryStream.ToArray();
-        var mimeType = MimeTypeConstants.FallbackType;
+        const string mimeType = MimeTypeConstants.FallbackType;
 
         l.A($"Created ZIP with {filesToInclude.Count} files, size: {fileBytes.Length} bytes");
 
@@ -129,7 +129,7 @@ public class ExportExtension(
         List<(string sourcePath, string zipPath, string contenet)> bundles,
         JsonObject modifiedJson, 
         string extensionName,
-        ILog parentLog)
+        ILog? parentLog)
     {
         var l = parentLog.Fn<MemoryStream>($"files:{filesToInclude.Count}, ext:{extensionName}");
 
@@ -166,7 +166,7 @@ public class ExportExtension(
         return l.ReturnAsOk(memoryStream);
     }
 
-    private JsonObject ModifyExtensionJson(JsonObject json, int appId, string extensionDataPath, ILog parentLog)
+    private JsonObject ModifyExtensionJson(JsonObject json, int appId, string extensionDataPath, ILog? parentLog)
     {
         var l = parentLog.Fn<JsonObject>();
 
@@ -225,7 +225,7 @@ public class ExportExtension(
         JsonObject extensionJson,
         IAppPaths appPaths,
         string extensionName,
-        ILog parentLog)
+        ILog? parentLog)
     {
         var l = parentLog.Fn<List<(string sourcePath, string zipPath)>>();
 
@@ -234,7 +234,7 @@ public class ExportExtension(
         var files = new List<(string, string)>();
 
         // 1. Always include /extensions/[name] folder (except App_Data which we handle separately)
-        AddDirectoryFiles(extensionPath, extensionPath, $"{FolderConstants.AppExtensionsFolder}/{extensionName}", files, exclude: new[] { $"{FolderConstants.DataFolderProtected}\\{FolderConstants.AppExtensionJsonFile}" }, l);
+        AddDirectoryFiles(extensionPath, extensionPath, $"{FolderConstants.AppExtensionsFolder}/{extensionName}", files, exclude: [$"{FolderConstants.DataFolderProtected}\\{FolderConstants.AppExtensionJsonFile}"], l);
 
         // 2. Check for hasAppCode setting
         var hasAppCode = extensionJson.TryGetPropertyValue("hasAppCode", out var hasAppCodeNode) && hasAppCodeNode?.GetValue<bool>() == true;
@@ -250,7 +250,7 @@ public class ExportExtension(
         return l.ReturnAsOk(files);
     }
 
-    private List<(string, string, string)> ExportDataBundles(JsonArray bundles, string extensionDataPath, string extensionName, int appId, ILog parentLog)
+    private List<(string, string, string)> ExportDataBundles(JsonArray bundles, string extensionDataPath, string extensionName, int appId, ILog? parentLog)
     {
         var l = parentLog.Fn<List<(string, string, string)>>();
         
@@ -312,7 +312,7 @@ public class ExportExtension(
         l.Done($"Added {files.Count} files to collection");
     }
 
-    private object CreateLockFile(List<(string sourcePath, string zipPath)> files, List<(string sourcePath, string zipPath, string contenet)> bundles, JsonObject extensionJson, ILog parentLog)
+    private object CreateLockFile(List<(string sourcePath, string zipPath)> files, List<(string sourcePath, string zipPath, string contenet)> bundles, JsonObject extensionJson, ILog? parentLog)
     {
         var l = parentLog.Fn<object>();
         l.A($"Creating {FolderConstants.AppExtensionLockJsonFile} file");
