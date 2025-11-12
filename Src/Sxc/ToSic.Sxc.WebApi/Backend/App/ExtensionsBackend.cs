@@ -102,9 +102,9 @@ public class ExtensionsBackend(
     /// Expected zip layout: extensions/{extensionName}/App_Data/extension.json + assets.
     /// If name not provided, derive from zip filename or use the single subfolder under 'extensions'.
     /// </summary>
-    public bool InstallExtensionZip(int zoneId, int appId, Stream zipStream, string? name = null, bool overwrite = false, string? originalZipFileName = null)
+    public bool InstallExtensionZip(int zoneId, int appId, Stream zipStream, bool overwrite = false, string? originalZipFileName = null)
     {
-        var l = Log.Fn<bool>($"z:{zoneId}, a:{appId}, overwrite:{overwrite}, pref:'{name}', ofn:'{originalZipFileName}'");
+        var l = Log.Fn<bool>($"z:{zoneId}, a:{appId}, overwrite:{overwrite}, ofn:'{originalZipFileName}'");
 
         string? tempDir = null;
         try
@@ -139,12 +139,12 @@ public class ExtensionsBackend(
                 return l.ReturnFalse($"'{FolderConstants.AppExtensionsFolder}' folder empty");
 
             // Determine source extension directory
-            var (resolvedName, sourcePath) = ResolveName(name, originalZipFileName, extensionsDir, candidates);
+            var (resolvedName, sourcePath) = ResolveName(originalZipFileName: null, extensionsDir: extensionsDir, candidates: candidates);
             if (sourcePath == null)
                 return l.ReturnFalse("could not determine extension subfolder – specify 'name'");
 
             // Final folder name
-            var folderName = !string.IsNullOrWhiteSpace(name) ? name!.Trim() : resolvedName!;
+            var folderName = resolvedName!;
             if (!IsValidFolderName(folderName))
                 return l.ReturnFalse($"invalid folder name:'{folderName}'");
 
@@ -210,24 +210,12 @@ public class ExtensionsBackend(
         }
     }
 
-    private static (string? resolvedName, string? sourcePath) ResolveName(
-        string? name,
-        string? originalZipFileName,
+    private static (string? resolvedName, string? sourcePath) ResolveName(string? originalZipFileName,
         string extensionsDir,
         string[] candidates)
     {
         string? resolvedName = null;
         string? sourcePath = null;
-
-        if (!string.IsNullOrWhiteSpace(name))
-        {
-            var preferred = Path.Combine(extensionsDir, name!.Trim());
-            if (Directory.Exists(preferred))
-            {
-                resolvedName = name.Trim();
-                sourcePath = preferred;
-            }
-        }
 
         if (sourcePath == null && candidates.Length == 1)
         {

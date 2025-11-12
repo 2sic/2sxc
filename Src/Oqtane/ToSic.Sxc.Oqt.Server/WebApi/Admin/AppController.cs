@@ -145,11 +145,11 @@ public class AppController() : OqtStatefulControllerBase(RealController.LogSuffi
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool InstallExtension([FromQuery] int zoneId, [FromQuery] int appId, [FromQuery] string? name = null, [FromQuery] bool overwrite = true)
+    public bool InstallExtension([FromQuery] int zoneId, [FromQuery] int appId, [FromQuery] bool overwrite = true)
     {
         // Ensure that Hot Reload is not enabled or try to disable it.
         HotReloadEnabledCheck.Check();
-        return Real.InstallExtensionZip(new(Request), zoneId, appId, name, overwrite);
+        return Real.InstallExtensionZip(new(Request), zoneId, appId, overwrite);
     }
 
     /// <inheritdoc />
