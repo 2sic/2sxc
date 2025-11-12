@@ -339,25 +339,58 @@ public class ExtensionsBackendTests
             var tempRoot = Path.Combine(Path.GetTempPath(), "2sxc-ext-tests", Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(tempRoot);
 
+            // Create site & path services first so they can be registered
+            var site = new FakeSite(tempRoot);
+            var appPathSvc = new FakeAppPathsMicroSvc(tempRoot);
+
             var services = new ServiceCollection();
             services.AddSingleton<IAppReaderFactory, FakeAppReaderFactory>();
             services.AddSingleton<IJsonService, SimpleJsonService>();
             services.AddSingleton<IGlobalConfiguration, FakeGlobalConfiguration>();
+            services.AddSingleton<ISite>(site);
+            services.AddSingleton<IAppPathsMicroSvc>(appPathSvc);
+
+            // Register LazySvc wrappers for basic services using factory overloads (DI will provide sp when resolving)
+            services.AddSingleton(sp => new LazySvc<IAppReaderFactory>(sp));
+            services.AddSingleton(sp => new LazySvc<IJsonService>(sp));
+
+            // Register backend dependencies explicitly so they can be resolved by LazySvc later
+            services.AddSingleton<ExtensionsReaderBackend>(sp => new ExtensionsReaderBackend(
+                sp.GetRequiredService<LazySvc<IAppReaderFactory>>(),
+                sp.GetRequiredService<ISite>(),
+                sp.GetRequiredService<IAppPathsMicroSvc>(),
+                sp.GetRequiredService<LazySvc<IJsonService>>()));
+
+            services.AddSingleton<ExtensionsWriterBackend>(sp => new ExtensionsWriterBackend(
+                sp.GetRequiredService<LazySvc<IAppReaderFactory>>(),
+                sp.GetRequiredService<ISite>(),
+                sp.GetRequiredService<IAppPathsMicroSvc>()));
+
+            services.AddSingleton<ExtensionsZipInstallerBackend>(sp => new ExtensionsZipInstallerBackend(
+                sp.GetRequiredService<LazySvc<IAppReaderFactory>>(),
+                sp.GetRequiredService<ISite>(),
+                sp.GetRequiredService<IAppPathsMicroSvc>(),
+                sp.GetRequiredService<IGlobalConfiguration>()));
+
+            // Register LazySvc wrappers for the backend classes themselves
+            services.AddSingleton(sp => new LazySvc<ExtensionsReaderBackend>(sp));
+            services.AddSingleton(sp => new LazySvc<ExtensionsWriterBackend>(sp));
+            services.AddSingleton(sp => new LazySvc<ExtensionsZipInstallerBackend>(sp));
+
             var sp = services.BuildServiceProvider() as ServiceProvider ?? throw new InvalidOperationException("Failed to build service provider");
 
-            var appReadersLazy = new LazySvc<IAppReaderFactory>(sp);
-            var jsonLazy = new LazySvc<IJsonService>(sp);
+            // Configure global folder as previous tests relied on it for path resolution helpers
             var globalConfig = sp.GetRequiredService<IGlobalConfiguration>();
-
-            // Ensure GlobalFolder is configured so extension methods like TemporaryFolder() can resolve
             globalConfig.GlobalFolder(tempRoot);
 
-            var site = new FakeSite(tempRoot);
-            var appPathSvc = new FakeAppPathsMicroSvc(tempRoot);
+            // Resolve LazySvc backends
+            var readerLazy = sp.GetRequiredService<LazySvc<ExtensionsReaderBackend>>();
+            var writerLazy = sp.GetRequiredService<LazySvc<ExtensionsWriterBackend>>();
+            var zipLazy = sp.GetRequiredService<LazySvc<ExtensionsZipInstallerBackend>>();
 
-            var backend = new ExtensionsBackend(appReadersLazy, site, appPathSvc, jsonLazy, globalConfig);
+            var backend = new ExtensionsBackend(readerLazy, writerLazy, zipLazy);
 
-            var jsonSvc = jsonLazy.Value;
+            var jsonSvc = sp.GetRequiredService<IJsonService>();
 
             return new TestContext(tempRoot, sp, backend, jsonSvc);
         }

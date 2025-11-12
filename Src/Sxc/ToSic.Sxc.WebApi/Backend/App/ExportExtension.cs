@@ -42,7 +42,7 @@ public class ExportExtension(
         
         // Basic validation to ensure folder is a simple directory name
         name = name.Trim();
-        if (!ExtensionsBackend.IsValidFolderName(name))
+        if (!ExtensionFolderNameValidator.IsValid(name))
             throw l.Ex(new ArgumentException("Invalid extension name", nameof(name)));
 
         // 1. Validate and get paths
@@ -75,8 +75,8 @@ public class ExportExtension(
 
         // 4. Handle data bundles
         var bundles = new List<(string sourcePath, string zipPath, string content)>();
-        var hasDataBundles = extensionJson.TryGetPropertyValue("hasDataBundles", out var hasAppCodeNode)
-                             && hasAppCodeNode?.GetValue<bool>() == true;
+        var hasDataBundles = extensionJson.TryGetPropertyValue("hasDataBundles", out var hasDataBundlesNode)
+                             && hasDataBundlesNode?.GetValue<bool>() == true;
         if (hasDataBundles && modifiedJson.TryGetPropertyValue("bundles", out var bundlesNode))
         {
             // Convert bundlesNode to JsonArray, handling both string and array cases
@@ -126,7 +126,7 @@ public class ExportExtension(
 
     private MemoryStream CreateZipArchive(
         List<(string sourcePath, string zipPath)> filesToInclude,
-        List<(string sourcePath, string zipPath, string contenet)> bundles,
+        List<(string sourcePath, string zipPath, string content)> bundles,
         JsonObject modifiedJson, 
         string extensionName,
         ILog? parentLog)
@@ -312,7 +312,7 @@ public class ExportExtension(
         l.Done($"Added {files.Count} files to collection");
     }
 
-    private object CreateLockFile(List<(string sourcePath, string zipPath)> files, List<(string sourcePath, string zipPath, string contenet)> bundles, JsonObject extensionJson, ILog? parentLog)
+    private object CreateLockFile(List<(string sourcePath, string zipPath)> files, List<(string sourcePath, string zipPath, string content)> bundles, JsonObject extensionJson, ILog? parentLog)
     {
         var l = parentLog.Fn<object>();
         l.A($"Creating {FolderConstants.AppExtensionLockJsonFile} file");
@@ -331,7 +331,7 @@ public class ExportExtension(
             bundles.Select(b => new
             {
                 file = "/" + b.zipPath,
-                hash = Sha256.Hash(b.contenet)
+                hash = Sha256.Hash(b.content)
             }).ToList()
             );
 

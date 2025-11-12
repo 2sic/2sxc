@@ -41,7 +41,11 @@ public static class StartupWebApi
 
         // Backends
         services.TryAddTransient<AppsBackend>();
+        services.TryAddTransient<ExportExtension>();
         services.TryAddTransient<ExtensionsBackend>();
+        services.TryAddTransient<ExtensionsReaderBackend>();
+        services.TryAddTransient<ExtensionsWriterBackend>();
+        services.TryAddTransient<ExtensionsZipInstallerBackend>();
         services.TryAddTransient<EntityBackend>();
         services.TryAddTransient<EditLoadBackend>();
         services.TryAddTransient<EditLoadPrefetchHelper>();
