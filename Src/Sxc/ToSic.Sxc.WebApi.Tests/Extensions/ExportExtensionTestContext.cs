@@ -6,6 +6,7 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
 using ToSic.Eav.Sys;
+using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -53,6 +54,7 @@ internal sealed class ExportExtensionTestContext : IDisposable
 
         var appReadersLazy = new LazySvc<IAppReaderFactory>(sp);
         var jsonLazy = new LazySvc<IJsonService>(sp);
+        var contentExportLazy = new LazySvc<ContentExportApi>(sp);
 
         var site = new FakeSite(tempRoot);
         var appPathSvc = new FakeAppPathsMicroSvc(tempRoot);
@@ -65,7 +67,8 @@ internal sealed class ExportExtensionTestContext : IDisposable
             jsonLazy, 
             user, 
             null!, // ResponseMaker - not needed for structure tests
-            null!); // JsonSerializer generator - not needed for structure tests
+            null!, // JsonSerializer generator - not needed for structure tests
+            contentExportLazy);
 
         return new ExportExtensionTestContext(tempRoot, sp, exportBackend);
     }

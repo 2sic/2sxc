@@ -28,7 +28,7 @@ public class ExportExtensionTests
         const string version = "1.0.0";
         ctx.SetupExtension(extName, new { version, isInstalled = false });
         
-        var result = ctx.ExportBackend.Export(zoneId: 1, appId: 42, name: extName);
+        var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
         Assert.NotNull(result);
 #if !NETFRAMEWORK
@@ -48,7 +48,7 @@ public class ExportExtensionTests
         const string extName = "test-extension";
         ctx.SetupExtension(extName, new { version = "1.0.0" });
         
-        var result = ctx.ExportBackend.Export(zoneId: 1, appId: 42, name: extName);
+        var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
 #if !NETFRAMEWORK
         var fileResult = result as FileContentResult;
@@ -67,7 +67,7 @@ public class ExportExtensionTests
         const string extName = "test-extension";
         ctx.SetupExtension(extName, new { version = "1.0.0" });
         
-        var result = ctx.ExportBackend.Export(zoneId: 1, appId: 42, name: extName);
+        var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
 #if !NETFRAMEWORK
         var fileResult = result as FileContentResult;
@@ -88,7 +88,7 @@ public class ExportExtensionTests
         using var ctx = ExportExtensionTestContext.Create();
         
         Assert.Throws<DirectoryNotFoundException>(() =>
-            ctx.ExportBackend.Export(zoneId: 1, appId: 42, name: "nonexistent"));
+            ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: "nonexistent"));
     }
 
     [Fact]
@@ -101,7 +101,7 @@ public class ExportExtensionTests
         Directory.CreateDirectory(extDir);
         
         Assert.Throws<FileNotFoundException>(() =>
-            ctx.ExportBackend.Export(zoneId: 1, appId: 42, name: extName));
+            ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName));
     }
 
     #endregion
@@ -116,7 +116,7 @@ public class ExportExtensionTests
         const string extName = "test-extension";
         ctx.SetupExtension(extName, new { version = "1.0.0", isInstalled = false });
         
-        var result = ctx.ExportBackend.Export(zoneId: 1, appId: 42, name: extName);
+        var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
 
 #if !NETFRAMEWORK
         var fileResult = result as FileContentResult;
@@ -137,7 +137,7 @@ public class ExportExtensionTests
         const string extName = "test-extension";
         ctx.SetupExtension(extName, new { version = "1.0.0" });
         
-        var result = ctx.ExportBackend.Export(zoneId: 1, appId: 42, name: extName);
+        var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
 #if !NETFRAMEWORK
         var fileResult = result as FileContentResult;
@@ -162,7 +162,7 @@ public class ExportExtensionTests
             FolderConstants.DataFolderProtected, FolderConstants.AppExtensionJsonFile);
         var originalContent = File.ReadAllText(originalPath);
         
-        var result = ctx.ExportBackend.Export(zoneId: 1, appId: 42, name: extName);
+        var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
         var afterExportContent = File.ReadAllText(originalPath);
         Assert.Equal(originalContent, afterExportContent);
@@ -187,7 +187,7 @@ public class ExportExtensionTests
             ("Helper.cs", "// test helper"),
             ("Service.cs", "// test service"));
         
-        var result = ctx.ExportBackend.Export(zoneId: 1, appId: 42, name: extName);
+        var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
 #if !NETFRAMEWORK
         var fileResult = result as FileContentResult;
@@ -208,7 +208,7 @@ public class ExportExtensionTests
         ctx.SetupExtension(extName, new { version = "1.0.0", hasAppCode = false });
         ctx.CreateAppCodeFiles(extName, ("Helper.cs", "// should not be included"));
         
-        var result = ctx.ExportBackend.Export(zoneId: 1, appId: 42, name: extName);
+        var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
 #if !NETFRAMEWORK
         var fileResult = result as FileContentResult;
@@ -227,7 +227,7 @@ public class ExportExtensionTests
         const string extName = "no-appcode-property";
         ctx.SetupExtension(extName, new { version = "1.0.0" });
         
-        var result = ctx.ExportBackend.Export(zoneId: 1, appId: 42, name: extName);
+        var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
 #if !NETFRAMEWORK
         var fileResult = result as FileContentResult;
@@ -251,7 +251,7 @@ public class ExportExtensionTests
         const string version = "2.4.7";
         ctx.SetupExtension(extName, new { version });
         
-        var result = ctx.ExportBackend.Export(zoneId: 1, appId: 42, name: extName);
+        var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
 #if !NETFRAMEWORK
         var fileResult = result as FileContentResult;
@@ -275,7 +275,7 @@ public class ExportExtensionTests
         var extDir = Path.Combine(ctx.TempRoot, FolderConstants.AppExtensionsFolder, extName);
         File.WriteAllText(Path.Combine(extDir, "readme.txt"), "test");
         
-        var result = ctx.ExportBackend.Export(zoneId: 1, appId: 42, name: extName);
+        var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
 #if !NETFRAMEWORK
         var fileResult = result as FileContentResult;
@@ -298,7 +298,7 @@ public class ExportExtensionTests
         const string extName = "test-extension";
         ctx.SetupExtension(extName, new { version = "1.0.0" });
         
-        var result = ctx.ExportBackend.Export(zoneId: 1, appId: 42, name: extName);
+        var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
 #if !NETFRAMEWORK
         var fileResult = result as FileContentResult;
@@ -338,7 +338,7 @@ public class ExportExtensionTests
             ("script.js", "console.log('test');"),
             ("styles.css", ".test { color: red; }"));
         
-        var result = ctx.ExportBackend.Export(zoneId: 1, appId: 42, name: extName);
+        var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
 #if !NETFRAMEWORK
         var fileResult = result as FileContentResult;
@@ -358,7 +358,7 @@ public class ExportExtensionTests
         const string extName = "test-extension";
         ctx.SetupExtension(extName, new { version = "1.0.0" });
         
-        var result = ctx.ExportBackend.Export(zoneId: 1, appId: 42, name: extName);
+        var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
 #if !NETFRAMEWORK
         var fileResult = result as FileContentResult;
