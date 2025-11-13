@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Text.Json;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.ImportExport.Sys.Zip;
@@ -193,6 +195,7 @@ public class ExtensionsZipInstallerBackend(
             if (!overwrite)
                 return l.ReturnAsError(new(false, $"'{targetPath}' target exists - set overwrite"));
 
+            // RemoveReadOnlyRecursive(targetPath, parentLog);
             l.A($"cleanup target:'{targetPath}'");
             Zipping.TryToDeleteDirectory(targetPath, parentLog);
         }
@@ -231,7 +234,9 @@ public class ExtensionsZipInstallerBackend(
                     return l.ReturnAsError(new(false, $"illegal destination path:'{rel}'"));
 
                 Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
+                RemoveReadOnlyIfNeeded(destinationPath, rel, l);
                 File.Copy(file, destinationPath, overwrite: true);
+                EnsureReadOnly(destinationPath, rel, l);
                 l.A($"copied:'{rel}'");
             }
         }
@@ -353,5 +358,67 @@ public class ExtensionsZipInstallerBackend(
         => !string.IsNullOrWhiteSpace(path) && Directory.Exists(path)
             ? Directory.GetFiles(path, "*", SearchOption.AllDirectories)
             : Array.Empty<string>();
+
+    private static void RemoveReadOnlyRecursive(string directory, ILog? log)
+    {
+        if (!Directory.Exists(directory))
+            return;
+
+        foreach (var file in Directory.GetFiles(directory, "*", SearchOption.AllDirectories))
+        {
+            var rel = file.Substring(directory.Length)
+                .TrimPrefixSlash()
+                .ForwardSlash();
+            RemoveReadOnlyIfNeeded(file, rel, log);
+        }
+
+        foreach (var dir in Directory.GetDirectories(directory, "*", SearchOption.AllDirectories))
+        {
+            var rel = dir.Substring(directory.Length)
+                .TrimPrefixSlash()
+                .ForwardSlash();
+            ClearDirectoryReadOnly(dir, rel, log);
+        }
+
+        ClearDirectoryReadOnly(directory, string.Empty, log);
+    }
+
+    private static void RemoveReadOnlyIfNeeded(string path, string relPath, ILog? log)
+    {
+        if (!File.Exists(path))
+            return;
+
+        var attributes = File.GetAttributes(path);
+        if (!attributes.HasFlag(FileAttributes.ReadOnly))
+            return;
+
+        File.SetAttributes(path, attributes & ~FileAttributes.ReadOnly);
+        log?.A($"cleared readonly:'{relPath}'");
+    }
+
+    private static void EnsureReadOnly(string path, string relPath, ILog? log)
+    {
+        if (!File.Exists(path))
+            return;
+
+        var attributes = File.GetAttributes(path);
+        if (attributes.HasFlag(FileAttributes.ReadOnly))
+            return;
+
+        File.SetAttributes(path, attributes | FileAttributes.ReadOnly);
+        log?.A($"set readonly:'{relPath}'");
+    }
+
+    private static void ClearDirectoryReadOnly(string directory, string relPath, ILog? log)
+    {
+        var info = new DirectoryInfo(directory);
+        var attributes = info.Attributes;
+        if (!attributes.HasFlag(FileAttributes.ReadOnly))
+            return;
+
+        info.Attributes = attributes & ~FileAttributes.ReadOnly;
+        if (!string.IsNullOrEmpty(relPath))
+            log?.A($"cleared readonly dir:'{relPath}'");
+    }
 
 }
