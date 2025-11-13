@@ -1,12 +1,7 @@
-using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Text;
-using System.Text.Json;
-using ToSic.Eav.Sys;
-using ToSic.Sys.Security.Encryption;
 using Tests.ToSic.ToSxc.WebApi.Extensions;
-using static ToSic.Sxc.WebApi.Tests.Extensions.ExportExtensionTestHelpers;
+using ToSic.Sys.Security.Encryption;
 
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
@@ -231,5 +226,209 @@ public class ExtensionsZipInstallerBackendTest
 
         // Assert - Third install with overwrite succeeds
         Assert.True(ok3);
+    }
+
+    // Additional tests covering validation and lock/hash failure modes
+
+    [Fact]
+    public void InstallZip_MissingTopLevelExtensionsFolder_Fails()
+    {
+        using var ctx = ExtensionsBackendTestContext.Create();
+        using var ms = new MemoryStream();
+        using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
+        {
+            var entry = zip.CreateEntry($"notextensions/foo/App_Data/extension.json");
+            using (var stream = entry.Open())
+            {
+                using var writer = new StreamWriter(stream, new UTF8Encoding(false));
+                writer.Write("{ \"id\":\"foo\", \"isInstalled\": true }");
+            }
+        }
+        ms.Position = 0;
+
+        var ok = ctx.Backend.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "missing-extensions.zip");
+        Assert.False(ok);
+    }
+
+    [Fact]
+    public void InstallZip_MissingLockFile_Fails()
+    {
+        using var ctx = ExtensionsBackendTestContext.Create();
+        const string folder = "no-lock";
+        using var ms = new MemoryStream();
+        using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
+        {
+            var extensionJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.json");
+            using (var stream = extensionJson.Open())
+            {
+                using var writer = new StreamWriter(stream, new UTF8Encoding(false));
+                writer.Write($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}");
+            }
+
+            // Intentionally do not add lock file
+            var extra = zip.CreateEntry($"extensions/{folder}/dist/extra.js");
+            using (var s2 = extra.Open())
+            {
+                using var w2 = new StreamWriter(s2, new UTF8Encoding(false));
+                w2.Write("console.log('x');");
+            }
+        }
+        ms.Position = 0;
+
+        var ok = ctx.Backend.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "no-lock.zip");
+        Assert.False(ok);
+    }
+
+    [Fact]
+    public void InstallZip_InvalidExtensionJson_Fails()
+    {
+        using var ctx = ExtensionsBackendTestContext.Create();
+        const string folder = "invalid-json";
+        using var ms = new MemoryStream();
+        using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
+        {
+            var extensionJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.json");
+            using (var stream = extensionJson.Open())
+            {
+                using var writer = new StreamWriter(stream, new UTF8Encoding(false));
+                // Missing isInstalled true
+                writer.Write($"{{ \"id\":\"{folder}\", \"enabled\": true }}");
+            }
+
+            // Provide a lock file so validation still checks extension.json
+            var lockJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.lock.json");
+            using (var lstream = lockJson.Open())
+            {
+                using var lw = new StreamWriter(lstream, new UTF8Encoding(false));
+                var lockData = new { version = TestVersion, files = new[] { new { file = $"extensions/{folder}/App_Data/extension.json", hash = Sha256.Hash("{}") } } };
+                lw.Write(ctx.JsonSvc.ToJson(lockData, indentation: 2));
+            }
+        }
+        ms.Position = 0;
+
+        var ok = ctx.Backend.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "invalid-json.zip");
+        Assert.False(ok);
+    }
+
+    [Fact]
+    public void InstallZip_MissingFilesListedInLock_Fails()
+    {
+        using var ctx = ExtensionsBackendTestContext.Create();
+        const string folder = "missing-file";
+        using var ms = new MemoryStream();
+        using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
+        {
+            // Only include extension.json but lock lists another file
+            var extensionJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.json");
+            using (var stream = extensionJson.Open())
+            {
+                using var writer = new StreamWriter(stream, new UTF8Encoding(false));
+                writer.Write($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}");
+            }
+
+            var lockJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.lock.json");
+            using (var lstream = lockJson.Open())
+            {
+                using var lw = new StreamWriter(lstream, new UTF8Encoding(false));
+                var lockData = new
+                {
+                    version = TestVersion,
+                    files = new[]
+                    {
+                        new { file = $"extensions/{folder}/App_Data/extension.json", hash = Sha256.Hash($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}") },
+                        new { file = $"extensions/{folder}/dist/missing.js", hash = Sha256.Hash("console.log('x');") }
+                    }
+                };
+                lw.Write(ctx.JsonSvc.ToJson(lockData, indentation: 2));
+            }
+        }
+        ms.Position = 0;
+
+        var ok = ctx.Backend.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "missing-file.zip");
+        Assert.False(ok);
+    }
+
+    [Fact]
+    public void InstallZip_UnexpectedExtraFiles_Fails()
+    {
+        using var ctx = ExtensionsBackendTestContext.Create();
+        const string folder = "extra-file";
+        using var ms = new MemoryStream();
+        using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
+        {
+            // extension.json
+            var extensionJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.json");
+            using (var stream = extensionJson.Open())
+            {
+                using var writer = new StreamWriter(stream, new UTF8Encoding(false));
+                writer.Write($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}");
+            }
+
+            // an extra file not listed in lock
+            var extra = zip.CreateEntry($"extensions/{folder}/dist/extra.js");
+            using (var s2 = extra.Open())
+            {
+                using var w2 = new StreamWriter(s2, new UTF8Encoding(false));
+                w2.Write("console.log('extra');");
+            }
+
+            // lock only lists the extension.json
+            var lockJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.lock.json");
+            using (var lstream = lockJson.Open())
+            {
+                using var lw = new StreamWriter(lstream, new UTF8Encoding(false));
+                var lockData = new { version = TestVersion, files = new[] { new { file = $"extensions/{folder}/App_Data/extension.json", hash = Sha256.Hash($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}") } } };
+                lw.Write(ctx.JsonSvc.ToJson(lockData, indentation: 2));
+            }
+        }
+        ms.Position = 0;
+
+        var ok = ctx.Backend.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "extra-file.zip");
+        Assert.False(ok);
+    }
+
+    [Fact]
+    public void InstallZip_HashMismatch_Fails()
+    {
+        using var ctx = ExtensionsBackendTestContext.Create();
+        const string folder = "bad-hash";
+        using var ms = new MemoryStream();
+        using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
+        {
+            var extensionJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.json");
+            using (var stream = extensionJson.Open())
+            {
+                using var writer = new StreamWriter(stream, new UTF8Encoding(false));
+                writer.Write($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}");
+            }
+
+            var file = zip.CreateEntry($"extensions/{folder}/dist/main.js");
+            using (var s = file.Open())
+            using (var w = new StreamWriter(s, new UTF8Encoding(false)))
+            {
+                w.Write("console.log('real');");
+            }
+
+            var lockJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.lock.json");
+            using (var lstream = lockJson.Open())
+            {
+                using var lw = new StreamWriter(lstream, new UTF8Encoding(false));
+                // Intentionally put wrong hash for main.js
+                var lockData = new
+                {
+                    version = TestVersion,
+                    files = new[]
+                    {
+                        new { file = $"extensions/{folder}/App_Data/extension.json", hash = Sha256.Hash($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}") },
+                        new { file = $"extensions/{folder}/dist/main.js", hash = "0000000000000000000000000000000000000000000000000000000000000000" }
+                    }
+                };
+                lw.Write(ctx.JsonSvc.ToJson(lockData, indentation: 2));
+            }
+        }
+        ms.Position = 0;
+
+        var ok = ctx.Backend.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "bad-hash.zip");
+        Assert.False(ok);
     }
 }
