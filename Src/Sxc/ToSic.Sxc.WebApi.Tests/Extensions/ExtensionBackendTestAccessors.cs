@@ -11,6 +11,7 @@ internal static class ExtensionBackendTestAccessors
     public static bool SaveExtensionTac(this ExtensionsBackend backend, int zoneId, int appId, string name, JsonElement configuration)
         => backend.SaveExtension(zoneId: zoneId, appId: appId, name: name, configuration: configuration);
 
-    public static bool InstallExtensionZipTac(this ExtensionsBackend backend, int zoneId, int appId, Stream zipStream, string? name = null, bool overwrite = false, string? originalZipFileName = null)
+    public static bool InstallExtensionZipTac(this ExtensionsBackend backend, int zoneId, int appId, Stream zipStream,
+        bool overwrite = false, string? originalZipFileName = null)
         => backend.InstallExtensionZip(zoneId: zoneId, appId: appId, zipStream: zipStream, overwrite: overwrite, originalZipFileName: originalZipFileName);
 }
