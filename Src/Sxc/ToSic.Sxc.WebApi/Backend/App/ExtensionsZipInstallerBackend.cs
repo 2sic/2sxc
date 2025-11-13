@@ -4,6 +4,7 @@ using ToSic.Eav.ImportExport.Sys.Zip;
 using ToSic.Eav.Sys;
 using ToSic.Sys.Configuration;
 using ToSic.Sys.Security.Encryption;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.App;
 
@@ -55,52 +56,24 @@ public class ExtensionsZipInstallerBackend(
 
             var installed = new List<string>();
 
-            foreach (var folderName in lockResults.Keys)
+            foreach (var lockResult in lockResults)
             {
-                l.A($"install:'{folderName}'");
+                var folderName = lockResult.Key;
+                var lockValidation = lockResult.Value;
 
-                if (!ExtensionFolderNameValidator.IsValid(folderName))
-                    return l.ReturnFalse($"invalid folder name:'{folderName}'");
+                l.A($"prepare install:'{folderName}'");
 
-                // Reuse per-candidate lock validation result
-                if (!lockResults.TryGetValue(folderName, out var lockValidation) || !lockValidation.Success)
-                    return l.ReturnFalse(lockValidation?.Error ?? "lock validation missing");
+                var installResult = InstallSingleExtension(
+                    folderName: folderName,
+                    lockValidation: lockValidation,
+                    tempDir: tempDir,
+                    extensionsRoot: extensionsRoot,
+                    appRoot: appPaths.PhysicalPath,
+                    overwrite: overwrite,
+                    parentLog: l);
 
-                var targetExtensionRoot = Path.Combine(extensionsRoot, folderName);
-                if (Directory.Exists(targetExtensionRoot))
-                {
-                    if (!overwrite)
-                        return l.ReturnFalse($"'{targetExtensionRoot}' target exists - set overwrite");
-
-                    Zipping.TryToDeleteDirectory(targetExtensionRoot, l);
-                }
-
-                var tempExtensionRoot = Path.Combine(tempDir, FolderConstants.AppExtensionsFolder, folderName);
-                if (Directory.Exists(tempExtensionRoot))
-                {
-                    if (!overwrite)
-                        return l.ReturnFalse($"'{tempExtensionRoot}' target exists - set overwrite");
-
-                    CopyDirectory(tempExtensionRoot, targetExtensionRoot, l, lockValidation.AllowedFiles, tempDir, appPaths.PhysicalPath);
-                }
-
-                var appCodeExtensionDirectory = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, folderName);
-                if (Directory.Exists(appCodeExtensionDirectory))
-                {
-                    if (!overwrite)
-                        return l.ReturnFalse($"'{appCodeExtensionDirectory}' target exists - set overwrite");
-
-                    Zipping.TryToDeleteDirectory(appCodeExtensionDirectory, l);
-                }
-
-                var tmpAppCodeExtensionDirectory = Path.Combine(tempDir, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, folderName);
-                if (Directory.Exists(tmpAppCodeExtensionDirectory))
-                {
-                    if (!overwrite)
-                        return l.ReturnFalse($"'{tmpAppCodeExtensionDirectory}' target exists - set overwrite");
-
-                    CopyDirectory(tempDir, appCodeExtensionDirectory, l, lockValidation.AllowedFiles, tempDir, appPaths.PhysicalPath);
-                }
+                if (!installResult.Success)
+                    return l.ReturnFalse(installResult.Error ?? $"install failed:'{folderName}'");
 
                 installed.Add(folderName);
             }
@@ -168,6 +141,108 @@ public class ExtensionsZipInstallerBackend(
         return l.ReturnAndLog((issues.Any() ? $"invalid extension subfolder(s): {string.Join("; ", issues)}" : null, lockResults));
     }
 
+    // Install a single extension folder using the lock metadata to guard file copying.
+    private ValidationResult InstallSingleExtension(string folderName, LockValidationResult lockValidation, string tempDir, string extensionsRoot, string appRoot, bool overwrite, ILog? parentLog)
+    {
+        var l = parentLog.Fn<ValidationResult>($"folder:'{folderName}'");
+
+        if (!ExtensionFolderNameValidator.IsValid(folderName))
+            return l.ReturnAsError(new(false, $"invalid folder name:'{folderName}'"));
+
+        if (!lockValidation.Success)
+            return l.ReturnAsError(new(false, lockValidation.Error ?? $"lock validation failed:'{folderName}'"));
+
+        var allowedFiles = lockValidation.AllowedFiles;
+        if (allowedFiles == null || allowedFiles.Count == 0)
+            return l.ReturnAsError(new(false, $"no files allowed for '{folderName}'"));
+
+        var tempExtensionFolder = Path.Combine(tempDir, FolderConstants.AppExtensionsFolder, folderName);
+        var tempAppCodeFolder = Path.Combine(tempDir, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, folderName);
+
+        var extensionTarget = Path.Combine(extensionsRoot, folderName);
+        var appCodeTarget = Path.Combine(appRoot, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, folderName);
+
+        var extensionTargetValidation = EnsureTargetReadyForCopy(tempExtensionFolder, extensionTarget, overwrite, l, FolderConstants.AppExtensionsFolder);
+        if (!extensionTargetValidation.Success)
+            return l.ReturnAsError(extensionTargetValidation);
+
+        var appCodeTargetValidation = EnsureTargetReadyForCopy(tempAppCodeFolder, appCodeTarget, overwrite, l, FolderConstants.AppCodeFolder);
+        if (!appCodeTargetValidation.Success)
+            return l.ReturnAsError(appCodeTargetValidation);
+
+        var copyResult = CopyAllowedFiles(tempDir, appRoot, folderName, allowedFiles, l);
+        if (!copyResult.Success)
+            return l.ReturnAsError(copyResult);
+
+        return l.ReturnAsOk(new(true, null));
+    }
+
+    // Ensure the destination directory is ready to receive new files, deleting previous content when required.
+    private static ValidationResult EnsureTargetReadyForCopy(string tempSourcePath, string targetPath, bool overwrite, ILog? parentLog, string areaName)
+    {
+        var l = parentLog.Fn<ValidationResult>($"area:{areaName}");
+
+        var sourceExists = Directory.Exists(tempSourcePath);
+        var targetExists = Directory.Exists(targetPath);
+
+        if (!sourceExists && !targetExists)
+            return l.ReturnAsOk(new(true, null));
+
+        if (targetExists)
+        {
+            if (!overwrite)
+                return l.ReturnAsError(new(false, $"'{targetPath}' target exists - set overwrite"));
+
+            l.A($"cleanup target:'{targetPath}'");
+            Zipping.TryToDeleteDirectory(targetPath, parentLog);
+        }
+
+        return l.ReturnAsOk(new(true, null));
+    }
+
+    private static ValidationResult CopyAllowedFiles(string sourceRoot, string targetRoot, string folderName, HashSet<string> allowedFiles, ILog? parentLog)
+    {
+        var l = parentLog.Fn<ValidationResult>($"copy:'{folderName}'");
+
+        var sourceRootFull = SuffixBackslash(Path.GetFullPath(sourceRoot));
+        var targetRootFull = SuffixBackslash(Path.GetFullPath(targetRoot));
+
+        var sources = new[]
+        {
+            Path.Combine(sourceRoot, FolderConstants.AppExtensionsFolder, folderName),
+            Path.Combine(sourceRoot, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, folderName),
+        };
+
+        foreach (var source in sources)
+        {
+            foreach (var file in EnumerateFilesSafe(source))
+            {
+                var rel = file
+                    .Substring(sourceRootFull.Length)
+                    .TrimPrefixSlash()
+                    .ForwardSlash();
+
+                var isLockFile = rel.EndsWith(FolderConstants.AppExtensionLockJsonFile, StringComparison.OrdinalIgnoreCase);
+                if (!isLockFile && !allowedFiles.Contains(rel))
+                    continue;
+
+                var destinationPath = Path.GetFullPath(Path.Combine(targetRoot, rel.Backslash()));
+                if (!destinationPath.StartsWith(targetRootFull, StringComparison.OrdinalIgnoreCase))
+                    return l.ReturnAsError(new(false, $"illegal destination path:'{rel}'"));
+
+                Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
+                File.Copy(file, destinationPath, overwrite: true);
+                l.A($"copied:'{rel}'");
+            }
+        }
+
+        return l.ReturnAsOk(new(true, null));
+    }
+
+    private static string SuffixBackslash(string path)
+        => path.SuffixSlash().Backslash();
+
+
     private record ValidationResult(bool Success, string? Error);
 
     private static ValidationResult ValidateExtensionJsonFile(string extensionJsonFilePath, string sourcePath, ILog? parentLog)
@@ -222,22 +297,22 @@ public class ExtensionsZipInstallerBackend(
                 if (!item.TryGetProperty("hash", out var h) || h.ValueKind != JsonValueKind.String)
                     return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionLockJsonFile} entry missing 'hash'", null));
 
-                var file = f.GetString()!.Replace('\\','/').Trim().TrimStart('/');
+                var file = f.GetString()!.Trim().TrimPrefixSlash().ForwardSlash();
                 var hash = h.GetString()!.Trim();
 
-                if (file.StartsWith("..") || file.Contains("/../"))
+                if (file.ContainsPathTraversal())
                     return l.ReturnAsError(new(false, $"illegal path:'{file}' in {FolderConstants.AppExtensionLockJsonFile}", null));
 
                 allowed.Add(file);
                 expectedWithHash[file] = hash;
                 l.A($"added candidate file '{file}' with hash");
             }
-            var actualFiles = Directory.GetFiles(candidatePath, "*", SearchOption.AllDirectories)
-                .Union(Directory.GetFiles(tmpAppCodeExtensionDirectory, "*", SearchOption.AllDirectories))
+            var actualFiles = EnumerateFilesSafe(candidatePath)
+                .Union(EnumerateFilesSafe(tmpAppCodeExtensionDirectory))
                 .Select(f => f
                     .Substring(tempDir.Length)
-                    .TrimStart(Path.DirectorySeparatorChar)
-                    .Replace(Path.DirectorySeparatorChar,'/'))
+                    .TrimPrefixSlash()
+                    .ForwardSlash())
                 .Where(f => !string.Equals(Path.GetFileName(f), FolderConstants.AppExtensionLockJsonFile, StringComparison.OrdinalIgnoreCase))
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
@@ -255,7 +330,7 @@ public class ExtensionsZipInstallerBackend(
 
             foreach (var rel in allowed)
             {
-                var full = Path.Combine(tempDir, rel.Replace('/', Path.DirectorySeparatorChar));
+                var full = Path.Combine(tempDir, rel.Backslash());
                 if (!File.Exists(full))
                     return l.ReturnAsError(new(false, $"file for hash missing:{rel}", null));
 
@@ -274,31 +349,9 @@ public class ExtensionsZipInstallerBackend(
         }
     }
 
-    private static void CopyDirectory(string source, string target, ILog? parentLog, HashSet<string>? allowedFiles, string sourceRoot, string targetRoot)
-    {
-        var l = parentLog.Fn();
+    private static IEnumerable<string> EnumerateFilesSafe(string? path)
+        => !string.IsNullOrWhiteSpace(path) && Directory.Exists(path)
+            ? Directory.GetFiles(path, "*", SearchOption.AllDirectories)
+            : Array.Empty<string>();
 
-        var sourceLen = sourceRoot.Length;
-        var allFiles = Directory.GetFiles(source, "*", SearchOption.AllDirectories);
-        l.A($"files found: {allFiles.Length}");
-
-        foreach (var file in allFiles)
-        {
-            var rel = file
-                .Substring(sourceLen)
-                .TrimStart(Path.DirectorySeparatorChar)
-                .Replace(Path.DirectorySeparatorChar, '/');
-
-            if (!rel.EndsWith(FolderConstants.AppExtensionLockJsonFile, StringComparison.OrdinalIgnoreCase))
-                if (allowedFiles != null && !allowedFiles.Contains(rel))
-                    continue;
-
-            var destFull = Path.Combine(targetRoot, rel.Replace('/', Path.DirectorySeparatorChar));
-            Directory.CreateDirectory(Path.GetDirectoryName(destFull)!);
-            File.Copy(file, destFull, overwrite: true);
-            l.A($"file copy :'${rel}'");
-        }
-        
-        l.Done();
-    }
 }
