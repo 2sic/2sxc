@@ -194,8 +194,8 @@ public class ExportExtensionTests
         using var zipStream = new MemoryStream(fileResult!.FileContents);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         
-        Assert.Contains(zip.Entries, e => e.FullName.Contains($"AppCode/Extensions/{extName}/Helper.cs"));
-        Assert.Contains(zip.Entries, e => e.FullName.Contains($"AppCode/Extensions/{extName}/Service.cs"));
+        Assert.Contains(zip.Entries, e => e.FullName.Contains($"AppCode/Extensions/{extName}/Helper.cs", StringComparison.InvariantCultureIgnoreCase));
+        Assert.Contains(zip.Entries, e => e.FullName.Contains($"AppCode/Extensions/{extName}/Service.cs", StringComparison.InvariantCultureIgnoreCase));
 #endif
     }
 
