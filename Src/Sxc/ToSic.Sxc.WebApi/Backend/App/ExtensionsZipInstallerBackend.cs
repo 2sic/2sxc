@@ -1,7 +1,7 @@
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.ImportExport.Sys.Zip;
+using ToSic.Eav.Sys;
 using ToSic.Sys.Configuration;
 using ToSic.Sys.Security.Encryption;
 
@@ -24,7 +24,7 @@ public class ExtensionsZipInstallerBackend(
         {
             var appReader = appReadersLazy.Value.Get(appId);
             var appPaths = appPathSvc.Get(appReader, site);
-            var extensionsRoot = Path.Combine(appPaths.PhysicalPath, ToSic.Eav.Sys.FolderConstants.AppExtensionsFolder);
+            var extensionsRoot = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppExtensionsFolder);
             Directory.CreateDirectory(extensionsRoot);
 
             tempDir = Path.Combine(globalConfiguration.TemporaryFolder(), Guid.NewGuid().ToString("N"));
@@ -40,63 +40,71 @@ public class ExtensionsZipInstallerBackend(
                 return l.ReturnFalse("invalid zip");
             }
 
-            var extensionsDir = Path.Combine(tempDir, ToSic.Eav.Sys.FolderConstants.AppExtensionsFolder);
+            var extensionsDir = Path.Combine(tempDir, FolderConstants.AppExtensionsFolder);
             if (!Directory.Exists(extensionsDir))
-                return l.ReturnFalse($"zip missing top-level '{ToSic.Eav.Sys.FolderConstants.AppExtensionsFolder}' folder");
+                return l.ReturnFalse($"zip missing top-level '{FolderConstants.AppExtensionsFolder}' folder");
 
-            var candidates = Directory.GetDirectories(extensionsDir, "*", SearchOption.TopDirectoryOnly);
-            if (candidates.Length == 0)
-                return l.ReturnFalse($"'{ToSic.Eav.Sys.FolderConstants.AppExtensionsFolder}' folder empty");
+            var candidateDirs = Directory.GetDirectories(extensionsDir, "*", SearchOption.TopDirectoryOnly);
+            if (candidateDirs.Length == 0)
+                return l.ReturnFalse($"'{FolderConstants.AppExtensionsFolder}' folder empty");
 
-            var (resolvedName, sourcePath) = ResolveName(originalZipFileName: originalZipFileName, extensionsDir: extensionsDir, candidates: candidates);
-            if (sourcePath == null)
-                return l.ReturnFalse("could not determine extension subfolder – specify 'name'");
+            // Validate every immediate subfolder: must contain required files and valid lock/json entries
+            var (error, lockResults) = ValidateCandidateSubfolders(tempDir, candidateDirs, l);
+            if (error != null)
+                return l.ReturnFalse(error);
 
-            var folderName = resolvedName!;
-            if (!ExtensionFolderNameValidator.IsValid(folderName))
-                return l.ReturnFalse($"invalid folder name:'{folderName}'");
+            var installed = new List<string>();
 
-            var extensionJsonFilePath = Path.Combine(sourcePath, ToSic.Eav.Sys.FolderConstants.DataFolderProtected, ToSic.Eav.Sys.FolderConstants.AppExtensionJsonFile);
-            if (!File.Exists(extensionJsonFilePath))
-                return l.ReturnFalse($"missing {ToSic.Eav.Sys.FolderConstants.AppExtensionJsonFile}");
-
-            var extensionJsonValidation = ValidateExtensionJsonFile(extensionJsonFilePath, sourcePath, l);
-            if (!extensionJsonValidation.Success)
-                return l.ReturnFalse(extensionJsonValidation.Error ?? $"{ToSic.Eav.Sys.FolderConstants.AppExtensionJsonFile} validation failed");
-
-            var lockFilePath = Path.Combine(sourcePath, ToSic.Eav.Sys.FolderConstants.DataFolderProtected, ToSic.Eav.Sys.FolderConstants.AppExtensionLockJsonFile);
-            if (!File.Exists(lockFilePath))
-                return l.ReturnFalse($"missing {ToSic.Eav.Sys.FolderConstants.AppExtensionLockJsonFile}");
-
-            var lockValidation = ValidateLockFile(lockFilePath, sourcePath, l);
-            if (!lockValidation.Success)
-                return l.ReturnFalse(lockValidation.Error ?? $"{ToSic.Eav.Sys.FolderConstants.AppExtensionLockJsonFile} validation failed");
-
-            var targetRoot = Path.Combine(extensionsRoot, folderName);
-            if (Directory.Exists(targetRoot))
+            foreach (var folderName in lockResults.Keys)
             {
-                if (!overwrite) return l.ReturnFalse("target exists - set overwrite");
-                try { Zipping.TryToDeleteDirectory(targetRoot, l); } catch { }
+                l.A($"install:'{folderName}'");
+
+                if (!ExtensionFolderNameValidator.IsValid(folderName))
+                    return l.ReturnFalse($"invalid folder name:'{folderName}'");
+
+                // Reuse per-candidate lock validation result
+                if (!lockResults.TryGetValue(folderName, out var lockValidation) || !lockValidation.Success)
+                    return l.ReturnFalse(lockValidation?.Error ?? "lock validation missing");
+
+                var targetExtensionRoot = Path.Combine(extensionsRoot, folderName);
+                if (Directory.Exists(targetExtensionRoot))
+                {
+                    if (!overwrite)
+                        return l.ReturnFalse($"'{targetExtensionRoot}' target exists - set overwrite");
+
+                    Zipping.TryToDeleteDirectory(targetExtensionRoot, l);
+                }
+
+                var tempExtensionRoot = Path.Combine(tempDir, FolderConstants.AppExtensionsFolder, folderName);
+                if (Directory.Exists(tempExtensionRoot))
+                {
+                    if (!overwrite)
+                        return l.ReturnFalse($"'{tempExtensionRoot}' target exists - set overwrite");
+
+                    CopyDirectory(tempExtensionRoot, targetExtensionRoot, l, lockValidation.AllowedFiles, tempDir, appPaths.PhysicalPath);
+                }
+
+                var appCodeExtensionDirectory = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, folderName);
+                if (Directory.Exists(appCodeExtensionDirectory))
+                {
+                    if (!overwrite)
+                        return l.ReturnFalse($"'{appCodeExtensionDirectory}' target exists - set overwrite");
+
+                    Zipping.TryToDeleteDirectory(appCodeExtensionDirectory, l);
+                }
+
+                var tmpAppCodeExtensionDirectory = Path.Combine(tempDir, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, folderName);
+                if (Directory.Exists(tmpAppCodeExtensionDirectory))
+                {
+                    if (!overwrite)
+                        return l.ReturnFalse($"'{tmpAppCodeExtensionDirectory}' target exists - set overwrite");
+
+                    CopyDirectory(tempDir, appCodeExtensionDirectory, l, lockValidation.AllowedFiles, tempDir, appPaths.PhysicalPath);
+                }
+
+                installed.Add(folderName);
             }
-
-            var appCodeExtensionDirectory = Path.Combine(appPaths.PhysicalPath, ToSic.Eav.Sys.FolderConstants.AppCodeFolder, ToSic.Eav.Sys.FolderConstants.AppExtensionsFolder, folderName);
-            if (Directory.Exists(appCodeExtensionDirectory))
-            {
-                if (!overwrite) return l.ReturnFalse("target exists - set overwrite");
-                try { Zipping.TryToDeleteDirectory(appCodeExtensionDirectory, l); } catch { }
-            }
-
-            CopyDirectory(tempDir, appPaths.PhysicalPath, l, lockValidation.AllowedFiles);
-
-            var appData = Path.Combine(targetRoot, ToSic.Eav.Sys.FolderConstants.DataFolderProtected);
-            Directory.CreateDirectory(appData);
-            var extJson = Path.Combine(appData, ToSic.Eav.Sys.FolderConstants.AppExtensionJsonFile);
-            if (!File.Exists(extJson))
-            {
-                try { File.WriteAllText(extJson, @"{}", new System.Text.UTF8Encoding(false)); } catch { }
-            }
-
-            return l.ReturnTrue($"installed '{folderName}'");
+            return l.ReturnTrue($"installed '{string.Join("','", installed)}' from '{originalZipFileName}'");
         }
         catch (Exception ex)
         {
@@ -106,58 +114,58 @@ public class ExtensionsZipInstallerBackend(
         finally
         {
             if (tempDir != null)
-            {
-                try { Zipping.TryToDeleteDirectory(tempDir, l); } catch { }
-            }
+                Zipping.TryToDeleteDirectory(tempDir, l);
         }
     }
 
-    private static (string? resolvedName, string? sourcePath) ResolveName(string? originalZipFileName,
-        string extensionsDir,
-        string[] candidates)
+    private static (string? error, Dictionary<string, LockValidationResult> lockResults) ValidateCandidateSubfolders(string tempDir, string[] candidateDirs, ILog? parentLog)
     {
-        string? resolvedName = null;
-        string? sourcePath = null;
+        var l = parentLog.Fn<(string? error, Dictionary<string, LockValidationResult> lockResults)>();
+        
+        var issues = new List<string>();
+        var lockResults = new Dictionary<string, LockValidationResult>(StringComparer.OrdinalIgnoreCase);
 
-        if (sourcePath == null && candidates.Length == 1)
+        foreach (var dir in candidateDirs)
         {
-            sourcePath = candidates[0];
-            resolvedName = Path.GetFileName(sourcePath);
-        }
+            var folder = Path.GetFileName(dir);
+            l.A($"validate:'{folder}'");
 
-        if (sourcePath == null)
-        {
-            var derived = DeriveFolderNameFromZipFileName(originalZipFileName);
-            if (!string.IsNullOrWhiteSpace(derived))
+            var appDataDir = Path.Combine(dir, FolderConstants.DataFolderProtected);
+            var extensionJsonPath = Path.Combine(appDataDir, FolderConstants.AppExtensionJsonFile);
+            var lockJsonPath = Path.Combine(appDataDir, FolderConstants.AppExtensionLockJsonFile);
+            var folderIssues = new List<string>();
+
+            if (!File.Exists(extensionJsonPath))
+                folderIssues.Add($"missing {FolderConstants.AppExtensionJsonFile}");
+
+            if (!File.Exists(lockJsonPath))
+                folderIssues.Add($"missing {FolderConstants.AppExtensionLockJsonFile}");
+
+            // Validate extension.json contents if present
+            LockValidationResult? lockValidation = null;
+            if (File.Exists(extensionJsonPath))
             {
-                var derivedPath = Path.Combine(extensionsDir, derived);
-                if (Directory.Exists(derivedPath))
-                {
-                    sourcePath = derivedPath;
-                    resolvedName = derived;
-                }
+                var extVal = ValidateExtensionJsonFile(extensionJsonPath, dir, l);
+                if (!extVal.Success)
+                    folderIssues.Add(extVal.Error ?? "extension.json invalid");
             }
+
+            // Validate lock file contents restricted to this candidate
+            if (File.Exists(lockJsonPath))
+            {
+                // Use specialized candidate validation to avoid cross-extension interference
+                lockValidation = ValidateLockFile(lockJsonPath, tempDir, dir, l);
+                if (!lockValidation.Success)
+                    folderIssues.Add(lockValidation.Error ?? "extension.lock.json invalid");
+            }
+
+            if (folderIssues.Any())
+                issues.Add($"{folder}: {string.Join(", ", folderIssues)}");
+            else if (lockValidation != null)
+                lockResults[folder] = lockValidation;
         }
 
-        return (resolvedName, sourcePath);
-    }
-
-    private static string? DeriveFolderNameFromZipFileName(string? originalFileName)
-    {
-        if (string.IsNullOrWhiteSpace(originalFileName))
-            return null;
-
-        var baseName = Path.GetFileNameWithoutExtension(originalFileName!.Trim());
-        if (string.IsNullOrWhiteSpace(baseName))
-            return null;
-
-        baseName = Regex.Replace(baseName, @"\s\(\d+\)$", string.Empty);
-
-        var match = Regex.Match(baseName, @"^(?<name>.+)_(?<version>\d+\.\d+\.\d+)$");
-        if (match.Success)
-            return match.Groups["name"].Value;
-
-        return baseName;
+        return l.ReturnAndLog((issues.Any() ? $"invalid extension subfolder(s): {string.Join("; ", issues)}" : null, lockResults));
     }
 
     private record ValidationResult(bool Success, string? Error);
@@ -173,97 +181,86 @@ public class ExtensionsZipInstallerBackend(
             var root = doc.RootElement;
 
             if (!root.TryGetProperty("isInstalled", out var isInstalledProp) || isInstalledProp.ValueKind != JsonValueKind.True)
-                return l.ReturnAsError(new(false, $"{ToSic.Eav.Sys.FolderConstants.AppExtensionJsonFile} missing 'isInstalled' True"));
+                return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionJsonFile} missing 'isInstalled' True"));
 
             return l.ReturnAsOk(new(true, null));
         }
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.ReturnAsError(new(false, $"{ToSic.Eav.Sys.FolderConstants.AppExtensionJsonFile} parse error"));
+            return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionJsonFile} parse error"));
         }
     }
 
     private record LockValidationResult(bool Success, string? Error, HashSet<string>? AllowedFiles) : ValidationResult(Success, Error);
 
-    private static LockValidationResult ValidateLockFile(string lockFilePath, string sourcePath, ILog? parentLog)
+    // Validate lock file against a single candidate folder only
+    private static LockValidationResult ValidateLockFile(string lockFilePath, string tempDir, string candidatePath, ILog? parentLog)
     {
         var l = parentLog.Fn<LockValidationResult>();
-
         try
         {
             var json = File.ReadAllText(lockFilePath);
             using var doc = JsonDocument.Parse(json);
             var root = doc.RootElement;
             if (!root.TryGetProperty("files", out var filesProp) || filesProp.ValueKind != JsonValueKind.Array)
-                return l.ReturnAsError(new(false, $"{ToSic.Eav.Sys.FolderConstants.AppExtensionLockJsonFile} missing 'files' array", null));
+                return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionLockJsonFile} missing 'files' array", null));
 
-            var extractionPath = Directory.GetParent(Directory.GetParent(sourcePath)!.FullName)!.FullName;
             var allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             var expectedWithHash = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var folderName = Path.GetFileName(candidatePath);
+            var tmpAppCodeExtensionDirectory = Path.Combine(tempDir, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, folderName);
 
             foreach (var item in filesProp.EnumerateArray())
             {
-                string? file = null;
-                string? hash = null;
+                if (item.ValueKind != JsonValueKind.Object)
+                    return l.ReturnAsError(new(false, $"invalid {FolderConstants.AppExtensionLockJsonFile} entry: {item.ValueKind}", null));
 
-                if (item.ValueKind == JsonValueKind.Object)
-                {
-                    if (!item.TryGetProperty("file", out var f) || f.ValueKind != JsonValueKind.String)
-                        return l.ReturnAsError(new(false, $"{ToSic.Eav.Sys.FolderConstants.AppExtensionLockJsonFile} entry missing 'file'", null));
+                if (!item.TryGetProperty("file", out var f) || f.ValueKind != JsonValueKind.String)
+                    return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionLockJsonFile} entry missing 'file'", null));
 
-                    file = f.GetString();
+                if (!item.TryGetProperty("hash", out var h) || h.ValueKind != JsonValueKind.String)
+                    return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionLockJsonFile} entry missing 'hash'", null));
 
-                    if (item.TryGetProperty("hash", out var h) && h.ValueKind == JsonValueKind.String)
-                        hash = h.GetString();
-                    else
-                        return l.ReturnAsError(new(false, $"{ToSic.Eav.Sys.FolderConstants.AppExtensionLockJsonFile} entry missing 'hash'", null));
-                }
-                else
-                    return l.ReturnAsError(new(false, $"invalid {ToSic.Eav.Sys.FolderConstants.AppExtensionLockJsonFile} entry: {item.ValueKind}", null));
-
-                if (string.IsNullOrWhiteSpace(file))
-                    return l.ReturnAsError(new(false, $"empty 'file' in {ToSic.Eav.Sys.FolderConstants.AppExtensionLockJsonFile}", null));
-
-                if (string.IsNullOrWhiteSpace(hash))
-                    return l.ReturnAsError(new(false, $"empty 'hash' in {ToSic.Eav.Sys.FolderConstants.AppExtensionLockJsonFile}", null));
-
-                file = file!.Replace('\\', '/').Trim().TrimStart('/');
+                var file = f.GetString()!.Replace('\\','/').Trim().TrimStart('/');
+                var hash = h.GetString()!.Trim();
 
                 if (file.StartsWith("..") || file.Contains("/../"))
-                    return l.ReturnAsError(new(false, $"illegal path:'{file}' in {ToSic.Eav.Sys.FolderConstants.AppExtensionLockJsonFile}", null));
-
-                hash = hash!.Trim();
+                    return l.ReturnAsError(new(false, $"illegal path:'{file}' in {FolderConstants.AppExtensionLockJsonFile}", null));
 
                 allowed.Add(file);
                 expectedWithHash[file] = hash;
-                l.A($"added 'file':'{file}' to allowed with 'hash':'{hash}'");
+                l.A($"added candidate file '{file}' with hash");
             }
-
-            var lockFileName = ToSic.Eav.Sys.FolderConstants.AppExtensionLockJsonFile;
-            var actualFiles = Directory.GetFiles(extractionPath, "*", SearchOption.AllDirectories)
-                .Select(f => f.Substring(extractionPath.Length).TrimStart(Path.DirectorySeparatorChar).Replace(Path.DirectorySeparatorChar, '/'))
-                .Where(f => !string.Equals(Path.GetFileName(f), lockFileName, StringComparison.OrdinalIgnoreCase))
+            var actualFiles = Directory.GetFiles(candidatePath, "*", SearchOption.AllDirectories)
+                .Union(Directory.GetFiles(tmpAppCodeExtensionDirectory, "*", SearchOption.AllDirectories))
+                .Select(f => f
+                    .Substring(tempDir.Length)
+                    .TrimStart(Path.DirectorySeparatorChar)
+                    .Replace(Path.DirectorySeparatorChar,'/'))
+                .Where(f => !string.Equals(Path.GetFileName(f), FolderConstants.AppExtensionLockJsonFile, StringComparison.OrdinalIgnoreCase))
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-            var missing = allowed.Where(a => !actualFiles.Contains(a)).ToList();
+            var missing = allowed
+                .Where(a => !actualFiles.Contains(a))
+                .ToList();
             if (missing.Any())
                 return l.ReturnAsError(new(false, $"missing files:'{string.Join("','", missing)}'", null));
 
-            var extras = actualFiles.Where(a => !allowed.Contains(a)).ToList();
+            var extras = actualFiles
+                .Where(a => !allowed.Contains(a))
+                .ToList();
             if (extras.Any())
                 return l.ReturnAsError(new(false, $"unexpected files:'{string.Join("','", extras)}'", null));
 
             foreach (var rel in allowed)
             {
-                if (!expectedWithHash.TryGetValue(rel, out var expected))
-                    return l.ReturnAsError(new(false, $"hash missing for:{rel}", null));
-
-                var full = Path.Combine(extractionPath, rel.Replace('/', Path.DirectorySeparatorChar));
+                var full = Path.Combine(tempDir, rel.Replace('/', Path.DirectorySeparatorChar));
                 if (!File.Exists(full))
                     return l.ReturnAsError(new(false, $"file for hash missing:{rel}", null));
 
                 var actualHash = Sha256.Hash(File.ReadAllText(full));
+                var expected = expectedWithHash[rel];
                 if (!string.Equals(actualHash, expected, StringComparison.OrdinalIgnoreCase))
                     return l.ReturnAsError(new(false, $"hash mismatch: {rel}", null));
             }
@@ -273,49 +270,35 @@ public class ExtensionsZipInstallerBackend(
         catch (Exception ex)
         {
             l.Ex(ex);
-            return  l.ReturnAsError(new(false, $"{ToSic.Eav.Sys.FolderConstants.AppExtensionLockJsonFile} parse error", null));
+            return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionLockJsonFile} parse error", null));
         }
     }
 
-    private static void CopyDirectory(string source, string target, ILog? parentLog, HashSet<string>? allowedFiles)
+    private static void CopyDirectory(string source, string target, ILog? parentLog, HashSet<string>? allowedFiles, string sourceRoot, string targetRoot)
     {
         var l = parentLog.Fn();
 
-        var sourceLen = source.Length;
+        var sourceLen = sourceRoot.Length;
         var allFiles = Directory.GetFiles(source, "*", SearchOption.AllDirectories);
         l.A($"files found: {allFiles.Length}");
 
         foreach (var file in allFiles)
         {
-            var rel = file.Substring(sourceLen).TrimStart(Path.DirectorySeparatorChar).Replace(Path.DirectorySeparatorChar, '/');
+            var rel = file
+                .Substring(sourceLen)
+                .TrimStart(Path.DirectorySeparatorChar)
+                .Replace(Path.DirectorySeparatorChar, '/');
 
-            if (string.Equals(rel, ToSic.Eav.Sys.FolderConstants.AppExtensionLockJsonFile, StringComparison.OrdinalIgnoreCase))
-                continue; 
+            if (!rel.EndsWith(FolderConstants.AppExtensionLockJsonFile, StringComparison.OrdinalIgnoreCase))
+                if (allowedFiles != null && !allowedFiles.Contains(rel))
+                    continue;
 
-            if (allowedFiles != null && !allowedFiles.Contains(rel))
-                continue; 
-
-            var destFull = Path.Combine(target, rel.Replace('/', Path.DirectorySeparatorChar));
+            var destFull = Path.Combine(targetRoot, rel.Replace('/', Path.DirectorySeparatorChar));
             Directory.CreateDirectory(Path.GetDirectoryName(destFull)!);
             File.Copy(file, destFull, overwrite: true);
             l.A($"file copy :'${rel}'");
         }
-
-        var lockPath = Path.Combine(source, ToSic.Eav.Sys.FolderConstants.AppExtensionLockJsonFile);
-        if (File.Exists(lockPath))
-        {
-            var destLock = Path.Combine(target, ToSic.Eav.Sys.FolderConstants.AppExtensionLockJsonFile);
-            try
-            {
-                File.Copy(lockPath, destLock, overwrite: true);
-                l.A($"file copy '{ToSic.Eav.Sys.FolderConstants.AppExtensionLockJsonFile}'");
-            }
-            catch(Exception ex)
-            {
-                l.Ex(ex,$"can't copy '{ToSic.Eav.Sys.FolderConstants.AppExtensionLockJsonFile}'");
-            }
-        }
-
+        
         l.Done();
     }
 }
