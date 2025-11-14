@@ -41,6 +41,8 @@ public class MockPageService: IPageService
         IEnumerable<int> sizes = null) =>
         "";
 
+    public List<string> FeatureKeysAdded { get; }
+
     public string TurnOn(object runOrSpecs, NoParamOrder noParamOrder = default, object require = default, object data = default,
         IEnumerable<object> args = default, bool condition = true, bool? noDuplicates = default, string addContext = default) =>
         "";
