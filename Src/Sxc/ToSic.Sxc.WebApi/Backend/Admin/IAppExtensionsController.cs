@@ -31,7 +31,7 @@ public interface IAppExtensionsController<out THttpResponse>
     /// <param name="appId">App identifier</param>
     /// <param name="overwrite">Overwrite existing files if true</param>
     /// <returns>true if installation succeeded</returns>
-    bool InstallExtension(int zoneId, int appId, bool overwrite = false);
+    bool Install(int zoneId, int appId, bool overwrite = false);
 
     /// <summary>
     /// Download (export) a specific extension as a ZIP file.

@@ -1,7 +1,5 @@
 using System.Text.Json;
 using System.Web;
-using ToSic.Eav.WebApi.Sys.Admin;
-using ToSic.Eav.WebApi.Sys.Dto;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using RealController = ToSic.Sxc.Backend.Admin.AppExtensionsControllerReal;
@@ -37,8 +35,8 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public bool InstallExtension([FromUri] int zoneId, [FromUri] int appId, [FromUri] bool overwrite = true)
-        => Real.InstallExtensionZip(new(Request, HttpContext.Current.Request), zoneId, appId, overwrite);
+    public bool Install([FromUri] int zoneId, [FromUri] int appId, [FromUri] bool overwrite = true)
+        => Real.Install(new(Request, HttpContext.Current.Request), zoneId, appId, overwrite);
 
     /// <inheritdoc />
     [HttpGet]

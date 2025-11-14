@@ -29,7 +29,7 @@ public class AppExtensionsControllerReal(
     /// <summary>
     /// Install an extension ZIP into /extensions.
     /// </summary>
-    public bool InstallExtensionZip(HttpUploadedFile uploadInfo, int zoneId, int appId, bool overwrite = false)
+    public bool Install(HttpUploadedFile uploadInfo, int zoneId, int appId, bool overwrite = false)
     {
         var l = Log.Fn<bool>($"z:{zoneId}, a:{appId}, overwrite:{overwrite}");
 
