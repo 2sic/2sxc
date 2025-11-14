@@ -10,6 +10,7 @@ using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Security.Encryption;
 using ToSic.Sys.Users;
+using ToSic.Sys.Utils;
 using EavJsonSerializer = ToSic.Eav.ImportExport.Json.Sys.JsonSerializer;
 
 #if NETFRAMEWORK
@@ -33,6 +34,16 @@ public class ExportExtension(
     LazySvc<ContentExportApi> contentExport)
     : ServiceBase("Bck.ExtExp", connect: [appReadersLazy, site, appPathSvc, jsonLazy, user, responseMaker, jsonSerializerGenerator])
 {
+    /// <summary>
+    /// ZIP file name format, with placeholders for name and version
+    /// </summary>
+    private const string ZipFileNameFormat = "app-extension-{0}-v{1}.zip";
+
+    /// <summary>
+    /// Default value for version if none is found in extension.json
+    /// </summary>
+    private const string DefaultVersion = "01.00.00";
+
     public THttpResponseType Export(int zoneId, int appId, string name)
     {
         var l = Log.Fn<THttpResponseType>($"export extension z#{zoneId}, a#{appId}, name:'{name}'");
@@ -107,8 +118,9 @@ public class ExportExtension(
         }
 
         // 5. Create ZIP using Zipping helper
-        var version = modifiedJson["version"]?.GetValue<string>() ?? "1.0.0";
-        var fileName = $"{name}_{version}.zip";
+        var version = (modifiedJson["version"]?.GetValue<string>())
+            .UseFallbackIfNoValue(DefaultVersion);
+        var fileName = string.Format(ZipFileNameFormat, name, version);
         
         using var memoryStream = CreateZipArchive(filesToInclude, bundles, modifiedJson, name, l);
         memoryStream.Position = 0;
