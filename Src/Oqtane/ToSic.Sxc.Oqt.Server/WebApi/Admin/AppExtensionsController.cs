@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Text.Json;
+using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
 using RealController = ToSic.Sxc.Backend.Admin.AppExtensionsControllerReal;
@@ -29,8 +30,8 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
     [HttpPut("{name}")]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Extensions(int zoneId, int appId, string name, [FromBody] JsonElement configuration)
-        => Real.Extensions(zoneId, appId, name, configuration);
+    public bool Extension(int zoneId, int appId, string name, [FromBody] JsonElement configuration)
+        => Real.Extension(zoneId, appId, name, configuration);
 
     /// <inheritdoc />
     [HttpPost]

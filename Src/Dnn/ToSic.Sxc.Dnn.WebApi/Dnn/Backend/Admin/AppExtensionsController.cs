@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Web;
 using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.Dto;
+using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using RealController = ToSic.Sxc.Backend.Admin.AppExtensionsControllerReal;
 
@@ -19,7 +20,8 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [JsonFormatter(Casing = Casing.Camel)]
-    public ExtensionsResultDto Extensions(int appId) => Real.Extensions(appId);
+    public ExtensionsResultDto Extensions(int appId)
+        => Real.Extensions(appId);
 
     /// <inheritdoc />
     [HttpPost]
@@ -27,8 +29,8 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [JsonFormatter(Casing = Casing.Camel)]
-    public bool Extensions([FromUri] int zoneId, [FromUri] int appId, [FromUri] string name, [FromBody] JsonElement configuration)
-        => Real.Extensions(zoneId, appId, name, configuration);
+    public bool Extension([FromUri] int zoneId, [FromUri] int appId, [FromUri] string name, [FromBody] JsonElement configuration)
+        => Real.Extension(zoneId, appId, name, configuration);
 
     /// <inheritdoc />
     [HttpPost]

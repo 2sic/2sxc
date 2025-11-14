@@ -23,7 +23,7 @@ public class AppExtensionsControllerReal(
         => extensionsBackendLazy.Value.GetExtensions(appId);
 
     // Create or update configuration for a specific extension
-    public bool Extensions(int zoneId, int appId, string name, JsonElement configuration)
+    public bool Extension(int zoneId, int appId, string name, JsonElement configuration)
         => extensionsBackendLazy.Value.SaveExtension(zoneId, appId, name, configuration);
 
     /// <summary>
