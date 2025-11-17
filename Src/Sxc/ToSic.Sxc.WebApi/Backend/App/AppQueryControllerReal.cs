@@ -137,15 +137,51 @@ public class AppQueryControllerReal(
             serializerWithOData.AddSelectFields(systemQueryOptions.Select.ToListOpt());
 
         // v20 support OData filtering, sorting...
-        IDataSource filteredSource = query;
-        if (systemQueryOptions.RawAllSystem.Any())
+        var result = systemQueryOptions.RawAllSystem.Any()
+            ? ApplyOData(query, systemQueryOptions, stream, more?.Guids)
+            : dataConverter.Convert(query, stream?.Split(','), more?.Guids);
+        return l.Return(result);
+    }
+
+    private IDictionary<string, IEnumerable<EavLightEntity>> ApplyOData(IDataSource query, SystemQueryOptions systemQueryOptions, string? stream, string[]? filterGuids)
+    {
+        var l = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>();
+        var oDataQuery = UriQueryParser.Parse(systemQueryOptions);
+        var engine = new ODataQueryEngine(dataSourcesService);
+
+        var streams = stream?.Split(',')
+                          .Select(s => s.Trim())
+                          .Where(s => !string.IsNullOrWhiteSpace(s))
+                          .ToArray()
+                      ?? query.Out.Select(p => p.Key).ToArray();
+
+        var guidFilter = filterGuids?
+            .Select(g => Guid.TryParse(g, out var guid) ? guid : (Guid?)null)
+            .Where(g => g.HasValue)
+            .Select(g => g!.Value)
+            .ToHashSet()
+            ?? new HashSet<Guid>();
+
+        var results = new Dictionary<string, IEnumerable<EavLightEntity>>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var streamName in streams)
         {
-            var oDataQuery = UriQueryParser.Parse(systemQueryOptions);
-            var engine = new ODataQueryEngine(dataSourcesService);
-            filteredSource = engine.BuildFilteredAndSorted(query, oDataQuery);
+            var sourceStream = query.GetStream(streamName, nullIfNotFound: true);
+            if (sourceStream == null)
+            {
+                l.A($"Stream '{streamName}' not found, skip OData.");
+                continue;
+            }
+
+            var wrapper = dataSourcesService.Create<PassThrough>(sourceStream);
+            var execution = engine.Execute(wrapper, oDataQuery);
+            var entities = guidFilter.Any()
+                ? execution.Items.Where(e => guidFilter.Contains(e.EntityGuid))
+                : execution.Items;
+
+            results[streamName] = dataConverter.Convert(entities);
         }
 
-        var result = dataConverter.Convert(filteredSource, stream?.Split(','), more?.Guids);
-        return l.Return(result);
+        return l.Return(results);
     }
 }
