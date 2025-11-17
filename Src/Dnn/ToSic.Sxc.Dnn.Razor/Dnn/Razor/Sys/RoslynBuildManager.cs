@@ -457,35 +457,27 @@ namespace ToSic.Sxc.Dnn.Razor.Sys
         {
             var l = Log.Fn<string>($"{spec}");
 
-            try
+            // Get AppCode assembly from cache/compiler
+            var (appCodeAssemblyResult, _) = appCodeLoader.Value.GetAppCode(spec);
+            var appCodeAssembly = appCodeAssemblyResult?.Assembly;
+
+            if (appCodeAssembly == null)
             {
-                // Get AppCode assembly from cache/compiler
-                var (appCodeAssemblyResult, _) = appCodeLoader.Value.GetAppCode(spec);
-                var appCodeAssembly = appCodeAssemblyResult?.Assembly;
-
-                if (appCodeAssembly == null)
-                {
-                    l.A("No AppCode assembly - returning empty hash");
-                    return l.Return(string.Empty, "no-appcode");
-                }
-
-                // Use assembly full name as hash source (includes version info)
-                var assemblyFullName = appCodeAssembly.FullName ?? string.Empty;
-                l.A($"AppCode assembly: {assemblyFullName}");
-
-                // Compute SHA256 hash of assembly full name
-                using var sha256 = SHA256.Create();
-                var bytes = System.Text.Encoding.UTF8.GetBytes(assemblyFullName);
-                var hashBytes = sha256.ComputeHash(bytes);
-                var hash = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
-
-                return l.Return(hash, $"hash computed from assembly name");
+                l.A("No AppCode assembly - returning empty hash");
+                return l.Return(string.Empty, "no-appcode");
             }
-            catch (Exception ex)
-            {
-                l.Ex(ex);
-                return l.Return(string.Empty, "error");
-            }
+
+            // Use assembly full name as hash source (includes version info)
+            var assemblyFullName = appCodeAssembly.FullName ?? string.Empty;
+            l.A($"AppCode assembly: {assemblyFullName}");
+
+            // Compute SHA256 hash of assembly full name
+            using var sha256 = SHA256.Create();
+            var bytes = System.Text.Encoding.UTF8.GetBytes(assemblyFullName);
+            var hashBytes = sha256.ComputeHash(bytes);
+            var hash = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
+
+            return l.Return(hash, $"hash computed from assembly name");
         }
 
         /// <summary>

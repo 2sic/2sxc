@@ -93,7 +93,9 @@ internal class AppCodeCompilerNetFull(
                 ["DllName"] = dllName,
                 ["Files"] = sourceFiles.Length.ToString(),
                 ["Errors"] = compilerResults.Errors.HasErrors.ToString(),
-                ["Assembly"] = compilerResults.CompiledAssembly?.FullName ?? "null",
+                ["Assembly"] = compilerResults.Errors.HasErrors
+                    ? "null"
+                    : compilerResults.CompiledAssembly?.FullName ?? "null",
                 ["AssemblyPath"] = assemblyPath,
                 ["SymbolsPath"] = symbolsPath,
             };

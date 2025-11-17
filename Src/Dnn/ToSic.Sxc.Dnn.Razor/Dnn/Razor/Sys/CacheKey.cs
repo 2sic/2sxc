@@ -39,10 +39,14 @@ public sealed class CacheKey : IEquatable<CacheKey>
     /// </summary>
     public CacheKey(int appId, string? edition, string normalizedPath, string contentHash, string appCodeHash)
     {
-        if (appId <= 0) throw new ArgumentException("AppId must be positive", nameof(appId));
-        if (string.IsNullOrWhiteSpace(normalizedPath)) throw new ArgumentNullException(nameof(normalizedPath));
-        if (string.IsNullOrWhiteSpace(contentHash)) throw new ArgumentNullException(nameof(contentHash));
-        if (string.IsNullOrWhiteSpace(appCodeHash)) throw new ArgumentNullException(nameof(appCodeHash));
+        if (appId <= 0)
+            throw new ArgumentException("AppId must be positive", nameof(appId));
+        if (string.IsNullOrWhiteSpace(normalizedPath))
+            throw new ArgumentNullException(nameof(normalizedPath));
+        if (string.IsNullOrWhiteSpace(contentHash))
+            throw new ArgumentNullException(nameof(contentHash));
+        if (string.IsNullOrWhiteSpace(appCodeHash))
+            throw new ArgumentNullException(nameof(appCodeHash));
 
         // Coalesce null/empty editions to a stable default token
         var normalizedEdition = string.IsNullOrWhiteSpace(edition) ? "root" : edition;
@@ -107,8 +111,10 @@ public sealed class CacheKey : IEquatable<CacheKey>
 
     public bool Equals(CacheKey? other)
     {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
+        if (ReferenceEquals(null, other))
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
         return AppId == other.AppId 
             && Edition == other.Edition 
             && NormalizedPath == other.NormalizedPath 
@@ -117,7 +123,8 @@ public sealed class CacheKey : IEquatable<CacheKey>
     }
 
     public override bool Equals(object? obj) 
-        => ReferenceEquals(this, obj) || obj is CacheKey other && Equals(other);
+        => ReferenceEquals(this, obj) || obj is CacheKey other
+            && Equals(other);
 
     /// <summary>
     /// Provide a fast, well-distributed hash for CacheKey so it can be used in hash-based collections (Dictionary, HashSet) consistent with Equals.
