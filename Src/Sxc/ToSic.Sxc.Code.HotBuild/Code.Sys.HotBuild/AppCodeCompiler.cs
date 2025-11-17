@@ -23,9 +23,6 @@ public abstract class AppCodeCompiler(
         if (!Directory.Exists(fullPath))
             return l.ReturnAsOk([]);
 
-        //var sourceFiles = GetSourceFilesInFolder(Path.Combine(fullPath, HotBuildEnum.Code.ToString()))
-        //    .Concat(GetSourceFilesInFolder(Path.Combine(fullPath, HotBuildEnum.Data.ToString()))).ToArray();
-
         // Build the AppCode folder with subfolders
         var sourceFiles = sourceCodeHasher.GetSourceFilesInFolder(fullPath);
 
@@ -42,8 +39,12 @@ public abstract class AppCodeCompiler(
     private string GetAppCodeDllName(string sourceRootPath, HotBuildSpecWithSharedSuffix spec)
     {
         var l = Log.Fn<string>($"{nameof(sourceRootPath)}: '{sourceRootPath}'; {spec}", timer: true);
-        var assemblyName = $"App-{spec.AppId:00000}-AppCode{OptionalSuffix(spec)}";
-        return l.ReturnAsOk(HashInNameWithoutExtension(sourceRootPath, assemblyName));
+        var appCodeHash = sourceCodeHasher.GetHashString(sourceRootPath);
+        var appCodeHashShort = appCodeHash.Length > 6
+            ? appCodeHash.Substring(0, 6)
+            : appCodeHash;
+        var assemblyName = $"AppCode-{appCodeHashShort}";
+        return l.ReturnAsOk(assemblyName);
     }
 
     /// <summary>
@@ -54,22 +55,13 @@ public abstract class AppCodeCompiler(
     {
         var l = Log.Fn<string>($"{nameof(dependency)}: '{dependency}'; {nameof(folderPath)}: '{folderPath}'; {spec}", timer: true);
         var dependencyFileName = Path.GetFileNameWithoutExtension(dependency);
-        var assemblyName = $"App-{spec.AppId:00000}-Dependency{OptionalSuffix(spec)}-{dependencyFileName}";
+        var assemblyName = $"dep-{dependencyFileName}";
         return l.ReturnAsOk(RandomNameWithoutExtension(folderPath, assemblyName));
     }
 
-    private static string OptionalSuffix(HotBuildSpecWithSharedSuffix spec)
-    {
-        var optionalEditionSuffix = spec.Edition.HasValue() ? $".{spec.Edition}" : "";
-        var optionalSharedSuffix = spec.SharedSuffix.HasValue() ? $".{spec.SharedSuffix}" : "";
-        return $"{optionalEditionSuffix}{optionalSharedSuffix}";
-    }
-
-    private string HashInNameWithoutExtension(string folderPath, string assemblyName)
-        => $"{assemblyName}-{sourceCodeHasher.GetHashString(folderPath)}";
-
     private static string RandomNameWithoutExtension(string folderPath, string assemblyName)
     {
+        Directory.CreateDirectory(folderPath);
         string randomNameWithoutExtension;
         do
         {
@@ -80,7 +72,7 @@ public abstract class AppCodeCompiler(
 
         return randomNameWithoutExtension;
     }
-
+    
     /// <summary>
     /// Normalize full file or folder path, so it is without redirections like "../" in "dir1/dir2/../file.cs"
     /// </summary>
@@ -110,15 +102,15 @@ public abstract class AppCodeCompiler(
     protected (string SymbolsPath, string AssemblyPath) GetAssemblyLocations(HotBuildSpecWithSharedSuffix spec, string sourceRootPath)
     {
         var l = Log.Fn<(string, string)>($"{spec}");
-        var tempAssemblyFolder = globalConfiguration.TempAssemblyFolder();
-        l.A($"TempAssemblyFolderPath: '{tempAssemblyFolder}'");
+        var cacheFolder = GetAppAssemblyFolder(spec);
+        l.A($"App cache folder: '{cacheFolder}'");
 
         // need name 
         var assemblyName = GetAppCodeDllName(sourceRootPath, spec);
         l.A($"AssemblyName: '{assemblyName}'");
-        var assemblyFilePath = Path.Combine(tempAssemblyFolder, $"{assemblyName}.dll");
+        var assemblyFilePath = Path.Combine(cacheFolder, $"{assemblyName}.dll");
         l.A($"AssemblyFilePath: '{assemblyFilePath}'");
-        var symbolsFilePath = Path.Combine(tempAssemblyFolder, $"{assemblyName}.pdb");
+        var symbolsFilePath = Path.Combine(cacheFolder, $"{assemblyName}.pdb");
         l.A($"SymbolsFilePath: '{symbolsFilePath}'");
         var assemblyLocations = (symbolsFilePath, assemblyFilePath);
         return l.ReturnAsOk(assemblyLocations);
@@ -127,13 +119,13 @@ public abstract class AppCodeCompiler(
     protected internal string GetDependencyAssemblyLocations(string dependency, HotBuildSpecWithSharedSuffix spec)
     {
         var l = Log.Fn<string>($"{spec}");
-        var tempAssemblyFolder = globalConfiguration.TempAssemblyFolder();
-        l.A($"TempAssemblyFolderPath: '{tempAssemblyFolder}'");
+        var cacheFolder = GetAppAssemblyFolder(spec);
+        l.A($"TempAssemblyFolderPath: '{cacheFolder}'");
 
         // need random name, because assemblies has to be preserved on disk, and we can not replace them until AppDomain is unloaded 
-        var assemblyName = GetDependencyDllName(tempAssemblyFolder, spec, dependency);
+        var assemblyName = GetDependencyDllName(cacheFolder, spec, dependency);
         l.A($"AssemblyName: '{assemblyName}'");
-        var assemblyFilePath = Path.Combine(tempAssemblyFolder, $"{assemblyName}.dll");
+        var assemblyFilePath = Path.Combine(cacheFolder, $"{assemblyName}.dll");
         l.A($"AssemblyFilePath: '{assemblyFilePath}'");
 
         return l.ReturnAsOk(assemblyFilePath);
@@ -190,5 +182,33 @@ public abstract class AppCodeCompiler(
             // Handle any other exceptions that might occur
             return l.ReturnTrue($"{nameof(Exception)} other");
         }
+    }
+
+    /// <summary>
+    /// Build the per-app cache folder path (app/edition/shared) and ensure it exists.
+    /// </summary>
+    protected string GetAppAssemblyFolder(HotBuildSpecWithSharedSuffix spec)
+    {
+        var editionSegment = NormalizeForFolder(spec.Edition, "root");
+        var sharedSegment = NormalizeForFolder(spec.SharedSuffix, "local");
+        var cacheFolder = Path.Combine(
+            globalConfiguration.TempAssemblyFolder(),
+            $"{spec.AppId}",
+            editionSegment,
+            sharedSegment);
+
+        Directory.CreateDirectory(cacheFolder);
+        return cacheFolder;
+    }
+
+    private static string NormalizeForFolder(string? value, string fallback)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return fallback;
+        var invalid = Path.GetInvalidFileNameChars();
+        var cleaned = new string(value.Select(ch => invalid.Contains(ch) ? '-' : ch).ToArray());
+        return string.IsNullOrWhiteSpace(cleaned)
+            ? fallback
+            : cleaned;
     }
 }

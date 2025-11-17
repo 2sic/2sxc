@@ -215,8 +215,9 @@ public class AssemblyDiskCache(NoParamOrder protector = default, object[]? conne
     /// </summary>
     /// <param name="cacheDirectory">Cache directory path</param>
     /// <param name="searchPattern">File search pattern (e.g., "app-123-*.dll")</param>
+    /// <param name="searchOption">Search scope (TopDirectoryOnly by default)</param>
     /// <returns>Number of files deleted</returns>
-    public int InvalidateCache(string cacheDirectory, string searchPattern)
+    public int InvalidateCache(string cacheDirectory, string searchPattern, SearchOption searchOption = SearchOption.TopDirectoryOnly)
     {
         var l = Log.Fn<int>($"dir:{cacheDirectory}, pattern:{searchPattern}");
 
@@ -228,7 +229,7 @@ public class AssemblyDiskCache(NoParamOrder protector = default, object[]? conne
                 return l.Return(0, "no-directory");
             }
 
-            var matchingFiles = Directory.GetFiles(cacheDirectory, searchPattern);
+            var matchingFiles = Directory.GetFiles(cacheDirectory, searchPattern, searchOption);
             var deletedCount = 0;
 
             foreach (var file in matchingFiles)

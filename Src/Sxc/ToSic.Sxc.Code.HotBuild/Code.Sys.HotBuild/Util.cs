@@ -1,4 +1,3 @@
-﻿using System.Text.RegularExpressions;
 using ToSic.Sys.Configuration;
 
 namespace ToSic.Sxc.Code.Sys.HotBuild;
@@ -32,7 +31,7 @@ public class Util(IGlobalConfiguration globalConfiguration)
             // Clean Razor compiled templates folder (2sxc.bin.cshtml)
             CleanAssemblyFolder(globalConfiguration.CshtmlAssemblyFolder(), "Razor (2sxc.bin.cshtml)");
 
-            // Clean ephemeral compiler artifacts from "2sxc.bin.cshtml\temp" folder
+            // Clean ephemeral compiler artifacts from "2sxc.bin.cshtml\\temp" folder
             CleanAssemblyFolder(Path.Combine(globalConfiguration.CshtmlAssemblyFolder(), "temp"), "roslyn compiler temp Folder");
 
             Cleaned = true;
@@ -40,7 +39,7 @@ public class Util(IGlobalConfiguration globalConfiguration)
     }
 
     /// <summary>
-    /// Cleans a specific assembly folder by removing old/orphaned DLL files and ephemeral compiler artifacts.
+    /// Cleans a specific assembly folder by removing old/orphaned DLL files (including nested app/edition folders) and ephemeral compiler artifacts.
     /// Keeps corresponding .pdb files for debugging.
     /// </summary>
     private void CleanAssemblyFolder(string folderPath, string folderDescription)
@@ -54,69 +53,91 @@ public class Util(IGlobalConfiguration globalConfiguration)
             return; // nothing else to do first run
         }
 
-        // Step 1: Remove ephemeral Roslyn temp files (*.cmdline, *.err, *.out, *.tmp, *.cs) but KEEP .pdb
-        foreach (var file in Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly))
-        {
-            var ext = Path.GetExtension(file);
+        // Clean recursively because cache is now nested per app/edition/shared
+        var directories = Directory.GetDirectories(folderPath, "*", SearchOption.AllDirectories)
+            .Prepend(folderPath)
+            .Distinct(StringComparer.OrdinalIgnoreCase);
 
-            if (!EphemeralExtensions.Contains(ext))
-                continue;
-
-            try { File.Delete(file); } catch { /* ignore */ }
-        }
-
-        // Step 2: Retention of DLL/PDB groups by prefix/hash; keep newest recent dll+pdb, remove older ones
         const int retentionDays = 28;
         var now = DateTime.Now;
 
-        // Group dlls by prefix (without trailing hash) and choose which to keep
-        var dllFiles = Directory.GetFiles(folderPath, "*" + Dll, SearchOption.TopDirectoryOnly)
-            .Select(f => new FileInfo(f))
-            .GroupBy(fi => GetFilePrefix(fi.Name));
-
-        foreach (var group in dllFiles)
+        foreach (var dir in directories)
         {
-            // Skip files which didn't match pattern
-            if (group.Key == null)
-                continue;
-            
-            // Sort files in the group by LastWriteTime descending (latest first)
-            var ordered = group.OrderByDescending(f => f.LastWriteTime).ToList();
-            
-            // Find the first which is still within retention window
-            var keep = ordered.FirstOrDefault(f => (now - f.LastWriteTime).TotalDays < retentionDays) ?? ordered.First();
+            var isRoot = string.Equals(dir, folderPath, StringComparison.OrdinalIgnoreCase);
 
-            // Keep the latest file, delete the rest.
-            foreach (var old in ordered.Where(f => f.FullName != keep.FullName))
+            // Step 1: Remove ephemeral Roslyn temp files (*.cmdline, *.err, *.out, *.tmp, *.cs) but KEEP .pdb
+            foreach (var file in Directory.GetFiles(dir, "*.*", SearchOption.TopDirectoryOnly))
             {
-                try { File.Delete(old.FullName); } catch { /* ignore */ }
-                // Also delete matching pdb for removed dll
-                var pdb = Path.ChangeExtension(old.FullName, ".pdb");
-                if (File.Exists(pdb)) try { File.Delete(pdb); } catch { /* ignore */ }
+                var ext = Path.GetExtension(file);
+
+                if (!EphemeralExtensions.Contains(ext))
+                    continue;
+
+                try
+                {
+                    File.Delete(file);
+                }
+                catch { /* ignore */ }
+            }
+
+            // Step 2a: legacy cleanup - delete any dll/pdb in the root folder (old flat layout, no longer used)
+            if (isRoot)
+            {
+                foreach (var legacy in Directory.GetFiles(dir, "*.dll", SearchOption.TopDirectoryOnly)
+                             .Concat(Directory.GetFiles(dir, "*.pdb", SearchOption.TopDirectoryOnly)))
+                {
+                    try { File.Delete(legacy); } catch { /* ignore */ }
+                }
+                // no retention logic needed on root after legacy cleanup
+                continue;
+            }
+
+            // Step 2: delete old DLLs (and matching PDBs) past retention
+            foreach (var dll in Directory.GetFiles(dir, "*" + Dll, SearchOption.TopDirectoryOnly))
+            {
+                var fi = new FileInfo(dll);
+                if ((now - fi.LastWriteTime).TotalDays < retentionDays)
+                    continue;
+
+                try
+                {
+                    File.Delete(dll);
+                }
+                catch { /* ignore */ }
+
+                var pdb = Path.ChangeExtension(dll, ".pdb");
+                if (File.Exists(pdb))
+                    try
+                    {
+                        File.Delete(pdb);
+                    }
+                    catch { /* ignore */ }
+            }
+
+            // Step 3: remove orphaned pdbs without matching dll
+            foreach (var pdb in Directory.GetFiles(dir, "*.pdb", SearchOption.TopDirectoryOnly))
+            {
+                var dll = Path.ChangeExtension(pdb, ".dll");
+                if (!File.Exists(dll))
+                    try
+                    {
+                        File.Delete(pdb);
+                    }
+                    catch { /* ignore */ }
             }
         }
-        // Remove orphaned pdbs without matching dll
-        foreach (var pdb in Directory.GetFiles(folderPath, "*.pdb", SearchOption.TopDirectoryOnly))
+
+        // Step 4: remove empty subfolders (but leave the root)
+        foreach (var dir in directories
+                     .Where(d => !string.Equals(d, folderPath, StringComparison.OrdinalIgnoreCase))
+                     .OrderByDescending(d => d.Length))
         {
-            var dll = Path.ChangeExtension(pdb, ".dll");
-            if (!File.Exists(dll)) try { File.Delete(pdb); } catch { /* ignore */ }
+            try
+            {
+                if (Directory.Exists(dir) && !Directory.EnumerateFileSystemEntries(dir).Any())
+                    Directory.Delete(dir);
+            }
+            catch { /* ignore */ }
         }
-    }
-
-    // Helper method to extract the prefix from the filename, validating the hash part
-    private static string? GetFilePrefix(string fileName)
-    {
-        if (Path.GetExtension(fileName) != Dll) return null;
-        var nameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
-        var lastDashIndex = nameWithoutExtension.LastIndexOf('-');
-        if (lastDashIndex < 0) return null;
-        var hashCandidate = nameWithoutExtension.Substring(lastDashIndex + 1);
-        return IsValidHash(hashCandidate) ? nameWithoutExtension.Substring(0, lastDashIndex) : null;
-    }
-
-    private static bool IsValidHash(string input)
-    {
-        const string hashPattern = @"^[a-fA-F0-9]{64}$|^[a-fA-F0-9]{6}$";
-        return Regex.IsMatch(input, hashPattern);
     }
 }

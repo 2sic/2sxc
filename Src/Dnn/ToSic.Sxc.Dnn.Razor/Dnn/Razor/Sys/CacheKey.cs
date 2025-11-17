@@ -39,6 +39,8 @@ public sealed class CacheKey : IEquatable<CacheKey>
     /// </summary>
     public CacheKey(int appId, string? edition, string normalizedPath, string contentHash, string appCodeHash)
     {
+        const string root = "root";
+
         if (appId <= 0)
             throw new ArgumentException("AppId must be positive", nameof(appId));
         if (string.IsNullOrWhiteSpace(normalizedPath))
@@ -48,22 +50,19 @@ public sealed class CacheKey : IEquatable<CacheKey>
         if (string.IsNullOrWhiteSpace(appCodeHash))
             throw new ArgumentNullException(nameof(appCodeHash));
 
-        // Coalesce null/empty editions to a stable default token
-        var normalizedEdition = string.IsNullOrWhiteSpace(edition) ? "root" : edition;
-
         AppId = appId;
-        Edition = normalizedEdition;
+        Edition = NormalizeEdition(edition);
         NormalizedPath = normalizedPath;
         ContentHash = contentHash;
         AppCodeHash = appCodeHash;
     }
 
     /// <summary>
-    /// Generates the cache key string in the format:
-    /// app-{appId}-{edition}-{normalizedPath}-{contentHash}-{appCodeHash}.dll
+    /// Generates the cache key file name in the format:
+    /// {normalizedPath}-{contentHash}-{appCodeHash}.dll
     /// </summary>
     /// <example>
-    /// app-1-live-views-default-cshtml-a1b2c3-x9y8z7.dll
+    /// views-default-cshtml-a1b2c3-x9y8z7.dll
     /// </example>
     public override string ToString()
     {
@@ -71,7 +70,7 @@ public sealed class CacheKey : IEquatable<CacheKey>
         var contentHashShort = ContentHash.Length > 6 ? ContentHash.Substring(0, 6) : ContentHash;
         var appCodeHashShort = AppCodeHash.Length > 6 ? AppCodeHash.Substring(0, 6) : AppCodeHash;
         
-        return $"app-{AppId}-{Edition}-{NormalizedPath}-{contentHashShort}-{appCodeHashShort}.dll";
+        return $"{NormalizedPath}-{contentHashShort}-{appCodeHashShort}.dll";
     }
 
     /// <summary>
@@ -80,9 +79,13 @@ public sealed class CacheKey : IEquatable<CacheKey>
     /// <param name="cacheDirectory">Root cache directory path</param>
     /// <returns>Full path to the cached DLL file</returns>
     public string GetFilePath(string cacheDirectory)
-        => string.IsNullOrWhiteSpace(cacheDirectory)
-            ? throw new ArgumentNullException(nameof(cacheDirectory))
-            : Path.Combine(cacheDirectory, ToString());
+    {
+        if (string.IsNullOrWhiteSpace(cacheDirectory))
+            throw new ArgumentNullException(nameof(cacheDirectory));
+
+        var directory = Path.Combine(cacheDirectory, GetAppFolder(AppId), GetEditionFolder(Edition));
+        return Path.Combine(directory, ToString());
+    }
 
     /// <summary>
     /// Normalizes a template path for use in cache keys.
@@ -97,7 +100,7 @@ public sealed class CacheKey : IEquatable<CacheKey>
         if (string.IsNullOrWhiteSpace(templatePath))
             throw new ArgumentNullException(nameof(templatePath));
 
-        return templatePath
+        return Path.GetFileName(templatePath)
             .ToLowerInvariant()
             .Replace('/', '-')
             .Replace('\\', '-')
@@ -105,6 +108,27 @@ public sealed class CacheKey : IEquatable<CacheKey>
             .Replace('.', '-')
             .Replace(' ', '-')
             .Trim('-');
+    }
+
+    internal static string NormalizeEdition(string? edition)
+    {
+        const string root = "root";
+        return string.IsNullOrWhiteSpace(edition)
+            ? root
+            : SanitizeSegment(edition, root);
+    }
+
+    internal static string GetAppFolder(int appId) => $"{appId}";
+
+    internal static string GetEditionFolder(string edition) => $"{edition}";
+
+    private static string SanitizeSegment(string value, string fallback)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return fallback;
+        var invalidChars = Path.GetInvalidFileNameChars();
+        var cleaned = new string(value.Select(ch => invalidChars.Contains(ch) ? '-' : ch).ToArray());
+        return string.IsNullOrWhiteSpace(cleaned) ? fallback : cleaned;
     }
 
     #region Equality Members

@@ -361,14 +361,14 @@ public class RoslynBuildManager(
             CompilerOptions = DnnRoslynConstants.CompilerOptions,
         };
 
-        if (diskCacheService.IsEnabled() && !string.IsNullOrEmpty(outputAssemblyPath))
-        {
-            var outDir = Path.GetDirectoryName(outputAssemblyPath);
-            if (!Directory.Exists(outDir)) Directory.CreateDirectory(outDir);
-            compilerParameters.OutputAssembly = outputAssemblyPath;
-            // Prevents pollution of the main cache directory with .cs, .cmdline, .err, .out, .tmp files
-            compilerParameters.TempFiles = new TempFileCollection(EnsureTempDir(outDir));
-        }
+            if (diskCacheService.IsEnabled() && !string.IsNullOrEmpty(outputAssemblyPath))
+            {
+                var outDir = Path.GetDirectoryName(outputAssemblyPath);
+                if (!Directory.Exists(outDir)) Directory.CreateDirectory(outDir);
+                compilerParameters.OutputAssembly = outputAssemblyPath;
+                // Prevents pollution of the main cache directory with .cs, .cmdline, .err, .out, .tmp files
+                compilerParameters.TempFiles = new TempFileCollection(EnsureTempDir());
+            }
 
         return compilerParameters;
     }
@@ -524,10 +524,12 @@ public class RoslynBuildManager(
     /// </summary>
     /// <param name="outDir"></param>
     /// <returns></returns>
-    private static string EnsureTempDir(string outDir)
+    private string EnsureTempDir()
     {
-        var tempDir = Path.Combine(outDir, "temp");
-        if (!Directory.Exists(tempDir)) Directory.CreateDirectory(tempDir);
+        var cacheRoot = diskCacheService.GetCacheDirectoryPath();
+        var tempDir = Path.Combine(cacheRoot, "temp");
+        if (!Directory.Exists(tempDir))
+            Directory.CreateDirectory(tempDir);
         return tempDir;
     }
 }

@@ -117,7 +117,7 @@ public class AssemblyDiskCacheService(
         var normalizedPath = CacheKey.NormalizePath(templateRelativePath);
         var searchPattern = $"*-{normalizedPath}-*.dll";
 
-        var deletedCount = diskCache.InvalidateCache(cacheDir, searchPattern);
+        var deletedCount = diskCache.InvalidateCache(cacheDir, searchPattern, SearchOption.AllDirectories);
         l.A($"Invalidated {deletedCount} cache files for template {templateRelativePath}");
 
         l.Done();
@@ -131,10 +131,13 @@ public class AssemblyDiskCacheService(
         var l = Log.Fn($"app:{appId}, edition:{edition}");
 
         var cacheDir = GetCacheDirectoryPath();
-        var searchPattern = $"app-{appId}-{edition}-*.dll";
+        var editionNormalized = CacheKey.NormalizeEdition(edition);
+        var appDir = Path.Combine(cacheDir, CacheKey.GetAppFolder(appId), CacheKey.GetEditionFolder(editionNormalized));
 
-        var deletedCount = diskCache.InvalidateCache(cacheDir, searchPattern);
-        l.A($"Invalidated {deletedCount} cache files for app {appId} edition {edition}");
+        var deletedCount = Directory.Exists(appDir)
+            ? diskCache.InvalidateCache(appDir, "*.dll", SearchOption.AllDirectories)
+            : 0;
+        l.A($"Invalidated {deletedCount} cache files for app {appId} edition {editionNormalized}");
 
         l.Done();
     }
