@@ -34,6 +34,7 @@ public class RazorDiskCacheTests
                 CacheKey.NormalizePath(TestTemplatePath), TestContentHash, TestAppCodeHash);
             
             var cachePath = cacheKey.GetFilePath(tempCacheDir);
+            Directory.CreateDirectory(Path.GetDirectoryName(cachePath)!);
             
             // Create a test assembly file (using current assembly as test data)
             var testAssemblyPath = Assembly.GetExecutingAssembly().Location;
@@ -115,8 +116,8 @@ public class RazorDiskCacheTests
 
         // Assert
         Equal("root", cacheKey.Edition);
-        Contains("-root-", fileName);
-        True(fileName.Contains("app-" + TestAppId + "-root-"), "Cache key should contain default 'root' edition");
+        // file name no longer contains edition/app, but edition on the object must default to root
+        DoesNotContain("root", fileName);
     }
 
     /// <summary>
@@ -158,29 +159,35 @@ public class RazorDiskCacheTests
         try
         {
             // Create multiple cache files for the same app
-            var cacheKey1 = new CacheKey(TestAppId, TestEdition, "template1", "hash1", "apphash1");
-            var cacheKey2 = new CacheKey(TestAppId, TestEdition, "template2", "hash2", "apphash1");
-            var cacheKey3 = new CacheKey(999, TestEdition, "template3", "hash3", "apphash1"); // Different app
-            
-            var cachePath1 = cacheKey1.GetFilePath(tempCacheDir);
-            var cachePath2 = cacheKey2.GetFilePath(tempCacheDir);
-            var cachePath3 = cacheKey3.GetFilePath(tempCacheDir);
+        var cacheKey1 = new CacheKey(TestAppId, TestEdition, "template1", "hash1", "apphash1");
+        var cacheKey2 = new CacheKey(TestAppId, TestEdition, "template2", "hash2", "apphash1");
+        var cacheKey3 = new CacheKey(999, TestEdition, "template3", "hash3", "apphash1"); // Different app
+        
+        var cachePath1 = cacheKey1.GetFilePath(tempCacheDir);
+        var cachePath2 = cacheKey2.GetFilePath(tempCacheDir);
+        var cachePath3 = cacheKey3.GetFilePath(tempCacheDir);
 
-            File.WriteAllText(cachePath1, "test1");
-            File.WriteAllText(cachePath2, "test2");
-            File.WriteAllText(cachePath3, "test3");
+        Directory.CreateDirectory(Path.GetDirectoryName(cachePath1)!);
+        Directory.CreateDirectory(Path.GetDirectoryName(cachePath2)!);
+        Directory.CreateDirectory(Path.GetDirectoryName(cachePath3)!);
 
-            // Act - Simulate InvalidateAppCache pattern matching
-            var pattern = $"app-{TestAppId}-{TestEdition}-*.dll";
-            var filesToDelete = Directory.GetFiles(tempCacheDir, pattern);
+        File.WriteAllText(cachePath1, "test1");
+        File.WriteAllText(cachePath2, "test2");
+        File.WriteAllText(cachePath3, "test3");
 
-            foreach (var file in filesToDelete)
-                File.Delete(file);
+        // Act - delete all dlls for app/edition folder
+        var appEditionDir = Path.Combine(tempCacheDir, CacheKey.GetAppFolder(TestAppId), CacheKey.GetEditionFolder(CacheKey.NormalizeEdition(TestEdition)));
+        var filesToDelete = Directory.Exists(appEditionDir)
+            ? Directory.GetFiles(appEditionDir, "*.dll", SearchOption.AllDirectories)
+            : Array.Empty<string>();
 
-            // Assert
-            False(File.Exists(cachePath1), "Cache file 1 should be deleted");
-            False(File.Exists(cachePath2), "Cache file 2 should be deleted");
-            True(File.Exists(cachePath3), "Cache file 3 (different app) should remain");
+        foreach (var file in filesToDelete)
+            File.Delete(file);
+
+        // Assert
+        False(File.Exists(cachePath1), "Cache file 1 should be deleted");
+        False(File.Exists(cachePath2), "Cache file 2 should be deleted");
+        True(File.Exists(cachePath3), "Cache file 3 (different app) should remain");
         }
         finally
         {

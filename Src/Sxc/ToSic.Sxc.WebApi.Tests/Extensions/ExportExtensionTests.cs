@@ -36,7 +36,7 @@ public class ExportExtensionTests
         Assert.NotNull(fileResult);
         Assert.NotEmpty(fileResult!.FileContents);
         Assert.Contains(fileResult.ContentType, new[] { "application/zip", "application/octet-stream" });
-        Assert.Contains($"{extName}_{version}.zip", fileResult.FileDownloadName);
+        Assert.Contains($"app-extension-{extName}-v{version}.zip", fileResult.FileDownloadName);
 #endif
     }
 
@@ -367,7 +367,9 @@ public class ExportExtensionTests
         
         foreach (var entry in zip.Entries.Where(e => !string.IsNullOrEmpty(e.Name)))
         {
-            Assert.StartsWith("extensions/", entry.FullName);
+            if (!entry.FullName.StartsWith("install-package.json")
+                && !entry.FullName.StartsWith("App_Data"))
+                Assert.StartsWith("extensions/", entry.FullName);
         }
 #endif
     }

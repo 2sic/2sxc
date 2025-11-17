@@ -64,10 +64,6 @@ internal sealed class ExportExtensionTestContext : IDisposable
             appReadersLazy, 
             site, 
             appPathSvc, 
-            jsonLazy, 
-            user, 
-            null!, // ResponseMaker - not needed for structure tests
-            null!, // JsonSerializer generator - not needed for structure tests
             contentExportLazy);
 
         return new ExportExtensionTestContext(tempRoot, sp, exportBackend);

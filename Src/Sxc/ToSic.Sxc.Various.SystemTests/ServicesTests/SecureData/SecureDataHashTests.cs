@@ -19,8 +19,8 @@ public class SecureDataHashTests(ISecureDataService sds)
     }
 
     [Fact]
-    public void TestSha256RootWithNull() =>
-        Throws<ArgumentNullException>(() => Sha256.Hash(null!));
+    public void TestSha256RootWithNull()
+        => Throws<ArgumentNullException>(() => Sha256.Hash((string)null!));
 
     /// <remarks>
     /// test data created using https://emn178.github.io/online-tools/sha256.html

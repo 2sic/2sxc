@@ -15,7 +15,7 @@ public class CacheKeyTests
 
     /// <summary>
     /// CacheKey.ToString() format verification
-    /// Verifies filename format: app-{appId}-{edition}-{path}-{contentHash}-{appCodeHash}.dll
+    /// Verifies filename format: {fileName}-{extension}-{contentHash}-{appCodeHash}.dll
     /// </summary>
     [Fact]
     public void CacheKey_ToString_ReturnsCorrectFormat()
@@ -28,14 +28,11 @@ public class CacheKeyTests
         var result = cacheKey.ToString();
 
         // Assert
-        Contains("app-", result);
-        Contains($"{TestAppId}", result);
-        Contains(TestEdition, result);
         Contains(normalizedPath, result);
         EndsWith(".dll", result);
-        
-        // Verify format: app-{appId}-{edition}-{path}-{hash1}-{hash2}.dll
-        var expectedPattern = $"app-{TestAppId}-{TestEdition}-{normalizedPath}-";
+
+        // Verify format: {fileName}-{extension}-{hash1}-{hash2}.dll
+        var expectedPattern = $"{normalizedPath}";
         StartsWith(expectedPattern, result);
     }
 
@@ -139,7 +136,7 @@ public class CacheKeyTests
     {
         // Arrange
         var inputPath = "Views/Default.cshtml";
-        var expectedOutput = "views-default-cshtml";
+        var expectedOutput = "default-cshtml";
 
         // Act
         var result = CacheKey.NormalizePath(inputPath);
@@ -231,10 +228,6 @@ public class CacheKeyTests
 
         // Assert
         Equal("root", cacheKey.Edition);
-        
-        // Verify it appears in the cache key string
-        var result = cacheKey.ToString();
-        Contains("-root-", result);
     }
 
     /// <summary>
@@ -254,9 +247,5 @@ public class CacheKeyTests
 
         // Assert
         Equal(edition, cacheKey.Edition);
-        
-        // Verify it appears in the cache key string
-        var result = cacheKey.ToString();
-        Contains($"-{edition}-", result);
     }
 }
