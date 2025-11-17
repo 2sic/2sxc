@@ -1,6 +1,7 @@
 ﻿using Custom.Razor.Sys;
 using Microsoft.AspNetCore.Mvc.Razor;
 using ToSic.Sxc.Code.Sys;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code.Sys.CodeErrorHelp;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Render.Sys;
@@ -12,7 +13,6 @@ namespace ToSic.Sxc.Razor;
 /// <summary>
 /// The razor engine, which compiles / runs engine templates
 /// </summary>
-[PrivateApi("used to be marked as internal, but it doesn't make sense to show in docs")]
 [EngineDefinition(Name = "Razor")]
 internal class RazorEngine(
     EngineBase.Dependencies services,
@@ -45,7 +45,6 @@ internal class RazorEngine(
         }
     }
 
-    [PrivateApi]
     private async Task<(TextWriter? TextWriter, Exception? Exception)> RenderTask(RenderSpecs specs)
     {
         Log.A("will render into TextWriter");

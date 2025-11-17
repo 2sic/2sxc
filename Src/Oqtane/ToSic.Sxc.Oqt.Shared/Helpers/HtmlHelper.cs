@@ -1,4 +1,3 @@
-﻿using Oqtane.Models;
 using Oqtane.Shared;
 using System.Collections;
 using System.Net;
@@ -79,7 +78,7 @@ public class HtmlHelper
 
     public static string? GetMetaTagContent(string html, string name, bool decode = true)
     {
-        if (html.IsNullOrEmpty() || name.IsNullOrEmpty())
+        if (string.IsNullOrEmpty(html) || string.IsNullOrEmpty(name))
             return null;
         var pattern = "<meta\\s+name\\s*=\\s*[\"']" + WebUtility.HtmlEncode(name) + "[\"']\\s+content\\s*=\\s*[\"'](.*?)[\"']\\s*/?>";
         var match = Regex.Match(html, pattern, RegexOptions.IgnoreCase);
@@ -89,7 +88,7 @@ public class HtmlHelper
     [return: NotNullIfNotNull(nameof(html))]
     public static string? AddOrUpdateMetaTagContent(string? html, string name, string content, bool encode = true)
     {
-        if (name.IsNullOrEmpty())
+        if (string.IsNullOrEmpty(name))
             return html;
         html ??= string.Empty;
 
@@ -171,7 +170,7 @@ public class HtmlHelper
 
         var count = 0;
         foreach (var url in viewResults.SxcScripts ?? []) 
-            html = url.IsNullOrEmpty()
+            html = string.IsNullOrEmpty(url)
                 ? html
                 : AddScript(html, new() { Url = url, Reload = false }, alias, pageHtml, ++count);
 
@@ -216,7 +215,7 @@ public class HtmlHelper
     [return: NotNullIfNotNull(nameof(html))]
     private static string? AddAssetWhenMissing(string? html, string? assetHtml)
     {
-        if (assetHtml.IsNullOrEmpty())
+        if (string.IsNullOrEmpty(assetHtml))
             return html;
         html ??= string.Empty;
 

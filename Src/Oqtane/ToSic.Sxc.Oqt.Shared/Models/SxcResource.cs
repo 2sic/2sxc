@@ -1,4 +1,5 @@
-﻿using Oqtane.Models;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ToSic.Sxc.Oqt.Shared.Models;
 

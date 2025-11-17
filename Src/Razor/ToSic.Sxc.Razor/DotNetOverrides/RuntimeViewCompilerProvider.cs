@@ -53,7 +53,7 @@ internal sealed class RuntimeViewCompilerProvider : ServiceBase, IViewCompilerPr
         ILogStore logStore) : base($"{SxcLogging.SxcLogName}.RzrViewCmpProv",
             connect: [assemblyResolver, sourceAnalyzer])
     {
-        var l = Dbg ? Log.Fn() : null;
+        var l = Dbg ? this.Log.Fn() : null;
 
         _applicationPartManager = applicationPartManager;
         _razorProjectEngine = razorProjectEngine;
@@ -71,14 +71,14 @@ internal sealed class RuntimeViewCompilerProvider : ServiceBase, IViewCompilerPr
         _createCompiler = CreateCompiler;
 
         if (Dbg)
-            logStore.Add(SxcLogging.SxcLogAppCodeLoader, Log);
+            logStore.Add(SxcLogging.SxcLogAppCodeLoader, this.Log);
 
         l.Done();
     }
 
     public IViewCompiler GetCompiler()
     {
-        var l = Dbg ? Log.Fn<IViewCompiler>() : null;
+        var l = Dbg ? this.Log.Fn<IViewCompiler>() : null;
 
         return l.ReturnAsOk(LazyInitializer.EnsureInitialized(
             ref _compiler,
@@ -89,7 +89,7 @@ internal sealed class RuntimeViewCompilerProvider : ServiceBase, IViewCompilerPr
 
     private IViewCompiler CreateCompiler()
     {
-        var l = Dbg ? Log.Fn<IViewCompiler>() : null;
+        var l = Dbg ? this.Log.Fn<IViewCompiler>() : null;
 
         var feature = new ViewsFeature();
         _applicationPartManager.PopulateFeature(feature);

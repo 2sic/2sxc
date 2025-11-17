@@ -19,8 +19,7 @@
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.5" /><!-- from ToSic.Sxc.Oqt.Server.csproj  (affects Oqtane only) -->
+  <ItemGroup><!-- from ToSic.Sxc.Oqt.Server.csproj  (affects Oqtane only) -->
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependecy, but force updated to latest version  (affects Oqtane only) -->
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.Extensions" Version="6.0.36" />
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependecy, but force updated to latest version  (affects Oqtane only) -->

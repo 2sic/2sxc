@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <AssemblyName>ToSic.Sxc.Oqtane.Package</AssemblyName>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>

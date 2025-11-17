@@ -1,5 +1,4 @@
-﻿using Oqtane.Shared;
-using ToSic.Sxc.Oqt.Shared.Models;
+﻿using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Shared.Interfaces;
 

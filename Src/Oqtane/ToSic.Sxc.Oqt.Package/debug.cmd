@@ -7,7 +7,7 @@ SET OqtaneTarget=%2
 SET ModuleTargetFramework=%3
 REM ModuleTargetFramework is sometimes older than OqtaneTargetFramework to preserve compatibility with older Oqtane versions.
 REM Change the OqtaneTargetFramework to TargetFramework from Oqtane.Server.csproj
-SET OqtaneTargetFramework=net9.0
+SET OqtaneTargetFramework=net10.0
 
 REM Displaying the parameters received
 ECHO BuildFolder=%BuildFolder%

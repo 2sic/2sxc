@@ -23,8 +23,6 @@ using ToSic.Sys.Code.Help;
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
 
-[PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
-[method: PrivateApi]
 // ReSharper disable once UnusedMember.Global
 public abstract class RazorTyped<TModel>()
     : OqtRazorBase<TModel>(CompatibilityLevels.CompatibilityLevel16, "Oqt.Rzr16"), IHasCodeLog, IRazor,
@@ -43,7 +41,7 @@ public abstract class RazorTyped<TModel>()
 
     #region MyModel
 
-    [PrivateApi("WIP v16.02")]
+    // [PrivateApi("WIP v16.02")]
     public ITypedRazorModel MyModel => CodeHelper.MyModel;
 
     #endregion
@@ -137,10 +135,11 @@ public abstract class RazorTyped<TModel>()
 
     #region Dev Tools & Dev Helpers
 
-    [PrivateApi("Not yet ready")]
+    // TODO: [PrivateApi("Not yet ready")] - Attribute not found in current dependencies, please review if it should be replaced or removed.
     public new IDevTools DevTools => CodeHelper.DevTools;
 
-    [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpDbRazor.Compile16;
+    // TODO: [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpDbRazor.Compile16; - Attribute not found in current dependencies, please review if it should be replaced or removed.
+    List<CodeHelp> IHasCodeHelp.ErrorHelpers => HelpDbRazor.Compile16;
 
     #endregion
 
@@ -190,7 +189,7 @@ public abstract class RazorTyped<TModel>()
     /// * Introduced in v17.03 (beta)
     /// * Stable since v18.00
     /// </remarks>
-    [PrivateApi("WIP, don't publish yet")]
+    // TODO: [PrivateApi("WIP, don't publish yet")] - Attribute not found in current dependencies, please review if it should be replaced or removed.
     public new TModel Model => CodeHelper.GetModel<TModel>();
 
     /// <inheritdoc cref="CodeTyped.Customize"/>

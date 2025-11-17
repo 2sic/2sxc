@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToSic.Sxc.Code;
@@ -16,7 +16,6 @@ using Logging_IHasLog = ToSic.Sys.Logging.IHasLog;
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
 
-[PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>, IHasCodeLog, Logging_IHasLog, ISetDynamicModel, IGetCodePath
 {
@@ -25,22 +24,21 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
     /// <summary>
     /// Constructor - only available for inheritance
     /// </summary>
-    [PrivateApi]
-    protected OqtRazorBase(int compatibilityLevel, string logName)
+        protected OqtRazorBase(int compatibilityLevel, string logName)
     {
         CompatibilityLevel = compatibilityLevel;
         RzrHlp = new(this);
         //Log.Rename(logName);
     }
 
-    [PrivateApi] public int CompatibilityLevel { get; }
+    public int CompatibilityLevel { get; }
 
 
     /// <summary>
     /// Special helper to move all Razor logic into a separate class.
     /// For architecture of Composition over Inheritance.
     /// </summary>
-    [PrivateApi]
+
     internal OqtRazorHelper<TModel> RzrHlp { get; }
 
     #endregion
@@ -60,26 +58,25 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
     /// <inheritdoc cref="IHasCodeLog.Log" />
     public ICodeLog Log => RzrHlp.CodeLog;
 
-    [PrivateApi] ILog IHasLog.Log => RzrHlp.Log;
+    ILog IHasLog.Log => RzrHlp.Log;
 
-    [PrivateApi("Not yet ready")]
-    [ShowApiWhenReleased(ShowApiMode.Never)]
+        [ShowApiWhenReleased(ShowApiMode.Never)]
     public IDevTools DevTools => RzrHlp.ExCtxRoot.GetTypedApi().DevTools;
 
     #endregion
 
     #region DynCode Root
 
-    [PrivateApi]
+
     [ShowApiWhenReleased(ShowApiMode.Never)]
     internal IExecutionContext ExCtx => RzrHlp.ExCtxRoot!;
 
-    [PrivateApi]
+
     public void ConnectToRoot(IExecutionContext exCtx)
         => RzrHlp.ConnectToRoot(exCtx);
 
     [RazorInject]
-    [PrivateApi]
+
     public new ViewDataDictionary<TModel> ViewData
     {
         get => base.ViewData;
@@ -99,7 +96,7 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
     #region CreateInstance
 
     /// <inheritdoc cref="ICreateInstance.CreateInstancePath"/>
-    [PrivateApi]
+
     [field: AllowNull, MaybeNull]
     // Note: The path for CreateInstance / GetCode - unsure if this is actually used anywhere on this object
     string IGetCodePath.CreateInstancePath

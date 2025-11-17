@@ -15,8 +15,6 @@ using ToSic.Sxc.Engines.Sys;
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid;
 
-[PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
-[method: PrivateApi]
 public abstract class Razor12<TModel>() : OqtRazorBase<TModel>(CompatibilityLevels.CompatibilityLevel12, "Oqt.Rzr12"),
     IHasCodeLog, IRazor, IRazor12, ISetDynamicModel
 {
@@ -31,8 +29,7 @@ public abstract class Razor12<TModel>() : OqtRazorBase<TModel>(CompatibilityLeve
     #region CreateInstance
 
     /// <inheritdoc cref="ICreateInstance.CreateInstancePath"/>
-    [PrivateApi]
-    [field: AllowNull, MaybeNull]
+        [field: AllowNull, MaybeNull]
     // Note: The path for CreateInstance / GetCode - unsure if this is actually used anywhere on this object
     string IGetCodePath.CreateInstancePath
     {
@@ -113,7 +110,7 @@ public abstract class Razor12<TModel>() : OqtRazorBase<TModel>(CompatibilityLeve
 
     #region Convert-Service - V12 only!
 
-    [PrivateApi] public IConvertService Convert => field ??= CodeApi.Convert;
+    public IConvertService Convert => field ??= CodeApi.Convert;
 
     #endregion
 

@@ -8,11 +8,26 @@
 
   <Import Project="../../SharedImports/CsProj.Props/Reference/RazorBlade.props" />
 
+  <!-- ASP.NET Core shared framework for net10.0 APIs like IHtmlContent -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\ToSic.Sxc.Blocks\ToSic.Sxc.Blocks.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Cms\ToSic.Sxc.Cms.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Core\ToSic.Sxc.Core.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Data\ToSic.Sxc.Data.csproj" />
+  </ItemGroup>
+
+  <!-- Direct references to EAV and Sys projects used by Edit -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Data\ToSic.Eav.Data.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Context\ToSic.Eav.Context.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Core\ToSic.Sys.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Utils\ToSic.Sys.Utils.csproj" />
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Sys.Caching\ToSic.Sys.Caching.csproj" />
   </ItemGroup>
 
 </Project>

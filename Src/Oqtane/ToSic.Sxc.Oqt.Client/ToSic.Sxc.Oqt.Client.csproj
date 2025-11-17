@@ -5,40 +5,29 @@
   
   <PropertyGroup>
     <Nullable>enable</Nullable>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <RootNamespace>ToSic.Sxc.Oqt.Client</RootNamespace>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <RazorLangVersion>3.0</RazorLangVersion>
     <AssemblyName>ToSic.Sxc.Oqtane.Client</AssemblyName>
+    <BlazorWebAssemblyEnableLinking>false</BlazorWebAssemblyEnableLinking>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
   
   <Import Project="../../SharedImports/CsProj.Props/CreateXDocsOnRelease.props" />
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.5" /><!-- from Oqtane.Client.csproj -->
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.5" PrivateAssets="all" /><!-- from Oqtane.Client.csproj -->
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.5" /><!-- from Oqtane.Client.csproj -->
-    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.5" /><!-- from Oqtane.Maui.csproj -->
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.5" /><!-- from Oqtane.Client.csproj -->
-    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.5" /><!-- from Oqtane.Client.csproj -->
-    <PackageReference Include="System.Net.Http.Json" Version="9.0.5" /><!-- from Oqtane.Client.csproj -->
-    <PackageReference Include="Oqtane.Client" Version="6.1.3" />
-    <PackageReference Include="Oqtane.Shared" Version="6.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.0" /><!-- from Oqtane.Client.csproj -->
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" PrivateAssets="all" Version="10.0.0" /><!-- from Oqtane.Client.csproj -->
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="10.0.0" /><!-- from Oqtane.Client.csproj -->
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.0" /><!-- from Oqtane.Maui.csproj -->
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="10.0.0" /><!-- from Oqtane.Client.csproj -->
+    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" /><!-- from Oqtane.Client.csproj --><!-- from Oqtane.Client.csproj -->
+    <PackageReference Include="Oqtane.Client" Version="10.0.0" />
+    <PackageReference Include="Oqtane.Shared" Version="10.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <!--<ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Client\Oqtane.Client.csproj" />-->
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <!-- there may be other elements here -->
-    <BlazorWebAssemblyEnableLinking>false</BlazorWebAssemblyEnableLinking>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-  </PropertyGroup>
 
 </Project>
