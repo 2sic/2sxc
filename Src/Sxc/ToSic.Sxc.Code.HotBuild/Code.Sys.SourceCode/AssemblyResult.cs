@@ -60,4 +60,9 @@ public class AssemblyResult(Assembly? assembly = null): ICanBeCacheDependency, I
 
     #endregion
 
+    /// <summary>
+    /// Optional cache dependency to attach when this assembly is reused (e.g., AppCode dependency for Razor cache).
+    /// </summary>
+    public ICanBeCacheDependency? AppCodeDependency { get; init; }
+
 }

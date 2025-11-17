@@ -47,7 +47,7 @@ public class AssemblyDiskCacheService(
         try
         {
             // Load references so we can get the main type later (Razor-specific logic)
-            var (referencedAssemblies, appCodeAssemblyResult, appCodeAssembly) = roslynBuildManager.ReferencedAssemblies(codeFileInfo, spec);
+            var (referencedAssemblies, appCodeDependency, appCodeAssembly) = roslynBuildManager.ReferencedAssemblies(codeFileInfo, spec);
 
             // Create AssemblyResult with MainType populated
             var className = RoslynBuildManager.GetSafeClassName(templateRelativePath);
@@ -61,7 +61,8 @@ public class AssemblyDiskCacheService(
 
             var result = new AssemblyResult(assembly)
             {
-                MainType = mainType
+                MainType = mainType,
+                AppCodeDependency = appCodeDependency
             };
 
             return l.Return(result, "Cache hit - loaded from disk");
