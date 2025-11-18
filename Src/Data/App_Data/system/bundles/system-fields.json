@@ -8454,45 +8454,6 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 53697,
-                "Version": 10,
-                "Guid": "7c8aad9f-40a8-4756-94fb-2c3e58e8a2f6",
-                "Type": {
-                  "Id": "ContentType-InputType",
-                  "Name": "ContentType-InputType"
-                },
-                "Attributes": {
-                  "String": {
-                    "AngularAssets": {
-                      "*": "[system:path]/system/field-string-wysiwyg/index.js"
-                    },
-                    "Description": {
-                      "*": "light wysiwyg-editor (recommended) - without images or advanced formating, as is usually the case in professional content-templates."
-                    },
-                    "Label": {
-                      "*": "WYSIWYG editor (default)"
-                    },
-                    "Type": {
-                      "*": "string-wysiwyg"
-                    }
-                  },
-                  "Boolean": {
-                    "DisableI18n": {
-                      "*": false
-                    },
-                    "UseAdam": {
-                      "*": true
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=1",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "@string-wysiwyg"
-                }
-              },
-              {
                 "Id": 53713,
                 "Version": 4,
                 "Guid": "c9da1ed4-42ab-4947-957d-7f40c0c44a94",
@@ -8586,6 +8547,48 @@
                   }
                 },
                 "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "@string-wysiwyg"
+                }
+              },
+              {
+                "Id": 53697,
+                "Version": 10,
+                "Guid": "7c8aad9f-40a8-4756-94fb-2c3e58e8a2f6",
+                "Type": {
+                  "Id": "ContentType-InputType",
+                  "Name": "ContentType-InputType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AngularAssets": {
+                      "en-us": "[system:path]/extensions/field-string-wysiwyg/index.js"
+                    },
+                    "ConfigTypes": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": "light wysiwyg-editor (recommended) - without images or advanced formating, as is usually the case in professional content-templates."
+                    },
+                    "Label": {
+                      "en-us": "WYSIWYG editor (default)"
+                    },
+                    "Type": {
+                      "en-us": "string-wysiwyg"
+                    }
+                  },
+                  "Boolean": {
+                    "DisableI18n": {
+                      "en-us": false
+                    },
+                    "UseAdam": {
+                      "en-us": true
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=1",
                 "For": {
                   "Target": "ContentType",
                   "TargetType": 5,
@@ -10012,45 +10015,6 @@
             "Scope": "System.Fields",
             "Metadata": [
               {
-                "Id": 46512,
-                "Version": 9,
-                "Guid": "e0342e24-fca1-412c-8b72-7220833a1410",
-                "Type": {
-                  "Id": "ContentType-InputType",
-                  "Name": "ContentType-InputType"
-                },
-                "Attributes": {
-                  "String": {
-                    "AngularAssets": {
-                      "*": "[system:path]/system/field-custom-gps/index.js"
-                    },
-                    "Description": {
-                      "*": "to pick a location with a map - can also store the values in separate number fields and auto-find an address based on values in the form"
-                    },
-                    "Label": {
-                      "*": "GPS Picker"
-                    },
-                    "Type": {
-                      "*": "custom-gps"
-                    }
-                  },
-                  "Boolean": {
-                    "DisableI18n": {
-                      "*": false
-                    },
-                    "UseAdam": {
-                      "*": false
-                    }
-                  }
-                },
-                "Owner": "dnn:userid=1",
-                "For": {
-                  "Target": "ContentType",
-                  "TargetType": 5,
-                  "String": "@custom-gps"
-                }
-              },
-              {
                 "Id": 53674,
                 "Version": 1,
                 "Guid": "b97ce122-71d1-41a7-b9f1-6f122023cfbe",
@@ -10099,6 +10063,48 @@
                 },
                 "Attributes": {},
                 "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "@custom-gps"
+                }
+              },
+              {
+                "Id": 46512,
+                "Version": 9,
+                "Guid": "e0342e24-fca1-412c-8b72-7220833a1410",
+                "Type": {
+                  "Id": "ContentType-InputType",
+                  "Name": "ContentType-InputType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AngularAssets": {
+                      "en-us": "[system:path]/extensions/field-custom-gps/index.js"
+                    },
+                    "ConfigTypes": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": "to pick a location with a map - can also store the values in separate number fields and auto-find an address based on values in the form"
+                    },
+                    "Label": {
+                      "en-us": "GPS Picker"
+                    },
+                    "Type": {
+                      "en-us": "custom-gps"
+                    }
+                  },
+                  "Boolean": {
+                    "DisableI18n": {
+                      "en-us": false
+                    },
+                    "UseAdam": {
+                      "en-us": false
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=1",
                 "For": {
                   "Target": "ContentType",
                   "TargetType": 5,
