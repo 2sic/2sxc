@@ -19,11 +19,13 @@ public class Util(IGlobalConfiguration globalConfiguration)
     public void CleanTempAssemblyFolder()
     {
         // Ensure that cleaning is executed only once
-        if (Cleaned) return;
+        if (Cleaned)
+            return;
 
         lock (CleaningLock)
         {
-            if (Cleaned) return;
+            if (Cleaned)
+                return;
 
             // Clean AppCode folder (2sxc.bin)
             CleanAssemblyFolder(globalConfiguration.TempAssemblyFolder(), "AppCode (2sxc.bin)");

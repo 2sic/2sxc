@@ -78,10 +78,10 @@ public sealed class CacheKey : IEquatable<CacheKey>
     /// <returns>Full path to the cached DLL file</returns>
     public string GetFilePath(string cacheDirectory)
     {
-        if (string.IsNullOrWhiteSpace(cacheDirectory))
+        if (!cacheDirectory.HasValue())
             throw new ArgumentNullException(nameof(cacheDirectory));
 
-        var directory = Path.Combine(cacheDirectory, GetAppFolder(AppId), GetEditionFolder(Edition));
+        var directory = Path.Combine(cacheDirectory, GetAppFolder(AppId, Edition));
         return Path.Combine(directory, ToString());
     }
 
@@ -98,7 +98,7 @@ public sealed class CacheKey : IEquatable<CacheKey>
         if (string.IsNullOrWhiteSpace(templatePath))
             throw new ArgumentNullException(nameof(templatePath));
 
-        return Path.GetFileName(templatePath)
+        return templatePath
             .ToLowerInvariant()
             .Replace('/', '-')
             .Replace('\\', '-')
@@ -116,11 +116,8 @@ public sealed class CacheKey : IEquatable<CacheKey>
             : root;
     }
 
-    internal static string GetAppFolder(int appId)
-        => $"{appId}";
-
-    internal static string GetEditionFolder(string edition)
-        => $"{edition}";
+    internal static string GetAppFolder(int appId, string edition)
+        => $"{appId:0000}-{edition}";
 
     private static string SanitizeSegment(string value, string fallback)
     {

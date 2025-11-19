@@ -130,7 +130,7 @@ public class AssemblyDiskCacheService(
 
         var cacheDir = GetCacheDirectoryPath();
         var editionNormalized = CacheKey.NormalizeEdition(edition);
-        var appDir = Path.Combine(cacheDir, CacheKey.GetAppFolder(appId), CacheKey.GetEditionFolder(editionNormalized));
+        var appDir = Path.Combine(cacheDir, CacheKey.GetAppFolder(appId, editionNormalized));
 
         var deletedCount = Directory.Exists(appDir)
             ? diskCache.InvalidateCache(appDir, "*.dll", SearchOption.AllDirectories)

@@ -176,7 +176,7 @@ public class RazorDiskCacheTests
         File.WriteAllText(cachePath3, "test3");
 
         // Act - delete all dlls for app/edition folder
-        var appEditionDir = Path.Combine(tempCacheDir, CacheKey.GetAppFolder(TestAppId), CacheKey.GetEditionFolder(CacheKey.NormalizeEdition(TestEdition)));
+        var appEditionDir = Path.Combine(tempCacheDir, CacheKey.GetAppFolder(TestAppId, CacheKey.NormalizeEdition(TestEdition)));
         var filesToDelete = Directory.Exists(appEditionDir)
             ? Directory.GetFiles(appEditionDir, "*.dll", SearchOption.AllDirectories)
             : Array.Empty<string>();

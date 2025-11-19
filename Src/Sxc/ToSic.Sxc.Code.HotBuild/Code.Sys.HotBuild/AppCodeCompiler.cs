@@ -189,13 +189,13 @@ public abstract class AppCodeCompiler(
     /// </summary>
     protected string GetAppAssemblyFolder(HotBuildSpecWithSharedSuffix spec)
     {
-        var editionSegment = NormalizeForFolder(spec.Edition, "root");
-        var sharedSegment = NormalizeForFolder(spec.SharedSuffix, "local");
+        var root = spec.SharedSuffix.HasValue()
+            ? Path.Combine(globalConfiguration.TempAssemblyFolder(), spec.SharedSuffix)
+            : globalConfiguration.TempAssemblyFolder();
+        var edition = NormalizeForFolder(spec.Edition, "root");
         var cacheFolder = Path.Combine(
-            globalConfiguration.TempAssemblyFolder(),
-            $"{spec.AppId}",
-            editionSegment,
-            sharedSegment);
+            root,
+            $"{spec.AppId:0000}-{edition}");
 
         Directory.CreateDirectory(cacheFolder);
         return cacheFolder;

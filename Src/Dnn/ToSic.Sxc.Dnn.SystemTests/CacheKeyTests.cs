@@ -136,7 +136,7 @@ public class CacheKeyTests
     {
         // Arrange
         var inputPath = "Views/Default.cshtml";
-        var expectedOutput = "default-cshtml";
+        var expectedOutput = "views-default-cshtml";
 
         // Act
         var result = CacheKey.NormalizePath(inputPath);
