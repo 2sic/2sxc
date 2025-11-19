@@ -55,13 +55,13 @@ internal partial class DnnRazorEngine(EngineBase.Dependencies helpers, DnnRazorC
 
 
     [PrivateApi]
-    protected override (string, List<Exception>?) RenderEntryRazor(RenderSpecs specs)
+    protected override (string, List<Exception>) RenderEntryRazor(RenderSpecs specs)
     {
         var (writer, exceptions) = DnnRenderImplementation(EntryRazorComponent, specs);
         return (writer.ToString(), exceptions);
     }
 
-    private (TextWriter writer, List<Exception>? exceptions) DnnRenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
+    private (TextWriter writer, List<Exception> exceptions) DnnRenderImplementation(RazorComponentBase webpage, RenderSpecs specs)
     {
         ILogCall<(TextWriter writer, List<Exception> exceptions)> l = Log.Fn<(TextWriter, List<Exception>)>();
         var writer = new StringWriter();

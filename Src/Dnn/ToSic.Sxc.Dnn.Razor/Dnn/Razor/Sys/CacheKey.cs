@@ -37,10 +37,8 @@ public sealed class CacheKey : IEquatable<CacheKey>
     /// <summary>
     /// Creates a new cache key with the specified components.
     /// </summary>
-    public CacheKey(int appId, string? edition, string normalizedPath, string contentHash, string appCodeHash)
+    public CacheKey(int appId, string edition, string normalizedPath, string contentHash, string appCodeHash)
     {
-        const string root = "root";
-
         if (appId <= 0)
             throw new ArgumentException("AppId must be positive", nameof(appId));
         if (string.IsNullOrWhiteSpace(normalizedPath))
@@ -110,17 +108,19 @@ public sealed class CacheKey : IEquatable<CacheKey>
             .Trim('-');
     }
 
-    internal static string NormalizeEdition(string? edition)
+    internal static string NormalizeEdition(string edition)
     {
         const string root = "root";
-        return string.IsNullOrWhiteSpace(edition)
-            ? root
-            : SanitizeSegment(edition, root);
+        return edition.HasValue()
+            ? SanitizeSegment(edition, root)
+            : root;
     }
 
-    internal static string GetAppFolder(int appId) => $"{appId}";
+    internal static string GetAppFolder(int appId)
+        => $"{appId}";
 
-    internal static string GetEditionFolder(string edition) => $"{edition}";
+    internal static string GetEditionFolder(string edition)
+        => $"{edition}";
 
     private static string SanitizeSegment(string value, string fallback)
     {
@@ -128,12 +128,14 @@ public sealed class CacheKey : IEquatable<CacheKey>
             return fallback;
         var invalidChars = Path.GetInvalidFileNameChars();
         var cleaned = new string(value.Select(ch => invalidChars.Contains(ch) ? '-' : ch).ToArray());
-        return string.IsNullOrWhiteSpace(cleaned) ? fallback : cleaned;
+        return string.IsNullOrWhiteSpace(cleaned)
+            ? fallback
+            : cleaned;
     }
 
     #region Equality Members
 
-    public bool Equals(CacheKey? other)
+    public bool Equals(CacheKey other)
     {
         if (ReferenceEquals(null, other))
             return false;
@@ -146,7 +148,7 @@ public sealed class CacheKey : IEquatable<CacheKey>
             && AppCodeHash == other.AppCodeHash;
     }
 
-    public override bool Equals(object? obj) 
+    public override bool Equals(object obj) 
         => ReferenceEquals(this, obj) || obj is CacheKey other
             && Equals(other);
 
@@ -172,9 +174,11 @@ public sealed class CacheKey : IEquatable<CacheKey>
         }
     }
 
-    public static bool operator ==(CacheKey? left, CacheKey? right) => Equals(left, right);
+    public static bool operator ==(CacheKey left, CacheKey right)
+        => Equals(left, right);
 
-    public static bool operator !=(CacheKey? left, CacheKey? right) => !Equals(left, right);
+    public static bool operator !=(CacheKey left, CacheKey right)
+        => !Equals(left, right);
 
     #endregion
 }

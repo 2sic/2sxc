@@ -60,7 +60,7 @@ internal class PerRequestConfigurationHelper
         return updated;
     }
 
-    private static HttpConfiguration? ApplyPerRequestConfiguration(HttpActionContext context, HttpConfiguration configuration)
+    private static HttpConfiguration ApplyPerRequestConfiguration(HttpActionContext context, HttpConfiguration configuration)
     {
         if (configuration == null)
             return null;

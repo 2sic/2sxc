@@ -117,7 +117,7 @@ internal class DnnJsonFormattersManager(ILog parentLog): HelperBase(parentLog, "
     internal void ReconfigureActionWithContextAwareSerializer(
         HttpControllerDescriptor controllerDescriptor,
         MediaTypeFormatterCollection formatters,
-        JsonFormatterAttribute? jsonFormatterAttributeOnAction)
+        JsonFormatterAttribute jsonFormatterAttributeOnAction)
     {
         var l = Log.Fn();
 

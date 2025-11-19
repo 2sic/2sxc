@@ -43,7 +43,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     private ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
     /// <inheritdoc />
-    public override ISite Init(int siteId, ILog? parentLogOrNull)
+    public override ISite Init(int siteId, ILog parentLogOrNull)
         => TryInitPortal(new(siteId), parentLogOrNull);
 
     #endregion
@@ -116,7 +116,7 @@ internal sealed class DnnSite: Site<PortalSettings>, IZoneCultureResolverProWIP
     #region Culture / Languages
 
     /// <inheritdoc />
-    public override string DefaultCultureCode => _defaultLanguage ??= UnwrappedSite?.DefaultLanguage?.ToLowerInvariant();
+    public override string DefaultCultureCode => (_defaultLanguage ??= UnwrappedSite?.DefaultLanguage?.ToLowerInvariant()) ?? string.Empty;
     private string _defaultLanguage;
 
 

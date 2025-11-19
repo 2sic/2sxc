@@ -31,7 +31,7 @@ public class ConfigureJsonOnlyResponseAttribute : ActionFilterAttribute, IContro
     private static readonly bool TestThrowOnActionExecuting = false;
     // ReSharper restore ConvertToConstant.Local
 
-    public ILog? Log { get; } = LogAnything ? new Log("Api.JsnAttr") : null;
+    public ILog Log { get; } = LogAnything ? new Log("Api.JsnAttr") : null;
 
     private bool IsDebugEnabled()
         => new GlobalDebugParser(LogDetails ? Log : null).IsDebugEnabled();

@@ -45,7 +45,7 @@ internal class DnnValueConverter : ValueConverterBase
         => TryToResolveOneLinkToInternalDnnCode(value);
 
     /// <inheritdoc />
-    public override string? ToValue(string? reference, Guid itemGuid = default)
+    public override string ToValue(string reference, Guid itemGuid = default)
         => TryToResolveCodeToLink(itemGuid, reference);
 
     /// <summary>

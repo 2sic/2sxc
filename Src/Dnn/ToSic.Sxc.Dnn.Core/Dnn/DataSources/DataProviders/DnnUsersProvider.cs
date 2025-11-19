@@ -22,7 +22,7 @@ internal class DnnUsersProvider(LazySvc<DnnSecurity> dnnSecurity)
 
     public string PlatformIdentityTokenPrefix => DnnConstants.UserTokenPrefix;
 
-    public IUserModel? GetUser(int userId, int siteId)
+    public IUserModel GetUser(int userId, int siteId)
     {
         var user = UserController.Instance.GetUserById(siteId, userId);
         return user == null
