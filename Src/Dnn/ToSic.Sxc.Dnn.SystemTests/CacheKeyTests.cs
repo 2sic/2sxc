@@ -21,11 +21,12 @@ public class CacheKeyTests
     public void CacheKey_ToString_ReturnsCorrectFormat()
     {
         // Arrange
+        var templatePath = "Views/Default.cshtml";
         var normalizedPath = "views-default-cshtml";
-        var cacheKey = new CacheKey(TestAppId, TestEdition, normalizedPath, TestContentHash, TestAppCodeHash);
+        var cacheKey = CacheKeyTestAccessors.NewCacheKeyTac(TestAppId, TestEdition, templatePath, TestContentHash, TestAppCodeHash);
 
         // Act
-        var result = cacheKey.ToString();
+        var result = cacheKey.ToStringTac();
 
         // Assert
         Contains(normalizedPath, result);
@@ -44,11 +45,11 @@ public class CacheKeyTests
     public void CacheKey_ToString_TruncatesHashesToSixCharacters()
     {
         // Arrange
-        var normalizedPath = "views-test";
-        var cacheKey = new CacheKey(TestAppId, TestEdition, normalizedPath, TestContentHash, TestAppCodeHash);
+        var templatePath = "Views/Test.cshtml";
+        var cacheKey = CacheKeyTestAccessors.NewCacheKeyTac(TestAppId, TestEdition, templatePath, TestContentHash, TestAppCodeHash);
 
         // Act
-        var result = cacheKey.ToString();
+        var result = cacheKey.ToStringTac();
 
         // Assert
         var expectedContentHashShort = TestContentHash.Substring(0, 6); // "abcdef"
@@ -73,7 +74,7 @@ public class CacheKeyTests
         var inputPath = "Views/Default.cshtml";
 
         // Act
-        var result = CacheKey.NormalizePath(inputPath);
+        var result = CacheKeyTestAccessors.NormalizePathTac(inputPath);
 
         // Assert
         Equal(result, result.ToLowerInvariant());
@@ -93,8 +94,8 @@ public class CacheKeyTests
         var inputPath2 = "Views\\Default.cshtml";
 
         // Act
-        var result1 = CacheKey.NormalizePath(inputPath1);
-        var result2 = CacheKey.NormalizePath(inputPath2);
+        var result1 = CacheKeyTestAccessors.NormalizePathTac(inputPath1);
+        var result2 = CacheKeyTestAccessors.NormalizePathTac(inputPath2);
 
         // Assert
         DoesNotContain("/", result1);
@@ -120,7 +121,7 @@ public class CacheKeyTests
         var inputPath = "Views/Default.cshtml";
 
         // Act
-        var result = CacheKey.NormalizePath(inputPath);
+        var result = CacheKeyTestAccessors.NormalizePathTac(inputPath);
 
         // Assert
         DoesNotContain(".cshtml", result);
@@ -139,7 +140,7 @@ public class CacheKeyTests
         var expectedOutput = "views-default-cshtml";
 
         // Act
-        var result = CacheKey.NormalizePath(inputPath);
+        var result = CacheKeyTestAccessors.NormalizePathTac(inputPath);
 
         // Assert
         Equal(expectedOutput, result);
@@ -153,13 +154,13 @@ public class CacheKeyTests
     {
         // Arrange
         var normalizedPath = "views-test";
-        var key1 = new CacheKey(TestAppId, TestEdition, normalizedPath, TestContentHash, TestAppCodeHash);
-        var key2 = new CacheKey(TestAppId, TestEdition, normalizedPath, TestContentHash, TestAppCodeHash);
+        var key1 = CacheKeyTestAccessors.NewCacheKeyTac(TestAppId, TestEdition, normalizedPath, TestContentHash, TestAppCodeHash);
+        var key2 = CacheKeyTestAccessors.NewCacheKeyTac(TestAppId, TestEdition, normalizedPath, TestContentHash, TestAppCodeHash);
 
         // Act & Assert
         Equal(key1, key2);
-        True(key1.Equals(key2));
-        Equal(key1.GetHashCode(), key2.GetHashCode());
+        True(key1.EqualsTac(key2));
+        Equal(key1.GetHashCodeTac(), key2.GetHashCodeTac());
     }
 
     /// <summary>
@@ -170,12 +171,12 @@ public class CacheKeyTests
     {
         // Arrange
         var normalizedPath = "views-test";
-        var key1 = new CacheKey(TestAppId, TestEdition, normalizedPath, TestContentHash, TestAppCodeHash);
-        var key2 = new CacheKey(TestAppId, TestEdition, normalizedPath, "different", TestAppCodeHash);
+        var key1 = CacheKeyTestAccessors.NewCacheKeyTac(TestAppId, TestEdition, normalizedPath, TestContentHash, TestAppCodeHash);
+        var key2 = CacheKeyTestAccessors.NewCacheKeyTac(TestAppId, TestEdition, normalizedPath, "different", TestAppCodeHash);
 
         // Act & Assert
         NotEqual(key1, key2);
-        False(key1.Equals(key2));
+        False(key1.EqualsTac(key2));
     }
 
     /// <summary>
@@ -187,10 +188,10 @@ public class CacheKeyTests
         // Arrange
         var cacheDir = @"C:\temp\cache";
         var normalizedPath = "views-test";
-        var cacheKey = new CacheKey(TestAppId, TestEdition, normalizedPath, TestContentHash, TestAppCodeHash);
+        var cacheKey = CacheKeyTestAccessors.NewCacheKeyTac(TestAppId, TestEdition, normalizedPath, TestContentHash, TestAppCodeHash);
 
         // Act
-        var result = cacheKey.GetFilePath(cacheDir);
+        var result = cacheKey.GetFilePathTac(cacheDir);
 
         // Assert
         StartsWith(cacheDir, result);
@@ -207,7 +208,7 @@ public class CacheKeyTests
     public void CacheKey_Constructor_ThrowsOnInvalidAppId(int appId, string edition, string path, string hash1, string hash2)
     {
         // Act & Assert
-        Throws<ArgumentException>(() => new CacheKey(appId, edition, path, hash1, hash2));
+        Throws<ArgumentException>(() => CacheKeyTestAccessors.NewCacheKeyTac(appId, edition, path, hash1, hash2));
     }
 
     /// <summary>
@@ -224,7 +225,7 @@ public class CacheKeyTests
         var normalizedPath = "views-test";
 
         // Act
-        var cacheKey = new CacheKey(TestAppId, edition, normalizedPath, TestContentHash, TestAppCodeHash);
+        var cacheKey = CacheKeyTestAccessors.NewCacheKeyTac(TestAppId, edition, normalizedPath, TestContentHash, TestAppCodeHash);
 
         // Assert
         Equal("root", cacheKey.Edition);
@@ -243,7 +244,7 @@ public class CacheKeyTests
         var normalizedPath = "views-test";
 
         // Act
-        var cacheKey = new CacheKey(TestAppId, edition, normalizedPath, TestContentHash, TestAppCodeHash);
+        var cacheKey = CacheKeyTestAccessors.NewCacheKeyTac(TestAppId, edition, normalizedPath, TestContentHash, TestAppCodeHash);
 
         // Assert
         Equal(edition, cacheKey.Edition);
