@@ -90,7 +90,7 @@ public class AssemblyDiskCache(NoParamOrder protector = default, object[]? conne
     /// - Assembly already at target location (skip copy)
     /// </remarks>
     public bool TrySaveToCache(
- string sourceAssemblyPath,
+        string? sourceAssemblyPath,
         string cachePath,
         Func<bool>? featureFlagCheck = null)
     {
@@ -282,7 +282,7 @@ public class AssemblyDiskCache(NoParamOrder protector = default, object[]? conne
     /// </summary>
     /// <param name="cachePath">Path to corrupted cache file</param>
     /// <param name="log">Log for diagnostic output</param>
-    private void HandleCorruptedCache(string cachePath, ILog log)
+    private void HandleCorruptedCache(string cachePath, ILog? log)
     {
         log.A("Corrupted cache file detected - will trigger recompilation");
         try

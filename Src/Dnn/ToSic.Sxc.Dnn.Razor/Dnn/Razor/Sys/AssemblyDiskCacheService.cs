@@ -14,21 +14,22 @@ namespace ToSic.Sxc.Dnn.Razor.Sys;
 public class AssemblyDiskCacheService(
     LazySvc<IFeaturesService> featureService,
     IGlobalConfiguration globalConfiguration,
-    AssemblyDiskCache diskCache)
-  : ServiceBase("Dnn.AsmDskCch", connect: [featureService, globalConfiguration, diskCache]), IAssemblyDiskCacheService
+    AssemblyDiskCache diskCache,
+    AssemblyUtilities assemblyUtilities)
+  : ServiceBase("Dnn.AsmDskCch", connect: [featureService, globalConfiguration, diskCache, assemblyUtilities]), IAssemblyDiskCacheService
 {
     /// <summary>
     /// Attempts to load a cached assembly from disk for the specified template.
     /// </summary>
-    public AssemblyResult? TryLoadFromCache(
+    public AssemblyResult TryLoadFromCache(
         HotBuildSpec spec,
         string templateRelativePath,
         string contentHash,
         string appCodeHash,
-        RoslynBuildManager roslynBuildManager,
+        AssemblyResult appCodeDependency,
         CodeFileInfo codeFileInfo)
     {
-        var l = Log.Fn<AssemblyResult?>($"app:{spec.AppId}, edition:{spec.Edition}, template:{templateRelativePath}", timer: true);
+        var l = Log.Fn<AssemblyResult>($"app:{spec.AppId}, edition:{spec.Edition}, template:{templateRelativePath}", timer: true);
 
         // Generate cache key
         var normalizedPath = CacheKey.NormalizePath(templateRelativePath);
@@ -46,12 +47,9 @@ public class AssemblyDiskCacheService(
 
         try
         {
-            // Load references so we can get the main type later (Razor-specific logic)
-            var (referencedAssemblies, appCodeDependency, appCodeAssembly) = roslynBuildManager.ReferencedAssemblies(codeFileInfo, spec);
-
-            // Create AssemblyResult with MainType populated
-            var className = RoslynBuildManager.GetSafeClassName(templateRelativePath);
-            var mainType = RoslynBuildManager.FindMainType(assembly, className, isCshtml: true, Log);
+            // Create AssemblyResult with MainType and AppCodeDependency populated
+            var className = assemblyUtilities.GetSafeClassName(templateRelativePath);
+            var mainType = assemblyUtilities.FindMainType(assembly, className, isCshtml: true);
 
             if (mainType == null)
             {
@@ -93,7 +91,7 @@ public class AssemblyDiskCacheService(
         var cachePath = cacheKey.GetFilePath(GetCacheDirectoryPath());
 
         // Get source assembly path
-        var sourceAssemblyPath = assemblyResult.Assembly.Location;
+        var sourceAssemblyPath = assemblyResult.Assembly?.Location;
 
         // Delegate to shared disk cache service
         var saved = diskCache.TrySaveToCache(

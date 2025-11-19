@@ -18,6 +18,10 @@ public static class StartUpDnnRazor
 
         services.TryAddTransient<IRoslynBuildManager, RoslynBuildManager>();
         services.TryAddTransient<IAssemblyDiskCacheService, AssemblyDiskCacheService>();
+        services.TryAddTransient<TemplateCacheService>();
+        services.TryAddTransient<RazorCompilerService>();
+        services.TryAddTransient<CSharpCompilerService>();
+        services.TryAddTransient<AssemblyUtilities>();
 
         return services;
     }

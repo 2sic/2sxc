@@ -16,8 +16,8 @@ public interface IAssemblyDiskCacheService
     /// <param name="templateRelativePath">Relative path to the CSHTML template</param>
     /// <param name="contentHash">Hash of the template's source code content</param>
     /// <param name="appCodeHash">Hash of the AppCode assembly (includes version info)</param>
-    /// <param name="roslynBuildManager"></param>
-    /// <param name="codeFileInfo"></param>
+    /// <param name="appCodeDependency">The AppCode dependency to attach to the loaded assembly</param>
+    /// <param name="codeFileInfo">Code file information</param>
     /// <returns>Cached assembly result if found and valid; null if cache miss or invalid</returns>
     /// <remarks>
     /// Returns null in these scenarios:
@@ -27,12 +27,12 @@ public interface IAssemblyDiskCacheService
     /// - Assembly load fails (corruption)
     /// - Feature flag is disabled
     /// </remarks>
-    AssemblyResult? TryLoadFromCache(
+    AssemblyResult TryLoadFromCache(
         HotBuildSpec spec,
         string templateRelativePath,
         string contentHash,
         string appCodeHash,
-        RoslynBuildManager roslynBuildManager,
+        AssemblyResult appCodeDependency,
         CodeFileInfo codeFileInfo);
 
     /// <summary>
