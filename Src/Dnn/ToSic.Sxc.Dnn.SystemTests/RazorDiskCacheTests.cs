@@ -31,7 +31,7 @@ public class RazorDiskCacheTests
         try
         {
             var cacheKey = CacheKeyTestAccessors.NewCacheKeyTac(TestAppId, TestEdition,
-                CacheKeyTestAccessors.NormalizePathTac(TestTemplatePath), TestContentHash, TestAppCodeHash);
+                CacheKeyTestAccessors.NormalizePathTac(TestTemplatePath, TestEdition), TestContentHash, TestAppCodeHash);
             
             var cachePath = cacheKey.GetFilePathTac(tempCacheDir);
             Directory.CreateDirectory(Path.GetDirectoryName(cachePath)!);
@@ -68,11 +68,11 @@ public class RazorDiskCacheTests
         var modifiedContentHash = "hash2";
 
         var originalKey = CacheKeyTestAccessors.NewCacheKeyTac(TestAppId, TestEdition,
-            CacheKeyTestAccessors.NormalizePathTac(TestTemplatePath), originalContentHash, TestAppCodeHash);
+            CacheKeyTestAccessors.NormalizePathTac(TestTemplatePath, TestEdition), originalContentHash, TestAppCodeHash);
         
         // Act - Simulate file change with different content hash
         var modifiedKey = CacheKeyTestAccessors.NewCacheKeyTac(TestAppId, TestEdition,
-            CacheKeyTestAccessors.NormalizePathTac(TestTemplatePath), modifiedContentHash, TestAppCodeHash);
+            CacheKeyTestAccessors.NormalizePathTac(TestTemplatePath, TestEdition), modifiedContentHash, TestAppCodeHash);
 
         // Assert
         NotEqual(originalKey.ToStringTac(), modifiedKey.ToStringTac());
@@ -90,11 +90,11 @@ public class RazorDiskCacheTests
         var modifiedAppCodeHash = "bbb222000000000000000000000000000000000000000000000000000000";
 
         var originalKey = CacheKeyTestAccessors.NewCacheKeyTac(TestAppId, TestEdition,
-            CacheKeyTestAccessors.NormalizePathTac(TestTemplatePath), TestContentHash, originalAppCodeHash);
+            CacheKeyTestAccessors.NormalizePathTac(TestTemplatePath, TestEdition), TestContentHash, originalAppCodeHash);
         
         // Act - Simulate AppCode change with different hash
         var modifiedKey = CacheKeyTestAccessors.NewCacheKeyTac(TestAppId, TestEdition,
-            CacheKeyTestAccessors.NormalizePathTac(TestTemplatePath), TestContentHash, modifiedAppCodeHash);
+            CacheKeyTestAccessors.NormalizePathTac(TestTemplatePath, TestEdition), TestContentHash, modifiedAppCodeHash);
 
         // Assert
         NotEqual(originalKey.ToStringTac(), modifiedKey.ToStringTac());
@@ -110,7 +110,7 @@ public class RazorDiskCacheTests
     {
         // Arrange & Act - Pass null edition
         var cacheKey = CacheKeyTestAccessors.NewCacheKeyTac(TestAppId, null,
-            CacheKeyTestAccessors.NormalizePathTac(TestTemplatePath), TestContentHash, TestAppCodeHash);
+            CacheKeyTestAccessors.NormalizePathTac(TestTemplatePath, null), TestContentHash, TestAppCodeHash);
         
         var fileName = cacheKey.ToStringTac();
 
@@ -136,7 +136,7 @@ public class RazorDiskCacheTests
         Parallel.For(0, threadCount, i =>
         {
             var key = CacheKeyTestAccessors.NewCacheKeyTac(TestAppId, TestEdition,
-                CacheKeyTestAccessors.NormalizePathTac(TestTemplatePath), TestContentHash, TestAppCodeHash);
+                CacheKeyTestAccessors.NormalizePathTac(TestTemplatePath, TestEdition), TestContentHash, TestAppCodeHash);
             cacheKeys.Add(key.ToStringTac());
         });
 
@@ -176,7 +176,7 @@ public class RazorDiskCacheTests
             File.WriteAllText(cachePath3, "test3");
 
             // Act - delete all dlls for app/edition folder
-            var appEditionDir = Path.Combine(tempCacheDir, CacheKeyTestAccessors.GetAppFolderTac(TestAppId, CacheKeyTestAccessors.NormalizeEditionTac(TestEdition)));
+            var appEditionDir = Path.Combine(tempCacheDir, CacheKeyTestAccessors.GetAppFolderTac(TestAppId, TestEdition));
             var filesToDelete = Directory.Exists(appEditionDir)
                 ? Directory.GetFiles(appEditionDir, "*.dll", SearchOption.AllDirectories)
                 : Array.Empty<string>();

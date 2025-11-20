@@ -20,7 +20,7 @@ public sealed class CacheKey : IEquatable<CacheKey>
     public string Edition { get; }
 
     /// <summary>
-    /// Normalized template path (lowercase, slash-normalized)
+    /// Normalized template path (sanitized relative path + hash for uniqueness).
     /// </summary>
     public string NormalizedPath { get; }
 
@@ -37,20 +37,22 @@ public sealed class CacheKey : IEquatable<CacheKey>
     /// <summary>
     /// Creates a new cache key with the specified components.
     /// </summary>
-    public CacheKey(int appId, string edition, string normalizedPath, string contentHash, string appCodeHash)
+    public CacheKey(int appId, string edition, string templatePath, string contentHash, string appCodeHash, string appPath = default)
     {
         if (appId <= 0)
             throw new ArgumentException("AppId must be positive", nameof(appId));
-        if (string.IsNullOrWhiteSpace(normalizedPath))
-            throw new ArgumentNullException(nameof(normalizedPath));
+        if (string.IsNullOrWhiteSpace(templatePath))
+            throw new ArgumentNullException(nameof(templatePath));
         if (string.IsNullOrWhiteSpace(contentHash))
             throw new ArgumentNullException(nameof(contentHash));
         if (string.IsNullOrWhiteSpace(appCodeHash))
             throw new ArgumentNullException(nameof(appCodeHash));
 
+        var normalizedEdition = CacheKeyPathUtils.NormalizeEdition(edition);
+
         AppId = appId;
-        Edition = NormalizeEdition(edition);
-        NormalizedPath = normalizedPath;
+        Edition = normalizedEdition;
+        NormalizedPath = CacheKeyPathUtils.NormalizePath(templatePath, normalizedEdition, appPath);
         ContentHash = contentHash;
         AppCodeHash = appCodeHash;
     }
@@ -60,7 +62,7 @@ public sealed class CacheKey : IEquatable<CacheKey>
     /// {normalizedPath}-{contentHash}-{appCodeHash}.dll
     /// </summary>
     /// <example>
-    /// views-default-cshtml-a1b2c3-x9y8z7.dll
+    /// views-default-cshtml-6995bfe9-a1b2c3-x9y8z7.dll
     /// </example>
     public override string ToString()
     {
@@ -81,7 +83,7 @@ public sealed class CacheKey : IEquatable<CacheKey>
         if (!cacheDirectory.HasValue())
             throw new ArgumentNullException(nameof(cacheDirectory));
 
-        var directory = Path.Combine(cacheDirectory, GetAppFolder(AppId, Edition));
+        var directory = Path.Combine(cacheDirectory, CacheKeyPathUtils.GetAppFolder(AppId, Edition));
         return Path.Combine(directory, ToString());
     }
 
@@ -89,46 +91,18 @@ public sealed class CacheKey : IEquatable<CacheKey>
     /// Normalizes a template path for use in cache keys.
     /// </summary>
     /// <param name="templatePath">Original template path (may have mixed case, forward/back slashes)</param>
-    /// <returns>Normalized path (lowercase, hyphens instead of slashes)</returns>
+    /// <param name="edition">Edition segment used to remove the app root portion</param>
+    /// <param name="appPath">app path</param>
+    /// <returns>Normalized path combining the sanitized relative path (trimmed to the app/edition scope) and an 8-character hash</returns>
     /// <example>
-    /// Input: "Views/Default.cshtml" → Output: "views-default-cshtml"
+    /// Input: "Views/Default.cshtml" → Output: "views-default-cshtml-6995bfe9"
     /// </example>
-    public static string NormalizePath(string templatePath)
-    {
-        if (string.IsNullOrWhiteSpace(templatePath))
-            throw new ArgumentNullException(nameof(templatePath));
+    public static string NormalizePath(string templatePath, string edition, string appPath = default)
+        => CacheKeyPathUtils.NormalizePath(templatePath, edition, appPath);
 
-        return templatePath
-            .ToLowerInvariant()
-            .Replace('/', '-')
-            .Replace('\\', '-')
-            .Replace(".cshtml", "-cshtml")
-            .Replace('.', '-')
-            .Replace(' ', '-')
-            .Trim('-');
-    }
-
-    internal static string NormalizeEdition(string edition)
-    {
-        const string root = "root";
-        return edition.HasValue()
-            ? SanitizeSegment(edition, root)
-            : root;
-    }
-
+    // API compatibility: keep existing callers working
     internal static string GetAppFolder(int appId, string edition)
-        => $"{appId:0000}-{edition}";
-
-    private static string SanitizeSegment(string value, string fallback)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-            return fallback;
-        var invalidChars = Path.GetInvalidFileNameChars();
-        var cleaned = new string(value.Select(ch => invalidChars.Contains(ch) ? '-' : ch).ToArray());
-        return string.IsNullOrWhiteSpace(cleaned)
-            ? fallback
-            : cleaned;
-    }
+        => CacheKeyPathUtils.GetAppFolder(appId, edition);
 
     #region Equality Members
 
@@ -179,3 +153,4 @@ public sealed class CacheKey : IEquatable<CacheKey>
 
     #endregion
 }
+

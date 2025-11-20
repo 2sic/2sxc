@@ -116,10 +116,7 @@ public class RoslynBuildManager(
         if (!diskCacheService.IsEnabled())
             return null;
 
-        var normalizedPath = CacheKey.NormalizePath(codeFileInfo.RelativePath);
-        var cacheDir = diskCacheService.GetCacheDirectoryPath();
-        
-        var outputPath = new CacheKey(spec.AppId, spec.Edition, normalizedPath, contentHash, appCodeHash).GetFilePath(cacheDir);
+        var outputPath = diskCacheService.GetCacheFilePath(spec, codeFileInfo.RelativePath, contentHash, appCodeHash);
         var directoryName = Path.GetDirectoryName(outputPath);
         if (directoryName.HasValue())
             Directory.CreateDirectory(directoryName!);

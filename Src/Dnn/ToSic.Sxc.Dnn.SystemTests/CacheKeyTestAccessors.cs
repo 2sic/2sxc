@@ -8,20 +8,16 @@ namespace ToSic.Sxc.Dnn;
 internal static class CacheKeyTestAccessors
 {
     // Constructor forwarder (factory)
-    public static CacheKey NewCacheKeyTac(int appId, string? edition, string templatePath, string contentHash, string appCodeHash)
-        => new CacheKey(appId: appId, edition: edition, templatePath: templatePath, contentHash: contentHash, appCodeHash: appCodeHash);
+    public static CacheKey NewCacheKeyTac(int appId, string? edition, string templatePath, string contentHash, string appCodeHash, string? appPath = null)
+        => new CacheKey(appId: appId, edition: edition, templatePath: templatePath, contentHash: contentHash, appCodeHash: appCodeHash, appPath: appPath);
 
     // Static method forwarders
-    public static string NormalizePathTac(string templatePath)
-        => CacheKey.NormalizePath(templatePath: templatePath);
-
-    public static string NormalizeEditionTac(string edition)
-        => CacheKey.NormalizeEdition(edition: edition);
+    public static string NormalizePathTac(string templatePath, string edition, string? appPath = null)
+        => CacheKey.NormalizePath(templatePath: templatePath, edition: edition, appPath: appPath);
 
     public static string GetAppFolderTac(int appId, string edition)
         => CacheKey.GetAppFolder(appId: appId, edition: edition);
 
-    // Instance method forwarders (extension style)
     public static string ToStringTac(this CacheKey cacheKey)
         => cacheKey.ToString();
 

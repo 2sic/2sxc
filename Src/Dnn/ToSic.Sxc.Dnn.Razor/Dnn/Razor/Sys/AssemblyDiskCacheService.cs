@@ -1,7 +1,10 @@
 using System.Reflection;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Code.Sys.SourceCode;
 using ToSic.Sys.Configuration;
+using ISite = ToSic.Eav.Context.ISite;
 
 namespace ToSic.Sxc.Dnn.Razor.Sys;
 
@@ -15,8 +18,11 @@ public class AssemblyDiskCacheService(
     LazySvc<IFeaturesService> featureService,
     IGlobalConfiguration globalConfiguration,
     AssemblyDiskCache diskCache,
-    AssemblyUtilities assemblyUtilities)
-  : ServiceBase("Dnn.AsmDskCch", connect: [featureService, globalConfiguration, diskCache, assemblyUtilities]), IAssemblyDiskCacheService
+    AssemblyUtilities assemblyUtilities,
+    IAppReaderFactory appReadFac,
+    LazySvc<IAppPathsMicroSvc> appPathsLazy,
+    ISite site)
+  : ServiceBase("Dnn.AsmDskCch", connect: [featureService, globalConfiguration, diskCache, assemblyUtilities, appReadFac, appPathsLazy, site]), IAssemblyDiskCacheService
 {
     /// <summary>
     /// Attempts to load a cached assembly from disk for the specified template.
@@ -32,9 +38,7 @@ public class AssemblyDiskCacheService(
         var l = Log.Fn<AssemblyResult>($"app:{spec.AppId}, edition:{spec.Edition}, template:{templateRelativePath}", timer: true);
 
         // Generate cache key
-        var normalizedPath = CacheKey.NormalizePath(templateRelativePath);
-        var cacheKey = new CacheKey(spec.AppId, spec.Edition, normalizedPath, contentHash, appCodeHash);
-        var cachePath = cacheKey.GetFilePath(GetCacheDirectoryPath());
+        var cachePath = GetCacheFilePath(spec, templateRelativePath, contentHash, appCodeHash);
 
         // Load assembly bytes from disk using shared cache service
         var assembly = diskCache.TryLoadFromCache(
@@ -86,9 +90,7 @@ public class AssemblyDiskCacheService(
         var l = Log.Fn<bool>($"app:{spec.AppId}, edition:{spec.Edition}, template:{templateRelativePath}", timer: true);
 
         // Generate cache key
-        var normalizedPath = CacheKey.NormalizePath(templateRelativePath);
-        var cacheKey = new CacheKey(spec.AppId, spec.Edition, normalizedPath, contentHash, appCodeHash);
-        var cachePath = cacheKey.GetFilePath(GetCacheDirectoryPath());
+        var cachePath = GetCacheFilePath(spec, templateRelativePath, contentHash, appCodeHash);
 
         // Get source assembly path
         var sourceAssemblyPath = assemblyResult.Assembly?.Location;
@@ -105,14 +107,38 @@ public class AssemblyDiskCacheService(
     }
 
     /// <summary>
+    /// Builds the full cache file path for the given template/spec combination.
+    /// </summary>
+    public string GetCacheFilePath(
+        HotBuildSpec spec,
+        string templateRelativePath,
+        string contentHash,
+        string appCodeHash)
+    {
+        var cacheKey = BuildCacheKey(spec, templateRelativePath, contentHash, appCodeHash);
+        return cacheKey.GetFilePath(GetCacheDirectoryPath());
+    }
+
+    private CacheKey BuildCacheKey(HotBuildSpec spec, string templateRelativePath, string contentHash, string appCodeHash)
+        => new(spec.AppId, spec.Edition, templateRelativePath, contentHash, appCodeHash, GetAppRelativePath(spec));
+
+    private string GetAppRelativePath(HotBuildSpec spec)
+    {
+        if (spec.AppId <= 0)
+            return string.Empty;
+
+        return appPathsLazy.Value.Get(appReadFac.Get(spec.AppId), site).RelativePath ?? string.Empty;
+    }
+
+    /// <summary>
     /// Invalidates (deletes) cached assemblies for a specific template.
     /// </summary>
-    public void InvalidateCache(string templateRelativePath)
+    public void InvalidateCache(string templateRelativePath, string edition, string appPath = null)
     {
         var l = Log.Fn($"template:{templateRelativePath}");
 
         var cacheDir = GetCacheDirectoryPath();
-        var normalizedPath = CacheKey.NormalizePath(templateRelativePath);
+        var normalizedPath = CacheKey.NormalizePath(templateRelativePath, edition, appPath);
         var searchPattern = $"*-{normalizedPath}-*.dll";
 
         var deletedCount = diskCache.InvalidateCache(cacheDir, searchPattern, SearchOption.AllDirectories);
@@ -129,13 +155,12 @@ public class AssemblyDiskCacheService(
         var l = Log.Fn($"app:{appId}, edition:{edition}");
 
         var cacheDir = GetCacheDirectoryPath();
-        var editionNormalized = CacheKey.NormalizeEdition(edition);
-        var appDir = Path.Combine(cacheDir, CacheKey.GetAppFolder(appId, editionNormalized));
+        var appDir = Path.Combine(cacheDir, CacheKey.GetAppFolder(appId, edition));
 
         var deletedCount = Directory.Exists(appDir)
             ? diskCache.InvalidateCache(appDir, "*.dll", SearchOption.AllDirectories)
             : 0;
-        l.A($"Invalidated {deletedCount} cache files for app {appId} edition {editionNormalized}");
+        l.A($"Invalidated {deletedCount} cache files for app {appId} edition {edition}");
 
         l.Done();
     }
