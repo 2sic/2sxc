@@ -41,6 +41,10 @@ public class ExportExtension(
     /// </summary>
     private const string DefaultVersion = "00.00.01";
 
+    private const string DataIncluded = "dataInside";
+    private const string DataBundles = "dataBundles";
+    private const string AppCodeInside = "appCodeInside";
+
     public THttpResponseType Export(int zoneId, int appId, string name)
     {
         var l = Log.Fn<THttpResponseType>($"export extension z#{zoneId}, a#{appId}, name:'{name}'");
@@ -85,9 +89,9 @@ public class ExportExtension(
 
         // 4. Handle data bundles
         var bundles = new List<(string sourcePath, string zipPath, string content)>();
-        var hasDataBundles = extensionJson.TryGetPropertyValue("hasDataBundles", out var hasDataBundlesNode)
+        var hasDataBundles = extensionJson.TryGetPropertyValue(DataIncluded, out var hasDataBundlesNode)
                              && hasDataBundlesNode?.GetValue<bool>() == true;
-        if (hasDataBundles && modifiedJson.TryGetPropertyValue("bundles", out var bundlesNode))
+        if (hasDataBundles && modifiedJson.TryGetPropertyValue(DataBundles, out var bundlesNode))
         {
             // Convert bundlesNode to JsonArray, handling both string and array cases
             JsonArray bundlesArray;
@@ -117,11 +121,11 @@ public class ExportExtension(
         }
 
         // 5. Create ZIP using Zipping helper
-        var version = (modifiedJson["version"]?.GetValue<string>())
+        var versionString = (modifiedJson["version"]?.GetValue<string>())
             .UseFallbackIfNoValue(DefaultVersion);
-        var fileName = string.Format(ZipFileNameFormat, name, version);
+        var fileName = string.Format(ZipFileNameFormat, name, versionString);
 
-        using var memoryStream = CreateZipArchive(filesToInclude, bundles, modifiedJson, name);
+        using var memoryStream = CreateZipArchive(filesToInclude, bundles, modifiedJson, name, versionString);
         memoryStream.Position = 0;
         var fileBytes = memoryStream.ToArray();
 
@@ -144,11 +148,11 @@ public class ExportExtension(
     };
     private string ToNiceJson(object data) => JsonSerializer.Serialize(data, JsonSerializationIndented);
 
-    private MemoryStream CreateZipArchive(
-        List<(string sourcePath, string zipPath)> filesToInclude,
+    private MemoryStream CreateZipArchive(List<(string sourcePath, string zipPath)> filesToInclude,
         List<(string sourcePath, string zipPath, string content)> bundles,
         JsonObject extensionJson,
-        string extensionName)
+        string extensionName,
+        string versionString)
     {
         var l = Log.Fn<MemoryStream>($"files:{filesToInclude.Count}, ext:{extensionName}");
 
@@ -176,7 +180,6 @@ public class ExportExtension(
             }
 
             // Create and add extension.lock file
-            var versionString = extensionJson["version"]?.GetValue<string>() ?? DefaultVersion;
             var lockData = CreateLockObject(filesToInclude, bundles, versionString, finalJsonString);
             var lockJsonPath = $"{basePath}/{FolderConstants.AppExtensionLockJsonFile}";
             var lockJson = ToNiceJson(lockData);
@@ -265,7 +268,7 @@ public class ExportExtension(
             exclude: [$"{FolderConstants.DataFolderProtected}\\{FolderConstants.AppExtensionJsonFile}"]);
 
         // 2. Check for hasAppCode setting
-        var hasAppCode = extensionJson.TryGetPropertyValue("hasAppCode", out var hasAppCodeNode) &&
+        var hasAppCode = extensionJson.TryGetPropertyValue(AppCodeInside, out var hasAppCodeNode) &&
                          hasAppCodeNode?.GetValue<bool>() == true;
         if (hasAppCode)
         {

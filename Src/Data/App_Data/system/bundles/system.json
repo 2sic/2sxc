@@ -6410,7 +6410,7 @@
                           "en-us": "empty-default"
                         },
                         "Name": {
-                          "en-us": "Parts / Functionality"
+                          "en-us": "Parts / Functionality / Features"
                         },
                         "Notes": {
                           "en-us": ""
@@ -6470,7 +6470,7 @@
                 ]
               },
               {
-                "Name": "hasFields",
+                "Name": "inputFieldInside",
                 "Type": "Boolean",
                 "InputType": "boolean-default",
                 "IsTitle": false,
@@ -6561,7 +6561,7 @@
                 ]
               },
               {
-                "Name": "hasAppCode",
+                "Name": "appCodeInside",
                 "Type": "Boolean",
                 "InputType": "boolean-default",
                 "IsTitle": false,
@@ -6652,7 +6652,7 @@
                 ]
               },
               {
-                "Name": "hasWebApi",
+                "Name": "webApiInside",
                 "Type": "Boolean",
                 "InputType": "boolean-default",
                 "IsTitle": false,
@@ -6743,7 +6743,7 @@
                 ]
               },
               {
-                "Name": "hasRazor",
+                "Name": "razorInside",
                 "Type": "Boolean",
                 "InputType": "boolean-default",
                 "IsTitle": false,
@@ -6834,7 +6834,98 @@
                 ]
               },
               {
-                "Name": "hasDataBundles",
+                "Name": "editionsSupported",
+                "Type": "Boolean",
+                "InputType": "boolean-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 184298,
+                    "Version": 1,
+                    "Guid": "2870777f-5bf4-4c10-8ecc-02e1d53acb59",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "false"
+                        },
+                        "InputType": {
+                          "en-us": "boolean-default"
+                        },
+                        "Name": {
+                          "en-us": "supportsEditions"
+                        },
+                        "Notes": {
+                          "en-us": "<p>If it supports polymorphism, then multiple editions can be installed side-by-side so that developers can try a new edition while users still see the existing, installed edition.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "unknown"
+                  },
+                  {
+                    "Id": 184299,
+                    "Version": 1,
+                    "Guid": "526de5f1-c439-4e59-af7a-6665361d2098",
+                    "Type": {
+                      "Id": "@Boolean",
+                      "Name": "@Boolean"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "TitleFalse": {
+                          "en-us": "Does not support Polymorphism / Editions"
+                        },
+                        "TitleIndeterminate": {
+                          "en-us": ""
+                        },
+                        "TitleTrue": {
+                          "en-us": "Supports Polymorphism / Editions"
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "dataInside",
                 "Type": "Boolean",
                 "InputType": "boolean-default",
                 "IsTitle": false,
@@ -6917,6 +7008,206 @@
                         },
                         "TitleTrue": {
                           "en-us": "Includes Data Bundles"
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "groupInputField",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 184300,
+                    "Version": 1,
+                    "Guid": "1df7ab45-ebeb-4b47-9ca8-035cd99020e9",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-default"
+                        },
+                        "Name": {
+                          "en-us": "Input Fields Configuration"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Provide additional information about input fields.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "e7f883d9-cfb3-4360-9562-886b4d97a71c"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "unknown"
+                  },
+                  {
+                    "Id": 184302,
+                    "Version": 1,
+                    "Guid": "8740923e-299e-4f32-8d38-b0fa20bbe155",
+                    "Type": {
+                      "Id": "@empty-default",
+                      "Name": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "inputFieldAssets",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 184301,
+                    "Version": 1,
+                    "Guid": "39336675-fff6-45c4-b698-b70f522fc51f",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "index.js"
+                        },
+                        "InputType": {
+                          "en-us": "string-default"
+                        },
+                        "Name": {
+                          "en-us": "Input Field Assets"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Assets to load when this input field is used. Default is index.js, which should then load everything.&nbsp;</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "unknown"
+                  },
+                  {
+                    "Id": 184303,
+                    "Version": 1,
+                    "Guid": "bdf1ec49-0593-4e21-932f-d8dc61f2048f",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 184304,
+                    "Version": 1,
+                    "Guid": "c0cead99-decd-4a6f-8b54-a3ec1a1ebc18",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": "monospace"
+                        },
+                        "TextWrapping": {
+                          "en-us": ""
+                        }
+                      },
+                      "Number": {
+                        "RowCount": {
+                          "en-us": 2
                         }
                       }
                     },
@@ -7012,7 +7303,7 @@
                 ]
               },
               {
-                "Name": "bundles",
+                "Name": "dataBundles",
                 "Type": "String",
                 "InputType": "string-dropdown-query",
                 "IsTitle": false,
@@ -7037,10 +7328,10 @@
                           "en-us": "string-dropdown-query"
                         },
                         "Name": {
-                          "en-us": "bundles"
+                          "en-us": "Data Bundles"
                         },
                         "Notes": {
-                          "en-us": ""
+                          "en-us": "<p>Reference data bundles to include / export with this extension.</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -7129,7 +7420,7 @@
                 ]
               },
               {
-                "Name": "hasContentTypes",
+                "Name": "contentTypesInside",
                 "Type": "Boolean",
                 "InputType": "boolean-default",
                 "IsTitle": false,
@@ -7157,7 +7448,7 @@
                           "en-us": "has ContentTypes"
                         },
                         "Notes": {
-                          "en-us": "<p>The bundles include Content-Types.</p>"
+                          "en-us": "<p>The data contains Content-Types.</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -7220,7 +7511,7 @@
                 ]
               },
               {
-                "Name": "hasQueries",
+                "Name": "queriesInside",
                 "Type": "Boolean",
                 "InputType": "boolean-default",
                 "IsTitle": false,
@@ -7248,7 +7539,7 @@
                           "en-us": "has Queries"
                         },
                         "Notes": {
-                          "en-us": ""
+                          "en-us": "<p>The data include Queries.</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -7311,7 +7602,7 @@
                 ]
               },
               {
-                "Name": "hasViews",
+                "Name": "viewsInside",
                 "Type": "Boolean",
                 "InputType": "boolean-default",
                 "IsTitle": false,
@@ -7339,7 +7630,7 @@
                           "en-us": "Has Views"
                         },
                         "Notes": {
-                          "en-us": "<p>The bundles contain View Configurations.</p>"
+                          "en-us": "<p>The data contain View Configurations.</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -8319,6 +8610,34 @@
                 "String": {
                   "Formula": {
                     "en-us": "v2((data, context) => {\n  return data.hasDataBundles;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 184305,
+              "Version": 1,
+              "Guid": "e7f883d9-cfb3-4360-9562-886b4d97a71c",
+              "Type": {
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf",
+                "Name": "UiFormula"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, _) => {\n  return data.inputFieldInside;\n});"
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"
