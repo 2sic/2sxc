@@ -17,6 +17,8 @@ public static class StartUpDnnRazor
         services.TryAddTransient<HtmlHelper>();
 
         services.TryAddTransient<IRoslynBuildManager, RoslynBuildManager>();
+        services.TryAddTransient<RoslynCompilationRunner>();
+        services.TryAddTransient<RoslynCacheFallbackHandler>();
         services.TryAddTransient<IAssemblyDiskCacheService, AssemblyDiskCacheService>();
         services.TryAddTransient<TemplateCacheService>();
         services.TryAddTransient<RazorCompilerService>();

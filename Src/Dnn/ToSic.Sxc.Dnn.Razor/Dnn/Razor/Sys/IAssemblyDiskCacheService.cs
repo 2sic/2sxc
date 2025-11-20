@@ -41,7 +41,7 @@ public interface IAssemblyDiskCacheService
     /// <summary>
     /// Invalidates cached assemblies for a specific template path / edition combination.
     /// </summary>
-    void InvalidateCache(string templateRelativePath, string edition, string? appPath = null);
+    void InvalidateCache(string templateRelativePath, string edition, string appPath = null);
 
     /// <summary>
     /// Invalidates (deletes) cached assemblies for a specific app and edition.

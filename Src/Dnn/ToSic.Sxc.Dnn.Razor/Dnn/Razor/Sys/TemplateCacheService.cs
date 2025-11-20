@@ -117,7 +117,7 @@ public class TemplateCacheService(
         );
     }
 
-    internal sealed class AppCodeCacheInfo(AssemblyResult assemblyResult, string hash)
+    public sealed class AppCodeCacheInfo(AssemblyResult assemblyResult, string hash)
     {
         public AssemblyResult AssemblyResult { get; } = assemblyResult;
         public string Hash { get; } = hash;

@@ -19,10 +19,11 @@ public class AssemblyDiskCacheService(
     IGlobalConfiguration globalConfiguration,
     AssemblyDiskCache diskCache,
     AssemblyUtilities assemblyUtilities,
+    AssemblyResolver assemblyResolver,
     IAppReaderFactory appReadFac,
     LazySvc<IAppPathsMicroSvc> appPathsLazy,
     ISite site)
-  : ServiceBase("Dnn.AsmDskCch", connect: [featureService, globalConfiguration, diskCache, assemblyUtilities, appReadFac, appPathsLazy, site]), IAssemblyDiskCacheService
+  : ServiceBase("Dnn.AsmDskCch", connect: [featureService, globalConfiguration, diskCache, assemblyUtilities, assemblyResolver, appReadFac, appPathsLazy, site]), IAssemblyDiskCacheService
 {
     /// <summary>
     /// Attempts to load a cached assembly from disk for the specified template.
@@ -39,6 +40,10 @@ public class AssemblyDiskCacheService(
 
         // Generate cache key
         var cachePath = GetCacheFilePath(spec, templateRelativePath, contentHash, appCodeHash);
+
+        // Ensure assembly resolver can provide AppCode dependencies when the cached assembly is loaded
+        if (appCodeDependency?.Assembly != null)
+            assemblyResolver.AddAssembly(appCodeDependency.Assembly, GetAppRelativePath(spec));
 
         // Load assembly bytes from disk using shared cache service
         var assembly = diskCache.TryLoadFromCache(
@@ -127,7 +132,7 @@ public class AssemblyDiskCacheService(
         if (spec.AppId <= 0)
             return string.Empty;
 
-        return appPathsLazy.Value.Get(appReadFac.Get(spec.AppId), site).RelativePath ?? string.Empty;
+        return appPathsLazy.Value.Get(appReadFac.Get(spec.AppId), site).RelativePath;
     }
 
     /// <summary>

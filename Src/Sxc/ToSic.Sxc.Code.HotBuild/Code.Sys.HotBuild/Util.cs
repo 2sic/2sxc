@@ -65,7 +65,8 @@ public class Util(IGlobalConfiguration globalConfiguration)
 
         var now = DateTime.Now;
 
-        foreach (var dir in directories)
+        var enumerable = directories.ToList();
+        foreach (var dir in enumerable)
         {
             var isRoot = string.Equals(dir, folderPath, StringComparison.OrdinalIgnoreCase);
 
@@ -126,7 +127,7 @@ public class Util(IGlobalConfiguration globalConfiguration)
         }
 
         // Step 5: remove empty subfolders (but leave the root)
-        foreach (var dir in directories
+        foreach (var dir in enumerable
                      .Where(d => !string.Equals(d, folderPath, StringComparison.OrdinalIgnoreCase))
                      .OrderByDescending(d => d.Length))
         {
