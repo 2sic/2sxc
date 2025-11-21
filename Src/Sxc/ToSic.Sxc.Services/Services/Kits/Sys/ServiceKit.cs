@@ -13,7 +13,7 @@
 // #NoEditorBrowsableBecauseOfInheritance
 // 2025-05-11 re-enabled, since it shouldn't matter anymore with the new setup
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ServiceKit(string logName) : ServiceWithContext(logName)
+public class ServiceKit(string logName = "Sxc.Kit") : ServiceWithContext(logName)
 {
 
     /// <summary>
