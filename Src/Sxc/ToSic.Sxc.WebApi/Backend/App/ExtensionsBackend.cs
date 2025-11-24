@@ -10,7 +10,8 @@ public class ExtensionsBackend(
     LazySvc<ExtensionsZipInstallerBackend> zipLazy)
     : ServiceBase("Bck.Exts", connect: [readerLazy, writerLazy, zipLazy])
 {
-    public ExtensionsResultDto GetExtensions(int appId) => readerLazy.Value.GetExtensions(appId);
+    public ExtensionsResultDto GetExtensions(int appId)
+        => readerLazy.Value.GetExtensions(appId);
 
     public bool SaveExtension(int zoneId, int appId, string name, JsonElement configuration)
         => writerLazy.Value.SaveExtension(appId, name, configuration);

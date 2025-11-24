@@ -3,6 +3,7 @@ using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
 using ToSic.Eav.Sys;
@@ -62,11 +63,14 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         services.AddSingleton(sp => new LazySvc<IJsonService>(sp));
 
         // Register backend dependencies explicitly so they can be resolved by LazySvc later
+        services.AddTransient<ExtensionManifestService>();
+        
         services.AddSingleton<ExtensionsReaderBackend>(sp => new ExtensionsReaderBackend(
             sp.GetRequiredService<LazySvc<IAppReaderFactory>>(),
             sp.GetRequiredService<ISite>(),
             sp.GetRequiredService<IAppPathsMicroSvc>(),
-            sp.GetRequiredService<LazySvc<IJsonService>>()));
+            sp.GetRequiredService<LazySvc<IJsonService>>(),
+            sp.GetRequiredService<ExtensionManifestService>()));
 
         services.AddSingleton<ExtensionsWriterBackend>(sp => new ExtensionsWriterBackend(
             sp.GetRequiredService<LazySvc<IAppReaderFactory>>(),
