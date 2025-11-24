@@ -6,10 +6,11 @@ using THttpResponseType = System.Net.Http.HttpResponseMessage;
 using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 #endif
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
 /// <summary>
-/// Test accessor methods for ExportExtension to isolate test usage from production code references.
+/// Test accessor methods for ExtensionExportService to isolate test usage from production code references.
 /// These are pure pass-through forwarders with no logic.
 /// </summary>
 internal static class ExportExtensionTestAccessors
@@ -17,6 +18,6 @@ internal static class ExportExtensionTestAccessors
     /// <summary>
     /// Test accessor for Export method.
     /// </summary>
-    public static THttpResponseType ExportTac(this ExportExtension exportExtension, int zoneId, int appId, string name)
-        => exportExtension.Export(zoneId: zoneId, appId: appId, name: name);
+    public static THttpResponseType ExportTac(this ExtensionExportService exportExtension, int zoneId, int appId, string name)
+        => exportExtension.Export(appId: appId, name: name);
 }

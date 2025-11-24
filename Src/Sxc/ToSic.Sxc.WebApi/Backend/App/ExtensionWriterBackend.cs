@@ -1,41 +1,41 @@
-using System.Text.Json;
+using System.Text;
+using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Paths;
+using ToSic.Eav.Sys;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.App;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionsWriterBackend(
+public class ExtensionWriterBackend(
     LazySvc<IAppReaderFactory> appReadersLazy,
     ISite site,
     IAppPathsMicroSvc appPathSvc)
     : ServiceBase("Bck.ExtWrite", connect: [appReadersLazy, site, appPathSvc])
 {
-    public bool SaveExtension(int appId, string name, JsonElement configuration)
+    // Remove previous local serializer & use shared helper
+    public bool SaveExtension(int appId, string name, ExtensionManifest manifest)
     {
         var l = Log.Fn<bool>($"a:{appId}, f:'{name}'");
-
-        if (string.IsNullOrWhiteSpace(name))
+        if (name.IsEmpty())
             return l.ReturnFalse("no folder");
-
         name = name.Trim();
         if (!ExtensionFolderNameValidator.IsValid(name))
             return l.ReturnFalse($"invalid folder name:'{name}'");
-
         var appReader = appReadersLazy.Value.Get(appId);
         var appPaths = appPathSvc.Get(appReader, site);
-        var dir = Path.Combine(appPaths.PhysicalPath, ToSic.Eav.Sys.FolderConstants.AppExtensionsFolder, name);
-        if (!Directory.Exists(dir))
-            return l.ReturnFalse($"extension folder:'{dir}' doesn't exist");
-
-        var appData = Path.Combine(dir, ToSic.Eav.Sys.FolderConstants.DataFolderProtected);
-        var jsonPath = Path.Combine(appData, ToSic.Eav.Sys.FolderConstants.AppExtensionJsonFile);
-
+        var dir = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppExtensionsFolder, name);
+        
+        // Create extension folder if it doesn't exist
+        Directory.CreateDirectory(dir);
+        
+        var appData = Path.Combine(dir, FolderConstants.DataFolderProtected);
+        var jsonPath = Path.Combine(appData, FolderConstants.AppExtensionJsonFile);
         try
         {
             Directory.CreateDirectory(appData);
-            using var jsonDoc = JsonDocument.Parse(configuration.GetRawText());
-            var json = JsonSerializer.Serialize(jsonDoc, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(jsonPath, json, new System.Text.UTF8Encoding(false));
+            var json = ExtensionManifestSerializer.Serialize(manifest);
+            File.WriteAllText(jsonPath, json, new UTF8Encoding(false));
             return l.ReturnTrue("saved");
         }
         catch (Exception ex)

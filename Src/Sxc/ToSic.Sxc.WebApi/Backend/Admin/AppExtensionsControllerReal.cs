@@ -1,6 +1,6 @@
-using System.Text.Json;
 using ToSic.Sxc.Backend.App;
-using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
+using ToSic.Eav.Apps.Sys.FileSystemState;
+
 
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;
@@ -12,41 +12,106 @@ namespace ToSic.Sxc.Backend.Admin;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppExtensionsControllerReal(
-    LazySvc<ExtensionsBackend> extensionsBackendLazy,
-    LazySvc<ExportExtension> exportExtensionLazy)
-    : Services_ServiceBase($"Api.{LogSuffix}Rl", connect: [extensionsBackendLazy, exportExtensionLazy])
+    LazySvc<ExtensionReaderBackend> readerLazy,
+    LazySvc<ExtensionWriterBackend> writerLazy,
+    LazySvc<ExtensionInstallBackend> zipLazy,
+    LazySvc<ExtensionInspectBackend> inspectorLazy,
+    LazySvc<ExtensionDeleteBackend> deleteLazy,
+    LazySvc<ExtensionExportService> exportExtensionLazy)
+    : ServiceBase("Api.ExtsRl", connect: [readerLazy, writerLazy, zipLazy, inspectorLazy, deleteLazy, exportExtensionLazy])
 {
-    public const string LogSuffix = "AppExt";
-
-    // List all App Extensions and configuration
-    public ExtensionsResultDto Extensions(int appId)
-        => extensionsBackendLazy.Value.GetExtensions(appId);
-
-    // Create or update configuration for a specific extension
-    public bool Extension(int zoneId, int appId, string name, JsonElement configuration)
-        => extensionsBackendLazy.Value.SaveExtension(zoneId, appId, name, configuration);
+    public const string LogSuffix = "ApiExts";
 
     /// <summary>
-    /// Install an extension ZIP into /extensions.
+    /// Get all App Extensions and their configuration (if any).
     /// </summary>
-    public bool Install(HttpUploadedFile uploadInfo, int zoneId, int appId, bool overwrite = false)
+    /// <param name="appId">App identifier</param>
+    /// <returns>Object with property "extensions" containing an array of extensions</returns>
+    public ExtensionsResultDto Extensions(int appId)
+        => readerLazy.Value.GetExtensions(appId);
+
+    /// <summary>
+    /// Preflight install of an extension zip to report current state and options.
+    /// </summary>
+    /// <param name="uploadInfo">Uploaded ZIP file containing the extension package</param>
+    /// <param name="appId">App identifier</param>
+    /// <param name="editions">Optional list of editions to install into (empty or null = root)</param>
+    /// <returns>Preflight result describing detected state and installation options</returns>
+    public PreflightResultDto InstallPreflight(HttpUploadedFile uploadInfo, int appId, string[]? editions = null)
     {
-        var l = Log.Fn<bool>($"z:{zoneId}, a:{appId}, overwrite:{overwrite}");
+        var l = Log.Fn<PreflightResultDto>($"a:{appId}, editions:'{string.Join(",", editions ?? [])}'");
+
+        if (!uploadInfo.HasFiles())
+            throw l.Ex(new ArgumentException("no file uploaded", nameof(uploadInfo)));
+
+        var (fileName, stream) = uploadInfo.GetStream();
+        if (stream == null!)
+            throw l.Ex(new NullReferenceException("File Stream is null, upload canceled"));
+
+        var result = zipLazy.Value.InstallPreflight(appId, stream, originalZipFileName: fileName, editions: editions);
+        return l.Return(result, "ok");
+    }
+
+    /// <summary>
+    /// Install app extension zip.
+    /// </summary>
+    /// <param name="uploadInfo">Uploaded ZIP file containing the extension package</param>
+    /// <param name="appId">App identifier</param>
+    /// <param name="editions">Optional list of editions to install into (empty or null = root)</param>
+    /// <param name="overwrite">Overwrite existing files if true</param>
+    /// <returns>true if installation succeeded</returns>
+    public bool Install(HttpUploadedFile uploadInfo, int appId, string[]? editions = null, bool overwrite = false)
+    {
+        var l = Log.Fn<bool>($"a:{appId}, editions:'{string.Join(",", editions ?? [])}', overwrite:{overwrite}");
 
         if (!uploadInfo.HasFiles())
             return l.ReturnFalse("no file uploaded");
 
-        var (fileName, stream) = uploadInfo.GetStream(0);
+        var (fileName, stream) = uploadInfo.GetStream();
         if (stream == null!)
             throw new NullReferenceException("File Stream is null, upload canceled");
 
-        var ok = extensionsBackendLazy.Value.InstallExtensionZip(zoneId, appId, stream, overwrite, originalZipFileName: fileName);
+        var ok = zipLazy.Value.InstallExtensionZip(appId, stream, overwrite, originalZipFileName: fileName, editions: editions);
         return l.ReturnAsOk(ok);
     }
 
     /// <summary>
-    /// Export an extension as a ZIP file
+    /// Inspect endpoint mirroring DNN behavior.
     /// </summary>
-    public THttpResponseType Download(int zoneId, int appId, string name)
-        => exportExtensionLazy.Value.Export(zoneId, appId, name);
+    /// <param name="appId">App identifier</param>
+    /// <param name="name">Extension folder name</param>
+    /// <param name="edition">Optional edition name</param>
+    public ExtensionInspectResultDto Inspect(int appId, string name, string? edition = null)
+        => inspectorLazy.Value.Inspect(appId, name, edition);
+
+    /// <summary>
+    /// Create or replace the configuration of a specific App Extension.
+    /// </summary>
+    /// <param name="appId">App identifier</param>
+    /// <param name="name">Extension folder name under "/extensions"</param>
+    /// <param name="manifest">JSON to write as App_Data/extension.json</param>
+    /// <returns>true if saved</returns>
+    public bool Extension(int appId, string name, ExtensionManifest manifest)
+        => writerLazy.Value.SaveExtension(appId, name, manifest);
+
+    /// <summary>
+    /// Download (export) a specific extension as a ZIP file.
+    /// </summary>
+    /// <param name="appId">App identifier</param>
+    /// <param name="name">Extension folder name</param>
+    /// <returns>HTTP response containing the file data.</returns>
+    public THttpResponseType Download(int appId, string name)
+        => exportExtensionLazy.Value.Export(appId, name);
+    
+    /// <summary>
+    /// Delete an extension and optionally its data.
+    /// </summary>
+    /// <param name="appId">App identifier</param>
+    /// <param name="name">Extension folder name</param>
+    /// <param name="edition">Optional edition name</param>
+    /// <param name="force">Force deletion even when files or data changed.</param>
+    /// <param name="withData">Delete related data when true (requires force).</param>
+    /// <returns>true if deleted</returns>
+    public bool Delete(int appId, string name, string? edition = null, bool force = false, bool withData = false)
+        => deleteLazy.Value.DeleteExtension(appId, name, edition, force, withData);
 }

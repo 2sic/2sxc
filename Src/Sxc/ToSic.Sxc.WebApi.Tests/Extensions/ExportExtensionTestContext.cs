@@ -13,19 +13,20 @@ using ToSic.Sxc.Services;
 using ToSic.Sys.Coding;
 using ToSic.Sys.DI;
 using ToSic.Sys.Logging;
-using ToSic.Sys.Users;
+using ToSic.Eav.Apps.Sys.FileSystemState;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
 /// <summary>
-/// Test context for ExportExtension tests providing setup/teardown and test extension creation
+/// Test context for ExtensionExportService tests providing setup/teardown and test extension creation
 /// </summary>
 internal sealed class ExportExtensionTestContext : IDisposable
 {
     #region Properties
 
     public string TempRoot { get; }
-    public ExportExtension ExportBackend { get; }
+    public ExtensionExportService ExportBackend { get; }
 
     #endregion
 
@@ -33,7 +34,7 @@ internal sealed class ExportExtensionTestContext : IDisposable
 
     private readonly ServiceProvider _sp;
 
-    private ExportExtensionTestContext(string tempRoot, ServiceProvider sp, ExportExtension exportBackend)
+    private ExportExtensionTestContext(string tempRoot, ServiceProvider sp, ExtensionExportService exportBackend)
     {
         TempRoot = tempRoot;
         _sp = sp;
@@ -49,22 +50,24 @@ internal sealed class ExportExtensionTestContext : IDisposable
         services.AddSingleton<IAppReaderFactory, FakeAppReaderFactory>();
         services.AddSingleton<IJsonService, SimpleJsonService>();
             
-        var sp = services.BuildServiceProvider() as ServiceProvider 
+        var sp = services.BuildServiceProvider() 
             ?? throw new InvalidOperationException("Failed to build service provider");
 
         var appReadersLazy = new LazySvc<IAppReaderFactory>(sp);
-        var jsonLazy = new LazySvc<IJsonService>(sp);
         var contentExportLazy = new LazySvc<ContentExportApi>(sp);
 
         var site = new FakeSite(tempRoot);
         var appPathSvc = new FakeAppPathsMicroSvc(tempRoot);
-        var user = new FakeUser();
 
-        var exportBackend = new ExportExtension(
+        // Create manifest service
+        var manifestService = new ExtensionManifestService();
+
+        var exportBackend = new ExtensionExportService(
             appReadersLazy, 
             site, 
             appPathSvc, 
-            contentExportLazy);
+            contentExportLazy,
+            manifestService);
 
         return new ExportExtensionTestContext(tempRoot, sp, exportBackend);
     }
@@ -74,18 +77,30 @@ internal sealed class ExportExtensionTestContext : IDisposable
     #region Setup Helpers
 
     /// <summary>
-    /// Setup a test extension with given configuration
+    /// Setup a test extension with given manifest
     /// </summary>
-    public void SetupExtension(string name, object config)
+    public void SetupExtension(string name, ExtensionManifest manifest)
     {
         var extDir = Path.Combine(TempRoot, FolderConstants.AppExtensionsFolder, name);
         var dataDir = Path.Combine(extDir, FolderConstants.DataFolderProtected);
         Directory.CreateDirectory(dataDir);
-            
+
         var jsonPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
-        var json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
+
+        // Sanitize JsonElements (Undefined -> null) then serialize directly
+        var sanitized = manifest with
+        {
+            DataBundles = SanitizeJsonElement(manifest.DataBundles),
+            InputTypeAssets = SanitizeJsonElement(manifest.InputTypeAssets),
+            Releases = SanitizeJsonElement(manifest.Releases),
+        };
+
+        var json = JsonSerializer.Serialize(sanitized, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(jsonPath, json, new UTF8Encoding(false));
     }
+
+    private static readonly JsonElement JsonNullElement = JsonDocument.Parse("null").RootElement.Clone();
+    private static JsonElement SanitizeJsonElement(JsonElement el) => el.ValueKind == JsonValueKind.Undefined ? JsonNullElement : el;
 
     /// <summary>
     /// Create extension files in dist folder
@@ -107,8 +122,7 @@ internal sealed class ExportExtensionTestContext : IDisposable
     /// </summary>
     public void CreateAppCodeFiles(string name, params (string fileName, string content)[] files)
     {
-        var appCodePath = Path.Combine(TempRoot, FolderConstants.AppCodeFolder, 
-            FolderConstants.AppExtensionsFolder, name);
+        var appCodePath = Path.Combine(TempRoot, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, name);
         Directory.CreateDirectory(appCodePath);
 
         foreach (var (fileName, content) in files)
@@ -193,24 +207,6 @@ internal sealed class ExportExtensionTestContext : IDisposable
         public string CurrentCultureCode { get; } = "en-us";
         public string DefaultCultureCode { get; } = "en-us";
         public int ZoneId { get; } = 1;
-    }
-
-    private class FakeUser : IUser
-    {
-        public int Id => 1;
-        public Guid Guid => System.Guid.NewGuid();
-        public string IdentityToken => "test-token";
-        public string Username => "test-user";
-        public string Name => "Test User";
-        public string Email => "test@example.com";
-        public bool IsSystemAdmin => true;
-        public bool IsSiteAdmin => true;
-        public bool IsContentAdmin => true;
-        public bool IsContentEditor => true;
-        public bool IsDesigner => true;
-        public bool IsSiteDeveloper => true;
-        public bool IsAnonymous => false;
-        public List<int> Roles => [];
     }
 
     #endregion

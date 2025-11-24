@@ -1,6 +1,7 @@
-using System.Text.Json;
 using System.Web;
+using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Sxc.Backend.Admin;
+using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using RealController = ToSic.Sxc.Backend.Admin.AppExtensionsControllerReal;
 
@@ -26,17 +27,47 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    [JsonFormatter(Casing = Casing.Camel)]
-    public bool Extension([FromUri] int zoneId, [FromUri] int appId, [FromUri] string name, [FromBody] JsonElement configuration)
-        => Real.Extension(zoneId, appId, name, configuration);
+    public PreflightResultDto InstallPreflight(int appId, [FromUri] string[] editions = null)
+        => Real.InstallPreflight(new(Request, HttpContext.Current.Request), appId, editions);
 
     /// <inheritdoc />
+    [ActionName("installExtension")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public bool Install([FromUri] int zoneId, [FromUri] int appId, [FromUri] bool overwrite = true)
-        => Real.Install(new(Request, HttpContext.Current.Request), zoneId, appId, overwrite);
+    public bool Install(int appId, [FromUri] string[] editions = null, bool overwrite = false)
+        => Real.Install(new(Request, HttpContext.Current.Request), appId, editions, overwrite);
+
+    /// <inheritdoc />
+    [HttpGet]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [JsonFormatter(Casing = Casing.Camel)]
+    public ExtensionInspectResultDto Inspect(int appId, string name, string edition = null)
+        => Real.Inspect(appId, name, edition);
+
+    /// <inheritdoc />
+    /// Update/create endpoint using PUT with name as route segment.
+    [Route("api/2sxc/admin/[controller]/{name}")]
+    [ValidateAntiForgeryToken]
+    [SupportedModules(DnnSupportedModuleNames)]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [JsonFormatter(Casing = Casing.Camel)]
+    public bool Extension(int appId, [FromUri] string name, [FromBody] ExtensionManifest configuration)
+        => Real.Extension(appId, name, configuration);
+
+    /// <summary>
+    /// Alias POST endpoint for front-ends posting to /appExtensions/extensions with query parameters.
+    /// Matches plural POST behavior to avoid 405 errors if client uses POST.
+    /// </summary>
+    [ActionName("extensions")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [SupportedModules(DnnSupportedModuleNames)]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [JsonFormatter(Casing = Casing.Camel)]
+    public bool ExtensionsPostAlias(int appId, string name, [FromBody] ExtensionManifest configuration)
+        => Real.Extension(appId, name, configuration);
 
     /// <inheritdoc />
     [HttpGet]
@@ -44,6 +75,15 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     //[ValidateAntiForgeryToken]
     //[SupportedModules(DnnSupportedModuleNames)]
     [DnnAuthorize(StaticRoles = "Administrators")]
-    public HttpResponseMessage Download([FromUri] int zoneId, [FromUri] int appId, [FromUri] string name)
-        => Real.Download(zoneId, appId, name);
+    public HttpResponseMessage Download(int appId, string name)
+        => Real.Download(appId, name);
+
+    /// <inheritdoc />
+    [HttpDelete]
+    [ValidateAntiForgeryToken]
+    [SupportedModules(DnnSupportedModuleNames)]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [JsonFormatter(Casing = Casing.Camel)]
+    public bool Delete(int appId, string name, string edition = null, bool force = false, bool withData = false)
+        => Real.Delete(appId, name, edition, force, withData);
 }

@@ -1,10 +1,11 @@
 using System.IO.Compression;
 using System.Text.Json;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
 /// <summary>
-/// Helper methods for ExportExtension tests
+/// Helper methods for ExtensionExportService tests
 /// </summary>
 internal static class ExportExtensionTestHelpers
 {

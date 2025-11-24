@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Sys.Insights;
 using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.ImportExport;
@@ -24,6 +25,7 @@ using ToSic.Sxc.Render.Sys.ResourceExtractor;
 using ToSic.Sxc.WebApi.Sys;
 using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Backend;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -41,11 +43,13 @@ public static class StartupWebApi
 
         // Backends
         services.TryAddTransient<AppsBackend>();
-        services.TryAddTransient<ExportExtension>();
-        services.TryAddTransient<ExtensionsBackend>();
-        services.TryAddTransient<ExtensionsReaderBackend>();
-        services.TryAddTransient<ExtensionsWriterBackend>();
-        services.TryAddTransient<ExtensionsZipInstallerBackend>();
+        services.TryAddTransient<ExtensionExportService>();
+        services.TryAddTransient<ExtensionReaderBackend>();
+        services.TryAddTransient<ExtensionWriterBackend>();
+        services.TryAddTransient<ExtensionInstallBackend>();
+        services.TryAddTransient<ExtensionManifestService>();
+        services.TryAddTransient<ExtensionInspectBackend>();
+        services.TryAddTransient<ExtensionDeleteBackend>();
         services.TryAddTransient<EntityBackend>();
         services.TryAddTransient<EditLoadBackend>();
         services.TryAddTransient<EditLoadPrefetchHelper>();

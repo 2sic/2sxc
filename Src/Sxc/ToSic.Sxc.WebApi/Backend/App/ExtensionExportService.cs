@@ -1,7 +1,7 @@
 using System.IO.Compression;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Nodes;
+using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.WebApi.Sys.ImportExport;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.ImportExport.Sys.Zip;
@@ -24,12 +24,14 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 namespace ToSic.Sxc.Backend.App;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExportExtension(
+public class ExtensionExportService(
     LazySvc<IAppReaderFactory> appReadersLazy,
     ISite site,
     IAppPathsMicroSvc appPathSvc,
-    LazySvc<ContentExportApi> contentExport)
-    : ServiceBase("Bck.ExtExp", connect: [appReadersLazy, site, appPathSvc])
+    LazySvc<ContentExportApi> contentExport,
+    ExtensionManifestService manifestService
+    )
+    : ServiceBase("Bck.ExtExp", connect: [appReadersLazy, site, appPathSvc, manifestService])
 {
     /// <summary>
     /// ZIP file name format, with placeholders for name and version
@@ -41,13 +43,9 @@ public class ExportExtension(
     /// </summary>
     private const string DefaultVersion = "00.00.01";
 
-    private const string DataIncluded = "dataInside";
-    private const string DataBundles = "dataBundles";
-    private const string AppCodeInside = "appCodeInside";
-
-    public THttpResponseType Export(int zoneId, int appId, string name)
+    public THttpResponseType Export(int appId, string name)
     {
-        var l = Log.Fn<THttpResponseType>($"export extension z#{zoneId}, a#{appId}, name:'{name}'");
+        var l = Log.Fn<THttpResponseType>($"export extension a#{appId}, name:'{name}'");
 
         if (string.IsNullOrWhiteSpace(name))
             throw l.Ex(new ArgumentException(@"Extension name is required", nameof(name)));
@@ -66,66 +64,37 @@ public class ExportExtension(
             throw l.Ex(new DirectoryNotFoundException($"Extension folder not found: {name}"));
         l.A($"extension '{name}' folder found: '{extensionPath}'");
 
+        var extensionManifestFile = manifestService.GetManifestFile(new(extensionPath));
+
+        if (!extensionManifestFile.Exists)
+            throw l.Ex(new FileNotFoundException($"{FolderConstants.AppExtensionJsonFile} not found in extension: {name}"));
+
+        l.A($"{FolderConstants.AppExtensionJsonFile} found: '{extensionManifestFile.FullName}'");
+
+        // 2. Read manifest
+        var manifest = manifestService.LoadManifest(extensionManifestFile)
+                       ?? throw l.Ex(new InvalidOperationException(
+                           $"{FolderConstants.AppExtensionJsonFile} could not be loaded"));
+        l.A($"{FolderConstants.AppExtensionJsonFile} loaded: version:'{manifest.Version}'");
+
+        // 3. Modify manifest for export
+        var modifiedManifest = ModifyExtensionManifest(manifest, appId);
+        l.A($"Modified manifest: version:'{modifiedManifest.Version}', isInstalled:{modifiedManifest.IsInstalled}");
+
+        // compute extension data path under the extension folder (protected data folder)
         var extensionDataPath = Path.Combine(extensionPath, FolderConstants.DataFolderProtected);
-        var extensionJsonPath = Path.Combine(extensionDataPath, FolderConstants.AppExtensionJsonFile);
 
-        if (!File.Exists(extensionJsonPath))
-            throw l.Ex(new FileNotFoundException(
-                $"{FolderConstants.AppExtensionJsonFile} not found in extension: {name}"));
-        l.A($"{FolderConstants.AppExtensionJsonFile} found: '{extensionJsonPath}'");
+        // 4. Collect files to include
+        var filesToInclude = CollectFilesToInclude(extensionPath, modifiedManifest, appPaths, name);
 
-        // 2. Read and modify extension.json
-        var extensionJson = JsonNode.Parse(File.ReadAllText(extensionJsonPath)) as JsonObject
-                            ?? throw l.Ex(new InvalidOperationException(
-                                $"{FolderConstants.AppExtensionJsonFile} is not a valid JSON object"));
-        l.A($"{FolderConstants.AppExtensionJsonFile} parsed");
-        l.A($"\n{ToNiceJson(extensionJson)}\n");
+        // 5. Handle data bundles
+        var bundles = ExportDataBundlesIfNeeded(modifiedManifest, extensionDataPath, name, appId);
 
-        var modifiedJson = ModifyExtensionJson(extensionJson, appId);
-        l.A($"\n{ToNiceJson(modifiedJson)}\n");
-
-        // 3. Collect files to include
-        var filesToInclude = CollectFilesToInclude(extensionPath, modifiedJson, appPaths, name);
-
-        // 4. Handle data bundles
-        var bundles = new List<(string sourcePath, string zipPath, string content)>();
-        var hasDataBundles = extensionJson.TryGetPropertyValue(DataIncluded, out var hasDataBundlesNode)
-                             && hasDataBundlesNode?.GetValue<bool>() == true;
-        if (hasDataBundles && modifiedJson.TryGetPropertyValue(DataBundles, out var bundlesNode))
-        {
-            // Convert bundlesNode to JsonArray, handling both string and array cases
-            JsonArray bundlesArray;
-            switch (bundlesNode)
-            {
-                case JsonValue jsonValue when jsonValue.TryGetValue<string>(out var singleBundle):
-                    // Single bundle as string - convert to array
-                    bundlesArray = [singleBundle];
-                    l.A($"Single bundle found, converted to array: {singleBundle}");
-                    break;
-                case JsonArray existingArray:
-                    // Already an array
-                    bundlesArray = existingArray;
-                    break;
-                default:
-                    // Unexpected type
-                    l.A($"Unexpected bundles type: {bundlesNode?.GetType().Name}, skipping");
-                    bundlesArray = [];
-                    break;
-            }
-
-            if (bundlesArray.Count > 0)
-            {
-                l.A($"Exporting {bundlesArray.Count} data bundles");
-                bundles = ExportDataBundles(bundlesArray, extensionDataPath, name, appId);
-            }
-        }
-
-        // 5. Create ZIP using Zipping helper
-        var versionString = (modifiedJson["version"]?.GetValue<string>())
-            .UseFallbackIfNoValue(DefaultVersion);
+        // 6. Create ZIP using Zipping helper
+        var versionString = modifiedManifest.Version.UseFallbackIfNoValue(DefaultVersion);
         var fileName = string.Format(ZipFileNameFormat, name, versionString);
 
-        using var memoryStream = CreateZipArchive(filesToInclude, bundles, modifiedJson, name, versionString);
+        using var memoryStream = CreateZipArchive(filesToInclude, bundles, modifiedManifest, name, versionString);
         memoryStream.Position = 0;
         var fileBytes = memoryStream.ToArray();
 
@@ -146,11 +115,12 @@ public class ExportExtension(
         WriteIndented = true,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
+
     private string ToNiceJson(object data) => JsonSerializer.Serialize(data, JsonSerializationIndented);
 
     private MemoryStream CreateZipArchive(List<(string sourcePath, string zipPath)> filesToInclude,
         List<(string sourcePath, string zipPath, string content)> bundles,
-        JsonObject extensionJson,
+        ExtensionManifest manifest,
         string extensionName,
         string versionString)
     {
@@ -168,7 +138,7 @@ public class ExportExtension(
             // Add modified extension.json
             var basePath = $"{FolderConstants.AppExtensionsFolder}/{extensionName}/{FolderConstants.DataFolderProtected}";
             var extensionJsonPath = $"{basePath}/{FolderConstants.AppExtensionJsonFile}";
-            var finalJsonString = ToNiceJson(extensionJson);
+            var finalJsonString = ExtensionManifestSerializer.Serialize(manifest, JsonSerializationIndented);
             zipping.AddTextEntry(archive, extensionJsonPath, finalJsonString, new UTF8Encoding(false));
             l.A($"Added modified {FolderConstants.AppExtensionJsonFile} to ZIP");
 
@@ -197,63 +167,78 @@ public class ExportExtension(
     }
 
 
-    private JsonObject ModifyExtensionJson(JsonObject json, int appId)
+    private ExtensionManifest ModifyExtensionManifest(ExtensionManifest manifest, int appId)
     {
-        var l = Log.Fn<JsonObject>();
+        var l = Log.Fn<ExtensionManifest>();
 
         l.A($"Modifying {FolderConstants.AppExtensionJsonFile}");
 
         // Set isInstalled to true
-        json["isInstalled"] = true;
+        var modified = manifest with { IsInstalled = true };
         l.A("set isInstalled to true");
 
         // Process releases if they exist
-        if (json.TryGetPropertyValue("releases", out var releasesNode) && releasesNode is JsonArray releases)
+        if (manifest.Releases.ValueKind == JsonValueKind.Array)
         {
-            var appReader = appReadersLazy.Value.Get(appId);
-
-            l.A($"Processing {releases.Count} release references");
-            var newReleases = new JsonArray();
-
-            foreach (var releaseRef in releases)
+            var releases = manifest.Releases.EnumerateArray().ToList();
+            if (releases.Count > 0)
             {
-                var guidString = releaseRef?.GetValue<string>();
-                if (string.IsNullOrEmpty(guidString) || !Guid.TryParse(guidString, out var guid))
+                var appReader = appReadersLazy.Value.Get(appId);
+
+                l.A($"Processing {releases.Count} release references");
+                var expandedReleases = new List<object>();
+
+                foreach (var releaseRef in releases)
                 {
-                    l.A($"Skipping invalid release GUID: {guidString}");
-                    continue;
+                    if (releaseRef.ValueKind != JsonValueKind.String)
+                    {
+                        l.A($"Skipping non-string release reference: {releaseRef.ValueKind}");
+                        continue;
+                    }
+
+                    var guidString = releaseRef.GetString();
+                    if (string.IsNullOrEmpty(guidString) || !Guid.TryParse(guidString, out var guid))
+                    {
+                        l.A($"Skipping invalid release GUID: {guidString}");
+                        continue;
+                    }
+
+                    // Look up release entity from app data
+                    var releaseEntity = appReader.List.FirstOrDefault(e => e.EntityGuid == guid);
+
+                    if (releaseEntity == null)
+                    {
+                        l.A($"Release entity not found for GUID: {guid}");
+                        continue;
+                    }
+
+                    // Create release object
+                    var releaseObj = new
+                    {
+                        version = releaseEntity.Get<string>("Version") ?? DefaultVersion,
+                        breaking = releaseEntity.Get<bool>("Breaking"),
+                        notes = releaseEntity.Get<string>("Notes") ?? ""
+                    };
+
+                    expandedReleases.Add(releaseObj);
                 }
 
-                // Look up release entity from app data
-                var releaseEntity = appReader.List.FirstOrDefault(e => e.EntityGuid == guid);
+                // Serialize expanded releases back to JsonElement
+                var expandedJson = JsonSerializer.Serialize(expandedReleases, JsonSerializationIndented);
+                using var expandedDoc = JsonDocument.Parse(expandedJson);
+                var expandedElement = expandedDoc.RootElement.Clone();
+                modified = modified with { Releases = expandedElement };
 
-                if (releaseEntity == null)
-                {
-                    l.A($"Release entity not found for GUID: {guid}");
-                    continue;
-                }
-
-                // Create release object
-                var releaseObj = new JsonObject
-                {
-                    ["version"] = releaseEntity.Get<string>("Version") ?? DefaultVersion,
-                    ["breaking"] = releaseEntity.Get<bool>("Breaking"),
-                    ["notes"] = releaseEntity.Get<string>("Notes") ?? ""
-                };
-
-                newReleases.Add(releaseObj);
+                l.A($"Expanded {expandedReleases.Count} releases");
             }
-
-            json["releases"] = newReleases;
-            l.A($"Expanded {newReleases.Count} releases");
         }
 
-        return l.ReturnAsOk(json);
+        return l.ReturnAsOk(modified);
     }
 
     private List<(string sourcePath, string zipPath)> CollectFilesToInclude(
         string extensionPath,
-        JsonObject extensionJson,
+        ExtensionManifest manifest,
         IAppPaths appPaths,
         string extensionName)
     {
@@ -268,9 +253,7 @@ public class ExportExtension(
             exclude: [$"{FolderConstants.DataFolderProtected}\\{FolderConstants.AppExtensionJsonFile}"]);
 
         // 2. Check for hasAppCode setting
-        var hasAppCode = extensionJson.TryGetPropertyValue(AppCodeInside, out var hasAppCodeNode) &&
-                         hasAppCodeNode?.GetValue<bool>() == true;
-        if (hasAppCode)
+        if (manifest.HasAppCode)
         {
             l.A($"Extension has AppCode, including AppCode/{FolderConstants.AppExtensionsFolder} folder");
             var appCodeExtPath = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppCodeFolder,
@@ -284,25 +267,63 @@ public class ExportExtension(
         return l.ReturnAsOk(files);
     }
 
-    private List<(string bundlePath, string zipFile, string fileContents)> ExportDataBundles(JsonArray bundles,
-        string extensionDataPath, string extensionName, int appId)
+    private List<(string bundlePath, string zipFile, string fileContents)> ExportDataBundlesIfNeeded(
+        ExtensionManifest manifest,
+        string extensionDataPath,
+        string extensionName,
+        int appId)
     {
         var l = Log.Fn<List<(string, string, string)>>();
 
+        if (!manifest.DataInside)
+            return l.Return([], "no data bundles");
+
+        var bundles = manifest.DataBundles;
+        if (bundles.ValueKind == JsonValueKind.Undefined || bundles.ValueKind == JsonValueKind.Null)
+            return l.Return([], "dataBundles is null/undefined");
+
+        // Convert to list of GUIDs
+        var guidList = new List<Guid>();
+        switch (bundles.ValueKind)
+        {
+            case JsonValueKind.String:
+                // Single bundle as string
+                var singleGuidStr = bundles.GetString();
+                if (!string.IsNullOrEmpty(singleGuidStr) && Guid.TryParse(singleGuidStr, out var singleGuid))
+                {
+                    guidList.Add(singleGuid);
+                    l.A($"Single bundle found: {singleGuid}");
+                }
+                break;
+            case JsonValueKind.Array:
+                // Array of bundles
+                foreach (var bundleRef in bundles.EnumerateArray())
+                {
+                    if (bundleRef.ValueKind == JsonValueKind.String)
+                    {
+                        var guidString = bundleRef.GetString();
+                        if (!string.IsNullOrEmpty(guidString) && Guid.TryParse(guidString, out var guid))
+                            guidList.Add(guid);
+                    }
+                }
+                l.A($"Found {guidList.Count} bundle references");
+                break;
+            default:
+                l.A($"Unexpected bundles type: {bundles.ValueKind}, skipping");
+                break;
+        }
+
+        if (guidList.Count == 0)
+            return l.Return([], "no valid bundle GUIDs");
+
+        l.A($"Exporting {guidList.Count} data bundles");
         var bundlesExport = contentExport.Value.Init(appId);
         var files = new List<(string, string, string)>();
         var bundlesDir = Path.Combine(extensionDataPath, FolderConstants.DataSubFolderSystem,
             AppDataFoldersConstants.BundlesFolder);
 
-        foreach (var bundleRef in bundles)
+        foreach (var guid in guidList)
         {
-            var guidString = bundleRef?.GetValue<string>();
-            if (string.IsNullOrEmpty(guidString) || !Guid.TryParse(guidString, out var guid))
-            {
-                l.A($"Skipping invalid bundle GUID: {guidString}");
-                continue;
-            }
-
             // Export bundle entity as JSON
             var (export, fileContent) = bundlesExport.CreateBundleExport(guid, 2);
             var bundlePath = Path.Combine(bundlesDir, export.FileName);
