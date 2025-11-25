@@ -85,7 +85,7 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
     public ICacheSpecs SetAbsoluteExpiration(DateTimeOffset absoluteExpiration)
         => WithChanges(writeConfig: WriteConfig with { AbsoluteExpiration = absoluteExpiration });
 
-    public ICacheSpecs SetSlidingExpiration(TimeSpan? timeSpan = null, NoParamOrder protector = default, int? seconds = null) =>
+    public ICacheSpecs SetSlidingExpiration(TimeSpan? timeSpan = null, NoParamOrder npo = default, int? seconds = null) =>
         WithChanges(keyConfig: KeyConfig with
         {
             ForElevation = KeyConfig.ForElevation.SetOne(
@@ -117,20 +117,20 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
 
     #region Watch App Data / Folder
 
-    public ICacheSpecs WatchAppData(NoParamOrder protector = default) =>
+    public ICacheSpecs WatchAppData(NoParamOrder npo = default) =>
         WithChanges(writeConfig: WriteConfig with { WatchAppData = true, });
 
-    public ICacheSpecs WatchAppFolder(NoParamOrder protector = default, bool? withSubfolders = default) =>
+    public ICacheSpecs WatchAppFolder(NoParamOrder npo = default, bool? withSubfolders = default) =>
         WithChanges(writeConfig: WriteConfig with { WatchAppFolder = true, WatchAppSubfolders = withSubfolders ?? true });
     
     #endregion
 
     #region Vary By Value
 
-    //public ICacheSpecs VaryBy(string value, NoParamOrder protector = default, bool caseSensitive = false)
+    //public ICacheSpecs VaryBy(string value, NoParamOrder npo = default, bool caseSensitive = false)
     //    => Next(value, "", caseSensitive: caseSensitive);
 
-    public ICacheSpecs VaryBy(string name, string value, NoParamOrder protector = default, bool caseSensitive = false) =>
+    public ICacheSpecs VaryBy(string name, string value, NoParamOrder npo = default, bool caseSensitive = false) =>
         WithChanges(writeConfig: WriteConfig with
         {
             AdditionalValues = [.. WriteConfig.AdditionalValues, (name, value, caseSensitive)]
@@ -141,7 +141,7 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
     #region Vary-By Custom User, QueryString, etc.
 
     /// <inheritdoc />
-    public ICacheSpecs VaryByPageParameters(string? names = default, NoParamOrder protector = default, bool caseSensitive = false)
+    public ICacheSpecs VaryByPageParameters(string? names = default, NoParamOrder npo = default, bool caseSensitive = false)
         => WithChanges(KeyConfig.Updated(CacheSpecConstants.ByPageParameters, names, caseSensitive));
 
     /// <summary>
@@ -152,7 +152,7 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
     /// <param name="names"></param>
     /// <param name="caseSensitive"></param>
     /// <returns></returns>
-    public ICacheSpecs VaryByParameters(IParameters parameters, NoParamOrder protector = default, string? names = default, bool caseSensitive = false) =>
+    public ICacheSpecs VaryByParameters(IParameters parameters, NoParamOrder npo = default, string? names = default, bool caseSensitive = false) =>
         WithChanges(writeConfig: WriteConfig with
             {
                 AdditionalParameters = [..WriteConfig.AdditionalParameters, (parameters, names, caseSensitive)]
@@ -162,7 +162,7 @@ internal record CacheSpecs : HelperRecordBase, ICacheSpecs
 
     #region VaryByModel Experimental
 
-    public ICacheSpecs VaryByModel(string? names = default, NoParamOrder protector = default, bool caseSensitive = false) =>
+    public ICacheSpecs VaryByModel(string? names = default, NoParamOrder npo = default, bool caseSensitive = false) =>
         WithChanges(KeyConfig with
             {
                 ByModel = CacheKeyConfigExtensions.Update(KeyConfig.ByModel, names, caseSensitive)

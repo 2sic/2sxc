@@ -14,7 +14,7 @@ public interface ICreateInstance: IGetCodePath
     /// Create an instance of code lying in a file near this
     /// </summary>
     /// <param name="virtualPath">path to the other code file to compile</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="name">Override the class name to compile - usually not required as it should match the file name</param>
     /// <param name="relativePath">optional relative path, will usually use the <see cref="IGetCodePath.CreateInstancePath"/></param>
     /// <param name="throwOnError">throw errors if compiling fails, recommended</param>
@@ -24,7 +24,7 @@ public interface ICreateInstance: IGetCodePath
     /// then it will automatically be initialized to support App, AsDynamic etc.
     /// </remarks>
     dynamic? CreateInstance(string virtualPath,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? name = null,
         string? relativePath = null,
         bool throwOnError = true);

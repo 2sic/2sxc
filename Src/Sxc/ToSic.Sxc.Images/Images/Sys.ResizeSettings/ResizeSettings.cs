@@ -53,7 +53,7 @@ internal record ResizeSettings : IResizeSettings, IResizeSettingsInternal
     /// </summary>
     public ResizeSettings(
         IResizeSettings original,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         int? width = null,
         int? height = null,
         double? aspectRatio = null,

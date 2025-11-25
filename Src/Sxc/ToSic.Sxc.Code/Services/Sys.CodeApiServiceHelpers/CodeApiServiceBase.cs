@@ -41,7 +41,7 @@ public abstract class CodeApiServiceBase(CodeApiServiceBase.Dependencies service
         public LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder { get; } = modAndBlockBuilder;
     }
 
-    protected IApp GetApp(Generator<App> appGenerator, NoParamOrder noParamOrder = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
+    protected IApp GetApp(Generator<App> appGenerator, NoParamOrder npo = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null)
     {
         MakeSureLogIsInHistory();
 

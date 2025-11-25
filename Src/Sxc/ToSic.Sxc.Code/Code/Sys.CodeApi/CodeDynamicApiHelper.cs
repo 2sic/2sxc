@@ -36,8 +36,8 @@ internal class CodeDynamicApiHelper(ExecutionContext exCtx) : CodeAnyApiHelper(e
         set => ExCtx.CreateInstancePath = value;
     }
 
-    public dynamic? CreateInstance(string virtualPath, NoParamOrder noParamOrder = default, string? name = null,
+    public dynamic? CreateInstance(string virtualPath, NoParamOrder npo = default, string? name = null,
         string? relativePath = null, bool throwOnError = true) =>
-        ExCtx.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
+        ExCtx.CreateInstance(virtualPath, npo, name, relativePath, throwOnError);
 
 }

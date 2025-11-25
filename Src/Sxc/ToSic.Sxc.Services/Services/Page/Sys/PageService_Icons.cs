@@ -7,7 +7,7 @@ partial class PageService
 {
     /// <inheritdoc />
     public string AddIcon(string path,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string rel = "",
         int size = 0, string? type = null)
     {
@@ -17,7 +17,7 @@ partial class PageService
 
     /// <inheritdoc />
     public string AddIconSet(string path,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? favicon = null, IEnumerable<string>? rels = null, IEnumerable<int>? sizes = null)
     {
         foreach (var s in IconSet.GenerateIconSet(path, favicon, rels, sizes))

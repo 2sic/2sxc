@@ -68,8 +68,8 @@ internal partial class PreWrapObject: PreWrapBase, IPropertyLookup, IHasJsonSour
 
     public override bool ContainsKey(string name) => PropDic.ContainsKey(name);
 
-    public override IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default)
-        => FilterKeysIfPossible(noParamOrder, only, PropDic.Keys);
+    public override IEnumerable<string> Keys(NoParamOrder npo = default, IEnumerable<string>? only = default)
+        => FilterKeysIfPossible(npo, only, PropDic.Keys);
 
     #endregion
 

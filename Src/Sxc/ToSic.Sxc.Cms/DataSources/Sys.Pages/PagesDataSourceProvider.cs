@@ -18,7 +18,7 @@ public abstract class PagesDataSourceProvider(string logName, object[]? connect 
     /// </summary>
     /// <returns></returns>
     public abstract List<PageModelRaw> GetPagesInternal(
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         bool includeHidden = default,
         bool includeDeleted = default,
         bool includeAdmin = default,

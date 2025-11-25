@@ -15,7 +15,7 @@ partial class EditService
     #region Scripts and CSS includes
 
     /// <inheritdoc/>
-    public string? Enable(NoParamOrder noParamOrder = default, bool? js = null, bool? api = null,
+    public string? Enable(NoParamOrder npo = default, bool? js = null, bool? api = null,
         bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null)
     {
         var l = Log.Fn<string>();

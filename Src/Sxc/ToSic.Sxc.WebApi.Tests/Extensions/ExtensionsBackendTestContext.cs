@@ -177,9 +177,9 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
             new JsonSerializerOptions(Options) { WriteIndented = indentation > 0 });
         public T? To<T>(string json) => JsonSerializer.Deserialize<T>(json, Options);
         public object? ToObject(string json) => JsonSerializer.Deserialize<object>(json, Options);
-        public ITyped? ToTyped(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default) 
+        public ITyped? ToTyped(string json, NoParamOrder npo = default, string? fallback = default, bool? propsRequired = default) 
             => throw new NotImplementedException();
-        public IEnumerable<ITyped>? ToTypedList(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default) 
+        public IEnumerable<ITyped>? ToTypedList(string json, NoParamOrder npo = default, string? fallback = default, bool? propsRequired = default) 
             => throw new NotImplementedException();
     }
 

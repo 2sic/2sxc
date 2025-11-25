@@ -21,7 +21,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// If it's a list of entity-like things, the first one will be converted.
     /// </summary>
     [return: NotNullIfNotNull(nameof(source))]
-    TCustom? AsCustom<TCustom>(object? source, NoParamOrder protector = default, bool mock = false)
+    TCustom? AsCustom<TCustom>(object? source, NoParamOrder npo = default, bool mock = false)
         where TCustom : class, ICanWrapData;
 
     [return: NotNullIfNotNull(nameof(item))]
@@ -34,7 +34,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// <remarks>
     /// Never null, unless explicitly requested with `nullIfNull`, otherwise it would return an empty list.
     /// </remarks>
-    IEnumerable<TCustom> AsCustomList<TCustom>(object? source, NoParamOrder protector, bool nullIfNull)
+    IEnumerable<TCustom> AsCustomList<TCustom>(object? source, NoParamOrder npo, bool nullIfNull)
         where TCustom : class, ICanWrapData;
 
     [return: NotNullIfNotNull(nameof(data))]
@@ -78,7 +78,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     /// Convert a list of Entities into a DynamicEntity.
     /// Only used in DynamicCodeRoot.
     /// </summary>
-    IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, ConvertItemSettings settings, NoParamOrder protector = default, IEntity? parent = default, string? field = default);
+    IDynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, ConvertItemSettings settings, NoParamOrder npo = default, IEntity? parent = default, string? field = default);
 
     /// <summary>
     /// Convert any object into a dynamic list.
@@ -93,7 +93,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     object? AsDynamicFromObject(object dynObject);
 
     dynamic? MergeDynamic(object[] entities);
-    ITypedItem? AsItem(object? data, ConvertItemSettings settings, NoParamOrder noParamOrder = default, ITypedItem? fallback = default);
+    ITypedItem? AsItem(object? data, ConvertItemSettings settings, NoParamOrder npo = default, ITypedItem? fallback = default);
 
     /// <summary>
     /// Quick convert an entity to item - if not null, otherwise return null.
@@ -105,7 +105,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     ITypedItem? AsItem(IEntity? entity, ConvertItemSettings settings);
 
     IEnumerable<ITypedItem> EntitiesToItems(IEnumerable<IEntity> entities, ConvertItemSettings settings);
-    IEnumerable<ITypedItem> AsItems(object list, ConvertItemSettings settings, NoParamOrder noParamOrder = default, IEnumerable<ITypedItem>? fallback = default);
+    IEnumerable<ITypedItem> AsItems(object list, ConvertItemSettings settings, NoParamOrder npo = default, IEnumerable<ITypedItem>? fallback = default);
     void SetCompatibilityLevel(int compatibilityLevel);
     void SetFallbacks(ISite site, int? compatibility = default, /*AdamManager*/ object? adamManagerPrepared = default);
     object? Json2Jacket(string json, string? fallback = default);
@@ -143,7 +143,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     IFile? File(IField field);
 
     IHtmlTag Html(object thing,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? container = default,
         string? classes = default,
         bool debug = default,
@@ -154,7 +154,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     IResponsivePicture Picture(
         object? link = null,
         object? settings = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakMedia, ITweakMedia>? tweak = default,
         object? factor = default,
         object? width = default,
@@ -171,7 +171,7 @@ public interface ICodeDataFactory: ICanGetService, IHasLog
     IResponsiveImage Img(
         object? link = null,
         object? settings = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakMedia, ITweakMedia>? tweak = default,
         object? factor = default,
         object? width = default,

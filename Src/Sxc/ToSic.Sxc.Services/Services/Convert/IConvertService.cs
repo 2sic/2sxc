@@ -64,11 +64,11 @@ public interface IConvertService
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="value"></param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails.</param>
     /// <returns></returns>
     T? To<T>(object value,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         T? fallback = default);
 
     /// <summary>
@@ -170,11 +170,11 @@ public interface IConvertService
     /// </summary>
     /// <param name="value">The value to convert</param>
     /// <param name="fallback">Fallback in case conversion fails or result is null</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallbackOnNull">Determine that nulls should also fallback, default is `true`</param>
     string? ToString(object value,
         string? fallback = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         bool fallbackOnNull = true);
 
     /// <summary>

@@ -26,7 +26,7 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
 
     /// <inheritdoc />
     public string To(
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         int? pageId = null,
         string? api = null,
         object? parameters = null,
@@ -111,7 +111,7 @@ public abstract class LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPa
         string? url = default,
         object? settings = default,
         object? factor = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         IField? field = default,
         object? width = default,
         object? height = default,

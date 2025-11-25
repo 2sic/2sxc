@@ -17,8 +17,8 @@ internal class PreWrapJsonObject(CodeJsonWrapper wrapper, JsonObject item)
 
     #region Keys
 
-    public override IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default) 
-        => TypedHelpers.FilterKeysIfPossible(noParamOrder, only, item.Select(p => p.Key));
+    public override IEnumerable<string> Keys(NoParamOrder npo = default, IEnumerable<string>? only = default) 
+        => TypedHelpers.FilterKeysIfPossible(npo, only, item.Select(p => p.Key));
 
     public override bool ContainsKey(string name)
     {

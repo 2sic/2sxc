@@ -42,7 +42,7 @@ public interface ITypedCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IHas
     /// 
     /// For example in Mobius Forms, News etc. where a developer might create a new mail template and the editor can select it from the files in the folder.
     /// </remarks>
-    TService GetService<TService>(NoParamOrder protector = default, string? typeName = default) where TService : class;
+    TService GetService<TService>(NoParamOrder npo = default, string? typeName = default) where TService : class;
 
     #region Moving Properties
 
@@ -84,7 +84,7 @@ public interface ITypedCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IHas
     /// <inheritdoc cref="ITypedApi.AsItem"/>
     ITypedItem AsItem(
         object data,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         bool? propsRequired = default,
         bool? mock = default
     );
@@ -92,7 +92,7 @@ public interface ITypedCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IHas
     /// <inheritdoc cref="ITypedApi.AsItems"/>
     IEnumerable<ITypedItem> AsItems(
         object list,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         bool? propsRequired = default
     );
 
@@ -103,14 +103,14 @@ public interface ITypedCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IHas
     /// <inheritdoc cref="ITypedApi.AsTyped"/>
     ITyped AsTyped(
         object data,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         bool? propsRequired = default
     );
 
     /// <inheritdoc cref="ITypedApi.AsTypedList"/>
     IEnumerable<ITyped> AsTypedList(
         object list,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         bool? propsRequired = default
     );
 
@@ -152,7 +152,7 @@ public interface ITypedCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IHas
     /// Note that the class name in the file must match the file name, so `MyHelpers.cs` must have a `MyHelpers` class.
     /// </summary>
     /// <param name="path">The path, like `Helper.cs`, `./helper.cs`, `../../Helper.cs` or `/SomeFolderInApp/Helper.cs` (new 16.05)</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="className">Optional class name, if it doesn't match the file name (new 16.03)</param>
     /// <returns>, </returns>
     /// <remarks>
@@ -162,18 +162,18 @@ public interface ITypedCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IHas
     /// 
     /// In older code there was a similar `CreateInstance` method
     /// </remarks>
-    dynamic? GetCode(string path, NoParamOrder noParamOrder = default, string? className = default);
+    dynamic? GetCode(string path, NoParamOrder npo = default, string? className = default);
 
     #endregion
 
     #region As Conversions
 
     /// <inheritdoc cref="ITypedApi.As{T}"/>
-    T As<T>(object source, NoParamOrder protector = default, bool mock = default)
+    T As<T>(object source, NoParamOrder npo = default, bool mock = default)
         where T : class, ICanWrapData;
 
     /// <inheritdoc cref="ITypedApi.AsList{T}"/>
-    IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
+    IEnumerable<T> AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = default)
         where T : class, ICanWrapData;
 
     #endregion

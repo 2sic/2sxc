@@ -90,7 +90,7 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.Dependencie
     /// <param name="options"></param>
     protected void ProvideOut(
         Func<object> getList,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string name = DataSourceConstants.StreamDefaultName,
         Func<DataFactoryOptions>? options = default
     )

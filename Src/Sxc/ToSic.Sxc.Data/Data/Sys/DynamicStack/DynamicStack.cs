@@ -104,15 +104,15 @@ public class DynamicStack: DynamicObject,
     public dynamic? Get(string name) => GetHelper.Get(name);
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public dynamic? Get(string name, NoParamOrder noParamOrder = default, string? language = null, bool convertLinks = true, bool? debug = null)
-        => GetHelper.Get(name, noParamOrder, language, convertLinks, debug);
+    public dynamic? Get(string name, NoParamOrder npo = default, string? language = null, bool convertLinks = true, bool? debug = null)
+        => GetHelper.Get(name, npo, language, convertLinks, debug);
 
     public TValue? Get<TValue>(string name)
         => GetHelper.Get<TValue>(name);
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public TValue? Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue? fallback = default)
-        => GetHelper.Get(name, noParamOrder, fallback);
+    public TValue? Get<TValue>(string name, NoParamOrder npo = default, TValue? fallback = default)
+        => GetHelper.Get(name, npo, fallback);
 
     #endregion
 

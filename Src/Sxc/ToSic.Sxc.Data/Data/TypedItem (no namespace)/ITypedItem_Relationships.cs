@@ -8,16 +8,16 @@ partial interface ITypedItem
     #region parents / children
 
     /// <inheritdoc cref="ITypedRelationshipsDocs.Child"/>
-    ITypedItem? Child(string name, NoParamOrder noParamOrder = default, bool? required = default, GetRelatedOptions? options = default);
+    ITypedItem? Child(string name, NoParamOrder npo = default, bool? required = default, GetRelatedOptions? options = default);
 
     /// <inheritdoc cref="ITypedRelationshipsDocs.Children"/>
-    IEnumerable<ITypedItem> Children(string? field = default, NoParamOrder noParamOrder = default, string? type = default, bool? required = default, GetRelatedOptions? options = default);
+    IEnumerable<ITypedItem> Children(string? field = default, NoParamOrder npo = default, string? type = default, bool? required = default, GetRelatedOptions? options = default);
 
     /// <inheritdoc cref="ITypedRelationshipsDocs.Parent"/>
-    ITypedItem? Parent(NoParamOrder noParamOrder = default, bool? current = default, string? type = default, string? field = default, GetRelatedOptions? options = default);
+    ITypedItem? Parent(NoParamOrder npo = default, bool? current = default, string? type = default, string? field = default, GetRelatedOptions? options = default);
 
     /// <inheritdoc cref="ITypedRelationshipsDocs.Parents"/>
-    IEnumerable<ITypedItem> Parents(NoParamOrder noParamOrder = default, string? type = default, string? field = default, GetRelatedOptions? options = default);
+    IEnumerable<ITypedItem> Parents(NoParamOrder npo = default, string? type = default, string? field = default, GetRelatedOptions? options = default);
 
     #endregion
 
@@ -33,7 +33,7 @@ partial interface ITypedItem
     /// <remarks>
     /// New v17.05
     /// </remarks>
-    public T? Child<T>(string name, NoParamOrder protector = default, bool? required = default, GetRelatedOptions? options = default)
+    public T? Child<T>(string name, NoParamOrder npo = default, bool? required = default, GetRelatedOptions? options = default)
         where T : class, ICanWrapData, new();
 
     /// <summary>
@@ -53,7 +53,7 @@ partial interface ITypedItem
     /// New v17.05
     /// Never null, unless explicitly requested with `nullIfNull`, otherwise it would return an empty list.
     /// </remarks>
-    public IEnumerable<T> Children<T>(string? field = default, NoParamOrder protector = default,
+    public IEnumerable<T> Children<T>(string? field = default, NoParamOrder npo = default,
         string? type = default, bool? required = default, GetRelatedOptions? options = default)
         where T : class, ICanWrapData, new();
 
@@ -70,7 +70,7 @@ partial interface ITypedItem
     /// <remarks>
     /// New v17.06
     /// </remarks>
-    public T? Parent<T>(NoParamOrder protector = default, bool? current = default, string? type = default,
+    public T? Parent<T>(NoParamOrder npo = default, bool? current = default, string? type = default,
         string? field = default, GetRelatedOptions? options = default)
         where T : class, ICanWrapData, new();
 
@@ -91,7 +91,7 @@ partial interface ITypedItem
     /// New v17.06
     /// Never null. If not found, will return an empty list.
     /// </remarks>
-    public IEnumerable<T> Parents<T>(NoParamOrder protector = default,
+    public IEnumerable<T> Parents<T>(NoParamOrder npo = default,
         string? type = default, string? field = default, GetRelatedOptions? options = default)
         where T : class, ICanWrapData, new();
 

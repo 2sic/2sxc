@@ -19,7 +19,7 @@ partial record ToolbarBuilder
     /// <param name="mode"></param>
     /// <param name="target"></param>
     /// <returns></returns>
-    private IToolbarBuilder With(NoParamOrder noParamOrder = default, string? mode = default, object? target = default)
+    private IToolbarBuilder With(NoParamOrder npo = default, string? mode = default, object? target = default)
     {
         // Create clone before starting to log so it's in there too
         var clone = target == null

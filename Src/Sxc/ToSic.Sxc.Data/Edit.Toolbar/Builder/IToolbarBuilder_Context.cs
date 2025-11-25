@@ -30,13 +30,13 @@ public partial interface IToolbarBuilder
     /// 
     /// </summary>
     /// <param name="root"></param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="message">Optional message or a resources key such as `Resources.ToolbarShowingDemo`</param>
     /// <returns></returns>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP 16.02")]
     IToolbarBuilder DetectDemo(
         ICanBeEntity root,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? message = default);
 
     /// <summary>
@@ -85,7 +85,7 @@ public partial interface IToolbarBuilder
     /// * updated with roleNames/denyRoleNames v20
     /// </remarks>
     IToolbarBuilder Audience(
-        NoParamOrder protector = default,
+        NoParamOrder npo = default,
         bool? everyone = default,
         IEnumerable<string>? roleNames = default,
         IEnumerable<string>? denyRoleNames = default);

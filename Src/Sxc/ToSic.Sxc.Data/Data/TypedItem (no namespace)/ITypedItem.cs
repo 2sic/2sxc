@@ -36,11 +36,11 @@ public partial interface ITypedItem: ITyped, ICanBeEntity, ICanBeItem, IEquatabl
     /// This is a rich object used by other operations which need a lot of context about the item and the field.
     /// </summary>
     /// <param name="name">Name of the property</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns></returns>
     IField? Field(string name,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         bool? required = default);
 
 }

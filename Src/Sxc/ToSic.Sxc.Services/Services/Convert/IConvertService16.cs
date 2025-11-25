@@ -55,10 +55,10 @@ public interface IConvertService16
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="value">value to convert</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails. If not specified, will use `default(T)`</param>
     /// <returns></returns>
-    T? To<T>(object value, NoParamOrder noParamOrder = default, T? fallback = default);
+    T? To<T>(object value, NoParamOrder npo = default, T? fallback = default);
 
     ///// <summary>
     ///// Convert any object safely to bool.
@@ -74,10 +74,10 @@ public interface IConvertService16
     /// _Note that it's called ToBool, not ToBoolean, because the core type is also called bool, not boolean. This is different from `System.Convert.ToBoolean(...)`_
     /// </summary>
     /// <param name="value">value to convert</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails. Defaults to `false`.</param>
     /// <returns></returns>
-    bool ToBool(object value, NoParamOrder noParamOrder = default, bool fallback = default);
+    bool ToBool(object value, NoParamOrder npo = default, bool fallback = default);
 
     ///// <summary>
     ///// Convert any object safely to decimal.
@@ -90,9 +90,9 @@ public interface IConvertService16
     /// This does the same as <see cref="To{T}(object, NoParamOrder, T)"/> but this is easier to type in Razor.
     /// </summary>
     /// <param name="value">value to convert</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails. Defaults to `0`.</param>
-    decimal ToDecimal(object value, NoParamOrder noParamOrder = default, decimal fallback = default);
+    decimal ToDecimal(object value, NoParamOrder npo = default, decimal fallback = default);
 
     ///// <summary>
     ///// Convert any object safely to double.
@@ -105,9 +105,9 @@ public interface IConvertService16
     /// This does the same as <see cref="To{T}(object, NoParamOrder, T)"/> but this is easier to type in Razor.
     /// </summary>
     /// <param name="value">value to convert</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails. Defaults to `0`.</param>
-    double ToDouble(object value, NoParamOrder noParamOrder = default, double fallback = default);
+    double ToDouble(object value, NoParamOrder npo = default, double fallback = default);
 
     ///// <summary>
     ///// Convert any object safely to float.
@@ -124,9 +124,9 @@ public interface IConvertService16
     /// _Note that it's called ToFloat, not ToSingle, because the core type is also called float, not single. This is different from `System.Convert.ToSingle(...)`_
     /// </summary>
     /// <param name="value">value to convert</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails. Defaults to `0`.</param>
-    float ToFloat(object value, NoParamOrder noParamOrder = default, float fallback = default);
+    float ToFloat(object value, NoParamOrder npo = default, float fallback = default);
 
     ///// <summary>
     ///// Convert any object safely to standard int.
@@ -139,9 +139,9 @@ public interface IConvertService16
     /// This does the same as <see cref="To{T}(object, NoParamOrder, T)"/> but this is easier to type in Razor.
     /// </summary>
     /// <param name="value">value to convert</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails. Defaults to `0`.</param>
-    int ToInt(object value, NoParamOrder noParamOrder = default, int fallback = default);
+    int ToInt(object value, NoParamOrder npo = default, int fallback = default);
 
     ///// <summary>
     ///// Convert any object safely to a Guid
@@ -154,9 +154,9 @@ public interface IConvertService16
     /// This does the same as <see cref="To{T}(object, NoParamOrder, T)"/> but this is easier to type in Razor.
     /// </summary>
     /// <param name="value">value to convert</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails. Defaults to `Guid.Empty`.</param>
-    Guid ToGuid(object value, NoParamOrder noParamOrder = default, Guid fallback = default);
+    Guid ToGuid(object value, NoParamOrder npo = default, Guid fallback = default);
 
 
 
@@ -174,11 +174,11 @@ public interface IConvertService16
     /// But this ToString will also give you the fallback, if the result is null. 
     /// </summary>
     /// <param name="value">The value to convert</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">Fallback in case conversion fails or result is null. Defaults to `null`.</param>
     /// <param name="fallbackOnNull">Determine that nulls should also fallback, default is `true`</param>
     string? ToString(object value,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? fallback = default,
         bool fallbackOnNull = true);
 
@@ -206,9 +206,9 @@ public interface IConvertService16
     /// </summary>
     /// <returns></returns>
     /// <param name="value">value to convert</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The value used if conversion fails. Defaults to `null`.</param>
-    string? ForCode(object value, NoParamOrder noParamOrder = default, string? fallback = default);
+    string? ForCode(object value, NoParamOrder npo = default, string? fallback = default);
 
     /// <summary>
     /// Sub-Service to convert JSON
@@ -219,12 +219,12 @@ public interface IConvertService16
 
     [PrivateApi("WIP, don't publish yet")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    T As<T>(ICanBeEntity source, NoParamOrder protector = default, bool mock = false)
+    T As<T>(ICanBeEntity source, NoParamOrder npo = default, bool mock = false)
         where T : class, ICanWrapData;
 
     [PrivateApi("WIP, don't publish yet")]
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder protector = default, bool nullIfNull = default)
+    IEnumerable<T> AsList<T>(IEnumerable<ICanBeEntity> source, NoParamOrder npo = default, bool nullIfNull = default)
         where T : class, ICanWrapData;
 
     #endregion

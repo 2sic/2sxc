@@ -21,7 +21,7 @@ public partial interface IDynamicEntity
     /// See [](xref:NetCode.DynamicData.DynamicEntityHtml)
     /// </summary>
     /// <param name="name">the field name</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="container">
     /// A wrapper tag for the result.
     /// It's either a RazorBlade tag such as `Kit.HtmlTag.Div()`, a string such as `span` or an empty string `` to indicate no container.
@@ -38,7 +38,7 @@ public partial interface IDynamicEntity
     /// </remarks>
     IHtmlTag? Html(
         string name,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? container = default,
         bool? toolbar = default,
         object? imageSettings = default,

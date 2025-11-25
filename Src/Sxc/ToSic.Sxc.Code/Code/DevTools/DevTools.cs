@@ -9,7 +9,7 @@ internal class DevTools(CompileCodeHelperSpecs specs, ILog parentLog) : HelperBa
         $"Partial Razor '{specs.CodeFileName}' requires {requires} of the following parameters, but {but} were provided: " +
         string.Join(", ", (names ?? []).Select(s => $"'{s}'"));
 
-    public void Debug(object target, NoParamOrder noParamOrder = default, bool debug = true)
+    public void Debug(object target, NoParamOrder npo = default, bool debug = true)
     {
         var l = Log.Fn($"{nameof(target)}: '{target?.GetType()}', {nameof(debug)}: {debug}");
         

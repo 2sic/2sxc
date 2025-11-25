@@ -27,7 +27,7 @@ public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSo
     { }
 
     public AdamDataSourceProvider<TFolderId, TFileId> Configure(
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         int appId = default,
         string? entityIds = default,
         string? entityGuids = default,

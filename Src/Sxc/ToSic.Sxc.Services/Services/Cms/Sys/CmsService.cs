@@ -20,7 +20,7 @@ internal class CmsService(Generator<CmsServiceStringWysiwyg> stringWysiwyg)
 
     public IHtmlTag Html(
         object? thing,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? container = default,
         string? classes = default,
         bool debug = default,

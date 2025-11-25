@@ -16,5 +16,5 @@ public interface IDevTools
     /// <param name="target"></param>
     /// <param name="noParamOrder"></param>
     /// <param name="debug"></param>
-    void Debug(object target, NoParamOrder noParamOrder = default, bool debug = true);
+    void Debug(object target, NoParamOrder npo = default, bool debug = true);
 }

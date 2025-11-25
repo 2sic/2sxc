@@ -15,7 +15,7 @@ partial class CodeDataFactory: IModelFactory
     /// If it's a list of entity-like things, the first one will be converted.
     /// </summary>
     [return: NotNullIfNotNull(nameof(source))]
-    public TCustom? AsCustom<TCustom>(object? source, NoParamOrder protector = default, bool mock = false)
+    public TCustom? AsCustom<TCustom>(object? source, NoParamOrder npo = default, bool mock = false)
         where TCustom : class, ICanWrapData
     {
         var settings = new Factory.ConvertItemSettings { ItemIsStrict = true, UseMock = mock };
@@ -94,7 +94,7 @@ partial class CodeDataFactory: IModelFactory
     /// <summary>
     /// Create list of custom-typed ITypedItems
     /// </summary>
-    public IEnumerable<TCustom> AsCustomList<TCustom>(object? source, NoParamOrder protector, bool nullIfNull)
+    public IEnumerable<TCustom> AsCustomList<TCustom>(object? source, NoParamOrder npo, bool nullIfNull)
         where TCustom : class, ICanWrapData
     {
         return source switch

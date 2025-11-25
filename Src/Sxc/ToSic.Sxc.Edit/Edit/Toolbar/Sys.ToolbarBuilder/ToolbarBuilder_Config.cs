@@ -6,13 +6,13 @@ namespace ToSic.Sxc.Edit.Toolbar.Sys.ToolbarBuilder;
 
 partial record ToolbarBuilder
 {
-    public IToolbarBuilder More(NoParamOrder noParamOrder = default, object? ui = default)
+    public IToolbarBuilder More(NoParamOrder npo = default, object? ui = default)
         => this.AddInternal([new ToolbarRuleCustom("more", ui: PrepareUi(ui))]);
 
     public IToolbarBuilder For(object target)
         => Parameters(target);
 
-    public IToolbarBuilder DetectDemo(ICanBeEntity root, NoParamOrder noParamOrder = default, string? message = default)
+    public IToolbarBuilder DetectDemo(ICanBeEntity root, NoParamOrder npo = default, string? message = default)
         => this with { Configuration = Configuration with { DemoCheckItem = root, DemoMessage = message } };
 
     public IToolbarBuilder Condition(bool condition)
@@ -22,7 +22,7 @@ partial record ToolbarBuilder
         => this with { Configuration = Configuration with { ConditionFunc = condition } };
 
     public IToolbarBuilder Audience(
-        NoParamOrder protector = default,
+        NoParamOrder npo = default,
         bool? everyone = default,
         IEnumerable<string>? roleNames = default,
         IEnumerable<string>? denyRoleNames = default)

@@ -16,7 +16,7 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : 
 {
     #region Get Engine Default / Empty
 
-    public ITemplateEngine Default(NoParamOrder protector = default, IEnumerable<ILookUp>? sources = default)
+    public ITemplateEngine Default(NoParamOrder npo = default, IEnumerable<ILookUp>? sources = default)
     {
         var sourcesList = sources?.ToList();
         var noSources = sourcesList == null || sourcesList.Count == 0;
@@ -35,7 +35,7 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : 
 
     private ITemplateEngine? _default;
 
-    public ITemplateEngine Empty(NoParamOrder protector = default, IEnumerable<ILookUp>? sources = null)
+    public ITemplateEngine Empty(NoParamOrder npo = default, IEnumerable<ILookUp>? sources = null)
     {
         var sourcesList = sources?.ToList();
         var noSources = sourcesList == null || sourcesList.Count == 0;
@@ -66,8 +66,8 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : 
     private ITemplateEngine Engine => field ??= Default();
 
 
-    string ITemplateService.Parse(string template, NoParamOrder protector, bool allowHtml, IEnumerable<ILookUp>? sources, int recursions)
-        => Engine.Parse(template, protector, allowHtml: allowHtml, sources: sources, recursions: recursions);
+    string ITemplateService.Parse(string template, NoParamOrder npo, bool allowHtml, IEnumerable<ILookUp>? sources, int recursions)
+        => Engine.Parse(template, npo, allowHtml: allowHtml, sources: sources, recursions: recursions);
 
     #endregion
 
@@ -88,7 +88,7 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : 
     [field: AllowNull, MaybeNull]
     private ICodeDataFactory Cdf => field ??= ExCtx.GetCdf();
 
-    public ILookUp CreateSource(string name, ICanBeEntity item, NoParamOrder protector = default, string[]? dimensions = default) 
+    public ILookUp CreateSource(string name, ICanBeEntity item, NoParamOrder npo = default, string[]? dimensions = default) 
         => new LookUpInEntity(name, item.Entity, dimensions: dimensions ?? Cdf.Dimensions);
 
     public ILookUp MergeSources(string name, IEnumerable<ILookUp>? sources)
@@ -112,7 +112,7 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : 
 
     #region Create Templated Entity
 
-    ITypedItem ITemplateService.ParseAsItem(ICanBeEntity original, NoParamOrder protector,
+    ITypedItem ITemplateService.ParseAsItem(ICanBeEntity original, NoParamOrder npo,
         bool allowHtml,
         ITemplateEngine? parser, 
         IEnumerable<ILookUp>? sources,
@@ -129,14 +129,14 @@ internal class TemplateService(LazySvc<ILookUpEngineResolver> getLookupsLazy) : 
         return templated;
     }
 
-    T ITemplateService.ParseAs<T>(ICanBeEntity original, NoParamOrder protector,
+    T ITemplateService.ParseAs<T>(ICanBeEntity original, NoParamOrder npo,
         bool allowHtml,
         ITemplateEngine? parser,
         IEnumerable<ILookUp>? sources,
         int recursions
     )
     {
-        var templated = ((ITemplateService)this).ParseAsItem(original, protector, allowHtml, parser, sources, recursions: recursions);
+        var templated = ((ITemplateService)this).ParseAsItem(original, npo, allowHtml, parser, sources, recursions: recursions);
         return Cdf.AsCustom<T>(source: templated);
     }
 

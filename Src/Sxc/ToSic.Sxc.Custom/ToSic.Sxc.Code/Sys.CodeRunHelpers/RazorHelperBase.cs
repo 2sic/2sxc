@@ -40,15 +40,15 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
 
     #region CreateInstance / GetCode
 
-    public object? GetCode(string path, NoParamOrder noParamOrder = default, string? className = default) 
-        => GetCode(path, noParamOrder: noParamOrder, name: className, throwOnError: true);
+    public object? GetCode(string path, NoParamOrder npo = default, string? className = default) 
+        => GetCode(path, npo: npo, name: className, throwOnError: true);
 
     /// <summary>
     /// Creates instances of the shared pages with the given relative path
     /// </summary>
     /// <returns></returns>
     private object? GetCode(string virtualPath,
-        NoParamOrder noParamOrder,
+        NoParamOrder npo,
         string? name,
         bool throwOnError)
     {
@@ -73,7 +73,7 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
         try
         {
             object? result = path.EndsWith(SourceCodeConstants.CsFileExtension)
-                ? ExCtx.GetDynamicApi().CreateInstance(path, noParamOrder, name: name, relativePath: null, throwOnError: throwOnError)
+                ? ExCtx.GetDynamicApi().CreateInstance(path, npo, name: name, relativePath: null, throwOnError: throwOnError)
                 : GetCodeCshtml(path);
             return l.Return(result, "ok");
         }
@@ -88,11 +88,11 @@ public abstract class RazorHelperBase(string logName) : CodeHelperBase(logName)
 
 
     public object? CreateInstance(string virtualPath,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? name = null,
         string? relativePath = null,
         bool throwOnError = true
-    ) => GetCode(virtualPath: virtualPath, noParamOrder: noParamOrder, name: name, throwOnError: throwOnError);
+    ) => GetCode(virtualPath: virtualPath, npo: npo, name: name, throwOnError: throwOnError);
 
     protected abstract object GetCodeCshtml(string path);
 

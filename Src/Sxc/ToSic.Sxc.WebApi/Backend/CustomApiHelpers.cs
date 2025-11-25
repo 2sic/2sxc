@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Backend;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class CustomApiHelpers
 {
-    public static string FileParamsInitialCheck(NoParamOrder noParamOrder, bool? download, string virtualPath,
+    public static string FileParamsInitialCheck(NoParamOrder npo, bool? download, string virtualPath,
         string fileDownloadName, object contents)
     {
         // Check initial conflicting values

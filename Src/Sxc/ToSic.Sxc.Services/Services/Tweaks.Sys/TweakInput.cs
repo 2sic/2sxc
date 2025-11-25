@@ -6,15 +6,15 @@ internal class TweakInput<TInput>
     public List<TweakConfig> Tweaks { get; init; } = [];
 
     [PublicApi]
-    public ITweakInput<TInput> Input(TInput replace, NoParamOrder protector = default)
+    public ITweakInput<TInput> Input(TInput replace, NoParamOrder npo = default)
         => CloneWith(_ => replace);
 
     [PublicApi]
-    public ITweakInput<TInput> Input(Func<TInput> func, NoParamOrder protector = default)
+    public ITweakInput<TInput> Input(Func<TInput> func, NoParamOrder npo = default)
         => CloneWith(_ => func());
 
     [PublicApi]
-    public ITweakInput<TInput> Input(Func<TInput, TInput> func, NoParamOrder protector = default)
+    public ITweakInput<TInput> Input(Func<TInput, TInput> func, NoParamOrder npo = default)
         => CloneWith(tv => func(tv.Value!));
 
     /// <summary>

@@ -163,6 +163,6 @@ public interface IDynamicCode14<out TModel, out TServiceKit> : /*ICompatibleToCo
 
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
     [PrivateApi("added in 16.05, but not sure if it should be public")]
-    dynamic? GetCode(string path, NoParamOrder noParamOrder = default, string? className = default);
+    dynamic? GetCode(string path, NoParamOrder npo = default, string? className = default);
 
 }

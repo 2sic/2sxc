@@ -49,70 +49,70 @@ public class WrapObjectTyped(LazySvc<IScrub> scrubSvc, LazySvc<ConvertForCodeSer
         }
     );
 
-    public bool IsEmpty(string name, NoParamOrder noParamOrder = default, string? language = default /* ignore */)
-        => HasKeysHelper.IsEmpty(this, name, noParamOrder, default);
+    public bool IsEmpty(string name, NoParamOrder npo = default, string? language = default /* ignore */)
+        => HasKeysHelper.IsEmpty(this, name, npo, default);
 
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder = default, string? language = default /* ignore */)
-        => HasKeysHelper.IsNotEmpty(this, name, noParamOrder, default);
+    public bool IsNotEmpty(string name, NoParamOrder npo = default, string? language = default /* ignore */)
+        => HasKeysHelper.IsNotEmpty(this, name, npo, default);
 
 
 
-    public IEnumerable<string> Keys(NoParamOrder noParamOrder = default, IEnumerable<string>? only = default)
-        => PreWrap.Keys(noParamOrder, only);
+    public IEnumerable<string> Keys(NoParamOrder npo = default, IEnumerable<string>? only = default)
+        => PreWrap.Keys(npo, only);
 
     #endregion
 
     #region ITyped Get
 
-    object? ITyped.Get(string name, NoParamOrder noParamOrder, bool? required, string? language /* ignore */)
-        => PreWrap.TryGetObject(name, noParamOrder, required);
+    object? ITyped.Get(string name, NoParamOrder npo, bool? required, string? language /* ignore */)
+        => PreWrap.TryGetObject(name, npo, required);
 
-    TValue? ITyped.Get<TValue>(string name, NoParamOrder noParamOrder, TValue? fallback, bool? required, string? language /* note ignored */)
+    TValue? ITyped.Get<TValue>(string name, NoParamOrder npo, TValue? fallback, bool? required, string? language /* note ignored */)
         where TValue : default
-        => PreWrap.TryGetTyped(name, noParamOrder, fallback, required: required);
+        => PreWrap.TryGetTyped(name, npo, fallback, required: required);
 
     #endregion
 
     #region ITyped Values: Bool, String, etc.
 
-    bool ITyped.Bool(string name, NoParamOrder noParamOrder, bool fallback, bool? required)
-        => PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+    bool ITyped.Bool(string name, NoParamOrder npo, bool fallback, bool? required)
+        => PreWrap.TryGetTyped(name, npo: npo, fallback: fallback, required: required);
 
-    DateTime ITyped.DateTime(string name, NoParamOrder noParamOrder, DateTime fallback, bool? required)
-        => PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+    DateTime ITyped.DateTime(string name, NoParamOrder npo, DateTime fallback, bool? required)
+        => PreWrap.TryGetTyped(name, npo: npo, fallback: fallback, required: required);
 
-    string? ITyped.String(string name, NoParamOrder noParamOrder, string? fallback, bool? required, object? scrubHtml)
+    string? ITyped.String(string name, NoParamOrder npo, string? fallback, bool? required, object? scrubHtml)
     {
-        var value = PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+        var value = PreWrap.TryGetTyped(name, npo: npo, fallback: fallback, required: required);
         return TypedItemHelpers.MaybeScrub(value, scrubHtml, () => scrubSvc.Value);
     }
 
-    int ITyped.Int(string name, NoParamOrder noParamOrder, int fallback, bool? required)
-        => PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+    int ITyped.Int(string name, NoParamOrder npo, int fallback, bool? required)
+        => PreWrap.TryGetTyped(name, npo: npo, fallback: fallback, required: required);
 
-    long ITyped.Long(string name, NoParamOrder noParamOrder, long fallback, bool? required)
-        => PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+    long ITyped.Long(string name, NoParamOrder npo, long fallback, bool? required)
+        => PreWrap.TryGetTyped(name, npo: npo, fallback: fallback, required: required);
 
-    float ITyped.Float(string name, NoParamOrder noParamOrder, float fallback, bool? required)
-        => PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+    float ITyped.Float(string name, NoParamOrder npo, float fallback, bool? required)
+        => PreWrap.TryGetTyped(name, npo: npo, fallback: fallback, required: required);
 
-    decimal ITyped.Decimal(string name, NoParamOrder noParamOrder, decimal fallback, bool? required)
-        => PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+    decimal ITyped.Decimal(string name, NoParamOrder npo, decimal fallback, bool? required)
+        => PreWrap.TryGetTyped(name, npo: npo, fallback: fallback, required: required);
 
-    double ITyped.Double(string name, NoParamOrder noParamOrder, double fallback, bool? required)
-        => PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+    double ITyped.Double(string name, NoParamOrder npo, double fallback, bool? required)
+        => PreWrap.TryGetTyped(name, npo: npo, fallback: fallback, required: required);
 
     #endregion
 
     #region ITyped Specials: Attribute, Url
 
-    string? ITyped.Url(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
+    string? ITyped.Url(string name, NoParamOrder npo, string? fallback, bool? required)
     {
-        var url = PreWrap.TryGetTyped(name, noParamOrder: noParamOrder, fallback, required: required);
+        var url = PreWrap.TryGetTyped(name, npo: npo, fallback, required: required);
         return Tags.SafeUrl(url).ToString();
     }
 
-    IRawHtmlString? ITyped.Attribute(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
+    IRawHtmlString? ITyped.Attribute(string name, NoParamOrder npo, string? fallback, bool? required)
     {
         var value = PreWrap.TryGetWrap(name, false).Result;
         var strValue = forCodeConverter.Value.ForCode(value, fallback: fallback);

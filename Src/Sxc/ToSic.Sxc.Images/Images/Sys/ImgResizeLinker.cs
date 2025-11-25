@@ -41,7 +41,7 @@ public class ImgResizeLinker(
         string? url = default,
         object? settings = default,
         object? factor = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         IField? field = default,  // todo
         object? width = default,
         object? height = default,

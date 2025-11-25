@@ -24,7 +24,7 @@ partial interface ITypedItem
     /// See [](xref:NetCode.DynamicData.DynamicEntityHtml)
     /// </summary>
     /// <param name="name">the field name</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="container">
     /// A wrapper tag for the result.
     /// It's either a RazorBlade tag such as `Kit.HtmlTag.Div()`, a string such as `span` or an empty string `` to indicate no container.
@@ -44,7 +44,7 @@ partial interface ITypedItem
     /// </remarks>
     IHtmlTag? Html(
         string name,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? container = default,
         bool? toolbar = default,
         object? imageSettings = default,
@@ -68,7 +68,7 @@ partial interface ITypedItem
     /// > An important difference is that it returns `null` if the field does not exist or is empty, allowing you to just show nothing or use `...Picture(...) ?? someFallback;`
     /// </summary>
     /// <param name="name">Name of a field</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">
     /// Tweak API to configure everything (new v18.03).
     /// This is recommended above using parameter names and all newer parameters will only be available on this.
@@ -115,7 +115,7 @@ partial interface ITypedItem
     /// </remarks>
     IResponsivePicture? Picture(
         string name,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakMedia, ITweakMedia>? tweak = default,
         object? settings = default,
         object? factor = default,
@@ -144,7 +144,7 @@ partial interface ITypedItem
     /// > An important difference is that it returns `null` if the field does not exist or is empty, allowing you to just show nothing or use `...Picture(...) ?? someFallback;`
     /// </summary>
     /// <param name="name">Name of a field</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">
     /// Tweak API to configure everything (new v18.03).
     /// This is recommended above using parameter names and all newer parameters will only be available on this.
@@ -188,7 +188,7 @@ partial interface ITypedItem
     /// </remarks>
     IResponsiveImage? Img(
         string name,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakMedia, ITweakMedia>? tweak = default,
         object? settings = default,
         object? factor = default,
@@ -209,5 +209,5 @@ partial interface ITypedItem
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns></returns>
     /// <remarks>New in v17.03</remarks>
-    GpsCoordinates Gps(string name, NoParamOrder protector = default, bool? required = default);
+    GpsCoordinates Gps(string name, NoParamOrder npo = default, bool? required = default);
 }

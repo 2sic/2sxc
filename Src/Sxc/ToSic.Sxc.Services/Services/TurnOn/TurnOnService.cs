@@ -17,7 +17,7 @@ internal class TurnOnService(LazySvc<IHtmlTagsService> htmlTagsService)
 
     public Attribute Attribute(
         object runOrSpecs,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? require = default,
         object? data = default
     )
@@ -30,7 +30,7 @@ internal class TurnOnService(LazySvc<IHtmlTagsService> htmlTagsService)
 
     public IHtmlTag Run(
         object runOrSpecs,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? require = default,
         object? data = default,
         IEnumerable<object>? args = default,

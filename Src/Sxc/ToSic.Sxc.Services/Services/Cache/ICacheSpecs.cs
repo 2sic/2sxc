@@ -90,13 +90,13 @@ public interface ICacheSpecs
     /// If neither absolute nor sliding are set, a sliding expiration of 1 hour will be used.
     /// Setting both is invalid and will throw an exception.
     /// </remarks>
-    ICacheSpecs SetSlidingExpiration(TimeSpan? timeSpan = default, NoParamOrder protector = default, int? seconds = null);
+    ICacheSpecs SetSlidingExpiration(TimeSpan? timeSpan = default, NoParamOrder npo = default, int? seconds = null);
 
     /// <summary>
     /// Depend on the app data, so if any data changes, the cache will be invalidated.
     /// </summary>
     /// <returns></returns>
-    ICacheSpecs WatchAppData(NoParamOrder protector = default);
+    ICacheSpecs WatchAppData(NoParamOrder npo = default);
 
     /// <summary>
     /// Depend on the app folder, so if any file in the app folder changes, the cache will be invalidated. WIP!
@@ -104,7 +104,7 @@ public interface ICacheSpecs
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="withSubfolders">should it also watch subfolders? default is `true`</param>
     /// <returns></returns>
-    ICacheSpecs WatchAppFolder(NoParamOrder protector = default, bool? withSubfolders = default);
+    ICacheSpecs WatchAppFolder(NoParamOrder npo = default, bool? withSubfolders = default);
 
     ///// <summary>
     ///// Add files
@@ -125,7 +125,7 @@ public interface ICacheSpecs
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="caseSensitive"></param>
     /// <returns></returns>
-    ICacheSpecs VaryBy(string name, string value, NoParamOrder protector = default, bool caseSensitive = false);
+    ICacheSpecs VaryBy(string name, string value, NoParamOrder npo = default, bool caseSensitive = false);
 
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -210,7 +210,7 @@ public interface ICacheSpecs
     /// <param name="names">Names of one or more parameters, comma-separated. If null, all parameters are used, if `""`, no parameters are used.</param>
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="caseSensitive">Determines if the value should be treated case-sensitive, default is `false`</param>
-    ICacheSpecs VaryByPageParameters(string? names = default, NoParamOrder protector = default, bool caseSensitive = false);
+    ICacheSpecs VaryByPageParameters(string? names = default, NoParamOrder npo = default, bool caseSensitive = false);
 
     /// <summary>
     /// Vary the cache by a custom parameters list.
@@ -224,7 +224,7 @@ public interface ICacheSpecs
     /// This only makes sense when using with the CacheService, but not in output caching.
     /// Reason is that in output caching, the pre-flight would not have access to the parameters object and would never result in a cache hit.
     /// </remarks>
-    ICacheSpecs VaryByParameters(IParameters parameters, NoParamOrder protector = default, string? names = default, bool caseSensitive = false);
+    ICacheSpecs VaryByParameters(IParameters parameters, NoParamOrder npo = default, string? names = default, bool caseSensitive = false);
 
     #endregion
 
@@ -244,7 +244,7 @@ public interface ICacheSpecs
     /// WIP v20.01
     /// </remarks>
     [WorkInProgressApi("WIP v20.01")]
-    ICacheSpecs VaryByModel(string? names = default, NoParamOrder protector = default, bool caseSensitive = false);
+    ICacheSpecs VaryByModel(string? names = default, NoParamOrder npo = default, bool caseSensitive = false);
 
     #endregion
 }

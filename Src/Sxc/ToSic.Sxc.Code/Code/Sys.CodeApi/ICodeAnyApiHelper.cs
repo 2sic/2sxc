@@ -38,7 +38,7 @@ public interface ICodeAnyApiHelper
     /// <param name="reuse">if true, then a service requested multiple times will return the same instance</param>
     /// <returns></returns>
     [PrivateApi("new v17.02")]
-    TService GetService<TService>(NoParamOrder protector = default, bool reuse = false, Type? type = default) where TService : class;
+    TService GetService<TService>(NoParamOrder npo = default, bool reuse = false, Type? type = default) where TService : class;
 
     #region Helpers / Tools
 

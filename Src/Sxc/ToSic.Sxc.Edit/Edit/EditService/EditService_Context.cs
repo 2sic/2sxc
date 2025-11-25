@@ -12,7 +12,7 @@ partial class EditService
 
     /// <inheritdoc/>
     public IRawHtmlString? ContextAttributes(ICanBeEntity target,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? field = null,
         string? contentType = null,
         Guid? newGuid = null,

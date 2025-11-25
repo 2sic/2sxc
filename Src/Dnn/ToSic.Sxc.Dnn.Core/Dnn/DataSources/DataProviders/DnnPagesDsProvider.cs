@@ -14,7 +14,7 @@ internal class DnnPagesDsProvider() : PagesDataSourceProvider("Dnn.Pages")
     private const int DnnLevelOffset = 1;
 
     public override List<PageModelRaw> GetPagesInternal(
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         bool includeHidden = default,
         bool includeDeleted = default,
         bool includeAdmin = default,

@@ -23,7 +23,7 @@ partial record ToolbarBuilder
     private CleanedParamsWithParts PreCleanParams(
         Func<ITweakButton, ITweakButton>? tweak,
         ToolbarRuleOps defOp, 
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? operation = default, 
         object? ui = default, 
         object? uiMerge = default, 
@@ -87,7 +87,7 @@ partial record ToolbarBuilder
 
     public IToolbarBuilder Delete(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
@@ -105,7 +105,7 @@ partial record ToolbarBuilder
 
     public IToolbarBuilder Edit(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
@@ -120,7 +120,7 @@ partial record ToolbarBuilder
 
     public IToolbarBuilder New(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
@@ -136,7 +136,7 @@ partial record ToolbarBuilder
 
     public IToolbarBuilder Publish(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
@@ -153,7 +153,7 @@ partial record ToolbarBuilder
     public IToolbarBuilder Metadata(
         object target,
         string? contentTypes = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
@@ -196,7 +196,7 @@ partial record ToolbarBuilder
     /// <inheritdoc />
     public IToolbarBuilder Copy(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         string? contentType = null,
         object? ui = null,
@@ -216,7 +216,7 @@ partial record ToolbarBuilder
 
     public IToolbarBuilder Data(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? filter = null,
         object? ui = null,

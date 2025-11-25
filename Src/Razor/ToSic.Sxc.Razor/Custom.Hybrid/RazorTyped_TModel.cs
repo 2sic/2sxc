@@ -81,11 +81,11 @@ public abstract class RazorTyped<TModel>()
     #region As Conversions
 
     /// <inheritdoc cref="ITypedApi.AsItem" />
-    public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
+    public ITypedItem AsItem(object data, NoParamOrder npo = default, bool? propsRequired = default, bool? mock = default)
         => CodeApi.Cdf.AsItem(data, new() { ItemIsStrict = propsRequired ?? true, UseMock = mock == true })!;
 
     /// <inheritdoc cref="ITypedApi.AsItems" />
-    public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
+    public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder npo = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsItems(list, new() { ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="ITypedApi.AsEntity" />
@@ -93,11 +93,11 @@ public abstract class RazorTyped<TModel>()
         => CodeApi.Cdf.AsEntity(thing);
 
     /// <inheritdoc cref="ITypedApi.AsTyped" />
-    public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
+    public ITyped AsTyped(object original, NoParamOrder npo = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsTyped(original, new() { EntryPropIsRequired = false, ItemIsStrict = propsRequired ?? true })!;
 
     /// <inheritdoc cref="ITypedApi.AsTypedList" />
-    public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
+    public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder npo = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsTypedList(list, new() { EntryPropIsRequired = false, ItemIsStrict = propsRequired ?? true })!;
 
     /// <inheritdoc cref="ITypedApi.AsStack" />
@@ -113,8 +113,8 @@ public abstract class RazorTyped<TModel>()
 
 
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
-    public dynamic? GetCode(string path, NoParamOrder noParamOrder = default, string? className = default)
-        => RzrHlp.GetCode(path, noParamOrder, className);
+    public dynamic? GetCode(string path, NoParamOrder npo = default, string? className = default)
+        => RzrHlp.GetCode(path, npo, className);
 
     #region MyContext & UniqueKey
 
@@ -169,14 +169,14 @@ public abstract class RazorTyped<TModel>()
     #region As / AsList WIP v17
 
     /// <inheritdoc />
-    public T As<T>(object source, NoParamOrder protector = default, bool mock = false)
+    public T As<T>(object source, NoParamOrder npo = default, bool mock = false)
         where T : class, ICanWrapData
-        => CodeApi.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock)!;
+        => CodeApi.Cdf.AsCustom<T>(source: source, npo: npo, mock: mock)!;
 
     /// <inheritdoc />
-    public IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
+    public IEnumerable<T> AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = default)
         where T : class, ICanWrapData
-        => CodeApi.Cdf.AsCustomList<T>(source: source, protector: protector, nullIfNull: nullIfNull);
+        => CodeApi.Cdf.AsCustomList<T>(source: source, npo: npo, nullIfNull: nullIfNull);
 
     #endregion
 

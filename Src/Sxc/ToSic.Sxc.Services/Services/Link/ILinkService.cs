@@ -32,7 +32,7 @@ public interface ILinkService: /*INeedsCodeApiService,*/ ICanDebug
     /// <summary>
     /// returns a link to the current page with parameters resolved in a way that DNN wants it
     /// </summary>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="pageId">optional page ID (TabId) - if not supplied, will use current page</param>
     /// <param name="api">optional api url "api/name/method?id=something"</param>
     /// <param name="parameters">
@@ -60,7 +60,7 @@ public interface ILinkService: /*INeedsCodeApiService,*/ ICanDebug
     /// * In v13.02 introduced language with "current"
     /// </remarks>
     string To(
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         int? pageId = null,
         string? api = null,
         object? parameters = null,
@@ -94,7 +94,7 @@ public interface ILinkService: /*INeedsCodeApiService,*/ ICanDebug
     ///   If this is provided, only `factor` will still be respected, all other settings like `width` on this command will be ignored.
     /// </param>
     /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Like 0.5.</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="field">WIP v13.04 - not final yet</param>
     /// <param name="width">Optional width parameter. Usually takes the default from the `settings`.</param>
     /// <param name="height">Optional height parameter. Usually takes the default from the `settings`.</param>
@@ -151,7 +151,7 @@ public interface ILinkService: /*INeedsCodeApiService,*/ ICanDebug
         string? url = default,
         object? settings = default,
         object? factor = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         IField? field = default,
         object? width = default,
         object? height = default,

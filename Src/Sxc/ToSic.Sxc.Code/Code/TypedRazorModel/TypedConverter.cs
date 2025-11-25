@@ -34,7 +34,7 @@ internal class TypedConverter(ICodeDataFactory cdf)
                 : Cdf.AsEntity(untyped);
     }
 
-    public ITypedItem? Item(object? data, NoParamOrder noParamOrder, ITypedItem? fallback)
+    public ITypedItem? Item(object? data, NoParamOrder npo, ITypedItem? fallback)
     {
         var (typed, untyped, ok) = EvalInterface(data, fallback);
         // Try to convert, in case it's an IEntity or something; could also result in error
@@ -46,7 +46,7 @@ internal class TypedConverter(ICodeDataFactory cdf)
                 : Cdf.AsItem(untyped, new() { ItemIsStrict = false });
     }
 
-    public IEnumerable<ITypedItem>? Items(object? maybe, NoParamOrder noParamOrder, IEnumerable<ITypedItem>? fallback)
+    public IEnumerable<ITypedItem>? Items(object? maybe, NoParamOrder npo, IEnumerable<ITypedItem>? fallback)
     {
         var (typed, untyped, ok) = EvalInterface(maybe, fallback);
         // Try to convert, in case it's an IEntity or something; could also result in error
@@ -127,7 +127,7 @@ internal class TypedConverter(ICodeDataFactory cdf)
     }
 
     [return: NotNullIfNotNull(nameof(fallback))]
-    public ITyped? Typed(object? maybe, NoParamOrder noParamOrder, ITyped? fallback)
+    public ITyped? Typed(object? maybe, NoParamOrder npo, ITyped? fallback)
     {
         var (typed, untyped, ok) = EvalInterface(maybe, fallback);
         // Try to convert, in case it's an IEntity or something; could also result in error

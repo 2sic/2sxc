@@ -16,7 +16,7 @@ public interface ITweakInput<TInput>
     /// <param name="replace">replacement value to use instead</param>
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <returns></returns>
-    ITweakInput<TInput> Input(TInput replace, NoParamOrder protector = default);
+    ITweakInput<TInput> Input(TInput replace, NoParamOrder npo = default);
     ///// <param name="step">optional step, such as 'before' or 'after' - default is 'before'</param>
     
 
@@ -26,7 +26,7 @@ public interface ITweakInput<TInput>
     /// <param name="func">function to generate a replacement value</param>
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <returns></returns>
-    ITweakInput<TInput> Input(Func<TInput> func, NoParamOrder protector = default);
+    ITweakInput<TInput> Input(Func<TInput> func, NoParamOrder npo = default);
     ///// <param name="step">optional step, such as 'before' or 'after' - default is 'before'</param>
 
 
@@ -36,7 +36,7 @@ public interface ITweakInput<TInput>
     /// <param name="func">function to generate a replacement value, but first providing the initial value</param>
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <returns></returns>
-    ITweakInput<TInput> Input(Func<TInput, TInput> func, NoParamOrder protector = default);
+    ITweakInput<TInput> Input(Func<TInput, TInput> func, NoParamOrder npo = default);
     ///// <param name="step">optional step, such as 'before' or 'after' - default is 'before'</param>
 
 
@@ -49,5 +49,5 @@ public interface ITweakInput<TInput>
     ///// <param name="step">optional step, such as 'before' or 'after' - default is 'before'</param>
     ///// <returns></returns>
     //[PrivateApi("not yet final")]
-    //ITweakHtml Process(Func<ITweakValue<string>, string> func, NoParamOrder protector = default);//, string step = default);
+    //ITweakHtml Process(Func<ITweakValue<string>, string> func, NoParamOrder npo = default);//, string step = default);
 }

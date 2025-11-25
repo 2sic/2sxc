@@ -28,7 +28,7 @@ public interface ITypedQuery: IDataSource
     /// <remarks>
     /// WIP in v20.00
     /// </remarks>
-    IEnumerable<T>? GetAll<T>(NoParamOrder protector = default, string? typeName = default, bool nullIfNotFound = default)
+    IEnumerable<T>? GetAll<T>(NoParamOrder npo = default, string? typeName = default, bool nullIfNotFound = default)
         where T : class, ICanWrapData;
 
     /// <summary>
@@ -42,7 +42,7 @@ public interface ITypedQuery: IDataSource
     /// <remarks>
     /// WIP in v20.00
     /// </remarks>
-    T? GetOne<T>(int id, NoParamOrder protector = default, bool skipTypeCheck = false)
+    T? GetOne<T>(int id, NoParamOrder npo = default, bool skipTypeCheck = false)
         where T : class, ICanWrapData;
 
 
@@ -57,7 +57,7 @@ public interface ITypedQuery: IDataSource
     /// <remarks>
     /// WIP in v20.00
     /// </remarks>
-    T? GetOne<T>(Guid guid, NoParamOrder protector = default, bool skipTypeCheck = false)
+    T? GetOne<T>(Guid guid, NoParamOrder npo = default, bool skipTypeCheck = false)
         where T : class, ICanWrapData;
 
     #endregion

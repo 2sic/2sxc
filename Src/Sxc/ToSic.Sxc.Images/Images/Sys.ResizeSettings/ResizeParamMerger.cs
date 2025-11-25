@@ -27,7 +27,7 @@ internal class ResizeParamMerger(ILog parentLog) : HelperBase(parentLog, $"{SxcL
 
     internal ResizeSettings BuildResizeSettings(
         object? settings = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? factor = null,
         object? width = null,
         object? height = null,

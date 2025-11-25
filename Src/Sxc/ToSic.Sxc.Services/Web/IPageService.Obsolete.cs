@@ -42,9 +42,9 @@ public interface IPageService // : ToSic.Sxc.Services.IPageService
     string AddOpenGraph(string property, string content);
     string AddJsonLd(string jsonString);
     string AddJsonLd(object jsonObject);
-    string AddIcon(string path, NoParamOrder noParamOrder = default,
+    string AddIcon(string path, NoParamOrder npo = default,
         string rel = "", int size = 0, string? type = null);
-    string AddIconSet(string path, NoParamOrder noParamOrder = default,
+    string AddIconSet(string path, NoParamOrder npo = default,
         object? favicon = null, IEnumerable<string>? rels = null, IEnumerable<int>? sizes = null);
     string Activate(params string[] keys);
 #pragma warning restore CS0108, CS0114

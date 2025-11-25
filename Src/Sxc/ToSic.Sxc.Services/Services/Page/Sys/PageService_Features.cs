@@ -58,7 +58,7 @@ partial class PageService
 
     /// <inheritdoc />
     public string? Activate(
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         bool condition = true,
         params string[] features)
     {

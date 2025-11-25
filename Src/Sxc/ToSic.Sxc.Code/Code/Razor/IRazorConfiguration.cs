@@ -21,7 +21,7 @@ public interface IRazorConfiguration
     /// <remarks>
     /// Will only hav an effect if the feature [LightSpeedOutputCachePartials](https://patrons.2sxc.org/features/feat/LightSpeedOutputCachePartials) is enabled.
     /// </remarks>
-    string? PartialCache(NoParamOrder protector = default,
+    string? PartialCache(NoParamOrder npo = default,
         int? seconds = null,
         string? watch = null,
         string? varyBy = null,

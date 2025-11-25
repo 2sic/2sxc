@@ -14,9 +14,9 @@ public partial interface ITyped
     /// 1. Html encode any characters which would cause trouble such as quotes
     /// </summary>
     /// <param name="name">Name of the property</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">Value to use if the property specified by `name` doesn't exist</param>
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns></returns>
-    IRawHtmlString? Attribute(string name, NoParamOrder noParamOrder = default, string? fallback = default, bool? required = default);
+    IRawHtmlString? Attribute(string name, NoParamOrder npo = default, string? fallback = default, bool? required = default);
 }

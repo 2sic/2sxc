@@ -41,7 +41,7 @@ public interface IImageService: ICanDebug
     /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
     /// - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings.
     /// </param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">
     /// Tweak API to configure everything (new v18.03).
     /// This is recommended above using parameter names and all newer parameters will only be available on this.
@@ -67,7 +67,7 @@ public interface IImageService: ICanDebug
     /// </remarks>
     IResizeSettings Settings(
         object? settings = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakResize, ITweakResize>? tweak = default,
         object? factor = default,
         object? width = default,
@@ -85,7 +85,7 @@ public interface IImageService: ICanDebug
 
     Recipe Recipe(
         Recipe recipe,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? name = default,
         int width = default,
         string? variants = default,
@@ -109,7 +109,7 @@ public interface IImageService: ICanDebug
     /////     - Or a specially prepared <see cref="IResizeSettings"/> object containing all settings.
     /////     Note: If you need to construct very custom settings, use <see cref="ResizeSettings">ResizeSettings</see> to create them
     ///// </param>
-    ///// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    ///// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     ///// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Like 0.5. </param>
     ///// <param name="recipe">Optional string to configure what `srcset`s to generate - see [](xref:NetCode.Images.SrcSet) (note it's `srcset`, not `srcSet`)</param>
     ///// <returns></returns>
@@ -139,7 +139,7 @@ public interface IImageService: ICanDebug
     /// - a <see cref="IField"/> in which case it would be used if `field` is not specified
     /// - a <see cref="IFile"/> (new 16.03)
     /// </param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="settings">
     /// - The name of a settings configuration, like "Content", "Screen", "Square", etc.
     /// - A standardized Image-Settings object like Settings.Images.Content - see https://go.2sxc.org/settings
@@ -187,7 +187,7 @@ public interface IImageService: ICanDebug
     IResponsivePicture Picture(
         object? link = null,
         object? settings = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakMedia, ITweakMedia>? tweak = default,
         object? factor = default,
         object? width = default,
@@ -218,7 +218,7 @@ public interface IImageService: ICanDebug
     ///     - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
     ///     - A <see cref="IResizeSettings"/> object containing all settings created using <see cref="ToSic.Sxc.Services.IImageService.Settings">ResizeSettings</see> 
     /// </param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">
     /// Tweak API to configure everything (new v18.03).
     /// This is recommended above using parameter names and all newer parameters will only be available on this.
@@ -256,7 +256,7 @@ public interface IImageService: ICanDebug
     IResponsiveImage Img(
         object? link = null,
         object? settings = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakMedia, ITweakMedia>? tweak = default,
         object? factor = default,
         object? width = default,

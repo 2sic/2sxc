@@ -14,15 +14,15 @@ internal class CodeItemHelper(GetAndConvertHelper helper, ITyped data)
     public readonly GetAndConvertHelper Helper = helper;
 
     #region Keys
-    public bool IsEmpty(string name, NoParamOrder noParamOrder, bool? isBlank, string? language)
+    public bool IsEmpty(string name, NoParamOrder npo, bool? isBlank, string? language)
     {
-        var result = Get(name, noParamOrder, required: false, language: language);
+        var result = Get(name, npo, required: false, language: language);
         return HasKeysHelper.IsEmpty(result, isBlank);
     }
 
-    public bool IsNotEmpty(string name, NoParamOrder noParamOrder, bool? isBlank, string? language)
+    public bool IsNotEmpty(string name, NoParamOrder npo, bool? isBlank, string? language)
     {
-        var result = Get(name, noParamOrder, required: false, language: language);
+        var result = Get(name, npo, required: false, language: language);
         return HasKeysHelper.IsNotEmpty(result, isBlank);
     }
 
@@ -31,7 +31,7 @@ internal class CodeItemHelper(GetAndConvertHelper helper, ITyped data)
 
     #region Get
 
-    public object? Get(string name, NoParamOrder noParamOrder, bool? required, string? language = default, [CallerMemberName] string? cName = default)
+    public object? Get(string name, NoParamOrder npo, bool? required, string? language = default, [CallerMemberName] string? cName = default)
     {
         var findResult = Helper.TryGet(name, language);
         return IsErrStrict(findResult.Found, required, Helper.PropsRequired)
@@ -39,7 +39,7 @@ internal class CodeItemHelper(GetAndConvertHelper helper, ITyped data)
             : findResult.Result;
     }
 
-    public TValue G4T<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, [CallerMemberName] string? cName = default)
+    public TValue G4T<TValue>(string name, NoParamOrder npo, TValue fallback, bool? required, [CallerMemberName] string? cName = default)
     {
         var findResult = Helper.TryGet(name);
         return IsErrStrict(findResult.Found, required, Helper.PropsRequired)
@@ -47,7 +47,7 @@ internal class CodeItemHelper(GetAndConvertHelper helper, ITyped data)
             : findResult.Result.ConvertOrFallback(fallback);
     }
 
-    public TValue GetT<TValue>(string name, NoParamOrder noParamOrder, TValue fallback, bool? required, string? language = default, [CallerMemberName] string? cName = default)
+    public TValue GetT<TValue>(string name, NoParamOrder npo, TValue fallback, bool? required, string? language = default, [CallerMemberName] string? cName = default)
     {
         var findResult = Helper.TryGet(field: name, language: language);
         return IsErrStrict(findResult.Found, required, Helper.PropsRequired)
@@ -58,23 +58,23 @@ internal class CodeItemHelper(GetAndConvertHelper helper, ITyped data)
 
     #endregion
 
-    public IRawHtmlString? Attribute(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
+    public IRawHtmlString? Attribute(string name, NoParamOrder npo, string? fallback, bool? required)
     {
-        var result = Get(name, noParamOrder, required);
+        var result = Get(name, npo, required);
         var strValue = Helper.Cdf.Services.ForCode.ForCode(result, fallback: fallback);
         return strValue is null
             ? null
             : new RawHtmlString(WebUtility.HtmlEncode(strValue));
     }
 
-    public string? String(string name, NoParamOrder noParamOrder, string? fallback, bool? required, object? scrubHtml = default)
+    public string? String(string name, NoParamOrder npo, string? fallback, bool? required, object? scrubHtml = default)
     {
-        var value = G4T(name, noParamOrder: noParamOrder, fallback: fallback, required: required);
+        var value = G4T(name, npo: npo, fallback: fallback, required: required);
         return TypedItemHelpers.MaybeScrub(value, scrubHtml, () => Helper.Cdf.Services.Scrub);
     }
 
 
-    public string? Url(string name, NoParamOrder noParamOrder, string? fallback, bool? required)
+    public string? Url(string name, NoParamOrder npo, string? fallback, bool? required)
     {
         // TODO: STRICT
         var url = Helper.TryGet(name, lookupLink: true).Result as string;

@@ -24,14 +24,14 @@ internal abstract class DynamicEntityDocs
     /// Get a property using the string name. Only needed in special situations, as most cases can use the object.name directly
     /// </summary>
     /// <param name="name">the property name like `Image` - or path like `Author.Name` (new v15)</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="language">Optional language code - like "de-ch" to prioritize that language</param>
     /// <param name="convertLinks">Optionally turn off if links like file:72 are looked up to a real link. Default is true.</param>
     /// <param name="debug">Set true to see more details in [Insights](xref:NetCode.Debug.Insights.Index) how the value was retrieved.</param>
     /// <returns>a dynamically typed result, can be string, bool, etc.</returns>
     public abstract dynamic Get(string name,
         // ReSharper disable once MethodOverloadWithOptionalParameter
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? language = null,
         bool convertLinks = true,
         bool? debug = null
@@ -59,13 +59,13 @@ internal abstract class DynamicEntityDocs
     /// Note that you don't need to specify it, if you specify the `fallback` property.
     /// </typeparam>
     /// <param name="name">the property name like `Image` - or path like `Author.Name` (new v15)</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">the fallback value to provide if not found</param>
     /// <returns>The typed value, or the `default` like `null` or `0` if casting isn't possible.</returns>
     /// <remarks>Added in v15</remarks>
     public abstract TValue Get<TValue>(string name,
         // ReSharper disable once MethodOverloadWithOptionalParameter
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         TValue? fallback = default);
 
 }

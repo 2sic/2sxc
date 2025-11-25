@@ -34,16 +34,16 @@ internal class DataSourceToTypedHelper(ICodeDataFactory cdf, IDataSource dataSou
 
         return list == null
             ? null
-            : cdf.AsCustomList<T>(source: list, protector: default, nullIfNull: nullIfNotFound);
+            : cdf.AsCustomList<T>(source: list, npo: default, nullIfNull: nullIfNotFound);
     }
 
     /// <inheritdoc />
-    public T? GetOne<T>(int id, NoParamOrder protector, bool skipTypeCheck)
+    public T? GetOne<T>(int id, NoParamOrder npo, bool skipTypeCheck)
         where T : class, ICanWrapData
         => cdf.GetOne<T>(() => dataSource.List.One(id), id, skipTypeCheck);
 
     /// <inheritdoc />
-    public T? GetOne<T>(Guid id, NoParamOrder protector, bool skipTypeCheck)
+    public T? GetOne<T>(Guid id, NoParamOrder npo, bool skipTypeCheck)
         where T : class, ICanWrapData
         => cdf.GetOne<T>(() => dataSource.List.One(id), id, skipTypeCheck);
 

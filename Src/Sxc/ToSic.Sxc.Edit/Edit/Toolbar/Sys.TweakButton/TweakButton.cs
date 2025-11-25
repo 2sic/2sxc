@@ -55,7 +55,7 @@ internal class TweakButton: ITweakButton
 
     public ITweakButton Note(
         string? note,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? type = default,
         string? background = default,
         int delay = default,
@@ -80,7 +80,7 @@ internal class TweakButton: ITweakButton
     public ITweakButton Show(bool show = true)
         => Ui(ToolbarConstants.RuleShow, show ? "true" : "false");
 
-    public ITweakButton Color(string? color = default, NoParamOrder noParamOrder = default, string? background = default,
+    public ITweakButton Color(string? color = default, NoParamOrder npo = default, string? background = default,
         string? foreground = default)
     {
         if (color == default)

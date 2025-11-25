@@ -23,11 +23,11 @@ public partial interface ITyped
     /// If conversion fails, will return default `false` or what is specified in the `fallback`.
     /// </summary>
     /// <param name="name">property name</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">_optional_ fallback if conversion fails</param>
     /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>Value as `bool`</returns>
-    bool Bool(string name, NoParamOrder noParamOrder = default, bool fallback = default, bool? required = default);
+    bool Bool(string name, NoParamOrder npo = default, bool fallback = default, bool? required = default);
 
 
     /// <summary>
@@ -35,18 +35,18 @@ public partial interface ITyped
     /// If conversion fails, will return default `0001-01-01` or what is specified in the `fallback`.
     /// </summary>
     /// <param name="name">property name</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">_optional_ fallback if conversion fails</param>
     /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>Value as `DateTime`</returns>
-    DateTime DateTime(string name, NoParamOrder noParamOrder = default, DateTime fallback = default, bool? required = default);
+    DateTime DateTime(string name, NoParamOrder npo = default, DateTime fallback = default, bool? required = default);
 
     /// <summary>
     /// Get a property and return the value as a `string`.
     /// If conversion fails, will return default `null` or what is specified in the `fallback`.
     /// </summary>
     /// <param name="name">property name</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">_optional_ fallback if conversion fails</param>
     /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <param name="scrubHtml">
@@ -55,7 +55,7 @@ public partial interface ITyped
     /// This is the same as using `Kit.Scrub.All(...)` or `.Only(...). For more detailed scrubbing, use the `Kit.Scrub`
     /// </param>
     /// <returns>Value as `string`</returns>
-    string? String(string name, NoParamOrder noParamOrder = default, string? fallback = default, bool? required = default, object? scrubHtml = default);
+    string? String(string name, NoParamOrder npo = default, string? fallback = default, bool? required = default, object? scrubHtml = default);
 
     #region Numbers
 
@@ -67,11 +67,11 @@ public partial interface ITyped
     /// If conversion fails, will return default `0` or what is specified in the `fallback`.
     /// </summary>
     /// <param name="name">property name</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">_optional_ fallback if conversion fails</param>
     /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>Value as `int`</returns>
-    int Int(string name, NoParamOrder noParamOrder = default, int fallback = default, bool? required = default);
+    int Int(string name, NoParamOrder npo = default, int fallback = default, bool? required = default);
 
 
     /// <summary>
@@ -79,22 +79,22 @@ public partial interface ITyped
     /// If conversion fails, will return default `0` or what is specified in the `fallback`.
     /// </summary>
     /// <param name="name">property name</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">_optional_ fallback if conversion fails</param>
     /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>Value as `long`</returns>
-    long Long(string name, NoParamOrder noParamOrder = default, long fallback = default, bool? required = default);
+    long Long(string name, NoParamOrder npo = default, long fallback = default, bool? required = default);
 
     /// <summary>
     /// Get a property and return the value as a `float`.
     /// If conversion fails, will return default `0` or what is specified in the `fallback`.
     /// </summary>
     /// <param name="name">property name</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">_optional_ fallback if conversion fails</param>
     /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>Value as `float`</returns>
-    float Float(string name, NoParamOrder noParamOrder = default, float fallback = default, bool? required = default);
+    float Float(string name, NoParamOrder npo = default, float fallback = default, bool? required = default);
 
 
     /// <summary>
@@ -102,22 +102,22 @@ public partial interface ITyped
     /// If conversion fails, will return default `0` or what is specified in the `fallback`.
     /// </summary>
     /// <param name="name">property name</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">_optional_ fallback if conversion fails</param>
     /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>Value as `decimal`</returns>
-    decimal Decimal(string name, NoParamOrder noParamOrder = default, decimal fallback = default, bool? required = default);
+    decimal Decimal(string name, NoParamOrder npo = default, decimal fallback = default, bool? required = default);
 
     /// <summary>
     /// Get a property and return the value as a `double`.
     /// If conversion fails, will return default `0` or what is specified in the `fallback`.
     /// </summary>
     /// <param name="name">property name</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">_optional_ fallback if conversion fails</param>
     /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>Value as `double`</returns>
-    double Double(string name, NoParamOrder noParamOrder = default, double fallback = default, bool? required = default);
+    double Double(string name, NoParamOrder npo = default, double fallback = default, bool? required = default);
 
     #endregion
 
@@ -128,11 +128,11 @@ public partial interface ITyped
     /// On TypedItems it will also auto-convert values such as `file:72` or `page:14`.
     /// </summary>
     /// <param name="name">The field name.</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">_optional_ fallback if conversion fails</param>
     /// <param name="required">throw error if the `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>A url converted if possible. If the field contains anything else such as `hello` then it will not be modified.</returns>
-    string? Url(string name, NoParamOrder noParamOrder = default, string? fallback = default, bool? required = default);
+    string? Url(string name, NoParamOrder npo = default, string? fallback = default, bool? required = default);
 
     #region Debugging
 

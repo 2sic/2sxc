@@ -8,7 +8,7 @@ public partial class ExecutionContext
 
     /// <inheritdoc />
     public object? CreateInstance(string virtualPath,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? name = null,
         string? relativePath = null,
         bool throwOnError = true)

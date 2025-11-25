@@ -6,7 +6,7 @@ namespace ToSic.Sxc.DataSources.Sys.Pages;
 
 internal class PagesDataSourceProviderUnknown(WarnUseOfUnknown<PagesDataSourceProviderUnknown> _) : PagesDataSourceProvider($"{SxcLogName}.{LogConstants.NameUnknown}")
 {
-    public override List<PageModelRaw> GetPagesInternal(NoParamOrder noParamOrder = default,
+    public override List<PageModelRaw> GetPagesInternal(NoParamOrder npo = default,
         bool includeHidden = default, bool includeDeleted = default, bool includeAdmin = default,
         bool includeSystem = default, bool includeLinks = default, bool requireViewPermissions = true,
         bool requireEditPermissions = true) => [];

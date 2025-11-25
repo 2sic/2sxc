@@ -30,8 +30,8 @@ public abstract partial class DataSource16
 
     /// <inheritdoc />
     [PrivateApi("Hide in docs to only show important APIs for DataSource creators")]
-    public IDataStream? GetStream(string? name = null, NoParamOrder noParamOrder = default, bool nullIfNotFound = false, bool emptyIfNotFound = false)
-        => _inner.GetStream(name, noParamOrder, nullIfNotFound, emptyIfNotFound);
+    public IDataStream? GetStream(string? name = null, NoParamOrder npo = default, bool nullIfNotFound = false, bool emptyIfNotFound = false)
+        => _inner.GetStream(name, npo, nullIfNotFound, emptyIfNotFound);
 
     /// <inheritdoc />
     [PrivateApi("Hide in docs to only show important APIs for DataSource creators")]

@@ -120,7 +120,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     [PrivateApi("Should not be documented here, as it should only be used on ITyped")]
     public IHtmlTag? Html(
         string name,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? container = default,
         bool? toolbar = default,
         object? imageSettings = default,
@@ -128,7 +128,7 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     ) => Cdf.CompatibilityLevel < CompatibilityLevels.CompatibilityLevel12
         // Only do compatibility check if used on DynamicEntity
         ? throw new NotSupportedException($"{nameof(Html)}(...) not supported in older Razor templates. Use Razor14, RazorTyped or newer.")
-        : TypedItemHelpers.Html(Cdf, TypedItem, name: name, noParamOrder: noParamOrder, container: container,
+        : TypedItemHelpers.Html(Cdf, TypedItem, name: name, npo: npo, container: container,
             toolbar: toolbar, imageSettings: imageSettings, required: false, debug: debug);
 
     #endregion
@@ -201,15 +201,15 @@ public partial class DynamicEntity : DynamicObject, IDynamicEntity, IHasMetadata
     public dynamic? Get(string name) => GetHelper.Get(name);
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public dynamic? Get(string name, NoParamOrder noParamOrder = default, string? language = null, bool convertLinks = true, bool? debug = null)
-        => GetHelper.Get(name, noParamOrder, language, convertLinks, debug);
+    public dynamic? Get(string name, NoParamOrder npo = default, string? language = null, bool convertLinks = true, bool? debug = null)
+        => GetHelper.Get(name, npo, language, convertLinks, debug);
 
     public TValue? Get<TValue>(string name)
         => GetHelper.Get<TValue>(name);
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public TValue? Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue? fallback = default)
-        => GetHelper.Get(name, noParamOrder, fallback);
+    public TValue? Get<TValue>(string name, NoParamOrder npo = default, TValue? fallback = default)
+        => GetHelper.Get(name, npo, fallback);
 
     #endregion
 

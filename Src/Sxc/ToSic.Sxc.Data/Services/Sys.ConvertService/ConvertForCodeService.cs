@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Services.Sys.ConvertService;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ConvertForCodeService(ConvertValueService cnvSvc) : ServiceBase("Sxc.CnvSrv", connect: [cnvSvc])
 {
-    public string? ForCode(object? value, NoParamOrder noParamOrder = default, string? fallback = default)
+    public string? ForCode(object? value, NoParamOrder npo = default, string? fallback = default)
     {
         if (value == null)
             return fallback;

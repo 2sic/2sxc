@@ -78,17 +78,17 @@ internal class WebPageServiceObsolete(Services.IPageService pageServiceImplement
         return pageServiceImplementation.AddJsonLd(jsonObject);
     }
 
-    public string AddIcon(string path, NoParamOrder noParamOrder = default, string rel = "", int size = 0,
+    public string AddIcon(string path, NoParamOrder npo = default, string rel = "", int size = 0,
         string? type = null)
     {
-        return pageServiceImplementation.AddIcon(path, noParamOrder, rel, size, type);
+        return pageServiceImplementation.AddIcon(path, npo, rel, size, type);
     }
 
-    public string AddIconSet(string path, NoParamOrder noParamOrder = default, object? favicon = null,
+    public string AddIconSet(string path, NoParamOrder npo = default, object? favicon = null,
         IEnumerable<string>? rels = null,
         IEnumerable<int>? sizes = null)
     {
-        return pageServiceImplementation.AddIconSet(path, noParamOrder, favicon, rels, sizes);
+        return pageServiceImplementation.AddIconSet(path, npo, favicon, rels, sizes);
     }
 
     public string Activate(params string[] keys)

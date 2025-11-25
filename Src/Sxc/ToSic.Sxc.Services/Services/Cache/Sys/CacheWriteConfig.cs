@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Services.Cache.Sys;
 /// </summary>
 public record CacheWriteConfig
 {
-    public CacheWriteConfig(NoParamOrder protector = default, string? watch = null)
+    public CacheWriteConfig(NoParamOrder npo = default, string? watch = null)
     {
         foreach (var part in watch.CsvToArrayWithoutEmpty())
             switch (part.ToLowerInvariant())

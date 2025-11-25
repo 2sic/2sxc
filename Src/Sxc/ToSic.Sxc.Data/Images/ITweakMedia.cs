@@ -31,17 +31,17 @@ public interface ITweakMedia
     /// Name of an existing configuration, such as "Lightbox".
     /// If not specified (null) will default to "Content".
     /// </param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">Tweak API to customize further settings</param>
     public ITweakMedia Resize(
         string? name,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakResize, ITweakResize>? tweak = default
     );
 
     ITweakMedia Resize(
         IResizeSettings settings,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakResize, ITweakResize>? tweak = default
     );
     // Note: Recipe is missing
@@ -107,13 +107,13 @@ public interface ITweakMedia
     #region TweakInput - attempted in v20.09 but doesn't work - reason is we would have to pass the tweak very, very deep into the system which we stopped
 
     ///// <inheritdoc cref="ITweakInput{IInput}.Input(IInput, NoParamOrder)"/>
-    //ITweakMedia Input(string replace, NoParamOrder protector = default);
+    //ITweakMedia Input(string replace, NoParamOrder npo = default);
 
     ///// <inheritdoc cref="ITweakInput{IInput}.Input(Func{IInput}, NoParamOrder)"/>
-    //ITweakMedia Input(Func<string> func, NoParamOrder protector = default);
+    //ITweakMedia Input(Func<string> func, NoParamOrder npo = default);
 
     ///// <inheritdoc cref="ITweakInput{IInput}.Input(Func{IInput, IInput}, NoParamOrder)"/>
-    //ITweakMedia Input(Func<string, string> func, NoParamOrder protector = default);
+    //ITweakMedia Input(Func<string, string> func, NoParamOrder npo = default);
 
 
     #endregion

@@ -18,7 +18,7 @@ public interface IMailService: INeedsExecutionContext
     /// Quickly create a MailMessage object for further modification and then sending using <see cref="Send(MailMessage)"/>
     /// If you don't want to modify the resulting object, skip this and use the direct-send method. 
     /// </summary>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="from">
     ///     sender e-mail address in one of the following formats
     ///     * An e-mail string like "info@somwhere.com"
@@ -50,7 +50,7 @@ public interface IMailService: INeedsExecutionContext
     /// </param>
     /// <returns>The newly created `MailMessage` object</returns>
     MailMessage Create(
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? from = null,
         object? to = null,
         object? cc = null,
@@ -72,7 +72,7 @@ public interface IMailService: INeedsExecutionContext
     /// <summary>
     /// Quickly create and send an E-Mail.
     /// </summary>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="from">
     ///     sender e-mail address in one of the following formats
     ///     * An e-mail string like "info@somwhere.com"
@@ -104,7 +104,7 @@ public interface IMailService: INeedsExecutionContext
     /// </param>
     /// <returns>void</returns>
     void Send(
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? from = null,
         object? to = null,
         object? cc = null,

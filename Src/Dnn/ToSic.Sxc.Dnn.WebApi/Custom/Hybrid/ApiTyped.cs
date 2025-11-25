@@ -71,7 +71,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
 
     /// <inheritdoc cref="ITypedCode16.GetService{TService}(NoParamOrder, string?)"/>
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public TService GetService<TService>(NoParamOrder protector = default, string typeName = default) where TService : class
+    public TService GetService<TService>(NoParamOrder npo = default, string typeName = default) where TService : class
         => AppCodeGetNamedServiceHelper.GetService<TService>(owner: this, CodeHelper.Specs, typeName);
 
     /// <inheritdoc cref="IDynamicCodeDocs.Link" />
@@ -128,9 +128,9 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     #region Adam
 
     /// <inheritdoc cref="IDynamicWebApi.SaveInAdam"/>
-    public IFile SaveInAdam(NoParamOrder noParamOrder = default, Stream stream = null, string fileName = null, string contentType = null,
+    public IFile SaveInAdam(NoParamOrder npo = default, Stream stream = null, string fileName = null, string contentType = null,
         Guid? guid = null, string field = null, string subFolder = "")
-        => DynHlp.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
+        => DynHlp.SaveInAdam(stream: stream, fileName: fileName, contentType: contentType, guid: guid, field: field, subFolder: subFolder);
 
     #endregion
 
@@ -155,7 +155,7 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     string IGetCodePath.CreateInstancePath { get; set; }
 
     /// <inheritdoc cref="ITypedCode16.GetCode"/>
-    public dynamic GetCode(string path, NoParamOrder noParamOrder = default, string className = default)
+    public dynamic GetCode(string path, NoParamOrder npo = default, string className = default)
         => CompileCodeHlp.GetCode(path, className: className);
 
     #endregion
@@ -183,11 +183,11 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     #region As Conversions
 
     /// <inheritdoc cref="ITypedApi.AsItem" />
-    public ITypedItem AsItem(object data, NoParamOrder noParamOrder = default, bool? propsRequired = default, bool? mock = default)
+    public ITypedItem AsItem(object data, NoParamOrder npo = default, bool? propsRequired = default, bool? mock = default)
         => CodeApi.Cdf.AsItem(data, new() { ItemIsStrict = propsRequired ?? true, UseMock = mock == true });
 
     /// <inheritdoc cref="ITypedApi.AsItems" />
-    public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
+    public IEnumerable<ITypedItem> AsItems(object list, NoParamOrder npo = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsItems(list, new() { ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="ITypedApi.AsEntity" />
@@ -195,11 +195,11 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
         => CodeApi.Cdf.AsEntity(thing);
 
     /// <inheritdoc cref="ITypedApi.AsTyped" />
-    public ITyped AsTyped(object original, NoParamOrder noParamOrder = default, bool? propsRequired = default)
+    public ITyped AsTyped(object original, NoParamOrder npo = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsTyped(original, new() { EntryPropIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="ITypedApi.AsTypedList" />
-    public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder noParamOrder = default, bool? propsRequired = default)
+    public IEnumerable<ITyped> AsTypedList(object list, NoParamOrder npo = default, bool? propsRequired = default)
         => CodeApi.Cdf.AsTypedList(list, new() { EntryPropIsRequired = false, ItemIsStrict = propsRequired ?? true });
 
     /// <inheritdoc cref="ITypedApi.AsStack" />
@@ -220,13 +220,13 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     #region Net Core Compatibility Shims - Copy this entire section to WebApi Files
 
     /// <inheritdoc cref="IDynamicWebApi.File"/>
-    public dynamic File(NoParamOrder noParamOrder = default,
+    public dynamic File(NoParamOrder npo = default,
         bool? download = null,
         string virtualPath = null,
         string contentType = null,
         string fileDownloadName = null,
         object contents = null)
-        => Shim.File(noParamOrder, download, virtualPath, contentType, fileDownloadName, contents);
+        => Shim.File(download: download, virtualPath: virtualPath, contentType: contentType, fileDownloadName: fileDownloadName, contents: contents);
 
     private WebApiCoreShim Shim => new(Request);
 
@@ -297,14 +297,14 @@ public abstract class ApiTyped: DnnSxcCustomControllerBase, IHasCodeLog, IDynami
     #region As / AsList WIP v17
 
     /// <inheritdoc />
-    public T As<T>(object source, NoParamOrder protector = default, bool mock = false)
+    public T As<T>(object source, NoParamOrder npo = default, bool mock = false)
         where T : class, ICanWrapData
-        => CodeApi.Cdf.AsCustom<T>(source: source, protector: protector, mock: mock);
+        => CodeApi.Cdf.AsCustom<T>(source: source, npo: npo, mock: mock);
 
     /// <inheritdoc />
-    public IEnumerable<T> AsList<T>(object source, NoParamOrder protector = default, bool nullIfNull = default)
+    public IEnumerable<T> AsList<T>(object source, NoParamOrder npo = default, bool nullIfNull = default)
         where T : class, ICanWrapData
-        => CodeApi.Cdf.AsCustomList<T>(source, protector, nullIfNull);
+        => CodeApi.Cdf.AsCustomList<T>(source, npo, nullIfNull);
 
     #endregion
 

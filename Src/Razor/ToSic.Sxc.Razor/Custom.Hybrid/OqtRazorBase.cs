@@ -53,7 +53,7 @@ public abstract class OqtRazorBase<TModel>: Microsoft.AspNetCore.Mvc.Razor.Razor
 
     /// <inheritdoc cref="ITypedCode16.GetService{TService}(NoParamOrder, string?)"/>
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public TService GetService<TService>(NoParamOrder protector = default, string? typeName = default) where TService : class
+    public TService GetService<TService>(NoParamOrder npo = default, string? typeName = default) where TService : class
         => AppCodeGetNamedServiceHelper.GetService<TService>(owner: this, RzrHlp.CodeHelper.Specs, typeName);
 
 

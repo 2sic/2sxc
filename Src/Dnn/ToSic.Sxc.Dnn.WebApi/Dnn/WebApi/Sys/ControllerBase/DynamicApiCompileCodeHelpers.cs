@@ -122,7 +122,7 @@ internal class DynamicApiCompileCodeHelpers: CompileCodeHelper
 
     public AdamCode AdamCode { get; private set; }
 
-    public Sxc.Adam.IFile SaveInAdam(NoParamOrder noParamOrder = default,
+    public Sxc.Adam.IFile SaveInAdam(NoParamOrder npo = default,
         Stream stream = null,
         string fileName = null,
         string contentType = null,

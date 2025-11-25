@@ -38,7 +38,7 @@ internal class GetAndConvertHelper(
     public object? Get(string name) => TryGet(name, lookupLink: true).Result;
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public object? Get(string name, NoParamOrder noParamOrder = default, string? language = null, bool convertLinks = true, bool? debug = null)
+    public object? Get(string name, NoParamOrder npo = default, string? language = null, bool convertLinks = true, bool? debug = null)
     {
         _debug = debug;
         var result = TryGet(name, language: language, lookupLink: convertLinks).Result;
@@ -51,7 +51,7 @@ internal class GetAndConvertHelper(
         => TryGet(name).Result.ConvertOrDefault<TValue>();
 
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    public TValue? Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue? fallback = default)
+    public TValue? Get<TValue>(string name, NoParamOrder npo = default, TValue? fallback = default)
         => TryGet(name).Result.ConvertOrFallback(fallback);
 
     #endregion

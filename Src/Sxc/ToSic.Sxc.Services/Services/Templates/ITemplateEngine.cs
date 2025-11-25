@@ -18,7 +18,7 @@ public interface ITemplateEngine
     /// Get a list of underlying sources, mainly for debugging.
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<ILookUp> GetSources(NoParamOrder protector = default, int depth = 0);
+    public IEnumerable<ILookUp> GetSources(NoParamOrder npo = default, int depth = 0);
 
     /// <summary>
     /// Basic Parse functionality.
@@ -42,5 +42,5 @@ public interface ITemplateEngine
     /// Defaults to `0` for safety, added v20.09
     /// </param>
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    string Parse(string template, NoParamOrder protector = default, bool allowHtml = false, IEnumerable<ILookUp>? sources = default, int recursions = TemplateEngineTokens.MaxDepth);
+    string Parse(string template, NoParamOrder npo = default, bool allowHtml = false, IEnumerable<ILookUp>? sources = default, int recursions = TemplateEngineTokens.MaxDepth);
 }

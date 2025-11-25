@@ -9,7 +9,7 @@ partial class ImageService
     /// <inheritdoc />
     public IResizeSettings Settings(
         object? settings = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakResize, ITweakResize>? tweak = default,
         object? factor = default,
         object? width = default,
@@ -21,7 +21,7 @@ partial class ImageService
         object? aspectRatio = default,
         string? parameters = default,
         object? recipe = default
-    ) => SettingsInternal(settings: settings, noParamOrder: noParamOrder, tweak: tweak,
+    ) => SettingsInternal(settings: settings, npo: npo, tweak: tweak,
         factor: factor, width: width, height: height, quality: quality,
         resizeMode: resizeMode, scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
         parameters: parameters, recipe: recipe);
@@ -32,7 +32,7 @@ partial class ImageService
     /// <returns>an internal settings record which could be further manipulated</returns>
     internal ResizeSettings.ResizeSettings SettingsInternal(
         object? settings = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakResize, ITweakResize>? tweak = default,
         object? factor = default,
         object? width = default,
@@ -48,7 +48,7 @@ partial class ImageService
     {
         var realSettings = GetBestSettings(settings);
 
-        var almostFinal = ImgLinker.ResizeParamMerger.BuildResizeSettings(noParamOrder: noParamOrder, settings: realSettings, factor: factor,
+        var almostFinal = ImgLinker.ResizeParamMerger.BuildResizeSettings(npo: npo, settings: realSettings, factor: factor,
             width: width, height: height, quality: quality, resizeMode: resizeMode,
             scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, advanced: AdvancedSettings.Parse(recipe));
 
@@ -94,7 +94,7 @@ partial class ImageService
     /// <inheritdoc />
     public Recipe Recipe(
         Recipe recipe,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? name = default,
         int width = default,
         string? variants = default,

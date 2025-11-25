@@ -7,7 +7,7 @@ public partial interface IToolbarBuilder
     /// Can also be used to remove the same button on a toolbar which would have it by default. 
     /// </summary>
     /// <param name="target">_not used ATM_ just here for API consistency</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters</param>
     /// <param name="operation">
     /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
@@ -18,7 +18,7 @@ public partial interface IToolbarBuilder
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder App(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
@@ -30,7 +30,7 @@ public partial interface IToolbarBuilder
     /// Can also be used to remove the same button on a toolbar which would have it by default.
     /// </summary>
     /// <param name="target">_not used ATM_ just here for API consistency</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters</param>
     /// <param name="operation">
     /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
@@ -41,7 +41,7 @@ public partial interface IToolbarBuilder
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder AppImport(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
@@ -53,7 +53,7 @@ public partial interface IToolbarBuilder
     /// Can also be used to remove the same button on a toolbar which would have it by default.
     /// </summary>
     /// <param name="target">_not used ATM_ just here for API consistency</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters</param>
     /// <param name="operation">
     /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
@@ -64,7 +64,7 @@ public partial interface IToolbarBuilder
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder AppResources(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
@@ -76,7 +76,7 @@ public partial interface IToolbarBuilder
     /// Can also be used to remove the same button on a toolbar which would have it by default.
     /// </summary>
     /// <param name="target">_not used ATM_ just here for API consistency</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters</param>
     /// <param name="operation">
     /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
@@ -87,7 +87,7 @@ public partial interface IToolbarBuilder
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder AppSettings(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
@@ -99,7 +99,7 @@ public partial interface IToolbarBuilder
     /// Can also be used to remove the same button on a toolbar which would have it by default.
     /// </summary>
     /// <param name="target">_not used ATM_ just here for API consistency</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters</param>
     /// <param name="operation">
     /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
@@ -110,7 +110,7 @@ public partial interface IToolbarBuilder
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder Apps(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
@@ -122,7 +122,7 @@ public partial interface IToolbarBuilder
     /// Can also be used to remove the same button on a toolbar which would have it by default.
     /// </summary>
     /// <param name="target">_not used ATM_ just here for API consistency</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters</param>
     /// <param name="operation">
     /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
@@ -133,7 +133,7 @@ public partial interface IToolbarBuilder
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder System(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
@@ -145,7 +145,7 @@ public partial interface IToolbarBuilder
     /// Can also be used to remove the same button on a toolbar which would have it by default.
     /// </summary>
     /// <param name="target">_not used ATM_ just here for API consistency</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters</param>
     /// <param name="operation">
     /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
@@ -156,7 +156,7 @@ public partial interface IToolbarBuilder
     /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
     IToolbarBuilder Insights(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,

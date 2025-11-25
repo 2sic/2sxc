@@ -28,15 +28,15 @@ internal class JsonService(Generator<CodeJsonWrapper> wrapJsonGenerator)
         => JsonSerializer.Serialize(item, SafeJsonForHtmlAttributes);
 
     /// <inheritdoc />
-    public ITyped? ToTyped(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default)
+    public ITyped? ToTyped(string json, NoParamOrder npo = default, string? fallback = default, bool? propsRequired = default)
         => wrapJsonGenerator.New()
             .Setup(WrapperSettings.Typed(true, true, propsRequired: propsRequired ?? true))
-            .JsonToTyped(json, noParamOrder, fallback);
+            .JsonToTyped(json, npo, fallback);
 
 
     /// <inheritdoc />
-    public IEnumerable<ITyped>? ToTypedList(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default)
+    public IEnumerable<ITyped>? ToTypedList(string json, NoParamOrder npo = default, string? fallback = default, bool? propsRequired = default)
         => wrapJsonGenerator.New()
             .Setup(WrapperSettings.Typed(true, true, propsRequired: propsRequired ?? true))
-            .JsonToTypedList(json, noParamOrder, fallback);
+            .JsonToTypedList(json, npo, fallback);
 }

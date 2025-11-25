@@ -27,7 +27,7 @@ public interface IRenderService
     /// At the moment it MUST stay internal, as it's not clear what API we want to surface
     /// </summary>
     /// <param name="parent">The parent-item containing the content-blocks and providing edit-context</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="item">The content-block item to render. Optional, by default the same item is used as the context.</param>
     /// <param name="field">Optional: </param>
     /// <param name="newGuid">Internal: this is the guid given to the item when being created in this block. Important for the inner-content functionality to work. </param>
@@ -38,7 +38,7 @@ public interface IRenderService
     /// </remarks>
     IRawHtmlString One(
         ICanBeItem parent,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         ICanBeEntity? item = null,
         object? data = null,
         string? field = null,
@@ -49,7 +49,7 @@ public interface IRenderService
     /// Render content-blocks into a larger html-block containing placeholders
     /// </summary>
     /// <param name="parent">The parent-item containing the content-blocks and providing edit-context</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="field">Required: Field containing the content-blocks. </param>
     /// <param name="max">BETA / WIP</param>
     /// <param name="merge">Optional: html-text containing special placeholders.</param>
@@ -60,7 +60,7 @@ public interface IRenderService
     /// </remarks>
     IRawHtmlString All(
         ICanBeItem parent,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? field = null,
         string? apps = null,
         int max = 100,
@@ -72,7 +72,7 @@ public interface IRenderService
     /// </summary>
     /// <param name="pageId"></param>
     /// <param name="moduleId"></param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="data">Data to give the Razor as `DynamicModel` - new 15.07</param>
     /// <returns>
     /// An HTML-String which can be added to the output directly.
@@ -82,7 +82,7 @@ public interface IRenderService
     IRenderResult Module(
         int pageId,
         int moduleId,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? data = null
     );
 }

@@ -20,7 +20,7 @@ public interface ITweakButton
     /// Add a floating note to the button.
     /// </summary>
     /// <param name="note">The note/message</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="type">Optional type, like `info` (default), `warning`, `help`</param>
     /// <param name="background">Background color.</param>
     /// <param name="delay">Delay show by this duration in ms. If mouse leaves before, it won't appear (new v17).</param>
@@ -34,7 +34,7 @@ public interface ITweakButton
     /// </remarks>
     ITweakButton Note(
         string? note = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? type = default,
         string? background = default,
         int delay = default,
@@ -60,7 +60,7 @@ public interface ITweakButton
     /// <returns></returns>
     ITweakButton Color(
         string? color = default,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? background = default,
         string? foreground = default
     );

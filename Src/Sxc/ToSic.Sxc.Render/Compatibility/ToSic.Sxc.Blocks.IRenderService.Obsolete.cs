@@ -16,12 +16,12 @@
 //{
 //    [PrivateApi]
 //    [Obsolete("Old interface. Pls use ToSic.Sxc.Services.IRenderService instead.")]
-//    IRawHtmlString One(ICanBeItem parent, NoParamOrder noParamOrder = default,
+//    IRawHtmlString One(ICanBeItem parent, NoParamOrder npo = default,
 //        ICanBeEntity? item = null, object? data = null, string? field = null, Guid? newGuid = null);
 
 //    [PrivateApi]
 //    [Obsolete("Old interface. Pls use ToSic.Sxc.Services.IRenderService instead.")]
-//    IRawHtmlString All(ICanBeItem parent, NoParamOrder noParamOrder = default,
+//    IRawHtmlString All(ICanBeItem parent, NoParamOrder npo = default,
 //        string? field = null, string? apps = null, int max = 100, string? merge = null);
 //}
 //#endif

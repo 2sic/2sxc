@@ -21,7 +21,7 @@ public interface ITemplateService
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="sources">optional _additional_ sources</param>
     /// <returns></returns>
-    ITemplateEngine Default(NoParamOrder protector = default, IEnumerable<ILookUp>? sources = null);
+    ITemplateEngine Default(NoParamOrder npo = default, IEnumerable<ILookUp>? sources = null);
 
     /// <summary>
     /// Start with an empty engine.
@@ -30,7 +30,7 @@ public interface ITemplateService
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="sources">optional sources, but without them this engine won't do much</param>
     /// <returns></returns>
-    ITemplateEngine Empty(NoParamOrder protector = default, IEnumerable<ILookUp>? sources = null);
+    ITemplateEngine Empty(NoParamOrder npo = default, IEnumerable<ILookUp>? sources = null);
 
     /// <summary>
     /// Get a built-in source by name.
@@ -67,7 +67,7 @@ public interface ITemplateService
     /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="dimensions">optional array of languages to use when looking for the value - if the data is multi-language. Default to current languages.</param>
     /// <returns></returns>
-    ILookUp CreateSource(string name, ICanBeEntity item, NoParamOrder protector = default, string[]? dimensions = default);
+    ILookUp CreateSource(string name, ICanBeEntity item, NoParamOrder npo = default, string[]? dimensions = default);
 
     /// <summary>
     /// Create a source using a function, basically a very custom source. 
@@ -110,7 +110,7 @@ public interface ITemplateService
     /// Defaults to `0`, added v20.09
     /// </param>
     /// <returns></returns>
-    string Parse(string template, NoParamOrder protector = default, bool allowHtml = false, IEnumerable<ILookUp>? sources = default, int recursions = TemplateEngineTokens.MaxDepth);
+    string Parse(string template, NoParamOrder npo = default, bool allowHtml = false, IEnumerable<ILookUp>? sources = default, int recursions = TemplateEngineTokens.MaxDepth);
 
 
     /// <summary>
@@ -132,7 +132,7 @@ public interface ITemplateService
     ///
     /// If neither parser nor sources are provided, an empty parser will be used, resulting in no changes to the original values.
     /// </remarks>
-    ITypedItem ParseAsItem(ICanBeEntity original, NoParamOrder protector = default, bool allowHtml = false, ITemplateEngine? parser = null, IEnumerable<ILookUp>? sources = null, int recursions = TemplateEngineTokens.MaxDepth);
+    ITypedItem ParseAsItem(ICanBeEntity original, NoParamOrder npo = default, bool allowHtml = false, ITemplateEngine? parser = null, IEnumerable<ILookUp>? sources = null, int recursions = TemplateEngineTokens.MaxDepth);
 
     /// <summary>
     /// Take an entity, TypedItem or similar object, and return a type `T` which will run its values through the parser.
@@ -153,6 +153,6 @@ public interface ITemplateService
     ///
     /// If neither parser nor sources are provided, an empty parser will be used, resulting in no changes to the original values.
     /// </remarks>
-    T ParseAs<T>(ICanBeEntity original, NoParamOrder protector = default, bool allowHtml = false, ITemplateEngine? parser = null, IEnumerable<ILookUp>? sources = null, int recursions = TemplateEngineTokens.MaxDepth)
+    T ParseAs<T>(ICanBeEntity original, NoParamOrder npo = default, bool allowHtml = false, ITemplateEngine? parser = null, IEnumerable<ILookUp>? sources = null, int recursions = TemplateEngineTokens.MaxDepth)
         where T : class, ICanWrapData;
 }

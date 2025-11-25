@@ -16,7 +16,7 @@ public interface IDynamicWebApi
     /// Save a file from a stream (usually an upload from the browser) into an adam-field of an item.
     /// Read more about this in the [WebAPI docs for SaveInAdam](xref:NetCode.WebApi.DotNet.SaveInAdam)
     /// </summary>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="stream">the stream</param>
     /// <param name="fileName">file name to save to</param>
     /// <param name="contentType">content-type of the target item (important for security checks)</param>
@@ -25,7 +25,7 @@ public interface IDynamicWebApi
     /// <param name="subFolder"></param>
     /// <returns></returns>
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    IFile SaveInAdam(NoParamOrder noParamOrder = default,
+    IFile SaveInAdam(NoParamOrder npo = default,
         Stream? stream = null,
         string? fileName = null,
         string? contentType = null,
@@ -40,7 +40,7 @@ public interface IDynamicWebApi
     ///
     /// Typical use: `return File(download: true, contentType: "text/xml", contents: ...);`
     /// </summary>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="download">If a download should be enforced (otherwise the file may just be displayed - like an image)</param>
     /// <param name="virtualPath">Path in the website to get the file from. Provide _either_ virtualPath or contents</param>
     /// <param name="contentType">Mime Content-type. Will try to auto-detect from virtualPath or fileDownloadName if not provided.</param>
@@ -51,7 +51,7 @@ public interface IDynamicWebApi
     /// Added in 2sxc 12.05
     /// </remarks>
     [ShowApiWhenReleased(ShowApiMode.Never)]
-    dynamic File(NoParamOrder noParamOrder = default,
+    dynamic File(NoParamOrder npo = default,
         // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
         bool? download = null,
         // important: this is the virtualPath, but it should not have the same name, to not confuse the compiler with same sounding param names

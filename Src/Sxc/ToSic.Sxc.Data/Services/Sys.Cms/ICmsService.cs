@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Services.Sys.Cms;
 public interface ICmsService
 {
     IHtmlTag Html(object thing,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         object? container = default,
         string? classes = default,
         bool debug = default,

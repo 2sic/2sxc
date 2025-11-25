@@ -10,7 +10,7 @@ partial record ToolbarBuilder
     private IToolbarBuilder AddListAction(
         string commandName,
         object? target,
-        NoParamOrder noParamOrder,
+        NoParamOrder npo,
         string? contentType,
         object? ui,
         object? parameters,
@@ -32,67 +32,67 @@ partial record ToolbarBuilder
 
     public IToolbarBuilder Add(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? contentType = null,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction("add", target, noParamOrder, contentType, ui, parameters, operation, tweak);
+    ) => AddListAction("add", target, npo, contentType, ui, parameters, operation, tweak);
 
     public IToolbarBuilder AddExisting(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         string? contentType = null,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction("add-existing", target, noParamOrder, contentType, ui, parameters, operation, tweak);
+    ) => AddListAction("add-existing", target, npo, contentType, ui, parameters, operation, tweak);
 
     public IToolbarBuilder List(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction("list", target, noParamOrder, null, ui, parameters, operation, tweak);
+    ) => AddListAction("list", target, npo, null, ui, parameters, operation, tweak);
 
 
     public IToolbarBuilder MoveDown(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction("movedown", target, noParamOrder, null, ui, parameters, operation, tweak);
+    ) => AddListAction("movedown", target, npo, null, ui, parameters, operation, tweak);
 
     public IToolbarBuilder MoveUp(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction("moveup", target, noParamOrder, null, ui, parameters, operation, tweak);
+    ) => AddListAction("moveup", target, npo, null, ui, parameters, operation, tweak);
 
     public IToolbarBuilder Remove(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction("remove", target, noParamOrder, null, ui, parameters, operation, tweak);
+    ) => AddListAction("remove", target, npo, null, ui, parameters, operation, tweak);
 
     public IToolbarBuilder Replace(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddListAction("replace", target, noParamOrder, null, ui, parameters, operation, tweak);
+    ) => AddListAction("replace", target, npo, null, ui, parameters, operation, tweak);
 }

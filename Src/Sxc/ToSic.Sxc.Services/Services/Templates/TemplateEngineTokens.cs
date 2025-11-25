@@ -15,7 +15,7 @@ internal class TemplateEngineTokens(ILookUpEngine original): ITemplateEngine, IW
     /// </summary>
     internal const int MaxDepth = 0;
 
-    IEnumerable<ILookUp> ITemplateEngine.GetSources(NoParamOrder protector, int depth)
+    IEnumerable<ILookUp> ITemplateEngine.GetSources(NoParamOrder npo, int depth)
     {
         if (depth == 0)
             return original.Sources;
@@ -33,9 +33,9 @@ internal class TemplateEngineTokens(ILookUpEngine original): ITemplateEngine, IW
     }
 
     string ITemplateEngine.Parse(string template)
-        => ((ITemplateEngine)this).Parse(template, protector: default, sources: null);
+        => ((ITemplateEngine)this).Parse(template, npo: default, sources: null);
 
-    string ITemplateEngine.Parse(string template, NoParamOrder protector, bool allowHtml, IEnumerable<ILookUp>? sources, int recursions)
+    string ITemplateEngine.Parse(string template, NoParamOrder npo, bool allowHtml, IEnumerable<ILookUp>? sources, int recursions)
     {
         var dic = new Dictionary<string, string>
         {

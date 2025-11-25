@@ -8,7 +8,7 @@ partial record ToolbarBuilder
 {
     private IToolbarBuilder AddAdminAction(
         string verb,
-        NoParamOrder noParamOrder,
+        NoParamOrder npo,
         object? ui,
         object? parameters,
         string? operation,
@@ -41,66 +41,66 @@ partial record ToolbarBuilder
         
     public IToolbarBuilder App(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("app", noParamOrder, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction("app", npo, ui, parameters, operation, target, tweak);
 
     public IToolbarBuilder AppImport(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("app-import", noParamOrder, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction("app-import", npo, ui, parameters, operation, target, tweak);
         
     public IToolbarBuilder AppResources(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("app-resources", noParamOrder, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction("app-resources", npo, ui, parameters, operation, target, tweak);
 
     public IToolbarBuilder AppSettings(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("app-settings", noParamOrder, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction("app-settings", npo, ui, parameters, operation, target, tweak);
 
     public IToolbarBuilder Apps(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("apps", noParamOrder, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction("apps", npo, ui, parameters, operation, target, tweak);
 
     public IToolbarBuilder System(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("system", noParamOrder, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction("system", npo, ui, parameters, operation, target, tweak);
 
 
     public IToolbarBuilder Insights(
         object? target = null,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         Func<ITweakButton, ITweakButton>? tweak = default,
         object? ui = null,
         object? parameters = null,
         string? operation = null
-    ) => AddAdminAction("insights", noParamOrder, ui, parameters, operation, target, tweak);
+    ) => AddAdminAction("insights", npo, ui, parameters, operation, target, tweak);
 
 }

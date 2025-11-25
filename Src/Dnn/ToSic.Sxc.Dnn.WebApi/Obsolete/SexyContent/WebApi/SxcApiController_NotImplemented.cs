@@ -25,7 +25,7 @@ partial class SxcApiController
     #endregion
 
     [PrivateApi]
-    public dynamic File(NoParamOrder noParamOrder = default, bool? download = null,
+    public dynamic File(NoParamOrder npo = default, bool? download = null,
         string virtualPath = null, string contentType = null, string fileDownloadName = null, object contents = null) =>
         throw new NotSupportedException($"This method is not available in the old {nameof(SxcApiController)}. {ApiController.ErrRecommendedNamespaces}");
 

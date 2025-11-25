@@ -37,7 +37,7 @@ internal class RenderingHelper(ILinkPaths linkPaths, LazySvc<IEnvironmentLogger>
 
 
     public string WrapInContext(string? content,
-        NoParamOrder noParamOrder = default,
+        NoParamOrder npo = default,
         int instanceId = 0,
         int contentBlockId = 0,
         bool editContext = false,

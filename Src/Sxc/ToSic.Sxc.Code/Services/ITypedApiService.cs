@@ -74,14 +74,14 @@ public interface ITypedApiService
     ///// Get a rich <see cref="Apps.IApp"/> object for a specific App.
     ///// This is the simplest way to work with data of this App, but won't give you commands like `AsDynamic(...)`
     ///// </summary>
-    ///// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    ///// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     ///// <param name="zoneId">The ZoneId of the App (optional)</param>
     ///// <param name="appId">The AppId - REQUIRED</param>
     ///// <param name="site">Site information for further context (optional) </param>
     ///// <param name="withUnpublished">Determines if the App.Data gives you unpublished data (like in admin-mode) or just published data. If not set, will default to user permissions.</param>
     ///// <returns>An initialized App object which you can use to access App.Data</returns>
     //IApp App(
-    //    NoParamOrder noParamOrder = default,
+    //    NoParamOrder npo = default,
     //    int? zoneId = null,
     //    int? appId = null,
     //    ISite? site = null,
@@ -98,19 +98,19 @@ public interface ITypedApiService
     ///// Get a rich <see cref="Apps.IApp"/> object for the primary (aka Site) App. 
     ///// This is the simplest way to work with data of this App, but won't give you commands like `AsDynamic(...)`
     ///// </summary>
-    ///// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    ///// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     ///// <param name="siteId">The SiteId which is the PortalId in DNN. Optional - without it, the current Site / Portal is used. </param>
     ///// <param name="overrideSite">Site information for further context (optional) </param>
     ///// <param name="withUnpublished">Determines if the App.Data gives you unpublished data (like in admin-mode) or just published data. If not set, will default to user permissions.</param>
     ///// <returns>An initialized App object which you can use to access App.Data</returns>
     //IApp AppOfSite(
     //    // ReSharper disable once MethodOverloadWithOptionalParameter
-    //    NoParamOrder noParamOrder = default,
+    //    NoParamOrder npo = default,
     //    int? siteId = null,
     //    ISite? overrideSite = null,
     //    bool? withUnpublished = null);
 
-    IAppTyped App(NoParamOrder noParamOrder = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null);
+    IAppTyped App(NoParamOrder npo = default, int? zoneId = null, int? appId = null, ISite? site = null, bool? withUnpublished = null);
 
     /// <inheritdoc />
     IAppTyped AppOfSite();

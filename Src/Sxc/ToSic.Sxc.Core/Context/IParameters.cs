@@ -58,14 +58,14 @@ public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
     /// <param name="name">Key/name of the parameter</param>
-    /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">Optional fallback value to use if not found</param>
     /// <returns></returns>
     /// <remarks>
     /// Added v15.04
     /// </remarks>
     // ReSharper disable once MethodOverloadWithOptionalParameter
-    TValue? Get<TValue>(string name, NoParamOrder noParamOrder = default, TValue? fallback = default);
+    TValue? Get<TValue>(string name, NoParamOrder npo = default, TValue? fallback = default);
 
     #endregion
 
@@ -212,7 +212,7 @@ public interface IParameters: IReadOnlyDictionary<string, string>, ITyped
     /// <param name="protector"></param>
     /// <param name="sort"></param>
     /// <returns></returns>
-    string ToString(NoParamOrder protector = default, bool sort = false);
+    string ToString(NoParamOrder npo = default, bool sort = false);
 
     #endregion
 

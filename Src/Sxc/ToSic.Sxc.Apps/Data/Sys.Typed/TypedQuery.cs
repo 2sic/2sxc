@@ -20,17 +20,17 @@ internal class TypedQuery(DataSourceBase.Dependencies services, LazySvc<QueryBui
     #endregion
 
     /// <inheritdoc />
-    IEnumerable<T>? ITypedQuery.GetAll<T>(NoParamOrder protector, string? typeName, bool nullIfNotFound)
+    IEnumerable<T>? ITypedQuery.GetAll<T>(NoParamOrder npo, string? typeName, bool nullIfNotFound)
         => ToTypedHelper.GetAllShared<T>(typeName, nullIfNotFound, useDefaultIfNameNotSetAndNotFound: true);
 
     /// <inheritdoc />
-    T? ITypedQuery.GetOne<T>(int id, NoParamOrder protector, bool skipTypeCheck)
+    T? ITypedQuery.GetOne<T>(int id, NoParamOrder npo, bool skipTypeCheck)
         where T : class
-        => ToTypedHelper.GetOne<T>(id, protector, skipTypeCheck);
+        => ToTypedHelper.GetOne<T>(id, npo, skipTypeCheck);
 
     /// <inheritdoc />
-    T? ITypedQuery.GetOne<T>(Guid guid, NoParamOrder protector, bool skipTypeCheck)
+    T? ITypedQuery.GetOne<T>(Guid guid, NoParamOrder npo, bool skipTypeCheck)
         where T : class
-        => ToTypedHelper.GetOne<T>(guid, protector, skipTypeCheck);
+        => ToTypedHelper.GetOne<T>(guid, npo, skipTypeCheck);
 
 }
