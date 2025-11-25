@@ -194,7 +194,7 @@ public interface ITypedApi
     /// </summary>
     /// <typeparam name="T">the target type</typeparam>
     /// <param name="source">the source object - an `IEntity` or `ITypedItem`</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="mock">if `true` will return a fake when `source` is `null` - otherwise a wrapper item with empty-contents</param>
     /// <returns></returns>
     /// <remarks>
@@ -209,7 +209,7 @@ public interface ITypedApi
     /// </summary>
     /// <typeparam name="T">the target type</typeparam>
     /// <param name="source">the source object - a List/Enumerable of `IEntity` or `ITypedItem`</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="nullIfNull">if `true` will return null when `source` is `null` - otherwise a wrapper item with empty-contents</param>
     /// <returns></returns>
     /// <remarks>

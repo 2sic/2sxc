@@ -9,8 +9,8 @@ namespace ToSic.Sxc.Services.Sys;
 // #NoEditorBrowsableBecauseOfInheritance
 //[ShowApiWhenReleased(ShowApiMode.Never)]
 [method: PrivateApi]
-public abstract class ServiceWithContext(string logName, NoParamOrder protect = default, object[]? connect = default)
-    : ServiceBase(logName, protect: protect, connect: connect), INeedsExecutionContext, ICanDebug
+public abstract class ServiceWithContext(string logName, NoParamOrder npo = default, object[]? connect = default)
+    : ServiceBase(logName, npo: npo, connect: connect), INeedsExecutionContext, ICanDebug
 {
     /// <summary>
     /// Connect to CodeRoot and it's log

@@ -21,7 +21,7 @@ public interface ITypedQuery: IDataSource
     /// This is usually a type of your `AppCode.Data` namespace.
     /// </summary>
     /// <typeparam name="T">The type to convert to - usually inheriting `Custom.Data.CustomItem` or `CustomModel`</typeparam>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="typeName">_optional_ type name which is used as the **stream** name when retrieving the data, as each stream contains entities of one type.</param>
     /// <param name="nullIfNotFound">if set, will return null if the type doesn't exist - default is empty list.</param>
     /// <returns></returns>
@@ -36,7 +36,7 @@ public interface ITypedQuery: IDataSource
     /// </summary>
     /// <typeparam name="T">The type to convert to - usually inheriting `Custom.Data.CustomItem` or `CustomModel`</typeparam>
     /// <param name="id">the ID as an int</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="skipTypeCheck">allow get even if the Content-Type of the item with the ID doesn't match the type specified in the parameter T</param>
     /// <returns></returns>
     /// <remarks>
@@ -51,7 +51,7 @@ public interface ITypedQuery: IDataSource
     /// </summary>
     /// <typeparam name="T">The type to convert to - usually inheriting `Custom.Data.CustomItem` or `CustomModel`</typeparam>
     /// <param name="guid">the ID as GUID</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="skipTypeCheck">allow get even if the Content-Type of the item with the ID doesn't match the type specified in the parameter T</param>
     /// <returns></returns>
     /// <remarks>

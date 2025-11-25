@@ -14,7 +14,7 @@ public interface ITweakInput<TInput>
     /// Simple value tweak, to inject a different value for use instead of the original.
     /// </summary>
     /// <param name="replace">replacement value to use instead</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <returns></returns>
     ITweakInput<TInput> Input(TInput replace, NoParamOrder npo = default);
     ///// <param name="step">optional step, such as 'before' or 'after' - default is 'before'</param>
@@ -24,7 +24,7 @@ public interface ITweakInput<TInput>
     /// Simple value tweak, to inject a different value for use instead of the original.
     /// </summary>
     /// <param name="func">function to generate a replacement value</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <returns></returns>
     ITweakInput<TInput> Input(Func<TInput> func, NoParamOrder npo = default);
     ///// <param name="step">optional step, such as 'before' or 'after' - default is 'before'</param>
@@ -34,7 +34,7 @@ public interface ITweakInput<TInput>
     /// Simple value tweak, to inject a different value for use instead of the original.
     /// </summary>
     /// <param name="func">function to generate a replacement value, but first providing the initial value</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <returns></returns>
     ITweakInput<TInput> Input(Func<TInput, TInput> func, NoParamOrder npo = default);
     ///// <param name="step">optional step, such as 'before' or 'after' - default is 'before'</param>
@@ -45,7 +45,7 @@ public interface ITweakInput<TInput>
     ///// Simple value tweak, to inject a different value for use instead of the original.
     ///// </summary>
     ///// <param name="func">function to generate a replacement value, receiving the previous value inside a <see cref="ITweakValue{TValue}"/> </param>
-    ///// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    ///// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     ///// <param name="step">optional step, such as 'before' or 'after' - default is 'before'</param>
     ///// <returns></returns>
     //[PrivateApi("not yet final")]

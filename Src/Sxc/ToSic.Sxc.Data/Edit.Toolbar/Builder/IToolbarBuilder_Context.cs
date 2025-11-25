@@ -69,7 +69,7 @@ public partial interface IToolbarBuilder
     /// <summary>
     /// Specify an audience for the toolbar - to activate even if the user wouldn't normally see it.
     /// </summary>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="everyone">default is `null`, set to true to make everybody see this.</param>
     /// <param name="roleNames">list/array of role names which should _also_ see the toolbar (new v20)</param>
     /// <param name="denyRoleNames">list/array of role names which should _never_ see the toolbar - has precedence over allow (new v20)</param>

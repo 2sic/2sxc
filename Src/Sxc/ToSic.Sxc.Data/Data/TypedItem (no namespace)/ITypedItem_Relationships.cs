@@ -27,7 +27,7 @@ partial interface ITypedItem
     /// Get a child and return with specified custom type.
     /// </summary>
     /// <param name="name">Name of the field</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns></returns>
     /// <remarks>
@@ -45,7 +45,7 @@ partial interface ITypedItem
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="field">Name of the field</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="type">Optional type filter - would only return items of this type. </param>
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns></returns>
@@ -61,7 +61,7 @@ partial interface ITypedItem
     /// Get either the _current_ parent or the first parent which would be found on `.Parents(...)` as **strongly typed**.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="current">if set to `true`, will get the Item which created the current item (the parent) which called `.Child(...)` or `.Children(...)`</param>
     /// <param name="type">Optional type filter - would only return items of this type. </param>
     /// <param name="field">Optional field filter - would only return items that point to the current item in a specific field name.</param>
@@ -82,7 +82,7 @@ partial interface ITypedItem
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="type">Optional type filter - would only return items of this type. If not specified (null) will use the name of T.</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="field">Optional field filter - would only return items that point to the current item in a specific field name.</param>
     /// <returns>A list of all items pointing here (filtered), converted to DynamicEntity for convenience.</returns>
     /// <remarks>Note that the parameter-order is reversed to the Children()</remarks>

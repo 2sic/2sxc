@@ -33,7 +33,7 @@ public interface ITemplateEngine
     /// Basic Parse functionality with more options.
     /// </summary>
     /// <param name="template">The string containing the token placeholders like `Hello [User:FirstName]`</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="allowHtml">allow adding html to the string - if false (default) will html encode anything found for safety before replacing something</param>
     /// <param name="sources">A list of sources to use for this parse - otherwise use the sources provided on creation of the template engine</param>
     /// <param name="recursions">

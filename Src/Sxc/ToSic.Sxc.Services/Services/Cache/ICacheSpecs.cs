@@ -83,7 +83,7 @@ public interface ICacheSpecs
     /// Set sliding expiration, alternative is absolute expiration.
     /// </summary>
     /// <param name="timeSpan"></param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="seconds">time in seconds - if specified, takes precedence - new v20.01</param>
     /// <returns></returns>
     /// <remarks>
@@ -101,7 +101,7 @@ public interface ICacheSpecs
     /// <summary>
     /// Depend on the app folder, so if any file in the app folder changes, the cache will be invalidated. WIP!
     /// </summary>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="withSubfolders">should it also watch subfolders? default is `true`</param>
     /// <returns></returns>
     ICacheSpecs WatchAppFolder(NoParamOrder npo = default, bool? withSubfolders = default);
@@ -122,7 +122,7 @@ public interface ICacheSpecs
     /// </summary>
     /// <param name="name"></param>
     /// <param name="value"></param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="caseSensitive"></param>
     /// <returns></returns>
     ICacheSpecs VaryBy(string name, string value, NoParamOrder npo = default, bool caseSensitive = false);
@@ -208,7 +208,7 @@ public interface ICacheSpecs
     /// Using this method will only vary the cache by the mentioned parameters and ignore the rest.
     /// </summary>
     /// <param name="names">Names of one or more parameters, comma-separated. If null, all parameters are used, if `""`, no parameters are used.</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="caseSensitive">Determines if the value should be treated case-sensitive, default is `false`</param>
     ICacheSpecs VaryByPageParameters(string? names = default, NoParamOrder npo = default, bool caseSensitive = false);
 
@@ -216,7 +216,7 @@ public interface ICacheSpecs
     /// Vary the cache by a custom parameters list.
     /// </summary>
     /// <param name="parameters">parameters object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="names">Names of one or more parameters, comma-separated</param>
     /// <param name="caseSensitive">Determines if the value should be treated case-sensitive, default is `false`</param>
     /// <returns></returns>
@@ -234,7 +234,7 @@ public interface ICacheSpecs
     /// Vary the cache by values in the model, so that each sample has its own cache. Used in Partial-Caching only. WORK-IN-PROGRESS!
     /// </summary>
     /// <param name="names">Names of one or more parameters, comma-separated</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="caseSensitive">Determines if the value should be treated case-sensitive, default is `false`</param>
     /// <returns></returns>
     /// <remarks>

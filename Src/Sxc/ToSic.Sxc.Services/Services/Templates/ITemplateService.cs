@@ -18,7 +18,7 @@ public interface ITemplateService
     /// <summary>
     /// Start with the default engine, which already has lookups for QueryString and similar sources.
     /// </summary>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="sources">optional _additional_ sources</param>
     /// <returns></returns>
     ITemplateEngine Default(NoParamOrder npo = default, IEnumerable<ILookUp>? sources = null);
@@ -27,7 +27,7 @@ public interface ITemplateService
     /// Start with an empty engine.
     /// This usually only makes sense, if you provide custom sources. 
     /// </summary>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="sources">optional sources, but without them this engine won't do much</param>
     /// <returns></returns>
     ITemplateEngine Empty(NoParamOrder npo = default, IEnumerable<ILookUp>? sources = null);
@@ -64,7 +64,7 @@ public interface ITemplateService
     /// </summary>
     /// <param name="name">The source name, basically the first part of the token eg: [Name:Value]</param>
     /// <param name="item">An <see cref="IEntity"/>, <see cref="ITypedItem"/> or similar object.</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="dimensions">optional array of languages to use when looking for the value - if the data is multi-language. Default to current languages.</param>
     /// <returns></returns>
     ILookUp CreateSource(string name, ICanBeEntity item, NoParamOrder npo = default, string[]? dimensions = default);
@@ -101,7 +101,7 @@ public interface ITemplateService
     /// Quick parse a template using the default engine, and optional sources.
     /// </summary>
     /// <param name="template"></param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="allowHtml">allow adding html to the string - if false (default) will html encode anything found for safety before replacing something</param>
     /// <param name="sources"></param>
     /// <param name="recursions">
@@ -117,7 +117,7 @@ public interface ITemplateService
     /// Take an entity, TypedItem or similar object, and return a TypedItem which will run its values through the parser.
     /// </summary>
     /// <param name="original"></param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="allowHtml">allow adding html to the string - if false (default) will html encode anything found for safety before replacing something</param>
     /// <param name="parser">A prepared parser - takes preference over `sources`</param>
     /// <param name="sources">A list of sources to create a parser</param>
@@ -138,7 +138,7 @@ public interface ITemplateService
     /// Take an entity, TypedItem or similar object, and return a type `T` which will run its values through the parser.
     /// </summary>
     /// <param name="original"></param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="allowHtml">allow adding html to the string - if false (default) will html encode anything found for safety before replacing something</param>
     /// <param name="parser">A prepared parser - takes preference over `sources`</param>
     /// <param name="sources">A list of sources to create a parser</param>

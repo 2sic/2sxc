@@ -49,7 +49,7 @@ public interface ITypedRazorModel: IHasKeys
     /// Will get the value and return as object, since the type isn't known. 
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="required">throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired)</param>
     /// <returns>Object if found, `null` if not found.</returns>
     object? Get(string name, NoParamOrder npo = default, bool? required = default);
@@ -59,7 +59,7 @@ public interface ITypedRazorModel: IHasKeys
     /// </summary>
     /// <typeparam name="T">The returned type</typeparam>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The fallback value. If provided, the type is automatically determined.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
@@ -78,7 +78,7 @@ public interface ITypedRazorModel: IHasKeys
     /// Code was usually created in the caller using `GetCode(...)` and may need to be passed around.
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">A fallback to use if not found - not commonly used here.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
@@ -96,7 +96,7 @@ public interface ITypedRazorModel: IHasKeys
     /// Will get the value and return in the desired type.
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The optional fallback value.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
@@ -109,7 +109,7 @@ public interface ITypedRazorModel: IHasKeys
     /// Will get the value and return in the desired type.
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The optional fallback value.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
@@ -122,7 +122,7 @@ public interface ITypedRazorModel: IHasKeys
     /// Will get the value and return in the desired type.
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The optional fallback value.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
@@ -136,7 +136,7 @@ public interface ITypedRazorModel: IHasKeys
     /// Will get the value and return in the desired type.
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The optional fallback value.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
@@ -153,7 +153,7 @@ public interface ITypedRazorModel: IHasKeys
     /// Will get the value and return in the desired type.
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The optional fallback value.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
@@ -167,7 +167,7 @@ public interface ITypedRazorModel: IHasKeys
     /// Will get the value and return in the desired type.
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The optional fallback value.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
@@ -181,7 +181,7 @@ public interface ITypedRazorModel: IHasKeys
     /// Will get the value and return in the desired type.
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The optional fallback value.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
@@ -195,7 +195,7 @@ public interface ITypedRazorModel: IHasKeys
     /// Will get the value and return in the desired type.
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The optional fallback value.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
@@ -214,7 +214,7 @@ public interface ITypedRazorModel: IHasKeys
     /// If the value is a list of files, then this will only return the first one.
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The optional fallback value.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
@@ -228,7 +228,7 @@ public interface ITypedRazorModel: IHasKeys
     /// If the value is a single file, will return a list containing that file.
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The optional fallback value.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
@@ -242,7 +242,7 @@ public interface ITypedRazorModel: IHasKeys
     /// If the value is a list of folders, then this will only return the first one.
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The optional fallback value.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
@@ -256,7 +256,7 @@ public interface ITypedRazorModel: IHasKeys
     /// If the value is a single folder, will return a list containing that folder.
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The optional fallback value.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
@@ -273,7 +273,7 @@ public interface ITypedRazorModel: IHasKeys
     /// Will get the value and return in the desired type.
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The optional fallback value.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
@@ -309,7 +309,7 @@ public interface ITypedRazorModel: IHasKeys
     /// If the value is a list of items, then this will only return the first one.
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The optional fallback value.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
@@ -323,7 +323,7 @@ public interface ITypedRazorModel: IHasKeys
     /// If the value is a single item, will return a list containing that item.
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The optional fallback value.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
@@ -336,7 +336,7 @@ public interface ITypedRazorModel: IHasKeys
     /// Will get the value being a toolbar as specified.
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The optional fallback value.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
@@ -353,7 +353,7 @@ public interface ITypedRazorModel: IHasKeys
     /// Will get the value being an `IHtmlTag` as specified (RazorBlade objects)
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The optional fallback value.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
@@ -367,7 +367,7 @@ public interface ITypedRazorModel: IHasKeys
     /// Will get the value being an list (IEnumerable) of `IHtmlTag` as specified (RazorBlade objects)
     /// </summary>
     /// <param name="name">Property name on the passed in data object</param>
-    /// <param name="protector">see [](xref:NetCode.Conventions.NamedParameters)</param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="fallback">The optional fallback value.</param>
     /// <param name="required">
     /// Throw error if `name` doesn't exist, see [](xref:NetCode.Conventions.PropertiesRequired).
