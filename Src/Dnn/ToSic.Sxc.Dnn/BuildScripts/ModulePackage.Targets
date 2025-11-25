@@ -65,11 +65,13 @@
 
       <!-- all js + css + html etc. stuff from assets-->
       <InstallInclude Include="$(Source)readme.md" Exclude="@(DefaultExclude)" />
-      <InstallIncludeJs Include="$(Source)\js\**\*.*" Exclude="$(Source)\js\**\*.map" />
-      <InstallIncludeSystem Include="$(Source)\system\**\*.*" Exclude="$(Source)\system\**\*.map" />
-      <InstallIncludeDist Include="$(Source)\dist\**\*.*" Exclude="$(Source)\dist\**\*.map" />
+      <InstallIncludeJsJs Include="$(Source)\js\**\*.*" Exclude="$(Source)\js\**\*.map" />
+      <!-- 2025-11-25 2dm for v20.09 - moving wysiwyg & gps to /extensions -->
+      <!--<InstallIncludeSystem Include="$(Source)\system\**\*.*" Exclude="$(Source)\system\**\*.map" />-->
+      <InstallIncludeJsExtensions Include="$(Source)\extensions\**\*.*" Exclude="$(Source)\extensions\**\*.map" />
+      <InstallIncludeJsDist Include="$(Source)\dist\**\*.*" Exclude="$(Source)\dist\**\*.map" />
       <!-- WIP - turnOn map files must be included for now-->
-      <InstallIncludeDist Include="$(Source)\turnOn\*.*" />
+      <InstallIncludeJsDist Include="$(Source)\turnOn\*.*" />
 
       <!-- all global types and queries -->
       <InstallInclude Include="..\..\Data\**\App_Data\new-app\**\*.*" />
@@ -272,9 +274,9 @@
 
     <!-- create the INSTALL RESOURCES.ZIP file -->
     <Copy SourceFiles="@(InstallInclude)" DestinationFolder="$(TempPackageResourcesFolder)\%(RecursiveDir)" />
-    <Copy SourceFiles="@(InstallIncludeJs)" DestinationFolder="$(TempPackageResourcesFolder)\js\%(RecursiveDir)" />
-    <Copy SourceFiles="@(InstallIncludeSystem)" DestinationFolder="$(TempPackageResourcesFolder)\system\%(RecursiveDir)" />
-    <Copy SourceFiles="@(InstallIncludeDist)" DestinationFolder="$(TempPackageResourcesFolder)\dist\%(RecursiveDir)" />
+    <Copy SourceFiles="@(InstallIncludeJsJs)" DestinationFolder="$(TempPackageResourcesFolder)\js\%(RecursiveDir)" />
+    <Copy SourceFiles="@(InstallIncludeJsExtensions)" DestinationFolder="$(TempPackageResourcesFolder)\extensions\%(RecursiveDir)" />
+    <Copy SourceFiles="@(InstallIncludeJsDist)" DestinationFolder="$(TempPackageResourcesFolder)\dist\%(RecursiveDir)" />
 
     <CreateItem Include="$(TempPackageResourcesFolder)\**\*.*">
       <Output TaskParameter="Include" ItemName="ResourcesContent" />
