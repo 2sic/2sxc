@@ -1,8 +1,8 @@
 using System.IO.Compression;
 using System.Text;
-using Tests.ToSic.ToSxc.WebApi.Extensions;
 using ToSic.Sys.Security.Encryption;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
 /// <summary>

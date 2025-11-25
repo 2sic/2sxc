@@ -14,6 +14,7 @@ using ToSic.Sys.Coding;
 using ToSic.Sys.DI;
 using ToSic.Sys.Logging;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
 /// <summary>
@@ -49,7 +50,7 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
         services.AddSingleton<IJsonService, SimpleJsonService>();
         services.AddTransient<ExtensionManifestService>();
             
-        var sp = services.BuildServiceProvider() as ServiceProvider 
+        var sp = services.BuildServiceProvider() 
             ?? throw new InvalidOperationException("Failed to build service provider");
 
         var appReadersLazy = new LazySvc<IAppReaderFactory>(sp);
@@ -82,7 +83,9 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
         Directory.CreateDirectory(dataDir);
             
         var jsonPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
-        var json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
+        var json = config is ExtensionManifest manifest 
+            ? ExtensionManifestSerializer.Serialize(manifest, new JsonSerializerOptions { WriteIndented = true })
+            : JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(jsonPath, json, new UTF8Encoding(false));
     }
 
@@ -96,7 +99,9 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
         Directory.CreateDirectory(dataDir);
             
         var jsonPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
-        var json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
+        var json = config is ExtensionManifest manifest 
+            ? ExtensionManifestSerializer.Serialize(manifest, new JsonSerializerOptions { WriteIndented = true })
+            : JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(jsonPath, json, new UTF8Encoding(false));
     }
 
@@ -125,21 +130,32 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
 
     private class FakeAppReaderFactory : IAppReaderFactory
     {
-        public IAppReader Get(int appId) => null!;
-        public IAppReader Get(IAppIdentity appIdentity) => null!;
-        public IAppReader GetSystemPreset() => null!;
-        public IAppIdentityPure AppIdentity(int appId) => new AppIdentity(1, appId) as IAppIdentityPure ?? throw new();
-        public IAppReader GetZonePrimary(int zoneId) => throw new NotImplementedException();
-        public IAppReader? TryGet(IAppIdentity appIdentity) => null;
-        public IAppReader? ToReader(IAppStateCache? state) => null;
-        public IAppReader? TryGetSystemPreset(bool nullIfNotLoaded) => null;
-        public IAppReader GetOrKeep(IAppIdentity appIdOrReader) => throw new NotImplementedException();
+        public IAppReader Get(int appId)
+            => null!;
+        public IAppReader Get(IAppIdentity appIdentity)
+            => null!;
+        public IAppReader GetSystemPreset()
+            => null!;
+        public IAppIdentityPure AppIdentity(int appId)
+            => new AppIdentity(1, appId) as IAppIdentityPure ?? throw new();
+        public IAppReader GetZonePrimary(int zoneId)
+            => throw new NotImplementedException();
+        public IAppReader? TryGet(IAppIdentity appIdentity)
+            => null;
+        public IAppReader? ToReader(IAppStateCache? state)
+            => null;
+        public IAppReader? TryGetSystemPreset(bool nullIfNotLoaded)
+            => null;
+        public IAppReader GetOrKeep(IAppIdentity appIdOrReader)
+            => throw new NotImplementedException();
     }
 
     private class FakeAppPathsMicroSvc(string root) : IAppPathsMicroSvc
     {
-        public IAppPaths Get(IAppReader appReader) => new FakeAppPaths(root);
-        public IAppPaths Get(IAppReader appReader, ISite? siteOrNull) => new FakeAppPaths(root);
+        public IAppPaths Get(IAppReader appReader)
+            => new FakeAppPaths(root);
+        public IAppPaths Get(IAppReader appReader, ISite? siteOrNull)
+            => new FakeAppPaths(root);
     }
 
     private class FakeAppPaths(string physicalPath) : IAppPaths
@@ -160,11 +176,14 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
             WriteIndented = false 
         };
 
-        public string ToJson(object item) => JsonSerializer.Serialize(item, Options);
-        public string ToJson(object item, int indentation) => JsonSerializer.Serialize(item, 
-            new JsonSerializerOptions(Options) { WriteIndented = indentation > 0 });
-        public T? To<T>(string json) => JsonSerializer.Deserialize<T>(json, Options);
-        public object? ToObject(string json) => JsonSerializer.Deserialize<object>(json, Options);
+        public string ToJson(object item)
+            => JsonSerializer.Serialize(item, Options);
+        public string ToJson(object item, int indentation)
+            => JsonSerializer.Serialize(item, new JsonSerializerOptions(Options) { WriteIndented = indentation > 0 });
+        public T? To<T>(string json)
+            => JsonSerializer.Deserialize<T>(json, Options);
+        public object? ToObject(string json)
+            => JsonSerializer.Deserialize<object>(json, Options);
         public ITyped? ToTyped(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default) 
             => null;
         public IEnumerable<ITyped>? ToTypedList(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default) 
@@ -173,7 +192,8 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
 
     private class FakeSite(string appsRootPhysicalFull) : ISite
     {
-        public ISite Init(int siteId, ILog? parentLogOrNull) => this;
+        public ISite Init(int siteId, ILog? parentLogOrNull)
+            => this;
         public int Id { get; } = 1;
         public string Name { get; } = "Test";
         public string AppsRootPhysical { get; } = appsRootPhysicalFull;

@@ -1,4 +1,3 @@
-using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps;
@@ -6,7 +5,6 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
-using ToSic.Eav.Sys;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -15,6 +13,7 @@ using ToSic.Sys.Configuration;
 using ToSic.Sys.DI;
 using ToSic.Sys.Logging;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
 /// <summary>
@@ -88,7 +87,7 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         services.AddSingleton(sp => new LazySvc<ExtensionsWriterBackend>(sp));
         services.AddSingleton(sp => new LazySvc<ExtensionsZipInstallerBackend>(sp));
 
-        var sp = services.BuildServiceProvider() as ServiceProvider 
+        var sp = services.BuildServiceProvider() 
             ?? throw new InvalidOperationException("Failed to build service provider");
 
         // Configure global folder as previous tests relied on it for path resolution helpers
@@ -108,25 +107,7 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
     }
 
     #endregion
-
-    #region Setup Helpers
-
-    /// <summary>
-    /// Setup a test extension with given configuration
-    /// </summary>
-    public void SetupExtension(string name, object config)
-    {
-        var extDir = Path.Combine(TempRoot, FolderConstants.AppExtensionsFolder, name);
-        var dataDir = Path.Combine(extDir, FolderConstants.DataFolderProtected);
-        Directory.CreateDirectory(dataDir);
-
-        var jsonPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
-        var json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
-        File.WriteAllText(jsonPath, json, new UTF8Encoding(false));
-    }
-
-    #endregion
-
+    
     #region Disposal
 
     public void Dispose()
@@ -141,21 +122,32 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
 
     private class FakeAppReaderFactory : IAppReaderFactory
     {
-        public IAppReader Get(int appId) => null!; // not used by our fake path svc
-        public IAppReader Get(IAppIdentity appIdentity) => null!;
-        public IAppReader GetSystemPreset() => null!;
-        public IAppIdentityPure AppIdentity(int appId) => throw new NotImplementedException();
-        public IAppReader GetZonePrimary(int zoneId) => throw new NotImplementedException();
-        public IAppReader? TryGet(IAppIdentity appIdentity) => null;
-        public IAppReader? ToReader(IAppStateCache? state) => null;
-        public IAppReader? TryGetSystemPreset(bool nullIfNotLoaded) => null;
-        public IAppReader GetOrKeep(IAppIdentity appIdOrReader) => throw new NotImplementedException();
+        public IAppReader Get(int appId)
+            => null!; // not used by our fake path svc
+        public IAppReader Get(IAppIdentity appIdentity)
+            => null!;
+        public IAppReader GetSystemPreset()
+            => null!;
+        public IAppIdentityPure AppIdentity(int appId)
+            => throw new NotImplementedException();
+        public IAppReader GetZonePrimary(int zoneId)
+            => throw new NotImplementedException();
+        public IAppReader? TryGet(IAppIdentity appIdentity)
+            => null;
+        public IAppReader? ToReader(IAppStateCache? state)
+            => null;
+        public IAppReader? TryGetSystemPreset(bool nullIfNotLoaded)
+            => null;
+        public IAppReader GetOrKeep(IAppIdentity appIdOrReader)
+            => throw new NotImplementedException();
     }
 
     private class FakeAppPathsMicroSvc(string root) : IAppPathsMicroSvc
     {
-        public IAppPaths Get(IAppReader appReader) => new FakeAppPaths(root);
-        public IAppPaths Get(IAppReader appReader, ISite? siteOrNull) => new FakeAppPaths(root);
+        public IAppPaths Get(IAppReader appReader)
+            => new FakeAppPaths(root);
+        public IAppPaths Get(IAppReader appReader, ISite? siteOrNull)
+            => new FakeAppPaths(root);
     }
 
     private class FakeAppPaths(string physicalPath) : IAppPaths
@@ -173,17 +165,33 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         private static readonly JsonSerializerOptions Options = new()
         {
             PropertyNamingPolicy = null,
-            WriteIndented = false
+            WriteIndented = true
         };
 
-        public string ToJson(object item) => JsonSerializer.Serialize(item, Options);
+        public string ToJson(object item) => item switch
+        {
+            string s => s,
+            JsonElement je => je.GetRawText(),
+            _ => JsonSerializer.Serialize(item, Options)
+        };
         public string ToJson(object item, int indentation) => JsonSerializer.Serialize(item, 
             new JsonSerializerOptions(Options) { WriteIndented = indentation > 0 });
         public T? To<T>(string json) => JsonSerializer.Deserialize<T>(json, Options);
-        public object? ToObject(string json) => JsonSerializer.Deserialize<object>(json, Options);
-        public ITyped? ToTyped(string json, NoParamOrder npo = default, string? fallback = default, bool? propsRequired = default) 
+        public object? ToObject(string json)
+        {
+            try
+            {
+                using var doc = JsonDocument.Parse(json);
+                return doc.RootElement.Clone();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        public ITyped ToTyped(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default) 
             => throw new NotImplementedException();
-        public IEnumerable<ITyped>? ToTypedList(string json, NoParamOrder npo = default, string? fallback = default, bool? propsRequired = default) 
+        public IEnumerable<ITyped>? ToTypedList(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default) 
             => throw new NotImplementedException();
     }
 
@@ -207,13 +215,13 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
     private class FakeGlobalConfiguration : IGlobalConfiguration
     {
         private readonly Dictionary<string, string?> _values = new();
-        private readonly string _tempFolder;
 
         public FakeGlobalConfiguration()
         {
-            // Create a unique temp folder for this test run
-            _tempFolder = Path.Combine(Path.GetTempPath(), "2sxc-test-temp", Guid.NewGuid().ToString("N"));
-            Directory.CreateDirectory(_tempFolder);
+            var tempFolder =
+                // Create a unique temp folder for this test run
+                Path.Combine(Path.GetTempPath(), "2sxc-test-temp", Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempFolder);
         }
 
         public string? GetThis(string? key = null) => _values.TryGetValue(key!, out var value) ? value : null;

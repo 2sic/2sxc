@@ -1,5 +1,5 @@
-using System.Text.Json;
 using System.Web;
+using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using RealController = ToSic.Sxc.Backend.Admin.AppExtensionsControllerReal;
@@ -22,12 +22,26 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
         => Real.Extensions(appId);
 
     /// <inheritdoc />
+    /// Update/create endpoint using PUT with name as route segment.
+    [Route("api/2sxc/admin/[controller]/{name}")]
+    [ValidateAntiForgeryToken]
+    [SupportedModules(DnnSupportedModuleNames)]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [JsonFormatter(Casing = Casing.Camel)]
+    public bool Extension([FromUri] int zoneId, [FromUri] int appId, string name, [FromBody] ExtensionManifest configuration)
+        => Real.Extension(zoneId, appId, name, configuration);
+
+    /// <summary>
+    /// Alias POST endpoint for front-ends posting to /appExtensions/extensions with query parameters.
+    /// Matches plural POST behavior to avoid 405 errors if client uses POST.
+    /// </summary>
+    [ActionName("extensions")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [JsonFormatter(Casing = Casing.Camel)]
-    public bool Extension([FromUri] int zoneId, [FromUri] int appId, [FromUri] string name, [FromBody] JsonElement configuration)
+    public bool ExtensionsPostAlias([FromUri] int zoneId, [FromUri] int appId, [FromUri] string name, [FromBody] ExtensionManifest configuration)
         => Real.Extension(zoneId, appId, name, configuration);
 
     /// <inheritdoc />

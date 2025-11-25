@@ -1,9 +1,8 @@
-using System.Text;
-using System.Text.Json;
+using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Sys;
-using Tests.ToSic.ToSxc.WebApi.Extensions;
-using static ToSic.Sxc.WebApi.Tests.Extensions.ExportExtensionTestHelpers;
+using ToSic.Sxc.Backend.App;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
 /// <summary>
@@ -26,20 +25,19 @@ public class ExtensionsBackendTests
     {
         // Arrange
         using var ctx = ExtensionsBackendTestContext.Create();
-        const string extensionName = "foo";
-        var config = new { enabled = true, version = TestVersion, list = new[] { 1, 2 } };
+        const string extensionName = "test";
+        var manifest = new ExtensionManifest
+        {
+            Version = TestVersion,
+            IsInstalled = true
+        };
 
         // Ensure extension folder exists before saving
         var fooFolder = Path.Combine(ctx.TempRoot, FolderConstants.AppExtensionsFolder, extensionName);
         Directory.CreateDirectory(fooFolder);
 
-        // Serialize config to JsonElement
-        var configJson = ctx.JsonSvc.ToJson(config);
-        using var configDoc = JsonDocument.Parse(configJson);
-        var configElem = configDoc.RootElement;
-
         // Act
-        var saved = ctx.Backend.SaveExtensionTac(zoneId: TestZoneId, appId: TestAppId, name: extensionName, configuration: configElem);
+        var saved = ctx.Backend.SaveExtensionTac(zoneId: TestZoneId, appId: TestAppId, name: extensionName, manifest: manifest);
 
         // Assert
         Assert.True(saved);
@@ -54,157 +52,46 @@ public class ExtensionsBackendTests
 
         var foo = result.Extensions.FirstOrDefault(e => e.Folder == extensionName);
         Assert.NotNull(foo);
-        Assert.NotNull(foo!.Configuration);
+        Assert.NotNull(foo.Configuration);
 
-        var expectedJson = ctx.JsonSvc.ToJson(config);
-        var actualJson = ctx.JsonSvc.ToJson(foo.Configuration!);
+        var expectedJson = ExtensionManifestSerializer.Serialize(manifest);
+        var actualJson = ctx.JsonSvc.ToJson(foo.Configuration);
         Assert.Equal(expectedJson, actualJson);
 
         var bar = result.Extensions.FirstOrDefault(e => e.Folder == "bar");
         Assert.NotNull(bar);
-        Assert.NotNull(bar!.Configuration);
+        Assert.NotNull(bar.Configuration);
     }
 
     [Fact]
     public void SaveThenRead_WithSampleSimpleExtension_Config_Works()
     {
-        // Arrange
         using var ctx = ExtensionsBackendTestContext.Create();
-        const string folder = "sample-simple-extension";
-
-        // Ensure extension folder exists before saving
+        const string folder = "test";
         var folderPath = Path.Combine(ctx.TempRoot, FolderConstants.AppExtensionsFolder, folder);
         Directory.CreateDirectory(folderPath);
 
-        // Parse sample JSON into JsonElement
-        using var cfgDoc = JsonDocument.Parse(SampleSimpleJson);
-        var cfgElem = cfgDoc.RootElement;
+        var manifest = new ExtensionManifest
+        {
+            Version = "00.00.03",
+            IsInstalled = false,
+            InputTypeInside = "empty-app-hello-world-simple",
+            EditionsSupported = false
+        };
 
-        // Act
-        var saved = ctx.Backend.SaveExtensionTac(zoneId: TestZoneId, appId: TestAppId, name: folder, configuration: cfgElem);
-
-        // Assert
+        var saved = ctx.Backend.SaveExtensionTac(zoneId: TestZoneId, appId: TestAppId, name: folder, manifest: manifest);
         Assert.True(saved);
 
         var result = ctx.Backend.GetExtensionsTac(TestAppId);
         Assert.NotNull(result);
         var item = result.Extensions.FirstOrDefault(e => e.Folder == folder);
         Assert.NotNull(item);
-        Assert.NotNull(item!.Configuration);
+        Assert.NotNull(item.Configuration);
 
-        // Normalize both to minified JSON and compare
-        var expected = ctx.JsonSvc.ToJson(ctx.JsonSvc.ToObject(SampleSimpleJson)!);
-        var actual = ctx.JsonSvc.ToJson(item.Configuration!);
+        var expected = ExtensionManifestSerializer.Serialize(manifest);
+        var actual = ctx.JsonSvc.ToJson(item.Configuration);
         Assert.Equal(expected, actual);
     }
-
-    [Fact]
-    public void ReadExisting_WithComplexFeatureExtension_Config_Works()
-    {
-        // Arrange
-        using var ctx = ExtensionsBackendTestContext.Create();
-        const string complexFeatureExtension = "complex-feature-extension";
-        const int complexAppId = 99;
-
-        var extDir = Path.Combine(ctx.TempRoot, FolderConstants.AppExtensionsFolder, complexFeatureExtension, FolderConstants.DataFolderProtected);
-        Directory.CreateDirectory(extDir);
-        var jsonPath = Path.Combine(extDir, FolderConstants.AppExtensionJsonFile);
-
-        // Write pretty JSON as it might come from source control
-        File.WriteAllText(jsonPath, ComplexFeatureJson, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
-
-        // Act
-        var result = ctx.Backend.GetExtensionsTac(complexAppId);
-
-        // Assert
-        Assert.NotNull(result);
-        var item = result.Extensions.FirstOrDefault(e => e.Folder == complexFeatureExtension);
-        Assert.NotNull(item);
-        Assert.NotNull(item!.Configuration);
-
-        // Normalize both to minified JSON and compare
-        var expected = ctx.JsonSvc.ToJson(ctx.JsonSvc.ToObject(ComplexFeatureJson)!);
-        var actual = ctx.JsonSvc.ToJson(item.Configuration!);
-        Assert.Equal(expected, actual);
-    }
-
-    #endregion
-
-    #region Test Data
-
-    private const string SampleSimpleJson = """
-    {
-      "id": "sample-simple",
-      "name": "Sample Simple Extension",
-      "version": "1.0.0",
-      "author": {
-        "name": "Example Corp",
-        "contact": "dev@example.com"
-      },
-      "description": "A minimal extension used for w2w integration testing.",
-      "enabled": true,
-      "settings": {
-        "theme": "light",
-        "maxItems": 10,
-        "showPreview": false
-      },
-      "scripts": [
-        { "url": "/extensions/sample-simple/dist/script.js", "type": "module", "defer": true }
-      ],
-      "styles": [
-        { "url": "/extensions/sample-simple/dist/styles.css", "media": "all" }
-      ],
-      "dependencies": [
-        { "folder": "common-utils", "version": ">=1.2.0" }
-      ],
-      "createdAt": "2025-09-16T12:00:00Z"
-    }
-    """;
-
-    private const string ComplexFeatureJson = """
-    {
-      "id": "complex-feature",
-      "name": "Complex Feature Extension",
-      "version": "2.4.1",
-      "author": { "name": "ACME Integrations", "url": "https://acme.example" },
-      "description": "Extension with nested config, feature flags and translations for w2w testing.",
-      "enabled": true,
-      "features": {
-        "betaMode": true,
-        "analytics": {
-          "enabled": false,
-          "provider": "ga",
-          "samplingRate": 0.1
-        },
-        "dataSync": {
-          "enabled": true,
-          "intervalSeconds": 3600
-        }
-      },
-      "translations": {
-        "en": { "title": "Complex Feature", "button": "Run" },
-        "de": { "title": "Komplexes Feature", "button": "Ausführen" }
-      },
-      "mappings": [
-        { "source": "legacyId", "target": "id", "type": "int" },
-        { "source": "priceCents", "target": "price", "transform": "divide100" }
-      ],
-      "configurationData": {
-        "rules": [
-          { "name": "ruleA", "enabled": true, "conditions": [] },
-          { "name": "ruleB", "enabled": false, "conditions": [{ "field": "status", "op": "==", "value": "active" }] }
-        ],
-        "metadata": {},
-        "exampleArray": [1, 2, 3, { "nested": "value" }]
-      },
-      "permissions": {
-        "admin": ["read", "write", "delete"],
-        "editor": ["read", "write"],
-        "viewer": ["read"]
-      },
-      "notes": null
-    }
-    """;
 
     #endregion
 }

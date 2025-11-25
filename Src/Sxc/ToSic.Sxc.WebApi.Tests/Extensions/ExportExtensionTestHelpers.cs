@@ -1,6 +1,7 @@
 using System.IO.Compression;
 using System.Text.Json;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
 /// <summary>

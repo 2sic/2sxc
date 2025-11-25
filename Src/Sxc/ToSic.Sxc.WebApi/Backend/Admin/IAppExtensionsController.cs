@@ -1,4 +1,4 @@
-using System.Text.Json;
+using ToSic.Eav.Apps.Sys.FileSystemState;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -22,7 +22,7 @@ public interface IAppExtensionsController<out THttpResponse>
     /// <param name="name">Extension folder name under "/extensions"</param>
     /// <param name="configuration">JSON to write as App_Data/extension.json</param>
     /// <returns>true if saved</returns>
-    bool Extension(int zoneId, int appId, string name, JsonElement configuration);
+    bool Extension(int zoneId, int appId, string name, ExtensionManifest configuration);
 
     /// <summary>
     /// Install app extension zip.

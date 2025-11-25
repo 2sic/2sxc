@@ -6,6 +6,7 @@ using THttpResponseType = System.Net.Http.HttpResponseMessage;
 using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 #endif
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
 /// <summary>

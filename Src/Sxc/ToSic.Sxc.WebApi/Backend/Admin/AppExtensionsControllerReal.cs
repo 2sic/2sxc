@@ -1,6 +1,7 @@
-using System.Text.Json;
 using ToSic.Sxc.Backend.App;
 using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
+using ToSic.Eav.Apps.Sys.FileSystemState;
+
 
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;
@@ -23,8 +24,8 @@ public class AppExtensionsControllerReal(
         => extensionsBackendLazy.Value.GetExtensions(appId);
 
     // Create or update configuration for a specific extension
-    public bool Extension(int zoneId, int appId, string name, JsonElement configuration)
-        => extensionsBackendLazy.Value.SaveExtension(zoneId, appId, name, configuration);
+    public bool Extension(int zoneId, int appId, string name, ExtensionManifest manifest)
+        => extensionsBackendLazy.Value.SaveExtension(zoneId, appId, name, manifest);
 
     /// <summary>
     /// Install an extension ZIP into /extensions.
@@ -36,7 +37,7 @@ public class AppExtensionsControllerReal(
         if (!uploadInfo.HasFiles())
             return l.ReturnFalse("no file uploaded");
 
-        var (fileName, stream) = uploadInfo.GetStream(0);
+        var (fileName, stream) = uploadInfo.GetStream();
         if (stream == null!)
             throw new NullReferenceException("File Stream is null, upload canceled");
 

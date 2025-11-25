@@ -1,4 +1,3 @@
-using System.Text.Json.Nodes;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Sys;
@@ -45,33 +44,15 @@ public class ExtensionsReaderBackend(
         var l = Log.Fn<ExtensionDto>($"folder:'{folderName}'");
         
         var extensionManifestFile = manifestService.GetManifestFile(new(extensionPath));
-        
-        object? configuration = null;
-        ExtensionManifest? manifest = null;
-        
-        try
-        {
-            if (extensionManifestFile.Exists)
-            {
-                var json = File.ReadAllText(extensionManifestFile.FullName);
-                configuration = jsonLazy.Value.ToObject(json);
-                
-                // Also load as manifest to check for editions support
-                manifest = manifestService.LoadManifest(extensionManifestFile);
-            }
-        }
-        catch (Exception ex)
-        {
-            l.Ex(ex);
-        }
-
-        configuration ??= new JsonObject();
+        // Also load as manifest to check for editions support
+        var configuration = manifestService.LoadManifest(extensionManifestFile)
+            ?? new ExtensionManifest();
 
         // Check for editions if manifest says they're supported
         Dictionary<string, ExtensionEditionDto>? editions = null;
-        if (manifest?.EditionsSupported == true)
+        if (configuration.EditionsSupported)
         {
-            editions = DetectEditions(appRootPath, folderName, manifest);
+            editions = DetectEditions(appRootPath, folderName, configuration);
             if (editions?.Count > 0)
                 l.A($"Found {editions.Count} editions for extension '{folderName}'");
         }
@@ -129,24 +110,10 @@ public class ExtensionsReaderBackend(
                 continue;
             }
 
-            // Load the edition configuration
-            object? editionConfiguration = null;
-            try
-            {
-                var json = File.ReadAllText(editionManifestFile.FullName);
-                editionConfiguration = jsonLazy.Value.ToObject(json);
-            }
-            catch (Exception ex)
-            {
-                l.Ex(ex);
-            }
-
-            editionConfiguration ??= new JsonObject();
-
             editions[editionFolder.Name] = new ExtensionEditionDto
             {
                 Folder = editionFolder.Name,
-                Configuration = editionConfiguration
+                Configuration = editionManifest
             };
         }
 

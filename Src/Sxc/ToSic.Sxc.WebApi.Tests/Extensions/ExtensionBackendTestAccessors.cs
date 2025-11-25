@@ -1,16 +1,17 @@
-﻿using System.Text.Json;
-using ToSic.Eav.WebApi.Sys.Dto;
+﻿using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.App;
 
-namespace Tests.ToSic.ToSxc.WebApi.Extensions;
+// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.WebApi.Tests.Extensions;
+
 internal static class ExtensionBackendTestAccessors
 {
     public static ExtensionsResultDto GetExtensionsTac(this ExtensionsBackend backend, int appId)
         => backend.GetExtensions(appId: appId);
 
-    public static bool SaveExtensionTac(this ExtensionsBackend backend, int zoneId, int appId, string name, JsonElement configuration)
-        => backend.SaveExtension(zoneId: zoneId, appId: appId, name: name, configuration: configuration);
+    public static bool SaveExtensionTac(this ExtensionsBackend backend, int zoneId, int appId, string name, ExtensionManifest manifest)
+        => backend.SaveExtension(zoneId: zoneId, appId: appId, name: name, manifest: manifest);
 
     public static bool InstallExtensionZipTac(this ExtensionsBackend backend, int zoneId, int appId, Stream zipStream,
         bool overwrite = false, string? originalZipFileName = null)

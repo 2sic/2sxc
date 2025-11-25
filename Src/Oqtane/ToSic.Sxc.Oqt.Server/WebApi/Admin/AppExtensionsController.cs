@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Text.Json;
+using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
@@ -27,10 +28,21 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
         => Real.Extensions(appId);
 
     /// <inheritdoc />
+    /// Original update/create endpoint using PUT with name segment.
     [HttpPut("{name}")]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Extension(int zoneId, int appId, string name, [FromBody] JsonElement configuration)
+    public bool Extension(int zoneId, int appId, string name, [FromBody] ExtensionManifest configuration)
+        => Real.Extension(zoneId, appId, name, configuration);
+
+    /// <summary>
+    /// Alias POST endpoint for front-ends posting to /appExtensions/extensions with query parameters.
+    /// Matches DNN plural POST behavior to avoid 405 errors if client uses POST instead of PUT.
+    /// </summary>
+    [HttpPost("extensions")]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = RoleNames.Admin)]
+    public bool ExtensionsPostAlias([FromQuery] int zoneId, [FromQuery] int appId, [FromQuery] string name, [FromBody] ExtensionManifest configuration)
         => Real.Extension(zoneId, appId, name, configuration);
 
     /// <inheritdoc />
@@ -39,7 +51,6 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
     [Authorize(Roles = RoleNames.Admin)]
     public bool Install([FromQuery] int zoneId, [FromQuery] int appId, [FromQuery] bool overwrite = true)
     {
-        // Ensure that Hot Reload is not enabled or try to disable it.
         HotReloadEnabledCheck.Check();
         return Real.Install(new(Request), zoneId, appId, overwrite);
     }

@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using ToSic.Eav.Apps.Sys.FileSystemState;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -16,7 +17,7 @@ public class ExtensionDto
     public required string Folder { get; init; }
 
     [JsonPropertyName("configuration")]
-    public required object Configuration { get; init; }
+    public required ExtensionManifest Configuration { get; init; }
 
     /// <summary>
     /// Edition-specific information if the extension supports editions.
@@ -43,5 +44,6 @@ public class ExtensionEditionDto
     /// The configuration object for this edition
     /// </summary>
     [JsonPropertyName("configuration")]
-    public required object Configuration { get; init; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public required ExtensionManifest? Configuration { get; init; }
 }
