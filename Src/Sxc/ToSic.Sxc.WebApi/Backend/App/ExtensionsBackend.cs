@@ -1,15 +1,14 @@
-using System.Text.Json;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Sxc.Backend.Admin;
 
 namespace ToSic.Sxc.Backend.App;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionsBackend(
-    LazySvc<ExtensionsReaderBackend> readerLazy,
+public class ExtensionsBackend(LazySvc<ExtensionsReaderBackend> readerLazy,
     LazySvc<ExtensionsWriterBackend> writerLazy,
-    LazySvc<ExtensionsZipInstallerBackend> zipLazy)
-    : ServiceBase("Bck.Exts", connect: [readerLazy, writerLazy, zipLazy])
+    LazySvc<ExtensionsZipInstallerBackend> zipLazy,
+    LazySvc<ExtensionsInspectorBackend> inspectorLazy)
+    : ServiceBase("Bck.Exts", connect: [readerLazy, writerLazy, zipLazy, inspectorLazy])
 {
     public ExtensionsResultDto GetExtensions(int appId)
         => readerLazy.Value.GetExtensions(appId);
@@ -19,4 +18,7 @@ public class ExtensionsBackend(
 
     public bool InstallExtensionZip(int zoneId, int appId, Stream zipStream, bool overwrite = false, string? originalZipFileName = null)
         => zipLazy.Value.InstallExtensionZip(appId, zipStream, overwrite, originalZipFileName);
+
+    public ExtensionInspectResultDto InspectExtension(int appId, string name, string? edition)
+        => inspectorLazy.Value.Inspect(appId, name, edition);
 }

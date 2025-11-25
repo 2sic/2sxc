@@ -4,6 +4,7 @@ using Oqtane.Shared;
 using System.Text.Json;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Sxc.Backend.Admin;
+using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
 using RealController = ToSic.Sxc.Backend.Admin.AppExtensionsControllerReal;
@@ -57,8 +58,15 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
 
     /// <inheritdoc />
     [HttpGet]
-    [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
     public IActionResult Download([FromQuery] int zoneId, [FromQuery] int appId, [FromQuery] string name)
         => Real.Download(zoneId, appId, name);
+
+    /// <summary>
+    /// Inspect endpoint mirroring DNN behavior.
+    /// </summary>
+    [HttpGet]
+    [Authorize(Roles = RoleNames.Admin)]
+    public ExtensionInspectResultDto Inspect(int appId, [FromQuery] string name, [FromQuery] string? edition = null)
+        => Real.Inspect(appId, name, edition);
 }

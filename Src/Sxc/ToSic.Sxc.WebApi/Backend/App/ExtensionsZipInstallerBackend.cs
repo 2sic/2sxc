@@ -3,8 +3,8 @@ using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.ImportExport.Sys.Zip;
 using ToSic.Eav.Sys;
 using ToSic.Sys.Configuration;
-using ToSic.Sys.Security.Encryption;
 using ToSic.Sys.Utils;
+using static ToSic.Sxc.Backend.App.ExtensionLockHelper;
 
 namespace ToSic.Sxc.Backend.App;
 
@@ -104,13 +104,14 @@ public class ExtensionsZipInstallerBackend(
             l.A($"validate:'{folder}'");
 
             var appDataDir = Path.Combine(dir, FolderConstants.DataFolderProtected);
-            var extensionJsonPath = Path.Combine(appDataDir, FolderConstants.AppExtensionJsonFile);
-            var lockJsonPath = Path.Combine(appDataDir, FolderConstants.AppExtensionLockJsonFile);
+
             var folderIssues = new List<string>();
 
+            var extensionJsonPath = Path.Combine(appDataDir, FolderConstants.AppExtensionJsonFile);
             if (!File.Exists(extensionJsonPath))
                 folderIssues.Add($"missing {FolderConstants.AppExtensionJsonFile}");
 
+            var lockJsonPath = Path.Combine(appDataDir, FolderConstants.AppExtensionLockJsonFile);
             if (!File.Exists(lockJsonPath))
                 folderIssues.Add($"missing {FolderConstants.AppExtensionLockJsonFile}");
 
@@ -205,8 +206,8 @@ public class ExtensionsZipInstallerBackend(
     {
         var l = parentLog.Fn<ValidationResult>($"copy:'{folderName}'");
 
-        var sourceRootFull = SuffixBackslash(Path.GetFullPath(sourceRoot));
-        var targetRootFull = SuffixBackslash(Path.GetFullPath(targetRoot));
+        var sourceRootFull = EnsureTrailingBackslash(Path.GetFullPath(sourceRoot));
+        var targetRootFull = EnsureTrailingBackslash(Path.GetFullPath(targetRoot));
 
         var sources = new[]
         {
@@ -242,10 +243,6 @@ public class ExtensionsZipInstallerBackend(
         return l.ReturnAsOk(new(true, null));
     }
 
-    private static string SuffixBackslash(string path)
-        => path.SuffixSlash().Backslash();
-
-
     private record ValidationResult(bool Success, string? Error);
 
     private static ValidationResult ValidateExtensionJsonFile(string extensionJsonFilePath, string sourcePath, ILog? parentLog)
@@ -276,86 +273,51 @@ public class ExtensionsZipInstallerBackend(
     private static LockValidationResult ValidateLockFile(string lockFilePath, string tempDir, string candidatePath, ILog? parentLog)
     {
         var l = parentLog.Fn<LockValidationResult>();
-        try
+
+        var lockRead = ReadLockFile(lockFilePath, l);
+        if (!lockRead.Success || lockRead.ExpectedWithHash == null || lockRead.AllowedFiles == null)
+            return l.ReturnAsError(new(false, lockRead.Error ?? $"{FolderConstants.AppExtensionLockJsonFile} invalid", null));
+
+        var allowed = lockRead.AllowedFiles;
+        var expectedWithHash = lockRead.ExpectedWithHash;
+        var folderName = Path.GetFileName(candidatePath);
+        var tmpAppCodeExtensionDirectory = Path.Combine(tempDir, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, folderName);
+
+        var actualFiles = EnumerateFilesSafe(candidatePath)
+            .Union(EnumerateFilesSafe(tmpAppCodeExtensionDirectory))
+            .Select(f => f
+                .Substring(tempDir.Length)
+                .TrimPrefixSlash()
+                .ForwardSlash())
+            .Where(f => !string.Equals(Path.GetFileName(f), FolderConstants.AppExtensionLockJsonFile, StringComparison.OrdinalIgnoreCase))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var missing = allowed
+            .Where(a => !actualFiles.Contains(a))
+            .ToList();
+        if (missing.Any())
+            return l.ReturnAsError(new(false, $"missing files:'{string.Join("','", missing)}'", null));
+
+        var extras = actualFiles
+            .Where(a => !allowed.Contains(a))
+            .ToList();
+        if (extras.Any())
+            return l.ReturnAsError(new(false, $"unexpected files:'{string.Join("','", extras)}'", null));
+
+        foreach (var rel in allowed)
         {
-            var json = File.ReadAllText(lockFilePath);
-            using var doc = JsonDocument.Parse(json);
-            var root = doc.RootElement;
-            if (!root.TryGetProperty("files", out var filesProp) || filesProp.ValueKind != JsonValueKind.Array)
-                return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionLockJsonFile} missing 'files' array", null));
+            var full = Path.Combine(tempDir, rel.Backslash());
+            if (!File.Exists(full))
+                return l.ReturnAsError(new(false, $"file for hash missing:{rel}", null));
 
-            var allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            var expectedWithHash = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            var folderName = Path.GetFileName(candidatePath);
-            var tmpAppCodeExtensionDirectory = Path.Combine(tempDir, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, folderName);
-
-            foreach (var item in filesProp.EnumerateArray())
-            {
-                if (item.ValueKind != JsonValueKind.Object)
-                    return l.ReturnAsError(new(false, $"invalid {FolderConstants.AppExtensionLockJsonFile} entry: {item.ValueKind}", null));
-
-                if (!item.TryGetProperty("file", out var f) || f.ValueKind != JsonValueKind.String)
-                    return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionLockJsonFile} entry missing 'file'", null));
-
-                if (!item.TryGetProperty("hash", out var h) || h.ValueKind != JsonValueKind.String)
-                    return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionLockJsonFile} entry missing 'hash'", null));
-
-                var file = f.GetString()!.Trim().TrimPrefixSlash().ForwardSlash();
-                var hash = h.GetString()!.Trim();
-
-                if (file.ContainsPathTraversal())
-                    return l.ReturnAsError(new(false, $"illegal path:'{file}' in {FolderConstants.AppExtensionLockJsonFile}", null));
-
-                allowed.Add(file);
-                expectedWithHash[file] = hash;
-                l.A($"added candidate file '{file}' with hash");
-            }
-            var actualFiles = EnumerateFilesSafe(candidatePath)
-                .Union(EnumerateFilesSafe(tmpAppCodeExtensionDirectory))
-                .Select(f => f
-                    .Substring(tempDir.Length)
-                    .TrimPrefixSlash()
-                    .ForwardSlash())
-                .Where(f => !string.Equals(Path.GetFileName(f), FolderConstants.AppExtensionLockJsonFile, StringComparison.OrdinalIgnoreCase))
-                .ToHashSet(StringComparer.OrdinalIgnoreCase);
-
-            var missing = allowed
-                .Where(a => !actualFiles.Contains(a))
-                .ToList();
-            if (missing.Any())
-                return l.ReturnAsError(new(false, $"missing files:'{string.Join("','", missing)}'", null));
-
-            var extras = actualFiles
-                .Where(a => !allowed.Contains(a))
-                .ToList();
-            if (extras.Any())
-                return l.ReturnAsError(new(false, $"unexpected files:'{string.Join("','", extras)}'", null));
-
-            foreach (var rel in allowed)
-            {
-                var full = Path.Combine(tempDir, rel.Backslash());
-                if (!File.Exists(full))
-                    return l.ReturnAsError(new(false, $"file for hash missing:{rel}", null));
-
-                var actualHash = Sha256.Hash(File.ReadAllText(full));
-                var expected = expectedWithHash[rel];
-                if (!string.Equals(actualHash, expected, StringComparison.OrdinalIgnoreCase))
-                    return l.ReturnAsError(new(false, $"hash mismatch: {rel}", null));
-            }
-
-            return l.ReturnAsOk(new(true, null, allowed));
+            var actualHash = CalculateHash(full);
+            var expected = expectedWithHash[rel];
+            if (!string.Equals(actualHash, expected, StringComparison.OrdinalIgnoreCase))
+                return l.ReturnAsError(new(false, $"hash mismatch: {rel}", null));
         }
-        catch (Exception ex)
-        {
-            l.Ex(ex);
-            return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionLockJsonFile} parse error", null));
-        }
+
+        return l.ReturnAsOk(new(true, null, allowed));
     }
-
-    private static IEnumerable<string> EnumerateFilesSafe(string? path)
-        => !string.IsNullOrWhiteSpace(path) && Directory.Exists(path)
-            ? Directory.GetFiles(path, "*", SearchOption.AllDirectories)
-            : Array.Empty<string>();
 
     private static void RemoveReadOnlyRecursive(string directory, ILog? log)
     {

@@ -1,6 +1,7 @@
 using System.Web;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Sxc.Backend.Admin;
+using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 using RealController = ToSic.Sxc.Backend.Admin.AppExtensionsControllerReal;
 
@@ -60,4 +61,13 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     [DnnAuthorize(StaticRoles = "Administrators")]
     public HttpResponseMessage Download([FromUri] int zoneId, [FromUri] int appId, [FromUri] string name)
         => Real.Download(zoneId, appId, name);
+
+    /// <summary>
+    /// Inspect endpoint for DNN, following conventions and delegating to Real.Inspect.
+    /// </summary>
+    [HttpGet]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [JsonFormatter(Casing = Casing.Camel)]
+    public ExtensionInspectResultDto Inspect(int appId, string name, string edition = null)
+        => Real.Inspect(appId, name, edition);
 }

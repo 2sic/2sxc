@@ -63,6 +63,7 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
 
         // Register backend dependencies explicitly so they can be resolved by LazySvc later
         services.AddTransient<ExtensionManifestService>();
+        services.AddTransient<ExtensionsInspectorBackend>();
         
         services.AddSingleton<ExtensionsReaderBackend>(sp => new ExtensionsReaderBackend(
             sp.GetRequiredService<LazySvc<IAppReaderFactory>>(),
@@ -86,6 +87,7 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         services.AddSingleton(sp => new LazySvc<ExtensionsReaderBackend>(sp));
         services.AddSingleton(sp => new LazySvc<ExtensionsWriterBackend>(sp));
         services.AddSingleton(sp => new LazySvc<ExtensionsZipInstallerBackend>(sp));
+        services.AddSingleton(sp => new LazySvc<ExtensionsInspectorBackend>(sp));
 
         var sp = services.BuildServiceProvider() 
             ?? throw new InvalidOperationException("Failed to build service provider");
@@ -98,8 +100,9 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         var readerLazy = sp.GetRequiredService<LazySvc<ExtensionsReaderBackend>>();
         var writerLazy = sp.GetRequiredService<LazySvc<ExtensionsWriterBackend>>();
         var zipLazy = sp.GetRequiredService<LazySvc<ExtensionsZipInstallerBackend>>();
+        var inspectorLazy = sp.GetRequiredService<LazySvc<ExtensionsInspectorBackend>>();
 
-        var backend = new ExtensionsBackend(readerLazy, writerLazy, zipLazy);
+        var backend = new ExtensionsBackend(readerLazy, writerLazy, zipLazy, inspectorLazy);
 
         var jsonSvc = sp.GetRequiredService<IJsonService>();
 

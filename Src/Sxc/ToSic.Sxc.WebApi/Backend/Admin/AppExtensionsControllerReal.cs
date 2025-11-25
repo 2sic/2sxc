@@ -1,7 +1,5 @@
 using ToSic.Sxc.Backend.App;
-using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 using ToSic.Eav.Apps.Sys.FileSystemState;
-
 
 #if NETFRAMEWORK
 using THttpResponseType = System.Net.Http.HttpResponseMessage;
@@ -12,20 +10,19 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 namespace ToSic.Sxc.Backend.Admin;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class AppExtensionsControllerReal(
-    LazySvc<ExtensionsBackend> extensionsBackendLazy,
+public class AppExtensionsControllerReal(ExtensionsBackend backend,
     LazySvc<ExportExtension> exportExtensionLazy)
-    : Services_ServiceBase($"Api.{LogSuffix}Rl", connect: [extensionsBackendLazy, exportExtensionLazy])
+    : ServiceBase("Api.ExtsRl", connect: [backend, exportExtensionLazy])
 {
-    public const string LogSuffix = "AppExt";
+    public const string LogSuffix = "ApiExts";
 
     // List all App Extensions and configuration
     public ExtensionsResultDto Extensions(int appId)
-        => extensionsBackendLazy.Value.GetExtensions(appId);
+        => backend.GetExtensions(appId);
 
     // Create or update configuration for a specific extension
     public bool Extension(int zoneId, int appId, string name, ExtensionManifest manifest)
-        => extensionsBackendLazy.Value.SaveExtension(zoneId, appId, name, manifest);
+        => backend.SaveExtension(zoneId, appId, name, manifest);
 
     /// <summary>
     /// Install an extension ZIP into /extensions.
@@ -41,7 +38,7 @@ public class AppExtensionsControllerReal(
         if (stream == null!)
             throw new NullReferenceException("File Stream is null, upload canceled");
 
-        var ok = extensionsBackendLazy.Value.InstallExtensionZip(zoneId, appId, stream, overwrite, originalZipFileName: fileName);
+        var ok = backend.InstallExtensionZip(zoneId, appId, stream, overwrite, originalZipFileName: fileName);
         return l.ReturnAsOk(ok);
     }
 
@@ -50,4 +47,10 @@ public class AppExtensionsControllerReal(
     /// </summary>
     public THttpResponseType Download(int zoneId, int appId, string name)
         => exportExtensionLazy.Value.Export(zoneId, appId, name);
+
+    /// <summary>
+    /// Inspect an extension for changes compared to its lock file.
+    /// </summary>
+    public ExtensionInspectResultDto Inspect(int appId, string name, string? edition = null)
+        => backend.InspectExtension(appId, name, edition);
 }
