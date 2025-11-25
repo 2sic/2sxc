@@ -116,8 +116,6 @@ partial record ToolbarBuilder
         return EntityRule("edit", target, pars, propsSkip: [KeyEntityGuid, KeyTitle, KeyPublished]).Builder;
     }
 
-    internal const string BetaEditUiFieldsParamName = "uifields";
-
     public IToolbarBuilder New(
         object? target = null,
         NoParamOrder npo = default,

@@ -24,7 +24,10 @@ public class ToolbarConstants
     // Parameter prefixes, so that e.g. form params become "form:key=value"
     public const string RuleParamPrefixPrefill = "prefill:";
     public const string RuleParamPrefixForm = "form:";
+    //public const string RuleParamPrefixFormItem = "form-item:";
     public const string RuleParamPrefixFilter = "filter:";
+
+    public const string RuleParamUiFields = "uifields";
 
     public const string ToolbarAttributeName = "sxc-toolbar";
     public const string JsonToolbarNodeName = "toolbar";

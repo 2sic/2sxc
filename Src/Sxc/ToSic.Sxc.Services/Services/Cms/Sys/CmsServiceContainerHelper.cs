@@ -61,7 +61,7 @@ internal class CmsServiceContainerHelper(
             tag = tag.Attr(Toolbar.Empty()
                 .Edit(entityField.Parent, tweak: b => b
                     .Icon(EditFieldIcon)
-                    .Parameters(ToolbarBuilder.BetaEditUiFieldsParamName, entityField.Name)
+                    .UiFields(entityField.Name)
                 )
             );
         return l.Return(tag, "added toolbar");

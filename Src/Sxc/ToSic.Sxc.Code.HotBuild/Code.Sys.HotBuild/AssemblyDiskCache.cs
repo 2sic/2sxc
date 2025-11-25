@@ -10,7 +10,9 @@ namespace ToSic.Sxc.Code.Sys.HotBuild;
 /// Platform-neutral implementation with configurable assembly loading.
 /// </summary>
 [ShowApiWhenReleased(ShowApiMode.Never)]
+#pragma warning disable CS9113 // Parameter is unread.
 public class AssemblyDiskCache(NoParamOrder npo = default, object[]? connect = default)
+#pragma warning restore CS9113 // Parameter is unread.
     : ServiceBase("Sxc.AsmDskCch", connect: connect)
 {
     /// <summary>

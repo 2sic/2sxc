@@ -164,6 +164,9 @@ internal class TweakButton: ITweakButton
     public ITweakButton Prefill(string name, object value)
         => ParamObjInternal(name, value, ToolbarConstants.RuleParamPrefixPrefill);
 
+    public ITweakButton UiFields(string value)
+        => ParamObjInternal(ToolbarConstants.RuleParamUiFields, value, null /* no special prefix */);
+
     public ITweakButton XCustom(string prefix, string name, object value)
         => ParamObjInternal(name, value, prefix + (prefix.EndsWith(":") ? "" : ":"));
 

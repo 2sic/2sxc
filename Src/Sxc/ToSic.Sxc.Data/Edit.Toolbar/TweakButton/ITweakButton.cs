@@ -193,18 +193,30 @@ public interface ITweakButton
     /// <returns></returns>
     ITweakButton Filter(string name, object value);
 
+    /// <summary>
+    /// Tell the Edit-UI which fields to show / edit, so the user sees a smaller focused form.
+    /// </summary>
+    /// <param name="value">A string such as `FirstName,SecondName` listing a CSV of fields to show</param>
+    /// <returns></returns>
+    /// <remarks>
+    /// * Introduced as a hidden feature in v16
+    /// * released in v20.09
+    /// </remarks>
+    public ITweakButton UiFields(string value);
+
     #endregion
 
     /// <summary>
     /// Optional parameter to skip adding this button-rule.
-    /// If the condition is false, this rule will not be added.
+    /// </summary>
+    /// <param name="value">if `false`, this button will not be added.</param>
+    /// <returns></returns>
+    /// <remarks>
     /// This may sometimes be confusing:
     ///
     /// - most rules are add rules, so if this is false, it will not add the button
     /// - but if you have a remove rule, it will _not_ remove the button
-    /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
+    /// </remarks>
     [PrivateApi]
     [ShowApiWhenReleased(ShowApiMode.Never)]
     ITweakButton Condition(bool value);

@@ -61,7 +61,9 @@ internal class ResponsiveToolbarBuilder(ILog parentLog) : HelperBase(parentLog, 
                         btn = btn.Note(note, format: "html", background: "#DFC2F2", delay: 1000);
 
                     // if image is from elsewhere, show warning
-                    btn = isInSameEntity ? btn : btn.FormParameters(ImageDecorator.ShowWarningGlobalFile, true);
+                    btn = isInSameEntity
+                        ? btn
+                        : btn.FormParameters(ImageDecorator.ShowWarningGlobalFile, true);
                     return btn;
                 });
 
@@ -72,15 +74,18 @@ internal class ResponsiveToolbarBuilder(ILog parentLog) : HelperBase(parentLog, 
                     .DoIfNotNull(cpEntity =>
                     {
                         var copyright = new CopyrightDecorator(cpEntity);
-                        modified = modified.AddNamed(CopyrightDecorator.TypeNameId, btn => btn
+                        modified = modified.AddNamed(
+                            CopyrightDecorator.TypeNameId,
+                            btn => btn
                                 .Tooltip("Copyright")
                                 .Note(copyright.CopyrightMessage.NullIfNoValue() ??
-                                      copyright.Copyrights?.FirstOrDefault()?.GetBestTitle() ?? "")
-                            );
+                                      copyright.Copyrights?.FirstOrDefault()?.GetBestTitle() ?? ""
+                                )
+                        );
                     });
 
 
-                return modified ?? t;
+                return modified;
             });
 
         return l.ReturnAsOk(imgTlb);
