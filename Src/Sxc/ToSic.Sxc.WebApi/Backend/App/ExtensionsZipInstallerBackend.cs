@@ -16,7 +16,7 @@ public class ExtensionsZipInstallerBackend(
     IGlobalConfiguration globalConfiguration)
     : ServiceBase("Bck.ExtZip", connect: [appReadersLazy, site, appPathSvc, globalConfiguration])
 {
-    public bool InstallExtensionZip(int appId, Stream zipStream, bool overwrite = false, string? originalZipFileName = null)
+    public bool InstallExtensionZip(int appId, Stream zipStream, bool overwrite = false, string? originalZipFileName = null, string[]? editions = null)
     {
         var l = Log.Fn<bool>($"a:{appId}, overwrite:{overwrite}, ofn:'{originalZipFileName}'");
 
@@ -25,7 +25,9 @@ public class ExtensionsZipInstallerBackend(
         {
             var appReader = appReadersLazy.Value.Get(appId);
             var appPaths = appPathSvc.Get(appReader, site);
-            var extensionsRoot = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppExtensionsFolder);
+            var editionList = NormalizeEditions(editions);
+            var appRoot = appPaths.PhysicalPath;
+            var extensionsRoot = Path.Combine(appRoot, FolderConstants.AppExtensionsFolder);
             Directory.CreateDirectory(extensionsRoot);
 
             tempDir = Path.Combine(globalConfiguration.TemporaryFolder(), Guid.NewGuid().ToString("N"));
@@ -50,7 +52,7 @@ public class ExtensionsZipInstallerBackend(
                 return l.ReturnFalse($"'{FolderConstants.AppExtensionsFolder}' folder empty");
 
             // Validate every immediate subfolder: must contain required files and valid lock/json entries
-            var (error, lockResults) = ValidateCandidateSubfolders(tempDir, candidateDirs, l);
+            var (error, lockResults, manifestResults) = ValidateCandidateSubfolders(tempDir, candidateDirs);
             if (error != null)
                 return l.ReturnFalse(error);
 
@@ -63,17 +65,33 @@ public class ExtensionsZipInstallerBackend(
 
                 l.A($"prepare install:'{folderName}'");
 
-                var installResult = InstallSingleExtension(
-                    folderName: folderName,
-                    lockValidation: lockValidation,
-                    tempDir: tempDir,
-                    extensionsRoot: extensionsRoot,
-                    appRoot: appPaths.PhysicalPath,
-                    overwrite: overwrite,
-                    parentLog: l);
+                if (!manifestResults.TryGetValue(folderName, out var manifestValidation))
+                    return l.ReturnFalse($"missing manifest info for '{folderName}'");
 
-                if (!installResult.Success)
-                    return l.ReturnFalse(installResult.Error ?? $"install failed:'{folderName}'");
+                var editionsSupported = manifestValidation.EditionsSupported;
+                if (editionList.Any(e => e.HasValue()) && !editionsSupported)
+                    return l.ReturnFalse("extension does not support editions");
+
+                foreach (var edition in editionList)
+                {
+                    var editionRoot = edition.HasValue()
+                        ? Path.Combine(appRoot, edition)
+                        : appRoot;
+
+                    var editionExtensionsRoot = Path.Combine(editionRoot, FolderConstants.AppExtensionsFolder);
+                    Directory.CreateDirectory(editionExtensionsRoot);
+
+                    var installResult = InstallSingleExtension(
+                        folderName: folderName,
+                        lockValidation: lockValidation,
+                        tempDir: tempDir,
+                        extensionsRoot: editionExtensionsRoot,
+                        appRoot: editionRoot,
+                        overwrite: overwrite);
+
+                    if (!installResult.Success)
+                        return l.ReturnFalse(installResult.Error ?? $"install failed:'{folderName}'");
+                }
 
                 installed.Add(folderName);
             }
@@ -91,12 +109,14 @@ public class ExtensionsZipInstallerBackend(
         }
     }
 
-    private static (string? error, Dictionary<string, LockValidationResult> lockResults) ValidateCandidateSubfolders(string tempDir, string[] candidateDirs, ILog? parentLog)
+    private (string? error, Dictionary<string, LockValidationResult> lockResults, Dictionary<string, ManifestValidationResult> manifestResults) ValidateCandidateSubfolders(string tempDir,
+            string[] candidateDirs)
     {
-        var l = parentLog.Fn<(string? error, Dictionary<string, LockValidationResult> lockResults)>();
+        var l = Log.Fn<(string? error, Dictionary<string, LockValidationResult> lockResults, Dictionary<string, ManifestValidationResult> manifestResults)>();
         
         var issues = new List<string>();
         var lockResults = new Dictionary<string, LockValidationResult>(StringComparer.OrdinalIgnoreCase);
+        var manifestResults = new Dictionary<string, ManifestValidationResult>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var dir in candidateDirs)
         {
@@ -119,16 +139,18 @@ public class ExtensionsZipInstallerBackend(
             LockValidationResult? lockValidation = null;
             if (File.Exists(extensionJsonPath))
             {
-                var extVal = ValidateExtensionJsonFile(extensionJsonPath, dir, l);
+                var extVal = ValidateExtensionJsonFile(extensionJsonPath);
                 if (!extVal.Success)
                     folderIssues.Add(extVal.Error ?? "extension.json invalid");
+                else
+                    manifestResults[folder] = extVal;
             }
 
             // Validate lock file contents restricted to this candidate
             if (File.Exists(lockJsonPath))
             {
                 // Use specialized candidate validation to avoid cross-extension interference
-                lockValidation = ValidateLockFile(lockJsonPath, tempDir, dir, l);
+                lockValidation = ValidateLockFile(lockJsonPath, tempDir, dir);
                 if (!lockValidation.Success)
                     folderIssues.Add(lockValidation.Error ?? "extension.lock.json invalid");
             }
@@ -139,13 +161,13 @@ public class ExtensionsZipInstallerBackend(
                 lockResults[folder] = lockValidation;
         }
 
-        return l.ReturnAndLog((issues.Any() ? $"invalid extension subfolder(s): {string.Join("; ", issues)}" : null, lockResults));
+        return l.ReturnAndLog((issues.Any() ? $"invalid extension subfolder(s): {string.Join("; ", issues)}" : null, lockResults, manifestResults));
     }
 
     // Install a single extension folder using the lock metadata to guard file copying.
-    private ValidationResult InstallSingleExtension(string folderName, LockValidationResult lockValidation, string tempDir, string extensionsRoot, string appRoot, bool overwrite, ILog? parentLog)
+    private ValidationResult InstallSingleExtension(string folderName, LockValidationResult lockValidation, string tempDir, string extensionsRoot, string appRoot, bool overwrite)
     {
-        var l = parentLog.Fn<ValidationResult>($"folder:'{folderName}'");
+        var l = Log.Fn<ValidationResult>($"folder:'{folderName}'");
 
         if (!ExtensionFolderNameValidator.IsValid(folderName))
             return l.ReturnAsError(new(false, $"invalid folder name:'{folderName}'"));
@@ -163,15 +185,15 @@ public class ExtensionsZipInstallerBackend(
         var extensionTarget = Path.Combine(extensionsRoot, folderName);
         var appCodeTarget = Path.Combine(appRoot, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, folderName);
 
-        var extensionTargetValidation = EnsureTargetReadyForCopy(tempExtensionFolder, extensionTarget, overwrite, l, FolderConstants.AppExtensionsFolder);
+        var extensionTargetValidation = EnsureTargetReadyForCopy(tempExtensionFolder, extensionTarget, overwrite, FolderConstants.AppExtensionsFolder);
         if (!extensionTargetValidation.Success)
             return l.ReturnAsError(extensionTargetValidation);
 
-        var appCodeTargetValidation = EnsureTargetReadyForCopy(tempAppCodeFolder, appCodeTarget, overwrite, l, FolderConstants.AppCodeFolder);
+        var appCodeTargetValidation = EnsureTargetReadyForCopy(tempAppCodeFolder, appCodeTarget, overwrite, FolderConstants.AppCodeFolder);
         if (!appCodeTargetValidation.Success)
             return l.ReturnAsError(appCodeTargetValidation);
 
-        var copyResult = CopyAllowedFiles(tempDir, appRoot, folderName, allowedFiles, l);
+        var copyResult = CopyAllowedFiles(tempDir, appRoot, folderName, allowedFiles);
         if (!copyResult.Success)
             return l.ReturnAsError(copyResult);
 
@@ -179,9 +201,9 @@ public class ExtensionsZipInstallerBackend(
     }
 
     // Ensure the destination directory is ready to receive new files, deleting previous content when required.
-    private static ValidationResult EnsureTargetReadyForCopy(string tempSourcePath, string targetPath, bool overwrite, ILog? parentLog, string areaName)
+    private ValidationResult EnsureTargetReadyForCopy(string tempSourcePath, string targetPath, bool overwrite, string areaName)
     {
-        var l = parentLog.Fn<ValidationResult>($"area:{areaName}");
+        var l = Log.Fn<ValidationResult>($"area:{areaName}");
 
         var sourceExists = Directory.Exists(tempSourcePath);
         var targetExists = Directory.Exists(targetPath);
@@ -196,15 +218,15 @@ public class ExtensionsZipInstallerBackend(
 
             // RemoveReadOnlyRecursive(targetPath, parentLog);
             l.A($"cleanup target:'{targetPath}'");
-            Zipping.TryToDeleteDirectory(targetPath, parentLog);
+            Zipping.TryToDeleteDirectory(targetPath, l);
         }
 
         return l.ReturnAsOk(new(true, null));
     }
 
-    private static ValidationResult CopyAllowedFiles(string sourceRoot, string targetRoot, string folderName, HashSet<string> allowedFiles, ILog? parentLog)
+    private ValidationResult CopyAllowedFiles(string sourceRoot, string targetRoot, string folderName, HashSet<string> allowedFiles)
     {
-        var l = parentLog.Fn<ValidationResult>($"copy:'{folderName}'");
+        var l = Log.Fn<ValidationResult>($"copy:'{folderName}'");
 
         var sourceRootFull = EnsureTrailingBackslash(Path.GetFullPath(sourceRoot));
         var targetRootFull = EnsureTrailingBackslash(Path.GetFullPath(targetRoot));
@@ -233,9 +255,9 @@ public class ExtensionsZipInstallerBackend(
                     return l.ReturnAsError(new(false, $"illegal destination path:'{rel}'"));
 
                 Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
-                RemoveReadOnlyIfNeeded(destinationPath, rel, l);
+                RemoveReadOnlyIfNeeded(destinationPath, rel);
                 File.Copy(file, destinationPath, overwrite: true);
-                EnsureReadOnly(destinationPath, rel, l);
+                EnsureReadOnly(destinationPath, rel);
                 l.A($"copied:'{rel}'");
             }
         }
@@ -245,9 +267,9 @@ public class ExtensionsZipInstallerBackend(
 
     private record ValidationResult(bool Success, string? Error);
 
-    private static ValidationResult ValidateExtensionJsonFile(string extensionJsonFilePath, string sourcePath, ILog? parentLog)
+    private ManifestValidationResult ValidateExtensionJsonFile(string extensionJsonFilePath)
     {
-        var l = parentLog.Fn<ValidationResult>();
+        var l = Log.Fn<ManifestValidationResult>();
 
         try
         {
@@ -256,23 +278,27 @@ public class ExtensionsZipInstallerBackend(
             var root = doc.RootElement;
 
             if (!root.TryGetProperty("isInstalled", out var isInstalledProp) || isInstalledProp.ValueKind != JsonValueKind.True)
-                return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionJsonFile} missing 'isInstalled' True"));
+                return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionJsonFile} missing 'isInstalled' True", false));
 
-            return l.ReturnAsOk(new(true, null));
+            var editionsSupported = root.TryGetProperty("editionsSupported", out var editionsProp)
+                                    && editionsProp.ValueKind == JsonValueKind.True;
+
+            return l.ReturnAsOk(new(true, null, editionsSupported));
         }
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionJsonFile} parse error"));
+            return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionJsonFile} parse error", false));
         }
     }
 
     private record LockValidationResult(bool Success, string? Error, HashSet<string>? AllowedFiles) : ValidationResult(Success, Error);
+    private record ManifestValidationResult(bool Success, string? Error, bool EditionsSupported) : ValidationResult(Success, Error);
 
     // Validate lock file against a single candidate folder only
-    private static LockValidationResult ValidateLockFile(string lockFilePath, string tempDir, string candidatePath, ILog? parentLog)
+    private LockValidationResult ValidateLockFile(string lockFilePath, string tempDir, string candidatePath)
     {
-        var l = parentLog.Fn<LockValidationResult>();
+        var l = Log.Fn<LockValidationResult>();
 
         var lockRead = ReadLockFile(lockFilePath, l);
         if (!lockRead.Success || lockRead.ExpectedWithHash == null || lockRead.AllowedFiles == null)
@@ -319,30 +345,73 @@ public class ExtensionsZipInstallerBackend(
         return l.ReturnAsOk(new(true, null, allowed));
     }
     
-    private static void RemoveReadOnlyIfNeeded(string path, string relPath, ILog? log)
+    private void RemoveReadOnlyIfNeeded(string path, string relPath)
     {
+        var l = Log.Fn();
+
         if (!File.Exists(path))
+        {
+            l.Done($"file not found: {relPath}");
             return;
+        }
 
         var attributes = File.GetAttributes(path);
         if (!attributes.HasFlag(FileAttributes.ReadOnly))
+        {
+            l.Done($"file is not readonly: {relPath}");
             return;
+        }
 
         File.SetAttributes(path, attributes & ~FileAttributes.ReadOnly);
-        log?.A($"cleared readonly:'{relPath}'");
+        l.Done($"cleared readonly:'{relPath}'");
     }
 
-    private static void EnsureReadOnly(string path, string relPath, ILog? log)
+    private void EnsureReadOnly(string path, string relPath)
     {
+        var l = Log.Fn();
+
         if (!File.Exists(path))
+        {
+            l.Done($"file not found: {relPath}");
             return;
+        }
 
         var attributes = File.GetAttributes(path);
         if (attributes.HasFlag(FileAttributes.ReadOnly))
+        {
+            l.Done($"file is already readonly: {relPath}");
             return;
+        }
 
         File.SetAttributes(path, attributes | FileAttributes.ReadOnly);
-        log?.A($"set readonly:'{relPath}'");
+        l.Done($"set readonly:'{relPath}'");
+    }
+
+    private static List<string> NormalizeEditions(string[]? editions)
+    {
+        var segments = (editions ?? Array.Empty<string>())
+            .SelectMany(raw =>
+            {
+                // Split comma-delimited entries so DNN/webforms can send editions=staging,live
+                if (raw == null)
+                    return new[] { string.Empty };
+                return raw.Split(new[] { ',' }, StringSplitOptions.None);
+            });
+
+        var normalized = segments
+            .Select(e => e.NullIfNoValue()?.Trim().Trim('/', '\\') ?? string.Empty)
+            .Select(e =>
+            {
+                if (e.ContainsPathTraversal())
+                    throw new ArgumentException("edition contains invalid path traversal", nameof(editions));
+                return e;
+            })
+            .ToList();
+
+        if (normalized.Count == 0)
+            normalized.Add(string.Empty);
+
+        return normalized.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
     }
 
 }

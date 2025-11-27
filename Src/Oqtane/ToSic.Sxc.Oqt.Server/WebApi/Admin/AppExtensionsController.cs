@@ -46,13 +46,13 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
         => Real.Extension(zoneId, appId, name, configuration);
 
     /// <inheritdoc />
-    [HttpPost]
+    [HttpPost("installExtension")]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Install(int zoneId, int appId, bool overwrite = true)
+    public bool Install(int zoneId, int appId, bool overwrite = true, [FromQuery] string[] editions = null)
     {
         HotReloadEnabledCheck.Check();
-        return Real.Install(new(Request), zoneId, appId, overwrite);
+        return Real.Install(new(Request), zoneId, appId, overwrite, editions);
     }
 
     /// <inheritdoc />

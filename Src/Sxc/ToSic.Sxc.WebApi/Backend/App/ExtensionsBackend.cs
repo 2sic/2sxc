@@ -17,8 +17,8 @@ public class ExtensionsBackend(LazySvc<ExtensionsReaderBackend> readerLazy,
     public bool SaveExtension(int zoneId, int appId, string name, ExtensionManifest manifest)
         => writerLazy.Value.SaveExtension(appId, name, manifest);
 
-    public bool InstallExtensionZip(int zoneId, int appId, Stream zipStream, bool overwrite = false, string? originalZipFileName = null)
-        => zipLazy.Value.InstallExtensionZip(appId, zipStream, overwrite, originalZipFileName);
+    public bool InstallExtensionZip(int zoneId, int appId, Stream zipStream, bool overwrite = false, string? originalZipFileName = null, string[]? editions = null)
+        => zipLazy.Value.InstallExtensionZip(appId, zipStream, overwrite, originalZipFileName, editions);
 
     public ExtensionInspectResultDto InspectExtension(int appId, string name, string? edition)
         => inspectorLazy.Value.Inspect(appId, name, edition);

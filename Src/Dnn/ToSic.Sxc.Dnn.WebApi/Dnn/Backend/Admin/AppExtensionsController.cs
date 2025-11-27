@@ -46,12 +46,13 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
         => Real.Extension(zoneId, appId, name, configuration);
 
     /// <inheritdoc />
+    [ActionName("installExtension")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public bool Install(int zoneId, int appId, bool overwrite = true)
-        => Real.Install(new(Request, HttpContext.Current.Request), zoneId, appId, overwrite);
+    public bool Install(int zoneId, int appId, bool overwrite = false, [FromUri] string[] editions = null)
+        => Real.Install(new(Request, HttpContext.Current.Request), zoneId, appId, overwrite, editions);
 
     /// <inheritdoc />
     [HttpGet]

@@ -14,6 +14,6 @@ internal static class ExtensionBackendTestAccessors
         => backend.SaveExtension(zoneId: zoneId, appId: appId, name: name, manifest: manifest);
 
     public static bool InstallExtensionZipTac(this ExtensionsBackend backend, int zoneId, int appId, Stream zipStream,
-        bool overwrite = false, string? originalZipFileName = null)
-        => backend.InstallExtensionZip(zoneId: zoneId, appId: appId, zipStream: zipStream, overwrite: overwrite, originalZipFileName: originalZipFileName);
+        bool overwrite = false, string? originalZipFileName = null, string[]? editions = null)
+        => backend.InstallExtensionZip(zoneId: zoneId, appId: appId, zipStream: zipStream, overwrite: overwrite, originalZipFileName: originalZipFileName, editions: editions);
 }

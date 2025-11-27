@@ -27,7 +27,7 @@ public class AppExtensionsControllerReal(ExtensionsBackend backend,
     /// <summary>
     /// Install an extension ZIP into /extensions.
     /// </summary>
-    public bool Install(HttpUploadedFile uploadInfo, int zoneId, int appId, bool overwrite = false)
+    public bool Install(HttpUploadedFile uploadInfo, int zoneId, int appId, bool overwrite = false, string[]? editions = null)
     {
         var l = Log.Fn<bool>($"z:{zoneId}, a:{appId}, overwrite:{overwrite}");
 
@@ -38,7 +38,7 @@ public class AppExtensionsControllerReal(ExtensionsBackend backend,
         if (stream == null!)
             throw new NullReferenceException("File Stream is null, upload canceled");
 
-        var ok = backend.InstallExtensionZip(zoneId, appId, stream, overwrite, originalZipFileName: fileName);
+        var ok = backend.InstallExtensionZip(zoneId, appId, stream, overwrite, originalZipFileName: fileName, editions: editions);
         return l.ReturnAsOk(ok);
     }
 
