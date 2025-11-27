@@ -7,8 +7,9 @@ namespace ToSic.Sxc.Backend.App;
 public class ExtensionsBackend(LazySvc<ExtensionsReaderBackend> readerLazy,
     LazySvc<ExtensionsWriterBackend> writerLazy,
     LazySvc<ExtensionsZipInstallerBackend> zipLazy,
-    LazySvc<ExtensionsInspectorBackend> inspectorLazy)
-    : ServiceBase("Bck.Exts", connect: [readerLazy, writerLazy, zipLazy, inspectorLazy])
+    LazySvc<ExtensionsInspectorBackend> inspectorLazy,
+    LazySvc<ExtensionsDeleteBackend> deleteLazy)
+    : ServiceBase("Bck.Exts", connect: [readerLazy, writerLazy, zipLazy, inspectorLazy, deleteLazy])
 {
     public ExtensionsResultDto GetExtensions(int appId)
         => readerLazy.Value.GetExtensions(appId);
@@ -21,4 +22,7 @@ public class ExtensionsBackend(LazySvc<ExtensionsReaderBackend> readerLazy,
 
     public ExtensionInspectResultDto InspectExtension(int appId, string name, string? edition)
         => inspectorLazy.Value.Inspect(appId, name, edition);
+
+    public bool DeleteExtension(int appId, string name, string? edition, bool force, bool withData)
+        => deleteLazy.Value.DeleteExtension(appId, name, edition, force, withData);
 }

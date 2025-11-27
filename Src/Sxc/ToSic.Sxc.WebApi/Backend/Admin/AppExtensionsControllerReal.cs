@@ -53,4 +53,10 @@ public class AppExtensionsControllerReal(ExtensionsBackend backend,
     /// </summary>
     public ExtensionInspectResultDto Inspect(int appId, string name, string? edition = null)
         => backend.InspectExtension(appId, name, edition);
+
+    /// <summary>
+    /// Delete an extension and optionally its data.
+    /// </summary>
+    public bool Delete(int appId, string name, string? edition = null, bool force = false, bool withData = false)
+        => backend.DeleteExtension(appId, name, edition, force, withData);
 }

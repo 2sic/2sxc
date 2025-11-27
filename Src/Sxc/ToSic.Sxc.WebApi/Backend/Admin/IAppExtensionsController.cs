@@ -1,4 +1,5 @@
 using ToSic.Eav.Apps.Sys.FileSystemState;
+using ToSic.Sxc.Backend.App;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -41,4 +42,23 @@ public interface IAppExtensionsController<out THttpResponse>
     /// <param name="name">Extension folder name</param>
     /// <returns>HTTP response containing the file data.</returns>
     THttpResponse Download(int zoneId, int appId, string name);
+
+    /// <summary>
+    /// Inspect endpoint mirroring DNN behavior.
+    /// </summary>
+    /// <param name="appId">App identifier</param>
+    /// <param name="name">Extension folder name</param>
+    /// <param name="edition">Optional edition name</param>
+    public ExtensionInspectResultDto Inspect(int appId, string name, string? edition = null);
+
+    /// <summary>
+    /// Delete an extension and optionally its data.
+    /// </summary>
+    /// <param name="appId">App identifier</param>
+    /// <param name="name">Extension folder name</param>
+    /// <param name="edition">Optional edition name</param>
+    /// <param name="force">Force deletion even when files or data changed.</param>
+    /// <param name="withData">Delete related data when true (requires force).</param>
+    /// <returns>true if deleted</returns>
+    bool Delete(int appId, string name, string? edition = null, bool force = false, bool withData = false);
 }

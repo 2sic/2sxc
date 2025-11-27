@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Sys.Insights;
 using ToSic.Eav.WebApi.Sys.Admin;
 using ToSic.Eav.WebApi.Sys.ImportExport;
@@ -46,6 +47,9 @@ public static class StartupWebApi
         services.TryAddTransient<ExtensionsReaderBackend>();
         services.TryAddTransient<ExtensionsWriterBackend>();
         services.TryAddTransient<ExtensionsZipInstallerBackend>();
+        services.TryAddTransient<ExtensionManifestService>();
+        services.TryAddTransient<ExtensionsInspectorBackend>();
+        services.TryAddTransient<ExtensionsDeleteBackend>();
         services.TryAddTransient<EntityBackend>();
         services.TryAddTransient<EditLoadBackend>();
         services.TryAddTransient<EditLoadPrefetchHelper>();

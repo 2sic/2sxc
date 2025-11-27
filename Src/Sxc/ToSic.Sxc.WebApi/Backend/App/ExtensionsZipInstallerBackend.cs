@@ -318,31 +318,7 @@ public class ExtensionsZipInstallerBackend(
 
         return l.ReturnAsOk(new(true, null, allowed));
     }
-
-    private static void RemoveReadOnlyRecursive(string directory, ILog? log)
-    {
-        if (!Directory.Exists(directory))
-            return;
-
-        foreach (var file in Directory.GetFiles(directory, "*", SearchOption.AllDirectories))
-        {
-            var rel = file.Substring(directory.Length)
-                .TrimPrefixSlash()
-                .ForwardSlash();
-            RemoveReadOnlyIfNeeded(file, rel, log);
-        }
-
-        foreach (var dir in Directory.GetDirectories(directory, "*", SearchOption.AllDirectories))
-        {
-            var rel = dir.Substring(directory.Length)
-                .TrimPrefixSlash()
-                .ForwardSlash();
-            ClearDirectoryReadOnly(dir, rel, log);
-        }
-
-        ClearDirectoryReadOnly(directory, string.Empty, log);
-    }
-
+    
     private static void RemoveReadOnlyIfNeeded(string path, string relPath, ILog? log)
     {
         if (!File.Exists(path))
@@ -367,18 +343,6 @@ public class ExtensionsZipInstallerBackend(
 
         File.SetAttributes(path, attributes | FileAttributes.ReadOnly);
         log?.A($"set readonly:'{relPath}'");
-    }
-
-    private static void ClearDirectoryReadOnly(string directory, string relPath, ILog? log)
-    {
-        var info = new DirectoryInfo(directory);
-        var attributes = info.Attributes;
-        if (!attributes.HasFlag(FileAttributes.ReadOnly))
-            return;
-
-        info.Attributes = attributes & ~FileAttributes.ReadOnly;
-        if (!string.IsNullOrEmpty(relPath))
-            log?.A($"cleared readonly dir:'{relPath}'");
     }
 
 }

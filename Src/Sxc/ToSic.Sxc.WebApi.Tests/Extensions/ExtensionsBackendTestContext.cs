@@ -8,6 +8,7 @@ using ToSic.Eav.Context;
 using ToSic.Sxc.Backend.App;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
+using ToSic.Eav.WebApi.Sys.Entities;
 using ToSic.Sys.Coding;
 using ToSic.Sys.Configuration;
 using ToSic.Sys.DI;
@@ -64,6 +65,8 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         // Register backend dependencies explicitly so they can be resolved by LazySvc later
         services.AddTransient<ExtensionManifestService>();
         services.AddTransient<ExtensionsInspectorBackend>();
+        services.AddTransient<ExtensionsDeleteBackend>();
+        services.AddSingleton(sp => new LazySvc<EntityApi>(sp));
         
         services.AddSingleton<ExtensionsReaderBackend>(sp => new ExtensionsReaderBackend(
             sp.GetRequiredService<LazySvc<IAppReaderFactory>>(),
@@ -88,6 +91,7 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         services.AddSingleton(sp => new LazySvc<ExtensionsWriterBackend>(sp));
         services.AddSingleton(sp => new LazySvc<ExtensionsZipInstallerBackend>(sp));
         services.AddSingleton(sp => new LazySvc<ExtensionsInspectorBackend>(sp));
+        services.AddSingleton(sp => new LazySvc<ExtensionsDeleteBackend>(sp));
 
         var sp = services.BuildServiceProvider() 
             ?? throw new InvalidOperationException("Failed to build service provider");
@@ -101,8 +105,9 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         var writerLazy = sp.GetRequiredService<LazySvc<ExtensionsWriterBackend>>();
         var zipLazy = sp.GetRequiredService<LazySvc<ExtensionsZipInstallerBackend>>();
         var inspectorLazy = sp.GetRequiredService<LazySvc<ExtensionsInspectorBackend>>();
+        var deleteLazy = sp.GetRequiredService<LazySvc<ExtensionsDeleteBackend>>();
 
-        var backend = new ExtensionsBackend(readerLazy, writerLazy, zipLazy, inspectorLazy);
+        var backend = new ExtensionsBackend(readerLazy, writerLazy, zipLazy, inspectorLazy, deleteLazy);
 
         var jsonSvc = sp.GetRequiredService<IJsonService>();
 

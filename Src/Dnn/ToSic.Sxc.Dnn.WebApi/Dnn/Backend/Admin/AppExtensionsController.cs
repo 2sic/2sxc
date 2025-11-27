@@ -29,7 +29,7 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [JsonFormatter(Casing = Casing.Camel)]
-    public bool Extension([FromUri] int zoneId, [FromUri] int appId, string name, [FromBody] ExtensionManifest configuration)
+    public bool Extension(int zoneId, int appId, [FromUri] string name, [FromBody] ExtensionManifest configuration)
         => Real.Extension(zoneId, appId, name, configuration);
 
     /// <summary>
@@ -42,7 +42,7 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [JsonFormatter(Casing = Casing.Camel)]
-    public bool ExtensionsPostAlias([FromUri] int zoneId, [FromUri] int appId, [FromUri] string name, [FromBody] ExtensionManifest configuration)
+    public bool ExtensionsPostAlias(int zoneId, int appId, string name, [FromBody] ExtensionManifest configuration)
         => Real.Extension(zoneId, appId, name, configuration);
 
     /// <inheritdoc />
@@ -50,7 +50,7 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public bool Install([FromUri] int zoneId, [FromUri] int appId, [FromUri] bool overwrite = true)
+    public bool Install(int zoneId, int appId, bool overwrite = true)
         => Real.Install(new(Request, HttpContext.Current.Request), zoneId, appId, overwrite);
 
     /// <inheritdoc />
@@ -59,15 +59,22 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     //[ValidateAntiForgeryToken]
     //[SupportedModules(DnnSupportedModuleNames)]
     [DnnAuthorize(StaticRoles = "Administrators")]
-    public HttpResponseMessage Download([FromUri] int zoneId, [FromUri] int appId, [FromUri] string name)
+    public HttpResponseMessage Download(int zoneId, int appId, string name)
         => Real.Download(zoneId, appId, name);
 
-    /// <summary>
-    /// Inspect endpoint for DNN, following conventions and delegating to Real.Inspect.
-    /// </summary>
+    /// <inheritdoc />
     [HttpGet]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [JsonFormatter(Casing = Casing.Camel)]
     public ExtensionInspectResultDto Inspect(int appId, string name, string edition = null)
         => Real.Inspect(appId, name, edition);
+
+    /// <inheritdoc />
+    [HttpDelete]
+    [ValidateAntiForgeryToken]
+    [SupportedModules(DnnSupportedModuleNames)]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [JsonFormatter(Casing = Casing.Camel)]
+    public bool Delete(int appId, string name, string edition = null, bool force = false, bool withData = false)
+        => Real.Delete(appId, name, edition, force, withData);
 }

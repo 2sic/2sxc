@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using System.Text.Json;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.App;
@@ -43,14 +42,14 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
     [HttpPost("extensions")]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool ExtensionsPostAlias([FromQuery] int zoneId, [FromQuery] int appId, [FromQuery] string name, [FromBody] ExtensionManifest configuration)
+    public bool ExtensionsPostAlias(int zoneId, int appId, string name, [FromBody] ExtensionManifest configuration)
         => Real.Extension(zoneId, appId, name, configuration);
 
     /// <inheritdoc />
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Install([FromQuery] int zoneId, [FromQuery] int appId, [FromQuery] bool overwrite = true)
+    public bool Install(int zoneId, int appId, bool overwrite = true)
     {
         HotReloadEnabledCheck.Check();
         return Real.Install(new(Request), zoneId, appId, overwrite);
@@ -59,14 +58,19 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
     /// <inheritdoc />
     [HttpGet]
     [Authorize(Roles = RoleNames.Admin)]
-    public IActionResult Download([FromQuery] int zoneId, [FromQuery] int appId, [FromQuery] string name)
+    public IActionResult Download(int zoneId, int appId, string name)
         => Real.Download(zoneId, appId, name);
 
-    /// <summary>
-    /// Inspect endpoint mirroring DNN behavior.
-    /// </summary>
+    /// <inheritdoc />
     [HttpGet]
     [Authorize(Roles = RoleNames.Admin)]
-    public ExtensionInspectResultDto Inspect(int appId, [FromQuery] string name, [FromQuery] string? edition = null)
+    public ExtensionInspectResultDto Inspect(int appId, string name, string edition = null)
         => Real.Inspect(appId, name, edition);
+
+    /// <inheritdoc />
+    [HttpDelete]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = RoleNames.Admin)]
+    public bool Delete(int appId, string name, string edition = null, bool force = false, bool withData = false)
+        => Real.Delete(appId, name, edition, force, withData);
 }
