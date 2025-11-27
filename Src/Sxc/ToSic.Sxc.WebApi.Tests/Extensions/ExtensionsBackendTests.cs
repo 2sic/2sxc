@@ -6,7 +6,7 @@ using ToSic.Sxc.Backend.App;
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
 /// <summary>
-/// Unit tests for ExtensionsBackend service covering read and write operations
+/// Unit tests for extension read/write backends covering read and write operations
 /// </summary>
 public class ExtensionsBackendTests
 {
@@ -37,7 +37,7 @@ public class ExtensionsBackendTests
         Directory.CreateDirectory(fooFolder);
 
         // Act
-        var saved = ctx.Backend.SaveExtensionTac(zoneId: TestZoneId, appId: TestAppId, name: extensionName, manifest: manifest);
+        var saved = ctx.Writer.SaveExtensionTac(zoneId: TestZoneId, appId: TestAppId, name: extensionName, manifest: manifest);
 
         // Assert
         Assert.True(saved);
@@ -46,7 +46,7 @@ public class ExtensionsBackendTests
         var barFolder = Path.Combine(ctx.TempRoot, FolderConstants.AppExtensionsFolder, "bar");
         Directory.CreateDirectory(barFolder);
 
-        var result = ctx.Backend.GetExtensionsTac(TestAppId);
+        var result = ctx.Reader.GetExtensionsTac(TestAppId);
         Assert.NotNull(result);
         Assert.NotNull(result.Extensions);
 
@@ -79,10 +79,10 @@ public class ExtensionsBackendTests
             EditionsSupported = false
         };
 
-        var saved = ctx.Backend.SaveExtensionTac(zoneId: TestZoneId, appId: TestAppId, name: folder, manifest: manifest);
+        var saved = ctx.Writer.SaveExtensionTac(zoneId: TestZoneId, appId: TestAppId, name: folder, manifest: manifest);
         Assert.True(saved);
 
-        var result = ctx.Backend.GetExtensionsTac(TestAppId);
+        var result = ctx.Reader.GetExtensionsTac(TestAppId);
         Assert.NotNull(result);
         var item = result.Extensions.FirstOrDefault(e => e.Folder == folder);
         Assert.NotNull(item);

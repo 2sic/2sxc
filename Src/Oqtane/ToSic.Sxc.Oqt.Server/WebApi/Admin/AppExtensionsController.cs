@@ -28,12 +28,37 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
         => Real.Extensions(appId);
 
     /// <inheritdoc />
-    /// Original update/create endpoint using PUT with name segment.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = RoleNames.Admin)]
+    public ExtensionInstallPreflightResultDto InstallPreflight(int appId, [FromQuery] string[] editions = null)
+    {
+        HotReloadEnabledCheck.Check();
+        return Real.InstallPreflight(new(Request), appId, editions);
+    }
+
+    /// <inheritdoc />
+    [HttpPost("installExtension")]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = RoleNames.Admin)]
+    public bool Install(int appId, [FromQuery] string[] editions = null, bool overwrite = true)
+    {
+        HotReloadEnabledCheck.Check();
+        return Real.Install(new(Request), appId, editions, overwrite);
+    }
+
+    /// <inheritdoc />
+    [HttpGet]
+    [Authorize(Roles = RoleNames.Admin)]
+    public ExtensionInspectResultDto Inspect(int appId, string name, string edition = null)
+        => Real.Inspect(appId, name, edition);
+
+    /// <inheritdoc />
     [HttpPut("{name}")]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Extension(int zoneId, int appId, string name, [FromBody] ExtensionManifest configuration)
-        => Real.Extension(zoneId, appId, name, configuration);
+    public bool Extension(int appId, string name, [FromBody] ExtensionManifest configuration)
+        => Real.Extension(appId, name, configuration);
 
     /// <summary>
     /// Alias POST endpoint for front-ends posting to /appExtensions/extensions with query parameters.
@@ -42,30 +67,14 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
     [HttpPost("extensions")]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool ExtensionsPostAlias(int zoneId, int appId, string name, [FromBody] ExtensionManifest configuration)
-        => Real.Extension(zoneId, appId, name, configuration);
-
-    /// <inheritdoc />
-    [HttpPost("installExtension")]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Admin)]
-    public bool Install(int zoneId, int appId, bool overwrite = true, [FromQuery] string[] editions = null)
-    {
-        HotReloadEnabledCheck.Check();
-        return Real.Install(new(Request), zoneId, appId, overwrite, editions);
-    }
+    public bool ExtensionsPostAlias(int appId, string name, [FromBody] ExtensionManifest configuration)
+        => Real.Extension(appId, name, configuration);
 
     /// <inheritdoc />
     [HttpGet]
     [Authorize(Roles = RoleNames.Admin)]
-    public IActionResult Download(int zoneId, int appId, string name)
-        => Real.Download(zoneId, appId, name);
-
-    /// <inheritdoc />
-    [HttpGet]
-    [Authorize(Roles = RoleNames.Admin)]
-    public ExtensionInspectResultDto Inspect(int appId, string name, string edition = null)
-        => Real.Inspect(appId, name, edition);
+    public IActionResult Download(int appId, string name)
+        => Real.Download(appId, name);
 
     /// <inheritdoc />
     [HttpDelete]

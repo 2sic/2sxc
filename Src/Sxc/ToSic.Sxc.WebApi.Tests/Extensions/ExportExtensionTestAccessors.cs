@@ -19,5 +19,5 @@ internal static class ExportExtensionTestAccessors
     /// Test accessor for Export method.
     /// </summary>
     public static THttpResponseType ExportTac(this ExportExtension exportExtension, int zoneId, int appId, string name)
-        => exportExtension.Export(zoneId: zoneId, appId: appId, name: name);
+        => exportExtension.Export(appId: appId, name: name);
 }

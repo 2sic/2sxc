@@ -43,9 +43,9 @@ public class ExportExtension(
     /// </summary>
     private const string DefaultVersion = "00.00.01";
 
-    public THttpResponseType Export(int zoneId, int appId, string name)
+    public THttpResponseType Export(int appId, string name)
     {
-        var l = Log.Fn<THttpResponseType>($"export extension z#{zoneId}, a#{appId}, name:'{name}'");
+        var l = Log.Fn<THttpResponseType>($"export extension a#{appId}, name:'{name}'");
 
         if (string.IsNullOrWhiteSpace(name))
             throw l.Ex(new ArgumentException(@"Extension name is required", nameof(name)));
@@ -271,7 +271,7 @@ public class ExportExtension(
             exclude: [$"{FolderConstants.DataFolderProtected}\\{FolderConstants.AppExtensionJsonFile}"]);
 
         // 2. Check for hasAppCode setting
-        if (manifest.AppCodeInside)
+        if (manifest.HasAppCode)
         {
             l.A($"Extension has AppCode, including AppCode/{FolderConstants.AppExtensionsFolder} folder");
             var appCodeExtPath = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppCodeFolder,

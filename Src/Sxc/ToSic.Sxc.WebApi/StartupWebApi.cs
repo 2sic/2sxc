@@ -25,6 +25,7 @@ using ToSic.Sxc.Render.Sys.ResourceExtractor;
 using ToSic.Sxc.WebApi.Sys;
 using ToSic.Sxc.WebApi.Sys.ExternalLinks;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Backend;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
@@ -43,7 +44,6 @@ public static class StartupWebApi
         // Backends
         services.TryAddTransient<AppsBackend>();
         services.TryAddTransient<ExportExtension>();
-        services.TryAddTransient<ExtensionsBackend>();
         services.TryAddTransient<ExtensionsReaderBackend>();
         services.TryAddTransient<ExtensionsWriterBackend>();
         services.TryAddTransient<ExtensionsZipInstallerBackend>();

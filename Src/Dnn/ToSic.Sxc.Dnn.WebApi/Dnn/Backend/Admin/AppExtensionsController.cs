@@ -23,14 +23,38 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
         => Real.Extensions(appId);
 
     /// <inheritdoc />
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [SupportedModules(DnnSupportedModuleNames)]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    public ExtensionInstallPreflightResultDto InstallPreflight(int appId, [FromUri] string[] editions = null)
+        => Real.InstallPreflight(new(Request, HttpContext.Current.Request), appId, editions);
+
+    /// <inheritdoc />
+    [ActionName("installExtension")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [SupportedModules(DnnSupportedModuleNames)]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    public bool Install(int appId, [FromUri] string[] editions = null, bool overwrite = false)
+        => Real.Install(new(Request, HttpContext.Current.Request), appId, editions, overwrite);
+
+    /// <inheritdoc />
+    [HttpGet]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [JsonFormatter(Casing = Casing.Camel)]
+    public ExtensionInspectResultDto Inspect(int appId, string name, string edition = null)
+        => Real.Inspect(appId, name, edition);
+
+    /// <inheritdoc />
     /// Update/create endpoint using PUT with name as route segment.
     [Route("api/2sxc/admin/[controller]/{name}")]
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [JsonFormatter(Casing = Casing.Camel)]
-    public bool Extension(int zoneId, int appId, [FromUri] string name, [FromBody] ExtensionManifest configuration)
-        => Real.Extension(zoneId, appId, name, configuration);
+    public bool Extension(int appId, [FromUri] string name, [FromBody] ExtensionManifest configuration)
+        => Real.Extension(appId, name, configuration);
 
     /// <summary>
     /// Alias POST endpoint for front-ends posting to /appExtensions/extensions with query parameters.
@@ -42,17 +66,8 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [JsonFormatter(Casing = Casing.Camel)]
-    public bool ExtensionsPostAlias(int zoneId, int appId, string name, [FromBody] ExtensionManifest configuration)
-        => Real.Extension(zoneId, appId, name, configuration);
-
-    /// <inheritdoc />
-    [ActionName("installExtension")]
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public bool Install(int zoneId, int appId, bool overwrite = false, [FromUri] string[] editions = null)
-        => Real.Install(new(Request, HttpContext.Current.Request), zoneId, appId, overwrite, editions);
+    public bool ExtensionsPostAlias(int appId, string name, [FromBody] ExtensionManifest configuration)
+        => Real.Extension(appId, name, configuration);
 
     /// <inheritdoc />
     [HttpGet]
@@ -60,15 +75,8 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     //[ValidateAntiForgeryToken]
     //[SupportedModules(DnnSupportedModuleNames)]
     [DnnAuthorize(StaticRoles = "Administrators")]
-    public HttpResponseMessage Download(int zoneId, int appId, string name)
-        => Real.Download(zoneId, appId, name);
-
-    /// <inheritdoc />
-    [HttpGet]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    [JsonFormatter(Casing = Casing.Camel)]
-    public ExtensionInspectResultDto Inspect(int appId, string name, string edition = null)
-        => Real.Inspect(appId, name, edition);
+    public HttpResponseMessage Download(int appId, string name)
+        => Real.Download(appId, name);
 
     /// <inheritdoc />
     [HttpDelete]

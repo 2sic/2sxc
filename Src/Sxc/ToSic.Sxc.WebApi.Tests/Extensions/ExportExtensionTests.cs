@@ -28,7 +28,7 @@ public class ExportExtensionTests
         
         const string extName = "test-extension";
         const string version = "1.0.0";
-        ctx.SetupExtension(extName, new ExtensionManifest { Version = version, IsInstalled = false, AppCodeInside = false, DataInside = false });
+        ctx.SetupExtension(extName, new ExtensionManifest { Version = version, IsInstalled = false, HasAppCode = false, DataInside = false });
         
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
         
@@ -180,7 +180,7 @@ public class ExportExtensionTests
         using var ctx = ExportExtensionTestContext.Create();
         
         const string extName = "with-appcode";
-        ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0", AppCodeInside = true });
+        ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0", HasAppCode = true });
         ctx.CreateAppCodeFiles(extName, 
             ("Helper.cs", "// test helper"),
             ("Service.cs", "// test service"));
@@ -203,7 +203,7 @@ public class ExportExtensionTests
         using var ctx = ExportExtensionTestContext.Create();
         
         const string extName = "without-appcode";
-        ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0", AppCodeInside = false });
+        ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0", HasAppCode = false });
         ctx.CreateAppCodeFiles(extName, ("Helper.cs", "// should not be included"));
         
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);

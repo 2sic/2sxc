@@ -2,7 +2,6 @@ using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.Entities;
-using ToSic.Sys.Logging;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.App;
@@ -73,7 +72,7 @@ public class ExtensionsDeleteBackend(
 
         var typeNames = new HashSet<string>(types
             .Select(t => t.Guid)
-            .Where(n => !string.IsNullOrWhiteSpace(n))!, StringComparer.OrdinalIgnoreCase);
+            .Where(n => n.HasValue()), StringComparer.OrdinalIgnoreCase);
 
         if (typeNames.Count == 0)
         {
@@ -102,7 +101,7 @@ public class ExtensionsDeleteBackend(
         DeleteDirectorySafe(extensionPath);
 
         var appCodePath = GetExtensionAppCodePath(appRoot, extensionName, edition);
-        if (!string.IsNullOrWhiteSpace(appCodePath))
+        if (appCodePath.HasValue())
             DeleteDirectorySafe(appCodePath);
 
         l.Done();

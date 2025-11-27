@@ -1,4 +1,5 @@
 using System.Text.Json;
+using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.ImportExport.Sys.Zip;
 using ToSic.Eav.Sys;
@@ -13,8 +14,10 @@ public class ExtensionsZipInstallerBackend(
     LazySvc<IAppReaderFactory> appReadersLazy,
     ISite site,
     IAppPathsMicroSvc appPathSvc,
-    IGlobalConfiguration globalConfiguration)
-    : ServiceBase("Bck.ExtZip", connect: [appReadersLazy, site, appPathSvc, globalConfiguration])
+    IGlobalConfiguration globalConfiguration,
+    ExtensionManifestService manifestService,
+    LazySvc<ExtensionsInspectorBackend> inspectorLazy)
+    : ServiceBase("Bck.ExtZip", connect: [appReadersLazy, site, appPathSvc, globalConfiguration, manifestService, inspectorLazy])
 {
     public bool InstallExtensionZip(int appId, Stream zipStream, bool overwrite = false, string? originalZipFileName = null, string[]? editions = null)
     {
@@ -52,7 +55,7 @@ public class ExtensionsZipInstallerBackend(
                 return l.ReturnFalse($"'{FolderConstants.AppExtensionsFolder}' folder empty");
 
             // Validate every immediate subfolder: must contain required files and valid lock/json entries
-            var (error, lockResults, manifestResults) = ValidateCandidateSubfolders(tempDir, candidateDirs);
+            var (error, lockResults, manifestResults) = ValidateCandidateSubfolders(tempDir, candidateDirs, manifestService);
             if (error != null)
                 return l.ReturnFalse(error);
 
@@ -109,8 +112,86 @@ public class ExtensionsZipInstallerBackend(
         }
     }
 
+    public ExtensionInstallPreflightResultDto InstallExtensionPreflight(int appId, Stream zipStream, string? originalZipFileName = null, string[]? editions = null)
+    {
+        var l = Log.Fn<ExtensionInstallPreflightResultDto>($"a:{appId}, ofn:'{originalZipFileName}'");
+
+        string? tempDir = null;
+        try
+        {
+            var appReader = appReadersLazy.Value.Get(appId);
+            var appPaths = appPathSvc.Get(appReader, site);
+            var appRoot = appPaths.PhysicalPath;
+            var requestedEditions = NormalizeEditions(editions);
+
+            tempDir = Path.Combine(globalConfiguration.TemporaryFolder(), Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempDir);
+
+            new Zipping(Log).ExtractZipStream(zipStream, tempDir, allowCodeImport: true);
+
+            var extensionsDir = Path.Combine(tempDir, FolderConstants.AppExtensionsFolder);
+            if (!Directory.Exists(extensionsDir))
+                throw new InvalidOperationException($"zip missing top-level '{FolderConstants.AppExtensionsFolder}' folder");
+
+            var candidateDirs = Directory.GetDirectories(extensionsDir, "*", SearchOption.TopDirectoryOnly);
+            if (candidateDirs.Length == 0)
+                throw new InvalidOperationException($"'{FolderConstants.AppExtensionsFolder}' folder empty");
+
+            var (error, lockResults, manifestResults) = ValidateCandidateSubfolders(tempDir, candidateDirs, manifestService);
+            if (error != null)
+                throw new InvalidOperationException(error);
+
+            var result = new ExtensionInstallPreflightResultDto();
+
+            foreach (var kvp in lockResults)
+            {
+                var folderName = kvp.Key;
+                var lockValidation = kvp.Value;
+
+                if (!manifestResults.TryGetValue(folderName, out var manifestValidation) || manifestValidation.Manifest == null)
+                    throw new InvalidOperationException($"missing manifest info for '{folderName}'");
+
+                var manifest = manifestValidation.Manifest;
+                var editionsSupported = manifestValidation.EditionsSupported;
+                if (requestedEditions.Any(e => e.HasValue()) && !editionsSupported)
+                    throw new InvalidOperationException("extension does not support editions");
+
+                var editionTargets = MergeEditions(requestedEditions, DetectInstalledEditions(appRoot, folderName));
+                var extDto = new ExtensionInstallPreflightExtensionDto
+                {
+                    Name = folderName,
+                    Version = manifest.Version,
+                    EditionsSupported = editionsSupported,
+                    FileCount = lockValidation.AllowedFiles?.Count ?? 0,
+                    Features = MapFeatures(manifest)
+                };
+
+                foreach (var edition in editionTargets)
+                {
+                    var editionInfo = BuildEditionInfo(appId, appRoot, folderName, edition, manifest);
+                    if (editionInfo is not null)
+                        extDto.Editions.Add(editionInfo);
+                }
+
+                result.Extensions.Add(extDto);
+            }
+
+            return l.Return(result, $"extensions:{result.Extensions.Count}");
+        }
+        catch (Exception ex)
+        {
+            l.Ex(ex);
+            throw;
+        }
+        finally
+        {
+            if (tempDir != null)
+                Zipping.TryToDeleteDirectory(tempDir, l);
+        }
+    }
+
     private (string? error, Dictionary<string, LockValidationResult> lockResults, Dictionary<string, ManifestValidationResult> manifestResults) ValidateCandidateSubfolders(string tempDir,
-            string[] candidateDirs)
+            string[] candidateDirs, ExtensionManifestService manifestSvc)
     {
         var l = Log.Fn<(string? error, Dictionary<string, LockValidationResult> lockResults, Dictionary<string, ManifestValidationResult> manifestResults)>();
         
@@ -139,13 +220,12 @@ public class ExtensionsZipInstallerBackend(
             LockValidationResult? lockValidation = null;
             if (File.Exists(extensionJsonPath))
             {
-                var extVal = ValidateExtensionJsonFile(extensionJsonPath);
+                var extVal = ValidateExtensionJsonFile(extensionJsonPath, manifestSvc);
                 if (!extVal.Success)
                     folderIssues.Add(extVal.Error ?? "extension.json invalid");
                 else
                     manifestResults[folder] = extVal;
             }
-
             // Validate lock file contents restricted to this candidate
             if (File.Exists(lockJsonPath))
             {
@@ -265,35 +345,162 @@ public class ExtensionsZipInstallerBackend(
         return l.ReturnAsOk(new(true, null));
     }
 
+    private ExtensionInstallPreflightEditionDto? BuildEditionInfo(int appId, string appRoot, string extensionName, string edition, ExtensionManifest incomingManifest)
+    {
+        var l = Log.Fn<ExtensionInstallPreflightEditionDto>();
+
+        var editionRoot = edition.HasValue()
+            ? Path.Combine(appRoot, edition)
+            : appRoot;
+
+        l.A($"prep edition:'{edition}', root:'{editionRoot}', ext:'{extensionName}'");
+
+        if (!Directory.Exists(Path.Combine(editionRoot, FolderConstants.AppExtensionsFolder, extensionName)))
+            return l.ReturnNull($"extension not found:'{extensionName}'");
+
+        var installedManifest = LoadInstalledManifest(editionRoot, extensionName);
+        if (installedManifest is null)
+            return l.Return(new ExtensionInstallPreflightEditionDto
+                {
+                    Edition = edition
+                }, $"extension without manifest:'{extensionName}'");
+
+        var currentVersion = installedManifest.Version;
+        var isInstalled = installedManifest.IsInstalled == true;
+
+        var inspectEdition = inspectorLazy.Value.Inspect(appId, extensionName, edition.HasValue() ? edition : null);
+        var hasFileChanges = inspectEdition.FoundLock && inspectEdition.Summary != null
+            && (inspectEdition.Summary.Changed > 0 || inspectEdition.Summary.Added > 0 || inspectEdition.Summary.Missing > 0);
+        var hasData = inspectEdition.Data?.ContentTypes.Any(ct => ct.LocalEntities > 0) == true;
+        var breakingChanges = HasBreakingChanges(incomingManifest, currentVersion);
+
+        l.A($"state installed:{isInstalled}, ver:'{currentVersion}', changes:{hasFileChanges}, data:{hasData}, breaking:{breakingChanges}");
+
+        return l.ReturnAsOk(new ExtensionInstallPreflightEditionDto
+        {
+            Edition = edition,
+            IsInstalled = isInstalled,
+            CurrentVersion = currentVersion,
+            HasFileChanges = hasFileChanges,
+            HasData = hasData,
+            BreakingChanges = breakingChanges
+        });
+    }
+
+    private static ExtensionInstallPreflightFeaturesDto MapFeatures(ExtensionManifest manifest) => new()
+    {
+        FieldsInside = manifest.HasFields,
+        RazorInside = manifest.HasRazor,
+        AppCodeInside = manifest.HasAppCode,
+        WebApiInside = manifest.HasWebApi,
+        ContentTypesInside = manifest.HasContentTypes,
+        DataBundlesInside = manifest.HasDataBundles,
+        QueriesInside = manifest.HasQueries,
+        ViewsInside = manifest.HasViews,
+        DataInside = manifest.DataInside,
+        InputTypeInside = manifest.InputTypeInside.HasValue()
+    };
+
+    private static bool HasBreakingChanges(ExtensionManifest incomingManifest, string? currentVersion)
+    {
+        if (incomingManifest.Releases.ValueKind != JsonValueKind.Array)
+            return false;
+
+        var current = new Version();
+        var hasCurrent = currentVersion.HasValue() && Version.TryParse(currentVersion, out current);
+
+        foreach (var release in incomingManifest.Releases.EnumerateArray())
+        {
+            if (release.ValueKind != JsonValueKind.Object)
+                continue;
+
+            var breaking = release.TryGetProperty("breaking", out var breakingProp)
+                           && breakingProp.ValueKind == JsonValueKind.True;
+            if (!breaking)
+                continue;
+
+            if (!hasCurrent)
+                return false;
+
+            if (release.TryGetProperty("version", out var versionProp)
+                && versionProp.ValueKind == JsonValueKind.String
+                && Version.TryParse($"{versionProp}", out var releaseVersion))
+            {
+                if (releaseVersion > current)
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    private ExtensionManifest? LoadInstalledManifest(string editionRoot, string extensionName)
+    {
+        var manifestPath = Path.Combine(editionRoot, FolderConstants.AppExtensionsFolder, extensionName, FolderConstants.DataFolderProtected, FolderConstants.AppExtensionJsonFile);
+        return File.Exists(manifestPath)
+            ? manifestService.LoadManifest(new FileInfo(manifestPath))
+            : null;
+    }
+
+    private List<string> DetectInstalledEditions(string appRoot, string extensionName)
+    {
+        var list = new List<string>();
+        var rootPath = Path.Combine(appRoot, FolderConstants.AppExtensionsFolder, extensionName);
+        if (Directory.Exists(rootPath))
+            list.Add(string.Empty);
+
+        foreach (var dir in Directory.GetDirectories(appRoot))
+        {
+            var name = Path.GetFileName(dir);
+            if (name.Equals(FolderConstants.AppExtensionsFolder, StringComparison.OrdinalIgnoreCase)
+                || name.Equals(FolderConstants.AppCodeFolder, StringComparison.OrdinalIgnoreCase)
+                || name.Equals(FolderConstants.DataFolderProtected, StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            var editionExtPath = Path.Combine(dir, FolderConstants.AppExtensionsFolder, extensionName);
+            if (Directory.Exists(editionExtPath))
+                list.Add(name);
+        }
+
+        return list;
+    }
+
+    private static List<string> MergeEditions(List<string> requested, List<string> installed)
+        => requested
+            .Concat(installed)
+            .Where(e => e != null)
+            .Select(e => e!)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
     private record ValidationResult(bool Success, string? Error);
 
-    private ManifestValidationResult ValidateExtensionJsonFile(string extensionJsonFilePath)
+    private ManifestValidationResult ValidateExtensionJsonFile(string extensionJsonFilePath, ExtensionManifestService manifestSvc)
     {
         var l = Log.Fn<ManifestValidationResult>();
 
         try
         {
-            var json = File.ReadAllText(extensionJsonFilePath);
-            using var doc = JsonDocument.Parse(json);
-            var root = doc.RootElement;
+            var manifest = manifestSvc.LoadManifest(new FileInfo(extensionJsonFilePath));
+            if (manifest == null)
+                return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionJsonFile} parse error", false, null));
 
-            if (!root.TryGetProperty("isInstalled", out var isInstalledProp) || isInstalledProp.ValueKind != JsonValueKind.True)
-                return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionJsonFile} missing 'isInstalled' True", false));
+            if (manifest.IsInstalled != true)
+                return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionJsonFile} missing 'isInstalled' True", false, manifest));
 
-            var editionsSupported = root.TryGetProperty("editionsSupported", out var editionsProp)
-                                    && editionsProp.ValueKind == JsonValueKind.True;
+            var editionsSupported = manifest.EditionsSupported;
 
-            return l.ReturnAsOk(new(true, null, editionsSupported));
+            return l.ReturnAsOk(new(true, null, editionsSupported, manifest));
         }
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionJsonFile} parse error", false));
+            return l.ReturnAsError(new(false, $"{FolderConstants.AppExtensionJsonFile} parse error", false, null));
         }
     }
 
     private record LockValidationResult(bool Success, string? Error, HashSet<string>? AllowedFiles) : ValidationResult(Success, Error);
-    private record ManifestValidationResult(bool Success, string? Error, bool EditionsSupported) : ValidationResult(Success, Error);
+    private record ManifestValidationResult(bool Success, string? Error, bool EditionsSupported, ExtensionManifest? Manifest) : ValidationResult(Success, Error);
 
     // Validate lock file against a single candidate folder only
     private LockValidationResult ValidateLockFile(string lockFilePath, string tempDir, string candidatePath)
