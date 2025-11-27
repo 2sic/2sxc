@@ -47,12 +47,11 @@ internal class CSharpDataModelGenerator(CSharpDataModelsGenerator dmg, IContentT
                    remarks: remarks);
     }
 
-    protected override string GenerateAutoGenClassComment()
-    {
-        return CodeGenHelper.XmlComment(Specs.TabsClass,
+    protected override string GenerateAutoGenClassComment() =>
+        CodeGenHelper.XmlComment(Specs.TabsClass,
             summary:
-            $"Auto-Generated base class for {Type.Scope}.{ClassName} in separate namespace and special name to avoid accidental use.");
-    }
+            $"Auto-Generated *base* class for '{ClassName}' in scope '{Type.Scope}'. " +
+            $"It uses special names to avoid accidental use.");
 
     #endregion
 
