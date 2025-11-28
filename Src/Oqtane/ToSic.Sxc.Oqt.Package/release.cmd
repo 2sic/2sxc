@@ -18,7 +18,7 @@ ROBOCOPY /mir "..\..\Data\assets\ " "%BuildTarget%\assets\ "
 
 REM Copy 2sxc JS stuff
 ROBOCOPY /mir "%Source%\js\ " "%BuildTarget%\js\ "
-ROBOCOPY /mir "%Source%\system\ " "%BuildTarget%\system\ "
+ROBOCOPY /mir "%Source%\extensions\ " "%BuildTarget%\extensions\ "
 ROBOCOPY /mir "%Source%\dist\ " "%BuildTarget%\dist\ "
 
 .nuget\nuget.exe pack %PackageName%.Install.nuspec -Properties targetframework=%TargetFramework%;projectname=%PackageName%

@@ -70,7 +70,7 @@ ECHO(
 ECHO the target for js, css, json etc is: %BuildTarget%
 REM robocopy /mir "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc.Oqtane\js\ " "%BuildTarget%\js\ "
 REM robocopy /mir "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc.Oqtane\dist\ " "%BuildTarget%\dist\ "
-REM robocopy /mir "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc.Oqtane\system\ " "%BuildTarget%\system\ "
+REM robocopy /mir "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc.Oqtane\extensions\ " "%BuildTarget%\extensions\ "
 
 ECHO(
 ECHO Copy ImportExport instructions

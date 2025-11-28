@@ -14,10 +14,12 @@ Src/Integration/SxcEdit01/wwwroot/adam/*
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/Content
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc/assets
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc/dist
+/Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc/extensions
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc/js
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc/system
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc.Oqtane/assets
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc.Oqtane/dist
+/Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc.Oqtane/extensions
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc.Oqtane/js
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc.Oqtane/system
 *.lutconfig
