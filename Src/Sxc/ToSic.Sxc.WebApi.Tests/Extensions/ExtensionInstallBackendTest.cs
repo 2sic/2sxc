@@ -6,9 +6,9 @@ using ToSic.Sys.Security.Encryption;
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
 /// <summary>
-/// Unit tests for ExtensionsZipInstallerBackend focusing on ZIP install scenarios
+/// Unit tests for ExtensionInstallBackend focusing on ZIP install scenarios
 /// </summary>
-public class ExtensionsZipInstallerBackendTest
+public class ExtensionInstallBackendTest
 {
     private const int TestZoneId = 1;
     private const int TestAppId = 42;

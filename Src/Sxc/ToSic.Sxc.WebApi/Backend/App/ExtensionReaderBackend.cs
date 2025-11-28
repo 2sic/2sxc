@@ -8,7 +8,7 @@ using ToSic.Sys.Utils;
 namespace ToSic.Sxc.Backend.App;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionsReaderBackend(
+public class ExtensionReaderBackend(
     LazySvc<IAppReaderFactory> appReadersLazy,
     ISite site,
     IAppPathsMicroSvc appPathSvc,
@@ -49,7 +49,7 @@ public class ExtensionsReaderBackend(
             ?? new ExtensionManifest();
 
         // Check for editions if manifest says they're supported
-        Dictionary<string, ExtensionEditionDto>? editions = null;
+        Dictionary<string, Admin.ExtensionEditionDto>? editions = null;
         if (configuration.EditionsSupported)
         {
             editions = DetectEditions(appRootPath, folderName, configuration);
@@ -70,12 +70,12 @@ public class ExtensionsReaderBackend(
     /// <summary>
     /// Detect and build edition information for an extension.
     /// </summary>
-    private Dictionary<string, ExtensionEditionDto>? DetectEditions(string appRootPath, string extensionFolderName, ExtensionManifest primaryManifest)
+    private Dictionary<string, Admin.ExtensionEditionDto>? DetectEditions(string appRootPath, string extensionFolderName, ExtensionManifest primaryManifest)
     {
-        var l = Log.Fn<Dictionary<string, ExtensionEditionDto>?>($"extension:'{extensionFolderName}'");
+        var l = Log.Fn<Dictionary<string, Admin.ExtensionEditionDto>?>($"extension:'{extensionFolderName}'");
         
         var appRoot = new DirectoryInfo(appRootPath);
-        var editions = new Dictionary<string, ExtensionEditionDto>(StringComparer.OrdinalIgnoreCase);
+        var editions = new Dictionary<string, Admin.ExtensionEditionDto>(StringComparer.OrdinalIgnoreCase);
 
         // Look for edition folders at the app root level (e.g., /staging, /live, /dev)
         foreach (var editionFolder in appRoot.GetDirectories())
@@ -110,7 +110,7 @@ public class ExtensionsReaderBackend(
                 continue;
             }
 
-            editions[editionFolder.Name] = new ExtensionEditionDto
+            editions[editionFolder.Name] = new Admin.ExtensionEditionDto
             {
                 Folder = editionFolder.Name,
                 Configuration = editionManifest

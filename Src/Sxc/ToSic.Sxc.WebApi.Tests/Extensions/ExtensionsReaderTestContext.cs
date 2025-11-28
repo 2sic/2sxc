@@ -18,14 +18,14 @@ using ToSic.Sys.Logging;
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
 /// <summary>
-/// Test context for ExtensionsReaderBackend tests
+/// Test context for ExtensionReaderBackend tests
 /// </summary>
 internal sealed class ExtensionsReaderTestContext : IDisposable
 {
     #region Properties
 
     public string TempRoot { get; }
-    public ExtensionsReaderBackend ReaderBackend { get; }
+    public ExtensionReaderBackend ReaderBackend { get; }
 
     #endregion
 
@@ -33,7 +33,7 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
 
     private readonly ServiceProvider _sp;
 
-    private ExtensionsReaderTestContext(string tempRoot, ServiceProvider sp, ExtensionsReaderBackend readerBackend)
+    private ExtensionsReaderTestContext(string tempRoot, ServiceProvider sp, ExtensionReaderBackend readerBackend)
     {
         TempRoot = tempRoot;
         _sp = sp;
@@ -59,7 +59,7 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
         var appPathSvc = new FakeAppPathsMicroSvc(tempRoot);
         var manifestHelper = sp.GetRequiredService<ExtensionManifestService>();
 
-        var readerBackend = new ExtensionsReaderBackend(
+        var readerBackend = new ExtensionReaderBackend(
             appReadersLazy, 
             site, 
             appPathSvc, 

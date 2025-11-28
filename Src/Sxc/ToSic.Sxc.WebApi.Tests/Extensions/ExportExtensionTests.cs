@@ -15,7 +15,7 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
 /// <summary>
-/// Unit tests for ExportExtension service
+/// Unit tests for ExtensionExportService service
 /// </summary>
 public class ExportExtensionTests
 {

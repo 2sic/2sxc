@@ -7,15 +7,17 @@ using ToSic.Sys.Utils;
 namespace ToSic.Sxc.Backend.App;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionsDeleteBackend(
+public class ExtensionDeleteBackend(
     LazySvc<IAppReaderFactory> appReadersLazy,
     ISite site,
     IAppPathsMicroSvc appPathSvc,
     ExtensionManifestService manifestService,
-    LazySvc<ExtensionsInspectorBackend> inspectorLazy,
+    LazySvc<ExtensionInspectBackend> inspectorLazy,
     LazySvc<EntityApi> entityApiLazy)
     : ServiceBase("Bck.ExtDel", connect: [appReadersLazy, site, appPathSvc, manifestService, inspectorLazy, entityApiLazy])
 {
+    private ReadOnlyFileHelper ReadOnlyHelper => field ??= new(Log);
+
     public bool DeleteExtension(int appId, string name, string? edition, bool force, bool withData)
     {
         var l = Log.Fn<bool>($"a:{appId}, name:{name}, edition:{edition}, force:{force}, withData:{withData}");
@@ -23,13 +25,10 @@ public class ExtensionsDeleteBackend(
         if (string.IsNullOrWhiteSpace(name) || !ExtensionFolderNameValidator.IsValid(name))
             throw l.Ex(new ArgumentException("invalid extension name", nameof(name)));
 
-        var editionSegment = NormalizeEdition(edition);
+        var editionSegment = ExtensionEditionHelper.NormalizeEdition(edition);
         var appReader = appReadersLazy.Value.Get(appId);
         var appPaths = appPathSvc.Get(appReader, site);
-        var editionRoot = string.IsNullOrEmpty(editionSegment)
-            ? appPaths.PhysicalPath
-            : Path.Combine(appPaths.PhysicalPath, editionSegment);
-        var extensionPath = Path.Combine(editionRoot, FolderConstants.AppExtensionsFolder, name);
+        var extensionPath = ExtensionEditionHelper.GetExtensionRoot(appPaths, name, editionSegment);
 
         if (!Directory.Exists(extensionPath))
             throw l.Ex(new DirectoryNotFoundException($"Extension folder not found: {name}"));
@@ -61,7 +60,7 @@ public class ExtensionsDeleteBackend(
         if (hasData && withData && force)
             DeleteData(appReader, appId, contentTypesWithData);
 
-        DeleteFiles(extensionPath, appPaths.PhysicalPath, editionSegment, name);
+        DeleteFiles(appPaths.PhysicalPath, editionSegment, name);
 
         return l.ReturnTrue("deleted");
     }
@@ -94,13 +93,14 @@ public class ExtensionsDeleteBackend(
         l.Done($"deleted:{entityIds.Count}");
     }
 
-    private void DeleteFiles(string extensionPath, string appRoot, string edition, string extensionName)
+    private void DeleteFiles(string appRoot, string edition, string extensionName)
     {
         var l = Log.Fn($"del files ext:{extensionName}, edition:{edition}");
 
+        var extensionPath = ExtensionEditionHelper.GetExtensionRoot(appRoot, extensionName, edition);
         DeleteDirectorySafe(extensionPath);
 
-        var appCodePath = GetExtensionAppCodePath(appRoot, extensionName, edition);
+        var appCodePath = ExtensionEditionHelper.GetExtensionAppCodePath(appRoot, extensionName, edition);
         if (appCodePath.HasValue())
             DeleteDirectorySafe(appCodePath);
 
@@ -122,81 +122,8 @@ public class ExtensionsDeleteBackend(
         }
 
         Log.A($"clear readonly + delete: '{Path.GetFileName(path)}'");
-        RemoveReadOnlyRecursive(path);
+        ReadOnlyHelper.RemoveReadOnlyRecursive(path);
         Directory.Delete(path, recursive: true);
         Log.A($"deleted: '{Path.GetFileName(path)}'");
-    }
-
-    private static string NormalizeEdition(string? edition)
-    {
-        if (edition.IsEmpty())
-            return string.Empty;
-
-        var normalized = edition.Trim().TrimPrefixSlash().TrimEnd('/', '\\');
-        return normalized.ContainsPathTraversal()
-            ? throw new ArgumentException("edition contains invalid path traversal", nameof(edition))
-            : normalized;
-    }
-
-    private static string GetExtensionAppCodePath(string appRoot, string extensionName, string edition)
-    {
-        var editionAppCode = Path.Combine(appRoot, edition, FolderConstants.AppCodeFolder);
-        return Directory.Exists(editionAppCode)
-            ? Path.Combine(editionAppCode, FolderConstants.AppExtensionsFolder, extensionName)
-            : Path.Combine(appRoot, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, extensionName);
-    }
-
-    private void RemoveReadOnlyRecursive(string directory)
-    {
-        var l = Log.Fn();
-        if (!Directory.Exists(directory))
-        {
-            l.Done("path not exist");
-            return;
-        }
-
-        foreach (var file in Directory.GetFiles(directory, "*", SearchOption.AllDirectories))
-            RemoveReadOnlyIfNeeded(file);
-
-        foreach (var dir in Directory.GetDirectories(directory, "*", SearchOption.AllDirectories))
-            ClearDirectoryReadOnly(dir);
-
-        ClearDirectoryReadOnly(directory);
-        l.Done();
-    }
-
-    private void RemoveReadOnlyIfNeeded(string path)
-    {
-        var l = Log.Fn();
-        if (!File.Exists(path))
-        {
-            l.Done("file do not exist");
-            return;
-        }
-
-        var attributes = File.GetAttributes(path);
-        if (!attributes.HasFlag(FileAttributes.ReadOnly))
-        {
-            l.Done("file is not readonly");
-            return;
-        }
-
-        File.SetAttributes(path, attributes & ~FileAttributes.ReadOnly);
-        l.Done($"cleared readonly:'{path}'");
-    }
-
-    private void ClearDirectoryReadOnly(string directory)
-    {
-        var l = Log.Fn();
-        var info = new DirectoryInfo(directory);
-        var attributes = info.Attributes;
-        if (!attributes.HasFlag(FileAttributes.ReadOnly))
-        {
-            l.Done("directory is not readonly");
-            return;
-        }
-
-        info.Attributes = attributes & ~FileAttributes.ReadOnly;
-        l.Done($"cleared readonly dir:'{directory}'");
     }
 }

@@ -3,14 +3,14 @@ using System.Text.Json.Serialization;
 namespace ToSic.Sxc.Backend.App;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionInstallPreflightResultDto
+public class PreflightResultDto
 {
     [JsonPropertyName("extensions")]
-    public List<ExtensionInstallPreflightExtensionDto> Extensions { get; init; } = [];
+    public List<PreflightExtensionDto> Extensions { get; init; } = [];
 }
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionInstallPreflightExtensionDto
+public class PreflightExtensionDto
 {
     [JsonPropertyName("name")]
     public required string Name { get; init; }
@@ -25,14 +25,14 @@ public class ExtensionInstallPreflightExtensionDto
     public int FileCount { get; init; }
 
     [JsonPropertyName("features")]
-    public ExtensionInstallPreflightFeaturesDto Features { get; init; } = new();
+    public ExtensionFeaturesDto Features { get; init; } = new();
 
     [JsonPropertyName("editions")]
-    public List<ExtensionInstallPreflightEditionDto> Editions { get; init; } = [];
+    public List<ExtensionEditionDto> Editions { get; init; } = [];
 }
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionInstallPreflightEditionDto
+public class ExtensionEditionDto
 {
     [JsonPropertyName("edition")]
     public string Edition { get; init; } = string.Empty;
@@ -59,7 +59,7 @@ public class ExtensionInstallPreflightEditionDto
 }
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionInstallPreflightFeaturesDto
+public class ExtensionFeaturesDto
 {
     [JsonPropertyName("fieldsInside")]
     public bool FieldsInside { get; init; }

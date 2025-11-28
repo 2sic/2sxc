@@ -12,12 +12,12 @@ namespace ToSic.Sxc.Backend.Admin;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class AppExtensionsControllerReal(
-    LazySvc<ExtensionsReaderBackend> readerLazy,
-    LazySvc<ExtensionsWriterBackend> writerLazy,
-    LazySvc<ExtensionsZipInstallerBackend> zipLazy,
-    LazySvc<ExtensionsInspectorBackend> inspectorLazy,
-    LazySvc<ExtensionsDeleteBackend> deleteLazy,
-    LazySvc<ExportExtension> exportExtensionLazy)
+    LazySvc<ExtensionReaderBackend> readerLazy,
+    LazySvc<ExtensionWriterBackend> writerLazy,
+    LazySvc<ExtensionInstallBackend> zipLazy,
+    LazySvc<ExtensionInspectBackend> inspectorLazy,
+    LazySvc<ExtensionDeleteBackend> deleteLazy,
+    LazySvc<ExtensionExportService> exportExtensionLazy)
     : ServiceBase("Api.ExtsRl", connect: [readerLazy, writerLazy, zipLazy, inspectorLazy, deleteLazy, exportExtensionLazy])
 {
     public const string LogSuffix = "ApiExts";
@@ -37,9 +37,9 @@ public class AppExtensionsControllerReal(
     /// <param name="appId">App identifier</param>
     /// <param name="editions">Optional list of editions to install into (empty or null = root)</param>
     /// <returns>Preflight result describing detected state and installation options</returns>
-    public ExtensionInstallPreflightResultDto InstallPreflight(HttpUploadedFile uploadInfo, int appId, string[]? editions = null)
+    public PreflightResultDto InstallPreflight(HttpUploadedFile uploadInfo, int appId, string[]? editions = null)
     {
-        var l = Log.Fn<ExtensionInstallPreflightResultDto>($"a:{appId}, editions:'{string.Join(",", editions ?? [])}'");
+        var l = Log.Fn<PreflightResultDto>($"a:{appId}, editions:'{string.Join(",", editions ?? [])}'");
 
         if (!uploadInfo.HasFiles())
             throw l.Ex(new ArgumentException("no file uploaded", nameof(uploadInfo)));
@@ -48,7 +48,7 @@ public class AppExtensionsControllerReal(
         if (stream == null!)
             throw l.Ex(new NullReferenceException("File Stream is null, upload canceled"));
 
-        var result = zipLazy.Value.InstallExtensionPreflight(appId, stream, originalZipFileName: fileName, editions: editions);
+        var result = zipLazy.Value.InstallPreflight(appId, stream, originalZipFileName: fileName, editions: editions);
         return l.Return(result, "ok");
     }
 

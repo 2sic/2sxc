@@ -2,7 +2,7 @@
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
 /// <summary>
-/// Unit tests for ExtensionsReaderBackend editions detection
+/// Unit tests for ExtensionReaderBackend editions detection
 /// </summary>
 public class ExtensionsReaderEditionsTests
 {

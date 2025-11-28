@@ -19,14 +19,14 @@ using ToSic.Eav.Apps.Sys.FileSystemState;
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
 /// <summary>
-/// Test context for ExportExtension tests providing setup/teardown and test extension creation
+/// Test context for ExtensionExportService tests providing setup/teardown and test extension creation
 /// </summary>
 internal sealed class ExportExtensionTestContext : IDisposable
 {
     #region Properties
 
     public string TempRoot { get; }
-    public ExportExtension ExportBackend { get; }
+    public ExtensionExportService ExportBackend { get; }
 
     #endregion
 
@@ -34,7 +34,7 @@ internal sealed class ExportExtensionTestContext : IDisposable
 
     private readonly ServiceProvider _sp;
 
-    private ExportExtensionTestContext(string tempRoot, ServiceProvider sp, ExportExtension exportBackend)
+    private ExportExtensionTestContext(string tempRoot, ServiceProvider sp, ExtensionExportService exportBackend)
     {
         TempRoot = tempRoot;
         _sp = sp;
@@ -62,7 +62,7 @@ internal sealed class ExportExtensionTestContext : IDisposable
         // Create manifest service
         var manifestService = new ExtensionManifestService();
 
-        var exportBackend = new ExportExtension(
+        var exportBackend = new ExtensionExportService(
             appReadersLazy, 
             site, 
             appPathSvc, 

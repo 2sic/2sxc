@@ -1,5 +1,4 @@
 using System.Text;
-using System.Text.Json;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Sys;
@@ -8,7 +7,7 @@ using ToSic.Sys.Utils;
 namespace ToSic.Sxc.Backend.App;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionsWriterBackend(
+public class ExtensionWriterBackend(
     LazySvc<IAppReaderFactory> appReadersLazy,
     ISite site,
     IAppPathsMicroSvc appPathSvc)

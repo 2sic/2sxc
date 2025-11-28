@@ -24,7 +24,7 @@ using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 namespace ToSic.Sxc.Backend.App;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExportExtension(
+public class ExtensionExportService(
     LazySvc<IAppReaderFactory> appReadersLazy,
     ISite site,
     IAppPathsMicroSvc appPathSvc,
@@ -115,26 +115,8 @@ public class ExportExtension(
         WriteIndented = true,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
+
     private string ToNiceJson(object data) => JsonSerializer.Serialize(data, JsonSerializationIndented);
-
-    // Proper serialization: sanitize JsonElement fields then use JsonSerializer directly
-    private static readonly JsonElement JsonNullElement = JsonDocument.Parse("null").RootElement.Clone();
-
-    private static JsonElement Sanitize(JsonElement el)
-        => el.ValueKind == JsonValueKind.Undefined ? JsonNullElement : el;
-
-    // Serialize ExtensionManifest safely using simple dictionary + JsonSerializer
-    private string SerializeManifestToString(ExtensionManifest manifest)
-    {
-        // Ensure no JsonElement has ValueKind.Undefined (would cause Serialize to throw)
-        var sanitized = manifest with
-        {
-            DataBundles = Sanitize(manifest.DataBundles),
-            InputTypeAssets = Sanitize(manifest.InputTypeAssets),
-            Releases = Sanitize(manifest.Releases),
-        };
-        return JsonSerializer.Serialize(sanitized, JsonSerializationIndented);
-    }
 
     private MemoryStream CreateZipArchive(List<(string sourcePath, string zipPath)> filesToInclude,
         List<(string sourcePath, string zipPath, string content)> bundles,
@@ -156,7 +138,7 @@ public class ExportExtension(
             // Add modified extension.json
             var basePath = $"{FolderConstants.AppExtensionsFolder}/{extensionName}/{FolderConstants.DataFolderProtected}";
             var extensionJsonPath = $"{basePath}/{FolderConstants.AppExtensionJsonFile}";
-            var finalJsonString = SerializeManifestToString(manifest);
+            var finalJsonString = ExtensionManifestSerializer.Serialize(manifest, JsonSerializationIndented);
             zipping.AddTextEntry(archive, extensionJsonPath, finalJsonString, new UTF8Encoding(false));
             l.A($"Added modified {FolderConstants.AppExtensionJsonFile} to ZIP");
 

@@ -31,7 +31,7 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public ExtensionInstallPreflightResultDto InstallPreflight(int appId, [FromQuery] string[] editions = null)
+    public PreflightResultDto InstallPreflight(int appId, [FromQuery] string[] editions = null)
     {
         HotReloadEnabledCheck.Check();
         return Real.InstallPreflight(new(Request), appId, editions);

@@ -20,7 +20,7 @@ public interface IAppExtensionsController<out THttpResponse>
     /// </summary>
     /// <param name="appId">App identifier</param>
     /// <param name="editions">Optional list of editions to install into (empty or null = root).</param>
-    ExtensionInstallPreflightResultDto InstallPreflight(int appId, string[]? editions = null);
+    PreflightResultDto InstallPreflight(int appId, string[]? editions = null);
 
     /// <summary>
     /// Install app extension zip.

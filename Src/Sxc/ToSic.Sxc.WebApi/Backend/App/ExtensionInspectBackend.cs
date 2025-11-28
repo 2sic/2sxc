@@ -7,7 +7,7 @@ using static ToSic.Sxc.Backend.App.ExtensionLockHelper;
 namespace ToSic.Sxc.Backend.App;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]
-public class ExtensionsInspectorBackend(
+public class ExtensionInspectBackend(
     LazySvc<IAppReaderFactory> appReadersLazy,
     ISite site,
     IAppPathsMicroSvc appPathSvc)
@@ -19,15 +19,13 @@ public class ExtensionsInspectorBackend(
         if (!ExtensionFolderNameValidator.IsValid(name))
             throw l.Ex(new ArgumentException("invalid extension name", nameof(name)));
 
-        var editionSegment = NormalizeEdition(edition);
+        var editionSegment = ExtensionEditionHelper.NormalizeEdition(edition);
         var appReader = appReadersLazy.Value.Get(appId);
         var appPaths = appPathSvc.Get(appReader, site);
         var appRoot = appPaths.PhysicalPath;
-        var editionRoot = string.IsNullOrEmpty(editionSegment)
-            ? appRoot
-            : Path.Combine(appRoot, editionSegment);
+        var editionRoot = ExtensionEditionHelper.GetEditionRoot(appPaths, editionSegment);
 
-        var extensionRoot = Path.Combine(editionRoot, FolderConstants.AppExtensionsFolder, name);
+        var extensionRoot = ExtensionEditionHelper.GetExtensionRoot(appPaths, name, editionSegment);
         var lockPath = Path.Combine(extensionRoot, FolderConstants.DataFolderProtected, FolderConstants.AppExtensionLockJsonFile);
         var foundLock = File.Exists(lockPath);
 
@@ -91,17 +89,6 @@ public class ExtensionsInspectorBackend(
         return l.Return(result, $"files:{statuses.Count}, changed:{changed}, added:{added}, missing:{missing}");
     }
 
-    private static string NormalizeEdition(string? edition)
-    {
-        if (edition.IsEmpty())
-            return string.Empty;
-
-        var normalized = edition.Trim().TrimPrefixSlash().TrimEnd('/', '\\');
-        return normalized.ContainsPathTraversal()
-            ? throw new ArgumentException("edition contains invalid path traversal", nameof(edition))
-            : normalized;
-    }
-
     private static int AddAddedFiles(string appRoot, string edition, string extensionName, string basePathFull,
         HashSet<string> expectedPaths, List<ExtensionFileStatusDto> statuses)
     {
@@ -110,10 +97,9 @@ public class ExtensionsInspectorBackend(
         
         var ownRoots = new[]
         {
-            Path.Combine(appRoot, FolderConstants.AppExtensionsFolder, extensionName), // edition extension
-            GetExtensionAppCodePath(appRoot, extensionName, edition), // edition/root AppCode
+            ExtensionEditionHelper.GetExtensionRoot(appRoot, extensionName, edition),
+            ExtensionEditionHelper.GetExtensionAppCodePath(appRoot, extensionName, edition),
         };
-
 
         foreach (var ownRoot in ownRoots)
         {
@@ -143,14 +129,6 @@ public class ExtensionsInspectorBackend(
         }
 
         return added;
-    }
-
-    private static string GetExtensionAppCodePath(string appRoot, string extensionName, string edition)
-    {
-        var editionAppCode = Path.Combine(appRoot, edition, FolderConstants.AppCodeFolder);
-        return Directory.Exists(editionAppCode)
-            ? Path.Combine(editionAppCode, FolderConstants.AppExtensionsFolder, extensionName) // extension in edition AppCode
-            : Path.Combine(appRoot, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, extensionName); // extension in root AppCode
     }
 
     private ExtensionInspectDataDto? BuildData(int appId, string extensionName)
@@ -194,10 +172,10 @@ public class ExtensionsInspectorBackend(
     private static bool IsContentTypeFromExtension(IContentType contentType, string extensionName)
     {
         var address = contentType.RepositoryAddress;
-        if (string.IsNullOrWhiteSpace(address))
+        if (address.IsEmptyOrWs())
             return false;
 
-        var normalizedPath = NormalizePath(address);
+        var normalizedPath = address.ForwardSlash();
         return ContainsExtensionPath(normalizedPath, FolderConstants.AppExtensionsFolder, extensionName)
                || ContainsExtensionPath(normalizedPath, FolderConstants.AppExtensionsLegacyFolder, extensionName)
                || ContainsExtensionPath(normalizedPath,
@@ -209,9 +187,6 @@ public class ExtensionsInspectorBackend(
         var needle = $"/{containerFolder.Trim('/')}/{extensionName}/";
         return normalizedPath.Contains(needle, StringComparison.OrdinalIgnoreCase);
     }
-
-    private static string NormalizePath(string path)
-        => path.Replace('\\', '/');
 
     private static bool IsLocalEntity(IEntity entity)
         => entity.EntityId > 0;

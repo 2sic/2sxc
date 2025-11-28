@@ -27,7 +27,7 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public ExtensionInstallPreflightResultDto InstallPreflight(int appId, [FromUri] string[] editions = null)
+    public PreflightResultDto InstallPreflight(int appId, [FromUri] string[] editions = null)
         => Real.InstallPreflight(new(Request, HttpContext.Current.Request), appId, editions);
 
     /// <inheritdoc />

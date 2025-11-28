@@ -5,7 +5,7 @@ using System.Text.Json;
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
 /// <summary>
-/// Helper methods for ExportExtension tests
+/// Helper methods for ExtensionExportService tests
 /// </summary>
 internal static class ExportExtensionTestHelpers
 {
