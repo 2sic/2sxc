@@ -2,12 +2,6 @@ using ToSic.Sxc.Backend.App;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 
 
-#if NETFRAMEWORK
-using THttpResponseType = System.Net.Http.HttpResponseMessage;
-#else
-using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
-#endif
-
 namespace ToSic.Sxc.Backend.Admin;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]

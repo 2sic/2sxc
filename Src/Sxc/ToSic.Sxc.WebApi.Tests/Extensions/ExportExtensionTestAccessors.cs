@@ -1,11 +1,5 @@
 using ToSic.Sxc.Backend.App;
 
-#if NETFRAMEWORK
-using THttpResponseType = System.Net.Http.HttpResponseMessage;
-#else
-using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
-#endif
-
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 

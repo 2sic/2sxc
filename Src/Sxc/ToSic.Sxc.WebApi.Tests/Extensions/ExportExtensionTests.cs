@@ -4,13 +4,6 @@ using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Sys;
 using static ToSic.Sxc.WebApi.Tests.Extensions.ExportExtensionTestHelpers;
 
-#if NETFRAMEWORK
-using THttpResponseType = System.Net.Http.HttpResponseMessage;
-#else
-using Microsoft.AspNetCore.Mvc;
-using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
-#endif
-
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 

@@ -13,12 +13,8 @@ using ToSic.Sxc.ImportExport.InstallPackage.Sys;
 using ToSic.Sys.Security.Encryption;
 using ToSic.Sys.Utils;
 
-
-#if NETFRAMEWORK
-using THttpResponseType = System.Net.Http.HttpResponseMessage;
-#else
+#if NETCOREAPP
 using Microsoft.AspNetCore.Mvc;
-using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
 #endif
 
 namespace ToSic.Sxc.Backend.App;

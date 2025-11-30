@@ -8,12 +8,6 @@ using ToSic.Sxc.Backend.ImportExport;
 using ToSic.Sys.Users;
 using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 
-#if NETFRAMEWORK
-using THttpResponseType = System.Net.Http.HttpResponseMessage;
-#else
-using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
-#endif
-
 namespace ToSic.Sxc.Backend.Admin;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]

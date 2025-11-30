@@ -5,12 +5,6 @@ using ToSic.Eav.ImportExport.Sys.XmlExport;
 using ToSic.Eav.WebApi.Sys.Security;
 using ToSic.Sys.Users;
 
-#if NETFRAMEWORK
-using THttpResponseType = System.Net.Http.HttpResponseMessage;
-#else
-using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
-#endif
-
 namespace ToSic.Sxc.Backend.ImportExport;
 
 [ShowApiWhenReleased(ShowApiMode.Never)]

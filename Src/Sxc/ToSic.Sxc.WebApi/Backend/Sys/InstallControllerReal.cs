@@ -13,11 +13,6 @@ using ToSic.Sxc.Sys.Integration.Installation;
 using ToSic.Sys.Capabilities.Features;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
-#if NETFRAMEWORK
-using THttpResponseType = System.Net.Http.HttpResponseMessage;
-#else
-using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
-#endif
 
 namespace ToSic.Sxc.Backend.Sys;
 

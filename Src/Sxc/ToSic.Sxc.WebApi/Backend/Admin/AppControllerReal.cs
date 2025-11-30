@@ -12,12 +12,6 @@ using ToSic.Sxc.Services;
 using ToSic.Sys.Configuration;
 using Services_ServiceBase = ToSic.Sys.Services.ServiceBase;
 
-#if NETFRAMEWORK
-using THttpResponseType = System.Net.Http.HttpResponseMessage;
-#else
-using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
-#endif
-
 namespace ToSic.Sxc.Backend.Admin;
 
 /// <summary>
