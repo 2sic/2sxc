@@ -14,7 +14,7 @@ public class ExtensionWriterBackend(
     : ServiceBase("Bck.ExtWrite", connect: [appReadersLazy, site, appPathSvc])
 {
     // Remove previous local serializer & use shared helper
-    public bool SaveExtension(int appId, string name, ExtensionManifest manifest)
+    public bool SaveConfiguration(int appId, string name, ExtensionManifest manifest)
     {
         var l = Log.Fn<bool>($"a:{appId}, f:'{name}'");
         if (name.IsEmpty())

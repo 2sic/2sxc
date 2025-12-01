@@ -16,7 +16,7 @@ public interface IAppExtensionsController<out THttpResponse>
     ExtensionsResultDto Extensions(int appId);
 
     /// <summary>
-    /// Preflight install of an extension zip to report current state and options.
+    /// Preflight installation of an extension zip to report current state and options.
     /// </summary>
     /// <param name="appId">App identifier</param>
     /// <param name="editions">Optional list of editions to install into (empty or null = root).</param>
@@ -46,7 +46,7 @@ public interface IAppExtensionsController<out THttpResponse>
     /// <param name="name">Extension folder name under "/extensions"</param>
     /// <param name="configuration">JSON to write as App_Data/extension.json</param>
     /// <returns>true if saved</returns>
-    bool Extension(int appId, string name, ExtensionManifest configuration);
+    bool Configuration(int appId, string name, ExtensionManifest configuration);
 
     /// <summary>
     /// Download (export) a specific extension as a ZIP file.

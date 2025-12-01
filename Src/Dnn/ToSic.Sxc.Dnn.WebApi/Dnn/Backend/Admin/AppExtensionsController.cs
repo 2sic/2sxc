@@ -50,25 +50,26 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     /// <inheritdoc />
     /// Update/create endpoint using PUT with name as route segment.
     [Route("api/2sxc/admin/[controller]/{name}")]
-    [ValidateAntiForgeryToken]
-    [SupportedModules(DnnSupportedModuleNames)]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    [JsonFormatter(Casing = Casing.Camel)]
-    public bool Extension(int appId, [FromUri] string name, [FromBody] ExtensionManifest configuration)
-        => Real.Extension(appId, name, configuration);
-
-    /// <summary>
-    /// Alias POST endpoint for front-ends posting to /appExtensions/extensions with query parameters.
-    /// Matches plural POST behavior to avoid 405 errors if client uses POST.
-    /// </summary>
-    //[ActionName("extensions")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [JsonFormatter(Casing = Casing.Camel)]
-    public bool Extensions(int appId, string name, [FromBody] ExtensionManifest configuration)
-        => Real.Extension(appId, name, configuration);
+    public new bool Configuration(int appId, [FromUri] string name, [FromBody] ExtensionManifest configuration)
+        => Real.Configuration(appId, name, configuration);
+
+    ///// <summary>
+    ///// Alias POST endpoint for front-ends posting to /appExtensions/extensions with query parameters.
+    ///// Matches plural POST behavior to avoid 405 errors if client uses POST.
+    ///// </summary>
+    ////[ActionName("extensions")]
+    //[HttpPost]
+    //[ValidateAntiForgeryToken]
+    //[SupportedModules(DnnSupportedModuleNames)]
+    //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    //[JsonFormatter(Casing = Casing.Camel)]
+    //public bool Extensions(int appId, string name, [FromBody] ExtensionManifest configuration)
+    //    => Real.Extension(appId, name, configuration);
 
     /// <inheritdoc />
     [HttpGet]

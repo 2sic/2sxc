@@ -85,8 +85,8 @@ public class AppExtensionsControllerReal(
     /// <param name="name">Extension folder name under "/extensions"</param>
     /// <param name="manifest">JSON to write as App_Data/extension.json</param>
     /// <returns>true if saved</returns>
-    public bool Extension(int appId, string name, ExtensionManifest manifest)
-        => writerLazy.Value.SaveExtension(appId, name, manifest);
+    public bool Configuration(int appId, string name, ExtensionManifest manifest)
+        => writerLazy.Value.SaveConfiguration(appId, name, manifest);
 
     /// <summary>
     /// Download (export) a specific extension as a ZIP file.

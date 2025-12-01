@@ -11,7 +11,7 @@ internal static class ExtensionBackendTestAccessors
         => reader.GetExtensions(appId: appId);
 
     public static bool SaveExtensionTac(this ExtensionWriterBackend writer, int zoneId, int appId, string name, ExtensionManifest manifest)
-        => writer.SaveExtension(appId: appId, name: name, manifest: manifest);
+        => writer.SaveConfiguration(appId: appId, name: name, manifest: manifest);
 
     public static bool InstallExtensionZipTac(this ExtensionInstallBackend zip, int zoneId, int appId, Stream zipStream,
         bool overwrite = false, string? originalZipFileName = null, string[]? editions = null)

@@ -38,7 +38,7 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
     }
 
     /// <inheritdoc />
-    [HttpPost("installExtension")]
+    //[HttpPost("installExtension")]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
     public bool Install(int appId, [FromQuery] string[] editions = null, bool overwrite = true)
@@ -54,21 +54,23 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
         => Real.Inspect(appId, name, edition);
 
     /// <inheritdoc />
-    [HttpPut("{name}")]
+    //[HttpPut("{name}")]
+    [HttpPost("{name}")]
+    //[HttpPost("extensions")]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Extension(int appId, string name, [FromBody] ExtensionManifest configuration)
-        => Real.Extension(appId, name, configuration);
+    public bool Configuration(int appId, string name, [FromBody] ExtensionManifest configuration)
+        => Real.Configuration(appId, name, configuration);
 
-    /// <summary>
-    /// Alias POST endpoint for front-ends posting to /appExtensions/extensions with query parameters.
-    /// Matches DNN plural POST behavior to avoid 405 errors if client uses POST instead of PUT.
-    /// </summary>
-    [HttpPost("extensions")]
-    [ValidateAntiForgeryToken]
-    [Authorize(Roles = RoleNames.Admin)]
-    public bool ExtensionsPostAlias(int appId, string name, [FromBody] ExtensionManifest configuration)
-        => Real.Extension(appId, name, configuration);
+    ///// <summary>
+    ///// Alias POST endpoint for front-ends posting to /appExtensions/extensions with query parameters.
+    ///// Matches DNN plural POST behavior to avoid 405 errors if client uses POST instead of PUT.
+    ///// </summary>
+    //[HttpPost("extensions")]
+    //[ValidateAntiForgeryToken]
+    //[Authorize(Roles = RoleNames.Admin)]
+    //public bool ExtensionsPostAlias(int appId, string name, [FromBody] ExtensionManifest configuration)
+    //    => Real.Extension(appId, name, configuration);
 
     /// <inheritdoc />
     [HttpGet]
