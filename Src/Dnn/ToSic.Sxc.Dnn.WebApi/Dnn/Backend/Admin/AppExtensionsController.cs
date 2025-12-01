@@ -31,7 +31,8 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
         => Real.InstallPreflight(new(Request, HttpContext.Current.Request), appId, editions);
 
     /// <inheritdoc />
-    [ActionName("installExtension")]
+    // Not sure why ActionName was used here - seems redundant? name change not needed?
+    //[ActionName("installExtension")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
@@ -60,13 +61,13 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     /// Alias POST endpoint for front-ends posting to /appExtensions/extensions with query parameters.
     /// Matches plural POST behavior to avoid 405 errors if client uses POST.
     /// </summary>
-    [ActionName("extensions")]
+    //[ActionName("extensions")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [JsonFormatter(Casing = Casing.Camel)]
-    public bool ExtensionsPostAlias(int appId, string name, [FromBody] ExtensionManifest configuration)
+    public bool Extensions(int appId, string name, [FromBody] ExtensionManifest configuration)
         => Real.Extension(appId, name, configuration);
 
     /// <inheritdoc />
