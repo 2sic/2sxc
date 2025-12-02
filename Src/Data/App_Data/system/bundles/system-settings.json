@@ -5281,6 +5281,97 @@
                     "Owner": "dnn:userid=41"
                   }
                 ]
+              },
+              {
+                "Name": "ScoreThreshold",
+                "Type": "Number",
+                "InputType": "number-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 184322,
+                    "Version": 1,
+                    "Guid": "7dbd96c0-f948-47a6-864e-ef357ea0cbc2",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "0.5"
+                        },
+                        "InputType": {
+                          "en-us": "number-default"
+                        },
+                        "Name": {
+                          "en-us": "Score Threshold"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Recaptcha score / threshold which must be met to pass the test. See <a href=\"https://docs.cloud.google.com/recaptcha/docs/interpret-assessment-website\" target=\"_blank\" rel=\"noopener\">docs</a>. Recommended default is 0.5, for highly attacked sites 0.7 may be better.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "unknown"
+                  },
+                  {
+                    "Id": 184323,
+                    "Version": 1,
+                    "Guid": "c60c362d-79aa-4cbd-a21e-6ec8fa58515e",
+                    "Type": {
+                      "Id": "@Number",
+                      "Name": "@Number"
+                    },
+                    "Attributes": {
+                      "Number": {
+                        "Decimals": {
+                          "en-us": 2
+                        },
+                        "Max": {
+                          "en-us": 1
+                        },
+                        "Min": {
+                          "en-us": 0
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
               }
             ]
           },
@@ -9934,6 +10025,11 @@
               },
               "SiteKey": {
                 "en-us": "secure:+klje+7SHT2AiCDpTM+AsLZ9IGcAXBV1DlGUsdWrASihQfxwa5J/y11hvn/ahemA;iv:1tYjA+gPNTKHvWTo8aef+Q=="
+              }
+            },
+            "Number": {
+              "ScoreThreshold": {
+                "en-us": 0.5
               }
             }
           },
