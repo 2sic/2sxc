@@ -49,7 +49,7 @@ internal class ExtensionPreflightHelper(
             IsInstalled = isInstalled,
             CurrentVersion = currentVersion,
             HasFileChanges = hasFileChanges,
-            HasData = hasData,
+            DataInside = hasData,
             BreakingChanges = breakingChanges
         });
     }
@@ -57,16 +57,16 @@ internal class ExtensionPreflightHelper(
     internal ExtensionFeaturesDto MapFeatures(ExtensionManifest manifest)
         => new()
             {
-                FieldsInside = manifest.HasFields,
-                RazorInside = manifest.HasRazor,
-                AppCodeInside = manifest.HasAppCode,
-                WebApiInside = manifest.HasWebApi,
-                ContentTypesInside = manifest.HasContentTypes,
-                DataBundlesInside = manifest.HasDataBundles,
-                QueriesInside = manifest.HasQueries,
-                ViewsInside = manifest.HasViews,
+                InputFieldInside = manifest.InputFieldInside,
+                RazorInside = manifest.RazorInside,
+                AppCodeInside = manifest.AppCodeInside,
+                WebApiInside = manifest.WebApiInside,
+                ContentTypesInside = manifest.ContentTypesInside,
+                //DataBundlesInside = manifest.HasDataBundles,
+                QueriesInside = manifest.QueriesInside,
+                ViewsInside = manifest.ViewsInside,
                 DataInside = manifest.DataInside,
-                InputTypeInside = manifest.InputTypeInside.HasValue()
+                //InputTypeInside = manifest.InputTypeInside.HasValue()
             };
 
     private bool HasBreakingChanges(ExtensionManifest incomingManifest, string? currentVersion)

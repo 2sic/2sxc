@@ -75,7 +75,8 @@ public class ExtensionsBackendTests
         {
             Version = "00.00.03",
             IsInstalled = false,
-            InputTypeInside = "empty-app-hello-world-simple",
+            //InputTypeInside = "empty-app-hello-world-simple",
+            Name = "empty-app-hello-world-simple",
             EditionsSupported = false
         };
 

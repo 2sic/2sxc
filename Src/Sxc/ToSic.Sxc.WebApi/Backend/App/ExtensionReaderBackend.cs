@@ -67,6 +67,9 @@ public class ExtensionReaderBackend(
         return l.Return(result, $"folder:'{folderName}', hasEditions:{editions != null}");
     }
 
+    // TODO: @STV - WARNING - THIS CODE LOOKS EXTREMELY SIMILAR TO AppFileSystemInputTypesLoader.BuildUiAssets
+    // PLS CHECK AGAIN TO AVOID DUPLICATE CODE
+
     /// <summary>
     /// Detect and build edition information for an extension.
     /// </summary>
@@ -100,13 +103,16 @@ public class ExtensionReaderBackend(
                 continue;
 
             var editionManifest = manifestService.LoadManifest(editionManifestFile);
-            if (editionManifest?.InputTypeInside.IsEmpty() ?? true)
+            //if (editionManifest?.InputTypeInside.IsEmpty() ?? true)
+            if (editionManifest?.InputFieldInside ?? true)
                 continue;
 
             // Ensure the edition manifest references the same input type
-            if (!editionManifest.InputTypeInside.Equals(primaryManifest.InputTypeInside, StringComparison.OrdinalIgnoreCase))
+            //if (!editionManifest.InputTypeInside.Equals(primaryManifest.InputTypeInside, StringComparison.OrdinalIgnoreCase))
+            if (editionManifest.InputFieldInside != primaryManifest.InputFieldInside)
             {
-                l.A($"Edition {editionFolder.Name} has mismatched inputTypeInside: {editionManifest.InputTypeInside} != {primaryManifest.InputTypeInside}");
+                //l.A($"Edition {editionFolder.Name} has mismatched inputTypeInside: {editionManifest.InputTypeInside} != {primaryManifest.InputTypeInside}");
+                l.A($"Edition {editionFolder.Name} has mismatched inputTypeInside: {editionManifest.InputFieldInside} != {primaryManifest.InputFieldInside}");
                 continue;
             }
 

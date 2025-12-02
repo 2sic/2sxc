@@ -78,7 +78,7 @@ public class ExtensionManifestServiceTests : IDisposable
 
         var manifestPath = Path.Combine(dataDir, FolderConstants.AppExtensionJsonFile);
         var manifestJson = @"{
-            ""inputTypeInside"": ""string-wysiwyg"",
+            //""inputTypeInside"": ""string-wysiwyg"",
             ""inputTypeAssets"": [
                 ""styles.css"",
                 ""editor.js"",
@@ -113,7 +113,8 @@ public class ExtensionManifestServiceTests : IDisposable
         
         // Assert
         Assert.NotNull(manifest);
-        Assert.Equal("string-wysiwyg", manifest.InputTypeInside);
+        //Assert.Equal("string-wysiwyg", manifest.InputTypeInside);
+        Assert.Equal("string-wysiwyg", manifest.Name);
         Assert.Equal("2.5.1", manifest.Version);
         Assert.True(manifest.EditionsSupported);
         
@@ -205,7 +206,8 @@ public class ExtensionManifestServiceTests : IDisposable
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal("string-font-icon", result.InputTypeInside);
+        //Assert.Equal("string-font-icon", result.InputTypeInside);
+        Assert.Equal("string-font-icon", result.Name);
         Assert.Equal("1.2.3", result.Version);
         Assert.True(result.EditionsSupported);
     }

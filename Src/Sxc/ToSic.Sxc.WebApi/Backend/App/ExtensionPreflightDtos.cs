@@ -49,9 +49,9 @@ public class ExtensionEditionDto
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? HasFileChanges { get; init; } = null;
 
-    [JsonPropertyName("hasData")]
+    [JsonPropertyName("dataInside")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? HasData { get; init; } = null;
+    public bool? DataInside { get; init; } = null;
 
     [JsonPropertyName("breakingChanges")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -61,8 +61,8 @@ public class ExtensionEditionDto
 [ShowApiWhenReleased(ShowApiMode.Never)]
 public class ExtensionFeaturesDto
 {
-    [JsonPropertyName("fieldsInside")]
-    public bool FieldsInside { get; init; }
+    [JsonPropertyName("inputFieldInside")]
+    public bool InputFieldInside { get; init; }
 
     [JsonPropertyName("razorInside")]
     public bool RazorInside { get; init; }
@@ -76,8 +76,8 @@ public class ExtensionFeaturesDto
     [JsonPropertyName("contentTypesInside")]
     public bool ContentTypesInside { get; init; }
 
-    [JsonPropertyName("dataBundlesInside")]
-    public bool DataBundlesInside { get; init; }
+    //[JsonPropertyName("dataBundlesInside")]
+    //public bool DataBundlesInside { get; init; }
 
     [JsonPropertyName("queriesInside")]
     public bool QueriesInside { get; init; }
@@ -88,6 +88,6 @@ public class ExtensionFeaturesDto
     [JsonPropertyName("dataInside")]
     public bool DataInside { get; init; }
 
-    [JsonPropertyName("inputTypeInside")]
-    public bool InputTypeInside { get; init; }
+    //[JsonPropertyName("inputTypeInside")]
+    //public bool InputTypeInside { get; init; }
 }

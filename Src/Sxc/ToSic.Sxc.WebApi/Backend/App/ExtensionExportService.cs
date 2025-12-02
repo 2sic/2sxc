@@ -249,7 +249,7 @@ public class ExtensionExportService(
             exclude: [$"{FolderConstants.DataFolderProtected}\\{FolderConstants.AppExtensionJsonFile}"]);
 
         // 2. Check for hasAppCode setting
-        if (manifest.HasAppCode)
+        if (manifest.AppCodeInside)
         {
             l.A($"Extension has AppCode, including AppCode/{FolderConstants.AppExtensionsFolder} folder");
             var appCodeExtPath = Path.Combine(appPaths.PhysicalPath, FolderConstants.AppCodeFolder,

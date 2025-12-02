@@ -23,7 +23,8 @@ public static class ExtensionManifestSerializer
         var sanitized = manifest with
         {
             DataBundles = Sanitize(manifest.DataBundles),
-            InputTypeAssets = Sanitize(manifest.InputTypeAssets),
+            //InputTypeAssets = Sanitize(manifest.InputTypeAssets),
+            InputFieldAssets = Sanitize(manifest.InputFieldAssets),
             Releases = Sanitize(manifest.Releases),
         };
         return JsonSerializer.Serialize(sanitized, options ?? DefaultOptions);

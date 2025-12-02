@@ -91,7 +91,8 @@ internal sealed class ExportExtensionTestContext : IDisposable
         var sanitized = manifest with
         {
             DataBundles = SanitizeJsonElement(manifest.DataBundles),
-            InputTypeAssets = SanitizeJsonElement(manifest.InputTypeAssets),
+            //InputTypeAssets = SanitizeJsonElement(manifest.InputTypeAssets),
+            InputFieldAssets = SanitizeJsonElement(manifest.InputFieldAssets),
             Releases = SanitizeJsonElement(manifest.Releases),
         };
 
