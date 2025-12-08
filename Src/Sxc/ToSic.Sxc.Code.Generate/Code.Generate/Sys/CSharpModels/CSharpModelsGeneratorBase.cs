@@ -60,7 +60,7 @@ internal abstract class CSharpModelsGeneratorBase(IUser user, IAppReaderFactory 
 
         types.AddRange(appConfigTypes);
 
-        Specs.ExportedContentContentTypes = types;
+        Specs = Specs with { ExportedContentContentTypes = types };
 
         CodeGenHelper = new(Specs, Log);
     }
