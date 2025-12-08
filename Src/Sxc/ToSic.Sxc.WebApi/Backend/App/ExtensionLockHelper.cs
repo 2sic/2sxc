@@ -1,5 +1,4 @@
 using System.Text.Json;
-using ToSic.Eav.Sys;
 using ToSic.Sxc.ImportExport.Package.Sys;
 using ToSic.Sys.Security.Encryption;
 using ToSic.Sys.Utils;
@@ -11,6 +10,7 @@ namespace ToSic.Sxc.Backend.App;
 /// </summary>
 internal static class ExtensionLockHelper
 {
+    // TODO: @2rb - change to use the typed PackageIndexFile instead of the raw JsonDocument
     internal static LockFileReadResult ReadLockFile(string lockFilePath, ILog? parentLog)
     {
         var l = parentLog.Fn<LockFileReadResult>();
@@ -59,13 +59,13 @@ internal static class ExtensionLockHelper
     internal static IEnumerable<string> EnumerateFilesSafe(string? path)
         => !string.IsNullOrWhiteSpace(path) && Directory.Exists(path)
             ? Directory.GetFiles(path, "*", SearchOption.AllDirectories)
-            : Array.Empty<string>();
+            : [];
 
     internal static string EnsureTrailingBackslash(string path)
         => path.SuffixSlash().Backslash();
 
     internal static string CalculateHash(string path)
-        => Sha256.Hash(File.ReadAllText(path));
+        => Sha256.Hash(File.ReadAllBytes(path));
 }
 
 internal record LockFileReadResult(bool Success, string? Error, Dictionary<string, string>? ExpectedWithHash, HashSet<string>? AllowedFiles);
