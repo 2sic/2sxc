@@ -3,7 +3,7 @@
 /// <summary>
 /// WIP Parameters to give the code generator
 /// </summary>
-internal class FileGeneratorSpecs : IFileGeneratorSpecs
+internal record FileGeneratorSpecs : IFileGeneratorSpecs
 {
     /// <inheritdoc />
     public int AppId { get; init; }
@@ -11,5 +11,15 @@ internal class FileGeneratorSpecs : IFileGeneratorSpecs
     /// <inheritdoc />
     public string? Edition { get; init; }
 
+    /// <inheritdoc />
     public DateTime DateTime { get; init; } = DateTime.Now;
+
+    /// <inheritdoc />
+    public string? Namespace { get; init; }
+
+    /// <inheritdoc />
+    public string? TargetPath { get; init; }
+
+    /// <inheritdoc />
+    public ICollection<string>? ContentTypes { get; init; }
 }

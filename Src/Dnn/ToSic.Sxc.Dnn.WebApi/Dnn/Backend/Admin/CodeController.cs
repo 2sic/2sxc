@@ -21,8 +21,8 @@ public class CodeController() : DnnSxcControllerBase(RealController.LogSuffix)
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public RichResult GenerateDataModels(int appId, string generator, string edition = default)
-        => Real.GenerateDataModels(appId, edition, generator: generator);
+    public RichResult GenerateDataModels(int appId, string generator, string edition = null, int configurationId = 0)
+        => Real.GenerateDataModels(appId, edition, generator: generator, configurationId: configurationId);
 
     [HttpGet]
     [JsonFormatter]
