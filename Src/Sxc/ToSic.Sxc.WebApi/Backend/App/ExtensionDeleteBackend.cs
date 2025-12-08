@@ -2,7 +2,7 @@ using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys.Entities;
-using ToSic.Sxc.ImportExport.IndexFile.Sys;
+using ToSic.Sxc.ImportExport.Package.Sys;
 using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Backend.App;
@@ -46,7 +46,7 @@ public class ExtensionDeleteBackend(
 
         var inspect = inspectorLazy.Value.Inspect(appId, name, editionSegment);
         if (!inspect.FoundLock)
-            throw l.Ex(new InvalidOperationException($"{IndexLockFile.LockFileName} missing; delete manually."));
+            throw l.Ex(new InvalidOperationException($"{PackageIndexFile.LockFileName} missing; delete manually."));
 
         var summary = inspect.Summary ?? new ExtensionInspectSummaryDto();
         var hasFileChanges = summary.Changed > 0 || summary.Added > 0 || summary.Missing > 0;

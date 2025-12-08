@@ -1,6 +1,6 @@
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Sys;
-using ToSic.Sxc.ImportExport.IndexFile.Sys;
+using ToSic.Sxc.ImportExport.Package.Sys;
 using ToSic.Sys.Utils;
 using static ToSic.Sxc.Backend.App.ExtensionLockHelper;
 
@@ -33,9 +33,9 @@ internal class ExtensionValidationHelper(ExtensionManifestService manifestSvc, I
             if (!File.Exists(extensionJsonPath))
                 folderIssues.Add($"missing {FolderConstants.AppExtensionJsonFile}");
 
-            var lockJsonPath = Path.Combine(appDataDir, IndexLockFile.LockFileName);
+            var lockJsonPath = Path.Combine(appDataDir, PackageIndexFile.LockFileName);
             if (!File.Exists(lockJsonPath))
-                folderIssues.Add($"missing {IndexLockFile.LockFileName}");
+                folderIssues.Add($"missing {PackageIndexFile.LockFileName}");
 
             // Validate extension.json contents if present
             LockValidationResult? lockValidation = null;
@@ -53,7 +53,7 @@ internal class ExtensionValidationHelper(ExtensionManifestService manifestSvc, I
             {
                 lockValidation = ValidateLockFile(lockJsonPath, tempDir, dir);
                 if (!lockValidation.Success)
-                    folderIssues.Add(lockValidation.Error ?? $"{IndexLockFile.LockFileName} invalid");
+                    folderIssues.Add(lockValidation.Error ?? $"{PackageIndexFile.LockFileName} invalid");
             }
 
             if (folderIssues.Any())
@@ -96,7 +96,7 @@ internal class ExtensionValidationHelper(ExtensionManifestService manifestSvc, I
 
         var lockRead = ReadLockFile(lockFilePath, l);
         if (!lockRead.Success || lockRead.ExpectedWithHash == null || lockRead.AllowedFiles == null)
-            return l.ReturnAsError(new(false, lockRead.Error ?? $"{IndexLockFile.LockFileName} invalid", null));
+            return l.ReturnAsError(new(false, lockRead.Error ?? $"{PackageIndexFile.LockFileName} invalid", null));
 
         var allowed = lockRead.AllowedFiles;
         var expectedWithHash = lockRead.ExpectedWithHash;
@@ -109,7 +109,7 @@ internal class ExtensionValidationHelper(ExtensionManifestService manifestSvc, I
                 .Substring(tempDir.Length)
                 .TrimPrefixSlash()
                 .ForwardSlash())
-            .Where(f => !string.Equals(Path.GetFileName(f), IndexLockFile.LockFileName, StringComparison.OrdinalIgnoreCase))
+            .Where(f => !string.Equals(Path.GetFileName(f), PackageIndexFile.LockFileName, StringComparison.OrdinalIgnoreCase))
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
         var missing = allowed

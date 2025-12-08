@@ -8,8 +8,7 @@ using ToSic.Eav.ImportExport.Sys.Zip;
 using ToSic.Eav.Persistence.File;
 using ToSic.Eav.Sys;
 using ToSic.Eav.WebApi.Sys;
-using ToSic.Sxc.ImportExport.IndexFile.Sys;
-using ToSic.Sxc.ImportExport.InstallPackage.Sys;
+using ToSic.Sxc.ImportExport.Package.Sys;
 using ToSic.Sys.Security.Encryption;
 using ToSic.Sys.Utils;
 
@@ -147,16 +146,16 @@ public class ExtensionExportService(
 
             // Create and add extension.lock file
             var lockData = CreateLockObject(filesToInclude, bundles, versionString, finalJsonString);
-            var lockJsonPath = $"{basePath}/{IndexLockFile.LockFileName}";
+            var lockJsonPath = $"{basePath}/{PackageIndexFile.LockFileName}";
             var lockJson = ToNiceJson(lockData);
             zipping.AddTextEntry(archive, lockJsonPath, lockJson, new UTF8Encoding(false));
 
             // Create and add 2sxc-package.json file
             var packageData = CreatePackageObject(extensionName, extensionJsonPath, lockJsonPath, lockJson);
             var packageJson = ToNiceJson(packageData);
-            zipping.AddTextEntry(archive, InstallPackage.FileName, packageJson, new UTF8Encoding(false));
+            zipping.AddTextEntry(archive, PackageInstallFile.FileName, packageJson, new UTF8Encoding(false));
 
-            l.A($"Added {IndexLockFile.LockFileName} lock file to ZIP");
+            l.A($"Added {PackageIndexFile.LockFileName} lock file to ZIP");
         }
 
         return l.ReturnAsOk(memoryStream);
@@ -370,12 +369,12 @@ public class ExtensionExportService(
     private object CreateLockObject(List<(string sourcePath, string zipPath)> files,
         List<(string sourcePath, string zipPath, string content)> bundles, string version, string finalExtensionJson)
     {
-        var l = Log.Fn<object>($"Creating {IndexLockFile.LockFileName} file");
+        var l = Log.Fn<object>($"Creating {PackageIndexFile.LockFileName} file");
 
         l.A($"{nameof(version)}:{version}");
 
         var fileList = files
-            .Select(f => new IndexLockFileEntry
+            .Select(f => new PackageIndexFileEntry
             {
                 File = "/" + f.zipPath,
                 Hash = Sha256.Hash(File.ReadAllBytes(f.sourcePath))
@@ -385,7 +384,7 @@ public class ExtensionExportService(
         // Include bundles
         fileList.AddRange(
             bundles
-                .Select(b => new IndexLockFileEntry
+                .Select(b => new PackageIndexFileEntry
                 {
                     File = "/" + b.zipPath,
                     Hash = Sha256.Hash(b.content)
@@ -400,25 +399,25 @@ public class ExtensionExportService(
             Hash = Sha256.Hash(finalExtensionJson)
         });
 
-        l.A($"{IndexLockFile.LockFileName} file created with {fileList.Count} entries");
+        l.A($"{PackageIndexFile.LockFileName} file created with {fileList.Count} entries");
 
-        return l.ReturnAsOk(new IndexLockFile
+        return l.ReturnAsOk(new PackageIndexFile
         {
             Version = version,
             Files = fileList
         });
     }
 
-    private InstallPackage CreatePackageObject(string extensionName, string extensionJsonPath, string lockPath, string lockJson)
+    private PackageInstallFile CreatePackageObject(string extensionName, string extensionJsonPath, string lockPath, string lockJson)
     {
-        var l = Log.Fn<InstallPackage>();
+        var l = Log.Fn<PackageInstallFile>();
 
         // Create the package object
-        var package = new InstallPackage
+        var package = new PackageInstallFile
         {
             Header = new()
             {
-                PackageType = InstallPackageHeader.PackageTypes.AppExtension,
+                PackageType = PackageTypes.AppExtension,
             },
             About = new()
             {

@@ -1,6 +1,6 @@
 using ToSic.Eav.ImportExport.Sys.Zip;
 using ToSic.Eav.Sys;
-using ToSic.Sxc.ImportExport.IndexFile.Sys;
+using ToSic.Sxc.ImportExport.Package.Sys;
 using ToSic.Sys.Utils;
 using static ToSic.Sxc.Backend.App.ExtensionLockHelper;
 
@@ -91,7 +91,7 @@ internal class ExtensionInstallHelper(ReadOnlyFileHelper readOnlyHelper, ILog? p
                     .TrimPrefixSlash()
                     .ForwardSlash();
 
-                var isLockFile = rel.EndsWith(IndexLockFile.LockFileName, StringComparison.OrdinalIgnoreCase);
+                var isLockFile = rel.EndsWith(PackageIndexFile.LockFileName, StringComparison.OrdinalIgnoreCase);
                 if (!isLockFile && !allowedFiles.Contains(rel))
                     continue;
 

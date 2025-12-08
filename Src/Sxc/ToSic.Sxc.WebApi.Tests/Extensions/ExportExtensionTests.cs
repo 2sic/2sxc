@@ -2,7 +2,7 @@ using System.IO.Compression;
 using System.Text.Json;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using static ToSic.Eav.Sys.FolderConstants;
-using static ToSic.Sxc.ImportExport.IndexFile.Sys.IndexLockFile;
+using static ToSic.Sxc.ImportExport.Package.Sys.PackageIndexFile;
 using static ToSic.Sxc.WebApi.Tests.Extensions.ExportExtensionTestHelpers;
 
 // ReSharper disable once CheckNamespace
