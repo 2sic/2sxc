@@ -9879,6 +9879,114 @@
                 ]
               },
               {
+                "Name": "TargetFolder",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 184336,
+                    "Version": 1,
+                    "Guid": "f1f5d9c1-2d3c-4838-8398-76665beb916d",
+                    "Type": {
+                      "Id": "@All",
+                      "Name": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "AppCode/Data"
+                        },
+                        "InputType": {
+                          "en-us": "string-default"
+                        },
+                        "Name": {
+                          "en-us": "TargetFolder"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "unknown"
+                  },
+                  {
+                    "Id": 184337,
+                    "Version": 1,
+                    "Guid": "f3e1e915-3903-4b1b-b4cd-e9308fbedf4c",
+                    "Type": {
+                      "Id": "@String",
+                      "Name": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 184338,
+                    "Version": 1,
+                    "Guid": "4a8141d8-4d87-4408-8b26-40c9b43bb4a2",
+                    "Type": {
+                      "Id": "@string-default",
+                      "Name": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": ""
+                        },
+                        "TextWrapping": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "Scope",
                 "Type": "String",
                 "InputType": "string-dropdown-query",
@@ -9970,7 +10078,7 @@
                           "en-us": "Default"
                         },
                         "UrlParameters": {
-                          "en-us": ""
+                          "en-us": "$filter=not startswith(NameId, 'System')"
                         },
                         "Value": {
                           "en-us": "NameId"
