@@ -147,7 +147,7 @@ public class ExtensionExportService(
 
             // Create and add extension.lock file
             var lockData = CreateLockObject(filesToInclude, bundles, versionString, finalJsonString);
-            var lockJsonPath = $"{basePath}/{FolderConstants.AppExtensionLockJsonFile}";
+            var lockJsonPath = $"{basePath}/{IndexLockFile.LockFileName}";
             var lockJson = ToNiceJson(lockData);
             zipping.AddTextEntry(archive, lockJsonPath, lockJson, new UTF8Encoding(false));
 
@@ -156,7 +156,7 @@ public class ExtensionExportService(
             var packageJson = ToNiceJson(packageData);
             zipping.AddTextEntry(archive, InstallPackage.FileName, packageJson, new UTF8Encoding(false));
 
-            l.A($"Added {FolderConstants.AppExtensionLockJsonFile} lock file to ZIP");
+            l.A($"Added {IndexLockFile.LockFileName} lock file to ZIP");
         }
 
         return l.ReturnAsOk(memoryStream);
@@ -370,7 +370,7 @@ public class ExtensionExportService(
     private object CreateLockObject(List<(string sourcePath, string zipPath)> files,
         List<(string sourcePath, string zipPath, string content)> bundles, string version, string finalExtensionJson)
     {
-        var l = Log.Fn<object>($"Creating {FolderConstants.AppExtensionLockJsonFile} file");
+        var l = Log.Fn<object>($"Creating {IndexLockFile.LockFileName} file");
 
         l.A($"{nameof(version)}:{version}");
 
@@ -400,7 +400,7 @@ public class ExtensionExportService(
             Hash = Sha256.Hash(finalExtensionJson)
         });
 
-        l.A($"{FolderConstants.AppExtensionLockJsonFile} lock file created with {fileList.Count} entries");
+        l.A($"{IndexLockFile.LockFileName} file created with {fileList.Count} entries");
 
         return l.ReturnAsOk(new IndexLockFile
         {

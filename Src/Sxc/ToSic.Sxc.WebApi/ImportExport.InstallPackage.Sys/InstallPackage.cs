@@ -17,7 +17,7 @@ public record InstallPackage
     /// The name in the root of the package ZIP file where this definition is stored.
     /// Note that upon import, this file should never be imported.
     /// </summary>
-    public const string FileName = "install-package.json";
+    public const string FileName = "package-install.json";
 
     /// <inheritdoc cref="InstallPackageHeader"/>
     public InstallPackageHeader Header { get; init; } = new();

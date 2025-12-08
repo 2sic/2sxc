@@ -1,6 +1,7 @@
 using ToSic.Eav.Apps.AppReader.Sys;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Sys;
+using ToSic.Sxc.ImportExport.IndexFile.Sys;
 using ToSic.Sys.Utils;
 using static ToSic.Sxc.Backend.App.ExtensionLockHelper;
 
@@ -26,7 +27,7 @@ public class ExtensionInspectBackend(
         var editionRoot = ExtensionEditionHelper.GetEditionRoot(appPaths, editionSegment);
 
         var extensionRoot = ExtensionEditionHelper.GetExtensionRoot(appPaths, name, editionSegment);
-        var lockPath = Path.Combine(extensionRoot, FolderConstants.DataFolderProtected, FolderConstants.AppExtensionLockJsonFile);
+        var lockPath = Path.Combine(extensionRoot, FolderConstants.DataFolderProtected, IndexLockFile.LockFileName);
         var foundLock = File.Exists(lockPath);
 
         var statuses = new List<ExtensionFileStatusDto>();
@@ -117,7 +118,7 @@ public class ExtensionInspectBackend(
                 if (expectedPaths.Contains(rel))
                     continue;
 
-                if (rel.EndsWith(FolderConstants.AppExtensionLockJsonFile, StringComparison.OrdinalIgnoreCase))
+                if (rel.EndsWith(IndexLockFile.LockFileName, StringComparison.OrdinalIgnoreCase))
                     continue;
 
                 if (!seen.Add(rel))

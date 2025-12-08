@@ -2,6 +2,7 @@ using System.IO.Compression;
 using System.Text.Json;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using static ToSic.Eav.Sys.FolderConstants;
+using static ToSic.Sxc.ImportExport.IndexFile.Sys.IndexLockFile;
 using static ToSic.Sxc.WebApi.Tests.Extensions.ExportExtensionTestHelpers;
 
 // ReSharper disable once CheckNamespace
@@ -67,7 +68,7 @@ public class ExportExtensionTests
         var fileResult = result as FileContentResult;
         using var zipStream = new MemoryStream(fileResult!.FileContents);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
-        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"/{DataFolderProtected}/{AppExtensionLockJsonFile}", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"/{DataFolderProtected}/{LockFileName}", StringComparison.OrdinalIgnoreCase));
 #endif
     }
 
@@ -249,7 +250,7 @@ public class ExportExtensionTests
         using var zipStream = new MemoryStream(fileResult!.FileContents);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         
-        var lockData = GetJsonFileFromZip(zip, $"/{DataFolderProtected}/{AppExtensionLockJsonFile}");
+        var lockData = GetJsonFileFromZip(zip, $"/{DataFolderProtected}/{LockFileName}");
         Assert.True(lockData.ContainsKey("version"));
         Assert.Equal(version, lockData.GetString("version"));
 #endif
@@ -273,7 +274,7 @@ public class ExportExtensionTests
         using var zipStream = new MemoryStream(fileResult!.FileContents);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
 
-        var lockData = GetJsonFileFromZip(zip, $"/{DataFolderProtected}/{AppExtensionLockJsonFile}");
+        var lockData = GetJsonFileFromZip(zip, $"/{DataFolderProtected}/{LockFileName}");
         Assert.True(lockData.ContainsKey("files"));
         var filesElem = lockData.GetElement("files");
         Assert.True(filesElem.ValueKind == JsonValueKind.Array);
@@ -296,7 +297,7 @@ public class ExportExtensionTests
         using var zipStream = new MemoryStream(fileResult!.FileContents);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
 
-        var lockEntry = zip.Entries.First(e => e.FullName.EndsWith($"/{DataFolderProtected}/{AppExtensionLockJsonFile}"));
+        var lockEntry = zip.Entries.First(e => e.FullName.EndsWith($"/{DataFolderProtected}/{LockFileName}"));
         using var lockStream = lockEntry.Open();
         using var reader = new StreamReader(lockStream);
         var lockJson = reader.ReadToEnd();

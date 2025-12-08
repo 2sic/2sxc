@@ -1,5 +1,6 @@
 using System.Text.Json;
 using ToSic.Eav.Sys;
+using ToSic.Sxc.ImportExport.IndexFile.Sys;
 using ToSic.Sys.Security.Encryption;
 using ToSic.Sys.Utils;
 
@@ -19,7 +20,7 @@ internal static class ExtensionLockHelper
             using var doc = JsonDocument.Parse(json);
             var root = doc.RootElement;
             if (!root.TryGetProperty("files", out var filesProp) || filesProp.ValueKind != JsonValueKind.Array)
-                return l.Return(new(false, $"{FolderConstants.AppExtensionLockJsonFile} missing 'files' array", null, null));
+                return l.Return(new(false, $"{IndexLockFile.LockFileName} missing 'files' array", null, null));
 
             var expectedWithHash = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             var allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -27,19 +28,19 @@ internal static class ExtensionLockHelper
             foreach (var item in filesProp.EnumerateArray())
             {
                 if (item.ValueKind != JsonValueKind.Object)
-                    return l.Return(new(false, $"invalid {FolderConstants.AppExtensionLockJsonFile} entry: {item.ValueKind}", null, null));
+                    return l.Return(new(false, $"invalid {IndexLockFile.LockFileName} entry: {item.ValueKind}", null, null));
 
                 if (!item.TryGetProperty("file", out var f) || f.ValueKind != JsonValueKind.String)
-                    return l.Return(new(false, $"{FolderConstants.AppExtensionLockJsonFile} entry missing 'file'", null, null));
+                    return l.Return(new(false, $"{IndexLockFile.LockFileName} entry missing 'file'", null, null));
 
                 if (!item.TryGetProperty("hash", out var h) || h.ValueKind != JsonValueKind.String)
-                    return l.Return(new(false, $"{FolderConstants.AppExtensionLockJsonFile} entry missing 'hash'", null, null));
+                    return l.Return(new(false, $"{IndexLockFile.LockFileName} entry missing 'hash'", null, null));
 
                 var file = f.GetString()!.Trim().TrimPrefixSlash().ForwardSlash();
                 var hash = h.GetString()!.Trim();
 
                 if (file.ContainsPathTraversal())
-                    return l.Return(new(false, $"illegal path:'{file}' in {FolderConstants.AppExtensionLockJsonFile}", null, null));
+                    return l.Return(new(false, $"illegal path:'{file}' in {IndexLockFile.LockFileName}", null, null));
 
                 allowed.Add(file);
                 expectedWithHash[file] = hash;
@@ -51,7 +52,7 @@ internal static class ExtensionLockHelper
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.Return(new(false, $"{FolderConstants.AppExtensionLockJsonFile} parse error", null, null));
+            return l.Return(new(false, $"{IndexLockFile.LockFileName} parse error", null, null));
         }
     }
 
