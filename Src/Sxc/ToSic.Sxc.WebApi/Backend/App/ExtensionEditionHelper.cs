@@ -74,7 +74,7 @@ internal static class ExtensionEditionHelper
             : Path.Combine(appRoot, FolderConstants.AppCodeFolder, FolderConstants.AppExtensionsFolder, extensionName);
     }
 
-    internal static List<string> DetectInstalledEditions(string appRoot, string extensionName)
+    internal static List<string> DetectInstalledEditions(string appRoot, List<string> availableEditions, string extensionName)
     {
         var list = new List<string>();
         var rootPath = Path.Combine(appRoot, FolderConstants.AppExtensionsFolder, extensionName);
@@ -84,11 +84,8 @@ internal static class ExtensionEditionHelper
         foreach (var dir in Directory.GetDirectories(appRoot))
         {
             var name = Path.GetFileName(dir);
-            if (name.Equals(FolderConstants.AppExtensionsFolder, StringComparison.OrdinalIgnoreCase)
-                || name.Equals(FolderConstants.AppCodeFolder, StringComparison.OrdinalIgnoreCase)
-                || name.Equals(FolderConstants.DataFolderProtected, StringComparison.OrdinalIgnoreCase))
+            if (!availableEditions.Contains(name, StringComparer.OrdinalIgnoreCase))
                 continue;
-
             var editionExtPath = Path.Combine(dir, FolderConstants.AppExtensionsFolder, extensionName);
             if (Directory.Exists(editionExtPath))
                 list.Add(name);

@@ -14,8 +14,9 @@ public class ExtensionInstallBackend(
     IAppPathsMicroSvc appPathSvc,
     IGlobalConfiguration globalConfiguration,
     ExtensionManifestService manifestService,
-    LazySvc<ExtensionInspectBackend> inspectorLazy)
-    : ServiceBase("Bck.ExtZip", connect: [appReadersLazy, site, appPathSvc, globalConfiguration, manifestService, inspectorLazy])
+    LazySvc<ExtensionInspectBackend> inspectorLazy,
+    LazySvc<Admin.CodeControllerReal> codeLazy)
+    : ServiceBase("Bck.ExtZip", connect: [appReadersLazy, site, appPathSvc, globalConfiguration, manifestService, inspectorLazy, codeLazy])
 {
     private ReadOnlyFileHelper ReadOnlyHelper => field ??= new(Log);
     private ExtensionValidationHelper Validation => field ??= new(manifestService, Log);
@@ -106,6 +107,7 @@ public class ExtensionInstallBackend(
 
             var appRoot = prep.AppRoot;
             var requestedEditions = prep.Editions;
+            var availableEditions = codeLazy.Value.GetEditions(appId).Editions.Select(e => e.Name).ToList();
             var lockResults = prep.LockResults;
             var manifestResults = prep.ManifestResults;
 
@@ -124,7 +126,8 @@ public class ExtensionInstallBackend(
                 if (editionSupportError != null)
                     throw new InvalidOperationException(editionSupportError);
 
-                var editionTargets = ExtensionEditionHelper.MergeEditions(requestedEditions.ToList(), ExtensionEditionHelper.DetectInstalledEditions(appRoot, folderName));
+                var editionTargets = ExtensionEditionHelper.MergeEditions(requestedEditions.ToList(), ExtensionEditionHelper.DetectInstalledEditions(appRoot, availableEditions, folderName));
+                var allEditionTargets = ExtensionEditionHelper.MergeEditions(editionTargets, availableEditions);
                 var extDto = new PreflightExtensionDto
                 {
                     Name = folderName,
@@ -134,11 +137,25 @@ public class ExtensionInstallBackend(
                     Features = Preflight.MapFeatures(manifest)
                 };
 
-                foreach (var edition in editionTargets)
+                foreach (var edition in allEditionTargets)
                 {
                     var editionInfo = Preflight.BuildEditionInfo(appId, appRoot, folderName, edition, manifest);
                     if (editionInfo is not null)
+                    {
                         extDto.Editions.Add(editionInfo);
+                        continue;
+                    }
+
+                    var editionRoot = ExtensionEditionHelper.GetEditionRoot(appRoot, edition);
+                    var extensionExists = Directory.Exists(Path.Combine(editionRoot, FolderConstants.AppExtensionsFolder, folderName));
+                    if (extensionExists)
+                        continue;
+
+                    extDto.Editions.Add(new ExtensionEditionDto
+                    {
+                        Edition = edition,
+                        IsInstalled = false
+                    });
                 }
 
                 result.Extensions.Add(extDto);
