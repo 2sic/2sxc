@@ -30,10 +30,10 @@ public class ExtensionInstallBackend(
         string? tempDir = null;
         try
         {
-            var prep = Extraction.PrepareExtraction(appId, zipStream, editions, catchZipExceptions: true);
+            var prep = Extraction.PrepareExtraction(appId, zipStream, editions);
             tempDir = prep.TempDir;
             if (!prep.Success)
-                return l.ReturnFalse(prep.Error ?? "error");
+                throw new InvalidOperationException(prep.Error ?? "error");
 
             var appRoot = prep.AppRoot;
             var editionList = prep.Editions;
@@ -51,11 +51,11 @@ public class ExtensionInstallBackend(
                 l.A($"prepare install:'{folderName}'");
 
                 if (!manifestResults.TryGetValue(folderName, out var manifestValidation))
-                    return l.ReturnFalse($"missing manifest info for '{folderName}'");
+                    throw new InvalidOperationException($"missing manifest info for '{folderName}'");
 
                 var editionSupportError = EnsureEditionsSupported(manifestValidation.EditionsSupported, editionList);
                 if (editionSupportError != null)
-                    return l.ReturnFalse(editionSupportError);
+                    throw new InvalidOperationException(editionSupportError);
 
                 foreach (var edition in editionList)
                 {
@@ -73,7 +73,7 @@ public class ExtensionInstallBackend(
                         overwrite: overwrite);
 
                     if (!installResult.Success)
-                        return l.ReturnFalse(installResult.Error ?? $"install failed:'{folderName}'");
+                        throw new InvalidOperationException(installResult.Error ?? $"install failed:'{folderName}'");
                 }
 
                 installed.Add(folderName);
@@ -83,7 +83,7 @@ public class ExtensionInstallBackend(
         catch (Exception ex)
         {
             l.Ex(ex);
-            return l.ReturnFalse("error");
+            throw;
         }
         finally
         {
@@ -99,7 +99,7 @@ public class ExtensionInstallBackend(
         string? tempDir = null;
         try
         {
-            var prep = Extraction.PrepareExtraction(appId, zipStream, editions, catchZipExceptions: false);
+            var prep = Extraction.PrepareExtraction(appId, zipStream, editions);
             tempDir = prep.TempDir;
             if (!prep.Success)
                 throw new InvalidOperationException(prep.Error ?? "error");

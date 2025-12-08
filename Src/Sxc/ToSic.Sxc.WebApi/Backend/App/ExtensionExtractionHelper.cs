@@ -17,7 +17,7 @@ internal class ExtensionExtractionHelper(
     ILog? parentLog)
     : HelperBase(parentLog, "Bck.ExtPrep")
 {
-    internal ExtensionExtractionResult PrepareExtraction(int appId, Stream zipStream, string[]? editions, bool catchZipExceptions)
+    internal ExtensionExtractionResult PrepareExtraction(int appId, Stream zipStream, string[]? editions)
     {
         var l = Log.Fn<ExtensionExtractionResult>($"prep a:{appId}");
 
@@ -35,12 +35,8 @@ internal class ExtensionExtractionHelper(
         }
         catch (Exception ex)
         {
-            if (catchZipExceptions)
-            {
-                l.Ex(ex);
-                return l.Return(new(false, "invalid zip", tempDir, appRoot, editionList, new(), new()), "zip invalid");
-            }
-            throw;
+            l.Ex(ex);
+            throw new InvalidOperationException("invalid zip", ex);
         }
 
         var extensionsDir = Path.Combine(tempDir, FolderConstants.AppExtensionsFolder);

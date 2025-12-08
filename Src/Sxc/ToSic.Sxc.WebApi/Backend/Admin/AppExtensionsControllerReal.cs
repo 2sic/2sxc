@@ -59,11 +59,11 @@ public class AppExtensionsControllerReal(
         var l = Log.Fn<bool>($"a:{appId}, editions:'{string.Join(",", editions ?? [])}', overwrite:{overwrite}");
 
         if (!uploadInfo.HasFiles())
-            return l.ReturnFalse("no file uploaded");
+            throw l.Ex(new ArgumentException("no file uploaded", nameof(uploadInfo)));
 
         var (fileName, stream) = uploadInfo.GetStream();
         if (stream == null!)
-            throw new NullReferenceException("File Stream is null, upload canceled");
+            throw l.Ex(new NullReferenceException("File Stream is null, upload canceled"));
 
         var ok = zipLazy.Value.InstallExtensionZip(appId, stream, overwrite, originalZipFileName: fileName, editions: editions);
         return l.ReturnAsOk(ok);
