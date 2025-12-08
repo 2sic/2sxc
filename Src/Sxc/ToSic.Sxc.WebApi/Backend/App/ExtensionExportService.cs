@@ -324,7 +324,7 @@ public class ExtensionExportService(
             var (export, fileContent) = bundlesExport.CreateBundleExport(guid, 2);
             var bundlePath = Path.Combine(bundlesDir, export.FileName);
             var zipPath =
-                $"extensions/{extensionName}/{FolderConstants.DataFolderProtected}/{FolderConstants.DataSubFolderSystem}/{AppDataFoldersConstants.BundlesFolder}/{export.FileName}";
+                $"{FolderConstants.AppExtensionsFolder}/{extensionName}/{FolderConstants.DataFolderProtected}/{FolderConstants.DataSubFolderSystem}/{AppDataFoldersConstants.BundlesFolder}/{export.FileName}";
             files.Add((bundlePath, zipPath, fileContent));
         }
 

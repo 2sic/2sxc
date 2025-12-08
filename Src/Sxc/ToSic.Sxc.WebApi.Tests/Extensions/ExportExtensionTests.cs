@@ -1,7 +1,7 @@
 using System.IO.Compression;
 using System.Text.Json;
 using ToSic.Eav.Apps.Sys.FileSystemState;
-using ToSic.Eav.Sys;
+using static ToSic.Eav.Sys.FolderConstants;
 using static ToSic.Sxc.WebApi.Tests.Extensions.ExportExtensionTestHelpers;
 
 // ReSharper disable once CheckNamespace
@@ -49,7 +49,7 @@ public class ExportExtensionTests
         var fileResult = result as FileContentResult;
         using var zipStream = new MemoryStream(fileResult!.FileContents);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
-        Assert.Contains(zip.Entries, e => e.FullName.EndsWith("/App_Data/extension.json", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"/{DataFolderProtected}/{AppExtensionJsonFile}", StringComparison.OrdinalIgnoreCase));
 #endif
     }
 
@@ -67,7 +67,7 @@ public class ExportExtensionTests
         var fileResult = result as FileContentResult;
         using var zipStream = new MemoryStream(fileResult!.FileContents);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
-        Assert.Contains(zip.Entries, e => e.FullName.EndsWith("/App_Data/extension.lock.json", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(zip.Entries, e => e.FullName.EndsWith($"/{DataFolderProtected}/{AppExtensionLockJsonFile}", StringComparison.OrdinalIgnoreCase));
 #endif
     }
 
@@ -90,7 +90,7 @@ public class ExportExtensionTests
         using var ctx = ExportExtensionTestContext.Create();
         
         const string extName = "incomplete";
-        var extDir = Path.Combine(ctx.TempRoot, FolderConstants.AppExtensionsFolder, extName);
+        var extDir = Path.Combine(ctx.TempRoot, AppExtensionsFolder, extName);
         Directory.CreateDirectory(extDir);
         
         Assert.Throws<FileNotFoundException>(() =>
@@ -115,7 +115,7 @@ public class ExportExtensionTests
         var fileResult = result as FileContentResult;
         using var zipStream = new MemoryStream(fileResult!.FileContents);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
-        var config = GetJsonFileFromZip(zip, "/App_Data/extension.json");
+        var config = GetJsonFileFromZip(zip, $"/{DataFolderProtected}/{AppExtensionJsonFile}");
         Assert.True(config.ContainsKey("isInstalled"));
         Assert.True(config.GetBool("isInstalled"));
 #endif
@@ -135,7 +135,7 @@ public class ExportExtensionTests
         var fileResult = result as FileContentResult;
         using var zipStream = new MemoryStream(fileResult!.FileContents);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
-        var config = GetJsonFileFromZip(zip, "/App_Data/extension.json");
+        var config = GetJsonFileFromZip(zip, $"/{DataFolderProtected}/{AppExtensionJsonFile}");
         Assert.True(config.ContainsKey("isInstalled"));
         Assert.True(config.GetBool("isInstalled"));
 #endif
@@ -149,8 +149,8 @@ public class ExportExtensionTests
         const string extName = "test-extension";
         ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0", IsInstalled = false });
         
-        var originalPath = Path.Combine(ctx.TempRoot, FolderConstants.AppExtensionsFolder, extName, 
-            FolderConstants.DataFolderProtected, FolderConstants.AppExtensionJsonFile);
+        var originalPath = Path.Combine(ctx.TempRoot, AppExtensionsFolder, extName, 
+            DataFolderProtected, AppExtensionJsonFile);
         var originalContent = File.ReadAllText(originalPath);
         
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
@@ -249,7 +249,7 @@ public class ExportExtensionTests
         using var zipStream = new MemoryStream(fileResult!.FileContents);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
         
-        var lockData = GetJsonFileFromZip(zip, "/App_Data/extension.lock.json");
+        var lockData = GetJsonFileFromZip(zip, $"/{DataFolderProtected}/{AppExtensionLockJsonFile}");
         Assert.True(lockData.ContainsKey("version"));
         Assert.Equal(version, lockData.GetString("version"));
 #endif
@@ -263,7 +263,7 @@ public class ExportExtensionTests
         const string extName = "test-extension";
         ctx.SetupExtension(extName, new ExtensionManifest { Version = "1.0.0" });
         
-        var extDir = Path.Combine(ctx.TempRoot, FolderConstants.AppExtensionsFolder, extName);
+        var extDir = Path.Combine(ctx.TempRoot, AppExtensionsFolder, extName);
         File.WriteAllText(Path.Combine(extDir, "readme.txt"), "test");
         
         var result = ctx.ExportBackend.ExportTac(zoneId: 1, appId: 42, name: extName);
@@ -272,8 +272,8 @@ public class ExportExtensionTests
         var fileResult = result as FileContentResult;
         using var zipStream = new MemoryStream(fileResult!.FileContents);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
-        
-        var lockData = GetJsonFileFromZip(zip, "/App_Data/extension.lock.json");
+
+        var lockData = GetJsonFileFromZip(zip, $"/{DataFolderProtected}/{AppExtensionLockJsonFile}");
         Assert.True(lockData.ContainsKey("files"));
         var filesElem = lockData.GetElement("files");
         Assert.True(filesElem.ValueKind == JsonValueKind.Array);
@@ -295,8 +295,8 @@ public class ExportExtensionTests
         var fileResult = result as FileContentResult;
         using var zipStream = new MemoryStream(fileResult!.FileContents);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
-        
-        var lockEntry = zip.Entries.First(e => e.FullName.EndsWith("/App_Data/extension.lock.json"));
+
+        var lockEntry = zip.Entries.First(e => e.FullName.EndsWith($"/{DataFolderProtected}/{AppExtensionLockJsonFile}"));
         using var lockStream = lockEntry.Open();
         using var reader = new StreamReader(lockStream);
         var lockJson = reader.ReadToEnd();
@@ -359,8 +359,8 @@ public class ExportExtensionTests
         foreach (var entry in zip.Entries.Where(e => !string.IsNullOrEmpty(e.Name)))
         {
             if (!entry.FullName.StartsWith("install-package.json")
-                && !entry.FullName.StartsWith("App_Data"))
-                Assert.StartsWith("extensions/", entry.FullName);
+                && !entry.FullName.StartsWith(DataFolderProtected))
+                Assert.StartsWith($"{AppExtensionsFolder}/", entry.FullName);
         }
 #endif
     }

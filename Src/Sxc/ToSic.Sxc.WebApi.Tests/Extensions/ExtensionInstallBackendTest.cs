@@ -1,6 +1,7 @@
 using System.IO.Compression;
 using System.Text;
 using ToSic.Sys.Security.Encryption;
+using static ToSic.Eav.Sys.FolderConstants;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
@@ -25,14 +26,14 @@ public class ExtensionInstallBackendTest
         using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
         {
             // Create proper extensions/color-picker/ structure
-            var extensionJson = zip.CreateEntry($"extensions/{extensionName}/App_Data/extension.json");
+            var extensionJson = zip.CreateEntry($"{AppExtensionsFolder}/{extensionName}/{DataFolderProtected}/{AppExtensionJsonFile}");
             using (var stream = extensionJson.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
                 writer.Write($"{{ \"id\":\"{extensionName}\", \"enabled\": true, \"isInstalled\": true }}");
             }
 
-            var distFile = zip.CreateEntry($"extensions/{extensionName}/dist/script.js");
+            var distFile = zip.CreateEntry($"{AppExtensionsFolder}/{extensionName}/dist/script.js");
             using (var stream = distFile.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
@@ -40,7 +41,7 @@ public class ExtensionInstallBackendTest
             }
 
             // Create lock file
-            var lockJson = zip.CreateEntry($"extensions/{extensionName}/App_Data/extension.lock.json");
+            var lockJson = zip.CreateEntry($"{AppExtensionsFolder}/{extensionName}/{DataFolderProtected}/{AppExtensionLockJsonFile}");
             using (var stream = lockJson.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
@@ -51,12 +52,12 @@ public class ExtensionInstallBackendTest
                     {
                         new
                         {
-                            file = $"extensions/{extensionName}/App_Data/extension.json",
+                            file = $"{AppExtensionsFolder}/{extensionName}/{DataFolderProtected}/{AppExtensionJsonFile}",
                             hash = Sha256.Hash($"{{ \"id\":\"{extensionName}\", \"enabled\": true, \"isInstalled\": true }}")
                         },
                         new
                         {
-                            file = $"extensions/{extensionName}/dist/script.js",
+                            file = $"{AppExtensionsFolder}/{extensionName}/dist/script.js",
                             hash = Sha256.Hash("console.log('ok');")
                         }
                     }
@@ -89,7 +90,7 @@ public class ExtensionInstallBackendTest
         using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
         {
             // Create proper structure but with path traversal attempt
-            var extensionJson = zip.CreateEntry($"extensions/{extensionName}/App_Data/extension.json");
+            var extensionJson = zip.CreateEntry($"{AppExtensionsFolder}/{extensionName}/{DataFolderProtected}/{AppExtensionJsonFile}");
             using (var stream = extensionJson.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
@@ -97,7 +98,7 @@ public class ExtensionInstallBackendTest
             }
 
             // Try to create a file outside the extension folder
-            var badFile = zip.CreateEntry($"extensions/{extensionName}/../../outside.txt");
+            var badFile = zip.CreateEntry($"{AppExtensionsFolder}/{extensionName}/../../outside.txt");
             using (var stream = badFile.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
@@ -105,7 +106,7 @@ public class ExtensionInstallBackendTest
             }
 
             // Create lock file (it should fail validation due to the traversal)
-            var lockJson = zip.CreateEntry($"extensions/{extensionName}/App_Data/extension.lock.json");
+            var lockJson = zip.CreateEntry($"{AppExtensionsFolder}/{extensionName}/{DataFolderProtected}/{AppExtensionLockJsonFile}");
             using (var stream = lockJson.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
@@ -116,12 +117,12 @@ public class ExtensionInstallBackendTest
                     {
                         new
                         {
-                            file = $"extensions/{extensionName}/App_Data/extension.json",
+                            file = $"{AppExtensionsFolder}/{extensionName}/{DataFolderProtected}/{AppExtensionJsonFile}",
                             hash = Sha256.Hash($"{{ \"id\":\"{extensionName}\", \"isInstalled\": true }}")
                         },
                         new
                         {
-                            file = $"extensions/{extensionName}/../../outside.txt",
+                            file = $"{AppExtensionsFolder}/{extensionName}/../../outside.txt",
                             hash = Sha256.Hash("nope")
                         }
                     }
@@ -148,7 +149,7 @@ public class ExtensionInstallBackendTest
         using (var zip = new ZipArchive(ms1, ZipArchiveMode.Create, leaveOpen: true))
         {
             // Create extensions/dup/ structure
-            var extensionJson = zip.CreateEntry($"extensions/{extensionName}/App_Data/extension.json");
+            var extensionJson = zip.CreateEntry($"{AppExtensionsFolder}/{extensionName}/{DataFolderProtected}/{AppExtensionJsonFile}");
             using (var stream = extensionJson.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
@@ -156,7 +157,7 @@ public class ExtensionInstallBackendTest
             }
 
             // Create a simple file to include
-            var distFile = zip.CreateEntry($"extensions/{extensionName}/dist/main.js");
+            var distFile = zip.CreateEntry($"{AppExtensionsFolder}/{extensionName}/dist/main.js");
             using (var stream = distFile.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
@@ -164,7 +165,7 @@ public class ExtensionInstallBackendTest
             }
 
             // Add another placeholder asset to ensure multi-file lock scenarios
-            var placeholder = zip.CreateEntry($"extensions/{extensionName}/readme.txt");
+            var placeholder = zip.CreateEntry($"{AppExtensionsFolder}/{extensionName}/readme.txt");
             using (var stream = placeholder.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
@@ -172,7 +173,7 @@ public class ExtensionInstallBackendTest
             }
 
             // Create lock file with file hashes (must include all installed files except the lock itself)
-            var lockJson = zip.CreateEntry($"extensions/{extensionName}/App_Data/extension.lock.json");
+            var lockJson = zip.CreateEntry($"{AppExtensionsFolder}/{extensionName}/{DataFolderProtected}/{AppExtensionLockJsonFile}");
             using (var stream = lockJson.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
@@ -183,17 +184,17 @@ public class ExtensionInstallBackendTest
                     {
                         new
                         {
-                            file = $"extensions/{extensionName}/App_Data/extension.json",
+                            file = $"{AppExtensionsFolder}/{extensionName}/{DataFolderProtected}/{AppExtensionJsonFile}",
                             hash = Sha256.Hash($"{{ \"id\":\"{extensionName}\", \"isInstalled\": true }}")
                         },
                         new
                         {
-                            file = $"extensions/{extensionName}/dist/main.js",
+                            file = $"{AppExtensionsFolder}/{extensionName}/dist/main.js",
                             hash = Sha256.Hash($"console.log('{extensionName}');")
                         },
                         new
                         {
-                            file = $"extensions/{extensionName}/readme.txt",
+                            file = $"{AppExtensionsFolder}/{extensionName}/readme.txt",
                             hash = Sha256.Hash($"{extensionName} extension placeholder")
                         }
                     }
@@ -233,7 +234,7 @@ public class ExtensionInstallBackendTest
         using var ms = new MemoryStream();
         using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
         {
-            var entry = zip.CreateEntry($"notextensions/foo/App_Data/extension.json");
+            var entry = zip.CreateEntry($"notextensions/foo/{DataFolderProtected}/{AppExtensionJsonFile}");
             using (var stream = entry.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
@@ -254,7 +255,7 @@ public class ExtensionInstallBackendTest
         using var ms = new MemoryStream();
         using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
         {
-            var extensionJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.json");
+            var extensionJson = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}");
             using (var stream = extensionJson.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
@@ -262,7 +263,7 @@ public class ExtensionInstallBackendTest
             }
 
             // Intentionally do not add lock file
-            var extra = zip.CreateEntry($"extensions/{folder}/dist/extra.js");
+            var extra = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/dist/extra.js");
             using (var s2 = extra.Open())
             {
                 using var w2 = new StreamWriter(s2, new UTF8Encoding(false));
@@ -283,7 +284,7 @@ public class ExtensionInstallBackendTest
         using var ms = new MemoryStream();
         using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
         {
-            var extensionJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.json");
+            var extensionJson = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}");
             using (var stream = extensionJson.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
@@ -292,11 +293,11 @@ public class ExtensionInstallBackendTest
             }
 
             // Provide a lock file so validation still checks extension.json
-            var lockJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.lock.json");
+            var lockJson = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionLockJsonFile}");
             using (var lstream = lockJson.Open())
             {
                 using var lw = new StreamWriter(lstream, new UTF8Encoding(false));
-                var lockData = new { version = TestVersion, files = new[] { new { file = $"extensions/{folder}/App_Data/extension.json", hash = Sha256.Hash("{}") } } };
+                var lockData = new { version = TestVersion, files = new[] { new { file = $"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}", hash = Sha256.Hash("{}") } } };
                 lw.Write(ctx.JsonSvc.ToJson(lockData, indentation: 2));
             }
         }
@@ -315,14 +316,14 @@ public class ExtensionInstallBackendTest
         using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
         {
             // Only include extension.json but lock lists another file
-            var extensionJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.json");
+            var extensionJson = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}");
             using (var stream = extensionJson.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
                 writer.Write($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}");
             }
 
-            var lockJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.lock.json");
+            var lockJson = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionLockJsonFile}");
             using (var lstream = lockJson.Open())
             {
                 using var lw = new StreamWriter(lstream, new UTF8Encoding(false));
@@ -331,8 +332,8 @@ public class ExtensionInstallBackendTest
                     version = TestVersion,
                     files = new[]
                     {
-                        new { file = $"extensions/{folder}/App_Data/extension.json", hash = Sha256.Hash($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}") },
-                        new { file = $"extensions/{folder}/dist/missing.js", hash = Sha256.Hash("console.log('x');") }
+                        new { file = $"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}", hash = Sha256.Hash($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}") },
+                        new { file = $"{AppExtensionsFolder}/{folder}/dist/missing.js", hash = Sha256.Hash("console.log('x');") }
                     }
                 };
                 lw.Write(ctx.JsonSvc.ToJson(lockData, indentation: 2));
@@ -353,7 +354,7 @@ public class ExtensionInstallBackendTest
         using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
         {
             // extension.json
-            var extensionJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.json");
+            var extensionJson = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}");
             using (var stream = extensionJson.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
@@ -361,7 +362,7 @@ public class ExtensionInstallBackendTest
             }
 
             // an extra file not listed in lock
-            var extra = zip.CreateEntry($"extensions/{folder}/dist/extra.js");
+            var extra = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/dist/extra.js");
             using (var s2 = extra.Open())
             {
                 using var w2 = new StreamWriter(s2, new UTF8Encoding(false));
@@ -369,11 +370,11 @@ public class ExtensionInstallBackendTest
             }
 
             // lock only lists the extension.json
-            var lockJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.lock.json");
+            var lockJson = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionLockJsonFile}");
             using (var lstream = lockJson.Open())
             {
                 using var lw = new StreamWriter(lstream, new UTF8Encoding(false));
-                var lockData = new { version = TestVersion, files = new[] { new { file = $"extensions/{folder}/App_Data/extension.json", hash = Sha256.Hash($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}") } } };
+                var lockData = new { version = TestVersion, files = new[] { new { file = $"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}", hash = Sha256.Hash($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}") } } };
                 lw.Write(ctx.JsonSvc.ToJson(lockData, indentation: 2));
             }
         }
@@ -391,21 +392,21 @@ public class ExtensionInstallBackendTest
         using var ms = new MemoryStream();
         using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
         {
-            var extensionJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.json");
+            var extensionJson = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}");
             using (var stream = extensionJson.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
                 writer.Write($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}");
             }
 
-            var file = zip.CreateEntry($"extensions/{folder}/dist/main.js");
+            var file = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/dist/main.js");
             using (var s = file.Open())
             using (var w = new StreamWriter(s, new UTF8Encoding(false)))
             {
                 w.Write("console.log('real');");
             }
 
-            var lockJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.lock.json");
+            var lockJson = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionLockJsonFile}");
             using (var lstream = lockJson.Open())
             {
                 using var lw = new StreamWriter(lstream, new UTF8Encoding(false));
@@ -415,8 +416,8 @@ public class ExtensionInstallBackendTest
                     version = TestVersion,
                     files = new[]
                     {
-                        new { file = $"extensions/{folder}/App_Data/extension.json", hash = Sha256.Hash($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}") },
-                        new { file = $"extensions/{folder}/dist/main.js", hash = "0000000000000000000000000000000000000000000000000000000000000000" }
+                        new { file = $"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}", hash = Sha256.Hash($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}") },
+                        new { file = $"{AppExtensionsFolder}/{folder}/dist/main.js", hash = "0000000000000000000000000000000000000000000000000000000000000000" }
                     }
                 };
                 lw.Write(ctx.JsonSvc.ToJson(lockData, indentation: 2));
@@ -437,14 +438,14 @@ public class ExtensionInstallBackendTest
         using var ms = new MemoryStream();
         using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
         {
-            var extensionJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.json");
+            var extensionJson = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}");
             using (var stream = extensionJson.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
                 writer.Write($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}");
             }
 
-            var jsFile = zip.CreateEntry($"extensions/{folder}/dist/script.js");
+            var jsFile = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/dist/script.js");
             using (var stream = jsFile.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
@@ -458,7 +459,7 @@ public class ExtensionInstallBackendTest
                 writer.Write("public class Helper { public static string Hi() => \"hi\"; }");
             }
 
-            var lockJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.lock.json");
+            var lockJson = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionLockJsonFile}");
             using (var stream = lockJson.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
@@ -467,8 +468,8 @@ public class ExtensionInstallBackendTest
                     version = TestVersion,
                     files = new[]
                     {
-                        new { file = $"extensions/{folder}/App_Data/extension.json", hash = Sha256.Hash($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}") },
-                        new { file = $"extensions/{folder}/dist/script.js", hash = Sha256.Hash("console.log('ac');") },
+                        new { file = $"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}", hash = Sha256.Hash($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}") },
+                        new { file = $"{AppExtensionsFolder}/{folder}/dist/script.js", hash = Sha256.Hash("console.log('ac');") },
                         new { file = $"AppCode/extensions/{folder}/Helper.cs", hash = Sha256.Hash("public class Helper { public static string Hi() => \"hi\"; }") }
                     }
                 };
@@ -495,19 +496,19 @@ public class ExtensionInstallBackendTest
         {
             void Add(string folder)
             {
-                var extensionJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.json");
+                var extensionJson = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}");
                 using (var stream = extensionJson.Open())
                 {
                     using var writer = new StreamWriter(stream, new UTF8Encoding(false));
                     writer.Write($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}");
                 }
-                var asset = zip.CreateEntry($"extensions/{folder}/dist/asset.js");
+                var asset = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/dist/asset.js");
                 using (var s = asset.Open())
                 {
                     using var w = new StreamWriter(s, new UTF8Encoding(false));
                     w.Write($"console.log('{folder}');");
                 }
-                var lockJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.lock.json");
+                var lockJson = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionLockJsonFile}");
                 using (var ls = lockJson.Open())
                 {
                     using var lw = new StreamWriter(ls, new UTF8Encoding(false));
@@ -516,8 +517,8 @@ public class ExtensionInstallBackendTest
                         version = TestVersion,
                         files = new[]
                         {
-                            new { file = $"extensions/{folder}/App_Data/extension.json", hash = Sha256.Hash($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}") },
-                            new { file = $"extensions/{folder}/dist/asset.js", hash = Sha256.Hash($"console.log('{folder}');") }
+                            new { file = $"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}", hash = Sha256.Hash($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}") },
+                            new { file = $"{AppExtensionsFolder}/{folder}/dist/asset.js", hash = Sha256.Hash($"console.log('{folder}');") }
                         }
                     };
                     lw.Write(ctx.JsonSvc.ToJson(lockData, indentation: 2));
@@ -548,28 +549,28 @@ public class ExtensionInstallBackendTest
         using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
         {
             // Good extension
-            var gJson = zip.CreateEntry($"extensions/{good}/App_Data/extension.json");
+            var gJson = zip.CreateEntry($"{AppExtensionsFolder}/{good}/{DataFolderProtected}/{AppExtensionJsonFile}");
             using (var s = gJson.Open())
             {
                 using var w = new StreamWriter(s, new UTF8Encoding(false));
                 w.Write($"{{ \"id\":\"{good}\", \"isInstalled\": true }}");
             }
-            var gScript = zip.CreateEntry($"extensions/{good}/dist/a.js");
+            var gScript = zip.CreateEntry($"{AppExtensionsFolder}/{good}/dist/a.js");
             using (var s = gScript.Open())
             {
                 using var w = new StreamWriter(s, new UTF8Encoding(false));
                 w.Write("console.log('g');");
             }
-            var gLock = zip.CreateEntry($"extensions/{good}/App_Data/extension.lock.json");
+            var gLock = zip.CreateEntry($"{AppExtensionsFolder}/{good}/{DataFolderProtected}/{AppExtensionLockJsonFile}");
             using (var s = gLock.Open())
             {
                 using var w = new StreamWriter(s, new UTF8Encoding(false));
-                var lockData = new { version = TestVersion, files = new[] { new { file = $"extensions/{good}/App_Data/extension.json", hash = Sha256.Hash($"{{ \"id\":\"{good}\", \"isInstalled\": true }}") }, new { file = $"extensions/{good}/dist/a.js", hash = Sha256.Hash("console.log('g');") } } };
+                var lockData = new { version = TestVersion, files = new[] { new { file = $"{AppExtensionsFolder}/{good}/{DataFolderProtected}/{AppExtensionJsonFile}", hash = Sha256.Hash($"{{ \"id\":\"{good}\", \"isInstalled\": true }}") }, new { file = $"{AppExtensionsFolder}/{good}/dist/a.js", hash = Sha256.Hash("console.log('g');") } } };
                 w.Write(ctx.JsonSvc.ToJson(lockData, indentation: 2));
             }
 
             // Bad extension (missing lock file)
-            var bJson = zip.CreateEntry($"extensions/{bad}/App_Data/extension.json");
+            var bJson = zip.CreateEntry($"{AppExtensionsFolder}/{bad}/{DataFolderProtected}/{AppExtensionJsonFile}");
             using (var s = bJson.Open())
             {
                 using var w = new StreamWriter(s, new UTF8Encoding(false));
@@ -595,23 +596,23 @@ public class ExtensionInstallBackendTest
         using var ms = new MemoryStream();
         using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
         {
-            var extensionJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.json");
+            var extensionJson = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}");
             using (var stream = extensionJson.Open())
             {
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
                 writer.Write($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}");
             }
-            var asset = zip.CreateEntry($"extensions/{folder}/dist/x.js");
+            var asset = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/dist/x.js");
             using (var s = asset.Open())
             {
                 using var w = new StreamWriter(s, new UTF8Encoding(false));
                 w.Write("console.log('x');");
             }
-            var lockJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.lock.json");
+            var lockJson = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionLockJsonFile}");
             using (var s = lockJson.Open())
             {
                 using var w = new StreamWriter(s, new UTF8Encoding(false));
-                var lockData = new { version = TestVersion, files = new[] { new { file = $"extensions/{folder}/App_Data/extension.json", hash = Sha256.Hash($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}") }, new { file = $"extensions/{folder}/dist/x.js", hash = Sha256.Hash("console.log('x');") } } };
+                var lockData = new { version = TestVersion, files = new[] { new { file = $"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}", hash = Sha256.Hash($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}") }, new { file = $"{AppExtensionsFolder}/{folder}/dist/x.js", hash = Sha256.Hash("console.log('x');") } } };
                 w.Write(ctx.JsonSvc.ToJson(lockData, indentation: 2));
             }
         }
@@ -620,7 +621,7 @@ public class ExtensionInstallBackendTest
         var ok = ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: ms, overwrite: false, originalZipFileName: "lockfile.zip");
         Assert.True(ok);
 
-        var lockPath = Path.Combine(ctx.TempRoot, "extensions", folder, "App_Data", "extension.lock.json");
+        var lockPath = Path.Combine(ctx.TempRoot, AppExtensionsFolder, folder, DataFolderProtected, AppExtensionLockJsonFile);
         Assert.True(File.Exists(lockPath));
         Assert.True(File.GetAttributes(lockPath).HasFlag(FileAttributes.ReadOnly));
     }
@@ -636,23 +637,23 @@ public class ExtensionInstallBackendTest
             var ms = new MemoryStream();
             using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, leaveOpen: true))
             {
-                var extensionJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.json");
+                var extensionJson = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}");
                 using (var stream = extensionJson.Open())
                 {
                     using var writer = new StreamWriter(stream, new UTF8Encoding(false));
                     writer.Write($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}");
                 }
-                var asset = zip.CreateEntry($"extensions/{folder}/dist/main.js");
+                var asset = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/dist/main.js");
                 using (var s = asset.Open())
                 {
                     using var w = new StreamWriter(s, new UTF8Encoding(false));
                     w.Write(jsContent);
                 }
-                var lockJson = zip.CreateEntry($"extensions/{folder}/App_Data/extension.lock.json");
+                var lockJson = zip.CreateEntry($"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionLockJsonFile}");
                 using (var s = lockJson.Open())
                 {
                     using var w = new StreamWriter(s, new UTF8Encoding(false));
-                    var lockData = new { version = TestVersion, files = new[] { new { file = $"extensions/{folder}/App_Data/extension.json", hash = Sha256.Hash($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}") }, new { file = $"extensions/{folder}/dist/main.js", hash = Sha256.Hash(jsContent) } } };
+                    var lockData = new { version = TestVersion, files = new[] { new { file = $"{AppExtensionsFolder}/{folder}/{DataFolderProtected}/{AppExtensionJsonFile}", hash = Sha256.Hash($"{{ \"id\":\"{folder}\", \"isInstalled\": true }}") }, new { file = $"{AppExtensionsFolder}/{folder}/dist/main.js", hash = Sha256.Hash(jsContent) } } };
                     w.Write(ctx.JsonSvc.ToJson(lockData, indentation: 2));
                 }
             }
@@ -664,7 +665,7 @@ public class ExtensionInstallBackendTest
         var ok1 = ctx.Zip.InstallExtensionZipTac(zoneId: TestZoneId, appId: TestAppId, zipStream: first, overwrite: false, originalZipFileName: "replace-v1.zip");
         Assert.True(ok1);
 
-        var filePath = Path.Combine(ctx.TempRoot, "extensions", folder, "dist", "main.js");
+        var filePath = Path.Combine(ctx.TempRoot, AppExtensionsFolder, folder, "dist", "main.js");
         Assert.True(File.Exists(filePath));
         Assert.Equal("console.log('v1');", File.ReadAllText(filePath));
 

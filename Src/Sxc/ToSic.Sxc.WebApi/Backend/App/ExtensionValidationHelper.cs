@@ -52,7 +52,7 @@ internal class ExtensionValidationHelper(ExtensionManifestService manifestSvc, I
             {
                 lockValidation = ValidateLockFile(lockJsonPath, tempDir, dir);
                 if (!lockValidation.Success)
-                    folderIssues.Add(lockValidation.Error ?? "extension.lock.json invalid");
+                    folderIssues.Add(lockValidation.Error ?? $"{FolderConstants.AppExtensionLockJsonFile} invalid");
             }
 
             if (folderIssues.Any())

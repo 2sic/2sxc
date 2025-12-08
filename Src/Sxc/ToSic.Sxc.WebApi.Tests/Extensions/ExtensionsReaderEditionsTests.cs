@@ -1,4 +1,8 @@
+
+
+using ToSic.Eav.Sys;
 // ReSharper disable once CheckNamespace
+
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
 
 /// <summary>
@@ -267,7 +271,7 @@ public class ExtensionsReaderEditionsTests
         var ext = result.Extensions.First();
         
         // Should not have an edition called "extensions"
-        Assert.False(ext.Editions?.ContainsKey("extensions") ?? false);
+        Assert.False(ext.Editions?.ContainsKey(FolderConstants.AppExtensionsFolder) ?? false);
     }
 
     #endregion
