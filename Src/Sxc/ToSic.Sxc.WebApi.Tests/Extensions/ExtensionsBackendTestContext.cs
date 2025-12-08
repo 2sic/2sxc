@@ -1,17 +1,15 @@
-using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Apps;
+using System.Text.Json;
 using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Paths;
-using ToSic.Eav.Context;
+using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.App;
+using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using ToSic.Sys.Coding;
 using ToSic.Sys.Configuration;
-using ToSic.Sys.DI;
-using ToSic.Sys.Logging;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.WebApi.Tests.Extensions;
@@ -64,11 +62,21 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         // Register LazySvc wrappers for basic services using factory overloads (DI will provide sp when resolving)
         services.AddSingleton(sp => new LazySvc<IAppReaderFactory>(sp));
         services.AddSingleton(sp => new LazySvc<IJsonService>(sp));
+        services.AddSingleton<IEnumerable<IFileGenerator>>(_ => Array.Empty<IFileGenerator>());
+        services.AddSingleton(sp => new LazySvc<IEnumerable<IFileGenerator>>(sp));
+        services.AddSingleton<IAppJsonConfigurationService, FakeAppJsonConfigurationService>();
+        services.AddSingleton(sp => new LazySvc<IAppJsonConfigurationService>(sp));
 
         // Register backend dependencies explicitly so they can be resolved by LazySvc later
         services.AddTransient<ExtensionManifestService>();
         services.AddSingleton(sp => new LazySvc<ExtensionInspectBackend>(sp));
         services.AddTransient<ExtensionInspectBackend>();
+        services.AddSingleton<FileSaver>();
+        services.AddSingleton<CodeControllerReal>(sp => new CodeControllerReal(
+            sp.GetRequiredService<FileSaver>(),
+            sp.GetRequiredService<LazySvc<IEnumerable<IFileGenerator>>>(),
+            sp.GetRequiredService<LazySvc<IAppJsonConfigurationService>>()));
+        services.AddSingleton(sp => new LazySvc<CodeControllerReal>(sp));
         
         services.AddSingleton<ExtensionReaderBackend>(sp => new ExtensionReaderBackend(
             sp.GetRequiredService<LazySvc<IAppReaderFactory>>(),
@@ -88,7 +96,8 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
             sp.GetRequiredService<IAppPathsMicroSvc>(),
             sp.GetRequiredService<IGlobalConfiguration>(),
             sp.GetRequiredService<ExtensionManifestService>(),
-            sp.GetRequiredService<LazySvc<ExtensionInspectBackend>>()));
+            sp.GetRequiredService<LazySvc<ExtensionInspectBackend>>(),
+            sp.GetRequiredService<LazySvc<CodeControllerReal>>()));
 
         var sp = services.BuildServiceProvider() 
             ?? throw new InvalidOperationException("Failed to build service provider");
@@ -192,7 +201,7 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
         }
         public ITyped ToTyped(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default) 
             => throw new NotImplementedException();
-        public IEnumerable<ITyped>? ToTypedList(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default) 
+        public IEnumerable<ITyped> ToTypedList(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default) 
             => throw new NotImplementedException();
     }
 
@@ -244,6 +253,20 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
             _values[key!] = value;
             return value;
         }
+    }
+
+    private class FakeAppJsonConfigurationService : IAppJsonConfigurationService
+    {
+        public void MoveAppJsonTemplateFromOldToNewLocation()
+        {
+        }
+
+        public AppJsonConfiguration? GetAppJson(int appId, bool useShared) => null;
+
+        public string AppJsonCacheKey(int appId, bool useShared) => string.Empty;
+
+        public ICollection<string> ExcludeSearchPatterns(string sourceFolder, int appId, bool useShared)
+            => Array.Empty<string>();
     }
 
     #endregion

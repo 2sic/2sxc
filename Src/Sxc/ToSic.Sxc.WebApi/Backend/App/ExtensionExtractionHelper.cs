@@ -17,7 +17,7 @@ internal class ExtensionExtractionHelper(
     ILog? parentLog)
     : HelperBase(parentLog, "Bck.ExtPrep")
 {
-    internal ExtensionExtractionResult PrepareExtraction(int appId, Stream zipStream, string[]? editions)
+    internal ExtensionExtractionResult PrepareExtraction(int appId, Stream zipStream, string editions)
     {
         var l = Log.Fn<ExtensionExtractionResult>($"prep a:{appId}");
 

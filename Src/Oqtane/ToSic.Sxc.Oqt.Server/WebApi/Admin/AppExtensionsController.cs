@@ -31,7 +31,7 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public PreflightResultDto InstallPreflight(int appId, [FromQuery] string[] editions = null)
+    public PreflightResultDto InstallPreflight(int appId, [FromQuery] string editions = "")
     {
         HotReloadEnabledCheck.Check();
         return Real.InstallPreflight(new(Request), appId, editions);
@@ -41,7 +41,7 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
     //[HttpPost("installExtension")]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
-    public bool Install(int appId, [FromQuery] string[] editions = null, bool overwrite = true)
+    public bool Install(int appId, [FromQuery] string editions = "", bool overwrite = false)
     {
         HotReloadEnabledCheck.Check();
         return Real.Install(new(Request), appId, editions, overwrite);

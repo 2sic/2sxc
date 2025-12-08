@@ -2,6 +2,7 @@ using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.ImportExport.Sys.Zip;
 using ToSic.Eav.Sys;
+using ToSic.Sxc.Backend.Admin;
 using ToSic.Sys.Configuration;
 using ToSic.Sys.Utils;
 
@@ -15,7 +16,7 @@ public class ExtensionInstallBackend(
     IGlobalConfiguration globalConfiguration,
     ExtensionManifestService manifestService,
     LazySvc<ExtensionInspectBackend> inspectorLazy,
-    LazySvc<Admin.CodeControllerReal> codeLazy)
+    LazySvc<CodeControllerReal> codeLazy)
     : ServiceBase("Bck.ExtZip", connect: [appReadersLazy, site, appPathSvc, globalConfiguration, manifestService, inspectorLazy, codeLazy])
 {
     private ReadOnlyFileHelper ReadOnlyHelper => field ??= new(Log);
@@ -24,7 +25,7 @@ public class ExtensionInstallBackend(
     private ExtensionInstallHelper Copier => field ??= new(ReadOnlyHelper, Log);
     private ExtensionPreflightHelper Preflight => field ??= new(manifestService, inspectorLazy, Log);
 
-    public bool InstallExtensionZip(int appId, Stream zipStream, bool overwrite = false, string? originalZipFileName = null, string[]? editions = null)
+    public bool InstallExtensionZip(int appId, Stream zipStream, bool overwrite = false, string? originalZipFileName = null, string editions = null!)
     {
         var l = Log.Fn<bool>($"a:{appId}, overwrite:{overwrite}, ofn:'{originalZipFileName}'");
 
@@ -93,7 +94,7 @@ public class ExtensionInstallBackend(
         }
     }
 
-    public PreflightResultDto InstallPreflight(int appId, Stream zipStream, string? originalZipFileName = null, string[]? editions = null)
+    public PreflightResultDto InstallPreflight(int appId, Stream zipStream, string? originalZipFileName = null, string editions = null!)
     {
         var l = Log.Fn<PreflightResultDto>($"a:{appId}, ofn:'{originalZipFileName}'");
 

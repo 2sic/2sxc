@@ -31,9 +31,9 @@ public class AppExtensionsControllerReal(
     /// <param name="appId">App identifier</param>
     /// <param name="editions">Optional list of editions to install into (empty or null = root)</param>
     /// <returns>Preflight result describing detected state and installation options</returns>
-    public PreflightResultDto InstallPreflight(HttpUploadedFile uploadInfo, int appId, string[]? editions = null)
+    public PreflightResultDto InstallPreflight(HttpUploadedFile uploadInfo, int appId, string editions = "")
     {
-        var l = Log.Fn<PreflightResultDto>($"a:{appId}, editions:'{string.Join(",", editions ?? [])}'");
+        var l = Log.Fn<PreflightResultDto>($"a:{appId}, editions:'{editions}'");
 
         if (!uploadInfo.HasFiles())
             throw l.Ex(new ArgumentException("no file uploaded", nameof(uploadInfo)));
@@ -54,9 +54,9 @@ public class AppExtensionsControllerReal(
     /// <param name="editions">Optional list of editions to install into (empty or null = root)</param>
     /// <param name="overwrite">Overwrite existing files if true</param>
     /// <returns>true if installation succeeded</returns>
-    public bool Install(HttpUploadedFile uploadInfo, int appId, string[]? editions = null, bool overwrite = false)
+    public bool Install(HttpUploadedFile uploadInfo, int appId, string editions = "", bool overwrite = false)
     {
-        var l = Log.Fn<bool>($"a:{appId}, editions:'{string.Join(",", editions ?? [])}', overwrite:{overwrite}");
+        var l = Log.Fn<bool>($"a:{appId}, editions:'{editions}', overwrite:{overwrite}");
 
         if (!uploadInfo.HasFiles())
             throw l.Ex(new ArgumentException("no file uploaded", nameof(uploadInfo)));
