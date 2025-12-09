@@ -9,9 +9,10 @@ namespace ToSic.Sxc.Razor;
 internal class HotBuildReferenceManager(
     RazorReferenceManager referenceManager,
     LazySvc<DependenciesLoader> dependenciesLoader,
-    AssemblyResolver assemblyResolver)
+    AssemblyResolver assemblyResolver,
+    LazySvc<ExtensionCompileReferenceService> extensionReference)
     : ServiceBase($"{SxcLogging.SxcLogName}.HbRefMgr",
-        connect: [referenceManager, dependenciesLoader, assemblyResolver])
+        connect: [referenceManager, dependenciesLoader, assemblyResolver, extensionReference])
 {
     private readonly RazorReferenceManagerEnhanced _referenceManager = (RazorReferenceManagerEnhanced)referenceManager;
 
@@ -37,11 +38,12 @@ internal class HotBuildReferenceManager(
 
             if (sourcePath.HasValue())
             {
-                foreach (var reference in ExtensionCompileReferenceReader.GetReferences(sourcePath, netFramework: false))
+                var referenceReader = extensionReference.Value;
+                foreach (var reference in referenceReader.GetReferences(sourcePath, netFramework: false))
                 {
-                    var resolved = ExtensionCompileReferenceReader.IsAssemblyName(reference.Value)
-                        ? ExtensionCompileReferenceReader.TryResolveAssemblyLocation(reference.Value)
-                        : ExtensionCompileReferenceReader.ResolveReferencePath(reference);
+                    var resolved = ExtensionCompileReferenceService.IsAssemblyName(reference.Value)
+                        ? referenceReader.TryResolveAssemblyLocation(reference.Value)
+                        : referenceReader.ResolveReferencePath(reference);
 
                     if (resolved.IsEmpty())
                     {

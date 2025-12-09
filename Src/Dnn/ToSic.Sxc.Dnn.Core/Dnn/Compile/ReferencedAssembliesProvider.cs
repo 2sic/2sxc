@@ -9,8 +9,11 @@ using static System.StringComparer;
 namespace ToSic.Sxc.Dnn.Compile;
 
 [PrivateApi]
-public class ReferencedAssembliesProvider(DependenciesLoader dependenciesLoader, AssemblyResolver assemblyResolver)
-    : ServiceBase("Sxc.RefAP", connect: [dependenciesLoader, assemblyResolver]), IReferencedAssembliesProvider
+public class ReferencedAssembliesProvider(
+    DependenciesLoader dependenciesLoader,
+    AssemblyResolver assemblyResolver,
+    LazySvc<ExtensionCompileReferenceService> extensionReference)
+    : ServiceBase("Sxc.RefAP", connect: [dependenciesLoader, assemblyResolver, extensionReference]), IReferencedAssembliesProvider
 {
     // cache of referenced assemblies per virtual path
     private static readonly ConcurrentDictionary<string, List<string>> ReferencedAssembliesCache = new(InvariantCultureIgnoreCase);
@@ -63,12 +66,12 @@ public class ReferencedAssembliesProvider(DependenciesLoader dependenciesLoader,
         return l.Return(new(referencedAssemblies), "created, re-wrapped in new list");
     }
 
-    private static void ReferenceAssembly(ICollection<string> referencedAssemblies, string assemblyName)
+    private void ReferenceAssembly(ICollection<string> referencedAssemblies, string assemblyName)
     {
         if (assemblyName.IsEmpty())
             return;
 
-        var normalized = ExtensionCompileReferenceReader.NormalizeAssemblyName(assemblyName);
+        var normalized = ExtensionCompileReferenceService.NormalizeAssemblyName(assemblyName);
         if (HasAssembly(referencedAssemblies, $"{normalized}.dll"))
             return;
 
@@ -93,15 +96,16 @@ public class ReferencedAssembliesProvider(DependenciesLoader dependenciesLoader,
         if (physicalPath.IsEmpty())
             return;
 
-        foreach (var reference in ExtensionCompileReferenceReader.GetReferences(physicalPath, netFramework: true))
+        var referenceReader = extensionReference.Value;
+        foreach (var reference in referenceReader.GetReferences(physicalPath, netFramework: true))
         {
-            if (ExtensionCompileReferenceReader.IsAssemblyName(reference.Value))
+            if (ExtensionCompileReferenceService.IsAssemblyName(reference.Value))
             {
                 ReferenceAssembly(referencedAssemblies, reference.Value);
                 continue;
             }
 
-            var resolvedPath = ExtensionCompileReferenceReader.ResolveReferencePath(reference);
+            var resolvedPath = referenceReader.ResolveReferencePath(reference);
             if (resolvedPath.IsEmpty() || !File.Exists(resolvedPath))
             {
                 Log.W($"Extension reference '{reference.Value}' in '{reference.ExtensionFolder}' not found or unreadable.");

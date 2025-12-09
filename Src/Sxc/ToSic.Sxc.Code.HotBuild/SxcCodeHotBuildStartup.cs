@@ -21,9 +21,9 @@ public static class SxcCodeHotBuildStartup
         services.TryAddSingleton<Util>();
         services.TryAddTransient<SourceCodeHasher>();
 
+        // v20
+        services.TryAddTransient<ExtensionCompileReferenceService>();
+
         return services;
     }
-
-
-        
 }
