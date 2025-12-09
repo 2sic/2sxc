@@ -9,14 +9,11 @@ namespace ToSic.Sxc.Backend.App;
 [ShowApiWhenReleased(ShowApiMode.Never)]
 internal static class ExtensionEditionHelper
 {
-    internal static List<string> NormalizeEditions(string editions)
+    internal static List<string> NormalizeEditions(string? editions)
     {
-        var segments = editions.Split(',')
-            .SelectMany(raw =>
-            {
-                // Split comma-delimited entries so DNN/webforms can send editions=staging,live
-                return raw.Split([','], StringSplitOptions.None);
-            });
+        var segments = (editions ?? string.Empty)
+            .Split(',')
+            .DefaultIfEmpty(string.Empty);
 
         var normalized = segments
             .Select(NormalizeEdition)
@@ -25,7 +22,9 @@ internal static class ExtensionEditionHelper
         if (normalized.Count == 0)
             normalized.Add(string.Empty);
 
-        return normalized.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+        return normalized
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
     }
 
     /// <summary>
