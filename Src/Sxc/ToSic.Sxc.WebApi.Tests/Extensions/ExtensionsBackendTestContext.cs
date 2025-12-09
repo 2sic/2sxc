@@ -83,7 +83,8 @@ internal sealed class ExtensionsBackendTestContext : IDisposable
             sp.GetRequiredService<ISite>(),
             sp.GetRequiredService<IAppPathsMicroSvc>(),
             sp.GetRequiredService<LazySvc<IJsonService>>(),
-            sp.GetRequiredService<ExtensionManifestService>()));
+            sp.GetRequiredService<ExtensionManifestService>(),
+            sp.GetRequiredService<LazySvc<CodeControllerReal>>()));
 
         services.AddSingleton<ExtensionWriterBackend>(sp => new ExtensionWriterBackend(
             sp.GetRequiredService<LazySvc<IAppReaderFactory>>(),

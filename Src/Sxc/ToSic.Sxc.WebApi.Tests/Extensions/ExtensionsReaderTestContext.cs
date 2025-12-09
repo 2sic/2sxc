@@ -3,11 +3,14 @@ using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Sys;
+using ToSic.Eav.Apps.Sys.AppJson;
 using ToSic.Eav.Apps.Sys.FileSystemState;
 using ToSic.Eav.Apps.Sys.Paths;
 using ToSic.Eav.Context;
 using ToSic.Eav.Sys;
+using ToSic.Sxc.Backend.Admin;
 using ToSic.Sxc.Backend.App;
+using ToSic.Sxc.Code.Generate.Sys;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 using ToSic.Sys.Coding;
@@ -32,12 +35,14 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
     #region Constructor / Factory
 
     private readonly ServiceProvider _sp;
+    private readonly FakeAppJsonConfigurationService _appJsonService;
 
-    private ExtensionsReaderTestContext(string tempRoot, ServiceProvider sp, ExtensionReaderBackend readerBackend)
+    private ExtensionsReaderTestContext(string tempRoot, ServiceProvider sp, ExtensionReaderBackend readerBackend, FakeAppJsonConfigurationService appJsonService)
     {
         TempRoot = tempRoot;
         _sp = sp;
         ReaderBackend = readerBackend;
+        _appJsonService = appJsonService;
     }
 
     public static ExtensionsReaderTestContext Create()
@@ -45,28 +50,46 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
         var tempRoot = Path.Combine(Path.GetTempPath(), "2sxc-extensions-reader-tests", Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(tempRoot);
 
+        var site = new FakeSite(tempRoot);
+        var appPathSvc = new FakeAppPathsMicroSvc(tempRoot);
+
         var services = new ServiceCollection();
         services.AddSingleton<IAppReaderFactory, FakeAppReaderFactory>();
         services.AddSingleton<IJsonService, SimpleJsonService>();
         services.AddTransient<ExtensionManifestService>();
+        services.AddSingleton<ISite>(site);
+        services.AddSingleton<IAppPathsMicroSvc>(appPathSvc);
+        services.AddSingleton<IEnumerable<IFileGenerator>>(_ => Array.Empty<IFileGenerator>());
+        services.AddSingleton(sp => new LazySvc<IEnumerable<IFileGenerator>>(sp));
+        services.AddSingleton<FakeAppJsonConfigurationService>(_ => new FakeAppJsonConfigurationService(tempRoot));
+        services.AddSingleton<IAppJsonConfigurationService>(sp => sp.GetRequiredService<FakeAppJsonConfigurationService>());
+        services.AddSingleton(sp => new LazySvc<IAppJsonConfigurationService>(sp));
+        services.AddSingleton<FileSaver>();
+        services.AddSingleton<CodeControllerReal>(sp => new CodeControllerReal(
+            sp.GetRequiredService<FileSaver>(),
+            sp.GetRequiredService<LazySvc<IEnumerable<IFileGenerator>>>(),
+            sp.GetRequiredService<LazySvc<IAppJsonConfigurationService>>()));
+        services.AddSingleton(sp => new LazySvc<CodeControllerReal>(sp));
             
         var sp = services.BuildServiceProvider() 
             ?? throw new InvalidOperationException("Failed to build service provider");
 
         var appReadersLazy = new LazySvc<IAppReaderFactory>(sp);
         var jsonLazy = new LazySvc<IJsonService>(sp);
-        var site = new FakeSite(tempRoot);
-        var appPathSvc = new FakeAppPathsMicroSvc(tempRoot);
         var manifestHelper = sp.GetRequiredService<ExtensionManifestService>();
+        var codeLazy = sp.GetRequiredService<LazySvc<CodeControllerReal>>();
 
         var readerBackend = new ExtensionReaderBackend(
             appReadersLazy, 
-            site, 
-            appPathSvc, 
+            sp.GetRequiredService<ISite>(), 
+            sp.GetRequiredService<IAppPathsMicroSvc>(), 
             jsonLazy,
-            manifestHelper);
+            manifestHelper,
+            codeLazy);
 
-        return new ExtensionsReaderTestContext(tempRoot, sp, readerBackend);
+        var appJsonService = sp.GetRequiredService<FakeAppJsonConfigurationService>();
+
+        return new ExtensionsReaderTestContext(tempRoot, sp, readerBackend, appJsonService);
     }
 
     #endregion
@@ -78,6 +101,8 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
     /// </summary>
     public void SetupExtension(string name, object config)
     {
+        _appJsonService.EnsureEdition(string.Empty);
+
         var extDir = Path.Combine(TempRoot, FolderConstants.AppExtensionsFolder, name);
         var dataDir = Path.Combine(extDir, FolderConstants.DataFolderProtected);
         Directory.CreateDirectory(dataDir);
@@ -94,6 +119,8 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
     /// </summary>
     public void SetupEdition(string editionName, string extensionName, object config)
     {
+        _appJsonService.EnsureEdition(editionName);
+
         var editionExtDir = Path.Combine(TempRoot, editionName, FolderConstants.AppExtensionsFolder, extensionName);
         var dataDir = Path.Combine(editionExtDir, FolderConstants.DataFolderProtected);
         Directory.CreateDirectory(dataDir);
@@ -110,6 +137,8 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
     /// </summary>
     public void CreateEditionFolderOnly(string editionName, string extensionName)
     {
+        _appJsonService.EnsureEdition(editionName);
+
         var editionExtDir = Path.Combine(TempRoot, editionName, FolderConstants.AppExtensionsFolder, extensionName);
         Directory.CreateDirectory(editionExtDir);
     }
@@ -188,6 +217,66 @@ internal sealed class ExtensionsReaderTestContext : IDisposable
             => null;
         public IEnumerable<ITyped>? ToTypedList(string json, NoParamOrder noParamOrder = default, string? fallback = default, bool? propsRequired = default) 
             => null;
+    }
+
+    private class FakeAppJsonConfigurationService : IAppJsonConfigurationService
+    {
+        private readonly string _appRoot;
+        private readonly AppJsonConfiguration _configuration;
+        private readonly object _lock = new();
+
+        public FakeAppJsonConfigurationService(string appRoot)
+        {
+            _appRoot = appRoot;
+            _configuration = new AppJsonConfiguration
+            {
+                IsConfigured = true,
+                Editions =
+                {
+                    [string.Empty] = new AppJsonConfiguration.EditionInfo
+                    {
+                        Description = "Root edition shared by all variants.",
+                        IsDefault = true
+                    }
+                }
+            };
+            PersistConfiguration();
+        }
+
+        public void MoveAppJsonTemplateFromOldToNewLocation()
+        {
+        }
+
+        public AppJsonConfiguration? GetAppJson(int appId, bool useShared) => _configuration;
+
+        public string AppJsonCacheKey(int appId, bool useShared) => string.Empty;
+
+        public ICollection<string> ExcludeSearchPatterns(string sourceFolder, int appId, bool useShared)
+            => Array.Empty<string>();
+
+        public void EnsureEdition(string editionName)
+        {
+            if (editionName == null)
+                return;
+
+            lock (_lock)
+            {
+                if (_configuration.Editions.ContainsKey(editionName))
+                    return;
+
+                _configuration.Editions[editionName] = new AppJsonConfiguration.EditionInfo();
+                PersistConfiguration();
+            }
+        }
+
+        private void PersistConfiguration()
+        {
+            var appData = Path.Combine(_appRoot, FolderConstants.DataFolderProtected);
+            Directory.CreateDirectory(appData);
+            var appJsonPath = Path.Combine(appData, FolderConstants.AppJsonFile);
+            var json = JsonSerializer.Serialize(_configuration, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(appJsonPath, json, new UTF8Encoding(false));
+        }
     }
 
     private class FakeSite(string appsRootPhysicalFull) : ISite

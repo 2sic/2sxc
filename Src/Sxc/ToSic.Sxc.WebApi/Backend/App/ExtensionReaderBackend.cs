@@ -45,16 +45,24 @@ public class ExtensionReaderBackend(
             var editionExtensionsDir = Path.Combine(appPaths.PhysicalPath, editionName.IsEmpty()
                 ? FolderConstants.AppExtensionsFolder
                 : Path.Combine(editionName, FolderConstants.AppExtensionsFolder));
-            if (Directory.Exists(editionExtensionsDir))
-            {
-                foreach (var dir in Directory.GetDirectories(editionExtensionsDir))
-                {
-                    var folderName = Path.GetFileName(dir);
-                    var manifestFile = manifestService.GetManifestFile(new(dir));
-                    var configuration = manifestService.LoadManifest(manifestFile);
-                    var inputTypeInside = ReadInputType(manifestFile);
+            if (!Directory.Exists(editionExtensionsDir))
+                continue;
 
-                    configuration ??= new ExtensionManifest();
+            foreach (var dir in Directory.GetDirectories(editionExtensionsDir))
+            {
+                var folderName = Path.GetFileName(dir);
+                var manifestFile = manifestService.GetManifestFile(new(dir));
+                if (!manifestFile.Exists)
+                    continue;
+
+                var configuration = manifestService.LoadManifest(manifestFile);
+                if (configuration == null)
+                    continue;
+
+                var inputTypeInside = ReadInputType(manifestFile);
+
+                if (editionName.IsEmpty())
+                {
                     list.Add(new ExtensionDto
                     {
                         Folder = folderName,
@@ -64,7 +72,24 @@ public class ExtensionReaderBackend(
 
                     primaryManifests[folderName] = configuration;
                     primaryInputTypes[folderName] = inputTypeInside;
+                    continue;
                 }
+
+                if (!primaryManifests.TryGetValue(folderName, out var primaryManifest) || !primaryManifest.EditionsSupported)
+                    continue;
+
+                if (!primaryInputTypes.TryGetValue(folderName, out var primaryInputType) || inputTypeInside.IsEmpty())
+                    continue;
+
+                if (!string.Equals(primaryInputType, inputTypeInside, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                list.Add(new ExtensionDto
+                {
+                    Folder = folderName,
+                    Edition = editionName,
+                    Configuration = configuration
+                });
             }
         }
         return l.ReturnAsOk(new ExtensionsResultDto { Extensions = list });
