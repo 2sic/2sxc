@@ -11,7 +11,7 @@ using ToSic.Sxc.Razor;
 namespace ToSic.Sxc.Oqt.Server.Code.Sys
 {
 
-    // Code is based on DynamicRun by Laurent Kempé
+    // Code is based on DynamicRun by Laurent KempÃ©
     // https://github.com/laurentkempe/DynamicRun
     // https://laurentkempe.com/2019/02/18/dynamically-compile-and-run-code-using-dotNET-Core-3.0/
     internal class Compiler(LazySvc<AppCodeLoader> appCodeLoader, HotBuildReferenceManager referenceManager)
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Sys
             var compilation = CSharpCompilation.Create(
                 $"{assemblyName}.dll",
                 syntaxTrees,
-                references: referenceManager.GetMetadataReferences(assemblyResult?.Assembly?.Location, spec),
+                references: referenceManager.GetMetadataReferences(assemblyResult?.Assembly?.Location, spec, sourceFile),
                 options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
                     optimizationLevel: OptimizationLevel.Debug,
                     assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default));
@@ -70,6 +70,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Sys
 
                 foreach (var diagnostic in failures)
                 {
+                    // ReSharper disable once ExplicitCallerInfoArgument
                     l.A("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
                     errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
                 }
@@ -79,7 +80,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Sys
             }
 
             peStream.Seek(0, SeekOrigin.Begin);
-            pdbStream?.Seek(0, SeekOrigin.Begin);
+            pdbStream.Seek(0, SeekOrigin.Begin);
 
             var assembly = assemblyLoadContext.LoadFromStream(peStream, pdbStream);
 
@@ -89,7 +90,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Sys
         // Ensure that can't be kept alive by stack slot references (real- or JIT-introduced locals).
         // That could keep the SimpleUnloadableAssemblyLoadContext alive and prevent an unload.
         [MethodImpl(MethodImplOptions.NoInlining)]
-        internal AssemblyResult GetCompiledAssemblyFromFolder(string[] sourceFiles, string assemblyFilePath, string pdbFilePath, string dllName, HotBuildSpec spec)
+        internal AssemblyResult GetCompiledAssemblyFromFolder(string[] sourceFiles, string assemblyFilePath, string pdbFilePath, string dllName, HotBuildSpec spec, string sourceRootPath)
         {
             var l = Log.Fn<AssemblyResult>($"{nameof(sourceFiles)}: {sourceFiles.Length}; {nameof(assemblyFilePath)}: '{assemblyFilePath}'", timer: true);
 
@@ -112,7 +113,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Sys
             var compilation = CSharpCompilation.Create(
                 dllName,
                 syntaxTrees,
-                references: referenceManager.GetMetadataReferences(assemblyFilePath, spec),
+                references: referenceManager.GetMetadataReferences(assemblyFilePath, spec, sourceRootPath),
                 options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
                     optimizationLevel: OptimizationLevel.Debug,
                     assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default));
@@ -139,6 +140,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Sys
 
                     foreach (var diagnostic in failures)
                     {
+                        // ReSharper disable once ExplicitCallerInfoArgument
                         l.A("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
                         errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
                     }
@@ -149,7 +151,7 @@ namespace ToSic.Sxc.Oqt.Server.Code.Sys
 
                 // Create file streams to save the compiled assembly and PDB to disk
                 peStream.Seek(0, SeekOrigin.Begin);
-                pdbStream?.Seek(0, SeekOrigin.Begin);
+                pdbStream.Seek(0, SeekOrigin.Begin);
 
                 using (var peFileStream = new FileStream(assemblyFilePath, FileMode.Create, FileAccess.Write))
                     peStream.CopyTo(peFileStream);

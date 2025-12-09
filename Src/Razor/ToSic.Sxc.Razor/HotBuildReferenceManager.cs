@@ -2,6 +2,7 @@
 using ToSic.Sxc.Code.Sys.HotBuild;
 using ToSic.Sxc.Razor.DotNetOverrides;
 using ToSic.Sxc.Sys;
+using ToSic.Sys.Utils;
 
 namespace ToSic.Sxc.Razor;
 
@@ -14,7 +15,7 @@ internal class HotBuildReferenceManager(
 {
     private readonly RazorReferenceManagerEnhanced _referenceManager = (RazorReferenceManagerEnhanced)referenceManager;
 
-    internal IEnumerable<MetadataReference> GetMetadataReferences(string appCodeFullPath, HotBuildSpec spec)
+    internal IEnumerable<MetadataReference> GetMetadataReferences(string? appCodeFullPath, HotBuildSpec spec, string? sourcePath)
     {
         var additionalReferencePaths = new List<string>();
         try
@@ -33,10 +34,34 @@ internal class HotBuildReferenceManager(
 
             if (!string.IsNullOrEmpty(appCodeFullPath) && File.Exists(appCodeFullPath))
                 additionalReferencePaths.Add(appCodeFullPath);
+
+            if (sourcePath.HasValue())
+            {
+                foreach (var reference in ExtensionCompileReferenceReader.GetReferences(sourcePath, netFramework: false))
+                {
+                    var resolved = ExtensionCompileReferenceReader.IsAssemblyName(reference.Value)
+                        ? ExtensionCompileReferenceReader.TryResolveAssemblyLocation(reference.Value)
+                        : ExtensionCompileReferenceReader.ResolveReferencePath(reference);
+
+                    if (resolved.IsEmpty())
+                    {
+                        Log.W($"Extension reference '{reference.Value}' in '{reference.ExtensionFolder}' could not be resolved.");
+                        continue;
+                    }
+
+                    if (!File.Exists(resolved))
+                    {
+                        Log.W($"Resolved reference '{resolved}' for '{reference.Value}' not found.");
+                        continue;
+                    }
+
+                    additionalReferencePaths.Add(resolved);
+                }
+            }
         }
         catch
         {
-            // sink
+            // ReSharper disable once EmptyStatement
         };
 
         return _referenceManager.GetAdditionalCompilationReferences(additionalReferencePaths);

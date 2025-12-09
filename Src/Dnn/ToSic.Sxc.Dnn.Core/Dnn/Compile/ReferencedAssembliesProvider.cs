@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Configuration;
+using System.Web.Hosting;
 using ToSic.Sxc.Code.Sys.HotBuild;
 using static System.StringComparer;
 
@@ -28,18 +29,12 @@ public class ReferencedAssembliesProvider(DependenciesLoader dependenciesLoader,
         lTimer = Log.Fn("timer for Web Configuration Manager", timer: true);
         var compilationSection = (CompilationSection)WebConfigurationManager.GetSection("system.web/compilation", virtualPath);
         foreach (AssemblyInfo assembly in compilationSection.Assemblies)
-        {
-            // Process your assembly information here
-            try
-            {
-                //referencedAssemblies.Add(assembly.WithPolicy().Location);
-                referencedAssemblies.Add(Assembly.ReflectionOnlyLoad(assembly.Assembly).Location);
-            }
-            catch
-            {
-                // sink
-            }
-        }
+            ReferenceAssembly(referencedAssemblies, assembly.Assembly);
+        lTimer.Done();
+
+        // include assemblies from `\AppCode\Extensions\[extension-name]\compile.json.resources`
+        lTimer = Log.Fn("timer for Extensions Reference Assemblies", timer: true);
+        EnsureExtensionsReferenceAssemblies(referencedAssemblies, virtualPath);
         lTimer.Done();
 
         lTimer = Log.Fn("timer for Dependencies", timer: true);
@@ -49,12 +44,13 @@ public class ReferencedAssembliesProvider(DependenciesLoader dependenciesLoader,
             var (dependencies, _) = dependenciesLoader.TryGetOrFallback(spec);
             assemblyResolver.AddAssemblies(dependencies);
 
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if (dependencies != null)
                 foreach (var dependency in dependencies)
                     referencedAssemblies.Add(dependency.Location);
         }
         lTimer.Done();
-
+        
         // deduplicate referencedAssemblies by filename, keep last duplicate
         referencedAssemblies = referencedAssemblies
             //.Where(IsValidAssembly)
@@ -67,23 +63,95 @@ public class ReferencedAssembliesProvider(DependenciesLoader dependenciesLoader,
         return l.Return(new(referencedAssemblies), "created, re-wrapped in new list");
     }
 
-    /// <summary>
-    /// We need to skip invalid assemblies to not break compile process
-    /// </summary>
-    /// <param name="filePath"></param>
-    /// <returns></returns>
-    private static bool IsValidAssembly(string filePath)
+    private static void ReferenceAssembly(ICollection<string> referencedAssemblies, string assemblyName)
     {
+        if (assemblyName.IsEmpty())
+            return;
+
+        var normalized = ExtensionCompileReferenceReader.NormalizeAssemblyName(assemblyName);
+        if (HasAssembly(referencedAssemblies, $"{normalized}.dll"))
+            return;
+
+        // Process your assembly information here
         try
         {
-            Assembly.ReflectionOnlyLoadFrom(filePath);
-            return true;
+            referencedAssemblies.Add(Assembly.ReflectionOnlyLoad(normalized).Location);
         }
         catch
         {
-            return false;
+            // sink
         }
     }
+
+
+    private void EnsureExtensionsReferenceAssemblies(ICollection<string> referencedAssemblies, string virtualPath)
+    {
+        //foreach (var assemblyName in GetExtensionsReferenceAssemblyNames)
+        //    referencedAssemblies.Add(Assembly.ReflectionOnlyLoad(assemblyName).Location);
+
+        var physicalPath = MapVirtualPath(virtualPath);
+        if (physicalPath.IsEmpty())
+            return;
+
+        foreach (var reference in ExtensionCompileReferenceReader.GetReferences(physicalPath, netFramework: true))
+        {
+            if (ExtensionCompileReferenceReader.IsAssemblyName(reference.Value))
+            {
+                ReferenceAssembly(referencedAssemblies, reference.Value);
+                continue;
+            }
+
+            var resolvedPath = ExtensionCompileReferenceReader.ResolveReferencePath(reference);
+            if (resolvedPath.IsEmpty() || !File.Exists(resolvedPath))
+            {
+                Log.W($"Extension reference '{reference.Value}' in '{reference.ExtensionFolder}' not found or unreadable.");
+                continue;
+            }
+
+            referencedAssemblies.Add(resolvedPath);
+        }
+    }
+
+    private static string MapVirtualPath(string virtualPath)
+    {
+        if (virtualPath.IsEmpty())
+            return string.Empty;
+
+        try
+        {
+            return HostingEnvironment.MapPath(virtualPath);
+        }
+        catch
+        {
+            return string.Empty;
+        }
+    }
+
+    private static bool HasAssembly(IEnumerable<string> referencedAssemblies, string fileName)
+        => referencedAssemblies.Any(path => string.Equals(Path.GetFileName(path), fileName, StringComparison.InvariantCultureIgnoreCase));
+
+    //private static readonly string[] GetExtensionsReferenceAssemblyNames =
+    //{
+    //    "System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+    //};
+
+    ///// <summary>
+    ///// We need to skip invalid assemblies to not break compile process
+    ///// </summary>
+    ///// <param name="filePath"></param>
+    ///// <returns></returns>
+    //private static bool IsValidAssembly(string filePath)
+    //{
+    //    try
+    //    {
+    //        Assembly.ReflectionOnlyLoadFrom(filePath);
+    //        return true;
+    //    }
+    //    catch
+    //    {
+    //        return false;
+    //    }
+    //}
 
     // static cached, because in case of dll change app will restart itself
     private static IReadOnlyList<string> AppReferencedAssemblies()
