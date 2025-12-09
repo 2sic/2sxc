@@ -36,6 +36,8 @@ public class ExtensionReaderBackend(
             .ThenBy(name => name, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
+        Log.A($"available editions: {string.Join(", ", availableEditions.Select(EditionLabel))}");
+
         var list = new List<ExtensionDto>();
         var primaryManifests = new Dictionary<string, ExtensionManifest>(StringComparer.OrdinalIgnoreCase);
         var primaryInputTypes = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
@@ -46,18 +48,27 @@ public class ExtensionReaderBackend(
                 ? FolderConstants.AppExtensionsFolder
                 : Path.Combine(editionName, FolderConstants.AppExtensionsFolder));
             if (!Directory.Exists(editionExtensionsDir))
+            {
+                Log.A($"edition {EditionLabel(editionName)} has no extensions folder at '{editionExtensionsDir}'");
                 continue;
+            }
 
             foreach (var dir in Directory.GetDirectories(editionExtensionsDir))
             {
                 var folderName = Path.GetFileName(dir);
                 var manifestFile = manifestService.GetManifestFile(new(dir));
-                if (!manifestFile.Exists)
-                    continue;
+                //if (!manifestFile.Exists)
+                //{
+                //    Log.A($"skip extension '{folderName}' in {EditionLabel(editionName)} because manifest file missing");
+                //    continue;
+                //}
 
-                var configuration = manifestService.LoadManifest(manifestFile);
-                if (configuration == null)
-                    continue;
+                var configuration = manifestService.LoadManifest(manifestFile) ?? new();
+                //if (configuration == null)
+                //{
+                //    Log.A($"skip extension '{folderName}' in {EditionLabel(editionName)} because manifest couldn't be parsed");
+                //    continue;
+                //}
 
                 var inputTypeInside = ReadInputType(manifestFile);
 
@@ -72,17 +83,33 @@ public class ExtensionReaderBackend(
 
                     primaryManifests[folderName] = configuration;
                     primaryInputTypes[folderName] = inputTypeInside;
+                    Log.A($"registered primary extension '{folderName}', supports editions: {configuration?.EditionsSupported}");
                     continue;
                 }
 
-                if (!primaryManifests.TryGetValue(folderName, out var primaryManifest) || !primaryManifest.EditionsSupported)
-                    continue;
+                //if (!primaryManifests.TryGetValue(folderName, out var primaryManifest) || !primaryManifest.EditionsSupported)
+                //{
+                //    Log.A($"skip edition '{EditionLabel(editionName)}' for '{folderName}' because primary manifest missing or not edition-enabled");
+                //    continue;
+                //}
 
-                if (!primaryInputTypes.TryGetValue(folderName, out var primaryInputType) || inputTypeInside.IsEmpty())
-                    continue;
+                //if (!primaryInputTypes.TryGetValue(folderName, out var primaryInputType))
+                //{
+                //    Log.A($"skip edition '{EditionLabel(editionName)}' for '{folderName}' because base input type was not recorded");
+                //    continue;
+                //}
 
-                if (!string.Equals(primaryInputType, inputTypeInside, StringComparison.OrdinalIgnoreCase))
-                    continue;
+                //if (inputTypeInside.IsEmpty())
+                //{
+                //    Log.A($"skip edition '{EditionLabel(editionName)}' for '{folderName}' because edition manifest lacks inputTypeInside");
+                //    continue;
+                //}
+
+                //if (!string.Equals(primaryInputType, inputTypeInside, StringComparison.OrdinalIgnoreCase))
+                //{
+                //    Log.A($"skip edition '{EditionLabel(editionName)}' for '{folderName}' due to inputType mismatch '{inputTypeInside}' != '{primaryInputType}'");
+                //    continue;
+                //}
 
                 list.Add(new ExtensionDto
                 {
@@ -90,9 +117,13 @@ public class ExtensionReaderBackend(
                     Edition = editionName,
                     Configuration = configuration
                 });
+                Log.A($"registered edition '{EditionLabel(editionName)}' for extension '{folderName}'");
             }
         }
+        Log.A($"extensions discovered: {list.Count}");
         return l.ReturnAsOk(new ExtensionsResultDto { Extensions = list });
+
+        string EditionLabel(string editionName) => editionName.IsEmpty() ? "(primary)" : editionName;
     }
 
     // TODO: @STV - WARNING - THIS CODE LOOKS EXTREMELY SIMILAR TO AppFileSystemInputTypesLoader.BuildUiAssets
