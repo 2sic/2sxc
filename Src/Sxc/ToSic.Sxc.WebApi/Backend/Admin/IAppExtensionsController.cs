@@ -32,6 +32,24 @@ public interface IAppExtensionsController<out THttpResponse>
     bool Install(int appId, string editions = "", bool overwrite = false);
 
     /// <summary>
+    /// Preflight installation of an extension zip downloaded from a URL.
+    /// </summary>
+    /// <param name="appId">App identifier</param>
+    /// <param name="urls">Remote URLs to extension packages (first is used)</param>
+    /// <param name="editions">Optional comma-delimited list of editions to install into (empty or null = root).</param>
+    PreflightResultDto InstallPreflightFrom(int appId, string[] urls, string editions = "");
+
+    /// <summary>
+    /// Install app extension zip downloaded from a URL.
+    /// </summary>
+    /// <param name="appId">App identifier</param>
+    /// <param name="urls">Remote URLs to extension packages (first is used)</param>
+    /// <param name="editions">Optional comma-delimited list of editions to install into (empty or null = root).</param>
+    /// <param name="overwrite">Overwrite existing files if true</param>
+    /// <returns>true if installation succeeded</returns>
+    bool InstallFrom(int appId, string[] urls, string editions = "", bool overwrite = false);
+
+    /// <summary>
     /// Inspect endpoint mirroring DNN behavior.
     /// </summary>
     /// <param name="appId">App identifier</param>

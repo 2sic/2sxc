@@ -1,6 +1,5 @@
-using ToSic.Sxc.Backend.App;
 using ToSic.Eav.Apps.Sys.FileSystemState;
-
+using ToSic.Sxc.Backend.App;
 
 namespace ToSic.Sxc.Backend.Admin;
 
@@ -11,8 +10,9 @@ public class AppExtensionsControllerReal(
     LazySvc<ExtensionInstallBackend> zipLazy,
     LazySvc<ExtensionInspectBackend> inspectorLazy,
     LazySvc<ExtensionDeleteBackend> deleteLazy,
-    LazySvc<ExtensionExportService> exportExtensionLazy)
-    : ServiceBase("Api.ExtsRl", connect: [readerLazy, writerLazy, zipLazy, inspectorLazy, deleteLazy, exportExtensionLazy])
+    LazySvc<ExtensionExportService> exportExtensionLazy,
+    LazySvc<ExtensionDownloadBackend> downloadLazy)
+    : ServiceBase("Api.ExtsRl", connect: [readerLazy, writerLazy, zipLazy, inspectorLazy, deleteLazy, exportExtensionLazy, downloadLazy])
 {
     public const string LogSuffix = "ApiExts";
 
@@ -70,6 +70,36 @@ public class AppExtensionsControllerReal(
     }
 
     /// <summary>
+    /// Preflight install of an extension zip downloaded from the provided URL(s).
+    /// </summary>
+    public PreflightResultDto InstallPreflightFrom(string[] urls, int appId, string editions = "")
+    {
+        var l = Log.Fn<PreflightResultDto>($"a:{appId}, editions:'{editions}'");
+
+        var download = downloadLazy.Value.DownloadFirstAvailable(urls);
+        using var stream = download.Stream;
+
+        // Run preflight on the downloaded zip and return the backend result.
+        var result = zipLazy.Value.InstallPreflight(appId, stream, originalZipFileName: download.FileName, editions: editions);
+        return l.Return(result, $"ok from '{download.Url}'");
+    }
+
+    /// <summary>
+    /// Install app extension zip downloaded from the provided URL(s).
+    /// </summary>
+    public bool InstallFrom(string[] urls, int appId, string editions = "", bool overwrite = false)
+    {
+        var l = Log.Fn<bool>($"a:{appId}, editions:'{editions}', overwrite:{overwrite}");
+
+        var download = downloadLazy.Value.DownloadFirstAvailable(urls);
+        using var stream = download.Stream;
+
+        // Install the downloaded package into the target app/edition(s).
+        var ok = zipLazy.Value.InstallExtensionZip(appId, stream, overwrite, originalZipFileName: download.FileName, editions: editions);
+        return l.Return(ok, $"url:'{download.Url}'");
+    }
+
+    /// <summary>
     /// Inspect endpoint mirroring DNN behavior.
     /// </summary>
     /// <param name="appId">App identifier</param>
@@ -109,3 +139,4 @@ public class AppExtensionsControllerReal(
     public bool Delete(int appId, string name, string? edition = null, bool force = false, bool withData = false)
         => deleteLazy.Value.DeleteExtension(appId, name, edition, force, withData);
 }
+

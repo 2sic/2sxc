@@ -35,8 +35,30 @@ public class AppExtensionsController() : DnnSxcControllerBase(RealController.Log
     [ValidateAntiForgeryToken]
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    public PreflightResultDto InstallPreflightFrom(int appId, [FromBody] string[] urls, string editions = "")
+    {
+        SysHlp.PreventServerTimeout600();
+        return Real.InstallPreflightFrom(urls, appId, editions);
+    }
+
+    /// <inheritdoc />
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [SupportedModules(DnnSupportedModuleNames)]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public bool Install(int appId, string editions = "", bool overwrite = false)
         => Real.Install(new(Request, HttpContext.Current.Request), appId, editions, overwrite);
+
+    /// <inheritdoc />
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [SupportedModules(DnnSupportedModuleNames)]
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    public bool InstallFrom(int appId, [FromBody] string[] urls, string editions = "", bool overwrite = false)
+    {
+        SysHlp.PreventServerTimeout600();
+        return Real.InstallFrom(urls, appId, editions, overwrite);
+    }
 
     /// <inheritdoc />
     [HttpGet]

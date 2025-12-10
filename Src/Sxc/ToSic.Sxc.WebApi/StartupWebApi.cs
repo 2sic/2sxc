@@ -47,6 +47,7 @@ public static class StartupWebApi
         services.TryAddTransient<ExtensionReaderBackend>();
         services.TryAddTransient<ExtensionWriterBackend>();
         services.TryAddTransient<ExtensionInstallBackend>();
+        services.TryAddTransient<ExtensionDownloadBackend>();
         services.TryAddTransient<ExtensionManifestService>();
         services.TryAddTransient<ExtensionInspectBackend>();
         services.TryAddTransient<ExtensionDeleteBackend>();

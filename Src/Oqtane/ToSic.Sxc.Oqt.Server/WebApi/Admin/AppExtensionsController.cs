@@ -38,13 +38,32 @@ public class AppExtensionsController() : OqtStatefulControllerBase(RealControlle
     }
 
     /// <inheritdoc />
-    //[HttpPost("installExtension")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = RoleNames.Admin)]
+    public PreflightResultDto InstallPreflightFrom(int appId, [FromBody] string[] urls, [FromQuery] string editions = "")
+    {
+        HotReloadEnabledCheck.Check();
+        return Real.InstallPreflightFrom(urls, appId, editions);
+    }
+
+    /// <inheritdoc />
     [ValidateAntiForgeryToken]
     [Authorize(Roles = RoleNames.Admin)]
     public bool Install(int appId, [FromQuery] string editions = "", bool overwrite = false)
     {
         HotReloadEnabledCheck.Check();
         return Real.Install(new(Request), appId, editions, overwrite);
+    }
+
+    /// <inheritdoc />
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = RoleNames.Admin)]
+    public bool InstallFrom(int appId, [FromBody] string[] urls, [FromQuery] string editions = "", bool overwrite = false)
+    {
+        HotReloadEnabledCheck.Check();
+        return Real.InstallFrom(urls, appId, editions, overwrite);
     }
 
     /// <inheritdoc />
