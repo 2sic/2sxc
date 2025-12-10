@@ -25,7 +25,7 @@ public interface IAppTyped: IAppIdentity
     /// Get a query in this App, optionally with more parameters and sources.
     /// </summary>
     /// <param name="name"></param>
-    /// <param name="noParamOrder"></param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="attach"></param>
     /// <param name="parameters"></param>
     /// <returns></returns>

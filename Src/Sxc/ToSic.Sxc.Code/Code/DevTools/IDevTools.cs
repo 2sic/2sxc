@@ -14,7 +14,7 @@ public interface IDevTools
     /// Enable debugging on a specific object, if it supports it.
     /// </summary>
     /// <param name="target"></param>
-    /// <param name="noParamOrder"></param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="debug"></param>
     void Debug(object target, NoParamOrder npo = default, bool debug = true);
 }

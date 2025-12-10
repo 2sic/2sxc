@@ -54,7 +54,7 @@ public interface ITweakButton
     /// A color can be `red`, `green` or `#FFCC66` as well as transparent colors such as `#FFCC6699`
     /// </summary>
     /// <param name="color">The main color parameter. Can contain two values, comma separated.</param>
-    /// <param name="noParamOrder"></param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="background">Background color - will only take effect if the `color` was not set.</param>
     /// <param name="foreground">Foreground color - will only take effect if the `color` was not set.</param>
     /// <returns></returns>

@@ -85,7 +85,7 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.Dependencie
     /// You can call this multiple times, providing different names.
     /// </summary>
     /// <param name="getList"></param>
-    /// <param name="noParamOrder"></param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="name"></param>
     /// <param name="options"></param>
     protected void ProvideOut(

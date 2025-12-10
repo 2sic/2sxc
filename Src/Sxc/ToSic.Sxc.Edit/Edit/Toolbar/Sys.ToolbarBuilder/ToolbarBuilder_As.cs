@@ -15,7 +15,7 @@ partial record ToolbarBuilder
     /// <summary>
     /// Helper for the AsTag, AsAttributes, AsJson methods.
     /// </summary>
-    /// <param name="noParamOrder"></param>
+    /// <param name="npo">see [](xref:NetCode.Conventions.NamedParameters)</param>
     /// <param name="mode"></param>
     /// <param name="target"></param>
     /// <returns></returns>
