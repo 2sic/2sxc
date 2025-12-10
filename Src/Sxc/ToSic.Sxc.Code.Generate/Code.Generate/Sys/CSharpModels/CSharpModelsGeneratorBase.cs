@@ -60,13 +60,37 @@ internal abstract class CSharpModelsGeneratorBase(IUser user, IAppReaderFactory 
 
         types.AddRange(appConfigTypes);
 
+        types = FilterSelectedContentTypes(types);
+
         Specs = Specs with { ExportedContentContentTypes = types };
 
         CodeGenHelper = new(Specs, Log);
     }
+    private List<IContentType> FilterSelectedContentTypes(List<IContentType> types)
+    {
+        if (Specs.ContentTypes == null)
+            return types;
+
+        var selected = Specs.ContentTypes
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Select(name => name.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        if (!selected.Any())
+            return types;
+
+        var filtered = types
+            .Where(ct => selected.Contains(ct.NameId) || selected.Contains(ct.Name))
+            .ToList();
+
+        return filtered.Any()
+            ? filtered
+            : types;
+    }
 
     protected abstract IGeneratedFile? CreateFileGenerator(IContentType type, string className);
-
+    
     public IGeneratedFileSet[] Generate(IFileGeneratorSpecs specs)
     {
         Setup(specs);
