@@ -4,12 +4,10 @@ using ToSic.Eav.Apps.Sys;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw.Sys;
 using ToSic.Eav.DataSource;
-
 using ToSic.Eav.DataSource.Sys;
 using ToSic.Eav.DataSources;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;
-
 
 namespace Custom.DataSource;
 
@@ -76,7 +74,8 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.Dependencie
     /// You can override this, or use one or more <see cref="ProvideOut"/> in your constructor.
     /// </summary>
     /// <returns></returns>
-    protected virtual IEnumerable<IRawEntity> GetDefault() => new List<IRawEntity>();
+    protected virtual IEnumerable<IRawEntity> GetDefault()
+        => new List<IRawEntity>();
 
     /// <summary>
     /// Provide out-data on this data source.
@@ -93,8 +92,7 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.Dependencie
         NoParamOrder npo = default,
         string name = DataSourceConstants.StreamDefaultName,
         Func<DataFactoryOptions>? options = default
-    )
-        => _inner.BreachProvideOut(getList, name: name, options: options);
+    ) => _inner.BreachProvideOut(getList, name: name, options: options);
 
 
     #region CodeLog
@@ -120,11 +118,11 @@ public abstract partial class DataSource16: ServiceBase<DataSource16.Dependencie
 
     #region IDataTarget - allmost all hidden
 
-    /// <inheritdoc/>
+    /// <inheritdoc cref="BreachExtensions.TryGetIn"/>
     public IImmutableList<IEntity>? TryGetIn(string name = DataSourceConstants.StreamDefaultName)
         => _inner.TryGetIn(name);
 
-    /// <inheritdoc/>
+    /// <inheritdoc cref="BreachExtensions.TryGetOut"/>
     public IImmutableList<IEntity>? TryGetOut(string name = DataSourceConstants.StreamDefaultName)
         => _inner.TryGetOut(name);
 
