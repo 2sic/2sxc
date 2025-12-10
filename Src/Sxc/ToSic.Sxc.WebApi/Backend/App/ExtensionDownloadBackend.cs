@@ -62,7 +62,7 @@ public class ExtensionDownloadBackend() : ServiceBase("Bck.ExtDl")
             response.Content.CopyToAsync(stream).Wait();
             stream.Position = 0;
 
-            return l.Return((stream, fileName), "ok");
+            return l.ReturnAsOk((stream, fileName));
         }
         catch (HttpRequestException ex)
         {
