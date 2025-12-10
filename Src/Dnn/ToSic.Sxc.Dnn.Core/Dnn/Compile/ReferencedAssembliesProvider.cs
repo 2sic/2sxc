@@ -35,7 +35,7 @@ public class ReferencedAssembliesProvider(
             ReferenceAssembly(referencedAssemblies, assembly.Assembly);
         lTimer.Done();
 
-        // include assemblies from `\AppCode\Extensions\[extension-name]\compile.json.resources`
+        // include assemblies from `\AppCode\Extensions\[extension-name]\compile.json`
         lTimer = Log.Fn("timer for Extensions Reference Assemblies", timer: true);
         EnsureExtensionsReferenceAssemblies(referencedAssemblies, virtualPath);
         lTimer.Done();

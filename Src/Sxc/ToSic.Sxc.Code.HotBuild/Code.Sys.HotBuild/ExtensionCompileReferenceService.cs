@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Code.Sys.HotBuild;
 public class ExtensionCompileReferenceService(MemoryCacheService cache)
     : ServiceBase("Sxc.ExtRefRd", connect: [cache])
 {
-    private const string CompileConfigFileName = "compile.json.resources";
+    private const string CompileConfigFileName = "compile.json";
 
     private static readonly JsonSerializerOptions ConfigSerializerOptions = new()
     {
